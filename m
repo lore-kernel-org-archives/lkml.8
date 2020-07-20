@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FEEC433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3CEC433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C48A720773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09AB122CBB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261041;
-	bh=eW2KrhQqTzX7xP0QopsTINkoMeHdMEn+TwYcjkFAGrw=;
+	s=default; t=1595261044;
+	bh=UckB6aorP9uBAZnlnr9liyRAEo9To/eHwIwBb1ucEnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m7BqlNdqIr1U8pPEpx2mGnWq4+pxJf11Yw25q9bm1pRXka9b8o0vxCboOvGGMmmGl
-	 og+KzFyHKklCdKnULvAhsQk2zEzZMgxRi27cDVN9FFfYSVY2kQWNcYPj0HeNU+hfmO
-	 Mslgtg4LY8MCsvZqyo6J+yO6lVVU7WfdM58HiBrI=
+	b=ERIglZ1wNCkyVfvAfNwdznSY+XZ1R2z/OagTeeQiVOUA6Wf+OxQ6NLLhtFrCaqZaf
+	 mxlwO4DzuTYBTzqyorkhxv7QAJOq0fjtZ6wopRWdWiZT7RYRpnrb8Z97xdVhsj+lX5
+	 xpFj1U+VGdmse82SABs9E1uAK1n18SsOCL7vXEmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732101AbgGTQEA (ORCPT
+        id S1732509AbgGTQEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:04:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38500 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:04:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732793AbgGTQDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:03:55 -0400
+        id S1732511AbgGTQD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:03:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B18BA20672;
-        Mon, 20 Jul 2020 16:03:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A4D420684;
+        Mon, 20 Jul 2020 16:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261035;
-        bh=eW2KrhQqTzX7xP0QopsTINkoMeHdMEn+TwYcjkFAGrw=;
+        s=default; t=1595261038;
+        bh=UckB6aorP9uBAZnlnr9liyRAEo9To/eHwIwBb1ucEnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fp/MgEK1EjPGRTZ0IJEoJE4yMGne5ox8fcRcKHnvovT1e29NTdLGSgUGRHni46oqV
-         H/3NYhU7PmUB/Af4MtwMlD/V6Uv/DWWKm4pHzJWqUAm/O7rvEIxnmfjqd3U523OF7Q
-         vQXJJuUZ7FyAYQBxopEoc88Zf6bPjps4N1aXgCHs=
+        b=oTfmDNSnELRJAlD5I2uKX7tPCoECIlqbusPAhEtI5Yf9I9MZE7xW+nSHJ/hkyf3Ji
+         iiS14ltZn+gwny+ZD1VvmQgSZOdMaVIV3nkM88JrPsE5+BHsjCQGoPRbgao0W9zfGM
+         UgMvT1/FFFDCyagRUk3kQx0MyOIHLy8zcVCBd3wU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Schwab <schwab@suse.de>,
-        Anup Patel <anup@brainfault.org>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH 5.4 185/215] riscv: use 16KB kernel stack on 64-bit
-Date:   Mon, 20 Jul 2020 17:37:47 +0200
-Message-Id: <20200720152828.976786584@linuxfoundation.org>
+        stable@vger.kernel.org, Vishwas M <vishwas.reddy.vr@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.4 186/215] hwmon: (emc2103) fix unable to change fan pwm1_enable attribute
+Date:   Mon, 20 Jul 2020 17:37:48 +0200
+Message-Id: <20200720152829.026671352@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -60,39 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Schwab <schwab@suse.de>
+From: Vishwas M <vishwas.reddy.vr@gmail.com>
 
-commit 0cac21b02ba5f3095fd2dcc77c26a25a0b2432ed upstream.
+commit 14b0e83dc4f1e52b94acaeb85a18fd7fdd46d2dc upstream.
 
-With the current 8KB stack size there are frequent overflows in a 64-bit
-configuration.  We may split IRQ stacks off in the future, but this fixes a
-number of issues right now.
+This patch fixes a bug which does not let FAN mode to be changed from
+sysfs(pwm1_enable). i.e pwm1_enable can not be set to 3, it will always
+remain at 0.
 
-Signed-off-by: Andreas Schwab <schwab@suse.de>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-[Palmer: mention irqstack in the commit text]
-Fixes: 7db91e57a0ac ("RISC-V: Task implementation")
+This is caused because the device driver handles the result of
+"read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg)" incorrectly. The
+driver thinks an error has occurred if the (result != 0). This has been
+fixed by changing the condition to (result < 0).
+
+Signed-off-by: Vishwas M <vishwas.reddy.vr@gmail.com>
+Link: https://lore.kernel.org/r/20200707142747.118414-1-vishwas.reddy.vr@gmail.com
+Fixes: 9df7305b5a86 ("hwmon: Add driver for SMSC EMC2103 temperature monitor and fan controller")
 Cc: stable@vger.kernel.org
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/riscv/include/asm/thread_info.h |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/hwmon/emc2103.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/riscv/include/asm/thread_info.h
-+++ b/arch/riscv/include/asm/thread_info.h
-@@ -12,7 +12,11 @@
- #include <linux/const.h>
+--- a/drivers/hwmon/emc2103.c
++++ b/drivers/hwmon/emc2103.c
+@@ -443,7 +443,7 @@ static ssize_t pwm1_enable_store(struct
+ 	}
  
- /* thread information allocation */
-+#ifdef CONFIG_64BIT
-+#define THREAD_SIZE_ORDER	(2)
-+#else
- #define THREAD_SIZE_ORDER	(1)
-+#endif
- #define THREAD_SIZE		(PAGE_SIZE << THREAD_SIZE_ORDER)
- 
- #ifndef __ASSEMBLY__
+ 	result = read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg);
+-	if (result) {
++	if (result < 0) {
+ 		count = result;
+ 		goto err;
+ 	}
 
 
