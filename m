@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEFEC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E71C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E50022CF6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87018206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261115;
-	bh=IufbSqnQoO/XlYrV0tWMAZ9tLze7G+NS2wb+k+R0EUI=;
+	s=default; t=1595261122;
+	bh=30CXrEdiYVz1AylAF1x57ZnlAb8SkFQ3PCeoPQOpcKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X/8bVyI4K6ghORRRBvsx5fbFvemKbADSUwwIpaSY/WDFq2VZn4hhXzvFBLc+BTcZQ
-	 X4v60kENhAqHrILnvFzVqPP15YY+uGAwEgr0VIcujOJu8l1RJ0PjdA1lzBOp8AWsv2
-	 C3LLP6+3GQ2YN53zCrDNHw8y/vN1ffIehCBfKoYw=
+	b=bd91i6UmyqlW6gt6EUDMu8MO+bIWEVmh88Hl6eNAfvjQBFnyb8N5yl4W3WvfOP5Z5
+	 7DIsEzh+RHEd8odYLgNhbs465hePvQ9JPHOAR6ZoVC9RpVGZObGK7+wM6Cw+aVA4+7
+	 SQw4OnCNbiQr/VDjaOos12I7qZpFKp1aTFknFLsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732956AbgGTQFO (ORCPT
+        id S1732001AbgGTQFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:05:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40542 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:05:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732365AbgGTQFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:05:12 -0400
+        id S1732365AbgGTQFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:05:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4AC92064B;
-        Mon, 20 Jul 2020 16:05:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4E942064B;
+        Mon, 20 Jul 2020 16:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261112;
-        bh=IufbSqnQoO/XlYrV0tWMAZ9tLze7G+NS2wb+k+R0EUI=;
+        s=default; t=1595261115;
+        bh=30CXrEdiYVz1AylAF1x57ZnlAb8SkFQ3PCeoPQOpcKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ndTurylZXonI5tpV4fcKpzgb8h1/52/2vWvP4/xlD46BhEuSRGOTS8VX2Zk3IutAH
-         abvVkjP9Uaztb8yQmn6h39B9eQEnzFkFnqdhHRiabbj8/Gc8WuObvoHcSBztOWqr8d
-         bASZXBP1HO5R4S2muT9pUw3jTqUqnkG5Ay78edJ0=
+        b=NYjIoAdqbIyd68KGe+Bo+tyYILmG+U7XZ/KJDONGXU52XZNvsdpwD5P/3KGFDQKy0
+         zLeXYyFEi2H3k484crt/yvCA2RvjY9Ug3jKwiFyR6tQ9Z8s/psgfb4lFAUCEloZJJk
+         fDaL+/7BnB1iJqzi9xzVFXAlz2ZVXgjTK0JqfCn0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Colin Xu <colin.xu@intel.com>
-Subject: [PATCH 5.4 214/215] drm/i915/gvt: Fix two CFL MMIO handling caused by regression.
-Date:   Mon, 20 Jul 2020 17:38:16 +0200
-Message-Id: <20200720152830.328049538@linuxfoundation.org>
+        stable@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Alex Hung <alex.hung@canonical.com>
+Subject: [PATCH 5.4 197/215] thermal: int3403_thermal: Downgrade error message
+Date:   Mon, 20 Jul 2020 17:37:59 +0200
+Message-Id: <20200720152829.533853136@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,40 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Xu <colin.xu@intel.com>
+From: Alex Hung <alex.hung@canonical.com>
 
-commit fccd0f7cf4d532674d727c7f204f038456675dee upstream.
+commit f3d7fb38976b1b0a8462ba1c7cbd404ddfaad086 upstream.
 
-D_CFL was incorrectly removed for:
-GAMT_CHKN_BIT_REG
-GEN9_CTX_PREEMPT_REG
+Downgrade "Unsupported event" message from dev_err to dev_dbg to avoid
+flooding with this message on some platforms.
 
-V2: Update commit message.
-V3: Rebase and split Fixes and mis-handled MMIO.
-
-Fixes: 43226e6fe798 (drm/i915/gvt: replaced register address with name)
-Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Signed-off-by: Colin Xu <colin.xu@intel.com>
-Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20200601030638.16002-1-colin.xu@intel.com
+Cc: stable@vger.kernel.org # v5.4+
+Suggested-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
+[ rzhang: fix typo in changelog ]
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Link: https://lore.kernel.org/r/20200615223957.183153-1-alex.hung@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gvt/handlers.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/thermal/intel/int340x_thermal/int3403_thermal.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/gvt/handlers.c
-+++ b/drivers/gpu/drm/i915/gvt/handlers.c
-@@ -3103,8 +3103,8 @@ static int init_skl_mmio_info(struct int
- 	MMIO_DFH(GEN9_WM_CHICKEN3, D_SKL_PLUS, F_MODE_MASK | F_CMD_ACCESS,
- 		 NULL, NULL);
- 
--	MMIO_D(GAMT_CHKN_BIT_REG, D_KBL);
--	MMIO_D(GEN9_CTX_PREEMPT_REG, D_KBL | D_SKL);
-+	MMIO_D(GAMT_CHKN_BIT_REG, D_KBL | D_CFL);
-+	MMIO_D(GEN9_CTX_PREEMPT_REG, D_SKL_PLUS);
- 
- 	return 0;
+--- a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
++++ b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+@@ -74,7 +74,7 @@ static void int3403_notify(acpi_handle h
+ 						   THERMAL_TRIP_CHANGED);
+ 		break;
+ 	default:
+-		dev_err(&priv->pdev->dev, "Unsupported event [0x%x]\n", event);
++		dev_dbg(&priv->pdev->dev, "Unsupported event [0x%x]\n", event);
+ 		break;
+ 	}
  }
 
 
