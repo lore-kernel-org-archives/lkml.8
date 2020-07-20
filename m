@@ -2,103 +2,117 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56FDF207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:38:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hwmyKa+w"
+	by mail.kernel.org (Postfix) with ESMTP id 5E71A2065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731003AbgGTTh6 (ORCPT
+        id S1730869AbgGTTpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:37:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgGTTh6 (ORCPT
+        Mon, 20 Jul 2020 15:45:32 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42420 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgGTTpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:37:58 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD306C061794;
-        Mon, 20 Jul 2020 12:37:57 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id i80so10353198lfi.13;
-        Mon, 20 Jul 2020 12:37:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sgXLRBaaylaS2C4gN9oP1CacUi+Zgix4Q9h2XdlkjFM=;
-        b=hwmyKa+wbbaz8q4bfXfO3z7rvx/ZhG7p5eG3b3XDUqtluypwYw/9hoRDYN179aPigz
-         zbXMm2BjYvvkeOcxBmxTg2wyVPd9LJSNO98x53xAU4Z0lG48Ajp6+lh4WQKmmJMBNbZG
-         y9l3qh9B5Eva4UN5r7vkDHx/bm7dvAMVRu/BsHrzbsgvCKftYhwI4+XeW78YuhG+fRNn
-         cWuF0d/ouBREyynZj68gZhQpDB5Ya5f/76uLcDEvQ4tcUiVNZ9JrBqqV1lGSixCOXSne
-         OkOLZMiGybwrlS8J0nzWyVofXaJBbMk/W/rz84oGfK+sNOZkFdMQDzB2vclCoaXFQhJk
-         RWqA==
+        Mon, 20 Jul 2020 15:45:32 -0400
+Received: by mail-qt1-f193.google.com with SMTP id e12so14196575qtr.9;
+        Mon, 20 Jul 2020 12:45:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sgXLRBaaylaS2C4gN9oP1CacUi+Zgix4Q9h2XdlkjFM=;
-        b=DgARxFC+5EDmZUnE5XtqnJYY3shlSe0yjwlYSDSHFDYk7FiJIeAwgO3hps9yJd5zID
-         nQOPWJAT1NB4iYvZoIFgyt8IACMNAjDSLZ+9hRtkZWhZqvHmbkS6mer/pM6PhAt8f21+
-         FZ17RDW6ihofiqmt13YPUH1WX7u03IM4ow6lCnoTG/wGqJslgenlviXCO6HZD7vCXJUh
-         4lSOfEQKsnXBN1n466cG6/ZJWr/FHqeZpLcTF0CIqJ9Uiv23o8ktIYj8GVSOwJhaJY/s
-         54zX/Ofpqi8pLjaarOfYxBvPVo3Szz6u5gjTR0AbsxTqZkC/oxfZkYyf7zvQQBTL3ZN9
-         tTyw==
-X-Gm-Message-State: AOAM532BxZz/5+XX/8kGFB9mVLpca3TkYcA2D5Q4iaafXoCy/0BMpuXu
-        h2a60H1s4YXAEaXfXhHDqn/Z/6slx5JHr91rWWc=
-X-Google-Smtp-Source: ABdhPJy1Jig5sDfVDdOSRyjt4VvlHQ9WhRxupA+W8Un21a1t7FbzrPXKASt/E5BtvMdxrDNU8FO+v8/2XARywqL/t1M=
-X-Received: by 2002:a05:6512:3610:: with SMTP id f16mr4307309lfs.8.1595273876184;
- Mon, 20 Jul 2020 12:37:56 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bavtckn1WyzFQoRWH68yz7FBW4WoeSboORTTPjJ1+DI=;
+        b=n2ybXWOiFPwgj3AisokN1EopE4YvqEF8A6EXrGOqB2gFtcUR9gS2FvrkW9eC4ldvwE
+         gS04cLpDFTQLS2Q5pia+5XDxTIj1Ncgwqw7xq2IqSTbeyvRSOuxw/hHquKlEK7yuqBzm
+         DbQ8f9KnyGy8maxlebTmTCC2zGWWbXqea3vOEm0z8aXYL6xGMlVq8/9bShra6Vs8asCV
+         Tc86NJFAYCn9yZjnEu7M503IqdsJ5M5Luguh58R4DdQfNOYSFwVCZRj6HhNWAP1M96YF
+         v898ocKUIeqz4frhO8+SnJW8u827/9+tiWhOknalmWAOO8nuwVeH/SlhGSQZgDrF/N6R
+         hchw==
+X-Gm-Message-State: AOAM531u5kzloC2WiFbhtPepRfkHKpcj4Hjpo2RwzUoJ3rYZtUa896+K
+        VlwYWyiE9qBbwQ8iq3PAVa5MoTAVYHI=
+X-Google-Smtp-Source: ABdhPJz143ZPTCs4XxM45mqUSP48zVY7+Yi4FbP1Mr8IF6Ua9Ax2JGltg+WO+dkM56JH1ieXgDdT6A==
+X-Received: by 2002:ac8:4c86:: with SMTP id j6mr400631qtv.56.1595274330691;
+        Mon, 20 Jul 2020 12:45:30 -0700 (PDT)
+Received: from [192.168.1.113] ([179.159.57.76])
+        by smtp.gmail.com with ESMTPSA id u58sm22200713qth.77.2020.07.20.12.45.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2020 12:45:30 -0700 (PDT)
+Subject: Re: [PATCH] media: v4l2-dev/ioctl: Fix document for VIDIOC_QUERYCAP
+To:     Jian-Jia Su <jjsu@chromium.org>, linux-media@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Helen Koike <helen.koike@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel@vger.kernel.org
+References: <20200720092933.2089288-1-jjsu@chromium.org>
+From:   Helen Koike <helen@koikeco.de>
+Message-ID: <91e92ed1-5364-884d-79ab-20d64594deb2@koikeco.de>
+Date:   Mon, 20 Jul 2020 16:45:26 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200720194225.17de9962@canb.auug.org.au> <a97220b2-9864-eb49-6e27-0ec5b7e5b977@infradead.org>
- <20200721044902.24ebe681@canb.auug.org.au>
-In-Reply-To: <20200721044902.24ebe681@canb.auug.org.au>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 20 Jul 2020 12:37:44 -0700
-Message-ID: <CAADnVQJNU+tm3WT+JuPoY8TTHWXxQ8OJ0sGCLQGq2Avf+Ri7Yw@mail.gmail.com>
-Subject: Re: linux-next: Tree for Jul 20 (kernel/bpf/net_namespace)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jakub Sitnicki <jakub@cloudflare.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200720092933.2089288-1-jjsu@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 11:49 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> On Mon, 20 Jul 2020 08:51:54 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
-> >
-> > on i386 or x86_64:
-> >
-> > # CONFIG_INET is not set
-> > # CONFIG_NET_NS is not set
-> >
-> > ld: kernel/bpf/net_namespace.o: in function `bpf_netns_link_release':
-> > net_namespace.c:(.text+0x32c): undefined reference to `bpf_sk_lookup_enabled'
-> > ld: kernel/bpf/net_namespace.o: in function `netns_bpf_link_create':
-> > net_namespace.c:(.text+0x8b7): undefined reference to `bpf_sk_lookup_enabled'
-> > ld: kernel/bpf/net_namespace.o: in function `netns_bpf_pernet_pre_exit':
-> > net_namespace.c:(.ref.text+0xa3): undefined reference to `bpf_sk_lookup_enabled'
->
-> Caused by commit
->
->   1559b4aa1db4 ("inet: Run SK_LOOKUP BPF program on socket lookup")
->
-> from the bpf-next tree.
+Hi,
 
-Jakub, please take a look.
+On 7/20/20 6:29 AM, Jian-Jia Su wrote:
+> V4L2_CAP_VIDEO_M2M is documented as 0x00004000
+> V4L2_CAP_VIDEO_M2M_MPLANE is documented as 0x00008000
+> This is different from the definition in include/uapi/linux/videodev2.h
+> 
+
+Nice catch, they are swapped in the docs indeed.
+
+From videodev2.h:
+
+/* Is a video mem-to-mem device that supports multiplanar formats */
+#define V4L2_CAP_VIDEO_M2M_MPLANE	0x00004000
+/* Is a video mem-to-mem device */
+#define V4L2_CAP_VIDEO_M2M		0x00008000
+
+> Signed-off-by: Jian-Jia Su <jjsu@chromium.org>
+
+Reviewed-by: Helen Koike <helen.koike@collabora.com>
+
+Regards,
+Helen
+
+> ---
+>  Documentation/userspace-api/media/v4l/vidioc-querycap.rst | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/userspace-api/media/v4l/vidioc-querycap.rst b/Documentation/userspace-api/media/v4l/vidioc-querycap.rst
+> index 666ac4d420519..90347367ef06a 100644
+> --- a/Documentation/userspace-api/media/v4l/vidioc-querycap.rst
+> +++ b/Documentation/userspace-api/media/v4l/vidioc-querycap.rst
+> @@ -168,11 +168,11 @@ specification the ioctl returns an ``EINVAL`` error code.
+>        - The device supports the :ref:`multi-planar API <planar-apis>`
+>  	through the :ref:`Video Output <output>` interface.
+>      * - ``V4L2_CAP_VIDEO_M2M``
+> -      - 0x00004000
+> +      - 0x00008000
+>        - The device supports the single-planar API through the Video
+>  	Memory-To-Memory interface.
+>      * - ``V4L2_CAP_VIDEO_M2M_MPLANE``
+> -      - 0x00008000
+> +      - 0x00004000
+>        - The device supports the :ref:`multi-planar API <planar-apis>`
+>  	through the Video Memory-To-Memory interface.
+>      * - ``V4L2_CAP_VIDEO_OVERLAY``
+> 
