@@ -2,88 +2,110 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F049C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AE2C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5492C21702
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:23:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595287396;
-	bh=CmjiBtNa6KB4IjS9/V99TRrvKhtZXBHGyuXzHFKf9oI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kiZQLg/7yhZ59SDrZu8sTNjL8BPtX6bbvIO0gpyBIXp8K18ydd4+pc7ySsC2rnGXl
-	 Kj0o5SyFRqMJmYzcNZepts3/tCO5D1w+xHbJreoZASAsWK/wSIolmxL8QGPc3KKrjI
-	 qI6izkLxzOjw5bpGuuGfx8ss4eDzN8OxZ7O8SqEw=
+	by mail.kernel.org (Postfix) with ESMTP id 25F8F21702
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HJ/gl9Wp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgGTXXP (ORCPT
+        id S1726845AbgGTX0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:23:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726021AbgGTXXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 19:23:15 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 497C32080D;
-        Mon, 20 Jul 2020 23:23:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595287394;
-        bh=CmjiBtNa6KB4IjS9/V99TRrvKhtZXBHGyuXzHFKf9oI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jzXMKwtfn5KFI0f04Uvy84IaDuRB8NTrky6Xp9lzKW3GFzqjGlpfUF0RVQRmSEpsD
-         d5XeamDDBR0ktCVRI9C11mNj7NVPRE8sOHpSnsydSzAHnoGp+xmt7oEHXw/RG+PXyq
-         0SLcONObYH9PwSUwuqyBpGuAtUlwuDiEpghdysNA=
-Date:   Mon, 20 Jul 2020 16:23:13 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     js1304@gmail.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] mm/page_alloc: fix non cma alloc context
-Message-Id: <20200720162313.1381e1ec82daa6a92ae4cda7@linux-foundation.org>
-In-Reply-To: <1595220978-9890-1-git-send-email-iamjoonsoo.kim@lge.com>
-References: <1595220978-9890-1-git-send-email-iamjoonsoo.kim@lge.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 20 Jul 2020 19:26:34 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57030 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgGTX0d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 19:26:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06KNQQUp126401;
+        Mon, 20 Jul 2020 18:26:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595287586;
+        bh=wF6WhftYpfnYBX0J8FroMAAxX2oGr5JH/Sy0gngDAQE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HJ/gl9WpBPKLP2N3e10x4sgs4qC19hCsqP5TkyS1yPl4i1u+BCf50ROad0S0312O/
+         JZ6aUKG+GeUx+tb+vaBoBG2heRPSQG6TkNlnq8Fb3DLxZHFbDNFGWNXtvBKJUeaOka
+         E3GJOpmAo2Qu+nqNaqCF8m4O2/6WFGN/gsNvUzOc=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06KNQQ6c046734
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 Jul 2020 18:26:26 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
+ Jul 2020 18:26:26 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 20 Jul 2020 18:26:26 -0500
+Received: from [10.250.34.248] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KNQQZX006261;
+        Mon, 20 Jul 2020 18:26:26 -0500
+Subject: Re: [PATCH v4 3/6] dt-bindings: remoteproc: Add common TI SCI rproc
+ bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
+References: <20200717234800.9423-1-s-anna@ti.com>
+ <20200717234800.9423-4-s-anna@ti.com> <20200720221718.GA2899451@bogus>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <4968835e-2ba5-dcd8-93b9-c3e33aabb0a9@ti.com>
+Date:   Mon, 20 Jul 2020 18:26:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200720221718.GA2899451@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 13:56:15 +0900 js1304@gmail.com wrote:
+On 7/20/20 5:17 PM, Rob Herring wrote:
+> On Fri, 17 Jul 2020 18:47:57 -0500, Suman Anna wrote:
+>> Add a bindings document that lists the common TI SCI properties
+>> used by the K3 R5F and DSP remoteproc devices.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>> v4: Addressed both of Rob's review comments on ti,sci-proc-ids property
+>> v3: https://patchwork.kernel.org/patch/11602317/
+>>
+>>   .../bindings/remoteproc/ti,k3-sci-proc.yaml   | 48 +++++++++++++++++++
+>>   1 file changed, 48 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+>>
+> 
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
 
-> Currently, preventing cma area in page allocation is implemented by using
-> current_gfp_context(). However, there are two problems of this
-> implementation.
-> 
-> First, this doesn't work for allocation fastpath. In the fastpath,
-> original gfp_mask is used since current_gfp_context() is introduced in
-> order to control reclaim and it is on slowpath.
-> Second, clearing __GFP_MOVABLE has a side effect to exclude the memory
-> on the ZONE_MOVABLE for allocation target.
-> 
-> To fix these problems, this patch changes the implementation to exclude
-> cma area in page allocation. Main point of this change is using the
-> alloc_flags. alloc_flags is mainly used to control allocation so it fits
-> for excluding cma area in allocation.
-> 
-> Fixes: d7fefcc8de91 (mm/cma: add PF flag to force non cma alloc)
-> Cc: <stable@vger.kernel.org>
+Rob,
 
-This patch is against linux-next (or -mm) and has a lot of issues
-applying to mainline.  If we indeed wish to backport it to -stable, it
-should be against mainline, please.
+You seem to have added your Reviewed-by tag by mistake on this 
+particular patch [1], that's why I actually dropped it.
+
+I do use pwclient, so the tags do get picked up automatically for my 
+newer versions.
+
+regards
+Suman
+
+[1] https://patchwork.kernel.org/comment/23484127/
