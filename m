@@ -2,51 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 878ACC433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA887C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6611E22D05
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A15420684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260860;
-	bh=Y5bg9Y4GnzcKG6Ap7wWceKNr1KDlKIQK5OveZjreIZo=;
+	s=default; t=1595260863;
+	bh=JNClSQQYpxj38ahF4M0o2Rn4B8uhr5eTzyuyhfw4B98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W7pFz8GZbtkto3RY1sEt4WlLTtcB2rFCrMP8lE6WCOH5w2DWwgSz0LmMnHz9mOJMx
-	 SIYZHy0te+XpNMIVPkiyafPKRjOfl1XkvSYpP2JI9nlrRzROK7t57enRqAHkMr53vr
-	 8Uk59FF6M0+q14f2i6IJsdNTZOFSR7mUyeWuRuaU=
+	b=dm9QHIiC69d4kdLlu1ejp79Pg7oVSrDBDRvYC/0L1eDASNJc2IO+xukd7invaGFP7
+	 Gppke/Wj2d5KaZ1ohw4QG0rAbHAGF52MP4ZXodo1vLKGKv5ZeuVR2WNYdHZNqpEn89
+	 qVaftmQzxx5AXOpkqIF7n2vwrgwa6zzsjTBiWBlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732465AbgGTQA6 (ORCPT
+        id S1732470AbgGTQBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:00:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34140 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:01:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732455AbgGTQAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:00:55 -0400
+        id S1731999AbgGTQA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:00:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C576120773;
-        Mon, 20 Jul 2020 16:00:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73C6622CF7;
+        Mon, 20 Jul 2020 16:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260855;
-        bh=Y5bg9Y4GnzcKG6Ap7wWceKNr1KDlKIQK5OveZjreIZo=;
+        s=default; t=1595260858;
+        bh=JNClSQQYpxj38ahF4M0o2Rn4B8uhr5eTzyuyhfw4B98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mGUd/SII92LL81yL3Q7jw9pFzd4MI+TKKSivEu92YxMGyyeFdPAl85C+TgIZcGyxT
-         q2oSvzMa4KhB6PpspAkZIm3tb759/c7zYrw/XQwMuxDhKHDcNGjp1sfAUNSkDKMaXU
-         WCefGbv7Yz6TU9mINDhXLwFbKcQ9Gl4PX7vAprqU=
+        b=fV0XoJYhKPldlL7gZUe/O4bM1dAZg8AWUS5K6h3PX9aJ/7nA9UgZOWiwUHs80L2Bq
+         Hjrz+OJ58GAN1aVARZtDKeCYwR5xUMKGAN3vRRZ8MU7qR4UefSohXtqTm/c3G0f13K
+         yUAr9DHR2gNvMc4w2k72Owpp1+8q4kcX1b0t4zwE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH 5.4 120/215] arm: dts: mt7623: add phy-mode property for gmac2
-Date:   Mon, 20 Jul 2020 17:36:42 +0200
-Message-Id: <20200720152825.906964168@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 5.4 121/215] soc: qcom: socinfo: add missing soc_id sysfs entry
+Date:   Mon, 20 Jul 2020 17:36:43 +0200
+Message-Id: <20200720152825.957684716@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,31 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-commit ff5b89c2858f28006f9f9c0a88c55a679488192c upstream.
+commit 27a344139c186889d742764d3c2a62b395949cef upstream.
 
-Add phy-mode property required by phylink on gmac2
+Looks like SoC ID is not exported to sysfs for some reason.
+This patch adds it!
 
-Fixes: b8fc9f30821e ("net: ethernet: mediatek: Add basic PHYLINK support")
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Link: https://lore.kernel.org/r/70e3eff31ecd500ed4862d9de28325a4dbd15105.1583648927.git.sean.wang@mediatek.com
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+This is mostly used by userspace libraries like Snapdragon
+Neural Processing Engine (SNPE) SDK for checking supported SoC info.
+
+Fixes: efb448d0a3fc ("soc: qcom: Add socinfo driver")
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20200319121418.5180-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/mt7623n-rfb-emmc.dts |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/qcom/socinfo.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-+++ b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-@@ -138,6 +138,7 @@
- 	mac@1 {
- 		compatible = "mediatek,eth-mac";
- 		reg = <1>;
-+		phy-mode = "rgmii";
- 		phy-handle = <&phy5>;
- 	};
- 
+--- a/drivers/soc/qcom/socinfo.c
++++ b/drivers/soc/qcom/socinfo.c
+@@ -428,6 +428,8 @@ static int qcom_socinfo_probe(struct pla
+ 	qs->attr.family = "Snapdragon";
+ 	qs->attr.machine = socinfo_machine(&pdev->dev,
+ 					   le32_to_cpu(info->id));
++	qs->attr.soc_id = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%u",
++					 le32_to_cpu(info->id));
+ 	qs->attr.revision = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%u.%u",
+ 					   SOCINFO_MAJOR(le32_to_cpu(info->ver)),
+ 					   SOCINFO_MINOR(le32_to_cpu(info->ver)));
 
 
