@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A377C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1B1C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49D4C20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601FF2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261859;
-	bh=2TS1Ea2a7AafsiS9gEeKEBmZzM6gZPlCqXNpl+2It98=;
+	s=default; t=1595261863;
+	bh=1vkmbu4AdmaI6B55+oei26Je9Lf0eQSbr6gGBI1jgV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DmkvBy3e/pv7Qh06fs6YcTENgVSgJiSTXoj8gzrvvWFxTDFBLY6pBSFrCcHPpnfmE
-	 EUBTN/+OWuKFVWKA389zg2MegvK6G/Pm6gS5HFyA1QYHGMxBEFQReHAoCADKWzLzQ6
-	 rFfGYS7wFPwHwWcMYHQyGftmisunyqlRcMG2osfA=
+	b=nmgSiFetq+JkIyeOk99AfuLPR95VKW7D+qRBzIltlaS+ji+ZnADUtHYdlPw7E4td5
+	 blWHb87zHK7DYifyOmOTg75rMz5JxLjr/umuIOm7tHYB7hyrR7wDnRtJduRxvaPAgd
+	 e7OAiwy2+bUVxGrKfj9NA15Tmo0ESqxss2iygmVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388277AbgGTQRi (ORCPT
+        id S2388008AbgGTQPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:17:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56506 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388426AbgGTQPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:15:33 -0400
+        id S2388376AbgGTQPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:15:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9973F20656;
-        Mon, 20 Jul 2020 16:15:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64032206E9;
+        Mon, 20 Jul 2020 16:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261733;
-        bh=2TS1Ea2a7AafsiS9gEeKEBmZzM6gZPlCqXNpl+2It98=;
+        s=default; t=1595261710;
+        bh=1vkmbu4AdmaI6B55+oei26Je9Lf0eQSbr6gGBI1jgV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vdL2bz012duSK3iFiwxFjffW8nj5wxgpx48ywzZdn/0wyJuWOf4OXSUXCE8rkcehH
-         Bff1EuAbkuIA2N0ACpqiiuSMo+jFz3xrUwYeT6A5dd4qysyH00yq9/4Xp/AmmAnsvz
-         YRsbHb2pu3EcNyUf+aS2fikNo2fR3cAHI//+YRxI=
+        b=OUuA0IYQ3Z6aDxxKNFyMuCuXrdKe/vbFa2SxEOfQqxYZ0+zP7Lms/7UFLc+Mcw7Bz
+         q6xdHv2Tms62/BPeyE9UCtETu0QmXhp9Pwig30QxesU8UG9oYuBlTJX4Pn8mg87+eG
+         CUq+A6JB1xD6mrckTRG0/FQqwP1DS72j3YbFwb50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Charmaine Lee <charmainel@vmware.com>,
-        Roland Scheidegger <sroland@vmware.com>
-Subject: [PATCH 5.7 223/244] drm/vmwgfx: fix update of display surface when resolution changes
-Date:   Mon, 20 Jul 2020 17:38:14 +0200
-Message-Id: <20200720152836.458938189@linuxfoundation.org>
+        stable@vger.kernel.org, Dinh Nguyen <dinh.nguyen@intel.com>
+Subject: [PATCH 5.7 215/244] arm64: dts: stratix10: increase QSPI reg address in nand dts file
+Date:   Mon, 20 Jul 2020 17:38:06 +0200
+Message-Id: <20200720152836.076914730@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,49 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roland Scheidegger <sroland@vmware.com>
+From: Dinh Nguyen <dinh.nguyen@intel.com>
 
-commit 1f054fd26e29784d373c3d29c348ee48f1c41fb2 upstream.
+commit 3bf9b8ffc8980c1090bdd3a5570cf42420620838 upstream.
 
-The assignment of metadata overwrote the new display resolution values,
-hence we'd miss the size actually changed and wouldn't redefine the
-surface. This would then lead to command buffer error when trying to
-update the screen target (due to the size mismatch), and result in a
-VM with black screen.
+Match the QSPI reg address in the socfpga_stratix10_socdk.dts file.
 
-Fixes: 504901dbb0b5 ("drm/vmwgfx: Refactor surface_define to use vmw_surface_metadata")
-Reviewed-by: Charmaine Lee <charmainel@vmware.com>
-Signed-off-by: Roland Scheidegger <sroland@vmware.com>
-Cc: stable@vger.kernel.org
+Fixes: 80f132d73709 ("arm64: dts: increase the QSPI reg address for Stratix10 and Agilex")
+Cc: linux-stable <stable@vger.kernel.org> # >= v5.6
+Signed-off-by: Dinh Nguyen <dinh.nguyen@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_stdu.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/altera/socfpga_stratix10_socdk_nand.dts |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_stdu.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_stdu.c
-@@ -1069,10 +1069,6 @@ vmw_stdu_primary_plane_prepare_fb(struct
- 	if (new_content_type != SAME_AS_DISPLAY) {
- 		struct vmw_surface_metadata metadata = {0};
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk_nand.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk_nand.dts
+@@ -212,12 +212,12 @@
  
--		metadata.base_size.width = hdisplay;
--		metadata.base_size.height = vdisplay;
--		metadata.base_size.depth = 1;
--
- 		/*
- 		 * If content buffer is a buffer object, then we have to
- 		 * construct surface info
-@@ -1104,6 +1100,10 @@ vmw_stdu_primary_plane_prepare_fb(struct
- 			metadata = new_vfbs->surface->metadata;
- 		}
+ 			qspi_boot: partition@0 {
+ 				label = "Boot and fpga data";
+-				reg = <0x0 0x034B0000>;
++				reg = <0x0 0x03FE0000>;
+ 			};
  
-+		metadata.base_size.width = hdisplay;
-+		metadata.base_size.height = vdisplay;
-+		metadata.base_size.depth = 1;
-+
- 		if (vps->surf) {
- 			struct drm_vmw_size cur_base_size =
- 				vps->surf->metadata.base_size;
+-			qspi_rootfs: partition@4000000 {
++			qspi_rootfs: partition@3FE0000 {
+ 				label = "Root Filesystem - JFFS2";
+-				reg = <0x034B0000 0x0EB50000>;
++				reg = <0x03FE0000 0x0C020000>;
+ 			};
+ 		};
+ 	};
 
 
