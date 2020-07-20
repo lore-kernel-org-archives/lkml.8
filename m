@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD138C433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F88C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8459720734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 648F9206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261706;
-	bh=QbPG9rSXRiATsoXetHNIz+YI8PZk1SZ+694pRJ3V0wA=;
+	s=default; t=1595261708;
+	bh=Umw0qQZ9A4r2/DbuUka5YKnWlE1/51GOA2v+b7VIqYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QQG6L0CR/zyDGiLQlF7kC3Cu49JASXtGHX++tGd/xezkEn+ks5MhGLVwBrebB9lF0
-	 chcu9/r2h8JzdzNjyh3DU6u2BRW3Ft8NMjcqyXnmipRVLbvu0AehKlIsbVaEkb8I10
-	 alUr22+19PoBrhXluzGDgJUZSAxDzg82JH02IO0g=
+	b=Rwgsf9aWMQy8RAI8KssgMc/XN/0D/0d1I3pNgqFysyYHZSaH3JlLcNYUTa1L35YUV
+	 soN9vy+pLn73SKCq63X2YBoZk05ry8NM9oxN2ei+JjE6ZW/eStPJPtk2JSL6ICqTJ4
+	 CKoRXvK9QZcOsggMXYs943D7LO2pNZbaOwEHeO5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388362AbgGTQPF (ORCPT
+        id S2388370AbgGTQPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:15:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55612 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:15:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387612AbgGTQO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:14:57 -0400
+        id S2388353AbgGTQPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:15:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7BE42064B;
-        Mon, 20 Jul 2020 16:14:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47AF822D2C;
+        Mon, 20 Jul 2020 16:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261697;
-        bh=QbPG9rSXRiATsoXetHNIz+YI8PZk1SZ+694pRJ3V0wA=;
+        s=default; t=1595261702;
+        bh=Umw0qQZ9A4r2/DbuUka5YKnWlE1/51GOA2v+b7VIqYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aJ6XTzzVNn02QujVEsA2QWHWJ7Yr8yjDnhJn3En094gZcSygfC+MOqyu2MsAiu072
-         QpYHrm4n8bZ+ZYXBgKjqQV8yLifhPgXJqZN3FX7cUYc9iAjjf5fz5HcAv1jhNPs6/t
-         5a1cg1+rDZUKgGU5sMVCnCYGfXJUqRAYWouztG6g=
+        b=bOcDOvNAZi+NyCPo4xLkUnvYYG8gVq9czAzK9zvlrc3EBn8fjwdHfM84GJHduovyT
+         gM1J8yjNOWUbfaHwHbr5E9uWoEbrKdsz2InFks6+wFWATvNky4/Mjxj9f2xQeBdhp4
+         /XdBFAG2f2/Y/WXPSZSsO3P46hScQzReCATj7TjY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        youngjun <her0gyugyu@gmail.com>,
         Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.7 179/244] ovl: inode reference leak in ovl_is_inuse true case.
-Date:   Mon, 20 Jul 2020 17:37:30 +0200
-Message-Id: <20200720152834.354881741@linuxfoundation.org>
+Subject: [PATCH 5.7 181/244] ovl: fix unneeded call to ovl_change_flags()
+Date:   Mon, 20 Jul 2020 17:37:32 +0200
+Message-Id: <20200720152834.455914160@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,50 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: youngjun <her0gyugyu@gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit 24f14009b8f1754ec2ae4c168940c01259b0f88a upstream.
+commit 81a33c1ee941c3bb9ffc6bac8f676be13351344e upstream.
 
-When "ovl_is_inuse" true case, trap inode reference not put.  plus adding
-the comment explaining sequence of ovl_is_inuse after ovl_setup_trap.
+The check if user has changed the overlay file was wrong, causing unneeded
+call to ovl_change_flags() including taking f_lock on every file access.
 
-Fixes: 0be0bfd2de9d ("ovl: fix regression caused by overlapping layers detection")
+Fixes: d989903058a8 ("ovl: do not generate duplicate fsnotify events for "fake" path")
 Cc: <stable@vger.kernel.org> # v4.19+
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: youngjun <her0gyugyu@gmail.com>
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/overlayfs/super.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ fs/overlayfs/file.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/fs/overlayfs/super.c
-+++ b/fs/overlayfs/super.c
-@@ -1450,14 +1450,23 @@ static int ovl_get_layers(struct super_b
- 		if (err < 0)
- 			goto out;
+--- a/fs/overlayfs/file.c
++++ b/fs/overlayfs/file.c
+@@ -32,13 +32,16 @@ static char ovl_whatisit(struct inode *i
+ 		return 'm';
+ }
  
-+		/*
-+		 * Check if lower root conflicts with this overlay layers before
-+		 * checking if it is in-use as upperdir/workdir of "another"
-+		 * mount, because we do not bother to check in ovl_is_inuse() if
-+		 * the upperdir/workdir is in fact in-use by our
-+		 * upperdir/workdir.
-+		 */
- 		err = ovl_setup_trap(sb, stack[i].dentry, &trap, "lowerdir");
- 		if (err)
- 			goto out;
++/* No atime modificaton nor notify on underlying */
++#define OVL_OPEN_FLAGS (O_NOATIME | FMODE_NONOTIFY)
++
+ static struct file *ovl_open_realfile(const struct file *file,
+ 				      struct inode *realinode)
+ {
+ 	struct inode *inode = file_inode(file);
+ 	struct file *realfile;
+ 	const struct cred *old_cred;
+-	int flags = file->f_flags | O_NOATIME | FMODE_NONOTIFY;
++	int flags = file->f_flags | OVL_OPEN_FLAGS;
  
- 		if (ovl_is_inuse(stack[i].dentry)) {
- 			err = ovl_report_in_use(ofs, "lowerdir");
--			if (err)
-+			if (err) {
-+				iput(trap);
- 				goto out;
-+			}
- 		}
+ 	old_cred = ovl_override_creds(inode->i_sb);
+ 	realfile = open_with_fake_path(&file->f_path, flags, realinode,
+@@ -59,8 +62,7 @@ static int ovl_change_flags(struct file
+ 	struct inode *inode = file_inode(file);
+ 	int err;
  
- 		mnt = clone_private_mount(&stack[i]);
+-	/* No atime modificaton on underlying */
+-	flags |= O_NOATIME | FMODE_NONOTIFY;
++	flags |= OVL_OPEN_FLAGS;
+ 
+ 	/* If some flag changed that cannot be changed then something's amiss */
+ 	if (WARN_ON((file->f_flags ^ flags) & ~OVL_SETFL_MASK))
+@@ -113,7 +115,7 @@ static int ovl_real_fdget_meta(const str
+ 	}
+ 
+ 	/* Did the flags change since open? */
+-	if (unlikely((file->f_flags ^ real->file->f_flags) & ~O_NOATIME))
++	if (unlikely((file->f_flags ^ real->file->f_flags) & ~OVL_OPEN_FLAGS))
+ 		return ovl_change_flags(real->file, file->f_flags);
+ 
+ 	return 0;
 
 
