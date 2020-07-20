@@ -2,125 +2,205 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F579C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AD1C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 597612073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5FD2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:57:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="LMkWN3sM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OySoCssi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgGTU5A (ORCPT
+        id S1726815AbgGTU5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 16:57:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgGTU47 (ORCPT
+        Mon, 20 Jul 2020 16:57:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37032 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726016AbgGTU5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 16:56:59 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81712C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:56:59 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id k1so470651pjt.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:56:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yJ/tpvydDMz3twTYDJaAWaLUOCGbbQA7F9t0js/9ubo=;
-        b=LMkWN3sMUU3w+Zpa3p4GKsHoJNFENcMaDdvt9aU9XWldoN3wW8WnX1d18uP7IkxXf0
-         8qlyHT8vbm3QGQdwM8TfrYm2M22oH40YkwbbFU0b6Pt/RoLRaPoWrVvVFlo86V5o8lnM
-         B9geSxKFKZ12Yf3/7CadewCiEdVLiGJ7pSvGCY+1QuXpD+Gpt0l+37s0tDGsUE1BTIdJ
-         QejJBGbHYfWXM4f+ewmbGRtT6Z6sYwz5OfTGSfrZvPSc2oL11iiWhynXBbOgdd4Bnnm+
-         AxVMqY54R1kaS6HelhqnNwbfRUZ9d88V/X5h7/LLYjtfcMORcZi/+6kqziOpLF6vLrAB
-         mY9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yJ/tpvydDMz3twTYDJaAWaLUOCGbbQA7F9t0js/9ubo=;
-        b=tMH8R7FVK601trneYxk7k/Oar+OKDJ6WrUN7O9B7ahueQ1ddTEqvd8N0sKqR9nWkou
-         I5p/hc5Na+GHZcoJxDuGQksCleL2YLcmlPYRuvRjn7aC1wYoXzXrqkZs+99AHRu3SOad
-         4Rs2fcn2F8O4jqAGIQ/ic5WnAqxlUvZIbpgXm8+XqBGEayv4L7Qwy20nEg69PyS9Glf8
-         xi3Wd7/YQzty3oZ7Iu6Qi1kEl+YSbHPGqtqTmiMyM5uYtFWlg4SK5MUp+Lv6lo7909eV
-         UO/LX8vcS6c0gqiMMaT4b90HHmE86YkreNTOKuEezaQsbdNmb7lN4L4VamYa19X2/uuv
-         m0ZA==
-X-Gm-Message-State: AOAM532pVcto5kK1z6Wbf0ZK+ZRspFCEOEGWSw/GxxoKYSCnkvuYVZRV
-        6ZVbkUotBwdnjEP2nMmh+/zH2A==
-X-Google-Smtp-Source: ABdhPJwT+gAR9vIZr/AMDE2WT/mxAc7CINRzqUbjbWq7crAyMx4DmBGZkdkZ/TvJvmiFIEYFa/OJqg==
-X-Received: by 2002:a17:90a:8d12:: with SMTP id c18mr1155557pjo.222.1595278618823;
-        Mon, 20 Jul 2020 13:56:58 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id a30sm18161011pfr.87.2020.07.20.13.56.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 13:56:58 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 13:56:50 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     "Sriram Krishnan (srirakr2)" <srirakr2@cisco.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "Malcolm Bumgardner (mbumgard)" <mbumgard@cisco.com>
-Subject: Re: [PATCH v2] AF_PACKET doesnt strip VLAN information
-Message-ID: <20200720135650.1939665b@hermes.lan>
-In-Reply-To: <CAF=yD-+gCkPVkXwcH6KiKYGV77TvpZiDo=3YyXeuGFk=TR2dcw@mail.gmail.com>
-References: <20200718091732.8761-1-srirakr2@cisco.com>
-        <CA+FuTSdfvctFD3AVMHzQV9efQERcKVE1TcYVD_T84eSgq9x4OA@mail.gmail.com>
-        <CY4PR1101MB21013DCD55B754E29AF4A838907B0@CY4PR1101MB2101.namprd11.prod.outlook.com>
-        <CAF=yD-+gCkPVkXwcH6KiKYGV77TvpZiDo=3YyXeuGFk=TR2dcw@mail.gmail.com>
+        Mon, 20 Jul 2020 16:57:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595278641;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=epckH3RTrZi5cYmGZDu/11K+cHm6x4vqJk8JLUqbk84=;
+        b=OySoCssiNUJN2lokcX4uw+3ffBDRlYscWutpVvIIuFfY3Ft75kvY6dyi7WJh96Gg4AmYK5
+        Dvp78Kwy8UD2MvR8AhEXPydZk0RUWU/As/cpPCDv1Pr0Kx31l/bqDVx3Gpa1b4Dbc9Puhv
+        gGvzd9eThM3jlwSKwlI5/FBRoS2UZgs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-32-09bg8cUrNASZmwx-EKBX9g-1; Mon, 20 Jul 2020 16:57:19 -0400
+X-MC-Unique: 09bg8cUrNASZmwx-EKBX9g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB984107ACCA;
+        Mon, 20 Jul 2020 20:57:17 +0000 (UTC)
+Received: from Ruby.redhat.com (ovpn-120-196.rdu2.redhat.com [10.10.120.196])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1109076216;
+        Mon, 20 Jul 2020 20:57:16 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     nouveau@lists.freedesktop.org
+Cc:     kernel test robot <lkp@intel.com>, Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Airlie <airlied@gmail.com>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA
+        GEFORCE/QUADRO GPUS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/nouveau/kms/nv50-: Fix CRC-related compile errors with debugfs disabled
+Date:   Mon, 20 Jul 2020 16:56:56 -0400
+Message-Id: <20200720205659.296879-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 09:52:27 -0400
-Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
+Looks like I made the mistake of forgetting to check whether or not this
+would build without CONFIG_DEBUG_FS, as the Kbuild bot reported some
+issues building with tegra_defconfig:
 
-> On Mon, Jul 20, 2020 at 12:27 AM Sriram Krishnan (srirakr2)
-> <srirakr2@cisco.com> wrote:
-> >
-> > +Stephen Hemminger
-> >
-> > Hi Willem,
-> > Thanks for looking into the code, I understand that this is more of a generic problem wherein many of the filtering functions assume the vlan tag to be in the skb rather than in the packet. Hence we moved the fix from the driver to the common AF packet that our solution uses.
-> >
-> > I recall from the v1 of the patch you had mentioned other common areas where this fix might be relevant (such as tap/tun), but I'm afraid I cant comprehensively test those patches out. Please let me know your thoughts  
-> 
-> Please use plain text to respond. HTML replies do not reach the list.
-> 
-> Can you be more precise in which other code besides the hyper-v driver
-> is affected? Do you have an example?
-> 
-> This is a resubmit of the original patch. My previous
-> questions/concerns remain valid:
-> 
-> - if the function can now fail, all callers must be updated to detect
-> and handle that
-> 
-> - any solution should probably address all inputs into the tx path:
-> packet sockets, tuntap, virtio-net
-> 
-> - this only addresses packet sockets with ETH_P_ALL/ETH_P_NONE. Not
-> sockets that set ETH_P_8021Q
-> 
-> - which code in the transmit stack requires the tag to be in the skb,
-> and does this problem after this patch still persist for Q-in-Q?
+In file included from drivers/gpu/drm/nouveau/nouveau_display.c:47:
+./drivers/gpu/drm/nouveau/dispnv50/crc.h: In function
+‘nv50_head_crc_late_register’:
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:106:47: error: parameter name
+omitted
+  106 | static inline int nv50_head_crc_late_register(struct nv50_head *) {}
+      |                                               ^~~~~~~~~~~~~~~~~~
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:106:54: warning: no return
+statement in function returning non-void [-Wreturn-type]
+  106 | static inline int nv50_head_crc_late_register(struct nv50_head *) {}
+      |                                                      ^~~~~~~~~
+./drivers/gpu/drm/nouveau/dispnv50/crc.h: In function
+‘nv50_crc_handle_vblank’:
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:108:57: warning: ‘return’ with
+a value, in function returning void [-Wreturn-type]
+  108 | nv50_crc_handle_vblank(struct nv50_head *head) { return 0; }
+      |                                                         ^
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:108:1: note: declared here
+  108 | nv50_crc_handle_vblank(struct nv50_head *head) { return 0; }
+      | ^~~~~~~~~~~~~~~~~~~~~~
+./drivers/gpu/drm/nouveau/dispnv50/crc.h: In function
+‘nv50_crc_atomic_check’:
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:111:23: error: parameter name
+omitted
+  111 | nv50_crc_atomic_check(struct nv50_head *, struct nv50_head_atom *,
+      |                       ^~~~~~~~~~~~~~~~~~
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:111:43: error: parameter name
+omitted
+  111 | nv50_crc_atomic_check(struct nv50_head *, struct nv50_head_atom *,
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:112:9: error: parameter name
+omitted
+  112 |         struct nv50_head_atom *) {}
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:112:16: warning: no return
+statement in function returning non-void [-Wreturn-type]
+  112 |         struct nv50_head_atom *) {}
+      |                ^~~~~~~~~~~~~~
+./drivers/gpu/drm/nouveau/dispnv50/crc.h: In function
+‘nv50_crc_atomic_stop_reporting’:
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:114:32: error: parameter name
+omitted
+  114 | nv50_crc_atomic_stop_reporting(struct drm_atomic_state *) {}
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+./drivers/gpu/drm/nouveau/dispnv50/crc.h: In function
+‘nv50_crc_atomic_prepare_notifier_contexts’:
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:116:43: error: parameter name
+omitted
+  116 | nv50_crc_atomic_prepare_notifier_contexts(struct drm_atomic_state *) {}
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~
+./drivers/gpu/drm/nouveau/dispnv50/crc.h: In function
+‘nv50_crc_atomic_start_reporting’:
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:118:33: error: parameter name
+omitted
+  118 | nv50_crc_atomic_start_reporting(struct drm_atomic_state *) {}
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+./drivers/gpu/drm/nouveau/dispnv50/crc.h: In function
+‘nv50_crc_atomic_set’:
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:120:21: error: parameter name
+omitted
+  120 | nv50_crc_atomic_set(struct nv50_head *, struct nv50_head_atom *) {}
+      |                     ^~~~~~~~~~~~~~~~~~
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:120:41: error: parameter name
+omitted
+  120 | nv50_crc_atomic_set(struct nv50_head *, struct nv50_head_atom *) {}
+      |                                         ^~~~~~~~~~~~~~~~~~~~~~~
+./drivers/gpu/drm/nouveau/dispnv50/crc.h: In function
+‘nv50_crc_atomic_clr’:
+./drivers/gpu/drm/nouveau/dispnv50/crc.h:122:21: error: parameter name
+omitted
+  122 | nv50_crc_atomic_clr(struct nv50_head *) {}
+      |                     ^~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/nouveau/nouveau_display.c: In function
+‘nouveau_framebuffer_new’:
+drivers/gpu/drm/nouveau/nouveau_display.c:286:15: warning: variable
+‘width’ set but not used [-Wunused-but-set-variable]
+  286 |  unsigned int width, height, i;
+      |               ^~~~~
 
-It matters because the problem is generic, not just to the netvsc driver.
-For example, BPF programs and netfilter rules will see different packets
-when send is through AF_PACKET than they would see for sends from the
-kernel stack.
+So, fix the inline function declarations we use in
+drm/drivers/gpu/drm/nouveau/dispnv50/crc.h when CONFIG_DEBUG_FS is
+enabled.
 
-Presenting uniform data to the lower layers makes sense.
+Fixes: 12885ecbfe62 ("drm/nouveau/kms/nvd9-: Add CRC support")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+---
+ drivers/gpu/drm/nouveau/dispnv50/crc.h | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/crc.h b/drivers/gpu/drm/nouveau/dispnv50/crc.h
+index 4bc59e7793151..92df084492a8c 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/crc.h
++++ b/drivers/gpu/drm/nouveau/dispnv50/crc.h
+@@ -106,26 +106,27 @@ struct nv50_crc_atom {};
+ #define nv50_crc_set_source NULL
+ 
+ static inline void nv50_crc_init(struct drm_device *dev) {}
+-static inline int nv50_head_crc_late_register(struct nv50_head *) {}
+-static inline void
+-nv50_crc_handle_vblank(struct nv50_head *head) { return 0; }
++static inline int
++nv50_head_crc_late_register(struct nv50_head *head) { return 0; }
++static inline void nv50_crc_handle_vblank(struct nv50_head *head) {}
+ 
+ static inline int
+-nv50_crc_atomic_check_head(struct nv50_head *, struct nv50_head_atom *,
+-			   struct nv50_head_atom *) {}
++nv50_crc_atomic_check_head(struct nv50_head *head,
++			   struct nv50_head_atom *asyh,
++			   struct nv50_head_atom *armh) { return 0; }
+ static inline void nv50_crc_atomic_check_outp(struct nv50_atom *atom) {}
+ static inline void
+-nv50_crc_atomic_stop_reporting(struct drm_atomic_state *) {}
++nv50_crc_atomic_stop_reporting(struct drm_atomic_state *state) {}
+ static inline void
+-nv50_crc_atomic_init_notifier_contexts(struct drm_atomic_state *) {}
++nv50_crc_atomic_init_notifier_contexts(struct drm_atomic_state *state) {}
+ static inline void
+-nv50_crc_atomic_release_notifier_contexts(struct drm_atomic_state *) {}
++nv50_crc_atomic_release_notifier_contexts(struct drm_atomic_state *state) {}
+ static inline void
+-nv50_crc_atomic_start_reporting(struct drm_atomic_state *) {}
++nv50_crc_atomic_start_reporting(struct drm_atomic_state *state) {}
+ static inline void
+-nv50_crc_atomic_set(struct nv50_head *, struct nv50_head_atom *) {}
++nv50_crc_atomic_set(struct nv50_head *head, struct nv50_head_atom *state) {}
+ static inline void
+-nv50_crc_atomic_clr(struct nv50_head *) {}
++nv50_crc_atomic_clr(struct nv50_head *head) {}
+ 
+ #endif /* IS_ENABLED(CONFIG_DEBUG_FS) */
+ #endif /* !__NV50_CRC_H__ */
+-- 
+2.26.2
+
