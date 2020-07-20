@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D8CC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 719D8C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26A9E2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C4B2065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261740;
-	bh=1Ff/nLzw5R7Lbjoxt3PMZ3q82rz7aPx4eBnyhDojGtE=;
+	s=default; t=1595261742;
+	bh=rEkJa8togNuzByIF4RXCuzp7Dg6DRSWpXP+C8+adn5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EcSdggDmWWIKVfwRtO0JGYPII7Lhn9QJ9wqLDEaAEyRazkXNkYv8lhpdfc1Ldl9rR
-	 Hg99uc8oq/dJs+Hc538yMTGRQ8sewgshucOwuP5hxIZvyu4Q9lYOB88NsVuoNoOlfS
-	 2NJM0iRvbLzY4a9Yv63d/eVXg+orZyptut9K0VqU=
+	b=EzKWcacTMDYKbWQaI+6D2FCdlvcF0+YF0usHhhdv/p8PYihyhg2zQatb4liQLI5l+
+	 tjSbABjHfel3Wzz2Jjd0DhMRmfPle8u763RaTcoaGhmi7mHrNwUfzED+qRMDWKGb8c
+	 08cBePteDwqJQpGQaNApQaA7zOYaNcSNPssAeny8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388429AbgGTQPf (ORCPT
+        id S2388447AbgGTQPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:15:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56346 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:15:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388025AbgGTQP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:15:28 -0400
+        id S2388435AbgGTQPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:15:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFCCA20656;
-        Mon, 20 Jul 2020 16:15:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E81C2064B;
+        Mon, 20 Jul 2020 16:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261727;
-        bh=1Ff/nLzw5R7Lbjoxt3PMZ3q82rz7aPx4eBnyhDojGtE=;
+        s=default; t=1595261736;
+        bh=rEkJa8togNuzByIF4RXCuzp7Dg6DRSWpXP+C8+adn5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qnd9Tbg/9uvDSzgIC6+rRQ+3Y1fDxre1ZRgSRCz4oul2fU+det0r8DVPyhGSc/+0/
-         Sdu+1DgQoYC8ScLYzoBl0K25XimWmehYU9ymeJ20v12LQqDTG3tlbt7ws7q1MsUtF+
-         bf66ytycCgaly6VSPIf9aVsZoA+HwkRiiWBhYF+8=
+        b=URGMf83tegk9yWI2RhBqEMtm41NP3Cue0TDg9+5TtFnP3zZkabn5k5ErjkP5iLrlw
+         gXS75Jy1BXar9oFlkiTZQXqr4+Ysti8yKUTTtR4DF9kRclwTA2mpo5epXIc72kcMYd
+         yOFLHsuOVj/qU4NVpQ/q2E5/oGUN2Bz4Gb1kdn0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>
-Subject: [PATCH 5.7 221/244] x86/ioperm: Fix io bitmap invalidation on Xen PV
-Date:   Mon, 20 Jul 2020 17:38:12 +0200
-Message-Id: <20200720152836.362435840@linuxfoundation.org>
+        stable@vger.kernel.org, chen gong <curry.gong@amd.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.7 224/244] drm/amdgpu/powerplay: Modify SMC message name for setting power profile mode
+Date:   Mon, 20 Jul 2020 17:38:15 +0200
+Message-Id: <20200720152836.505811922@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,171 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: chen gong <curry.gong@amd.com>
 
-commit cadfad870154e14f745ec845708bc17d166065f2 upstream.
+commit 98a34cf931e848f8489d3fb15a8f5fc03802ad65 upstream.
 
-tss_invalidate_io_bitmap() wasn't wired up properly through the pvop
-machinery, so the TSS and Xen's io bitmap would get out of sync
-whenever disabling a valid io bitmap.
+I consulted Cai Land(Chuntian.Cai@amd.com), he told me corresponding smc
+message name to fSMC_MSG_SetWorkloadMask() is
+"PPSMC_MSG_ActiveProcessNotify" in firmware code of Renoir.
 
-Add a new pvop for tss_invalidate_io_bitmap() to fix it.
+Strange though it may seem, but it's a fact.
 
-This is XSA-329.
-
-Fixes: 22fe5b0439dd ("x86/ioperm: Move TSS bitmap update to exit to user work")
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: chen gong <curry.gong@amd.com>
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/d53075590e1f91c19f8af705059d3ff99424c020.1595030016.git.luto@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/io_bitmap.h      |   16 ++++++++++++++++
- arch/x86/include/asm/paravirt.h       |    5 +++++
- arch/x86/include/asm/paravirt_types.h |    1 +
- arch/x86/kernel/paravirt.c            |    3 ++-
- arch/x86/kernel/process.c             |   18 ++----------------
- arch/x86/xen/enlighten_pv.c           |   12 ++++++++++++
- 6 files changed, 38 insertions(+), 17 deletions(-)
+ drivers/gpu/drm/amd/powerplay/renoir_ppt.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/io_bitmap.h
-+++ b/arch/x86/include/asm/io_bitmap.h
-@@ -19,12 +19,28 @@ struct task_struct;
- void io_bitmap_share(struct task_struct *tsk);
- void io_bitmap_exit(struct task_struct *tsk);
- 
-+static inline void native_tss_invalidate_io_bitmap(void)
-+{
-+	/*
-+	 * Invalidate the I/O bitmap by moving io_bitmap_base outside the
-+	 * TSS limit so any subsequent I/O access from user space will
-+	 * trigger a #GP.
-+	 *
-+	 * This is correct even when VMEXIT rewrites the TSS limit
-+	 * to 0x67 as the only requirement is that the base points
-+	 * outside the limit.
-+	 */
-+	this_cpu_write(cpu_tss_rw.x86_tss.io_bitmap_base,
-+		       IO_BITMAP_OFFSET_INVALID);
-+}
-+
- void native_tss_update_io_bitmap(void);
- 
- #ifdef CONFIG_PARAVIRT_XXL
- #include <asm/paravirt.h>
- #else
- #define tss_update_io_bitmap native_tss_update_io_bitmap
-+#define tss_invalidate_io_bitmap native_tss_invalidate_io_bitmap
- #endif
- 
- #else
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -296,6 +296,11 @@ static inline void write_idt_entry(gate_
- }
- 
- #ifdef CONFIG_X86_IOPL_IOPERM
-+static inline void tss_invalidate_io_bitmap(void)
-+{
-+	PVOP_VCALL0(cpu.invalidate_io_bitmap);
-+}
-+
- static inline void tss_update_io_bitmap(void)
- {
- 	PVOP_VCALL0(cpu.update_io_bitmap);
---- a/arch/x86/include/asm/paravirt_types.h
-+++ b/arch/x86/include/asm/paravirt_types.h
-@@ -141,6 +141,7 @@ struct pv_cpu_ops {
- 	void (*load_sp0)(unsigned long sp0);
- 
- #ifdef CONFIG_X86_IOPL_IOPERM
-+	void (*invalidate_io_bitmap)(void);
- 	void (*update_io_bitmap)(void);
- #endif
- 
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -343,7 +343,8 @@ struct paravirt_patch_template pv_ops =
- 	.cpu.swapgs		= native_swapgs,
- 
- #ifdef CONFIG_X86_IOPL_IOPERM
--	.cpu.update_io_bitmap	= native_tss_update_io_bitmap,
-+	.cpu.invalidate_io_bitmap	= native_tss_invalidate_io_bitmap,
-+	.cpu.update_io_bitmap		= native_tss_update_io_bitmap,
- #endif
- 
- 	.cpu.start_context_switch	= paravirt_nop,
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -322,20 +322,6 @@ void arch_setup_new_exec(void)
- }
- 
- #ifdef CONFIG_X86_IOPL_IOPERM
--static inline void tss_invalidate_io_bitmap(struct tss_struct *tss)
--{
--	/*
--	 * Invalidate the I/O bitmap by moving io_bitmap_base outside the
--	 * TSS limit so any subsequent I/O access from user space will
--	 * trigger a #GP.
--	 *
--	 * This is correct even when VMEXIT rewrites the TSS limit
--	 * to 0x67 as the only requirement is that the base points
--	 * outside the limit.
--	 */
--	tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_INVALID;
--}
--
- static inline void switch_to_bitmap(unsigned long tifp)
- {
- 	/*
-@@ -346,7 +332,7 @@ static inline void switch_to_bitmap(unsi
- 	 * user mode.
- 	 */
- 	if (tifp & _TIF_IO_BITMAP)
--		tss_invalidate_io_bitmap(this_cpu_ptr(&cpu_tss_rw));
-+		tss_invalidate_io_bitmap();
- }
- 
- static void tss_copy_io_bitmap(struct tss_struct *tss, struct io_bitmap *iobm)
-@@ -380,7 +366,7 @@ void native_tss_update_io_bitmap(void)
- 	u16 *base = &tss->x86_tss.io_bitmap_base;
- 
- 	if (!test_thread_flag(TIF_IO_BITMAP)) {
--		tss_invalidate_io_bitmap(tss);
-+		native_tss_invalidate_io_bitmap();
- 		return;
+--- a/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
+@@ -687,7 +687,7 @@ static int renoir_set_power_profile_mode
+ 		return -EINVAL;
  	}
  
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -841,6 +841,17 @@ static void xen_load_sp0(unsigned long s
- }
- 
- #ifdef CONFIG_X86_IOPL_IOPERM
-+static void xen_invalidate_io_bitmap(void)
-+{
-+	struct physdev_set_iobitmap iobitmap = {
-+		.bitmap = 0,
-+		.nr_ports = 0,
-+	};
-+
-+	native_tss_invalidate_io_bitmap();
-+	HYPERVISOR_physdev_op(PHYSDEVOP_set_iobitmap, &iobitmap);
-+}
-+
- static void xen_update_io_bitmap(void)
- {
- 	struct physdev_set_iobitmap iobitmap;
-@@ -1070,6 +1081,7 @@ static const struct pv_cpu_ops xen_cpu_o
- 	.load_sp0 = xen_load_sp0,
- 
- #ifdef CONFIG_X86_IOPL_IOPERM
-+	.invalidate_io_bitmap = xen_invalidate_io_bitmap,
- 	.update_io_bitmap = xen_update_io_bitmap,
- #endif
- 	.io_delay = xen_io_delay,
+-	ret = smu_send_smc_msg_with_param(smu, SMU_MSG_SetWorkloadMask,
++	ret = smu_send_smc_msg_with_param(smu, SMU_MSG_ActiveProcessNotify,
+ 				    1 << workload_type,
+ 				    NULL);
+ 	if (ret) {
 
 
