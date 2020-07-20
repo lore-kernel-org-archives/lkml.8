@@ -2,141 +2,118 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7AEC433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71140C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 160D7207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477052070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262790;
-	bh=BkPO0/2fL6hpC8xe81q/tQxSzpf/UbXGVlGV5BZe/eE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rVkjV8QYupQNWz9X35ABWuK6EmisZQuRu2wa4wM9gTjueceYrgJZ1/GHZsezgRad2
-	 //zc8H4FIGTRLvoHKur8ASCfSezpE7REgOKGNVbSV3C91wbxrQdkVDS/Rf19Kw9Y3r
-	 Kzc8Oxj5XuQ8UFi9V00yi+484xVExfef752jJWOM=
+	s=default; t=1595262799;
+	bh=dsu5b9IIjFUsGX50qBLDgmJ2Ketn/JuBNyJ68a8xfzk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gI6IvnPA0zZ56MjS12CbqFoNETrLuedlnfCBZOhZa/EwPXHqihdLG5Finlf3PZEZi
+	 IKO0CcObOjB6+5ZwL0bRzzT6Ai/a0s0IK90E3H8NkCxALEfdH+KhAzs+q0LgHM0Dvs
+	 8PXc34pGFOacMbOUoqqdcREGoY6gvkq2V59CJ/Y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388940AbgGTQdI (ORCPT
+        id S2388945AbgGTQdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:33:08 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33744 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731802AbgGTQdB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:33:01 -0400
-Received: by mail-io1-f65.google.com with SMTP id d18so18264091ion.0;
-        Mon, 20 Jul 2020 09:33:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Jnt8NGEcb9QuspToNkCE0B8uWDCkviqvtXBWs7ndp7U=;
-        b=dR3hTB7BiWw/IcwA5DjFjczFD2oDyELi2GOkahBJZT88PZ/PU8EGrz/VWOi6vPkCUb
-         0Z7/OyQEyU7mE5T7tLMWYaqGShtJkduHX++9Id4Ahj1viAODKwx9eaTEMdyvUpUBbJny
-         /FopgqQHKiUTu2vjwr5NwDg+thAako4p9sk55eNNPDQK/z436OvdKgeODv6eIAipd2yf
-         KZSMY3V1ygXtuJDuwgWKYoV3UdZs+6Bfw1Ds4TTTqpsTFx3YOip9gQfyZxpO1oS+UAJK
-         Q4IrbYLdbGdtrjLDA5A2mWOOF6j/P1aOt01GuRk2bEtPFb/6HqKXzKxr4Q7a8iZ8QCUB
-         FeFg==
-X-Gm-Message-State: AOAM532SsRu9U7wrB/r6ZcvzjopEdvZNNi9JBfc24wuoKksHV9HHJHbW
-        R64LpDdQ+ggwowZBET+/2w==
-X-Google-Smtp-Source: ABdhPJwcUlO64ABhqVtn8AX7Eodm+sHDVMi+gLO66Zc7WYwVg0XRJFukPDma212P5nj5hmFTmdHLSw==
-X-Received: by 2002:a6b:c343:: with SMTP id t64mr24390076iof.66.1595262779894;
-        Mon, 20 Jul 2020 09:32:59 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j17sm8948918ilq.7.2020.07.20.09.32.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 09:32:58 -0700 (PDT)
-Received: (nullmailer pid 2625794 invoked by uid 1000);
-        Mon, 20 Jul 2020 16:32:56 -0000
-Date:   Mon, 20 Jul 2020 10:32:56 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v8 1/2] dt-bindings: input: Add docs for ADC driven
- joystick.
-Message-ID: <20200720163256.GA2625563@bogus>
-References: <20200719221103.91644-1-contact@artur-rojek.eu>
- <20200719221103.91644-2-contact@artur-rojek.eu>
+        Mon, 20 Jul 2020 12:33:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731789AbgGTP4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:56:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4945C22BEF;
+        Mon, 20 Jul 2020 15:56:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260579;
+        bh=dsu5b9IIjFUsGX50qBLDgmJ2Ketn/JuBNyJ68a8xfzk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2iapsulwR8of0jvVl2uFjjpLgG1OiQESS9u3q3wIqy9pUTaZ9iV9UzKx/ldnQWAi4
+         dkkrjEmkB/yVhXyYmwRXyGA/EV1ZC85OlDe4+vRojdAq8lQRYCyWtDHZnBh5V4q0Rx
+         tt2tCTS54YNxs3mtEbOqn7RWEL+1fEIYFZJ6suko=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: [PATCH 5.4 002/215] crypto: atmel - Fix build error of CRYPTO_AUTHENC
+Date:   Mon, 20 Jul 2020 17:34:44 +0200
+Message-Id: <20200720152820.257058678@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200719221103.91644-2-contact@artur-rojek.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 00:11:02 +0200, Artur Rojek wrote:
-> Add documentation for the adc-joystick driver, used to provide support
-> for joysticks connected over ADC.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> 
->  Changes:
-> 
->  v2: - Add `reg` property to axis subnode in order to enumerate the axes,
->      - rename `linux,abs-code` property to `linux,code`,
->      - drop `linux,` prefix from the remaining properties of axis subnode
-> 
->  v3: no change
-> 
->  v4: - remove "bindings" from the unique identifier string,
->      - replace `|` with `>` for all description properties,
->      - specify the number of items for `io-channels`,
->      - correct the regex pattern of `axis` property,
->      - specify the value range of `reg` property for each axis,
->      - put `abs-range` properties under `allOf`
-> 
->  v5: add `a-f` to the regex pattern of `axis` property
-> 
->  v6-v8: no change
-> 
->  Notes:
-> 
->  Rob, the bindings example in this patch depends on changes introduced
->  in another patchset, still to be merged:
->  https://lore.kernel.org/linux-iio/20200719205307.87385-4-contact@artur-rojek.eu/
->  Your scripts will most likely fail to validate this.
-> 
->  .../bindings/input/adc-joystick.yaml          | 121 ++++++++++++++++++
->  1 file changed, 121 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
-> 
+From: YueHaibing <yuehaibing@huawei.com>
+
+commit aee1f9f3c30e1e20e7f74729ced61eac7d74ca68 upstream.
+
+If CRYPTO_DEV_ATMEL_AUTHENC is m, CRYPTO_DEV_ATMEL_SHA is m,
+but CRYPTO_DEV_ATMEL_AES is y, building will fail:
+
+drivers/crypto/atmel-aes.o: In function `atmel_aes_authenc_init_tfm':
+atmel-aes.c:(.text+0x670): undefined reference to `atmel_sha_authenc_get_reqsize'
+atmel-aes.c:(.text+0x67a): undefined reference to `atmel_sha_authenc_spawn'
+drivers/crypto/atmel-aes.o: In function `atmel_aes_authenc_setkey':
+atmel-aes.c:(.text+0x7e5): undefined reference to `atmel_sha_authenc_setkey'
+
+Make CRYPTO_DEV_ATMEL_AUTHENC depend on CRYPTO_DEV_ATMEL_AES,
+and select CRYPTO_DEV_ATMEL_SHA and CRYPTO_AUTHENC for it under there.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Suggested-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 89a82ef87e01 ("crypto: atmel-authenc - add support to...")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+---
+ drivers/crypto/Kconfig |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Error: Documentation/devicetree/bindings/input/adc-joystick.example.dts:24.31-32 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+--- a/drivers/crypto/Kconfig
++++ b/drivers/crypto/Kconfig
+@@ -491,10 +491,9 @@ if CRYPTO_DEV_UX500
+ endif # if CRYPTO_DEV_UX500
+ 
+ config CRYPTO_DEV_ATMEL_AUTHENC
+-	tristate "Support for Atmel IPSEC/SSL hw accelerator"
++	bool "Support for Atmel IPSEC/SSL hw accelerator"
+ 	depends on ARCH_AT91 || COMPILE_TEST
+-	select CRYPTO_DEV_ATMEL_AES
+-	select CRYPTO_DEV_ATMEL_SHA
++	depends on CRYPTO_DEV_ATMEL_AES
+ 	help
+ 	  Some Atmel processors can combine the AES and SHA hw accelerators
+ 	  to enhance support of IPSEC/SSL.
+@@ -507,7 +506,8 @@ config CRYPTO_DEV_ATMEL_AES
+ 	select CRYPTO_AES
+ 	select CRYPTO_AEAD
+ 	select CRYPTO_BLKCIPHER
+-	select CRYPTO_AUTHENC
++	select CRYPTO_AUTHENC if CRYPTO_DEV_ATMEL_AUTHENC
++	select CRYPTO_DEV_ATMEL_SHA if CRYPTO_DEV_ATMEL_AUTHENC
+ 	help
+ 	  Some Atmel processors have AES hw accelerator.
+ 	  Select this if you want to use the Atmel module for
 
-
-See https://patchwork.ozlabs.org/patch/1331964
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
 
