@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27934C43470
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE887C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA2C5206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93AD122BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281293;
-	bh=YOEldPYJZAz74gN0FsnvGPJW3gx6+vxdlBeAMEtsElw=;
+	s=default; t=1595281295;
+	bh=3Ntu81l2iPqRZi+s6BEQIwuKCV0gzsZOWwcMMWUJBYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ISDfuw8y3td1N6HNdJJWAqSERl6OqujbzDr1iMMSu2v7B5wIxqXZ7suHPi8Qxpmn/
-	 FGGaUj3QC2IxFBXXoQ8z9SmfWDMBgVf2Ib5xqDFc/0pQNxAdA8ZJ/T4hQg6cDjSKH0
-	 ZE/v3kRJaC7p/vnilcuvdeoP7rx/UKx7SdKNB+pU=
+	b=wDnrY7aPGC3kTGod47RZDFW83Jh/IAO8TFNne40hJaOHyo7iKVjLBQV1J5aBm/d03
+	 fQwHMwHbxSX3SPOWlnqQfZG/XIDB2kTcKjFGNnX4ktea541i2qpuV5bGZknIbboNor
+	 Bttcw2KjEjHBs7lvkX+nrMj8yiUz4+gCU6u0+BL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgGTVla (ORCPT
+        id S1728209AbgGTVle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:41:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59064 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:41:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728463AbgGTVj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:27 -0400
+        id S1728473AbgGTVj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1919622BF5;
-        Mon, 20 Jul 2020 21:39:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5511E22CBB;
+        Mon, 20 Jul 2020 21:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281166;
-        bh=YOEldPYJZAz74gN0FsnvGPJW3gx6+vxdlBeAMEtsElw=;
+        s=default; t=1595281168;
+        bh=3Ntu81l2iPqRZi+s6BEQIwuKCV0gzsZOWwcMMWUJBYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B4/qRExMdy1lGDExI7RTqNRnhq1GwTeQa+vJOJG7SiO0SZdGtUvFjuHIabB2c4VK7
-         gqv0CypkD/7DXKcQ8oknwG6ZhlhcxqdzhrpnvpPM5qFK0VLTpzAQhI1sjTlKnpsLRD
-         RUUmm7oFp0lbkxYMAm0vmRHrFrlypzBTtaQclHfM=
+        b=YuGVxMyw99FMPeqj4uQ90yzwWEhQSwdnAoKrxwtLct+ZN4Lm3dLVj18acf4kPXKHq
+         BnrVetd5Dp4YdY4IAxA692VGVW13QsmWxiXhcdW1H3G3p/+JL28ln1f1yXD/yepZVn
+         t3ox6olt+Jk7D0j4vhJf+CTuXUsX16R0GRPAAZ5A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Katsnelson <me@0upti.me>, Lyude Paul <lyude@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 09/13] Input: synaptics - enable InterTouch for ThinkPad X1E 1st gen
-Date:   Mon, 20 Jul 2020 17:39:10 -0400
-Message-Id: <20200720213914.407919-9-sashal@kernel.org>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 10/13] usb: gadget: udc: gr_udc: fix memleak on error handling path in gr_ep_init()
+Date:   Mon, 20 Jul 2020 17:39:11 -0400
+Message-Id: <20200720213914.407919-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213914.407919-1-sashal@kernel.org>
 References: <20200720213914.407919-1-sashal@kernel.org>
@@ -59,34 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Katsnelson <me@0upti.me>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit dcb00fc799dc03fd320e123e4c81b3278c763ea5 ]
+[ Upstream commit c8f8529e2c4141afa2ebb487ad48e8a6ec3e8c99 ]
 
-Tested on my own laptop, touchpad feels slightly more responsive with
-this on, though it might just be placebo.
+gr_ep_init() does not assign the allocated request anywhere if allocation
+of memory for the buffer fails. This is a memory leak fixed by the given
+patch.
 
-Signed-off-by: Ilya Katsnelson <me@0upti.me>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Link: https://lore.kernel.org/r/20200703143457.132373-1-me@0upti.me
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/synaptics.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/udc/gr_udc.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-index 85db184321f78..0714d572e49a3 100644
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -182,6 +182,7 @@ static const char * const smbus_pnp_ids[] = {
- 	"LEN0093", /* T480 */
- 	"LEN0096", /* X280 */
- 	"LEN0097", /* X280 -> ALPS trackpoint */
-+	"LEN0099", /* X1 Extreme 1st */
- 	"LEN009b", /* T580 */
- 	"LEN200f", /* T450s */
- 	"LEN2044", /* L470  */
+diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
+index feb73a1c42ef9..be094f4e116b1 100644
+--- a/drivers/usb/gadget/udc/gr_udc.c
++++ b/drivers/usb/gadget/udc/gr_udc.c
+@@ -2000,9 +2000,12 @@ static int gr_ep_init(struct gr_udc *dev, int num, int is_in, u32 maxplimit)
+ 
+ 	if (num == 0) {
+ 		_req = gr_alloc_request(&ep->ep, GFP_ATOMIC);
++		if (!_req)
++			return -ENOMEM;
++
+ 		buf = devm_kzalloc(dev->dev, PAGE_SIZE, GFP_DMA | GFP_ATOMIC);
+-		if (!_req || !buf) {
+-			/* possible _req freed by gr_probe via gr_remove */
++		if (!buf) {
++			gr_free_request(&ep->ep, _req);
+ 			return -ENOMEM;
+ 		}
+ 
 -- 
 2.25.1
 
