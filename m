@@ -2,128 +2,115 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AFAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CA1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBC822B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A6522B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:12:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ks6dk1mR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731525AbgGTSL5 (ORCPT
+        id S1730664AbgGTSMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 14:11:57 -0400
-Received: from mga01.intel.com ([192.55.52.88]:43566 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728448AbgGTSL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 14:11:56 -0400
-IronPort-SDR: u7sYJoWp2O7QGiQwMLAZKOnQ+5ykIWM0VY5xt4VxHeooygyj+g6SgT2G2FWccEv2129IGSGiMG
- /ESKN0lANMTg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="168125131"
-X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="scan'208";a="168125131"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 11:11:56 -0700
-IronPort-SDR: /fmlAY/iMfOEmHME3kfN5aV2UTzJmnU3t0dOXwf453J0OwODoOVpLilOEqCiqe0xWv1hu005GJ
- e36h0EfmZBNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="scan'208";a="362102923"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 20 Jul 2020 11:11:56 -0700
-Received: from [10.255.230.139] (kliang2-mobl.ccr.corp.intel.com [10.255.230.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 87F91580299;
-        Mon, 20 Jul 2020 11:11:55 -0700 (PDT)
-Subject: Re: [PATCH V6 07/14] perf/x86/intel: Generic support for hardware
- TopDown metrics
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-References: <20200717140554.22863-1-kan.liang@linux.intel.com>
- <20200717140554.22863-8-kan.liang@linux.intel.com>
- <20200720174103.GV10769@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <c814c39a-3cd2-f4d3-0b89-fbe4993e1fcc@linux.intel.com>
-Date:   Mon, 20 Jul 2020 14:11:54 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200720174103.GV10769@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 20 Jul 2020 14:12:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgGTSMq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 14:12:46 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB56C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 11:12:46 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 124so22894839ybb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 11:12:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=foQP01o+jLLxWyYMddt7wMxz9LiizEHjChmq39E8dvQ=;
+        b=ks6dk1mRoPvv5K/RguqHzZXRvpQzZ8Sma0KZPaH2f9dcYupIWG8cBMxwDl+AR4xhaV
+         CH1dhBt+6QvtqFvJImE7/TQy6QanJ3RuMki6d2XjchxX6NLmodxKd/KU4im88YsqeISB
+         0PdFNGrai/DE1DxfYYhfhT+51rxO3HwD7yttKR78i/mA3LXJAncVIiTIkjq0TKeK7F2b
+         sHfctGLF7Zvzut+ZSeq6cb4vKRBUUEW2YtnYgEgH5jCsx4+dhdKZHZk4cn03GDcAWKAt
+         Wmc6voUlwuxFz/qni4DIekfBhxrgjZWS+g8WjfJWc6pKMq891yKv8oGa2AbFZd79eTpv
+         o/EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=foQP01o+jLLxWyYMddt7wMxz9LiizEHjChmq39E8dvQ=;
+        b=lvyDltCuvsrtQgMHeNsTR6p72z2ZxLNI9Jatr6bWejo19D6nAdDegQQRpM7BUwqEM+
+         gcnsSUWCEXaDpouPEcCvOL7LPRSCOOFqeepOaCaFc2UYLlWO0VYGCIc5VuAracW81QII
+         XM12q7MiQHv3oYanxQD1U3H1Jk2jFAh4DzWLoSayQCTG3sWm8xwVC6p2qfuWtlzKAk7T
+         U9P3XWh3/0p9tSTkqAaUhDHVIhjZsYgy2FlWWAzYZg71am1mOHHtlCLxbgEXcbIcPacB
+         kVfG/Zm1lkLhPG44RRvG/UWdjFt2kxLuPS6kx8xlWfvyXACD4EGIySBjNoP+z+uf3PNY
+         3nmw==
+X-Gm-Message-State: AOAM531ufQbnMV+zonYA1m8BYrGcakzv/AtKTbbA6zMOpaH7XbyDCuqz
+        YTJn9Rk/byS9BJUD6pngv3ZV/T+7TjaO
+X-Google-Smtp-Source: ABdhPJzqOaS4ZMz+61ASiwWqZJTx0yklQsWOZm640ChrHnJkwqqqGPaVilq3n2xbqX2bO72REcKFb38xI/gV
+X-Received: by 2002:a25:fc04:: with SMTP id v4mr37291336ybd.164.1595268765617;
+ Mon, 20 Jul 2020 11:12:45 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 11:12:22 -0700
+Message-Id: <20200720181237.3015826-1-maskray@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+Subject: [PATCH] Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang cross compilation
+From:   Fangrui Song <maskray@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Cc:     Fangrui Song <maskray@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When CROSS_COMPILE is set (e.g. aarch64-linux-gnu-), if
+$(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-,
+GCC_TOOLCHAIN_DIR will be set to /usr/bin/.  --prefix= will be set to
+/usr/bin/ and Clang as of 11 will search for both
+$(prefix)aarch64-linux-gnu-$needle and $(prefix)$needle.
 
+GCC searchs for $(prefix)aarch64-linux-gnu/$version/$needle,
+$(prefix)aarch64-linux-gnu/$needle and $(prefix)$needle. In practice,
+$(prefix)aarch64-linux-gnu/$needle rarely contains executables.
 
-On 7/20/2020 1:41 PM, Peter Zijlstra wrote:
-> On Fri, Jul 17, 2020 at 07:05:47AM -0700, kan.liang@linux.intel.com wrote:
-> 
->> For the event mapping, a special 0x00 event code is used, which is
->> reserved for fake events. The metric events start from umask 0x10.
-> 
->> +#define INTEL_PMC_IDX_METRIC_BASE		(INTEL_PMC_IDX_FIXED + 16)
->> +#define INTEL_PMC_IDX_TD_RETIRING		(INTEL_PMC_IDX_METRIC_BASE + 0)
->> +#define INTEL_PMC_IDX_TD_BAD_SPEC		(INTEL_PMC_IDX_METRIC_BASE + 1)
->> +#define INTEL_PMC_IDX_TD_FE_BOUND		(INTEL_PMC_IDX_METRIC_BASE + 2)
->> +#define INTEL_PMC_IDX_TD_BE_BOUND		(INTEL_PMC_IDX_METRIC_BASE + 3)
-> 
-> So this is internal and we can change it around if/when needed, right?
-> 
+To better model how GCC's -B/--prefix takes in effect in practice, newer
+Clang only searches for $(prefix)$needle and for example it will find
+/usr/bin/as instead of /usr/bin/aarch64-linux-gnu-as.
 
-Yes
+Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
+(/usr/bin/aarch64-linux-gnu-) so that newer Clang can find the
+appropriate cross compiling GNU as (when -no-integrated-as is in
+effect).
 
->> +#define INTEL_PMC_IDX_METRIC_END		INTEL_PMC_IDX_TD_BE_BOUND
->> +#define INTEL_PMC_MSK_TOPDOWN			((0xfull << INTEL_PMC_IDX_METRIC_BASE) | \
->> +						INTEL_PMC_MSK_FIXED_SLOTS)
->> +
->> +/*
->> + * There is no event-code assigned to the TopDown events.
->> + *
->> + * For the slots event, use the pseudo code of the fixed counter 3.
->> + *
->> + * For the metric events, the pseudo event-code is 0x00.
->> + * The pseudo umask-code starts from 0x10.
->> + */
->> +#define INTEL_TD_SLOTS				0x0400	/* TOPDOWN.SLOTS */
->> +/* Level 1 metrics */
->> +#define INTEL_TD_METRIC_RETIRING		0x1000	/* Retiring metric */
->> +#define INTEL_TD_METRIC_BAD_SPEC		0x1100	/* Bad speculation metric */
->> +#define INTEL_TD_METRIC_FE_BOUND		0x1200	/* FE bound metric */
->> +#define INTEL_TD_METRIC_BE_BOUND		0x1300	/* BE bound metric */
->> +#define INTEL_TD_METRIC_MAX			INTEL_TD_METRIC_BE_BOUND
->> +#define INTEL_TD_METRIC_NUM			4
-> 
-> But this is ABI, once we merge this, it's stuck.
-> 
-> Also, per how Fixed2 is 0x0300, should not Fixed16 (aka
-> METRICS_RETIRING) be 0x1100 ?
-> 
-> But aside of that, are we sure the hardware will never grow a Fixed16?
-> Or do we want to be paranoid and move the metrics events up in the
-> pseudo event space?
-> 
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Fangrui Song <maskray@google.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/1099
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Right, we cannot guarantee that the number of fixed counters is always 
-less than 16.
-
-I will move the metrics events to the middle of the pseudo event space.
-
-+#define INTEL_TD_METRIC_RETIRING	0x8000	/* Retiring metric */
-+#define INTEL_TD_METRIC_BAD_SPEC	0x8100	/* Bad speculation metric */
-+#define INTEL_TD_METRIC_FE_BOUND	0x8200	/* FE bound metric */
-+#define INTEL_TD_METRIC_BE_BOUND	0x8300	/* BE bound metric */
-
-Thanks,
-Kan
+diff --git a/Makefile b/Makefile
+index 0b5f8538bde5..3ac83e375b61 100644
+--- a/Makefile
++++ b/Makefile
+@@ -567,7 +567,7 @@ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
+ ifneq ($(CROSS_COMPILE),)
+ CLANG_FLAGS	+= --target=$(notdir $(CROSS_COMPILE:%-=%))
+ GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
+-CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)
++CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
+ GCC_TOOLCHAIN	:= $(realpath $(GCC_TOOLCHAIN_DIR)/..)
+ endif
+ ifneq ($(GCC_TOOLCHAIN),)
+-- 
+2.28.0.rc0.105.gf9edc3c819-goog
 
