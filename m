@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D5AC433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A79AC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1163C22482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EEA22CBB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260466;
-	bh=Mk9BPFQSsYlWObJZHiGbURYRJrba9Qp7WU4zXP8MO70=;
+	s=default; t=1595260469;
+	bh=G/TmM+Mtc3F1e23WZCTVRx94sH6YSaRpiEo7RY3ru5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gZMZ6klIUVbM8+6dxhLaEZDEV6zDdU0UwhWG+2MI/i8SBvJMRXxFo025TlZEYqmSK
-	 CEcKzoBjkqN1V3H2kmUNY08MQ9htChEXs6QaZl9rWhw9YGCvd+zDathBuhAQvWaA2i
-	 KEKji7LyvCgbAe/RZPZlEoxQcWuxbtlXlr4f/D/8=
+	b=euAY8YvwvZJz0gncF90xNngyLwg40tZLkvgyAW4HZ1dZuJFmhrIaUia4XM/FiPzj0
+	 M6h8SaqCPp3X0BBYQ85gyJcQaGSHQuUi1DECCn2rZGO7imvDbNm1/j/Go/kIivB+fm
+	 s4cqBuXPni/tc1+eEGZUKgcPGiZZyEvefBGf7KMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731562AbgGTPyZ (ORCPT
+        id S1731564AbgGTPy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:54:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53028 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:54:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731560AbgGTPyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:54:21 -0400
+        id S1731349AbgGTPyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:54:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41067206E9;
-        Mon, 20 Jul 2020 15:54:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0614F22D07;
+        Mon, 20 Jul 2020 15:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260460;
-        bh=Mk9BPFQSsYlWObJZHiGbURYRJrba9Qp7WU4zXP8MO70=;
+        s=default; t=1595260463;
+        bh=G/TmM+Mtc3F1e23WZCTVRx94sH6YSaRpiEo7RY3ru5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qFpaZGMsZSKuTbk6F70bEuyMFJVNMaoooMST4ux95+IaZM0h/bm6sGIXvPBscztd0
-         VfKq5Qv7kR/1aK9ozso+SRGsgateZPJzi75vuGBCQY+qpaMnqqXh0miv6kkXy8L5wE
-         /95T5FycsP3AS1TJHuzFPuDVUJg93tOGHGwdpX2A=
+        b=Xss6+yBDNZVBsdwWJYUWa7Y7+n3hob2Jv+Uk66hYgDSJUt92i5OMnlHq9Mfs6wxOb
+         C+GLfCyi9IGGkJU12OR3VC7mjmox0pJ+rqZX6O7pGrsxM28nwkESS5XjG5D/CyhGkh
+         PfP0tRMZlhklXu8m22CiTOTb63mej6s3WhfC/ExM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 4.19 111/133] timer: Prevent base->clk from moving backward
-Date:   Mon, 20 Jul 2020 17:37:38 +0200
-Message-Id: <20200720152809.105593165@linuxfoundation.org>
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.19 112/133] timer: Fix wheel index calculation on last level
+Date:   Mon, 20 Jul 2020 17:37:39 +0200
+Message-Id: <20200720152809.153182663@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -63,72 +61,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Frederic Weisbecker <frederic@kernel.org>
 
-commit 30c66fc30ee7a98c4f3adf5fb7e213b61884474f upstream.
+commit e2a71bdea81690b6ef11f4368261ec6f5b6891aa upstream.
 
-When a timer is enqueued with a negative delta (ie: expiry is below
-base->clk), it gets added to the wheel as expiring now (base->clk).
+When an expiration delta falls into the last level of the wheel, that delta
+has be compared against the maximum possible delay and reduced to fit in if
+necessary.
 
-Yet the value that gets stored in base->next_expiry, while calling
-trigger_dyntick_cpu(), is the initial timer->expires value. The
-resulting state becomes:
+However instead of comparing the delta against the maximum, the code
+compares the actual expiry against the maximum. Then instead of fixing the
+delta to fit in, it sets the maximum delta as the expiry value.
 
-	base->next_expiry < base->clk
+This can result in various undesired outcomes, the worst possible one
+being a timer expiring 15 days ahead to fire immediately.
 
-On the next timer enqueue, forward_timer_base() may accidentally
-rewind base->clk. As a possible outcome, timers may expire way too
-early, the worst case being that the highest wheel levels get spuriously
-processed again.
-
-To prevent from that, make sure that base->next_expiry doesn't get below
-base->clk.
-
-Fixes: a683f390b93f ("timers: Forward the wheel clock whenever possible")
+Fixes: 500462a9de65 ("timers: Switch to a non-cascading wheel")
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Tested-by: Juri Lelli <juri.lelli@redhat.com>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200703010657.2302-1-frederic@kernel.org
+Link: https://lkml.kernel.org/r/20200717140551.29076-2-frederic@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/time/timer.c |   17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ kernel/time/timer.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -580,7 +580,15 @@ trigger_dyntick_cpu(struct timer_base *b
- 	 * Set the next expiry time and kick the CPU so it can reevaluate the
- 	 * wheel:
- 	 */
--	base->next_expiry = timer->expires;
-+	if (time_before(timer->expires, base->clk)) {
-+		/*
-+		 * Prevent from forward_timer_base() moving the base->clk
-+		 * backward
-+		 */
-+		base->next_expiry = base->clk;
-+	} else {
-+		base->next_expiry = timer->expires;
-+	}
- 	wake_up_nohz_cpu(base->cpu);
- }
+@@ -519,8 +519,8 @@ static int calc_wheel_index(unsigned lon
+ 		 * Force expire obscene large timeouts to expire at the
+ 		 * capacity limit of the wheel.
+ 		 */
+-		if (expires >= WHEEL_TIMEOUT_CUTOFF)
+-			expires = WHEEL_TIMEOUT_MAX;
++		if (delta >= WHEEL_TIMEOUT_CUTOFF)
++			expires = clk + WHEEL_TIMEOUT_MAX;
  
-@@ -899,10 +907,13 @@ static inline void forward_timer_base(st
- 	 * If the next expiry value is > jiffies, then we fast forward to
- 	 * jiffies otherwise we forward to the next expiry value.
- 	 */
--	if (time_after(base->next_expiry, jnow))
-+	if (time_after(base->next_expiry, jnow)) {
- 		base->clk = jnow;
--	else
-+	} else {
-+		if (WARN_ON_ONCE(time_before(base->next_expiry, base->clk)))
-+			return;
- 		base->clk = base->next_expiry;
-+	}
- #endif
- }
- 
+ 		idx = calc_index(expires, LVL_DEPTH - 1);
+ 	}
 
 
