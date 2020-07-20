@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA731C433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64844C2BD10
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAAFD207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE26207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281420;
-	bh=ryk1JkLK4R/2OzRJdodKgOOsjjAB4I2jemhgOQ6/pEU=;
+	s=default; t=1595281423;
+	bh=qR3qR1P8zCZPBL7I5aiHn7cQAkCbUrhl/7b8QvE1Xlo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fJyqvYVe8NAhxGswGpAWQ2o0p/e/4Ezpb9Hjg5Boy07/SuVWzAHi8UK9JORwFLpfJ
-	 QUvTXWrEjfeP8ckX/MMz6XI/+WEMeGDTZISmXpqgehK+Zv+C2o9qv/R0oxVjjj1E/T
-	 H4ManVIJSpnbDjtCHMdJFV/o8GuexGHKqBh96S6M=
+	b=GO+fmWyeqxFyxqipIHwpW6/TV+A+RXvZze5FkpTI95GyH70SaH2I7C8o+NrkU5NyF
+	 TnSaHoVBbBzh2/lKQuOT73oJdw/ZfMK43f8IgPHMbA4zKzm0UzfL9PABwgY7381KpF
+	 6C7ldvFnBXpUAmJQ6150JKB7StgXh/1vvsnS1p+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgGTVnj (ORCPT
+        id S1729006AbgGTVnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57002 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:43:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728135AbgGTVi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:26 -0400
+        id S1728127AbgGTViZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84DE822CBB;
-        Mon, 20 Jul 2020 21:38:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6571F22BF5;
+        Mon, 20 Jul 2020 21:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281106;
-        bh=ryk1JkLK4R/2OzRJdodKgOOsjjAB4I2jemhgOQ6/pEU=;
+        s=default; t=1595281105;
+        bh=qR3qR1P8zCZPBL7I5aiHn7cQAkCbUrhl/7b8QvE1Xlo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sqKf10P3PAYh4/TCzdz3J3zD9WZ/yjLKNPkLYSfT5g3t8D7wbIUjReVQJCqPi74eB
-         pzibIQsN6lVqePBvLjRIu2kRMBnWAWV+l2deV6eV72ehW/zHKR0HkhATKygzhpisUb
-         lnlujtqqWM4XQVr9t9NDMjrWbbMC72IsD6wrItIo=
+        b=06pGCm0S+Wk9MiJqHe5yAkTkfAHaJnSiH7O9QffxxiWweve3xIU3s4TiyxnvreRty
+         WZreNzxTJW23CUEQv3EqrC4plXq1sOARTvzwma96L28CXq4+2TQuhBgXpUWW3tMDif
+         b3hJSk58cIgzxXg6HfqMxRyMPxoSizsN7qQfPuxo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 15/34] usb: dwc3: pci: add support for the Intel Tiger Lake PCH -H variant
-Date:   Mon, 20 Jul 2020 17:37:48 -0400
-Message-Id: <20200720213807.407380-15-sashal@kernel.org>
+Cc:     Derek Basehore <dbasehore@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 14/34] Input: elan_i2c - only increment wakeup count on touch
+Date:   Mon, 20 Jul 2020 17:37:47 -0400
+Message-Id: <20200720213807.407380-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
 References: <20200720213807.407380-1-sashal@kernel.org>
@@ -59,41 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+From: Derek Basehore <dbasehore@chromium.org>
 
-[ Upstream commit c3f595a8119207cc0f82b3dc6ec5bbf6f3e6b135 ]
+[ Upstream commit 966334dfc472bdfa67bed864842943b19755d192 ]
 
-This patch adds the necessary PCI ID for TGP-H devices.
+This moves the wakeup increment for elan devices to the touch report.
+This prevents the drivers from incorrectly reporting a wakeup when the
+resume callback resets then device, which causes an interrupt to
+occur.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+Link: https://lore.kernel.org/r/20200706235046.1984283-1-dbasehore@chromium.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/input/mouse/elan_i2c_core.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-index 96c05b121fac8..47b7e83d90626 100644
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -38,6 +38,7 @@
- #define PCI_DEVICE_ID_INTEL_ICLLP		0x34ee
- #define PCI_DEVICE_ID_INTEL_EHLLP		0x4b7e
- #define PCI_DEVICE_ID_INTEL_TGPLP		0xa0ee
-+#define PCI_DEVICE_ID_INTEL_TGPH		0x43ee
+diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+index 8719da5403834..196e8505dd8d7 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -951,6 +951,8 @@ static void elan_report_absolute(struct elan_tp_data *data, u8 *packet)
+ 	u8 hover_info = packet[ETP_HOVER_INFO_OFFSET];
+ 	bool contact_valid, hover_event;
  
- #define PCI_INTEL_BXT_DSM_GUID		"732b85d5-b7a7-4a1b-9ba0-4bbd00ffd511"
- #define PCI_INTEL_BXT_FUNC_PMU_PWR	4
-@@ -358,6 +359,9 @@ static const struct pci_device_id dwc3_pci_id_table[] = {
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_TGPLP),
- 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
- 
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_TGPH),
-+	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
++	pm_wakeup_event(&data->client->dev, 0);
 +
- 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_NL_USB),
- 	  (kernel_ulong_t) &dwc3_pci_amd_properties, },
- 	{  }	/* Terminating Entry */
+ 	hover_event = hover_info & 0x40;
+ 	for (i = 0; i < ETP_MAX_FINGERS; i++) {
+ 		contact_valid = tp_info & (1U << (3 + i));
+@@ -974,6 +976,8 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
+ 	u8 *packet = &report[ETP_REPORT_ID_OFFSET + 1];
+ 	int x, y;
+ 
++	pm_wakeup_event(&data->client->dev, 0);
++
+ 	if (!data->tp_input) {
+ 		dev_warn_once(&data->client->dev,
+ 			      "received a trackpoint report while no trackpoint device has been created. Please report upstream.\n");
+@@ -998,7 +1002,6 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
+ static irqreturn_t elan_isr(int irq, void *dev_id)
+ {
+ 	struct elan_tp_data *data = dev_id;
+-	struct device *dev = &data->client->dev;
+ 	int error;
+ 	u8 report[ETP_MAX_REPORT_LEN];
+ 
+@@ -1016,8 +1019,6 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
+ 	if (error)
+ 		goto out;
+ 
+-	pm_wakeup_event(dev, 0);
+-
+ 	switch (report[ETP_REPORT_ID_OFFSET]) {
+ 	case ETP_REPORT_ID:
+ 		elan_report_absolute(data, report);
+@@ -1026,7 +1027,7 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
+ 		elan_report_trackpoint(data, report);
+ 		break;
+ 	default:
+-		dev_err(dev, "invalid report id data (%x)\n",
++		dev_err(&data->client->dev, "invalid report id data (%x)\n",
+ 			report[ETP_REPORT_ID_OFFSET]);
+ 	}
+ 
 -- 
 2.25.1
 
