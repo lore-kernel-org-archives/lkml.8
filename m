@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D507C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AECFC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A88E2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F852065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260688;
-	bh=ZmqYawwQGvRSl0ckDuDPBkrT0eHhbVkG/uYDczVrp3I=;
+	s=default; t=1595260691;
+	bh=7mPeL6q5fqzI+QggGUNvC3bQjLzT8Ro3i8ISN2AzR1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O6N4Put9nBBB85xP8M4Y3mAO0dJkp5lbGBA4w0Yqstbei9nqWkiF9FVIYHj5bVdR9
-	 QG+zYe03dPnsyKRisgBHfF9EiYKINJPsDJk1XLO6pK2dsRHoos90xsPwBt9uwXzotp
-	 rRajQGZRZuh7lO5hPs85ACK4LTe7Eh3Y91ewjgfM=
+	b=nle1qbEXDhzjKOprJkHnp7e84oLq9pWVK8xLf/k/mriuUtrykdRBNXuk2Tdz3lXtv
+	 Rd96eRxWrmo1LG7zYbOBJi5YG8PdqRBLCZQ5qCThi+Aoxl4hg/tEy5Rtrpk/+Aq3Qa
+	 74FopPw/4zq+X0PcprBBBDfdVLAzOGnoRu2eNVJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731990AbgGTP6G (ORCPT
+        id S1731998AbgGTP6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:58:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58208 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731985AbgGTP6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:58:04 -0400
+        id S1731991AbgGTP6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:58:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C66F206E9;
-        Mon, 20 Jul 2020 15:58:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EE9A206E9;
+        Mon, 20 Jul 2020 15:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260684;
-        bh=ZmqYawwQGvRSl0ckDuDPBkrT0eHhbVkG/uYDczVrp3I=;
+        s=default; t=1595260686;
+        bh=7mPeL6q5fqzI+QggGUNvC3bQjLzT8Ro3i8ISN2AzR1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ACIJ/Nw8zcddqyaAXiFRR1tzVyYUv9BvPetfFnj03xGG8+I2k9CN+KUvtOSXR6knD
-         3lwavgoJleSXk32acvdQHNNegtJnWYXzxbyQSJNOrsMFQ8Rc1FSsG5SUEr2299GAeP
-         r4bhBJcbNs9E7KzhF6Ov9S6VjSMmvyStQ20PGBwg=
+        b=A5KXijEqwTiLI06rRJYuu+1Rhmd7AWjpu6bOTWCKrVTu5IJIYPO4hgqQnkZCOfMzK
+         66adA54VyAtCVwlDR/OgrX6++msgbDdadEsTNQYAwBAMU+DSc2gaw6PYZysanMeDVa
+         8tH8gEBKOg62kl2OdC5kohZ8XBuDwRVUpeTTEG+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 057/215] of: of_mdio: Correct loop scanning logic
-Date:   Mon, 20 Jul 2020 17:35:39 +0200
-Message-Id: <20200720152822.926932540@linuxfoundation.org>
+Subject: [PATCH 5.4 058/215] net: macb: call pm_runtime_put_sync on failure path
+Date:   Mon, 20 Jul 2020 17:35:40 +0200
+Message-Id: <20200720152822.973921309@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -61,52 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+[ Upstream commit 0eaf228d574bd82a9aed73e3953bfb81721f4227 ]
 
-[ Upstream commit 5a8d7f126c97d04d893f5e5be2b286437a0d01b0 ]
+Call pm_runtime_put_sync() on failure path of at91ether_open.
 
-Commit 209c65b61d94 ("drivers/of/of_mdio.c:fix of_mdiobus_register()")
-introduced a break of the loop on the premise that a successful
-registration should exit the loop. The premise is correct but not to
-code, because rc && rc != -ENODEV is just a special error condition,
-that means we would exit the loop even with rc == -ENODEV which is
-absolutely not correct since this is the error code to indicate to the
-MDIO bus layer that scanning should continue.
-
-Fix this by explicitly checking for rc = 0 as the only valid condition
-to break out of the loop.
-
-Fixes: 209c65b61d94 ("drivers/of/of_mdio.c:fix of_mdiobus_register()")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: e6a41c23df0d ("net: macb: ensure interface is not suspended on at91rm9200")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/of_mdio.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index c34a6df712adb..26ddb4cc675a9 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -265,10 +265,15 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 				 child, addr);
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 01ed4d4296db2..a5c4d4d66df35 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3708,7 +3708,7 @@ static int at91ether_open(struct net_device *dev)
  
- 			if (of_mdiobus_child_is_phy(child)) {
-+				/* -ENODEV is the return code that PHYLIB has
-+				 * standardized on to indicate that bus
-+				 * scanning should continue.
-+				 */
- 				rc = of_mdiobus_register_phy(mdio, child, addr);
--				if (rc && rc != -ENODEV)
-+				if (!rc)
-+					break;
-+				if (rc != -ENODEV)
- 					goto unregister;
--				break;
- 			}
- 		}
- 	}
+ 	ret = at91ether_start(dev);
+ 	if (ret)
+-		return ret;
++		goto pm_exit;
+ 
+ 	/* Enable MAC interrupts */
+ 	macb_writel(lp, IER, MACB_BIT(RCOMP)	|
+@@ -3725,6 +3725,10 @@ static int at91ether_open(struct net_device *dev)
+ 	netif_start_queue(dev);
+ 
+ 	return 0;
++
++pm_exit:
++	pm_runtime_put_sync(&lp->pdev->dev);
++	return ret;
+ }
+ 
+ /* Close the interface */
 -- 
 2.25.1
 
