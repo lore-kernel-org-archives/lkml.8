@@ -2,194 +2,123 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F21FC433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B65AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 451B522BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CB420773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:38:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595263108;
+	bh=1tA+2fHiDrinWEOULh5l8EluCQFOE21aDFPmgw/uKDs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JqwOzA2QtzQLxpLVKSI6of9MJZTSBgtM8D7hePUhsSuc306+QdHg8JZ4ew1cSwW+m
+	 dwL21MinaLOY3d/XySzkUG35Zj+8q0Ckt9z8d9rgEjbezg4FXT057IxIPIMyeuc1Er
+	 T9BocMFOfyNUgIi8MSiNBHiVPJlQc7aRJpgjWQao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388993AbgGTQiQ (ORCPT
+        id S2388989AbgGTQi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:38:16 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:15323 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388950AbgGTQiL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:38:11 -0400
-X-Originating-IP: 42.109.212.217
-Received: from localhost (unknown [42.109.212.217])
-        (Authenticated sender: me@yadavpratyush.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 7114824000E;
-        Mon, 20 Jul 2020 16:38:04 +0000 (UTC)
-Date:   Mon, 20 Jul 2020 22:08:02 +0530
-From:   Pratyush Yadav <me@yadavpratyush.com>
-To:     Tudor.Ambarus@microchip.com
-Cc:     p.yadav@ti.com, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com, broonie@kernel.org, Nicolas.Ferre@microchip.com,
-        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
-        matthias.bgg@gmail.com, michal.simek@xilinx.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, boris.brezillon@collabora.com,
-        nsekhar@ti.com
-Subject: Re: [PATCH v10 07/17] mtd: spi-nor: sfdp: parse xSPI Profile 1.0
- table
-Message-ID: <20200720163802.veql43cmal7sunit@yadavpratyush.com>
-References: <20200623183030.26591-1-p.yadav@ti.com>
- <20200623183030.26591-8-p.yadav@ti.com>
- <1450d8c8-cda4-51e3-9f57-0b2f00825f11@microchip.com>
+        Mon, 20 Jul 2020 12:38:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730482AbgGTPud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:50:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE97220657;
+        Mon, 20 Jul 2020 15:50:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260233;
+        bh=1tA+2fHiDrinWEOULh5l8EluCQFOE21aDFPmgw/uKDs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=thevYuAYd3ShNXUfz/yflaeRwl7lWnQQecCv9mNTEZpVwEZX1zaQtAL3Jx+FkFgVW
+         ZJpBhfaRL1O0dJHN83r5kxAOwOAV4qhIraNL1HjjnyW1r24fT3vDPq9VNY3AZmlI5B
+         5AI41Q7WnN/jn7gLY9h9sx8v2Bre38kFPGct8R3I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 028/133] arm64/alternatives: dont patch up internal branches
+Date:   Mon, 20 Jul 2020 17:36:15 +0200
+Message-Id: <20200720152805.094092400@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
+References: <20200720152803.732195882@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1450d8c8-cda4-51e3-9f57-0b2f00825f11@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tudor,
+From: Ard Biesheuvel <ardb@kernel.org>
 
-On 08/07/20 04:01PM, Tudor.Ambarus@microchip.com wrote:
-> On 6/23/20 9:30 PM, Pratyush Yadav wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > This table is indication that the flash is xSPI compliant and hence
-> > supports octal DTR mode. Extract information like the fast read opcode,
-> > dummy cycles, the number of dummy cycles needed for a Read Status
-> > Register command, and the number of address bytes needed for a Read
-> > Status Register command.
-> > 
-> > We don't know what speed the controller is running at. Find the fast
-> > read dummy cycles for the fastest frequency the flash can run at to be
-> > sure we are never short of dummy cycles. If nothing is available,
-> > default to 20. Flashes that use a different value should update it in
-> > their fixup hooks.
-> > 
-> > Since we want to set read settings, expose spi_nor_set_read_settings()
-> > in core.h.
-> > 
-> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> > ---
-> >  drivers/mtd/spi-nor/core.c |  2 +-
-> >  drivers/mtd/spi-nor/core.h | 10 ++++
-> >  drivers/mtd/spi-nor/sfdp.c | 98 ++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 109 insertions(+), 1 deletion(-)
-> > 
-[...]
-> > diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
-> > index 3f709de5ea67..d5a24e61813c 100644
-> > --- a/drivers/mtd/spi-nor/sfdp.c
-> > +++ b/drivers/mtd/spi-nor/sfdp.c
-[...]
-> > @@ -66,6 +70,16 @@ struct sfdp_bfpt_erase {
-> >         u32                     shift;
-> >  };
-> > 
-> > +/* xSPI Profile 1.0 table (from JESD216D.01). */
-> > +#define PROFILE1_DWORD1_RD_FAST_CMD            GENMASK(15, 8)
-> > +#define PROFILE1_DWORD1_RDSR_DUMMY             BIT(28)
-> > +#define PROFILE1_DWORD1_RDSR_ADDR_BYTES                BIT(29)
-> > +#define PROFILE1_DWORD4_DUMMY_200MHZ           GENMASK(11, 7)
-> > +#define PROFILE1_DWORD5_DUMMY_166MHZ           GENMASK(31, 27)
-> > +#define PROFILE1_DWORD5_DUMMY_133MHZ           GENMASK(21, 17)
-> > +#define PROFILE1_DWORD5_DUMMY_100MHZ           GENMASK(11, 7)
-> 
-> we should order these macros in a consistent way. I see that previous macros
-> are declared in order starting from MSB to LSB.
-> 
-> > +#define PROFILE1_DUMMY_DEFAULT                 20
-> 
-> we need to explain why the default dummy value is 20.
+[ Upstream commit 5679b28142193a62f6af93249c0477be9f0c669b ]
 
-No reason other than the fact that it is the default for the first flash 
-that uses Profile 1.0 parsing (S28HS512T). AFAIK a similar reasoning is 
-followed for the default being 8 for 1-1-4 or 1-1-8 modes.
+Commit f7b93d42945c ("arm64/alternatives: use subsections for replacement
+sequences") moved the alternatives replacement sequences into subsections,
+in order to keep the as close as possible to the code that they replace.
 
-I can't think of any reasonable way of deciding on a default value since 
-it varies from flash to flash.
+Unfortunately, this broke the logic in branch_insn_requires_update,
+which assumed that any branch into kernel executable code was a branch
+that required updating, which is no longer the case now that the code
+sequences that are patched in are in the same section as the patch site
+itself.
+
+So the only way to discriminate branches that require updating and ones
+that don't is to check whether the branch targets the replacement sequence
+itself, and so we can drop the call to kernel_text_address() entirely.
+
+Fixes: f7b93d42945c ("arm64/alternatives: use subsections for replacement sequences")
+Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Tested-by: Alexandru Elisei <alexandru.elisei@arm.com>
+Link: https://lore.kernel.org/r/20200709125953.30918-1-ardb@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/kernel/alternative.c | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
+
+diff --git a/arch/arm64/kernel/alternative.c b/arch/arm64/kernel/alternative.c
+index b5d603992d401..0d345622bbba2 100644
+--- a/arch/arm64/kernel/alternative.c
++++ b/arch/arm64/kernel/alternative.c
+@@ -44,20 +44,8 @@ struct alt_region {
+  */
+ static bool branch_insn_requires_update(struct alt_instr *alt, unsigned long pc)
+ {
+-	unsigned long replptr;
+-
+-	if (kernel_text_address(pc))
+-		return true;
+-
+-	replptr = (unsigned long)ALT_REPL_PTR(alt);
+-	if (pc >= replptr && pc <= (replptr + alt->alt_len))
+-		return false;
+-
+-	/*
+-	 * Branching into *another* alternate sequence is doomed, and
+-	 * we're not even trying to fix it up.
+-	 */
+-	BUG();
++	unsigned long replptr = (unsigned long)ALT_REPL_PTR(alt);
++	return !(pc >= replptr && pc <= (replptr + alt->alt_len));
+ }
  
-> How about declaring all these macros immediately above of spi_nor_parse_profile1()?
-> 
-> > +
-> >  #define SMPT_CMD_ADDRESS_LEN_MASK              GENMASK(23, 22)
-> >  #define SMPT_CMD_ADDRESS_LEN_0                 (0x0UL << 22)
-> >  #define SMPT_CMD_ADDRESS_LEN_3                 (0x1UL << 22)
-> > @@ -1106,6 +1120,86 @@ static int spi_nor_parse_4bait(struct spi_nor *nor,
-> >         return ret;
-> >  }
-> > 
-> > +/**
-> > + * spi_nor_parse_profile1() - parse the xSPI Profile 1.0 table
-> > + * @nor:               pointer to a 'struct spi_nor'
-> > + * @param_header:      pointer to the 'struct sfdp_parameter_header' describing
-> > + *                     the 4-Byte Address Instruction Table length and version.
-> > + * @params:            pointer to the 'struct spi_nor_flash_parameter' to be.
-> > + *
-> > + * Return: 0 on success, -errno otherwise.
-> > + */
-> > +static int spi_nor_parse_profile1(struct spi_nor *nor,
-> > +                                 const struct sfdp_parameter_header *profile1_header,
-> > +                                 struct spi_nor_flash_parameter *params)
-> > +{
-> > +       u32 *table, opcode, addr;
-> 
-> s/table/dwords?
-> 
-> u8 opcode?
-> 
-> > +       size_t len;
-> > +       int ret, i;
-> > +       u8 dummy;
-> > +
-> > +       len = profile1_header->length * sizeof(*table);
-> > +       table = kmalloc(len, GFP_KERNEL);
-> > +       if (!table)
-> > +               return -ENOMEM;
-> > +
-> > +       addr = SFDP_PARAM_HEADER_PTP(profile1_header);
-> > +       ret = spi_nor_read_sfdp(nor, addr, len, table);
-> > +       if (ret)
-> > +               goto out;
-> > +
-> > +       /* Fix endianness of the table DWORDs. */
-> > +       for (i = 0; i < profile1_header->length; i++)
-> > +               table[i] = le32_to_cpu(table[i]);
-> 
-> le32_to_cpu_array(table, profile1_header->length);
-> 
-> > +
-> > +       /* Get 8D-8D-8D fast read opcode and dummy cycles. */
-> > +       opcode = FIELD_GET(PROFILE1_DWORD1_RD_FAST_CMD, table[0]);
-> > +
-> > +       /*
-> > +        * We don't know what speed the controller is running at. Find the
-> > +        * dummy cycles for the fastest frequency the flash can run at to be
-> > +        * sure we are never short of dummy cycles. A value of 0 means the
-> > +        * frequency is not supported.
-> > +        *
-> > +        * Default to PROFILE1_DUMMY_DEFAULT if we don't find anything, and let
-> > +        * flashes set the correct value if needed in their fixup hooks.
-> > +        */
-> > +       dummy = FIELD_GET(PROFILE1_DWORD4_DUMMY_200MHZ, table[3]);
-> > +       if (!dummy)
-> > +               dummy = FIELD_GET(PROFILE1_DWORD5_DUMMY_166MHZ, table[4]);
-> > +       if (!dummy)
-> > +               dummy = FIELD_GET(PROFILE1_DWORD5_DUMMY_133MHZ, table[4]);
-> > +       if (!dummy)
-> > +               dummy = FIELD_GET(PROFILE1_DWORD5_DUMMY_100MHZ, table[4]);
-> > +       if (!dummy)
-> > +               dummy = PROFILE1_DUMMY_DEFAULT;
-> > +
-> > +       /* Round up to an even value to avoid tripping controllers up. */
-> > +       dummy = ROUND_UP_TO(dummy, 2);
-> > +
-[...]
-
+ #define align_down(x, a)	((unsigned long)(x) & ~(((unsigned long)(a)) - 1))
 -- 
-Regards,
-Pratyush Yadav
+2.25.1
+
+
+
