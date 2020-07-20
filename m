@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F76C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA731C433F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F97D207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAAFD207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281414;
-	bh=8howY8j9fNGGWqKTj9zlyAhmGqYzekyWtWpnYVgsxus=;
+	s=default; t=1595281420;
+	bh=ryk1JkLK4R/2OzRJdodKgOOsjjAB4I2jemhgOQ6/pEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yvGwQ1AvTaAPgCNFp1fnT+yku9LQdrnjuxvDd2ixDTbvHpUMhzW+/vRcT9bS5Qqtg
-	 mk+Zc+1VDYK9P4GWzkGruO5wJOXxYJCkdwsczRTC21Pb1Xk8sxpUqsP3uJsKO37xe9
-	 qaT9cQzTJ7oW0+CQ5TDnTdLmm+GpCKkFOOSEkyHs=
+	b=fJyqvYVe8NAhxGswGpAWQ2o0p/e/4Ezpb9Hjg5Boy07/SuVWzAHi8UK9JORwFLpfJ
+	 QUvTXWrEjfeP8ckX/MMz6XI/+WEMeGDTZISmXpqgehK+Zv+C2o9qv/R0oxVjjj1E/T
+	 H4ManVIJSpnbDjtCHMdJFV/o8GuexGHKqBh96S6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbgGTVnd (ORCPT
+        id S1728982AbgGTVnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:43:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57124 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:43:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728157AbgGTVia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:30 -0400
+        id S1728135AbgGTVi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDC3C22C9D;
-        Mon, 20 Jul 2020 21:38:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84DE822CBB;
+        Mon, 20 Jul 2020 21:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281109;
-        bh=8howY8j9fNGGWqKTj9zlyAhmGqYzekyWtWpnYVgsxus=;
+        s=default; t=1595281106;
+        bh=ryk1JkLK4R/2OzRJdodKgOOsjjAB4I2jemhgOQ6/pEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YEnVzhW9OoXq+wWZuc4hCOrTL4lPhtAJjJogKS/suoNd5QUVIqlte0liVgCsLZhuL
-         KaZ92Ffqdwl89Ma7swX9OqsZI8JXhWVvw3OpqkpDESyZ/dyIe9gx/SnJF/waWkcL3V
-         nrFvELtdpATKBNWkma9z0QY57oDIpCw8dtx36yvQ=
+        b=sqKf10P3PAYh4/TCzdz3J3zD9WZ/yjLKNPkLYSfT5g3t8D7wbIUjReVQJCqPi74eB
+         pzibIQsN6lVqePBvLjRIu2kRMBnWAWV+l2deV6eV72ehW/zHKR0HkhATKygzhpisUb
+         lnlujtqqWM4XQVr9t9NDMjrWbbMC72IsD6wrItIo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Chen <peter.chen@nxp.com>, kbuild test robot <lkp@intel.com>,
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 18/34] usb: cdns3: ep0: fix some endian issues
-Date:   Mon, 20 Jul 2020 17:37:51 -0400
-Message-Id: <20200720213807.407380-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 15/34] usb: dwc3: pci: add support for the Intel Tiger Lake PCH -H variant
+Date:   Mon, 20 Jul 2020 17:37:48 -0400
+Message-Id: <20200720213807.407380-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
 References: <20200720213807.407380-1-sashal@kernel.org>
@@ -59,97 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-[ Upstream commit 9f81d45c79271def8a9b90447b04b9c6323291f9 ]
+[ Upstream commit c3f595a8119207cc0f82b3dc6ec5bbf6f3e6b135 ]
 
-It is found by sparse.
+This patch adds the necessary PCI ID for TGP-H devices.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/cdns3/ep0.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/usb/dwc3/dwc3-pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
-index da4c5eb03d7ee..666cebd9c5f29 100644
---- a/drivers/usb/cdns3/ep0.c
-+++ b/drivers/usb/cdns3/ep0.c
-@@ -37,18 +37,18 @@ static void cdns3_ep0_run_transfer(struct cdns3_device *priv_dev,
- 	struct cdns3_usb_regs __iomem *regs = priv_dev->regs;
- 	struct cdns3_endpoint *priv_ep = priv_dev->eps[0];
+diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
+index 96c05b121fac8..47b7e83d90626 100644
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -38,6 +38,7 @@
+ #define PCI_DEVICE_ID_INTEL_ICLLP		0x34ee
+ #define PCI_DEVICE_ID_INTEL_EHLLP		0x4b7e
+ #define PCI_DEVICE_ID_INTEL_TGPLP		0xa0ee
++#define PCI_DEVICE_ID_INTEL_TGPH		0x43ee
  
--	priv_ep->trb_pool[0].buffer = TRB_BUFFER(dma_addr);
--	priv_ep->trb_pool[0].length = TRB_LEN(length);
-+	priv_ep->trb_pool[0].buffer = cpu_to_le32(TRB_BUFFER(dma_addr));
-+	priv_ep->trb_pool[0].length = cpu_to_le32(TRB_LEN(length));
+ #define PCI_INTEL_BXT_DSM_GUID		"732b85d5-b7a7-4a1b-9ba0-4bbd00ffd511"
+ #define PCI_INTEL_BXT_FUNC_PMU_PWR	4
+@@ -358,6 +359,9 @@ static const struct pci_device_id dwc3_pci_id_table[] = {
+ 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_TGPLP),
+ 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
  
- 	if (zlp) {
--		priv_ep->trb_pool[0].control = TRB_CYCLE | TRB_TYPE(TRB_NORMAL);
--		priv_ep->trb_pool[1].buffer = TRB_BUFFER(dma_addr);
--		priv_ep->trb_pool[1].length = TRB_LEN(0);
--		priv_ep->trb_pool[1].control = TRB_CYCLE | TRB_IOC |
--		    TRB_TYPE(TRB_NORMAL);
-+		priv_ep->trb_pool[0].control = cpu_to_le32(TRB_CYCLE | TRB_TYPE(TRB_NORMAL));
-+		priv_ep->trb_pool[1].buffer = cpu_to_le32(TRB_BUFFER(dma_addr));
-+		priv_ep->trb_pool[1].length = cpu_to_le32(TRB_LEN(0));
-+		priv_ep->trb_pool[1].control = cpu_to_le32(TRB_CYCLE | TRB_IOC |
-+		    TRB_TYPE(TRB_NORMAL));
- 	} else {
--		priv_ep->trb_pool[0].control = TRB_CYCLE | TRB_IOC |
--		    TRB_TYPE(TRB_NORMAL);
-+		priv_ep->trb_pool[0].control = cpu_to_le32(TRB_CYCLE | TRB_IOC |
-+		    TRB_TYPE(TRB_NORMAL));
- 		priv_ep->trb_pool[1].control = 0;
- 	}
- 
-@@ -264,11 +264,11 @@ static int cdns3_req_ep0_get_status(struct cdns3_device *priv_dev,
- 	case USB_RECIP_INTERFACE:
- 		return cdns3_ep0_delegate_req(priv_dev, ctrl);
- 	case USB_RECIP_ENDPOINT:
--		index = cdns3_ep_addr_to_index(ctrl->wIndex);
-+		index = cdns3_ep_addr_to_index(le16_to_cpu(ctrl->wIndex));
- 		priv_ep = priv_dev->eps[index];
- 
- 		/* check if endpoint is stalled or stall is pending */
--		cdns3_select_ep(priv_dev, ctrl->wIndex);
-+		cdns3_select_ep(priv_dev, le16_to_cpu(ctrl->wIndex));
- 		if (EP_STS_STALL(readl(&priv_dev->regs->ep_sts)) ||
- 		    (priv_ep->flags & EP_STALL_PENDING))
- 			usb_status =  BIT(USB_ENDPOINT_HALT);
-@@ -388,10 +388,10 @@ static int cdns3_ep0_feature_handle_endpoint(struct cdns3_device *priv_dev,
- 	if (!(ctrl->wIndex & ~USB_DIR_IN))
- 		return 0;
- 
--	index = cdns3_ep_addr_to_index(ctrl->wIndex);
-+	index = cdns3_ep_addr_to_index(le16_to_cpu(ctrl->wIndex));
- 	priv_ep = priv_dev->eps[index];
- 
--	cdns3_select_ep(priv_dev, ctrl->wIndex);
-+	cdns3_select_ep(priv_dev, le16_to_cpu(ctrl->wIndex));
- 
- 	if (set)
- 		__cdns3_gadget_ep_set_halt(priv_ep);
-@@ -452,7 +452,7 @@ static int cdns3_req_ep0_set_sel(struct cdns3_device *priv_dev,
- 	if (priv_dev->gadget.state < USB_STATE_ADDRESS)
- 		return -EINVAL;
- 
--	if (ctrl_req->wLength != 6) {
-+	if (le16_to_cpu(ctrl_req->wLength) != 6) {
- 		dev_err(priv_dev->dev, "Set SEL should be 6 bytes, got %d\n",
- 			ctrl_req->wLength);
- 		return -EINVAL;
-@@ -476,7 +476,7 @@ static int cdns3_req_ep0_set_isoch_delay(struct cdns3_device *priv_dev,
- 	if (ctrl_req->wIndex || ctrl_req->wLength)
- 		return -EINVAL;
- 
--	priv_dev->isoch_delay = ctrl_req->wValue;
-+	priv_dev->isoch_delay = le16_to_cpu(ctrl_req->wValue);
- 
- 	return 0;
- }
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_TGPH),
++	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
++
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_NL_USB),
+ 	  (kernel_ulong_t) &dwc3_pci_amd_properties, },
+ 	{  }	/* Terminating Entry */
 -- 
 2.25.1
 
