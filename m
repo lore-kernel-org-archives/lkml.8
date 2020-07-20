@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD232C4345A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51F2C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9580C22B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B7122BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595237146;
-	bh=YMyAfjljQc8EzCHFIHsxaCYd3kRBN7HbarnPGa14M7k=;
+	s=default; t=1595237166;
+	bh=xIW2F2IJFqxTzMmaAs6C8+3yiJvBuUFpN7ht+vECA5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L6MQwM3j4h7FXgFshYD/2yhmPYxVtKqqGXOXIOBmVzqJ/oslYImKxt2RxQwfG/adZ
-	 FI1rVoNYPSlPfDTJSxwsl41WroTEhKGS2XxaqCybskSEE8rJ3r8eN7+mJh5gl5Ipnr
-	 Rolb+PXzU7bsQoPNK0DkGxzbX5AN70lLkR7q6uOU=
+	b=pIWGdbIjUKcUNrHsMHhpp6TSm04OsMReFxqUoprRGDEBIGcV/UkEL+k4nAxyxA8VT
+	 99TmYfxL6pQHAcm3NRn58RglUG10lztCKItZrVBRroUHrLwqo5ki055bABhwdGMxqd
+	 9GMw9YUwtsDr07iluPLAqjpcnfeoUYE0/9gbzu5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgGTJZp (ORCPT
+        id S1728335AbgGTJ0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:25:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39570 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 05:26:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726730AbgGTJZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:25:44 -0400
+        id S1728115AbgGTJ0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 05:26:01 -0400
 Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B51821775;
-        Mon, 20 Jul 2020 09:25:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6D012176B;
+        Mon, 20 Jul 2020 09:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595237144;
-        bh=YMyAfjljQc8EzCHFIHsxaCYd3kRBN7HbarnPGa14M7k=;
+        s=default; t=1595237160;
+        bh=xIW2F2IJFqxTzMmaAs6C8+3yiJvBuUFpN7ht+vECA5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R/sQXHHftzERFhSX4qe/uBjqX1PQydghDLSbhQH84dS6AvDOZYJNhqdbcctYhKHqy
-         6yHeLNt65hm5HlvIwNeOGGFk12IFwzl/x/ngBS/kMGJK7lUlQ9BMmqxPT158JLP1sj
-         unUTxs6WPJwzX9HI1Y8+tYlm3Cv1r1fkKGph/VT0=
+        b=rrNLOpGtsBkLwzoA0ZoHKqviCVJ3KJRCdTwu93rSdZ36ELhztooGsQ2e4T8KUYbwf
+         g95kfDYYhWT0rijSXjiKDluNKSd11vd3VHc2VWrEE5zvJz5wMrVk6WVbraWxItZhwN
+         Z/wN2S6aNtjO+InKcFYziVst7pgrShtls+s5WRPo=
 From:   Mike Rapoport <rppt@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -67,9 +67,9 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-nvdimm@lists.01.org, linux-riscv@lists.infradead.org,
         x86@kernel.org
-Subject: [PATCH 4/6] arch, mm: wire up secretmemfd system call were relevant
-Date:   Mon, 20 Jul 2020 12:24:33 +0300
-Message-Id: <20200720092435.17469-5-rppt@kernel.org>
+Subject: [PATCH 6/6] mm: secretmem: add ability to reserve memory at boot
+Date:   Mon, 20 Jul 2020 12:24:35 +0300
+Message-Id: <20200720092435.17469-7-rppt@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200720092435.17469-1-rppt@kernel.org>
 References: <20200720092435.17469-1-rppt@kernel.org>
@@ -82,108 +82,213 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mike Rapoport <rppt@linux.ibm.com>
 
-Wire up secretmemfd system call on architectures that define
-ARCH_HAS_SET_DIRECT_MAP, namely arm64, risc-v and x86.
+Taking pages out from the direct map and bringing them back may create
+undesired fragmentation and usage of the smaller pages in the direct
+mapping of the physical memory.
+
+This can be avoided if a significantly large area of the physical memory
+would be reserved for secretmem purposes at boot time.
+
+Add ability to reserve physical memory for secretmem at boot time using
+"secretmem" kernel parameter and then use that reserved memory as a global
+pool for secret memory needs.
 
 Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- arch/arm64/include/asm/unistd32.h      | 2 ++
- arch/arm64/include/uapi/asm/unistd.h   | 1 +
- arch/riscv/include/asm/unistd.h        | 1 +
- arch/x86/entry/syscalls/syscall_32.tbl | 1 +
- arch/x86/entry/syscalls/syscall_64.tbl | 1 +
- include/linux/syscalls.h               | 1 +
- include/uapi/asm-generic/unistd.h      | 7 ++++++-
- 7 files changed, 13 insertions(+), 1 deletion(-)
+ mm/secretmem.c | 134 ++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 126 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index 6d95d0c8bf2f..f9e00baa67f5 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -885,6 +885,8 @@ __SYSCALL(__NR_openat2, sys_openat2)
- __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
- #define __NR_faccessat2 439
- __SYSCALL(__NR_faccessat2, sys_faccessat2)
-+#define __NR_secretmemfd 439
-+__SYSCALL(__NR_secretmemfd, sys_secretmemfd)
+diff --git a/mm/secretmem.c b/mm/secretmem.c
+index dce56f84968f..322f425dbb22 100644
+--- a/mm/secretmem.c
++++ b/mm/secretmem.c
+@@ -8,6 +8,7 @@
+ #include <linux/pagemap.h>
+ #include <linux/genalloc.h>
+ #include <linux/syscalls.h>
++#include <linux/memblock.h>
+ #include <linux/pseudo_fs.h>
+ #include <linux/set_memory.h>
+ #include <linux/sched/signal.h>
+@@ -30,6 +31,39 @@ struct secretmem_ctx {
+ 	unsigned int mode;
+ };
  
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/arm64/include/uapi/asm/unistd.h b/arch/arm64/include/uapi/asm/unistd.h
-index f83a70e07df8..f2693f05fc80 100644
---- a/arch/arm64/include/uapi/asm/unistd.h
-+++ b/arch/arm64/include/uapi/asm/unistd.h
-@@ -20,5 +20,6 @@
- #define __ARCH_WANT_SET_GET_RLIMIT
- #define __ARCH_WANT_TIME32_SYSCALLS
- #define __ARCH_WANT_SYS_CLONE3
-+#define __ARCH_WANT_SECRETMEMFD
- 
- #include <asm-generic/unistd.h>
-diff --git a/arch/riscv/include/asm/unistd.h b/arch/riscv/include/asm/unistd.h
-index 977ee6181dab..9e47d9aed5eb 100644
---- a/arch/riscv/include/asm/unistd.h
-+++ b/arch/riscv/include/asm/unistd.h
-@@ -9,6 +9,7 @@
-  */
- 
- #define __ARCH_WANT_SYS_CLONE
-+#define __ARCH_WANT_SECRETMEMFD
- 
- #include <uapi/asm/unistd.h>
- 
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index d8f8a1a69ed1..7b91a932ed13 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -443,3 +443,4 @@
- 437	i386	openat2			sys_openat2
- 438	i386	pidfd_getfd		sys_pidfd_getfd
- 439	i386	faccessat2		sys_faccessat2
-+440	i386	secretmemfd		sys_secretmemfd
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 78847b32e137..9cddea4ec1ce 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -360,6 +360,7 @@
- 437	common	openat2			sys_openat2
- 438	common	pidfd_getfd		sys_pidfd_getfd
- 439	common	faccessat2		sys_faccessat2
-+440	common	secretmemfd		sys_secretmemfd
- 
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index b951a87da987..8fe242fc70ea 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1005,6 +1005,7 @@ asmlinkage long sys_pidfd_send_signal(int pidfd, int sig,
- 				       siginfo_t __user *info,
- 				       unsigned int flags);
- asmlinkage long sys_pidfd_getfd(int pidfd, int fd, unsigned int flags);
-+asmlinkage long sys_secretmemfd(unsigned long flags);
- 
- /*
-  * Architecture-specific system calls
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index f4a01305d9a6..aadaf25cbf5a 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -858,8 +858,13 @@ __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
- #define __NR_faccessat2 439
- __SYSCALL(__NR_faccessat2, sys_faccessat2)
- 
-+#ifdef __ARCH_WANT_SECRETMEMFD
-+#define __NR_secretmemfd 440
-+__SYSCALL(__NR_secretmemfd, sys_secretmemfd)
-+#endif
++struct secretmem_pool {
++	struct gen_pool *pool;
++	unsigned long reserved_size;
++	void *reserved;
++};
 +
- #undef __NR_syscalls
--#define __NR_syscalls 440
-+#define __NR_syscalls 441
++static struct secretmem_pool secretmem_pool;
++
++static struct page *secretmem_alloc_huge_page(gfp_t gfp)
++{
++	struct gen_pool *pool = secretmem_pool.pool;
++	unsigned long addr = 0;
++	struct page *page = NULL;
++
++	if (pool) {
++		if (gen_pool_avail(pool) < PMD_SIZE)
++			return NULL;
++
++		addr = gen_pool_alloc(pool, PMD_SIZE);
++		if (!addr)
++			return NULL;
++
++		page = virt_to_page(addr);
++	} else {
++		page = alloc_pages(gfp, PMD_PAGE_ORDER);
++
++		if (page)
++			split_page(page, PMD_PAGE_ORDER);
++	}
++
++	return page;
++}
++
+ static int secretmem_pool_increase(struct secretmem_ctx *ctx, gfp_t gfp)
+ {
+ 	unsigned long nr_pages = (1 << PMD_PAGE_ORDER);
+@@ -38,12 +72,11 @@ static int secretmem_pool_increase(struct secretmem_ctx *ctx, gfp_t gfp)
+ 	struct page *page;
+ 	int err;
  
- /*
-  * 32 bit systems traditionally used different
+-	page = alloc_pages(gfp, PMD_PAGE_ORDER);
++	page = secretmem_alloc_huge_page(gfp);
+ 	if (!page)
+ 		return -ENOMEM;
+ 
+ 	addr = (unsigned long)page_address(page);
+-	split_page(page, PMD_PAGE_ORDER);
+ 
+ 	err = gen_pool_add(pool, addr, PMD_SIZE, NUMA_NO_NODE);
+ 	if (err) {
+@@ -266,11 +299,13 @@ SYSCALL_DEFINE1(secretmemfd, unsigned long, flags)
+ 	return err;
+ }
+ 
+-static void secretmem_cleanup_chunk(struct gen_pool *pool,
+-				    struct gen_pool_chunk *chunk, void *data)
++static void secretmem_recycle_range(unsigned long start, unsigned long end)
++{
++	gen_pool_free(secretmem_pool.pool, start, PMD_SIZE);
++}
++
++static void secretmem_release_range(unsigned long start, unsigned long end)
+ {
+-	unsigned long start = chunk->start_addr;
+-	unsigned long end = chunk->end_addr;
+ 	unsigned long nr_pages, addr;
+ 
+ 	nr_pages = (end - start + 1) / PAGE_SIZE;
+@@ -280,6 +315,18 @@ static void secretmem_cleanup_chunk(struct gen_pool *pool,
+ 		put_page(virt_to_page(addr));
+ }
+ 
++static void secretmem_cleanup_chunk(struct gen_pool *pool,
++				    struct gen_pool_chunk *chunk, void *data)
++{
++	unsigned long start = chunk->start_addr;
++	unsigned long end = chunk->end_addr;
++
++	if (secretmem_pool.pool)
++		secretmem_recycle_range(start, end);
++	else
++		secretmem_release_range(start, end);
++}
++
+ static void secretmem_cleanup_pool(struct secretmem_ctx *ctx)
+ {
+ 	struct gen_pool *pool = ctx->pool;
+@@ -319,14 +366,85 @@ static struct file_system_type secretmem_fs = {
+ 	.kill_sb	= kill_anon_super,
+ };
+ 
++static int secretmem_reserved_mem_init(void)
++{
++	struct gen_pool *pool;
++	struct page *page;
++	void *addr;
++	int err;
++
++	if (!secretmem_pool.reserved)
++		return 0;
++
++	pool = gen_pool_create(PMD_SHIFT, NUMA_NO_NODE);
++	if (!pool)
++		return -ENOMEM;
++
++	err = gen_pool_add(pool, (unsigned long)secretmem_pool.reserved,
++			   secretmem_pool.reserved_size, NUMA_NO_NODE);
++	if (err)
++		goto err_destroy_pool;
++
++	for (addr = secretmem_pool.reserved;
++	     addr < secretmem_pool.reserved + secretmem_pool.reserved_size;
++	     addr += PAGE_SIZE) {
++		page = virt_to_page(addr);
++		__ClearPageReserved(page);
++		set_page_count(page, 1);
++	}
++
++	secretmem_pool.pool = pool;
++	page = virt_to_page(secretmem_pool.reserved);
++	__kernel_map_pages(page, secretmem_pool.reserved_size / PAGE_SIZE, 0);
++	return 0;
++
++err_destroy_pool:
++	gen_pool_destroy(pool);
++	return err;
++}
++
+ static int secretmem_init(void)
+ {
+-	int ret = 0;
++	int ret;
++
++	ret = secretmem_reserved_mem_init();
++	if (ret)
++		return ret;
+ 
+ 	secretmem_mnt = kern_mount(&secretmem_fs);
+-	if (IS_ERR(secretmem_mnt))
++	if (IS_ERR(secretmem_mnt)) {
++		gen_pool_destroy(secretmem_pool.pool);
+ 		ret = PTR_ERR(secretmem_mnt);
++	}
+ 
+ 	return ret;
+ }
+ fs_initcall(secretmem_init);
++
++static int __init secretmem_setup(char *str)
++{
++	phys_addr_t align = PMD_SIZE;
++	unsigned long reserved_size;
++	void *reserved;
++
++	reserved_size = memparse(str, NULL);
++	if (!reserved_size)
++		return 0;
++
++	if (reserved_size * 2 > PUD_SIZE)
++		align = PUD_SIZE;
++
++	reserved = memblock_alloc(reserved_size, align);
++	if (!reserved) {
++		pr_err("failed to reserve %zu bytes\n", secretmem_pool.reserved_size);
++		return 0;
++	}
++
++	secretmem_pool.reserved_size = reserved_size;
++	secretmem_pool.reserved = reserved;
++
++	pr_info("reserved %zuM\n", reserved_size >> 20);
++
++	return 1;
++}
++__setup("secretmem=", secretmem_setup);
 -- 
 2.26.2
 
