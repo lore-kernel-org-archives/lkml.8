@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A00E8C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 756D22064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE2282064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261836;
-	bh=30CXrEdiYVz1AylAF1x57ZnlAb8SkFQ3PCeoPQOpcKk=;
+	s=default; t=1595261844;
+	bh=erffx3k8jVgl0Xf9ti2xAmllVE/bSCxeXZxcgTckQvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QodLVsp+KhOGrnzkbpe2HNN2N3Vnlwx4aJfC1hN1YEkAARIvUCedzYOadol3Fb1pY
-	 quTxLMlUklJHfKy0yCVuziJU03kSD6g5DqgGb75cJMxRgT5ZLuGSu0c0R2ISXETbiy
-	 ZUkRrsnzIiNWacjZOpS9mlWwkai6eSFKWomLU9Bs=
+	b=QU1TUs6RjufU5shSTFOZyBsOpI6e9cThHHyNkJvarA3A7u8fqJ4ew8JbhvDYJ7IqR
+	 ZPddnj4R2PlU3n8jwWeuAWcKHeSSvuEAu++6LpSOifVsPk0yzVVlHvhNac1ZsVOQQs
+	 XcbNLu0L7eVj2wNkp2Qa9j8hHUm6B/hzO/CIT9pI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388234AbgGTQRP (ORCPT
+        id S2388207AbgGTQRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:17:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57684 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:17:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388143AbgGTQQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:16:26 -0400
+        id S2388500AbgGTQQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:16:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB2D42176B;
-        Mon, 20 Jul 2020 16:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB6CF206E9;
+        Mon, 20 Jul 2020 16:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261786;
-        bh=30CXrEdiYVz1AylAF1x57ZnlAb8SkFQ3PCeoPQOpcKk=;
+        s=default; t=1595261766;
+        bh=erffx3k8jVgl0Xf9ti2xAmllVE/bSCxeXZxcgTckQvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BNr274B41mELVgCk4w9Diw3SSkSIP4ZWm+t/SHtgm/XOQCouF0We/etZdlMogXEf9
-         yPLM6w/uDy+dQ0rbHF3q9XpJV1IQmqIVyG4NNVjLyjtJmXxSj2Q0oJdhkqMJtEMhoc
-         1zdVQRk9eJiRjpQ7lXVh1jgk5gNqgINsrE6tRwNE=
+        b=NfCnobxx7sJfAKEjVBl/vmcvfJf7+rDV7E6K0wZZUl0MZpwDDD4ULnDNY5QYticG/
+         Yqs7qpKXpoM+Bvd9j7SwpHzkHZzbl8As7o1Y4TnnftRtKGpLnMVwDFoKmQG0PiqskG
+         xmTfIRf0kwVqglVCQTShVjH6rmH507JNEob4/t+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Alex Hung <alex.hung@canonical.com>
-Subject: [PATCH 5.7 211/244] thermal: int3403_thermal: Downgrade error message
-Date:   Mon, 20 Jul 2020 17:38:02 +0200
-Message-Id: <20200720152835.889846161@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 5.7 234/244] rxrpc: Fix trace string
+Date:   Mon, 20 Jul 2020 17:38:25 +0200
+Message-Id: <20200720152836.970065125@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,35 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Hung <alex.hung@canonical.com>
+From: David Howells <dhowells@redhat.com>
 
-commit f3d7fb38976b1b0a8462ba1c7cbd404ddfaad086 upstream.
+commit aadf9dcef9d4cd68c73a4ab934f93319c4becc47 upstream.
 
-Downgrade "Unsupported event" message from dev_err to dev_dbg to avoid
-flooding with this message on some platforms.
+The trace symbol printer (__print_symbolic()) ignores symbols that map to
+an empty string and prints the hex value instead.
 
-Cc: stable@vger.kernel.org # v5.4+
-Suggested-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Alex Hung <alex.hung@canonical.com>
-[ rzhang: fix typo in changelog ]
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Link: https://lore.kernel.org/r/20200615223957.183153-1-alex.hung@canonical.com
+Fix the symbol for rxrpc_cong_no_change to " -" instead of "" to avoid
+this.
+
+Fixes: b54a134a7de4 ("rxrpc: Fix handling of enums-to-string translation in tracing")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/thermal/intel/int340x_thermal/int3403_thermal.c |    2 +-
+ include/trace/events/rxrpc.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
-+++ b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
-@@ -74,7 +74,7 @@ static void int3403_notify(acpi_handle h
- 						   THERMAL_TRIP_CHANGED);
- 		break;
- 	default:
--		dev_err(&priv->pdev->dev, "Unsupported event [0x%x]\n", event);
-+		dev_dbg(&priv->pdev->dev, "Unsupported event [0x%x]\n", event);
- 		break;
- 	}
- }
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -400,7 +400,7 @@ enum rxrpc_tx_point {
+ 	EM(rxrpc_cong_begin_retransmission,	" Retrans") \
+ 	EM(rxrpc_cong_cleared_nacks,		" Cleared") \
+ 	EM(rxrpc_cong_new_low_nack,		" NewLowN") \
+-	EM(rxrpc_cong_no_change,		"") \
++	EM(rxrpc_cong_no_change,		" -") \
+ 	EM(rxrpc_cong_progress,			" Progres") \
+ 	EM(rxrpc_cong_retransmit_again,		" ReTxAgn") \
+ 	EM(rxrpc_cong_rtt_window_end,		" RttWinE") \
 
 
