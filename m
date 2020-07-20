@@ -2,94 +2,115 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC60C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B7BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE3D208B3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF66207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:13:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RBUC5MP1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgGTDBS (ORCPT
+        id S1726531AbgGTDM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 23:01:18 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:43620 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726312AbgGTDBS (ORCPT
+        Sun, 19 Jul 2020 23:12:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgGTDM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 23:01:18 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0U3AgGSF_1595214071;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U3AgGSF_1595214071)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 20 Jul 2020 11:01:12 +0800
-Subject: Re: [PATCH v16 00/22] per memcg lru_lock
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0UcKVyTXQ=tGv_uMV+fSvoH_-cuG9zA_zhE+S8Ou11gt=w@mail.gmail.com>
- <57c619e7-da7e-198e-3de8-530bf19b9450@linux.alibaba.com>
- <alpine.LSU.2.11.2007190801490.3521@eggly.anvils>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <5f2401d3-dd4f-cbc6-8cb4-4e92fc64998c@linux.alibaba.com>
-Date:   Mon, 20 Jul 2020 11:01:10 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Sun, 19 Jul 2020 23:12:58 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8968C0619D5
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 20:12:57 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id s20so7744985vsq.5
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 20:12:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VTK/t0wOVgstUCjWFFumbAsOJwk/3XPeIbWLXHuzjRo=;
+        b=RBUC5MP1ZoysEzfohwmNwP5dNE9+dD2ndIjWHfdgGEci67W69nOh6JF++0UupL7Osf
+         mala9LAbpL4V+9Dz8q5I5kRHVYHszkRjZ5YuUkqKT50/pWR3d2sYAUqc76d9bVIXddc/
+         fYF8pFyxiS03rwbQcD0Zm7c03b3vvh3xmgYrVrQQtU15/DYsmnMtleDVeun1+YlE9Yjt
+         QmIv67ZqKGq1VHQoXa4mlchg65aT/8AnOhaIv1Lg04gw7oeROYPf0j/WzcoF3cZ3KxJm
+         z0hoFlmrUXoVhz5rA8p5OhgQo6phsf+Hzhkrg8XEat6Qa7H0JQwtqSNPz9z4C1M/Aiqs
+         i+Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VTK/t0wOVgstUCjWFFumbAsOJwk/3XPeIbWLXHuzjRo=;
+        b=ITHcBRuiGwXY1NeMYCWgnKMQUkGR+bixzHLzzqDA5gihFaCYxJAPqC1rdcikHuoqYb
+         ejEAPjc9LmD0zN6SdFgtC+XpXx23lrarlfWSs0YSC7znX1/ppysGkVO1MiQY/5xOGode
+         xox4g+igzBjsmu6MmZw+p+MZ9xzlcYK+cMSEoPHQVD5yvKtFvt10R7VwVvhuUwsQg+2C
+         5NKpaFpYSD+qfp3b2STumVkDd6KGI8urZ1qd5PmORucr+PNH20W3PLtExRTGfVBqC82a
+         GDDDedgbZv/v9elIU8gNmwy7T3UFizijevHjH0zaqo5QRky/J6+Gd4jbeShRSeIpUUu1
+         sF+g==
+X-Gm-Message-State: AOAM532vdsQdaseN6suoBjsTzOyDfhE9HpY92i+cX0aD/1nTEeycjNdB
+        L+oBNcAe/CKxE77wnTZtOc1fqQdvUkPJ1CWXUoRg2A==
+X-Google-Smtp-Source: ABdhPJzdd+PpPYk4WS7IVTp2LuoN6j5bxecEV2JlREOj7/Ffe6WZuuhrl/ebvhI40+Oh7WEKIE/jOT5Yif9NFqMY2z0=
+X-Received: by 2002:a67:ec58:: with SMTP id z24mr14219904vso.109.1595214775242;
+ Sun, 19 Jul 2020 20:12:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.2007190801490.3521@eggly.anvils>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20200710004258.296017-1-linchuyuan@google.com> <20200719222222.GA78762@roeck-us.net>
+In-Reply-To: <20200719222222.GA78762@roeck-us.net>
+From:   Chu Lin <linchuyuan@google.com>
+Date:   Sun, 19 Jul 2020 20:12:44 -0700
+Message-ID: <CAKCA56CSyG3+RvmEYPpv3VC8mnmTFopd-Ee-xzF62ie80g+cag@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: hwmon: adm1272: add adm1272-adm1275-temp1-en binding
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Kais Belgaied <belgaied@google.com>,
+        Jason Ling <jasonling@google.com>, jdelvare@suse.com,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Zhongqi Li <zhongqil@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jul 19, 2020 at 3:22 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Fri, Jul 10, 2020 at 12:42:58AM +0000, Chu Lin wrote:
+> > Problem:
+> >       adm1272 and adm1278 supports temperature sampling. The
+> > current way of enabling it requires the user manually unbind the device
+> > from the driver, flip the temperature sampling control bit and then bind
+> > the device back to the driver. It would be nice if we can control this in a
+> > better way by reading the dt.
+> >
+> > Solution:
+> >       Introducing device tree binding adm1272-adm1278-temp1-en. If the
+> > flag is set, flip the temp1_en control bit on probing.
+> >
+> > Testing:
+> > make dt_binding_check
+> >
+> > Signed-off-by: Chu Lin <linchuyuan@google.com>
+> > ---
+> >  Documentation/devicetree/bindings/hwmon/adm1275.txt | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/hwmon/adm1275.txt b/Documentation/devicetree/bindings/hwmon/adm1275.txt
+> > index 1ecd03f3da4d..4403fe30f005 100644
+> > --- a/Documentation/devicetree/bindings/hwmon/adm1275.txt
+> > +++ b/Documentation/devicetree/bindings/hwmon/adm1275.txt
+> > @@ -15,6 +15,8 @@ Optional properties:
+> >
+> >  - shunt-resistor-micro-ohms
+> >       Shunt resistor value in micro-Ohm
+> > +- adm1272-adm1278-temp1-en
+> > +     Enable temperature sampling. This is supported on adm1272 and adm1278
+>
+> I suspect this should be something like "analog,temp1-enable". Either case,
+> I would suggest to resend the series and copy DT maintainers at least on
+> this patch.
 
+Thanks for the heads up. I will send another review with a fix.
 
-在 2020/7/19 下午11:23, Hugh Dickins 写道:
-> I noticed that 5.8-rc5, with lrulock v16 applied, took significantly
-> longer to run loads than without it applied, when there should have been
-> only slight differences in system time. Comparing /proc/vmstat, something
-> that stood out was "pgrotated 0" for the patched kernels, which led here:
-> 
-> If pagevec_lru_move_fn() is now to TestClearPageLRU (I have still not
-> decided whether that's good or not, but assume here that it is good),
-> then functions called though it must be changed not to expect PageLRU!
-> 
-> Signed-off-by: Hugh Dickins <hughd@google.com>
-
-Good catch!
-
-Thanks a lot, Hugh! 
-except 6 changes should apply, looks we add one more in swap.c file to stop
-!PageRLU further actions!
-
-Many Thanks!
-Alex
-
-@@ -649,7 +647,7 @@ void deactivate_file_page(struct page *page)
-         * In a workload with many unevictable page such as mprotect,
-         * unevictable page deactivation for accelerating reclaim is pointless.
-         */
--       if (PageUnevictable(page))
-+       if (PageUnevictable(page) || !PageLRU(page))
-                return;
-
-        if (likely(get_page_unless_zero(page))) {
+Thanks,
+Chu
