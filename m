@@ -2,212 +2,217 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D5BC433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D6EC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC1E020773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u/gfBau8"
+	by mail.kernel.org (Postfix) with ESMTP id C26B5206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262474;
+	bh=0FZeMFH7gDbfkGfeeYppuC4EMRgBINcNU5H0gQHaCSk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dSiFLEMlSLmGSRZ2hSF+Y10KvUBTUkGDX7rxKIPVnIHaT2ey1QVEQ47RdDMEqEfUV
+	 gzydYUQOHK5N6kxgnV6HIYqryugVJrmN0y0Myw30fyiJXg4EHHtEgS6NLMaR4gzOcW
+	 N0QZ29yJ0BeYMWgEpz9nlyK4JY65vlM+oyXPmthQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732261AbgGTP7h (ORCPT
+        id S2388760AbgGTQ1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:59:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731124AbgGTP7U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:20 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6456FC0619D2;
-        Mon, 20 Jul 2020 08:59:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=21w+ZovXtzUYFHjW7zAcq/SvhfaPcQNA2bBLjzfA85I=; b=u/gfBau8lfBl8lCv/Gjz5NsubZ
-        w76/+yxGcjwLvwMSvoOVhBh357tz0mSTy69IR9y8hDVWFW/VNrIddpJx7RF/2fl0YDli5vygc3D3I
-        6Uv7PzkrJvlSKg1P928YG718uNYPTBiJ4rGfGxgd+ZgIypimlndFBFETTjU8VD9QLoB2aIq8cpQJe
-        jfSFW4o73TyyRghGylTJKHYNUQwqkQfWAV/NdI4TOEIIYgoSzib0yCH2mOc6FsyfHl2Cn6DlS7st7
-        EKqLf7SWQx4XotdhdHsIFPk9kpmozwvQPuymN7USpIXdOEGw8DXMecs6eD9FKIGiJso2ObI/JZhOG
-        q7Pda19g==;
-Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxYCB-0007oM-UG; Mon, 20 Jul 2020 15:59:16 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
+        Mon, 20 Jul 2020 12:27:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60386 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732251AbgGTP7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5925622CBB;
+        Mon, 20 Jul 2020 15:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260774;
+        bh=0FZeMFH7gDbfkGfeeYppuC4EMRgBINcNU5H0gQHaCSk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=U93apk+D2MD5JUi+lzcsq897lzTHjDvEvX9QXmtvIXivJ3m73R6JhjJCUbj82dSew
+         HirljRE5wO2PmbmA7/dkg5YIvKCVwMtI9bPxlQdzzAnX7eQd4HXESV4g/Go7+rlsri
+         yAFLvoYN0xiaM57MGlCtyOHQlPPRqQ/FdSfzip+w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 08/24] fs: add a kern_access helper
-Date:   Mon, 20 Jul 2020 17:58:46 +0200
-Message-Id: <20200720155902.181712-9-hch@lst.de>
+        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 091/215] bus: ti-sysc: Use optional clocks on for enable and wait for softreset bit
+Date:   Mon, 20 Jul 2020 17:36:13 +0200
+Message-Id: <20200720152824.536061809@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720155902.181712-1-hch@lst.de>
-References: <20200720155902.181712-1-hch@lst.de>
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a simple helper for a access with a kernelspace name and use it in
-the early init code instead of relying on the implicit set_fs(KERNEL_DS)
-there.  Remove the now unused ksys_access.
+From: Tony Lindgren <tony@atomide.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+[ Upstream commit d46f9fbec71997420e4fb83c04d9affdf423f879 ]
+
+Some modules reset automatically when idled, and when re-enabled, we must
+wait for the automatic OCP softreset to complete. And if optional clocks
+are configured, we need to keep the clocks on while waiting for the reset
+to complete.
+
+Let's fix the issue by moving the OCP softreset code to a separate
+function sysc_wait_softreset(), and call it also from sysc_enable_module()
+with the optional clocks enabled.
+
+This is based on what we're already doing for legacy platform data booting
+in _enable_sysc().
+
+Fixes: 7324a7a0d5e2 ("bus: ti-sysc: Implement display subsystem reset quirk")
+Reported-by: Faiz Abbas <faiz_abbas@ti.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/open.c                | 37 +++++++++++++++++++++++++------------
- include/linux/fs.h       |  1 +
- include/linux/syscalls.h |  7 -------
- init/main.c              |  3 +--
- 4 files changed, 27 insertions(+), 21 deletions(-)
+ drivers/bus/ti-sysc.c | 80 ++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 60 insertions(+), 20 deletions(-)
 
-diff --git a/fs/open.c b/fs/open.c
-index 424db905da5f18..2a9457a16b2be2 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -394,19 +394,19 @@ static const struct cred *access_override_creds(void)
- 	return old_cred;
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index d0b75e7d5e50f..bb3e3310865bd 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -186,6 +186,35 @@ static u32 sysc_read_sysstatus(struct sysc *ddata)
+ 	return sysc_read(ddata, offset);
  }
  
--long do_faccessat(int dfd, const char __user *filename, int mode, int flags)
-+static int do_faccessat(int dfd, struct filename *name, int mode, int flags)
- {
- 	struct path path;
- 	struct inode *inode;
--	int res;
-+	int res = -EINVAL;
- 	unsigned int lookup_flags = LOOKUP_FOLLOW;
- 	const struct cred *old_cred = NULL;
- 
- 	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
--		return -EINVAL;
-+		goto out_putname;
- 
- 	if (flags & ~(AT_EACCESS | AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH))
--		return -EINVAL;
-+		goto out_putname;
- 
- 	if (flags & AT_SYMLINK_NOFOLLOW)
- 		lookup_flags &= ~LOOKUP_FOLLOW;
-@@ -414,15 +414,16 @@ long do_faccessat(int dfd, const char __user *filename, int mode, int flags)
- 		lookup_flags |= LOOKUP_EMPTY;
- 
- 	if (!(flags & AT_EACCESS)) {
-+		res = -ENOMEM;
- 		old_cred = access_override_creds();
- 		if (!old_cred)
--			return -ENOMEM;
-+			goto out_putname;
- 	}
- 
- retry:
--	res = user_path_at(dfd, filename, lookup_flags, &path);
-+	res = filename_lookup(dfd, name, lookup_flags, &path, NULL);
- 	if (res)
--		goto out;
-+		goto out_revert_creds;
- 
- 	inode = d_backing_inode(path.dentry);
- 
-@@ -459,27 +460,39 @@ long do_faccessat(int dfd, const char __user *filename, int mode, int flags)
- 		lookup_flags |= LOOKUP_REVAL;
- 		goto retry;
- 	}
--out:
-+	putname(name);
-+out_revert_creds:
- 	if (old_cred)
- 		revert_creds(old_cred);
--
- 	return res;
-+out_putname:
-+	if (!IS_ERR(name))
-+		putname(name);
-+	return res;
++/* Poll on reset status */
++static int sysc_wait_softreset(struct sysc *ddata)
++{
++	u32 sysc_mask, syss_done, rstval;
++	int syss_offset, error = 0;
++
++	syss_offset = ddata->offsets[SYSC_SYSSTATUS];
++	sysc_mask = BIT(ddata->cap->regbits->srst_shift);
++
++	if (ddata->cfg.quirks & SYSS_QUIRK_RESETDONE_INVERTED)
++		syss_done = 0;
++	else
++		syss_done = ddata->cfg.syss_mask;
++
++	if (syss_offset >= 0) {
++		error = readx_poll_timeout(sysc_read_sysstatus, ddata, rstval,
++					   (rstval & ddata->cfg.syss_mask) ==
++					   syss_done,
++					   100, MAX_MODULE_SOFTRESET_WAIT);
++
++	} else if (ddata->cfg.quirks & SYSC_QUIRK_RESET_STATUS) {
++		error = readx_poll_timeout(sysc_read_sysconfig, ddata, rstval,
++					   !(rstval & sysc_mask),
++					   100, MAX_MODULE_SOFTRESET_WAIT);
++	}
++
++	return error;
 +}
 +
-+int __init kern_access(const char __user *filename, int mode)
-+{
-+	return do_faccessat(AT_FDCWD, getname_kernel(filename), mode, 0);
- }
+ static int sysc_add_named_clock_from_child(struct sysc *ddata,
+ 					   const char *name,
+ 					   const char *optfck_name)
+@@ -892,8 +921,34 @@ static int sysc_enable_module(struct device *dev)
+ 	struct sysc *ddata;
+ 	const struct sysc_regbits *regbits;
+ 	u32 reg, idlemodes, best_mode;
++	int error;
  
- SYSCALL_DEFINE3(faccessat, int, dfd, const char __user *, filename, int, mode)
- {
--	return do_faccessat(dfd, filename, mode, 0);
-+	return do_faccessat(dfd, getname(filename), mode, 0);
- }
- 
- SYSCALL_DEFINE4(faccessat2, int, dfd, const char __user *, filename, int, mode,
- 		int, flags)
- {
--	return do_faccessat(dfd, filename, mode, flags);
-+	unsigned int lookup_flags = (flags & AT_EMPTY_PATH) ? LOOKUP_EMPTY : 0;
-+	struct filename *name = getname_flags(filename, lookup_flags, NULL);
+ 	ddata = dev_get_drvdata(dev);
 +
-+	return do_faccessat(dfd, name, mode, flags);
- }
++	/*
++	 * Some modules like DSS reset automatically on idle. Enable optional
++	 * reset clocks and wait for OCP softreset to complete.
++	 */
++	if (ddata->cfg.quirks & SYSC_QUIRK_OPT_CLKS_IN_RESET) {
++		error = sysc_enable_opt_clocks(ddata);
++		if (error) {
++			dev_err(ddata->dev,
++				"Optional clocks failed for enable: %i\n",
++				error);
++			return error;
++		}
++	}
++	error = sysc_wait_softreset(ddata);
++	if (error)
++		dev_warn(ddata->dev, "OCP softreset timed out\n");
++	if (ddata->cfg.quirks & SYSC_QUIRK_OPT_CLKS_IN_RESET)
++		sysc_disable_opt_clocks(ddata);
++
++	/*
++	 * Some subsystem private interconnects, like DSS top level module,
++	 * need only the automatic OCP softreset handling with no sysconfig
++	 * register bits to configure.
++	 */
+ 	if (ddata->offsets[SYSC_SYSCONFIG] == -ENODEV)
+ 		return 0;
  
- SYSCALL_DEFINE2(access, const char __user *, filename, int, mode)
+@@ -1691,11 +1746,10 @@ static int sysc_rstctrl_reset_deassert(struct sysc *ddata, bool reset)
+  */
+ static int sysc_reset(struct sysc *ddata)
  {
--	return do_faccessat(AT_FDCWD, filename, mode, 0);
-+	return do_faccessat(AT_FDCWD, getname(filename), mode, 0);
- }
+-	int sysc_offset, syss_offset, sysc_val, rstval, error = 0;
+-	u32 sysc_mask, syss_done;
++	int sysc_offset, sysc_val, error;
++	u32 sysc_mask;
  
- static int do_chdir(struct filename *name)
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 0205355bffb1bc..0c7672d3f1172f 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3673,5 +3673,6 @@ static inline int inode_drain_writes(struct inode *inode)
+ 	sysc_offset = ddata->offsets[SYSC_SYSCONFIG];
+-	syss_offset = ddata->offsets[SYSC_SYSSTATUS];
  
- int kern_chdir(const char *filename);
- int kern_chroot(const char *filename);
-+int __init kern_access(const char *filename, int mode);
+ 	if (ddata->legacy_mode || sysc_offset < 0 ||
+ 	    ddata->cap->regbits->srst_shift < 0 ||
+@@ -1704,11 +1758,6 @@ static int sysc_reset(struct sysc *ddata)
  
- #endif /* _LINUX_FS_H */
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index a3176d1a521467..b387e3700c68c5 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1326,13 +1326,6 @@ static inline int ksys_chmod(const char __user *filename, umode_t mode)
- 	return do_fchmodat(AT_FDCWD, filename, mode);
- }
+ 	sysc_mask = BIT(ddata->cap->regbits->srst_shift);
  
--long do_faccessat(int dfd, const char __user *filename, int mode, int flags);
+-	if (ddata->cfg.quirks & SYSS_QUIRK_RESETDONE_INVERTED)
+-		syss_done = 0;
+-	else
+-		syss_done = ddata->cfg.syss_mask;
 -
--static inline long ksys_access(const char __user *filename, int mode)
--{
--	return do_faccessat(AT_FDCWD, filename, mode, 0);
--}
--
- extern int do_fchownat(int dfd, const char __user *filename, uid_t user,
- 		       gid_t group, int flag);
+ 	if (ddata->pre_reset_quirk)
+ 		ddata->pre_reset_quirk(ddata);
  
-diff --git a/init/main.c b/init/main.c
-index c2c9143db96795..880f195b61abe1 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -1514,8 +1514,7 @@ static noinline void __init kernel_init_freeable(void)
- 	 * check if there is an early userspace init.  If yes, let it do all
- 	 * the work
- 	 */
--	if (ksys_access((const char __user *)
--			ramdisk_execute_command, 0) != 0) {
-+	if (kern_access(ramdisk_execute_command, 0) != 0) {
- 		ramdisk_execute_command = NULL;
- 		prepare_namespace();
- 	}
+@@ -1723,18 +1772,9 @@ static int sysc_reset(struct sysc *ddata)
+ 	if (ddata->post_reset_quirk)
+ 		ddata->post_reset_quirk(ddata);
+ 
+-	/* Poll on reset status */
+-	if (syss_offset >= 0) {
+-		error = readx_poll_timeout(sysc_read_sysstatus, ddata, rstval,
+-					   (rstval & ddata->cfg.syss_mask) ==
+-					   syss_done,
+-					   100, MAX_MODULE_SOFTRESET_WAIT);
+-
+-	} else if (ddata->cfg.quirks & SYSC_QUIRK_RESET_STATUS) {
+-		error = readx_poll_timeout(sysc_read_sysconfig, ddata, rstval,
+-					   !(rstval & sysc_mask),
+-					   100, MAX_MODULE_SOFTRESET_WAIT);
+-	}
++	error = sysc_wait_softreset(ddata);
++	if (error)
++		dev_warn(ddata->dev, "OCP softreset timed out\n");
+ 
+ 	if (ddata->reset_done_quirk)
+ 		ddata->reset_done_quirk(ddata);
 -- 
-2.27.0
+2.25.1
+
+
 
