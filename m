@@ -2,145 +2,132 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895A1C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB2BC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64AB220734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234EF2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261085;
-	bh=qdORIBFauGX+RlOa8U16iXHiLl+0wTtPgvKAEkWyzl0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=yAByQpkshTnkV4XCuuF44/DKWIlVcQReVrcL/I0FPiCjZ1MfiqZW5gUuQHj+P/dis
-	 qgBbSeNvNsiViXni+vx1C2SMlq+yIiw3oIqFh2eIfmFFkSZoOSDN4fG7kTEfrqN4KX
-	 TWhskXFQO4iRrfo+QC1Mj2kUfLkQVRE016NvHnUw=
+	s=default; t=1595261078;
+	bh=dL51J9ZjJIx7T182G+ExsZ/CAI778fDI4ysS9fKS0DU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NGsHoTS48NnsKyCgkioTLnn6kzRj/lrw/viIreMrA2Z/AtYa92dIgrPgrVll2jdUs
+	 /wFs7cIZVNcmgGvzNEUOgEGyGElE7lQ63gRkRFmTJGfcHrmXXqL49VyRVZ4WUXJrtE
+	 Q2ugzoKYa9Q110vUGisdenmqW0JJzE76G1RwPqMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732878AbgGTQEo (ORCPT
+        id S1732860AbgGTQEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:04:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39498 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:04:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732463AbgGTQEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:04:35 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        id S1732834AbgGTQEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:04:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FB1320684;
-        Mon, 20 Jul 2020 16:04:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71E5920684;
+        Mon, 20 Jul 2020 16:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261074;
-        bh=qdORIBFauGX+RlOa8U16iXHiLl+0wTtPgvKAEkWyzl0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=LEGcdINyNzKCbCQ5wXX5ZfNJtY1BviG61dvpY5itgMnb+pGqfBoafq2w7cs8b+pa1
-         W0vSJhrpcc6VZhyj5E/PTxTxJlEIKfe9giRYmNze5HTCnvFSt9xhyZ5bjJL9yl0vww
-         xEwnV3+E0AKOEYt5J9leynZvBhNfL36vSmHnj5UE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 0B1D93522A8C; Mon, 20 Jul 2020 09:04:34 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 09:04:34 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Dave Chinner <david@fromorbit.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
-Message-ID: <20200720160433.GQ9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200717044427.68747-1-ebiggers@kernel.org>
- <20200718014204.GN5369@dread.disaster.area>
- <20200718140811.GA1179836@rowland.harvard.edu>
- <20200720013320.GP5369@dread.disaster.area>
- <20200720145211.GC1228057@rowland.harvard.edu>
- <20200720153911.GX12769@casper.infradead.org>
+        s=default; t=1595261071;
+        bh=dL51J9ZjJIx7T182G+ExsZ/CAI778fDI4ysS9fKS0DU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JeJq/JyPCqoqr95iGTHFOjlc7dTwhm/SRaCTjsKKgdxDt/RHYmkVCl5QEk+YvB7hB
+         FDX0OYDnyvnUhWjHIAHHZ7KNWLuPFtrEguykfwxViMDEnxCQ0woBRkGIt/wh+4tWB9
+         LXQ1rT2mFU89HexxvIjpl5cYieP8ptKO/iLDJy5M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH 5.4 168/215] serial: mxs-auart: add missed iounmap() in probe failure and remove
+Date:   Mon, 20 Jul 2020 17:37:30 +0200
+Message-Id: <20200720152828.162219093@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720153911.GX12769@casper.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 04:39:11PM +0100, Matthew Wilcox wrote:
-> On Mon, Jul 20, 2020 at 10:52:11AM -0400, Alan Stern wrote:
-> > On Mon, Jul 20, 2020 at 11:33:20AM +1000, Dave Chinner wrote:
-> > > On Sat, Jul 18, 2020 at 10:08:11AM -0400, Alan Stern wrote:
-> > > > > This is one of the reasons that the LKMM documetnation is so damn
-> > > > > difficult to read and understand: just understanding the vocabulary
-> > > > > it uses requires a huge learning curve, and it's not defined
-> > > > > anywhere. Understanding the syntax of examples requires a huge
-> > > > > learning curve, because it's not defined anywhere. 
-> > > > 
-> > > > Have you seen tools/memory-model/Documentation/explanation.txt?
-> > > 
-> > > <raises eyebrow>
-> > > 
-> > > Well, yes. Several times. I look at it almost daily, but that
-> > > doesn't mean it's approachable, easy to read or even -that I
-> > > understand what large parts of it say-. IOWs, that's one of the 
-> > > problematic documents that I've been saying have a huge learning
-> > > curve.
-> > 
-> > Can you be more specific?  For example, exactly where does it start to 
-> > become unapproachable or difficult to read?
-> > 
-> > Don't forget that this document was meant to help mitigate the LKMM's 
-> > learning curve.  If it isn't successful, I want to improve it.
-> 
-> I can't speak for Dave, but the introduction to that documentation makes
-> it clear to me that it's not the document I want to read.
-> 
-> : This document describes the ideas underlying the LKMM.  It is meant
-> : for people who want to understand how the model was designed.  It does
-> : not go into the details of the code in the .bell and .cat files;
-> : rather, it explains in English what the code expresses symbolically.
-> 
-> I don't want to know how the model was designed.  I want to write a
-> device driver, or filesystem, or whatever.
-> 
-> Honestly, even the term "release semantics" trips me up _every_ time.
-> It's a barrier to understanding because I have to translate it into "Oh,
-> he means it's like an unlock".  Why can't you just say "unlock semantics"?
+From: Chuhong Yuan <hslester96@gmail.com>
 
-One way to think of it is "release" as in "release a lock".
+commit d8edf8eb5f6e921fe6389f96d2cd05862730a6ff upstream.
 
-But to answer your question:
+This driver calls ioremap() in probe, but it misses calling iounmap() in
+probe's error handler and remove.
+Add the missed calls to fix it.
 
-1.	The rest of the industry settled on "release" for that form
-	of atomics a very long time ago.  Yes, we could insist on
-	Linux-kernel exceptionalism, but that doesn't seem consistent
-	with the large number of people coming into the kernel, even if
-	only briefly.
+Fixes: 47d37d6f94cc ("serial: Add auart driver for i.MX23/28")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200709135608.68290-1-hslester96@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/tty/serial/mxs-auart.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-2.	If we were to say "unlock" instead of "release", consistency
-	would demand that we also say "lock" instead of "acquire".
-	But "lock" is subtlely different than "acquire", and there is
-	a history of people requesting further divergence.
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -1701,21 +1701,21 @@ static int mxs_auart_probe(struct platfo
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+ 		ret = irq;
+-		goto out_disable_clks;
++		goto out_iounmap;
+ 	}
+ 
+ 	s->port.irq = irq;
+ 	ret = devm_request_irq(&pdev->dev, irq, mxs_auart_irq_handle, 0,
+ 			       dev_name(&pdev->dev), s);
+ 	if (ret)
+-		goto out_disable_clks;
++		goto out_iounmap;
+ 
+ 	platform_set_drvdata(pdev, s);
+ 
+ 	ret = mxs_auart_init_gpios(s, &pdev->dev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to initialize GPIOs.\n");
+-		goto out_disable_clks;
++		goto out_iounmap;
+ 	}
+ 
+ 	/*
+@@ -1723,7 +1723,7 @@ static int mxs_auart_probe(struct platfo
+ 	 */
+ 	ret = mxs_auart_request_gpio_irq(s);
+ 	if (ret)
+-		goto out_disable_clks;
++		goto out_iounmap;
+ 
+ 	auart_port[s->port.line] = s;
+ 
+@@ -1749,6 +1749,9 @@ out_free_qpio_irq:
+ 	mxs_auart_free_gpio_irq(s);
+ 	auart_port[pdev->id] = NULL;
+ 
++out_iounmap:
++	iounmap(s->port.membase);
++
+ out_disable_clks:
+ 	if (is_asm9260_auart(s)) {
+ 		clk_disable_unprepare(s->clk);
+@@ -1764,6 +1767,7 @@ static int mxs_auart_remove(struct platf
+ 	uart_remove_one_port(&auart_driver, &s->port);
+ 	auart_port[pdev->id] = NULL;
+ 	mxs_auart_free_gpio_irq(s);
++	iounmap(s->port.membase);
+ 	if (is_asm9260_auart(s)) {
+ 		clk_disable_unprepare(s->clk);
+ 		clk_disable_unprepare(s->clk_ahb);
 
-3.	At least one architecture has started using GCC intrinsics
-	to implement atomics.  I would expect more to follow.  And
-	the GCC intrinsics say "_release".
 
-4.	More cynically (and I do not bleach my hair, so yes, I do have the
-	hair color for it), the Linux kernel community is sufficiently
-	creative in its (ab)use of whatever tools happen to be lying
-	around that any name will become misleading over time in any case.
-
-							Thanx, Paul
