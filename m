@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43E1C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 173EFC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7C3E20773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD682206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263637;
-	bh=ZJbHCFIdZH4X4ZBrUiUDxNPeZ/xp15aUJQ4HRBDeBgQ=;
+	s=default; t=1595263647;
+	bh=Goq3gE73MFyJrQ8A7qmzhAcc5rjHku2kdxLwaQUMtBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RQCXQMTlOJlPIWPPVw5gufppww2aKHVS4KaiYwCqd2jNKOMQAej7PYtYKRWeZPd7O
-	 92SgZ3Mjbn9kPjsabZBdsxaPZzzIJuLAJvQUHAK5tUw0+dtfBDyHBIjVwCeb4H/4PS
-	 s5vSU45wJ7/Po3+Iwub9ZZBYz/W9vhzOXCDgWYSo=
+	b=IkZe5egEaYjSp/junEt4zrotNlrriDlfWYtx0+rJ8QctLFrxDjIucWg74c6Gh1KOA
+	 mT0/z4MH84s60a/xUQZbh6LgjUuFiMRg4KsoXYbOAPApVHHWpVsF4IpoJXloP7YNYx
+	 KsXsQmctZYsMYBBJiF1aeirzQKBLpi72QdLPUCSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730044AbgGTQrQ (ORCPT
+        id S1729486AbgGTPj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:47:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59068 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:39:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729579AbgGTPjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:39:49 -0400
+        id S1726426AbgGTPjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:39:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BC1522CB2;
-        Mon, 20 Jul 2020 15:39:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D76222CAF;
+        Mon, 20 Jul 2020 15:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259588;
-        bh=ZJbHCFIdZH4X4ZBrUiUDxNPeZ/xp15aUJQ4HRBDeBgQ=;
+        s=default; t=1595259563;
+        bh=Goq3gE73MFyJrQ8A7qmzhAcc5rjHku2kdxLwaQUMtBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KM7Gl0NV6G/zP5aIekXV0bDaw3QFFpMsmcC/1IFr9gDJUVqAhiwLYg/X3jM2Ht+7R
-         sDVy2vLNTmZHaK/Yl8bl+PhS/l57Z2i/OQ3oPZi/wf1k5FmpSYSVF4xDSuzllR8hOu
-         Ny+0vZU3JRVDc60F5elxpaX031LrbcBwBsvGiMzE=
+        b=KFyA5l8iFX8gySpwTv/Ej42Ocg2ydvgVnn0yh/Or3DUzIEVimctRfD3fMrBmg7Ozx
+         MWK+tzIgS2lZ1f6QwNX4TbkC6YthYV4vpzvKrbuzzRM3thDEpDAgGlHbAltiV9UO2M
+         +Pz+zaiXQqrIseT8imPApaeTIgYaX+y+eCff8zgU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 45/58] USB: serial: cypress_m8: enable Simply Automated UPB PIM
-Date:   Mon, 20 Jul 2020 17:37:01 +0200
-Message-Id: <20200720152749.488265934@linuxfoundation.org>
+        stable@vger.kernel.org, Vishwas M <vishwas.reddy.vr@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 55/58] hwmon: (emc2103) fix unable to change fan pwm1_enable attribute
+Date:   Mon, 20 Jul 2020 17:37:11 +0200
+Message-Id: <20200720152750.024884509@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
 References: <20200720152747.127988571@linuxfoundation.org>
@@ -59,75 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hilliard <james.hilliard1@gmail.com>
+From: Vishwas M <vishwas.reddy.vr@gmail.com>
 
-commit 5c45d04c5081c1830d674f4d22d4400ea2083afe upstream.
+commit 14b0e83dc4f1e52b94acaeb85a18fd7fdd46d2dc upstream.
 
-This is a UPB (Universal Powerline Bus) PIM (Powerline Interface Module)
-which allows for controlling multiple UPB compatible devices from Linux
-using the standard serial interface.
+This patch fixes a bug which does not let FAN mode to be changed from
+sysfs(pwm1_enable). i.e pwm1_enable can not be set to 3, it will always
+remain at 0.
 
-Based on vendor application source code there are two different models
-of USB based PIM devices in addition to a number of RS232 based PIM's.
+This is caused because the device driver handles the result of
+"read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg)" incorrectly. The
+driver thinks an error has occurred if the (result != 0). This has been
+fixed by changing the condition to (result < 0).
 
-The vendor UPB application source contains the following USB ID's:
-
-	#define USB_PCS_VENDOR_ID 0x04b4
-	#define USB_PCS_PIM_PRODUCT_ID 0x5500
-
-	#define USB_SAI_VENDOR_ID 0x17dd
-	#define USB_SAI_PIM_PRODUCT_ID 0x5500
-
-The first set of ID's correspond to the PIM variant sold by Powerline
-Control Systems while the second corresponds to the Simply Automated
-Incorporated PIM. As the product ID for both of these match the default
-cypress HID->COM RS232 product ID it assumed that they both use an
-internal variant of this HID->COM RS232 converter hardware. However
-as the vendor ID for the Simply Automated variant is different we need
-to also add it to the cypress_M8 driver so that it is properly
-detected.
-
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-Link: https://lore.kernel.org/r/20200616220403.1807003-1-james.hilliard1@gmail.com
+Signed-off-by: Vishwas M <vishwas.reddy.vr@gmail.com>
+Link: https://lore.kernel.org/r/20200707142747.118414-1-vishwas.reddy.vr@gmail.com
+Fixes: 9df7305b5a86 ("hwmon: Add driver for SMSC EMC2103 temperature monitor and fan controller")
 Cc: stable@vger.kernel.org
-[ johan: amend VID define entry ]
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/cypress_m8.c |    2 ++
- drivers/usb/serial/cypress_m8.h |    3 +++
- 2 files changed, 5 insertions(+)
+ drivers/hwmon/emc2103.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/cypress_m8.c
-+++ b/drivers/usb/serial/cypress_m8.c
-@@ -63,6 +63,7 @@ static const struct usb_device_id id_tab
+--- a/drivers/hwmon/emc2103.c
++++ b/drivers/hwmon/emc2103.c
+@@ -452,7 +452,7 @@ static ssize_t set_pwm_enable(struct dev
+ 	}
  
- static const struct usb_device_id id_table_cyphidcomrs232[] = {
- 	{ USB_DEVICE(VENDOR_ID_CYPRESS, PRODUCT_ID_CYPHIDCOM) },
-+	{ USB_DEVICE(VENDOR_ID_SAI, PRODUCT_ID_CYPHIDCOM) },
- 	{ USB_DEVICE(VENDOR_ID_POWERCOM, PRODUCT_ID_UPS) },
- 	{ USB_DEVICE(VENDOR_ID_FRWD, PRODUCT_ID_CYPHIDCOM_FRWD) },
- 	{ }						/* Terminating entry */
-@@ -77,6 +78,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(VENDOR_ID_DELORME, PRODUCT_ID_EARTHMATEUSB) },
- 	{ USB_DEVICE(VENDOR_ID_DELORME, PRODUCT_ID_EARTHMATEUSB_LT20) },
- 	{ USB_DEVICE(VENDOR_ID_CYPRESS, PRODUCT_ID_CYPHIDCOM) },
-+	{ USB_DEVICE(VENDOR_ID_SAI, PRODUCT_ID_CYPHIDCOM) },
- 	{ USB_DEVICE(VENDOR_ID_POWERCOM, PRODUCT_ID_UPS) },
- 	{ USB_DEVICE(VENDOR_ID_FRWD, PRODUCT_ID_CYPHIDCOM_FRWD) },
- 	{ USB_DEVICE(VENDOR_ID_DAZZLE, PRODUCT_ID_CA42) },
---- a/drivers/usb/serial/cypress_m8.h
-+++ b/drivers/usb/serial/cypress_m8.h
-@@ -24,6 +24,9 @@
- #define VENDOR_ID_CYPRESS		0x04b4
- #define PRODUCT_ID_CYPHIDCOM		0x5500
- 
-+/* Simply Automated HID->COM UPB PIM (using Cypress PID 0x5500) */
-+#define VENDOR_ID_SAI			0x17dd
-+
- /* FRWD Dongle - a GPS sports watch */
- #define VENDOR_ID_FRWD			0x6737
- #define PRODUCT_ID_CYPHIDCOM_FRWD	0x0001
+ 	result = read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg);
+-	if (result) {
++	if (result < 0) {
+ 		count = result;
+ 		goto err;
+ 	}
 
 
