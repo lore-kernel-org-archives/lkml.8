@@ -2,259 +2,129 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E070EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BCBC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2194206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ISJGpjki"
+	by mail.kernel.org (Postfix) with ESMTP id 752DB206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595263429;
+	bh=KMkAKeNoZ26c+Gb1mutbil441mqczc7waHx+c2v1cJM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eZMqqCaGnTPGfP4bRTQXxKeGIv6nii5SzaMedBbqC4Syp73ZfQvx4/3ykSmqANoFH
+	 EczkduTw4b4Y805vds14VE6EmqVaQVGhgqR+FA9RI+MQ8vB3Aw5UNoklA73NGedxPu
+	 Hfi/00G8kODT+0k/Q2i/csPvp7qSzHH+5VsY5nsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731575AbgGTQnq (ORCPT
+        id S1729990AbgGTPl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:43:46 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:12601 "EHLO m43-7.mailgun.net"
+        Mon, 20 Jul 2020 11:41:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729984AbgGTPmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:42:01 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595259720; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=ojYn9xI5Ymeb5LxnRNnEThN5GJTa6H+dqaberOWG00k=; b=ISJGpjki0hZBCVSZzIl18XDRJtvJMXgyV9khKCmnPQS3TrfX4Wr36XWiDwUPMWcsZZtiFLqG
- lYdYtiPZp5noPZfhc2D2gydddMERkMZHcXVqlJBhUzqtQgic/Fu9FvGkLzMGNqiy4xgfWuJ2
- Rk+RNpvygQj+D5o+h75kROjHaag=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5f15bb1c8e9b2c49c6a50c43 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 15:41:16
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 50799C4344B; Mon, 20 Jul 2020 15:41:15 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729977AbgGTPly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:41:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DE811C4344A;
-        Mon, 20 Jul 2020 15:41:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DE811C4344A
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v10 06/13] iommu/arm-smmu-qcom: Get and set the pagetable config for split pagetables
-Date:   Mon, 20 Jul 2020 09:40:40 -0600
-Message-Id: <20200720154047.3611092-7-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720154047.3611092-1-jcrouse@codeaurora.org>
-References: <20200720154047.3611092-1-jcrouse@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 936172064B;
+        Mon, 20 Jul 2020 15:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595259714;
+        bh=KMkAKeNoZ26c+Gb1mutbil441mqczc7waHx+c2v1cJM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EYshliYSplSjDLTeGXUqMFJP7ShzxVHKC2G/2PbVjz0WuIFpdT35ZkRYr9gOykdsI
+         5OsForaruYy27Q5xJOCKgiS/6s/1bW69XsFgRVwHvuXfdU9FLjzv6M5ftx2Vz0GdBC
+         FNJwvTBB+Y+fnWRJXWUkK/SpDkh5ng/OAZh6tzC8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 53/86] spi: spi-sun6i: sun6i_spi_transfer_one(): fix setting of clock rate
+Date:   Mon, 20 Jul 2020 17:36:49 +0200
+Message-Id: <20200720152755.830531635@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
+References: <20200720152753.138974850@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Adreno GPU has the capability to manage its own pagetables and switch
-them dynamically from the hardware. To do this the GPU uses TTBR1 for
-"global" GPU memory and creates local pagetables for each context and
-switches them dynamically with the GPU.
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-Use DOMAIN_ATTR_PGTABLE_CFG to get the current configuration for the
-TTBR1 pagetable from the smmu driver so the leaf driver can create
-compatible pagetables for use with TTBR0.
+[ Upstream commit ed7815db70d17b1741883f2da8e1d80bc2efe517 ]
 
-Because TTBR0 is disabled by default when TTBR1 is enabled the GPU
-driver can pass the configuration of one of the newly created pagetables
-back through DOMAIN_ATTR_PGTABLE_CFG as a trigger to enable translation on
-TTBR0.
+A SPI transfer defines the _maximum_ speed of the SPI transfer. However the
+driver doesn't take into account that the clock divider is always rounded down
+(due to integer arithmetics). This results in a too high clock rate for the SPI
+transfer.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+E.g.: with a mclk_rate of 24 MHz and a SPI transfer speed of 10 MHz, the
+original code calculates a reg of "0", which results in a effective divider of
+"2" and a 12 MHz clock for the SPI transfer.
+
+This patch fixes the issue by using DIV_ROUND_UP() instead of a plain
+integer division.
+
+While there simplify the divider calculation for the CDR1 case, use
+order_base_2() instead of two ilog2() calculations.
+
+Fixes: 3558fe900e8a ("spi: sunxi: Add Allwinner A31 SPI controller driver")
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Link: https://lore.kernel.org/r/20200706143443.9855-2-mkl@pengutronix.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/spi/spi-sun6i.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
- drivers/iommu/arm-smmu-qcom.c | 47 +++++++++++++++++++++++++++++++++++
- drivers/iommu/arm-smmu.c      | 32 ++++++++++++++++++------
- drivers/iommu/arm-smmu.h      | 10 ++++++++
- 3 files changed, 81 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-index b9a5c5369e86..9a0c64ca9cb6 100644
---- a/drivers/iommu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm-smmu-qcom.c
-@@ -34,6 +34,52 @@ static bool qcom_adreno_smmu_is_gpu_device(struct device *dev)
- 	return false;
- }
- 
-+/*
-+ * Local implementation to configure TTBR0 wil the specified pagetable config.
-+ * The GPU driver will call this to enable TTBR0 when per-instance pagetables
-+ * are active
-+ */
-+static int qcom_adreno_smmu_set_pgtable_cfg(struct arm_smmu_domain *smmu_domain,
-+		struct io_pgtable_cfg *pgtbl_cfg)
-+{
-+	struct io_pgtable *pgtable = io_pgtable_ops_to_pgtable(smmu_domain->pgtbl_ops);
-+	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
-+	struct arm_smmu_cb *cb = &smmu_domain->smmu->cbs[cfg->cbndx];
-+
-+	/* The domain must have split pagetables already enabled */
-+	if (cb->tcr[0] & ARM_SMMU_TCR_EPD1)
-+		return -EINVAL;
-+
-+	/* If the pagetable config is NULL, disable TTBR0 */
-+	if (!pgtbl_cfg) {
-+		/* Do nothing if it is already disabled */
-+		if ((cb->tcr[0] & ARM_SMMU_TCR_EPD0))
-+			return -EINVAL;
-+
-+		/* Set TCR to the original configuration */
-+		cb->tcr[0] = arm_smmu_lpae_tcr(&pgtable->cfg);
-+		cb->ttbr[0] = FIELD_PREP(ARM_SMMU_TTBRn_ASID, cb->cfg->asid);
-+	} else {
-+		u32 tcr = cb->tcr[0];
-+
-+		/* FIXME: What sort of validation do we need to do here? */
-+
-+		/* Don't call this again if TTBR0 is already enabled */
-+		if (!(cb->tcr[0] & ARM_SMMU_TCR_EPD0))
-+			return -EINVAL;
-+
-+		tcr |= arm_smmu_lpae_tcr(pgtbl_cfg);
-+		tcr &= ~(ARM_SMMU_TCR_EPD0 | ARM_SMMU_TCR_EPD1);
-+
-+		cb->tcr[0] = tcr;
-+		cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
-+		cb->ttbr[0] |= FIELD_PREP(ARM_SMMU_TTBRn_ASID, cb->cfg->asid);
-+	}
-+
-+	arm_smmu_write_context_bank(smmu_domain->smmu, cb->cfg->cbndx);
-+	return 0;
-+}
-+
- static int qcom_adreno_smmu_alloc_context_bank(struct arm_smmu_domain *smmu_domain,
- 		struct device *dev, int start, int count)
+diff --git a/drivers/spi/spi-sun6i.c b/drivers/spi/spi-sun6i.c
+index 7e7da97982aaf..17068e62e792d 100644
+--- a/drivers/spi/spi-sun6i.c
++++ b/drivers/spi/spi-sun6i.c
+@@ -163,7 +163,7 @@ static int sun6i_spi_transfer_one(struct spi_master *master,
+ 				  struct spi_transfer *tfr)
  {
-@@ -131,6 +177,7 @@ static const struct arm_smmu_impl qcom_adreno_smmu_impl = {
- 	.def_domain_type = qcom_smmu_def_domain_type,
- 	.reset = qcom_smmu500_reset,
- 	.alloc_context_bank = qcom_adreno_smmu_alloc_context_bank,
-+	.set_pgtable_cfg = qcom_adreno_smmu_set_pgtable_cfg,
- };
- 
- static struct arm_smmu_device *qcom_smmu_create(struct arm_smmu_device *smmu,
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index fff536a44faa..e1036ae54a8d 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -86,13 +86,6 @@ struct arm_smmu_smr {
- 	bool				valid;
- };
- 
--struct arm_smmu_cb {
--	u64				ttbr[2];
--	u32				tcr[2];
--	u32				mair[2];
--	struct arm_smmu_cfg		*cfg;
--};
+ 	struct sun6i_spi *sspi = spi_master_get_devdata(master);
+-	unsigned int mclk_rate, div, timeout;
++	unsigned int mclk_rate, div, div_cdr1, div_cdr2, timeout;
+ 	unsigned int start, end, tx_time;
+ 	unsigned int tx_len = 0;
+ 	int ret = 0;
+@@ -241,14 +241,12 @@ static int sun6i_spi_transfer_one(struct spi_master *master,
+ 	 * First try CDR2, and if we can't reach the expected
+ 	 * frequency, fall back to CDR1.
+ 	 */
+-	div = mclk_rate / (2 * tfr->speed_hz);
+-	if (div <= (SUN6I_CLK_CTL_CDR2_MASK + 1)) {
+-		if (div > 0)
+-			div--;
 -
- static bool using_legacy_binding, using_generic_binding;
- 
- static inline int arm_smmu_rpm_get(struct arm_smmu_device *smmu)
-@@ -558,7 +551,7 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+-		reg = SUN6I_CLK_CTL_CDR2(div) | SUN6I_CLK_CTL_DRS;
++	div_cdr1 = DIV_ROUND_UP(mclk_rate, tfr->speed_hz);
++	div_cdr2 = DIV_ROUND_UP(div_cdr1, 2);
++	if (div_cdr2 <= (SUN6I_CLK_CTL_CDR2_MASK + 1)) {
++		reg = SUN6I_CLK_CTL_CDR2(div_cdr2 - 1) | SUN6I_CLK_CTL_DRS;
+ 	} else {
+-		div = ilog2(mclk_rate) - ilog2(tfr->speed_hz);
++		div = min(SUN6I_CLK_CTL_CDR1_MASK, order_base_2(div_cdr1));
+ 		reg = SUN6I_CLK_CTL_CDR1(div);
  	}
- }
  
--static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
-+void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
- {
- 	u32 reg;
- 	bool stage1;
-@@ -1515,6 +1508,18 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
- 		case DOMAIN_ATTR_NESTING:
- 			*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
- 			return 0;
-+		case DOMAIN_ATTR_PGTABLE_CFG: {
-+			struct io_pgtable *pgtable;
-+			struct io_pgtable_cfg *dest = data;
-+
-+			if (!smmu_domain->pgtbl_ops)
-+				return -ENODEV;
-+
-+			pgtable = io_pgtable_ops_to_pgtable(smmu_domain->pgtbl_ops);
-+
-+			memcpy(dest, &pgtable->cfg, sizeof(*dest));
-+			return 0;
-+		}
- 		default:
- 			return -ENODEV;
- 		}
-@@ -1555,6 +1560,17 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
- 			else
- 				smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
- 			break;
-+		case DOMAIN_ATTR_PGTABLE_CFG: {
-+			struct arm_smmu_device *smmu = smmu_domain->smmu;
-+
-+			ret = -EPERM;
-+
-+			if (smmu)
-+				if (smmu->impl && smmu->impl->set_pgtable_cfg)
-+					ret = smmu->impl->set_pgtable_cfg(smmu_domain,
-+						data);
-+			}
-+			break;
- 		default:
- 			ret = -ENODEV;
- 		}
-diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-index 9f81c1fffe1e..9325fc28d24a 100644
---- a/drivers/iommu/arm-smmu.h
-+++ b/drivers/iommu/arm-smmu.h
-@@ -328,6 +328,13 @@ struct arm_smmu_cfg {
- };
- #define ARM_SMMU_INVALID_IRPTNDX	0xff
- 
-+struct arm_smmu_cb {
-+	u64				ttbr[2];
-+	u32				tcr[2];
-+	u32				mair[2];
-+	struct arm_smmu_cfg		*cfg;
-+};
-+
- enum arm_smmu_domain_stage {
- 	ARM_SMMU_DOMAIN_S1 = 0,
- 	ARM_SMMU_DOMAIN_S2,
-@@ -408,6 +415,8 @@ struct arm_smmu_impl {
- 	int (*def_domain_type)(struct device *dev);
- 	int (*alloc_context_bank)(struct arm_smmu_domain *smmu_domain,
- 			struct device *dev, int start, int max);
-+	int (*set_pgtable_cfg)(struct arm_smmu_domain *smmu_domain,
-+			struct io_pgtable_cfg *cfg);
- };
- 
- #define INVALID_SMENDX			-1
-@@ -493,6 +502,7 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu);
- struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu);
- struct arm_smmu_device *qcom_adreno_smmu_impl_init(struct arm_smmu_device *smmu);
- 
-+void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx);
- int arm_mmu500_reset(struct arm_smmu_device *smmu);
- 
- #endif /* _ARM_SMMU_H */
 -- 
 2.25.1
+
+
 
