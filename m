@@ -2,175 +2,97 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 200B9C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB883C4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03A7D207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A80A8207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595281307;
+	bh=mzOX92lrI1z/vL+l8kiOBnblu9pbDp1Fzd+SgTVzpEI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dr1KYAcAS24+DVIGdiVLpSCmQAIIUmWtXddM1DZF7JJtE5SKnyM4zJ4AQP+IsRYUq
+	 Is28+xChRBe1h6DEt4qjPtgINe0yCLn/W6/VgEiDRriKAnZHtAHThoMS6LBOvuVMKO
+	 Entq37gVOiVW5AHUt2B6OpucTJTsZ6Y5qcnPCxnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbgGTVlj (ORCPT
+        id S1728785AbgGTVlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:41:39 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:34514 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbgGTVlb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:41:31 -0400
-Date:   Mon, 20 Jul 2020 17:41:28 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Cc:     helgaas@kernel.org, Yoshinori Sato <ysato@users.sourceforge.jp>,
-        bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
-Subject: Re: [RFC PATCH 24/35] sh: Change PCIBIOS_SUCCESSFUL to 0
-Message-ID: <20200720214128.GN14669@brightrain.aerifal.cx>
-References: <20200713122247.10985-1-refactormyself@gmail.com>
- <20200713122247.10985-25-refactormyself@gmail.com>
+        Mon, 20 Jul 2020 17:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728451AbgGTVjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:24 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5726422CF8;
+        Mon, 20 Jul 2020 21:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595281164;
+        bh=mzOX92lrI1z/vL+l8kiOBnblu9pbDp1Fzd+SgTVzpEI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y5BqSgMzsqVDCX3WdnFltMbkgmybbvSLLPznY4dpbUg/T927ryN8VleZO0740YvdK
+         A1YPRZAKDWD6BAK2hGd4wA5xix6zpJxbP76W9vygEddhJX0/nNVBuO373vyM9cvcGC
+         z57aKOUYMhwQLEhOhUvijI7CYn4WtpxDKPUVPHgY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 07/13] hwmon: (aspeed-pwm-tacho) Avoid possible buffer overflow
+Date:   Mon, 20 Jul 2020 17:39:08 -0400
+Message-Id: <20200720213914.407919-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200720213914.407919-1-sashal@kernel.org>
+References: <20200720213914.407919-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713122247.10985-25-refactormyself@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 02:22:36PM +0200, Saheed O. Bolarinwa wrote:
-> In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
-> Their scope should be limited within arch/x86.
-> 
-> Change all PCIBIOS_SUCCESSFUL to 0
-> 
-> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-> ---
->  arch/sh/drivers/pci/common.c        | 2 +-
->  arch/sh/drivers/pci/ops-dreamcast.c | 4 ++--
->  arch/sh/drivers/pci/ops-sh4.c       | 4 ++--
->  arch/sh/drivers/pci/ops-sh7786.c    | 8 ++++----
->  arch/sh/drivers/pci/pci.c           | 2 +-
->  5 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/sh/drivers/pci/common.c b/arch/sh/drivers/pci/common.c
-> index fe163ecd0719..ee27cdfd3e68 100644
-> --- a/arch/sh/drivers/pci/common.c
-> +++ b/arch/sh/drivers/pci/common.c
-> @@ -61,7 +61,7 @@ int __init pci_is_66mhz_capable(struct pci_channel *hose,
->  			continue;
->  		if (early_read_config_word(hose, top_bus, current_bus,
->  					   pci_devfn, PCI_VENDOR_ID, &vid) !=
-> -		    PCIBIOS_SUCCESSFUL)
-> +		    0)
->  			continue;
->  		if (vid == 0xffff)
->  			continue;
-> diff --git a/arch/sh/drivers/pci/ops-dreamcast.c b/arch/sh/drivers/pci/ops-dreamcast.c
-> index 517a8a9702f6..431cd006951f 100644
-> --- a/arch/sh/drivers/pci/ops-dreamcast.c
-> +++ b/arch/sh/drivers/pci/ops-dreamcast.c
-> @@ -56,7 +56,7 @@ static int gapspci_read(struct pci_bus *bus, unsigned int devfn, int where, int
->  	case 4: *val = inl(GAPSPCI_BBA_CONFIG+where); break;
->  	}
->  
-> -        return PCIBIOS_SUCCESSFUL;
-> +	return 0;
->  }
->  
->  static int gapspci_write(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val)
-> @@ -70,7 +70,7 @@ static int gapspci_write(struct pci_bus *bus, unsigned int devfn, int where, int
->  	case 4: outl((u32)val, GAPSPCI_BBA_CONFIG+where); break;
->  	}
->  
-> -        return PCIBIOS_SUCCESSFUL;
-> +	return 0;
->  }
->  
->  struct pci_ops gapspci_pci_ops = {
-> diff --git a/arch/sh/drivers/pci/ops-sh4.c b/arch/sh/drivers/pci/ops-sh4.c
-> index a205be3bfc4a..4d757e5f38c6 100644
-> --- a/arch/sh/drivers/pci/ops-sh4.c
-> +++ b/arch/sh/drivers/pci/ops-sh4.c
-> @@ -49,7 +49,7 @@ static int sh4_pci_read(struct pci_bus *bus, unsigned int devfn,
->  		return PCIBIOS_FUNC_NOT_SUPPORTED;
->  	}
->  
-> -	return PCIBIOS_SUCCESSFUL;
-> +	return 0;
->  }
->  
->  /*
-> @@ -90,7 +90,7 @@ static int sh4_pci_write(struct pci_bus *bus, unsigned int devfn,
->  
->  	pci_write_reg(chan, data, SH4_PCIPDR);
->  
-> -	return PCIBIOS_SUCCESSFUL;
-> +	return 0;
->  }
->  
->  struct pci_ops sh4_pci_ops = {
-> diff --git a/arch/sh/drivers/pci/ops-sh7786.c b/arch/sh/drivers/pci/ops-sh7786.c
-> index a10f9f4ebd7f..7c329e467360 100644
-> --- a/arch/sh/drivers/pci/ops-sh7786.c
-> +++ b/arch/sh/drivers/pci/ops-sh7786.c
-> @@ -52,7 +52,7 @@ static int sh7786_pcie_config_access(unsigned char access_type,
->  			else
->  				pci_write_reg(chan, *data, PCI_REG(reg));
->  
-> -			return PCIBIOS_SUCCESSFUL;
-> +			return 0;
->  		} else if (dev > 1)
->  			return PCIBIOS_DEVICE_NOT_FOUND;
->  	}
-> @@ -83,7 +83,7 @@ static int sh7786_pcie_config_access(unsigned char access_type,
->  	/* Disable the configuration access */
->  	pci_write_reg(chan, 0, SH4A_PCIEPCTLR);
->  
-> -	return PCIBIOS_SUCCESSFUL;
-> +	return 0;
->  }
->  
->  static int sh7786_pcie_read(struct pci_bus *bus, unsigned int devfn,
-> @@ -101,7 +101,7 @@ static int sh7786_pcie_read(struct pci_bus *bus, unsigned int devfn,
->  	raw_spin_lock_irqsave(&pci_config_lock, flags);
->  	ret = sh7786_pcie_config_access(PCI_ACCESS_READ, bus,
->  					devfn, where, &data);
-> -	if (ret != PCIBIOS_SUCCESSFUL) {
-> +	if (ret != 0) {
->  		*val = 0xffffffff;
->  		goto out;
->  	}
-> @@ -137,7 +137,7 @@ static int sh7786_pcie_write(struct pci_bus *bus, unsigned int devfn,
->  	raw_spin_lock_irqsave(&pci_config_lock, flags);
->  	ret = sh7786_pcie_config_access(PCI_ACCESS_READ, bus,
->  					devfn, where, &data);
-> -	if (ret != PCIBIOS_SUCCESSFUL)
-> +	if (ret != 0)
->  		goto out;
->  
->  	dev_dbg(&bus->dev, "pcie-config-write: bus=%3d devfn=0x%04x "
-> diff --git a/arch/sh/drivers/pci/pci.c b/arch/sh/drivers/pci/pci.c
-> index c7784e156964..77130f035fdd 100644
-> --- a/arch/sh/drivers/pci/pci.c
-> +++ b/arch/sh/drivers/pci/pci.c
-> @@ -204,7 +204,7 @@ pcibios_bus_report_status_early(struct pci_channel *hose,
->  			continue;
->  		ret = early_read_config_word(hose, top_bus, current_bus,
->  					     pci_devfn, PCI_STATUS, &status);
-> -		if (ret != PCIBIOS_SUCCESSFUL)
-> +		if (ret != 0)
->  			continue;
->  		if (status == 0xffff)
->  			continue;
-> -- 
-> 2.18.2
+From: Evgeny Novikov <novikov@ispras.ru>
 
-Acked-by: Rich Felker <dalias@libc.org>
+[ Upstream commit bc4071aafcf4d0535ee423b69167696d6c03207d ]
 
-(for both this and the following one in the series)
+aspeed_create_fan() reads a pwm_port value using of_property_read_u32().
+If pwm_port will be more than ARRAY_SIZE(pwm_port_params), there will be
+a buffer overflow in
+aspeed_create_pwm_port()->aspeed_set_pwm_port_enable(). The patch fixes
+the potential buffer overflow.
+
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Link: https://lore.kernel.org/r/20200703111518.9644-1-novikov@ispras.ru
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hwmon/aspeed-pwm-tacho.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
+index 69b97d45e3cbb..e4337e9dda444 100644
+--- a/drivers/hwmon/aspeed-pwm-tacho.c
++++ b/drivers/hwmon/aspeed-pwm-tacho.c
+@@ -878,6 +878,8 @@ static int aspeed_create_fan(struct device *dev,
+ 	ret = of_property_read_u32(child, "reg", &pwm_port);
+ 	if (ret)
+ 		return ret;
++	if (pwm_port >= ARRAY_SIZE(pwm_port_params))
++		return -EINVAL;
+ 	aspeed_create_pwm_port(priv, (u8)pwm_port);
+ 
+ 	ret = of_property_count_u8_elems(child, "cooling-levels");
+-- 
+2.25.1
+
