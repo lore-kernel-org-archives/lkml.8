@@ -2,165 +2,202 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4269EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBCFC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28F5020709
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238D422B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:49:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="J/HE6FTp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jg/iEt+0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732122AbgGTRtP (ORCPT
+        id S1730718AbgGTRtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:49:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58944 "EHLO
+        Mon, 20 Jul 2020 13:49:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726699AbgGTRtN (ORCPT
+        with ESMTP id S1726686AbgGTRtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 13:49:13 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C23EFC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:49:12 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id c80so361278wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:49:12 -0700 (PDT)
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023AAC0619D4;
+        Mon, 20 Jul 2020 10:49:12 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id k71so188795pje.0;
+        Mon, 20 Jul 2020 10:49:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dHGb/SpCGr7LJoGHyEMXrvxy1/3cgQI+BwLHtPx8ztY=;
-        b=J/HE6FTppGwiK3cGRV8XmKQpMaqC49zVxWuYF7d5shgDI/H/123csQWqM48Bmrcsl7
-         p5cIf3WJeukPwjcXWMNBfvh7jsT9vM4+FpSE9zs9wiA0fWpn52OEOZezEnbZmQaAP8c+
-         IHnQVc8OFDw5QOyw7Vpd4Q5cg6ui1FvltX6hY=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=96y7EAtauwpST2sJvN1xqRaaYTBW7xFiifRwkpVmX4I=;
+        b=jg/iEt+0wHY/FV3Q81wX9QAl/uJk+XggykUcXKKHxIkxhXQ0AXB7HJA1n+VKyzthkI
+         8hDC3mxxB86xuU1/zjVG17x2pWdnLQaexcu/kE5SYCLbJnNv7QyCO/RocBC4IeE3Dnk0
+         xp/Q7wTP6ClTeePLDl1t4OkFpMCXWMCKPrc/6DqTxBF4PXQHHdQyPjQpJLlkFEffPB/w
+         TStkgpuAiE0YkT/QEqdMS/wxmHQMVQNSg/Os+aDFc0ZvUo4Hyjn8j6VP15VVQN1Hf83S
+         x1X9YrqeLocpYpqr7t4cjHsyYliRRciPUN+e/QX/p/1Op9g4bjSFRz/wdv21jNcjKgI0
+         EKJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dHGb/SpCGr7LJoGHyEMXrvxy1/3cgQI+BwLHtPx8ztY=;
-        b=K3pYAOLe0JOtY3Ro+kGZ8wv4jRGS0ADMeWRkuEb+xk7/EuHuXFa05UxHVMvzrY5t/b
-         BpcH3LOY52B7vg+bhM/gZJugidw6asgPdcAaxoxJK4ADw2/ja181+rH3K9Nq5Tb6Y5t1
-         BfzRN+ZDrqgyBSWfmVllyQ7gy/kooNVrGMEw1fomtqYqaOU1aRAnjxEA74LQutzhZJmG
-         uhMghBrNNPcW2sZw96witxSC3Fob3dH/T7RJMNZ+waq6z32OOkfda7KwVEaEpt6lFu6B
-         4LzTHPtqekAQucNIAzGtEqToDifW489QdysD0hwKLuKc0s61ZuXKaKTVv4Y9x+ezHLwA
-         tBQg==
-X-Gm-Message-State: AOAM530zHysLYl1FQr2okj0L4zsXJfVHjDRv9In6s5a3plhMX4X7AG+d
-        P4qKFX6gj0EVJEvVU4tP5PBs6H5tavszk9ko
-X-Google-Smtp-Source: ABdhPJxmGe7qRWDzUpGNJ5e168Fd+vcelswyQ/kv7bMS8mjdZOMqqqGGUiZ7Qgz0uB93WeAl44OTgg==
-X-Received: by 2002:a05:600c:218f:: with SMTP id e15mr377219wme.187.1595267351324;
+        bh=96y7EAtauwpST2sJvN1xqRaaYTBW7xFiifRwkpVmX4I=;
+        b=kjxEUdM/vHh/4+kxlZ9HEReD6vhk/OebZwOwXSI1QRrJ+/5ecqN2paUAhRAOG4FMG1
+         xux6J6oKc7hFh5IzbzlHEPSDNom6hqlXnITcdYUAFa2pPBQ/dO6JTz98beRWyPgsdLy0
+         Q3HytJLc7SydfU655hr6DB+DeHJ873GH/oQNeGomAWe3cEtiVoeZaPBWqiSHsS6uvMlD
+         dPB7/UfJD5czKDY8ktnwBDhHXhAj+oDdb+8QmB/0bsGyEObMZmbwAqAksMDh84trg6Q1
+         p5K816kwj5ol+4AX9/mwmJ/MZyWBLum/KLMvSuFMXQeB1IE4IzMp/6wwUhQ5lydhiatG
+         iuwQ==
+X-Gm-Message-State: AOAM531iWiQpSIxdgpaskvI3C+okkXRXJntK2Tj1vz77ZD5OhUje0r0h
+        8Xw8QwEMKhKN53KH9Vs7adY=
+X-Google-Smtp-Source: ABdhPJy/P1ezLwGpEG0knayswF4R/ww4dDpu6dy1QBZUaQEiSB0wwVhOtmGxkQyhBFmAypl7LGgj1g==
+X-Received: by 2002:a17:90a:c295:: with SMTP id f21mr562409pjt.208.1595267352276;
+        Mon, 20 Jul 2020 10:49:12 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.67])
+        by smtp.gmail.com with ESMTPSA id i196sm15538658pgc.55.2020.07.20.10.49.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 20 Jul 2020 10:49:11 -0700 (PDT)
-Received: from [10.136.8.242] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id k14sm33356834wrn.76.2020.07.20.10.49.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 10:49:10 -0700 (PDT)
-Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
-To:     Dhananjay Phadke <dphadke@linux.microsoft.com>,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wolfram Sang <wsa@kernel.org>
-Cc:     Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com
-References: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com>
-Date:   Mon, 20 Jul 2020 10:49:06 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1] media: cafe-driver: use generic power management
+Date:   Mon, 20 Jul 2020 23:15:46 +0530
+Message-Id: <20200720174545.827778-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Drivers using legacy PM have to manage PCI states and device's PM states
+themselves. They also need to take care of configuration registers.
 
+With improved and powerful support of generic PM, PCI Core takes care of
+above mentioned, device-independent, jobs.
 
-On 7/18/2020 4:39 PM, Dhananjay Phadke wrote:
-> When i2c client unregisters, synchronize irq before setting
-> iproc_i2c->slave to NULL.
-> 
-> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000318
-> 
-> [  371.020421] pc : bcm_iproc_i2c_isr+0x530/0x11f0
-> [  371.025098] lr : __handle_irq_event_percpu+0x6c/0x170
-> [  371.030309] sp : ffff800010003e40
-> [  371.033727] x29: ffff800010003e40 x28: 0000000000000060
-> [  371.039206] x27: ffff800010ca9de0 x26: ffff800010f895df
-> [  371.044686] x25: ffff800010f18888 x24: ffff0008f7ff3600
-> [  371.050165] x23: 0000000000000003 x22: 0000000001600000
-> [  371.055645] x21: ffff800010f18888 x20: 0000000001600000
-> [  371.061124] x19: ffff0008f726f080 x18: 0000000000000000
-> [  371.066603] x17: 0000000000000000 x16: 0000000000000000
-> [  371.072082] x15: 0000000000000000 x14: 0000000000000000
-> [  371.077561] x13: 0000000000000000 x12: 0000000000000001
-> [  371.083040] x11: 0000000000000000 x10: 0000000000000040
-> [  371.088519] x9 : ffff800010f317c8 x8 : ffff800010f317c0
-> [  371.093999] x7 : ffff0008f805b3b0 x6 : 0000000000000000
-> [  371.099478] x5 : ffff0008f7ff36a4 x4 : ffff8008ee43d000
-> [  371.104957] x3 : 0000000000000000 x2 : ffff8000107d64c0
-> [  371.110436] x1 : 00000000c00000af x0 : 0000000000000000
-> 
-> [  371.115916] Call trace:
-> [  371.118439]  bcm_iproc_i2c_isr+0x530/0x11f0
-> [  371.122754]  __handle_irq_event_percpu+0x6c/0x170
-> [  371.127606]  handle_irq_event_percpu+0x34/0x88
-> [  371.132189]  handle_irq_event+0x40/0x120
-> [  371.136234]  handle_fasteoi_irq+0xcc/0x1a0
-> [  371.140459]  generic_handle_irq+0x24/0x38
-> [  371.144594]  __handle_domain_irq+0x60/0xb8
-> [  371.148820]  gic_handle_irq+0xc0/0x158
-> [  371.152687]  el1_irq+0xb8/0x140
-> [  371.155927]  arch_cpu_idle+0x10/0x18
-> [  371.159615]  do_idle+0x204/0x290
-> [  371.162943]  cpu_startup_entry+0x24/0x60
-> [  371.166990]  rest_init+0xb0/0xbc
-> [  371.170322]  arch_call_rest_init+0xc/0x14
-> [  371.174458]  start_kernel+0x404/0x430
-> 
-> Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
-> Signed-off-by: Dhananjay Phadke <dphadke@linux.microsoft.com>
-> ---
->  drivers/i2c/busses/i2c-bcm-iproc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-> index b58224b7b..37d2a79e7 100644
-> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
-> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-> @@ -1074,14 +1074,15 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
->  	if (!iproc_i2c->slave)
->  		return -EINVAL;
->  
-> -	iproc_i2c->slave = NULL;
-> -
->  	/* disable all slave interrupts */
->  	tmp = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
->  	tmp &= ~(IE_S_ALL_INTERRUPT_MASK <<
->  			IE_S_ALL_INTERRUPT_SHIFT);
->  	iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, tmp);
->  
-> +	synchronize_irq(iproc_i2c->irq);
+This driver makes use of PCI helper functions like
+pci_save/restore_state() and pci_enable/disable_device() to do required
+operations. In generic mode, they are no longer needed.
 
-If one takes a look at the I2C slave ISR routine, there are places where
-IRQ can be re-enabled in the ISR itself. What happens after we mask all
-slave interrupt and when 'synchronize_irq' is called, which I suppose is
-meant to wait for inflight interrupt to finish where there's a chance
-the interrupt can be re-enable again? How is one supposed to deal with that?
+Change function parameter in both .suspend() and .resume() to
+"struct device*" type.
 
-Thanks,
+Compile-tested only.
 
-Ray
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ .../media/platform/marvell-ccic/cafe-driver.c | 31 +++++--------------
+ .../media/platform/marvell-ccic/mcam-core.c   |  3 --
+ 2 files changed, 7 insertions(+), 27 deletions(-)
 
-> +	iproc_i2c->slave = NULL;
-> +
->  	/* Erase the slave address programmed */
->  	tmp = iproc_i2c_rd_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET);
->  	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
-> 
+diff --git a/drivers/media/platform/marvell-ccic/cafe-driver.c b/drivers/media/platform/marvell-ccic/cafe-driver.c
+index 9a09a10a3631..58b9915ac7a4 100644
+--- a/drivers/media/platform/marvell-ccic/cafe-driver.c
++++ b/drivers/media/platform/marvell-ccic/cafe-driver.c
+@@ -604,44 +604,28 @@ static void cafe_pci_remove(struct pci_dev *pdev)
+ }
+ 
+ 
+-#ifdef CONFIG_PM
+ /*
+  * Basic power management.
+  */
+-static int cafe_pci_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused cafe_pci_suspend(struct device *dev)
+ {
+-	struct v4l2_device *v4l2_dev = dev_get_drvdata(&pdev->dev);
++	struct v4l2_device *v4l2_dev = dev_get_drvdata(dev);
+ 	struct cafe_camera *cam = to_cam(v4l2_dev);
+-	int ret;
+ 
+-	ret = pci_save_state(pdev);
+-	if (ret)
+-		return ret;
+ 	mccic_suspend(&cam->mcam);
+-	pci_disable_device(pdev);
+ 	return 0;
+ }
+ 
+ 
+-static int cafe_pci_resume(struct pci_dev *pdev)
++static int __maybe_unused cafe_pci_resume(struct device *dev)
+ {
+-	struct v4l2_device *v4l2_dev = dev_get_drvdata(&pdev->dev);
++	struct v4l2_device *v4l2_dev = dev_get_drvdata(dev);
+ 	struct cafe_camera *cam = to_cam(v4l2_dev);
+-	int ret = 0;
+ 
+-	pci_restore_state(pdev);
+-	ret = pci_enable_device(pdev);
+-
+-	if (ret) {
+-		cam_warn(cam, "Unable to re-enable device on resume!\n");
+-		return ret;
+-	}
+ 	cafe_ctlr_init(&cam->mcam);
+ 	return mccic_resume(&cam->mcam);
+ }
+ 
+-#endif  /* CONFIG_PM */
+-
+ static const struct pci_device_id cafe_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL,
+ 		     PCI_DEVICE_ID_MARVELL_88ALP01_CCIC) },
+@@ -650,15 +634,14 @@ static const struct pci_device_id cafe_ids[] = {
+ 
+ MODULE_DEVICE_TABLE(pci, cafe_ids);
+ 
++static SIMPLE_DEV_PM_OPS(cafe_pci_pm_ops, cafe_pci_suspend, cafe_pci_resume);
++
+ static struct pci_driver cafe_pci_driver = {
+ 	.name = "cafe1000-ccic",
+ 	.id_table = cafe_ids,
+ 	.probe = cafe_pci_probe,
+ 	.remove = cafe_pci_remove,
+-#ifdef CONFIG_PM
+-	.suspend = cafe_pci_suspend,
+-	.resume = cafe_pci_resume,
+-#endif
++	.driver.pm = &cafe_pci_pm_ops,
+ };
+ 
+ 
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
+index 09775b6624c6..d81d0c130e3c 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.c
++++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+@@ -1967,8 +1967,6 @@ EXPORT_SYMBOL_GPL(mccic_shutdown);
+ /*
+  * Power management
+  */
+-#ifdef CONFIG_PM
+-
+ void mccic_suspend(struct mcam_camera *cam)
+ {
+ 	mutex_lock(&cam->s_mutex);
+@@ -2015,7 +2013,6 @@ int mccic_resume(struct mcam_camera *cam)
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(mccic_resume);
+-#endif /* CONFIG_PM */
+ 
+ MODULE_LICENSE("GPL v2");
+ MODULE_AUTHOR("Jonathan Corbet <corbet@lwn.net>");
+-- 
+2.27.0
+
