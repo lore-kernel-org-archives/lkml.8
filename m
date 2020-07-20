@@ -2,144 +2,84 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33C3C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92725C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D622206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:46:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="iER91zsD"
+	by mail.kernel.org (Postfix) with ESMTP id 74681206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595263590;
+	bh=nbwn6TZZ0LFmygzzXGwmza/qSf14tzLEA/vC7zv4svw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mwp/NMnyV14fcZMVR/F3RjKOd5tTBBSkwGkzEjUdzDaqPnET4DEqLjLnHO5IINuy6
+	 MMz6hX4EUqfqSFnfdeOA6CDvlFk0enVoNrzirRqsBjt8Mi9NrRDp1IMVE5HBisE8kL
+	 cieNHhPQIYv/yPr98asbvT7FimNOFy8WFEn8oE24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730379AbgGTQqR (ORCPT
+        id S1730672AbgGTQq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:46:17 -0400
-Received: from bgl-iport-3.cisco.com ([72.163.197.27]:30487 "EHLO
-        bgl-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730328AbgGTQp6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:45:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=3119; q=dns/txt; s=iport;
-  t=1595263557; x=1596473157;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Vdjo6hmqo0zLm1DR6bYASgDhovS0RKIR/PWgbRmhkv4=;
-  b=iER91zsDStYg6kxHzwcD/cI4oCz7yFlYn5ocbodVe1PUwFXKUPd0DBSA
-   Vn4egPYEMb3/lZGwCukCXzmUaO4g2Ng1odQfZxel8WM8tLHjLPmOR2yGi
-   odSSvUqupb5zK2hA7IO6zbX2bwZm/G5SPMpqMqaPrFbceuwhE9cmzmNvS
-   4=;
-X-IronPort-AV: E=Sophos;i="5.75,375,1589241600"; 
-   d="scan'208";a="126215549"
-Received: from vla196-nat.cisco.com (HELO bgl-core-4.cisco.com) ([72.163.197.24])
-  by bgl-iport-3.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 20 Jul 2020 16:45:52 +0000
-Received: from SRIRAKR2-M-R0A8.cisco.com ([10.65.70.250])
-        by bgl-core-4.cisco.com (8.15.2/8.15.2) with ESMTP id 06KGjq3j001338;
-        Mon, 20 Jul 2020 16:45:52 GMT
-From:   Sriram Krishnan <srirakr2@cisco.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Cc:     mbumgard@cisco.com, ugm@cisco.com, nimm@cisco.com,
-        xe-linux-external@cisco.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] net: hyperv: add support for vlans in netvsc driver
-Date:   Mon, 20 Jul 2020 22:15:51 +0530
-Message-Id: <20200720164551.14153-1-srirakr2@cisco.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 20 Jul 2020 12:46:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729732AbgGTPkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:40:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C53BE2176B;
+        Mon, 20 Jul 2020 15:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595259641;
+        bh=nbwn6TZZ0LFmygzzXGwmza/qSf14tzLEA/vC7zv4svw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=x4WFKYwaMLZTybuEypr94AuaQQAvB4ZuSg3H3jY1yQRRCTaUZRzWCpSDYTR35ddgC
+         7APhNlagQR34PNCSzarmWUqYQDexPR1Owrpcj/uUaKFxYJ1swMFLMMg5lq07UFiONn
+         G0l+AGFQRpjCoLfVMNZB9UVfJM7QE4bwotcVY9Hk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.9 25/86] ARC: elf: use right ELF_ARCH
+Date:   Mon, 20 Jul 2020 17:36:21 +0200
+Message-Id: <20200720152754.415928050@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
+References: <20200720152753.138974850@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.65.70.250, [10.65.70.250]
-X-Outbound-Node: bgl-core-4.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vlan tagged packets are getting dropped when used with DPDK that uses
-the AF_PACKET interface on a hyperV guest.
+From: Vineet Gupta <vgupta@synopsys.com>
 
-The packet layer uses the tpacket interface to communicate the vlans
-information to the upper layers. On Rx path, these drivers can read the
-vlan info from the tpacket header but on the Tx path, this information
-is still within the packet frame and requires the paravirtual drivers to
-push this back into the NDIS header which is then used by the host OS to
-form the packet.
+commit b7faf971081a4e56147f082234bfff55135305cb upstream.
 
-This transition from the packet frame to NDIS header is currently missing
-hence causing the host OS to drop the all vlan tagged packets sent by
-the drivers that use AF_PACKET (ETH_P_ALL) such as DPDK.
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Here is an overview of the changes in the vlan header in the packet path:
-
-The RX path (userspace handles everything):
-  1. RX VLAN packet is stripped by HOST OS and placed in NDIS header
-  2. Guest Kernel RX hv_netvsc packets and moves VLAN info from NDIS
-     header into kernel SKB
-  3. Kernel shares packets with user space application with PACKET_MMAP.
-     The SKB VLAN info is copied to tpacket layer and indication set
-     TP_STATUS_VLAN_VALID.
-  4. The user space application will re-insert the VLAN info into the frame.
-
-The TX path:
-  1. The user space application has the VLAN info in the frame.
-  2. Guest kernel gets packets from the application with PACKET_MMAP.
-  3. The kernel later sends the frame to the hv_netvsc driver. The only way
-     to send VLANs is when the SKB is setup & the VLAN is is stripped from the
-     frame.
-  4. TX VLAN is re-inserted by HOST OS based on the NDIS header. If it sees
-     a VLAN in the frame the packet is dropped.
-
-Cc: xe-linux-external@cisco.com
-Cc: Sriram Krishnan <srirakr2@cisco.com>
-Signed-off-by: Sriram Krishnan <srirakr2@cisco.com>
 ---
- drivers/net/hyperv/netvsc_drv.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/arc/include/asm/elf.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 6267f706e8ee..2a25b4352369 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -605,6 +605,29 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
- 		*hash_info = hash;
- 	}
+--- a/arch/arc/include/asm/elf.h
++++ b/arch/arc/include/asm/elf.h
+@@ -26,7 +26,7 @@
+ #define  R_ARC_32_PCREL		0x31
  
-+	/* When using AF_PACKET we need to remove VLAN from frame
-+	 * and indicate VLAN information in SKB so HOST OS will
-+	 * transmit the VLAN frame
-+	 */
-+	if (skb->protocol == htons(ETH_P_8021Q)) {
-+		u16 vlan_tci = 0;
-+		skb_reset_mac_header(skb);
-+		if (eth_type_vlan(eth_hdr(skb)->h_proto)) {
-+			int pop_err;
-+			pop_err = __skb_vlan_pop(skb, &vlan_tci);
-+			if (likely(pop_err == 0)) {
-+				__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vlan_tci);
-+
-+				/* Update the NDIS header pkt lengths */
-+				packet->total_data_buflen -= VLAN_HLEN;
-+				rndis_msg->msg_len = packet->total_data_buflen;
-+				rndis_msg->msg.pkt.data_len = packet->total_data_buflen;
-+
-+			} else {
-+				netdev_err(net,"Pop vlan err %x\n",pop_err);
-+			}
-+		}
-+	}
- 	if (skb_vlan_tag_present(skb)) {
- 		struct ndis_pkt_8021q_info *vlan;
+ /*to set parameters in the core dumps */
+-#define ELF_ARCH		EM_ARCOMPACT
++#define ELF_ARCH		EM_ARC_INUSE
+ #define ELF_CLASS		ELFCLASS32
  
--- 
-2.24.0
+ #ifdef CONFIG_CPU_BIG_ENDIAN
+
 
