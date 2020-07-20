@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8BEC433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB32C433FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2E9320773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FD820773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262203;
-	bh=yJdQ9x0NnxcJSbyMWotm4xSTdoYpqFfOHOchrswNJ7k=;
+	s=default; t=1595262209;
+	bh=9fcM8UNcJIVaRWwp8+SdABCME/wG7n29B/fICmrFgRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B7x6YtePdX2bXT2nf7JLdTIqF3ODaTxEjsmWi4ijLW6I2+V5q5BKighXUKVac6iag
-	 TEmFs7mhjGtJGJJ1ooq0+/zVizw0jn0rPHfhp6ngG7fHI2sERleF3WV+51KNTQxVUX
-	 UlaPbLphMHV/n4eY22yO+12L5ULg5rZDU55PRH/Y=
+	b=0/EWMeu7wDtwPIChqGpEZZVzhotHSghPMQsfqGYI+yZdQKdGpqpWJ6E6iVzfNbavI
+	 rW6+1Zm8101cVJk6mIIXBLxjO0VSIhp9b+lhvfprI+X/dgHT04y5a60/q+JA6GBJxS
+	 c16x0SS55R17xvy+pZvKf3opiM24C/YxMUtzTvzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387730AbgGTQXW (ORCPT
+        id S2388738AbgGTQX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:23:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41350 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:23:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732995AbgGTQFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:05:40 -0400
+        id S1732644AbgGTQFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:05:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD05F2064B;
-        Mon, 20 Jul 2020 16:05:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26B5A2064B;
+        Mon, 20 Jul 2020 16:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261140;
-        bh=yJdQ9x0NnxcJSbyMWotm4xSTdoYpqFfOHOchrswNJ7k=;
+        s=default; t=1595261134;
+        bh=9fcM8UNcJIVaRWwp8+SdABCME/wG7n29B/fICmrFgRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ps8LA+8pnyrFAQXUEpYhWBgeKehfYY+HnuOQ9Onm2ss2Zg9y2WSWWKnjlOApfs2Q8
-         D+Uxjb9eDEUqUgM/OClBIA+eRtGT7oIygKsNhwehvMYxp7MtCA50iADg8iI49abz3V
-         nriBGfZ7oUqPwFKRN7BAzpn6rpygy3gNaMMysmI0=
+        b=uao4MNRY0FK3yurvQKkMp0eNXoRFUkIY0SOCu9aaS1EJ0QKBc+z2DZpkKm6glRxV4
+         TZ+htyWveymbDOjNwcmQwhPabI2chlXkis4s5aqfYaMcy2eOW6S6KrniBtA8e7u8oE
+         Kx4U7Dy4Nc37JuJDC5gRqdI2Ye4/q1yUEkU7giWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Gong <yibin.gong@nxp.com>,
-        Angelo Dureghello <angelo@sysam.it>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.4 195/215] dmaengine: fsl-edma-common: correct DSIZE_32BYTE
-Date:   Mon, 20 Jul 2020 17:37:57 +0200
-Message-Id: <20200720152829.446376498@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: [PATCH 5.4 203/215] sched/fair: handle case of task_h_load() returning 0
+Date:   Mon, 20 Jul 2020 17:38:05 +0200
+Message-Id: <20200720152829.823407143@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -60,35 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-commit e142087b15960a4e1e5932942e5abae1f49d2318 upstream.
+commit 01cfcde9c26d8555f0e6e9aea9d6049f87683998 upstream.
 
-Correct EDMA_TCD_ATTR_DSIZE_32BYTE define since it's broken by the below:
-'0x0005 --> BIT(3) | BIT(0))'
+task_h_load() can return 0 in some situations like running stress-ng
+mmapfork, which forks thousands of threads, in a sched group on a 224 cores
+system. The load balance doesn't handle this correctly because
+env->imbalance never decreases and it will stop pulling tasks only after
+reaching loop_max, which can be equal to the number of running tasks of
+the cfs. Make sure that imbalance will be decreased by at least 1.
 
-Fixes: 4d6d3a90e4ac ("dmaengine: fsl-edma: fix macros")
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Tested-by: Angelo Dureghello <angelo@sysam.it>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/1593449998-32091-1-git-send-email-yibin.gong@nxp.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+misfit task is the other feature that doesn't handle correctly such
+situation although it's probably more difficult to face the problem
+because of the smaller number of CPUs and running tasks on heterogenous
+system.
+
+We can't simply ensure that task_h_load() returns at least one because it
+would imply to handle underflow in other places.
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: <stable@vger.kernel.org> # v4.4+
+Link: https://lkml.kernel.org/r/20200710152426.16981-1-vincent.guittot@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/fsl-edma-common.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/fair.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
---- a/drivers/dma/fsl-edma-common.h
-+++ b/drivers/dma/fsl-edma-common.h
-@@ -33,7 +33,7 @@
- #define EDMA_TCD_ATTR_DSIZE_16BIT	BIT(0)
- #define EDMA_TCD_ATTR_DSIZE_32BIT	BIT(1)
- #define EDMA_TCD_ATTR_DSIZE_64BIT	(BIT(0) | BIT(1))
--#define EDMA_TCD_ATTR_DSIZE_32BYTE	(BIT(3) | BIT(0))
-+#define EDMA_TCD_ATTR_DSIZE_32BYTE	(BIT(2) | BIT(0))
- #define EDMA_TCD_ATTR_SSIZE_8BIT	0
- #define EDMA_TCD_ATTR_SSIZE_16BIT	(EDMA_TCD_ATTR_DSIZE_16BIT << 8)
- #define EDMA_TCD_ATTR_SSIZE_32BIT	(EDMA_TCD_ATTR_DSIZE_32BIT << 8)
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3824,7 +3824,11 @@ static inline void update_misfit_status(
+ 		return;
+ 	}
+ 
+-	rq->misfit_task_load = task_h_load(p);
++	/*
++	 * Make sure that misfit_task_load will not be null even if
++	 * task_h_load() returns 0.
++	 */
++	rq->misfit_task_load = max_t(unsigned long, task_h_load(p), 1);
+ }
+ 
+ #else /* CONFIG_SMP */
+@@ -7407,7 +7411,15 @@ static int detach_tasks(struct lb_env *e
+ 		if (!can_migrate_task(p, env))
+ 			goto next;
+ 
+-		load = task_h_load(p);
++		/*
++		 * Depending of the number of CPUs and tasks and the
++		 * cgroup hierarchy, task_h_load() can return a null
++		 * value. Make sure that env->imbalance decreases
++		 * otherwise detach_tasks() will stop only after
++		 * detaching up to loop_max tasks.
++		 */
++		load = max_t(unsigned long, task_h_load(p), 1);
++
+ 
+ 		if (sched_feat(LB_MIN) && load < 16 && !env->sd->nr_balance_failed)
+ 			goto next;
 
 
