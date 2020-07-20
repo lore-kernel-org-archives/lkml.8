@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5492C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE7FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90FAE20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F9F2177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:13:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tl2HgLRl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fa6BM93D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgGTANK (ORCPT
+        id S1726764AbgGTANY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 20:13:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37006 "EHLO
+        Sun, 19 Jul 2020 20:13:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgGTANK (ORCPT
+        with ESMTP id S1726700AbgGTANX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 20:13:10 -0400
+        Sun, 19 Jul 2020 20:13:23 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0401C0619D2;
-        Sun, 19 Jul 2020 17:13:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C93FC0619D2;
+        Sun, 19 Jul 2020 17:13:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
         Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
         Content-Description:In-Reply-To:References;
-        bh=OoBxCM7kR8Bn+e6mXK1TKeVJzvNOOfwwqkj9KXYxgso=; b=Tl2HgLRl9N+TtT85weWwfaoaY4
-        TWZ/f8kwZEnVbmrq+TGqh60mymp7HOPxg7+3tarbIN/EeD/D6AGp9zgR4V6mzpHbxxWKTmTrA9Xvr
-        VAr3zURKbGBEBvbeWJ9PshVVs83ydZ5dXH46iVlXrpAEPN2nRVvUgHikReaRWNqn4c2DAVV1cqMbl
-        mSfb6XZBQt24hxncavkRbu4RM8mucypL3eAkQ7bLH9OLtXO/1mVnRP0DOkfsTRAupuuiQh3QOB0fr
-        +hRznH8LShMrW/G4xMNss1v091t8maUN6Ze8H17D+dwBorwDOR3nDMInofefEdMLvg5l17WQlsZBt
-        7rvYUIbw==;
+        bh=lu1fmLS9P2smCCuZldAHD8/i9SFslEh6s3uUkcgyaTU=; b=fa6BM93DTZr3J0lM0xhqz8cVh8
+        s+SNOUzuoVpcRK9xAw0CCnLo6HNkgLTa+XPtGSPue0+ElyEL0cMjcXjgnw4EIcM4bT63dXNzrOCfC
+        o2pfu2jBSeSV/ptZo/Z/bw6ebdwZQpqsYa4/VbxfiPrM7DsLE4tZdDBvfqAGt19K8CzaK7Sz4s0XB
+        jezKMeE6RNEDoMDauZfngcWX9cIMcEFFyTBvPb23+dAhI9sf7QQzRZtbXVFCBU/VACnNtM5s1696y
+        HOJSOKxM1S/UptVrk30R47ERnKswBqFFE6sHmxIgfEKcNXs8ySO8lD+oDcNKoXCo/+OprS+LYBuB2
+        fr/QKJPw==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxJQY-0003w8-EM; Mon, 20 Jul 2020 00:13:07 +0000
+        id 1jxJQm-0003wk-Lm; Mon, 20 Jul 2020 00:13:21 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org
-Subject: [PATCH] ceph: super.h: delete a duplicated word
-Date:   Sun, 19 Jul 2020 17:12:59 -0700
-Message-Id: <20200720001259.21668-1-rdunlap@infradead.org>
+        Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH] cifs: delete duplicated words in header files
+Date:   Sun, 19 Jul 2020 17:13:16 -0700
+Message-Id: <20200720001316.22854-1-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -55,24 +55,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the repeated word "the" in a comment.
+Drop repeated words in multiple comments.
+(be, use, the, See)
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jeff Layton <jlayton@kernel.org>
-Cc: Ilya Dryomov <idryomov@gmail.com>
-Cc: ceph-devel@vger.kernel.org
+Cc: Steve French <sfrench@samba.org>
+Cc: linux-cifs@vger.kernel.org
+Cc: samba-technical@lists.samba.org
 ---
- fs/ceph/super.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/cifsacl.h  |    4 ++--
+ fs/cifs/cifsglob.h |    2 +-
+ fs/cifs/smb2pdu.h  |    2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
---- linux-next-20200717.orig/fs/ceph/super.h
-+++ linux-next-20200717/fs/ceph/super.h
-@@ -353,7 +353,7 @@ struct ceph_inode_info {
- 	unsigned i_dirty_caps, i_flushing_caps;     /* mask of dirtied fields */
+--- linux-next-20200717.orig/fs/cifs/cifsacl.h
++++ linux-next-20200717/fs/cifs/cifsacl.h
+@@ -132,7 +132,7 @@ struct cifs_ace {
+ /*
+  * The current SMB3 form of security descriptor is similar to what was used for
+  * cifs (see above) but some fields are split, and fields in the struct below
+- * matches names of fields to the the spec, MS-DTYP (see sections 2.4.5 and
++ * matches names of fields to the spec, MS-DTYP (see sections 2.4.5 and
+  * 2.4.6). Note that "CamelCase" fields are used in this struct in order to
+  * match the MS-DTYP and MS-SMB2 specs which define the wire format.
+  */
+@@ -178,7 +178,7 @@ struct smb3_acl {
  
+ /*
+  * Used to store the special 'NFS SIDs' used to persist the POSIX uid and gid
+- * See See http://technet.microsoft.com/en-us/library/hh509017(v=ws.10).aspx
++ * See http://technet.microsoft.com/en-us/library/hh509017(v=ws.10).aspx
+  */
+ struct owner_sid {
+ 	u8 Revision;
+--- linux-next-20200717.orig/fs/cifs/cifsglob.h
++++ linux-next-20200717/fs/cifs/cifsglob.h
+@@ -1466,7 +1466,7 @@ struct cifsInodeInfo {
+ 	struct list_head llist;	/* locks helb by this inode */
  	/*
--	 * Link to the the auth cap's session's s_cap_dirty list. s_cap_dirty
-+	 * Link to the auth cap's session's s_cap_dirty list. s_cap_dirty
- 	 * is protected by the mdsc->cap_dirty_lock, but each individual item
- 	 * is also protected by the inode's i_ceph_lock. Walking s_cap_dirty
- 	 * requires the mdsc->cap_dirty_lock. List presence for an item can
+ 	 * NOTE: Some code paths call down_read(lock_sem) twice, so
+-	 * we must always use use cifs_down_write() instead of down_write()
++	 * we must always use cifs_down_write() instead of down_write()
+ 	 * for this semaphore to avoid deadlocks.
+ 	 */
+ 	struct rw_semaphore lock_sem;	/* protect the fields above */
+--- linux-next-20200717.orig/fs/cifs/smb2pdu.h
++++ linux-next-20200717/fs/cifs/smb2pdu.h
+@@ -31,7 +31,7 @@
+  * Note that, due to trying to use names similar to the protocol specifications,
+  * there are many mixed case field names in the structures below.  Although
+  * this does not match typical Linux kernel style, it is necessary to be
+- * be able to match against the protocol specfication.
++ * able to match against the protocol specfication.
+  *
+  * SMB2 commands
+  * Some commands have minimal (wct=0,bcc=0), or uninteresting, responses
