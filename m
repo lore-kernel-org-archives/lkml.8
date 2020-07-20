@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8471FC4345F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E558BC43463
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59E7E22CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B1A22BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281080;
-	bh=BOKO7t/Dev2HgUzW5nquzFUNM4FL7ZyT25MzW3MvQis=;
+	s=default; t=1595281087;
+	bh=ouo7TMEz/IqYJUsjvl8B3CXtrHu4eF3BTHFsVDf8JeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O3h/aFTc4geygcbkntnl3oLPGoHNI3GKxPZiKug2VTnF8rycmsEUwclet7Ge1J9W9
-	 ZUYNaOXQ+wuB3l9vIcMAB/B0f5h/B26ZSitewKTuSJP5SljwCiyOMp/x0rLgi4DWu5
-	 KWaB9LVr7sNbSt5vzwKV0w+dLoenuWI65QMUQ4DU=
+	b=Sm8OBthsqsj3TQzStr5I6R+ZHbxGLqFpRoxqeCObxiqkaaSlHRIv9RM9yGHFoDSKi
+	 t2klW447zaH6Ps+FAD9sanugnLpcnu2cVz63BPwzpBqsD1ZgVYr3xAx3BebUFWux2/
+	 VxZ1nkH1c7MZZiNvmwazk8Vu+hlmDadxQEX8yL00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgGTVh7 (ORCPT
+        id S1727971AbgGTViF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:37:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56054 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:38:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727852AbgGTVhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:37:55 -0400
+        id S1727880AbgGTVhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:37:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9017922CAF;
-        Mon, 20 Jul 2020 21:37:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A79F207FC;
+        Mon, 20 Jul 2020 21:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281075;
-        bh=BOKO7t/Dev2HgUzW5nquzFUNM4FL7ZyT25MzW3MvQis=;
+        s=default; t=1595281073;
+        bh=ouo7TMEz/IqYJUsjvl8B3CXtrHu4eF3BTHFsVDf8JeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l2czx97xN29lK1x51gvSJA+u3udRcggAWE7NhV4c/M+j45FQrjcjK0Z8Wef299wmI
-         Psn4xeXkoDCH0yILdmBbIu+8GkuI1T7AQ1ScHUTcsIBrI/Npr71SUZtw/FQto8Fxq8
-         yeK59yLB1sOiNKEMnCo7vrGeCuFlepM/TydBSw0Y=
+        b=lTiQu19yL0nn+PqPyeojnWWIeT+61r4z9iZUr1dF5Cn7ej85dKlkNeJl4bLjhGVGm
+         IqbkvIjwqdS2ht687rKM8ief80w3P3c/td0ljeFvWYSpMSo6tUfNCHIYRryWQrU4lP
+         PvjQothttDAc6DmJ1UroFBsYdpW+v8Ktu/teGk6s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     PeiSen Hou <pshou@realtek.com.tw>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 32/40] ALSA: hda/realtek - fixup for yet another Intel reference board
-Date:   Mon, 20 Jul 2020 17:37:07 -0400
-Message-Id: <20200720213715.406997-32-sashal@kernel.org>
+Cc:     Vasiliy Kupriakov <rublag-ns@yandex.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 30/40] platform/x86: asus-wmi: allow BAT1 battery name
+Date:   Mon, 20 Jul 2020 17:37:05 -0400
+Message-Id: <20200720213715.406997-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213715.406997-1-sashal@kernel.org>
 References: <20200720213715.406997-1-sashal@kernel.org>
@@ -58,33 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: PeiSen Hou <pshou@realtek.com.tw>
+From: Vasiliy Kupriakov <rublag-ns@yandex.ru>
 
-[ Upstream commit 5734e509d5d515c187f642937ef2de1e58d7715d ]
+[ Upstream commit 9a33e375d98ece5ea40c576eabd3257acb90c509 ]
 
-Add headset_jack for the intel reference board support with
-10ec:1230.
+The battery on my laptop ASUS TUF Gaming FX706II is named BAT1.
+This patch allows battery extension to load.
 
-Signed-off-by: PeiSen Hou <pshou@realtek.com.tw>
-Link: https://lore.kernel.org/r/20200716090134.9811-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Vasiliy Kupriakov <rublag-ns@yandex.ru>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 1 +
+ drivers/platform/x86/asus-wmi.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 16ecc8515db8e..1470321bf31ef 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7523,6 +7523,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x10cf, 0x1629, "Lifebook U7x7", ALC255_FIXUP_LIFEBOOK_U7x7_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x10cf, 0x1845, "Lifebook U904", ALC269_FIXUP_LIFEBOOK_EXTMIC),
- 	SND_PCI_QUIRK(0x10ec, 0x10f2, "Intel Reference board", ALC700_FIXUP_INTEL_REFERENCE),
-+	SND_PCI_QUIRK(0x10ec, 0x1230, "Intel Reference board", ALC225_FIXUP_HEADSET_JACK),
- 	SND_PCI_QUIRK(0x10f7, 0x8338, "Panasonic CF-SZ6", ALC269_FIXUP_HEADSET_MODE),
- 	SND_PCI_QUIRK(0x144d, 0xc109, "Samsung Ativ book 9 (NP900X3G)", ALC269_FIXUP_INV_DMIC),
- 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index cd212ee210e2d..537b824a1ae25 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -432,6 +432,7 @@ static int asus_wmi_battery_add(struct power_supply *battery)
+ 	 * battery is named BATT.
+ 	 */
+ 	if (strcmp(battery->desc->name, "BAT0") != 0 &&
++	    strcmp(battery->desc->name, "BAT1") != 0 &&
+ 	    strcmp(battery->desc->name, "BATT") != 0)
+ 		return -ENODEV;
+ 
 -- 
 2.25.1
 
