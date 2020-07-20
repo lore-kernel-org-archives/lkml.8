@@ -2,89 +2,145 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF5BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125C4C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68BB121775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:34:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tPvgmFap"
+	by mail.kernel.org (Postfix) with ESMTP id F108621775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgGTIea (ORCPT
+        id S1728087AbgGTIei convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:34:30 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38584 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728024AbgGTIe1 (ORCPT
+        Mon, 20 Jul 2020 04:34:38 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:21996 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728063AbgGTIeh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:34:27 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06K8WNwB093440;
-        Mon, 20 Jul 2020 08:34:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=xpaW2B9941YB0NweNGEDZrsGofKWzgtxk2QzTD/4JrQ=;
- b=tPvgmFapTBAxYadM93ygaKWhRMck8GqGDNtEd6D8aSmRo+l1HERPXsP+87LNO0Ir0iPH
- YWwb0rUN2wfGP7Y9EGbUgy8S+E2IWahAvX/EGBKNDAaNp6d8bxl8xYRxS/N/cl6Bzz4I
- augqlcm80FXX7Y6rlCR6FdtaTlkOXBYelL2DqMGuqQB6LtnDFeeGpsM0zeSat/ERrjxr
- k3NtpQpX+aXRDwMV7YTqQUkIOCOFRSO5rSsZ/05Bb5EtWiEC7cvWbHfTdybA799Cpow1
- dQswVo+jyL9egYxf96U/Ba4l3hAvQlSRLsUDwI+RiCl/Jxg9IX4lEtJCurdEx0Q6KEJR OA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 32brgr5gu7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 20 Jul 2020 08:34:19 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06K8Wvq6006452;
-        Mon, 20 Jul 2020 08:34:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 32d68g7jpq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 08:34:18 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06K8YHSM032622;
-        Mon, 20 Jul 2020 08:34:17 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 Jul 2020 01:34:15 -0700
-Date:   Mon, 20 Jul 2020 11:34:09 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Suraj Upadhyay <usuraj35@gmail.com>
-Cc:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH v2] staging: media: atomisp: Replace depracated MSI APIs
-Message-ID: <20200720083409.GF2549@kadam>
-References: <20200719142623.GA31565@blackclown>
+        Mon, 20 Jul 2020 04:34:37 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-110-UvCh1H6SNg2kNCAjyiamHg-1; Mon, 20 Jul 2020 09:34:33 +0100
+X-MC-Unique: UvCh1H6SNg2kNCAjyiamHg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 20 Jul 2020 09:34:32 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 20 Jul 2020 09:34:32 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Kees Cook' <keescook@chromium.org>,
+        Scott Branden <scott.branden@broadcom.com>
+CC:     Mimi Zohar <zohar@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        James Morris <jmorris@namei.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jessica Yu <jeyu@kernel.org>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <stephen.boyd@linaro.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 07/13] fs/kernel_read_file: Switch buffer size arg to
+ size_t
+Thread-Topic: [PATCH 07/13] fs/kernel_read_file: Switch buffer size arg to
+ size_t
+Thread-Index: AQHWXGHtmci88hmJCUOWA6z9jUdXWKkQJ6ZQ
+Date:   Mon, 20 Jul 2020 08:34:32 +0000
+Message-ID: <5db582d3ec08401eb4731ce3acd51561@AcuMS.aculab.com>
+References: <20200717174309.1164575-1-keescook@chromium.org>
+ <20200717174309.1164575-8-keescook@chromium.org>
+In-Reply-To: <20200717174309.1164575-8-keescook@chromium.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200719142623.GA31565@blackclown>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9687 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- phishscore=0 mlxlogscore=999 suspectscore=0 spamscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007200064
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9687 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- impostorscore=0 suspectscore=0 adultscore=0 clxscore=1011 mlxlogscore=999
- priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007200064
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, this is still not correct.  See comments on other thread.  There
-are other msi related code which needs to be updated.
+From: Kees Cook
+> Sent: 17 July 2020 18:43
+> In preparation for further refactoring of kernel_read_file*(), rename
+> the "max_size" argument to the more accurate "buf_size", and correct
+> its type to size_t. Add kerndoc to explain the specifics of how the
+> arguments will be used. Note that with buf_size now size_t, it can no
+> longer be negative (and was never called with a negative value). Adjust
+> callers to use it as a "maximum size" when *buf is NULL.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  fs/kernel_read_file.c            | 34 +++++++++++++++++++++++---------
+>  include/linux/kernel_read_file.h |  8 ++++----
+>  security/integrity/digsig.c      |  2 +-
+>  security/integrity/ima/ima_fs.c  |  2 +-
+>  4 files changed, 31 insertions(+), 15 deletions(-)
+> 
+> diff --git a/fs/kernel_read_file.c b/fs/kernel_read_file.c
+> index dc28a8def597..e21a76001fff 100644
+> --- a/fs/kernel_read_file.c
+> +++ b/fs/kernel_read_file.c
+> @@ -5,15 +5,31 @@
+>  #include <linux/security.h>
+>  #include <linux/vmalloc.h>
+> 
+> +/**
+> + * kernel_read_file() - read file contents into a kernel buffer
+> + *
+> + * @file	file to read from
+> + * @buf		pointer to a "void *" buffer for reading into (if
+> + *		*@buf is NULL, a buffer will be allocated, and
+> + *		@buf_size will be ignored)
+> + * @buf_size	size of buf, if already allocated. If @buf not
+> + *		allocated, this is the largest size to allocate.
+> + * @id		the kernel_read_file_id identifying the type of
+> + *		file contents being read (for LSMs to examine)
+> + *
+> + * Returns number of bytes read (no single read will be bigger
+> + * than INT_MAX), or negative on error.
+> + *
+> + */
 
-regards,
-dan carpenter
+That seems to be self-inconsistent.
+If '*buf' is NULL is both says that buf_size is ignored and
+is treated as a limit.
+To make life easier, zero should probably be treated as no-limit.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
