@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4243DC2D0A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15ABDC2D0A7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14A9D22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9487207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281181;
-	bh=ck+t5BO0KC/lWu1r0TlgaUuIVf2Zmt5Tke3WUWETRiI=;
+	s=default; t=1595281186;
+	bh=wRgAKJCJkV7Q4az1cAhz2iFJt5bHLBdVWRTvN1inipk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mGeNF2nJLBXtkmCG4nU5DutrURRihJgPB3jZMUP3M4cgQdyR2iiG3SeHPgxwmfjvS
-	 ULYlSP9emKzceSYIpH2k1IU2KZa6wBaTGxApsTKsGzGYl+d0lrCzVYbGGEwLFJJZ5A
-	 0X+X4Wy6q7OsUoulDiOCQw3EE3TGgj1M0iJiin+M=
+	b=VjhbflnNg2ufyFEFgiQRiu5NB/of6qwuDU7ELxok58GpHWe97xmQt2Xl8VyF+0zhQ
+	 1W9ZPNDhkqqT1sDCsVLbdJzmDYj4N+WIgc5eWgxaUwGyEfTvMsyWklJ7dxUgaC3D5p
+	 s6oUdbPa32r+9N02Q/+7K/LIUky+0ENacaWi7JIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbgGTVjj (ORCPT
+        id S1728555AbgGTVjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:39:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58252 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:39:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728347AbgGTVjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:06 -0400
+        id S1728380AbgGTVjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A247622BF5;
-        Mon, 20 Jul 2020 21:39:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09CF022C9D;
+        Mon, 20 Jul 2020 21:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281146;
-        bh=ck+t5BO0KC/lWu1r0TlgaUuIVf2Zmt5Tke3WUWETRiI=;
+        s=default; t=1595281150;
+        bh=wRgAKJCJkV7Q4az1cAhz2iFJt5bHLBdVWRTvN1inipk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HEIxq/amYic9Ft+gLkTpSYd2C6xtRgqAXZTHs6Dexrtfn0sg9q1S0GLrydH64NxNs
-         POEv7xrsJGbNMhkisXjn1a93fcek9z/RAZxuWLTmAvgDWZaKOjHMBYk+fUYxKUPr5v
-         v+9Tqid1TSNY3YFdO1dtLjDp3BXT+SLQxkDoLLhc=
+        b=ImjiAMoONHUm+dctYuVrhYVxck6xBt/omRZ3lPKwBl4PQiwfEV4+3eX2aNtBb3Twf
+         f3EgTfC3Iq/uUlOnGoF/wjJ7U65ls45uTinWc7oSubjcBUC3kc83qsyitkLE53aaMC
+         XW23igRTT7+VC+RR98VaGBxBDxcp7skU7WoS1ijo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Derek Basehore <dbasehore@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/19] Input: elan_i2c - only increment wakeup count on touch
-Date:   Mon, 20 Jul 2020 17:38:43 -0400
-Message-Id: <20200720213851.407715-12-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 16/19] arm64: Use test_tsk_thread_flag() for checking TIF_SINGLESTEP
+Date:   Mon, 20 Jul 2020 17:38:47 -0400
+Message-Id: <20200720213851.407715-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213851.407715-1-sashal@kernel.org>
 References: <20200720213851.407715-1-sashal@kernel.org>
@@ -59,61 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Derek Basehore <dbasehore@chromium.org>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 966334dfc472bdfa67bed864842943b19755d192 ]
+[ Upstream commit 5afc78551bf5d53279036e0bf63314e35631d79f ]
 
-This moves the wakeup increment for elan devices to the touch report.
-This prevents the drivers from incorrectly reporting a wakeup when the
-resume callback resets then device, which causes an interrupt to
-occur.
+Rather than open-code test_tsk_thread_flag() at each callsite, simply
+replace the couple of offenders with calls to test_tsk_thread_flag()
+directly.
 
-Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-Link: https://lore.kernel.org/r/20200706235046.1984283-1-dbasehore@chromium.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/elan_i2c_core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/debug-monitors.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-index ae012639ae1d5..82afaca2e1a67 100644
---- a/drivers/input/mouse/elan_i2c_core.c
-+++ b/drivers/input/mouse/elan_i2c_core.c
-@@ -917,6 +917,8 @@ static void elan_report_absolute(struct elan_tp_data *data, u8 *packet)
- 	u8 hover_info = packet[ETP_HOVER_INFO_OFFSET];
- 	bool contact_valid, hover_event;
+diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+index 262925b98f421..85bf560f363bd 100644
+--- a/arch/arm64/kernel/debug-monitors.c
++++ b/arch/arm64/kernel/debug-monitors.c
+@@ -389,14 +389,14 @@ void user_rewind_single_step(struct task_struct *task)
+ 	 * If single step is active for this thread, then set SPSR.SS
+ 	 * to 1 to avoid returning to the active-pending state.
+ 	 */
+-	if (test_ti_thread_flag(task_thread_info(task), TIF_SINGLESTEP))
++	if (test_tsk_thread_flag(task, TIF_SINGLESTEP))
+ 		set_regs_spsr_ss(task_pt_regs(task));
+ }
+ NOKPROBE_SYMBOL(user_rewind_single_step);
  
-+	pm_wakeup_event(&data->client->dev, 0);
-+
- 	hover_event = hover_info & 0x40;
- 	for (i = 0; i < ETP_MAX_FINGERS; i++) {
- 		contact_valid = tp_info & (1U << (3 + i));
-@@ -939,6 +941,8 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
- 	u8 *packet = &report[ETP_REPORT_ID_OFFSET + 1];
- 	int x, y;
- 
-+	pm_wakeup_event(&data->client->dev, 0);
-+
- 	if (!data->tp_input) {
- 		dev_warn_once(&data->client->dev,
- 			      "received a trackpoint report while no trackpoint device has been created. Please report upstream.\n");
-@@ -963,7 +967,6 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
- static irqreturn_t elan_isr(int irq, void *dev_id)
+ void user_fastforward_single_step(struct task_struct *task)
  {
- 	struct elan_tp_data *data = dev_id;
--	struct device *dev = &data->client->dev;
- 	int error;
- 	u8 report[ETP_MAX_REPORT_LEN];
- 
-@@ -989,7 +992,7 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
- 		elan_report_trackpoint(data, report);
- 		break;
- 	default:
--		dev_err(dev, "invalid report id data (%x)\n",
-+		dev_err(&data->client->dev, "invalid report id data (%x)\n",
- 			report[ETP_REPORT_ID_OFFSET]);
- 	}
+-	if (test_ti_thread_flag(task_thread_info(task), TIF_SINGLESTEP))
++	if (test_tsk_thread_flag(task, TIF_SINGLESTEP))
+ 		clear_regs_spsr_ss(task_pt_regs(task));
+ }
  
 -- 
 2.25.1
