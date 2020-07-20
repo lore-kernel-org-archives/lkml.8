@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E11C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4B6C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B48E82065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B81C20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261474;
-	bh=RGAd/ueHDbU3dwJHFieFRMGRh8Ltf3gCt91ODDtADOw=;
+	s=default; t=1595261476;
+	bh=YkZhxolwuafrRRgXW9py0/9Z7mDIDrnIT8YPURoty0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EEo02euyLahTxnwN/F6c/uj5yecG5zR8YHSs07WtFSB5aFxaEozBE0YLi9nrgfnt/
-	 5UlVa3lKjwVKonoRAUvxp9ClmIYF/gsuOBku8ZfW8bEOJaW3G8pY8kdTfQPQUc26mA
-	 Fj0bDVAGs0me1SmSTjFdXMChk6aONPfziwF1Swm4=
+	b=l4xt9vD6Tx3y9IcwrLxzQNpqZz4nOyU4rxpTyH5qqTdAGRg36SKOGCneeIbzW1Zei
+	 fhFD31K8f4+q6wUUE68Doh80KU0sb9+UEBhVXX+tfxpX6yNCEdmdMd9BonKIaAOyHu
+	 28q8fOTL1VzN3mGDw55psnOSE+3i86IZ2VjvZ/s4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387768AbgGTQLO (ORCPT
+        id S2387775AbgGTQLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 20 Jul 2020 12:11:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50018 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:50076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387753AbgGTQLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:11:08 -0400
+        id S2387759AbgGTQLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:11:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A91A72065E;
-        Mon, 20 Jul 2020 16:11:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5717E2065E;
+        Mon, 20 Jul 2020 16:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261467;
-        bh=RGAd/ueHDbU3dwJHFieFRMGRh8Ltf3gCt91ODDtADOw=;
+        s=default; t=1595261469;
+        bh=YkZhxolwuafrRRgXW9py0/9Z7mDIDrnIT8YPURoty0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kfnVk1QR6H/ZRrnZ04oM8KeqzqDD10QF3XbeTgzvQqZ+VHh//M/WjpINCeRIjujdY
-         t3EXLpGB3kdcS1gn3Hk53ft1IT9SRyTDRAG4IpCt0Wishmn5VOSmz4Mt6qW5+Pj7Ee
-         jwqYZwkhnv+FLCH5wuNPfK5XCC74Vfqv7sC5LJIc=
+        b=ZYRVZHaRRa94oJ5aacdC0Pe/2SdCC2xM63nsdITc9k6AYBmgzQyfM/xuW1rzUogjO
+         MxvxCWZGx+gzEKv1qq/VXL12qvPSDnGP3Rss8tT9kMlCmK7vTEXGRjKWBVvntJfep2
+         UUuNKUx04Wy0r+E4rldBo3+hN79JMzB7bUBRUFvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
         Douglas Anderson <dianders@chromium.org>,
         Stephen Boyd <swboyd@chromium.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.7 126/244] soc: qcom: rpmh: Update dirty flag only when data changes
-Date:   Mon, 20 Jul 2020 17:36:37 +0200
-Message-Id: <20200720152831.835383485@linuxfoundation.org>
+Subject: [PATCH 5.7 127/244] soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes before flushing new data
+Date:   Mon, 20 Jul 2020 17:36:38 +0200
+Message-Id: <20200720152831.886702951@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -65,99 +63,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maulik Shah <mkshah@codeaurora.org>
 
-commit bb7000677a1b287206c8d4327c62442fa3050a8f upstream.
+commit f5ac95f9ca2f439179a5baf48e1c0f22f83d936e upstream.
 
-Currently rpmh ctrlr dirty flag is set for all cases regardless of data
-is really changed or not. Add changes to update dirty flag when data is
-changed to newer values. Update dirty flag everytime when data in batch
-cache is updated since rpmh_flush() may get invoked from any CPU instead
-of only last CPU going to low power mode.
+TCSes have previously programmed data when rpmh_flush() is called.
+This can cause old data to trigger along with newly flushed.
 
-Also move dirty flag updates to happen from within cache_lock and remove
-unnecessary INIT_LIST_HEAD() call and a default case from switch.
+Fix this by cleaning SLEEP and WAKE TCSes before new data is flushed.
+
+With this there is no need to invoke rpmh_rsc_invalidate() call from
+rpmh_invalidate().
+
+Simplify rpmh_invalidate() by moving invalidate_batch() inside.
 
 Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
 Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Link: https://lore.kernel.org/r/1586703004-13674-3-git-send-email-mkshah@codeaurora.org
+Link: https://lore.kernel.org/r/1586703004-13674-4-git-send-email-mkshah@codeaurora.org
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/soc/qcom/rpmh.c |   19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ drivers/soc/qcom/rpmh.c |   41 ++++++++++++++++++-----------------------
+ 1 file changed, 18 insertions(+), 23 deletions(-)
 
 --- a/drivers/soc/qcom/rpmh.c
 +++ b/drivers/soc/qcom/rpmh.c
-@@ -119,6 +119,7 @@ static struct cache_req *cache_rpm_reque
- {
- 	struct cache_req *req;
- 	unsigned long flags;
-+	u32 old_sleep_val, old_wake_val;
+@@ -317,19 +317,6 @@ static int flush_batch(struct rpmh_ctrlr
+ 	return ret;
+ }
  
- 	spin_lock_irqsave(&ctrlr->cache_lock, flags);
- 	req = __find_req(ctrlr, cmd->addr);
-@@ -133,26 +134,27 @@ static struct cache_req *cache_rpm_reque
- 
- 	req->addr = cmd->addr;
- 	req->sleep_val = req->wake_val = UINT_MAX;
--	INIT_LIST_HEAD(&req->list);
- 	list_add_tail(&req->list, &ctrlr->cache);
- 
- existing:
-+	old_sleep_val = req->sleep_val;
-+	old_wake_val = req->wake_val;
-+
- 	switch (state) {
- 	case RPMH_ACTIVE_ONLY_STATE:
--		if (req->sleep_val != UINT_MAX)
--			req->wake_val = cmd->data;
--		break;
- 	case RPMH_WAKE_ONLY_STATE:
- 		req->wake_val = cmd->data;
- 		break;
- 	case RPMH_SLEEP_STATE:
- 		req->sleep_val = cmd->data;
- 		break;
--	default:
--		break;
+-static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
+-{
+-	struct batch_cache_req *req, *tmp;
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&ctrlr->cache_lock, flags);
+-	list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
+-		kfree(req);
+-	INIT_LIST_HEAD(&ctrlr->batch_cache);
+-	ctrlr->dirty = true;
+-	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+-}
+-
+ /**
+  * rpmh_write_batch: Write multiple sets of RPMH commands and wait for the
+  * batch to finish.
+@@ -467,6 +454,13 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+ 		return 0;
  	}
  
--	ctrlr->dirty = true;
-+	ctrlr->dirty = (req->sleep_val != old_sleep_val ||
-+			req->wake_val != old_wake_val) &&
-+			req->sleep_val != UINT_MAX &&
-+			req->wake_val != UINT_MAX;
++	/* Invalidate the TCSes first to avoid stale data */
++	do {
++		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
++	} while (ret == -EAGAIN);
++	if (ret)
++		return ret;
 +
- unlock:
- 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
- 
-@@ -287,6 +289,7 @@ static void cache_batch(struct rpmh_ctrl
- 
- 	spin_lock_irqsave(&ctrlr->cache_lock, flags);
- 	list_add_tail(&req->list, &ctrlr->batch_cache);
-+	ctrlr->dirty = true;
- 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+ 	/* First flush the cached batch requests */
+ 	ret = flush_batch(ctrlr);
+ 	if (ret)
+@@ -498,24 +492,25 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
  }
  
-@@ -323,6 +326,7 @@ static void invalidate_batch(struct rpmh
- 	list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
- 		kfree(req);
- 	INIT_LIST_HEAD(&ctrlr->batch_cache);
+ /**
+- * rpmh_invalidate: Invalidate all sleep and active sets
+- * sets.
++ * rpmh_invalidate: Invalidate sleep and wake sets in batch_cache
+  *
+  * @dev: The device making the request
+  *
+- * Invalidate the sleep and active values in the TCS blocks.
++ * Invalidate the sleep and wake values in batch_cache.
+  */
+ int rpmh_invalidate(const struct device *dev)
+ {
+ 	struct rpmh_ctrlr *ctrlr = get_rpmh_ctrlr(dev);
+-	int ret;
+-
+-	invalidate_batch(ctrlr);
++	struct batch_cache_req *req, *tmp;
++	unsigned long flags;
+ 
+-	do {
+-		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
+-	} while (ret == -EAGAIN);
++	spin_lock_irqsave(&ctrlr->cache_lock, flags);
++	list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
++		kfree(req);
++	INIT_LIST_HEAD(&ctrlr->batch_cache);
 +	ctrlr->dirty = true;
- 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
++	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+ 
+-	return ret;
++	return 0;
  }
- 
-@@ -507,7 +511,6 @@ int rpmh_invalidate(const struct device
- 	int ret;
- 
- 	invalidate_batch(ctrlr);
--	ctrlr->dirty = true;
- 
- 	do {
- 		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
+ EXPORT_SYMBOL(rpmh_invalidate);
 
 
