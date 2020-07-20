@@ -2,196 +2,138 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A35C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22912C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 023F1206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:46:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="HXiT5Rdi"
+	by mail.kernel.org (Postfix) with ESMTP id F3F1A2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595263595;
+	bh=u6reX8RWcT+jZEkkz12oQRRLOVk+GlTIcn6I4bMN9tY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qW6ksvVG71yXqL06cEljHBnYbHKmSg1Y6nt4w6IMggnVXEVqd3eAAYraq6izY+AZ3
+	 O+cCkTPd4e4D5TfziueNyJoRLZ+VAvAQQ+ThEvceaccLmrXuB0/uiUEkhnb4HzseJ7
+	 G4fYRHxgoonnkHd/BBe/EUSagJSHeVtIVT025/Jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388855AbgGTQqh (ORCPT
+        id S1730137AbgGTQqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:46:37 -0400
-Received: from mail.efficios.com ([167.114.26.124]:40442 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729732AbgGTQqc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:46:32 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 4A2722C34AA;
-        Mon, 20 Jul 2020 12:46:31 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id y8N1uMCN0ppf; Mon, 20 Jul 2020 12:46:30 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id CCD872C3619;
-        Mon, 20 Jul 2020 12:46:30 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com CCD872C3619
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1595263590;
-        bh=qGPk0zNFwo5cVQw8ZAK/QyIsHyu6OZPMekpsDrpVWP0=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=HXiT5Rdi/FF5QIH6XZv4gJJ1Kju6lX5VX4hzPj+hydfPtz1E9pzRTxh8iaYZG2R73
-         eg3S6CBN/N3CzdOA1wtGesnftvZPn/jreiYbon5BVt5Xo07uYCDrp3r6+T6NpduFg1
-         +WaAaCvuMdvcOz7ILW26ZFzs7SSho+yUvlWOXk4X3/jZCbCPPaJVfE8ksX3ESVXYZy
-         UJHjbMPAPdnxAbLqWKXe13jwyDGaE1j2dwhFeLRbe2rF5E+yQnFrtHCIHes82YNUuZ
-         hMFVlmdcxzHjcByqw0tk6PQeH+vfVINABK0AxVRl9R/75dRRzYKUr7TbPkcu/OxiEL
-         QX9rO3DoP+RtQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id lJkhJIb6W00t; Mon, 20 Jul 2020 12:46:30 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id B98062C34A7;
-        Mon, 20 Jul 2020 12:46:30 -0400 (EDT)
-Date:   Mon, 20 Jul 2020 12:46:30 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Message-ID: <2055788870.20749.1595263590675.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1595213677.kxru89dqy2.astroid@bobo.none>
-References: <1594868476.6k5kvx8684.astroid@bobo.none> <EFAD6E2F-EC08-4EB3-9ECC-2A963C023FC5@amacapital.net> <20200716085032.GO10769@hirez.programming.kicks-ass.net> <1594892300.mxnq3b9a77.astroid@bobo.none> <20200716110038.GA119549@hirez.programming.kicks-ass.net> <1594906688.ikv6r4gznx.astroid@bobo.none> <1314561373.18530.1594993363050.JavaMail.zimbra@efficios.com> <1595213677.kxru89dqy2.astroid@bobo.none>
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
- membarrier_mm_sync_core_before_usermode
+        Mon, 20 Jul 2020 12:46:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729736AbgGTPkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:40:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7360C20773;
+        Mon, 20 Jul 2020 15:40:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595259636;
+        bh=u6reX8RWcT+jZEkkz12oQRRLOVk+GlTIcn6I4bMN9tY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jc6gnp3E5ifHeZiHXU2EUb0NUOtktIwQBk+ijlgiBJ2JiawrWPav1BHy4qbtk9Afy
+         XhsE+KH0ob1X0RSeCtQKahmIvJUdCKAm22sjovSDKdIxfffDUOICwblrXujYUWVnbZ
+         FTWAaKFWEYpdU1zr1ibcwWklTjk/lgwGN+GnyhiA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.9 23/86] drm/radeon: fix double free
+Date:   Mon, 20 Jul 2020 17:36:19 +0200
+Message-Id: <20200720152754.316994046@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
+References: <20200720152753.138974850@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: x86: use exit_lazy_tlb rather than membarrier_mm_sync_core_before_usermode
-Thread-Index: 9hzlA0XuD7jqnfPzlJuu2D9uF0Nx4Q==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 19, 2020, at 11:03 PM, Nicholas Piggin npiggin@gmail.com wrote:
+From: Tom Rix <trix@redhat.com>
 
-> Excerpts from Mathieu Desnoyers's message of July 17, 2020 11:42 pm:
->> ----- On Jul 16, 2020, at 7:26 PM, Nicholas Piggin npiggin@gmail.com wrote:
->> [...]
->>> 
->>> membarrier does replace barrier instructions on remote CPUs, which do
->>> order accesses performed by the kernel on the user address space. So
->>> membarrier should too I guess.
->>> 
->>> Normal process context accesses like read(2) will do so because they
->>> don't get filtered out from IPIs, but kernel threads using the mm may
->>> not.
->> 
->> But it should not be an issue, because membarrier's ordering is only with
->> respect
->> to submit and completion of io_uring requests, which are performed through
->> system calls from the context of user-space threads, which are called from the
->> right mm.
-> 
-> Is that true? Can io completions be written into an address space via a
-> kernel thread? I don't know the io_uring code well but it looks like
-> that's asynchonously using the user mm context.
+commit 41855a898650803e24b284173354cc3e44d07725 upstream.
 
-Indeed, the io completion appears to be signaled asynchronously between kernel
-and user-space. Therefore, both kernel and userspace code need to have proper
-memory barriers in place to signal completion, otherwise user-space could read
-garbage after it notices completion of a read.
+clang static analysis flags this error
 
-I did not review the entire io_uring implementation, but the publish side
-for completion appears to be:
+drivers/gpu/drm/radeon/ci_dpm.c:5652:9: warning: Use of memory after it is freed [unix.Malloc]
+                kfree(rdev->pm.dpm.ps[i].ps_priv);
+                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/radeon/ci_dpm.c:5654:2: warning: Attempt to free released memory [unix.Malloc]
+        kfree(rdev->pm.dpm.ps);
+        ^~~~~~~~~~~~~~~~~~~~~~
 
-static void __io_commit_cqring(struct io_ring_ctx *ctx)
-{
-        struct io_rings *rings = ctx->rings;
+problem is reported in ci_dpm_fini, with these code blocks.
 
-        /* order cqe stores with ring update */
-        smp_store_release(&rings->cq.tail, ctx->cached_cq_tail);
+	for (i = 0; i < rdev->pm.dpm.num_ps; i++) {
+		kfree(rdev->pm.dpm.ps[i].ps_priv);
+	}
+	kfree(rdev->pm.dpm.ps);
 
-        if (wq_has_sleeper(&ctx->cq_wait)) {
-                wake_up_interruptible(&ctx->cq_wait);
-                kill_fasync(&ctx->cq_fasync, SIGIO, POLL_IN);
-        }
-}
+The first free happens in ci_parse_power_table where it cleans up locally
+on a failure.  ci_dpm_fini also does a cleanup.
 
-The store-release on tail should be paired with a load_acquire on the
-reader-side (it's called "read_barrier()" in the code):
+	ret = ci_parse_power_table(rdev);
+	if (ret) {
+		ci_dpm_fini(rdev);
+		return ret;
+	}
 
-tools/io_uring/queue.c:
+So remove the cleanup in ci_parse_power_table and
+move the num_ps calculation to inside the loop so ci_dpm_fini
+will know how many array elements to free.
 
-static int __io_uring_get_cqe(struct io_uring *ring,
-                              struct io_uring_cqe **cqe_ptr, int wait)
-{
-        struct io_uring_cq *cq = &ring->cq;
-        const unsigned mask = *cq->kring_mask;
-        unsigned head;
-        int ret;
+Fixes: cc8dbbb4f62a ("drm/radeon: add dpm support for CI dGPUs (v2)")
 
-        *cqe_ptr = NULL;
-        head = *cq->khead;
-        do {
-                /*
-                 * It's necessary to use a read_barrier() before reading
-                 * the CQ tail, since the kernel updates it locklessly. The
-                 * kernel has the matching store barrier for the update. The
-                 * kernel also ensures that previous stores to CQEs are ordered
-                 * with the tail update.
-                 */
-                read_barrier();
-                if (head != *cq->ktail) {
-                        *cqe_ptr = &cq->cqes[head & mask];
-                        break;
-                }
-                if (!wait)
-                        break;
-                ret = io_uring_enter(ring->ring_fd, 0, 1,
-                                        IORING_ENTER_GETEVENTS, NULL);
-                if (ret < 0)
-                        return -errno;
-        } while (1);
+Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-        return 0;
-}
+---
+ drivers/gpu/drm/radeon/ci_dpm.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-So as far as membarrier memory ordering dependencies are concerned, it relies
-on the store-release/load-acquire dependency chain in the completion queue to
-order against anything that was done prior to the completed requests.
+--- a/drivers/gpu/drm/radeon/ci_dpm.c
++++ b/drivers/gpu/drm/radeon/ci_dpm.c
+@@ -5557,6 +5557,7 @@ static int ci_parse_power_table(struct r
+ 	if (!rdev->pm.dpm.ps)
+ 		return -ENOMEM;
+ 	power_state_offset = (u8 *)state_array->states;
++	rdev->pm.dpm.num_ps = 0;
+ 	for (i = 0; i < state_array->ucNumEntries; i++) {
+ 		u8 *idx;
+ 		power_state = (union pplib_power_state *)power_state_offset;
+@@ -5566,10 +5567,8 @@ static int ci_parse_power_table(struct r
+ 		if (!rdev->pm.power_state[i].clock_info)
+ 			return -EINVAL;
+ 		ps = kzalloc(sizeof(struct ci_ps), GFP_KERNEL);
+-		if (ps == NULL) {
+-			kfree(rdev->pm.dpm.ps);
++		if (ps == NULL)
+ 			return -ENOMEM;
+-		}
+ 		rdev->pm.dpm.ps[i].ps_priv = ps;
+ 		ci_parse_pplib_non_clock_info(rdev, &rdev->pm.dpm.ps[i],
+ 					      non_clock_info,
+@@ -5591,8 +5590,8 @@ static int ci_parse_power_table(struct r
+ 			k++;
+ 		}
+ 		power_state_offset += 2 + power_state->v2.ucNumDPMLevels;
++		rdev->pm.dpm.num_ps = i + 1;
+ 	}
+-	rdev->pm.dpm.num_ps = state_array->ucNumEntries;
+ 
+ 	/* fill in the vce power states */
+ 	for (i = 0; i < RADEON_MAX_VCE_LEVELS; i++) {
 
-What is in-flight while the requests are being serviced provides no memory
-ordering guarantee whatsoever.
 
-> How about other memory accesses via kthread_use_mm? Presumably there is
-> still ordering requirement there for membarrier,
-
-Please provide an example case with memory accesses via kthread_use_mm where
-ordering matters to support your concern.
-
-> so I really think
-> it's a fragile interface with no real way for the user to know how
-> kernel threads may use its mm for any particular reason, so membarrier
-> should synchronize all possible kernel users as well.
-
-I strongly doubt so, but perhaps something should be clarified in the documentation
-if you have that feeling.
-
-Thanks,
-
-Mathieu
-
-> 
-> Thanks,
-> Nick
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
