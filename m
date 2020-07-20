@@ -2,81 +2,122 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6168C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00660C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 865E021775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFCC321775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:27:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aGfxJuM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgGTI0i (ORCPT
+        id S1727975AbgGTI1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:26:38 -0400
-Received: from spam01.hygon.cn ([110.188.70.11]:59526 "EHLO spam2.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726611AbgGTI0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:26:36 -0400
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam2.hygon.cn with ESMTP id 06K8NRZW082690;
-        Mon, 20 Jul 2020 16:23:27 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-DB.hygon.cn with ESMTP id 06K8NL5A027822;
-        Mon, 20 Jul 2020 16:23:21 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from ubuntu1604-2.higon.com (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Mon, 20 Jul
- 2020 16:23:06 +0800
-From:   Pu Wen <puwen@hygon.cn>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <peterz@infradead.org>, <mingo@kernel.org>, <jolsa@redhat.com>,
-        <bp@alien8.de>, <eranian@google.com>, Pu Wen <puwen@hygon.cn>
-Subject: [RFC PATCH RESEND] perf/x86/rapl: Add Hygon Fam18h RAPL support
-Date:   Mon, 20 Jul 2020 16:22:05 +0800
-Message-ID: <20200720082205.1307-1-puwen@hygon.cn>
-X-Mailer: git-send-email 2.23.0
+        Mon, 20 Jul 2020 04:27:08 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45365 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725845AbgGTI1I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 04:27:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595233627;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=M4z7nR04vRuVBvqoFTXOBrRy4wubg3LXnzAisW2rHG8=;
+        b=aGfxJuM3H9G6LWu/gDCs6wpNflRlT16UIrfLz8Ft5Vb5encZsEe5GNuc2dPLhcsyLCLd4A
+        TzGfH+bmuTNOj5sEdFaf2cmXTq6SFGCsVTsGt6/NbBtvDFV3NLws+3QN6NzBJqj6Fu1dgp
+        jPIl0eaVzVRNFR6SqJLU/5Qsb5qy3h8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-251--lMo-fx-NMyyAy6e2oW7CA-1; Mon, 20 Jul 2020 04:27:03 -0400
+X-MC-Unique: -lMo-fx-NMyyAy6e2oW7CA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A94EC800597;
+        Mon, 20 Jul 2020 08:27:01 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.147])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4D90773058;
+        Mon, 20 Jul 2020 08:26:59 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 20 Jul 2020 10:27:01 +0200 (CEST)
+Date:   Mon, 20 Jul 2020 10:26:58 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Jiri Slaby <jirislaby@kernel.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        christian@brauner.io, "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Dave Jones <davej@codemonkey.org.uk>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
+Message-ID: <20200720082657.GC6612@redhat.com>
+References: <6b253b55-586d-0bc4-9f58-c45c631abc60@kernel.org>
+ <5a8c4c38-7aeb-981a-8d3b-a7a5c8ca5564@kernel.org>
+ <20200717122651.GA6067@redhat.com>
+ <20200717124017.GB6067@redhat.com>
+ <2c8ef23c-43b4-39d4-8e84-92769c948da9@kernel.org>
+ <20200718171406.GB16791@redhat.com>
+ <20200718174448.4btbjcvp6wbbdgts@wittgenstein>
+ <badcb9d5-f628-2be1-7a72-902cf08010bd@kernel.org>
+ <20200720064326.GA6612@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam2.hygon.cn 06K8NRZW082690
-X-DNSRBL: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720064326.GA6612@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hygon Family 18h(Dhyana) support RAPL in bit 14 of CPUID 0x80000007 EDX,
-and has MSRs RAPL_PWR_UNIT/CORE_ENERGY_STAT/PKG_ENERGY_STAT. So add Hygon
-Dhyana Family 18h support for RAPL.
+Peter,
 
-The output is available via the energy-pkg pseudo event:
-  $ perf stat -a -I 1000 --per-socket -e power/energy-pkg/
+Let me add another note. TASK_TRACED/TASK_STOPPED was always protected by
+->siglock. In particular, ttwu(__TASK_TRACED) must be always called with
+->siglock held. That is why ptrace_freeze_traced() assumes it can safely
+do s/TASK_TRACED/__TASK_TRACED/ under spin_lock(siglock).
 
-Signed-off-by: Pu Wen <puwen@hygon.cn>
----
- arch/x86/events/rapl.c | 1 +
- 1 file changed, 1 insertion(+)
+Can this change race with
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 0f2bf59f4354..18c69d84b031 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -788,6 +788,7 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		&model_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&model_skl),
- 	X86_MATCH_VENDOR_FAM(AMD, 0x17, &model_amd_fam17h),
-+	X86_MATCH_VENDOR_FAM(HYGON, 0x18, &model_amd_fam17h),
- 	{},
- };
- MODULE_DEVICE_TABLE(x86cpu, rapl_model_match);
--- 
-2.23.0
+		if (signal_pending_state(prev->state, prev)) {
+			prev->state = TASK_RUNNING;
+		}
+
+in __schedule() ? Hopefully not, signal-state is protected by siglock too.
+
+So I think this logic was correct even if it doesn't look nice. But "doesn't
+look nice" is true for the whole ptrace code ;)
+
+On 07/20, Oleg Nesterov wrote:
+>
+> On 07/20, Jiri Slaby wrote:
+> >
+> > You tackled it, we cherry-picked dbfb089d360 to our kernels. Ccing more
+> > people.
+>
+> Thanks... so with this patch __schedule() does
+>
+> 	prev_state = prev->state;
+>
+> 	...
+>
+> 	if (!preempt && prev_state && prev_state == prev->state) {
+> 		if (signal_pending_state(prev_state, prev)) {
+> 			prev->state = TASK_RUNNING;
+> 		} else {
+>
+> and ptrace_freeze_traced() can change ->state in between. This means
+> that this task can return from __schedule() with ->state != RUNNING,
+> this can explain BUG_ON(task_is_stopped_or_traced) in do_notify_parent()
+> you reported.
+>
+> Oleg.
 
