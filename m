@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D5BC2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE53C2BD11
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1032022CBB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11D422D02
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281156;
-	bh=GQOqnqSzSP8PmRxQJU8Ag/AtG2V5L5qrXRDvzyO2dO4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rnk+f/Rh9iSIsVvUuJ6p+QBw6OsC1noYMRuw/jLSefrD7vmmGhmThpU2HF2U2otuR
-	 17jVI1DhC/w9JS68id+a7ecyoJBEsjPMk10tXkGq5NK4o5EKboQX5nS0hFRXwEiEM1
-	 iKlXUkkozC5+KGO60rYwoN40lDTrg5xMKg41FsDw=
+	s=default; t=1595281163;
+	bh=qdAfJnBJ7sjyxic7UNz+QaCPtfFw871DnQVRrHY+yCY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=YWWOvj0WXcB7C7owO/bBCdT6nF13vUUCaKh/cn3BSHXs0ixaSpiEdFDc/5qY6xpMY
+	 cQhMrjpth1eNwtX2x960ceT4ajMuVMlK5Qo3k+GiK85I3zuIzlczuqXgVKUsYA2Qfq
+	 xGSDw1N8FxmXIT+L/QpHdqw5Q7PXyB2XHyHh5nM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgGTVjO (ORCPT
+        id S1728439AbgGTVjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:39:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57476 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:39:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728227AbgGTVim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:42 -0400
+        id S1728121AbgGTVix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 208B622CB3;
-        Mon, 20 Jul 2020 21:38:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 283D022CF7;
+        Mon, 20 Jul 2020 21:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281122;
-        bh=GQOqnqSzSP8PmRxQJU8Ag/AtG2V5L5qrXRDvzyO2dO4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SLPsxoU+VkUxleP+pViGlHVpoD4v90kSqX7iCbqCwcGfjrOY+I7TmyIZMjhkvftZj
-         dobzjyXGViB8Dg/1WfxvH+eT2HjGUgbkES+1XRWB7ILFTlqwey50GMWHiM2cVSOLg+
-         Gdc6Yjv8WJs8hAHtRjsgAc/CAn8LOB0KN3Ta7s8U=
+        s=default; t=1595281132;
+        bh=qdAfJnBJ7sjyxic7UNz+QaCPtfFw871DnQVRrHY+yCY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=m9VhpZ69CWfiD9afVuKTeOaICBJ7QvFTeNevMfbUSjwAtrHzYr/g/Opjz/uUW9vl0
+         quVP6XoK/EtAcUCr7en0gzxSb9pZeCofUvQdSQH3Nj+DwvXZ3yrDUeLfr2qwUtwV4q
+         c2t/HAVHw2Jvb0Td9kzLfFMoftIW/Zr0XtJ0NYAQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qi Liu <liuqi115@huawei.com>,
-        Haifeng Wang <wang.wanghaifeng@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 28/34] drivers/perf: Fix kernel panic when rmmod PMU modules during perf sampling
-Date:   Mon, 20 Jul 2020 17:38:01 -0400
-Message-Id: <20200720213807.407380-28-sashal@kernel.org>
+Cc:     Federico Ricchiuto <fed.ricchiuto@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 01/19] HID: i2c-hid: add Mediacom FlexBook edge13 to descriptor override
+Date:   Mon, 20 Jul 2020 17:38:32 -0400
+Message-Id: <20200720213851.407715-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
-References: <20200720213807.407380-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,126 +57,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qi Liu <liuqi115@huawei.com>
+From: Federico Ricchiuto <fed.ricchiuto@gmail.com>
 
-[ Upstream commit bdc5c744c7b6457d18a95c26769dad0e7f480a08 ]
+[ Upstream commit 43e666acb79f3d355dd89bf20f4d25d3b15da13e ]
 
-When users try to remove PMU modules during perf sampling, kernel panic
-will happen because the pmu->read() is a NULL pointer here.
+The Mediacom FlexBook edge13 uses the SIPODEV SP1064 touchpad, which does not
+supply descriptors, so it has to be added to the override list.
 
-INFO on HiSilicon hip08 platform as follow:
-pc : hisi_uncore_pmu_event_update+0x30/0xa4 [hisi_uncore_pmu]
-lr : hisi_uncore_pmu_read+0x20/0x2c [hisi_uncore_pmu]
-sp : ffff800010103e90
-x29: ffff800010103e90 x28: ffff0027db0c0e40
-x27: ffffa29a76f129d8 x26: ffffa29a77ceb000
-x25: ffffa29a773a5000 x24: ffffa29a77392000
-x23: ffffddffe5943f08 x22: ffff002784285960
-x21: ffff002784285800 x20: ffff0027d2e76c80
-x19: ffff0027842859e0 x18: ffff80003498bcc8
-x17: ffffa29a76afe910 x16: ffffa29a7583f530
-x15: 16151a1512061a1e x14: 0000000000000000
-x13: ffffa29a76f1e238 x12: 0000000000000001
-x11: 0000000000000400 x10: 00000000000009f0
-x9 : ffff8000107b3e70 x8 : ffff0027db0c1890
-x7 : ffffa29a773a7000 x6 : 00000007f5131013
-x5 : 00000007f5131013 x4 : 09f257d417c00000
-x3 : 00000002187bd7ce x2 : ffffa29a38f0f0d8
-x1 : ffffa29a38eae268 x0 : ffff0027d2e76c80
-Call trace:
-hisi_uncore_pmu_event_update+0x30/0xa4 [hisi_uncore_pmu]
-hisi_uncore_pmu_read+0x20/0x2c [hisi_uncore_pmu]
-__perf_event_read+0x1a0/0x1f8
-flush_smp_call_function_queue+0xa0/0x160
-generic_smp_call_function_single_interrupt+0x18/0x20
-handle_IPI+0x31c/0x4dc
-gic_handle_irq+0x2c8/0x310
-el1_irq+0xcc/0x180
-arch_cpu_idle+0x4c/0x20c
-default_idle_call+0x20/0x30
-do_idle+0x1b4/0x270
-cpu_startup_entry+0x28/0x30
-secondary_start_kernel+0x1a4/0x1fc
-
-To solve the above issue, current module should be registered to kernel,
-so that try_module_get() can be invoked when perf sampling starts. This
-adds the reference counting of module and could prevent users from removing
-modules during sampling.
-
-Reported-by: Haifeng Wang <wang.wanghaifeng@huawei.com>
-Signed-off-by: Qi Liu <liuqi115@huawei.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Link: https://lore.kernel.org/r/1594891165-8228-1-git-send-email-liuqi115@huawei.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Federico Ricchiuto <fed.ricchiuto@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm_smmuv3_pmu.c                 | 1 +
- drivers/perf/fsl_imx8_ddr_perf.c              | 1 +
- drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c | 1 +
- drivers/perf/hisilicon/hisi_uncore_hha_pmu.c  | 1 +
- drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c  | 1 +
- 5 files changed, 5 insertions(+)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-index 3269232ff5708..f8fc1b612119c 100644
---- a/drivers/perf/arm_smmuv3_pmu.c
-+++ b/drivers/perf/arm_smmuv3_pmu.c
-@@ -742,6 +742,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, smmu_pmu);
- 
- 	smmu_pmu->pmu = (struct pmu) {
-+		.module		= THIS_MODULE,
- 		.task_ctx_nr    = perf_invalid_context,
- 		.pmu_enable	= smmu_pmu_enable,
- 		.pmu_disable	= smmu_pmu_disable,
-diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-index 6eef47de8fccc..b241db6929c08 100644
---- a/drivers/perf/fsl_imx8_ddr_perf.c
-+++ b/drivers/perf/fsl_imx8_ddr_perf.c
-@@ -451,6 +451,7 @@ static int ddr_perf_init(struct ddr_pmu *pmu, void __iomem *base,
- {
- 	*pmu = (struct ddr_pmu) {
- 		.pmu = (struct pmu) {
-+			.module	      = THIS_MODULE,
- 			.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
- 			.task_ctx_nr = perf_invalid_context,
- 			.attr_groups = attr_groups,
-diff --git a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-index e42d4464c2cf7..64712cf2f99ad 100644
---- a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-@@ -381,6 +381,7 @@ static int hisi_ddrc_pmu_probe(struct platform_device *pdev)
- 			      ddrc_pmu->sccl_id, ddrc_pmu->index_id);
- 	ddrc_pmu->pmu = (struct pmu) {
- 		.name		= name,
-+		.module		= THIS_MODULE,
- 		.task_ctx_nr	= perf_invalid_context,
- 		.event_init	= hisi_uncore_pmu_event_init,
- 		.pmu_enable	= hisi_uncore_pmu_enable,
-diff --git a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-index 0d6325d6a4ec3..a4004dad6bf1c 100644
---- a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-@@ -392,6 +392,7 @@ static int hisi_hha_pmu_probe(struct platform_device *pdev)
- 			      hha_pmu->sccl_id, hha_pmu->index_id);
- 	hha_pmu->pmu = (struct pmu) {
- 		.name		= name,
-+		.module		= THIS_MODULE,
- 		.task_ctx_nr	= perf_invalid_context,
- 		.event_init	= hisi_uncore_pmu_event_init,
- 		.pmu_enable	= hisi_uncore_pmu_enable,
-diff --git a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-index c5b0950c2a7a9..2f3f291b0c2ed 100644
---- a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-@@ -382,6 +382,7 @@ static int hisi_l3c_pmu_probe(struct platform_device *pdev)
- 			      l3c_pmu->sccl_id, l3c_pmu->index_id);
- 	l3c_pmu->pmu = (struct pmu) {
- 		.name		= name,
-+		.module		= THIS_MODULE,
- 		.task_ctx_nr	= perf_invalid_context,
- 		.event_init	= hisi_uncore_pmu_event_init,
- 		.pmu_enable	= hisi_uncore_pmu_enable,
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+index 681ac9bc68b3d..f98c1e1b1dbdc 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -373,6 +373,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Mediacom FlexBook edge 13",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "MEDIACOM"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "FlexBook_edge13-M-FBE13"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{
+ 		.ident = "Odys Winbook 13",
+ 		.matches = {
 -- 
 2.25.1
 
