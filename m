@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF3BC43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF6CC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0383222D04
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A55320773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259861;
-	bh=Cei+BSonFQYb6HoU2sdFiBP10urd9JKVtgB9AsIp7nk=;
+	s=default; t=1595259863;
+	bh=yyl96vjlmSmH5Y5qIXm5qvZTpqD4Eb0LGQhvzz+9sJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NQ0p88KkJEqImfNNaFg+L60PDaD0y2xjNjxCYuN13RUqfm2/s/YaFTFGszJFROS1f
-	 QfmHfCFwb/X/FKcY51hEAl51FTVlitQcWuFtlf+TnCgoH4jSyyFEXB+SfM9ZIGaywn
-	 v4+syOZepzNFKaDZzIt7BzNZUrE5uNMtwUtpEUkw=
+	b=dt7NsGvUI1NsoAs+xX8SAvFwK5m3kjf4FV3i80P6fuvI219wvJZPIMu1v1oJmATFP
+	 IRysxEW8T+dR0CzYhc/fhOFM1pudHPMKJdi0iAnBPqWoqMY9O/JLQpUkvxvtdyDVv8
+	 ZVuo6hKMBCHc8i7dMwwW7W6fviHMNt+IQVGht3QY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbgGTPoT (ORCPT
+        id S1730393AbgGTPoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:44:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38090 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:44:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729130AbgGTPoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:44:16 -0400
+        id S1730385AbgGTPoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:44:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76F0F2064B;
-        Mon, 20 Jul 2020 15:44:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 476222064B;
+        Mon, 20 Jul 2020 15:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259856;
-        bh=Cei+BSonFQYb6HoU2sdFiBP10urd9JKVtgB9AsIp7nk=;
+        s=default; t=1595259858;
+        bh=yyl96vjlmSmH5Y5qIXm5qvZTpqD4Eb0LGQhvzz+9sJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eoLZSL3CnNOYplUz27KUChh7riaUZoNu6Kou5fyfg03fFMLCc8pvDkmKa+paBYzhd
-         8PGYnIWaXAh8CFj4S2t6CzDwOq/dPByNZ4K/rn07BI3M4QpzPeDP7AM6gFl6yS9HAw
-         z7V+paHFE1LAvgF66NnWyXM+avPemQYKPGdwIzx0=
+        b=VwrMfs/obWy8Gtxn1/cFlkyM0h3+viPZs1bjBeFl9nE1W2KkXz7g8ohHVj4q+uYWZ
+         O1roYPhnQQ5gEblSlcwb7dM8f8f1XbNSyCicPH+Kmkio/P3hy8VhP50JEv6RqK2/2+
+         hLLQVSoHJY8DTMTVqxu/HqOdfpiSjiyNiUekHoIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 018/125] smsc95xx: check return value of smsc95xx_reset
-Date:   Mon, 20 Jul 2020 17:35:57 +0200
-Message-Id: <20200720152803.865771991@linuxfoundation.org>
+Subject: [PATCH 4.14 019/125] smsc95xx: avoid memory leak in smsc95xx_bind
+Date:   Mon, 20 Jul 2020 17:35:58 +0200
+Message-Id: <20200720152803.905294995@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -63,44 +63,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andre Edich <andre.edich@microchip.com>
 
-[ Upstream commit 7c8b1e855f94f88a0c569be6309fc8d5c8844cd1 ]
+[ Upstream commit 3ed58f96a70b85ef646d5427258f677f1395b62f ]
 
-The return value of the function smsc95xx_reset() must be checked
-to avoid returning false success from the function smsc95xx_bind().
+In a case where the ID_REV register read is failed, the memory for a
+private data structure has to be freed before returning error from the
+function smsc95xx_bind.
 
-Fixes: 2f7ca802bdae2 ("net: Add SMSC LAN9500 USB2.0 10/100 ethernet adapter driver")
+Fixes: bbd9f9ee69242 ("smsc95xx: add wol support for more frame types")
 Signed-off-by: Andre Edich <andre.edich@microchip.com>
 Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/smsc95xx.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/usb/smsc95xx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
-index bcb99bee450a5..859dfb4a9a576 100644
+index 859dfb4a9a576..bc6bcea67bff3 100644
 --- a/drivers/net/usb/smsc95xx.c
 +++ b/drivers/net/usb/smsc95xx.c
-@@ -1301,6 +1301,8 @@ static int smsc95xx_bind(struct usbnet *dev, struct usb_interface *intf)
- 
- 	/* Init all registers */
- 	ret = smsc95xx_reset(dev);
-+	if (ret)
-+		goto free_pdata;
- 
+@@ -1307,7 +1307,8 @@ static int smsc95xx_bind(struct usbnet *dev, struct usb_interface *intf)
  	/* detect device revision as different features may be available */
  	ret = smsc95xx_read_reg(dev, ID_REV, &val);
-@@ -1331,6 +1333,10 @@ static int smsc95xx_bind(struct usbnet *dev, struct usb_interface *intf)
- 	schedule_delayed_work(&pdata->carrier_check, CARRIER_CHECK_DELAY);
- 
- 	return 0;
+ 	if (ret < 0)
+-		return ret;
++		goto free_pdata;
 +
-+free_pdata:
-+	kfree(pdata);
-+	return ret;
- }
- 
- static void smsc95xx_unbind(struct usbnet *dev, struct usb_interface *intf)
+ 	val >>= 16;
+ 	pdata->chip_id = val;
+ 	pdata->mdix_ctrl = get_mdix_status(dev->net);
 -- 
 2.25.1
 
