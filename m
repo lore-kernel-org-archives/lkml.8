@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43817C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32B3920773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1694C22CF6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259844;
-	bh=cGe61lbOqkSpfEAcXd4jQngPZQxa5uwJDyeySxi7nX4=;
+	s=default; t=1595259847;
+	bh=UH6G1+0WBk1GHP2aRIO3g6ybHZ8FCumTW500zg7A4mM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FbHFg1aPaO4V7ELpT0LwkRrFa3krOB2PGcaJgq4Meqm6ydYFUU2X2UQw4iQC4ffHz
-	 ezDNQlcdzkBNs7ThTRm1Ns145yyROBw8NnvZ3dA5uyMWebQ1ToaNfzvLzCRUXXR1ng
-	 t1jZRlr41SaB1jgU+n7Ja1KYTeMO0m3fXASvb9o4=
+	b=t915DHAdPdMbbafYv841E1MGcLRADLoLbkI467djAF1UiGSmyqOy1GvA+hf4Cb7+i
+	 GOcf9E94ujzZzxbQTAQyI42YNAGjHCufGvX3clTFMxIG5sgvulYZN6X4yqEJVOQKW2
+	 NIc3D0KvKsnyChY4rNa/+UqyTZ0oqOeD6dcO3IkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbgGTPoC (ORCPT
+        id S1730353AbgGTPoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:44:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37542 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:44:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730342AbgGTPn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:43:59 -0400
+        id S1729737AbgGTPoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:44:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91A902065E;
-        Mon, 20 Jul 2020 15:43:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D51C2064B;
+        Mon, 20 Jul 2020 15:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259839;
-        bh=cGe61lbOqkSpfEAcXd4jQngPZQxa5uwJDyeySxi7nX4=;
+        s=default; t=1595259841;
+        bh=UH6G1+0WBk1GHP2aRIO3g6ybHZ8FCumTW500zg7A4mM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kysi8oz72S4TND8kwQqqJi31/TPlHkWhimdPzBn5B2MpdAT16xzhDCaRorZFfiju
-         DKWcygVoZgYtjLnjGMwvmyUpMXkSqmUDwFGQ1BLUHIPi7saaCXkERSpfjsPWr2DLKZ
-         cIOBrFGuhS5Oj+j4RvVzZ+VvsiqA2Odz2euOohLE=
+        b=yNdf9AyytnPIf7RQmvXACoY1KkxyXRLKXrfP1dAM8NTWxRgYPZQWxpjd6v5fobOmp
+         R/5FrlXWiWQTl8jw+6T8Belom5Wo/eykfrK9Gj2sCpMIwEqjvnGlck6IbEZG/9EEnK
+         GU51ihapViv3yggJ5JJoSqiiem2faCePsSXJMOJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 012/125] cifs: update ctime and mtime during truncate
-Date:   Mon, 20 Jul 2020 17:35:51 +0200
-Message-Id: <20200720152803.556229771@linuxfoundation.org>
+Subject: [PATCH 4.14 013/125] ARM: imx6: add missing put_device() call in imx6q_suspend_init()
+Date:   Mon, 20 Jul 2020 17:35:52 +0200
+Message-Id: <20200720152803.612706495@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -61,46 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 5618303d8516f8ac5ecfe53ee8e8bc9a40eaf066 ]
+[ Upstream commit 4845446036fc9c13f43b54a65c9b757c14f5141b ]
 
-As the man description of the truncate, if the size changed,
-then the st_ctime and st_mtime fields should be updated. But
-in cifs, we doesn't do it.
+if of_find_device_by_node() succeed, imx6q_suspend_init() doesn't have a
+corresponding put_device(). Thus add a jump target to fix the exception
+handling for this function implementation.
 
-It lead the xfstests generic/313 failed.
-
-So, add the ATTR_MTIME|ATTR_CTIME flags on attrs when change
-the file size
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/inode.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/mach-imx/pm-imx6.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index 528fe225b65a9..d0d295a28b6e4 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -2216,6 +2216,15 @@ set_size_out:
- 	if (rc == 0) {
- 		cifsInode->server_eof = attrs->ia_size;
- 		cifs_setsize(inode, attrs->ia_size);
-+
-+		/*
-+		 * The man page of truncate says if the size changed,
-+		 * then the st_ctime and st_mtime fields for the file
-+		 * are updated.
-+		 */
-+		attrs->ia_ctime = attrs->ia_mtime = current_time(inode);
-+		attrs->ia_valid |= ATTR_CTIME | ATTR_MTIME;
-+
- 		cifs_truncate_page(inode->i_mapping, inode->i_size);
+diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
+index 6078bcc9f594a..c7dcb0b207301 100644
+--- a/arch/arm/mach-imx/pm-imx6.c
++++ b/arch/arm/mach-imx/pm-imx6.c
+@@ -483,14 +483,14 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
+ 	if (!ocram_pool) {
+ 		pr_warn("%s: ocram pool unavailable!\n", __func__);
+ 		ret = -ENODEV;
+-		goto put_node;
++		goto put_device;
  	}
+ 
+ 	ocram_base = gen_pool_alloc(ocram_pool, MX6Q_SUSPEND_OCRAM_SIZE);
+ 	if (!ocram_base) {
+ 		pr_warn("%s: unable to alloc ocram!\n", __func__);
+ 		ret = -ENOMEM;
+-		goto put_node;
++		goto put_device;
+ 	}
+ 
+ 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
+@@ -513,7 +513,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
+ 	ret = imx6_pm_get_base(&pm_info->mmdc_base, socdata->mmdc_compat);
+ 	if (ret) {
+ 		pr_warn("%s: failed to get mmdc base %d!\n", __func__, ret);
+-		goto put_node;
++		goto put_device;
+ 	}
+ 
+ 	ret = imx6_pm_get_base(&pm_info->src_base, socdata->src_compat);
+@@ -560,7 +560,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
+ 		&imx6_suspend,
+ 		MX6Q_SUSPEND_OCRAM_SIZE - sizeof(*pm_info));
+ 
+-	goto put_node;
++	goto put_device;
+ 
+ pl310_cache_map_failed:
+ 	iounmap(pm_info->gpc_base.vbase);
+@@ -570,6 +570,8 @@ iomuxc_map_failed:
+ 	iounmap(pm_info->src_base.vbase);
+ src_map_failed:
+ 	iounmap(pm_info->mmdc_base.vbase);
++put_device:
++	put_device(&pdev->dev);
+ put_node:
+ 	of_node_put(node);
  
 -- 
 2.25.1
