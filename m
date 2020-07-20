@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99759C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6436BC433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 736102070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38DA122CE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263354;
-	bh=ZJbHCFIdZH4X4ZBrUiUDxNPeZ/xp15aUJQ4HRBDeBgQ=;
+	s=default; t=1595263359;
+	bh=42JyVhg1+olFp1dfJGVALbpgABZHdFoxPFAbxbHEucg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JtDlxcR6/mdce1Cj+CPAzrPXYSOejn5GA/aghrsIGnOAWut8U5gJWs68lq0PokDW2
-	 rjikOIh1B4S3dkKsIqweioZKUXVjcFcBUcYPJGO2s6petTCInVkAHDzIwsb75l8a6b
-	 7bYzicJnT/UNTSNJ2Tgk9f3hp9zAv/mJC/1g7poQ=
+	b=YVYJsIjeaPP9+vnPgI+Gu8x4d0gtRGevzbP26OpacQFuTXSjrFWdbfzBp/W2LfA/0
+	 0OAenYGBog2143Tqe8nbVWh608I1bRT/R6bGMctZhnH9uZ6gNhWEU21Me0ksHVPm7/
+	 zdCFIARJW55rD27rpiRuR1Ho+dofD/X+PkspqMfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbgGTQmc (ORCPT
+        id S1729654AbgGTPn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:42:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:43:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730280AbgGTPnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:43:37 -0400
+        id S1730239AbgGTPnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:43:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C7402065E;
-        Mon, 20 Jul 2020 15:43:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2000522CAF;
+        Mon, 20 Jul 2020 15:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259817;
-        bh=ZJbHCFIdZH4X4ZBrUiUDxNPeZ/xp15aUJQ4HRBDeBgQ=;
+        s=default; t=1595259800;
+        bh=42JyVhg1+olFp1dfJGVALbpgABZHdFoxPFAbxbHEucg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rqKyH4+lb9DMo1QygGXnyGsUF8guEw50Vn2+enOE3+Lp9hF90MX1wv1FlogCJ3zMb
-         PnHPfNrTC5lJ8Rlsqv+LECh4R+c6OpYU21q089AmRmLFMZkXThCilh+YxzSO9TScb0
-         +ffwdrAU59VJDqjzHzXH3UGhLhu4kGRWeV7CrU7g=
+        b=IGAtHxikdsIQ2u1Ouguf636isG2NLGhkei+iPp47RPiU1vY3QqiwE3G1RS5OH9d4w
+         PywRTKEjOyozXiof53vxqdakRkyDqyk0CC2FOttqfWTzcuWJFTA9LnUtYGiRf1FVQW
+         HoxwkPKK5fOZevIB8btgaAg35iurKKERjKKBbQno=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 69/86] USB: serial: cypress_m8: enable Simply Automated UPB PIM
-Date:   Mon, 20 Jul 2020 17:37:05 +0200
-Message-Id: <20200720152756.649841128@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: [PATCH 4.9 84/86] sched/fair: handle case of task_h_load() returning 0
+Date:   Mon, 20 Jul 2020 17:37:20 +0200
+Message-Id: <20200720152757.501990741@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -59,75 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hilliard <james.hilliard1@gmail.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-commit 5c45d04c5081c1830d674f4d22d4400ea2083afe upstream.
+commit 01cfcde9c26d8555f0e6e9aea9d6049f87683998 upstream.
 
-This is a UPB (Universal Powerline Bus) PIM (Powerline Interface Module)
-which allows for controlling multiple UPB compatible devices from Linux
-using the standard serial interface.
+task_h_load() can return 0 in some situations like running stress-ng
+mmapfork, which forks thousands of threads, in a sched group on a 224 cores
+system. The load balance doesn't handle this correctly because
+env->imbalance never decreases and it will stop pulling tasks only after
+reaching loop_max, which can be equal to the number of running tasks of
+the cfs. Make sure that imbalance will be decreased by at least 1.
 
-Based on vendor application source code there are two different models
-of USB based PIM devices in addition to a number of RS232 based PIM's.
+misfit task is the other feature that doesn't handle correctly such
+situation although it's probably more difficult to face the problem
+because of the smaller number of CPUs and running tasks on heterogenous
+system.
 
-The vendor UPB application source contains the following USB ID's:
+We can't simply ensure that task_h_load() returns at least one because it
+would imply to handle underflow in other places.
 
-	#define USB_PCS_VENDOR_ID 0x04b4
-	#define USB_PCS_PIM_PRODUCT_ID 0x5500
-
-	#define USB_SAI_VENDOR_ID 0x17dd
-	#define USB_SAI_PIM_PRODUCT_ID 0x5500
-
-The first set of ID's correspond to the PIM variant sold by Powerline
-Control Systems while the second corresponds to the Simply Automated
-Incorporated PIM. As the product ID for both of these match the default
-cypress HID->COM RS232 product ID it assumed that they both use an
-internal variant of this HID->COM RS232 converter hardware. However
-as the vendor ID for the Simply Automated variant is different we need
-to also add it to the cypress_M8 driver so that it is properly
-detected.
-
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-Link: https://lore.kernel.org/r/20200616220403.1807003-1-james.hilliard1@gmail.com
-Cc: stable@vger.kernel.org
-[ johan: amend VID define entry ]
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: <stable@vger.kernel.org> # v4.4+
+Link: https://lkml.kernel.org/r/20200710152426.16981-1-vincent.guittot@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/usb/serial/cypress_m8.c |    2 ++
- drivers/usb/serial/cypress_m8.h |    3 +++
- 2 files changed, 5 insertions(+)
 
---- a/drivers/usb/serial/cypress_m8.c
-+++ b/drivers/usb/serial/cypress_m8.c
-@@ -63,6 +63,7 @@ static const struct usb_device_id id_tab
+---
+ kernel/sched/fair.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6561,7 +6561,15 @@ static int detach_tasks(struct lb_env *e
+ 		if (!can_migrate_task(p, env))
+ 			goto next;
  
- static const struct usb_device_id id_table_cyphidcomrs232[] = {
- 	{ USB_DEVICE(VENDOR_ID_CYPRESS, PRODUCT_ID_CYPHIDCOM) },
-+	{ USB_DEVICE(VENDOR_ID_SAI, PRODUCT_ID_CYPHIDCOM) },
- 	{ USB_DEVICE(VENDOR_ID_POWERCOM, PRODUCT_ID_UPS) },
- 	{ USB_DEVICE(VENDOR_ID_FRWD, PRODUCT_ID_CYPHIDCOM_FRWD) },
- 	{ }						/* Terminating entry */
-@@ -77,6 +78,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(VENDOR_ID_DELORME, PRODUCT_ID_EARTHMATEUSB) },
- 	{ USB_DEVICE(VENDOR_ID_DELORME, PRODUCT_ID_EARTHMATEUSB_LT20) },
- 	{ USB_DEVICE(VENDOR_ID_CYPRESS, PRODUCT_ID_CYPHIDCOM) },
-+	{ USB_DEVICE(VENDOR_ID_SAI, PRODUCT_ID_CYPHIDCOM) },
- 	{ USB_DEVICE(VENDOR_ID_POWERCOM, PRODUCT_ID_UPS) },
- 	{ USB_DEVICE(VENDOR_ID_FRWD, PRODUCT_ID_CYPHIDCOM_FRWD) },
- 	{ USB_DEVICE(VENDOR_ID_DAZZLE, PRODUCT_ID_CA42) },
---- a/drivers/usb/serial/cypress_m8.h
-+++ b/drivers/usb/serial/cypress_m8.h
-@@ -24,6 +24,9 @@
- #define VENDOR_ID_CYPRESS		0x04b4
- #define PRODUCT_ID_CYPHIDCOM		0x5500
- 
-+/* Simply Automated HID->COM UPB PIM (using Cypress PID 0x5500) */
-+#define VENDOR_ID_SAI			0x17dd
+-		load = task_h_load(p);
++		/*
++		 * Depending of the number of CPUs and tasks and the
++		 * cgroup hierarchy, task_h_load() can return a null
++		 * value. Make sure that env->imbalance decreases
++		 * otherwise detach_tasks() will stop only after
++		 * detaching up to loop_max tasks.
++		 */
++		load = max_t(unsigned long, task_h_load(p), 1);
 +
- /* FRWD Dongle - a GPS sports watch */
- #define VENDOR_ID_FRWD			0x6737
- #define PRODUCT_ID_CYPHIDCOM_FRWD	0x0001
+ 
+ 		if (sched_feat(LB_MIN) && load < 16 && !env->sd->nr_balance_failed)
+ 			goto next;
 
 
