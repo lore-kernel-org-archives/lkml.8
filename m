@@ -3,389 +3,262 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8F3C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C64C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3232421775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2EA20709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:22:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gb3QwmaI"
+	dkim=pass (1024-bit key) header.d=tencent.com header.i=@tencent.com header.b="V2SczQBo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgGTIWS (ORCPT
+        id S1727931AbgGTIWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:22:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbgGTIWQ (ORCPT
+        Mon, 20 Jul 2020 04:22:23 -0400
+Received: from mail4.tencent.com ([183.57.53.109]:33641 "EHLO
+        mail4.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgGTIWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:22:16 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E63C061794;
-        Mon, 20 Jul 2020 01:22:16 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id e13so14432821qkg.5;
-        Mon, 20 Jul 2020 01:22:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Hn3XBHozzSpRXalgzql+MPTSBLyIidSsEYM8QEEhOtc=;
-        b=Gb3QwmaI13D5zi+JQWDZCU5N3aZE/c+X+ldmSs0GLmM6IEFPFZ7EErKWsBCafaEFVy
-         rTQqENeAgpAd44Sy5887xLmK4mMzKH0eUzlOqJYXJbzsDrY51R3ndloNPbLiqvfHq4Pj
-         v/WWyprf7PjmKzi82u+F8ktPIDtnDzYaDiGsUHBWViTl1AGkFV1DXRaV36jpn/C3PNaZ
-         j0m9PnrlsvOdIY/SxVZYzhVHY56pgzJPfEl3ip8tLqMMkqqiT1462HEI+OaMMBAHgt22
-         p0RVCr+WmeH/4xS1rzyKBrTpp1GNFLtaPVqlzVXQ/+S4/E8soeWE6vrwlONIB8Pbz5Dp
-         /D2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Hn3XBHozzSpRXalgzql+MPTSBLyIidSsEYM8QEEhOtc=;
-        b=PTP83i7gZDdUkIOGJB15VaR9BLIbLY5wP6h9Rkh7vVDzrzNoHnA95FViZhQlw5oynG
-         HnSO/KkHQ41I8PRkfn0DxWBO6Yj2Hts9emZZDFl/xqOQpS3oaEQsPQut+7VPF5dhTaH+
-         ZRn4RfzvXuy08qbTVLDskEc/kwTgCf/STaLp9R7HUuOhEYNLt1BjlZ7xWs6S7Yd5MPSL
-         xGCUCcAXxjuntRgKm65cFvGGmLWu0SEKAnFSY3L2bQnPh9Dg4Bu0ddwGNMYfGns/cTEo
-         pfQ+LhbAkombPNuUwSwP5E1kkN/yQqVIC0Y5k9htRepXMf/14W53oEoUr03tjpLy/HmC
-         +DEA==
-X-Gm-Message-State: AOAM530qvdd/OBNSvP75jFBprujNIU/Yy+bCPFPG7Ai7LFJMN6Ljv+Gz
-        Om/k1YIGLng7mIyfAFu4JFo=
-X-Google-Smtp-Source: ABdhPJzJTxh0p68VyupzKQ//6bAyTqgucI9hU6DGHszARvOmVINc617ihwWKvq1dlM7uMXlSp19lBw==
-X-Received: by 2002:a37:9e41:: with SMTP id h62mr87241qke.426.1595233335431;
-        Mon, 20 Jul 2020 01:22:15 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id c7sm21202327qta.95.2020.07.20.01.22.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jul 2020 01:22:14 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id C430D27C0054;
-        Mon, 20 Jul 2020 04:22:13 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 20 Jul 2020 04:22:13 -0400
-X-ME-Sender: <xms:NVQVXxBsGexWrm9ObYZAUHW-8IWvp9fR37MGCz699asaPMTgrtVoVg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrgeefgddthecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepsghoqhhunhdr
-    fhgvnhhgsehgmhgrihhlrdgtohhmnecuggftrfgrthhtvghrnhepuddvgfeutdeuhefggf
-    fhlefggeevueeliefgvdfggeeukeehleelueeiiedukedunecukfhppeehvddrudehhedr
-    udduuddrjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeg
-    hedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomh
-    esfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:NVQVX_h-nySvrdHAAJxF0_gXJ8K76D2p47JjtkC8W2QeCgoS0FMYFQ>
-    <xmx:NVQVX8k3_PdGmoEWQsF_0xyX7FrIXd6qamylCTPTGmSMqpHG0woUTg>
-    <xmx:NVQVX7zCsTDztHnUn8Q6q9tollINMmMcsNon0HaDH_dLv0A-j-fmdw>
-    <xmx:NVQVX1H1-ceR4hJBGytHZ-9vsREWkGysJ2z11BLlaV1wbwUN5LDhQA>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B8781306005F;
-        Mon, 20 Jul 2020 04:22:12 -0400 (EDT)
-Date:   Mon, 20 Jul 2020 16:22:11 +0800
-From:   boqun.feng@gmail.com
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH RFC v2] rcu/segcblist: Add counters to segcblist
- datastructure
-Message-ID: <20200720082211.GA35358@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200719035518.2386828-1-joel@joelfernandes.org>
- <CAEXW_YQhYiYQZOJ95dqBcu_fAZ_6k7HGbrw53eTgPrgXU+5few@mail.gmail.com>
- <20200719041841.GA2398236@google.com>
+        Mon, 20 Jul 2020 04:22:19 -0400
+Received: from EX-SZ018.tencent.com (unknown [10.28.6.39])
+        by mail4.tencent.com (Postfix) with ESMTP id A0DC9725BA;
+        Mon, 20 Jul 2020 16:22:14 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tencent.com;
+        s=s202002; t=1595233334;
+        bh=lwg4TpeGg9ByuUekb6wUgoCLff0dKxMDAZZj04QIqoM=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=V2SczQBoNPEelTi2k6L4JzozNs5AuNwRVzsqWT9zOSUkDeTv5j8UD4hFh1w41WZNU
+         F/CERaQ7EWFoIKZ5PqEoU4albVUbcKL5n6cR4CxtSOtI6jY904UTsE8bGFnfoEVen1
+         9mODzq7GpwKsmQ/DbuBt22jRpE3msMCCg2UJpHBo=
+Received: from EX-SZ004.tencent.com (10.28.6.25) by EX-SZ018.tencent.com
+ (10.28.6.39) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Mon, 20 Jul
+ 2020 16:22:14 +0800
+Received: from EX-SZ012.tencent.com (10.28.6.36) by EX-SZ004.tencent.com
+ (10.28.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Mon, 20 Jul
+ 2020 16:22:14 +0800
+Received: from EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b]) by
+ EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b%3]) with mapi id
+ 15.01.1847.007; Mon, 20 Jul 2020 16:22:14 +0800
+From:   =?utf-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
+To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
+CC:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Tim Chen" <tim.c.chen@linux.intel.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pjt@google.com" <pjt@google.com>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "subhra.mazumdar@oracle.com" <subhra.mazumdar@oracle.com>,
+        "fweisbec@gmail.com" <fweisbec@gmail.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "kerrnel@google.com" <kerrnel@google.com>,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "vineethrp@gmail.com" <vineethrp@gmail.com>,
+        "Chen Yu" <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [RFC PATCH 10/16] sched: Trivial forced-newidle balancer(Internet
+ mail)
+Thread-Topic: [RFC PATCH 10/16] sched: Trivial forced-newidle
+ balancer(Internet mail)
+Thread-Index: AQHWTyYpnBjYC7x930alFUJ4JyvKnakPcZ0AgAAh6ICAABWDgIAACvUAgAAFV4A=
+Date:   Mon, 20 Jul 2020 08:22:13 +0000
+Message-ID: <23F5F9C5-A554-4697-9B75-ED302E6723D7@tencent.com>
+References: <cover.1593530334.git.vpillai@digitalocean.com>
+ <980b600006945a45ce1ec34ef206fc04bcf0b5dc.1593530334.git.vpillai@digitalocean.com>
+ <750BB828-1AAE-4DED-A460-CF8ADDE3CFDA@tencent.com>
+ <288368e3-9f6b-21bf-287a-f2446073f6fb@linux.intel.com>
+ <8082F052-2F52-42D3-B396-18A35A94F26F@tencent.com>
+ <5ac7b50a-b422-040c-81f4-eab5bdda477b@linux.intel.com>
+In-Reply-To: <5ac7b50a-b422-040c-81f4-eab5bdda477b@linux.intel.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.28.2.34]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <ADB2065204C35D4BA69AD3B92A004D5F@tencent.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200719041841.GA2398236@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel,
-
-On Sun, Jul 19, 2020 at 12:18:41AM -0400, Joel Fernandes wrote:
-> On Sun, Jul 19, 2020 at 12:06:28AM -0400, Joel Fernandes wrote:
-> > On Sat, Jul 18, 2020 at 11:55 PM Joel Fernandes (Google)
-> > <joel@joelfernandes.org> wrote:
-> > [...]
-> > >         /* If no callbacks moved, nothing more need be done. */
-> > > @@ -419,10 +494,9 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
-> > >          * callbacks.  The overall effect is to copy down the later pointers
-> > >          * into the gap that was created by the now-ready segments.
-> > >          */
-> > > -       for (j = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL; i++, j++) {
-> > > -               if (rsclp->tails[j] == rsclp->tails[RCU_NEXT_TAIL])
-> > > -                       break;  /* No more callbacks. */
-> > > +       for (j = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL && j < RCU_NEXT_TAIL; i++, j++) {
-> > >                 WRITE_ONCE(rsclp->tails[j], rsclp->tails[i]);
-> > > +               rcu_segcblist_move_seglen(rsclp, i, j);
-> > >                 rsclp->gp_seq[j] = rsclp->gp_seq[i];
-> > >         }
-> > 
-> > Unfortunately I broke this code, _sigh_.  I need to reinstate the
-> > if (rsclp->tails[j] == rsclp->tails[RCU_NEXT_TAIL]) , I completely
-> > misunderstood that.
-> 
-> And hopefully, third time's a charm with various extra newlines removed:
-> 
-> ---8<-----------------------
-> 
-> From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-> Subject: [PATCH v3] rcu/segcblist: Add counters to segcblist datastructure
-> 
-> Add counting of segment lengths of segmented callback list.
-> 
-> This will be useful for a number of things such as knowing how big the
-> ready-to-execute segment have gotten. The immediate benefit is ability
-> to trace how the callbacks in the segmented callback list change.
-> 
-> Tested by profusely reading traces when segcblist counts updated.
-> 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> 
-> v1->v3: minor nits.
-> ---
->  include/linux/rcu_segcblist.h |  2 +
->  kernel/rcu/rcu_segcblist.c    | 77 +++++++++++++++++++++++++++++++++--
->  2 files changed, 76 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
-> index b36afe7b22c9..d462ae5e340a 100644
-> --- a/include/linux/rcu_segcblist.h
-> +++ b/include/linux/rcu_segcblist.h
-> @@ -69,8 +69,10 @@ struct rcu_segcblist {
->  	unsigned long gp_seq[RCU_CBLIST_NSEGS];
->  #ifdef CONFIG_RCU_NOCB_CPU
->  	atomic_long_t len;
-> +	atomic_long_t seglen[RCU_CBLIST_NSEGS];
->  #else
->  	long len;
-> +	long seglen[RCU_CBLIST_NSEGS];
->  #endif
->  	u8 enabled;
->  	u8 offloaded;
-> diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-> index 9a0f66133b4b..c5841efcd38e 100644
-> --- a/kernel/rcu/rcu_segcblist.c
-> +++ b/kernel/rcu/rcu_segcblist.c
-> @@ -88,6 +88,57 @@ static void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
->  #endif
->  }
->  
-> +/* Get the length of a segment of the rcu_segcblist structure. */
-> +static long rcu_segcblist_get_seglen(struct rcu_segcblist *rsclp, int seg)
-> +{
-> +#ifdef CONFIG_RCU_NOCB_CPU
-> +	return atomic_long_read(&rsclp->seglen[seg]);
-> +#else
-> +	return READ_ONCE(rsclp->seglen[seg]);
-> +#endif
-> +}
-> +
-> +/* Set the length of a segment of the rcu_segcblist structure. */
-> +static void rcu_segcblist_set_seglen(struct rcu_segcblist *rsclp, int seg, long v)
-> +{
-> +#ifdef CONFIG_RCU_NOCB_CPU
-> +	atomic_long_set(&rsclp->seglen[seg], v);
-> +#else
-> +	WRITE_ONCE(rsclp->seglen[seg], v);
-> +#endif
-
-These #ifdef really make me uncomfortable ;-) Since we are allowed to
-use the '_Generic' key from C11 (see include/linux/compiler_types.h), I
-wonder whether it's better if we have a few "generic" primitives like:
-
-	#define gen_long_read(x) _Generic((x),						\
-					  atomic_long_t: atomic_long_read(&x, v),	\
-					  long: READ_ONCE(x)),				\
-					  ...
-
-	#define gen_long_set(x, v) _Generic((x),					\
-					    atomic_long_t: atomic_long_set(&x, v),	\
-					    long: WRITE_ONCE(x, v)),			\
-					    ...
-
-, and similar for _xchg and _add.
-
-With these primitives introduced, you can avoid to add those
-rcu_segcblist_*_seglen() which have #ifdefs in them. Of course, an
-alternative would be that we implement rcu_segcblist_*_seglen() using
-_Generic, but I think someone else may have the similar problems or
-requirement (already or in the future), so it might be worthwhile to
-introduce the gen_ primitives for broader usage.
-
-Also add Peter and Will to the Cc list.
-
-To summarize, Joel's patch points out that there are some places where
-the developers want to save some cost from atomic APIs in a particular
-configuration, and obviously they know what they are doing when they use
-{READ,WRITE}_ONCE() to replace atomic APIs: they use different types in
-different configurations. With the help of C11's _Generic keyword, we
-can provide a set of APIs help developers write less but cleaner code.
-
-Any idea? I admit that "gen_" is not a good prefix, just put it here as
-a placeholder ;-)
-
-Regards,
-Boqun
-
-> +}
-> +
-> +/* Return number of callbacks in a segment of the segmented callback list. */
-> +static void rcu_segcblist_add_seglen(struct rcu_segcblist *rsclp, int seg, long v)
-> +{
-> +#ifdef CONFIG_RCU_NOCB_CPU
-> +	smp_mb__before_atomic(); /* Up to the caller! */
-> +	atomic_long_add(v, &rsclp->seglen[seg]);
-> +	smp_mb__after_atomic(); /* Up to the caller! */
-> +#else
-> +	smp_mb(); /* Up to the caller! */
-> +	WRITE_ONCE(rsclp->seglen[seg], rsclp->seglen[seg] + v);
-> +	smp_mb(); /* Up to the caller! */
-> +#endif
-> +}
-> +
-> +/* Move from's segment length to to's segment. */
-> +static void rcu_segcblist_move_seglen(struct rcu_segcblist *rsclp, int from, int to)
-> +{
-> +	long len = rcu_segcblist_get_seglen(rsclp, from);
-> +
-> +	if (!len || from == to)
-> +		return;
-> +	rcu_segcblist_add_seglen(rsclp, to, len);
-> +	rcu_segcblist_set_seglen(rsclp, from, 0);
-> +}
-> +
-> +/* Increment segment's length. */
-> +static void rcu_segcblist_inc_seglen(struct rcu_segcblist *rsclp, int seg)
-> +{
-> +	rcu_segcblist_add_seglen(rsclp, seg, 1);
-> +}
-> +
->  /*
->   * Increase the numeric length of an rcu_segcblist structure by the
->   * specified amount, which can be negative.  This can cause the ->len
-> @@ -149,8 +200,10 @@ void rcu_segcblist_init(struct rcu_segcblist *rsclp)
->  	BUILD_BUG_ON(RCU_NEXT_TAIL + 1 != ARRAY_SIZE(rsclp->gp_seq));
->  	BUILD_BUG_ON(ARRAY_SIZE(rsclp->tails) != ARRAY_SIZE(rsclp->gp_seq));
->  	rsclp->head = NULL;
-> -	for (i = 0; i < RCU_CBLIST_NSEGS; i++)
-> +	for (i = 0; i < RCU_CBLIST_NSEGS; i++) {
->  		rsclp->tails[i] = &rsclp->head;
-> +		rcu_segcblist_set_seglen(rsclp, i, 0);
-> +	}
->  	rcu_segcblist_set_len(rsclp, 0);
->  	rsclp->enabled = 1;
->  }
-> @@ -245,6 +298,7 @@ void rcu_segcblist_enqueue(struct rcu_segcblist *rsclp,
->  			   struct rcu_head *rhp)
->  {
->  	rcu_segcblist_inc_len(rsclp);
-> +	rcu_segcblist_inc_seglen(rsclp, RCU_NEXT_TAIL);
->  	smp_mb(); /* Ensure counts are updated before callback is enqueued. */
->  	rhp->next = NULL;
->  	WRITE_ONCE(*rsclp->tails[RCU_NEXT_TAIL], rhp);
-> @@ -274,6 +328,7 @@ bool rcu_segcblist_entrain(struct rcu_segcblist *rsclp,
->  	for (i = RCU_NEXT_TAIL; i > RCU_DONE_TAIL; i--)
->  		if (rsclp->tails[i] != rsclp->tails[i - 1])
->  			break;
-> +	rcu_segcblist_inc_seglen(rsclp, i);
->  	WRITE_ONCE(*rsclp->tails[i], rhp);
->  	for (; i <= RCU_NEXT_TAIL; i++)
->  		WRITE_ONCE(rsclp->tails[i], &rhp->next);
-> @@ -307,6 +362,7 @@ void rcu_segcblist_extract_done_cbs(struct rcu_segcblist *rsclp,
->  
->  	if (!rcu_segcblist_ready_cbs(rsclp))
->  		return; /* Nothing to do. */
-> +	rclp->len = rcu_segcblist_get_seglen(rsclp, RCU_DONE_TAIL);
->  	*rclp->tail = rsclp->head;
->  	WRITE_ONCE(rsclp->head, *rsclp->tails[RCU_DONE_TAIL]);
->  	WRITE_ONCE(*rsclp->tails[RCU_DONE_TAIL], NULL);
-> @@ -314,6 +370,7 @@ void rcu_segcblist_extract_done_cbs(struct rcu_segcblist *rsclp,
->  	for (i = RCU_CBLIST_NSEGS - 1; i >= RCU_DONE_TAIL; i--)
->  		if (rsclp->tails[i] == rsclp->tails[RCU_DONE_TAIL])
->  			WRITE_ONCE(rsclp->tails[i], &rsclp->head);
-> +	rcu_segcblist_set_seglen(rsclp, RCU_DONE_TAIL, 0);
->  }
->  
->  /*
-> @@ -330,11 +387,16 @@ void rcu_segcblist_extract_pend_cbs(struct rcu_segcblist *rsclp,
->  
->  	if (!rcu_segcblist_pend_cbs(rsclp))
->  		return; /* Nothing to do. */
-> +	rclp->len = rcu_segcblist_get_seglen(rsclp, RCU_WAIT_TAIL) +
-> +		    rcu_segcblist_get_seglen(rsclp, RCU_NEXT_READY_TAIL) +
-> +		    rcu_segcblist_get_seglen(rsclp, RCU_NEXT_TAIL);
->  	*rclp->tail = *rsclp->tails[RCU_DONE_TAIL];
->  	rclp->tail = rsclp->tails[RCU_NEXT_TAIL];
->  	WRITE_ONCE(*rsclp->tails[RCU_DONE_TAIL], NULL);
-> -	for (i = RCU_DONE_TAIL + 1; i < RCU_CBLIST_NSEGS; i++)
-> +	for (i = RCU_DONE_TAIL + 1; i < RCU_CBLIST_NSEGS; i++) {
->  		WRITE_ONCE(rsclp->tails[i], rsclp->tails[RCU_DONE_TAIL]);
-> +		rcu_segcblist_set_seglen(rsclp, i, 0);
-> +	}
->  }
->  
->  /*
-> @@ -359,6 +421,7 @@ void rcu_segcblist_insert_done_cbs(struct rcu_segcblist *rsclp,
->  
->  	if (!rclp->head)
->  		return; /* No callbacks to move. */
-> +	rcu_segcblist_add_seglen(rsclp, RCU_DONE_TAIL, rclp->len);
->  	*rclp->tail = rsclp->head;
->  	WRITE_ONCE(rsclp->head, rclp->head);
->  	for (i = RCU_DONE_TAIL; i < RCU_CBLIST_NSEGS; i++)
-> @@ -379,6 +442,8 @@ void rcu_segcblist_insert_pend_cbs(struct rcu_segcblist *rsclp,
->  {
->  	if (!rclp->head)
->  		return; /* Nothing to do. */
-> +
-> +	rcu_segcblist_add_seglen(rsclp, RCU_NEXT_TAIL, rclp->len);
->  	WRITE_ONCE(*rsclp->tails[RCU_NEXT_TAIL], rclp->head);
->  	WRITE_ONCE(rsclp->tails[RCU_NEXT_TAIL], rclp->tail);
->  }
-> @@ -403,6 +468,7 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
->  		if (ULONG_CMP_LT(seq, rsclp->gp_seq[i]))
->  			break;
->  		WRITE_ONCE(rsclp->tails[RCU_DONE_TAIL], rsclp->tails[i]);
-> +		rcu_segcblist_move_seglen(rsclp, i, RCU_DONE_TAIL);
->  	}
->  
->  	/* If no callbacks moved, nothing more need be done. */
-> @@ -423,6 +489,7 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
->  		if (rsclp->tails[j] == rsclp->tails[RCU_NEXT_TAIL])
->  			break;  /* No more callbacks. */
->  		WRITE_ONCE(rsclp->tails[j], rsclp->tails[i]);
-> +		rcu_segcblist_move_seglen(rsclp, i, j);
->  		rsclp->gp_seq[j] = rsclp->gp_seq[i];
->  	}
->  }
-> @@ -444,7 +511,7 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
->   */
->  bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
->  {
-> -	int i;
-> +	int i, j;
->  
->  	WARN_ON_ONCE(!rcu_segcblist_is_enabled(rsclp));
->  	if (rcu_segcblist_restempty(rsclp, RCU_DONE_TAIL))
-> @@ -479,6 +546,10 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
->  	if (++i >= RCU_NEXT_TAIL)
->  		return false;
->  
-> +	/* Accounting: everything below i is about to get merged into i. */
-> +	for (j = i + 1; j <= RCU_NEXT_TAIL; j++)
-> +		rcu_segcblist_move_seglen(rsclp, j, i);
-> +
->  	/*
->  	 * Merge all later callbacks, including newly arrived callbacks,
->  	 * into the segment located by the for-loop above.  Assign "seq"
-> -- 
-> 2.28.0.rc0.105.gf9edc3c819-goog
-> 
+DQoNCj4gT24gSnVsIDIwLCAyMDIwLCBhdCA0OjAzIFBNLCBMaSwgQXVicmV5IDxhdWJyZXkubGlA
+bGludXguaW50ZWwuY29tPiB3cm90ZToNCj4gDQo+IE9uIDIwMjAvNy8yMCAxNToyMywgYmVuYmpp
+YW5nKOiSi+W9qikgd3JvdGU6DQo+PiBIaSwgDQo+PiANCj4+PiBPbiBKdWwgMjAsIDIwMjAsIGF0
+IDI6MDYgUE0sIExpLCBBdWJyZXkgPGF1YnJleS5saUBsaW51eC5pbnRlbC5jb20gPG1haWx0bzph
+dWJyZXkubGlAbGludXguaW50ZWwuY29tPj4gd3JvdGU6DQo+Pj4gDQo+Pj4gT24gMjAyMC83LzIw
+IDEyOjA2LCBiZW5iamlhbmco6JKL5b2qKSB3cm90ZToNCj4+Pj4gSGksDQo+Pj4+IA0KPj4+Pj4g
+T24gSnVsIDEsIDIwMjAsIGF0IDU6MzIgQU0sIFZpbmVldGggUmVtYW5hbiBQaWxsYWkgPHZwaWxs
+YWlAZGlnaXRhbG9jZWFuLmNvbSA8bWFpbHRvOnZwaWxsYWlAZGlnaXRhbG9jZWFuLmNvbT4+IHdy
+b3RlOg0KPj4+Pj4gDQo+Pj4+PiBGcm9tOiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVh
+ZC5vcmcgPG1haWx0bzpwZXRlcnpAaW5mcmFkZWFkLm9yZz4+DQo+Pj4+PiANCj4+Pj4+IFdoZW4g
+YSBzaWJsaW5nIGlzIGZvcmNlZC1pZGxlIHRvIG1hdGNoIHRoZSBjb3JlLWNvb2tpZTsgc2VhcmNo
+IGZvcg0KPj4+Pj4gbWF0Y2hpbmcgdGFza3MgdG8gZmlsbCB0aGUgY29yZS4NCj4+Pj4+IA0KPj4+
+Pj4gcmN1X3JlYWRfdW5sb2NrKCkgY2FuIGluY3VyIGFuIGluZnJlcXVlbnQgZGVhZGxvY2sgaW4N
+Cj4+Pj4+IHNjaGVkX2NvcmVfYmFsYW5jZSgpLiBGaXggdGhpcyBieSB1c2luZyB0aGUgUkNVLXNj
+aGVkIGZsYXZvciBpbnN0ZWFkLg0KPj4+Pj4gDQo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBa
+aWpsc3RyYSAoSW50ZWwpIDxwZXRlcnpAaW5mcmFkZWFkLm9yZyA8bWFpbHRvOnBldGVyekBpbmZy
+YWRlYWQub3JnPj4NCj4+Pj4+IFNpZ25lZC1vZmYtYnk6IEpvZWwgRmVybmFuZGVzIChHb29nbGUp
+IDxqb2VsQGpvZWxmZXJuYW5kZXMub3JnIDxtYWlsdG86am9lbEBqb2VsZmVybmFuZGVzLm9yZz4+
+DQo+Pj4+PiBBY2tlZC1ieTogUGF1bCBFLiBNY0tlbm5leSA8cGF1bG1ja0BrZXJuZWwub3JnIDxt
+YWlsdG86cGF1bG1ja0BrZXJuZWwub3JnPj4NCj4+Pj4+IC0tLQ0KPj4+Pj4gaW5jbHVkZS9saW51
+eC9zY2hlZC5oIHwgICAxICsNCj4+Pj4+IGtlcm5lbC9zY2hlZC9jb3JlLmMgICB8IDEzMSArKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0NCj4+Pj4+IGtlcm5lbC9zY2hl
+ZC9pZGxlLmMgICB8ICAgMSArDQo+Pj4+PiBrZXJuZWwvc2NoZWQvc2NoZWQuaCAgfCAgIDYgKysN
+Cj4+Pj4+IDQgZmlsZXMgY2hhbmdlZCwgMTM4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkN
+Cj4+Pj4+IA0KPj4+Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc2NoZWQuaCBiL2luY2x1
+ZGUvbGludXgvc2NoZWQuaA0KPj4+Pj4gaW5kZXggM2M4ZGNjNWZmMDM5Li40ZjllZGYwMTNkZjMg
+MTAwNjQ0DQo+Pj4+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L3NjaGVkLmgNCj4+Pj4+ICsrKyBiL2lu
+Y2x1ZGUvbGludXgvc2NoZWQuaA0KPj4+Pj4gQEAgLTY4OCw2ICs2ODgsNyBAQCBzdHJ1Y3QgdGFz
+a19zdHJ1Y3Qgew0KPj4+Pj4gI2lmZGVmIENPTkZJR19TQ0hFRF9DT1JFDQo+Pj4+PiBzdHJ1Y3Qg
+cmJfbm9kZWNvcmVfbm9kZTsNCj4+Pj4+IHVuc2lnbmVkIGxvbmdjb3JlX2Nvb2tpZTsNCj4+Pj4+
+ICt1bnNpZ25lZCBpbnRjb3JlX29jY3VwYXRpb247DQo+Pj4+PiAjZW5kaWYNCj4+Pj4+IA0KPj4+
+Pj4gI2lmZGVmIENPTkZJR19DR1JPVVBfU0NIRUQNCj4+Pj4+IGRpZmYgLS1naXQgYS9rZXJuZWwv
+c2NoZWQvY29yZS5jIGIva2VybmVsL3NjaGVkL2NvcmUuYw0KPj4+Pj4gaW5kZXggNGQ2ZDZhNjc4
+MDEzLi5mYjllZGIwOWVhZDcgMTAwNjQ0DQo+Pj4+PiAtLS0gYS9rZXJuZWwvc2NoZWQvY29yZS5j
+DQo+Pj4+PiArKysgYi9rZXJuZWwvc2NoZWQvY29yZS5jDQo+Pj4+PiBAQCAtMjAxLDYgKzIwMSwy
+MSBAQCBzdGF0aWMgc3RydWN0IHRhc2tfc3RydWN0ICpzY2hlZF9jb3JlX2ZpbmQoc3RydWN0IHJx
+ICpycSwgdW5zaWduZWQgbG9uZyBjb29raWUpDQo+Pj4+PiByZXR1cm4gbWF0Y2g7DQo+Pj4+PiB9
+DQo+Pj4+PiANCj4+Pj4+ICtzdGF0aWMgc3RydWN0IHRhc2tfc3RydWN0ICpzY2hlZF9jb3JlX25l
+eHQoc3RydWN0IHRhc2tfc3RydWN0ICpwLCB1bnNpZ25lZCBsb25nIGNvb2tpZSkNCj4+Pj4+ICt7
+DQo+Pj4+PiArc3RydWN0IHJiX25vZGUgKm5vZGUgPSAmcC0+Y29yZV9ub2RlOw0KPj4+Pj4gKw0K
+Pj4+Pj4gK25vZGUgPSByYl9uZXh0KG5vZGUpOw0KPj4+Pj4gK2lmICghbm9kZSkNCj4+Pj4+ICty
+ZXR1cm4gTlVMTDsNCj4+Pj4+ICsNCj4+Pj4+ICtwID0gY29udGFpbmVyX29mKG5vZGUsIHN0cnVj
+dCB0YXNrX3N0cnVjdCwgY29yZV9ub2RlKTsNCj4+Pj4+ICtpZiAocC0+Y29yZV9jb29raWUgIT0g
+Y29va2llKQ0KPj4+Pj4gK3JldHVybiBOVUxMOw0KPj4+Pj4gKw0KPj4+Pj4gK3JldHVybiBwOw0K
+Pj4+Pj4gK30NCj4+Pj4+ICsNCj4+Pj4+IC8qDQo+Pj4+PiAqIFRoZSBzdGF0aWMta2V5ICsgc3Rv
+cC1tYWNoaW5lIHZhcmlhYmxlIGFyZSBuZWVkZWQgc3VjaCB0aGF0Og0KPj4+Pj4gKg0KPj4+Pj4g
+QEAgLTQyMzMsNyArNDI0OCw3IEBAIHBpY2tfbmV4dF90YXNrKHN0cnVjdCBycSAqcnEsIHN0cnVj
+dCB0YXNrX3N0cnVjdCAqcHJldiwgc3RydWN0IHJxX2ZsYWdzICpyZikNCj4+Pj4+IHN0cnVjdCB0
+YXNrX3N0cnVjdCAqbmV4dCwgKm1heCA9IE5VTEw7DQo+Pj4+PiBjb25zdCBzdHJ1Y3Qgc2NoZWRf
+Y2xhc3MgKmNsYXNzOw0KPj4+Pj4gY29uc3Qgc3RydWN0IGNwdW1hc2sgKnNtdF9tYXNrOw0KPj4+
+Pj4gLWludCBpLCBqLCBjcHU7DQo+Pj4+PiAraW50IGksIGosIGNwdSwgb2NjID0gMDsNCj4+Pj4+
+IGJvb2wgbmVlZF9zeW5jOw0KPj4+Pj4gDQo+Pj4+PiBpZiAoIXNjaGVkX2NvcmVfZW5hYmxlZChy
+cSkpDQo+Pj4+PiBAQCAtNDMzMiw2ICs0MzQ3LDkgQEAgcGlja19uZXh0X3Rhc2soc3RydWN0IHJx
+ICpycSwgc3RydWN0IHRhc2tfc3RydWN0ICpwcmV2LCBzdHJ1Y3QgcnFfZmxhZ3MgKnJmKQ0KPj4+
+Pj4gZ290byBkb25lOw0KPj4+Pj4gfQ0KPj4+Pj4gDQo+Pj4+PiAraWYgKCFpc19pZGxlX3Rhc2so
+cCkpDQo+Pj4+PiArb2NjKys7DQo+Pj4+PiArDQo+Pj4+PiBycV9pLT5jb3JlX3BpY2sgPSBwOw0K
+Pj4+Pj4gDQo+Pj4+PiAvKg0KPj4+Pj4gQEAgLTQzNTcsNiArNDM3NSw3IEBAIHBpY2tfbmV4dF90
+YXNrKHN0cnVjdCBycSAqcnEsIHN0cnVjdCB0YXNrX3N0cnVjdCAqcHJldiwgc3RydWN0IHJxX2Zs
+YWdzICpyZikNCj4+Pj4+IA0KPj4+Pj4gY3B1X3JxKGopLT5jb3JlX3BpY2sgPSBOVUxMOw0KPj4+
+Pj4gfQ0KPj4+Pj4gK29jYyA9IDE7DQo+Pj4+PiBnb3RvIGFnYWluOw0KPj4+Pj4gfSBlbHNlIHsN
+Cj4+Pj4+IC8qDQo+Pj4+PiBAQCAtNDM5Myw2ICs0NDEyLDggQEAgbmV4dF9jbGFzczo7DQo+Pj4+
+PiBpZiAoaXNfaWRsZV90YXNrKHJxX2ktPmNvcmVfcGljaykgJiYgcnFfaS0+bnJfcnVubmluZykN
+Cj4+Pj4+IHJxX2ktPmNvcmVfZm9yY2VpZGxlID0gdHJ1ZTsNCj4+Pj4+IA0KPj4+Pj4gK3JxX2kt
+PmNvcmVfcGljay0+Y29yZV9vY2N1cGF0aW9uID0gb2NjOw0KPj4+Pj4gKw0KPj4+Pj4gaWYgKGkg
+PT0gY3B1KQ0KPj4+Pj4gY29udGludWU7DQo+Pj4+PiANCj4+Pj4+IEBAIC00NDA4LDYgKzQ0Mjks
+MTE0IEBAIG5leHRfY2xhc3M6Ow0KPj4+Pj4gcmV0dXJuIG5leHQ7DQo+Pj4+PiB9DQo+Pj4+PiAN
+Cj4+Pj4+ICtzdGF0aWMgYm9vbCB0cnlfc3RlYWxfY29va2llKGludCB0aGlzLCBpbnQgdGhhdCkN
+Cj4+Pj4+ICt7DQo+Pj4+PiArc3RydWN0IHJxICpkc3QgPSBjcHVfcnEodGhpcyksICpzcmMgPSBj
+cHVfcnEodGhhdCk7DQo+Pj4+PiArc3RydWN0IHRhc2tfc3RydWN0ICpwOw0KPj4+Pj4gK3Vuc2ln
+bmVkIGxvbmcgY29va2llOw0KPj4+Pj4gK2Jvb2wgc3VjY2VzcyA9IGZhbHNlOw0KPj4+Pj4gKw0K
+Pj4+Pj4gK2xvY2FsX2lycV9kaXNhYmxlKCk7DQo+Pj4+PiArZG91YmxlX3JxX2xvY2soZHN0LCBz
+cmMpOw0KPj4+Pj4gKw0KPj4+Pj4gK2Nvb2tpZSA9IGRzdC0+Y29yZS0+Y29yZV9jb29raWU7DQo+
+Pj4+PiAraWYgKCFjb29raWUpDQo+Pj4+PiArZ290byB1bmxvY2s7DQo+Pj4+PiArDQo+Pj4+PiAr
+aWYgKGRzdC0+Y3VyciAhPSBkc3QtPmlkbGUpDQo+Pj4+PiArZ290byB1bmxvY2s7DQo+Pj4+PiAr
+DQo+Pj4+PiArcCA9IHNjaGVkX2NvcmVfZmluZChzcmMsIGNvb2tpZSk7DQo+Pj4+PiAraWYgKHAg
+PT0gc3JjLT5pZGxlKQ0KPj4+Pj4gK2dvdG8gdW5sb2NrOw0KPj4+Pj4gKw0KPj4+Pj4gK2RvIHsN
+Cj4+Pj4+ICtpZiAocCA9PSBzcmMtPmNvcmVfcGljayB8fCBwID09IHNyYy0+Y3VycikNCj4+Pj4+
+ICtnb3RvIG5leHQ7DQo+Pj4+PiArDQo+Pj4+PiAraWYgKCFjcHVtYXNrX3Rlc3RfY3B1KHRoaXMs
+ICZwLT5jcHVzX21hc2spKQ0KPj4+Pj4gK2dvdG8gbmV4dDsNCj4+Pj4+ICsNCj4+Pj4+ICtpZiAo
+cC0+Y29yZV9vY2N1cGF0aW9uID4gZHN0LT5pZGxlLT5jb3JlX29jY3VwYXRpb24pDQo+Pj4+PiAr
+Z290byBuZXh0Ow0KPj4+Pj4gKw0KPj4+Pj4gK3AtPm9uX3JxID0gVEFTS19PTl9SUV9NSUdSQVRJ
+Tkc7DQo+Pj4+PiArZGVhY3RpdmF0ZV90YXNrKHNyYywgcCwgMCk7DQo+Pj4+PiArc2V0X3Rhc2tf
+Y3B1KHAsIHRoaXMpOw0KPj4+Pj4gK2FjdGl2YXRlX3Rhc2soZHN0LCBwLCAwKTsNCj4+Pj4+ICtw
+LT5vbl9ycSA9IFRBU0tfT05fUlFfUVVFVUVEOw0KPj4+Pj4gKw0KPj4+Pj4gK3Jlc2NoZWRfY3Vy
+cihkc3QpOw0KPj4+Pj4gKw0KPj4+Pj4gK3N1Y2Nlc3MgPSB0cnVlOw0KPj4+Pj4gK2JyZWFrOw0K
+Pj4+Pj4gKw0KPj4+Pj4gK25leHQ6DQo+Pj4+PiArcCA9IHNjaGVkX2NvcmVfbmV4dChwLCBjb29r
+aWUpOw0KPj4+Pj4gK30gd2hpbGUgKHApOw0KPj4+Pj4gKw0KPj4+Pj4gK3VubG9jazoNCj4+Pj4+
+ICtkb3VibGVfcnFfdW5sb2NrKGRzdCwgc3JjKTsNCj4+Pj4+ICtsb2NhbF9pcnFfZW5hYmxlKCk7
+DQo+Pj4+PiArDQo+Pj4+PiArcmV0dXJuIHN1Y2Nlc3M7DQo+Pj4+PiArfQ0KPj4+Pj4gKw0KPj4+
+Pj4gK3N0YXRpYyBib29sIHN0ZWFsX2Nvb2tpZV90YXNrKGludCBjcHUsIHN0cnVjdCBzY2hlZF9k
+b21haW4gKnNkKQ0KPj4+Pj4gK3sNCj4+Pj4+ICtpbnQgaTsNCj4+Pj4+ICsNCj4+Pj4+ICtmb3Jf
+ZWFjaF9jcHVfd3JhcChpLCBzY2hlZF9kb21haW5fc3BhbihzZCksIGNwdSkgew0KPj4+PiBTaW5j
+ZSAoaSA9PSBjcHUpIHNob3VsZCBiZSBza2lwcGVkLCBzaG91bGQgd2Ugc3RhcnQgaXRlcmF0aW9u
+IGF0IGNwdSsxPyBsaWtlLA0KPj4+PiBmb3JfZWFjaF9jcHVfd3JhcChpLCBzY2hlZF9kb21haW5f
+c3BhbihzZCksIGNwdSsxKSB7DQo+Pj4+IOKApg0KPj4+PiB9DQo+Pj4+IEluIHRoYXQgd2F5LCB3
+ZSBjb3VsZCBhdm9pZCBoaXR0aW5nIGZvbGxvd2luZyBpZihpID09IGNwdSkgYWx3YXlzLg0KPj4+
+IA0KPj4+IElNSE8sIHRoaXMgd29uJ3Qgd29yaywgYXMgY3B1aWQgaXMgbm90IGNvbnRpbnVvdXMu
+DQo+PiBDcHVpZCBtYXkgYmUgbm90IGNvbnRpbnVvdXMsIGJ1dCBmb3JfZWFjaF9jcHVfd3JhcCgp
+IGNvdWxkIGNvdmVyIHRoZSBjYXNlLCBJIHRoaW5rLiA6KQ0KPiANCj4gQW5kIGZvcl9lYWNoX2Nw
+dV93cmFwKCkgd2lsbCBzdGlsbCB3cmFwIGFyb3VuZCBhbmQgcGljayBpID09IGNwdSwgZXZlbiB0
+aG91Z2ggaXQgc3RhcnRzDQo+IGZyb20gKGNwdSsxKS4uLg0KPiANCj4gVGhhbmtzLA0KPiAtQXVi
+cmV5DQpZZXAsIGJ1dCB0aGF04oCZcyB0aGUgbGFzdCBjaG9pY2UsIHdlIG1heSBzdGVhbCB0aGUg
+cmlnaHQgdGFzayBpbiBtb3N0IGNhc2VzIHdpdGhvdXQgc2tpcHBpbmcuIA0KSnVzdCBhbiBvcHRp
+b24uIDopDQoNCj4gDQo+PiANCj4+PiANCj4+Pj4+ICtpZiAoaSA9PSBjcHUpDQo+Pj4+PiArY29u
+dGludWU7DQo+Pj4+PiArDQo+Pj4+PiAraWYgKG5lZWRfcmVzY2hlZCgpKQ0KPj4+Pj4gK2JyZWFr
+Ow0KPj4+PiBTaG91bGQgd2UgcmV0dXJuIHRydWUgaGVyZSB0byBhY2NlbGVyYXRlIHRoZSBicmVh
+a2luZyBvZiBzY2hlZF9jb3JlX2JhbGFuY2U/IA0KPj4+PiBPdGhlcndpc2UgdGhlIGJyZWFraW5n
+IHdvdWxkIGJlIGRlbGF5ZWQgdG8gdGhlIG5leHQgbGV2ZWwgc2QgaXRlcmF0aW9uLg0KQW5kIGNv
+dWxkIHlvdSBoYXZlIGEgbG9vayBoZXJlLiA6KQ0KVGhhbmtzLg0KDQpSZWdhcmRzLA0KSmlhbmcg
+DQoNCj4+Pj4+ICsNCj4+Pj4+ICtpZiAodHJ5X3N0ZWFsX2Nvb2tpZShjcHUsIGkpKQ0KPj4+Pj4g
+K3JldHVybiB0cnVlOw0KPj4+Pj4gK30NCj4+Pj4+ICsNCj4+Pj4+ICtyZXR1cm4gZmFsc2U7DQo+
+Pj4+PiArfQ0KPj4+Pj4gKw0KPj4+Pj4gK3N0YXRpYyB2b2lkIHNjaGVkX2NvcmVfYmFsYW5jZShz
+dHJ1Y3QgcnEgKnJxKQ0KPj4+Pj4gK3sNCj4+Pj4+ICtzdHJ1Y3Qgc2NoZWRfZG9tYWluICpzZDsN
+Cj4+Pj4+ICtpbnQgY3B1ID0gY3B1X29mKHJxKTsNCj4+Pj4+ICsNCj4+Pj4+ICtyY3VfcmVhZF9s
+b2NrX3NjaGVkKCk7DQo+Pj4+PiArcmF3X3NwaW5fdW5sb2NrX2lycShycV9sb2NrcChycSkpOw0K
+Pj4+Pj4gK2Zvcl9lYWNoX2RvbWFpbihjcHUsIHNkKSB7DQo+Pj4+PiAraWYgKCEoc2QtPmZsYWdz
+ICYgU0RfTE9BRF9CQUxBTkNFKSkNCj4+Pj4+ICticmVhazsNCj4+Pj4+ICsNCj4+Pj4+ICtpZiAo
+bmVlZF9yZXNjaGVkKCkpDQo+Pj4+PiArYnJlYWs7DQo+Pj4+IElmIHJlc2NoZWRlZCBoZXJlLCB3
+ZSBtaXNzZWQgdGhlIGNoYW5jZSB0byBkbyBmdXJ0aGVyIGZvcmNlZC1uZXdpZGxlIGJhbGFuY2Us
+IA0KPj4+PiBhbmQgdGhlIGlkbGUtY29yZSBjb3VsZCBiZSBpZGxlIGZvciBhIGxvbmcgdGltZSwg
+YmVjYXVzZSBsYWNraW5nIG9mIHB1bGxpbmcgY2hhbmNlLg0KPj4+PiBDb3VsZCBpdCBiZSBwb3Nz
+aWJsZSB0byBhZGQgYSBuZXcgZm9yY2VkLW5ld2lkbGUgYmFsYW5jZSBjaGFuY2UgaW4gdGFza190
+aWNrX2lkbGU/DQo+Pj4+IHdoaWNoIGNvdWxkIG1ha2UgaXQgbW9yZSBlZmZpY2llbnQuDQo+Pj4g
+DQo+Pj4gVGhpcyBmbGFnIGluZGljYXRlcyB0aGVyZSBpcyBhbm90aGVyIHRocmVhZCBkZXNlcnZl
+cyB0byBydW4sIFNvIEkgZ3Vlc3MgdGhlIGNvcmUgd29uJ3QNCj4+PiBiZSBpZGxlIGZvciBhIGxv
+bmcgdGltZS4NCj4+PiANCj4+PiBUaGFua3MsDQo+Pj4gLUF1YnJleQ0KPj4gSW5kZWVkLCB0aGFu
+a3MgZm9yIHRoZSBleHBsYW5hdGlvbi4gOikNCj4+IA0KPj4+PiANCj4+Pj4+ICtpZiAoc3RlYWxf
+Y29va2llX3Rhc2soY3B1LCBzZCkpDQo+Pj4+PiArYnJlYWs7DQo+Pj4+PiArfQ0KPj4+Pj4gK3Jh
+d19zcGluX2xvY2tfaXJxKHJxX2xvY2twKHJxKSk7DQo+Pj4+PiArcmN1X3JlYWRfdW5sb2NrX3Nj
+aGVkKCk7DQo+Pj4+PiArfQ0KPj4+Pj4gKw0KPj4+Pj4gK3N0YXRpYyBERUZJTkVfUEVSX0NQVShz
+dHJ1Y3QgY2FsbGJhY2tfaGVhZCwgY29yZV9iYWxhbmNlX2hlYWQpOw0KPj4+Pj4gKw0KPj4+Pj4g
+K3ZvaWQgcXVldWVfY29yZV9iYWxhbmNlKHN0cnVjdCBycSAqcnEpDQo+Pj4+PiArew0KPj4+Pj4g
+K2lmICghc2NoZWRfY29yZV9lbmFibGVkKHJxKSkNCj4+Pj4+ICtyZXR1cm47DQo+Pj4+PiArDQo+
+Pj4+PiAraWYgKCFycS0+Y29yZS0+Y29yZV9jb29raWUpDQo+Pj4+PiArcmV0dXJuOw0KPj4+Pj4g
+Kw0KPj4+Pj4gK2lmICghcnEtPm5yX3J1bm5pbmcpIC8qIG5vdCBmb3JjZWQgaWRsZSAqLw0KPj4+
+Pj4gK3JldHVybjsNCj4+Pj4+ICsNCj4+Pj4+ICtxdWV1ZV9iYWxhbmNlX2NhbGxiYWNrKHJxLCAm
+cGVyX2NwdShjb3JlX2JhbGFuY2VfaGVhZCwgcnEtPmNwdSksIHNjaGVkX2NvcmVfYmFsYW5jZSk7
+DQo+Pj4+PiArfQ0KPj4+Pj4gKw0KPj4+Pj4gI2Vsc2UgLyogIUNPTkZJR19TQ0hFRF9DT1JFICov
+DQo+Pj4+PiANCj4+Pj4+IHN0YXRpYyBzdHJ1Y3QgdGFza19zdHJ1Y3QgKg0KPj4+Pj4gZGlmZiAt
+LWdpdCBhL2tlcm5lbC9zY2hlZC9pZGxlLmMgYi9rZXJuZWwvc2NoZWQvaWRsZS5jDQo+Pj4+PiBp
+bmRleCBhOGQ0MGZmYWIwOTcuLmRmZjZiYTIyMGVkNyAxMDA2NDQNCj4+Pj4+IC0tLSBhL2tlcm5l
+bC9zY2hlZC9pZGxlLmMNCj4+Pj4+ICsrKyBiL2tlcm5lbC9zY2hlZC9pZGxlLmMNCj4+Pj4+IEBA
+IC0zOTUsNiArMzk1LDcgQEAgc3RhdGljIHZvaWQgc2V0X25leHRfdGFza19pZGxlKHN0cnVjdCBy
+cSAqcnEsIHN0cnVjdCB0YXNrX3N0cnVjdCAqbmV4dCwgYm9vbCBmaXINCj4+Pj4+IHsNCj4+Pj4+
+IHVwZGF0ZV9pZGxlX2NvcmUocnEpOw0KPj4+Pj4gc2NoZWRzdGF0X2luYyhycS0+c2NoZWRfZ29p
+ZGxlKTsNCj4+Pj4+ICtxdWV1ZV9jb3JlX2JhbGFuY2UocnEpOw0KPj4+Pj4gfQ0KPj4+Pj4gDQo+
+Pj4+PiAjaWZkZWYgQ09ORklHX1NNUA0KPj4+Pj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9zY2hlZC9z
+Y2hlZC5oIGIva2VybmVsL3NjaGVkL3NjaGVkLmgNCj4+Pj4+IGluZGV4IDI5M2FhMWFlMDMwOC4u
+NDY0NTU5Njc2ZmQyIDEwMDY0NA0KPj4+Pj4gLS0tIGEva2VybmVsL3NjaGVkL3NjaGVkLmgNCj4+
+Pj4+ICsrKyBiL2tlcm5lbC9zY2hlZC9zY2hlZC5oDQo+Pj4+PiBAQCAtMTA4OSw2ICsxMDg5LDgg
+QEAgc3RhdGljIGlubGluZSByYXdfc3BpbmxvY2tfdCAqcnFfbG9ja3Aoc3RydWN0IHJxICpycSkN
+Cj4+Pj4+IGJvb2wgY2ZzX3ByaW9fbGVzcyhzdHJ1Y3QgdGFza19zdHJ1Y3QgKmEsIHN0cnVjdCB0
+YXNrX3N0cnVjdCAqYik7DQo+Pj4+PiB2b2lkIHNjaGVkX2NvcmVfYWRqdXN0X3NpYmxpbmdfdnJ1
+bnRpbWUoaW50IGNwdSwgYm9vbCBjb3Jlc2NoZWRfZW5hYmxlZCk7DQo+Pj4+PiANCj4+Pj4+ICtl
+eHRlcm4gdm9pZCBxdWV1ZV9jb3JlX2JhbGFuY2Uoc3RydWN0IHJxICpycSk7DQo+Pj4+PiArDQo+
+Pj4+PiAjZWxzZSAvKiAhQ09ORklHX1NDSEVEX0NPUkUgKi8NCj4+Pj4+IA0KPj4+Pj4gc3RhdGlj
+IGlubGluZSBib29sIHNjaGVkX2NvcmVfZW5hYmxlZChzdHJ1Y3QgcnEgKnJxKQ0KPj4+Pj4gQEAg
+LTExMDEsNiArMTEwMywxMCBAQCBzdGF0aWMgaW5saW5lIHJhd19zcGlubG9ja190ICpycV9sb2Nr
+cChzdHJ1Y3QgcnEgKnJxKQ0KPj4+Pj4gcmV0dXJuICZycS0+X19sb2NrOw0KPj4+Pj4gfQ0KPj4+
+Pj4gDQo+Pj4+PiArc3RhdGljIGlubGluZSB2b2lkIHF1ZXVlX2NvcmVfYmFsYW5jZShzdHJ1Y3Qg
+cnEgKnJxKQ0KPj4+Pj4gK3sNCj4+Pj4+ICt9DQo+Pj4+PiArDQo+Pj4+PiAjZW5kaWYgLyogQ09O
+RklHX1NDSEVEX0NPUkUgKi8NCj4+Pj4+IA0KPj4+Pj4gI2lmZGVmIENPTkZJR19TQ0hFRF9TTVQN
+Cj4+Pj4+IC0tIA0KPj4+Pj4gMi4xNy4xDQo+PiANCj4gDQo+IA0KDQo=
