@@ -2,221 +2,109 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EE4C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 982C1207EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2140D20709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:38:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BFCoaiX7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgGTGhC (ORCPT
+        id S1726841AbgGTGim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 02:37:02 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:33360 "EHLO
-        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbgGTGhC (ORCPT
+        Mon, 20 Jul 2020 02:38:42 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:4452 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbgGTGil (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:37:02 -0400
-IronPort-SDR: PW3PFm9GuydKmYMWns7DxNIfl9M8JrVSW1bTtIuMhEmOaV9GGRE7NaSQjwFQDbRO7nIRO5s3HI
- so3B1yzxR9h2QIPYFNSm7AQauoxVRZAQrWNnVdLSMvLnKHKM+Lm+HEwXZY9sulGHNpjlZA2cqg
- Q3+bBnc9qzVnuKuLq3MhnqLA6J4x6h8mjLq2uwTmP4FZDhiQwoqiWp0jEaGg9x4Mnpqjvdz8E+
- BzY+JgMyGnTw4P+7KlCOZsb3X3w1qqRTLlw+2A+qrbdQLJ8O5ZNoCRH+xccaf1LpN+Bwl+0F6v
- XXA=
-X-IronPort-AV: E=Sophos;i="5.75,374,1589266800"; 
-   d="scan'208";a="47226986"
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by labrats.qualcomm.com with ESMTP; 19 Jul 2020 23:37:00 -0700
-Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 19 Jul 2020 23:36:59 -0700
-Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
-        id ADCDB22DA5; Sun, 19 Jul 2020 23:36:59 -0700 (PDT)
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 8/8] scsi: ufs: Fix a racing problem btw error handler and runtime PM ops
-Date:   Sun, 19 Jul 2020 23:35:55 -0700
-Message-Id: <1595226956-7779-9-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595226956-7779-1-git-send-email-cang@codeaurora.org>
-References: <1595226956-7779-1-git-send-email-cang@codeaurora.org>
+        Mon, 20 Jul 2020 02:38:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1595227122; x=1626763122;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=R4jL1jut1jCNCp3l/7tMkBB8YQEOUGJTQevNPAD7i4k=;
+  b=BFCoaiX7WgbVIdrZjbbjCZpkDdsOE5t6XMwpXyoeyK4KhPXl3vXLU2ne
+   pzWEQrbyZXSS5JjtjruOjNh14WJzL11UM7C0V/qAdHhV6EmHlL0yLkF7W
+   40i/SMv4fSxhaeFKH8Zz08Ds23Yh933CKgUYkpHMKIAItcSjIXVKnqRHk
+   g=;
+IronPort-SDR: dtMT/GYKR2F/RvGS/GvaTaC9Rlgl9C1tV0iVshfCmR0b4ZErGPMvd8JgrPDiEYKKfTHGN0oYrR
+ d08AxqErckiw==
+X-IronPort-AV: E=Sophos;i="5.75,374,1589241600"; 
+   d="scan'208";a="59738372"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-cc689b93.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 20 Jul 2020 06:38:39 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-cc689b93.us-west-2.amazon.com (Postfix) with ESMTPS id 3EC20120F02;
+        Mon, 20 Jul 2020 06:38:38 +0000 (UTC)
+Received: from EX13D28EUC001.ant.amazon.com (10.43.164.4) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 20 Jul 2020 06:38:37 +0000
+Received: from ua97a68a4e7db56.ant.amazon.com.amazon.com (10.43.162.221) by
+ EX13D28EUC001.ant.amazon.com (10.43.164.4) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 20 Jul 2020 06:38:32 +0000
+References: <20200720025309.18597-1-wanghai38@huawei.com> <f31ec3e646c9ba73c09f821a173c20110346deab.camel@perches.com>
+User-agent: mu4e 1.4.10; emacs 26.3
+From:   Shay Agroskin <shayagr@amazon.com>
+To:     Joe Perches <joe@perches.com>
+CC:     Wang Hai <wanghai38@huawei.com>, <gtzalik@amazon.com>,
+        <saeedb@amazon.com>, <zorik@amazon.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <sameehj@amazon.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v2] net: ena: Fix using plain integer as NULL pointer in ena_init_napi_in_range
+In-Reply-To: <f31ec3e646c9ba73c09f821a173c20110346deab.camel@perches.com>
+Date:   Mon, 20 Jul 2020 09:38:26 +0300
+Message-ID: <pj41zllfjebsil.fsf@ua97a68a4e7db56.ant.amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed
+X-Originating-IP: [10.43.162.221]
+X-ClientProxiedBy: EX13D13UWB003.ant.amazon.com (10.43.161.233) To
+ EX13D28EUC001.ant.amazon.com (10.43.164.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current IRQ handler blocks scsi requests before scheduling eh_work, when
-error handler calls pm_runtime_get_sync, if ufshcd_suspend/resume sends a
-scsi cmd, most likely the SSU cmd, since scsi requests are blocked,
-pm_runtime_get_sync() will never return because ufshcd_suspend/reusme is
-blocked by the scsi cmd. Some changes and code re-arrangement can be made
-to resolve it.
 
-o In queuecommand path, hba->ufshcd_state check and ufshcd_send_command
-  should stay into the same spin lock. This is to make sure that no more
-  commands leak into doorbell after hba->ufshcd_state is changed.
-o Don't block scsi requests before scheduling eh_work, let error handler
-  block scsi requests when it is ready to start error recovery.
-o Don't let scsi layer keep requeuing the scsi cmds sent from hba runtime
-  PM ops, let them pass or fail them. Let them pass if eh_work is scheduled
-  due to non-fatal errors. Fail them fail if eh_work is scheduled due to
-  fatal errors, otherwise the cmds may eventually time out since UFS is in
-  bad state, which gets error handler blocked for too long. If we fail the
-  scsi cmds sent from hba runtime PM ops, hba runtime PM ops fails too, but
-  it does not hurt since error handler can recover hba runtime PM error.
+Joe Perches <joe@perches.com> writes:
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 84 +++++++++++++++++++++++++++--------------------
- 1 file changed, 49 insertions(+), 35 deletions(-)
+> On Mon, 2020-07-20 at 10:53 +0800, Wang Hai wrote:
+>> Fix sparse build warning:
+>> 
+>> drivers/net/ethernet/amazon/ena/ena_netdev.c:2193:34: warning:
+>>  Using plain integer as NULL pointer
+> []
+>> diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c 
+>> b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+> []
+>> @@ -2190,11 +2190,10 @@ static void 
+>> ena_del_napi_in_range(struct ena_adapter *adapter,
+>>  static void ena_init_napi_in_range(struct ena_adapter 
+>>  *adapter,
+>>  				   int first_index, int count)
+>>  {
+>> -	struct ena_napi *napi = {0};
+>>  	int i;
+>>  
+>>  	for (i = first_index; i < first_index + count; i++) {
+>> -		napi = &adapter->ena_napi[i];
+>> +		struct ena_napi *napi = &adapter->ena_napi[i];
+>>  
+>>  		netif_napi_add(adapter->netdev,
+>>  			       &adapter->ena_napi[i].napi,
+>
+> Another possible change is to this statement:
+>
+>  		netif_napi_add(adapter->netdev,
+> 			       &napi->napi,
+> 			       etc...);
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index ae78d5d..e9d8c4f 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -126,7 +126,8 @@ enum {
- 	UFSHCD_STATE_RESET,
- 	UFSHCD_STATE_ERROR,
- 	UFSHCD_STATE_OPERATIONAL,
--	UFSHCD_STATE_EH_SCHEDULED,
-+	UFSHCD_STATE_EH_SCHEDULED_FATAL,
-+	UFSHCD_STATE_EH_SCHEDULED_NON_FATAL,
- };
- 
- /* UFSHCD error handling flags */
-@@ -2515,34 +2516,6 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 	if (!down_read_trylock(&hba->clk_scaling_lock))
- 		return SCSI_MLQUEUE_HOST_BUSY;
- 
--	spin_lock_irqsave(hba->host->host_lock, flags);
--	switch (hba->ufshcd_state) {
--	case UFSHCD_STATE_OPERATIONAL:
--		break;
--	case UFSHCD_STATE_EH_SCHEDULED:
--	case UFSHCD_STATE_RESET:
--		err = SCSI_MLQUEUE_HOST_BUSY;
--		goto out_unlock;
--	case UFSHCD_STATE_ERROR:
--		set_host_byte(cmd, DID_ERROR);
--		cmd->scsi_done(cmd);
--		goto out_unlock;
--	default:
--		dev_WARN_ONCE(hba->dev, 1, "%s: invalid state %d\n",
--				__func__, hba->ufshcd_state);
--		set_host_byte(cmd, DID_BAD_TARGET);
--		cmd->scsi_done(cmd);
--		goto out_unlock;
--	}
--
--	/* if error handling is in progress, don't issue commands */
--	if (ufshcd_eh_in_progress(hba)) {
--		set_host_byte(cmd, DID_ERROR);
--		cmd->scsi_done(cmd);
--		goto out_unlock;
--	}
--	spin_unlock_irqrestore(hba->host->host_lock, flags);
--
- 	hba->req_abort_count = 0;
- 
- 	err = ufshcd_hold(hba, true);
-@@ -2578,11 +2551,50 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 	/* Make sure descriptors are ready before ringing the doorbell */
- 	wmb();
- 
--	/* issue command to the controller */
- 	spin_lock_irqsave(hba->host->host_lock, flags);
-+	switch (hba->ufshcd_state) {
-+	case UFSHCD_STATE_OPERATIONAL:
-+	case UFSHCD_STATE_EH_SCHEDULED_NON_FATAL:
-+		break;
-+	case UFSHCD_STATE_EH_SCHEDULED_FATAL:
-+		/*
-+		 * If we are here, eh_work is either scheduled or running.
-+		 * Before eh_work sets ufshcd_state to STATE_RESET, it flushes
-+		 * runtime PM ops by calling pm_runtime_get_sync(). If a scsi
-+		 * cmd, e.g. the SSU cmd, is sent by PM ops, it can never be
-+		 * finished if we let SCSI layer keep retrying it, which gets
-+		 * eh_work stuck forever. Neither can we let it pass, because
-+		 * ufs now is not in good status, so the SSU cmd may eventually
-+		 * time out, blocking eh_work for too long. So just let it fail.
-+		 */
-+		if (hba->pm_op_in_progress) {
-+			hba->force_reset = true;
-+			set_host_byte(cmd, DID_BAD_TARGET);
-+			goto out_compl_cmd;
-+		}
-+	case UFSHCD_STATE_RESET:
-+		err = SCSI_MLQUEUE_HOST_BUSY;
-+		goto out_compl_cmd;
-+	case UFSHCD_STATE_ERROR:
-+		set_host_byte(cmd, DID_ERROR);
-+		goto out_compl_cmd;
-+	default:
-+		dev_WARN_ONCE(hba->dev, 1, "%s: invalid state %d\n",
-+				__func__, hba->ufshcd_state);
-+		set_host_byte(cmd, DID_BAD_TARGET);
-+		goto out_compl_cmd;
-+	}
- 	ufshcd_send_command(hba, tag);
--out_unlock:
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
-+	goto out;
-+
-+out_compl_cmd:
-+	scsi_dma_unmap(lrbp->cmd);
-+	lrbp->cmd = NULL;
-+	spin_unlock_irqrestore(hba->host->host_lock, flags);
-+	ufshcd_release(hba);
-+	if (!err)
-+		cmd->scsi_done(cmd);
- out:
- 	up_read(&hba->clk_scaling_lock);
- 	return err;
-@@ -5553,7 +5565,11 @@ static inline void ufshcd_schedule_eh_work(struct ufs_hba *hba)
- {
- 	/* handle fatal errors only when link is not in error state */
- 	if (hba->ufshcd_state != UFSHCD_STATE_ERROR) {
--		hba->ufshcd_state = UFSHCD_STATE_EH_SCHEDULED;
-+		if (hba->force_reset || ufshcd_is_link_broken(hba) ||
-+		    ufshcd_is_saved_err_fatal(hba))
-+			hba->ufshcd_state = UFSHCD_STATE_EH_SCHEDULED_FATAL;
-+		else
-+			hba->ufshcd_state = UFSHCD_STATE_EH_SCHEDULED_NON_FATAL;
- 		queue_work(hba->eh_wq, &hba->eh_work);
- 	}
- }
-@@ -5658,6 +5674,7 @@ static void ufshcd_err_handler(struct work_struct *work)
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
- 	ufshcd_err_handler_prepare(hba);
- 	spin_lock_irqsave(hba->host->host_lock, flags);
-+	ufshcd_scsi_block_requests(hba);
- 	hba->ufshcd_state = UFSHCD_STATE_RESET;
- 
- 	/* Complete requests that have door-bell cleared by h/w */
-@@ -5911,9 +5928,6 @@ static irqreturn_t ufshcd_check_errors(struct ufs_hba *hba)
- 		 */
- 		hba->saved_err |= hba->errors;
- 		hba->saved_uic_err |= hba->uic_error;
--
--		/* block commands from scsi mid-layer */
--		ufshcd_scsi_block_requests(hba);
- 		ufshcd_schedule_eh_work(hba);
- 		retval |= IRQ_HANDLED;
- 	}
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Yup, missed that myself. Wang, if you don't mind please apply 
+Joe's change as well.
 
+Thanks, Shay
