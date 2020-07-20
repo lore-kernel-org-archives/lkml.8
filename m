@@ -2,115 +2,132 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0AEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 453B0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 346552070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DEE2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:48:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRkt7CJk"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="LgfaTu3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbgGTLrt (ORCPT
+        id S1728657AbgGTLs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 07:47:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50384 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728524AbgGTLrt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 07:47:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595245667;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ynpLds+mNFt1PnIoPvN1ltsQTgb/FhKjLQm67olPb38=;
-        b=IRkt7CJkY7uEqCpJuW+TcSw+7pUaDsGmoLB402mxtVxlp5xBLVtSCqSMZTWM7OaipP1Th3
-        0aDtZt205sxH6hv/vPGKkPk0SRQUoD29WIMI8DTLuZsHn3mJR07qwaXbNWwi++fgegbUhU
-        bbMrIx2W5pfh1EBcHIdDsYD8hs34154=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-1-zbtqdPoRO16Rp1Y661hzMg-1; Mon, 20 Jul 2020 07:47:45 -0400
-X-MC-Unique: zbtqdPoRO16Rp1Y661hzMg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 52DBE18C63C0;
-        Mon, 20 Jul 2020 11:47:44 +0000 (UTC)
-Received: from [10.10.114.255] (ovpn-114-255.rdu2.redhat.com [10.10.114.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B39112DE64;
-        Mon, 20 Jul 2020 11:47:43 +0000 (UTC)
-Subject: Re: [PATCH] Revert "kbuild: use -flive-patching when CONFIG_LIVEPATCH
- is enabled"
-To:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        live-patching@vger.kernel.org
+        Mon, 20 Jul 2020 07:48:29 -0400
+Received: from mout.web.de ([212.227.15.3]:36859 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728469AbgGTLs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 07:48:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1595245698;
+        bh=B9YFGKXCwbpCJaQ7rDkbGRRvr272ma/yhkp2sjxpSeo=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=LgfaTu3lVPIlzmS5JPiviQcuIglycwKxzcEgvfA1je3siuYEbOMbGcZ6Ivz4/fOMd
+         4th7IaAnAgDU9GPgaknJ5WS1DkHsvHczpYq3rZzO/1QTCupk43weFFB/5eqISKxBts
+         FpqOXdhnh4DSEverjurGdzYgKr4DeKyPD7bBN0qE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.85.87]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MN43c-1jvJUY1toe-006bma; Mon, 20
+ Jul 2020 13:48:18 +0200
+To:     hexin.op@bytedance.com, Liu Qi <liuqi.16@bytedance.com>,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
 Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-References: <696262e997359666afa053fe7d1a9fb2bb373964.1595010490.git.jpoimboe@redhat.com>
- <fc7d4932-a043-1adc-fd9b-96211c508f64@redhat.com>
- <9c53c755-a497-25f0-40ae-7e435be3269b@linux.vnet.ibm.com>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <940c041f-84e8-337b-ae98-1086119ddf9a@redhat.com>
-Date:   Mon, 20 Jul 2020 07:47:43 -0400
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: Re: [PATCH] drm/virtio: Fix memory leak in
+ virtio_gpu_execbuffer_ioctl()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <17aea294-f51c-f2b0-bfe3-a47261e2039b@web.de>
+Date:   Mon, 20 Jul 2020 13:48:15 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <9c53c755-a497-25f0-40ae-7e435be3269b@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:8UASvadiCjLpcNDtHhCbZpI6TcIU0yEkxWb0gWTZnrImQFoq3dd
+ MNWueY1Eu4wlcxbeM9O8Mv3yfuAePAa9+HFnccnBnuY60sz9Ymn3ndfNhvu08Qf9lO8JPpO
+ /CmqgPJ0Q0qt4oG5DIfruTDRYRqjsJSUWisIjhCu/TSXDeCfc0W4yO4KGaBTnLM5HzScxJg
+ 60RzpOKDDifuB8hS8Sm2w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xM55sP9bbik=:bbsFmXYbgmZwbrLmx6n3pX
+ gsmvrKoJyheKqtK1yL2VSTygH5GqfPFLzOg3jMRKeuP1W7urJ04FpvPtTmWwOU2kGWztgAdBw
+ YwhSwaPW4jkG5rvtkrS/zKRuZfGIwiWXBBNY1wwuxMn+Vf9TnjRYjY5mrwR5TXblKnwTqgnkw
+ 1xuG4ei4iMpjfWSSNBDHQ+GqceZmhBHSEkJDy/HssuWKbuFbVXNTFtJpVJokin1E1J5TbPINc
+ QoelQkAhO7VDO1r3AeMkRpEXfUCE4kUshJmRsdq6ol7rhnmwG4/57kBEwQ46pOAwJRUfk/qfj
+ I2BOa4AiHPmqr/BD+4+nQyb+wLj8krBBwhMQmts0Pf+u2+wbxp3nAyPubltiBKkUM3Sj5V4Jj
+ KCIhiB+3cXbhqT6HMyDxYrso2KzYHPo7GEItBtQZtdG2gnKmrvRXBrnO+VjroridB8kjyaOsm
+ TzxqOSJNfwbsxX64Jp85fFXVCU/vP1xKgmrQV9rJ2URBGKu4vzTzhdeNvG8R6TEuUsY6gijsQ
+ zpkSLxwnPjR2RpowzV2fRmG+D/xZdaPJ3+5bHNAI6aop9LV3zG5C/CwDsM/xLWJyaUDShVe+j
+ zDs0bh0lQetNULMvqk1Cyo400KrSUK0504eMEzL4njruM98lbmU+pahb0fo8XXSSTQ4OLWq1q
+ pLlDr1ErcGs/rUMgLLAQR54Up5irSCaIBHc1j9tk8bTJZX6Upkz+iABYeXae0X0yvclzlwGkh
+ RjTf+QWvuzUMn7o1xE53oVoPHVb+ikNUYud2sfSPyxC0XC2pg+kyBr1XNTwluyfkPwG3mpyFl
+ tzhAkf1bmcPrx7r58xTPdteWu9FUQrjPSzDn7QuVceD1llP8yk3zMHPdfSQHa5qiKiMKsUAsb
+ eRmqtcp2R43IepUkwpfnFrzUtsNNbja+O0hseQSpjadYmv+LByU67fnkouiGT1PYyO51iBwYC
+ pTghpVMvOucJdMguRm+mjqIBPEf9z6R0nnerfN7EhvtWgd13TMfncgIZH/+AayusEAcNsX/Fo
+ FAeewdJ742Vg9hvTKEUl6JZQ1OPMsnveyDYWHlnEW6Wme0dGJYE8o9bIPw8MTUZjeImeGd1zd
+ kUO0rDEUAmStD0hMGgurwmE8hdm619Y5xBg9dmi0rN8tSGbt8koI44frT5Hqi67HUce+LJ8Yp
+ hAMs6F1p0Ayc63r9wtZ2ggKrPFmObPnh1+yIM/wx7uN2ilN6y1s0WR5dJBN9R3SvbD+gph99r
+ YDtmAOoGzFm9RfxCndEIlaGeH2gWfRN8iLfEEWQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/20/20 4:50 AM, Kamalesh Babulal wrote:
-> On 20/07/20 9:05 am, Joe Lawrence wrote:
->> On 7/17/20 2:29 PM, Josh Poimboeuf wrote:
->>> Use of the new -flive-patching flag was introduced with the following
->>> commit:
->>>
->>>     43bd3a95c98e ("kbuild: use -flive-patching when CONFIG_LIVEPATCH is enabled")
->>>
->>> This flag has several drawbacks:
->>>
->>> [ ... snip ... ]
->>>
->>> - While there *is* a distro which relies on this flag for their distro
->>>     livepatch module builds, there's not a publicly documented way to
->>>     create safe livepatch modules with it.  Its use seems to be based on
->>>     tribal knowledge.  It serves no benefit to those who don't know how to
->>>     use it.
->>>
->>>     (In fact, I believe the current livepatch documentation and samples
->>>     are misleading and dangerous, and should be corrected.  Or at least
->>>     amended with a disclaimer.  But I don't feel qualified to make such
->>>     changes.)
->>
->> FWIW, I'm not exactly qualified to document source-based creation either, however I have written a few of the samples and obviously the kselftest modules.
->>
->> The samples should certainly include a disclaimer (ie, they are only for API demonstration purposes!) and eventually it would be great if the kselftest modules could guarantee their safety as well.  I don't know quite yet how we can automate that, but perhaps some kind of post-build sanity check could verify that they are in fact patching what they intend to patch.
->>
->> As for a more general, long-form warning about optimizations, I grabbed Miroslav's LPC slides from a few years back and poked around at some IPA-optimized disassembly... Here are my notes that attempt to capture some common cases:
->>
->> http://file.bos.redhat.com/~jolawren/klp-compiler-notes/livepatch/compiler-considerations.html
-> 
-> Hi Joe,
-> 
-> The notes link you shared is not accessible.
-> 
+* I suggest to add a change description.
 
-Oops, lets try that again:
+* Is =E2=80=9Chexin.op=E2=80=9D a real name?
 
-http://people.redhat.com/~jolawren/klp-compiler-notes/livepatch/compiler-considerations.html
-
--- Joe
-
+Regards,
+Markus
