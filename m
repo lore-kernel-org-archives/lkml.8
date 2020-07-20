@@ -2,344 +2,103 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEA5C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6684DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1045722B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4408322BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595250243;
+	bh=IrHumJNNwPA5DDR5b4RIKODfqPUkFXljRiSqzAuKtGw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K+epynqBFrN2Fj3/5hctW7w5E17e4VBOvm0zCTgIcrEN7YM0xlFC8cl4n0eG2K3LI
+	 TFiuGUZnO/punv8omRL+XpppFjk8CAKv0umJPJQl5oxko6MdlNiHnR0cYuUnhmbg8t
+	 OpIT1uJpsauLYqvQLVkN9SakJCY22cnbkhseeg/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgGTNCt (ORCPT
+        id S1728236AbgGTNEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:02:49 -0400
-Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:40093 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728296AbgGTNCs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 09:02:48 -0400
-Received: from localhost.localdomain ([93.22.38.146])
-        by mwinf5d51 with ME
-        id 5R2j2300339BigV03R2jDm; Mon, 20 Jul 2020 15:02:45 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 20 Jul 2020 15:02:45 +0200
-X-ME-IP: 93.22.38.146
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     kuba@kernel.org, davem@davemloft.net, f.fainelli@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] r6040: switch from 'pci_' to 'dma_' API
-Date:   Mon, 20 Jul 2020 15:02:42 +0200
-Message-Id: <20200720130242.366855-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Mon, 20 Jul 2020 09:04:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727844AbgGTNEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 09:04:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D53C207FC;
+        Mon, 20 Jul 2020 13:04:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595250241;
+        bh=IrHumJNNwPA5DDR5b4RIKODfqPUkFXljRiSqzAuKtGw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tNkIcLz0gZ/B1LVcyqZLazYMATcvmu5gT0QMb0tiDqsxFc4v6SZXGw1VlZaqhQy9n
+         twMPX7AlSdky7q3P0paxzBfuPK9vj4P/udpzlSxrjfk0Yavud541HD/KKlapC5JXp5
+         XA9a3VYcWoV7x9fzL87yw3Qbsh0i6d+an7eaxAe0=
+Date:   Mon, 20 Jul 2020 15:04:11 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL VIRTUAL MACHINE FOR ARM64 (KVM/arm64)" 
+        <kvmarm@lists.cs.columbia.edu>
+Subject: Re: [PATCH stable v4.9 v2] arm64: entry: Place an SB sequence
+ following an ERET instruction
+Message-ID: <20200720130411.GB494210@kroah.com>
+References: <20200709195034.15185-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709195034.15185-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
+On Thu, Jul 09, 2020 at 12:50:23PM -0700, Florian Fainelli wrote:
+> From: Will Deacon <will.deacon@arm.com>
+> 
+> commit 679db70801da9fda91d26caf13bf5b5ccc74e8e8 upstream
+> 
+> Some CPUs can speculate past an ERET instruction and potentially perform
+> speculative accesses to memory before processing the exception return.
+> Since the register state is often controlled by a lower privilege level
+> at the point of an ERET, this could potentially be used as part of a
+> side-channel attack.
+> 
+> This patch emits an SB sequence after each ERET so that speculation is
+> held up on exception return.
+> 
+> Signed-off-by: Will Deacon <will.deacon@arm.com>
+> [florian: Adjust hyp-entry.S to account for the label
+>  added change to hyp/entry.S]
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+> Changes in v2:
+> 
+> - added missing hunk in hyp/entry.S per Will's feedback
 
-The patch has been generated with the coccinelle script below and has been
-hand modified to replace GFP_ with a correct flag.
-It has been compile tested.
+What about 4.19.y and 4.14.y trees?  I can't take something for 4.9.y
+and then have a regression if someone moves to a newer release, right?
 
-When memory is allocated in 'r6040_open()', GFP_KERNEL can be used because
-this is a net_device_ops' 'ndo_open' function. This function is protected
-by the rtnl_lock() semaphore. So only a mutex is used and no spin_lock is
-acquired.
+thanks,
 
-
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
-
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
-
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
-
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
-
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
----
- drivers/net/ethernet/rdc/r6040.c | 64 +++++++++++++++++---------------
- 1 file changed, 34 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/net/ethernet/rdc/r6040.c b/drivers/net/ethernet/rdc/r6040.c
-index f5ecc410ff85..7c74318620b1 100644
---- a/drivers/net/ethernet/rdc/r6040.c
-+++ b/drivers/net/ethernet/rdc/r6040.c
-@@ -262,9 +262,9 @@ static void r6040_free_txbufs(struct net_device *dev)
- 
- 	for (i = 0; i < TX_DCNT; i++) {
- 		if (lp->tx_insert_ptr->skb_ptr) {
--			pci_unmap_single(lp->pdev,
--				le32_to_cpu(lp->tx_insert_ptr->buf),
--				MAX_BUF_SIZE, PCI_DMA_TODEVICE);
-+			dma_unmap_single(&lp->pdev->dev,
-+					 le32_to_cpu(lp->tx_insert_ptr->buf),
-+					 MAX_BUF_SIZE, DMA_TO_DEVICE);
- 			dev_kfree_skb(lp->tx_insert_ptr->skb_ptr);
- 			lp->tx_insert_ptr->skb_ptr = NULL;
- 		}
-@@ -279,9 +279,9 @@ static void r6040_free_rxbufs(struct net_device *dev)
- 
- 	for (i = 0; i < RX_DCNT; i++) {
- 		if (lp->rx_insert_ptr->skb_ptr) {
--			pci_unmap_single(lp->pdev,
--				le32_to_cpu(lp->rx_insert_ptr->buf),
--				MAX_BUF_SIZE, PCI_DMA_FROMDEVICE);
-+			dma_unmap_single(&lp->pdev->dev,
-+					 le32_to_cpu(lp->rx_insert_ptr->buf),
-+					 MAX_BUF_SIZE, DMA_FROM_DEVICE);
- 			dev_kfree_skb(lp->rx_insert_ptr->skb_ptr);
- 			lp->rx_insert_ptr->skb_ptr = NULL;
- 		}
-@@ -335,9 +335,10 @@ static int r6040_alloc_rxbufs(struct net_device *dev)
- 			goto err_exit;
- 		}
- 		desc->skb_ptr = skb;
--		desc->buf = cpu_to_le32(pci_map_single(lp->pdev,
--					desc->skb_ptr->data,
--					MAX_BUF_SIZE, PCI_DMA_FROMDEVICE));
-+		desc->buf = cpu_to_le32(dma_map_single(&lp->pdev->dev,
-+						       desc->skb_ptr->data,
-+						       MAX_BUF_SIZE,
-+						       DMA_FROM_DEVICE));
- 		desc->status = DSC_OWNER_MAC;
- 		desc = desc->vndescp;
- 	} while (desc != lp->rx_ring);
-@@ -484,14 +485,14 @@ static int r6040_close(struct net_device *dev)
- 
- 	/* Free Descriptor memory */
- 	if (lp->rx_ring) {
--		pci_free_consistent(pdev,
--				RX_DESC_SIZE, lp->rx_ring, lp->rx_ring_dma);
-+		dma_free_coherent(&pdev->dev, RX_DESC_SIZE, lp->rx_ring,
-+				  lp->rx_ring_dma);
- 		lp->rx_ring = NULL;
- 	}
- 
- 	if (lp->tx_ring) {
--		pci_free_consistent(pdev,
--				TX_DESC_SIZE, lp->tx_ring, lp->tx_ring_dma);
-+		dma_free_coherent(&pdev->dev, TX_DESC_SIZE, lp->tx_ring,
-+				  lp->tx_ring_dma);
- 		lp->tx_ring = NULL;
- 	}
- 
-@@ -544,8 +545,8 @@ static int r6040_rx(struct net_device *dev, int limit)
- 
- 		/* Do not count the CRC */
- 		skb_put(skb_ptr, descptr->len - 4);
--		pci_unmap_single(priv->pdev, le32_to_cpu(descptr->buf),
--					MAX_BUF_SIZE, PCI_DMA_FROMDEVICE);
-+		dma_unmap_single(&priv->pdev->dev, le32_to_cpu(descptr->buf),
-+				 MAX_BUF_SIZE, DMA_FROM_DEVICE);
- 		skb_ptr->protocol = eth_type_trans(skb_ptr, priv->dev);
- 
- 		/* Send to upper layer */
-@@ -555,9 +556,10 @@ static int r6040_rx(struct net_device *dev, int limit)
- 
- 		/* put new skb into descriptor */
- 		descptr->skb_ptr = new_skb;
--		descptr->buf = cpu_to_le32(pci_map_single(priv->pdev,
--						descptr->skb_ptr->data,
--					MAX_BUF_SIZE, PCI_DMA_FROMDEVICE));
-+		descptr->buf = cpu_to_le32(dma_map_single(&priv->pdev->dev,
-+							  descptr->skb_ptr->data,
-+							  MAX_BUF_SIZE,
-+							  DMA_FROM_DEVICE));
- 
- next_descr:
- 		/* put the descriptor back to the MAC */
-@@ -597,8 +599,8 @@ static void r6040_tx(struct net_device *dev)
- 		dev->stats.tx_packets++;
- 		dev->stats.tx_bytes += skb_ptr->len;
- 
--		pci_unmap_single(priv->pdev, le32_to_cpu(descptr->buf),
--			skb_ptr->len, PCI_DMA_TODEVICE);
-+		dma_unmap_single(&priv->pdev->dev, le32_to_cpu(descptr->buf),
-+				 skb_ptr->len, DMA_TO_DEVICE);
- 		/* Free buffer */
- 		dev_kfree_skb(skb_ptr);
- 		descptr->skb_ptr = NULL;
-@@ -750,14 +752,16 @@ static int r6040_open(struct net_device *dev)
- 
- 	/* Allocate Descriptor memory */
- 	lp->rx_ring =
--		pci_alloc_consistent(lp->pdev, RX_DESC_SIZE, &lp->rx_ring_dma);
-+		dma_alloc_coherent(&lp->pdev->dev, RX_DESC_SIZE,
-+				   &lp->rx_ring_dma, GFP_KERNEL);
- 	if (!lp->rx_ring) {
- 		ret = -ENOMEM;
- 		goto err_free_irq;
- 	}
- 
- 	lp->tx_ring =
--		pci_alloc_consistent(lp->pdev, TX_DESC_SIZE, &lp->tx_ring_dma);
-+		dma_alloc_coherent(&lp->pdev->dev, TX_DESC_SIZE,
-+				   &lp->tx_ring_dma, GFP_KERNEL);
- 	if (!lp->tx_ring) {
- 		ret = -ENOMEM;
- 		goto err_free_rx_ring;
-@@ -773,11 +777,11 @@ static int r6040_open(struct net_device *dev)
- 	return 0;
- 
- err_free_tx_ring:
--	pci_free_consistent(lp->pdev, TX_DESC_SIZE, lp->tx_ring,
--			lp->tx_ring_dma);
-+	dma_free_coherent(&lp->pdev->dev, TX_DESC_SIZE, lp->tx_ring,
-+			  lp->tx_ring_dma);
- err_free_rx_ring:
--	pci_free_consistent(lp->pdev, RX_DESC_SIZE, lp->rx_ring,
--			lp->rx_ring_dma);
-+	dma_free_coherent(&lp->pdev->dev, RX_DESC_SIZE, lp->rx_ring,
-+			  lp->rx_ring_dma);
- err_free_irq:
- 	free_irq(dev->irq, dev);
- out:
-@@ -811,8 +815,8 @@ static netdev_tx_t r6040_start_xmit(struct sk_buff *skb,
- 	descptr = lp->tx_insert_ptr;
- 	descptr->len = skb->len;
- 	descptr->skb_ptr = skb;
--	descptr->buf = cpu_to_le32(pci_map_single(lp->pdev,
--		skb->data, skb->len, PCI_DMA_TODEVICE));
-+	descptr->buf = cpu_to_le32(dma_map_single(&lp->pdev->dev, skb->data,
-+						  skb->len, DMA_TO_DEVICE));
- 	descptr->status = DSC_OWNER_MAC;
- 
- 	skb_tx_timestamp(skb);
-@@ -1029,12 +1033,12 @@ static int r6040_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto err_out;
- 
- 	/* this should always be supported */
--	err = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
-+	err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
- 	if (err) {
- 		dev_err(&pdev->dev, "32-bit PCI DMA addresses not supported by the card\n");
- 		goto err_out_disable_dev;
- 	}
--	err = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
-+	err = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
- 	if (err) {
- 		dev_err(&pdev->dev, "32-bit PCI DMA addresses not supported by the card\n");
- 		goto err_out_disable_dev;
--- 
-2.25.1
-
+greg k-h
