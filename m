@@ -2,107 +2,159 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1389AC433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDF1C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3150206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ieVgzSIF"
+	by mail.kernel.org (Postfix) with ESMTP id D8C5B2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262568;
+	bh=3KRZcieEP6v8AtuNQIAdBlVRggsZqQwLO0e1d34e/YQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=s0uAz37s7gIkWCC8lpvS7oXdJZKHbAspvxv2dYVO//fvGUyxHmBjoIkMytSvH9at9
+	 /qCxd8bBBFpwaWgQMBUn8v7eFWyQyI+cuUhPCufjtZasG1fWD6+jBFo4IEZ6qPyJMs
+	 UjHpNiqodMJevIyJuvPQpyZXQgGJQ6JxR6O5Jx64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732177AbgGTP7Q (ORCPT
+        id S2387785AbgGTQ32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:59:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732140AbgGTP7L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A30C0619D2;
-        Mon, 20 Jul 2020 08:59:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=ATjmBzjI/n6oxkwr3gKzLrXKn2KIaLRJvHCblp/KGMo=; b=ieVgzSIF0/MnWX86vE7znh0SaZ
-        +w0UOnDHJfs6ucW7fJdERo7h+KGK27CyD70XmHEWC5JSJFGpreOWoAdQ+gBBUDX5ugIIaBassftAg
-        N4zRCBYNIJeD+uIp9cTApbCgkSAXCgWaRElPc4HL3jDQsMz4xPYlgFhCkw677jPNvSOserBfWSPoT
-        geQZ1Ai/Vye5Knk6VdPjP9WUOXPPFVA3I6JJ/bR9I/IPO64MPHvk++2Dse1hZyED9cCs5WKLPtcnN
-        O4x+psI9RMnV4uaIkuNb3I0w3kYNz1djswFGsVGs2bI6UYEII16DHee6rPnQOqShAk6C2h9TotZm7
-        7gK2+Zdw==;
-Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxYBz-0007mY-7z; Mon, 20 Jul 2020 15:59:03 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
+        Mon, 20 Jul 2020 12:29:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731383AbgGTP7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC2022065E;
+        Mon, 20 Jul 2020 15:59:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260758;
+        bh=3KRZcieEP6v8AtuNQIAdBlVRggsZqQwLO0e1d34e/YQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GFD01kSieR1HOXMtld4A8nTXj+Us7H5BsKWSXRnwv8KuVRqfHh5hE3S0+n2DAEHkP
+         Hdki9AbC+Ej86bOQJngwOk/W7ZKjmdKiviQAfzYb4Q668xK0Rf9xrKF5G98WKVjcEK
+         sLMpsG3PzX1J3my/ShMhDDHrC0p6c3OUuDIR/Z00=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: add file system helpers that take kernel pointers for the init code
-Date:   Mon, 20 Jul 2020 17:58:38 +0200
-Message-Id: <20200720155902.181712-1-hch@lst.de>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 085/215] ALSA: usb-audio: Rewrite registration quirk handling
+Date:   Mon, 20 Jul 2020 17:36:07 +0200
+Message-Id: <20200720152824.246255051@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Al,
+From: Takashi Iwai <tiwai@suse.de>
 
-currently a lot of the file system calls in the early in code (and the
-devtmpfs kthread) rely on the implicit set_fs(KERNEL_DS) during boot.
-This is one of the few last remaining places we need to deal with to kill
-off set_fs entirely, so this series adds new helpers that take kernel
-pointers.  That is mostly done by pushing the getname() call further up
-the stack so that we can add variants using getname_kernel() without
-duplicating code.
+[ Upstream commit d8695bc5b1fe88305396b1f788d3b5f218e28a30 ]
 
-The series sits on top of my previous
+A slight refactoring of the registration quirk code.  Now it uses the
+table lookup for easy additions in future.  Also the return type was
+changed to bool, and got a few more comments.
 
-  "decruft the early init / initrd / initramfs code v2"
+Link: https://lore.kernel.org/r/20200325103322.2508-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/usb/card.c   |  2 +-
+ sound/usb/quirks.c | 40 ++++++++++++++++++++++++++++++----------
+ sound/usb/quirks.h |  3 +--
+ 3 files changed, 32 insertions(+), 13 deletions(-)
 
-series.
+diff --git a/sound/usb/card.c b/sound/usb/card.c
+index 2284377cbb98d..230d862cfa3a8 100644
+--- a/sound/usb/card.c
++++ b/sound/usb/card.c
+@@ -662,7 +662,7 @@ static int usb_audio_probe(struct usb_interface *intf,
+ 	/* we are allowed to call snd_card_register() many times, but first
+ 	 * check to see if a device needs to skip it or do anything special
+ 	 */
+-	if (snd_usb_registration_quirk(chip, ifnum) == 0) {
++	if (!snd_usb_registration_quirk(chip, ifnum)) {
+ 		err = snd_card_register(chip->card);
+ 		if (err < 0)
+ 			goto __error;
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index f3e26e65c3257..ad557ab65e043 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1783,16 +1783,36 @@ void snd_usb_audioformat_attributes_quirk(struct snd_usb_audio *chip,
+ 	}
+ }
+ 
+-int snd_usb_registration_quirk(struct snd_usb_audio *chip,
+-			       int iface)
++/*
++ * registration quirk:
++ * the registration is skipped if a device matches with the given ID,
++ * unless the interface reaches to the defined one.  This is for delaying
++ * the registration until the last known interface, so that the card and
++ * devices appear at the same time.
++ */
++
++struct registration_quirk {
++	unsigned int usb_id;	/* composed via USB_ID() */
++	unsigned int interface;	/* the interface to trigger register */
++};
++
++#define REG_QUIRK_ENTRY(vendor, product, iface) \
++	{ .usb_id = USB_ID(vendor, product), .interface = (iface) }
++
++static const struct registration_quirk registration_quirks[] = {
++	REG_QUIRK_ENTRY(0x0951, 0x16d8, 2),	/* Kingston HyperX AMP */
++	{ 0 }					/* terminator */
++};
++
++/* return true if skipping registration */
++bool snd_usb_registration_quirk(struct snd_usb_audio *chip, int iface)
+ {
+-	switch (chip->usb_id) {
+-	case USB_ID(0x0951, 0x16d8): /* Kingston HyperX AMP */
+-		/* Register only when we reach interface 2 so that streams can
+-		 * merge correctly into PCMs from interface 0
+-		 */
+-		return (iface != 2);
+-	}
++	const struct registration_quirk *q;
++
++	for (q = registration_quirks; q->usb_id; q++)
++		if (chip->usb_id == q->usb_id)
++			return iface != q->interface;
++
+ 	/* Register as normal */
+-	return 0;
++	return false;
+ }
+diff --git a/sound/usb/quirks.h b/sound/usb/quirks.h
+index 3afc01eabc7e2..c76cf24a640a6 100644
+--- a/sound/usb/quirks.h
++++ b/sound/usb/quirks.h
+@@ -51,7 +51,6 @@ void snd_usb_audioformat_attributes_quirk(struct snd_usb_audio *chip,
+ 					  struct audioformat *fp,
+ 					  int stream);
+ 
+-int snd_usb_registration_quirk(struct snd_usb_audio *chip,
+-			       int iface);
++bool snd_usb_registration_quirk(struct snd_usb_audio *chip, int iface);
+ 
+ #endif /* __USBAUDIO_QUIRKS_H */
+-- 
+2.25.1
 
 
-Git tree:
 
-    git://git.infradead.org/users/hch/misc.git kern_path
-
-Gitweb:
-
-    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/kern_path
-
-
-Diffstat:
- drivers/base/devtmpfs.c    |    8 +-
- drivers/md/md-autodetect.c |    2 
- fs/coredump.c              |    2 
- fs/fs_parser.c             |    1 
- fs/internal.h              |   12 ---
- fs/namei.c                 |  166 +++++++++++++++++++++++++++++++--------------
- fs/namespace.c             |  134 +++++++++++++++++++++---------------
- fs/open.c                  |  149 ++++++++++++++++++++++++++++------------
- fs/stat.c                  |   92 ++++++++++++------------
- fs/utimes.c                |   19 +++--
- include/linux/fs.h         |   39 +++++-----
- include/linux/syscalls.h   |   82 ----------------------
- init/do_mounts.c           |   12 +--
- init/do_mounts.h           |    4 -
- init/do_mounts_initrd.c    |   26 +++----
- init/do_mounts_rd.c        |    2 
- init/initramfs.c           |   27 +++----
- init/main.c                |    9 --
- init/noinitramfs.c         |    9 +-
- kernel/uid16.c             |   15 ----
- 20 files changed, 434 insertions(+), 376 deletions(-)
