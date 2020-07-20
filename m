@@ -8,55 +8,54 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384ACC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3997CC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17F73207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9EF207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pggpCSV+"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wKiGe2St"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730596AbgGTQ6M (ORCPT
+        id S1732827AbgGTQ6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:58:12 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46868 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729941AbgGTQ6K (ORCPT
+        Mon, 20 Jul 2020 12:58:18 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40030 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729941AbgGTQ6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:58:10 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06KGw5BF079972;
-        Mon, 20 Jul 2020 11:58:05 -0500
+        Mon, 20 Jul 2020 12:58:12 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06KGw8kP027292;
+        Mon, 20 Jul 2020 11:58:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595264285;
-        bh=wq/HG2wN64kJj6fb3o9G8/jhw4U/26F2nKCG9d1GLZs=;
+        s=ti-com-17Q1; t=1595264288;
+        bh=DIxOOQwIi12wLQSGUItZsPXBRsZgdqTGMtvo+XZ3cO0=;
         h=From:To:Subject:Date:In-Reply-To:References;
-        b=pggpCSV+jUMiouI1P11dgQ/6W+SNqGMM0+JVl/GY/M4SrGhJYsjI3G3MEe47XE+zk
-         LjBMx8lNIq3m3n1+52uM5FafB4zG95BvpPF5nyTk85iTOg/d7jznm7e9OVqswTCJcO
-         MzFwZC6pbGcHrXkGJvygzWi3j5ZEirrCdpoXRgvo=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06KGw5nr128546
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 20 Jul 2020 11:58:05 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+        b=wKiGe2StgYD0Ho62RfoMEE3WDkCa4W4YdsU9G37VuQB3aKrxg4a/NvrcB3X4N+ZE1
+         Z0MHjHlQP9IRj7XvOG8N/h9vAlWc7ncTheS+b5swlWeZAfkznOmQdCx1EnDrTziDEa
+         lYQr2yqzS5hAi4BFj7KDftQ8vVQ3HkbpjGoy5iOc=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KGw8M2118536;
+        Mon, 20 Jul 2020 11:58:08 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
- Jul 2020 11:58:05 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2020 11:58:08 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 20 Jul 2020 11:58:05 -0500
+ Frontend Transport; Mon, 20 Jul 2020 11:58:08 -0500
 Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KGw3B5041101;
-        Mon, 20 Jul 2020 11:58:04 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KGw3BA041101;
+        Mon, 20 Jul 2020 11:58:07 -0500
 From:   Murali Karicheri <m-karicheri2@ti.com>
 To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
         <nsekhar@ti.com>, <grygorii.strashko@ti.com>,
         <vinicius.gomes@intel.com>
-Subject: [net-next v4 PATCH 2/7] net: hsr: introduce common code for skb initialization
-Date:   Mon, 20 Jul 2020 12:57:58 -0400
-Message-ID: <20200720165803.17793-3-m-karicheri2@ti.com>
+Subject: [net-next v4 PATCH 7/7] net: prp: enhance debugfs to display PRP info
+Date:   Mon, 20 Jul 2020 12:58:03 -0400
+Message-ID: <20200720165803.17793-8-m-karicheri2@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200720165803.17793-1-m-karicheri2@ti.com>
 References: <20200720165803.17793-1-m-karicheri2@ti.com>
@@ -68,97 +67,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As a preparatory patch to introduce PRP protocol support in the
-driver, refactor the skb init code to a separate function.
+Print PRP specific information from node table as part of debugfs
+node table display. Also display the node as DAN-H or DAN-P depending
+on the info from node table.
 
 Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
 ---
- net/hsr/hsr_device.c | 41 ++++++++++++++++++++++++++++-------------
- 1 file changed, 28 insertions(+), 13 deletions(-)
+ net/hsr/hsr_debugfs.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
-diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
-index 40ac45123a62..bfe2d1449dbd 100644
---- a/net/hsr/hsr_device.c
-+++ b/net/hsr/hsr_device.c
-@@ -230,15 +230,11 @@ static const struct header_ops hsr_header_ops = {
- 	.parse	 = eth_header_parse,
- };
+diff --git a/net/hsr/hsr_debugfs.c b/net/hsr/hsr_debugfs.c
+index c1932c0a15be..3b6f675bd55a 100644
+--- a/net/hsr/hsr_debugfs.c
++++ b/net/hsr/hsr_debugfs.c
+@@ -24,7 +24,7 @@ static struct dentry *hsr_debugfs_root_dir;
  
--static void send_hsr_supervision_frame(struct hsr_port *master,
--				       u8 type, u8 hsr_ver)
-+static struct sk_buff *hsr_init_skb(struct hsr_port *master, u8 hsr_ver)
+ static void print_mac_address(struct seq_file *sfp, unsigned char *mac)
  {
-+	struct hsr_priv *hsr = master->hsr;
- 	struct sk_buff *skb;
- 	int hlen, tlen;
--	struct hsr_tag *hsr_tag;
--	struct hsr_sup_tag *hsr_stag;
--	struct hsr_sup_payload *hsr_sp;
--	unsigned long irqflags;
- 
- 	hlen = LL_RESERVED_SPACE(master->dev);
- 	tlen = master->dev->needed_tailroom;
-@@ -247,22 +243,44 @@ static void send_hsr_supervision_frame(struct hsr_port *master,
- 			    sizeof(struct hsr_sup_payload) + hlen + tlen);
- 
- 	if (!skb)
--		return;
-+		return skb;
- 
- 	skb_reserve(skb, hlen);
--
- 	skb->dev = master->dev;
- 	skb->protocol = htons(hsr_ver ? ETH_P_HSR : ETH_P_PRP);
- 	skb->priority = TC_PRIO_CONTROL;
- 
- 	if (dev_hard_header(skb, skb->dev, (hsr_ver ? ETH_P_HSR : ETH_P_PRP),
--			    master->hsr->sup_multicast_addr,
-+			    hsr->sup_multicast_addr,
- 			    skb->dev->dev_addr, skb->len) <= 0)
- 		goto out;
-+
- 	skb_reset_mac_header(skb);
- 	skb_reset_network_header(skb);
- 	skb_reset_transport_header(skb);
- 
-+	return skb;
-+out:
-+	kfree_skb(skb);
-+
-+	return NULL;
-+}
-+
-+static void send_hsr_supervision_frame(struct hsr_port *master,
-+				       u8 type, u8 hsr_ver)
-+{
-+	struct hsr_sup_payload *hsr_sp;
-+	struct hsr_sup_tag *hsr_stag;
-+	struct hsr_tag *hsr_tag;
-+	unsigned long irqflags;
-+	struct sk_buff *skb;
-+
-+	skb = hsr_init_skb(master, hsr_ver);
-+	if (!skb) {
-+		WARN_ONCE(1, "HSR: Could not send supervision frame\n");
-+		return;
-+	}
-+
- 	if (hsr_ver > 0) {
- 		hsr_tag = skb_put(skb, sizeof(struct hsr_tag));
- 		hsr_tag->encap_proto = htons(ETH_P_PRP);
-@@ -299,11 +317,8 @@ static void send_hsr_supervision_frame(struct hsr_port *master,
- 		return;
- 
- 	hsr_forward_skb(skb, master);
--	return;
- 
--out:
--	WARN_ONCE(1, "HSR: Could not send supervision frame\n");
--	kfree_skb(skb);
-+	return;
+-	seq_printf(sfp, "%02x:%02x:%02x:%02x:%02x:%02x:",
++	seq_printf(sfp, "%02x:%02x:%02x:%02x:%02x:%02x ",
+ 		   mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
  }
  
- /* Announce (supervision frame) timer function
+@@ -35,20 +35,32 @@ hsr_node_table_show(struct seq_file *sfp, void *data)
+ 	struct hsr_priv *priv = (struct hsr_priv *)sfp->private;
+ 	struct hsr_node *node;
+ 
+-	seq_puts(sfp, "Node Table entries\n");
+-	seq_puts(sfp, "MAC-Address-A,   MAC-Address-B, time_in[A], ");
+-	seq_puts(sfp, "time_in[B], Address-B port\n");
++	seq_printf(sfp, "Node Table entries for (%s) device\n",
++		   (priv->prot_version == PRP_V1 ? "PRP" : "HSR"));
++	seq_puts(sfp, "MAC-Address-A,    MAC-Address-B,    time_in[A], ");
++	seq_puts(sfp, "time_in[B], Address-B port, ");
++	if (priv->prot_version == PRP_V1)
++		seq_puts(sfp, "SAN-A, SAN-B, DAN-P\n");
++	else
++		seq_puts(sfp, "DAN-H\n");
++
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(node, &priv->node_db, mac_list) {
+ 		/* skip self node */
+ 		if (hsr_addr_is_self(priv, node->macaddress_A))
+ 			continue;
+ 		print_mac_address(sfp, &node->macaddress_A[0]);
+-		seq_puts(sfp, " ");
+ 		print_mac_address(sfp, &node->macaddress_B[0]);
+-		seq_printf(sfp, "0x%lx, ", node->time_in[HSR_PT_SLAVE_A]);
+-		seq_printf(sfp, "0x%lx ", node->time_in[HSR_PT_SLAVE_B]);
+-		seq_printf(sfp, "0x%x\n", node->addr_B_port);
++		seq_printf(sfp, "%10lx, ", node->time_in[HSR_PT_SLAVE_A]);
++		seq_printf(sfp, "%10lx, ", node->time_in[HSR_PT_SLAVE_B]);
++		seq_printf(sfp, "%14x, ", node->addr_B_port);
++
++		if (priv->prot_version == PRP_V1)
++			seq_printf(sfp, "%5x, %5x, %5x\n",
++				   node->san_a, node->san_b,
++				   (node->san_a == 0 && node->san_b == 0));
++		else
++			seq_printf(sfp, "%5x\n", 1);
+ 	}
+ 	rcu_read_unlock();
+ 	return 0;
+@@ -57,7 +69,8 @@ hsr_node_table_show(struct seq_file *sfp, void *data)
+ /* hsr_node_table_open - Open the node_table file
+  *
+  * Description:
+- * This routine opens a debugfs file node_table of specific hsr device
++ * This routine opens a debugfs file node_table of specific hsr
++ * or prp device
+  */
+ static int
+ hsr_node_table_open(struct inode *inode, struct file *filp)
 -- 
 2.17.1
 
