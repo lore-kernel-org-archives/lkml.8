@@ -2,77 +2,80 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9EBC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFBF320684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D511222B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgGTM2K (ORCPT
+        id S1728458AbgGTM2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:28:10 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:16083 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbgGTM2K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 08:28:10 -0400
-X-Originating-IP: 90.65.108.121
-Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 02238240006;
-        Mon, 20 Jul 2020 12:28:05 +0000 (UTC)
-Date:   Mon, 20 Jul 2020 14:28:05 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Johnson CH Chen =?utf-8?B?KOmZs+aYreWLsyk=?= 
-        <JohnsonCH.Chen@moxa.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v5] rtc: rtc-ds1374: wdt: Use watchdog core for watchdog
- part
-Message-ID: <20200720122805.GH3428@piout.net>
-References: <HK2PR01MB32811CE9FE5DB463A69E94C8FA7B0@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
- <20200720102629.GE3428@piout.net>
- <HK2PR01MB3281AE06720A1C7013603B07FA7B0@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+        Mon, 20 Jul 2020 08:28:38 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7797 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727989AbgGTM2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 08:28:38 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 365FC1BA019343E1DE06;
+        Mon, 20 Jul 2020 20:28:37 +0800 (CST)
+Received: from [10.164.122.247] (10.164.122.247) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 20 Jul
+ 2020 20:28:35 +0800
+Subject: Re: [PATCH] f2fs: compress: fix to avoid memory leak on cc->cpages
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200720085250.47279-1-yuchao0@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <a24a282f-895f-39b1-181b-1208d6f1803c@huawei.com>
+Date:   Mon, 20 Jul 2020 20:28:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <HK2PR01MB3281AE06720A1C7013603B07FA7B0@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+In-Reply-To: <20200720085250.47279-1-yuchao0@huawei.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.164.122.247]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/07/2020 10:44:41+0000, Johnson CH Chen (陳昭勳) wrote:
-> Hi Alexandre,
-> 
-> > > v4->v5:
-> > > - Fix reported build error by replacing RTC_DRV_DS1374_WDT with
-> > > WATCHDOG_CORE
-> > >
-> > 
-> > This is not the correct solution as this will remove the alarm functionality for
-> > anyone enabling WATCHDOG. I already submitted a proper fix.
-> > 
-> 
-> It's an appropriate and better solution. Thanks!
-> 
-> RTC_DRV_DS1374_WDT still should select WATCHDOG_CORE to avoid build error if WATCHDOG_CORE is set to "m", and it should be depended on RTC_DRV_DS1374 and WATCHDOG.
-> 
+On 2020/7/20 16:52, Chao Yu wrote:
+> Memory allocated for storing compressed pages' poitner should be
+> released after f2fs_write_compressed_pages(), otherwise it will
+> cause memory leak issue.
 
-My patch handles that properly, RTC_DRV_DS1374_WDT still selects WATCHDOG_CORE
+Jaegeuk,
 
+Please help to add below tag when merging, thanks.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Fixes: 4c8ff7095bef ("f2fs: support data compression")
+
+> 
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>   fs/f2fs/compress.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> index 3a847bc36748..a20c9f3272af 100644
+> --- a/fs/f2fs/compress.c
+> +++ b/fs/f2fs/compress.c
+> @@ -1385,6 +1385,8 @@ int f2fs_write_multi_pages(struct compress_ctx *cc,
+>   		err = f2fs_write_compressed_pages(cc, submitted,
+>   							wbc, io_type);
+>   		cops->destroy_compress_ctx(cc);
+> +		kfree(cc->cpages);
+> +		cc->cpages = NULL;
+>   		if (!err)
+>   			return 0;
+>   		f2fs_bug_on(F2FS_I_SB(cc->inode), err != -EAGAIN);
+> 
