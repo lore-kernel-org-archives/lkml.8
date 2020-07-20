@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EBDC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18D6C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 554A222CE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0CF22CBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260491;
-	bh=9D4BKhxX91QDi37+vYRhuOfxXIYVo+HlAafW5fRwI78=;
+	s=default; t=1595260494;
+	bh=wLxL1nVipSq7d1yTtdip3hxHzFOIH1b0rYTLz36sJ+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pLrlpS+lodcO/lHQgOScIK4mupJbkH2+VeTyj4WRK7Xj14tFPnOvm2owBKgGbprAJ
-	 p0xdYRXs8e6rJ3k193zxmeFkte0OvGLe6K1rs6r4YbIenHIilhq1ueAxMuDC/1ABOy
-	 7gBbUCD0939SBJyiBYSyM04WZe4wr1Ffdor0iYIA=
+	b=rtaepTTDfEfUT7d+btKcMCV0jgxrNEKwWeX13ujDNwF/4pQY4k6dr0+HaUM20FQjo
+	 Lmqq01wBdHc0VNNzG9+8WYbQj501QUu8nRT4AzySQIGrEyNw5embywmEe8Z3tSzvN/
+	 9Y9Mj33aZL5xVnkm16IZ2bvyID1hnnUlRsFTPSQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731611AbgGTPyu (ORCPT
+        id S1730860AbgGTPyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:54:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53568 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:54:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731600AbgGTPyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:54:45 -0400
+        id S1731600AbgGTPyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:54:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF16622482;
-        Mon, 20 Jul 2020 15:54:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 354BC22CBE;
+        Mon, 20 Jul 2020 15:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260485;
-        bh=9D4BKhxX91QDi37+vYRhuOfxXIYVo+HlAafW5fRwI78=;
+        s=default; t=1595260490;
+        bh=wLxL1nVipSq7d1yTtdip3hxHzFOIH1b0rYTLz36sJ+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TaiYmwmpJyyEj42p1HIWLktMHHTK5SH5+FUupxTTONs5ZF1h/PJSAqX410eL700QB
-         UPNoKbN2JlzWwJfwPHsX+j/aFy2QzDbW5deMnqtNdcdciZIP5B2WkN1sS/FoBheFJz
-         Vw5+XSYPgEedcgklbIWshWWyYEIig8hZdUYS4LNs=
+        b=dM9mGhYm4Fu2yGaV7BUbkyYDLfrsMAiIt0ilihva8zu0xKDQZFeukh207/Y/hN4Do
+         5XZS+wZzSKBEUx6JRPTSL/kwy6sjjNnwFMeYnjbDBF5GD83P1OW28gom7DZVqTuAp+
+         cwH1DQZYRtPflhdHGOF00ET5FWkaXQtUuOqu/TMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.19 119/133] intel_th: pci: Add Emmitsburg PCH support
-Date:   Mon, 20 Jul 2020 17:37:46 +0200
-Message-Id: <20200720152809.489521397@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.19 121/133] dmaengine: fsl-edma: Fix NULL pointer exception in fsl_edma_tx_handler
+Date:   Mon, 20 Jul 2020 17:37:48 +0200
+Message-Id: <20200720152809.576391347@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -60,35 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit fd73d74a32bfaaf259441322cc5a1c83caaa94f2 upstream.
+commit f5e5677c420346b4e9788051c2e4d750996c428c upstream.
 
-This adds support for the Trace Hub in Emmitsburg PCH.
+NULL pointer exception happens occasionally on serial output initiated
+by login timeout.  This was reproduced only if kernel was built with
+significant debugging options and EDMA driver is used with serial
+console.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@vger.kernel.org # v4.14+
-Link: https://lore.kernel.org/r/20200706161339.55468-4-alexander.shishkin@linux.intel.com
+    col-vf50 login: root
+    Password:
+    Login timed out after 60 seconds.
+    Unable to handle kernel NULL pointer dereference at virtual address 00000044
+    Internal error: Oops: 5 [#1] ARM
+    CPU: 0 PID: 157 Comm: login Not tainted 5.7.0-next-20200610-dirty #4
+    Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+      (fsl_edma_tx_handler) from [<8016eb10>] (__handle_irq_event_percpu+0x64/0x304)
+      (__handle_irq_event_percpu) from [<8016eddc>] (handle_irq_event_percpu+0x2c/0x7c)
+      (handle_irq_event_percpu) from [<8016ee64>] (handle_irq_event+0x38/0x5c)
+      (handle_irq_event) from [<801729e4>] (handle_fasteoi_irq+0xa4/0x160)
+      (handle_fasteoi_irq) from [<8016ddcc>] (generic_handle_irq+0x34/0x44)
+      (generic_handle_irq) from [<8016e40c>] (__handle_domain_irq+0x54/0xa8)
+      (__handle_domain_irq) from [<80508bc8>] (gic_handle_irq+0x4c/0x80)
+      (gic_handle_irq) from [<80100af0>] (__irq_svc+0x70/0x98)
+    Exception stack(0x8459fe80 to 0x8459fec8)
+    fe80: 72286b00 e3359f64 00000001 0000412d a0070013 85c98840 85c98840 a0070013
+    fea0: 8054e0d4 00000000 00000002 00000000 00000002 8459fed0 8081fbe8 8081fbec
+    fec0: 60070013 ffffffff
+      (__irq_svc) from [<8081fbec>] (_raw_spin_unlock_irqrestore+0x30/0x58)
+      (_raw_spin_unlock_irqrestore) from [<8056cb48>] (uart_flush_buffer+0x88/0xf8)
+      (uart_flush_buffer) from [<80554e60>] (tty_ldisc_hangup+0x38/0x1ac)
+      (tty_ldisc_hangup) from [<8054c7f4>] (__tty_hangup+0x158/0x2bc)
+      (__tty_hangup) from [<80557b90>] (disassociate_ctty.part.1+0x30/0x23c)
+      (disassociate_ctty.part.1) from [<8011fc18>] (do_exit+0x580/0xba0)
+      (do_exit) from [<801214f8>] (do_group_exit+0x3c/0xb4)
+      (do_group_exit) from [<80121580>] (__wake_up_parent+0x0/0x14)
+
+Issue looks like race condition between interrupt handler fsl_edma_tx_handler()
+(called as result of fsl_edma_xfer_desc()) and terminating the transfer with
+fsl_edma_terminate_all().
+
+The fsl_edma_tx_handler() handles interrupt for a transfer with already freed
+edesc and idle==true.
+
+Fixes: d6be34fbd39b ("dma: Add Freescale eDMA engine driver support")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1591877861-28156-2-git-send-email-krzk@kernel.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/pci.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/dma/fsl-edma.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -230,6 +230,11 @@ static const struct pci_device_id intel_
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4b26),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
-+	{
-+		/* Emmitsburg PCH */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x1bcc),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
- 	{ 0 },
- };
+--- a/drivers/dma/fsl-edma.c
++++ b/drivers/dma/fsl-edma.c
+@@ -682,6 +682,13 @@ static irqreturn_t fsl_edma_tx_handler(i
+ 			fsl_chan = &fsl_edma->chans[ch];
  
+ 			spin_lock(&fsl_chan->vchan.lock);
++
++			if (!fsl_chan->edesc) {
++				/* terminate_all called before */
++				spin_unlock(&fsl_chan->vchan.lock);
++				continue;
++			}
++
+ 			if (!fsl_chan->edesc->iscyclic) {
+ 				list_del(&fsl_chan->edesc->vdesc.node);
+ 				vchan_cookie_complete(&fsl_chan->edesc->vdesc);
 
 
