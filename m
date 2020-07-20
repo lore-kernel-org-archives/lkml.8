@@ -2,325 +2,147 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D974C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B22C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 078B9208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E045207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:06:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Pi2p3IuT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgGTFBW (ORCPT
+        id S1726555AbgGTFGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 01:01:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12932 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725805AbgGTFBV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 01:01:21 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06K4WqDN159661;
-        Mon, 20 Jul 2020 01:00:53 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32buddgyqq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 01:00:53 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06K50HTU036012;
-        Mon, 20 Jul 2020 01:00:52 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32buddgyq1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 01:00:52 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06K4oqWC009851;
-        Mon, 20 Jul 2020 05:00:51 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03wdc.us.ibm.com with ESMTP id 32brq8pbt8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 05:00:51 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06K50oPr31457780
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 05:00:50 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 06D256A05A;
-        Mon, 20 Jul 2020 05:00:50 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4D9876A063;
-        Mon, 20 Jul 2020 05:00:49 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.102.23.82])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Jul 2020 05:00:49 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 9A6F42E3225; Mon, 20 Jul 2020 10:30:43 +0530 (IST)
-Date:   Mon, 20 Jul 2020 10:30:43 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
-Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@samba.org, srivatsa@csail.mit.edu,
-        shuah@kernel.org, npiggin@gmail.com, ego@linux.vnet.ibm.com,
-        svaidy@linux.ibm.com, linux-pm@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] cpuidle: Trace IPI based and timer based wakeup
- latency from idle states
-Message-ID: <20200720050043.GA31497@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <20200717091801.29289-1-psampat@linux.ibm.com>
- <20200717091801.29289-2-psampat@linux.ibm.com>
+        Mon, 20 Jul 2020 01:06:47 -0400
+Received: from mail-dm6nam10on2089.outbound.protection.outlook.com ([40.107.93.89]:57509
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725287AbgGTFGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 01:06:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T2FpbzMEBXvCTjdoTnaGyq57hWccr7+LfVCiKsJnB/5HDPJZD6BpUjHd+K9VH5gESG8eA/6mXexM/YZPgk2S+FpR7RIN97tcNIkEBJwbv/IMzS8g3yqb8odhOgaTfywEpqlG+xD6yhLGRKmq5OUxjX4SULb7vb7qB5TyWKyEXgrb48g5TffTKv9hdpUo9nlYrfL5vc+2Qpy9Dic35goxW/+RQucjt/DwgpJHsMh87DQje35OzIsYG1HL45q0deM7lf27yTNclINLW2E6UVIMV7IwgP3I5ydf84sA7mF8CtrPW/7O2JEmxNbeMmL7cdyxWSAWEMogWlVsScOmRV/v+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wfCk201FvWlIusiJ20M931+ZD+2bvTDB4nRyCEUoB8M=;
+ b=OByj50mcM/BrQMcib2oFVE0H7N41gBMMbm/ZAUZbzzS5nnFuwKT9HtkFEBspJyFJVrypC/BABSe/TQO30fz8vHXfzV6ghOpu7BXC1jnJ27AdUQYYZUhyvoqeRlwGE+bmRYgD+ZWnkq75vuHKHovqIUwwROuE/RiqJ6U9LHC1eRUhnHTBjQXpMskmN/fzLhS01z0tsNVE24bQayI8pIVQQR/wDh0w6biQ+aP2LahPby5KnuMg4MIloQ0ucRTomzfg4Yy8XJt8AlfRMj4wX5siOA6L0Lk9DYdgA0or2+YglrsRuNSQcHp0eEMeoa6kdkkLbJi16Tkgoerz2nLYBGB2Rg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wfCk201FvWlIusiJ20M931+ZD+2bvTDB4nRyCEUoB8M=;
+ b=Pi2p3IuTAtg5SXyAwW07NLsa9hDsx6ZO7S6NBDA2ubkQeXvJG6Pc9QyJg+PkCjtrH2+VX8WwIW9iLB52erMGQc88B96aQmQ+ZigJIs5BjiSmBG+SkLSkJv48OIoHlEuQIthL37irewwAQGygfJUaxlUTUNOTF1lmAZDBs06UHh0=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from MWHPR12MB1599.namprd12.prod.outlook.com (2603:10b6:301:10::12)
+ by MWHPR12MB1853.namprd12.prod.outlook.com (2603:10b6:300:113::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Mon, 20 Jul
+ 2020 05:06:44 +0000
+Received: from MWHPR12MB1599.namprd12.prod.outlook.com
+ ([fe80::25b9:83b0:4b17:2c63]) by MWHPR12MB1599.namprd12.prod.outlook.com
+ ([fe80::25b9:83b0:4b17:2c63%12]) with mapi id 15.20.3195.025; Mon, 20 Jul
+ 2020 05:06:44 +0000
+From:   Akshu Agrawal <akshu.agrawal@amd.com>
+To:     akshu.agrawal@amd.com
+Cc:     sboyd@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org (open list:ACPI),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 3/4] ACPI: APD: Add a fmw property is_raven
+Date:   Mon, 20 Jul 2020 10:34:58 +0530
+Message-Id: <20200720050500.23357-4-akshu.agrawal@amd.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200720050500.23357-1-akshu.agrawal@amd.com>
+References: <20200720050500.23357-1-akshu.agrawal@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MAXPR0101CA0054.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:e::16) To MWHPR12MB1599.namprd12.prod.outlook.com
+ (2603:10b6:301:10::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717091801.29289-2-psampat@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-20_01:2020-07-17,2020-07-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- suspectscore=0 malwarescore=0 mlxlogscore=999 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 clxscore=1011 impostorscore=0 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007200029
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from local.mshome.net (122.171.179.172) by MAXPR0101CA0054.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:e::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17 via Frontend Transport; Mon, 20 Jul 2020 05:06:42 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [122.171.179.172]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3c40a289-6ade-4d64-9b0d-08d82c6ab23b
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1853:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR12MB18537AF7CAD8ECAD9000E942F87B0@MWHPR12MB1853.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tmzuXdqr8b9umwm0+KoC4PTS3CWXFct8tv1BUpUkVBAdEho9g0b17GiIrP/HPLyaZAauVXKU0N+TAf0bDdEYaEacLq7a1c5r0AmnSzeF0HyuJwx3WGt+q4VyUp44rmlNsvnQBmnwnbfpnhjvsecAy8o9SFaDFh3ff2deL+wJFhBMmWLYnGtefQ6Cfy5BRAlmZrDvd5b9caoPrCQjd1acMANejtbgMi9JioeQ5Xt8Ht0g7n01i7VAQl7LlZkQiw8/hOBspdDbkq1IIUJZMDrNc7+bGIh63SQIXOi2/PaJ1lenZYApazpZPNF796bxf7q8E8RoYa07lzVyM9bsAPirgA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR12MB1599.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(346002)(39860400002)(366004)(6486002)(26005)(36756003)(478600001)(2906002)(8936002)(5660300002)(66946007)(66556008)(66476007)(6512007)(6506007)(86362001)(6666004)(37006003)(186003)(52116002)(316002)(1076003)(956004)(2616005)(8676002)(34206002)(4326008)(16526019)(44832011)(54906003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 06muF35z3zoMGweEbr4tI26PtHRIKwOuV+b+WmaHSGaNPDg72a2CeY71cC8kEg8rlWqBRHeYuhBB16+T8qRZSzLcb555NknXAaM7a0DaX9opeZxFVc4Kb7orQajnaFsP3QCJ93vln3ZPVSu5lOF+HTUZVG/fl9XAUzfsY6U6v51tBWSt3awwLp9FIaxCxMsb6j/xX/+FCRaly00mAXcJV1T9UnXT93t4bQhumn1f385JikYqb8i++u13RVLo+jbxf2bP0UGqYy/qMu5h8mjAN3vz1bUFvuKhhnd58+eFwVuPYFwE7H8Fbcd0Hi3hSoqoZaJP71SEh37OKfbFNr4udVvsNJfNa9Y4MqWuog5ncP3Oym430mllK1c/qECyK/6h1aItUhc9zhX3U9415ZTXt8EeO+HmPIaVJZm+UCGOrmzIeqjsWI14X2ekN8aaeg2SfcgSfy4qwhrGvyVWXP12aiYuXzCWt9lE8U8Kc1rd9O4=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c40a289-6ade-4d64-9b0d-08d82c6ab23b
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR12MB1599.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 05:06:44.5169
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B1/bbYfB7xSN90jb1VZPNJWdd2cretchN1Y3nzW8ASgAY1R/MttIlpFMJzXbIg8I0pfiLIF33MklX7NSkYXUoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1853
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 02:48:00PM +0530, Pratik Rajesh Sampat wrote:
-> Fire directed smp_call_function_single IPIs from a specified source
-> CPU to the specified target CPU to reduce the noise we have to wade
-> through in the trace log.
-> The module is based on the idea written by Srivatsa Bhat and maintained
-> by Vaidyanathan Srinivasan internally.
-> 
-> Queue HR timer and measure jitter. Wakeup latency measurement for idle
-> states using hrtimer.  Echo a value in ns to timer_test_function and
-> watch trace. A HRtimer will be queued and when it fires the expected
-> wakeup vs actual wakeup is computes and delay printed in ns.
-> 
-> Implemented as a module which utilizes debugfs so that it can be
-> integrated with selftests.
-> 
-> To include the module, check option and include as module
-> kernel hacking -> Cpuidle latency selftests
-> 
-> [srivatsa.bhat@linux.vnet.ibm.com: Initial implementation in
->  cpidle/sysfs]
-> 
-> [svaidy@linux.vnet.ibm.com: wakeup latency measurements using hrtimer
->  and fix some of the time calculation]
-> 
-> [ego@linux.vnet.ibm.com: Fix some whitespace and tab errors and
->  increase the resolution of IPI wakeup]
-> 
-> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+Since there is slight difference in AMD RV based soc in misc
+clk architecture. The fmw property will help in differentiating
+the SoCs.
 
+Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
+---
+ drivers/acpi/acpi_apd.c               | 4 ++++
+ include/linux/platform_data/clk-fch.h | 1 +
+ 2 files changed, 5 insertions(+)
 
-The debugfs module looks good to me.
+diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
+index 2d99e46add1a..d879ba28826c 100644
+--- a/drivers/acpi/acpi_apd.c
++++ b/drivers/acpi/acpi_apd.c
+@@ -82,6 +82,7 @@ static int misc_check_res(struct acpi_resource *ares, void *data)
+ static int fch_misc_setup(struct apd_private_data *pdata)
+ {
+ 	struct acpi_device *adev = pdata->adev;
++	const union acpi_object *obj;
+ 	struct platform_device *clkdev;
+ 	struct fch_clk_data *clk_data;
+ 	struct resource_entry *rentry;
+@@ -98,6 +99,9 @@ static int fch_misc_setup(struct apd_private_data *pdata)
+ 	if (ret < 0)
+ 		return -ENOENT;
+ 
++	acpi_dev_get_property(adev, "is-rv", ACPI_TYPE_INTEGER, &obj);
++	clk_data->is_rv = obj->integer.value;
++
+ 	list_for_each_entry(rentry, &resource_list, node) {
+ 		clk_data->base = devm_ioremap(&adev->dev, rentry->res->start,
+ 					      resource_size(rentry->res));
+diff --git a/include/linux/platform_data/clk-fch.h b/include/linux/platform_data/clk-fch.h
+index 850ca776156d..b9f682459f08 100644
+--- a/include/linux/platform_data/clk-fch.h
++++ b/include/linux/platform_data/clk-fch.h
+@@ -12,6 +12,7 @@
+ 
+ struct fch_clk_data {
+ 	void __iomem *base;
++	u32 is_rv;
+ };
+ 
+ #endif /* __CLK_FCH_H */
+-- 
+2.20.1
 
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-
-
-> ---
->  drivers/cpuidle/Makefile               |   1 +
->  drivers/cpuidle/test-cpuidle_latency.c | 150 +++++++++++++++++++++++++
->  lib/Kconfig.debug                      |  10 ++
->  3 files changed, 161 insertions(+)
->  create mode 100644 drivers/cpuidle/test-cpuidle_latency.c
-> 
-> diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
-> index f07800cbb43f..2ae05968078c 100644
-> --- a/drivers/cpuidle/Makefile
-> +++ b/drivers/cpuidle/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_ARCH_NEEDS_CPU_IDLE_COUPLED) += coupled.o
->  obj-$(CONFIG_DT_IDLE_STATES)		  += dt_idle_states.o
->  obj-$(CONFIG_ARCH_HAS_CPU_RELAX)	  += poll_state.o
->  obj-$(CONFIG_HALTPOLL_CPUIDLE)		  += cpuidle-haltpoll.o
-> +obj-$(CONFIG_IDLE_LATENCY_SELFTEST)	  += test-cpuidle_latency.o
-> 
->  ##################################################################################
->  # ARM SoC drivers
-> diff --git a/drivers/cpuidle/test-cpuidle_latency.c b/drivers/cpuidle/test-cpuidle_latency.c
-> new file mode 100644
-> index 000000000000..61574665e972
-> --- /dev/null
-> +++ b/drivers/cpuidle/test-cpuidle_latency.c
-> @@ -0,0 +1,150 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Module-based API test facility for cpuidle latency using IPIs and timers
-> + */
-> +
-> +#include <linux/debugfs.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +
-> +/* IPI based wakeup latencies */
-> +struct latency {
-> +	unsigned int src_cpu;
-> +	unsigned int dest_cpu;
-> +	ktime_t time_start;
-> +	ktime_t time_end;
-> +	u64 latency_ns;
-> +} ipi_wakeup;
-> +
-> +static void measure_latency(void *info)
-> +{
-> +	struct latency *v;
-> +	ktime_t time_diff;
-> +
-> +	v = (struct latency *)info;
-> +	v->time_end = ktime_get();
-> +	time_diff = ktime_sub(v->time_end, v->time_start);
-> +	v->latency_ns = ktime_to_ns(time_diff);
-> +}
-> +
-> +void run_smp_call_function_test(unsigned int cpu)
-> +{
-> +	ipi_wakeup.src_cpu = smp_processor_id();
-> +	ipi_wakeup.dest_cpu = cpu;
-> +	ipi_wakeup.time_start = ktime_get();
-> +	smp_call_function_single(cpu, measure_latency, &ipi_wakeup, 1);
-> +}
-> +
-> +/* Timer based wakeup latencies */
-> +struct timer_data {
-> +	unsigned int src_cpu;
-> +	u64 timeout;
-> +	ktime_t time_start;
-> +	ktime_t time_end;
-> +	struct hrtimer timer;
-> +	u64 timeout_diff_ns;
-> +} timer_wakeup;
-> +
-> +static enum hrtimer_restart timer_called(struct hrtimer *hrtimer)
-> +{
-> +	struct timer_data *w;
-> +	ktime_t time_diff;
-> +
-> +	w = container_of(hrtimer, struct timer_data, timer);
-> +	w->time_end = ktime_get();
-> +
-> +	time_diff = ktime_sub(w->time_end, w->time_start);
-> +	time_diff = ktime_sub(time_diff, ns_to_ktime(w->timeout));
-> +	w->timeout_diff_ns = ktime_to_ns(time_diff);
-> +	return HRTIMER_NORESTART;
-> +}
-> +
-> +static void run_timer_test(unsigned int ns)
-> +{
-> +	hrtimer_init(&timer_wakeup.timer, CLOCK_MONOTONIC,
-> +		     HRTIMER_MODE_REL);
-> +	timer_wakeup.timer.function = timer_called;
-> +	timer_wakeup.time_start = ktime_get();
-> +	timer_wakeup.src_cpu = smp_processor_id();
-> +	timer_wakeup.timeout = ns;
-> +
-> +	hrtimer_start(&timer_wakeup.timer, ns_to_ktime(ns),
-> +		      HRTIMER_MODE_REL_PINNED);
-> +}
-> +
-> +static struct dentry *dir;
-> +
-> +static int cpu_read_op(void *data, u64 *value)
-> +{
-> +	*value = ipi_wakeup.dest_cpu;
-> +	return 0;
-> +}
-> +
-> +static int cpu_write_op(void *data, u64 value)
-> +{
-> +	run_smp_call_function_test(value);
-> +	return 0;
-> +}
-> +DEFINE_SIMPLE_ATTRIBUTE(ipi_ops, cpu_read_op, cpu_write_op, "%llu\n");
-> +
-> +static int timeout_read_op(void *data, u64 *value)
-> +{
-> +	*value = timer_wakeup.timeout;
-> +	return 0;
-> +}
-> +
-> +static int timeout_write_op(void *data, u64 value)
-> +{
-> +	run_timer_test(value);
-> +	return 0;
-> +}
-> +DEFINE_SIMPLE_ATTRIBUTE(timeout_ops, timeout_read_op, timeout_write_op, "%llu\n");
-> +
-> +static int __init latency_init(void)
-> +{
-> +	struct dentry *temp;
-> +
-> +	dir = debugfs_create_dir("latency_test", 0);
-> +	if (!dir) {
-> +		pr_alert("latency_test: failed to create /sys/kernel/debug/latency_test\n");
-> +		return -1;
-> +	}
-> +	temp = debugfs_create_file("ipi_cpu_dest",
-> +				   0666,
-> +				   dir,
-> +				   NULL,
-> +				   &ipi_ops);
-> +	if (!temp) {
-> +		pr_alert("latency_test: failed to create /sys/kernel/debug/ipi_cpu_dest\n");
-> +		return -1;
-> +	}
-> +	debugfs_create_u64("ipi_latency_ns", 0444, dir, &ipi_wakeup.latency_ns);
-> +	debugfs_create_u32("ipi_cpu_src", 0444, dir, &ipi_wakeup.src_cpu);
-> +
-> +	temp = debugfs_create_file("timeout_expected_ns",
-> +				   0666,
-> +				   dir,
-> +				   NULL,
-> +				   &timeout_ops);
-> +	if (!temp) {
-> +		pr_alert("latency_test: failed to create /sys/kernel/debug/timeout_expected_ns\n");
-> +		return -1;
-> +	}
-> +	debugfs_create_u64("timeout_diff_ns", 0444, dir, &timer_wakeup.timeout_diff_ns);
-> +	debugfs_create_u32("timeout_cpu_src", 0444, dir, &timer_wakeup.src_cpu);
-> +	pr_info("Latency Test module loaded\n");
-> +	return 0;
-> +}
-> +
-> +static void __exit latency_cleanup(void)
-> +{
-> +	pr_info("Cleaning up Latency Test module.\n");
-> +	debugfs_remove_recursive(dir);
-> +}
-> +
-> +module_init(latency_init);
-> +module_exit(latency_cleanup);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("IBM Corporation");
-> +MODULE_DESCRIPTION("Measuring idle latency for IPIs and Timers");
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index d74ac0fd6b2d..e2283790245a 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -1375,6 +1375,16 @@ config DEBUG_KOBJECT
->  	  If you say Y here, some extra kobject debugging messages will be sent
->  	  to the syslog.
-> 
-> +config IDLE_LATENCY_SELFTEST
-> +	tristate "Cpuidle latency selftests"
-> +	depends on CPU_IDLE
-> +	help
-> +	  This option provides a kernel module that runs tests using the IPI and
-> +	  timers to measure latency.
-> +
-> +	  Say M if you want these self tests to build as a module.
-> +	  Say N if you are unsure.
-> +
->  config DEBUG_KOBJECT_RELEASE
->  	bool "kobject release debugging"
->  	depends on DEBUG_OBJECTS_TIMERS
-> -- 
-> 2.25.4
-> 
