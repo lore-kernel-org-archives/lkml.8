@@ -2,53 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2424BC433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC20C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00EB82070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1702070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262075;
-	bh=1H5+7kJO9eaqpbN5JgnI5mNMkNUZHr0WnC6h16aXQEM=;
+	s=default; t=1595262079;
+	bh=JPe1lrDpA9xuwFElMoTI7X4eMCC3D4qGTTzu5bmtCbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c1sc2sUWmJI+E4/rd+TiPTIKQp6OGgwAQHMhgoHEGSPkBJ7L1SdLqbfHkL8m2ZedA
-	 oWuf+Zf4g4aD6wptM2YCGvluNixc8dESCkneTG8AqpeIjXelWsCBWiTA++W/0+tz+4
-	 TjUlf/8W5zF/m9BxJ9rh+WmRn69gFtn9ljhfb9hg=
+	b=gDnvOT4KAImpXn1FwMHRpSBUG7ofW485b+Apwqmj9n0glZx7pWFwFZk5TqibqcOf3
+	 qg2J8dXPz7+2/mHuvTxC8AsSx2aIMXDOqTKtHATQ1Emy/ZM0B9YxYj4zRZ/Q8jzusq
+	 1zBqw7lSi8WSiIgVpWoEu/B8yNcufFJgWH9FdmiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733308AbgGTQIb (ORCPT
+        id S2388279AbgGTQVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:08:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45816 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:21:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733292AbgGTQIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:08:24 -0400
+        id S2387404AbgGTQIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:08:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8371F20672;
-        Mon, 20 Jul 2020 16:08:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAECA206E9;
+        Mon, 20 Jul 2020 16:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261304;
-        bh=1H5+7kJO9eaqpbN5JgnI5mNMkNUZHr0WnC6h16aXQEM=;
+        s=default; t=1595261312;
+        bh=JPe1lrDpA9xuwFElMoTI7X4eMCC3D4qGTTzu5bmtCbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OGtFQuOvzgGf6ep0ye8lVBO/Q7/Ud4xlYkEVudlagSdc1j7LtPIrHJEk7YqfvGLC+
-         B52jjg7/BfYU8GmZ3/FTsdZ9v4YtUP35V1Y0X6adp8pMmsVKOPzq3ihBKqjbvSEB1s
-         C0Sedmmb5gzudjgqDUqhvYNetpgCCpx327iyBuD0=
+        b=tkrcc3rPYa/Yyy/hYybYNgPwfShShAOsGgsD6VkHOzUnL2IEB+tZo/XH95CCWMEly
+         LRLe09G4dhLCcSY7O26N4NoAxirU0YFGyBBzc73glAqV52Vk6524p0VxlGnPkb1Bu2
+         tl7viYOgfXf+SG/wf5wjlYkLYvwJvG/MLqKA/Iuw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Stable@vger.kernel.org
-Subject: [PATCH 5.7 067/244] iio:pressure:ms5611 Fix buffer element alignment
-Date:   Mon, 20 Jul 2020 17:35:38 +0200
-Message-Id: <20200720152829.043924062@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 069/244] arm64: Add missing sentinel to erratum_1463225
+Date:   Mon, 20 Jul 2020 17:35:40 +0200
+Message-Id: <20200720152829.133440198@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -61,59 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 8db4afe163bbdd93dca6fcefbb831ef12ecc6b4d upstream.
+[ Upstream commit 09c717c92b52df54918e12cbfe6a4658233fda69 ]
 
-One of a class of bugs pointed out by Lars in a recent review.
-iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
-to the size of the timestamp (8 bytes).  This is not guaranteed in
-this driver which uses an array of smaller elements on the stack.
-Here there is no data leak possibility so use an explicit structure
-on the stack to ensure alignment and nice readable fashion.
+When the erratum_1463225 array was introduced a sentinel at the end was
+missing thus causing a KASAN: global-out-of-bounds in
+is_affected_midr_range_list on arm64 error.
 
-The forced alignment of ts isn't strictly necessary in this driver
-as the padding will be correct anyway (there isn't any).  However
-it is probably less fragile to have it there and it acts as
-documentation of the requirement.
-
-Fixes: 713bbb4efb9dc ("iio: pressure: ms5611: Add triggered buffer support")
-Reported-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: a9e821b89daa ("arm64: Add KRYO4XX gold CPU cores to erratum list 1463225 and 1418040")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Link: https://lore.kernel.org/linux-arm-kernel/CA+G9fYs3EavpU89-rTQfqQ9GgxAMgMAk7jiiVrfP0yxj5s+Q6g@mail.gmail.com/
+Link: https://lore.kernel.org/r/20200709051345.14544-1-f.fainelli@gmail.com
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/pressure/ms5611_core.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/cpu_errata.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/iio/pressure/ms5611_core.c
-+++ b/drivers/iio/pressure/ms5611_core.c
-@@ -212,16 +212,21 @@ static irqreturn_t ms5611_trigger_handle
- 	struct iio_poll_func *pf = p;
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct ms5611_state *st = iio_priv(indio_dev);
--	s32 buf[4]; /* s32 (pressure) + s32 (temp) + 2 * s32 (timestamp) */
-+	/* Ensure buffer elements are naturally aligned */
-+	struct {
-+		s32 channels[2];
-+		s64 ts __aligned(8);
-+	} scan;
- 	int ret;
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index dbf266212808e..f9387c1252325 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -778,6 +778,7 @@ static const struct midr_range erratum_1463225[] = {
+ 	MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 3, 1),
+ 	/* Kryo4xx Gold (rcpe to rfpf) => (r0p0 to r3p1) */
+ 	MIDR_RANGE(MIDR_QCOM_KRYO_4XX_GOLD, 0xc, 0xe, 0xf, 0xf),
++	{},
+ };
+ #endif
  
- 	mutex_lock(&st->lock);
--	ret = ms5611_read_temp_and_pressure(indio_dev, &buf[1], &buf[0]);
-+	ret = ms5611_read_temp_and_pressure(indio_dev, &scan.channels[1],
-+					    &scan.channels[0]);
- 	mutex_unlock(&st->lock);
- 	if (ret < 0)
- 		goto err;
- 
--	iio_push_to_buffers_with_timestamp(indio_dev, buf,
-+	iio_push_to_buffers_with_timestamp(indio_dev, &scan,
- 					   iio_get_time_ns(indio_dev));
- 
- err:
+-- 
+2.25.1
+
 
 
