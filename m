@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422C2C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCFAC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A54A207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEC912065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261622;
-	bh=XpVYNTG7d63c1wj1Uwh5uvfSxJPpzA9JbBiqS/oVjqQ=;
+	s=default; t=1595261626;
+	bh=hRF5xXYQb2JblcGP2n9ndxkhrq+atP2E9XBJF5Slttc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dpdFyjmGHhezkoFlQOOFHeOhJ3we2ngA9/S1Ui9LaWLsm7CY61FhrtztudWgUF8aA
-	 K/aD6y6PBVhBsvRiWBVNiDXmIUBYxDoBI5zEv0UX5QBuBDVYKEYZ+/JSMZ4//GsyWn
-	 o4C0gSrTsNaeMmm09cdSF/Xa5c8TVPfiuPvsDT/w=
+	b=00vaWKmVmtCR4JO/PY7OPFlCGV2+Wc/oGGLJ1MUBFMM4xQzvjb/0V90CT5ixS0NuS
+	 BVjCHcsFXggwjxuQBFYfi98a2mftUXUohaFFw9zTCojrthSow00FXmkWr3HRGivpAC
+	 wcMGDorV02pOJmjZHkVv+rM8qvpr3U5/GfsjzSgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388140AbgGTQNk (ORCPT
+        id S2387804AbgGTQNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:13:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53632 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:13:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387666AbgGTQNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:13:37 -0400
+        id S2388136AbgGTQNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:13:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5850F2065E;
-        Mon, 20 Jul 2020 16:13:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37BA120734;
+        Mon, 20 Jul 2020 16:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261616;
-        bh=XpVYNTG7d63c1wj1Uwh5uvfSxJPpzA9JbBiqS/oVjqQ=;
+        s=default; t=1595261619;
+        bh=hRF5xXYQb2JblcGP2n9ndxkhrq+atP2E9XBJF5Slttc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t0/2SVyckCyKWOk0YipXLE2Oc1sHfBveVEY22Kc53fBiDFguHrF+eDao1/Z3id3/y
-         fu42hO0GAF+kDdvB21mbpcayZaLl1YVI+gJQ7PxMYHgjsp/49PmcK8dAgw4sxES5pn
-         1COcP+cm/TEqD14EBcsVSTG1MA4Kv10ZC4wgasUA=
+        b=Bs7HX4Af+pBmUgtgo+lTTGDoewf0yUX8KYrvKw4uzj91QKlBI5fGkYLeimdCg329H
+         biZ1XE7xs1wJ31FjnlKHcYI9D912b/KzeI8DQH4b8Eo+QNddh12zi3EHxq2O1rINFY
+         QrCLxCV3yPBz4+THGlecoxLRgxuZ1t6DqCEGS8qI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@pm.me>,
-        Amit Shah <amit@kernel.org>
-Subject: [PATCH 5.7 173/244] virtio: virtio_console: add missing MODULE_DEVICE_TABLE() for rproc serial
-Date:   Mon, 20 Jul 2020 17:37:24 +0200
-Message-Id: <20200720152834.064507603@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Priebe <s.priebe@profihost.ag>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.7 182/244] fuse: ignore data argument of mount(..., MS_REMOUNT)
+Date:   Mon, 20 Jul 2020 17:37:33 +0200
+Message-Id: <20200720152834.497235240@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,51 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@pm.me>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit 897c44f0bae574c5fb318c759b060bebf9dd6013 upstream.
+commit e8b20a474cf2c42698d1942f939ff2128819f151 upstream.
 
-rproc_serial_id_table lacks an exposure to module devicetable, so
-when remoteproc firmware requests VIRTIO_ID_RPROC_SERIAL, no uevent
-is generated and no module autoloading occurs.
-Add missing MODULE_DEVICE_TABLE() annotation and move the existing
-one for VIRTIO_ID_CONSOLE right to the table itself.
+The command
 
-Fixes: 1b6370463e88 ("virtio_console: Add support for remoteproc serial")
-Cc: <stable@vger.kernel.org> # v3.8+
-Signed-off-by: Alexander Lobakin <alobakin@pm.me>
-Reviewed-by: Amit Shah <amit@kernel.org>
-Link: https://lore.kernel.org/r/x7C_CbeJtoGMy258nwAXASYz3xgFMFpyzmUvOyZzRnQrgWCREBjaqBOpAUS7ol4NnZYvSVwmTsCG0Ohyfvta-ygw6HMHcoeKK0C3QFiAO_Q=@pm.me
+  mount -o remount -o unknownoption /mnt/fuse
+
+succeeds on kernel versions prior to v5.4 and fails on kernel version at or
+after.  This is because fuse_parse_param() rejects any unrecognised options
+in case of FS_CONTEXT_FOR_RECONFIGURE, just as for FS_CONTEXT_FOR_MOUNT.
+
+This causes a regression in case the fuse filesystem is in fstab, since
+remount sends all options found there to the kernel; even ones that are
+meant for the initial mount and are consumed by the userspace fuse server.
+
+Fix this by ignoring mount options, just as fuse_remount_fs() did prior to
+the conversion to the new API.
+
+Reported-by: Stefan Priebe <s.priebe@profihost.ag>
+Fixes: c30da2e981a7 ("fuse: convert to use the new mount API")
+Cc: <stable@vger.kernel.org> # v5.4
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/virtio_console.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/fuse/inode.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/char/virtio_console.c
-+++ b/drivers/char/virtio_console.c
-@@ -2116,6 +2116,7 @@ static struct virtio_device_id id_table[
- 	{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
- 	{ 0 },
- };
-+MODULE_DEVICE_TABLE(virtio, id_table);
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -468,6 +468,13 @@ static int fuse_parse_param(struct fs_co
+ 	struct fuse_fs_context *ctx = fc->fs_private;
+ 	int opt;
  
- static unsigned int features[] = {
- 	VIRTIO_CONSOLE_F_SIZE,
-@@ -2128,6 +2129,7 @@ static struct virtio_device_id rproc_ser
- #endif
- 	{ 0 },
- };
-+MODULE_DEVICE_TABLE(virtio, rproc_serial_id_table);
- 
- static unsigned int rproc_serial_features[] = {
- };
-@@ -2280,6 +2282,5 @@ static void __exit fini(void)
- module_init(init);
- module_exit(fini);
- 
--MODULE_DEVICE_TABLE(virtio, id_table);
- MODULE_DESCRIPTION("Virtio console driver");
- MODULE_LICENSE("GPL");
++	/*
++	 * Ignore options coming from mount(MS_REMOUNT) for backward
++	 * compatibility.
++	 */
++	if (fc->purpose == FS_CONTEXT_FOR_RECONFIGURE)
++		return 0;
++
+ 	opt = fs_parse(fc, fuse_fs_parameters, param, &result);
+ 	if (opt < 0)
+ 		return opt;
 
 
