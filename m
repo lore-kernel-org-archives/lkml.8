@@ -4,84 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FF7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49836C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36CFC20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A8C20709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595232063;
-	bh=LmnmOr9bZrI+OSg3ACxiPbwpTzNjUKxhZGxEN8QjcsQ=;
+	s=default; t=1595232150;
+	bh=YWX0T0Km4CQxwzthmPHWk15E4G6K+rvEZicBswWqlQU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C2DAOFIXOeKJZuM/riupdOP3Em1/G7RmuBDFqpLepyKwpV4wcu+/7TuRE2CUnTIt1
-	 6Hu2mBhCw1qV0KKPf0g5MV6wYOfPt2p3C6g22v65K7IlT6ryFkAqVejnoHE6Xk+pTX
-	 1nw2bI8+g06kg3qZCYqfcTBASXRoNqk0eHRDFD8c=
+	b=KhRv4q6Pz2mcb+6vg/MibFm3/kuklXjVKt6T06GiPmSiQQvXyHsQHR5ICLjZYmACa
+	 CIWBYPgxzj2HjXKSisN8v1juBkkV7SEHE1w7d84OsF7e7M69e1IF+WKoQMuidFYKwF
+	 htDR+PVXjSzmB2L48ca/R4zgaolMrTAdqQBHc+Yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgGTIBC (ORCPT
+        id S1727107AbgGTIC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:01:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35908 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 04:02:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgGTIBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:01:01 -0400
+        id S1726015AbgGTIC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 04:02:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D158020702;
-        Mon, 20 Jul 2020 08:01:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E38720702;
+        Mon, 20 Jul 2020 08:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595232061;
-        bh=LmnmOr9bZrI+OSg3ACxiPbwpTzNjUKxhZGxEN8QjcsQ=;
+        s=default; t=1595232148;
+        bh=YWX0T0Km4CQxwzthmPHWk15E4G6K+rvEZicBswWqlQU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TwAfBSs1gNL2zsDmH/FqhFc3ks1csBkdK3UgL5V78ktEM+d3MU8TcICG0n28GuSIw
-         2SdNH/b58K1V3I82EKsU7odgguHkGMiAWzDGULWLRnLsucFYbJrbfuaKHIocghPgJw
-         Nsi/XXzAMY6Y7po6/vyZDIpCTVkyWQsGdEq4SeTs=
-Date:   Mon, 20 Jul 2020 10:01:11 +0200
+        b=D0bBpJQWLUxeHEAVfDX+zZpddkA4SunlFzeU/0fuL0MYB9iyTUdVGZ+vUm3WAgMRT
+         xTmYH5Tnsk7YwS1TNQvrmAUnSEBq6ln51Msby80CNavikEZAKqA9OZ8BZXX4zo4n/5
+         YEw4xguk25vhBiwL3xW7YK8Cr8YiwFgXT6HkAUZg=
+Date:   Mon, 20 Jul 2020 10:02:38 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, moritzf@google.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] FPGA Manager (late) fixes for 5.8
-Message-ID: <20200720080111.GA553171@kroah.com>
-References: <20200717234408.GA4556@epycbox.lan>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [git pull] habanalabs fixes pull request for kernel 5.8-rc7
+Message-ID: <20200720080238.GB553171@kroah.com>
+References: <20200719061322.GA31592@ogabbay-VM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200717234408.GA4556@epycbox.lan>
+In-Reply-To: <20200719061322.GA31592@ogabbay-VM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 04:44:08PM -0700, Moritz Fischer wrote:
-> The following changes since commit 11ba468877bb23f28956a35e896356252d63c983:
+On Sun, Jul 19, 2020 at 09:13:22AM +0300, Oded Gabbay wrote:
+> Hello Greg,
 > 
->   Linux 5.8-rc5 (2020-07-12 16:34:50 -0700)
+> This pull request is for 5.8-rc7 and it contains an important bug fix for
+> possible out-of-bounds access error.
+> 
+> Details are in the tag message below.
+> 
+> Thanks,
+> Oded
+> 
+> The following changes since commit b279b1fe5799cf653de3822ca253f5d21639d90a:
+> 
+>   Merge tag 'misc-habanalabs-fixes-2020-07-10' of git://people.freedesktop.org/~gabbayo/linux into char-misc-linus (2020-07-17 11:56:58 +0200)
 > 
 > are available in the Git repository at:
 > 
->   git://git.kernel.org/pub/scm/linux/kernel/git/mdf/linux-fpga.git fpga-late-fixes-for-5.8
-> 
-> for you to fetch changes up to 8614afd689df59d9ce019439389be20bd788a897:
-> 
->   fpga: dfl: fix bug in port reset handshake (2020-07-13 22:11:17 -0700)
-> 
-> ----------------------------------------------------------------
-> FPGA manager fixes for 5.8
-> 
-> Here are two (late) dfl fixes for the the 5.8 release.
-> 
-> Matthew's fix addresses an issue in the reset of a port.
-> 
-> Xu'x fix addresses a linter warning.
+>   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2020-07-19
 
-That's not a "real" issue, and should have waited until 5.9-rc1 as there
-is no bug being fixed there at all.  I'll take it for now, but be more
-careful in the future.
-
-thanks,
+Pulled and pushed out, thanks.
 
 greg k-h
