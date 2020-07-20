@@ -2,601 +2,216 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5D2C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C81C4346F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2971322CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF8C22CBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:52:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MadyBZx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbgGTMvz (ORCPT
+        id S1728836AbgGTMsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:51:55 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20294 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728461AbgGTMvj (ORCPT
+        Mon, 20 Jul 2020 08:48:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728074AbgGTMsJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 08:51:39 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KCWdNl068883;
-        Mon, 20 Jul 2020 08:51:21 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32cdy9u5ss-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 08:51:21 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KCk6MV111810;
-        Mon, 20 Jul 2020 08:51:21 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32cdy9u5rs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 08:51:20 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KCorkL006525;
-        Mon, 20 Jul 2020 12:51:18 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 32brq82nvc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 12:51:18 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KCpFI156885502
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 12:51:15 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 935B742041;
-        Mon, 20 Jul 2020 12:51:15 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF0FC42042;
-        Mon, 20 Jul 2020 12:51:11 +0000 (GMT)
-Received: from hbathini.in.ibm.com (unknown [9.85.112.199])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Jul 2020 12:51:11 +0000 (GMT)
-Subject: [PATCH v4 03/12] powerpc/kexec_file: add helper functions for
- getting memory ranges
-From:   Hari Bathini <hbathini@linux.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Date:   Mon, 20 Jul 2020 18:21:10 +0530
-Message-ID: <159524946347.20855.15784642736087777919.stgit@hbathini.in.ibm.com>
-In-Reply-To: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com>
-References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com>
-User-Agent: StGit/0.17.1-dirty
+        Mon, 20 Jul 2020 08:48:09 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EED7C061794;
+        Mon, 20 Jul 2020 05:48:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=v9KgsOSWea1bJKFDijg05Yu/Lxnc3rcc50PR6ELHK4E=; b=MadyBZx0Wf8x+2kw7O1nJxOIOd
+        FbU4MH1JyD5v78V7lQ/HRw45yXpPVs9JO/G+kH4DiN1QWFmw0WGQv/S2d22ogQPe/4gqcuswjDMxD
+        UA+RyowobKCKhwuLpSB8o4bKj8XVpqEmqj4r0KjhkUO/Xe3omvaNi1zO6Mu7Ul5xJ63b84wq7p4uE
+        igF3dMEhdDGLmF1UIoeXtgDt60qeorgzwuf6irI/HPydWG6GGi42y2nO3TPoyuU57ddcRPRbw8sYq
+        A124JUfae++O65R5yqh735FbvAIm2bAY6i4tx8g4ymy/GWe+BCXCPTa9ItoQv2rd6m2uecW1hKmJ+
+        VToa8WXQ==;
+Received: from [2001:4bb8:105:4a81:2a8f:15b1:2c3:7be7] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxVCt-0004Wa-Pp; Mon, 20 Jul 2020 12:47:49 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
+        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
+        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
+Subject: [PATCH 03/24] net: add a new sockptr_t type
+Date:   Mon, 20 Jul 2020 14:47:16 +0200
+Message-Id: <20200720124737.118617-4-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720124737.118617-1-hch@lst.de>
+References: <20200720124737.118617-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-20_07:2020-07-20,2020-07-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 impostorscore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 bulkscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007200084
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In kexec case, the kernel to be loaded uses the same memory layout as
-the running kernel. So, passing on the DT of the running kernel would
-be good enough.
+Add a uptr_t type that can hold a pointer to either a user or kernel
+memory region, and simply helpers to copy to and from it.  For
+architectures like x86 that have non-overlapping user and kernel
+address space it just is a union and uses a TASK_SIZE check to
+select the proper copy routine.  For architectures with overlapping
+address spaces a flag to indicate the address space is used instead.
 
-But in case of kdump, different memory ranges are needed to manage
-loading the kdump kernel, booting into it and exporting the elfcore
-of the crashing kernel. The ranges are exclude memory ranges, usable
-memory ranges, reserved memory ranges and crash memory ranges.
-
-Exclude memory ranges specify the list of memory ranges to avoid while
-loading kdump segments. Usable memory ranges list the memory ranges
-that could be used for booting kdump kernel. Reserved memory ranges
-list the memory regions for the loading kernel's reserve map. Crash
-memory ranges list the memory ranges to be exported as the crashing
-kernel's elfcore.
-
-Add helper functions for setting up the above mentioned memory ranges.
-This helpers facilitate in understanding the subsequent changes better
-and make it easy to setup the different memory ranges listed above, as
-and when appropriate.
-
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-Tested-by: Pingfan Liu <piliu@redhat.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
+ include/linux/sockptr.h | 121 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 121 insertions(+)
+ create mode 100644 include/linux/sockptr.h
 
-v3 -> v4:
-* Unchanged. Added Reviewed-by tag from Thiago.
-
-v2 -> v3:
-* Unchanged. Added Acked-by & Tested-by tags from Dave & Pingfan.
-
-v1 -> v2:
-* Introduced arch_kexec_locate_mem_hole() for override and dropped
-  weak arch_kexec_add_buffer().
-* Dropped __weak identifier for arch overridable functions.
-* Fixed the missing declaration for arch_kimage_file_post_load_cleanup()
-  reported by lkp. lkp report for reference:
-    - https://lore.kernel.org/patchwork/patch/1264418/
-
-
- arch/powerpc/include/asm/kexec_ranges.h |   25 ++
- arch/powerpc/kexec/Makefile             |    2 
- arch/powerpc/kexec/ranges.c             |  410 +++++++++++++++++++++++++++++++
- 3 files changed, 436 insertions(+), 1 deletion(-)
- create mode 100644 arch/powerpc/include/asm/kexec_ranges.h
- create mode 100644 arch/powerpc/kexec/ranges.c
-
-diff --git a/arch/powerpc/include/asm/kexec_ranges.h b/arch/powerpc/include/asm/kexec_ranges.h
+diff --git a/include/linux/sockptr.h b/include/linux/sockptr.h
 new file mode 100644
-index 0000000..78f3111
+index 00000000000000..e41dfa52555dec
 --- /dev/null
-+++ b/arch/powerpc/include/asm/kexec_ranges.h
-@@ -0,0 +1,25 @@
++++ b/include/linux/sockptr.h
+@@ -0,0 +1,121 @@
 +/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _ASM_POWERPC_KEXEC_RANGES_H
-+#define _ASM_POWERPC_KEXEC_RANGES_H
-+
-+#define MEM_RANGE_CHUNK_SZ		2048	/* Memory ranges size chunk */
-+
-+struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges);
-+int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
-+int add_tce_mem_ranges(struct crash_mem **mem_ranges);
-+int add_initrd_mem_range(struct crash_mem **mem_ranges);
-+#ifdef CONFIG_PPC_BOOK3S_64
-+int add_htab_mem_range(struct crash_mem **mem_ranges);
-+#else
-+static inline int add_htab_mem_range(struct crash_mem **mem_ranges)
-+{
-+	return 0;
-+}
-+#endif
-+int add_kernel_mem_range(struct crash_mem **mem_ranges);
-+int add_rtas_mem_range(struct crash_mem **mem_ranges);
-+int add_opal_mem_range(struct crash_mem **mem_ranges);
-+int add_reserved_ranges(struct crash_mem **mem_ranges);
-+void sort_memory_ranges(struct crash_mem *mrngs, bool merge);
-+
-+#endif /* _ASM_POWERPC_KEXEC_RANGES_H */
-diff --git a/arch/powerpc/kexec/Makefile b/arch/powerpc/kexec/Makefile
-index 67c3553..4aff684 100644
---- a/arch/powerpc/kexec/Makefile
-+++ b/arch/powerpc/kexec/Makefile
-@@ -7,7 +7,7 @@ obj-y				+= core.o crash.o core_$(BITS).o
- 
- obj-$(CONFIG_PPC32)		+= relocate_32.o
- 
--obj-$(CONFIG_KEXEC_FILE)	+= file_load.o file_load_$(BITS).o elf_$(BITS).o
-+obj-$(CONFIG_KEXEC_FILE)	+= file_load.o ranges.o file_load_$(BITS).o elf_$(BITS).o
- 
- ifdef CONFIG_HAVE_IMA_KEXEC
- ifdef CONFIG_IMA
-diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
-new file mode 100644
-index 0000000..713ce54
---- /dev/null
-+++ b/arch/powerpc/kexec/ranges.c
-@@ -0,0 +1,410 @@
-+// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * powerpc code to implement the kexec_file_load syscall
++ * Copyright (c) 2020 Christoph Hellwig.
 + *
-+ * Copyright (C) 2004  Adam Litke (agl@us.ibm.com)
-+ * Copyright (C) 2004  IBM Corp.
-+ * Copyright (C) 2004,2005  Milton D Miller II, IBM Corporation
-+ * Copyright (C) 2005  R Sharada (sharada@in.ibm.com)
-+ * Copyright (C) 2006  Mohan Kumar M (mohan@in.ibm.com)
-+ * Copyright (C) 2020  IBM Corporation
-+ *
-+ * Based on kexec-tools' kexec-ppc64.c, fs2dt.c.
-+ * Heavily modified for the kernel by
-+ * Hari Bathini <hbathini@linux.ibm.com>.
++ * Support for "universal" pointers that can point to either kernel or userspace
++ * memory.
 + */
++#ifndef _LINUX_SOCKPTR_H
++#define _LINUX_SOCKPTR_H
 +
-+#undef DEBUG
-+#define pr_fmt(fmt) "kexec ranges: " fmt
-+
-+#include <linux/sort.h>
-+#include <linux/kexec.h>
-+#include <linux/of_device.h>
 +#include <linux/slab.h>
-+#include <asm/sections.h>
-+#include <asm/kexec_ranges.h>
++#include <linux/uaccess.h>
 +
-+/**
-+ * get_max_nr_ranges - Get the max no. of ranges crash_mem structure
-+ *                     could hold, given the size allocated for it.
-+ * @size:              Allocation size of crash_mem structure.
-+ *
-+ * Returns the maximum no. of ranges.
-+ */
-+static inline unsigned int get_max_nr_ranges(size_t size)
++#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
++typedef union {
++	void		*kernel;
++	void __user	*user;
++} sockptr_t;
++
++static inline bool sockptr_is_kernel(sockptr_t sockptr)
 +{
-+	return ((size - sizeof(struct crash_mem)) /
-+		sizeof(struct crash_mem_range));
++	return (unsigned long)sockptr.kernel >= TASK_SIZE;
 +}
 +
-+/**
-+ * get_mem_rngs_size - Get the allocated size of mrngs based on
-+ *                     max_nr_ranges and chunk size.
-+ * @mrngs:             Memory ranges.
-+ *
-+ * Returns the maximum size of @mrngs.
-+ */
-+static inline size_t get_mem_rngs_size(struct crash_mem *mrngs)
++static inline sockptr_t KERNEL_SOCKPTR(void *p)
 +{
-+	size_t size;
++	return (sockptr_t) { .kernel = p };
++}
++#else /* CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE */
++typedef struct {
++	union {
++		void		*kernel;
++		void __user	*user;
++	};
++	bool		is_kernel : 1;
++} sockptr_t;
 +
-+	if (!mrngs)
-+		return 0;
-+
-+	size = (sizeof(struct crash_mem) +
-+		(mrngs->max_nr_ranges * sizeof(struct crash_mem_range)));
-+
-+	/*
-+	 * Memory is allocated in size multiple of MEM_RANGE_CHUNK_SZ.
-+	 * So, align to get the actual length.
-+	 */
-+	return ALIGN(size, MEM_RANGE_CHUNK_SZ);
++static inline bool sockptr_is_kernel(sockptr_t sockptr)
++{
++	return sockptr.is_kernel;
 +}
 +
-+/**
-+ * __add_mem_range - add a memory range to memory ranges list.
-+ * @mem_ranges:      Range list to add the memory range to.
-+ * @base:            Base address of the range to add.
-+ * @size:            Size of the memory range to add.
-+ *
-+ * (Re)allocates memory, if needed.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+static int __add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
++static inline sockptr_t KERNEL_SOCKPTR(void *p)
 +{
-+	struct crash_mem *mrngs = *mem_ranges;
++	return (sockptr_t) { .kernel = p, .is_kernel = true };
++}
++#endif /* CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE */
 +
-+	if ((mrngs == NULL) || (mrngs->nr_ranges == mrngs->max_nr_ranges)) {
-+		mrngs = realloc_mem_ranges(mem_ranges);
-+		if (!mrngs)
-+			return -ENOMEM;
-+	}
++static inline sockptr_t USER_SOCKPTR(void __user *p)
++{
++	return (sockptr_t) { .user = p };
++}
 +
-+	mrngs->ranges[mrngs->nr_ranges].start = base;
-+	mrngs->ranges[mrngs->nr_ranges].end = base + size - 1;
-+	pr_debug("Added memory range [%#016llx - %#016llx] at index %d\n",
-+		 base, base + size - 1, mrngs->nr_ranges);
-+	mrngs->nr_ranges++;
++static inline bool sockptr_is_null(sockptr_t sockptr)
++{
++	return !sockptr.user && !sockptr.kernel;
++}
++
++static inline int copy_from_sockptr(void *dst, sockptr_t src, size_t size)
++{
++	if (!sockptr_is_kernel(src))
++		return copy_from_user(dst, src.user, size);
++	memcpy(dst, src.kernel, size);
 +	return 0;
 +}
 +
-+/**
-+ * __merge_memory_ranges - Merges the given memory ranges list.
-+ * @mem_ranges:            Range list to merge.
-+ *
-+ * Assumes a sorted range list.
-+ *
-+ * Returns nothing.
-+ */
-+static void __merge_memory_ranges(struct crash_mem *mrngs)
++static inline int copy_to_sockptr(sockptr_t dst, const void *src, size_t size)
 +{
-+	struct crash_mem_range *rngs;
-+	int i, idx;
-+
-+	if (!mrngs)
-+		return;
-+
-+	idx = 0;
-+	rngs = &mrngs->ranges[0];
-+	for (i = 1; i < mrngs->nr_ranges; i++) {
-+		if (rngs[i].start <= (rngs[i-1].end + 1))
-+			rngs[idx].end = rngs[i].end;
-+		else {
-+			idx++;
-+			if (i == idx)
-+				continue;
-+
-+			rngs[idx] = rngs[i];
-+		}
-+	}
-+	mrngs->nr_ranges = idx + 1;
-+}
-+
-+/**
-+ * realloc_mem_ranges - reallocate mem_ranges with size incremented
-+ *                      by MEM_RANGE_CHUNK_SZ. Frees up the old memory,
-+ *                      if memory allocation fails.
-+ * @mem_ranges:         Memory ranges to reallocate.
-+ *
-+ * Returns pointer to reallocated memory on success, NULL otherwise.
-+ */
-+struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges)
-+{
-+	struct crash_mem *mrngs = *mem_ranges;
-+	unsigned int nr_ranges;
-+	size_t size;
-+
-+	size = get_mem_rngs_size(mrngs);
-+	nr_ranges = mrngs ? mrngs->nr_ranges : 0;
-+
-+	size += MEM_RANGE_CHUNK_SZ;
-+	mrngs = krealloc(*mem_ranges, size, GFP_KERNEL);
-+	if (!mrngs) {
-+		kfree(*mem_ranges);
-+		*mem_ranges = NULL;
-+		return NULL;
-+	}
-+
-+	mrngs->nr_ranges = nr_ranges;
-+	mrngs->max_nr_ranges = get_max_nr_ranges(size);
-+	*mem_ranges = mrngs;
-+
-+	return mrngs;
-+}
-+
-+/**
-+ * add_mem_range - Updates existing memory range, if there is an overlap.
-+ *                 Else, adds a new memory range.
-+ * @mem_ranges:    Range list to add the memory range to.
-+ * @base:          Base address of the range to add.
-+ * @size:          Size of the memory range to add.
-+ *
-+ * (Re)allocates memory, if needed.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
-+{
-+	struct crash_mem *mrngs = *mem_ranges;
-+	u64 mstart, mend, end;
-+	unsigned int i;
-+
-+	if (!size)
-+		return 0;
-+
-+	end = base + size - 1;
-+
-+	if ((mrngs == NULL) || (mrngs->nr_ranges == 0))
-+		return __add_mem_range(mem_ranges, base, size);
-+
-+	for (i = 0; i < mrngs->nr_ranges; i++) {
-+		mstart = mrngs->ranges[i].start;
-+		mend = mrngs->ranges[i].end;
-+		if (base < mend && end > mstart) {
-+			if (base < mstart)
-+				mrngs->ranges[i].start = base;
-+			if (end > mend)
-+				mrngs->ranges[i].end = end;
-+			return 0;
-+		}
-+	}
-+
-+	return __add_mem_range(mem_ranges, base, size);
-+}
-+
-+/**
-+ * add_tce_mem_ranges - Adds tce-table range to the given memory ranges list.
-+ * @mem_ranges:         Range list to add the memory range(s) to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_tce_mem_ranges(struct crash_mem **mem_ranges)
-+{
-+	struct device_node *dn;
-+	int ret;
-+
-+	for_each_node_by_type(dn, "pci") {
-+		u64 base;
-+		u32 size;
-+
-+		ret = of_property_read_u64(dn, "linux,tce-base", &base);
-+		ret |= of_property_read_u32(dn, "linux,tce-size", &size);
-+		if (ret)
-+			continue;
-+
-+		ret = add_mem_range(mem_ranges, base, size);
-+		if (ret)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+
-+/**
-+ * add_initrd_mem_range - Adds initrd range to the given memory ranges list,
-+ *                        if the initrd was retained.
-+ * @mem_ranges:           Range list to add the memory range to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_initrd_mem_range(struct crash_mem **mem_ranges)
-+{
-+	u64 base, end;
-+	int ret = 0;
-+	char *str;
-+
-+	/* This range means something only if initrd was retained */
-+	str = strstr(saved_command_line, "retain_initrd");
-+	if (!str)
-+		return 0;
-+
-+	ret = of_property_read_u64(of_chosen, "linux,initrd-start", &base);
-+	ret |= of_property_read_u64(of_chosen, "linux,initrd-end", &end);
-+	if (!ret)
-+		ret = add_mem_range(mem_ranges, base, end - base + 1);
-+	return ret;
-+}
-+
-+/**
-+ * add_htab_mem_range - Adds htab range to the given memory ranges list,
-+ *                      if it exists
-+ * @mem_ranges:         Range list to add the memory range to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_htab_mem_range(struct crash_mem **mem_ranges)
-+{
-+	if (!htab_address)
-+		return 0;
-+
-+	return add_mem_range(mem_ranges, __pa(htab_address), htab_size_bytes);
-+}
-+
-+/**
-+ * add_kernel_mem_range - Adds kernel text region to the given
-+ *                        memory ranges list.
-+ * @mem_ranges:           Range list to add the memory range to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_kernel_mem_range(struct crash_mem **mem_ranges)
-+{
-+	return add_mem_range(mem_ranges, 0, __pa(_end));
-+}
-+
-+/**
-+ * add_rtas_mem_range - Adds RTAS region to the given memory ranges list.
-+ * @mem_ranges:         Range list to add the memory range to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_rtas_mem_range(struct crash_mem **mem_ranges)
-+{
-+	struct device_node *dn;
-+	int ret = 0;
-+
-+	dn = of_find_node_by_path("/rtas");
-+	if (dn) {
-+		u32 base, size;
-+
-+		ret = of_property_read_u32(dn, "linux,rtas-base", &base);
-+		ret |= of_property_read_u32(dn, "rtas-size", &size);
-+		if (ret)
-+			goto out;
-+
-+		ret = add_mem_range(mem_ranges, base, size);
-+	}
-+
-+out:
-+	of_node_put(dn);
-+	return ret;
-+}
-+
-+/**
-+ * add_opal_mem_range - Adds OPAL region to the given memory ranges list.
-+ * @mem_ranges:         Range list to add the memory range to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_opal_mem_range(struct crash_mem **mem_ranges)
-+{
-+	struct device_node *dn;
-+	int ret = 0;
-+
-+	dn = of_find_node_by_path("/ibm,opal");
-+	if (dn) {
-+		u64 base, size;
-+
-+		ret = of_property_read_u64(dn, "opal-base-address", &base);
-+		ret |= of_property_read_u64(dn, "opal-runtime-size", &size);
-+		if (ret)
-+			goto out;
-+
-+		ret = add_mem_range(mem_ranges, base, size);
-+	}
-+
-+out:
-+	of_node_put(dn);
-+	return ret;
-+}
-+
-+/**
-+ * add_reserved_ranges - Adds "/reserved-ranges" regions exported by f/w
-+ *                       to the given memory ranges list.
-+ * @mem_ranges:          Range list to add the memory ranges to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_reserved_ranges(struct crash_mem **mem_ranges)
-+{
-+	int n_mem_addr_cells, n_mem_size_cells, i, len, cells, ret = 0;
-+	const __be32 *prop;
-+
-+	prop = of_get_property(of_root, "reserved-ranges", &len);
-+	if (!prop)
-+		return 0;
-+
-+	of_node_get(of_root);
-+	n_mem_addr_cells = of_n_addr_cells(of_root);
-+	n_mem_size_cells = of_n_size_cells(of_root);
-+	cells = n_mem_addr_cells + n_mem_size_cells;
-+
-+	/* Each reserved range is an (address,size) pair */
-+	for (i = 0; i < (len / (sizeof(*prop) * cells)); i++) {
-+		u64 base, size;
-+
-+		base = of_read_number(prop + (i * cells), n_mem_addr_cells);
-+		size = of_read_number(prop + (i * cells) + n_mem_addr_cells,
-+				      n_mem_size_cells);
-+
-+		ret = add_mem_range(mem_ranges, base, size);
-+		if (ret)
-+			break;
-+	}
-+
-+	of_node_put(of_root);
-+	return ret;
-+}
-+
-+/* cmp_func_t callback to sort ranges with sort() */
-+static int rngcmp(const void *_x, const void *_y)
-+{
-+	const struct crash_mem_range *x = _x, *y = _y;
-+
-+	if (x->start > y->start)
-+		return 1;
-+	if (x->start < y->start)
-+		return -1;
++	if (!sockptr_is_kernel(dst))
++		return copy_to_user(dst.user, src, size);
++	memcpy(dst.kernel, src, size);
 +	return 0;
 +}
 +
-+/**
-+ * sort_memory_ranges - Sorts the given memory ranges list.
-+ * @mem_ranges:         Range list to sort.
-+ * @merge:              If true, merge the list after sorting.
-+ *
-+ * Returns nothing.
-+ */
-+void sort_memory_ranges(struct crash_mem *mrngs, bool merge)
++static inline void *memdup_sockptr(sockptr_t src, size_t len)
 +{
-+	int i;
++	void *p = kmalloc_track_caller(len, GFP_USER | __GFP_NOWARN);
 +
-+	if (!mrngs)
-+		return;
-+
-+	/* Sort the ranges in-place */
-+	sort(&(mrngs->ranges[0]), mrngs->nr_ranges, sizeof(mrngs->ranges[0]),
-+	     rngcmp, NULL);
-+
-+	if (merge)
-+		__merge_memory_ranges(mrngs);
-+
-+	/* For debugging purpose */
-+	pr_debug("Memory ranges:\n");
-+	for (i = 0; i < mrngs->nr_ranges; i++) {
-+		pr_debug("\t[%03d][%#016llx - %#016llx]\n", i,
-+			 mrngs->ranges[i].start,
-+			 mrngs->ranges[i].end);
++	if (!p)
++		return ERR_PTR(-ENOMEM);
++	if (copy_from_sockptr(p, src, len)) {
++		kfree(p);
++		return ERR_PTR(-EFAULT);
 +	}
++	return p;
 +}
++
++static inline void *memdup_sockptr_nul(sockptr_t src, size_t len)
++{
++	char *p = kmalloc_track_caller(len + 1, GFP_KERNEL);
++
++	if (!p)
++		return ERR_PTR(-ENOMEM);
++	if (copy_from_sockptr(p, src, len)) {
++		kfree(p);
++		return ERR_PTR(-EFAULT);
++	}
++	p[len] = '\0';
++	return p;
++}
++
++static inline void sockptr_advance(sockptr_t sockptr, size_t len)
++{
++	if (sockptr_is_kernel(sockptr))
++		sockptr.kernel += len;
++	else
++		sockptr.user += len;
++}
++
++static inline long strncpy_from_sockptr(char *dst, sockptr_t src, size_t count)
++{
++	if (sockptr_is_kernel(src)) {
++		size_t len = min(strnlen(src.kernel, count - 1) + 1, count);
++
++		memcpy(dst, src.kernel, len);
++		return len;
++	}
++	return strncpy_from_user(dst, src.user, count);
++}
++
++#endif /* _LINUX_SOCKPTR_H */
+-- 
+2.27.0
 
