@@ -2,43 +2,43 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE25EC433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C3AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC89221775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9480622CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595237129;
-	bh=vyyX1LP4325hfnYgliYCjSjLjNxzM/CYe+v7FBLTqDc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FhtzxCKu3z5ipT/eOax3SnbMMNK6ZoYpxhDMWcKp1kYL0InggB53GApov/dOOfQ63
-	 KN8esYSuce9mc9NCjZ5DcTPin9+93B1SOlmvj/U2hWOE2GCQZSXT+XMrJf6kC+xxjT
-	 eebgtgAdI7woJ7W9ym5eyv7Hk8I4Lr+IFrcbqhsc=
+	s=default; t=1595237100;
+	bh=DZJgFWT9EBpxUAxDadsCWuChLAtXVn8oZMtP9QRL6C8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hh0w2bkizXAXeIRkOZ3K1pDvXQPYOLl/2Z/iSy50oQBspqL0NC2hvzOLdQs3W7czY
+	 6Ufccitl+R8dYtXsLW0rVY2zxjfEL8FCHokYc5YwcNq3oMwJ+rmXOX0UKuQdEUul4A
+	 H4GZc33gl113BsIbL++b5YXk7CO/8r+qFtWvKvwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgGTJZ2 (ORCPT
+        id S1728242AbgGTJY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:25:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38964 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 05:24:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbgGTJZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:25:27 -0400
+        id S1727769AbgGTJY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 05:24:58 -0400
 Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 738D922482;
-        Mon, 20 Jul 2020 09:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B05072176B;
+        Mon, 20 Jul 2020 09:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595237127;
-        bh=vyyX1LP4325hfnYgliYCjSjLjNxzM/CYe+v7FBLTqDc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g5qTGQIOWj1V9NU4yK00jz5UQP5Nt5v+OLzEYnJ2fYYF2s2RpuPHOjWCkAadxsvBt
-         KfGvj5cZa5KE3IDq7FgOMY35cboLHnI1EYroJXHTtzwIE4rD8KANUXvfFp/YUVmUzZ
-         gfaX0xMnS7xqZREdic3XBeaF92Yg2TjKzwFszmFw=
+        s=default; t=1595237097;
+        bh=DZJgFWT9EBpxUAxDadsCWuChLAtXVn8oZMtP9QRL6C8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZTwUZAfjeouKDVccICNkfWj3AXzdsSuDk2rXgQ1No8faUuhgdJkyGv8pNjSwr1p8s
+         KG+pxfIgNxDLMiwrUoHqNrpWJhB5PtUOQUvLH6+XLLQNsMur9U/3CoZ5gGNVXCI9pB
+         je+UNlkcrWBPmVpDOLe0ai7+vZwqHYtU7Ofhrs9o=
 From:   Mike Rapoport <rppt@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -67,12 +67,10 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-nvdimm@lists.01.org, linux-riscv@lists.infradead.org,
         x86@kernel.org
-Subject: [PATCH 2/6] mmap: make mlock_future_check() global
-Date:   Mon, 20 Jul 2020 12:24:31 +0300
-Message-Id: <20200720092435.17469-3-rppt@kernel.org>
+Subject: [PATCH 0/6] mm: introduce secretmemfd system call to create "secret" memory areas
+Date:   Mon, 20 Jul 2020 12:24:29 +0300
+Message-Id: <20200720092435.17469-1-rppt@kernel.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200720092435.17469-1-rppt@kernel.org>
-References: <20200720092435.17469-1-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,44 +80,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mike Rapoport <rppt@linux.ibm.com>
 
-It will be used by the upcoming secret memory implementation.
+Hi,
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- mm/internal.h | 3 +++
- mm/mmap.c     | 5 ++---
- 2 files changed, 5 insertions(+), 3 deletions(-)
+This is the third version of "secret" mappings implementation backed by a
+file descriptor. 
 
-diff --git a/mm/internal.h b/mm/internal.h
-index 9886db20d94f..af0a92f8f6bc 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -349,6 +349,9 @@ static inline void munlock_vma_pages_all(struct vm_area_struct *vma)
- extern void mlock_vma_page(struct page *page);
- extern unsigned int munlock_vma_page(struct page *page);
- 
-+extern int mlock_future_check(struct mm_struct *mm, unsigned long flags,
-+			      unsigned long len);
-+
- /*
-  * Clear the page's PageMlocked().  This can be useful in a situation where
-  * we want to unconditionally remove a page from the pagecache -- e.g.,
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 59a4682ebf3f..4dd40a4fedfb 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1310,9 +1310,8 @@ static inline unsigned long round_hint_to_min(unsigned long hint)
- 	return hint;
- }
- 
--static inline int mlock_future_check(struct mm_struct *mm,
--				     unsigned long flags,
--				     unsigned long len)
-+int mlock_future_check(struct mm_struct *mm, unsigned long flags,
-+		       unsigned long len)
- {
- 	unsigned long locked, lock_limit;
- 
+The file descriptor is created using a dedicated secretmemfd system call
+The desired protection mode for the memory is configured using flags
+parameter of the system call. The mmap() of the file descriptor created
+with secretmemfd() will create a "secret" memory mapping. The pages in that
+mapping will be marked as not present in the direct map and will have
+desired protection bits set in the user page table. For instance, current
+implementation allows uncached mappings.
+
+Although normally Linux userspace mappings are protected from other users, 
+such secret mappings are useful for environments where a hostile tenant is
+trying to trick the kernel into giving them access to other tenants
+mappings.
+
+Additionally, the secret mappings may be used as a mean to protect guest
+memory in a virtual machine host.
+
+For demonstration of secret memory usage we've created a userspace library
+[1] that does two things: the first is act as a preloader for openssl to
+redirect all the OPENSSL_malloc calls to secret memory meaning any secret
+keys get automatically protected this way and the other thing it does is
+expose the API to the user who needs it. We anticipate that a lot of the
+use cases would be like the openssl one: many toolkits that deal with
+secret keys already have special handling for the memory to try to give
+them greater protection, so this would simply be pluggable into the
+toolkits without any need for user application modification.
+
+I've hesitated whether to continue to use new flags to memfd_create() or to
+add a new system call and I've decided to use a new system call after I've
+started to look into man pages update. There would have been two completely
+independent descriptions and I think it would have been very confusing.
+
+Hiding secret memory mappings behind an anonymous file allows (ab)use of
+the page cache for tracking pages allocated for the "secret" mappings as
+well as using address_space_operations for e.g. page migration callbacks.
+
+The anonymous file may be also used implicitly, like hugetlb files, to
+implement mmap(MAP_SECRET) and use the secret memory areas with "native" mm
+ABIs in the future.
+
+As the fragmentation of the direct map was one of the major concerns raised
+during the previous postings, I've added an amortizing cache of PMD-size
+pages to each file descriptor and an ability to reserve large chunks of the
+physical memory at boot time and then use this memory as an allocation pool
+for the secret memory areas.
+
+In addition, I've tried to find some numbers that show the benefit of using
+larger pages in the direct map, but I couldn't find anything so I've run a
+couple of benchmarks from phoronix-test-suite on my laptop (i7-8650U with
+32G RAM).
+
+I've tested three variants: the default with 28G of the physical memory
+covered with 1G pages, then I disabled 1G pages using "nogbpages" in the
+kernel command line and at last I've forced the entire direct map to use 4K
+pages using a simple patch to arch/x86/mm/init.c.
+I've made runs of the benchmarks with SSD and tmpfs.
+
+Surprisingly, the results does not show huge advantage for large pages. For
+instance, here the results for kernel build with 'make -j8', in seconds:
+
+                        |  1G    |  2M    |  4K
+------------------------+--------+--------+---------
+ssd, mitigations=on	| 308.75 | 317.37 | 314.9 
+ssd, mitigations=off	| 305.25 | 295.32 | 304.92 
+ram, mitigations=on	| 301.58 | 322.49 | 306.54 
+ram, mitigations=off	| 299.32 | 288.44 | 310.65
+
+All the results I have are available at [2].
+If anybody is interested in plain text, please let me know.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/rppt/secret-memory-preloader.git/
+[2] https://docs.google.com/spreadsheets/d/1tdD-cu8e93vnfGsTFxZ5YdaEfs2E1GELlvWNOGkJV2U/edit?usp=sharing
+
+Mike Rapoport (6):
+  mm: add definition of PMD_PAGE_ORDER
+  mmap: make mlock_future_check() global
+  mm: introduce secretmemfd system call to create "secret" memory areas
+  arch, mm: wire up secretmemfd system call were relevant
+  mm: secretmem: use PMD-size pages to amortize direct map fragmentation
+  mm: secretmem: add ability to reserve memory at boot
+
+ arch/arm64/include/asm/unistd32.h      |   2 +
+ arch/arm64/include/uapi/asm/unistd.h   |   1 +
+ arch/riscv/include/asm/unistd.h        |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl |   1 +
+ fs/dax.c                               |  10 +-
+ include/linux/pgtable.h                |   3 +
+ include/linux/syscalls.h               |   1 +
+ include/uapi/asm-generic/unistd.h      |   7 +-
+ include/uapi/linux/magic.h             |   1 +
+ include/uapi/linux/secretmem.h         |   9 +
+ mm/Kconfig                             |   4 +
+ mm/Makefile                            |   1 +
+ mm/internal.h                          |   3 +
+ mm/mmap.c                              |   5 +-
+ mm/secretmem.c                         | 450 +++++++++++++++++++++++++
+ 16 files changed, 491 insertions(+), 9 deletions(-)
+ create mode 100644 include/uapi/linux/secretmem.h
+ create mode 100644 mm/secretmem.c
+
+
+base-commit: f932d58abc38c898d7d3fe635ecb2b821a256f54
 -- 
 2.26.2
 
