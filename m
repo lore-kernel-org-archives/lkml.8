@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DCAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4D7C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 876FD22D00
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1607B20773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260849;
-	bh=8+F1xvidluSTrZ/um2PpFkWZI11lB1bsHhGjws3CU2E=;
+	s=default; t=1595260853;
+	bh=WWdC/8JRDZCpZNHg7v589mBckIuYNk/cwpy8NeYCGjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L+6g803AzBaxDH0x+hfCcny0fj0IjUvwlajshV2AFz6C0WNEtB1Ka2PYP77uI4azu
-	 Fvt4DYjnR7bdfYpsz2YcirBmCrLF0oDfKf/6TvpU/27Vf55jIWDMVfAp1JepDE1lwo
-	 QZbjGEIGUuWVzRGcl/UkcvTX0bU4dwSw1dqnFmk8=
+	b=yWEV+u/F0Frl2oUU3FAk/Vkpcm54wfMgmsQzyYlCAE/oMWEA/7YQ3UmF2AtfHc5qw
+	 CTG20LwAk3oagkoUh5Kx3uSNt5aV1uh3xc1SWeN8rl6OBcrowePRZ6wrEalXRMy2Qj
+	 Eyq+Vpay8cxtBxc5THVFWNOn/Xtw3X0ttTabg4OY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732437AbgGTQAn (ORCPT
+        id S1732064AbgGTQAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:00:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33730 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:00:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732429AbgGTQAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:00:39 -0400
+        id S1732073AbgGTQAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:00:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CF1A20684;
-        Mon, 20 Jul 2020 16:00:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3318820684;
+        Mon, 20 Jul 2020 16:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260838;
-        bh=8+F1xvidluSTrZ/um2PpFkWZI11lB1bsHhGjws3CU2E=;
+        s=default; t=1595260846;
+        bh=WWdC/8JRDZCpZNHg7v589mBckIuYNk/cwpy8NeYCGjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OigXwxwOthGw+A3QBQnN7W4Hdaur0bYll9cE7R2rSZAjkPH2IJR/Kz5UlXlHo5ykD
-         T9ys5yH2PnRXpDqWcWXfrDl9qZl+Oe3KhNREZdKUshwQxlWGOPJdCD+0dIH03+44Dg
-         kxHxD4lMXxuR8s5+NP7AzxpGMSc6b9h8Q4WRZ/qk=
+        b=QqxRr1SIg7JeNxYNAfSz4BFqhVA/5RNjJotMq9MfB7IHjkMjHSET4khI9HCqi1xOZ
+         rn+zqVAFGftEzjNGOy95JGXkL8iOD2GxfzgViQA2WITz8x2bTzpR0s83qdLDp9VuW3
+         iGcxUfT/+WX1why3nwhTjJGZvVkaLKWmh2bfHthc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 097/215] arm64: dts: meson: add missing gxl rng clock
-Date:   Mon, 20 Jul 2020 17:36:19 +0200
-Message-Id: <20200720152824.826299352@linuxfoundation.org>
+Subject: [PATCH 5.4 117/215] keys: asymmetric: fix error return code in software_key_query()
+Date:   Mon, 20 Jul 2020 17:36:39 +0200
+Message-Id: <20200720152825.762641619@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -61,39 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 95ca6f06dd4827ff63be5154120c7a8511cd9a41 ]
+[ Upstream commit 6cbba1f9114a8134cff9138c79add15012fd52b9 ]
 
-The peripheral clock of the RNG is missing for gxl while it is present
-for gxbb.
+Fix to return negative error code -ENOMEM from kmalloc() error handling
+case instead of 0, as done elsewhere in this function.
 
-Fixes: 1b3f6d148692 ("ARM64: dts: meson-gx: add clock CLKID_RNG0 to hwrng node")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://lore.kernel.org/r/20200617125346.1163527-1-jbrunet@baylibre.com
+Fixes: f1774cb8956a ("X.509: parse public key parameters from x509 for akcipher")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ crypto/asymmetric_keys/public_key.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 49ff0a7d0210f..e3cfa24dca5ab 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -288,6 +288,11 @@ clkc: clock-controller {
- 	};
- };
+diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys/public_key.c
+index d7f43d4ea925a..e5fae4e838c06 100644
+--- a/crypto/asymmetric_keys/public_key.c
++++ b/crypto/asymmetric_keys/public_key.c
+@@ -119,6 +119,7 @@ static int software_key_query(const struct kernel_pkey_params *params,
+ 	if (IS_ERR(tfm))
+ 		return PTR_ERR(tfm);
  
-+&hwrng {
-+	clocks = <&clkc CLKID_RNG0>;
-+	clock-names = "core";
-+};
-+
- &i2c_A {
- 	clocks = <&clkc CLKID_I2C>;
- };
++	ret = -ENOMEM;
+ 	key = kmalloc(pkey->keylen + sizeof(u32) * 2 + pkey->paramlen,
+ 		      GFP_KERNEL);
+ 	if (!key)
 -- 
 2.25.1
 
