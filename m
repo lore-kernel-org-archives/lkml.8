@@ -2,76 +2,109 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB99CC433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7143EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B85A7207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46DF2207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:01:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="tOLfZLK8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgGTXAr (ORCPT
+        id S1727951AbgGTXB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:00:47 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:53914 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727042AbgGTXAr (ORCPT
+        Mon, 20 Jul 2020 19:01:26 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:51708 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgGTXB0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 19:00:47 -0400
-Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06KN0R9P056875;
-        Tue, 21 Jul 2020 08:00:27 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp);
- Tue, 21 Jul 2020 08:00:27 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06KN0RHT056872
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Tue, 21 Jul 2020 08:00:27 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH v2] vt: Reject zero-sized screen buffer size.
-To:     Brooke Basile <brookebasile@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
-References: <20200710113658.GA1238355@kroah.com>
- <20200710143455.3438-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <741c66b4-3855-9c5e-ca67-9e44eb6fa083@gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <4f9a7d46-223a-5178-ae82-4e973f5d8a29@i-love.sakura.ne.jp>
-Date:   Tue, 21 Jul 2020 08:00:26 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+        Mon, 20 Jul 2020 19:01:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=wh/cbRuJktuOsZzlc8uRgoVgjdqNsTzfdwIGfGrtxog=; b=tOLfZLK8pRPsPMltT5G8kggzB0
+        nO41G2ploZ70DChEYnLTnJPhOV19aXLUIaLE66P1go572nRzWz1RCML0pFyGUwkTw8+P9WmzC/rHc
+        pF0trKf1llt0ta4rL64uGgZRp/nSyDLfBy4aokNrjaWDGfO8sC0dHKpBp7nssrm5URlhkt8Me/n3a
+        m/bQ1XKXy7xOeLpwOVrrLAPST3wBVBu+6NnQlfGnsCtzdZ12zJ9u1Big4u1pOMoEVo9+1hkHSYNti
+        rW9h7PkY35K25VVHWpL8lAUQj21Ry8TGnJpwFqeyKtDhFO3BNwg+tWN1c3U6a1pN5jPgPQCQs9+gS
+        lMraswAw==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jxeme-0003gG-LY; Mon, 20 Jul 2020 17:01:21 -0600
+To:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20200716203319.16022-1-logang@deltatee.com>
+ <20200716203319.16022-8-logang@deltatee.com> <20200720141606.GF4627@lst.de>
+ <e939dd43-9e7f-8ef0-162b-2a27f53e6e1a@grimberg.me>
+ <5cc390cf-9b0b-b48b-7447-37934be51ee0@deltatee.com>
+ <2dc39232-4042-1f93-3dcc-3266e70cf6f0@grimberg.me>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <b8fc47a2-0b53-3316-775f-0e9a8eddfdc2@deltatee.com>
+Date:   Mon, 20 Jul 2020 17:01:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <741c66b4-3855-9c5e-ca67-9e44eb6fa083@gmail.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+In-Reply-To: <2dc39232-4042-1f93-3dcc-3266e70cf6f0@grimberg.me>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, hch@lst.de, sagi@grimberg.me
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v15 7/9] nvmet-passthru: Add passthru code to process
+ commands
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/21 0:40, Brooke Basile wrote:
-> Looks like this patch also fixes this bug reported by syzbot:
->     https://syzkaller.appspot.com/bug?id=dc5c6b1ae4952a5d72d0e82de0eeeb9e5f767efc
-> 
-> There's a lot of other bugs that were reported by syzbot that also touch this code, so I just wanted to give a heads up in case you weren't already aware of them.  It seems like this patch could be a fix for all of them.
-> 
-> Here are the links to those other bugs:
->     https://syzkaller.appspot.com/bug?id=3e2ad4922b18026c1579f50900747401842acdff
->     https://syzkaller.appspot.com/bug?id=7329638ab83b70fc8fab07e14c4b2fcdc73af21d
->     https://syzkaller.appspot.com/bug?id=01703eb07363bd1f9757bc4a54994455fc9db9dc
->     https://syzkaller.appspot.com/bug?id=7a04be77a06aae337077e00f0ecdb2239dfc2fc3
->     https://syzkaller.appspot.com/bug?id=ff1543b5ade351b9d6c4ef51c805d89422a8271d
-> 
 
-Indeed they all access around UINT_MAX address. Marked as dup. Thank you.
 
+On 2020-07-20 4:35 p.m., Sagi Grimberg wrote:
+> 
+>> Thanks for the review Christoph. I think I should be able to make all
+>> the requested changes in the next week or two.
+>>
+>> On 2020-07-20 1:35 p.m., Sagi Grimberg wrote:
+>>>
+>>>> I'm still not so happy about having to look up the namespace and still
+>>>> wonder if we should generalize the connect_q to a passthrough_q.  But
+>>>> I guess we can do that later and then reduce some of the exports here..
+>>>
+>>> That is a neat idea! should be easy to do (and we can then lose the host
+>>> xarray stuff). I don't mind having it on a later patch, but it should be
+>>> easy enough to do even before...
+>>>
+>>
+>> I sort of follow this. I can try to work something up but it will
+>> probably take me a few iterations to get it to where you want it. So,
+>> roughly, we'd create a passthrough_q in core with the controller's IO
+>> tagset and then cleanup the fabrics hosts to use that instead of each
+>> independently creating their connect_q?
+>>
+>> Though, I don't understand how this relates to the host xarray stuff
+>> that Sagi mentioned...
+> 
+> passthru commands are in essence REQ_OP_DRV_IN/REQ_OP_DRV_OUT, which
+> means that the driver shouldn't need the ns at all. So if you have a
+> dedicated request queue (mapped to the I/O tagset), you don't need the
+> ns->queue and we can lose the ns lookup altogether.
+
+Thanks, that helps clarify things a bit, but which xarray were you
+talking about?
+
+Logan
