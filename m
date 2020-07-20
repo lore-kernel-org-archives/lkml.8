@@ -2,96 +2,76 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2086EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DA2C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E52F2206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 803AF2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:44:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CjuyLSvU"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="uEJTanHQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732284AbgGTQoM (ORCPT
+        id S2388857AbgGTQoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:44:12 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:14165 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729939AbgGTPlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:41:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595259703; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=zyH7f0j1Zl1XaF/dWFxsiYKuhloakssbIQW2PQAFye8=; b=CjuyLSvUkiTNf422rRZairrZNZNzubbOnBmazEHXSrxHaCjKggNgMtL3YlkQ4AgmLiTRd/x8
- FRU+e2NauoLNg6tXDJIfk1DDTaRf0j6aIva3MlXCV69hg5xdYEu4/ujlbaySJZ1nsHhpAjbS
- pVO84t5slqtCDdbpya7G8xdw9Co=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n20.prod.us-west-2.postgun.com with SMTP id
- 5f15bb35d50c36e72976c796 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 15:41:41
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D8D91C43469; Mon, 20 Jul 2020 15:41:34 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7AB58C43395;
-        Mon, 20 Jul 2020 15:41:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7AB58C43395
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v10 13/13] arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
-Date:   Mon, 20 Jul 2020 09:40:47 -0600
-Message-Id: <20200720154047.3611092-14-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720154047.3611092-1-jcrouse@codeaurora.org>
-References: <20200720154047.3611092-1-jcrouse@codeaurora.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 20 Jul 2020 12:44:23 -0400
+Received: from st43p00im-zteg10072001.me.com ([17.58.63.167]:55507 "EHLO
+        st43p00im-zteg10072001.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732980AbgGTQoR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:44:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+        s=1a1hai; t=1595263456;
+        bh=xR7P0gEG725hD6X8ay110kl9ByPS6ftR/EYV5L9od8s=;
+        h=Content-Type:Subject:From:Date:Message-Id:To;
+        b=uEJTanHQJRaWghYO0wpxyO3RdswKQU09CItMZePgF2M+4P/vke338Ckc/37kHx6R4
+         aYdXRuRiLxV8v0ZFvRiYdraJn6Xv2sYhif49caXDtwBLO48KERv1mJm5jHZbeD3JAD
+         cPYZXOw2VouFMxzEp/4Z6a/W4iv4KMkfI0AVpFGtthMpyVGxsA5HqVFKNU1LHfXs6k
+         zZ5YtMCV1Do1jMjrVXIl5riKh8JhAj8b2rZk9hT9UaaFNTNX2yG6LJLoBg/wqfBcgB
+         ADsPc+jmS4Se1vuc5ngH8pmanVhkjY3YBZXa7ivv8LFEt+nYs2HJhWLJGi+5CEMf4y
+         w/emW6PgUkSig==
+Received: from juergens-mbp.lan (84-114-122-94.cable.dynamic.surfer.at [84.114.122.94])
+        by st43p00im-zteg10072001.me.com (Postfix) with ESMTPSA id 2E776C08B7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:44:16 +0000 (UTC)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: High load from process irq/65-i2c-INT3 - kernel module tps6598x
+From:   =?utf-8?Q?J=C3=BCrgen_Stauber?= <j.stauber@icloud.com>
+Date:   Mon, 20 Jul 2020 18:31:04 +0200
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <376EFB02-6CA2-4D5A-883B-7843B6F6B6EC@icloud.com>
+To:     heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=988 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-2004280000 definitions=main-2007200112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
-split pagetables and per-instance pagetables for drm/msm.
+Hi all,
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+I was made aware in the following launchpad bug report, that I should =
+report the issue directly with the upstream maintainers: =
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1883511
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As mentioned in the report, I experience high cpu load due to an =
+interrupted irq/65-i2c-INT3 process. A short fix is to unload the kernel =
+module tps6598x.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 759cdd0b002b..d883144360aa 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -3981,7 +3981,7 @@ opp-257000000 {
- 		};
- 
- 		adreno_smmu: iommu@5040000 {
--			compatible = "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
-+			compatible = "qcom,adreno-smmu", "qcom,smmu-v2";
- 			reg = <0 0x5040000 0 0x10000>;
- 			#iommu-cells = <1>;
- 			#global-interrupts = <2>;
--- 
-2.25.1
+Please be lenient with me, since I=E2=80=99ve got no glue whether I=E2=80=99=
+m doing this correctly.
 
+In case you need more details/logs/information, please let me know.
+
+Kind regards
+Juergen=
