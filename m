@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96561C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219A3C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B16022CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F9522CB2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259552;
-	bh=cuo+juPufaXmy7d316bkfcGe0dqdvApZ/1cf6hrJbV0=;
+	s=default; t=1595259555;
+	bh=txuOplGWjmQ3K1s8FW4oD57jL9HKZnOuWKFfbWDy9uU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cEGq41lO5Ta+iLAErTLyT3rsfN89w0ETbzAY/bsJxcU4sA5m0vqmAZwOEEyNloJd5
-	 UZuWg0ab6HgSuGticFVFI7OQg+ZIaGdkjgcJwt9Dv/iEpBhjtWCvaUKXNV5hLJVO3k
-	 Yr0rmsqbwzHWxIlVUKPPbJb8VHcp4UYip+srCNKs=
+	b=CVjw8zZfLivwHjMcmn6Y4W1v6TmV6eAoPQpwvjplu+qAwCI4OiTIRi7RD61I/CCMy
+	 m/qTK0zDvX+yxyGHcUnh/TwxDOKr3jErSAGXFPqVWeesP0ovZM5jt2KRkm2y/Xlx1N
+	 91zjy5C/dBT9E8SS+mWXVV4yxxS3WbJdpJ8ZNyG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729411AbgGTPjL (ORCPT
+        id S1729423AbgGTPjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:39:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58026 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:39:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729390AbgGTPjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:39:06 -0400
+        id S1729363AbgGTPjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:39:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97E2D22B4E;
-        Mon, 20 Jul 2020 15:39:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E7FD22D2C;
+        Mon, 20 Jul 2020 15:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259546;
-        bh=cuo+juPufaXmy7d316bkfcGe0dqdvApZ/1cf6hrJbV0=;
+        s=default; t=1595259548;
+        bh=txuOplGWjmQ3K1s8FW4oD57jL9HKZnOuWKFfbWDy9uU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kHIHMOJ4VkraaEyWLt/6KoWESuZLos57DsSrhXcleCblTjUNFi1gxlv4YDBFxy3qP
-         OAZOZ9IPhWU37JXlphuNrG75JkuWSa76XTFb4qWchLlel62jGZgMX1o9gg1kMPQhjp
-         Ow6VPv3OnTYSbh50oNBCL9a40FIH977JIXt+i4yk=
+        b=fXVZz17OXZlEJpn1atAkmSKlWtHtj4PLlF9EUarPAneUA/Nj+NUXoNyR7cUAt8t8P
+         K3y1dSaWOfZ83bwWysHquUfADLj74wU3aGz3slG9RcJWhOcUcLpXnZDonqvyas4oYM
+         o4u8t1Jsf+KIZFUZHo5rx2gqRpltpFWCTX46E6NY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 48/58] USB: serial: option: add Quectel EG95 LTE modem
-Date:   Mon, 20 Jul 2020 17:37:04 +0200
-Message-Id: <20200720152749.648141323@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@pm.me>,
+        Amit Shah <amit@kernel.org>
+Subject: [PATCH 4.4 49/58] virtio: virtio_console: add missing MODULE_DEVICE_TABLE() for rproc serial
+Date:   Mon, 20 Jul 2020 17:37:05 +0200
+Message-Id: <20200720152749.693616676@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
 References: <20200720152747.127988571@linuxfoundation.org>
@@ -59,51 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: AceLan Kao <acelan.kao@canonical.com>
+From: Alexander Lobakin <alobakin@pm.me>
 
-commit da6902e5b6dbca9081e3d377f9802d4fd0c5ea59 upstream.
+commit 897c44f0bae574c5fb318c759b060bebf9dd6013 upstream.
 
-Add support for Quectel Wireless Solutions Co., Ltd. EG95 LTE modem
+rproc_serial_id_table lacks an exposure to module devicetable, so
+when remoteproc firmware requests VIRTIO_ID_RPROC_SERIAL, no uevent
+is generated and no module autoloading occurs.
+Add missing MODULE_DEVICE_TABLE() annotation and move the existing
+one for VIRTIO_ID_CONSOLE right to the table itself.
 
-T:  Bus=01 Lev=01 Prnt=01 Port=02 Cnt=02 Dev#=  5 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=2c7c ProdID=0195 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-
-Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: 1b6370463e88 ("virtio_console: Add support for remoteproc serial")
+Cc: <stable@vger.kernel.org> # v3.8+
+Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+Reviewed-by: Amit Shah <amit@kernel.org>
+Link: https://lore.kernel.org/r/x7C_CbeJtoGMy258nwAXASYz3xgFMFpyzmUvOyZzRnQrgWCREBjaqBOpAUS7ol4NnZYvSVwmTsCG0Ohyfvta-ygw6HMHcoeKK0C3QFiAO_Q=@pm.me
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/char/virtio_console.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -248,6 +248,7 @@ static void option_instat_callback(struc
- /* These Quectel products use Quectel's vendor ID */
- #define QUECTEL_PRODUCT_EC21			0x0121
- #define QUECTEL_PRODUCT_EC25			0x0125
-+#define QUECTEL_PRODUCT_EG95			0x0195
- #define QUECTEL_PRODUCT_BG96			0x0296
- #define QUECTEL_PRODUCT_EP06			0x0306
+--- a/drivers/char/virtio_console.c
++++ b/drivers/char/virtio_console.c
+@@ -2155,6 +2155,7 @@ static struct virtio_device_id id_table[
+ 	{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
+ 	{ 0 },
+ };
++MODULE_DEVICE_TABLE(virtio, id_table);
  
-@@ -1095,6 +1096,8 @@ static const struct usb_device_id option
- 	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EC25),
- 	  .driver_info = RSVD(4) },
-+	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EG95),
-+	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_BG96),
- 	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EP06),
+ static unsigned int features[] = {
+ 	VIRTIO_CONSOLE_F_SIZE,
+@@ -2167,6 +2168,7 @@ static struct virtio_device_id rproc_ser
+ #endif
+ 	{ 0 },
+ };
++MODULE_DEVICE_TABLE(virtio, rproc_serial_id_table);
+ 
+ static unsigned int rproc_serial_features[] = {
+ };
+@@ -2319,6 +2321,5 @@ static void __exit fini(void)
+ module_init(init);
+ module_exit(fini);
+ 
+-MODULE_DEVICE_TABLE(virtio, id_table);
+ MODULE_DESCRIPTION("Virtio console driver");
+ MODULE_LICENSE("GPL");
 
 
