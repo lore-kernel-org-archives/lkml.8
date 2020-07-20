@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32116C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554BAC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1649206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 311A2206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261130;
-	bh=jJTY4CpwJBiOsJxX+eJrLO3bhqUPTbK7A8zPNtjrGbI=;
+	s=default; t=1595261134;
+	bh=Ms+3FkzOFmLew0WXAZ8/70kiPuFJ5chwHNJSUeLslN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P1LW6ud6CY7znJAYk/vxfUUwCaXkPkc7/0DPpet3DueGsOI1ToBsVWmOs4GFr89HV
-	 Y242dBhL1iflU8tpA8Bu4KtYR8WOhCez/RvrbkDMVvSbslyEMcBDNlcwjIKxSu9bh5
-	 8lD2Kpjbwz+rV1rnNO54HUyvgEvWSfQj0tLHmdlw=
+	b=xpwYBvnVk91CbMT4Hr1Hj7lI51bcLc2ActkMAKq/6gw8En+CH3u4cZo46veJbMmwY
+	 TNS9kHdTs3XWfCPNb00A+tQjRuM4KCLR07qN4UqXt18hjySPQM82j+mj5+fZ9i2xJf
+	 EflQwPFtU9vzgJxfK7j2g1Zh8WRxc4NhAqLtw+pA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732983AbgGTQF3 (ORCPT
+        id S1732416AbgGTQFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:05:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40786 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:05:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732966AbgGTQFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:05:21 -0400
+        id S1732972AbgGTQF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:05:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51DCA2064B;
-        Mon, 20 Jul 2020 16:05:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2C8122CBB;
+        Mon, 20 Jul 2020 16:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261120;
-        bh=jJTY4CpwJBiOsJxX+eJrLO3bhqUPTbK7A8zPNtjrGbI=;
+        s=default; t=1595261126;
+        bh=Ms+3FkzOFmLew0WXAZ8/70kiPuFJ5chwHNJSUeLslN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LIyjtARgfgDUrv3+kw/O91V5Cu/Di17KbQdlbTpehHdOf8SwK+r8jTweYZ8QF4eJ5
-         THNePQ7Rs6jp9s6sIw4HwXRG1LrgT3FOYSgb5XGKYislsrZR3q50IKs9hb/79ld7UJ
-         OiqryfVDEo3szuTmma6qfOEEWn4soHbgQmPBW0/I=
+        b=cVzg8c2XH2tO6ns9hPZE64woUXujXHOzc/caP18oy/f1lZQVtorSnm4PeiGzd67QJ
+         TWCmziuX1jRbBtihWgguLWKsqeZFG2lr6x4AijNHg2WzNQusgnFrBXh9VBPAH5mKAf
+         MlQAAtMm6tjobc+lq10xocn9h8ndWwEoz9JGOS/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finley Xiao <finley.xiao@rock-chips.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 5.4 198/215] thermal/drivers/cpufreq_cooling: Fix wrong frequency converted from power
-Date:   Mon, 20 Jul 2020 17:38:00 +0200
-Message-Id: <20200720152829.583394765@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Luis Machado <luis.machado@linaro.org>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.4 200/215] arm64: ptrace: Consistently use pseudo-singlestep exceptions
+Date:   Mon, 20 Jul 2020 17:38:02 +0200
+Message-Id: <20200720152829.681467189@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -61,53 +61,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finley Xiao <finley.xiao@rock-chips.com>
+From: Will Deacon <will@kernel.org>
 
-commit 371a3bc79c11b707d7a1b7a2c938dc3cc042fffb upstream.
+commit ac2081cdc4d99c57f219c1a6171526e0fa0a6fff upstream.
 
-The function cpu_power_to_freq is used to find a frequency and set the
-cooling device to consume at most the power to be converted. For example,
-if the power to be converted is 80mW, and the em table is as follow.
-struct em_cap_state table[] = {
-	/* KHz     mW */
-	{ 1008000, 36, 0 },
-	{ 1200000, 49, 0 },
-	{ 1296000, 59, 0 },
-	{ 1416000, 72, 0 },
-	{ 1512000, 86, 0 },
-};
-The target frequency should be 1416000KHz, not 1512000KHz.
+Although the arm64 single-step state machine can be fast-forwarded in
+cases where we wish to generate a SIGTRAP without actually executing an
+instruction, this has two major limitations outside of simply skipping
+an instruction due to emulation.
 
-Fixes: 349d39dc5739 ("thermal: cpu_cooling: merge frequency and power tables")
-Cc: <stable@vger.kernel.org> # v4.13+
-Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200619090825.32747-1-finley.xiao@rock-chips.com
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+1. Stepping out of a ptrace signal stop into a signal handler where
+   SIGTRAP is blocked. Fast-forwarding the stepping state machine in
+   this case will result in a forced SIGTRAP, with the handler reset to
+   SIG_DFL.
+
+2. The hardware implicitly fast-forwards the state machine when executing
+   an SVC instruction for issuing a system call. This can interact badly
+   with subsequent ptrace stops signalled during the execution of the
+   system call (e.g. SYSCALL_EXIT or seccomp traps), as they may corrupt
+   the stepping state by updating the PSTATE for the tracee.
+
+Resolve both of these issues by injecting a pseudo-singlestep exception
+on entry to a signal handler and also on return to userspace following a
+system call.
+
+Cc: <stable@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Tested-by: Luis Machado <luis.machado@linaro.org>
+Reported-by: Keno Fischer <keno@juliacomputing.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/thermal/cpu_cooling.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/thread_info.h |    1 +
+ arch/arm64/kernel/ptrace.c           |   27 ++++++++++++++++++++-------
+ arch/arm64/kernel/signal.c           |   11 ++---------
+ arch/arm64/kernel/syscall.c          |    2 +-
+ 4 files changed, 24 insertions(+), 17 deletions(-)
 
---- a/drivers/thermal/cpu_cooling.c
-+++ b/drivers/thermal/cpu_cooling.c
-@@ -210,11 +210,11 @@ static u32 cpu_power_to_freq(struct cpuf
- 	int i;
- 	struct freq_table *freq_table = cpufreq_cdev->freq_table;
+--- a/arch/arm64/include/asm/thread_info.h
++++ b/arch/arm64/include/asm/thread_info.h
+@@ -91,6 +91,7 @@ void arch_release_task_struct(struct tas
+ #define _TIF_SYSCALL_EMU	(1 << TIF_SYSCALL_EMU)
+ #define _TIF_UPROBE		(1 << TIF_UPROBE)
+ #define _TIF_FSCHECK		(1 << TIF_FSCHECK)
++#define _TIF_SINGLESTEP		(1 << TIF_SINGLESTEP)
+ #define _TIF_32BIT		(1 << TIF_32BIT)
+ #define _TIF_SVE		(1 << TIF_SVE)
  
--	for (i = 1; i <= cpufreq_cdev->max_level; i++)
--		if (power > freq_table[i].power)
-+	for (i = 0; i < cpufreq_cdev->max_level; i++)
-+		if (power >= freq_table[i].power)
- 			break;
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -1819,12 +1819,23 @@ static void tracehook_report_syscall(str
+ 	saved_reg = regs->regs[regno];
+ 	regs->regs[regno] = dir;
  
--	return freq_table[i - 1].frequency;
-+	return freq_table[i].frequency;
+-	if (dir == PTRACE_SYSCALL_EXIT)
++	if (dir == PTRACE_SYSCALL_ENTER) {
++		if (tracehook_report_syscall_entry(regs))
++			forget_syscall(regs);
++		regs->regs[regno] = saved_reg;
++	} else if (!test_thread_flag(TIF_SINGLESTEP)) {
+ 		tracehook_report_syscall_exit(regs, 0);
+-	else if (tracehook_report_syscall_entry(regs))
+-		forget_syscall(regs);
+-
+-	regs->regs[regno] = saved_reg;
++		regs->regs[regno] = saved_reg;
++	} else {
++		regs->regs[regno] = saved_reg;
++
++		/*
++		 * Signal a pseudo-step exception since we are stepping but
++		 * tracer modifications to the registers may have rewound the
++		 * state machine.
++		 */
++		tracehook_report_syscall_exit(regs, 1);
++	}
  }
  
- /**
+ int syscall_trace_enter(struct pt_regs *regs)
+@@ -1852,12 +1863,14 @@ int syscall_trace_enter(struct pt_regs *
+ 
+ void syscall_trace_exit(struct pt_regs *regs)
+ {
++	unsigned long flags = READ_ONCE(current_thread_info()->flags);
++
+ 	audit_syscall_exit(regs);
+ 
+-	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
++	if (flags & _TIF_SYSCALL_TRACEPOINT)
+ 		trace_sys_exit(regs, regs_return_value(regs));
+ 
+-	if (test_thread_flag(TIF_SYSCALL_TRACE))
++	if (flags & (_TIF_SYSCALL_TRACE | _TIF_SINGLESTEP))
+ 		tracehook_report_syscall(regs, PTRACE_SYSCALL_EXIT);
+ 
+ 	rseq_syscall(regs);
+--- a/arch/arm64/kernel/signal.c
++++ b/arch/arm64/kernel/signal.c
+@@ -782,7 +782,6 @@ static void setup_restart_syscall(struct
+  */
+ static void handle_signal(struct ksignal *ksig, struct pt_regs *regs)
+ {
+-	struct task_struct *tsk = current;
+ 	sigset_t *oldset = sigmask_to_save();
+ 	int usig = ksig->sig;
+ 	int ret;
+@@ -806,14 +805,8 @@ static void handle_signal(struct ksignal
+ 	 */
+ 	ret |= !valid_user_regs(&regs->user_regs, current);
+ 
+-	/*
+-	 * Fast forward the stepping logic so we step into the signal
+-	 * handler.
+-	 */
+-	if (!ret)
+-		user_fastforward_single_step(tsk);
+-
+-	signal_setup_done(ret, ksig, 0);
++	/* Step into the signal handler if we are stepping */
++	signal_setup_done(ret, ksig, test_thread_flag(TIF_SINGLESTEP));
+ }
+ 
+ /*
+--- a/arch/arm64/kernel/syscall.c
++++ b/arch/arm64/kernel/syscall.c
+@@ -121,7 +121,7 @@ static void el0_svc_common(struct pt_reg
+ 	if (!has_syscall_work(flags) && !IS_ENABLED(CONFIG_DEBUG_RSEQ)) {
+ 		local_daif_mask();
+ 		flags = current_thread_info()->flags;
+-		if (!has_syscall_work(flags)) {
++		if (!has_syscall_work(flags) && !(flags & _TIF_SINGLESTEP)) {
+ 			/*
+ 			 * We're off to userspace, where interrupts are
+ 			 * always enabled after we restore the flags from
 
 
