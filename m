@@ -2,145 +2,110 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AD4C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A955C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADAB22B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77CB22B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:28:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RUixrVyL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgGTI1N (ORCPT
+        id S1727941AbgGTI2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:27:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58642 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbgGTI1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:27:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BE7EBADF2;
-        Mon, 20 Jul 2020 08:27:16 +0000 (UTC)
+        Mon, 20 Jul 2020 04:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgGTI2S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 04:28:18 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17695C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 01:28:18 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id f16so9719219pjt.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 01:28:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VHz+fh9KhorFs1TLxN9L3mwYW6buhjiKAJZKsFMcKOQ=;
+        b=RUixrVyLy/D6O2GPVqA+VLNharw26Ydp8E7gQETyGg2n+yz8QV2yP9c627s6o9FBtP
+         MEiLFH6mIj/cYiE1xnchA3oTTEdJ/mhJPqA2OwY6A6DFyy+L4/94Rbv/yganEIEkwDA7
+         mamNcbjGwGuugX769pTgiVCIUvVXaMoiSczwQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VHz+fh9KhorFs1TLxN9L3mwYW6buhjiKAJZKsFMcKOQ=;
+        b=STckcrNJICmz87OmwNzvlbIyHS4rJrqggnXYFEiEuxAzvMO0hvsNRUXZN/EAVTEZV5
+         K16l5a/YcNxp89gtkOMt39naneEL+DS7qnVQQ6EQVRpBTMCqHKt0xJ9u4SQBy64Xf58E
+         UMOXzWER7vvnk4Zu7UQLe70u8jup3qG79FzYMI4JjoZXQKwHAbySi19YXhqGChQ0ckuc
+         WTl0aSsHtyuiTcWugby0u2w5U0oniHBEtbGKJdDR6/6kKEaGL61MnZm7wHaJrMavhps1
+         54qNayV+33jhbLeV5yUemME/+QtXN9+xi+xeyc8dCfp+X3acWCiIoZCQoKkyGoE59769
+         ewdA==
+X-Gm-Message-State: AOAM532h1Pf7YzaqGdWMFfdqRen/HM3s/LyEvQs+aY2nqkpThfMA4d63
+        Sc2XiHXK4l9XDmeD1didGjzqYQ==
+X-Google-Smtp-Source: ABdhPJxjWtKCUQClEpnzDStDZ5GTTSbi6ahDhohPe7UgMv64xFCLOT5tOfGZayicdbBejh/Vj0PJyQ==
+X-Received: by 2002:a17:902:8e86:: with SMTP id bg6mr14845530plb.57.1595233697582;
+        Mon, 20 Jul 2020 01:28:17 -0700 (PDT)
+Received: from kafuu-chino.c.googlers.com.com (105.219.229.35.bc.googleusercontent.com. [35.229.219.105])
+        by smtp.googlemail.com with ESMTPSA id o3sm5513095pfu.81.2020.07.20.01.28.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 01:28:16 -0700 (PDT)
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>, Shik Chen <shik@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] scripts/decode_stacktrace: Strip basepath from all paths.
+Date:   Mon, 20 Jul 2020 08:27:07 +0000
+Message-Id: <20200720082709.252805-1-pihsun@chromium.org>
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 20 Jul 2020 10:27:10 +0200
-From:   osalvador@suse.de
-To:     =?UTF-8?Q?HORIGUCHI_NAOYA=28=E5=A0=80=E5=8F=A3=E3=80=80=E7=9B=B4?=
-         =?UTF-8?Q?=E4=B9=9F=29?= <naoya.horiguchi@nec.com>
-Cc:     akpm@linux-foundation.org, Michal Hocko <MHocko@suse.com>,
-        linux-mm@kvack.org, mike.kravetz@oracle.com, david@redhat.com,
-        aneesh.kumar@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        Oscar Salvador <OSalvador@suse.com>
-Subject: Re: [PATCH v4 12/15] mm,hwpoison: Rework soft offline for in-use
- pages
-In-Reply-To: <f7387d64d0024d15a1bc821a8e19b8f0@DB7PR04MB5180.eurprd04.prod.outlook.com>
-References: <20200716123810.25292-1-osalvador@suse.de>
- <20200716123810.25292-13-osalvador@suse.de>
- <f7387d64d0024d15a1bc821a8e19b8f0@DB7PR04MB5180.eurprd04.prod.outlook.com>
-User-Agent: Roundcube Webmail
-Message-ID: <c19693eb3600832976f44ffa746a263a@suse.de>
-X-Sender: osalvador@suse.de
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-17 08:55, HORIGUCHI NAOYA wrote:
-> I ran Quan Cai's test program (https://github.com/cailca/linux-mm) on a
-> small (4GB memory) VM, and weiredly found that (1) the target hugepages
-> are not always dissolved and (2) dissovled hugetpages are still counted
-> in "HugePages_Total:". See below:
-> 
->     $ ./random 1
->     - start: migrate_huge_offline
->     - use NUMA nodes 0,1.
->     - mmap and free 8388608 bytes hugepages on node 0
->     - mmap and free 8388608 bytes hugepages on node 1
->     madvise: Cannot allocate memory
-> 
->     $ cat /proc/meminfo
->     MemTotal:        4026772 kB
->     MemFree:          976300 kB
->     MemAvailable:     892840 kB
->     Buffers:           20936 kB
->     Cached:            99768 kB
->     SwapCached:         5904 kB
->     Active:            84332 kB
->     Inactive:         116328 kB
->     Active(anon):      27944 kB
->     Inactive(anon):    68524 kB
->     Active(file):      56388 kB
->     Inactive(file):    47804 kB
->     Unevictable:        7532 kB
->     Mlocked:               0 kB
->     SwapTotal:       2621436 kB
->     SwapFree:        2609844 kB
->     Dirty:                56 kB
->     Writeback:             0 kB
->     AnonPages:         81764 kB
->     Mapped:            54348 kB
->     Shmem:              8948 kB
->     KReclaimable:      22744 kB
->     Slab:              52056 kB
->     SReclaimable:      22744 kB
->     SUnreclaim:        29312 kB
->     KernelStack:        3888 kB
->     PageTables:         2804 kB
->     NFS_Unstable:          0 kB
->     Bounce:                0 kB
->     WritebackTmp:          0 kB
->     CommitLimit:     3260612 kB
->     Committed_AS:     828196 kB
->     VmallocTotal:   34359738367 kB
->     VmallocUsed:       19260 kB
->     VmallocChunk:          0 kB
->     Percpu:             5120 kB
->     HardwareCorrupted:  5368 kB
->     AnonHugePages:     18432 kB
->     ShmemHugePages:        0 kB
->     ShmemPmdMapped:        0 kB
->     FileHugePages:         0 kB
->     FilePmdMapped:         0 kB
->     CmaTotal:              0 kB
->     CmaFree:               0 kB
->     HugePages_Total:    1342     // still counted as hugetlb pages.
->     HugePages_Free:        0     // all hugepage are still allocated
-> (or leaked?)
->     HugePages_Rsvd:        0
->     HugePages_Surp:      762     // some are counted in surplus.
->     Hugepagesize:       2048 kB
->     Hugetlb:         2748416 kB
->     DirectMap4k:      112480 kB
->     DirectMap2M:     4081664 kB
-> 
-> 
->     $ page-types -b hwpoison
->                  flags      page-count       MB  symbolic-flags
->              long-symbolic-flags
->     0x0000000000080008             421        1
-> ___U_______________X_______________________      uptodate,hwpoison
->     0x00000000000a8018               1        0
-> ___UD__________H_G_X_______________________
-> uptodate,dirty,compound_head,huge,hwpoison
->     0x00000000000a801c             920        3
-> __RUD__________H_G_X_______________________
-> referenced,uptodate,dirty,compound_head,huge,hwpoison
->                  total            1342        5
-> 
-> This means that some hugepages are dissolved, but the others not,
-> maybe which is not desirable.
-> I'll dig this more later but just let me share at first.
-> 
-> A few minor comment below ...
+Currently the basepath is removed only from the beginning of the string.
+When the symbol is inlined and there's multiple line outputs of
+addr2line, only the first line would have basepath removed.
 
+Change to remove the basepath prefix from all lines.
 
-Uhm, weird.
+Fixes: 31013836a71e ("scripts/decode_stacktrace: match basepath using shell prefix operator, not regex")
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Co-developed-by: Shik Chen <shik@chromium.org>
+Signed-off-by: Shik Chen <shik@chromium.org>
+---
+ scripts/decode_stacktrace.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I will be taking a look today.
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index 66a6d511b524..0869def435ee 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -87,8 +87,8 @@ parse_symbol() {
+ 		return
+ 	fi
+ 
+-	# Strip out the base of the path
+-	code=${code#$basepath/}
++	# Strip out the base of the path on each line
++	code=$(while read -r line; do echo "${line#$basepath/}"; done <<< "$code")
+ 
+ 	# In the case of inlines, move everything to same line
+ 	code=${code//$'\n'/' '}
 
-Thanks
+base-commit: 5714ee50bb4375bd586858ad800b1d9772847452
+-- 
+2.28.0.rc0.105.gf9edc3c819-goog
 
