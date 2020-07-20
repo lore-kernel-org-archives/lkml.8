@@ -2,174 +2,81 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8263C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00D6C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF6D20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B61422D01
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595226993;
+	bh=G8QKIIPp5D4K8kA/4r2aQzDTcpoqiOLy2Z0bz9pLapc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NOqpSu9iusCIbDsnM626DUtKLtW7LpXk6m2wlot/nDdzLWqj0TZove1C8qcBd4Sr2
+	 G0mCk1I8U6rWKUYBVo5qdEUDD7O0T0jjKqaSYK3Xs66ux5tkqVoE4dj15K+OyH6ztv
+	 tRAiV04VUd/5LrDr9/xutr4MnId9Kd+Xhyrx/OHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgGTGgQ (ORCPT
+        id S1727953AbgGTGgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 02:36:16 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:25378 "EHLO
-        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgGTGgP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:36:15 -0400
-IronPort-SDR: hXgtaggXXP3eodIe9el3Zs4QZSbkBoH8Iw15ywU7y+AczReFOSRw6RqmcZLXPAQC3wK8lh/6r4
- WQo48WOzZtP/oECEUe8c9U+LhcTW8kAZ5VA3ccL+UPDE7AsQAcb3GONMqXobL54Kz6VwwYxTiw
- Jasd0SSfNeERYRb7yJM055O+ZdhVCfW+ANntTEJfKcpDKgGfx+t4Acq8nZzcSVcuEQL1elawgV
- iWkR97B2rg1/qs8XOx3YjrK6w/RTDzJBbJvXS/TVseEOiN/qjthBvEVBb52/jrO8lMluge4spH
- dD4=
-X-IronPort-AV: E=Sophos;i="5.75,374,1589266800"; 
-   d="scan'208";a="29044591"
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by labrats.qualcomm.com with ESMTP; 19 Jul 2020 23:36:14 -0700
-Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 19 Jul 2020 23:36:14 -0700
-Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
-        id 1E09E22DA5; Sun, 19 Jul 2020 23:36:14 -0700 (PDT)
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Satya Tangirala <satyat@google.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 4/8] scsi: ufs: Add some debug infos to ufshcd_print_host_state
-Date:   Sun, 19 Jul 2020 23:35:51 -0700
-Message-Id: <1595226956-7779-5-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595226956-7779-1-git-send-email-cang@codeaurora.org>
-References: <1595226956-7779-1-git-send-email-cang@codeaurora.org>
+        Mon, 20 Jul 2020 02:36:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726084AbgGTGg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 02:36:29 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C195920709;
+        Mon, 20 Jul 2020 06:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595226988;
+        bh=G8QKIIPp5D4K8kA/4r2aQzDTcpoqiOLy2Z0bz9pLapc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nBFRWN4wCbNdNNdFP/mf6w4VUKv5HBcMFBn5nomZjwH+fumLcehyvFrJ6jH9JQvHR
+         JxFsvy4D00XgAwF0QS/XApUT+dv74ujDXrAukRJo3IeT3yyY2TpWTHco5oBmJ9MuDz
+         1+QKf3jQpAbOuSmZbWpaisjBmBLnXMbycc7bj4oQ=
+Date:   Mon, 20 Jul 2020 12:06:25 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 12/20] dt-bindings: dma: renesas,usb-dmac: Add binding
+ for r8a774e1
+Message-ID: <20200720063625.GG12965@vkoul-mobl>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594919915-5225-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The infos of the last interrupt status and its timestamp are very helpful
-when debug system stability issues, e.g. IRQ starvation, so add them to
-ufshcd_print_host_state. Meanwhile, UFS device infos like model name and
-its FW version also come in handy during debug. In addition, this change
-makes cleanup to some prints in ufshcd_print_host_regs as similar prints
-are already available in ufshcd_print_host_state.
+On 16-07-20, 18:18, Lad Prabhakar wrote:
+> Add binding for R8A774E1 SoC (RZ/G2H).
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 31 ++++++++++++++++++-------------
- drivers/scsi/ufs/ufshcd.h |  5 +++++
- 2 files changed, 23 insertions(+), 13 deletions(-)
+Applied, thanks
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 2907828..a22414b 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -411,15 +411,6 @@ static void ufshcd_print_err_hist(struct ufs_hba *hba,
- static void ufshcd_print_host_regs(struct ufs_hba *hba)
- {
- 	ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE, "host_regs: ");
--	dev_err(hba->dev, "hba->ufs_version = 0x%x, hba->capabilities = 0x%x\n",
--		hba->ufs_version, hba->capabilities);
--	dev_err(hba->dev,
--		"hba->outstanding_reqs = 0x%x, hba->outstanding_tasks = 0x%x\n",
--		(u32)hba->outstanding_reqs, (u32)hba->outstanding_tasks);
--	dev_err(hba->dev,
--		"last_hibern8_exit_tstamp at %lld us, hibern8_exit_cnt = %d\n",
--		ktime_to_us(hba->ufs_stats.last_hibern8_exit_tstamp),
--		hba->ufs_stats.hibern8_exit_cnt);
- 
- 	ufshcd_print_err_hist(hba, &hba->ufs_stats.pa_err, "pa_err");
- 	ufshcd_print_err_hist(hba, &hba->ufs_stats.dl_err, "dl_err");
-@@ -438,8 +429,6 @@ static void ufshcd_print_host_regs(struct ufs_hba *hba)
- 	ufshcd_print_err_hist(hba, &hba->ufs_stats.host_reset, "host_reset");
- 	ufshcd_print_err_hist(hba, &hba->ufs_stats.task_abort, "task_abort");
- 
--	ufshcd_print_clk_freqs(hba);
--
- 	ufshcd_vops_dbg_register_dump(hba);
- }
- 
-@@ -499,6 +488,8 @@ static void ufshcd_print_tmrs(struct ufs_hba *hba, unsigned long bitmap)
- 
- static void ufshcd_print_host_state(struct ufs_hba *hba)
- {
-+	struct scsi_device *sdev_ufs = hba->sdev_ufs_device;
-+
- 	dev_err(hba->dev, "UFS Host state=%d\n", hba->ufshcd_state);
- 	dev_err(hba->dev, "outstanding reqs=0x%lx tasks=0x%lx\n",
- 		hba->outstanding_reqs, hba->outstanding_tasks);
-@@ -511,12 +502,24 @@ static void ufshcd_print_host_state(struct ufs_hba *hba)
- 	dev_err(hba->dev, "Auto BKOPS=%d, Host self-block=%d\n",
- 		hba->auto_bkops_enabled, hba->host->host_self_blocked);
- 	dev_err(hba->dev, "Clk gate=%d\n", hba->clk_gating.state);
-+	dev_err(hba->dev,
-+		"last_hibern8_exit_tstamp at %lld us, hibern8_exit_cnt=%d\n",
-+		ktime_to_us(hba->ufs_stats.last_hibern8_exit_tstamp),
-+		hba->ufs_stats.hibern8_exit_cnt);
-+	dev_err(hba->dev, "last intr at %lld us, last intr status=0x%x\n",
-+		ktime_to_us(hba->ufs_stats.last_intr_ts),
-+		hba->ufs_stats.last_intr_status);
- 	dev_err(hba->dev, "error handling flags=0x%x, req. abort count=%d\n",
- 		hba->eh_flags, hba->req_abort_count);
--	dev_err(hba->dev, "Host capabilities=0x%x, caps=0x%x\n",
--		hba->capabilities, hba->caps);
-+	dev_err(hba->dev, "hba->ufs_version=0x%x, Host capabilities=0x%x, caps=0x%x\n",
-+		hba->ufs_version, hba->capabilities, hba->caps);
- 	dev_err(hba->dev, "quirks=0x%x, dev. quirks=0x%x\n", hba->quirks,
- 		hba->dev_quirks);
-+	if (sdev_ufs)
-+		dev_err(hba->dev, "UFS dev info: %.8s %.16s rev %.4s\n",
-+			sdev_ufs->vendor, sdev_ufs->model, sdev_ufs->rev);
-+
-+	ufshcd_print_clk_freqs(hba);
- }
- 
- /**
-@@ -5951,6 +5954,8 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
- 
- 	spin_lock(hba->host->host_lock);
- 	intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
-+	hba->ufs_stats.last_intr_status = intr_status;
-+	hba->ufs_stats.last_intr_ts = ktime_get();
- 
- 	/*
- 	 * There could be max of hba->nutrs reqs in flight and in worst case
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 656c069..5b2cdaf 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -406,6 +406,8 @@ struct ufs_err_reg_hist {
- 
- /**
-  * struct ufs_stats - keeps usage/err statistics
-+ * @last_intr_status: record the last interrupt status.
-+ * @last_intr_ts: record the last interrupt timestamp.
-  * @hibern8_exit_cnt: Counter to keep track of number of exits,
-  *		reset this after link-startup.
-  * @last_hibern8_exit_tstamp: Set time after the hibern8 exit.
-@@ -425,6 +427,9 @@ struct ufs_err_reg_hist {
-  * @tsk_abort: tracks task abort events
-  */
- struct ufs_stats {
-+	u32 last_intr_status;
-+	ktime_t last_intr_ts;
-+
- 	u32 hibern8_exit_cnt;
- 	ktime_t last_hibern8_exit_tstamp;
- 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+~Vinod
