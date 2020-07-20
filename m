@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86479C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF99CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4872064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43F0206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260119;
-	bh=eIg5zlpARQ0ncoOVYVLpaBxwWN3Nt8ngvgaUr4OFHAc=;
+	s=default; t=1595260124;
+	bh=3nBhr8KvHL41nT9MeEU1tSZse/nQrdOPicJryuGPjBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hVUNiGWVFxFtK2xyRAdjKaW3yd46CKKEbYTpB4k4ciakfElTCvgdncUAdYr4f6HkF
-	 jgR9mDRg6XQbDGr3RZcRJvlR4mqH6VccVZn7X9m/XTXs8+cj79QUn9Uhcr9sxIxWuS
-	 O0pHMOILSmjNeKJstZ0fI+N8lm5P9FnicBk2iBiY=
+	b=tyXkkZLVucgefFpT3+2eGb0QhDMY3bOoeT/nagirCEfFcTWEOfNzTK9QvHgr7aGwb
+	 PICp2I7YPBdfpu8jrk//821r95LzJ/tA4YITKJI+P9SzVLmdfoHS7e9ZbZUBU+ZVIm
+	 uBB5/Yfi/LawrEFRWTPfM5oSMqdloUsnj4cM/m3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbgGTPsi (ORCPT
+        id S1730920AbgGTPsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44246 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:48:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbgGTPsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:48:35 -0400
+        id S1729932AbgGTPsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:48:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E67D02064B;
-        Mon, 20 Jul 2020 15:48:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65B2222482;
+        Mon, 20 Jul 2020 15:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260114;
-        bh=eIg5zlpARQ0ncoOVYVLpaBxwWN3Nt8ngvgaUr4OFHAc=;
+        s=default; t=1595260119;
+        bh=3nBhr8KvHL41nT9MeEU1tSZse/nQrdOPicJryuGPjBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uhklUwDIfq3JkxRp/iokbC+Gn9J+rzTWI03p4peT58ovj0G+XfFAgYotV/eYi6tsh
-         Cn3+UE6yeBixo27QVVgmYBJn/KOyBikGV7Pog9JwoN+um0eohHv38XodjrMJVU4eEX
-         j7swkURabs29rwjWvs8ggDlHvXfOUpKQntWIs28I=
+        b=HxErNIKOeZuxLSakdEJ7lXO/EX9G8+RsW4wOmgeKsH9lErUF3/Uw+LJu8xzLL3mc3
+         T4ScW5H0S/5vYUzy220dR5FCB2FClaEBfcZ09wKY2cDktVoMcqrrcLLvMl56GqziKg
+         eya3YhOOs5UK2PD66QfW+EKGGLN+vhGa6GfaBTyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Esben Haabendal <esben@geanix.com>
-Subject: [PATCH 4.14 111/125] uio_pdrv_genirq: fix use without device tree and no interrupt
-Date:   Mon, 20 Jul 2020 17:37:30 +0200
-Message-Id: <20200720152808.387691137@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Huacai Chen <chenhc@lemote.com>
+Subject: [PATCH 4.14 113/125] MIPS: Fix build for LTS kernel caused by backporting lpj adjustment
+Date:   Mon, 20 Jul 2020 17:37:32 +0200
+Message-Id: <20200720152808.479775453@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -58,42 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Esben Haabendal <esben@geanix.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-commit bf12fdf0ab728ca8e5933aac46dd972c0dd0421e upstream.
+Commit ed26aacfb5f71eecb20a ("mips: Add udelay lpj numbers adjustment")
+has backported to 4.4~5.4, but the "struct cpufreq_freqs" (and also the
+cpufreq notifier machanism) of 4.4~4.19 are different from the upstream
+kernel. These differences cause build errors, and this patch can fix the
+build.
 
-While e3a3c3a20555 ("UIO: fix uio_pdrv_genirq with device tree but no
-interrupt") added support for using uio_pdrv_genirq for devices without
-interrupt for device tree platforms, the removal of uio_pdrv in
-26dac3c49d56 ("uio: Remove uio_pdrv and use uio_pdrv_genirq instead")
-broke the support for non device tree platforms.
-
-This change fixes this, so that uio_pdrv_genirq can be used without
-interrupt on all platforms.
-
-This still leaves the support that uio_pdrv had for custom interrupt
-handler lacking, as uio_pdrv_genirq does not handle it (yet).
-
-Fixes: 26dac3c49d56 ("uio: Remove uio_pdrv and use uio_pdrv_genirq instead")
-Signed-off-by: Esben Haabendal <esben@geanix.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200701145659.3978-3-esben@geanix.com
+Cc: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Stable <stable@vger.kernel.org> # 4.4/4.9/4.14/4.19
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/uio/uio_pdrv_genirq.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/kernel/time.c |   13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
---- a/drivers/uio/uio_pdrv_genirq.c
-+++ b/drivers/uio/uio_pdrv_genirq.c
-@@ -148,7 +148,7 @@ static int uio_pdrv_genirq_probe(struct
- 	if (!uioinfo->irq) {
- 		ret = platform_get_irq(pdev, 0);
- 		uioinfo->irq = ret;
--		if (ret == -ENXIO && pdev->dev.of_node)
-+		if (ret == -ENXIO)
- 			uioinfo->irq = UIO_IRQ_NONE;
- 		else if (ret < 0) {
- 			dev_err(&pdev->dev, "failed to get IRQ\n");
+--- a/arch/mips/kernel/time.c
++++ b/arch/mips/kernel/time.c
+@@ -40,10 +40,8 @@ static unsigned long glb_lpj_ref_freq;
+ static int cpufreq_callback(struct notifier_block *nb,
+ 			    unsigned long val, void *data)
+ {
+-	struct cpufreq_freqs *freq = data;
+-	struct cpumask *cpus = freq->policy->cpus;
+-	unsigned long lpj;
+ 	int cpu;
++	struct cpufreq_freqs *freq = data;
+ 
+ 	/*
+ 	 * Skip lpj numbers adjustment if the CPU-freq transition is safe for
+@@ -64,6 +62,7 @@ static int cpufreq_callback(struct notif
+ 		}
+ 	}
+ 
++	cpu = freq->cpu;
+ 	/*
+ 	 * Adjust global lpj variable and per-CPU udelay_val number in
+ 	 * accordance with the new CPU frequency.
+@@ -74,12 +73,8 @@ static int cpufreq_callback(struct notif
+ 						glb_lpj_ref_freq,
+ 						freq->new);
+ 
+-		for_each_cpu(cpu, cpus) {
+-			lpj = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
+-					    per_cpu(pcp_lpj_ref_freq, cpu),
+-					    freq->new);
+-			cpu_data[cpu].udelay_val = (unsigned int)lpj;
+-		}
++		cpu_data[cpu].udelay_val = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
++					   per_cpu(pcp_lpj_ref_freq, cpu), freq->new);
+ 	}
+ 
+ 	return NOTIFY_OK;
 
 
