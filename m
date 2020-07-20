@@ -2,212 +2,109 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C6BC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59246C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06B6A20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B2A20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:29:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fFdhjcq2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NikpLS+N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgGTJ1t (ORCPT
+        id S1728040AbgGTJ3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:27:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24868 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727769AbgGTJ1t (ORCPT
+        Mon, 20 Jul 2020 05:29:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbgGTJ3n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:27:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595237267;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BfDHngK+oB3XbjAU3xOuqommK/lKgoaQlCXUf45Prys=;
-        b=fFdhjcq2fE1CS44HaJauMZmAaAkyuOS1GpP/pQ/i8vPVQq1DE0mDE57oSD0dThGhJK3JqS
-        KK8JnFCw7RMDdtustDOOgXms/3ilGkHRgz6lEOuch7chRW83fCUV8ktAX1FViqslYuWB2y
-        cDdiopxCLyzgOtHbK/+OOm+7E480uAA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-435-wuvJNxP9OKKSt9aeJbHNOQ-1; Mon, 20 Jul 2020 05:27:45 -0400
-X-MC-Unique: wuvJNxP9OKKSt9aeJbHNOQ-1
-Received: by mail-wm1-f71.google.com with SMTP id z11so14064154wmg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:27:45 -0700 (PDT)
+        Mon, 20 Jul 2020 05:29:43 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9385C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:29:43 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x9so8436826plr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B2DSO/aWAoJzWSJL4puh7QjtP9M2G0vX5SgGCTFfnts=;
+        b=NikpLS+N3qR2sHdhR++q/DgmRGoIAbwJDPZKGfWUAcTIcUw9TlzB5FnpPDt1sPSC8M
+         Mk1NNk5XGn7yY2BPr8ug25MWnXMYXXuIY6FffQ9Cuct0k6OhyykTdx6MnypRI9vKclRx
+         P8GI+xWh/nlO6Y8TpDcDUh1fqoYJqxCoGaVCI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BfDHngK+oB3XbjAU3xOuqommK/lKgoaQlCXUf45Prys=;
-        b=aChLmDVWK2oUsyBH4KcyAzotZK02spYGNJfbYipI7mY3mRvpFGTKE2C3gjMhDXCv8y
-         YQdwhTQq3u7BoCObLZdTIt381+pV4p7ZO/OirkQZN3Yx2PxkNIm6goWenVJVBxgihsse
-         9cYAk/bQ0bvrES/eACLwHQC7vsvCzY5AS2sCLujRzxcz+gm5cvEM3F9ixNG1kujoAE+T
-         ISl4kwtpj0IJUSC6qHvnAZLuv6nHmIXYpDQHL07yC4t2SzWdSnjC6IBC2oUQMqGFx0VL
-         wAprHlOL+CwVo+d6AsXSP2nSuGQv2SRaNncUYtjjZQAHn696KO10LeuzAwoW7F3iOoai
-         lNng==
-X-Gm-Message-State: AOAM531FRbWdm/IZdU649upePBZ2tOy9jeZ7PjGe0K76AgRP47JpiZ0N
-        9I3ppn2ClAQf2dkoxNf6zzvFQNNmepk4ndtW8e8nwrNk+n/0Wpf0R7G2lTs1I1ZzpqPqDuBshxP
-        IKCNM0CDUxLwhoWvL1ePMeSKX
-X-Received: by 2002:a5d:690a:: with SMTP id t10mr8969051wru.374.1595237264614;
-        Mon, 20 Jul 2020 02:27:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwys0tMmHV0ufw5MBx2/qSIQ6Xy9iedoIg6GLkD2GxQLcM8Eic56JAKINuIrtIsYcxRKwK7oA==
-X-Received: by 2002:a5d:690a:: with SMTP id t10mr8969032wru.374.1595237264391;
-        Mon, 20 Jul 2020 02:27:44 -0700 (PDT)
-Received: from redhat.com ([192.117.173.58])
-        by smtp.gmail.com with ESMTPSA id z63sm34167625wmb.2.2020.07.20.02.27.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B2DSO/aWAoJzWSJL4puh7QjtP9M2G0vX5SgGCTFfnts=;
+        b=ladolUT9O9x7pj706DmBkSzDTXJpwz7snxThJwCwzZ3wWdf0f88AVdoQusgtGuFkAm
+         2y5SZcI7w5R+9af80EL4CAPFxNUSJfq6ybGZf9GygF2dVep5TUim3G76CMVGJtAV7IQP
+         aq1H8avVu5BXjqvVZQejrfFFRha34f/wGhcGi4xspcI3bwRF8wy16plmdjDAQllpT2rd
+         tGu4I8RTBZmgCZjw9vcWf3+z8Ldq7CN2wHbm/+lBnqU/FU0r3MeZX999xyYlcvY7DP2o
+         wx1oqml6cUY6awU3izMi7U/PITYjwO6LohlO4g+1rTa5zBI0LVgwHWJDJlyKx9gI4drH
+         oFkg==
+X-Gm-Message-State: AOAM530WqCdTnW3aUTXUspnBrY/IXHUAg3W/GSWtho8+S2YdjlkPyPIW
+        yvw52QvYfCwwbQp6LYvaTg8pEg==
+X-Google-Smtp-Source: ABdhPJyUJqTu1oMIZdT1XQQeuBWfeUW3vYNGSn8M+KxvAA1dCrmEuEg2ct9wwK30sAebekF1pTzQeA==
+X-Received: by 2002:a17:90a:66c7:: with SMTP id z7mr23079390pjl.172.1595237383150;
+        Mon, 20 Jul 2020 02:29:43 -0700 (PDT)
+Received: from jjsu-p920.tpe.corp.google.com ([2401:fa00:1:10:a6ae:11ff:fe11:67])
+        by smtp.gmail.com with ESMTPSA id v2sm11197363pje.19.2020.07.20.02.29.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 02:27:43 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 05:27:39 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eugenio Perez Martin <eperezma@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-Message-ID: <20200720051410-mutt-send-email-mst@kernel.org>
-References: <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com>
- <419cc689-adae-7ba4-fe22-577b3986688c@redhat.com>
- <CAJaqyWedEg9TBkH1MxGP1AecYHD-e-=ugJ6XUN+CWb=rQGf49g@mail.gmail.com>
- <0a83aa03-8e3c-1271-82f5-4c07931edea3@redhat.com>
- <CAJaqyWeqF-KjFnXDWXJ2M3Hw3eQeCEE2-7p1KMLmMetMTm22DQ@mail.gmail.com>
- <20200709133438-mutt-send-email-mst@kernel.org>
- <7dec8cc2-152c-83f4-aa45-8ef9c6aca56d@redhat.com>
- <CAJaqyWdLOH2EceTUduKYXCQUUNo1XQ1tLgjYHTBGhtdhBPHn_Q@mail.gmail.com>
- <20200710015615-mutt-send-email-mst@kernel.org>
- <CAJaqyWf1skGxrjuT9GLr6dtgd-433y-rCkbtStLHaAs2W2jYXA@mail.gmail.com>
+        Mon, 20 Jul 2020 02:29:42 -0700 (PDT)
+From:   Jian-Jia Su <jjsu@chromium.org>
+To:     linux-media@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Helen Koike <helen.koike@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jian-Jia Su <jjsu@chromium.org>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] media: v4l2-dev/ioctl: Fix document for VIDIOC_QUERYCAP
+Date:   Mon, 20 Jul 2020 17:29:33 +0800
+Message-Id: <20200720092933.2089288-1-jjsu@chromium.org>
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJaqyWf1skGxrjuT9GLr6dtgd-433y-rCkbtStLHaAs2W2jYXA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 07:16:27PM +0200, Eugenio Perez Martin wrote:
-> On Fri, Jul 10, 2020 at 7:58 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >
-> > On Fri, Jul 10, 2020 at 07:39:26AM +0200, Eugenio Perez Martin wrote:
-> > > > > How about playing with the batch size? Make it a mod parameter instead
-> > > > > of the hard coded 64, and measure for all values 1 to 64 ...
-> > > >
-> > > >
-> > > > Right, according to the test result, 64 seems to be too aggressive in
-> > > > the case of TX.
-> > > >
-> > >
-> > > Got it, thanks both!
-> >
-> > In particular I wonder whether with batch size 1
-> > we get same performance as without batching
-> > (would indicate 64 is too aggressive)
-> > or not (would indicate one of the code changes
-> > affects performance in an unexpected way).
-> >
-> > --
-> > MST
-> >
-> 
-> Hi!
-> 
-> Varying batch_size as drivers/vhost/net.c:VHOST_NET_BATCH,
+V4L2_CAP_VIDEO_M2M is documented as 0x00004000
+V4L2_CAP_VIDEO_M2M_MPLANE is documented as 0x00008000
+This is different from the definition in include/uapi/linux/videodev2.h
 
-sorry this is not what I meant.
+Signed-off-by: Jian-Jia Su <jjsu@chromium.org>
+---
+ Documentation/userspace-api/media/v4l/vidioc-querycap.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I mean something like this:
-
-
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 0b509be8d7b1..b94680e5721d 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1279,6 +1279,10 @@ static void handle_rx_net(struct vhost_work *work)
- 	handle_rx(net);
- }
- 
-+MODULE_PARM_DESC(batch_num, "Number of batched descriptors. (offset from 64)");
-+module_param(batch_num, int, 0644);
-+static int batch_num = 0;
-+
- static int vhost_net_open(struct inode *inode, struct file *f)
- {
- 	struct vhost_net *n;
-@@ -1333,7 +1337,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
- 		vhost_net_buf_init(&n->vqs[i].rxq);
- 	}
- 	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
--		       UIO_MAXIOV + VHOST_NET_BATCH,
-+		       UIO_MAXIOV + VHOST_NET_BATCH + batch_num,
- 		       VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT, true,
- 		       NULL);
- 
-
-then you can try tweaking batching and playing with mod parameter without
-recompiling.
-
-
-VHOST_NET_BATCH affects lots of other things.
-
-
-> and testing
-> the pps as previous mail says. This means that we have either only
-> vhost_net batching (in base testing, like previously to apply this
-> patch) or both batching sizes the same.
-> 
-> I've checked that vhost process (and pktgen) goes 100% cpu also.
-> 
-> For tx: Batching decrements always the performance, in all cases. Not
-> sure why bufapi made things better the last time.
-> 
-> Batching makes improvements until 64 bufs, I see increments of pps but like 1%.
-> 
-> For rx: Batching always improves performance. It seems that if we
-> batch little, bufapi decreases performance, but beyond 64, bufapi is
-> much better. The bufapi version keeps improving until I set a batching
-> of 1024. So I guess it is super good to have a bunch of buffers to
-> receive.
-> 
-> Since with this test I cannot disable event_idx or things like that,
-> what would be the next step for testing?
-> 
-> Thanks!
-> 
-> --
-> Results:
-> # Buf size: 1,16,32,64,128,256,512
-> 
-> # Tx
-> # ===
-> # Base
-> 2293304.308,3396057.769,3540860.615,3636056.077,3332950.846,3694276.154,3689820
-> # Batch
-> 2286723.857,3307191.643,3400346.571,3452527.786,3460766.857,3431042.5,3440722.286
-> # Batch + Bufapi
-> 2257970.769,3151268.385,3260150.538,3379383.846,3424028.846,3433384.308,3385635.231,3406554.538
-> 
-> # Rx
-> # ==
-> # pktgen results (pps)
-> 1223275,1668868,1728794,1769261,1808574,1837252,1846436
-> 1456924,1797901,1831234,1868746,1877508,1931598,1936402
-> 1368923,1719716,1794373,1865170,1884803,1916021,1975160
-> 
-> # Testpmd pps results
-> 1222698.143,1670604,1731040.6,1769218,1811206,1839308.75,1848478.75
-> 1450140.5,1799985.75,1834089.75,1871290,1880005.5,1934147.25,1939034
-> 1370621,1721858,1796287.75,1866618.5,1885466.5,1918670.75,1976173.5,1988760.75,1978316
-> 
-> pktgen was run again for rx with 1024 and 2048 buf size, giving
-> 1988760.75 and 1978316 pps. Testpmd goes the same way.
-
-Don't really understand what does this data mean.
-Which number of descs is batched for each run?
-
+diff --git a/Documentation/userspace-api/media/v4l/vidioc-querycap.rst b/Documentation/userspace-api/media/v4l/vidioc-querycap.rst
+index 666ac4d420519..90347367ef06a 100644
+--- a/Documentation/userspace-api/media/v4l/vidioc-querycap.rst
++++ b/Documentation/userspace-api/media/v4l/vidioc-querycap.rst
+@@ -168,11 +168,11 @@ specification the ioctl returns an ``EINVAL`` error code.
+       - The device supports the :ref:`multi-planar API <planar-apis>`
+ 	through the :ref:`Video Output <output>` interface.
+     * - ``V4L2_CAP_VIDEO_M2M``
+-      - 0x00004000
++      - 0x00008000
+       - The device supports the single-planar API through the Video
+ 	Memory-To-Memory interface.
+     * - ``V4L2_CAP_VIDEO_M2M_MPLANE``
+-      - 0x00008000
++      - 0x00004000
+       - The device supports the :ref:`multi-planar API <planar-apis>`
+ 	through the Video Memory-To-Memory interface.
+     * - ``V4L2_CAP_VIDEO_OVERLAY``
 -- 
-MST
+2.28.0.rc0.105.gf9edc3c819-goog
 
