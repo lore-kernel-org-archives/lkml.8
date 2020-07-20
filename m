@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C79C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E03CC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DAEA2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE66206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262343;
-	bh=q0MxL0kGFC57pE9a7oTZezIOHu74RLTYCa/mKYxsxv4=;
+	s=default; t=1595262354;
+	bh=af8InVDO/U1YjM7GM+ojmtmt52JeJZ5IDuzEDD4UhjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w4XFqk45wQO8T53jHYfhQq6w4N8FVbiUTXAuhtclJ8de99q0bAe0rOrfES9jkBn6s
-	 W13ahgFqL127VYbP74msIEAJPhjxVJZyKDK8AdJij8sj7+cIbAbTPC6BCRNDIRF2/w
-	 bBpOIrdjsYFGV3PfGk4NbN9pX1FPF7easiNBbSus=
+	b=P/LJ7LpaqyIIcsc8IM00LlLPQFPgCK8YKN5UzonL2ONjzbc1VBLc/PLIdbEFui95w
+	 8VksFx2bHJq+GQO+s4hAex8oLu/ggOdB8TPT+TuGjp9YP/mB62/SoDvUaFNF9vFQil
+	 AEUmhRybFPXd7GCj5v3yED/o0EtNqFw0AEsbQ3x0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731692AbgGTQZm (ORCPT
+        id S2387674AbgGTQZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:25:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34570 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732500AbgGTQBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:01:14 -0400
+        id S1732475AbgGTQBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:01:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A984D22CF7;
-        Mon, 20 Jul 2020 16:01:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48B8320684;
+        Mon, 20 Jul 2020 16:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260874;
-        bh=q0MxL0kGFC57pE9a7oTZezIOHu74RLTYCa/mKYxsxv4=;
+        s=default; t=1595260865;
+        bh=af8InVDO/U1YjM7GM+ojmtmt52JeJZ5IDuzEDD4UhjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IOQMogpyrMvekgN74f4MmkJYvDdTI3Z+XZ8hgqnA9nYZ8NtCZU/ULBKRcuI0sEk6d
-         i5jY944LavmBO9BxFJH0D/heBstJ2st9Bah3tmJIhTncl1kfQ/u5Hs7Qkey6t5kd4G
-         TmbtZotqfTDvAiNYw3y+Bg49hDyetxy0EtT0mHc4=
+        b=BobwqRKBT4y0p5e+maRaMd4ai2j5Xx1wjasa1UwGe01X0xUpIqwCSLYPS/GzfxfHP
+         Wmcoe8kZoaTm0tUlzHf1vrBLDo7SS1YgHERFkWEsDOY1GjOs0s4rE7U+gHdcxehC1l
+         HhnSrIIDTFM+eXJEnf9jOYYL/45YLN99QECKy/Ck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.4 126/215] soc: qcom: rpmh: Update dirty flag only when data changes
-Date:   Mon, 20 Jul 2020 17:36:48 +0200
-Message-Id: <20200720152826.195622807@linuxfoundation.org>
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH 5.4 124/215] PCI/PM: Call .bridge_d3() hook only if non-NULL
+Date:   Mon, 20 Jul 2020 17:36:46 +0200
+Message-Id: <20200720152826.100087522@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -63,101 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maulik Shah <mkshah@codeaurora.org>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-commit bb7000677a1b287206c8d4327c62442fa3050a8f upstream.
+commit c3aaf086701d05a82c8156ee8620af41e5a7d6fe upstream.
 
-Currently rpmh ctrlr dirty flag is set for all cases regardless of data
-is really changed or not. Add changes to update dirty flag when data is
-changed to newer values. Update dirty flag everytime when data in batch
-cache is updated since rpmh_flush() may get invoked from any CPU instead
-of only last CPU going to low power mode.
+26ad34d510a8 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports") added
+the struct pci_platform_pm_ops.bridge_d3() function pointer and
+platform_pci_bridge_d3() to use it.
 
-Also move dirty flag updates to happen from within cache_lock and remove
-unnecessary INIT_LIST_HEAD() call and a default case from switch.
+The .bridge_d3() op is implemented by acpi_pci_platform_pm, but not by
+mid_pci_platform_pm.  We don't expect platform_pci_bridge_d3() to be called
+on Intel MID platforms, but nothing in the code itself would prevent that.
 
-Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Link: https://lore.kernel.org/r/1586703004-13674-3-git-send-email-mkshah@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Check the .bridge_d3() pointer for NULL before calling it.
+
+Fixes: 26ad34d510a8 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/soc/qcom/rpmh.c |   19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ drivers/pci/pci.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/soc/qcom/rpmh.c
-+++ b/drivers/soc/qcom/rpmh.c
-@@ -119,6 +119,7 @@ static struct cache_req *cache_rpm_reque
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -802,7 +802,9 @@ static inline bool platform_pci_need_res
+ 
+ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
  {
- 	struct cache_req *req;
- 	unsigned long flags;
-+	u32 old_sleep_val, old_wake_val;
- 
- 	spin_lock_irqsave(&ctrlr->cache_lock, flags);
- 	req = __find_req(ctrlr, cmd->addr);
-@@ -133,26 +134,27 @@ static struct cache_req *cache_rpm_reque
- 
- 	req->addr = cmd->addr;
- 	req->sleep_val = req->wake_val = UINT_MAX;
--	INIT_LIST_HEAD(&req->list);
- 	list_add_tail(&req->list, &ctrlr->cache);
- 
- existing:
-+	old_sleep_val = req->sleep_val;
-+	old_wake_val = req->wake_val;
-+
- 	switch (state) {
- 	case RPMH_ACTIVE_ONLY_STATE:
--		if (req->sleep_val != UINT_MAX)
--			req->wake_val = cmd->data;
--		break;
- 	case RPMH_WAKE_ONLY_STATE:
- 		req->wake_val = cmd->data;
- 		break;
- 	case RPMH_SLEEP_STATE:
- 		req->sleep_val = cmd->data;
- 		break;
--	default:
--		break;
- 	}
- 
--	ctrlr->dirty = true;
-+	ctrlr->dirty = (req->sleep_val != old_sleep_val ||
-+			req->wake_val != old_wake_val) &&
-+			req->sleep_val != UINT_MAX &&
-+			req->wake_val != UINT_MAX;
-+
- unlock:
- 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
- 
-@@ -287,6 +289,7 @@ static void cache_batch(struct rpmh_ctrl
- 
- 	spin_lock_irqsave(&ctrlr->cache_lock, flags);
- 	list_add_tail(&req->list, &ctrlr->batch_cache);
-+	ctrlr->dirty = true;
- 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+-	return pci_platform_pm ? pci_platform_pm->bridge_d3(dev) : false;
++	if (pci_platform_pm && pci_platform_pm->bridge_d3)
++		return pci_platform_pm->bridge_d3(dev);
++	return false;
  }
  
-@@ -323,6 +326,7 @@ static void invalidate_batch(struct rpmh
- 	list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
- 		kfree(req);
- 	INIT_LIST_HEAD(&ctrlr->batch_cache);
-+	ctrlr->dirty = true;
- 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
- }
- 
-@@ -509,7 +513,6 @@ int rpmh_invalidate(const struct device
- 	int ret;
- 
- 	invalidate_batch(ctrlr);
--	ctrlr->dirty = true;
- 
- 	do {
- 		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
+ /**
 
 
