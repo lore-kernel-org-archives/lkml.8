@@ -2,54 +2,51 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A5FC433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F52C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1594E22BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047322065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259979;
-	bh=JnzwTOSD0dOZ6oJQzFQMgryNk5uoLCeCyw24xgv3p0A=;
+	s=default; t=1595259983;
+	bh=9UHgg0Mi5NuW88aXQ6kQzMfktcgDb8vMG3IDerjZilg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e6k5vHTLJL5pQdREjNgba1hWrsuqcsKaE15gCDsK2RQj8r1y5UWqmYKmHN87HUIJm
-	 wjZivvZ57zR/NfYIBVrU3f2E5H/Wqy1poPA/iPFmNP/YOo2aEilHeEt75sMSrXcB3x
-	 K6k6KR75O0Eykm3H9jJ2LC/iWsJMvhTTXabib+VI=
+	b=Ec18L5sHILD3diuPdOYMqn2jd9ZFHKRb7EZsHWPQG1+y7zt28A9leIme+NVZi9f2f
+	 snP0NWLV6Hb/EcRZBweK/muSrfqmS+iiSzhO7v4WrMPPQAqFxAgIErhlgwlkAS3M0q
+	 KbuV3qjd+akZUiYsrQbb+fKUyZ9kPnlu1xGZDNBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgGTPqR (ORCPT
+        id S1730653AbgGTPqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:46:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40888 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:46:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730004AbgGTPqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:46:15 -0400
+        id S1730004AbgGTPqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:46:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D08822CB3;
-        Mon, 20 Jul 2020 15:46:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3260622CB3;
+        Mon, 20 Jul 2020 15:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259975;
-        bh=JnzwTOSD0dOZ6oJQzFQMgryNk5uoLCeCyw24xgv3p0A=;
+        s=default; t=1595259978;
+        bh=9UHgg0Mi5NuW88aXQ6kQzMfktcgDb8vMG3IDerjZilg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BbPt6BRB4YPuzCY02tClw/lyEqKGUJUyQBJDvxYB3TbrRTNt6Wl4FivsZw9Q2ZBUj
-         FoyGvxkc3iuzF3nlmWFurZ4DqPp2DZsQ+iBUWeZg54Khg/sR6r12RfCb4/WzN9ympw
-         UrkKXTdIZfXm3J27RkAZlJiHcVXeY33hPlc7jk7s=
+        b=EeTGKGLa/NichUGU60cNnbpyYN73LEvWw5TFtu1XLoZcHsZAwjT60948G2YqDrjNH
+         6gCUwuXpUozIvlrXXOPkiuEw2piL+6K0Km8cxUkeiMcNYIszE5p9hb8Hy21jR1jSWJ
+         bQas6TkNcsCJJmE9bOLuHBWozZ4ISGgQbwiHhMQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 020/125] ALSA: compress: fix partial_drain completion state
-Date:   Mon, 20 Jul 2020 17:35:59 +0200
-Message-Id: <20200720152803.961487729@linuxfoundation.org>
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 054/125] cgroup: Fix sock_cgroup_data on big-endian.
+Date:   Mon, 20 Jul 2020 17:36:33 +0200
+Message-Id: <20200720152805.636333936@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -62,90 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinod Koul <vkoul@kernel.org>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit f79a732a8325dfbd570d87f1435019d7e5501c6d ]
+[ Upstream commit 14b032b8f8fce03a546dcf365454bec8c4a58d7d ]
 
-On partial_drain completion we should be in SNDRV_PCM_STATE_RUNNING
-state, so set that for partially draining streams in
-snd_compr_drain_notify() and use a flag for partially draining streams
+In order for no_refcnt and is_data to be the lowest order two
+bits in the 'val' we have to pad out the bitfield of the u8.
 
-While at it, add locks for stream state change in
-snd_compr_drain_notify() as well.
-
-Fixes: f44f2a5417b2 ("ALSA: compress: fix drain calls blocking other compress functions (v6)")
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Tested-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20200629134737.105993-4-vkoul@kernel.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ad0f75e5f57c ("cgroup: fix cgroup_sk_alloc() for sk_clone_lock()")
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/sound/compress_driver.h | 10 +++++++++-
- sound/core/compress_offload.c   |  4 ++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ include/linux/cgroup-defs.h |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/sound/compress_driver.h b/include/sound/compress_driver.h
-index 33a07c3badf01..f58b8edf0371b 100644
---- a/include/sound/compress_driver.h
-+++ b/include/sound/compress_driver.h
-@@ -72,6 +72,7 @@ struct snd_compr_runtime {
-  * @direction: stream direction, playback/recording
-  * @metadata_set: metadata set flag, true when set
-  * @next_track: has userspace signal next track transition, true when set
-+ * @partial_drain: undergoing partial_drain for stream, true when set
-  * @private_data: pointer to DSP private data
-  */
- struct snd_compr_stream {
-@@ -83,6 +84,7 @@ struct snd_compr_stream {
- 	enum snd_compr_direction direction;
- 	bool metadata_set;
- 	bool next_track;
-+	bool partial_drain;
- 	void *private_data;
- };
- 
-@@ -186,7 +188,13 @@ static inline void snd_compr_drain_notify(struct snd_compr_stream *stream)
- 	if (snd_BUG_ON(!stream))
- 		return;
- 
--	stream->runtime->state = SNDRV_PCM_STATE_SETUP;
-+	/* for partial_drain case we are back to running state on success */
-+	if (stream->partial_drain) {
-+		stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
-+		stream->partial_drain = false; /* clear this flag as well */
-+	} else {
-+		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
-+	}
- 
- 	wake_up(&stream->runtime->sleep);
- }
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 7ae8e24dc1e61..81624f6e3f330 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -723,6 +723,9 @@ static int snd_compr_stop(struct snd_compr_stream *stream)
- 
- 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_STOP);
- 	if (!retval) {
-+		/* clear flags and stop any drain wait */
-+		stream->partial_drain = false;
-+		stream->metadata_set = false;
- 		snd_compr_drain_notify(stream);
- 		stream->runtime->total_bytes_available = 0;
- 		stream->runtime->total_bytes_transferred = 0;
-@@ -880,6 +883,7 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
- 	if (stream->next_track == false)
- 		return -EPERM;
- 
-+	stream->partial_drain = true;
- 	retval = stream->ops->trigger(stream, SND_COMPR_TRIGGER_PARTIAL_DRAIN);
- 	if (retval) {
- 		pr_debug("Partial drain returned failure\n");
--- 
-2.25.1
-
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -683,6 +683,7 @@ struct sock_cgroup_data {
+ 		struct {
+ 			u8	is_data : 1;
+ 			u8	no_refcnt : 1;
++			u8	unused : 6;
+ 			u8	padding;
+ 			u16	prioidx;
+ 			u32	classid;
+@@ -692,6 +693,7 @@ struct sock_cgroup_data {
+ 			u32	classid;
+ 			u16	prioidx;
+ 			u8	padding;
++			u8	unused : 6;
+ 			u8	no_refcnt : 1;
+ 			u8	is_data : 1;
+ 		} __packed;
 
 
