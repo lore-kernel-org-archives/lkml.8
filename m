@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF01DC47437
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D59FC4345B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1FD206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9FB206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281473;
-	bh=p7kbBdidlvQ7bLIBBd8hhQHTZoQliGldBUR16LYjEP8=;
+	s=default; t=1595281479;
+	bh=2YIIIe82rhQonM8OSS7nLOwgi3BRrqAqK7yxquHChVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mh9+tVbFNz4CzqcGngO0KazHODIRLGiGJ2Fu7eAPGDEgFsS2MOZR27WMYlRcvUORw
-	 9f1VLcK+Y7dC0Iv0vJxLyEwmsynelH0/r2pZYy3NEa5R3GWN2aPlt4UKkS2uZUS3tR
-	 d+kDbK9S+S06x196U1JhmYqk6+EyoFDKaQWbfe5s=
+	b=E2j76iYI7KYjo2L4BPKaRR9Hl30E2H2reELYL01+51rc3ehnlqyoLhzZlCeVD6q/n
+	 hJnjFUOpCYF7kX8/gJ4Ez7qbAOaIUIrM7e5+Ca6tHipqTP6mvMiJk8dzQ6NEaUBJVH
+	 G7FnWGhzoqhlInX8U5QE247P881vohzYDZB7niSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgGTVoc (ORCPT
+        id S1729024AbgGTVoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:44:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56238 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:44:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727924AbgGTVh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:37:59 -0400
+        id S1727869AbgGTVhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:37:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BF8122D06;
-        Mon, 20 Jul 2020 21:37:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D45F22BEF;
+        Mon, 20 Jul 2020 21:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281079;
-        bh=p7kbBdidlvQ7bLIBBd8hhQHTZoQliGldBUR16LYjEP8=;
+        s=default; t=1595281071;
+        bh=2YIIIe82rhQonM8OSS7nLOwgi3BRrqAqK7yxquHChVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jFEXa1OSukulNB/hbwqrVSEZY3TflK6PZbDTaxO9D4v9kBWOGu5G7Amk2uOm82uKi
-         HcDK5hxRkUSQz7kFcdT5vD+/m/gfK33ysX1O9QQ4k3mXkmCG06YbWgPzAcjcN5FU9K
-         W4XBNSD9b4D4fYdejbSsXUBx10Y6q65qmTuHI1WM=
+        b=wzusJQEuKZrW3Bm/OgTBZZt9Stf9RKzMVdvN3Fr3pW5te8z1dwC5mQplh5ClPUIaP
+         BunofKoXPepcDdzRahTRvWOHeW6PLNTthL1dIM5Jq678zVDKO4Z7kUDyBrO07jfPQl
+         mbhr100SotkmqFzVi01a/+8xQaFeScKWDoUR1sXM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.7 35/40] x86: math-emu: Fix up 'cmp' insn for clang ias
-Date:   Mon, 20 Jul 2020 17:37:10 -0400
-Message-Id: <20200720213715.406997-35-sashal@kernel.org>
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 29/40] platform/x86: ISST: Add new PCI device ids
+Date:   Mon, 20 Jul 2020 17:37:04 -0400
+Message-Id: <20200720213715.406997-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213715.406997-1-sashal@kernel.org>
 References: <20200720213715.406997-1-sashal@kernel.org>
@@ -61,41 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-[ Upstream commit 81e96851ea32deb2c921c870eecabf335f598aeb ]
+[ Upstream commit e1eea3f839f41368d7cb4eb2d872d5b288677e94 ]
 
-The clang integrated assembler requires the 'cmp' instruction to
-have a length prefix here:
+Added new PCI device ids for supporting mailbox and MMIO interface for
+Sapphire Rapids.
 
-arch/x86/math-emu/wm_sqrt.S:212:2: error: ambiguous instructions require an explicit suffix (could be 'cmpb', 'cmpw', or 'cmpl')
- cmp $0xffffffff,-24(%ebp)
- ^
-
-Make this a 32-bit comparison, which it was clearly meant to be.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lkml.kernel.org/r/20200527135352.1198078-1-arnd@arndb.de
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/math-emu/wm_sqrt.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/intel_speed_select_if/isst_if_common.h   | 3 +++
+ drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c | 1 +
+ drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c     | 1 +
+ 3 files changed, 5 insertions(+)
 
-diff --git a/arch/x86/math-emu/wm_sqrt.S b/arch/x86/math-emu/wm_sqrt.S
-index 3b2b58164ec18..40526dd85137b 100644
---- a/arch/x86/math-emu/wm_sqrt.S
-+++ b/arch/x86/math-emu/wm_sqrt.S
-@@ -209,7 +209,7 @@ sqrt_stage_2_finish:
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
+index 1409a5bb55820..4f6f7f0761fc1 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
+@@ -13,6 +13,9 @@
+ #define INTEL_RAPL_PRIO_DEVID_0	0x3451
+ #define INTEL_CFG_MBOX_DEVID_0	0x3459
  
- #ifdef PARANOID
- /* It should be possible to get here only if the arg is ffff....ffff */
--	cmp	$0xffffffff,FPU_fsqrt_arg_1
-+	cmpl	$0xffffffff,FPU_fsqrt_arg_1
- 	jnz	sqrt_stage_2_error
- #endif /* PARANOID */
++#define INTEL_RAPL_PRIO_DEVID_1 0x3251
++#define INTEL_CFG_MBOX_DEVID_1  0x3259
++
+ /*
+  * Validate maximum commands in a single request.
+  * This is enough to handle command to every core in one ioctl, or all
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
+index de4169d0796bd..9a055fd54053f 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
+@@ -148,6 +148,7 @@ static long isst_if_mbox_proc_cmd(u8 *cmd_ptr, int *write_only, int resume)
  
+ static const struct pci_device_id isst_if_mbox_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_CFG_MBOX_DEVID_0)},
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_CFG_MBOX_DEVID_1)},
+ 	{ 0 },
+ };
+ MODULE_DEVICE_TABLE(pci, isst_if_mbox_ids);
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
+index 3584859fcc421..aa17fd7817f8f 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
+@@ -72,6 +72,7 @@ static long isst_if_mmio_rd_wr(u8 *cmd_ptr, int *write_only, int resume)
+ 
+ static const struct pci_device_id isst_if_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_RAPL_PRIO_DEVID_0)},
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_RAPL_PRIO_DEVID_1)},
+ 	{ 0 },
+ };
+ MODULE_DEVICE_TABLE(pci, isst_if_ids);
 -- 
 2.25.1
 
