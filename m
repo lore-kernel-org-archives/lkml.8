@@ -2,145 +2,131 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C09E5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECA8C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E62122CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC1A22CE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261416;
-	bh=U7uXjX8IfjoIHHcZ94LBnWRXLP1OX+olQJgVuZvrYz8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UdNkRWT5HQxfqOwQELhXR8iJOigCaH61rRiFhCdPcxHEKwVMnGtjdWXFzucz7L5t2
-	 4N5G96AVGvaN+i/z3WvkjGYXmpF20EjtLNRKvzbCUfoZ9C9hXH6ZQekaCR26q8Hn+4
-	 9xOjeip75PLLq8kfV/08ZZjNg85GVMgD8KMYtz88=
+	s=default; t=1595261420;
+	bh=OrUqV8JJjkoxK8FuCM07uleGXeKVco3gz7e0rfHRBo0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rEr+Xr5isez3F8Fem3qH2o0uy09SHU3wJVTE+iqd0w+6pUopDHIXHvotvrNNMDx2k
+	 R8ycsqo90zwpy06kurqclm56h65KCvKjFEX4g7c93gQCOGzJ9v8TWTOzzC0Djf2CW5
+	 5twPc4y1uunRE9CT0OY4SXJ30VyHB9C+OBIWQdo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387648AbgGTQKP (ORCPT
+        id S2387654AbgGTQKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:10:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48548 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:10:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387633AbgGTQKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:10:11 -0400
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2387647AbgGTQKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:10:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3404E2064B;
-        Mon, 20 Jul 2020 16:10:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 367872064B;
+        Mon, 20 Jul 2020 16:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261410;
-        bh=U7uXjX8IfjoIHHcZ94LBnWRXLP1OX+olQJgVuZvrYz8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mywFm7Q0v6qrIqaQ80nhFbUpcFOGRvUhHtCEA/fayqjg0rtYs/pYaWNKJfRqyw3i7
-         XLoxMzbKuZ6U1GcIcAVpCuXX8oodHcdxaDHqTU0uV8Uk8ODLH1CZk2FLTVg8JWrWk5
-         azVsSx9XhFktMuRsA0P0lAJSD1h4gOcHR2w6hAVE=
-Received: by mail-ej1-f42.google.com with SMTP id w9so4531276ejc.8;
-        Mon, 20 Jul 2020 09:10:10 -0700 (PDT)
-X-Gm-Message-State: AOAM532UX6QmOkkBaR02RKknpIS2MC84vWZupOPQ9JrLRy6icZs/0LNG
-        BQfwcdpj72qj4FEDNwQgY8s9dOLej04/Eu4NUQ==
-X-Google-Smtp-Source: ABdhPJzjWZka7dLZIstGqrBjwKgkCw0Jts0It8B2AGaHIdJ5T0KmMrd6sjOYVhE+rD/LgFxqtR3lEzkplYm7brWs4pA=
-X-Received: by 2002:a17:906:404e:: with SMTP id y14mr21106907ejj.260.1595261408723;
- Mon, 20 Jul 2020 09:10:08 -0700 (PDT)
+        s=default; t=1595261414;
+        bh=OrUqV8JJjkoxK8FuCM07uleGXeKVco3gz7e0rfHRBo0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Dk+TabjISWf+jQvVHxUpUH4insW+w74SbeN3oj+FMUiaXcfU8GFCcu/xsJkDFZbL/
+         +ERkAvS1s0WWKz2NRidAvMqkjcLJETK1LRdX89b204LhWloEWgSydDUJbia5YCzbBn
+         oh+/2SCPuBbKWkzQewVDHs7euP32RWhyoTdmzuTk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Andrew F. Davis" <afd@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 077/244] iio:health:afe4404 Fix timestamp alignment and prevent data leak.
+Date:   Mon, 20 Jul 2020 17:35:48 +0200
+Message-Id: <20200720152829.503117733@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
+References: <20200720152825.863040590@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200506084039.249977-1-eizan@chromium.org> <20200506184018.v2.1.I27dac0775ba64deff6a91837f39bfba83dccdf84@changeid>
-In-Reply-To: <20200506184018.v2.1.I27dac0775ba64deff6a91837f39bfba83dccdf84@changeid>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Tue, 21 Jul 2020 00:09:57 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9qSpH51kkopofoQTfSqYqGWcQVN8KrJJKQDWozoMK+NQ@mail.gmail.com>
-Message-ID: <CAAOTY_9qSpH51kkopofoQTfSqYqGWcQVN8KrJJKQDWozoMK+NQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] [media] mtk-mdp: add driver to probe mdp components
-To:     Eizan Miyamoto <eizan@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Eizan:
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Eizan Miyamoto <eizan@chromium.org> =E6=96=BC 2020=E5=B9=B45=E6=9C=886=E6=
-=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:41=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Broadly, this patch (1) adds a driver for various MTK MDP components to
-> go alongside the main MTK MDP driver, and (2) hooks them all together
-> using the component framework.
->
-> (1) Up until now, the MTK MDP driver controls 8 devices in the device
-> tree on its own. When running tests for the hardware video decoder, we
-> found that the iommus and LARBs were not being properly configured. To
-> configure them, a driver for each be added to mtk_mdp_comp so that
-> mtk_iommu_add_device() can (eventually) be called from dma_configure()
-> inside really_probe().
->
-> (2) The integration into the component framework allows us to defer the
-> registration with the v4l2 subsystem until all the MDP-related devices
-> have been probed, so that the relevant device node does not become
-> available until initialization of all the components is complete.
->
-> Some notes about how the component framework has been integrated:
->
-> - The driver for the rdma0 component serves double duty as the "master"
->   (aggregate) driver as well as a component driver. This is a non-ideal
->   compromise until a better solution is developed. This device is
->   differentiated from the rest by checking for a "mediatek,vpu" property
->   in the device node.
->
-> - The list of mdp components remains hard-coded as mtk_mdp_comp_dt_ids[]
->   in mtk_mdp_core.c, and as mtk_mdp_comp_driver_dt_match[] in
->   mtk_mdp_comp.c. This unfortunate duplication of information is
->   addressed in a following patch in this series.
->
-> - The component driver calls component_add() for each device that is
->   probed.
->
-> - In mtk_mdp_probe (the "master" device), we scan the device tree for
->   any matching nodes against mtk_mdp_comp_dt_ids, and add component
->   matches for them. The match criteria is a matching device node
->   pointer.
->
-> - When the set of components devices that have been probed corresponds
->   with the list that is generated by the "master", the callback to
->   mtk_mdp_master_bind() is made, which then calls the component bind
->   functions.
->
-> - Inside mtk_mdp_master_bind(), once all the component bind functions
->   have been called, we can then register our device to the v4l2
->   subsystem.
->
-> - The call to pm_runtime_enable() in the master device is called after
->   all the components have been registered by their bind() functions
->   called by mtk_mtp_master_bind(). As a result, the list of components
->   will not change while power management callbacks mtk_mdp_suspend()/
->   resume() are accessing the list of components.
+[ Upstream commit f88ecccac4be348bbcc6d056bdbc622a8955c04d ]
 
-For the component binding problem, MDP is similar to DRM driver [1],
-and DRM is probed by mmsys driver [2] (mmsys is a device which control
-display clock, display routing, mdp clock, mdp routing). Maybe you
-could refer to what DRM does.
+One of a class of bugs pointed out by Lars in a recent review.
+iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
+to the size of the timestamp (8 bytes).  This is not guaranteed in
+this driver which uses a 40 byte array of smaller elements on the stack.
+As Lars also noted this anti pattern can involve a leak of data to
+userspace and that indeed can happen here.  We close both issues by
+moving to a suitable structure in the iio_priv() data with alignment
+explicitly requested.  This data is allocated with kzalloc so no
+data can leak appart from previous readings.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/gpu/drm/mediatek/mtk_drm_drv.c?h=3Dv5.8-rc6
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/?h=3Dv5.8-rc6&id=3D667c769246b01c53ad0925d603d2a2531abd3ef2
+Fixes: 87aec56e27ef ("iio: health: Add driver for the TI AFE4404 heart monitor")
+Reported-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iio/health/afe4404.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Regards,
-Chun-Kuang.
+diff --git a/drivers/iio/health/afe4404.c b/drivers/iio/health/afe4404.c
+index e728bbb21ca88..cebb1fd4d0b15 100644
+--- a/drivers/iio/health/afe4404.c
++++ b/drivers/iio/health/afe4404.c
+@@ -83,6 +83,7 @@ static const struct reg_field afe4404_reg_fields[] = {
+  * @regulator: Pointer to the regulator for the IC
+  * @trig: IIO trigger for this device
+  * @irq: ADC_RDY line interrupt number
++ * @buffer: Used to construct a scan to push to the iio buffer.
+  */
+ struct afe4404_data {
+ 	struct device *dev;
+@@ -91,6 +92,7 @@ struct afe4404_data {
+ 	struct regulator *regulator;
+ 	struct iio_trigger *trig;
+ 	int irq;
++	s32 buffer[10] __aligned(8);
+ };
+ 
+ enum afe4404_chan_id {
+@@ -328,17 +330,17 @@ static irqreturn_t afe4404_trigger_handler(int irq, void *private)
+ 	struct iio_dev *indio_dev = pf->indio_dev;
+ 	struct afe4404_data *afe = iio_priv(indio_dev);
+ 	int ret, bit, i = 0;
+-	s32 buffer[10];
+ 
+ 	for_each_set_bit(bit, indio_dev->active_scan_mask,
+ 			 indio_dev->masklength) {
+ 		ret = regmap_read(afe->regmap, afe4404_channel_values[bit],
+-				  &buffer[i++]);
++				  &afe->buffer[i++]);
+ 		if (ret)
+ 			goto err;
+ 	}
+ 
+-	iio_push_to_buffers_with_timestamp(indio_dev, buffer, pf->timestamp);
++	iio_push_to_buffers_with_timestamp(indio_dev, afe->buffer,
++					   pf->timestamp);
+ err:
+ 	iio_trigger_notify_done(indio_dev->trig);
+ 
+-- 
+2.25.1
 
->
-> Signed-off-by: Eizan Miyamoto <eizan@chromium.org>
+
+
