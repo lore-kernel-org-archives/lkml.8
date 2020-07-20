@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DB5C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05589C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18CAA22B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91A822CB2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259645;
-	bh=JS8ZQOSUM4qWSeqJVCG/LhsLW7f6uNGnyC/H3yHP2+Q=;
+	s=default; t=1595259646;
+	bh=Gnn04dSXI7aMIFI6xFMx15OTYSb1EJtcg0QvAL//x2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kcVVFj7HfU8PbQ5n+A5HRYEdLFeEVvWCPrIn+I0SgRE8WPVvlNLs+o0Sj6g6jtmBR
-	 w9yH28zmLnuLsSudrbsrYCvcntPvVA7qYwjtpmIQNAg4c1Wm6BJSCitOJiMMVxjRAO
-	 wsGYL094/FOk6zlOIU2rCTRNEl/RbuaipcGKB7n8=
+	b=eF7NgdfSrepPy/SwAKYGz1/IvVhUPbfJJt4GF9Wc1cvKqHsZ+S3EHNBoh8PtrX/Yv
+	 vxwQ6OlwZkJPBYWSqtt71/rm5DLV67AQ3Q0WXlu27KB/ggwoC8iiuQVqwVPfbacB1i
+	 sjv7E2oJyLOb47XFErvPRQNQedRMZ6OKO0hWxtMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbgGTPkn (ORCPT
+        id S1728991AbgGTPkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:40:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60160 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:40:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729746AbgGTPkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:40:39 -0400
+        id S1729758AbgGTPko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:40:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19ACA22D04;
-        Mon, 20 Jul 2020 15:40:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31BCF20773;
+        Mon, 20 Jul 2020 15:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259638;
-        bh=JS8ZQOSUM4qWSeqJVCG/LhsLW7f6uNGnyC/H3yHP2+Q=;
+        s=default; t=1595259643;
+        bh=Gnn04dSXI7aMIFI6xFMx15OTYSb1EJtcg0QvAL//x2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SzexIeTx7S7mu+dUKXUisKxHLtzRFyX3ZRjuQqqLwJWekbgHcAdg7URpUom9eFNDW
-         hkUsAzEuUjLdZqwVuCEtf2vxfUrgtVl5Xk0daOGBlyNHh33JqcFbXBt/2GOjctS6Go
-         TUXH2p2xByKZfBGJ6c42HL8wubxyMpwoQbUlbjkA=
+        b=yn0eKg7w6gsypyPEaIhN3RPwPSgfekkr31Jz+h9Yg5qmbBgGLpglGTaYq+MNt0we/
+         5epo17i4vuYzbelgZHwgw/YkoSpInoTIe0935FD7TfR8/QlBziSssH2DIG3KH7Uctb
+         vCBVLWEfW74O7vAZKNbO1qWIx8MZ9d93m3AnVDF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>
-Subject: [PATCH 4.9 24/86] ARC: entry: fix potential EFA clobber when TIF_SYSCALL_TRACE
-Date:   Mon, 20 Jul 2020 17:36:20 +0200
-Message-Id: <20200720152754.367822689@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: [PATCH 4.9 26/86] s390/mm: fix huge pte soft dirty copying
+Date:   Mon, 20 Jul 2020 17:36:22 +0200
+Message-Id: <20200720152754.467193788@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -58,81 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineet Gupta <vgupta@synopsys.com>
+From: Janosch Frank <frankja@linux.ibm.com>
 
-commit 00fdec98d9881bf5173af09aebd353ab3b9ac729 upstream.
+commit 528a9539348a0234375dfaa1ca5dbbb2f8f8e8d2 upstream.
 
-Trap handler for syscall tracing reads EFA (Exception Fault Address),
-in case strace wants PC of trap instruction (EFA is not part of pt_regs
-as of current code).
+If the pmd is soft dirty we must mark the pte as soft dirty (and not dirty).
+This fixes some cases for guest migration with huge page backings.
 
-However this EFA read is racy as it happens after dropping to pure
-kernel mode (re-enabling interrupts). A taken interrupt could
-context-switch, trigger a different task's trap, clobbering EFA for this
-execution context.
-
-Fix this by reading EFA early, before re-enabling interrupts. A slight
-side benefit is de-duplication of FAKE_RET_FROM_EXCPN in trap handler.
-The trap handler is common to both ARCompact and ARCv2 builds too.
-
-This just came out of code rework/review and no real problem was reported
-but is clearly a potential problem specially for strace.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Cc: <stable@vger.kernel.org> # 4.8
+Fixes: bc29b7ac1d9f ("s390/mm: clean up pte/pmd encoding")
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arc/kernel/entry.S |   16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+ arch/s390/mm/hugetlbpage.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arc/kernel/entry.S
-+++ b/arch/arc/kernel/entry.S
-@@ -156,7 +156,6 @@ END(EV_Extension)
- tracesys:
- 	; save EFA in case tracer wants the PC of traced task
- 	; using ERET won't work since next-PC has already committed
--	lr  r12, [efa]
- 	GET_CURR_TASK_FIELD_PTR   TASK_THREAD, r11
- 	st  r12, [r11, THREAD_FAULT_ADDR]	; thread.fault_address
- 
-@@ -199,15 +198,9 @@ tracesys_exit:
- ; Breakpoint TRAP
- ; ---------------------------------------------
- trap_with_param:
--
--	; stop_pc info by gdb needs this info
--	lr  r0, [efa]
-+	mov r0, r12	; EFA in case ptracer/gdb wants stop_pc
- 	mov r1, sp
- 
--	; Now that we have read EFA, it is safe to do "fake" rtie
--	;   and get out of CPU exception mode
--	FAKE_RET_FROM_EXCPN
--
- 	; Save callee regs in case gdb wants to have a look
- 	; SP will grow up by size of CALLEE Reg-File
- 	; NOTE: clobbers r12
-@@ -234,6 +227,10 @@ ENTRY(EV_Trap)
- 
- 	EXCEPTION_PROLOGUE
- 
-+	lr  r12, [efa]
-+
-+	FAKE_RET_FROM_EXCPN
-+
- 	;============ TRAP 1   :breakpoints
- 	; Check ECR for trap with arg (PROLOGUE ensures r9 has ECR)
- 	bmsk.f 0, r9, 7
-@@ -241,9 +238,6 @@ ENTRY(EV_Trap)
- 
- 	;============ TRAP  (no param): syscall top level
- 
--	; First return from Exception to pure K mode (Exception/IRQs renabled)
--	FAKE_RET_FROM_EXCPN
--
- 	; If syscall tracing ongoing, invoke pre-post-hooks
- 	GET_CURR_THR_INFO_FLAGS   r10
- 	btst r10, TIF_SYSCALL_TRACE
+--- a/arch/s390/mm/hugetlbpage.c
++++ b/arch/s390/mm/hugetlbpage.c
+@@ -111,7 +111,7 @@ static inline pte_t __rste_to_pte(unsign
+ 					     _PAGE_YOUNG);
+ #ifdef CONFIG_MEM_SOFT_DIRTY
+ 		pte_val(pte) |= move_set_bit(rste, _SEGMENT_ENTRY_SOFT_DIRTY,
+-					     _PAGE_DIRTY);
++					     _PAGE_SOFT_DIRTY);
+ #endif
+ 	} else
+ 		pte_val(pte) = _PAGE_INVALID;
 
 
