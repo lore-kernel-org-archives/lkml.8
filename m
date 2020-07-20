@@ -2,381 +2,258 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9408FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8252C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6920122C9C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595253151;
-	bh=+gnwOM2az8B3fa+vUBkNuPzRDcAEiVPRuJCmHCsZTGM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=m3azLF5tTPuYnHEgXkmvPEs1rDFwDgRs1InEuM4fumIdptcvwjc4tj9Go5ZrLvMa6
-	 Ok32upd6NdapnszG4fRnxbcu2IjoUNaw0hhKLUs9EAcTCihrkFYEBgD35X1gA88z6G
-	 z3XG898JGFScHahIHTTNQ6RWJ5ZDPL3bR8Rk3a2c=
+	by mail.kernel.org (Postfix) with ESMTP id A547A22CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:52:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EiaOlkSA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgGTNw3 (ORCPT
+        id S1728077AbgGTNwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:52:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725792AbgGTNw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 09:52:29 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E52B222BF3;
-        Mon, 20 Jul 2020 13:52:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595253148;
-        bh=+gnwOM2az8B3fa+vUBkNuPzRDcAEiVPRuJCmHCsZTGM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RAwbiYny2LCKd9BP/++sNFTAqf/Q5iwzv4/BeCCbYDOrBEmTwn8DdSNzYHIGGDaIH
-         LdQh3IGbokWVNG4izpbZD8ZmFVJLN2zr76z7wxZyqpdLLk9fekpHMVQ96f+ihwP3+Q
-         2lhWN1KNXvLjcGoaTdmNnpeApVy0x01GdVpyCrUU=
-Date:   Mon, 20 Jul 2020 14:52:25 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Cristian Pop <cristian.pop@analog.com>, linux-iio@vger.kernel.org,
+        Mon, 20 Jul 2020 09:52:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbgGTNwa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 09:52:30 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7951DC061794;
+        Mon, 20 Jul 2020 06:52:30 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id br7so18112105ejb.5;
+        Mon, 20 Jul 2020 06:52:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F/UbNWIBaeF674uXxxrVs12lknTwnRrVE0eK/PDNsco=;
+        b=EiaOlkSAkiXnvBxrUoOX/6AmFKWe9GmqAQVnnPQ37yNptmuZCpQx05OkZCyBzq/sd1
+         ApWKsfV6HW8zSXYHkFIjCkRqyQPaAR46HdQWor6et0u12r2FCtBrJlt7BOHfivFoskCQ
+         oyLPvuM+2sptH27hO3rInki0Pg7TAAK4jKMyJQEPX1CIcglNR07yUCFd1eMiNzoqFpp8
+         uBa1uXgkE4CEZyIhAPsXdBYfFYZonF+8rZywOzbMxsm1iXUWzFm4KiQEd3c8wSU4NtQX
+         n9ng48kwgbvP8OYSMFuUvX7yplWyT2T/8RYBkSLgd1VIQndyxIZq/zXwpu9F35gQ927l
+         pc7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F/UbNWIBaeF674uXxxrVs12lknTwnRrVE0eK/PDNsco=;
+        b=Z11d6g6YECqRp3UPf5lWmtPACwoeg+e6W9DLP0omEWKlhh4x1C2zacHIcuhHC+D7Fz
+         cr/RdCrIKdIV9hZLZwojtqkhYUBETFaVjrMqgG9K7+prkvQGaavljnwjbLISYqBy4p3h
+         IIWJiz+WxZgBjOfpKbC5fTC5nfJI3OSZYeUrfQv5dPW5o5ELtEBxS1ovG5uC4gtA9+nd
+         elWinEXnmiECMhQwh9NJqMdF8sRHedm/6ZGA4LC1EXqtC+Gw4MT1uovdqHOU4uOTwsBJ
+         /hUWDhK367SgdEwIf7kVlw+ufNpA/Nb4E5ldTmPnLXT0HdJ233qmFDlH3y4nSvIZJvbT
+         /t/A==
+X-Gm-Message-State: AOAM532+dacMDC/cFNGAQwXDkYEfbNexeFojuDeYE+8I+0xU/44LU0HD
+        pz80Fho/jwfG64scElZYJGj/58e4E88i2g==
+X-Google-Smtp-Source: ABdhPJxpCBMEOoQnmoFIEri+t+8SuKntZy6icjwOEldQ9d2CgpK28AnzEgsy0LQfw83fBMZ3Bl3iYQ==
+X-Received: by 2002:a17:906:9244:: with SMTP id c4mr20215259ejx.60.1595253148866;
+        Mon, 20 Jul 2020 06:52:28 -0700 (PDT)
+Received: from localhost.localdomain (93-103-18-160.static.t-2.net. [93.103.18.160])
+        by smtp.gmail.com with ESMTPSA id r17sm15167779edw.68.2020.07.20.06.52.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 06:52:28 -0700 (PDT)
+From:   Uros Bizjak <ubizjak@gmail.com>
+To:     linux-crypto@vger.kernel.org, linux-next@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] one-bit-adc-dac: Add initial version of one bit
- ADC, DAC
-Message-ID: <20200720145225.4f5d552b@archlinux>
-In-Reply-To: <9bd0363c-e8fb-a36f-a107-0afd8f7851d0@metafoo.de>
-References: <20200716072737.9535-1-cristian.pop@analog.com>
-        <9bd0363c-e8fb-a36f-a107-0afd8f7851d0@metafoo.de>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Cc:     Uros Bizjak <ubizjak@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH] crypto: x86 - Put back integer parts of include/asm/inst.h
+Date:   Mon, 20 Jul 2020 15:51:57 +0200
+Message-Id: <20200720135157.4332-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020 11:25:36 +0200
-Lars-Peter Clausen <lars@metafoo.de> wrote:
+Resolves conflict with the tip tree.
 
-> On 7/16/20 9:27 AM, Cristian Pop wrote:
-> > Implementation for 1-bit ADC (comparator) and a 1-bit DAC (switch)  
-> 
-> Very sneaky way of introducing a iio-gpio-proxy driver to be able to 
-> access GPIOs through libiio ;). I'm not really a fan of the whole idea.
-> 
-> But either way I think this needs a better description of what 1-bit 
-> converters are and how they are used.
-I'll second that.  If we want to do this, I'd much rather seeing as
-an explicit gpio to IIO bridge driver. 
+CC: Herbert Xu <herbert@gondor.apana.org.au>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Borislav Petkov <bp@alien8.de>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: Stephen Rothwell <sfr@canb.auug.org.au>,
+CC: "Chang S. Bae" <chang.seok.bae@intel.com>,
+CC: Peter Zijlstra <peterz@infradead.org>,
+CC: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+---
+ arch/x86/include/asm/inst.h | 148 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 148 insertions(+)
+ create mode 100644 arch/x86/include/asm/inst.h
 
-If there is a comparator on an ADC pin, then the analog characteristics
-of that need describing.  There might be some argument in favour if that
-was done and hence we had scale etc provided for the channel.
-
-Given this is really just putting a new interface on gpios please
-cc the gpio maintainer / list for future versions.
-
-Thanks,
-
-Jonathan
-
-
-> 
-> >
-> > Signed-off-by: Cristian Pop <cristian.pop@analog.com>
-> > ---
-> >   drivers/iio/addac/one-bit-adc-dac.c | 229 ++++++++++++++++++++++++++++
-> >   1 file changed, 229 insertions(+)
-> >   create mode 100644 drivers/iio/addac/one-bit-adc-dac.c
-> >
-> > diff --git a/drivers/iio/addac/one-bit-adc-dac.c b/drivers/iio/addac/one-bit-adc-dac.c
-> > new file mode 100644
-> > index 000000000000..8e2a8a09fedb
-> > --- /dev/null
-> > +++ b/drivers/iio/addac/one-bit-adc-dac.c
-> > @@ -0,0 +1,229 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Analog Devices ONE_BIT_ADC_DAC
-> > + * Digital to Analog Converters driver
-> > + *
-> > + * Copyright 2019 Analog Devices Inc.
-
-Probably update to 2020 or 2019-2020
-
-> > + */
-> > +
-> > +#include <linux/device.h>
-> > +#include <linux/module.h>
-> > +#include <linux/iio/iio.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/gpio/consumer.h>
-> > +
-> > +enum ch_direction {
-> > +	CH_IN,
-> > +	CH_OUT,
-> > +};
-> > +
-> > +struct one_bit_adc_dac_state {
-> > +	struct platform_device  *pdev;
-> > +	struct gpio_descs       *in_gpio_descs;
-> > +	struct gpio_descs       *out_gpio_descs;
-> > +};
-> > +
-> > + #define ONE_BIT_ADC_DAC_CHANNEL(idx, direction)			\
-> > +	{								\
-> > +		.type = IIO_VOLTAGE,					\
-> > +		.indexed = 1,						\
-> > +		.channel = idx,						\
-> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-> > +		.output = direction,					\
-> > +	}
-
-Macro only used in one place, I'd not bother with the macro.
-
-> > +
-> > +static int one_bit_adc_dac_read_raw(struct iio_dev *indio_dev,
-> > +	const struct iio_chan_spec *chan, int *val, int *val2, long info)
-> > +{
-> > +	struct one_bit_adc_dac_state *st = iio_priv(indio_dev);
-> > +	int in_num_ch = 0, out_num_ch = 0;
-> > +	int channel = chan->channel;
-> > +
-> > +	if (st->in_gpio_descs)
-> > +		in_num_ch = st->in_gpio_descs->ndescs;
-> > +
-> > +	if (st->out_gpio_descs)
-> > +		out_num_ch = st->out_gpio_descs->ndescs;
-> > +
-> > +	switch (info) {
-> > +	case IIO_CHAN_INFO_RAW:
-> > +		if (channel < in_num_ch) {
-> > +			*val = gpiod_get_value_cansleep(
-> > +				st->in_gpio_descs->desc[channel]);
-> > +		} else {
-> > +			channel -= in_num_ch;
-> > +			*val = gpiod_get_value_cansleep(
-> > +				st->out_gpio_descs->desc[channel]);
-> > +		}
-> > +		return IIO_VAL_INT;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +}
-> > +
-> > +static int one_bit_adc_dac_write_raw(struct iio_dev *indio_dev,
-> > +			    struct iio_chan_spec const *chan,
-> > +			    int val,
-> > +			    int val2,
-> > +			    long info)
-> > +{
-> > +	struct one_bit_adc_dac_state *st = iio_priv(indio_dev);
-> > +	int in_num_ch = 0, out_num_ch = 0;
-> > +	int channel = chan->channel;
-> > +
-> > +	if (st->in_gpio_descs)
-> > +		in_num_ch = st->in_gpio_descs->ndescs;
-> > +
-> > +	if (st->out_gpio_descs)
-> > +		out_num_ch = st->out_gpio_descs->ndescs;
-> > +
-> > +	switch (info) {
-> > +	case IIO_CHAN_INFO_RAW:
-> > +		if (channel < in_num_ch) {
-> > +			gpiod_set_value_cansleep(
-> > +				st->in_gpio_descs->desc[channel], val);  
-> 
-> How can we set a value on an input GPIO?
-> 
-> > +		} else {
-> > +			channel -= in_num_ch;
-> > +			gpiod_set_value_cansleep(
-> > +				st->out_gpio_descs->desc[channel], val);
-> > +		}
-> > +
-> > +		return 0;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +}
-> > +
-> > +static const struct iio_info one_bit_adc_dac_info = {
-> > +	.read_raw = &one_bit_adc_dac_read_raw,
-> > +	.write_raw = &one_bit_adc_dac_write_raw,
-> > +};
-> > +
-> > +static int one_bit_adc_dac_set_ch(struct iio_dev *indio_dev,
-> > +					struct iio_chan_spec *channels,
-> > +					const char *propname,
-> > +					int num_ch,
-> > +					enum ch_direction direction,
-> > +					int offset)
-> > +{
-> > +	struct one_bit_adc_dac_state *st = iio_priv(indio_dev);
-> > +	const char **gpio_names;
-> > +	int ret, i;
-> > +
-> > +	if (num_ch <= 0)
-> > +		return 0;
-> > +
-> > +	gpio_names = devm_kcalloc(indio_dev->dev.parent,
-> > +					num_ch,
-> > +					sizeof(char *),  
-> sizeof(*gpio_names). It might be better to use normal kcalloc, kfree 
-> here since you only use it in this function.
-
-Definitely.
-
-> > +					GFP_KERNEL);
-> > +	if (!gpio_names)
-> > +		return -ENOMEM;
-> > +
-> > +	ret = device_property_read_string_array(&st->pdev->dev,
-> > +					propname,
-> > +					gpio_names,
-> > +					num_ch);
-Take advantage of the new longer acceptable line length (100 chars)
-to make some of these more readable.
-
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	for (i = 0; i < num_ch; i++) {
-> > +		channels[i] = (struct iio_chan_spec)ONE_BIT_ADC_DAC_CHANNEL(i +
-> > +							offset,
-> > +							direction);
-> > +		channels[i].extend_name = gpio_names[i];  
-> I think we want to avoid using extend_name in new drivers because it 
-> makes for a very clumsy ABI. We should add a label property like we have 
-> for the device for channels to have a symbolic name of the channel.
-
-Agreed. It keeps getting talked about, but no patches yet IIRC.
-
-I'd expect separate indexing for input and output channels.
-The in / out distinguishes them.
-
-in_voltage0_raw
-out_voltage0_raw etc
-
-
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int one_bit_adc_dac_parse_dt(struct iio_dev *indio_dev)
-> > +{
-> > +	struct one_bit_adc_dac_state *st = iio_priv(indio_dev);
-> > +	struct iio_chan_spec *channels;
-> > +	int ret, in_num_ch = 0, out_num_ch = 0;
-> > +
-> > +	st->in_gpio_descs = devm_gpiod_get_array_optional(&st->pdev->dev,
-> > +						"in", GPIOD_IN);
-> > +	if (IS_ERR(st->in_gpio_descs))
-> > +		return PTR_ERR(st->in_gpio_descs);
-> > +
-> > +	if (st->in_gpio_descs)
-> > +		in_num_ch = st->in_gpio_descs->ndescs;
-> > +
-> > +	st->out_gpio_descs = devm_gpiod_get_array_optional(&st->pdev->dev,
-> > +						"out", GPIOD_OUT_HIGH);
-> > +	if (IS_ERR(st->out_gpio_descs))
-> > +		return PTR_ERR(st->out_gpio_descs);
-> > +
-> > +	if (st->out_gpio_descs)
-> > +		out_num_ch = st->out_gpio_descs->ndescs;
-> > +
-> > +	channels = devm_kcalloc(indio_dev->dev.parent, (in_num_ch + out_num_ch),
-> > +				sizeof(struct iio_chan_spec), GFP_KERNEL);  
-> 
-> sizeof(*channels) to avoid accidentally using the wrong type.
-> 
-> > +	if (!channels)
-> > +		return -ENOMEM;
-> > +
-> > +	ret = one_bit_adc_dac_set_ch(indio_dev, &channels[0],
-> > +					"in-gpio-names", in_num_ch,
-> > +					CH_IN, 0);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = one_bit_adc_dac_set_ch(indio_dev, &channels[in_num_ch],
-> > +					"out-gpio-names", out_num_ch,
-> > +					CH_OUT, in_num_ch);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	indio_dev->channels = channels;
-> > +	indio_dev->num_channels = in_num_ch + out_num_ch;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int one_bit_adc_dac_probe(struct platform_device *pdev)
-> > +{
-> > +	struct iio_dev *indio_dev;
-> > +	struct one_bit_adc_dac_state *st;
-> > +	int ret;
-> > +
-> > +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*st));
-> > +	if (!indio_dev)
-> > +		return -ENOMEM;
-> > +
-> > +	st = iio_priv(indio_dev);
-> > +	st->pdev = pdev;
-> > +	indio_dev->dev.parent = &pdev->dev;  
-> parent assignment should not be needed thanks to Alex's work.
-> > +	indio_dev->name = "one-bit-adc-dac";
-> > +	indio_dev->modes = INDIO_DIRECT_MODE;
-> > +	indio_dev->info = &one_bit_adc_dac_info;
-> > +
-> > +	ret = one_bit_adc_dac_parse_dt(indio_dev);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	platform_set_drvdata(pdev, indio_dev);  
-> 
-> There does not seem to be a matching get_drvdata() anywhere so this is 
-> not needed.
-> 
-> > +	return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
-> > +}
-> > +
-> > +static const struct of_device_id one_bit_adc_dac_dt_match[] = {
-> > +	{ .compatible = "adi,one-bit-adc-dac" },
-
-This is definitely not ADI specific.  It also currently looks
-like a policy thing rather than truely defined by the wiring.
-Hence I'd kind of expect to see it instantiated via configfs
-rather than a dt binding.
-
-Note this would definitely need a dt binding doc if done this way.
-My gut feeling is that as it stands, it would go nowhere.
-
-
-
-> > +	{},
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(of, one_bit_adc_dac_dt_match);
-> > +
-> > +static struct platform_driver one_bit_adc_dac_driver = {
-> > +	.driver = {
-> > +		.name = "one-bit-adc-dac",
-> > +		.of_match_table = one_bit_adc_dac_dt_match,
-> > +	},
-> > +	.probe = one_bit_adc_dac_probe,
-> > +};
-> > +
-> > +module_platform_driver(one_bit_adc_dac_driver);
-> > +
-> > +MODULE_AUTHOR("Cristian Pop <cristian.pop@analog.com>");
-> > +MODULE_DESCRIPTION("Analog Devices ONE_BIT_ADC_DAC");
-> > +MODULE_LICENSE("GPL v2");  
-> 
-> 
+diff --git a/arch/x86/include/asm/inst.h b/arch/x86/include/asm/inst.h
+new file mode 100644
+index 000000000000..438ccd4f3cc4
+--- /dev/null
++++ b/arch/x86/include/asm/inst.h
+@@ -0,0 +1,148 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Generate .byte code for some instructions not supported by old
++ * binutils.
++ */
++#ifndef X86_ASM_INST_H
++#define X86_ASM_INST_H
++
++#ifdef __ASSEMBLY__
++
++#define REG_NUM_INVALID		100
++
++#define REG_TYPE_R32		0
++#define REG_TYPE_R64		1
++#define REG_TYPE_INVALID	100
++
++	.macro R32_NUM opd r32
++	\opd = REG_NUM_INVALID
++	.ifc \r32,%eax
++	\opd = 0
++	.endif
++	.ifc \r32,%ecx
++	\opd = 1
++	.endif
++	.ifc \r32,%edx
++	\opd = 2
++	.endif
++	.ifc \r32,%ebx
++	\opd = 3
++	.endif
++	.ifc \r32,%esp
++	\opd = 4
++	.endif
++	.ifc \r32,%ebp
++	\opd = 5
++	.endif
++	.ifc \r32,%esi
++	\opd = 6
++	.endif
++	.ifc \r32,%edi
++	\opd = 7
++	.endif
++#ifdef CONFIG_X86_64
++	.ifc \r32,%r8d
++	\opd = 8
++	.endif
++	.ifc \r32,%r9d
++	\opd = 9
++	.endif
++	.ifc \r32,%r10d
++	\opd = 10
++	.endif
++	.ifc \r32,%r11d
++	\opd = 11
++	.endif
++	.ifc \r32,%r12d
++	\opd = 12
++	.endif
++	.ifc \r32,%r13d
++	\opd = 13
++	.endif
++	.ifc \r32,%r14d
++	\opd = 14
++	.endif
++	.ifc \r32,%r15d
++	\opd = 15
++	.endif
++#endif
++	.endm
++
++	.macro R64_NUM opd r64
++	\opd = REG_NUM_INVALID
++#ifdef CONFIG_X86_64
++	.ifc \r64,%rax
++	\opd = 0
++	.endif
++	.ifc \r64,%rcx
++	\opd = 1
++	.endif
++	.ifc \r64,%rdx
++	\opd = 2
++	.endif
++	.ifc \r64,%rbx
++	\opd = 3
++	.endif
++	.ifc \r64,%rsp
++	\opd = 4
++	.endif
++	.ifc \r64,%rbp
++	\opd = 5
++	.endif
++	.ifc \r64,%rsi
++	\opd = 6
++	.endif
++	.ifc \r64,%rdi
++	\opd = 7
++	.endif
++	.ifc \r64,%r8
++	\opd = 8
++	.endif
++	.ifc \r64,%r9
++	\opd = 9
++	.endif
++	.ifc \r64,%r10
++	\opd = 10
++	.endif
++	.ifc \r64,%r11
++	\opd = 11
++	.endif
++	.ifc \r64,%r12
++	\opd = 12
++	.endif
++	.ifc \r64,%r13
++	\opd = 13
++	.endif
++	.ifc \r64,%r14
++	\opd = 14
++	.endif
++	.ifc \r64,%r15
++	\opd = 15
++	.endif
++#endif
++	.endm
++
++	.macro REG_TYPE type reg
++	R32_NUM reg_type_r32 \reg
++	R64_NUM reg_type_r64 \reg
++	.if reg_type_r64 <> REG_NUM_INVALID
++	\type = REG_TYPE_R64
++	.elseif reg_type_r32 <> REG_NUM_INVALID
++	\type = REG_TYPE_R32
++	.else
++	\type = REG_TYPE_INVALID
++	.endif
++	.endm
++
++	.macro PFX_REX opd1 opd2 W=0
++	.if ((\opd1 | \opd2) & 8) || \W
++	.byte 0x40 | ((\opd1 & 8) >> 3) | ((\opd2 & 8) >> 1) | (\W << 3)
++	.endif
++	.endm
++
++	.macro MODRM mod opd1 opd2
++	.byte \mod | (\opd1 & 7) | ((\opd2 & 7) << 3)
++	.endm
++#endif
++
++#endif
+-- 
+2.26.2
 
