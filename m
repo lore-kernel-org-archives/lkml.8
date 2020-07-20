@@ -2,110 +2,139 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822A5C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749C6C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FDF522482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:39:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BsIvAXE/"
+	by mail.kernel.org (Postfix) with ESMTP id 5BFF320729
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgGTOjk (ORCPT
+        id S1728499AbgGTOkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:39:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27790 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725815AbgGTOjj (ORCPT
+        Mon, 20 Jul 2020 10:40:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37768 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725815AbgGTOko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:39:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595255978;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bTQiDkwTqffwl6gPguYjz7dLWFf2hmRpT9nM3y07XK0=;
-        b=BsIvAXE/ha64zkDP0kHn2moznRFdA1Jl0Y0Fc41uWnLov8GSTOEyZH/AdF+ola9Zk+c61y
-        LaufGY6GjIR5GcqNHWTahwNY+uR8wG8B29qja+lkn59z1WpCLFh4DXuAu62O8BgQRKn/oN
-        2inqjYiQbW7vt5GZyUUd4Mb3t4lN6Kw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-332-uYkMibmYNyeRRlUnmjlMZQ-1; Mon, 20 Jul 2020 10:39:36 -0400
-X-MC-Unique: uYkMibmYNyeRRlUnmjlMZQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A691AC7467;
-        Mon, 20 Jul 2020 14:39:34 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.147])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 30E2019C58;
-        Mon, 20 Jul 2020 14:39:31 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 20 Jul 2020 16:39:34 +0200 (CEST)
-Date:   Mon, 20 Jul 2020 16:39:30 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Jiri Slaby <jirislaby@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        christian@brauner.io, "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Dave Jones <davej@codemonkey.org.uk>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
-Message-ID: <20200720143930.GE6612@redhat.com>
-References: <2c8ef23c-43b4-39d4-8e84-92769c948da9@kernel.org>
- <20200718171406.GB16791@redhat.com>
- <20200718174448.4btbjcvp6wbbdgts@wittgenstein>
- <badcb9d5-f628-2be1-7a72-902cf08010bd@kernel.org>
- <20200720064326.GA6612@redhat.com>
- <20200720082657.GC6612@redhat.com>
- <20200720084106.GJ10769@hirez.programming.kicks-ass.net>
- <20200720105924.GE43129@hirez.programming.kicks-ass.net>
- <20200720140224.GD6612@redhat.com>
- <20200720142105.GR10769@hirez.programming.kicks-ass.net>
+        Mon, 20 Jul 2020 10:40:44 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KEYgtu139830;
+        Mon, 20 Jul 2020 10:40:34 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5pepkqt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 10:40:34 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KEZ5HA141928;
+        Mon, 20 Jul 2020 10:40:33 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5pepkq8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 10:40:33 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KEdKgr018291;
+        Mon, 20 Jul 2020 14:40:33 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma05wdc.us.ibm.com with ESMTP id 32brq89tsb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 14:40:33 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KEeURM39518718
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 14:40:30 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CFDA078077;
+        Mon, 20 Jul 2020 14:40:31 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E51DB78066;
+        Mon, 20 Jul 2020 14:40:29 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.160.78.37])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jul 2020 14:40:29 +0000 (GMT)
+Subject: Re: [PATCH v6] ima: move APPRAISE_BOOTPARAM dependency on ARCH_POLICY
+ to runtime
+To:     Bruno Meneguele <bmeneg@redhat.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-integrity@vger.kernel.org,
+        zohar@linux.ibm.com
+Cc:     erichte@linux.ibm.com, nayna@linux.ibm.com, stable@vger.kernel.org
+References: <20200713164830.101165-1-bmeneg@redhat.com>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Message-ID: <d337cbba-e996-e898-1e75-9f142d480e5e@linux.vnet.ibm.com>
+Date:   Mon, 20 Jul 2020 10:40:29 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720142105.GR10769@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200713164830.101165-1-bmeneg@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 suspectscore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0 spamscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/20, Peter Zijlstra wrote:
+
+On 7/13/20 12:48 PM, Bruno Meneguele wrote:
+> The IMA_APPRAISE_BOOTPARAM config allows enabling different "ima_appraise="
+> modes - log, fix, enforce - at run time, but not when IMA architecture
+> specific policies are enabled.  This prevents properly labeling the
+> filesystem on systems where secure boot is supported, but not enabled on the
+> platform.  Only when secure boot is actually enabled should these IMA
+> appraise modes be disabled.
 >
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -4193,9 +4193,6 @@ static void __sched notrace __schedule(bool preempt)
->  	local_irq_disable();
->  	rcu_note_context_switch(preempt);
->  
-> -	/* See deactivate_task() below. */
-> -	prev_state = prev->state;
-> -
->  	/*
->  	 * Make sure that signal_pending_state()->signal_pending() below
->  	 * can't be reordered with __set_current_state(TASK_INTERRUPTIBLE)
-> @@ -4223,7 +4220,8 @@ static void __sched notrace __schedule(bool preempt)
->  	 * We must re-load prev->state in case ttwu_remote() changed it
->  	 * before we acquired rq->lock.
->  	 */
-> -	if (!preempt && prev_state && prev_state == prev->state) {
-> +	prev_state = prev->state;
-> +	if (!preempt && prev_state) {
+> This patch removes the compile time dependency and makes it a runtime
+> decision, based on the secure boot state of that platform.
+>
+> Test results as follows:
+>
+> -> x86-64 with secure boot enabled
+>
+> [    0.015637] Kernel command line: <...> ima_policy=appraise_tcb ima_appraise=fix
+> [    0.015668] ima: Secure boot enabled: ignoring ima_appraise=fix boot parameter option
+>
+> -> powerpc with secure boot disabled
+>
+> [    0.000000] Kernel command line: <...> ima_policy=appraise_tcb ima_appraise=fix
+> [    0.000000] Secure boot mode disabled
+>
+> -> Running the system without secure boot and with both options set:
+>
+> CONFIG_IMA_APPRAISE_BOOTPARAM=y
+> CONFIG_IMA_ARCH_POLICY=y
+>
+> Audit prompts "missing-hash" but still allow execution and, consequently,
+> filesystem labeling:
+>
+> type=INTEGRITY_DATA msg=audit(07/09/2020 12:30:27.778:1691) : pid=4976
+> uid=root auid=root ses=2
+> subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=appraise_data
+> cause=missing-hash comm=bash name=/usr/bin/evmctl dev="dm-0" ino=493150
+> res=no
+>
+> Cc: stable@vger.kernel.org
+> Fixes: d958083a8f64 ("x86/ima: define arch_get_ima_policy() for x86")
+> Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
 
-Heh ;) Peter, you know what? I did the same change and tried to understand
-why it is wrong and what have I missed.
 
-Thanks, now I can relax. But my head hurts too, I'll probably try to re-read
-this code and other emails from you tomorrow.
+Reviewed-by: Nayna Jain<nayna@linux.ibm.com>
 
-Oleg.
+Tested-by: Nayna Jain<nayna@linux.ibm.com>
+
+
+Thanks & Regards,
+
+         - Nayna
 
