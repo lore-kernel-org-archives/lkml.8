@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC71C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B75C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 096BF206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E983322D02
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261349;
-	bh=eoZ6aqVUpZt4bpJWl7G/xhI+5Tqx6a8wdxwhcKq1e40=;
+	s=default; t=1595261354;
+	bh=IQtVVwASIV9iN5LpAQ0FqLnEWWJ0Umn2MdHysulL3lQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dj6th+FshwPm2QYKvQN9SO0axOej6ujYngIBC/JZqehj8XBOE6JfjDNdybYh43ZZ3
-	 e8hJINTU0njsf6SdUVc6g6gnJ+HHD9CoTLhPItPRjO1oTwLZFnbAKy8GhvXZoIGoXG
-	 cDWa6utVAApniRfvogo4MoZUIf72umKmrsfXomqk=
+	b=zGqc3Pm9TQcJhirYpVd1pImFZYBoA7Il5N6JrvMxAv9Wqn4ed7U2vZJUTuX8szONI
+	 E0gMMyXsvgk7BJtP3ZfB+g054WcPcK7rK04hiMXOoF0u4spk/HxsZm/OOXI7PP3gL8
+	 e29ldtk/xwhkqt8BhsiS/CvON1wWolUX438+/RDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387485AbgGTQJF (ORCPT
+        id S1732350AbgGTQJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:09:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46736 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:09:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387469AbgGTQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:09:00 -0400
+        id S2387461AbgGTQJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:09:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A28DE22CB1;
-        Mon, 20 Jul 2020 16:08:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AF662065E;
+        Mon, 20 Jul 2020 16:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261340;
-        bh=eoZ6aqVUpZt4bpJWl7G/xhI+5Tqx6a8wdxwhcKq1e40=;
+        s=default; t=1595261342;
+        bh=IQtVVwASIV9iN5LpAQ0FqLnEWWJ0Umn2MdHysulL3lQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o5Lu6vleQTjBeFErHG+evzkY0utsmcCctqaCkMy5+Cb2GUFpFjZ0OMDWkcZGF8tO5
-         2Qyu9iuo1V+kWW7l7C0Tzk6sc/iEkawYZQBvkQ5X1XUpa6DiYavjrePJybhfBKNZAC
-         kdhS7wsi6Bx/q+J3Y15xQ5CEzYc2j29ltmsfInZ0=
+        b=mHD3ayACkiLDf7WleGsT0v+SYipGmn3ekMY91anz0UErKePkE5Yina2YMRVx03p8q
+         7ED9aGZp8BNqlmUXslqKCGfA1n30fjf0ki/BEL5p93fEYy4mS9ytEigIzoIgZTn7AZ
+         rZIwri1aW4v4mmIOlgZZdtmSnAIbGZdRoYgLltqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 073/244] scsi: qla2xxx: make 1-bit bit-fields unsigned int
-Date:   Mon, 20 Jul 2020 17:35:44 +0200
-Message-Id: <20200720152829.316470169@linuxfoundation.org>
+        stable@vger.kernel.org, Nikhil Rao <nikhil.rao@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 082/244] dmaengine: idxd: fix cdev locking for open and release
+Date:   Mon, 20 Jul 2020 17:35:53 +0200
+Message-Id: <20200720152829.742328308@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -62,40 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Nikhil Rao <nikhil.rao@intel.com>
 
-[ Upstream commit 78b874b7cbf09fbfadfa5f18a347ebef7bbb49fe ]
+[ Upstream commit 66983bc18fad17d10766650b3685045f6f092d73 ]
 
-The bitfields mpi_fw_dump_reading and mpi_fw_dumped are currently signed
-which is not recommended as the representation is an implementation defined
-behaviour.  Fix this by making the bit-fields unsigned ints.
+add the wq lock in cdev open and release call. This fixes
+race conditions observed in the open and close routines.
 
-Link: https://lore.kernel.org/r/20200428102013.1040598-1-colin.king@canonical.com
-Fixes: cbb01c2f2f63 ("scsi: qla2xxx: Fix MPI failure AEN (8200) handling")
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 42d279f9137a ("dmaengine: idxd: add char driver to expose submission portal to userland")
+Signed-off-by: Nikhil Rao <nikhil.rao@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/159285824892.64944.2905413694915141834.stgit@djiang5-desk3.ch.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_def.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/idxd/cdev.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
-index daa9e936887bb..172ea4e5887d9 100644
---- a/drivers/scsi/qla2xxx/qla_def.h
-+++ b/drivers/scsi/qla2xxx/qla_def.h
-@@ -4248,8 +4248,8 @@ struct qla_hw_data {
- 	int		fw_dump_reading;
- 	void		*mpi_fw_dump;
- 	u32		mpi_fw_dump_len;
--	int		mpi_fw_dump_reading:1;
--	int		mpi_fw_dumped:1;
-+	unsigned int	mpi_fw_dump_reading:1;
-+	unsigned int	mpi_fw_dumped:1;
- 	int		prev_minidump_failed;
- 	dma_addr_t	eft_dma;
- 	void		*eft;
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+index ff49847e37a86..cb376cf6a2d2c 100644
+--- a/drivers/dma/idxd/cdev.c
++++ b/drivers/dma/idxd/cdev.c
+@@ -74,6 +74,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+ 	struct idxd_device *idxd;
+ 	struct idxd_wq *wq;
+ 	struct device *dev;
++	int rc = 0;
+ 
+ 	wq = inode_wq(inode);
+ 	idxd = wq->idxd;
+@@ -81,17 +82,27 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+ 
+ 	dev_dbg(dev, "%s called: %d\n", __func__, idxd_wq_refcount(wq));
+ 
+-	if (idxd_wq_refcount(wq) > 0 && wq_dedicated(wq))
+-		return -EBUSY;
+-
+ 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+ 	if (!ctx)
+ 		return -ENOMEM;
+ 
++	mutex_lock(&wq->wq_lock);
++
++	if (idxd_wq_refcount(wq) > 0 && wq_dedicated(wq)) {
++		rc = -EBUSY;
++		goto failed;
++	}
++
+ 	ctx->wq = wq;
+ 	filp->private_data = ctx;
+ 	idxd_wq_get(wq);
++	mutex_unlock(&wq->wq_lock);
+ 	return 0;
++
++ failed:
++	mutex_unlock(&wq->wq_lock);
++	kfree(ctx);
++	return rc;
+ }
+ 
+ static int idxd_cdev_release(struct inode *node, struct file *filep)
+@@ -105,7 +116,9 @@ static int idxd_cdev_release(struct inode *node, struct file *filep)
+ 	filep->private_data = NULL;
+ 
+ 	kfree(ctx);
++	mutex_lock(&wq->wq_lock);
+ 	idxd_wq_put(wq);
++	mutex_unlock(&wq->wq_lock);
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
