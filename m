@@ -2,164 +2,163 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B17C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 384ACC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7969206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F73207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:58:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ARdfdFj1"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pggpCSV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbgGTQ5r (ORCPT
+        id S1730596AbgGTQ6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:57:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728894AbgGTQ5r (ORCPT
+        Mon, 20 Jul 2020 12:58:12 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46868 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729941AbgGTQ6K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:57:47 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE0CDC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:57:46 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id d4so10549585pgk.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:57:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HFcC80JUidtRsTSUDISufmr7F4zYUtVwLU2XV8q4Mr0=;
-        b=ARdfdFj1NmeTb0sfuOmhKjXFnTj40Hgqe9iDsi1nHPMaauaTgIaiFRIQq6GfVfzo0h
-         K78VxGo1OuhMLgPr28z8KrXTJV/17RcTvGpiPl9/JG/S0LB0yQAFjExQSrQySQOz+J+c
-         LsW4b9ovw3mP1gyWkayEXN6b1Nbkb/H8mvuZkJatUkCaUMT4rZExWCnF2Wa4hJuwkB29
-         V51YQppOAwyQLlXfWCQcpPSjYz+FHK4mCp7nkxuIDM4GLE7RXlj0/VXD0t+9+7/vPN7r
-         VCUA+VB3qbhw7GaNst/MrWmPwngCV5Os9eRkYV4tq+CvojifWXDx4hXNW446XHlhVIVi
-         eb/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HFcC80JUidtRsTSUDISufmr7F4zYUtVwLU2XV8q4Mr0=;
-        b=rtV4tEWInAJZFhYMK09mltHTQwiZZUvhnv7VSrB4m80es52gqeNIOn7eq2pttEVVk6
-         Wx+oYc+LhmaYMcuEK0hUZruM0VEHZmIGVx6GF/ymLiIsRTgP8HeN4r/TmK+L1zI1vx2J
-         lzt8BRllfchNzwrPATGEr+m38UnFgUIfYqxSvIxKIsM3dD735mDGgQ4NJ93h3nJc6bD+
-         2zeo+vBYIoApyIa8jE0WJ2b/XJU/ZOMkqZJdVgzAu5xIfdITGvOW/9bpwAPVWg+d76kL
-         2RcbW7Ws9TXVrTCwE4Wx81sFtpNC4HGAH9+IpzPbGKNveX+umnWZvbxLFILAxlD3+7K1
-         F39w==
-X-Gm-Message-State: AOAM530qBLDDjcROIm7tHMG5Be/N3D2m12O3rkSOoIFFrPHIVQfsu1jc
-        B5TvW9+l1KEDz5Axj0EYJ1mgiw==
-X-Google-Smtp-Source: ABdhPJxpVIgG93k2d+UdAcFHSaqkbUfsjBEpJQtEtIkEA7AoMnK+tFyXD9H9vJZ6+OX8Nr2ZMUKjKA==
-X-Received: by 2002:a62:dd91:: with SMTP id w139mr20667241pff.40.1595264266471;
-        Mon, 20 Jul 2020 09:57:46 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m17sm17807175pfo.182.2020.07.20.09.57.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 09:57:45 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 10:57:44 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, sidgup@codeaurora.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v1 2/4] remoteproc: qcom_q6v5_mss: Replace mask based
- tracking with size
-Message-ID: <20200720165744.GA1113627@xps15>
-References: <1594326716-15474-1-git-send-email-rishabhb@codeaurora.org>
- <1594326716-15474-3-git-send-email-rishabhb@codeaurora.org>
+        Mon, 20 Jul 2020 12:58:10 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06KGw5BF079972;
+        Mon, 20 Jul 2020 11:58:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595264285;
+        bh=wq/HG2wN64kJj6fb3o9G8/jhw4U/26F2nKCG9d1GLZs=;
+        h=From:To:Subject:Date:In-Reply-To:References;
+        b=pggpCSV+jUMiouI1P11dgQ/6W+SNqGMM0+JVl/GY/M4SrGhJYsjI3G3MEe47XE+zk
+         LjBMx8lNIq3m3n1+52uM5FafB4zG95BvpPF5nyTk85iTOg/d7jznm7e9OVqswTCJcO
+         MzFwZC6pbGcHrXkGJvygzWi3j5ZEirrCdpoXRgvo=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06KGw5nr128546
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 Jul 2020 11:58:05 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
+ Jul 2020 11:58:05 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 20 Jul 2020 11:58:05 -0500
+Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KGw3B5041101;
+        Mon, 20 Jul 2020 11:58:04 -0500
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <nsekhar@ti.com>, <grygorii.strashko@ti.com>,
+        <vinicius.gomes@intel.com>
+Subject: [net-next v4 PATCH 2/7] net: hsr: introduce common code for skb initialization
+Date:   Mon, 20 Jul 2020 12:57:58 -0400
+Message-ID: <20200720165803.17793-3-m-karicheri2@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200720165803.17793-1-m-karicheri2@ti.com>
+References: <20200720165803.17793-1-m-karicheri2@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594326716-15474-3-git-send-email-rishabhb@codeaurora.org>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 01:31:54PM -0700, Rishabh Bhatnagar wrote:
-> From: Sibi Sankar <sibis@codeaurora.org>
-> 
-> In order to land inline coredump support for mss, the dump_segment
-> function would need to support granularities less than the segment
-> size. This is achieved by replacing mask based tracking with size.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+As a preparatory patch to introduce PRP protocol support in the
+driver, refactor the skb init code to a separate function.
 
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ net/hsr/hsr_device.c | 41 ++++++++++++++++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 13 deletions(-)
 
-> ---
->  drivers/remoteproc/qcom_q6v5_mss.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> index feb70283b..c6ce032 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -181,8 +181,8 @@ struct q6v5 {
->  	bool running;
->  
->  	bool dump_mba_loaded;
-> -	unsigned long dump_segment_mask;
-> -	unsigned long dump_complete_mask;
-> +	size_t current_dump_size;
-> +	size_t total_dump_size;
->  
->  	phys_addr_t mba_phys;
->  	void *mba_region;
-> @@ -1203,7 +1203,6 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
->  {
->  	int ret = 0;
->  	struct q6v5 *qproc = rproc->priv;
-> -	unsigned long mask = BIT((unsigned long)segment->priv);
->  	int offset = segment->da - qproc->mpss_reloc;
->  	void *ptr = NULL;
->  
-> @@ -1229,10 +1228,10 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
->  		memset(dest, 0xff, segment->size);
->  	}
->  
-> -	qproc->dump_segment_mask |= mask;
-> +	qproc->current_dump_size += segment->size;
->  
->  	/* Reclaim mba after copying segments */
-> -	if (qproc->dump_segment_mask == qproc->dump_complete_mask) {
-> +	if (qproc->current_dump_size == qproc->total_dump_size) {
->  		if (qproc->dump_mba_loaded) {
->  			/* Try to reset ownership back to Q6 */
->  			q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
-> @@ -1274,7 +1273,7 @@ static int q6v5_start(struct rproc *rproc)
->  			"Failed to reclaim mba buffer system may become unstable\n");
->  
->  	/* Reset Dump Segment Mask */
-> -	qproc->dump_segment_mask = 0;
-> +	qproc->current_dump_size = 0;
->  	qproc->running = true;
->  
->  	return 0;
-> @@ -1323,7 +1322,7 @@ static int qcom_q6v5_register_dump_segments(struct rproc *rproc,
->  
->  	ehdr = (struct elf32_hdr *)fw->data;
->  	phdrs = (struct elf32_phdr *)(ehdr + 1);
-> -	qproc->dump_complete_mask = 0;
-> +	qproc->total_dump_size = 0;
->  
->  	for (i = 0; i < ehdr->e_phnum; i++) {
->  		phdr = &phdrs[i];
-> @@ -1338,7 +1337,7 @@ static int qcom_q6v5_register_dump_segments(struct rproc *rproc,
->  		if (ret)
->  			break;
->  
-> -		qproc->dump_complete_mask |= BIT(i);
-> +		qproc->total_dump_size += phdr->p_memsz;
->  	}
->  
->  	release_firmware(fw);
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+index 40ac45123a62..bfe2d1449dbd 100644
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -230,15 +230,11 @@ static const struct header_ops hsr_header_ops = {
+ 	.parse	 = eth_header_parse,
+ };
+ 
+-static void send_hsr_supervision_frame(struct hsr_port *master,
+-				       u8 type, u8 hsr_ver)
++static struct sk_buff *hsr_init_skb(struct hsr_port *master, u8 hsr_ver)
+ {
++	struct hsr_priv *hsr = master->hsr;
+ 	struct sk_buff *skb;
+ 	int hlen, tlen;
+-	struct hsr_tag *hsr_tag;
+-	struct hsr_sup_tag *hsr_stag;
+-	struct hsr_sup_payload *hsr_sp;
+-	unsigned long irqflags;
+ 
+ 	hlen = LL_RESERVED_SPACE(master->dev);
+ 	tlen = master->dev->needed_tailroom;
+@@ -247,22 +243,44 @@ static void send_hsr_supervision_frame(struct hsr_port *master,
+ 			    sizeof(struct hsr_sup_payload) + hlen + tlen);
+ 
+ 	if (!skb)
+-		return;
++		return skb;
+ 
+ 	skb_reserve(skb, hlen);
+-
+ 	skb->dev = master->dev;
+ 	skb->protocol = htons(hsr_ver ? ETH_P_HSR : ETH_P_PRP);
+ 	skb->priority = TC_PRIO_CONTROL;
+ 
+ 	if (dev_hard_header(skb, skb->dev, (hsr_ver ? ETH_P_HSR : ETH_P_PRP),
+-			    master->hsr->sup_multicast_addr,
++			    hsr->sup_multicast_addr,
+ 			    skb->dev->dev_addr, skb->len) <= 0)
+ 		goto out;
++
+ 	skb_reset_mac_header(skb);
+ 	skb_reset_network_header(skb);
+ 	skb_reset_transport_header(skb);
+ 
++	return skb;
++out:
++	kfree_skb(skb);
++
++	return NULL;
++}
++
++static void send_hsr_supervision_frame(struct hsr_port *master,
++				       u8 type, u8 hsr_ver)
++{
++	struct hsr_sup_payload *hsr_sp;
++	struct hsr_sup_tag *hsr_stag;
++	struct hsr_tag *hsr_tag;
++	unsigned long irqflags;
++	struct sk_buff *skb;
++
++	skb = hsr_init_skb(master, hsr_ver);
++	if (!skb) {
++		WARN_ONCE(1, "HSR: Could not send supervision frame\n");
++		return;
++	}
++
+ 	if (hsr_ver > 0) {
+ 		hsr_tag = skb_put(skb, sizeof(struct hsr_tag));
+ 		hsr_tag->encap_proto = htons(ETH_P_PRP);
+@@ -299,11 +317,8 @@ static void send_hsr_supervision_frame(struct hsr_port *master,
+ 		return;
+ 
+ 	hsr_forward_skb(skb, master);
+-	return;
+ 
+-out:
+-	WARN_ONCE(1, "HSR: Could not send supervision frame\n");
+-	kfree_skb(skb);
++	return;
+ }
+ 
+ /* Announce (supervision frame) timer function
+-- 
+2.17.1
+
