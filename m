@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7353CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E453AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4694E22CE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4EC322CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260509;
-	bh=4OjDOctGjCwaUP/tk71zHt2xEFdgrp0lwlJPrqAa36s=;
+	s=default; t=1595260511;
+	bh=73OfyVQhcIxZMzuwA5a7Od8723BMHesLMf45Xpthq9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zea/o7VcjTk0AvpJW2+GaJYCseN42Ds4n6Zxg0S8C3ig2zo+ZnpUGK6HL7M4/wzD/
-	 odZ8sMlwi4ANLVNn0GisBg3luwcP/6o9t/d30mO8rZyrebEVu01kbMqD0TBg51dY9l
-	 OMo/00ny64X1hZai+knYCTNPmJhcIVQP+gQGutiY=
+	b=vJ73MR0yWmkh0mW0Esw+wy+pjt129VdgCL2HoQAV/D52KuejRjP5YUqfyCHi/9Kuj
+	 eAyVvMlh6JS9uBPFDJKSSCyR3eBPq53XliotPio/eqTrdMX6u29kf7VkSbAhcJ6cFQ
+	 ctx84fF+c5dqpKi8WhlIHxPmOvCqOeHwmHUbiErI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731633AbgGTPzD (ORCPT
+        id S1730313AbgGTPzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:55:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53800 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:55:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731116AbgGTPy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:54:57 -0400
+        id S1731404AbgGTPzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:55:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BECD22D00;
-        Mon, 20 Jul 2020 15:54:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 475CC2065E;
+        Mon, 20 Jul 2020 15:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260496;
-        bh=4OjDOctGjCwaUP/tk71zHt2xEFdgrp0lwlJPrqAa36s=;
+        s=default; t=1595260504;
+        bh=73OfyVQhcIxZMzuwA5a7Od8723BMHesLMf45Xpthq9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uwWJ7yYdQTWqUhTLoXMSUm6IdePIvKMdWjcmIcXwj4xORiR3P9B4BEv4We00fUHwj
-         zD7gbTSQxuQPCZ0QgO5GQ16gIZBLeSf0kCv3zclYjp+y1FmItLbtypd7ouFBeQO5lk
-         sr4+t+czgC/bIHmGIhDie5ZDnoCgw6hSevqGHZbg=
+        b=meHayuuyAKG90IElWwBDPzn2RbK+hx1/2nYV+Ob9/PI646xzKrSXEAA5Pkk1GZt7l
+         FDDv0hWNwuYc+9/tEtTA9xS0Fpr431k0tYbJWR0YhEwUY0UDwwvgBxwhwW17IQoXBF
+         uVCi9CsvMbyGmRKmvh3o65sazw+dGIuqhq2jhNqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finley Xiao <finley.xiao@rock-chips.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 4.19 123/133] thermal/drivers/cpufreq_cooling: Fix wrong frequency converted from power
-Date:   Mon, 20 Jul 2020 17:37:50 +0200
-Message-Id: <20200720152809.664822211@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Luis Machado <luis.machado@linaro.org>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.19 126/133] arm64: compat: Ensure upper 32 bits of x0 are zero on syscall return
+Date:   Mon, 20 Jul 2020 17:37:53 +0200
+Message-Id: <20200720152809.812865589@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -61,53 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finley Xiao <finley.xiao@rock-chips.com>
+From: Will Deacon <will@kernel.org>
 
-commit 371a3bc79c11b707d7a1b7a2c938dc3cc042fffb upstream.
+commit 15956689a0e60aa0c795174f3c310b60d8794235 upstream.
 
-The function cpu_power_to_freq is used to find a frequency and set the
-cooling device to consume at most the power to be converted. For example,
-if the power to be converted is 80mW, and the em table is as follow.
-struct em_cap_state table[] = {
-	/* KHz     mW */
-	{ 1008000, 36, 0 },
-	{ 1200000, 49, 0 },
-	{ 1296000, 59, 0 },
-	{ 1416000, 72, 0 },
-	{ 1512000, 86, 0 },
-};
-The target frequency should be 1416000KHz, not 1512000KHz.
+Although we zero the upper bits of x0 on entry to the kernel from an
+AArch32 task, we do not clear them on the exception return path and can
+therefore expose 64-bit sign extended syscall return values to userspace
+via interfaces such as the 'perf_regs' ABI, which deal exclusively with
+64-bit registers.
 
-Fixes: 349d39dc5739 ("thermal: cpu_cooling: merge frequency and power tables")
-Cc: <stable@vger.kernel.org> # v4.13+
-Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200619090825.32747-1-finley.xiao@rock-chips.com
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Explicitly clear the upper 32 bits of x0 on return from a compat system
+call.
+
+Cc: <stable@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Keno Fischer <keno@juliacomputing.com>
+Cc: Luis Machado <luis.machado@linaro.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/thermal/cpu_cooling.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/syscall.h |   12 +++++++++++-
+ arch/arm64/kernel/syscall.c      |    3 +++
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
---- a/drivers/thermal/cpu_cooling.c
-+++ b/drivers/thermal/cpu_cooling.c
-@@ -278,11 +278,11 @@ static u32 cpu_power_to_freq(struct cpuf
- 	int i;
- 	struct freq_table *freq_table = cpufreq_cdev->freq_table;
- 
--	for (i = 1; i <= cpufreq_cdev->max_level; i++)
--		if (power > freq_table[i].power)
-+	for (i = 0; i < cpufreq_cdev->max_level; i++)
-+		if (power >= freq_table[i].power)
- 			break;
- 
--	return freq_table[i - 1].frequency;
-+	return freq_table[i].frequency;
+--- a/arch/arm64/include/asm/syscall.h
++++ b/arch/arm64/include/asm/syscall.h
+@@ -45,6 +45,10 @@ static inline long syscall_get_error(str
+ 				     struct pt_regs *regs)
+ {
+ 	unsigned long error = regs->regs[0];
++
++	if (is_compat_thread(task_thread_info(task)))
++		error = sign_extend64(error, 31);
++
+ 	return IS_ERR_VALUE(error) ? error : 0;
  }
  
- /**
+@@ -58,7 +62,13 @@ static inline void syscall_set_return_va
+ 					    struct pt_regs *regs,
+ 					    int error, long val)
+ {
+-	regs->regs[0] = (long) error ? error : val;
++	if (error)
++		val = error;
++
++	if (is_compat_thread(task_thread_info(task)))
++		val = lower_32_bits(val);
++
++	regs->regs[0] = val;
+ }
+ 
+ #define SYSCALL_MAX_ARGS 6
+--- a/arch/arm64/kernel/syscall.c
++++ b/arch/arm64/kernel/syscall.c
+@@ -50,6 +50,9 @@ static void invoke_syscall(struct pt_reg
+ 		ret = do_ni_syscall(regs, scno);
+ 	}
+ 
++	if (is_compat_task())
++		ret = lower_32_bits(ret);
++
+ 	regs->regs[0] = ret;
+ }
+ 
 
 
