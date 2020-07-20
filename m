@@ -2,187 +2,170 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9CAC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEEAC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5444B21775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75EEC2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:06:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bU8EMgFp"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="gK6UcSR/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgGTJFK (ORCPT
+        id S1728188AbgGTJG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:05:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728171AbgGTJFH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:05:07 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA0FC0619D4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:05:06 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id q5so17016725wru.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:05:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DkRWC0cI8O7GbXOYyHnGL5QyWF9IbOGv2nZauF5wCkI=;
-        b=bU8EMgFph/+KkpB7s9feIuGmNFweYyoKifyCutks+uAGpXf0FdKEY221dDMC3pPPwE
-         EPkm1IKadr74GCklQzZfCzYiRvTrA13cuP+tlXZk6Oe5X9gotE0Y+WlClqT1cPrDC4OM
-         7jmWVUA8x9OunWjWq9OJ8SarD2APdKH/QtcZV5e+VnQflCvT1hJdUE6lpE65l3tBdT7l
-         nb+mQR++sRVlL/ajK5nBUJuVjt8vGtSP6iA28jN4WtD4+dXXapcXVl52DnbCiEwxs6eS
-         MQC2pHVUz5nCy6TOdB4yzYWTviKb8UQbCcdAvXUmWBDeH96GVHAo2pNgsvwKblF3jOCT
-         u1WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DkRWC0cI8O7GbXOYyHnGL5QyWF9IbOGv2nZauF5wCkI=;
-        b=AVp4ky/05KTM0m/uosIsC7ZOeqFptcs0rS0oCO6z3z5iez97E0YJlcx3OVj3XjDyeL
-         jLVhAhr4kGu7gmSrtE9Vtbxws0OWO8BRnJdy4/7RJVaYm9xijRMA/RUGffAXoh8hwbzp
-         ZqDoSqbe6S5qPp2OGf/fSbqcwBqjyLS/dmX0KLZskJE5KNjegqYtFQXNMaAVgrFePRcz
-         eQfnPV3iBtmICy9mmi+cO8FiGPGuHKMX7z5G1xvf17AlkRPjvCo1iv7QwgzHoj9oGkz0
-         RBbfz9VUHQEa+zu19hQRQa0ZaOuxi6DtgVPvmOGVFHwJEs0GfYNZdzB71hqOz8zbuSrF
-         i+Ow==
-X-Gm-Message-State: AOAM533NBpxqEVb/ygXXs9YIsQthO27KcMnBPLoA0i4+enWQDGn+tKIV
-        L8JOzh1bnJIlXHUunZwfRaFNlW9iF9g=
-X-Google-Smtp-Source: ABdhPJxjaq34hzFmwVQqgEd8EEjoU54tk8kNmyK8IbWqdlkGCdZ95EJD2792qPaZuzt6PY2tbOPt+w==
-X-Received: by 2002:adf:a15c:: with SMTP id r28mr1900499wrr.151.1595235905139;
-        Mon, 20 Jul 2020 02:05:05 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id z1sm31934372wru.30.2020.07.20.02.05.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jul 2020 02:05:04 -0700 (PDT)
-Subject: Re: [PATCH v5 0/4] nvmem: qfprom: Patches for fuse blowing on
- Qualcomm SoCs
-To:     Douglas Anderson <dianders@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     sparate@codeaurora.org, saiprakash.ranjan@codeaurora.org,
-        mturney@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>, dhavalp@codeaurora.org,
-        rnayak@codeaurora.org, mkurumel@codeaurora.org,
-        Ravi Kumar Bokka <rbokka@codeaurora.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200710143520.1206846-1-dianders@chromium.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <3aff0624-b698-4711-aaa1-6d2fb661b085@linaro.org>
-Date:   Mon, 20 Jul 2020 10:05:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 20 Jul 2020 05:06:27 -0400
+Received: from mail-eopbgr00071.outbound.protection.outlook.com ([40.107.0.71]:30692
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726699AbgGTJGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 05:06:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YXU+A88MGUnBsNxUtKNFjKCZciBhPvVqymPna9lhIdFZxYokENMmE0b55x211Hoa7iah5ujscx4kas7nWIBQwivND1AoE1umrAIQqIq0tBNvoHhtqz3ARWP/1Exxd4MPL0u6zEKQZHu/TiXKK+bt9m6JmhZOHUNWsIoAajPS7zxf3LAfuhfCm25gTL9d1HacwFsQqUT8vcTznYaFonavJXCNXG/PStGFr9rybvGBJLjTYizbjfwgJH88ZXDWfT9Xxr2oMs0g1m0+DgnC9COF4gzf4/+N5LkphitA+gc+V3jDZormcyfBcGn4tavXnjFmiXxCh0pCmV+F1CN3Do6NLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9sTL4e494V1QvSQiJoYNmQB3UtUzHuuJKU/0gefoInI=;
+ b=F9GLwshOZH3/Dnt4q8QK3kfQ5LFwQ9sveQVZHBh3MADp8RaBpwROPggiPN1cQLpGDU08buYS/h7Jd7IpzHHaZH15ZZ0cJOfw99882UcEcqKC5NlVjfta82D5Sy+q5E4AZFpOCDqLgUySlbKHAZQHA2AGSKaBezyr2hGJOYXRE5cbl8gBCfbjIV2NQXfgLWOR/Ukbd7DIpAQsU6x2QIOdZG9A3JfMFtFrJNoN4HDNGDBgVqGZ2GnEtp6YOo7pRvMzyoA8ljVWhAIG7PiC4FVN26QZda++/XwLEVcTkNR58AgymvNUj8Ssz8Id1ThrZZs0ncdW54FjdKdD95ff1/mihA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9sTL4e494V1QvSQiJoYNmQB3UtUzHuuJKU/0gefoInI=;
+ b=gK6UcSR/GSIPtO1TMmtYaAv4XLNkrTIemQ6D3G2o8vbVTrzXc5mqxg4iUp6srxhSqSnR10BgM3TBCbnLVOmx06ydqX96hEgSt0hxNC2rDR9s0VxDyaltQFgn5rC3cU9UEP6Urj3anvgC5cjUZnd6St4rx0S/UHd9pjkjAHSu75k=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
+Received: from AM4PR0401MB2401.eurprd04.prod.outlook.com
+ (2603:10a6:200:47::26) by AM0PR0402MB3762.eurprd04.prod.outlook.com
+ (2603:10a6:208:3::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Mon, 20 Jul
+ 2020 09:06:19 +0000
+Received: from AM4PR0401MB2401.eurprd04.prod.outlook.com
+ ([fe80::d0eb:f746:90e:44b3]) by AM4PR0401MB2401.eurprd04.prod.outlook.com
+ ([fe80::d0eb:f746:90e:44b3%12]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
+ 09:06:19 +0000
+From:   franck.lenormand@oss.nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com
+Cc:     franck.lenormand@oss.nxp.com, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-imx@nxp.com, aisheng.dong@nxp.com, abel.vesa@nxp.com,
+        Anson.Huang@nxp.com, linux@rempel-privat.de,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        qiangqing.zhang@nxp.com, peng.fan@nxp.com
+Subject: [PATCH 0/7] Add support of SECVIO from SNVS on iMX8q/x
+Date:   Mon, 20 Jul 2020 11:06:10 +0200
+Message-Id: <1595235977-106241-1-git-send-email-franck.lenormand@oss.nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR10CA0075.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:15::28) To AM4PR0401MB2401.eurprd04.prod.outlook.com
+ (2603:10a6:200:47::26)
 MIME-Version: 1.0
-In-Reply-To: <20200710143520.1206846-1-dianders@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from SOPDPUATS05.ea.freescale.net (81.1.10.98) by AM0PR10CA0075.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:15::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3195.18 via Frontend Transport; Mon, 20 Jul 2020 09:06:18 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [81.1.10.98]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 36e39c94-15af-4a95-0881-08d82c8c2a51
+X-MS-TrafficTypeDiagnostic: AM0PR0402MB3762:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR0402MB37625F2E7366986C041ED0B4D37B0@AM0PR0402MB3762.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CkQ3YFTX31Cik71wiZ+OGhcGD7lNXrxviJ714H27z3wuMguwGcbcziNenIxb45yHkPW5pw3nUQjSluQyOpSzSdbJPtEexC98k3KcCQnIEEOwtBiYxnxe9ktSI/k9kt1jmM47/Ca/K/Mhovv28YCziMN1kzojg9qSTJHDTIUY/aQLzbHqMIFwof/GuPkYPk6u0BGYv55RLKPLZ9oT5zOhiRpjzpb8gT/gXd4E3BGsHLrdW/wTnB7VV+oRltb46tIAqKAcCIaS12MXAj0H4P1kKjHuvfn8E+8Y8+YTPa9f0FsLHlakT8u5uoR07EGc9kPKGjfkdsIudWjhcLm7oC8N+Dsor9eN6vy7HpWdvEIZ+L+mTw3diiAx7pikzwNmjqZu
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM4PR0401MB2401.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(136003)(346002)(39860400002)(376002)(6512007)(316002)(66476007)(66946007)(66556008)(2906002)(6666004)(9686003)(8676002)(8936002)(86362001)(83380400001)(5660300002)(26005)(186003)(16526019)(2616005)(6506007)(956004)(6486002)(478600001)(52116002)(4326008)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: LkXQE8mVU8hv4vcQbKFoM4pgdRj3Q3mBCzoznLZ1ih/h1JwqJOQXUXZ0I+40TJQev4WPB7cFitnuBpeeB5rkRp/CVh0xCy/EwmTfOozTe35CYV77ZGsjFrxvS9H/J54w6uKjw11joLz900EGF94IIhHD/JVfIWZ1bR7Fab+odFB3PFobgUSPuH1/KKZ2/uYcaQJW+8gAb/eD52N5i0mMw1oZoB7EUR1dupUXM8bWEBPE8H6lLqLxoCquJpdFtwx3iEJEFYnQ9YCyT34no22XepJorSPvpOuNFmtCA4JD2hJgF/CDWTbJUQlgoPxdUpKdHM8S7gAYI1QQsn7eROJfUufaq5HSe6qQZ7HyIHZRZbDmAyZLgbMtyXHk3mdGnsXQYurx/RHXfAnBKh+t0h8OcTZeFVKeMji3AtxTWMvxUI1ax/gIS/TVNh2ZP9ReKDzWM+35UWGta7Gg6Dk+Kgix02RCNxauDY+jDfGLd+Z+D8Y=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36e39c94-15af-4a95-0881-08d82c8c2a51
+X-MS-Exchange-CrossTenant-AuthSource: AM4PR0401MB2401.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 09:06:19.1261
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2kk/t/VbT7pz4rQZax+ar8ARbcL3S4qsM01vxOlbG/eU9xKNYE8iEGd/8odTyEXEZS2SMAVoMQKlr4iUQHVgbvMwtNVR6cmCssyqKuG7SXc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3762
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Franck LENORMAND <franck.lenormand@nxp.com>
 
+This patchset aims to add support for the SECurity VIOlation (SECVIO) of the
+SNVS. A secvio is a signal emitted by the SNVS when a hardware attack
+is detected. On imx8x and imx8q SoC, the SNVS is controlled by the
+SECO and it is possible to interact with it using the SCU using the SC APIs.
 
-On 10/07/2020 15:35, Douglas Anderson wrote:
-> This series enables blowing of fuses on Qualcomm SoCs by extending the
-> existing qfprom driver with write support.
-> 
-> A few notes:
-> - Though I don't have any firsthand knowledge of it, it's my
->    understanding that these changes could be used on any Qualcomm SoC.
->    However, it's likely not very useful on most boards because the
->    bootloader protects against this.  Thus the write support here is
->    likely only useful with a cooperating bootloader.
-> - Blowing fuses is truly a one-way process.  If you mess around with
->    this and do something wrong you could irreparably brick your chip.
->    You have been warned.
-> 
-> Versions 1 and 2 of this series were posted by Ravi Kumar Bokka.  I
-> posted version 3 containing my changes / fixups with his consent.  I
-> have left authorship as Ravi but added my own Signed-off-by.
-> 
-> Version 4 is a minor spin over version 3.
-> 
-> Version 5 is an even more minor spin and just bumps up some timings to
-> fix a failure reported by Ravi on one device.  I've collected Rob
-> Herring's reviews and (as far as I know) this is ready to land.
-> 
-> Changes in v5:
-> - QFPROM_FUSE_BLOW_POLL_US 10 => 100
-> - QFPROM_FUSE_BLOW_TIMEOUT_US 100 => 1000
-> 
-> Changes in v4:
-> - Maintainer now listed as Srinivas.
-> - Example under "soc" to get #address-cells and #size-cells.
-> - Clock name is "core", not "sec".
-> - Example under "soc" to get #address-cells and #size-cells.
-> - Only get clock/regulator if all address ranges are provided.
-> - Don't use optional version of clk_get now.
-> - Clock name is "core", not "sec".
-> - Cleaned up error message if couldn't get clock.
-> - Fixed up minor version mask.
-> - Use GENMASK to generate masks.
-> - Clock name is "core", not "sec".
-> 
-> Changes in v3:
-> - Split conversion to yaml into separate patch new in v3.
-> - Use 'const' for compatible instead of a 1-entry enum.
-> - Changed filename to match compatible string.
-> - Add #address-cells and #size-cells to list of properties.
-> - Fixed up example.
-> - Add an extra reg range (at 0x6000 offset for SoCs checked)
-> - Define two options for reg: 1 item or 4 items.
-> - No reg-names.
-> - Add "clocks" and "clock-names" to list of properties.
-> - Clock is now "sec", not "secclk".
-> - Add "vcc-supply" to list of properties.
-> - Fixed up example.
-> - Don't provide "reset" value for things; just save/restore.
-> - Use the major/minor version read from 0x6000.
-> - Reading should still read "corrected", not "raw".
-> - Added a sysfs knob to allow you to read "raw" instead of "corrected"
-> - Simplified the SoC data structure.
-> - No need for quite so many levels of abstraction for clocks/regulator.
-> - Don't set regulator voltage.  Rely on device tree to make sure it's right.
-> - Properly undo things in the case of failure.
-> - Don't just keep enabling the regulator over and over again.
-> - Enable / disable the clock each time
-> - Polling every 100 us but timing out in 10 us didn't make sense; swap.
-> - No reason for 100 us to be SoC specific.
-> - No need for reg-names.
-> - We shouldn't be creating two separate nvmem devices.
-> - Name is now 'efuse' to match what schema checker wants.
-> - Reorganized ranges to match driver/bindings changes.
-> - Added 4th range as per driver/binding changes.
-> - No more reg-names as per driver/binding changes.
-> - Clock name is now just "sec" as per driver/binding changes.
-> 
-> Ravi Kumar Bokka (4):
->    dt-bindings: nvmem: qfprom: Convert to yaml
->    dt-bindings: nvmem: Add properties needed for blowing fuses
->    nvmem: qfprom: Add fuse blowing support
+For the driver to communicate with the SNVS via the SCU and the SECO, I had to:
+ - Add support for exchange of big message with the SCU (needed for
+imx_scu_irq_get_status)
+ - Add API to check linux can control the SECVIO (imx_sc_rm_is_resource_owned)
+ - Add APIs for the driver to read the state of the SECVIO registers of the
+SNVS and DGO (imx_sc_seco_secvio_enable and imx_sc_seco_secvio_enable).
 
-Applied above 3 with merge conflict fixed.
-dts patches should go via arm-soc tree, Bjorn could pick that up!
+To check the state of the SECVIO IRQ in the SCU, I added the
+imx_scu_irq_get_status API.
 
+The secvio driver is designed to receive the IRQ produced by the
+SNVS in case of hardware attack and notify the status to the
+audit framework which can be used by the user.
 
-Thanks,
-srini
->    arm64: dts: qcom: sc7180: Add properties to qfprom for fuse blowing
-> 
->   .../bindings/nvmem/qcom,qfprom.yaml           |  96 ++++++
->   .../devicetree/bindings/nvmem/qfprom.txt      |  35 --
->   arch/arm64/boot/dts/qcom/sc7180-idp.dts       |   4 +
->   arch/arm64/boot/dts/qcom/sc7180.dtsi          |  10 +-
->   drivers/nvmem/qfprom.c                        | 314 +++++++++++++++++-
->   5 files changed, 411 insertions(+), 48 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
->   delete mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
-> 
+The goal of the driver is to be self suficient but can be extended by the
+user to perform custom operations on values read (imx_sc_seco_secvio_enable)
+
+Franck LENORMAND (7):
+  firmware: imx: scu-rm: Add Resource Management APIs
+  firmware: imx: scu: Support reception of messages of any size
+  firmware: imx: scu-seco: Add SEcure Controller APIS
+  firmware: imx: scu-irq: Add API to retrieve status of IRQ
+  dt-bindings: firmware: imx-scu: Add SECVIO resource
+  dt-bindings: arm: imx: Documentation of the SC secvio driver
+  soc: imx8: Add the SC SECVIO driver
+
+ .../bindings/arm/freescale/fsl,imx-sc-secvio.yaml  |  34 +
+ drivers/firmware/imx/Makefile                      |   2 +-
+ drivers/firmware/imx/imx-scu-irq.c                 |  37 +-
+ drivers/firmware/imx/imx-scu.c                     |  24 +-
+ drivers/firmware/imx/rm.c                          |  44 ++
+ drivers/firmware/imx/seco.c                        | 275 +++++++
+ drivers/soc/imx/Kconfig                            |  10 +
+ drivers/soc/imx/Makefile                           |   1 +
+ drivers/soc/imx/secvio/Kconfig                     |  10 +
+ drivers/soc/imx/secvio/Makefile                    |   3 +
+ drivers/soc/imx/secvio/imx-secvio-audit.c          |  39 +
+ drivers/soc/imx/secvio/imx-secvio-debugfs.c        | 379 +++++++++
+ drivers/soc/imx/secvio/imx-secvio-sc-int.h         |  83 ++
+ drivers/soc/imx/secvio/imx-secvio-sc.c             | 873 +++++++++++++++++++++
+ include/dt-bindings/firmware/imx/rsrc.h            |   3 +-
+ include/linux/firmware/imx/ipc.h                   |   1 +
+ include/linux/firmware/imx/sci.h                   |   6 +
+ include/linux/firmware/imx/svc/rm.h                |  69 ++
+ include/linux/firmware/imx/svc/seco.h              |  73 ++
+ include/soc/imx/imx-secvio-sc.h                    | 177 +++++
+ 20 files changed, 2134 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx-sc-secvio.yaml
+ create mode 100644 drivers/firmware/imx/rm.c
+ create mode 100644 drivers/firmware/imx/seco.c
+ create mode 100644 drivers/soc/imx/secvio/Kconfig
+ create mode 100644 drivers/soc/imx/secvio/Makefile
+ create mode 100644 drivers/soc/imx/secvio/imx-secvio-audit.c
+ create mode 100644 drivers/soc/imx/secvio/imx-secvio-debugfs.c
+ create mode 100644 drivers/soc/imx/secvio/imx-secvio-sc-int.h
+ create mode 100644 drivers/soc/imx/secvio/imx-secvio-sc.c
+ create mode 100644 include/linux/firmware/imx/svc/rm.h
+ create mode 100644 include/linux/firmware/imx/svc/seco.h
+ create mode 100644 include/soc/imx/imx-secvio-sc.h
+
+-- 
+2.7.4
+
