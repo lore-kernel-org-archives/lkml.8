@@ -2,152 +2,77 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546C4C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 395EA22D01
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595267228;
-	bh=h7xTJHL3tD3hyqROKlN47q+7JtwYj6iU2IDwcwmnD10=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xbhbSsDgjpHfyE5oUpFliDSGfLn9Xj8PCYMuVRf5ztK4wpwEG0fZQTcnfoby0dNPw
-	 D/98r6b3x9ZG+uhAS3wF4lMmbR1gxoGICIqMlgn2OhG0Kv8saIMvEtqZa3HrkDdsI5
-	 +CvR266LSpJm8kJfXw857sy3kXdFmO+cLpO30GK4=
+	by mail.kernel.org (Postfix) with ESMTP id 15C8120709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388986AbgGTRrG (ORCPT
+        id S1730681AbgGTRsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:47:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48018 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732122AbgGTRrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:47:06 -0400
-Received: from kernel.org (unknown [87.71.40.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45F9D20709;
-        Mon, 20 Jul 2020 17:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595267225;
-        bh=h7xTJHL3tD3hyqROKlN47q+7JtwYj6iU2IDwcwmnD10=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YlqRcxTuXQfRrbeqatLbuRaOeADiac4H6X9sEArUzE5oRMfR8PHkKo5MsS8CqIiH2
-         30gUB8awpWvMVLHqbmwCRcCebqbRb3WB5zVyQMWCeasxnsnHVcByE17hsBPHomNYe/
-         2IYK/lsU5KfUy43NS89poYLzWTie5RjpZ+F0ezt8=
-Date:   Mon, 20 Jul 2020 20:46:50 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linaro-mm-sig@lists.linaro.org,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: Re: [PATCH 3/6] mm: introduce secretmemfd system call to create
- "secret" memory areas
-Message-ID: <20200720174650.GD8593@kernel.org>
-References: <20200720092435.17469-1-rppt@kernel.org>
- <20200720092435.17469-4-rppt@kernel.org>
- <CAK8P3a0NyvRMqH7X0YNO5E6DGtvZXD5ZcD6Y6n7AkocufkMnHA@mail.gmail.com>
- <20200720142053.GC8593@kernel.org>
- <CAK8P3a07jAec4hKyNMcha032TT6OXjYHaZZ4Za9ncDsvapeg8Q@mail.gmail.com>
+        Mon, 20 Jul 2020 13:48:14 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:37225 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726812AbgGTRsN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 13:48:13 -0400
+Received: (qmail 1240647 invoked by uid 1000); 20 Jul 2020 13:48:12 -0400
+Date:   Mon, 20 Jul 2020 13:48:12 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: kworker/0:3+pm hogging CPU
+Message-ID: <20200720174812.GK1228057@rowland.harvard.edu>
+References: <20200720083956.GA4074@dhcp22.suse.cz>
+ <20200720135857.GB1228057@rowland.harvard.edu>
+ <20200720143213.GJ4074@dhcp22.suse.cz>
+ <20200720151255.GE1228057@rowland.harvard.edu>
+ <20200720163355.GA4061@dhcp22.suse.cz>
+ <20200720173807.GJ1228057@rowland.harvard.edu>
+ <20200720174530.GB4061@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a07jAec4hKyNMcha032TT6OXjYHaZZ4Za9ncDsvapeg8Q@mail.gmail.com>
+In-Reply-To: <20200720174530.GB4061@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 04:34:12PM +0200, Arnd Bergmann wrote:
-> On Mon, Jul 20, 2020 at 4:21 PM Mike Rapoport <rppt@kernel.org> wrote:
-> > On Mon, Jul 20, 2020 at 01:30:13PM +0200, Arnd Bergmann wrote:
-> > > On Mon, Jul 20, 2020 at 11:25 AM Mike Rapoport <rppt@kernel.org> wrote:
-> > > >
-> > > > From: Mike Rapoport <rppt@linux.ibm.com>
-> > > >
-> > > > Introduce "secretmemfd" system call with the ability to create memory areas
-> > > > visible only in the context of the owning process and not mapped not only
-> > > > to other processes but in the kernel page tables as well.
-> > > >
-> > > > The user will create a file descriptor using the secretmemfd system call
-> > > > where flags supplied as a parameter to this system call will define the
-> > > > desired protection mode for the memory associated with that file
-> > > > descriptor. Currently there are two protection modes:
-> > > >
-> > > > * exclusive - the memory area is unmapped from the kernel direct map and it
-> > > >               is present only in the page tables of the owning mm.
-> > > > * uncached  - the memory area is present only in the page tables of the
-> > > >               owning mm and it is mapped there as uncached.
-> > > >
-> > > > For instance, the following example will create an uncached mapping (error
-> > > > handling is omitted):
-> > > >
-> > > >         fd = secretmemfd(SECRETMEM_UNCACHED);
-> > > >         ftruncate(fd, MAP_SIZE);
-> > > >         ptr = mmap(NULL, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED,
-> > > >                    fd, 0);
-> > > >
-> > > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > >
-> > > I wonder if this should be more closely related to dmabuf file
-> > > descriptors, which
-> > > are already used for a similar purpose: sharing access to secret memory areas
-> > > that are not visible to the OS but can be shared with hardware through device
-> > > drivers that can import a dmabuf file descriptor.
-> >
-> > TBH, I didn't think about dmabuf, but my undestanding is that is this
-> > case memory areas are not visible to the OS because they are on device
-> > memory rather than normal RAM and when dmabuf is backed by the normal
-> > RAM, the memory is visible to the OS.
+On Mon, Jul 20, 2020 at 07:45:30PM +0200, Michal Hocko wrote:
+> On Mon 20-07-20 13:38:07, Alan Stern wrote:
+> > On Mon, Jul 20, 2020 at 06:33:55PM +0200, Michal Hocko wrote:
+> > > On Mon 20-07-20 11:12:55, Alan Stern wrote:
+> > > [...]
+> > > > 	sudo echo 'module usbcore =p' >/debug/dynamic_debug/control
+> > > > 
+> > > > Then wait long enough for some interesting messages to appear in the 
+> > > > kernel log (it should only take a few seconds if the worker thread is as 
+> > > > busy as you say) and collect the output from the dmesg command.
+> > > > 
+> > > > To turn dynamic debugging back off when you're finished, use the same 
+> > > > command with "=p" changed to "-p".
+> > > 
+> > > [   95.395815] hub 2-0:1.0: state 7 ports 6 chg 0006 evt 0000
+> > > [   95.395824] usb usb2-port1: status 0088, change 0000, 5.0 Gb/s
+> > > [   95.395838] usb usb2-port2: status 0088, change 0000, 5.0 Gb/s
+> > > [   95.396016] hub 2-0:1.0: hub_suspend
+> > > [   95.396023] usb usb2: bus auto-suspend, wakeup 1
+> > > [   95.396029] usb usb2: bus suspend fail, err -16
+> > 
+> > Okay, that's the problem.  You may get more specific information about 
+> > the suspend failure if you turn on dynamic debugging for the xhci-hcd 
+> > module (same command as above but with xhci-hcd instead of usbcore).
 > 
-> No, dmabuf is normally about normal RAM that is shared between multiple
-> devices, the idea is that you can have one driver allocate a buffer in RAM
-> and export it to user space through a file descriptor. The application can then
-> go and mmap() it or pass it into one or more other drivers.
-> 
-> This can be used e.g. for sharing a buffer between a video codec and the
-> gpu, or between a crypto engine and another device that accesses
-> unencrypted data while software can only observe the encrypted version.
+> Would that help to pinpoint the problem down?
 
-For our usecase sharing is optional from one side and there are no
-devices involved from the other.
+It might.  I can't say for sure without seeing the output.
 
-As James pointed out, there is no match for the userspace API and if
-there will emerge a usacase that requires integration of secretmem with
-dma-buf, we'll deal with it then.
-
->        Arnd
-
--- 
-Sincerely yours,
-Mike.
+Alan Stern
