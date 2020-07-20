@@ -2,52 +2,51 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C839C433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473DEC433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 320F822CB2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D66F22CB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259573;
-	bh=nHkRgkxW3FPWPvUEDFW0Ho3ejuEvpzjSEkQyB3mRkbg=;
+	s=default; t=1595259575;
+	bh=5PEKRoAOKVBycOnhm8UGdi1OJVGEjJ+BLfGgfmXXvxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b6SwDm0YQalazdpvkOE9sTK0NZMXLaMZWBs9NapvXBeVO+RhuG0DjuDIl2w7lJBxx
-	 s/X0vivCNPUGwEaCTHspYM/Y8M/Rnu4jtm43oS6wJJGQlDsH6R49v8va859XUwT8NB
-	 m2x7PX+4plDmmIifQHCooRFCI+i8RG6ON4nYWwso=
+	b=bYA1XBoz+gmxZ3TMBZ9voisRfPhh3xLRGzR3oZN54vXIKrVK1iY9EMBgJLzAe2Vi7
+	 d5l/IfZkCxGS+U5sfoP8X6XsJr9iH9XLqBLQ3TAJHXrtQ/TWQepAyHbqzMVsCNBX9T
+	 LrRdVqNNmeVIXFpC129wx2BOYEckTKS47sEBGpK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbgGTPjc (ORCPT
+        id S1729529AbgGTPje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:39:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58558 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:39:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729479AbgGTPj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:39:29 -0400
+        id S1729512AbgGTPjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:39:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65ED622CB2;
-        Mon, 20 Jul 2020 15:39:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 045DF22CBB;
+        Mon, 20 Jul 2020 15:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259569;
-        bh=nHkRgkxW3FPWPvUEDFW0Ho3ejuEvpzjSEkQyB3mRkbg=;
+        s=default; t=1595259571;
+        bh=5PEKRoAOKVBycOnhm8UGdi1OJVGEjJ+BLfGgfmXXvxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vUm7BzY+cecRb+9XYhs78Edhfe0q18wla1EsMnlOln2GzXIUhBUqJsuVySpxJxtOZ
-         3reAa9Yv9LTqXx1HoQduLo45teVp1Cc9J82WxqMW/CKzh9N9B+UwL1pHHhEy94rkK7
-         EQIabT/X0hZ67RTpKufPdTjwq1PRDmfjOTx6wIhw=
+        b=Sof0Tx7Ihe0HoQGL7w9LDcBwLyMkquISBFZNXJe8HCw/ihNmKSsFwCQXdpDqT8n05
+         +XJMt6wFgg+TolyY3SL4znfuH3HzH8NTCs7EYIsspKFA611eYFFCjrnhgf20LhZ4Wo
+         v/+pvy6ccZv96/RWUodhQrBZMfru/jsOzOSuHEAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+c190f6858a04ea7fbc52@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 39/58] ALSA: line6: Perform sanity check for each URB creation
-Date:   Mon, 20 Jul 2020 17:36:55 +0200
-Message-Id: <20200720152749.174857260@linuxfoundation.org>
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH 4.4 57/58] misc: atmel-ssc: lock with mutex instead of spinlock
+Date:   Mon, 20 Jul 2020 17:37:13 +0200
+Message-Id: <20200720152750.111855945@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
 References: <20200720152747.127988571@linuxfoundation.org>
@@ -60,49 +59,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit 6e8a914ad619042c5f25a4feb663357c4170fd8d upstream.
+commit b037d60a3b1d1227609fd858fa34321f41829911 upstream.
 
-LINE6 drivers create stream URBs with a fixed pipe without checking
-its validity, and this may lead to a kernel WARNING at the submission
-when a malformed USB descriptor is passed.
+Uninterruptible context is not needed in the driver and causes lockdep
+warning because of mutex taken in of_alias_get_id(). Convert the lock to
+mutex to avoid the issue.
 
-For avoiding the kernel warning, perform the similar sanity checks for
-each pipe type at creating a URB.
-
-Reported-by: syzbot+c190f6858a04ea7fbc52@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/s5hv9iv4hq8.wl-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@vger.kernel.org
+Fixes: 099343c64e16 ("ARM: at91: atmel-ssc: add device tree support")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/50f0d7fa107f318296afb49477c3571e4d6978c5.1592998403.git.mirq-linux@rere.qmqm.pl
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/line6/capture.c  |    2 ++
- sound/usb/line6/playback.c |    2 ++
- 2 files changed, 4 insertions(+)
+ drivers/misc/atmel-ssc.c |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
---- a/sound/usb/line6/capture.c
-+++ b/sound/usb/line6/capture.c
-@@ -269,6 +269,8 @@ int line6_create_audio_in_urbs(struct sn
- 		urb->interval = LINE6_ISO_INTERVAL;
- 		urb->error_count = 0;
- 		urb->complete = audio_in_callback;
-+		if (usb_urb_ep_type_check(urb))
-+			return -EINVAL;
+--- a/drivers/misc/atmel-ssc.c
++++ b/drivers/misc/atmel-ssc.c
+@@ -13,7 +13,7 @@
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
+-#include <linux/spinlock.h>
++#include <linux/mutex.h>
+ #include <linux/atmel-ssc.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+@@ -21,7 +21,7 @@
+ #include <linux/of.h>
+ 
+ /* Serialize access to ssc_list and user count */
+-static DEFINE_SPINLOCK(user_lock);
++static DEFINE_MUTEX(user_lock);
+ static LIST_HEAD(ssc_list);
+ 
+ struct ssc_device *ssc_request(unsigned int ssc_num)
+@@ -29,7 +29,7 @@ struct ssc_device *ssc_request(unsigned
+ 	int ssc_valid = 0;
+ 	struct ssc_device *ssc;
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	list_for_each_entry(ssc, &ssc_list, list) {
+ 		if (ssc->pdev->dev.of_node) {
+ 			if (of_alias_get_id(ssc->pdev->dev.of_node, "ssc")
+@@ -44,18 +44,18 @@ struct ssc_device *ssc_request(unsigned
  	}
  
- 	return 0;
---- a/sound/usb/line6/playback.c
-+++ b/sound/usb/line6/playback.c
-@@ -423,6 +423,8 @@ int line6_create_audio_out_urbs(struct s
- 		urb->interval = LINE6_ISO_INTERVAL;
- 		urb->error_count = 0;
- 		urb->complete = audio_out_callback;
-+		if (usb_urb_ep_type_check(urb))
-+			return -EINVAL;
+ 	if (!ssc_valid) {
+-		spin_unlock(&user_lock);
++		mutex_unlock(&user_lock);
+ 		pr_err("ssc: ssc%d platform device is missing\n", ssc_num);
+ 		return ERR_PTR(-ENODEV);
  	}
  
+ 	if (ssc->user) {
+-		spin_unlock(&user_lock);
++		mutex_unlock(&user_lock);
+ 		dev_dbg(&ssc->pdev->dev, "module busy\n");
+ 		return ERR_PTR(-EBUSY);
+ 	}
+ 	ssc->user++;
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	clk_prepare(ssc->clk);
+ 
+@@ -67,14 +67,14 @@ void ssc_free(struct ssc_device *ssc)
+ {
+ 	bool disable_clk = true;
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	if (ssc->user)
+ 		ssc->user--;
+ 	else {
+ 		disable_clk = false;
+ 		dev_dbg(&ssc->pdev->dev, "device already free\n");
+ 	}
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	if (disable_clk)
+ 		clk_unprepare(ssc->clk);
+@@ -194,9 +194,9 @@ static int ssc_probe(struct platform_dev
+ 		return -ENXIO;
+ 	}
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	list_add_tail(&ssc->list, &ssc_list);
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	platform_set_drvdata(pdev, ssc);
+ 
+@@ -210,9 +210,9 @@ static int ssc_remove(struct platform_de
+ {
+ 	struct ssc_device *ssc = platform_get_drvdata(pdev);
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	list_del(&ssc->list);
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
  	return 0;
+ }
 
 
