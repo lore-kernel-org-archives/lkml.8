@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39A5C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D507C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8202C206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A88E2065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260685;
-	bh=mtj+mNPGKLcYYy3QzFutSBT6xxBGFplPVCbMFTnt/qk=;
+	s=default; t=1595260688;
+	bh=ZmqYawwQGvRSl0ckDuDPBkrT0eHhbVkG/uYDczVrp3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n2yxdXtl9tYfzHTxjaQgHvLQ8FdgO4quxIfASm68+GIhY+GPuOWGJvHXeANPU7HVe
-	 KHjLlz1dmeh4XMIYpEefifIk3ijTRcIOrEKX3eXD+lEO/aO5EAKomVj2yW9w7sz2Uu
-	 gvzKjInunnpfg36VT+jW4znQopPCxe/oER8CzB1U=
+	b=O6N4Put9nBBB85xP8M4Y3mAO0dJkp5lbGBA4w0Yqstbei9nqWkiF9FVIYHj5bVdR9
+	 QG+zYe03dPnsyKRisgBHfF9EiYKINJPsDJk1XLO6pK2dsRHoos90xsPwBt9uwXzotp
+	 rRajQGZRZuh7lO5hPs85ACK4LTe7Eh3Y91ewjgfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731744AbgGTP6E (ORCPT
+        id S1731990AbgGTP6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:58:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58120 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:58:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731970AbgGTP57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:57:59 -0400
+        id S1731985AbgGTP6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:58:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EE45206E9;
-        Mon, 20 Jul 2020 15:57:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C66F206E9;
+        Mon, 20 Jul 2020 15:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260678;
-        bh=mtj+mNPGKLcYYy3QzFutSBT6xxBGFplPVCbMFTnt/qk=;
+        s=default; t=1595260684;
+        bh=ZmqYawwQGvRSl0ckDuDPBkrT0eHhbVkG/uYDczVrp3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FfnpVHyl3y3+tfzivKVYnqFNnFFF2Wj3IWyxrUS9xWqLRoWt+rTl4NMaSiW+1pPp9
-         5isPD7VOBoOBRbQ2r7k/6vl1imgUBcLkBM/wkbrO8iL52ZwRxu3z1Awb0bEIxEkQRB
-         lIsnfupcxH0ps6EcwCNVQv/eY+wb+hU6t2wUyUrg=
+        b=ACIJ/Nw8zcddqyaAXiFRR1tzVyYUv9BvPetfFnj03xGG8+I2k9CN+KUvtOSXR6knD
+         3lwavgoJleSXk32acvdQHNNegtJnWYXzxbyQSJNOrsMFQ8Rc1FSsG5SUEr2299GAeP
+         r4bhBJcbNs9E7KzhF6Ov9S6VjSMmvyStQ20PGBwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 055/215] spi: spi-fsl-dspi: Fix lockup if device is shutdown during SPI transfer
-Date:   Mon, 20 Jul 2020 17:35:37 +0200
-Message-Id: <20200720152822.830220377@linuxfoundation.org>
+Subject: [PATCH 5.4 057/215] of: of_mdio: Correct loop scanning logic
+Date:   Mon, 20 Jul 2020 17:35:39 +0200
+Message-Id: <20200720152822.926932540@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -62,57 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 3c525b69e8c1a9a6944e976603c7a1a713e728f9 ]
+[ Upstream commit 5a8d7f126c97d04d893f5e5be2b286437a0d01b0 ]
 
-During shutdown, the driver should unregister the SPI controller
-and stop the hardware.  Otherwise the dspi_transfer_one_message() could
-wait on completion infinitely.
+Commit 209c65b61d94 ("drivers/of/of_mdio.c:fix of_mdiobus_register()")
+introduced a break of the loop on the premise that a successful
+registration should exit the loop. The premise is correct but not to
+code, because rc && rc != -ENODEV is just a special error condition,
+that means we would exit the loop even with rc == -ENODEV which is
+absolutely not correct since this is the error code to indicate to the
+MDIO bus layer that scanning should continue.
 
-Additionally, calling spi_unregister_controller() first in device
-shutdown reverse-matches the probe function, where SPI controller is
-registered at the end.
+Fix this by explicitly checking for rc = 0 as the only valid condition
+to break out of the loop.
 
-Fixes: dc234825997e ("spi: spi-fsl-dspi: Adding shutdown hook")
-Reported-by: Vladimir Oltean <olteanv@gmail.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200622110543.5035-2-krzk@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 209c65b61d94 ("drivers/of/of_mdio.c:fix of_mdiobus_register()")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-dspi.c | 15 +--------------
- 1 file changed, 1 insertion(+), 14 deletions(-)
+ drivers/of/of_mdio.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 3e0e27731922e..c7560d7d16276 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -1184,20 +1184,7 @@ static int dspi_remove(struct platform_device *pdev)
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index c34a6df712adb..26ddb4cc675a9 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -265,10 +265,15 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 				 child, addr);
  
- static void dspi_shutdown(struct platform_device *pdev)
- {
--	struct spi_controller *ctlr = platform_get_drvdata(pdev);
--	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
--
--	/* Disable RX and TX */
--	regmap_update_bits(dspi->regmap, SPI_MCR,
--			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF,
--			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF);
--
--	/* Stop Running */
--	regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
--
--	dspi_release_dma(dspi);
--	clk_disable_unprepare(dspi->clk);
--	spi_unregister_controller(dspi->ctlr);
-+	dspi_remove(pdev);
- }
- 
- static struct platform_driver fsl_dspi_driver = {
+ 			if (of_mdiobus_child_is_phy(child)) {
++				/* -ENODEV is the return code that PHYLIB has
++				 * standardized on to indicate that bus
++				 * scanning should continue.
++				 */
+ 				rc = of_mdiobus_register_phy(mdio, child, addr);
+-				if (rc && rc != -ENODEV)
++				if (!rc)
++					break;
++				if (rc != -ENODEV)
+ 					goto unregister;
+-				break;
+ 			}
+ 		}
+ 	}
 -- 
 2.25.1
 
