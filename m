@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4B0C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D848AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7D4206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD46D206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261362;
-	bh=61N1JrhVoGC69lHR01/ihGSNnZtEraMQ42MzNixm1v8=;
+	s=default; t=1595261365;
+	bh=3teWVEPaloupJTd7mQW+Y7NsazRnxCyO/FYsPNSXKDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zXd8ITR0GY1yy7Dvdx+VqEQ46zteVIPAr+y77ka4aiw9I7FOEDx4oxRRFvQD4G6wh
-	 UFMMZNCafKQpE1StzdtK5duzM7aihLT9kBj1h6snE6rrpkIMU44m7UD4WAx1dsNqaR
-	 0BjRhFmfnidaLB3OdmWmNyzvbIJ46XsiLsmtzNic=
+	b=cMLbrdnk8lzUtL+kS2Fmm+sXdeBqWNYU870LE8Y9kqLGF1yb2ywGe/zpn33tzsPHZ
+	 kk8kfpP6uDKyu8mSzs12o03HHlZdN4cuixVNUOG5PeseID7E4/rMFf6Od1QaeBxMit
+	 zGKqMSre6UhPa1ipNsxfhS4KOKddc5NsfCD9gclw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387511AbgGTQJV (ORCPT
+        id S2387519AbgGTQJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:09:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47054 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:09:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387497AbgGTQJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:09:14 -0400
+        id S2387499AbgGTQJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:09:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79E6F20672;
-        Mon, 20 Jul 2020 16:09:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27D422064B;
+        Mon, 20 Jul 2020 16:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261354;
-        bh=61N1JrhVoGC69lHR01/ihGSNnZtEraMQ42MzNixm1v8=;
+        s=default; t=1595261356;
+        bh=3teWVEPaloupJTd7mQW+Y7NsazRnxCyO/FYsPNSXKDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SNIMYJivPNImIk777FVooqs2yd6g//TQ0l+bD/tAftaK7tFvQnhs7rXHLjwXsjy0h
-         pctURD3tGD6D+f5lmTERP+h23CgtxbmrNEkL4c4R0a7YF27O0CNpcdiSVZa2yePH1/
-         UPiwXV1Mtm/0aHEQ31VnBkLW1YLWHuISeH9LJB7Q=
+        b=SFiWe8b0OuNFkjDWxzX65xmpNLQdoS/Y8dVUoVlHE69CoZOSTm4Zh37m/UfzUCrRE
+         Ib4fLrVqRIDKSugfRXyYI3reQKX0HVyJxC8adbYshlXs9yhvAgc9oGWdGG1g7bPa3H
+         vSunCpLhC6TGUQhEoaEgYWLoTHyU7FIqhqScUvqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 086/244] phy: sun4i-usb: fix dereference of pointer phy0 before it is null checked
-Date:   Mon, 20 Jul 2020 17:35:57 +0200
-Message-Id: <20200720152829.930512678@linuxfoundation.org>
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 087/244] arm64: dts: meson: add missing gxl rng clock
+Date:   Mon, 20 Jul 2020 17:35:58 +0200
+Message-Id: <20200720152829.979762656@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,47 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 38b1927e5bf9bcad4a2e33189ef1c5569f9599ba ]
+[ Upstream commit 95ca6f06dd4827ff63be5154120c7a8511cd9a41 ]
 
-Currently pointer phy0 is being dereferenced via the assignment of
-phy on the call to phy_get_drvdata before phy0 is null checked, this
-can lead to a null pointer dereference. Fix this by performing the
-null check on phy0 before the call to phy_get_drvdata. Also replace
-the phy0 == NULL check with the more usual !phy0 idiom.
+The peripheral clock of the RNG is missing for gxl while it is present
+for gxbb.
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: e6f32efb1b12 ("phy: sun4i-usb: Make sure to disable PHY0 passby for peripheral mode")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20200625124428.83564-1-colin.king@canonical.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 1b3f6d148692 ("ARM64: dts: meson-gx: add clock CLKID_RNG0 to hwrng node")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://lore.kernel.org/r/20200617125346.1163527-1-jbrunet@baylibre.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/allwinner/phy-sun4i-usb.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-index 8569273822487..e5842e48a5e07 100644
---- a/drivers/phy/allwinner/phy-sun4i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-@@ -545,13 +545,14 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 	struct sun4i_usb_phy_data *data =
- 		container_of(work, struct sun4i_usb_phy_data, detect.work);
- 	struct phy *phy0 = data->phys[0].phy;
--	struct sun4i_usb_phy *phy = phy_get_drvdata(phy0);
-+	struct sun4i_usb_phy *phy;
- 	bool force_session_end, id_notify = false, vbus_notify = false;
- 	int id_det, vbus_det;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 259d863993905..887c43119e632 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -298,6 +298,11 @@ clkc: clock-controller {
+ 	};
+ };
  
--	if (phy0 == NULL)
-+	if (!phy0)
- 		return;
- 
-+	phy = phy_get_drvdata(phy0);
- 	id_det = sun4i_usb_phy0_get_id_det(data);
- 	vbus_det = sun4i_usb_phy0_get_vbus_det(data);
- 
++&hwrng {
++	clocks = <&clkc CLKID_RNG0>;
++	clock-names = "core";
++};
++
+ &i2c_A {
+ 	clocks = <&clkc CLKID_I2C>;
+ };
 -- 
 2.25.1
 
