@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA0DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50806C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83C382177B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2809C2177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:22:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZFc9bSkX"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qEvGlo6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgGTCV6 (ORCPT
+        id S1727115AbgGTCWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 22:21:58 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:43015 "EHLO m43-7.mailgun.net"
+        Sun, 19 Jul 2020 22:22:03 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:12405 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726998AbgGTCV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 22:21:57 -0400
+        id S1726510AbgGTCWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 22:22:02 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595211716; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1595211721; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=ykR2SdK1gJAE3c2jaq1OoL9b+HU9D1OPmYDpnLWtngY=; b=ZFc9bSkXNWs21Vz/MRZGo/T1zk87ouPs3pGZl9hSIRQREqT/s1S5lErQQiMtYiYkfFNaXp4L
- 9L8zE9rK2wgBNnEWFyy6E/Q8CA9k2VyU259xuFjJUiG0GSisnkw7s06nrYly1fSc8V4oeEJ8
- gcGUyIhHe0eHcmTlIV61FbIFsbs=
+ Sender; bh=mziV6dw1w86ytw+21xecioLH5sETgcRtWY7LRJxfINk=; b=qEvGlo6b2sjuHa0AnTyuG9n4QDJ4pBV8ZeMXCQ9hN7BVamGFkxo/hIqYoz60xDTG4sjC2/7O
+ f01V7dH/yXmkCHQpLPG7z4EAChITTP5Ghk9p3qbXf1HojQpXQap7jVt0n14RwI102X6nM+4M
+ qCo9y2ZLh9fUcUCZvatjEz1s5EY=
 X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5f14ffb3c9bd2efa2e36e960 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 02:21:39
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f14ffb78e36ecda3058b4e5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 02:21:43
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8E521C433CA; Mon, 20 Jul 2020 02:21:39 +0000 (UTC)
+        id 6E0AAC433C6; Mon, 20 Jul 2020 02:21:43 +0000 (UTC)
 Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C8A56C433C6;
-        Mon, 20 Jul 2020 02:21:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C8A56C433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A53ADC433C9;
+        Mon, 20 Jul 2020 02:21:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A53ADC433C9
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
 From:   Tingwei Zhang <tingwei@codeaurora.org>
@@ -54,9 +54,9 @@ Cc:     Tingwei Zhang <tingwei@codeaurora.org>, tsoni@codeaurora.org,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         Mao Jinlong <jinlmao@codeaurora.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] tracing: add trace_export support for trace_marker
-Date:   Mon, 20 Jul 2020 10:21:16 +0800
-Message-Id: <20200720022117.9375-4-tingwei@codeaurora.org>
+Subject: [PATCH 4/4] stm class: ftrace: use different channel accroding to CPU
+Date:   Mon, 20 Jul 2020 10:21:17 +0800
+Message-Id: <20200720022117.9375-5-tingwei@codeaurora.org>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20200720022117.9375-1-tingwei@codeaurora.org>
 References: <20200720022117.9375-1-tingwei@codeaurora.org>
@@ -67,27 +67,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support to route trace_marker buffer to other destination
-via trace_export.
+To avoid mixup of packets from differnt ftrace packets simultaneously,
+use different channel for packets from different CPU.
 
 Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
 ---
- kernel/trace/trace.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/hwtracing/stm/ftrace.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index aef6330836e2..ac18e0ee9246 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6639,6 +6639,8 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- 	} else
- 		entry->buf[cnt] = '\0';
+diff --git a/drivers/hwtracing/stm/ftrace.c b/drivers/hwtracing/stm/ftrace.c
+index ce868e095410..6c3bce11c8d3 100644
+--- a/drivers/hwtracing/stm/ftrace.c
++++ b/drivers/hwtracing/stm/ftrace.c
+@@ -10,7 +10,7 @@
+ #include <linux/stm.h>
+ #include <linux/trace.h>
  
-+	if (static_branch_unlikely(&ftrace_exports_enabled))
-+		ftrace_exports(event);
- 	__buffer_unlock_commit(buffer, event);
+-#define STM_FTRACE_NR_CHANNELS 1
++#define STM_FTRACE_NR_CHANNELS NR_CPUS
+ #define STM_FTRACE_CHAN 0
  
- 	if (tt)
+ static int stm_ftrace_link(struct stm_source_data *data);
+@@ -37,8 +37,9 @@ static void notrace
+ stm_ftrace_write(struct trace_export *export, const void *buf, unsigned int len)
+ {
+ 	struct stm_ftrace *stm = container_of(export, struct stm_ftrace, ftrace);
++	unsigned int cpu = smp_processor_id();
+ 
+-	stm_source_write(&stm->data, STM_FTRACE_CHAN, buf, len);
++	stm_source_write(&stm->data, STM_FTRACE_CHAN + cpu, buf, len);
+ }
+ 
+ static int stm_ftrace_link(struct stm_source_data *data)
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
