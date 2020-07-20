@@ -2,186 +2,126 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C48C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C97C208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6CF20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:59:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYXv9eft"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="g0AOzeb4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgGTE4r (ORCPT
+        id S1726658AbgGTE7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 00:56:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725287AbgGTE4q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 00:56:46 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE67CC0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 21:56:46 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t6so8118190plo.3
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 21:56:46 -0700 (PDT)
+        Mon, 20 Jul 2020 00:59:17 -0400
+Received: from mail-bn8nam11on2060.outbound.protection.outlook.com ([40.107.236.60]:27144
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726419AbgGTE7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 00:59:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M3cjN52KBZ+YJtFPekO2IChhslMSdgin64yvdSfC6msj73imFcKvYvhTq1BUsgn3MAY4KrRA82s4knJjv4NmZq+bpB+UpGYikJUlqmiTlMFr+vEqahb0N11vN7j/LEmM9SXD3wjG4zsweMDPsay3QIe0CPu2D/9tVE9bKn4ALrJdEFQiOyWAXxQV8xoWRDm/YqBms7Diiy807AVbdkdfi9A4jCLKgYkvlF/AzspyW3cv4tpaSHHxeSTYQydXoowtKSSlvIEupqLOi+1o5s4QzOZhOlFSmZFeamvzfRA5byC3qfp/u1zd13vUD80N29CkBqv89ueDgQQ4CE14VZrDhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D8rLW30wvx0O7d/VWwxVU/kQEomeAcdcsNT1OwVc58Q=;
+ b=W99XtXqth+AegJpivE3IHDb/Ld/7goGUlOLi7aIF7maBX3Y5Y6RXez9XzkYfwo9UgmgdXIc1Ba7W00eHaIn+lE1Ewt/xsQuOx0c7LY8I9+JUzbaH/wyNtjYtNsBoNsGuPVLTj+7TdHyP3++q8SZYUsl2Biamd1FvM9lhyzTRMvoDC9pV5fW37xhzzFd8HSEh7C6plAIWc6pZnmnxINc/KJ07UeCDSov9H2YlmC4fmf58lBvAxdLs53hVD6LqOZ6mh7yqH836/ANkmG88rZVG3QCDVOKpPH/+1n4WmbBJ/vRWwe5A22csFQSpWZvU+59b0w8iMdTBeFkv6TdDwx/m9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=WxQvsZ6QmcUkdn7bmiYYmJhxUakC2I6RnR8rzuhXmYI=;
-        b=iYXv9eftR84ZHA/raJZbczowGT4NKjrV8526WC8U95iR7EuvEcIqalEjIbB59y3oPu
-         OL6AvUcKU6L2I3zjzLUwCs2cAgbVakZ1QPgvgNIZOTdluu3dtek4uaCnu0oa3xzURgs/
-         QG7wjeVXnfxVo8JhZvFjcAFtbSfOVWVCP6WUpAacx1/q1PJCwkbVowxQTpi61dV9SOpm
-         NPX0wCUSOtDwA7tWaflIHY3p607XyjKY+pqHlyPYUdczUX8QKOXAdFn+5ib1roKDJexC
-         n9iFbleMRgpfi8GCy8b5Z2hdJJj1TZZ1NFx1ksaxeffoCcxYEnVAWtyJJlDE4/LxxiNT
-         tfrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=WxQvsZ6QmcUkdn7bmiYYmJhxUakC2I6RnR8rzuhXmYI=;
-        b=YHzuRIBV8KvBIKSvYoMqBiZPOLcwYLqyTmbp00R8tBk9RUhDqlhtGgyKAUAv9rjudR
-         cH+H7BlWsBQX+hIH8F+vtbJ/jkvB2IM6/Iwh+B/VNOk1wuNCf5XHgOUsn/bHjVWfTu/W
-         6JUMQkoFnz2zRQF0nLiwa8dB/AnrhzTlEHsNm4zTf6wEWlQ8br4mjIzHZT+ADWOpKP2t
-         /791883KFgt6m8HvWPNQr4ijSI+PtP0VPsdmKqdtCP4z+TXxZYyW0Ncm7C6CwyNJAWOM
-         8OIG5UYHJWrzFAJNkV+dxgCcdouoguCXcflzuu0ERUjJY4HBZT73YoZMqwSYB6mZRRys
-         EmDg==
-X-Gm-Message-State: AOAM530vDdi7wPcE3v4KONNZ4pviwNnllroDGXwZB0RdDhczbeXIfg7B
-        W385/zUQNU86yZBJ6w+iK9s=
-X-Google-Smtp-Source: ABdhPJw0rKezzDSAU6tqpn6flMPuV+16J+ebbVLnAeiSiY9g1d3Fxj4/34wxckGgtOme7S/i7vBDOw==
-X-Received: by 2002:a17:90a:32cb:: with SMTP id l69mr19545057pjb.205.1595221006220;
-        Sun, 19 Jul 2020 21:56:46 -0700 (PDT)
-Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id w2sm10177532pjt.19.2020.07.19.21.56.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 Jul 2020 21:56:45 -0700 (PDT)
-From:   js1304@gmail.com
-X-Google-Original-From: iamjoonsoo.kim@lge.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v2 3/4] mm/hugetlb: make hugetlb migration callback CMA aware
-Date:   Mon, 20 Jul 2020 13:56:17 +0900
-Message-Id: <1595220978-9890-3-git-send-email-iamjoonsoo.kim@lge.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595220978-9890-1-git-send-email-iamjoonsoo.kim@lge.com>
-References: <1595220978-9890-1-git-send-email-iamjoonsoo.kim@lge.com>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D8rLW30wvx0O7d/VWwxVU/kQEomeAcdcsNT1OwVc58Q=;
+ b=g0AOzeb4a3C1rIjw6oKXxOG8nliXX7+vqfT+GhaZHVdrRYOa2CYurpPJQDqveKC54yvulr0GyrOWV+m9Es39YUNyBY3dxpSZmsv1lAlijVd2uOZ5AJ+KyGAQYzc8mZr6akNiPGi/eNo1WDPHy2ntF03twC0ioPJidg/stVXGJak=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from MWHPR12MB1599.namprd12.prod.outlook.com (2603:10b6:301:10::12)
+ by MWHPR12MB1454.namprd12.prod.outlook.com (2603:10b6:301:11::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Mon, 20 Jul
+ 2020 04:59:13 +0000
+Received: from MWHPR12MB1599.namprd12.prod.outlook.com
+ ([fe80::25b9:83b0:4b17:2c63]) by MWHPR12MB1599.namprd12.prod.outlook.com
+ ([fe80::25b9:83b0:4b17:2c63%12]) with mapi id 15.20.3195.025; Mon, 20 Jul
+ 2020 04:59:13 +0000
+Subject: Re: [PATCH 2/5] clk: x86: Change name from ST to FCH
+To:     Stephen Boyd <sboyd@kernel.org>, akshu.agrawal@amd.com
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200713010001.18976-1-akshu.agrawal@amd.com>
+ <20200713010001.18976-2-akshu.agrawal@amd.com>
+ <159486017478.1987609.16233541356940866738@swboyd.mtv.corp.google.com>
+From:   "Agrawal, Akshu" <aagrawal2@amd.com>
+Message-ID: <cccfd007-1801-f289-2730-b831d9494a08@amd.com>
+Date:   Mon, 20 Jul 2020 10:29:02 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <159486017478.1987609.16233541356940866738@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: MAXPR0101CA0059.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:e::21) To MWHPR12MB1599.namprd12.prod.outlook.com
+ (2603:10b6:301:10::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.105] (122.171.179.172) by MAXPR0101CA0059.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:e::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Mon, 20 Jul 2020 04:59:10 +0000
+X-Originating-IP: [122.171.179.172]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fa1c9b09-bf24-4eda-0d3d-08d82c69a512
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1454:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR12MB145400114E69A70B960D1C9CF87B0@MWHPR12MB1454.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HoI8wZy2nXM2FfH7aj0wEYkUQwN2pPQ6JJvepqupx1s+HhWIhR06qv50qDGOrhIw07BwRnX9MIlqc5b60Q1Mj/BtUKPuKgJtSmyAmxuOK3u3f18F3523yzUv3NBEaAFNz1B9FFV8I8JjiddwB2VTJ9zi4ug6cRyPiTOphu0IinavRMETspd8Du7K7rNLhHR8qiU+M8D8h5YHkttpP0X0jXYa8nRsMZgzdtMGLPna1y4536fcMt+iS6ONB/A5OtuJrqgsffQ1C2vTBppZ9VQ+WrpVujyqWEfaygE/+37XCjveoqHt6ipo5R769W784mH/j2nYPERWTjdsIaJFPal1tC8zI3JwCtcmFfmdpfGkPtJ8qp702mZvdvoJnqeZ3pYo
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR12MB1599.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(396003)(136003)(346002)(376002)(53546011)(2616005)(16576012)(26005)(31696002)(956004)(36756003)(52116002)(478600001)(54906003)(31686004)(8676002)(6486002)(316002)(8936002)(2906002)(5660300002)(66476007)(6666004)(66556008)(4744005)(6636002)(16526019)(66946007)(186003)(4326008)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: SU7+5Q8ybNWx1wymk2qtR2E0GnNgx6FJa9R1L5ZbVAOqr12RqUT26rtJhmbe8MMlFs585tx8qwHXg6rAwRSttUYkaU4CLYzGKe1KKJLrP5FhZpnB5xeauFwhyGrFEUEj/K33IKI1W+hsY3g3VOikXgNjCbuipYtY79TxV/jgCAX6TmUiSl9q4LR1l0Ji5Y63iMfbpmTEb29ZllOXRPcvcr8HeJNABFfDMI/fmc0ajXs7qrqV/Dl/nh262/ZLrJA3ugSvOmXEGJX6DbkI8N/yv8T4B8Nz4XHs7wrtxSSpiJ1FdRvyCWMi48VDQOaQtCjhCQWbaedGoldGTGS2udO5daujmrZxgIgK8ukrqe20DtflRHLo7nQPg0b2c7gLTPHSX0kUi9cvS76qo0HfjXoXCATIEuFivVzFIr8Q5c03vHKQVE0Gszr/Gb71KpFwEhPnuluLsnXWiq9zwmo3TnoifD3Ut/3QBMJk2nxfPix44vk=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa1c9b09-bf24-4eda-0d3d-08d82c69a512
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR12MB1599.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 04:59:13.1024
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5Reof+hLw8zs2UApSPcLJT0YjrydG4goVeedkrr5fBGUtRzRQFzJuwDAw/fV2P6xUo4SjN7vj1CV79dltI+Mig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1454
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-new_non_cma_page() in gup.c requires to allocate the new page that is not
-on the CMA area. new_non_cma_page() implements it by using allocation
-scope APIs.
+On 7/16/2020 6:12 AM, Stephen Boyd wrote:
+> Quoting Akshu Agrawal (2020-07-12 17:59:50)
+>> diff --git a/drivers/clk/x86/clk-st.c b/drivers/clk/x86/clk-fch.c
+>> similarity index 73%
+>> rename from drivers/clk/x86/clk-st.c
+>> rename to drivers/clk/x86/clk-fch.c
+>> index 25d4b97aff9b..b252f0cf0628 100644
+>> --- a/drivers/clk/x86/clk-st.c
+>> +++ b/drivers/clk/x86/clk-fch.c
+>> @@ -8,7 +8,7 @@
+>>   #include <linux/clk.h>
+>>   #include <linux/clkdev.h>
+>>   #include <linux/clk-provider.h>
+>> -#include <linux/platform_data/clk-st.h>
+>> +#include <linux/platform_data/clk-fch.h>
+> Is this file moved somewhere?
 
-However, there is a work-around for hugetlb. Normal hugetlb page
-allocation API for migration is alloc_huge_page_nodemask(). It consists
-of two steps. First is dequeing from the pool. Second is, if there is no
-available page on the queue, allocating by using the page allocator.
+Renaming it from ST to FCH in previous patch of the series.
 
-new_non_cma_page() can't use this API since first step (deque) isn't
-aware of scope API to exclude CMA area. So, new_non_cma_page() exports
-hugetlb internal function for the second step, alloc_migrate_huge_page(),
-to global scope and uses it directly. This is suboptimal since hugetlb
-pages on the queue cannot be utilized.
+Thanks,
 
-This patch tries to fix this situation by making the deque function on
-hugetlb CMA aware. In the deque function, CMA memory is skipped if
-PF_MEMALLOC_NOCMA flag is found.
-
-Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
----
- include/linux/hugetlb.h |  2 --
- mm/gup.c                |  6 +-----
- mm/hugetlb.c            | 11 +++++++++--
- 3 files changed, 10 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 2660b04..fb2b5aa 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -509,8 +509,6 @@ struct page *alloc_huge_page_nodemask(struct hstate *h, int preferred_nid,
- 				nodemask_t *nmask, gfp_t gfp_mask);
- struct page *alloc_huge_page_vma(struct hstate *h, struct vm_area_struct *vma,
- 				unsigned long address);
--struct page *alloc_migrate_huge_page(struct hstate *h, gfp_t gfp_mask,
--				     int nid, nodemask_t *nmask);
- int huge_add_to_page_cache(struct page *page, struct address_space *mapping,
- 			pgoff_t idx);
- 
-diff --git a/mm/gup.c b/mm/gup.c
-index bbd36a1..4ba822a 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1634,11 +1634,7 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
- 		struct hstate *h = page_hstate(page);
- 
- 		gfp_mask = htlb_modify_alloc_mask(h, gfp_mask);
--		/*
--		 * We don't want to dequeue from the pool because pool pages will
--		 * mostly be from the CMA region.
--		 */
--		return alloc_migrate_huge_page(h, gfp_mask, nid, NULL);
-+		return alloc_huge_page_nodemask(h, nid, NULL, gfp_mask);
- 	}
- #endif
- 	if (PageTransHuge(page)) {
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 3245aa0..d9eb923 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -29,6 +29,7 @@
- #include <linux/numa.h>
- #include <linux/llist.h>
- #include <linux/cma.h>
-+#include <linux/sched/mm.h>
- 
- #include <asm/page.h>
- #include <asm/tlb.h>
-@@ -1036,10 +1037,16 @@ static void enqueue_huge_page(struct hstate *h, struct page *page)
- static struct page *dequeue_huge_page_node_exact(struct hstate *h, int nid)
- {
- 	struct page *page;
-+	bool nocma = !!(current->flags & PF_MEMALLOC_NOCMA);
-+
-+	list_for_each_entry(page, &h->hugepage_freelists[nid], lru) {
-+		if (nocma && is_migrate_cma_page(page))
-+			continue;
- 
--	list_for_each_entry(page, &h->hugepage_freelists[nid], lru)
- 		if (!PageHWPoison(page))
- 			break;
-+	}
-+
- 	/*
- 	 * if 'non-isolated free hugepage' not found on the list,
- 	 * the allocation fails.
-@@ -1928,7 +1935,7 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
- 	return page;
- }
- 
--struct page *alloc_migrate_huge_page(struct hstate *h, gfp_t gfp_mask,
-+static struct page *alloc_migrate_huge_page(struct hstate *h, gfp_t gfp_mask,
- 				     int nid, nodemask_t *nmask)
- {
- 	struct page *page;
--- 
-2.7.4
+Akshu
 
