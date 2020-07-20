@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C58EC433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA47C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1E5F22482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FDD2065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260129;
-	bh=hzLAThHvf7gJmaisKABfV8tEcvLhHCQOlRUK9Pj01rs=;
+	s=default; t=1595260132;
+	bh=JAYuStscX35V8T7eGN2EN6McHf/6+H/yJAYLptJU7g4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JO6J5C9aq7IDoPA64Iiq4hVSjhzdlAnv4a+jCLKvx+bo5LeyoGh/iKCYx5MpiUCVx
-	 nncy+7nzg1mPtS1q9GcpjrCkS+PBMM9DA910JPulkTq0mKsTUFW+YG6TobrGOn/gDk
-	 3d6g9yWq65maU0xK6WI8+dy7v9NLOvAW6awj66AE=
+	b=qUqZ9cRnmznjCkTQ7E8LNXphqUKWA+jULx3m30l37cEVADl35tL4gPxFGUTy3/deB
+	 YfqA3ospjIjvjMnp1u7mYtcRPKtHEYs/GgdqXzfYZLo8i6uydbuABVh18fLpR0Kojq
+	 avj5hgSsUpVwXWKLs4Wfil4EK/N47ZHjUXDlBrXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730927AbgGTPsr (ORCPT
+        id S1730042AbgGTPsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:48:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44442 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729962AbgGTPsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:48:43 -0400
+        id S1730925AbgGTPsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:48:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 236862064B;
-        Mon, 20 Jul 2020 15:48:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB8FB2065E;
+        Mon, 20 Jul 2020 15:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260122;
-        bh=hzLAThHvf7gJmaisKABfV8tEcvLhHCQOlRUK9Pj01rs=;
+        s=default; t=1595260125;
+        bh=JAYuStscX35V8T7eGN2EN6McHf/6+H/yJAYLptJU7g4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DkWUIPqfdYIaUlLHlAmiidBJSFwwp6nHLlEmlbrnxS5QXxiL9Lyi6m8L05JYfU/DC
-         xwdlqwF7YWje9I3hVJeznmPcR1NMWH6xXHKnWaCBD/TVd0Gd5MWW8LkwTgcjoQn/lr
-         cOqvrTgpHVs3AWYiT6Ss8IBYVtBhobEojtlzzmw0=
+        b=ajW+Ui8qzTmQAd/r/6lvKHSc7/6JzP9o5yTGEIffiXp9BHB6jDdkLWMZ6/jDhZR3V
+         ZvTq3lZxRIy7UOARuBlOWG4NWKebK7dVxIu44LZqgyfEa3k9M50RWwJ8mcV36sUCZ6
+         mg89tsctFBj0ceS91m2sBBZm391odviu0D5E71Cc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishwas M <vishwas.reddy.vr@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.14 114/125] hwmon: (emc2103) fix unable to change fan pwm1_enable attribute
-Date:   Mon, 20 Jul 2020 17:37:33 +0200
-Message-Id: <20200720152808.537990545@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.14 115/125] intel_th: pci: Add Jasper Lake CPU support
+Date:   Mon, 20 Jul 2020 17:37:34 +0200
+Message-Id: <20200720152808.585918391@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -59,40 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishwas M <vishwas.reddy.vr@gmail.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 14b0e83dc4f1e52b94acaeb85a18fd7fdd46d2dc upstream.
+commit 203c1f615052921901b7a8fbe2005d8ea6add076 upstream.
 
-This patch fixes a bug which does not let FAN mode to be changed from
-sysfs(pwm1_enable). i.e pwm1_enable can not be set to 3, it will always
-remain at 0.
+This adds support for the Trace Hub in Jasper Lake CPU.
 
-This is caused because the device driver handles the result of
-"read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg)" incorrectly. The
-driver thinks an error has occurred if the (result != 0). This has been
-fixed by changing the condition to (result < 0).
-
-Signed-off-by: Vishwas M <vishwas.reddy.vr@gmail.com>
-Link: https://lore.kernel.org/r/20200707142747.118414-1-vishwas.reddy.vr@gmail.com
-Fixes: 9df7305b5a86 ("hwmon: Add driver for SMSC EMC2103 temperature monitor and fan controller")
-Cc: stable@vger.kernel.org
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org # v4.14+
+Link: https://lore.kernel.org/r/20200706161339.55468-2-alexander.shishkin@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/emc2103.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwtracing/intel_th/pci.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/hwmon/emc2103.c
-+++ b/drivers/hwmon/emc2103.c
-@@ -454,7 +454,7 @@ static ssize_t pwm1_enable_store(struct
- 	}
- 
- 	result = read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg);
--	if (result) {
-+	if (result < 0) {
- 		count = result;
- 		goto err;
- 	}
+--- a/drivers/hwtracing/intel_th/pci.c
++++ b/drivers/hwtracing/intel_th/pci.c
+@@ -219,6 +219,11 @@ static const struct pci_device_id intel_
+ 		.driver_data = (kernel_ulong_t)&intel_th_2x,
+ 	},
+ 	{
++		/* Jasper Lake CPU */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4e29),
++		.driver_data = (kernel_ulong_t)&intel_th_2x,
++	},
++	{
+ 		/* Elkhart Lake CPU */
+ 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4529),
+ 		.driver_data = (kernel_ulong_t)&intel_th_2x,
 
 
