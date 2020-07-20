@@ -2,223 +2,111 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3914C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BB6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89DDF2176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:14:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cSV1VzkU"
+	by mail.kernel.org (Postfix) with ESMTP id 9004422B51
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:15:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595272521;
+	bh=y7vjF/7Gg0I1ck7MMsCAO02jGh/RyFblscWzzPbMNTY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Dtiu2rFBTiOPMcKipCx63cBvLZamXe1V/1iohfDmnTS0BYa7+eCw19HtrfpcyIMvw
+	 b0KasxZYsuGV/vnUB1NBQ+toG89HQD+e1dQpiD1tuKaeobSQB9H7Cfwz9y5DpfrIhJ
+	 RpfmIJR8N9O7acZ+yf+TUhbQ+ih6POFeYd6uIUtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729927AbgGTTOS (ORCPT
+        id S1730186AbgGTTPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:14:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729237AbgGTTOR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:14:17 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1022CC061794;
-        Mon, 20 Jul 2020 12:14:17 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id w9so5094877ejc.8;
-        Mon, 20 Jul 2020 12:14:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JjyHryxAwSxTQ0ittGP+rXGKdRNTM53Fze7YdhzbkuA=;
-        b=cSV1VzkU9Nkb6qqoBJknZ7LmzOwMz4bYV44z158KTB1lynYP2d1eMjou69dsfdYNKJ
-         HAMCI0/UmycnxC+uLP6rH/JfKfGfnlAGoiWE9Vs+tRekP9PfHWUc8vvQJbBGrTxoFZVr
-         9zfthvQw1KqMBLrFhWO0CaTmcn3Xlr797NVuuIR4zCXsXf9VVKQADK6zvery3k705iVX
-         KUO6l3we7oskzPldLPNwOBBSSQGS7K/U6TmPk9tejbkt2uiLStDzPi8MDgeAwB7GzbT4
-         EAPxXkbtVceOdntNvpeNRdBRcR4FRqTtrMs7KLR2a1hH7o5Qsj6k1NMLZvqjSEGz6tc9
-         l4Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JjyHryxAwSxTQ0ittGP+rXGKdRNTM53Fze7YdhzbkuA=;
-        b=WLB1Itl1kfkOKfyTcgSnTV3i+QlwWSR19oEC1j0ww0nZceURvyeLDW495VU2WRrO6h
-         UzNaez+TZfXk6SBjsUBNjqEGAh9K/PcbSyw/aYCdam2chQ7aAbJxZ4+7W0WUBvpT0bGo
-         vCvVLmohZWi3yG/bd6an4JCKVdiAvC2pI6NWhGWd/90g0efiVp1XunNBbkkFuHrH/Y5g
-         1AzRN55dXol0gNa6WEva6aB2+ujSd5ci21Ic3Hmq6gV3nAme4OYeoH/6aiXMnrHv3sv+
-         vO5rs5HR4QF9thd0nlNu/6g9/oOhjm1bOXGDWWNQqUBLrl3lRBdW0cb06ZHvcs1BDyuz
-         PTMA==
-X-Gm-Message-State: AOAM531Vsosdqnz9yR82kPfAjRUfEEd6LR29ULuyLygQVH5gtDiGEqDZ
-        zNOJYuzI5+dfPoc4CoLCWAwKvPcV
-X-Google-Smtp-Source: ABdhPJwMjH9Ys/3UaSvWYhIy7bpfQ7RCMAWq3nHCUEJ+/O76pprqlE8t9rTblRD8bjroXJ6mN6r1fg==
-X-Received: by 2002:a17:906:4158:: with SMTP id l24mr19384470ejk.101.1595272455521;
-        Mon, 20 Jul 2020 12:14:15 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:79a2:4d96:30bb:bcee? ([2a01:110f:b59:fd00:79a2:4d96:30bb:bcee])
-        by smtp.gmail.com with ESMTPSA id c10sm15971215edt.22.2020.07.20.12.14.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 12:14:14 -0700 (PDT)
-Subject: Re: [PATCH RFC leds + net-next 1/3] leds: trigger: add support for
- LED-private device triggers
-To:     =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
-        linux-leds@vger.kernel.org
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>,
-        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
-References: <20200716171730.13227-1-marek.behun@nic.cz>
- <20200716171730.13227-2-marek.behun@nic.cz>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <fe339634-bf0a-cbb0-cc46-223195482ea6@gmail.com>
-Date:   Mon, 20 Jul 2020 21:14:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 15:15:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727833AbgGTTPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 15:15:19 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B6A622B51;
+        Mon, 20 Jul 2020 19:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595272519;
+        bh=y7vjF/7Gg0I1ck7MMsCAO02jGh/RyFblscWzzPbMNTY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RFu8cSEQvecMwBh39qwG5H5zY+mfq5FmgFW9pAi1aAPgLmqfb8s1g8NFs+hmwEcuP
+         r28JVhuAtnMFTscgbaDhTTbV6u8UajCLiq6hiu8uV1sn4h3LCW267xLRwYulgIJHXY
+         c6FRcJPLzrqQM1toSZTDjrhPXQD3O9q30hs3GuzA=
+Received: by mail-oi1-f169.google.com with SMTP id l63so15197606oih.13;
+        Mon, 20 Jul 2020 12:15:19 -0700 (PDT)
+X-Gm-Message-State: AOAM533unQJ2wZrcxgp3juu4dx2PVOJifqQTK6la5D2dyD71EE0WluZy
+        apuUxU+ZvzUQQl92rJzEfOx/ov5eIuHvY2JmyQ==
+X-Google-Smtp-Source: ABdhPJxJt9eB3LJsFXU6KUnTkSdkYxCVHUD4AW2u4MEtSuMgxN9FUFdmQ/V73vIzN2u7Age2BlV1QCfDkUb0wEfouYk=
+X-Received: by 2002:aca:30d2:: with SMTP id w201mr625735oiw.147.1595272518900;
+ Mon, 20 Jul 2020 12:15:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200716171730.13227-2-marek.behun@nic.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200717144132.2206-1-laurentiu.palcu@oss.nxp.com>
+ <20200717144132.2206-5-laurentiu.palcu@oss.nxp.com> <20200720164927.GA2650420@bogus>
+ <20200720165537.kwlxwrtlmlijhuoh@fsr-ub1864-141>
+In-Reply-To: <20200720165537.kwlxwrtlmlijhuoh@fsr-ub1864-141>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 20 Jul 2020 13:15:06 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLbYvekVe_YeCKYCDO69RtTTNBoJQ9X1n=K_ToGwrMVXg@mail.gmail.com>
+Message-ID: <CAL_JsqLbYvekVe_YeCKYCDO69RtTTNBoJQ9X1n=K_ToGwrMVXg@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] dt-bindings: display: imx: add bindings for DCSS
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        devicetree@vger.kernel.org, lukas@mntmn.com,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek,
+On Mon, Jul 20, 2020 at 10:55 AM Laurentiu Palcu
+<laurentiu.palcu@oss.nxp.com> wrote:
+>
+> Hi Rob,
+>
+> On Mon, Jul 20, 2020 at 10:49:27AM -0600, Rob Herring wrote:
+> > On Fri, 17 Jul 2020 17:41:29 +0300, Laurentiu Palcu wrote:
+> > > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > >
+> > > Add bindings for iMX8MQ Display Controller Subsystem.
+> > >
+> > > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > > ---
+> > >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 ++++++++++++++++++
+> > >  1 file changed, 104 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> > >
+> >
+> >
+> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> > there's no need to repost patches *only* to add the tags. The upstream
+> > maintainer will do that for acks received on the version they apply.
+> >
+> > If a tag was not added on purpose, please state why and what changed.
+>
+> Well, I kind of did exactly that... in the cover letter. I stated
+> clearly why this patch needs another look... :/
 
-On 7/16/20 7:17 PM, Marek Behún wrote:
-> Some LED controllers may come with an internal HW triggering mechanism
-> for the LED and the ability to switch between SW control and the
-> internal HW control. This includes most PHYs, various ethernet switches,
-> the Turris Omnia LED controller or AXP20X PMIC.
-> 
-> This adds support for registering such triggers.
-> 
-> This code is based on work by Pavel Machek <pavel@ucw.cz> and
-> Ondřej Jirman <megous@megous.com>.
-> 
-> Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> ---
->   drivers/leds/led-triggers.c | 26 ++++++++++++++++++++------
->   include/linux/leds.h        | 10 ++++++++++
->   2 files changed, 30 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-> index 79e30d2cb7a5..81e758d5a048 100644
-> --- a/drivers/leds/led-triggers.c
-> +++ b/drivers/leds/led-triggers.c
-> @@ -27,6 +27,12 @@ LIST_HEAD(trigger_list);
->   
->    /* Used by LED Class */
->   
-> +static inline bool
-> +trigger_relevant(struct led_classdev *led_cdev, struct led_trigger *trig)
-> +{
-> +	return !trig->trigger_type || trig->trigger_type == led_cdev->trigger_type;
-> +}
-> +
->   ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
->   			  struct bin_attribute *bin_attr, char *buf,
->   			  loff_t pos, size_t count)
-> @@ -50,7 +56,7 @@ ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
->   
->   	down_read(&triggers_list_lock);
->   	list_for_each_entry(trig, &trigger_list, next_trig) {
-> -		if (sysfs_streq(buf, trig->name)) {
-> +		if (sysfs_streq(buf, trig->name) && trigger_relevant(led_cdev, trig)) {
->   			down_write(&led_cdev->trigger_lock);
->   			led_trigger_set(led_cdev, trig);
->   			up_write(&led_cdev->trigger_lock);
-> @@ -93,8 +99,12 @@ static int led_trigger_format(char *buf, size_t size,
->   				       led_cdev->trigger ? "none" : "[none]");
->   
->   	list_for_each_entry(trig, &trigger_list, next_trig) {
-> -		bool hit = led_cdev->trigger &&
-> -			!strcmp(led_cdev->trigger->name, trig->name);
-> +		bool hit;
-> +
-> +		if (!trigger_relevant(led_cdev, trig))
-> +			continue;
-> +
-> +		hit = led_cdev->trigger && !strcmp(led_cdev->trigger->name, trig->name);
->   
->   		len += led_trigger_snprintf(buf + len, size - len,
->   					    " %s%s%s", hit ? "[" : "",
-> @@ -243,7 +253,8 @@ void led_trigger_set_default(struct led_classdev *led_cdev)
->   	down_read(&triggers_list_lock);
->   	down_write(&led_cdev->trigger_lock);
->   	list_for_each_entry(trig, &trigger_list, next_trig) {
-> -		if (!strcmp(led_cdev->default_trigger, trig->name)) {
-> +		if (!strcmp(led_cdev->default_trigger, trig->name) &&
-> +		    trigger_relevant(led_cdev, trig)) {
->   			led_cdev->flags |= LED_INIT_DEFAULT_TRIGGER;
->   			led_trigger_set(led_cdev, trig);
->   			break;
-> @@ -280,7 +291,9 @@ int led_trigger_register(struct led_trigger *trig)
->   	down_write(&triggers_list_lock);
->   	/* Make sure the trigger's name isn't already in use */
->   	list_for_each_entry(_trig, &trigger_list, next_trig) {
-> -		if (!strcmp(_trig->name, trig->name)) {
-> +		if (!strcmp(_trig->name, trig->name) &&
-> +		    (trig->trigger_type == _trig->trigger_type ||
-> +		     !trig->trigger_type || !_trig->trigger_type)) {
->   			up_write(&triggers_list_lock);
->   			return -EEXIST;
->   		}
-> @@ -294,7 +307,8 @@ int led_trigger_register(struct led_trigger *trig)
->   	list_for_each_entry(led_cdev, &leds_list, node) {
->   		down_write(&led_cdev->trigger_lock);
->   		if (!led_cdev->trigger && led_cdev->default_trigger &&
-> -			    !strcmp(led_cdev->default_trigger, trig->name)) {
-> +		    !strcmp(led_cdev->default_trigger, trig->name) &&
-> +		    trigger_relevant(led_cdev, trig)) {
->   			led_cdev->flags |= LED_INIT_DEFAULT_TRIGGER;
->   			led_trigger_set(led_cdev, trig);
->   		}
-> diff --git a/include/linux/leds.h b/include/linux/leds.h
-> index 2451962d1ec5..6a8d6409c993 100644
-> --- a/include/linux/leds.h
-> +++ b/include/linux/leds.h
-> @@ -57,6 +57,10 @@ struct led_init_data {
->   	bool devname_mandatory;
->   };
->   
-> +struct led_hw_trigger_type {
-> +	int dummy;
-> +};
-> +
->   struct led_classdev {
->   	const char		*name;
->   	enum led_brightness	 brightness;
-> @@ -141,6 +145,9 @@ struct led_classdev {
->   	void			*trigger_data;
->   	/* true if activated - deactivate routine uses it to do cleanup */
->   	bool			activated;
-> +
-> +	/* LEDs that have private triggers have this set */
-> +	struct led_hw_trigger_type	*trigger_type;
->   #endif
->   
->   #ifdef CONFIG_LEDS_BRIGHTNESS_HW_CHANGED
-> @@ -345,6 +352,9 @@ struct led_trigger {
->   	int		(*activate)(struct led_classdev *led_cdev);
->   	void		(*deactivate)(struct led_classdev *led_cdev);
->   
-> +	/* LED-private triggers have this set */
-> +	struct led_hw_trigger_type *trigger_type;
-> +
->   	/* LEDs under control by this trigger (for simple triggers) */
->   	rwlock_t	  leddev_list_lock;
->   	struct list_head  led_cdevs;
+Put information closest to where it applies which is this patch. I
+don't read cover letters typically.
 
-Looks good to me:
+R-by still stands.
 
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-
--- 
-Best regards,
-Jacek Anaszewski
+Rob
