@@ -2,186 +2,104 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F21AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34914C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF812080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:55:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CnrhO/P3"
+	by mail.kernel.org (Postfix) with ESMTP id 13D8521775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595239030;
+	bh=bYF8x8T+NOYxWZCxmZtD7bG4+5sVpYYxLLih0BIYenY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZDJR2HcvFnUK1m7ceTP0FVpdQiVN2Asip94u1IT1SNc7tOFGeFtfteHrIvU+IsiG/
+	 N0oQKL14uVhxmKXTJ+gY977UGJK8xASYDVsCE+jrsIv9+vHb+RtC4CPLoOS5O7d+Cm
+	 ts45f4dXMMvk/XxTPPkGvF0DzXj+p21A1stYSCas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgGTJzh (ORCPT
+        id S1728294AbgGTJ5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:55:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbgGTJzh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:55:37 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 541E2C0619D6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:55:36 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id x9so19543267ljc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:55:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=czrhyEhEcs9KJspCOYLvyQfPnpci+2QYLOQ/WNW3lw4=;
-        b=CnrhO/P3aw1bN3pJS1WTslSh7lPanYvbf976SXyyViWivKY8mGeZOxGF6spscG4a1b
-         AzC35iSDUUSEX5QqQXDG0Dn9kVHODA7YLORPopS104iIUwrhm4qUSIeXG34qK/gSv1j1
-         6nDDcVHVm4Qevmn2gjv1NgsCxUBrPucPvzmBT+ANXqJJg8uR2YqBLZcOe31YPS+VIc52
-         g7bQNukOcKW6Y0Y3rbkmut/mg4YqJ80wmNtrVwNIL7xnw54V/5Xs/047iMhY9xpL/IN4
-         lgKMaFfPIwGh+Xvmo+bSS0jYrci3XSXT2JLA0dGTW24OD7cj94VHQeMoK0Ecq6E+cJSN
-         HVsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=czrhyEhEcs9KJspCOYLvyQfPnpci+2QYLOQ/WNW3lw4=;
-        b=gnhvg/0EuZxGiOxxXSyYuyjGF38/utTQXkq7atkcv6mdkAulDDP2sI+g/HZF5xy4Rv
-         0YQerXsB6yfspQj5GH9EM29sKJo6wFTFqy8ap92V9dSQL1PIzk7xRL4rGtjzsuHHv2VV
-         UGIwmAbAPsgpxxsXeJjFr8Ctyn0E69+ifPQ8YzQyrjWYQO4KSW0ggIUJ9P51FYUuuUGf
-         h2qSIee7BCUniL1j8uT/7HFdrOEjccbdKM5I1P3Ccu3tmJRkS1Qh1670S23YxW7il/Oz
-         FNBq7VuWZ2uCnC92ivzv+5I+GjgjAgP8YGIJvQ/Nf3A9/6SdET+9kyCYorAUK0H7jIde
-         oQfA==
-X-Gm-Message-State: AOAM531WOfV7aw8TyUURVDvTmVqeo/xH/GzZp7xZat485Y6FJnv7R4Vg
-        gyPrbnLnJmCDdhVJAm7nUSqkWc+oAS9HGQErJLLXyQ==
-X-Google-Smtp-Source: ABdhPJx7dPlocqfGM7sZ2KHKcW665NVMq4cJYWrzSHYvVDC6FGbeJQjTYpRHJaYHlI1CZ3+Gs0JPtBwFu51lvd8XbNk=
-X-Received: by 2002:a2e:8855:: with SMTP id z21mr10483601ljj.325.1595238934491;
- Mon, 20 Jul 2020 02:55:34 -0700 (PDT)
+        Mon, 20 Jul 2020 05:57:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727989AbgGTJ5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 05:57:08 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8B2820734;
+        Mon, 20 Jul 2020 09:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595239027;
+        bh=bYF8x8T+NOYxWZCxmZtD7bG4+5sVpYYxLLih0BIYenY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lYwLi/CkaFlBla38GLo8xOn6xBYHfq2cODfLE0754tTPPi8nTeeGutBGl4n7LIoCU
+         +LgKvxr5h18LO7rNGeTeT9rDnDUVACHr2/s2Fzc/PUb0H2CLQdqW6HgXn7cm56/uM1
+         dLMacy+FasIVm20WsOpUUBYSkW5ZP2h6Ck+grryE=
+Date:   Mon, 20 Jul 2020 10:57:03 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 0/2] input: ADC joystick driver & DT bindings
+Message-ID: <20200720105703.53b5e0b7@archlinux>
+In-Reply-To: <20200719221103.91644-1-contact@artur-rojek.eu>
+References: <20200719221103.91644-1-contact@artur-rojek.eu>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200716022817.30439-1-ansuelsmth@gmail.com> <20200716022817.30439-5-ansuelsmth@gmail.com>
-In-Reply-To: <20200716022817.30439-5-ansuelsmth@gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Mon, 20 Jul 2020 15:25:23 +0530
-Message-ID: <CAP245DVSwmk121SkZXqeXF2YUhDUw+KAb=F2EF8d63prKg+hVQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/7] dt-bindings: thermal: tsens: document ipq8064 bindings
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:58 AM Ansuel Smith <ansuelsmth@gmail.com> wrote:
->
-> Document the use of bindings used for ipq8064 SoCs tsens.
-> ipq8064 use the same gcc regs and is set as a child of the qcom gcc.
->
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  .../bindings/thermal/qcom-tsens.yaml          | 50 ++++++++++++++++---
->  1 file changed, 43 insertions(+), 7 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> index d7be931b42d2..9d480e3943a2 100644
-> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> @@ -19,6 +19,11 @@ description: |
->  properties:
->    compatible:
->      oneOf:
-> +      - description: msm9860 TSENS based
+On Mon, 20 Jul 2020 00:11:01 +0200
+Artur Rojek <contact@artur-rojek.eu> wrote:
 
-Another variant of the number here: I've seen 8960, 8064 (correct) and
-8060, 9860 (wrong) so far.
+> Hi all,
+> 
+> this series is a continuation of adc-joystick changes split from:
+> https://lore.kernel.org/linux-iio/20200709152200.10039-1-contact@artur-rojek.eu/
+> 
+> Rob, the bindings example in patch 1/2 depends on changes introduced
+> in another patchset, still to be merged:
+> https://lore.kernel.org/linux-iio/20200719205307.87385-4-contact@artur-rojek.eu/  
+> Your scripts will most likely fail to validate this. You have already
+> reviewed this patch when it was still part of the aforementioned series.
 
-Just use 8960 throughout this series and then add a new patch at the
-end of the series for a compatible for ipq8064.
+I've just taken v9 of the dependency into iio.git as an immutable branch based on 5.8
 
-> +        items:
-> +          - enum:
-> +            - qcom,ipq8064-tsens
-> +
->        - description: v0.1 of TSENS
->          items:
->            - enum:
-> @@ -85,12 +90,18 @@ properties:
->        Number of cells required to uniquely identify the thermal sensors. Since
->        we have multiple sensors this is set to 1
->
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - "#thermal-sensor-cells"
-> +
->  allOf:
->    - if:
->        properties:
->          compatible:
->            contains:
->              enum:
-> +              - qcom,ipq8064-tsens
->                - qcom,msm8916-tsens
->                - qcom,msm8974-tsens
->                - qcom,msm8976-tsens
-> @@ -111,17 +122,42 @@ allOf:
->          interrupt-names:
->            minItems: 2
->
-> -required:
-> -  - compatible
-> -  - reg
-> -  - "#qcom,sensors"
-> -  - interrupts
-> -  - interrupt-names
-> -  - "#thermal-sensor-cells"
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,tsens-v0_1
-> +              - qcom,tsens-v1
-> +              - qcom,tsens-v2
-> +
-> +    then:
-> +      required:
-> +        - reg
-> +        - interrupt-names
-> +        - "#qcom,sensors"
->
->  additionalProperties: false
->
->  examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    // Example msm9860 based SoC (ipq8064):
-> +    gcc: clock-controller {
-> +
-> +           /* ... */
-> +
-> +           tsens: thermal-sensor {
-> +                compatible = "qcom,ipq8064-tsens";
-> +
-> +                 nvmem-cells = <&tsens_calib>, <&tsens_calsel>;
-> +                 nvmem-cell-names = "calib", "calib_sel";
-> +                 interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +                 #thermal-sensor-cells = <1>;
-> +          };
-> +    };
-> +
->    - |
->      #include <dt-bindings/interrupt-controller/arm-gic.h>
->      // Example 1 (legacy: for pre v1 IP):
-> --
-> 2.27.0
->
+https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git ib-5.8-jz47xx-ts
+
+Thanks,
+
+Jonathan
+
+> 
+> Cheers,
+> Artur
+> 
+> Artur Rojek (2):
+>   dt-bindings: input: Add docs for ADC driven joystick.
+>   input: joystick: Add ADC attached joystick driver.
+> 
+>  .../bindings/input/adc-joystick.yaml          | 121 +++++++++
+>  drivers/input/joystick/Kconfig                |  10 +
+>  drivers/input/joystick/Makefile               |   1 +
+>  drivers/input/joystick/adc-joystick.c         | 253 ++++++++++++++++++
+>  4 files changed, 385 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
+>  create mode 100644 drivers/input/joystick/adc-joystick.c
+> 
+
