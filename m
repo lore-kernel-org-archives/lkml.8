@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2699C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68843C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0A5206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37EB7206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262301;
-	bh=MH2OgDUFa7iSCaBDAy+5lYYURRRv5AW7XUqJv/UM5CQ=;
+	s=default; t=1595262303;
+	bh=KiPVoFkWqXoOMvSZ98d4FiJrMC62nVa/LYDq0eJYjQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r32DYwxvhTy3kKn3ohFJ+iVwyI4O23Y3QbuazupJMyvpID5JdkYVq4E1rUl1/uoxP
-	 54uQM5c9ASIzerNpULteK7iG1ToJmMmozvo+6+6ua57qnrKy30Az1/b4Tojj7cAqgU
-	 n6Ip1jArpvL1+/pEZk7/2PNOWkxiygA7soUj9uSA=
+	b=DEVksn4QYMWS4MCHXSv444pBEA6ZNA+okZ7PxueW9T6bwxC1BgygRonyJm/O39dor
+	 KD8pe5zIIhZdMRxvmIZGluTiE4Ypuju5sAl6eE9KbJqKc+lK5T+ic20yuHi6kiYuMN
+	 KSPWhB90aaVdGgFKDzsIB0/FtdXcmwEGXVXi0VVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732622AbgGTQCH (ORCPT
+        id S1732606AbgGTQCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:02:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35748 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:02:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732617AbgGTQCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:02:05 -0400
+        id S1732309AbgGTQB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:01:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA1702176B;
-        Mon, 20 Jul 2020 16:02:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9650020773;
+        Mon, 20 Jul 2020 16:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260924;
-        bh=MH2OgDUFa7iSCaBDAy+5lYYURRRv5AW7XUqJv/UM5CQ=;
+        s=default; t=1595260919;
+        bh=KiPVoFkWqXoOMvSZ98d4FiJrMC62nVa/LYDq0eJYjQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VBEXYIwl4eJz3aePJzsB1ehCGf4qivGpEBFDa8Rf4h6Z3Eu4rOR+irkGOM6NC7Kgi
-         lCZlnf33dKo7Inw6RM1hB9ICVnqGR2rXac0FNo2ff2K0uhX38+XTwKeZXb2ecVjXLZ
-         QwqIpEY7mpOn9wvkOZ8prGV5wN9+MePKi0dah7pE=
+        b=xBLn5DolQrjw7N8GXYfKgNjOuuvRyDZfqy8fPpxJBpSsEGw62dJnaYtmfH4L1QC8z
+         41LwA5Ydc95+ZvE/5aPIiD3giL5rpXQ6NHPqSE9u+qCrXelCIKFNy0upv54TZqbbu9
+         s+OTqbTIfgQ7R55KkDv7/FjtPTEgYxo6jBY1QFeI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
+        stable@vger.kernel.org, Yariv <oigevald+kernel@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.4 146/215] HID: quirks: Ignore Simply Automated UPB PIM
-Date:   Mon, 20 Jul 2020 17:37:08 +0200
-Message-Id: <20200720152827.142689445@linuxfoundation.org>
+Subject: [PATCH 5.4 144/215] HID: magicmouse: do not set up autorepeat
+Date:   Mon, 20 Jul 2020 17:37:06 +0200
+Message-Id: <20200720152827.043651156@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,44 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hilliard <james.hilliard1@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit 1ee1369b46de1083238fced60ff718f59de4b8aa upstream.
+commit 6363d2065cd399cf9d6dc9d08c437f8658831100 upstream.
 
-As this is a cypress HID->COM RS232 style device that is handled
-by the cypress_M8 driver we also need to add it to the ignore list
-in hid-quirks.
+Neither the trackpad, nor the mouse want input core to generate autorepeat
+events for their buttons, so let's reset the bit (as hid-input sets it for
+these devices based on the usage vendor code).
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
+Cc: stable@vger.kernel.org
+Reported-by: Yariv <oigevald+kernel@gmail.com>
+Tested-by: Yariv <oigevald+kernel@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-ids.h    |    2 ++
- drivers/hid/hid-quirks.c |    1 +
- 2 files changed, 3 insertions(+)
+ drivers/hid/hid-magicmouse.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -996,6 +996,8 @@
- #define USB_DEVICE_ID_ROCCAT_RYOS_MK_PRO	0x3232
- #define USB_DEVICE_ID_ROCCAT_SAVU	0x2d5a
+--- a/drivers/hid/hid-magicmouse.c
++++ b/drivers/hid/hid-magicmouse.c
+@@ -535,6 +535,12 @@ static int magicmouse_setup_input(struct
+ 		__set_bit(MSC_RAW, input->mscbit);
+ 	}
  
-+#define USB_VENDOR_ID_SAI		0x17dd
++	/*
++	 * hid-input may mark device as using autorepeat, but neither
++	 * the trackpad, nor the mouse actually want it.
++	 */
++	__clear_bit(EV_REP, input->evbit);
 +
- #define USB_VENDOR_ID_SAITEK		0x06a3
- #define USB_DEVICE_ID_SAITEK_RUMBLEPAD	0xff17
- #define USB_DEVICE_ID_SAITEK_PS1000	0x0621
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -840,6 +840,7 @@ static const struct hid_device_id hid_ig
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_PETZL, USB_DEVICE_ID_PETZL_HEADLAMP) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_PHILIPS, USB_DEVICE_ID_PHILIPS_IEEE802154_DONGLE) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_POWERCOM, USB_DEVICE_ID_POWERCOM_UPS) },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SAI, USB_DEVICE_ID_CYPRESS_HIDCOM) },
- #if IS_ENABLED(CONFIG_MOUSE_SYNAPTICS_USB)
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_TP) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_INT_TP) },
+ 	return 0;
+ }
+ 
 
 
