@@ -2,53 +2,87 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9CAC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF752080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5444B21775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:05:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bU8EMgFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgGTJFB (ORCPT
+        id S1728179AbgGTJFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:05:01 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:45371 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726030AbgGTJFB (ORCPT
+        Mon, 20 Jul 2020 05:05:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728171AbgGTJFH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:05:01 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0U3FgSDJ_1595235887;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U3FgSDJ_1595235887)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 20 Jul 2020 17:04:48 +0800
-Subject: Re: [PATCH v16 14/22] mm/thp: add tail pages into lru anyway in
- split_huge_page()
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
-        =?UTF-8?Q?Mika_Penttil=c3=a4?= <mika.penttila@nextfour.com>
-References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
- <1594429136-20002-15-git-send-email-alex.shi@linux.alibaba.com>
- <d478a44b-c598-e99b-d438-9387f208ad37@linux.alibaba.com>
- <20200720084931.jusstogio6j74uhs@box>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <dd33c5ae-7924-393d-ecd2-3c7fc1bfd1cc@linux.alibaba.com>
-Date:   Mon, 20 Jul 2020 17:04:46 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Mon, 20 Jul 2020 05:05:07 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA0FC0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:05:06 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id q5so17016725wru.6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DkRWC0cI8O7GbXOYyHnGL5QyWF9IbOGv2nZauF5wCkI=;
+        b=bU8EMgFph/+KkpB7s9feIuGmNFweYyoKifyCutks+uAGpXf0FdKEY221dDMC3pPPwE
+         EPkm1IKadr74GCklQzZfCzYiRvTrA13cuP+tlXZk6Oe5X9gotE0Y+WlClqT1cPrDC4OM
+         7jmWVUA8x9OunWjWq9OJ8SarD2APdKH/QtcZV5e+VnQflCvT1hJdUE6lpE65l3tBdT7l
+         nb+mQR++sRVlL/ajK5nBUJuVjt8vGtSP6iA28jN4WtD4+dXXapcXVl52DnbCiEwxs6eS
+         MQC2pHVUz5nCy6TOdB4yzYWTviKb8UQbCcdAvXUmWBDeH96GVHAo2pNgsvwKblF3jOCT
+         u1WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DkRWC0cI8O7GbXOYyHnGL5QyWF9IbOGv2nZauF5wCkI=;
+        b=AVp4ky/05KTM0m/uosIsC7ZOeqFptcs0rS0oCO6z3z5iez97E0YJlcx3OVj3XjDyeL
+         jLVhAhr4kGu7gmSrtE9Vtbxws0OWO8BRnJdy4/7RJVaYm9xijRMA/RUGffAXoh8hwbzp
+         ZqDoSqbe6S5qPp2OGf/fSbqcwBqjyLS/dmX0KLZskJE5KNjegqYtFQXNMaAVgrFePRcz
+         eQfnPV3iBtmICy9mmi+cO8FiGPGuHKMX7z5G1xvf17AlkRPjvCo1iv7QwgzHoj9oGkz0
+         RBbfz9VUHQEa+zu19hQRQa0ZaOuxi6DtgVPvmOGVFHwJEs0GfYNZdzB71hqOz8zbuSrF
+         i+Ow==
+X-Gm-Message-State: AOAM533NBpxqEVb/ygXXs9YIsQthO27KcMnBPLoA0i4+enWQDGn+tKIV
+        L8JOzh1bnJIlXHUunZwfRaFNlW9iF9g=
+X-Google-Smtp-Source: ABdhPJxjaq34hzFmwVQqgEd8EEjoU54tk8kNmyK8IbWqdlkGCdZ95EJD2792qPaZuzt6PY2tbOPt+w==
+X-Received: by 2002:adf:a15c:: with SMTP id r28mr1900499wrr.151.1595235905139;
+        Mon, 20 Jul 2020 02:05:05 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id z1sm31934372wru.30.2020.07.20.02.05.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jul 2020 02:05:04 -0700 (PDT)
+Subject: Re: [PATCH v5 0/4] nvmem: qfprom: Patches for fuse blowing on
+ Qualcomm SoCs
+To:     Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Cc:     sparate@codeaurora.org, saiprakash.ranjan@codeaurora.org,
+        mturney@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>, dhavalp@codeaurora.org,
+        rnayak@codeaurora.org, mkurumel@codeaurora.org,
+        Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200710143520.1206846-1-dianders@chromium.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <3aff0624-b698-4711-aaa1-6d2fb661b085@linaro.org>
+Date:   Mon, 20 Jul 2020 10:05:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200720084931.jusstogio6j74uhs@box>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200710143520.1206846-1-dianders@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -56,16 +90,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-ÔÚ 2020/7/20 ÏÂÎç4:49, Kirill A. Shutemov Ð´µÀ:
->>
->> Split_huge_page() must start with PageLRU(head), and we are holding the
->> lru_lock here. If the head was cleared lru bit unexpected, tracking it.
->>
->> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+On 10/07/2020 15:35, Douglas Anderson wrote:
+> This series enables blowing of fuses on Qualcomm SoCs by extending the
+> existing qfprom driver with write support.
+> 
+> A few notes:
+> - Though I don't have any firsthand knowledge of it, it's my
+>    understanding that these changes could be used on any Qualcomm SoC.
+>    However, it's likely not very useful on most boards because the
+>    bootloader protects against this.  Thus the write support here is
+>    likely only useful with a cooperating bootloader.
+> - Blowing fuses is truly a one-way process.  If you mess around with
+>    this and do something wrong you could irreparably brick your chip.
+>    You have been warned.
+> 
+> Versions 1 and 2 of this series were posted by Ravi Kumar Bokka.  I
+> posted version 3 containing my changes / fixups with his consent.  I
+> have left authorship as Ravi but added my own Signed-off-by.
+> 
+> Version 4 is a minor spin over version 3.
+> 
+> Version 5 is an even more minor spin and just bumps up some timings to
+> fix a failure reported by Ravi on one device.  I've collected Rob
+> Herring's reviews and (as far as I know) this is ready to land.
+> 
+> Changes in v5:
+> - QFPROM_FUSE_BLOW_POLL_US 10 => 100
+> - QFPROM_FUSE_BLOW_TIMEOUT_US 100 => 1000
+> 
+> Changes in v4:
+> - Maintainer now listed as Srinivas.
+> - Example under "soc" to get #address-cells and #size-cells.
+> - Clock name is "core", not "sec".
+> - Example under "soc" to get #address-cells and #size-cells.
+> - Only get clock/regulator if all address ranges are provided.
+> - Don't use optional version of clk_get now.
+> - Clock name is "core", not "sec".
+> - Cleaned up error message if couldn't get clock.
+> - Fixed up minor version mask.
+> - Use GENMASK to generate masks.
+> - Clock name is "core", not "sec".
+> 
+> Changes in v3:
+> - Split conversion to yaml into separate patch new in v3.
+> - Use 'const' for compatible instead of a 1-entry enum.
+> - Changed filename to match compatible string.
+> - Add #address-cells and #size-cells to list of properties.
+> - Fixed up example.
+> - Add an extra reg range (at 0x6000 offset for SoCs checked)
+> - Define two options for reg: 1 item or 4 items.
+> - No reg-names.
+> - Add "clocks" and "clock-names" to list of properties.
+> - Clock is now "sec", not "secclk".
+> - Add "vcc-supply" to list of properties.
+> - Fixed up example.
+> - Don't provide "reset" value for things; just save/restore.
+> - Use the major/minor version read from 0x6000.
+> - Reading should still read "corrected", not "raw".
+> - Added a sysfs knob to allow you to read "raw" instead of "corrected"
+> - Simplified the SoC data structure.
+> - No need for quite so many levels of abstraction for clocks/regulator.
+> - Don't set regulator voltage.  Rely on device tree to make sure it's right.
+> - Properly undo things in the case of failure.
+> - Don't just keep enabling the regulator over and over again.
+> - Enable / disable the clock each time
+> - Polling every 100 us but timing out in 10 us didn't make sense; swap.
+> - No reason for 100 us to be SoC specific.
+> - No need for reg-names.
+> - We shouldn't be creating two separate nvmem devices.
+> - Name is now 'efuse' to match what schema checker wants.
+> - Reorganized ranges to match driver/bindings changes.
+> - Added 4th range as per driver/binding changes.
+> - No more reg-names as per driver/binding changes.
+> - Clock name is now just "sec" as per driver/binding changes.
+> 
+> Ravi Kumar Bokka (4):
+>    dt-bindings: nvmem: qfprom: Convert to yaml
+>    dt-bindings: nvmem: Add properties needed for blowing fuses
+>    nvmem: qfprom: Add fuse blowing support
 
-Hi Kirill,
+Applied above 3 with merge conflict fixed.
+dts patches should go via arm-soc tree, Bjorn could pick that up!
 
-Millions thanks for review!
 
-Alex
+Thanks,
+srini
+>    arm64: dts: qcom: sc7180: Add properties to qfprom for fuse blowing
+> 
+>   .../bindings/nvmem/qcom,qfprom.yaml           |  96 ++++++
+>   .../devicetree/bindings/nvmem/qfprom.txt      |  35 --
+>   arch/arm64/boot/dts/qcom/sc7180-idp.dts       |   4 +
+>   arch/arm64/boot/dts/qcom/sc7180.dtsi          |  10 +-
+>   drivers/nvmem/qfprom.c                        | 314 +++++++++++++++++-
+>   5 files changed, 411 insertions(+), 48 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+>   delete mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
+> 
