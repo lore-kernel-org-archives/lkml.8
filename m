@@ -2,216 +2,194 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24571C433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F21FC433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBCBA20773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:38:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263095;
-	bh=FlP7/nL/2iVCdWCI//CGGTMzKfnAhomEeYYoqq+mjOY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n+kxS6qqLCOp4Wer0knA+RlYeQd/51tCvpDab59qgKrVxlCALQjBCN1Wg9uLt1SNU
-	 Segj11fFj9F1HWbI37QN5Bv/9r9Qj3GYr4VdpIY59E9z5kW4rhZiPpyD0feYpredvy
-	 KDyFbxXoRCMN09/n+Sw0sduSzwzZGIcTEMPCvyGg=
+	by mail.kernel.org (Postfix) with ESMTP id 451B522BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbgGTPuy (ORCPT
+        id S2388993AbgGTQiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:50:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730556AbgGTPuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:50:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 355152065E;
-        Mon, 20 Jul 2020 15:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260249;
-        bh=FlP7/nL/2iVCdWCI//CGGTMzKfnAhomEeYYoqq+mjOY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IpuIzpkyea+JdaO1JgBECkTG5qXMqR4a0726et/+cn8JKEPjFlKd67rYfiOg5RPoH
-         glS7gavqxW83OmwE+VdJiz6EnLFHJkoQ9GlZGDQYUxeVMNcm9IKOemF/9zsQvAc267
-         CZawgh48DdAX8szoeyQRHp1rCFw0ZwVA9G3TkVyw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 006/133] llc: make sure applications use ARPHRD_ETHER
-Date:   Mon, 20 Jul 2020 17:35:53 +0200
-Message-Id: <20200720152804.046397848@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
-References: <20200720152803.732195882@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 12:38:16 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:15323 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388950AbgGTQiL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:38:11 -0400
+X-Originating-IP: 42.109.212.217
+Received: from localhost (unknown [42.109.212.217])
+        (Authenticated sender: me@yadavpratyush.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 7114824000E;
+        Mon, 20 Jul 2020 16:38:04 +0000 (UTC)
+Date:   Mon, 20 Jul 2020 22:08:02 +0530
+From:   Pratyush Yadav <me@yadavpratyush.com>
+To:     Tudor.Ambarus@microchip.com
+Cc:     p.yadav@ti.com, miquel.raynal@bootlin.com, richard@nod.at,
+        vigneshr@ti.com, broonie@kernel.org, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
+        matthias.bgg@gmail.com, michal.simek@xilinx.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, boris.brezillon@collabora.com,
+        nsekhar@ti.com
+Subject: Re: [PATCH v10 07/17] mtd: spi-nor: sfdp: parse xSPI Profile 1.0
+ table
+Message-ID: <20200720163802.veql43cmal7sunit@yadavpratyush.com>
+References: <20200623183030.26591-1-p.yadav@ti.com>
+ <20200623183030.26591-8-p.yadav@ti.com>
+ <1450d8c8-cda4-51e3-9f57-0b2f00825f11@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1450d8c8-cda4-51e3-9f57-0b2f00825f11@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+Hi Tudor,
 
-[ Upstream commit a9b1110162357689a34992d5c925852948e5b9fd ]
+On 08/07/20 04:01PM, Tudor.Ambarus@microchip.com wrote:
+> On 6/23/20 9:30 PM, Pratyush Yadav wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> > 
+> > This table is indication that the flash is xSPI compliant and hence
+> > supports octal DTR mode. Extract information like the fast read opcode,
+> > dummy cycles, the number of dummy cycles needed for a Read Status
+> > Register command, and the number of address bytes needed for a Read
+> > Status Register command.
+> > 
+> > We don't know what speed the controller is running at. Find the fast
+> > read dummy cycles for the fastest frequency the flash can run at to be
+> > sure we are never short of dummy cycles. If nothing is available,
+> > default to 20. Flashes that use a different value should update it in
+> > their fixup hooks.
+> > 
+> > Since we want to set read settings, expose spi_nor_set_read_settings()
+> > in core.h.
+> > 
+> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+> > ---
+> >  drivers/mtd/spi-nor/core.c |  2 +-
+> >  drivers/mtd/spi-nor/core.h | 10 ++++
+> >  drivers/mtd/spi-nor/sfdp.c | 98 ++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 109 insertions(+), 1 deletion(-)
+> > 
+[...]
+> > diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
+> > index 3f709de5ea67..d5a24e61813c 100644
+> > --- a/drivers/mtd/spi-nor/sfdp.c
+> > +++ b/drivers/mtd/spi-nor/sfdp.c
+[...]
+> > @@ -66,6 +70,16 @@ struct sfdp_bfpt_erase {
+> >         u32                     shift;
+> >  };
+> > 
+> > +/* xSPI Profile 1.0 table (from JESD216D.01). */
+> > +#define PROFILE1_DWORD1_RD_FAST_CMD            GENMASK(15, 8)
+> > +#define PROFILE1_DWORD1_RDSR_DUMMY             BIT(28)
+> > +#define PROFILE1_DWORD1_RDSR_ADDR_BYTES                BIT(29)
+> > +#define PROFILE1_DWORD4_DUMMY_200MHZ           GENMASK(11, 7)
+> > +#define PROFILE1_DWORD5_DUMMY_166MHZ           GENMASK(31, 27)
+> > +#define PROFILE1_DWORD5_DUMMY_133MHZ           GENMASK(21, 17)
+> > +#define PROFILE1_DWORD5_DUMMY_100MHZ           GENMASK(11, 7)
+> 
+> we should order these macros in a consistent way. I see that previous macros
+> are declared in order starting from MSB to LSB.
+> 
+> > +#define PROFILE1_DUMMY_DEFAULT                 20
+> 
+> we need to explain why the default dummy value is 20.
 
-syzbot was to trigger a bug by tricking AF_LLC with
-non sensible addr->sllc_arphrd
+No reason other than the fact that it is the default for the first flash 
+that uses Profile 1.0 parsing (S28HS512T). AFAIK a similar reasoning is 
+followed for the default being 8 for 1-1-4 or 1-1-8 modes.
 
-It seems clear LLC requires an Ethernet device.
-
-Back in commit abf9d537fea2 ("llc: add support for SO_BINDTODEVICE")
-Octavian Purdila added possibility for application to use a zero
-value for sllc_arphrd, convert it to ARPHRD_ETHER to not cause
-regressions on existing applications.
-
-BUG: KASAN: use-after-free in __read_once_size include/linux/compiler.h:199 [inline]
-BUG: KASAN: use-after-free in list_empty include/linux/list.h:268 [inline]
-BUG: KASAN: use-after-free in waitqueue_active include/linux/wait.h:126 [inline]
-BUG: KASAN: use-after-free in wq_has_sleeper include/linux/wait.h:160 [inline]
-BUG: KASAN: use-after-free in skwq_has_sleeper include/net/sock.h:2092 [inline]
-BUG: KASAN: use-after-free in sock_def_write_space+0x642/0x670 net/core/sock.c:2813
-Read of size 8 at addr ffff88801e0b4078 by task ksoftirqd/3/27
-
-CPU: 3 PID: 27 Comm: ksoftirqd/3 Not tainted 5.5.0-rc1-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
- __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:639
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- __read_once_size include/linux/compiler.h:199 [inline]
- list_empty include/linux/list.h:268 [inline]
- waitqueue_active include/linux/wait.h:126 [inline]
- wq_has_sleeper include/linux/wait.h:160 [inline]
- skwq_has_sleeper include/net/sock.h:2092 [inline]
- sock_def_write_space+0x642/0x670 net/core/sock.c:2813
- sock_wfree+0x1e1/0x260 net/core/sock.c:1958
- skb_release_head_state+0xeb/0x260 net/core/skbuff.c:652
- skb_release_all+0x16/0x60 net/core/skbuff.c:663
- __kfree_skb net/core/skbuff.c:679 [inline]
- consume_skb net/core/skbuff.c:838 [inline]
- consume_skb+0xfb/0x410 net/core/skbuff.c:832
- __dev_kfree_skb_any+0xa4/0xd0 net/core/dev.c:2967
- dev_kfree_skb_any include/linux/netdevice.h:3650 [inline]
- e1000_unmap_and_free_tx_resource.isra.0+0x21b/0x3a0 drivers/net/ethernet/intel/e1000/e1000_main.c:1963
- e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3854 [inline]
- e1000_clean+0x4cc/0x1d10 drivers/net/ethernet/intel/e1000/e1000_main.c:3796
- napi_poll net/core/dev.c:6532 [inline]
- net_rx_action+0x508/0x1120 net/core/dev.c:6600
- __do_softirq+0x262/0x98c kernel/softirq.c:292
- run_ksoftirqd kernel/softirq.c:603 [inline]
- run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
- smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
- kthread+0x361/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 8247:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:513 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
- kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:521
- slab_post_alloc_hook mm/slab.h:584 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x121/0x710 mm/slab.c:3484
- sock_alloc_inode+0x1c/0x1d0 net/socket.c:240
- alloc_inode+0x68/0x1e0 fs/inode.c:230
- new_inode_pseudo+0x19/0xf0 fs/inode.c:919
- sock_alloc+0x41/0x270 net/socket.c:560
- __sock_create+0xc2/0x730 net/socket.c:1384
- sock_create net/socket.c:1471 [inline]
- __sys_socket+0x103/0x220 net/socket.c:1513
- __do_sys_socket net/socket.c:1522 [inline]
- __se_sys_socket net/socket.c:1520 [inline]
- __ia32_sys_socket+0x73/0xb0 net/socket.c:1520
- do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
- do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
- entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-
-Freed by task 17:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:335 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
- __cache_free mm/slab.c:3426 [inline]
- kmem_cache_free+0x86/0x320 mm/slab.c:3694
- sock_free_inode+0x20/0x30 net/socket.c:261
- i_callback+0x44/0x80 fs/inode.c:219
- __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
- rcu_do_batch kernel/rcu/tree.c:2183 [inline]
- rcu_core+0x570/0x1540 kernel/rcu/tree.c:2408
- rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2417
- __do_softirq+0x262/0x98c kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff88801e0b4000
- which belongs to the cache sock_inode_cache of size 1152
-The buggy address is located 120 bytes inside of
- 1152-byte region [ffff88801e0b4000, ffff88801e0b4480)
-The buggy address belongs to the page:
-page:ffffea0000782d00 refcount:1 mapcount:0 mapping:ffff88807aa59c40 index:0xffff88801e0b4ffd
-raw: 00fffe0000000200 ffffea00008e6c88 ffffea0000782d48 ffff88807aa59c40
-raw: ffff88801e0b4ffd ffff88801e0b4000 0000000100000003 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88801e0b3f00: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
- ffff88801e0b3f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88801e0b4000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                                ^
- ffff88801e0b4080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88801e0b4100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-Fixes: abf9d537fea2 ("llc: add support for SO_BINDTODEVICE")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/llc/af_llc.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
---- a/net/llc/af_llc.c
-+++ b/net/llc/af_llc.c
-@@ -273,6 +273,10 @@ static int llc_ui_autobind(struct socket
+I can't think of any reasonable way of deciding on a default value since 
+it varies from flash to flash.
  
- 	if (!sock_flag(sk, SOCK_ZAPPED))
- 		goto out;
-+	if (!addr->sllc_arphrd)
-+		addr->sllc_arphrd = ARPHRD_ETHER;
-+	if (addr->sllc_arphrd != ARPHRD_ETHER)
-+		goto out;
- 	rc = -ENODEV;
- 	if (sk->sk_bound_dev_if) {
- 		llc->dev = dev_get_by_index(&init_net, sk->sk_bound_dev_if);
-@@ -330,15 +334,15 @@ static int llc_ui_bind(struct socket *so
- 	if (unlikely(!sock_flag(sk, SOCK_ZAPPED) || addrlen != sizeof(*addr)))
- 		goto out;
- 	rc = -EAFNOSUPPORT;
--	if (unlikely(addr->sllc_family != AF_LLC))
-+	if (!addr->sllc_arphrd)
-+		addr->sllc_arphrd = ARPHRD_ETHER;
-+	if (unlikely(addr->sllc_family != AF_LLC || addr->sllc_arphrd != ARPHRD_ETHER))
- 		goto out;
- 	rc = -ENODEV;
- 	rcu_read_lock();
- 	if (sk->sk_bound_dev_if) {
- 		llc->dev = dev_get_by_index_rcu(&init_net, sk->sk_bound_dev_if);
- 		if (llc->dev) {
--			if (!addr->sllc_arphrd)
--				addr->sllc_arphrd = llc->dev->type;
- 			if (is_zero_ether_addr(addr->sllc_mac))
- 				memcpy(addr->sllc_mac, llc->dev->dev_addr,
- 				       IFHWADDRLEN);
+> How about declaring all these macros immediately above of spi_nor_parse_profile1()?
+> 
+> > +
+> >  #define SMPT_CMD_ADDRESS_LEN_MASK              GENMASK(23, 22)
+> >  #define SMPT_CMD_ADDRESS_LEN_0                 (0x0UL << 22)
+> >  #define SMPT_CMD_ADDRESS_LEN_3                 (0x1UL << 22)
+> > @@ -1106,6 +1120,86 @@ static int spi_nor_parse_4bait(struct spi_nor *nor,
+> >         return ret;
+> >  }
+> > 
+> > +/**
+> > + * spi_nor_parse_profile1() - parse the xSPI Profile 1.0 table
+> > + * @nor:               pointer to a 'struct spi_nor'
+> > + * @param_header:      pointer to the 'struct sfdp_parameter_header' describing
+> > + *                     the 4-Byte Address Instruction Table length and version.
+> > + * @params:            pointer to the 'struct spi_nor_flash_parameter' to be.
+> > + *
+> > + * Return: 0 on success, -errno otherwise.
+> > + */
+> > +static int spi_nor_parse_profile1(struct spi_nor *nor,
+> > +                                 const struct sfdp_parameter_header *profile1_header,
+> > +                                 struct spi_nor_flash_parameter *params)
+> > +{
+> > +       u32 *table, opcode, addr;
+> 
+> s/table/dwords?
+> 
+> u8 opcode?
+> 
+> > +       size_t len;
+> > +       int ret, i;
+> > +       u8 dummy;
+> > +
+> > +       len = profile1_header->length * sizeof(*table);
+> > +       table = kmalloc(len, GFP_KERNEL);
+> > +       if (!table)
+> > +               return -ENOMEM;
+> > +
+> > +       addr = SFDP_PARAM_HEADER_PTP(profile1_header);
+> > +       ret = spi_nor_read_sfdp(nor, addr, len, table);
+> > +       if (ret)
+> > +               goto out;
+> > +
+> > +       /* Fix endianness of the table DWORDs. */
+> > +       for (i = 0; i < profile1_header->length; i++)
+> > +               table[i] = le32_to_cpu(table[i]);
+> 
+> le32_to_cpu_array(table, profile1_header->length);
+> 
+> > +
+> > +       /* Get 8D-8D-8D fast read opcode and dummy cycles. */
+> > +       opcode = FIELD_GET(PROFILE1_DWORD1_RD_FAST_CMD, table[0]);
+> > +
+> > +       /*
+> > +        * We don't know what speed the controller is running at. Find the
+> > +        * dummy cycles for the fastest frequency the flash can run at to be
+> > +        * sure we are never short of dummy cycles. A value of 0 means the
+> > +        * frequency is not supported.
+> > +        *
+> > +        * Default to PROFILE1_DUMMY_DEFAULT if we don't find anything, and let
+> > +        * flashes set the correct value if needed in their fixup hooks.
+> > +        */
+> > +       dummy = FIELD_GET(PROFILE1_DWORD4_DUMMY_200MHZ, table[3]);
+> > +       if (!dummy)
+> > +               dummy = FIELD_GET(PROFILE1_DWORD5_DUMMY_166MHZ, table[4]);
+> > +       if (!dummy)
+> > +               dummy = FIELD_GET(PROFILE1_DWORD5_DUMMY_133MHZ, table[4]);
+> > +       if (!dummy)
+> > +               dummy = FIELD_GET(PROFILE1_DWORD5_DUMMY_100MHZ, table[4]);
+> > +       if (!dummy)
+> > +               dummy = PROFILE1_DUMMY_DEFAULT;
+> > +
+> > +       /* Round up to an even value to avoid tripping controllers up. */
+> > +       dummy = ROUND_UP_TO(dummy, 2);
+> > +
+[...]
 
-
+-- 
+Regards,
+Pratyush Yadav
