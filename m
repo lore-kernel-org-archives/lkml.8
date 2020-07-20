@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BFBC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D05DC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA7F22BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48DA32064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260248;
-	bh=bYcsp+lTAjYQXjg17ZAbSyfn2+pSwrVpblngizYvBnQ=;
+	s=default; t=1595260250;
+	bh=412nGVgyVmkRZyzaJjo8NpyhjCgcd9mR7FnJzv4+7fg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WxRp77H/cQ5ncppAUE8ayPN0AjDunCw2qZVfvUSxCtFZ8Z1oUgEHhRttj1SzEEvmb
-	 93UDqne4zMnM/s/ybv4KeV0YbLvBjJCl2RG+NL6SmPHgQ1lZjGzts67GJHCeDhhKVl
-	 vHXMuMcyhMbuiM6Fj0tWk9j9DcSeVsticS4/Uu7E=
+	b=Co4sF4JmkPr3SIT+WHSPh0noQW9O/Nf7AQonOT7CFPbNYe3YSIPLN+a2XPtwayDTo
+	 JbMhcXIfX3X1yx2yTKpDSy6EiUcg/zutcu3xjXd11ZjOsl8+g4doN6uhQwQ/gTzzzg
+	 eP0XO1GYrj7PEefHmZLtQWneUJIyH+6fRzpFEDl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730547AbgGTPuq (ORCPT
+        id S1731163AbgGTPus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:50:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47272 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:50:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731148AbgGTPum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:50:42 -0400
+        id S1730556AbgGTPur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:50:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D651E206E9;
-        Mon, 20 Jul 2020 15:50:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BA232065E;
+        Mon, 20 Jul 2020 15:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260241;
-        bh=bYcsp+lTAjYQXjg17ZAbSyfn2+pSwrVpblngizYvBnQ=;
+        s=default; t=1595260246;
+        bh=412nGVgyVmkRZyzaJjo8NpyhjCgcd9mR7FnJzv4+7fg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vsvGioOlssbVPZ78droZfVkvWIqqm1p58xHXC+B8uzbCVkzusX/TenLU18S+QyBUI
-         XBVgIUeixFGsdQp7WFlISI9gaBHnhJFSVD0ayENr1ieDUXUJWdXBvGfBzvc4wFa4vM
-         AKjjjjrGwt88uQvEvhW5PmbaukuKihOi1b4hkcDM=
+        b=hBeqUtKO2LjTil2ZdnCEJzMX7MHcTGPEO8apVeTI94R8MAgZ7dMpvt2o7BuyaZoPY
+         nmiL4Y0fBd2VCnEjLvk/2r8z6wjdUZToXNolMm1pREws6DYtm9g18IlQtcJN8vSA8a
+         X0ZA0v4G6UgYdlQ5In40RiCZj2+6zbGeesnACKWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Alison Schofield <amsfield22@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Stable@vger.kernel.org
-Subject: [PATCH 4.19 030/133] iio:humidity:hdc100x Fix alignment and data leak issues
-Date:   Mon, 20 Jul 2020 17:36:17 +0200
-Message-Id: <20200720152805.191228617@linuxfoundation.org>
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        James Chapman <jchapman@katalix.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 005/133] l2tp: remove skb_dst_set() from l2tp_xmit_skb()
+Date:   Mon, 20 Jul 2020 17:35:52 +0200
+Message-Id: <20200720152803.998437522@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -62,69 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit ea5e7a7bb6205d24371373cd80325db1bc15eded upstream.
+[ Upstream commit 27d53323664c549b5bb2dfaaf6f7ad6e0376a64e ]
 
-One of a class of bugs pointed out by Lars in a recent review.
-iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
-to the size of the timestamp (8 bytes).  This is not guaranteed in
-this driver which uses an array of smaller elements on the stack.
-As Lars also noted this anti pattern can involve a leak of data to
-userspace and that indeed can happen here.  We close both issues by
-moving to a suitable structure in the iio_priv() data.
-This data is allocated with kzalloc so no data can leak apart
-from previous readings.
+In the tx path of l2tp, l2tp_xmit_skb() calls skb_dst_set() to set
+skb's dst. However, it will eventually call inet6_csk_xmit() or
+ip_queue_xmit() where skb's dst will be overwritten by:
 
-Fixes: 16bf793f86b2 ("iio: humidity: hdc100x: add triggered buffer support for HDC100X")
-Reported-by: Lars-Peter Clausen <lars@metafoo.de>
-Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Cc: Alison Schofield <amsfield22@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: <Stable@vger.kernel.org>
+   skb_dst_set_noref(skb, dst);
+
+without releasing the old dst in skb. Then it causes dst/dev refcnt leak:
+
+  unregister_netdevice: waiting for eth0 to become free. Usage count = 1
+
+This can be reproduced by simply running:
+
+  # modprobe l2tp_eth && modprobe l2tp_ip
+  # sh ./tools/testing/selftests/net/l2tp.sh
+
+So before going to inet6_csk_xmit() or ip_queue_xmit(), skb's dst
+should be dropped. This patch is to fix it by removing skb_dst_set()
+from l2tp_xmit_skb() and moving skb_dst_drop() into l2tp_xmit_core().
+
+Fixes: 3557baabf280 ("[L2TP]: PPP over L2TP driver core")
+Reported-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: James Chapman <jchapman@katalix.com>
+Tested-by: James Chapman <jchapman@katalix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/iio/humidity/hdc100x.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/l2tp/l2tp_core.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/drivers/iio/humidity/hdc100x.c
-+++ b/drivers/iio/humidity/hdc100x.c
-@@ -38,6 +38,11 @@ struct hdc100x_data {
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -1033,6 +1033,7 @@ static void l2tp_xmit_core(struct l2tp_s
  
- 	/* integration time of the sensor */
- 	int adc_int_us[2];
-+	/* Ensure natural alignment of timestamp */
-+	struct {
-+		__be16 channels[2];
-+		s64 ts __aligned(8);
-+	} scan;
- };
- 
- /* integration time in us */
-@@ -319,7 +324,6 @@ static irqreturn_t hdc100x_trigger_handl
- 	struct i2c_client *client = data->client;
- 	int delay = data->adc_int_us[0] + data->adc_int_us[1];
- 	int ret;
--	s16 buf[8];  /* 2x s16 + padding + 8 byte timestamp */
- 
- 	/* dual read starts at temp register */
- 	mutex_lock(&data->lock);
-@@ -330,13 +334,13 @@ static irqreturn_t hdc100x_trigger_handl
- 	}
- 	usleep_range(delay, delay + 1000);
- 
--	ret = i2c_master_recv(client, (u8 *)buf, 4);
-+	ret = i2c_master_recv(client, (u8 *)data->scan.channels, 4);
- 	if (ret < 0) {
- 		dev_err(&client->dev, "cannot read sensor data\n");
- 		goto err;
+ 	/* Queue the packet to IP for output */
+ 	skb->ignore_df = 1;
++	skb_dst_drop(skb);
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	if (l2tp_sk_is_v6(tunnel->sock))
+ 		error = inet6_csk_xmit(tunnel->sock, skb, NULL);
+@@ -1104,10 +1105,6 @@ int l2tp_xmit_skb(struct l2tp_session *s
+ 		goto out_unlock;
  	}
  
--	iio_push_to_buffers_with_timestamp(indio_dev, buf,
-+	iio_push_to_buffers_with_timestamp(indio_dev, &data->scan,
- 					   iio_get_time_ns(indio_dev));
- err:
- 	mutex_unlock(&data->lock);
+-	/* Get routing info from the tunnel socket */
+-	skb_dst_drop(skb);
+-	skb_dst_set(skb, sk_dst_check(sk, 0));
+-
+ 	inet = inet_sk(sk);
+ 	fl = &inet->cork.fl;
+ 	switch (tunnel->encap) {
 
 
