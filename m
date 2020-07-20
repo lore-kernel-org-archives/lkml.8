@@ -2,279 +2,545 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D8BC433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E2DC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2201E22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:52:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BWzHT04b";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Mslx0ZmY"
+	by mail.kernel.org (Postfix) with ESMTP id ACE3422CBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgGTMwU (ORCPT
+        id S1729220AbgGTMw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:52:20 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:14508 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729164AbgGTMwR (ORCPT
+        Mon, 20 Jul 2020 08:52:27 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12790 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729265AbgGTMwZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 08:52:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1595249560; x=1626785560;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=D47ZWtuYp+ltbQojuMH+iHGB5jbrwXJ47spBJNYF4A8=;
-  b=BWzHT04bYJXja6KZqtJ0S8geiHCvve9XC8AJRYVIxoBkPKjYNYyrWPcZ
-   t6ePsRA8sDJzAyKATSp8Sryp/TCty/3zfD+6W0+/L5thavq4U36GfiL5t
-   hcDzM314s9Za8T0EgkD+9cGbFTmVQWm9FZ3s53wpEegtrxZ1gqDRhfTn/
-   1r/ZBvOpin8WtX274Nmvo9XFYWu3OuKW1xPHu6P1s4Pb4xdbtpvCg9GXk
-   QhT8+0eZ2DmJB9eflAIs1mUuoMjuO0Scg0w+UG7tQRU4KEGcYnRt9/8dD
-   rRHvyC1WOBw5bf6A81LIYK9KWnw0hhAtGddCl5v8+Zx6UT79h2YMV4CLy
-   w==;
-IronPort-SDR: RkJkO0T171DVzCEbxJMLTt/Sq9E/vLMI3L4e9lgtL3FqZbJAl5kgJVRech5JK4c3QXdSPbsMhj
- fDirVRkpxt84BM92lVZAVk3pwR8wWGLveHnQJYMbgti8kL1i+rUjrxIDlxSIQkw7B4kIGRruAw
- 2k7VEa+jMOYoZ7Fwf8THP7u3EHc1cSLNOOmqC9gAjBpjU3omQhT3wP0aRrGs3hf8EBWRGs9AXg
- Ae/n01b2bCM15XZ7o4rIpsxVke0ze1yE6qHHnd68OrzvS6ko9+K1Rimm+yCiOwdQOSHb0qTp8q
- cxI=
-X-IronPort-AV: E=Sophos;i="5.75,375,1589212800"; 
-   d="scan'208";a="245953116"
-Received: from mail-mw2nam10lp2108.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.108])
-  by ob1.hgst.iphmx.com with ESMTP; 20 Jul 2020 20:52:38 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SzFZF/lfpe4a9REIXGgQEetIebXFkM92i567Y4KBL3yOY2hePY8C/hU7cD+wmaKg9YWk9eAA2jrknzbthLDDj8PNTJWbmq3DK9R/yaLBtY/Xc4iDX+2XaANRb5BCuvg1B11zTjez7fm5PcH2EMAt9GwETDYpZEjMUQF6bjhhhiFG1VGsLxPQtOaOk+Py7vkJX8QqUBaEcV+KBfhkjLfevl9dcTpJN9AmC6OcFqI380GNmMgoqkinh57CzhvxnH4nWiF36PkNpjpy+nYtFqIRVCODt1aOCbLdILff1jdfH4BZsI3WqP8Gc5EGVU9A/6nai2BFbk6rxgHmDqeifdebJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z6hcO4I+d+qxoKtx0AcJauw0wfpphPYyjnWIrZ8b+IU=;
- b=RoLBWuZ8RbAUzd8bIubl6j804+JRAAsI1zj7gTrtSdthOM6J9eRidRK0jdY6xbCkVpxpaZ5fgoFwYtxJUG/wJZSjA1LQrQtA8Zpf+yBR65XhxLVJIk8RPDBp5+FEaorcfMrEHaoo3fvjhB7uJVCquV8cyhVdFhfaurmGrVtm5NoDN2hNCkWSGJP/OHV9u+XDZmQ0g/ACRraYTcI3yEPIFkpFXKvEm7SlNvJQrml+/G3panRszIMcJBEWmr0bmGBkd30XpdHY59eH8RmL6eANhtUOKALHEpOEu5xVnWNeybc9R2OiHdh0e35817BBcnSUD49pbpDmaxoB8dK5MYUgTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z6hcO4I+d+qxoKtx0AcJauw0wfpphPYyjnWIrZ8b+IU=;
- b=Mslx0ZmYycTG0AQBLO6F6rUlAGyMO8WLbRkthDJ+HocK+AdU3heWKZ7cmPE7UbNMCA6udHf7RrTD/GOvveuyHcl+R0f7heobftr5VRPXDin9VOVO2EshjN1I1LivrN4jilVoumhQmR9ncj7vJtZs5QAt2+QUc9FLrpZML6K4wSA=
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
- by CY4PR04MB1256.namprd04.prod.outlook.com (2603:10b6:910:52::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.25; Mon, 20 Jul
- 2020 12:52:14 +0000
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::d9e5:135e:cfd9:4de0]) by CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::d9e5:135e:cfd9:4de0%7]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
- 12:52:14 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kernel-mentees@lists.linuxfoundation.org" 
-        <linux-kernel-mentees@lists.linuxfoundation.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v1 3/3] skd: use generic power management
-Thread-Topic: [PATCH v1 3/3] skd: use generic power management
-Thread-Index: AQHWXBHK3yyvSpv7dkelMB844h700w==
-Date:   Mon, 20 Jul 2020 12:52:14 +0000
-Message-ID: <CY4PR04MB37516C5544A7DCAD84921937E77B0@CY4PR04MB3751.namprd04.prod.outlook.com>
-References: <20200717080910.342741-1-vaibhavgupta40@gmail.com>
- <20200717080910.342741-4-vaibhavgupta40@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.182.57]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 57e251df-62e9-4c4d-0d15-08d82cabb9d5
-x-ms-traffictypediagnostic: CY4PR04MB1256:
-x-microsoft-antispam-prvs: <CY4PR04MB125644EB7B2087FB0C42CDC4E77B0@CY4PR04MB1256.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:785;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +dggwR7RAp1pcTWBtyMk3UE9GKBsdev7CRHA7uFpseFgVocA0WELXQB1S3TIBHKjoQckmicl2aidXkDNPuiJkqhTut19trHMCDVlerKOkbo90QDl6UtOhv9pDcV/W31/dDoO6JYhSUS7boEc4Q+DU4Yer6NszJVO7wxEnQdm59yPnv5avltGxy9aFAC5w5ZECX8KtafULNRAdQLxRFpOrW5IQZVIBeMr8xKMpk1JnKPfke0rv3Rsz79ibdv+Xc/qOjeZ/jzbXL7wPlE9GAfX8pdM6LONCRFY3z67uQri+tqSDFoVxtn+i61pPSAcEndROJ/jFdNMN8gPXwNTTMG2O8ORtKhLhTeqBhACPGx5/EVhu0cTrAYuX3KBWa9Q4sr3
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(376002)(346002)(396003)(8936002)(110136005)(71200400001)(54906003)(64756008)(8676002)(2906002)(52536014)(478600001)(66946007)(91956017)(66556008)(66476007)(76116006)(66446008)(5660300002)(7416002)(86362001)(316002)(7696005)(9686003)(26005)(186003)(33656002)(4326008)(53546011)(6506007)(55016002)(83380400001)(41533002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Eqja+DbiWCvHFUS2ySq+9svMHn+1LT1FTxg9vt3kvGtOQjeG3xHDPz7GNKVNJPwi0YfiLWI5rgP4YsMHj4bE8gm7I2lF1OJCCemLmtfCGd5+tNuSwidBiP+SER+PHuAaaVQNN/Taxg8TCyiZlP4uuLg1OyFOGE+IemT7gAfAQub4EHmiX+vG85S5fLYukIvFFNbI9DhqArutX2uhHYpfBpRauktXQTcVZGm5Yl0eZt6pxqXtY5fklyZcM+YNQ21Qe1HarUWZv7hjf1XkeTTnJR5TYGpfDQIEZ5VG395j7xTJt4m2OUBIDEgc0nbldV/J2gdoCoc45ao6GitBJnWBKYpNKIzavnL7PkOKKg/TGFZ5OtYQgLI7OEF5dNx9i+3Y/Bbe7KQJWDA/IYwZkwXexzMNzWqsGIwA3ZCFQ6vpPrm+DxHHg+LAWqOPU/wttnW8BAEYZ3pWb9Fm/h2bm9+F3UUBOERj34FJldhtG5Rkoauv44TM2bEpiZiOzo7yZazx
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Jul 2020 08:52:25 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KCWeY5068948;
+        Mon, 20 Jul 2020 08:52:13 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32cdy9u6h4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 08:52:12 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KCXKVO072022;
+        Mon, 20 Jul 2020 08:52:12 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32cdy9u6g8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 08:52:12 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KCp65i022059;
+        Mon, 20 Jul 2020 12:52:10 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 32brq7jnwe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 12:52:09 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KCq7Rc57540808
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 12:52:07 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED29811C04A;
+        Mon, 20 Jul 2020 12:52:06 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7589111C05C;
+        Mon, 20 Jul 2020 12:52:03 +0000 (GMT)
+Received: from hbathini.in.ibm.com (unknown [9.85.112.199])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jul 2020 12:52:03 +0000 (GMT)
+Subject: [PATCH v4 04/12] ppc64/kexec_file: avoid stomping memory used by
+ special regions
+From:   Hari Bathini <hbathini@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+Date:   Mon, 20 Jul 2020 18:22:02 +0530
+Message-ID: <159524948081.20855.1023953568610670370.stgit@hbathini.in.ibm.com>
+In-Reply-To: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com>
+References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR04MB3751.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57e251df-62e9-4c4d-0d15-08d82cabb9d5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 12:52:14.0662
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ugbjO/jMHvBQFVf05F8UOFw8dG8lJ0hO6+99qLTWF6gNHzJ0P7MpP0aicUO/9Go3kPhhe72a82fu8aitFW/Wrg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB1256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_07:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 impostorscore=0 phishscore=0
+ mlxlogscore=999 suspectscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/17 17:10, Vaibhav Gupta wrote:=0A=
-> Drivers using legacy PM have to manage PCI states and device's PM states=
-=0A=
-> themselves. They also need to take care of configuration registers.=0A=
-> =0A=
-> With improved and powerful support of generic PM, PCI Core takes care of=
-=0A=
-> above mentioned, device-independent, jobs.=0A=
-> =0A=
-> This driver makes use of PCI helper functions like=0A=
-> pci_save/restore_state(), pci_enable/disable_device(),=0A=
-> pci_request/release_regions(), pci_set_power_state() and=0A=
-> pci_set_master() to do required operations. In generic mode, they are no=
-=0A=
-> longer needed.=0A=
-> =0A=
-> Change function parameter in both .suspend() and .resume() to=0A=
-> "struct device*" type. Use to_pci_dev() to get "struct pci_dev*" variable=
-.=0A=
-> =0A=
-> Compile-tested only.=0A=
-=0A=
-I do not think this belongs into the commit message. This was mentioned in =
-the=0A=
-cover letter.=0A=
-=0A=
-> =0A=
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>=0A=
-> ---=0A=
->  drivers/block/skd_main.c | 36 ++++++++++--------------------------=0A=
->  1 file changed, 10 insertions(+), 26 deletions(-)=0A=
-> =0A=
-> diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c=0A=
-> index 51569c199a6c..d8d1042e7338 100644=0A=
-> --- a/drivers/block/skd_main.c=0A=
-> +++ b/drivers/block/skd_main.c=0A=
-> @@ -3315,12 +3315,12 @@ static void skd_pci_remove(struct pci_dev *pdev)=
-=0A=
->  	return;=0A=
->  }=0A=
->  =0A=
-> -static int skd_pci_suspend(struct pci_dev *pdev, pm_message_t state)=0A=
-> +static int __maybe_unused skd_pci_suspend(struct device *dev)=0A=
->  {=0A=
->  	int i;=0A=
-> -	struct skd_device *skdev;=0A=
-> +	struct pci_dev *pdev =3D to_pci_dev(dev);=0A=
-> +	struct skd_device *skdev =3D pci_get_drvdata(pdev);=0A=
-=0A=
-You can just add the pdev declaration here. The other 2 changes are not nee=
-ded.=0A=
-=0A=
->  =0A=
-> -	skdev =3D pci_get_drvdata(pdev);=0A=
-=0A=
-You can keep this as is.=0A=
-=0A=
->  	if (!skdev) {=0A=
->  		dev_err(&pdev->dev, "no device data for PCI\n");=0A=
->  		return -EIO;=0A=
-> @@ -3337,35 +3337,23 @@ static int skd_pci_suspend(struct pci_dev *pdev, =
-pm_message_t state)=0A=
->  	if (skdev->pcie_error_reporting_is_enabled)=0A=
->  		pci_disable_pcie_error_reporting(pdev);=0A=
->  =0A=
-> -	pci_release_regions(pdev);=0A=
-> -	pci_save_state(pdev);=0A=
-> -	pci_disable_device(pdev);=0A=
-> -	pci_set_power_state(pdev, pci_choose_state(pdev, state));=0A=
->  	return 0;=0A=
->  }=0A=
->  =0A=
-> -static int skd_pci_resume(struct pci_dev *pdev)=0A=
-> +static int __maybe_unused skd_pci_resume(struct device *dev)=0A=
->  {=0A=
->  	int i;=0A=
->  	int rc =3D 0;=0A=
-> -	struct skd_device *skdev;=0A=
->  =0A=
-> -	skdev =3D pci_get_drvdata(pdev);=0A=
-=0A=
-Same comment as above. Keep these as is and add only pdev declaration.=0A=
-=0A=
-> +	struct pci_dev *pdev =3D to_pci_dev(dev);=0A=
-> +	struct skd_device *skdev =3D pci_get_drvdata(pdev);=0A=
->  	if (!skdev) {=0A=
->  		dev_err(&pdev->dev, "no device data for PCI\n");=0A=
->  		return -1;=0A=
->  	}=0A=
->  =0A=
-> -	pci_set_power_state(pdev, PCI_D0);=0A=
-> -	pci_enable_wake(pdev, PCI_D0, 0);=0A=
-> -	pci_restore_state(pdev);=0A=
-> +	device_wakeup_disable(dev);=0A=
->  =0A=
-> -	rc =3D pci_enable_device(pdev);=0A=
-> -	if (rc)=0A=
-> -		return rc;=0A=
-> -	rc =3D pci_request_regions(pdev, DRV_NAME);=0A=
-> -	if (rc)=0A=
-> -		goto err_out;=0A=
->  	rc =3D dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));=0A=
->  	if (rc)=0A=
->  		rc =3D dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));=0A=
-> @@ -3374,7 +3362,6 @@ static int skd_pci_resume(struct pci_dev *pdev)=0A=
->  		goto err_out_regions;=0A=
->  	}=0A=
->  =0A=
-> -	pci_set_master(pdev);=0A=
->  	rc =3D pci_enable_pcie_error_reporting(pdev);=0A=
->  	if (rc) {=0A=
->  		dev_err(&pdev->dev,=0A=
-> @@ -3427,10 +3414,6 @@ static int skd_pci_resume(struct pci_dev *pdev)=0A=
->  		pci_disable_pcie_error_reporting(pdev);=0A=
->  =0A=
->  err_out_regions:=0A=
-> -	pci_release_regions(pdev);=0A=
-> -=0A=
-> -err_out:=0A=
-> -	pci_disable_device(pdev);=0A=
->  	return rc;=0A=
->  }=0A=
->  =0A=
-> @@ -3450,13 +3433,14 @@ static void skd_pci_shutdown(struct pci_dev *pdev=
-)=0A=
->  	skd_stop_device(skdev);=0A=
->  }=0A=
->  =0A=
-> +static SIMPLE_DEV_PM_OPS(skd_pci_pm_ops, skd_pci_suspend, skd_pci_resume=
-);=0A=
-> +=0A=
->  static struct pci_driver skd_driver =3D {=0A=
->  	.name		=3D DRV_NAME,=0A=
->  	.id_table	=3D skd_pci_tbl,=0A=
->  	.probe		=3D skd_pci_probe,=0A=
->  	.remove		=3D skd_pci_remove,=0A=
-> -	.suspend	=3D skd_pci_suspend,=0A=
-> -	.resume		=3D skd_pci_resume,=0A=
-> +	.driver.pm	=3D &skd_pci_pm_ops,=0A=
->  	.shutdown	=3D skd_pci_shutdown,=0A=
->  };=0A=
->  =0A=
-> =0A=
-=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+crashkernel region could have an overlap with special memory regions
+like  opal, rtas, tce-table & such. These regions are referred to as
+exclude memory ranges. Setup this ranges during image probe in order
+to avoid them while finding the buffer for different kdump segments.
+Override arch_kexec_locate_mem_hole() to locate a memory hole taking
+these ranges into account.
+
+Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+---
+
+v3 -> v4:
+* Dropped KDUMP_BUF_MIN & KDUMP_BUF_MAX macros and fixed off-by-one error
+  in arch_locate_mem_hole() helper routines.
+
+v2 -> v3:
+* If there are no exclude ranges, the right thing to do is fallbacking
+  back to default kexec_locate_mem_hole() implementation instead of
+  returning 0. Fixed that.
+
+v1 -> v2:
+* Did arch_kexec_locate_mem_hole() override to handle special regions.
+* Ensured holes in the memory are accounted for while locating mem hole.
+* Updated add_rtas_mem_range() & add_opal_mem_range() callsites based on
+  the new prototype for these functions.
+
+
+ arch/powerpc/include/asm/kexec.h  |    7 +
+ arch/powerpc/kexec/elf_64.c       |    8 +
+ arch/powerpc/kexec/file_load_64.c |  337 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 348 insertions(+), 4 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+index ac8fd48..835dc92 100644
+--- a/arch/powerpc/include/asm/kexec.h
++++ b/arch/powerpc/include/asm/kexec.h
+@@ -100,14 +100,16 @@ void relocate_new_kernel(unsigned long indirection_page, unsigned long reboot_co
+ #ifdef CONFIG_KEXEC_FILE
+ extern const struct kexec_file_ops kexec_elf64_ops;
+ 
+-#ifdef CONFIG_IMA_KEXEC
+ #define ARCH_HAS_KIMAGE_ARCH
+ 
+ struct kimage_arch {
++	struct crash_mem *exclude_ranges;
++
++#ifdef CONFIG_IMA_KEXEC
+ 	phys_addr_t ima_buffer_addr;
+ 	size_t ima_buffer_size;
+-};
+ #endif
++};
+ 
+ int setup_purgatory(struct kimage *image, const void *slave_code,
+ 		    const void *fdt, unsigned long kernel_load_addr,
+@@ -125,6 +127,7 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+ 			unsigned long initrd_load_addr,
+ 			unsigned long initrd_len, const char *cmdline);
+ #endif /* CONFIG_PPC64 */
++
+ #endif /* CONFIG_KEXEC_FILE */
+ 
+ #else /* !CONFIG_KEXEC_CORE */
+diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
+index 23ad04c..64c15a5 100644
+--- a/arch/powerpc/kexec/elf_64.c
++++ b/arch/powerpc/kexec/elf_64.c
+@@ -46,6 +46,14 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+ 	if (ret)
+ 		goto out;
+ 
++	if (image->type == KEXEC_TYPE_CRASH) {
++		/* min & max buffer values for kdump case */
++		kbuf.buf_min = pbuf.buf_min = crashk_res.start;
++		kbuf.buf_max = pbuf.buf_max =
++				((crashk_res.end < ppc64_rma_size) ?
++				 crashk_res.end : (ppc64_rma_size - 1));
++	}
++
+ 	ret = kexec_elf_load(image, &ehdr, &elf_info, &kbuf, &kernel_load_addr);
+ 	if (ret)
+ 		goto out;
+diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+index 41fe8b6..2df6f42 100644
+--- a/arch/powerpc/kexec/file_load_64.c
++++ b/arch/powerpc/kexec/file_load_64.c
+@@ -17,6 +17,8 @@
+ #include <linux/kexec.h>
+ #include <linux/of_fdt.h>
+ #include <linux/libfdt.h>
++#include <linux/memblock.h>
++#include <asm/kexec_ranges.h>
+ 
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ 	&kexec_elf64_ops,
+@@ -24,6 +26,254 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ };
+ 
+ /**
++ * get_exclude_memory_ranges - Get exclude memory ranges. This list includes
++ *                             regions like opal/rtas, tce-table, initrd,
++ *                             kernel, htab which should be avoided while
++ *                             setting up kexec load segments.
++ * @mem_ranges:                Range list to add the memory ranges to.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++static int get_exclude_memory_ranges(struct crash_mem **mem_ranges)
++{
++	int ret;
++
++	ret = add_tce_mem_ranges(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_initrd_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_htab_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_kernel_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_rtas_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_opal_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_reserved_ranges(mem_ranges);
++	if (ret)
++		goto out;
++
++	/* exclude memory ranges should be sorted for easy lookup */
++	sort_memory_ranges(*mem_ranges, true);
++out:
++	if (ret)
++		pr_err("Failed to setup exclude memory ranges\n");
++	return ret;
++}
++
++/**
++ * __locate_mem_hole_top_down - Looks top down for a large enough memory hole
++ *                              in the memory regions between buf_min & buf_max
++ *                              for the buffer. If found, sets kbuf->mem.
++ * @kbuf:                       Buffer contents and memory parameters.
++ * @buf_min:                    Minimum address for the buffer.
++ * @buf_max:                    Maximum address for the buffer.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++static int __locate_mem_hole_top_down(struct kexec_buf *kbuf,
++				      u64 buf_min, u64 buf_max)
++{
++	int ret = -EADDRNOTAVAIL;
++	phys_addr_t start, end;
++	u64 i;
++
++	for_each_mem_range_rev(i, &memblock.memory, NULL, NUMA_NO_NODE,
++			       MEMBLOCK_NONE, &start, &end, NULL) {
++		/*
++		 * memblock uses [start, end) convention while it is
++		 * [start, end] here. Fix the off-by-one to have the
++		 * same convention.
++		 */
++		end -= 1;
++
++		if (start > buf_max)
++			continue;
++
++		/* Memory hole not found */
++		if (end < buf_min)
++			break;
++
++		/* Adjust memory region based on the given range */
++		if (start < buf_min)
++			start = buf_min;
++		if (end > buf_max)
++			end = buf_max;
++
++		start = ALIGN(start, kbuf->buf_align);
++		if (start < end && (end - start + 1) >= kbuf->memsz) {
++			/* Suitable memory range found. Set kbuf->mem */
++			kbuf->mem = ALIGN_DOWN(end - kbuf->memsz + 1,
++					       kbuf->buf_align);
++			ret = 0;
++			break;
++		}
++	}
++
++	return ret;
++}
++
++/**
++ * locate_mem_hole_top_down_ppc64 - Skip special memory regions to find a
++ *                                  suitable buffer with top down approach.
++ * @kbuf:                           Buffer contents and memory parameters.
++ * @buf_min:                        Minimum address for the buffer.
++ * @buf_max:                        Maximum address for the buffer.
++ * @emem:                           Exclude memory ranges.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++static int locate_mem_hole_top_down_ppc64(struct kexec_buf *kbuf,
++					  u64 buf_min, u64 buf_max,
++					  const struct crash_mem *emem)
++{
++	int i, ret = 0, err = -EADDRNOTAVAIL;
++	u64 start, end, tmin, tmax;
++
++	tmax = buf_max;
++	for (i = (emem->nr_ranges - 1); i >= 0; i--) {
++		start = emem->ranges[i].start;
++		end = emem->ranges[i].end;
++
++		if (start > tmax)
++			continue;
++
++		if (end < tmax) {
++			tmin = (end < buf_min ? buf_min : end + 1);
++			ret = __locate_mem_hole_top_down(kbuf, tmin, tmax);
++			if (!ret)
++				return 0;
++		}
++
++		tmax = start - 1;
++
++		if (tmax < buf_min) {
++			ret = err;
++			break;
++		}
++		ret = 0;
++	}
++
++	if (!ret) {
++		tmin = buf_min;
++		ret = __locate_mem_hole_top_down(kbuf, tmin, tmax);
++	}
++	return ret;
++}
++
++/**
++ * __locate_mem_hole_bottom_up - Looks bottom up for a large enough memory hole
++ *                               in the memory regions between buf_min & buf_max
++ *                               for the buffer. If found, sets kbuf->mem.
++ * @kbuf:                        Buffer contents and memory parameters.
++ * @buf_min:                     Minimum address for the buffer.
++ * @buf_max:                     Maximum address for the buffer.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++static int __locate_mem_hole_bottom_up(struct kexec_buf *kbuf,
++				       u64 buf_min, u64 buf_max)
++{
++	int ret = -EADDRNOTAVAIL;
++	phys_addr_t start, end;
++	u64 i;
++
++	for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
++			   MEMBLOCK_NONE, &start, &end, NULL) {
++		/*
++		 * memblock uses [start, end) convention while it is
++		 * [start, end] here. Fix the off-by-one to have the
++		 * same convention.
++		 */
++		end -= 1;
++
++		if (end < buf_min)
++			continue;
++
++		/* Memory hole not found */
++		if (start > buf_max)
++			break;
++
++		/* Adjust memory region based on the given range */
++		if (start < buf_min)
++			start = buf_min;
++		if (end > buf_max)
++			end = buf_max;
++
++		start = ALIGN(start, kbuf->buf_align);
++		if (start < end && (end - start + 1) >= kbuf->memsz) {
++			/* Suitable memory range found. Set kbuf->mem */
++			kbuf->mem = start;
++			ret = 0;
++			break;
++		}
++	}
++
++	return ret;
++}
++
++/**
++ * locate_mem_hole_bottom_up_ppc64 - Skip special memory regions to find a
++ *                                   suitable buffer with bottom up approach.
++ * @kbuf:                            Buffer contents and memory parameters.
++ * @buf_min:                         Minimum address for the buffer.
++ * @buf_max:                         Maximum address for the buffer.
++ * @emem:                            Exclude memory ranges.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++static int locate_mem_hole_bottom_up_ppc64(struct kexec_buf *kbuf,
++					   u64 buf_min, u64 buf_max,
++					   const struct crash_mem *emem)
++{
++	int i, ret = 0, err = -EADDRNOTAVAIL;
++	u64 start, end, tmin, tmax;
++
++	tmin = buf_min;
++	for (i = 0; i < emem->nr_ranges; i++) {
++		start = emem->ranges[i].start;
++		end = emem->ranges[i].end;
++
++		if (end < tmin)
++			continue;
++
++		if (start > tmin) {
++			tmax = (start > buf_max ? buf_max : start - 1);
++			ret = __locate_mem_hole_bottom_up(kbuf, tmin, tmax);
++			if (!ret)
++				return 0;
++		}
++
++		tmin = end + 1;
++
++		if (tmin > buf_max) {
++			ret = err;
++			break;
++		}
++		ret = 0;
++	}
++
++	if (!ret) {
++		tmax = buf_max;
++		ret = __locate_mem_hole_bottom_up(kbuf, tmin, tmax);
++	}
++	return ret;
++}
++
++/**
+  * setup_purgatory_ppc64 - initialize PPC64 specific purgatory's global
+  *                         variables and call setup_purgatory() to initialize
+  *                         common global variable.
+@@ -68,6 +318,67 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+ }
+ 
+ /**
++ * arch_kexec_locate_mem_hole - Skip special memory regions like rtas, opal,
++ *                              tce-table, reserved-ranges & such (exclude
++ *                              memory ranges) as they can't be used for kexec
++ *                              segment buffer. Sets kbuf->mem when a suitable
++ *                              memory hole is found.
++ * @kbuf:                       Buffer contents and memory parameters.
++ *
++ * Assumes minimum of PAGE_SIZE alignment for kbuf->memsz & kbuf->buf_align.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
++{
++	struct crash_mem **emem;
++	u64 buf_min, buf_max;
++	int ret;
++
++	/*
++	 * Use the generic kexec_locate_mem_hole for regular
++	 * kexec_file_load syscall
++	 */
++	if (kbuf->image->type != KEXEC_TYPE_CRASH)
++		return kexec_locate_mem_hole(kbuf);
++
++	/* Look up the exclude ranges list while locating the memory hole */
++	emem = &(kbuf->image->arch.exclude_ranges);
++	if (!(*emem) || ((*emem)->nr_ranges == 0)) {
++		pr_warn("No exclude range list. Using the default locate mem hole method\n");
++		return kexec_locate_mem_hole(kbuf);
++	}
++
++	/* Segments for kdump kernel should be within crashkernel region */
++	buf_min = (kbuf->buf_min < crashk_res.start ?
++		   crashk_res.start : kbuf->buf_min);
++	buf_max = (kbuf->buf_max > crashk_res.end ?
++		   crashk_res.end : kbuf->buf_max);
++
++	if (buf_min > buf_max) {
++		pr_err("Invalid buffer min and/or max values\n");
++		return -EINVAL;
++	}
++
++	if (kbuf->top_down)
++		ret = locate_mem_hole_top_down_ppc64(kbuf, buf_min, buf_max,
++						     *emem);
++	else
++		ret = locate_mem_hole_bottom_up_ppc64(kbuf, buf_min, buf_max,
++						      *emem);
++
++	/* Add the buffer allocated to the exclude list for the next lookup */
++	if (!ret) {
++		add_mem_range(emem, kbuf->mem, kbuf->memsz);
++		sort_memory_ranges(*emem, true);
++	} else {
++		pr_err("Failed to locate memory buffer of size %lu\n",
++		       kbuf->memsz);
++	}
++	return ret;
++}
++
++/**
+  * arch_kexec_kernel_image_probe - Does additional handling needed to setup
+  *                                 kexec segments.
+  * @image:                         kexec image being loaded.
+@@ -79,9 +390,31 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+ int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+ 				  unsigned long buf_len)
+ {
+-	/* We don't support crash kernels yet. */
+-	if (image->type == KEXEC_TYPE_CRASH)
++	if (image->type == KEXEC_TYPE_CRASH) {
++		int ret;
++
++		/* Get exclude memory ranges needed for setting up kdump segments */
++		ret = get_exclude_memory_ranges(&(image->arch.exclude_ranges));
++		if (ret)
++			pr_err("Failed to setup exclude memory ranges for buffer lookup\n");
++		/* Return this until all changes for panic kernel are in */
+ 		return -EOPNOTSUPP;
++	}
+ 
+ 	return kexec_image_probe_default(image, buf, buf_len);
+ }
++
++/**
++ * arch_kimage_file_post_load_cleanup - Frees up all the allocations done
++ *                                      while loading the image.
++ * @image:                              kexec image being loaded.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int arch_kimage_file_post_load_cleanup(struct kimage *image)
++{
++	kfree(image->arch.exclude_ranges);
++	image->arch.exclude_ranges = NULL;
++
++	return kexec_image_post_load_cleanup_default(image);
++}
+
