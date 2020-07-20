@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5BFC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12E9C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE78D207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7027620684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261564;
-	bh=HXHRPEM+2O9GHjTozQU7VR71qzBWUhWaAWutmC+upGs=;
+	s=default; t=1595261568;
+	bh=rD/oQANo/tfWzhfMZw/pI/1zpyuP+YT4vSsGV6z3ILg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ecwXrYpoBBV0xhi0FXbIBynEKAZyIgG4hHRiyVXjpbEwS6c6KNIf+zo4ZV+OWIrLi
-	 T+GBiLkjXvY5Rs1ADjWbyddFxCnlRIiFZo3hDD3z0W227ZaM7fVpJe/9ZgmTamYBGY
-	 ucGrg/MWs72Bq7aOmZZiNYU7bVYjLj1fhhjoaaNQ=
+	b=jFidslv1Bv9N8qkBtJpZP87DRX2WTfI2Z1hb0xZMb+GQEtOmP39XvjAbVLZjzwdAW
+	 Bm3lcXgTeWnxvyVnnsNbIHhne9M4wVO822xEm5x+DkMHEuuuRTRLd4HE+MpiwqkdNt
+	 f9+bAYUT9MO3AhKBZ4ASTkd/4dK50EEsEtyS+Ygg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388014AbgGTQMn (ORCPT
+        id S2388022AbgGTQMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:12:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52286 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388001AbgGTQMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:12:39 -0400
+        id S2388001AbgGTQMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:12:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49DD820684;
-        Mon, 20 Jul 2020 16:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82EA820684;
+        Mon, 20 Jul 2020 16:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261558;
-        bh=HXHRPEM+2O9GHjTozQU7VR71qzBWUhWaAWutmC+upGs=;
+        s=default; t=1595261564;
+        bh=rD/oQANo/tfWzhfMZw/pI/1zpyuP+YT4vSsGV6z3ILg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WPodvokDNXmZFfFS+5Gg2boIHOAQeARwLHgVF9IQQoOkE2RHcvU6EBpDLgGBG4R5x
-         Z+Eo9POPnwY7dfiE1CleClXFJAKCHCKjjzzhS9HP6d+voLBmki29CpfrKB86h/owYp
-         OeW87rQNHMO5065sQokGJpexEIBXXnWT3spCl0no=
+        b=OlvStWJivE+MWgj0I8yCTivADurj9/9XVBpJAOQRuh6u0QvPnWbAJ809I9SBUIv2F
+         RL3QMnH3eE7Rsyr7TE0SQSOAofU2VyVOW4OBBMbdT1tDvu+VLFNf+vwJv6GsOpwKGN
+         lEIrTqqrCKoWqMwoFd4HmuwqjW2VstYeSxvzPNik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 5.7 159/244] thunderbolt: Fix path indices used in USB3 tunnel discovery
-Date:   Mon, 20 Jul 2020 17:37:10 +0200
-Message-Id: <20200720152833.408539876@linuxfoundation.org>
+        stable@vger.kernel.org, Frank Mori Hess <fmh6jj@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Doug Anderson <dianders@chromium.org>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.7 161/244] usb: dwc2: Fix shutdown callback in platform
+Date:   Mon, 20 Jul 2020 17:37:12 +0200
+Message-Id: <20200720152833.503805470@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,53 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
 
-commit 8b94a4b92327d061327117e127d7d44a4a43e639 upstream.
+commit 4fdf228cdf6925af45a2066d403821e0977bfddb upstream.
 
-The USB3 discovery used wrong indices when tunnel is discovered. It
-should use TB_USB3_PATH_DOWN for path that flows downstream and
-TB_USB3_PATH_UP when it flows upstream. This should not affect the
-functionality but better to fix it.
+To avoid lot of interrupts from dwc2 core, which can be asserted in
+specific conditions need to disable interrupts on HW level instead of
+disable IRQs on Kernel level, because of IRQ can be shared between
+drivers.
 
-Fixes: e6f818585713 ("thunderbolt: Add support for USB 3.x tunnels")
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: stable@vger.kernel.org # v5.6+
+Cc: stable@vger.kernel.org
+Fixes: a40a00318c7fc ("usb: dwc2: add shutdown callback to platform variant")
+Tested-by: Frank Mori Hess <fmh6jj@gmail.com>
+Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
+Reviewed-by: Doug Anderson <dianders@chromium.org>
+Reviewed-by: Frank Mori Hess <fmh6jj@gmail.com>
+Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/thunderbolt/tunnel.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/usb/dwc2/platform.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/thunderbolt/tunnel.c
-+++ b/drivers/thunderbolt/tunnel.c
-@@ -913,21 +913,21 @@ struct tb_tunnel *tb_tunnel_discover_usb
- 	 * case.
- 	 */
- 	path = tb_path_discover(down, TB_USB3_HOPID, NULL, -1,
--				&tunnel->dst_port, "USB3 Up");
-+				&tunnel->dst_port, "USB3 Down");
- 	if (!path) {
- 		/* Just disable the downstream port */
- 		tb_usb3_port_enable(down, false);
- 		goto err_free;
- 	}
--	tunnel->paths[TB_USB3_PATH_UP] = path;
--	tb_usb3_init_path(tunnel->paths[TB_USB3_PATH_UP]);
-+	tunnel->paths[TB_USB3_PATH_DOWN] = path;
-+	tb_usb3_init_path(tunnel->paths[TB_USB3_PATH_DOWN]);
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -342,7 +342,8 @@ static void dwc2_driver_shutdown(struct
+ {
+ 	struct dwc2_hsotg *hsotg = platform_get_drvdata(dev);
  
- 	path = tb_path_discover(tunnel->dst_port, -1, down, TB_USB3_HOPID, NULL,
--				"USB3 Down");
-+				"USB3 Up");
- 	if (!path)
- 		goto err_deactivate;
--	tunnel->paths[TB_USB3_PATH_DOWN] = path;
--	tb_usb3_init_path(tunnel->paths[TB_USB3_PATH_DOWN]);
-+	tunnel->paths[TB_USB3_PATH_UP] = path;
-+	tb_usb3_init_path(tunnel->paths[TB_USB3_PATH_UP]);
+-	disable_irq(hsotg->irq);
++	dwc2_disable_global_interrupts(hsotg);
++	synchronize_irq(hsotg->irq);
+ }
  
- 	/* Validate that the tunnel is complete */
- 	if (!tb_port_is_usb3_up(tunnel->dst_port)) {
+ /**
 
 
