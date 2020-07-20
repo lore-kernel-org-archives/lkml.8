@@ -2,98 +2,150 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1904DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E17CE22C9C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 451AE22C9C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:19:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D0FdBC7S"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="nCsQwJeX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgGTOQn (ORCPT
+        id S1728427AbgGTOTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:16:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgGTOQm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:16:42 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14972C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 07:16:42 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id z24so20395487ljn.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 07:16:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CfVCU5mHCDeITY1rM//7ZpN//MVZr1rSQIhyKmVtOzg=;
-        b=D0FdBC7SOJT1hoV2IiUH6Eaq72kKwsLCWcjJhyuRbRsxO7Rst9US5bLsUu/uswLx+r
-         BA1JKJ1DqJJKTxfUSkxYMzWt9tGuNubOZLSnCwjmfEF4p5x5NMDCBGPR99F6nqtqMqTX
-         0pHVdSY91l8NVK16xRWRY4o0e6C5N8l10mAfQENoAyqsEIy3VgCGQWKE9iqfk5g7xOEb
-         GqXf2mNYaeQDmxtXnxtxkRzJ0POTkULXYoC7/WMpjOfeWOy1J11ZCm9SgY/Jn6hnZtRu
-         hkb3o2K9e4NAg1UMqo4+dj3I8NIpxw5ZPF5/u/yM7oW/U42AJe1vE4pE+hE4Pm5Hk7GO
-         82WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CfVCU5mHCDeITY1rM//7ZpN//MVZr1rSQIhyKmVtOzg=;
-        b=jbOdGDNQcA7v122DQk0DaNsZOnPiApUrc42QxiY1ujqP5K4aJ66osVsNJsSNgmMAQU
-         ia/RUkJdpIluXxFBsN8qZeR6Ob6yB3cwrNopkt8xvSLVrvLtE9MsggudP9EMLJr4NN5q
-         6p9eOOEx7yxb2We3QGnEnRvP4+FxN3Ab1kuuDjaM4d30vSqF7tFc/aHAr3SsnXZBiEjN
-         ry99eD1eijxu/k3k3bUUzeX1F52WSR060Hgi4I7QRZgd40kITC8GVIuSX0Gwu/Er/wW2
-         HheliSYOlU9FDeu7EHfzOSa+1QHL94PJeNjxq9A6HlsZDFLYaRIYkfQjjn3xvc2QP87s
-         pXcg==
-X-Gm-Message-State: AOAM533pPETFl3KnKPhXwZj07A+itJv+InT3z+Gb25oEYvn6ds2QO8ae
-        irI/AO0YXk0nidrHgqzAtz9OXS3o4U/7uS508gbR/JB/hYc=
-X-Google-Smtp-Source: ABdhPJxCdtE5WzgJ33QEckSvFwyWtiAS2vzwpoohX8wqofbxOOkD2khe7ZOVTsb84s/0pYwurWaEsvPkRPvE3gGmlv4=
-X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr11280888ljc.286.1595254600586;
- Mon, 20 Jul 2020 07:16:40 -0700 (PDT)
+        Mon, 20 Jul 2020 10:19:25 -0400
+Received: from mout.web.de ([212.227.15.3]:40427 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726759AbgGTOTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 10:19:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1595254748;
+        bh=OExZunafEjPoP/mn9AZfuMf11tWR5wYwJKvm6Ui+qd8=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=nCsQwJeXM3JTRNYoaAgymHldDMNxKi9xNxlf0c68SWP6/7G7Pnu6ENy0vqEydLohv
+         U43dpQR2UEm2etr3HyMzpsrEcGNV1wb4nipviOOC5jkU/SAJbysk6+cWj5b4OSkJZi
+         JGOAHXYTv6ZjdDgPDDCGIPl61Q5lSDUwX8vwnjxk=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.85.87]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MIvJx-1jzSRG3BjF-002V31; Mon, 20
+ Jul 2020 16:19:07 +0200
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] clk: ti: clkctrl: add the missed kfree() for
+ _ti_omap4_clkctrl_setup()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Jing Xiangfeng <jingxiangfeng@huawei.com>,
+        linux-clk@vger.kernel.org, linux-omap@vger.kernel.org
+Message-ID: <b7f0dcda-7ec8-b3d8-ba53-c2720799abbc@web.de>
+Date:   Mon, 20 Jul 2020 16:19:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200718120807.19714-1-grandmaster@al2klimov.de>
-In-Reply-To: <20200718120807.19714-1-grandmaster@al2klimov.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 20 Jul 2020 16:16:29 +0200
-Message-ID: <CACRpkdYXS09FNE3k9e2rc36zcPrpJTBiptVTe35R+_efNZ0VNw@mail.gmail.com>
-Subject: Re: [PATCH] pinctl: ti: iodelay: Replace HTTP links with HTTPS ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Colin King <colin.king@canonical.com>,
-        ext Tony Lindgren <tony@atomide.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:TAFFwBtUf8EMNr/i/7TMnPeNyQcFIJxVsJk/5fTyr7p1J1qk018
+ fz/JckmV8XsByZXh2Zj75KND5waumCuZnw6jtU5rFTvLQN305qpUALa0mZFiCI4eOb/EoNl
+ DD+ouzsHWjJafnwI8H6dMcimm99iCpUu7J9SuisZlNLwVChk1vrA8PJbwbu253X5n4w4A+g
+ 0r3EuC1S7GhGTFcVTOTEQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xDb4Kd9oyQU=:O6vWZA1wfG47BY4IITt4xR
+ ouJ93vgB9vJl/s6q5eRIy+s3rO2Y/LW1edBHxAw/BgO+cA0dnCL93L6P2USpZeKYmVClhn/+E
+ s/sCnAjR97qxU6tLNc3Ai/sARit1uRBnESuWETBHaXJ4DlpsSmFMXXcBurA1GAwvx7odSDp8Y
+ yfmNb/FFuzZjgwQMVAv3/QHaq+t9Ze3kCRUdtpP/vHYYrww8ylxR5hDE7JKHwEqqRfiXQ1d1J
+ u6DheFOZOcrYVZF0Ko0qtushemPGdlA5SAEMCgPVYIe3O2id74ou3hZMbFbpeCZGD5QLajHgk
+ l0itQfnflsQ6PfItn0cIHfEceSYDGsOzJWhbaNyWN+QjSiQlBKvnSzXWrOxDWroYfYplOBbeI
+ D/AcmSFs3w8G6LAC45rJsu9Or122MWXMl26nfgK7JuPfTiDcLy6uzsfyUeymTUG7vS6E6H9mj
+ kceOcGamm+XLEd58xEMw9yyphAYq9sh0TqCaxCQqHqrJvEtvQ0dYwADzKujkB88LrOmZ3eIr1
+ 15ji6JzkZughAWxsw9dCKJZYPK9yW1+PyU1cfZaAaQU6/3Ov5YJ08bb85kwOb9/HDDx54Ksy4
+ VZpjmDVvhpefb/xOFvuJtSDR2jBcmdIbAA6zrd2YMo0DdeJQ3tzCmVSzexg5J86HrRaGhqpyt
+ H7FafP7tL+pkp0+FksldQpbx9SCtAXHkZxa0KwJAMly1Z1qT9U9g7dTQWyhDfHgxxFDmZFONp
+ B+WTjQEZivGPqq2DeGRztx1XyZZB/dw6p+iMA3715sWYHJrwqRWnE9D6VhecwgxCW1kCV+8ID
+ AViv2PGZ50DvOAU30RKKPZprcKJhBVmPPyGFxmWfQc+++HHRQG3rwTtZDMCdfVLp3Lw+OaD43
+ +oGuVK++r1dabqp2jLXhn6pHuakrz0kYX7V4qnYfteGDCNWF7DambndKLXi6mXk17HKD1dWbB
+ q250ICIuHJDOd+B399zAqav0L0SyTxqDTVCUEd93lDOdPj0bH3Hhcd/z00hSSdaWPJ4fFeojn
+ q5CrczNWwXok2bAiRfmO3EPOeAIgwktjFG/pL9x1cjo2wwEC/FNsAJVj27jO+kfN80lMapdhZ
+ Amu0dS4VJd2Xeb7jLsCJI1iu46PjwmwfdcoNivQCerS9TqzKb/iRkwsrqPZllqToRVpA+SnIO
+ utHjIzwYQQ85xwSHgoIPNaL/Cg680wA6JlBgAOPcWqSO+D4H/lAviYIAmrsqXUo642RdjUNt5
+ tMdAb2R7il3tnIi8A1WeYGjsBqVI3qV3dGwjQww==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 2:08 PM Alexander A. Klimov
-<grandmaster@al2klimov.de> wrote:
-
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+=E2=80=A6
+> +++ b/drivers/clk/ti/clkctrl.c
+> @@ -655,8 +655,10 @@ static void __init _ti_omap4_clkctrl_setup(struct d=
+evice_node *node)
+>  		}
 >
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
->
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+>  		hw =3D kzalloc(sizeof(*hw), GFP_KERNEL);
+> -		if (!hw)
+> +		if (!hw) {
+> +			kfree(clkctrl_name);
+>  			return;
+> +		}
+=E2=80=A6
 
-Patch applied as uncontroversial.
+I suggest to use an additional label instead.
 
-Yours,
-Linus Walleij
+ 		if (!hw)
+-			return;
++			goto free_control_name;
+
+
+By the way:
+How do you think about to replace the label =E2=80=9Ccleanup=E2=80=9D by o=
+ther jump targets
+for better exception handling in this function implementation?
+
+Regards,
+Markus
