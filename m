@@ -2,240 +2,86 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFBBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF092C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94E3B22CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:57:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QePSCcK4"
+	by mail.kernel.org (Postfix) with ESMTP id 8B66B20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgGTH5C (ORCPT
+        id S1727799AbgGTH5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:57:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgGTH5B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 03:57:01 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA51EC0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 00:57:00 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f18so16856231wrs.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 00:57:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XKQtYvYGtM0N/Ct4CJlyU+ij1I7Ll/jDSuKe/r+tpV8=;
-        b=QePSCcK44UIZmJ+7DxfyU1stV2IDfXAudhLIu4v/IMxSh8Vo2pcJb27KTvxXFjLFM+
-         LP8YkYzbjZCsk/yVjQmLbGiUNJlrC+f5jBGzNKpOcuuVqIO/0ByNOIBahGxYYJACP2S3
-         YnVWBTQCVl4dIsL5SGS9oj+oida3cWbwMSWqgU9xEeWzzNRKWLxhQo8k1vngaN8p8Ai+
-         1qy3Rsc9bLjsIo4w14Ok0AXZZOc1A/mf+OFmTDYpjhvPP24VV0cMrhFHYssj1HWuQDY+
-         x2Q+4NL4p4WOe4sLAIhsnWrJwh397PCWL/9S69t6WBIJIQb6N9ZBW7XYcBznB/t8mVHQ
-         Cwwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XKQtYvYGtM0N/Ct4CJlyU+ij1I7Ll/jDSuKe/r+tpV8=;
-        b=Ab3H9PBFUZAS2UO7z9TpdJoSRX30uFiNWGD/1UI9VhjzT14K9Ffn20K825MjxvoP6J
-         j4PL/tyyq1Ia9mErBJk20N+1qoZi2i0q+ivASGiAn/C+4dS/90NyoGFps72l8xMliOvK
-         Ubf936hzwfJQ0FGs5xNSwmDbJrXbFvtGotYAzg5/b3H6x35eG8WQ+6mPeRy13FqWn9ok
-         K0ODXQn60HcBbFZ+IJ39QOnuiH374YRkdqqdQ7n/MkMolslqjLSsNzxoX3Zh2sWleGWH
-         jVEWjAsg3Jgx0/zBm1lllxdDdoIrjJIc4GZTHcT2mvSO5qcxQxWmWDjHg9EN1kV/Cx31
-         P7GQ==
-X-Gm-Message-State: AOAM533ayXhU7XOid7IddPIY3/HwHXyDoiBw61lPn3V8P5MMsUP+p6Q/
-        32QBCek5k3m4cdf/yCq7JAzXxndgBkg=
-X-Google-Smtp-Source: ABdhPJzE09wAmkmLbE0ZLSzAWTmKyq12TseLHzepWKU2Mh0MBwqpfoiX9ZxPvEJ9HRW9CPX/lIlSjA==
-X-Received: by 2002:a5d:61c8:: with SMTP id q8mr11044972wrv.160.1595231819481;
-        Mon, 20 Jul 2020 00:56:59 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:3590:b402:869a:11fc? ([2a01:e34:ed2f:f020:3590:b402:869a:11fc])
-        by smtp.googlemail.com with ESMTPSA id h11sm7223446wrb.68.2020.07.20.00.56.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 00:56:58 -0700 (PDT)
-Subject: Re: [PATCH v8 1/2] dt-bindings: timer: Add Ingenic X1000 OST
- bindings.
-To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, paul@crapouillou.net
-References: <20200719114247.56100-1-zhouyanjie@wanyeetech.com>
- <20200719114247.56100-2-zhouyanjie@wanyeetech.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <53448115-2aa0-0aa0-03d8-a5993e8c84e9@linaro.org>
-Date:   Mon, 20 Jul 2020 09:56:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 03:57:53 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7788 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726254AbgGTH5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 03:57:52 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 09BFAF405D2241A1E172;
+        Mon, 20 Jul 2020 15:57:44 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
+ 15:57:41 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <joe@perches.com>, <shayagr@amazon.com>, <gtzalik@amazon.com>,
+        <saeedb@amazon.com>, <zorik@amazon.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <sameehj@amazon.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next v3] net: ena: Fix using plain integer as NULL pointer in ena_init_napi_in_range
+Date:   Mon, 20 Jul 2020 15:56:14 +0800
+Message-ID: <20200720075614.35676-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200719114247.56100-2-zhouyanjie@wanyeetech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/07/2020 13:42, 周琰杰 (Zhou Yanjie) wrote:
-> Add the OST bindings for the X10000 SoC from Ingenic.
+Fix sparse build warning:
 
+drivers/net/ethernet/amazon/ena/ena_netdev.c:2193:34: warning:
+ Using plain integer as NULL pointer
 
-Description: [v8,1/2] dt-bindings: timer: Add Ingenic X1000 OST bindings.
-Applying: dt-bindings: timer: Add Ingenic X1000 OST bindings.
-.git/rebase-apply/patch:91: space before tab in indent.
-    		compatible = "ingenic,x1000-ost";
-.git/rebase-apply/patch:92: space before tab in indent.
-    		reg = <0x12000000 0x3c>;
-.git/rebase-apply/patch:94: space before tab in indent.
-    		#clock-cells = <1>;
-.git/rebase-apply/patch:96: space before tab in indent.
-    		clocks = <&cgu X1000_CLK_OST>;
-.git/rebase-apply/patch:97: space before tab in indent.
-    		clock-names = "ost";
-warning: squelched 3 whitespace errors
-warning: 8 lines add whitespace errors.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Suggested-by: Joe Perches <joe@perches.com>
+Acked-by: Shay Agroskin <shayagr@amazon.com>
+---
+v1->v2:
+ Improve code readability based on Joe Perches's suggestion 
+v2->v3:
+ Simplify code based on Joe Perches's suggestion
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-
-> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> 
-> Notes:
->     v1->v2:
->     No change.
->     
->     v2->v3:
->     Fix wrong parameters in "clocks".
->     
->     v3->v4:
->     1.Rename "ingenic,ost.yaml" to "ingenic,sysost.yaml".
->     2.Rename "ingenic,ost.h" to "ingenic,sysost.h".
->     3.Modify the description in "ingenic,sysost.yaml".
->     
->     v4->v5:
->     No change.
->     
->     v5->v6:
->     1.Drop "oneOf" and the blank line.
->     2.Add "additionalProperties: false".
->     
->     v6->v7:
->     No change.
->     
->     v7->v8:
->     No change.
-> 
->  .../devicetree/bindings/timer/ingenic,sysost.yaml  | 63 ++++++++++++++++++++++
->  include/dt-bindings/clock/ingenic,sysost.h         | 12 +++++
->  2 files changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
->  create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
-> new file mode 100644
-> index 000000000000..1dae2e538725
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
-> @@ -0,0 +1,63 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/ingenic,sysost.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for SYSOST in Ingenic XBurst family SoCs
-> +
-> +maintainers:
-> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> +
-> +description:
-> +  The SYSOST in an Ingenic SoC provides one 64bit timer for clocksource
-> +  and one or more 32bit timers for clockevent.
-> +
-> +properties:
-> +  "#size-cells":
-> +    const: 1
-> +
-> +  compatible:
-> +    enum:
-> +      - ingenic,x1000-ost
-> +      - ingenic,x2000-ost
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: ost
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - "#clock-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/x1000-cgu.h>
-> +
-> +    ost: timer@12000000 {
-> +    		compatible = "ingenic,x1000-ost";
-> +    		reg = <0x12000000 0x3c>;
-> +
-> +    		#clock-cells = <1>;
-> +
-> +    		clocks = <&cgu X1000_CLK_OST>;
-> +    		clock-names = "ost";
-> +
-> +    		interrupt-parent = <&cpuintc>;
-> +    		interrupts = <3>;
-> +    	};
-> +...
-> diff --git a/include/dt-bindings/clock/ingenic,sysost.h b/include/dt-bindings/clock/ingenic,sysost.h
-> new file mode 100644
-> index 000000000000..9ac88e90babf
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/ingenic,sysost.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * This header provides clock numbers for the ingenic,tcu DT binding.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-> +#define __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-> +
-> +#define OST_CLK_PERCPU_TIMER	0
-> +#define OST_CLK_GLOBAL_TIMER	1
-> +
-> +#endif /* __DT_BINDINGS_CLOCK_INGENIC_OST_H__ */
-> 
-
-
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 91be3ffa1c5c..3eb63b12dd68 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -2190,14 +2190,13 @@ static void ena_del_napi_in_range(struct ena_adapter *adapter,
+ static void ena_init_napi_in_range(struct ena_adapter *adapter,
+ 				   int first_index, int count)
+ {
+-	struct ena_napi *napi = {0};
+ 	int i;
+ 
+ 	for (i = first_index; i < first_index + count; i++) {
+-		napi = &adapter->ena_napi[i];
++		struct ena_napi *napi = &adapter->ena_napi[i];
+ 
+ 		netif_napi_add(adapter->netdev,
+-			       &adapter->ena_napi[i].napi,
++			       &napi->napi,
+ 			       ENA_IS_XDP_INDEX(adapter, i) ? ena_xdp_io_poll : ena_io_poll,
+ 			       ENA_NAPI_BUDGET);
+ 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.17.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
