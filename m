@@ -2,225 +2,250 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15838C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D49AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF9E42065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:17:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ML5NdeUo"
+	by mail.kernel.org (Postfix) with ESMTP id 6E0BF2065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:17:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgGTHRI (ORCPT
+        id S1726717AbgGTHRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:17:08 -0400
-Received: from mail-eopbgr1300139.outbound.protection.outlook.com ([40.107.130.139]:32077
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725815AbgGTHRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 03:17:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=depLZnVxd2wzVRNjsyMUxmVMtxPeNf8CwC9FLxwUbr46C/hl5gKuSgjWtaFbe3ijZ3FWzGjYNgQftdDMmtgWv39F7CBhum6a+9zRw/654Pc9ksYqpp3z4n4gg6R/bmQ/NDocx2FedP7XzcXwdquWDPRcGkF6pS26t0LXK5UvEnkWrw2kFSewZWA4n+pfArQpz+6ypds7Vi1G2gRjBOKP7mWPXh97yiWn3UkCirXWvvwdQ8a3R1WY32oym0ZlU+v9BkI0ulSjmr0oiRBNdqwVzjohWW6WTxFiom6mhShnHWIP1ERLy5p97Exp49iN9OwC9MSzOOkRvhOr+NYyJclOEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=42/GJe7gRwprNTw/l/iMz4mVALiFBPpt4BS9ssiK2ro=;
- b=llgPta/wyjljWhNSaBGsYMNY72Fmw3QxnODcOd/bnucCUVVOjOqtNGhZd6i5yMYOdIuGHtt3wuy5vive+8VeGtOS5TNByO7GhAWMtJrycPd39v9i3BNXGXbNzgcCgUOxUced7etsWt6Sr3QYO3YlsgtlawXfO1LaaemrFMjpLwTMZD+lvDOP7Kfpa+qlwglN3JQy5iCs/Q0ZfxNpN480tAX6FA664qJXWrFbX7yvmt3AFkc+XlZpe37PAmwT1cr9lCrxP61AEqcDyTWQ2kdLQ440oWzhf9Pu4YcntaBUN015Ius4v9C9woTnJW6zaWgW52dqV/gIYyd3wq9C6WEdeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=42/GJe7gRwprNTw/l/iMz4mVALiFBPpt4BS9ssiK2ro=;
- b=ML5NdeUoTPpVyx7Ip4PV9R34QX4cPvPU60q6zv5SJeGdCiqLIptcb0q9KqMvW4qogmwumEkNDQFaw4K3MtVhvat+wdgfEQBTsfRZeu18prJ4j3MI47h5ccEpEaD5RbBy2SiqK4wekAI6DoE6RkXCZXZICR/OLfLQNM88BJVi1qE=
-Received: from HK0P153MB0275.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::14)
- by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.7; Mon, 20 Jul
- 2020 07:17:00 +0000
-Received: from HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
- ([fe80::b5ca:82a1:cb67:52e]) by HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
- ([fe80::b5ca:82a1:cb67:52e%6]) with mapi id 15.20.3216.018; Mon, 20 Jul 2020
- 07:17:00 +0000
-From:   Chi Song <Song.Chi@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 net-next] net: hyperv: Add attributes to show TX
- indirection table
-Thread-Topic: [PATCH v3 net-next] net: hyperv: Add attributes to show TX
- indirection table
-Thread-Index: AdZeZbrV+t5rWB2ETh+y8GF8jKdgPA==
-Date:   Mon, 20 Jul 2020 07:17:00 +0000
-Message-ID: <HK0P153MB0275B086FDE4B26D39E41059987B0@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-20T07:16:58Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=04b9772d-b507-4872-a4fc-786c63f4656c;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [2404:f801:8050:3:b9c1:8617:1570:6fe]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e98313ac-1a7e-4035-b912-08d82c7ce55b
-x-ms-traffictypediagnostic: HK0P153MB0273:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB027307A7E59DB0A54E940585987B0@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: l7skfKXClVyBK4e+DsUY051wDwHRlFdQz5/NRfeo5kLsK1E7OZsZfrPZl4Y3FpeIpAS+9gYXQl3jkS0v34adgiXjW8y/OX9Bb53z5YgJXG1Hn9XoSC/XHt2YBik/tVclcjzT2vju2h1rehsmSUjuH5eU0I+2sssgze5I2v/hrLxBdeClqV2M7M/+CxbR4oPSf62eaMcpYGq03kCTvRBssDcpy3z0V/MK6cjkNPOA73zOJ2RTErJgARO9+2UeVuYOjGbB5mmH7AOBr4uyFXVy1SzylPqihsFGM//dbCWmtnzJfLVxSDvriwMt88Qq0aS/
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0275.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(346002)(396003)(366004)(39860400002)(110136005)(9686003)(54906003)(478600001)(8990500004)(4326008)(2906002)(82950400001)(66556008)(66446008)(66476007)(66946007)(64756008)(76116006)(82960400001)(186003)(316002)(10290500003)(52536014)(86362001)(33656002)(71200400001)(5660300002)(8936002)(7696005)(83380400001)(55016002)(6506007)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: bOxCZd+EJmKurWwDXAtXBhxMkipsonpBRjJI61duTDVf3jFz/xXYEME6aJ0Y/4CJOZK05NumUhZqtzZkBzAGKJf4kIuCXkTgaRCv/flUhhm+nhZuXZ9xfPhrf6mNUcBJ/8SHsiBCkSXriOwqu9qS1skmffResbsGpgsJb9ll0oXF3Glff/Rem9n7IhIv/Bp34h/1R9xM2F2wRtUQ7GjNlnSjcFoX9HV2sa6a5hdIV2VYo37tMvR+qoiejgRcwFPKnnAzqqXV9LDAdfLnpEX8dYdznvPkak5lEBSuDEk6Jz7bCh0N49YOjAkt+mq4qFr2clYpz80G3YZv2t1VZn0x1BcRzg3IAqvMwUxV5AwnAd3f/Ic4LBdfNoUa/+4n2Hsvp6mVYlGPAtZNXM3xaxc+k46ekg4qqJLbqzxWfJSHuSLvcb8l2FCoei/P0/ofV6TIBcgZB8TJNL1O6r7pGIbJXLGsfzZI6RuSDyAWs/D506cLvNVIRaPZkTqBcpJS70qbryIh6zhchLcLJNwcyzpcv0gqqoOUMEVljnhyQY6kST4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Jul 2020 03:17:41 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:54201 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgGTHRk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 03:17:40 -0400
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MzhSh-1kjcv20hTV-00vdSd; Mon, 20 Jul 2020 09:17:37 +0200
+Received: by mail-qt1-f181.google.com with SMTP id u12so12177149qth.12;
+        Mon, 20 Jul 2020 00:17:36 -0700 (PDT)
+X-Gm-Message-State: AOAM530VK6mkVlxBvvCa2wt7KnTtCvHKdqI6dpXUIJmuoyK58TdpwqDH
+        fkmg51ZjepUt++CM/th+yehk/SKpvzd6+KrPDvc=
+X-Google-Smtp-Source: ABdhPJwQ7aG0Kfph32W7oujhBLlHufrj5SBDtqFGsDCgZiI0AOcu8JEKEqCBhxfpFSaC0WpZ33qNauezR2FDL5mRSbE=
+X-Received: by 2002:ac8:2b98:: with SMTP id m24mr22488198qtm.7.1595229455883;
+ Mon, 20 Jul 2020 00:17:35 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: e98313ac-1a7e-4035-b912-08d82c7ce55b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 07:17:00.3728
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aVU4PxejJgxIqQKkieH8iGTlCG0pPs+rE4e/xU7C0yDAR+6oZ/3sJs1YtiVhhFzajlO4sLVfDSmpjoRki5al0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0273
+References: <CA+G9fYuzqA0N6O-52uH9aHjsfF6HfhuxMby1Y6Yz7jGMAHW0zw@mail.gmail.com>
+In-Reply-To: <CA+G9fYuzqA0N6O-52uH9aHjsfF6HfhuxMby1Y6Yz7jGMAHW0zw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 Jul 2020 09:17:20 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1SHQKNNCVj9Gp25BLuXUC2nf7FuVrqfpPYQkvMbhjzFg@mail.gmail.com>
+Message-ID: <CAK8P3a1SHQKNNCVj9Gp25BLuXUC2nf7FuVrqfpPYQkvMbhjzFg@mail.gmail.com>
+Subject: Re: arm64: Internal error: Oops: qcom_iommu_tlb_inv_context
+ free_io_pgtable_ops on db410c
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <jroedel@suse.de>, Qian Cai <cai@lca.pw>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        lkft-triage@lists.linaro.org, Eric Anholt <eric@anholt.net>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
+        freedreno@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:s+OBU8LAwNfEoTA6fxDx71Z6m4Y+GceKPCmaMNqY+oYNZERtd04
+ TkFvl+2lplOROmrJQt9YxvaZqmPToYARmc2YjDod3kH5q11vqI9ZjNmcn+gqDdD1NVHGUyE
+ rVyU943nM1S1Z1M2r/rJOD0sqjxIAfuzZSBwcm+bQheoCk6a7nxNaM8qzYlSy9Inrfmuuep
+ Uhv7DKY5DV42fgZK+MOAg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vYpPBGS7tII=:6lfv/todvzHSk54TAUBA34
+ ojYgNVgU/Qbg5t5hn+CvleyDnPi5E/OjY5NC6aJxpfR5Dj1jbTliCQrB94CH4LjJa2EE1wyZk
+ IbRSpsu7qe9x3M7/NASzO0G916qxKRAvRUsQkr+LNlcHMOOCRNmru4VRxlfe3HcgYex80CVkT
+ QRj7o5AoqtCAYOXuujm9nqdeoWfm5oaT74btGLQjvRAJ4OfqTO3ovducRfN+zH4wwbFeoWNO/
+ 9ivjLS11et1/Qv175FZ07mM5JOOsYFA8IbxifYjgzN55XQ8pc2GzCXajXUrY5W1o1apspjvlk
+ 2YDDL1ajUl17ojMpT8ZZyC5FNJe0AtNcW3dWC90JiAZSL//42apIkiFfhvDWRvGd4ty0hafQc
+ LjOtwENq14gRjDkBbqIIMeC9IePoOmuXU38pzMHJlUo9Zrru95+Zza/kdNvX1iCi5poI062dF
+ AKmw8F1GlW42gtYVCWzzFLvhpM4h3bVsWcL0zzwP2YQyP9HscgMfVTkG7w9q3InPpKOAedLMR
+ 7FKcJhQF9+p0+tI1aQL9/LO4WMjEEcMncrQhqeshxqiB4u4YrotrhDrJ6eX1eynCmHLf59aeI
+ xK6UlEqUyCBDOx4JGm+4s9PBfmAxXlyDzAHXOVvbq8gx5ISfmAuAky4KzVSxaL82VbtjVwSY4
+ aLH9cA63iQiMbGxhGtlhLrmclPfjOQKXzgdLxSeqOs7/WVK67uZEJ/U0DgifcsN3T0aB22S+K
+ naETO3l21UCbF5KOlqUpn2b2OKAmK8Hf6Ao9NnC7urHy/idhaIQs/Sx7hEEvUVml51dEcnhDL
+ ltthkw/BjIq2BK9K0IKwncnHr+yqc/CJFHqhEIR3GG7qKK0lOF/zxVBhtlrpxP4DN4merojhu
+ s1OgWSbKDOQ3SxgO4veIqS/dweUq/8ocD0JZ8B8hT4qCXoJFB9El+xnNfAyeeZrCE8+ES98EW
+ Trx9Xlvwu3LAgfyJ0raBZhN8ee4KvxMzm7fYvFDp4+jTeQX24u5CH
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An imbalanced TX indirection table causes netvsc to have low
-performance. This table is created and managed during runtime. To help
-better diagnose performance issues caused by imbalanced tables, add
-device attributes to show the content of TX indirection tables.
+On Mon, Jul 20, 2020 at 8:36 AM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> This kernel oops while boot linux mainline kernel on arm64  db410c device.
+>
+> metadata:
+>   git branch: master
+>   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>   git commit: f8456690ba8eb18ea4714e68554e242a04f65cff
+>   git describe: v5.8-rc5-48-gf8456690ba8e
+>   make_kernelversion: 5.8.0-rc5
+>   kernel-config:
+> https://builds.tuxbuild.com/2aLnwV7BLStU0t1R1QPwHQ/kernel.config
 
-Signed-off-by: Chi Song <chisong@microsoft.com>
----
-v2: remove RX as it's in ethtool already, show single value in each file,
- and update description.
-v3: fix broken format by alpine.
+Thanks for the report. Adding freedreno folks to Cc, as this may have something
+to do with that driver.
 
-Thank you for comments. Let me know, if I miss something.
+>
+> [    5.444121] Unable to handle kernel NULL pointer dereference at
+> virtual address 0000000000000018
+> [    5.456615]   ESR = 0x96000004
+> [    5.464471]   SET = 0, FnV = 0
+> [    5.464487]   EA = 0, S1PTW = 0
+> [    5.466521] Data abort info:
+> [    5.469971]   ISV = 0, ISS = 0x00000004
+> [    5.472768]   CM = 0, WnR = 0
+> [    5.476172] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000bacba000
+> [    5.479349] [0000000000000018] pgd=0000000000000000, p4d=0000000000000000
+> [    5.485820] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+> [    5.492448] Modules linked in: crct10dif_ce adv7511(+)
+> qcom_spmi_temp_alarm cec msm(+) mdt_loader qcom_camss videobuf2_dma_sg
+> drm_kms_helper v4l2_fwnode videobuf2_memops videobuf2_v4l2 qcom_rng
+> videobuf2_common i2c_qcom_cci display_connector socinfo drm qrtr ns
+> rmtfs_mem fuse
+> [    5.500256] CPU: 0 PID: 286 Comm: systemd-udevd Not tainted 5.8.0-rc5 #1
+> [    5.522484] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+> [    5.529170] pstate: 20000005 (nzCv daif -PAN -UAO BTYPE=--)
+> [    5.535856] pc : qcom_iommu_tlb_inv_context+0x18/0xa8
+> [    5.541148] lr : free_io_pgtable_ops+0x28/0x58
+> [    5.546350] sp : ffff80001219b5f0
+> [    5.550689] x29: ffff80001219b5f0 x28: 0000000000000013
+> [    5.554078] x27: 0000000000000100 x26: ffff000036add3b8
+> [    5.559459] x25: ffff80000915e910 x24: ffff00003a5458c0
+> [    5.564753] x23: 0000000000000003 x22: ffff000036a37058
+> [    5.570049] x21: ffff000036a3a100 x20: ffff000036a3a480
+> [    5.575344] x19: ffff000036a37158 x18: 0000000000000000
+> [    5.580639] x17: 0000000000000000 x16: 0000000000000000
+> [    5.585935] x15: 0000000000000004 x14: 0000000000000368
+> [    5.591229] x13: 0000000000000000 x12: ffff000039c61798
+> [    5.596525] x11: ffff000039c616d0 x10: 0000000040000000
+> [    5.601820] x9 : 0000000000000000 x8 : ffff000039c616f8
+> [    5.607114] x7 : 0000000000000000 x6 : ffff000009f699a0
+> [    5.612410] x5 : ffff80001219b520 x4 : ffff000036a3a000
+> [    5.617705] x3 : ffff000009f69904 x2 : 0000000000000000
+> [    5.623001] x1 : ffff8000107e27e8 x0 : ffff00003a545810
+> [    5.628297] Call trace:
+> [    5.633592]  qcom_iommu_tlb_inv_context+0x18/0xa8
 
----
- drivers/net/hyperv/netvsc_drv.c | 53 +++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+This means that dev_iommu_fwspec_get() has returned NULL
+in qcom_iommu_tlb_inv_context(), either because dev->iommu
+is NULL, or because dev->iommu->fwspec is NULL.
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_dr=
-v.c
-index 6267f706e8ee..222c2fad9300 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -2370,6 +2370,55 @@ static int netvsc_unregister_vf(struct net_device *v=
-f_netdev)
- 	return NOTIFY_OK;
- }
-=20
-+static struct device_attribute dev_attr_netvsc_dev_attrs[VRSS_SEND_TAB_SIZ=
-E];
-+static struct attribute *netvsc_dev_attrs[VRSS_SEND_TAB_SIZE + 1];
-+
-+const struct attribute_group netvsc_dev_group =3D {
-+	.name =3D NULL,
-+	.attrs =3D netvsc_dev_attrs,
-+};
-+
-+static ssize_t tx_indirection_table_show(struct device *dev,
-+					 struct device_attribute *dev_attr,
-+					 char *buf)
-+{
-+	struct net_device *ndev =3D to_net_dev(dev);
-+	struct net_device_context *ndc =3D netdev_priv(ndev);
-+	ssize_t offset =3D 0;
-+	int index =3D dev_attr - dev_attr_netvsc_dev_attrs;
-+
-+	offset =3D sprintf(buf, "%u\n", ndc->tx_table[index]);
-+
-+	return offset;
-+}
-+
-+static void netvsc_attrs_init(void)
-+{
-+	int i;
-+	char buffer[32];
-+
-+	for (i =3D 0; i < VRSS_SEND_TAB_SIZE; i++) {
-+		sprintf(buffer, "tx_indirection_table_%02u", i);
-+		dev_attr_netvsc_dev_attrs[i].attr.name =3D
-+			kstrdup(buffer, GFP_KERNEL);
-+		dev_attr_netvsc_dev_attrs[i].attr.mode =3D 0444;
-+		sysfs_attr_init(&dev_attr_netvsc_dev_attrs[i].attr);
-+
-+		dev_attr_netvsc_dev_attrs[i].show =3D tx_indirection_table_show;
-+		dev_attr_netvsc_dev_attrs[i].store =3D NULL;
-+		netvsc_dev_attrs[i] =3D &dev_attr_netvsc_dev_attrs[i].attr;
-+	}
-+	netvsc_dev_attrs[VRSS_SEND_TAB_SIZE] =3D NULL;
-+}
-+
-+static void netvsc_attrs_exit(void)
-+{
-+	int i;
-+
-+	for (i =3D 0; i < VRSS_SEND_TAB_SIZE; i++)
-+		kfree(dev_attr_netvsc_dev_attrs[i].attr.name);
-+}
-+
- static int netvsc_probe(struct hv_device *dev,
- 			const struct hv_vmbus_device_id *dev_id)
- {
-@@ -2396,6 +2445,7 @@ static int netvsc_probe(struct hv_device *dev,
- 			   net_device_ctx->msg_enable);
-=20
- 	hv_set_drvdata(dev, net);
-+	netvsc_attrs_init();
-=20
- 	INIT_DELAYED_WORK(&net_device_ctx->dwork, netvsc_link_change);
-=20
-@@ -2410,6 +2460,7 @@ static int netvsc_probe(struct hv_device *dev,
-=20
- 	net->netdev_ops =3D &device_ops;
- 	net->ethtool_ops =3D &ethtool_ops;
-+	net->sysfs_groups[0] =3D &netvsc_dev_group;
- 	SET_NETDEV_DEV(net, &dev->device);
-=20
- 	/* We always need headroom for rndis header */
-@@ -2533,6 +2584,7 @@ static int netvsc_remove(struct hv_device *dev)
-=20
- 	rtnl_unlock();
-=20
-+	netvsc_attrs_exit();
- 	hv_set_drvdata(dev, NULL);
-=20
- 	free_percpu(ndev_ctx->vf_stats);
-@@ -2683,6 +2735,7 @@ static int __init netvsc_drv_init(void)
- 		return ret;
-=20
- 	register_netdevice_notifier(&netvsc_netdev_notifier);
-+
- 	return 0;
- }
-=20
---=20
-2.25.1
+qcom_iommu_tlb_inv_context() does not check for a NULL
+pointer before using the returned object.
+
+The bug is either in the lack of error handling, or the fact
+that it's possible to get into this function for a device
+that has not been fully set up.
+
+> [    5.635764]  free_io_pgtable_ops+0x28/0x58
+> [    5.640624]  qcom_iommu_domain_free+0x38/0x60
+> [    5.644617]  iommu_group_release+0x4c/0x70
+> [    5.649045]  kobject_put+0x6c/0x120
+> [    5.653035]  kobject_del+0x64/0x90
+> [    5.656421]  kobject_put+0xfc/0x120
+> [    5.659893]  iommu_group_remove_device+0xdc/0xf0
+> [    5.663281]  iommu_release_device+0x44/0x70
+> [    5.668142]  iommu_bus_notifier+0xbc/0xd0
+> [    5.672048]  notifier_call_chain+0x54/0x98
+> [    5.676214]  blocking_notifier_call_chain+0x48/0x70
+> [    5.680209]  device_del+0x26c/0x3a0
+> [    5.684981]  platform_device_del.part.0+0x1c/0x88
+> [    5.688453]  platform_device_unregister+0x24/0x40
+> [    5.693316]  of_platform_device_destroy+0xe4/0xf8
+> [    5.698002]  device_for_each_child+0x5c/0xa8
+> [    5.702689]  of_platform_depopulate+0x3c/0x80
+> [    5.707144]  msm_pdev_probe+0x1c4/0x308 [msm]
+
+It was triggered by a failure in msm_pdev_probe(), which was
+calls of_platform_depopulate() in its error handling code.
+This is a combination of two problems:
+
+a) Whatever caused msm_pdev_probe() to fail means that
+the gpu won't be usable, though it should not have caused the
+kernel to crash.
+
+b) the error handling itself causing additional problems due
+to failed unwinding.
+
+> [    5.711286]  platform_drv_probe+0x54/0xa8
+> [    5.715624]  really_probe+0xd8/0x320
+> [    5.719617]  driver_probe_device+0x58/0xb8
+> [    5.723263]  device_driver_attach+0x74/0x80
+> [    5.727168]  __driver_attach+0x58/0xe0
+> [    5.731248]  bus_for_each_dev+0x70/0xc0
+> [    5.735067]  driver_attach+0x24/0x30
+> [    5.738801]  bus_add_driver+0x14c/0x1f0
+> [    5.742619]  driver_register+0x64/0x120
+> [    5.746178]  __platform_driver_register+0x48/0x58
+> [    5.750099]  msm_drm_register+0x58/0x70 [msm]
+> [    5.754861]  do_one_initcall+0x54/0x1a0
+> [    5.759200]  do_init_module+0x54/0x200
+> [    5.762846]  load_module+0x1d1c/0x2300
+> [    5.766664]  __do_sys_finit_module+0xd8/0xf0
+> [    5.770398]  __arm64_sys_finit_module+0x20/0x30
+> [    5.774826]  el0_svc_common.constprop.0+0x6c/0x168
+> [    5.779078]  do_el0_svc+0x24/0x90
+> [    5.783939]  el0_sync_handler+0x90/0x198
+> [    5.787323]  el0_sync+0x158/0x180
+> [    5.791323] Code: 910003fd f9417404 b4000484 f9401482 (b9401846)
+> [    5.794532] ---[ end trace 3d6a53241629e560 ]---
+>
+> full crash log details.
+> https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.8-rc5-48-gf8456690ba8e/testrun/2945157/suite/linux-log-parser/test/check-kernel-oops-1573988/log
+
+There are a couple of messages directly preceding the bug output that are
+probably relevant here:
+
+[    5.259499] debugfs: Directory '1b0ac00.camss-vdda' with parent
+'smd:rpm:rpm-requests:pm8916-regulators-l2' already present!
+         Starting Resize root filesystem to fit available disk space...
+         Starting Start the WCN core...
+[[0;32m  OK  [0m] Started Network Service.
+[[0;32m  OK  [0m] Started QRTR service.
+[    5.352993] adreno 1c00000.gpu: Adding to iommu group 1
+[    5.357489] msm_mdp 1a01000.mdp: Adding to iommu group 2
+[    5.357757] msm_mdp 1a01000.mdp: No interconnect support may cause
+display underflows!
+[    5.366215] adv7511 3-0039: supply dvdd not found, using dummy regulator
+[    5.378036] msm 1a00000.mdss: supply vdd not found, using dummy regulator
+[    5.378715] msm_mdp 1a01000.mdp: [drm:mdp5_bind [msm]] MDP5 version v1.6
+[    5.380549] adv7511 3-0039: supply pvdd not found, using dummy regulator
+[    5.384606] msm 1a00000.mdss: bound 1a01000.mdp (ops mdp5_ops [msm])
+[    5.394368] adv7511 3-0039: supply a2vdd not found, using dummy regulator
+[    5.397633] msm_dsi 1a98000.dsi: supply gdsc not found, using dummy regulator
+[    5.411897] msm_dsi 1a98000.dsi: supply gdsc not found, using dummy regulator
+[    5.420207] msm_dsi_manager_register: failed to register mipi dsi
+host for DSI 0
+[    5.425717] platform 1a01000.mdp: Removing from iommu group 2
+[[0;1;31mFAILED[0m] Failed to start Entropy Daemon based on the HAVEGE
+algorithm.[    5.444121] Unable to handle kernel NULL pointer
+dereference at virtual address 0000000000000018
+
+See 'systemctl status haveged.service' for detai[    5.456615]   ESR =
+0x96000004
+ls.
+[    5.464471]   SET = 0, FnV = 0
+[    5.464487]   EA = 0, S1PTW = 0
+
+        Arnd
