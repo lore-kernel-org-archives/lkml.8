@@ -2,193 +2,103 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75CFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B040C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C82222482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:38:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rIjOLrpG"
+	by mail.kernel.org (Postfix) with ESMTP id 02FAC2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:40:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgGTKil (ORCPT
+        id S1728467AbgGTKk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 06:38:41 -0400
-Received: from mail-eopbgr150044.outbound.protection.outlook.com ([40.107.15.44]:52395
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728273AbgGTKik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 06:38:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WlDNi9UgeK4JxwWcKWA+uvkVjUpeNfP6fMsVnM7N5DBYLGuWhIAbEigna5Rki5xuvavHW0DWFvpNKDLVEQSYmHwrtxC3j3plQ4weZgoQe71cIrm0J4l3LZCQLVZ60n++xTSsWbWfDh8zpPSE4ILv3BNKZXhYTUy3y0Mlzyz+geWr6ZHSQThMpKhGqtZ6tlcbzygmXYJfxxVjsSghVSR/gorw3AaokBM3e835Nfi3PefQcx9gLfmWab7KMThaJt/JZPM5aMdPKYS/gDPLV7gex21ZuY+vEObzxUItujy8w7i1RD3P4Z6wE2TjSG5nInsW4QUi6odtzV03lSfVjmMV+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q24WVoc2ZJ7kurQdO+/TODmFq9VAGIpvbuXMnLkYVk0=;
- b=CaikOugZxAWYVQXn5bwZSjDl8O5bFsdXTg6l5xkaWSYWP3e7Wlde93ZaylukfXegwcz/aVwr+4ZwUhYs1xktooZk0Pul69mHDz0AmblTpE1JGkigEzsFJrUXpJv0Rwx/sDAfPPTai+HbfeKb1eR+PS+J0/VXCj9+PA1BJRVyg8QqTAwhl8CNJHb1+3/VMt+KlCK/VFhusr/u6Uwdkmbsg6GDhFxoFwhailBCTAGFWn41a8Y6pKTMbJnZZWQrALZCj/adKNejplyvyMkDP75Y9bigISdnJRvAVqLOuxdEgS7nyr7j65SX0P3zqULFc7iMD8djvWF1HVrgCnS1ul7Gmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q24WVoc2ZJ7kurQdO+/TODmFq9VAGIpvbuXMnLkYVk0=;
- b=rIjOLrpGmav2t1BqifjS+x2YstEX4OF6yXDRwnoU22FYEtcn9C9jlhlH9HVEXsAVRbO3juWePFJUcMuzXtJd8J1+2WJRUUVtlr9mX75gPRrpe0G8oEr6ll6jep2N5gJ9SjKLF122hvqWfTaQFVkUYMJpBiiYE9UE2+YmTJBnifY=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB5103.eurprd04.prod.outlook.com (2603:10a6:803:51::19)
- by VI1PR04MB5005.eurprd04.prod.outlook.com (2603:10a6:803:57::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.25; Mon, 20 Jul
- 2020 10:38:37 +0000
-Received: from VI1PR04MB5103.eurprd04.prod.outlook.com
- ([fe80::596d:cc81:f48a:daf7]) by VI1PR04MB5103.eurprd04.prod.outlook.com
- ([fe80::596d:cc81:f48a:daf7%2]) with mapi id 15.20.3174.030; Mon, 20 Jul 2020
- 10:38:37 +0000
-From:   hongbo.wang@nxp.com
-To:     xiaoliang.yang_1@nxp.com, allan.nielsen@microchip.com,
-        po.liu@nxp.com, claudiu.manoil@nxp.com,
-        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
-        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
-        f.fainelli@gmail.com, vivien.didelot@gmail.com,
-        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
-        kuba@kernel.org, vinicius.gomes@intel.com,
-        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, linux-devel@linux.nxdi.nxp.com
-Cc:     "hongbo.wang" <hongbo.wang@nxp.com>
-Subject: [PATCH 2/2] net: dsa: Set flag for 802.1AD when deleting vlan for dsa switch and port
-Date:   Mon, 20 Jul 2020 18:41:19 +0800
-Message-Id: <20200720104119.19146-2-hongbo.wang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200720104119.19146-1-hongbo.wang@nxp.com>
-References: <20200720104119.19146-1-hongbo.wang@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SGAP274CA0009.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::21)
- To VI1PR04MB5103.eurprd04.prod.outlook.com (2603:10a6:803:51::19)
+        Mon, 20 Jul 2020 06:40:29 -0400
+Received: from mga05.intel.com ([192.55.52.43]:48629 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728290AbgGTKk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 06:40:29 -0400
+IronPort-SDR: GuUILsx+nWhqO4bdDUozdYlzFb52sYTe8kGDHwsSmuqlxujvtNmUyQWwNAk4+M/gzUaf+lr7VD
+ traVmEbHNqDA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9687"; a="234737789"
+X-IronPort-AV: E=Sophos;i="5.75,374,1589266800"; 
+   d="scan'208";a="234737789"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 03:40:28 -0700
+IronPort-SDR: pdIOofzQnu5O/sZtthT/dTa7D4DE++Jyz1vkPToorQsEa9ta5YA52oVGSZ7xaTxubx57ElwWTa
+ OkiUlUAxf2Eg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,374,1589266800"; 
+   d="scan'208";a="431568927"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 20 Jul 2020 03:40:26 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jxTDe-002riE-LP; Mon, 20 Jul 2020 13:40:26 +0300
+Date:   Mon, 20 Jul 2020 13:40:26 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] pinctrl: baytrail: Use fallthrough pseudo-keyword
+Message-ID: <20200720104026.GR3703480@smile.fi.intel.com>
+References: <20200716211919.GA17378@embeddedor>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from whb-OptiPlex-790.ap.freescale.net (119.31.174.73) by SGAP274CA0009.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17 via Frontend Transport; Mon, 20 Jul 2020 10:38:30 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.73]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 18860973-a711-42e4-430c-08d82c990f4d
-X-MS-TrafficTypeDiagnostic: VI1PR04MB5005:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB5005CFFF60465741FD2502F2E17B0@VI1PR04MB5005.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Nbscx/u9+gTMEY3Dxicaqzb3O5z4J/T3pjfMDWCnL8jcw4w/FLLHaeKqMlSS8kOXURDk2Ead/myCFjZz/XelfyG+8bcVfw1urUJyyX0JJNGwejjhkNZ4Uhk3wJnnf6wfxA6vCiM3trizkRXhsSg7qXPjFzIbvKysvoP2hF8RudwjrwSGebQfithoBbow8Ja7xO7dGIW/a2et1IhS4SGn5YyH1ZlxBJaxOTAHcICtP5gQrxfUPYR2PZT/n/ySrNQd4H0tykVPn/ANnK2WHORn7UHmGcceYziDsaUaZkCgk98PPuQag6ipPoWpwpiyZL2jxcUopadkb4NgU7wS9ukGH+niPYG72ijzTsr8fbwLPHuM2/GY3d/3nWFW+IQaE+pk
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5103.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(396003)(39860400002)(366004)(136003)(26005)(2906002)(316002)(36756003)(7416002)(83380400001)(86362001)(186003)(16526019)(52116002)(66946007)(6506007)(66556008)(66476007)(6486002)(2616005)(956004)(6666004)(9686003)(6512007)(8936002)(1076003)(5660300002)(4326008)(478600001)(8676002)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: hImW8UNM58SdswF+zx7hEOi+nlRsaCHe7Dfxi/BsTp7yrrOiMpGuMGvhqPpAgA5Y6RhMs6Ehcm2AaPTG/h6cAFPSQKCdt+MIFVh8tc1ZtgZhg6H9oBCwawHHV/m3y2hi2js5/4+JLRHN/wbYgYiTpMi4qFJTWxyt/l2eW/5ZPOTLvTrDdNhjPcwIKK9vFpo9f7MjTyPQKJFmIg2o0DTK8OI0tm1bptS5Z8/HQOPUEVyVV6qlBdycbyMrDbvUHDjaVipp7aK0Py38CdxJujRL75pz2ftO8ftinnrCciGOkxNUTW7NZoOoXWIRRsOkooLUj3UdUXLzHaQgGhF6lpSpg2UqpaUQ6GPIy8YSxGdN4Ki2bjjc0KX7CSPlHUw2qmdnS2XdUyKJp3V879uDETyYdDEODD+Nkql3+A4i0FfAsfHkYAKRstwBvX7aMUJ3R5MWnUDv0HYvHBu0i7dXo/FikjqUULoTvNnCW/yi60PsZIg=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18860973-a711-42e4-430c-08d82c990f4d
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5103.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 10:38:37.4243
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DxDuDfVqeyIJeabrqxABrRNZrFB0ezB09b2hb8c+pCFpF06HdpiV7cQpBV6g+YKRhbRPvwVjro+hAowkFv6Www==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5005
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716211919.GA17378@embeddedor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "hongbo.wang" <hongbo.wang@nxp.com>
+On Thu, Jul 16, 2020 at 04:19:19PM -0500, Gustavo A. R. Silva wrote:
+> Replace the existing /* fall through */ comments and its variants with
+> the new pseudo-keyword macro fallthrough[1].
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-the following command will be supported:
-Add VLAN:
-    ip link add link swp1 name swp1.100 type vlan protocol 802.1ad id 100
-Delete VLAN:
-    ip link del link swp1 name swp1.100
+Pushed to my review and testing queue, thanks!
 
-Signed-off-by: hongbo.wang <hongbo.wang@nxp.com>
----
- net/dsa/dsa_priv.h  | 2 +-
- net/dsa/port.c      | 3 ++-
- net/dsa/slave.c     | 6 +++++-
- net/dsa/tag_8021q.c | 2 +-
- 4 files changed, 9 insertions(+), 4 deletions(-)
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/pinctrl/intel/pinctrl-baytrail.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+> index a917a2df520e..d6e35cba3065 100644
+> --- a/drivers/pinctrl/intel/pinctrl-baytrail.c
+> +++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+> @@ -1372,13 +1372,13 @@ static void byt_irq_unmask(struct irq_data *d)
+>  	switch (irqd_get_trigger_type(d)) {
+>  	case IRQ_TYPE_LEVEL_HIGH:
+>  		value |= BYT_TRIG_LVL;
+> -		/* fall through */
+> +		fallthrough;
+>  	case IRQ_TYPE_EDGE_RISING:
+>  		value |= BYT_TRIG_POS;
+>  		break;
+>  	case IRQ_TYPE_LEVEL_LOW:
+>  		value |= BYT_TRIG_LVL;
+> -		/* fall through */
+> +		fallthrough;
+>  	case IRQ_TYPE_EDGE_FALLING:
+>  		value |= BYT_TRIG_NEG;
+>  		break;
+> -- 
+> 2.27.0
+> 
 
-diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
-index adecf73bd608..5cd804c1d7e3 100644
---- a/net/dsa/dsa_priv.h
-+++ b/net/dsa/dsa_priv.h
-@@ -165,7 +165,7 @@ int dsa_port_vlan_add(struct dsa_port *dp,
- int dsa_port_vlan_del(struct dsa_port *dp,
- 		      const struct switchdev_obj_port_vlan *vlan);
- int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags);
--int dsa_port_vid_del(struct dsa_port *dp, u16 vid);
-+int dsa_port_vid_del(struct dsa_port *dp, u16 vid, u16 flags);
- int dsa_port_link_register_of(struct dsa_port *dp);
- void dsa_port_link_unregister_of(struct dsa_port *dp);
- extern const struct phylink_mac_ops dsa_port_phylink_mac_ops;
-diff --git a/net/dsa/port.c b/net/dsa/port.c
-index e23ece229c7e..8a8ecb91a030 100644
---- a/net/dsa/port.c
-+++ b/net/dsa/port.c
-@@ -454,10 +454,11 @@ int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags)
- }
- EXPORT_SYMBOL(dsa_port_vid_add);
- 
--int dsa_port_vid_del(struct dsa_port *dp, u16 vid)
-+int dsa_port_vid_del(struct dsa_port *dp, u16 vid, u16 flags)
- {
- 	struct switchdev_obj_port_vlan vlan = {
- 		.obj.id = SWITCHDEV_OBJ_ID_PORT_VLAN,
-+		.flags = flags,
- 		.vid_begin = vid,
- 		.vid_end = vid,
- 	};
-diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-index 376d7ac5f1e5..14784a6718a9 100644
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -1270,6 +1270,7 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
- static int dsa_slave_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
- 				      u16 vid)
- {
-+	u16 flags = 0;
- 	struct dsa_port *dp = dsa_slave_to_port(dev);
- 	struct bridge_vlan_info info;
- 	int ret;
-@@ -1290,10 +1291,13 @@ static int dsa_slave_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
- 			return -EBUSY;
- 	}
- 
-+	if (ntohs(proto) == ETH_P_8021AD)
-+		flags |= BRIDGE_VLAN_INFO_8021AD;
-+
- 	/* Do not deprogram the CPU port as it may be shared with other user
- 	 * ports which can be members of this VLAN as well.
- 	 */
--	return dsa_port_vid_del(dp, vid);
-+	return dsa_port_vid_del(dp, vid, flags);
- }
- 
- struct dsa_hw_port {
-diff --git a/net/dsa/tag_8021q.c b/net/dsa/tag_8021q.c
-index 780b2a15ac9b..87b732c5cccf 100644
---- a/net/dsa/tag_8021q.c
-+++ b/net/dsa/tag_8021q.c
-@@ -154,7 +154,7 @@ static int dsa_8021q_vid_apply(struct dsa_switch *ds, int port, u16 vid,
- 	if (enabled)
- 		return dsa_port_vid_add(dp, vid, flags);
- 
--	return dsa_port_vid_del(dp, vid);
-+	return dsa_port_vid_del(dp, vid, flags);
- }
- 
- /* RX VLAN tagging (left) and TX VLAN tagging (right) setup shown for a single
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
