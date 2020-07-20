@@ -2,143 +2,199 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16A4C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7631FC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7FE2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262587;
-	bh=cS5sXh8R8EECFabwRlhfigWsqZ9n88SnscShNI+HJNg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qSk41fuZWY7M5ACC8XJivJl4tBarPM9/TsDuivwIr1qfUb3OtxHjdpgFRY8gtjL/E
-	 ej2+1XZoLlopyXfQof+LRRO5cxlktVg1c+W0VI5G4AQ4hTvvdH6Fqmreq2+tt3UsSy
-	 aQLhqKQEBI5x3Ubf/AojSdvpzYTtKTz7330jXWA4=
+	by mail.kernel.org (Postfix) with ESMTP id 520A2207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SUGwTGF8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388793AbgGTQ3p (ORCPT
+        id S2388800AbgGTQ3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:29:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731645AbgGTP7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:29:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731850AbgGTP7L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 11:59:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3B3D2065E;
-        Mon, 20 Jul 2020 15:59:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260750;
-        bh=cS5sXh8R8EECFabwRlhfigWsqZ9n88SnscShNI+HJNg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CfX1H6Ajt43TalJdDMGbt7k1x/j/j/bIpLVcBL7SkED6SX77/VJ+juDCISvUfzwwY
-         +XLyR90SZv6LQfP9+SjldfjTVoJRMwnaV4m3tSJ+qxV6OS5TQvw6BcYFCVpHfLjcQA
-         h1+ZaRs3hrFP0URg0e3tCebAe/67ytkaR+bL8gBM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF7DC061794;
+        Mon, 20 Jul 2020 08:59:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=YknGFmw1HdnT1qStqOT9wnRgOHrqfYkyqpqGeX9Gd5g=; b=SUGwTGF87+Bvn4/tsKZJsW65zw
+        fmZtDW/2RCy6fXfMqQcTWNFpaZSYQGDdqENP66n9PGzgZbCLrZtjNmFGqCizXYlbVd/+xRN1Y+xnD
+        lROPbgblyoVZu5icjsZ5LUMYTyYBHSf8ZfFIEuSi2FP95MBSdRF1w6mhfucFrQ5dqSqV81WtlilGw
+        IcWO6eP7Hc3qoiuyBrgiOSYEkM97zA4Y+wnaMulONkuwC1ahJIgvlOmLFhhpnPqmig4eQES3TkB74
+        5ssCdnBJyB+do5/mCWVjnVsOtBZoTV49fxrXlJ4gnIpR0uNGOcCAaJRfeJZNjXS1JpN3UP+/TP3xl
+        ZJEOa2HA==;
+Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxYC3-0007n1-N9; Mon, 20 Jul 2020 15:59:08 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wulff <crwulff@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 082/215] ALSA: usb-audio: Create a registration quirk for Kingston HyperX Amp (0951:16d8)
-Date:   Mon, 20 Jul 2020 17:36:04 +0200
-Message-Id: <20200720152824.113641618@linuxfoundation.org>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH 03/24] fs: add a kern_umount helper
+Date:   Mon, 20 Jul 2020 17:58:41 +0200
+Message-Id: <20200720155902.181712-4-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
-References: <20200720152820.122442056@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200720155902.181712-1-hch@lst.de>
+References: <20200720155902.181712-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wulff <crwulff@gmail.com>
+Like ksys_umount, but takes a kernel pointer for the destination path.
+Switch over the umount in the init code to it, which just happens to work
+due to the implicit set_fs(KERNEL_DS) during early init right now.
 
-[ Upstream commit 55f7326170d9e83e2d828591938e1101982a679c ]
-
-Create a quirk that allows special processing and/or
-skipping the call to snd_card_register.
-
-For HyperX AMP, which uses two interfaces, but only has
-a capture stream in the second, this allows the capture
-stream to merge with the first PCM.
-
-Signed-off-by: Chris Wulff <crwulff@gmail.com>
-Link: https://lore.kernel.org/r/20200314165449.4086-3-crwulff@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- sound/usb/card.c   | 12 ++++++++----
- sound/usb/quirks.c | 14 ++++++++++++++
- sound/usb/quirks.h |  3 +++
- 3 files changed, 25 insertions(+), 4 deletions(-)
+ fs/namespace.c           | 53 ++++++++++++++++++++++++----------------
+ include/linux/fs.h       |  1 +
+ include/linux/syscalls.h |  1 -
+ init/do_mounts_initrd.c  |  2 +-
+ 4 files changed, 34 insertions(+), 23 deletions(-)
 
-diff --git a/sound/usb/card.c b/sound/usb/card.c
-index f9a64e9526f54..2284377cbb98d 100644
---- a/sound/usb/card.c
-+++ b/sound/usb/card.c
-@@ -659,10 +659,14 @@ static int usb_audio_probe(struct usb_interface *intf,
- 			goto __error;
- 	}
+diff --git a/fs/namespace.c b/fs/namespace.c
+index d208a389aac3c0..cfcee6a1bd5dd2 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -1706,36 +1706,26 @@ static inline bool may_mandlock(void)
+ }
+ #endif
  
--	/* we are allowed to call snd_card_register() many times */
--	err = snd_card_register(chip->card);
--	if (err < 0)
--		goto __error;
-+	/* we are allowed to call snd_card_register() many times, but first
-+	 * check to see if a device needs to skip it or do anything special
-+	 */
-+	if (snd_usb_registration_quirk(chip, ifnum) == 0) {
-+		err = snd_card_register(chip->card);
-+		if (err < 0)
-+			goto __error;
-+	}
+-/*
+- * Now umount can handle mount points as well as block devices.
+- * This is important for filesystems which use unnamed block devices.
+- *
+- * We now support a flag for forced unmount like the other 'big iron'
+- * unixes. Our API is identical to OSF/1 to avoid making a mess of AMD
+- */
++static int umount_lookup_flags(int flags)
++{
++	if (flags & UMOUNT_NOFOLLOW)
++		return LOOKUP_MOUNTPOINT;
++	return LOOKUP_MOUNTPOINT | LOOKUP_FOLLOW;
++}
  
- 	if (quirk && quirk->shares_media_device) {
- 		/* don't want to fail when snd_media_device_create() fails */
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 9d11ff742e5f5..f3e26e65c3257 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1782,3 +1782,17 @@ void snd_usb_audioformat_attributes_quirk(struct snd_usb_audio *chip,
- 		break;
+-int ksys_umount(char __user *name, int flags)
++static int path_umount(struct path *path, int flags)
+ {
+-	struct path path;
+ 	struct mount *mnt;
+ 	int retval;
+-	int lookup_flags = LOOKUP_MOUNTPOINT;
+ 
+ 	if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
+ 		return -EINVAL;
+-
+ 	if (!may_mount())
+ 		return -EPERM;
+ 
+-	if (!(flags & UMOUNT_NOFOLLOW))
+-		lookup_flags |= LOOKUP_FOLLOW;
+-
+-	retval = user_path_at(AT_FDCWD, name, lookup_flags, &path);
+-	if (retval)
+-		goto out;
+-	mnt = real_mount(path.mnt);
++	mnt = real_mount(path->mnt);
+ 	retval = -EINVAL;
+-	if (path.dentry != path.mnt->mnt_root)
++	if (path->dentry != path->mnt->mnt_root)
+ 		goto dput_and_out;
+ 	if (!check_mnt(mnt))
+ 		goto dput_and_out;
+@@ -1748,12 +1738,33 @@ int ksys_umount(char __user *name, int flags)
+ 	retval = do_umount(mnt, flags);
+ dput_and_out:
+ 	/* we mustn't call path_put() as that would clear mnt_expiry_mark */
+-	dput(path.dentry);
++	dput(path->dentry);
+ 	mntput_no_expire(mnt);
+-out:
+ 	return retval;
+ }
+ 
++static int ksys_umount(char __user *name, int flags)
++{
++	struct path path;
++	int ret;
++
++	ret = user_path_at(AT_FDCWD, name, umount_lookup_flags(flags), &path);
++	if (ret)
++		return ret;
++	return path_umount(&path, flags);
++}
++
++int __init kern_umount(char *name, int flags)
++{
++	struct path path;
++	int ret;
++
++	ret = kern_path(name, umount_lookup_flags(flags), &path);
++	if (ret)
++		return ret;
++	return path_umount(&path, flags);
++}
++
+ SYSCALL_DEFINE2(umount, char __user *, name, int, flags)
+ {
+ 	return ksys_umount(name, flags);
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 8f628f9868711d..fbeadaa1a185fb 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2339,6 +2339,7 @@ extern long do_mount(const char *, const char __user *,
+ 		     const char *, unsigned long, void *);
+ int do_kern_mount(const char *dev_name, const char *dir_name,
+ 		const char *type_page, unsigned long flags, void *data_page);
++int __init kern_umount(char *name, int flags);
+ extern struct vfsmount *collect_mounts(const struct path *);
+ extern void drop_collected_mounts(struct vfsmount *);
+ extern int iterate_mounts(int (*)(struct vfsmount *, void *), void *,
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 5b0f1fca4cfb9d..3b1b8ebcda1d8c 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1236,7 +1236,6 @@ asmlinkage long sys_ni_syscall(void);
+  * the ksys_xyzyyz() functions prototyped below.
+  */
+ 
+-int ksys_umount(char __user *name, int flags);
+ int ksys_chroot(const char __user *filename);
+ ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
+ int ksys_chdir(const char __user *filename);
+diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
+index 604ce78af9acfa..d3858620707893 100644
+--- a/init/do_mounts_initrd.c
++++ b/init/do_mounts_initrd.c
+@@ -122,7 +122,7 @@ static void __init handle_initrd(void)
+ 		else
+ 			printk("failed\n");
+ 		printk(KERN_NOTICE "Unmounting old root\n");
+-		ksys_umount("/old", MNT_DETACH);
++		kern_umount("/old", MNT_DETACH);
  	}
  }
-+
-+int snd_usb_registration_quirk(struct snd_usb_audio *chip,
-+			       int iface)
-+{
-+	switch (chip->usb_id) {
-+	case USB_ID(0x0951, 0x16d8): /* Kingston HyperX AMP */
-+		/* Register only when we reach interface 2 so that streams can
-+		 * merge correctly into PCMs from interface 0
-+		 */
-+		return (iface != 2);
-+	}
-+	/* Register as normal */
-+	return 0;
-+}
-diff --git a/sound/usb/quirks.h b/sound/usb/quirks.h
-index df0355843a4c1..3afc01eabc7e2 100644
---- a/sound/usb/quirks.h
-+++ b/sound/usb/quirks.h
-@@ -51,4 +51,7 @@ void snd_usb_audioformat_attributes_quirk(struct snd_usb_audio *chip,
- 					  struct audioformat *fp,
- 					  int stream);
  
-+int snd_usb_registration_quirk(struct snd_usb_audio *chip,
-+			       int iface);
-+
- #endif /* __USBAUDIO_QUIRKS_H */
 -- 
-2.25.1
-
-
+2.27.0
 
