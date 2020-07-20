@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D253C4727E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F76C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4954D207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F97D207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281408;
-	bh=z7Xsc4pAQnAXAS8z63rxjvWkR5v1ktjL8dfKflE2mQM=;
+	s=default; t=1595281414;
+	bh=8howY8j9fNGGWqKTj9zlyAhmGqYzekyWtWpnYVgsxus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NdKwJg+wc9zaEongU6xULsrZCBiz9C6cpqVBXqL1gkZo7Yr2PtYILVAF7di2FjQsx
-	 qAOzvIzep3B5QgiYlC8juUJ3cO6iabUKAN2LcRSPENKBwnnV5yUlO6ASbAGX8IjIPp
-	 lxX5M9SKRWxDE604aUaBpU2aJxLl3SGejsq36Mns=
+	b=yvGwQ1AvTaAPgCNFp1fnT+yku9LQdrnjuxvDd2ixDTbvHpUMhzW+/vRcT9bS5Qqtg
+	 mk+Zc+1VDYK9P4GWzkGruO5wJOXxYJCkdwsczRTC21Pb1Xk8sxpUqsP3uJsKO37xe9
+	 qaT9cQzTJ7oW0+CQ5TDnTdLmm+GpCKkFOOSEkyHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgGTVn1 (ORCPT
+        id S1728946AbgGTVnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:43:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57156 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:43:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbgGTVic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:32 -0400
+        id S1728157AbgGTVia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5527B22BF5;
-        Mon, 20 Jul 2020 21:38:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDC3C22C9D;
+        Mon, 20 Jul 2020 21:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281112;
-        bh=z7Xsc4pAQnAXAS8z63rxjvWkR5v1ktjL8dfKflE2mQM=;
+        s=default; t=1595281109;
+        bh=8howY8j9fNGGWqKTj9zlyAhmGqYzekyWtWpnYVgsxus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rQKG0v6qANqcJdqHramgk+/fGItdDn5TM2IUd919NupG7H9GeMeYTUDRF4Ebi0PtG
-         XIOTv1NSxzEMzQ37v6iZMAFrYNH0W8a41pQ5DnfSbXgK3jzbDPtyUXkepO3LcxNLFb
-         CTbb6aYzI+GVJ+Nqn6Rd2LZ/2be8p8KAQ+aTzjIU=
+        b=YEnVzhW9OoXq+wWZuc4hCOrTL4lPhtAJjJogKS/suoNd5QUVIqlte0liVgCsLZhuL
+         KaZ92Ffqdwl89Ma7swX9OqsZI8JXhWVvw3OpqkpDESyZ/dyIe9gx/SnJF/waWkcL3V
+         nrFvELtdpATKBNWkma9z0QY57oDIpCw8dtx36yvQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chu Lin <linchuyuan@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 20/34] hwmon: (adm1275) Make sure we are reading enough data for different chips
-Date:   Mon, 20 Jul 2020 17:37:53 -0400
-Message-Id: <20200720213807.407380-20-sashal@kernel.org>
+Cc:     Peter Chen <peter.chen@nxp.com>, kbuild test robot <lkp@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 18/34] usb: cdns3: ep0: fix some endian issues
+Date:   Mon, 20 Jul 2020 17:37:51 -0400
+Message-Id: <20200720213807.407380-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
 References: <20200720213807.407380-1-sashal@kernel.org>
@@ -59,68 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chu Lin <linchuyuan@google.com>
+From: Peter Chen <peter.chen@nxp.com>
 
-[ Upstream commit 6d1d41c075a1a54ba03370e268171fec20e06563 ]
+[ Upstream commit 9f81d45c79271def8a9b90447b04b9c6323291f9 ]
 
-Issue:
-When PEC is enabled, binding adm1272 to the adm1275 would
-fail due to PEC error. See below:
-adm1275: probe of xxxx failed with error -74
+It is found by sparse.
 
-Diagnosis:
-Per the datasheet of adm1272, adm1278, adm1293 and amd1294,
-PMON_CONFIG (0xd4) is 16bits wide. On the other hand,
-PMON_CONFIG (0xd4) for adm1275 is 8bits wide. The driver should not
-assume everything is 8bits wide and read only 8bits from it.
-
-Solution:
-If it is adm1272, adm1278, adm1293 and adm1294, use i2c_read_word.
-Else, use i2c_read_byte
-
-Testing:
-Binding adm1272 to the driver.
-The change is only tested on adm1272.
-
-Signed-off-by: Chu Lin <linchuyuan@google.com>
-Link: https://lore.kernel.org/r/20200709040612.3977094-1-linchuyuan@google.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pmbus/adm1275.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/usb/cdns3/ep0.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-index 5caa37fbfc187..66b12e5ccbc65 100644
---- a/drivers/hwmon/pmbus/adm1275.c
-+++ b/drivers/hwmon/pmbus/adm1275.c
-@@ -454,6 +454,7 @@ MODULE_DEVICE_TABLE(i2c, adm1275_id);
- static int adm1275_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-+	s32 (*config_read_fn)(const struct i2c_client *client, u8 reg);
- 	u8 block_buffer[I2C_SMBUS_BLOCK_MAX + 1];
- 	int config, device_config;
- 	int ret;
-@@ -499,11 +500,16 @@ static int adm1275_probe(struct i2c_client *client,
- 			   "Device mismatch: Configured %s, detected %s\n",
- 			   id->name, mid->name);
+diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
+index da4c5eb03d7ee..666cebd9c5f29 100644
+--- a/drivers/usb/cdns3/ep0.c
++++ b/drivers/usb/cdns3/ep0.c
+@@ -37,18 +37,18 @@ static void cdns3_ep0_run_transfer(struct cdns3_device *priv_dev,
+ 	struct cdns3_usb_regs __iomem *regs = priv_dev->regs;
+ 	struct cdns3_endpoint *priv_ep = priv_dev->eps[0];
  
--	config = i2c_smbus_read_byte_data(client, ADM1275_PMON_CONFIG);
-+	if (mid->driver_data == adm1272 || mid->driver_data == adm1278 ||
-+	    mid->driver_data == adm1293 || mid->driver_data == adm1294)
-+		config_read_fn = i2c_smbus_read_word_data;
-+	else
-+		config_read_fn = i2c_smbus_read_byte_data;
-+	config = config_read_fn(client, ADM1275_PMON_CONFIG);
- 	if (config < 0)
- 		return config;
+-	priv_ep->trb_pool[0].buffer = TRB_BUFFER(dma_addr);
+-	priv_ep->trb_pool[0].length = TRB_LEN(length);
++	priv_ep->trb_pool[0].buffer = cpu_to_le32(TRB_BUFFER(dma_addr));
++	priv_ep->trb_pool[0].length = cpu_to_le32(TRB_LEN(length));
  
--	device_config = i2c_smbus_read_byte_data(client, ADM1275_DEVICE_CONFIG);
-+	device_config = config_read_fn(client, ADM1275_DEVICE_CONFIG);
- 	if (device_config < 0)
- 		return device_config;
+ 	if (zlp) {
+-		priv_ep->trb_pool[0].control = TRB_CYCLE | TRB_TYPE(TRB_NORMAL);
+-		priv_ep->trb_pool[1].buffer = TRB_BUFFER(dma_addr);
+-		priv_ep->trb_pool[1].length = TRB_LEN(0);
+-		priv_ep->trb_pool[1].control = TRB_CYCLE | TRB_IOC |
+-		    TRB_TYPE(TRB_NORMAL);
++		priv_ep->trb_pool[0].control = cpu_to_le32(TRB_CYCLE | TRB_TYPE(TRB_NORMAL));
++		priv_ep->trb_pool[1].buffer = cpu_to_le32(TRB_BUFFER(dma_addr));
++		priv_ep->trb_pool[1].length = cpu_to_le32(TRB_LEN(0));
++		priv_ep->trb_pool[1].control = cpu_to_le32(TRB_CYCLE | TRB_IOC |
++		    TRB_TYPE(TRB_NORMAL));
+ 	} else {
+-		priv_ep->trb_pool[0].control = TRB_CYCLE | TRB_IOC |
+-		    TRB_TYPE(TRB_NORMAL);
++		priv_ep->trb_pool[0].control = cpu_to_le32(TRB_CYCLE | TRB_IOC |
++		    TRB_TYPE(TRB_NORMAL));
+ 		priv_ep->trb_pool[1].control = 0;
+ 	}
  
+@@ -264,11 +264,11 @@ static int cdns3_req_ep0_get_status(struct cdns3_device *priv_dev,
+ 	case USB_RECIP_INTERFACE:
+ 		return cdns3_ep0_delegate_req(priv_dev, ctrl);
+ 	case USB_RECIP_ENDPOINT:
+-		index = cdns3_ep_addr_to_index(ctrl->wIndex);
++		index = cdns3_ep_addr_to_index(le16_to_cpu(ctrl->wIndex));
+ 		priv_ep = priv_dev->eps[index];
+ 
+ 		/* check if endpoint is stalled or stall is pending */
+-		cdns3_select_ep(priv_dev, ctrl->wIndex);
++		cdns3_select_ep(priv_dev, le16_to_cpu(ctrl->wIndex));
+ 		if (EP_STS_STALL(readl(&priv_dev->regs->ep_sts)) ||
+ 		    (priv_ep->flags & EP_STALL_PENDING))
+ 			usb_status =  BIT(USB_ENDPOINT_HALT);
+@@ -388,10 +388,10 @@ static int cdns3_ep0_feature_handle_endpoint(struct cdns3_device *priv_dev,
+ 	if (!(ctrl->wIndex & ~USB_DIR_IN))
+ 		return 0;
+ 
+-	index = cdns3_ep_addr_to_index(ctrl->wIndex);
++	index = cdns3_ep_addr_to_index(le16_to_cpu(ctrl->wIndex));
+ 	priv_ep = priv_dev->eps[index];
+ 
+-	cdns3_select_ep(priv_dev, ctrl->wIndex);
++	cdns3_select_ep(priv_dev, le16_to_cpu(ctrl->wIndex));
+ 
+ 	if (set)
+ 		__cdns3_gadget_ep_set_halt(priv_ep);
+@@ -452,7 +452,7 @@ static int cdns3_req_ep0_set_sel(struct cdns3_device *priv_dev,
+ 	if (priv_dev->gadget.state < USB_STATE_ADDRESS)
+ 		return -EINVAL;
+ 
+-	if (ctrl_req->wLength != 6) {
++	if (le16_to_cpu(ctrl_req->wLength) != 6) {
+ 		dev_err(priv_dev->dev, "Set SEL should be 6 bytes, got %d\n",
+ 			ctrl_req->wLength);
+ 		return -EINVAL;
+@@ -476,7 +476,7 @@ static int cdns3_req_ep0_set_isoch_delay(struct cdns3_device *priv_dev,
+ 	if (ctrl_req->wIndex || ctrl_req->wLength)
+ 		return -EINVAL;
+ 
+-	priv_dev->isoch_delay = ctrl_req->wValue;
++	priv_dev->isoch_delay = le16_to_cpu(ctrl_req->wValue);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
