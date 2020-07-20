@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE565C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FD5C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80F0A22CB2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B192022CB2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259603;
-	bh=cSxS4YWnRC2AZvH8yca7ffr8tLw7bkuEtMicPWSPDSY=;
+	s=default; t=1595259608;
+	bh=YRMjNTQGhNU5JwMX8Bo6/kNLH/gfrVoU7afWPPlGggc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hsnZB9UhMygg2JJLdQiDHCTTzpjOW1zZZKIfs2QjCB7vFwEbGbd072vELFn8wWC4z
-	 u9F79LstHtaQt5TJZ/frwWymAFghIRRAuFfFDDWT2atad/cbDDgnPuVKMyiGEdJlD5
-	 qm5a/z9+1++18U+rtUnvZOnXtCEtUAMHP+y+s+Zo=
+	b=ywQpm7k5eYMe2TZ3Yf88n02nNKGfraGNByeBtsAv8/fXEBo4YJGMWt9Fk7fxjihsd
+	 CtqsI3D4AVr+mGX9bPm58jH1cPLpqQXohjhyPrQrEUbPhyYgXPgqI9R5Xp4m2Eyi1Q
+	 Y/CFbA6qm+k+AUbDsz39lCndebNm27zKoi5PYBjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbgGTPkB (ORCPT
+        id S1729656AbgGTPkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:40:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59282 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728518AbgGTPj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:39:59 -0400
+        id S1728872AbgGTPkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:40:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3941F22B4E;
-        Mon, 20 Jul 2020 15:39:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03AEC22B4E;
+        Mon, 20 Jul 2020 15:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259598;
-        bh=cSxS4YWnRC2AZvH8yca7ffr8tLw7bkuEtMicPWSPDSY=;
+        s=default; t=1595259603;
+        bh=YRMjNTQGhNU5JwMX8Bo6/kNLH/gfrVoU7afWPPlGggc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N007WIthHaaOgfUy+Xlaxx6kKxW2Xvm4m3KmxcV+LZMciltfWLgeudnp6O9p6avmz
-         4JJtGQMD8Udu77abtICY0lSdrigoTYPMbfveoVZ0WHvihjKOllxIidUbRjqFWnNczz
-         q6YLsS0aoFHwtQ16v7JV56rOQcU4pr9/RpXHhgvo=
+        b=EDP47/emLhl9EtGz7n8wc56sehL4/5OnQMVoHztwX0CxT4E/X1qoq/B4O6lcLQo/i
+         eIxO5iOCrkLOolVoH2j+XTUOVoC4ufPMk2Npkn+NAyYvLpjDdazZd9Ft8VjePCnlgR
+         Ic1pRmJwbknBiFaeyZdMSWcr/frKAJbg2RiGJAhc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Edich <andre.edich@microchip.com>,
-        Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 10/86] smsc95xx: check return value of smsc95xx_reset
-Date:   Mon, 20 Jul 2020 17:36:06 +0200
-Message-Id: <20200720152753.638659470@linuxfoundation.org>
+Subject: [PATCH 4.9 12/86] ALSA: compress: fix partial_drain completion state
+Date:   Mon, 20 Jul 2020 17:36:08 +0200
+Message-Id: <20200720152753.743085089@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -61,46 +62,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Edich <andre.edich@microchip.com>
+From: Vinod Koul <vkoul@kernel.org>
 
-[ Upstream commit 7c8b1e855f94f88a0c569be6309fc8d5c8844cd1 ]
+[ Upstream commit f79a732a8325dfbd570d87f1435019d7e5501c6d ]
 
-The return value of the function smsc95xx_reset() must be checked
-to avoid returning false success from the function smsc95xx_bind().
+On partial_drain completion we should be in SNDRV_PCM_STATE_RUNNING
+state, so set that for partially draining streams in
+snd_compr_drain_notify() and use a flag for partially draining streams
 
-Fixes: 2f7ca802bdae2 ("net: Add SMSC LAN9500 USB2.0 10/100 ethernet adapter driver")
-Signed-off-by: Andre Edich <andre.edich@microchip.com>
-Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+While at it, add locks for stream state change in
+snd_compr_drain_notify() as well.
+
+Fixes: f44f2a5417b2 ("ALSA: compress: fix drain calls blocking other compress functions (v6)")
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Tested-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/20200629134737.105993-4-vkoul@kernel.org
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/smsc95xx.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/sound/compress_driver.h | 10 +++++++++-
+ sound/core/compress_offload.c   |  4 ++++
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
-index 6852ebafd4d3b..6ecae631a6307 100644
---- a/drivers/net/usb/smsc95xx.c
-+++ b/drivers/net/usb/smsc95xx.c
-@@ -1292,6 +1292,8 @@ static int smsc95xx_bind(struct usbnet *dev, struct usb_interface *intf)
+diff --git a/include/sound/compress_driver.h b/include/sound/compress_driver.h
+index 49482080311a1..b3b06478cf2ba 100644
+--- a/include/sound/compress_driver.h
++++ b/include/sound/compress_driver.h
+@@ -72,6 +72,7 @@ struct snd_compr_runtime {
+  * @direction: stream direction, playback/recording
+  * @metadata_set: metadata set flag, true when set
+  * @next_track: has userspace signal next track transition, true when set
++ * @partial_drain: undergoing partial_drain for stream, true when set
+  * @private_data: pointer to DSP private data
+  */
+ struct snd_compr_stream {
+@@ -83,6 +84,7 @@ struct snd_compr_stream {
+ 	enum snd_compr_direction direction;
+ 	bool metadata_set;
+ 	bool next_track;
++	bool partial_drain;
+ 	void *private_data;
+ };
  
- 	/* Init all registers */
- 	ret = smsc95xx_reset(dev);
-+	if (ret)
-+		goto free_pdata;
+@@ -185,7 +187,13 @@ static inline void snd_compr_drain_notify(struct snd_compr_stream *stream)
+ 	if (snd_BUG_ON(!stream))
+ 		return;
  
- 	/* detect device revision as different features may be available */
- 	ret = smsc95xx_read_reg(dev, ID_REV, &val);
-@@ -1320,6 +1322,10 @@ static int smsc95xx_bind(struct usbnet *dev, struct usb_interface *intf)
- 	schedule_delayed_work(&pdata->carrier_check, CARRIER_CHECK_DELAY);
+-	stream->runtime->state = SNDRV_PCM_STATE_SETUP;
++	/* for partial_drain case we are back to running state on success */
++	if (stream->partial_drain) {
++		stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
++		stream->partial_drain = false; /* clear this flag as well */
++	} else {
++		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
++	}
  
- 	return 0;
-+
-+free_pdata:
-+	kfree(pdata);
-+	return ret;
+ 	wake_up(&stream->runtime->sleep);
  }
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index 7ae8e24dc1e61..81624f6e3f330 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -723,6 +723,9 @@ static int snd_compr_stop(struct snd_compr_stream *stream)
  
- static void smsc95xx_unbind(struct usbnet *dev, struct usb_interface *intf)
+ 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_STOP);
+ 	if (!retval) {
++		/* clear flags and stop any drain wait */
++		stream->partial_drain = false;
++		stream->metadata_set = false;
+ 		snd_compr_drain_notify(stream);
+ 		stream->runtime->total_bytes_available = 0;
+ 		stream->runtime->total_bytes_transferred = 0;
+@@ -880,6 +883,7 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
+ 	if (stream->next_track == false)
+ 		return -EPERM;
+ 
++	stream->partial_drain = true;
+ 	retval = stream->ops->trigger(stream, SND_COMPR_TRIGGER_PARTIAL_DRAIN);
+ 	if (retval) {
+ 		pr_debug("Partial drain returned failure\n");
 -- 
 2.25.1
 
