@@ -2,83 +2,86 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A084C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3050720734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:56:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595267794;
-	bh=3vzlXSdpUDpQCr/J2aKATys7J/5IWPSAhG03kFZ7Z7A=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=CQrOyG+lksvIRsKX1v6a/KLJ7tr3k6Tja5fwalsYCdTZKSD3g+JAKIeA9EZlqM0hI
-	 K4P4CXS+e1cxKaQmbfF/HZnHlYPIQJxhN5jZSUFymNDxVJysLQvG2l3w0rJSZdlBI8
-	 eLZQOACEL5NfXvdXo7tso5cfA/qbfvL4aLb/B+44=
+	by mail.kernel.org (Postfix) with ESMTP id 52A9620709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:58:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVPx3/vU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389195AbgGTR4d (ORCPT
+        id S2389210AbgGTR6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:56:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726699AbgGTR4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:56:32 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 888EF20709;
-        Mon, 20 Jul 2020 17:56:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595267792;
-        bh=3vzlXSdpUDpQCr/J2aKATys7J/5IWPSAhG03kFZ7Z7A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cb2G80aN02Q22RZJ7HZyxA7cthcXVY0qoOO32qttK0WptMWMsKYvsFuZ96o9zTPEl
-         paxveYoYmbhzuv4B+eQI+WgihcwhBMUHUMHPXNd3t/YOPCN3DZZa+OOtVjOkynAO5z
-         60tiDayi0P9HLTAvAeZRXWld6Lihh/X8mTSDBAk8=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        kernel test robot <lkp@intel.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: [PATCH rdma-next v1 0/2] Fix warnings reported by kbuild
-Date:   Mon, 20 Jul 2020 20:56:25 +0300
-Message-Id: <20200720175627.1273096-1-leon@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Mon, 20 Jul 2020 13:58:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbgGTR6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 13:58:14 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39D82C061794;
+        Mon, 20 Jul 2020 10:58:14 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id m22so10618226pgv.9;
+        Mon, 20 Jul 2020 10:58:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dn+bkLkSM2KuCKSXgr83y2+KLzl+K9NcQTzlSg6shOw=;
+        b=IVPx3/vUOZoleX2si86P7GBZQhDQfBmNSj5bNfeOjTPe/PcJT/frdYfHefwROvyw8y
+         dmsNiVTu7IYvZkKTvIHonXifIDXWA29zGL0oCiEqssPnxmqeXDE2T+Ymm4FkFLl2h4Kq
+         FvY8d8chMcK9tRBQc2CV5xQt46ujwWlyg04GNGGMX1qpVZ74B3LdMgqkRxT/EEPVO1D8
+         PmV9VZ7D3n7j713ejV9r7cHZ/srYMvzFFJ4UeUlE6lbsW81D+uIIeEudiebAIlyOZA+7
+         VdqYJQrmWPuUU3wfCe40/4ERIXixMWHX0Q5he2KrDL5jmhGN0zne09zYUlR8GNUMYwDX
+         2VhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dn+bkLkSM2KuCKSXgr83y2+KLzl+K9NcQTzlSg6shOw=;
+        b=WPQGNWMN9IJYt46jSnaEoYlr0a3UM/+P6Xm1ly0DiDi/g360Zow8xs3SDS7XPFEfH4
+         oy14Cx8zfLuwHVHV6GB+ycnhh6Jy33n2YHo0ZFcusakrAzeo00qgqb+GkXQUvbf+MTOj
+         B+bUPsbSAnr32/VB76ULgSeqbbDWOXMkGXtA85iBBNX2pYJ87HvI245/RjOQSeDwnq2T
+         x1dbzfCUrqzHoHrSA5tOiZWa8v0L0XvdlENU89f1KBS5q68fv1Ap65YPNJnuMFIM9ngd
+         9Q3IOW/41FNsTofVWfc6obaFCKY9JGbOyTzHHsPak7Py3zgWh7dqpkiaJhrzWpb/9xIs
+         Uu8g==
+X-Gm-Message-State: AOAM532pRPKEmUj0udqtKoRpvUBrStfu+vDaJjVMAB1DzcxobX+vkgCq
+        jaHKCelr33SSJ8XD+PJ77lMhGQvlvWglnrBgPDQ=
+X-Google-Smtp-Source: ABdhPJyUy9OUzx7NJxRwSJeXyNze72+OUAMDroKsg/wVdwo2gT5bAnmDsD13W9hyJDJ2SF9i6DOc0+yhLFfxxAXBQvQ=
+X-Received: by 2002:a65:6707:: with SMTP id u7mr19505026pgf.233.1595267893842;
+ Mon, 20 Jul 2020 10:58:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200716234433.6490-1-xie.he.0141@gmail.com> <b2836ae012e0c57ba01ba1dee0a9eacd@dev.tdt.de>
+In-Reply-To: <b2836ae012e0c57ba01ba1dee0a9eacd@dev.tdt.de>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Mon, 20 Jul 2020 10:58:03 -0700
+Message-ID: <CAJht_EOZZFE0-Os90-CyO9M8xX-B7UYWaTHcLiFOcGvHh3TB7A@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers/net/wan/x25_asy: Fix to make it work
+To:     Martin Schiller <ms@dev.tdt.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Linux X25 <linux-x25@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
-
-Changelog
-v1:
- * Delete "pd" cleanup line
- * Moved all cleaned feilds to be last in declaration list to improve
-  readability.
-v0:
-https://lore.kernel.org/lkml/20200719060319.77603-1-leon@kernel.org
-------------------------------------------------------------------
-Hi,
-
-There are two change as were reported by kbuild. They are not important
-enough to have Fixes line.
-
-Thanks
-
-Leon Romanovsky (2):
-  RDMA/uverbs: Remove redundant assignments
-  RDMA/uverbs: Silence shiftTooManyBitsSigned warning
-
- drivers/infiniband/core/uverbs_cmd.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
---
-2.26.2
-
+On Mon, Jul 20, 2020 at 4:23 AM -0700
+Martin Schiller <ms@dev.tdt.de> wrote:
+>
+> LGTM.
+>
+> I have never used the driver, but the adjustments look conclusive. The
+> functionality is now comparable to the one in the drivers lapbether or
+> hdlc_x25.
+>
+> Reviewed-by: Martin Schiller <ms@dev.tdt.de>
+>
+Thank you so much!
