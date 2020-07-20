@@ -2,240 +2,302 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BF1C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E84C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE4D22482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 907AB22482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:33:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lT61+N1i"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ofTk0MJi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbgGTObr (ORCPT
+        id S1728546AbgGTOdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:31:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgGTObq (ORCPT
+        Mon, 20 Jul 2020 10:33:47 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:17101 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726520AbgGTOdq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:31:46 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A8AC061794;
-        Mon, 20 Jul 2020 07:31:46 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 5so12288378oty.11;
-        Mon, 20 Jul 2020 07:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Q3g5qbdmC19gV+NnXyKNCgQ/rTdz9C9y5peqjUosD9s=;
-        b=lT61+N1i6xbgCZrxUx/ahZydAhqURpCPx0Fyz8BDuoTYteem+4vYQJ6DI8J3UJkwiv
-         YntOzmEQicJdm8cXoqEshZGmwh/TG4+Tmm0FhQJ+RkpNZBjY+zpxqeMx2Q8epR2kPkvD
-         kZ697dtgohPa5PRrPc0kJCGpDoEQpDQC2CJKD4rz2lpdNpT404eJrdvtQ0vu1wMIXZxW
-         y6OZV5SJM6hgbQRzwJe8EFKNURGCEuIAO0IUKVk5Wwh++HDagpJSIJK4oWicBYzFd+fq
-         fCTF57QvxmZp1vasmMaXVc09PQbJ2W7KwEsSoGSvMpgmc2YC3YPsiYmjIinYqviy9stE
-         rNFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Q3g5qbdmC19gV+NnXyKNCgQ/rTdz9C9y5peqjUosD9s=;
-        b=p7WjOQ1G4YrLZNwMdqsyL0EYlMn75pwR7gLbeUJ1v6LbRLuJDZ4w6bZdKuAf6MIJAS
-         PPoJI6d32PZpGJhFD1zPBbDp1VaH+m2GHLsaDgvIjR4RpGmvwG+glDgVdRqnqWlVqFOi
-         Va90RXgDc4MTVfz2+8pZ93IvQIfu2RoRkiByHqwhU5cLN/q2nQDo+Cq26oFVtphe7x7u
-         /cT3dMeSQf3TKna0fH8Fp9w3NMfKRVuaV0IwlQw5N72M52LfpvKIXcgtB3wCd2KFpvVV
-         wWkjL9iImZH0INAl/yDSG5Ylw+uKmeuz3q32egZ2sfC915HAhuo1rezPjIxJ5sTPA8kr
-         EJuQ==
-X-Gm-Message-State: AOAM530EOpJLSublnUNLj6TOmDVUp3+n/hRXC6/jacVNxKt8WbqI9t97
-        ipxE2vfjA40iQy5EHbHFmi4WAwUdRw8i88DAXVBd/A==
-X-Google-Smtp-Source: ABdhPJzGd8HYBZ1g5Cuh4cWHg44hrn4tgLZQsYcHeteNz+04u3lDAyMzPQRrObfAyyJ3oc3PfxGOyaNlNfU6RmmZ6sM=
-X-Received: by 2002:a05:6830:10ce:: with SMTP id z14mr20798184oto.135.1595255505584;
- Mon, 20 Jul 2020 07:31:45 -0700 (PDT)
+        Mon, 20 Jul 2020 10:33:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595255625; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=fr4KTF1zO28tUBurYye7Fu+K8QzPk0xO7FJyoSXYS6E=;
+ b=ofTk0MJiu/9nSIPZcT7Y/GWSqVjP/j91qOIpeyWmGmIhatEKxL/LUfUN2+p8cIcIioEhkpfH
+ mPwUFHEL0RIEuR0KAcfDdtCzexNTVDfiYytDtkDukknpLdD4P84HN7lo/z/6x0JcwepndOau
+ YRRT8CrLktTusXZbXVwHgRVOoo8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f15ab451e603dbb444a0011 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 14:33:41
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id F2711C433A1; Mon, 20 Jul 2020 14:33:39 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: dikshita)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90B08C433C6;
+        Mon, 20 Jul 2020 14:33:38 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200717222819.26198-1-nramas@linux.microsoft.com> <20200717222819.26198-5-nramas@linux.microsoft.com>
-In-Reply-To: <20200717222819.26198-5-nramas@linux.microsoft.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Mon, 20 Jul 2020 10:31:34 -0400
-Message-ID: <CAEjxPJ7xQtZToF4d2w_o8SXFKG9kPZaWTWTFqyC-7GwBWnQa0A@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] LSM: Define SELinux function to measure security state
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 20 Jul 2020 20:03:38 +0530
+From:   dikshita@codeaurora.org
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Nicolas Dufresne <nicolas@ndufresne.ca>, mchehab@kernel.org,
+        ezequiel@collabora.com, boris.brezillon@collabora.com,
+        ribalda@kernel.org, paul.kocialkowski@bootlin.com,
+        posciak@chromium.org, linux-media@vger.kernel.org,
+        stanimir.varbanov@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org,
+        majja@codeaurora.org, linux-media-owner@vger.kernel.org
+Subject: Re: [RFC PATCH 0/1] Add LTR controls
+In-Reply-To: <d37e4e83-b7ae-7d44-c75f-2055f11ae898@xs4all.nl>
+References: <1591871121-25420-1-git-send-email-dikshita@codeaurora.org>
+ <f07c4aab69d2b333c0e36c50c526c0a85322e708.camel@ndufresne.ca>
+ <1a9904b6-60a5-0faa-8a5e-c9dc00802184@xs4all.nl>
+ <40040141fc3027c3eb1fdebc1a0e8ade@codeaurora.org>
+ <d37e4e83-b7ae-7d44-c75f-2055f11ae898@xs4all.nl>
+Message-ID: <dd365fe82523c4e44af4353f4f457137@codeaurora.org>
+X-Sender: dikshita@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 6:28 PM Lakshmi Ramasubramanian
-<nramas@linux.microsoft.com> wrote:
->
-> SELinux configuration and policy are some of the critical data for this
-> security module that needs to be measured. To enable this measurement
-> SELinux needs to implement the interface function,
-> security_measure_data(), that the LSM can call.
->
-> Define the security_measure_data() function in SELinux to measure SELinux
-> configuration and policy. Call this function to measure SELinux data
-> when there is a change in the security module's state.
->
-> Sample measurement of SELinux state and hash of the policy:
->
-> 10 e32e...5ac3 ima-buf sha256:86e8...4594 selinux-state 656e61626c65643d3=
-13b656e666f7263696e673d303b636865636b72657170726f743d313b6e6574706565723d31=
-3b6f70656e7065726d3d313b657874736f636b636c6173733d313b616c776179736e6574776=
-f726b3d303b6367726f75707365636c6162656c3d313b6e6e706e6f737569647472616e7369=
-74696f6e3d313b67656e66737365636c6162656c73796d6c696e6b3d303b
-> 10 f4a7...9408 ima-buf sha256:4941...68fc selinux-policy-hash 8d1d...1834
->
-> To verify the measurement check the following:
->
-> Execute the following command to extract the measured data
-> from the IMA log for SELinux configuration (selinux-state).
->
->   cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements | gre=
-p -m 1 "selinux-state" | cut -d' ' -f 6 | xxd -r -p
->
-> The output should be the list of key-value pairs. For example,
->  enabled=3D1;enforcing=3D0;checkreqprot=3D1;network_peer_controls=3D1;ope=
-n_perms=3D1;extended_socket_class=3D1;always_check_network=3D0;cgroup_secla=
-bel=3D1;nnp_nosuid_transition=3D1;genfs_seclabel_symlinks=3D0;
->
-> To verify the measured data with the current SELinux state:
->
->  =3D> enabled should be set to 1 if /sys/fs/selinux folder exists,
->     0 otherwise
->
-> For other entries, compare the integer value in the files
->  =3D> /sys/fs/selinux/enforce
->  =3D> /sys/fs/selinux/checkreqprot
-> And, each of the policy capabilities files under
->  =3D> /sys/fs/selinux/policy_capabilities
->
-> The data for selinux-policy-hash is the SHA256 hash of SELinux policy.
->
-> To verify the measured data with the current SELinux policy run
-> the following commands and verify the output hash values match.
->
->   sha256sum /sys/fs/selinux/policy | cut -d' ' -f 1
->
->   cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements | gre=
-p -m 1 "selinux-policy-hash" | cut -d' ' -f 6
->
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> ---
+On 2020-07-16 14:25, Hans Verkuil wrote:
+> On 16/06/2020 20:41, dikshita@codeaurora.org wrote:
+>> Hi Hans, Nicolas,
+>> 
+>> Thanks for your comments.
+>> 
+>> On 2020-06-12 14:41, Hans Verkuil wrote:
+>>> Hi Dikshita, Nicolas,
+>>> 
+>>> On 11/06/2020 16:22, Nicolas Dufresne wrote:
+>>>> Le jeudi 11 juin 2020 à 15:55 +0530, Dikshita Agarwal a écrit :
+>>>>> LTR (Long Term Reference) frames are the frames that are encoded
+>>>>> sometime in the past
+>>>>> and stored in the DPB buffer list to be used as reference to encode
+>>>>> future frames.
+>>>>> One usage of LTR encoding is to reduce error propagation for video
+>>>>> transmission
+>>>>> in packet lossy networks.  For example, encoder may want to specify
+>>>>> some key frames as
+>>>>> LTR pictures and use them as reference frames for encoding. With
+>>>>> extra protection
+>>>>> selectively on these LTR frames or synchronization with the 
+>>>>> receiver
+>>>>> of reception of
+>>>>> the LTR frames during transmission, decoder can receive reference
+>>>>> frames more reliably
+>>>>> than other non-reference frames. As a result, transmission error 
+>>>>> can
+>>>>> be effectively
+>>>>> restricted within certain frames rather than propagated to future
+>>>>> frames.
+>>>>> 
+>>>>> We are introducing below V4l2 Controls for this feature
+>>>>> 1. V4L2_CID_MPEG_VIDEO_LTRCOUNT
+>>>>>     a. This is used to query or configure the number of LTR frames.
+>>>>>        This is a static control and is controlled by the client.
+>>>>>     b. The LTR index varies from 0 to the max LTR-1.
+>>>>>     c. If LTR Count is more than max supported LTR count (max LTR) 
+>>>>> by
+>>>>> driver, it will be rejected.
+>>>>>     d. Auto Marking : If LTR count is non zero,
+>>>>>         1) first LTR count frames would be mark as LTR 
+>>>>> automatically
+>>>>> after
+>>>>>       	   every IDR frame (inclusive).
+>>>>>         2) For multilayer encoding: first LTR count base layer
+>>>>> reference frames starting after
+>>>>>            every IDR frame (inclusive) in encoding order would be
+>>>>> marked as LTR frames by the encoder.
+>>>>>         3) Auto marking of LTR due to IDR should consider following
+>>>>> conditions:
+>>>>>             1. The frame is not already set to be marked as LTR.
+>>>>>             2. The frame is part of the base layer in the
+>>>>> hierarchical layer case.
+>>>>>             3. The number of frames currently marked as LTR is less
+>>>>> than the maximum LTR frame index plus 1.
+>>>>>     e. Encoder needs to handle explicit Mark/Use command when 
+>>>>> encoder
+>>>>> is still doing "auto" marking
+>>> 
+>>> I don't follow this, quite possibly due to lack of experience with
+>>> encoders.
+>>> 
+>>> I kind of would expect to see two modes: either automatic where
+>>> encoders can
+>>> mark up to LTR_COUNT frames as long term reference, and userspace 
+>>> just
+>>> sets
+>>> LTR_COUNT and doesn't have to do anything else.
+>>> 
+>>> Or it is manual mode where userspace explicitly marks long term
+>>> reference
+>>> frames.
+>>> 
+>>> From the proposal above it looks like you can mix auto and manual
+>>> modes.
+>>> 
+>>> BTW, how do you 'unmark' long term reference frames?
+>>> 
+>>> This feature is for stateful encoders, right?
+>>> 
+>>>> 
+>>>> Perhaps we are missing a LONG_TERM_REFERENCE_MODE ? I bet some 
+>>>> encoder
+>>>> can select by themself long term references and even some encoders 
+>>>> may
+>>>> not let the user decide.
+>>>> 
+>>>> (not huge han of LTR acronyme, but that could be fine too, assuming
+>>>> you
+>>>> add more _).
+>>>> 
+>> 
+>> Userspace sets LTR count which signifies the number of LTR frames
+>> encoder needs to generate or keep.
+>> The encoder has to build-up its internal buffer reference list (aka 
+>> DBP
+>> list or recon buffer list).
+>> In order to achieve that encoder will fill It's LTR (long term
+>> references) list and STR (short term references) list
+>> by auto marking n frames as LTR frames(n is equal to LTR count) based 
+>> on
+>> auto-marking dictated by the encoder spec.
+>> The client then can replace those automatically marked frames with new
+>> frames using V4L2_CID_MPEG_VIDEO_MARKLTRFRAME and can ask
+>> encoder to refer the newly marked frame for encoding the next frame
+>> using V4L2_CID_MPEG_VIDEO_USELTRFRAME.
+>> 
+>>>>> 
+>>>>> 2. V4L2_CID_MPEG_VIDEO_MARKLTRFRAME :
+>>>>>     a. This signals to mark the current frame as LTR frame. It is a
+>>>>> dynamic control and also provide the LTR index to be used.
+>>>>>     b. the LTR index provided by this control should never exceed 
+>>>>> the
+>>>>> max LTR-1. Else it will be rejected.
+>>>> 
+>>>> The "current" frame seems a bit loose. Perhaps you wanted to use
+>>>> buffer
+>>>> flags ? A bit like what we have to signal TOP/BOTTOM fields in
+>>>> alternate interlacing.
+>>> 
+>>> I was thinking the same thing. Using a control for this doesn't seem
+>>> right.
+>>> 
+>> 
+>> the client sets this to replace automatically marked frames by the
+>> encoder with a particular frame.
+>> this provides an index that ranges from 0 to LTR count-1 and then the
+>> particular frame will be marked with that index.
+>> this can be achieved through request by associating this control with 
+>> a
+>> specific buffer to make it synchronized.
+>> 
+>>>> 
+>>>>> 
+>>>>> 3. V4L2_CID_MPEG_VIDEO_USELTRFRAME :
+>>>>>     a. This specifies the LTR frame(s) to be used for encoding the
+>>>>> current frame. This is a dynamic control.
+>>>>>     b. LTR Use Bitmap : this consists of bits [0, 15]. A total of N
+>>>>> LSB bits of this field are valid,
+>>>>>        where N is the maximum number of LTRs supported. All the 
+>>>>> other
+>>>>> bits are invalid and should be rejected.
+>>>>>        The LSB corresponds to the LTR index 0. Bit N-1 from the LSB
+>>>>> corresponds to the LTR index max LTR-1.
+>>> 
+>>> How would userspace know this? Esp. with auto marking since userspace
+>>> would have
+>>> to predict how auto marking works (if I understand this correctly).
+>>> 
+>> 
+>> Client sets LTR count which tells about the number of LTR frames
+>> automatically marked by the encoder.
+>> so client can use LTR index (0 to LTR count -1) to ask encoder to 
+>> refer
+>> any particular
+>> frame (marked automatically by driver or marked by client with
+>> V4L2_CID_MPEG_VIDEO_MARKLTRFRAME) as a reference to encode the next
+>> frame.
+>> 
+>>> For which HW encoder is this meant?
+>>> 
+>> This is primarily meant for H264 and HEVC.
+> 
+> The venus encoder?
+yes
+> 
+> Some more questions:
+> 
+> 1) How many LTR frames do h.264 and hevc allow?
+According to spec, MAX LTR allowed by H.264 is 15 and HEVC allows max 32 
+LTR frames.
+> 2) Given N LTR frames, is there a ordering of those frames? E.g.
+>    the LTR frame with index 0 is processed/used differently from
+>    LTR frame with index 1? Or are they all equal in that it is just a 
+> pool
+>    of LTR frames that the encoder can use as it wishes?
+they are different frames marked to be used as LTR and stored in 
+available indices.
+Userspace notifies encoder which LTR frame index to use via USE LTR 
+control.
 
-> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
-> new file mode 100644
-> index 000000000000..659011637ae7
-> --- /dev/null
-> +++ b/security/selinux/measure.c
-> @@ -0,0 +1,155 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Measure SELinux state using IMA subsystem.
-> + */
-> +#include <linux/ima.h>
-> +#include "security.h"
-> +
-> +/* Pre-allocated buffer used for measuring state */
-> +static char *selinux_state_string;
-> +static size_t selinux_state_string_len;
-> +static char *str_format =3D "%s=3D%d;";
-> +static int selinux_state_count;
-> +
-> +void __init selinux_init_measurement(void)
-> +{
-> +       int i;
-> +
-> +       /*
-> +        * enabled
-> +        * enforcing
-> +        * checkreqport
-
-checkreqprot (spelling)
-
-What about initialized?  Or do you consider that to be implicitly
-true/1 else we wouldn't be taking a measurement?  Only caveat there is
-that it provides one more means of disabling measurements (at the same
-time as disabling enforcement) by setting it to false/0 via kernel
-write flaw.
-
-> +        * All policy capability flags
-> +        */
-> +       selinux_state_count =3D 3 + __POLICYDB_CAPABILITY_MAX;
-> +
-> +       selinux_state_string_len =3D snprintf(NULL, 0, str_format,
-> +                                           "enabled", 0);
-> +       selinux_state_string_len +=3D snprintf(NULL, 0, str_format,
-> +                                            "enforcing", 0);
-> +       selinux_state_string_len +=3D snprintf(NULL, 0, str_format,
-> +                                            "checkreqprot", 0);
-> +       for (i =3D 3; i < selinux_state_count; i++) {
-> +               selinux_state_string_len +=3D
-> +                       snprintf(NULL, 0, str_format,
-> +                                selinux_policycap_names[i-3], 0);
-> +       }
-
-What's the benefit of this pattern versus just making the loop go from
-0 to __POLICYDB_CAPABILITY_MAX and using selinux_policycap_names[i]?
-
-> +void selinux_measure_state(struct selinux_state *selinux_state)
-> +{
-> +       void *policy =3D NULL;
-> +       void *policy_hash =3D NULL;
-> +       size_t curr, buflen;
-> +       int i, policy_hash_len, rc =3D 0;
-> +
-> +       if (!selinux_initialized(selinux_state)) {
-> +               pr_warn("%s: SELinux not yet initialized.\n", __func__);
-> +               return;
-> +       }
-
-We could measure the global state variables before full SELinux
-initialization (i.e. policy load).
-Only the policy hash depends on having loaded the policy.
-
-> +
-> +       if (!selinux_state_string) {
-> +               pr_warn("%s: Buffer for state not allocated.\n", __func__=
-);
-> +               return;
-> +       }
-> +
-> +       curr =3D snprintf(selinux_state_string, selinux_state_string_len,
-> +                       str_format, "enabled",
-> +                       !selinux_disabled(selinux_state));
-> +       curr +=3D snprintf((selinux_state_string + curr),
-> +                        (selinux_state_string_len - curr),
-> +                        str_format, "enforcing",
-> +                        enforcing_enabled(selinux_state));
-> +       curr +=3D snprintf((selinux_state_string + curr),
-> +                        (selinux_state_string_len - curr),
-> +                        str_format, "checkreqprot",
-> +                        selinux_checkreqprot(selinux_state));
-> +
-> +       for (i =3D 3; i < selinux_state_count; i++) {
-> +               curr +=3D snprintf((selinux_state_string + curr),
-> +                                (selinux_state_string_len - curr),
-> +                                str_format,
-> +                                selinux_policycap_names[i - 3],
-> +                                selinux_state->policycap[i - 3]);
-> +       }
-
-Same question here as for the previous loop; seems cleaner to go from
-0 to __POLICYDB_CAPABILITY_MAX and use [i].
-
-What public git tree / branch would you recommend trying to use your
-patches against?  Didn't seem to apply to any of the obvious ones.
+Thanks,
+Dikshita
+> 
+> Regards,
+> 
+> 	Hans
+> 
+>> 
+>> Thanks,
+>> Dikshita
+>> 
+>>>> 
+>>>> Note, I haven't captured very well the userspace control flow, 
+>>>> perhaps
+>>>> this could be enhanced through writing some documentation.
+>>>> 
+>>>> As per all other generic encoder controls, we need to make sure it
+>>>> will
+>>>> be usable and flexible enough for multiple HW blocks, as it can be
+>>>> tedious to extend later otherwise. It is important that along with
+>>>> this
+>>>> RFC you provide some comparisons with with other HW / SW APIs in 
+>>>> order
+>>>> to help justify the design decisions. I also think there should be
+>>>> link made V4L2_CID_MPEG_VIDEO_GOP_* , number of B-Frames etc.
+>>> 
+>>> I agree with Nicolas.
+>>> 
+>>> Regards,
+>>> 
+>>> 	Hans
+>>> 
+>>>> 
+>>>> regards,
+>>>> Nicolas
+>>>> 
+>>>>> 
+>>>>> Dikshita Agarwal (1):
+>>>>>   media: v4l2-ctrls:  add control for ltr
+>>>>> 
+>>>>>  drivers/media/v4l2-core/v4l2-ctrls.c | 6 ++++++
+>>>>>  include/uapi/linux/v4l2-controls.h   | 4 ++++
+>>>>>  2 files changed, 10 insertions(+)
+>>>>> 
+>>>> 
