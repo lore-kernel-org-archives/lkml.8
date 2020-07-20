@@ -2,100 +2,112 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF050C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93423C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9334206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263263;
-	bh=HiOwwL2PD7FMOr0KZzLMBCmQbQEHfWXdnGdrVeZt+Ic=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jjWqmyMtK3pyig0K6J2tcd9nASXemADn0FGRpSQnRxAs04cJmrYYhl8vm2l4PScX1
-	 +huw4iXUMly+9Cosv6wnELE8N2XXD0Ud03okyotuqz1UKqHKlRHJfsJ8NOUdm1cPkO
-	 eTzc0Z9E23TdHGhfHhoxJaJlF83f45HGYgwiP7jc=
+	by mail.kernel.org (Postfix) with ESMTP id 68D0E206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ViLLZSgT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbgGTPqQ (ORCPT
+        id S1730601AbgGTPqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:46:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40832 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:46:00 -0400
+Received: from crapouillou.net ([89.234.176.41]:53584 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730624AbgGTPqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:46:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1B3A206E9;
-        Mon, 20 Jul 2020 15:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259972;
-        bh=HiOwwL2PD7FMOr0KZzLMBCmQbQEHfWXdnGdrVeZt+Ic=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eLIjisXL5utLz7idy2NoB6MpPZlx9eBU0ZI3q2mZpY+0frl+9/iIc6jIxwxhc+W1M
-         nfS/t+GvLkwrRVDhyoRiXrV3s+GRV4v5h/7MaqYjnN2FzRIjH6r/cFigjvVxvwbuIK
-         M05KwD4nEWLjIq4rvhAWE8JbXSPmESvEAwIRwQFc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.14 029/125] KVM: arm64: Fix definition of PAGE_HYP_DEVICE
-Date:   Mon, 20 Jul 2020 17:36:08 +0200
-Message-Id: <20200720152804.386719090@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
-References: <20200720152802.929969555@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730587AbgGTPp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:45:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1595259953; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=MYfSK0uCqzVeDm3Bgtm0aTqhsB8rtuNFCVEW421QRKw=;
+        b=ViLLZSgTdkS7MmHwzrvODyCaxPA9gXgb9Yz0MAjOzBpVUXU4ZKq6EVhy8BNdiZi4i6xLLv
+        4B+faPF+EAaMOHMiUqIOrceGjTMtUW/VDLNE0dwb2Dd/69Pyy+0B7rJEck3sd1AGdcYzgu
+        FkfhtUUlHZ3wQ/VkHhHA22M0j+8S1Jw=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     od@zcrc.me, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2] dt-bindings: ingenic,pinctrl: Support pinmux/pinconf nodes
+Date:   Mon, 20 Jul 2020 17:45:48 +0200
+Message-Id: <20200720154548.12453-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+Add YAML to describe the pinmux/pinconf sub-nodes of the pinctrl IP on
+Ingenic SoCs.
 
-commit 68cf617309b5f6f3a651165f49f20af1494753ae upstream.
-
-PAGE_HYP_DEVICE is intended to encode attribute bits for an EL2 stage-1
-pte mapping a device. Unfortunately, it includes PROT_DEVICE_nGnRE which
-encodes attributes for EL1 stage-1 mappings such as UXN and nG, which are
-RES0 for EL2, and DBM which is meaningless as TCR_EL2.HD is not set.
-
-Fix the definition of PAGE_HYP_DEVICE so that it doesn't set RES0 bits
-at EL2.
-
-Acked-by: Marc Zyngier <maz@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200708162546.26176-1-will@kernel.org
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/arm64/include/asm/pgtable-prot.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/include/asm/pgtable-prot.h
-+++ b/arch/arm64/include/asm/pgtable-prot.h
-@@ -65,7 +65,7 @@
- #define PAGE_HYP		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
- #define PAGE_HYP_EXEC		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
- #define PAGE_HYP_RO		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY | PTE_HYP_XN)
--#define PAGE_HYP_DEVICE		__pgprot(PROT_DEVICE_nGnRE | PTE_HYP)
-+#define PAGE_HYP_DEVICE		__pgprot(_PROT_DEFAULT | PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_HYP | PTE_HYP_XN)
+Notes:
+    v2: Rebased on top of pinctrl/devel
+
+ .../bindings/pinctrl/ingenic,pinctrl.yaml     | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+index 5be2b1e95b36..18163fb69ce7 100644
+--- a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+@@ -110,6 +110,46 @@ required:
+   - "#address-cells"
+   - "#size-cells"
  
- #define PAGE_S2			__pgprot(_PROT_DEFAULT | PTE_S2_MEMATTR(MT_S2_NORMAL) | PTE_S2_RDONLY)
- #define PAGE_S2_DEVICE		__pgprot(_PROT_DEFAULT | PTE_S2_MEMATTR(MT_S2_DEVICE_nGnRE) | PTE_S2_RDONLY | PTE_UXN)
-
++additionalProperties:
++  anyOf:
++    - type: object
++      allOf:
++        - $ref: pincfg-node.yaml#
++        - $ref: pinmux-node.yaml#
++
++      properties:
++        phandle: true
++        function: true
++        groups: true
++        pins: true
++        bias-disable: true
++        bias-pull-up: true
++        bias-pull-down: true
++        output-low: true
++        output-high: true
++      additionalProperties: false
++
++    - type: object
++      properties:
++        phandle: true
++      additionalProperties:
++        type: object
++        allOf:
++          - $ref: pincfg-node.yaml#
++          - $ref: pinmux-node.yaml#
++
++        properties:
++          phandle: true
++          function: true
++          groups: true
++          pins: true
++          bias-disable: true
++          bias-pull-up: true
++          bias-pull-down: true
++          output-low: true
++          output-high: true
++        additionalProperties: false
++
+ examples:
+   - |
+     pin-controller@10010000 {
+-- 
+2.27.0
 
