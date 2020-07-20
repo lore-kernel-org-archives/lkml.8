@@ -2,302 +2,148 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E84C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 907AB22482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:33:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ofTk0MJi"
+	by mail.kernel.org (Postfix) with ESMTP id E4B8822B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgGTOdr (ORCPT
+        id S1728307AbgGTOec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:33:47 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:17101 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726520AbgGTOdq (ORCPT
+        Mon, 20 Jul 2020 10:34:32 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:38095 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbgGTOec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:33:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595255625; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=fr4KTF1zO28tUBurYye7Fu+K8QzPk0xO7FJyoSXYS6E=;
- b=ofTk0MJiu/9nSIPZcT7Y/GWSqVjP/j91qOIpeyWmGmIhatEKxL/LUfUN2+p8cIcIioEhkpfH
- mPwUFHEL0RIEuR0KAcfDdtCzexNTVDfiYytDtkDukknpLdD4P84HN7lo/z/6x0JcwepndOau
- YRRT8CrLktTusXZbXVwHgRVOoo8=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f15ab451e603dbb444a0011 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 14:33:41
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F2711C433A1; Mon, 20 Jul 2020 14:33:39 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: dikshita)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90B08C433C6;
-        Mon, 20 Jul 2020 14:33:38 +0000 (UTC)
+        Mon, 20 Jul 2020 10:34:32 -0400
+Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N95qT-1krodm4BvT-016C7p; Mon, 20 Jul 2020 16:34:30 +0200
+Received: by mail-qk1-f171.google.com with SMTP id k18so15466062qke.4;
+        Mon, 20 Jul 2020 07:34:29 -0700 (PDT)
+X-Gm-Message-State: AOAM533vXOXAQA92gQlYFoAKT5yHOm1tb++FWh4RgrKXSqNGI4F7RuQG
+        UTA4LMhsn9U2RLn+KpXP96RHNp1NzVIa1IEFOpY=
+X-Google-Smtp-Source: ABdhPJwIxgAdvjUjPU+4jzybDNb2QFZAVcL3HMLlxw2RLgRPrBNFIwh83Ml0UJm/YApy5c7tnsKEhhbWEGttCx/g1AI=
+X-Received: by 2002:a37:b484:: with SMTP id d126mr21885286qkf.394.1595255668502;
+ Mon, 20 Jul 2020 07:34:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 20 Jul 2020 20:03:38 +0530
-From:   dikshita@codeaurora.org
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Nicolas Dufresne <nicolas@ndufresne.ca>, mchehab@kernel.org,
-        ezequiel@collabora.com, boris.brezillon@collabora.com,
-        ribalda@kernel.org, paul.kocialkowski@bootlin.com,
-        posciak@chromium.org, linux-media@vger.kernel.org,
-        stanimir.varbanov@linaro.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org,
-        majja@codeaurora.org, linux-media-owner@vger.kernel.org
-Subject: Re: [RFC PATCH 0/1] Add LTR controls
-In-Reply-To: <d37e4e83-b7ae-7d44-c75f-2055f11ae898@xs4all.nl>
-References: <1591871121-25420-1-git-send-email-dikshita@codeaurora.org>
- <f07c4aab69d2b333c0e36c50c526c0a85322e708.camel@ndufresne.ca>
- <1a9904b6-60a5-0faa-8a5e-c9dc00802184@xs4all.nl>
- <40040141fc3027c3eb1fdebc1a0e8ade@codeaurora.org>
- <d37e4e83-b7ae-7d44-c75f-2055f11ae898@xs4all.nl>
-Message-ID: <dd365fe82523c4e44af4353f4f457137@codeaurora.org>
-X-Sender: dikshita@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200720092435.17469-1-rppt@kernel.org> <20200720092435.17469-4-rppt@kernel.org>
+ <CAK8P3a0NyvRMqH7X0YNO5E6DGtvZXD5ZcD6Y6n7AkocufkMnHA@mail.gmail.com> <20200720142053.GC8593@kernel.org>
+In-Reply-To: <20200720142053.GC8593@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 Jul 2020 16:34:12 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a07jAec4hKyNMcha032TT6OXjYHaZZ4Za9ncDsvapeg8Q@mail.gmail.com>
+Message-ID: <CAK8P3a07jAec4hKyNMcha032TT6OXjYHaZZ4Za9ncDsvapeg8Q@mail.gmail.com>
+Subject: Re: [PATCH 3/6] mm: introduce secretmemfd system call to create
+ "secret" memory areas
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linaro-mm-sig@lists.linaro.org,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:srrbyHaYU7EURbuMbY9QNOdm0/1jFcAICWf2FjgUlgnNHilq/LO
+ rBs+nFhQT+5iIsJmYAQw+8rXEKBmp79SA6mGjT4SESma9NSNCFpU9Ae/HzvXu9rk77SCMvZ
+ 2auhZfsYsysXj7Eo8MYxrJCgxTWYRIHK9fnqhw37ua2xI7VhVkEPtYe60zjVSgGcDR7SUi5
+ ma2V/rkp2axitpYG3xo9g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:I7O8pHReyM0=:+GyzYzxPRQVMTgado+BH7U
+ RS5BLfeUxXEmyQxeTKuEipi+zA2jHyaw9lQFUOU3MbdZ24aGfLx+YWZANHxK4fnKDlF30bryv
+ Fm8h0wQxJzWh75bIJpNMlUyjKLqj5cNaIcvE3YLv/XMcgW9Vc03IqlhtmsGhdfnHsNdK6DAoI
+ W1HI2s2gbRdUsMkNyFlGTeXX5DeuDtlTXc0wpkrVjzsTeiB4SoyZH5eHUpOFgntthGIyjM1tu
+ 7sGtqPslChROHkISlm4Smq53sqo+rx3lHSmaeoKPBfMSv6Mt4Xbyn+2B82IH0RRPd6PBp6N9J
+ bWqvjj3NmDgtjs8atteTozw0fuEBqLleYOnCsdzGKg3STwchEf2RxZMJMK/UfE7WhFBV6XKFj
+ V1XKCXrM4qdG2Mk78OJR63VFavGUvSODtyq2ya2Z9clhZQv4XsnGCG8LDkfxWWfh8ai1xzVW7
+ 8G7LNmTKbwpdhllsZn4vWzYb+k1nVQ0StRbxSqsnkPUOh629SxEN/pC3pVrSwUUeCumc64xNF
+ 9SimHb2+KaYzVzhFDMRkRuD23Mt1SlWptSwAQ950IbH5bVanc19AYRmAuxm7FJGyP5GQ5BX5K
+ wfUlC8VJmfdSyAcj4xxrZ/ITQ2zE8SXSUVaAwGjvULDylMiAPpjdvR8syw2Z9zfLTSWBOFWJ7
+ 9S2cXNwtuXGrRYGIUN1KaaNMKyztQOs9YLZaFAKbwqFr1vLnkp/kieMKEgGMUkaTyvljfoJVu
+ xQHv2hbDF7N4NTj2aPIoUM6RLhyltBTyP85pgWeTVGx7OTgDrykIbZtD8XFQhXMddlgFYDMOp
+ R874jyVt5R1zRlwAi5SIEtq+zdbCEaJGzNbEPHTGFMLilmit9w8uQGfsfEARZwrhVqmbNr6s6
+ 6stsfbUov7A0y4GcRkq1kLed6ZreDjPRUj0fMA/j81z5IlbXItFSazULvr7wsIgDzQ03xStq+
+ Qfv6ySmj5Vxypu6JxhUCM9fCUFmvC1ek3klVxOT4RqH9BJJz/dGvC
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-16 14:25, Hans Verkuil wrote:
-> On 16/06/2020 20:41, dikshita@codeaurora.org wrote:
->> Hi Hans, Nicolas,
->> 
->> Thanks for your comments.
->> 
->> On 2020-06-12 14:41, Hans Verkuil wrote:
->>> Hi Dikshita, Nicolas,
->>> 
->>> On 11/06/2020 16:22, Nicolas Dufresne wrote:
->>>> Le jeudi 11 juin 2020 à 15:55 +0530, Dikshita Agarwal a écrit :
->>>>> LTR (Long Term Reference) frames are the frames that are encoded
->>>>> sometime in the past
->>>>> and stored in the DPB buffer list to be used as reference to encode
->>>>> future frames.
->>>>> One usage of LTR encoding is to reduce error propagation for video
->>>>> transmission
->>>>> in packet lossy networks.  For example, encoder may want to specify
->>>>> some key frames as
->>>>> LTR pictures and use them as reference frames for encoding. With
->>>>> extra protection
->>>>> selectively on these LTR frames or synchronization with the 
->>>>> receiver
->>>>> of reception of
->>>>> the LTR frames during transmission, decoder can receive reference
->>>>> frames more reliably
->>>>> than other non-reference frames. As a result, transmission error 
->>>>> can
->>>>> be effectively
->>>>> restricted within certain frames rather than propagated to future
->>>>> frames.
->>>>> 
->>>>> We are introducing below V4l2 Controls for this feature
->>>>> 1. V4L2_CID_MPEG_VIDEO_LTRCOUNT
->>>>>     a. This is used to query or configure the number of LTR frames.
->>>>>        This is a static control and is controlled by the client.
->>>>>     b. The LTR index varies from 0 to the max LTR-1.
->>>>>     c. If LTR Count is more than max supported LTR count (max LTR) 
->>>>> by
->>>>> driver, it will be rejected.
->>>>>     d. Auto Marking : If LTR count is non zero,
->>>>>         1) first LTR count frames would be mark as LTR 
->>>>> automatically
->>>>> after
->>>>>       	   every IDR frame (inclusive).
->>>>>         2) For multilayer encoding: first LTR count base layer
->>>>> reference frames starting after
->>>>>            every IDR frame (inclusive) in encoding order would be
->>>>> marked as LTR frames by the encoder.
->>>>>         3) Auto marking of LTR due to IDR should consider following
->>>>> conditions:
->>>>>             1. The frame is not already set to be marked as LTR.
->>>>>             2. The frame is part of the base layer in the
->>>>> hierarchical layer case.
->>>>>             3. The number of frames currently marked as LTR is less
->>>>> than the maximum LTR frame index plus 1.
->>>>>     e. Encoder needs to handle explicit Mark/Use command when 
->>>>> encoder
->>>>> is still doing "auto" marking
->>> 
->>> I don't follow this, quite possibly due to lack of experience with
->>> encoders.
->>> 
->>> I kind of would expect to see two modes: either automatic where
->>> encoders can
->>> mark up to LTR_COUNT frames as long term reference, and userspace 
->>> just
->>> sets
->>> LTR_COUNT and doesn't have to do anything else.
->>> 
->>> Or it is manual mode where userspace explicitly marks long term
->>> reference
->>> frames.
->>> 
->>> From the proposal above it looks like you can mix auto and manual
->>> modes.
->>> 
->>> BTW, how do you 'unmark' long term reference frames?
->>> 
->>> This feature is for stateful encoders, right?
->>> 
->>>> 
->>>> Perhaps we are missing a LONG_TERM_REFERENCE_MODE ? I bet some 
->>>> encoder
->>>> can select by themself long term references and even some encoders 
->>>> may
->>>> not let the user decide.
->>>> 
->>>> (not huge han of LTR acronyme, but that could be fine too, assuming
->>>> you
->>>> add more _).
->>>> 
->> 
->> Userspace sets LTR count which signifies the number of LTR frames
->> encoder needs to generate or keep.
->> The encoder has to build-up its internal buffer reference list (aka 
->> DBP
->> list or recon buffer list).
->> In order to achieve that encoder will fill It's LTR (long term
->> references) list and STR (short term references) list
->> by auto marking n frames as LTR frames(n is equal to LTR count) based 
->> on
->> auto-marking dictated by the encoder spec.
->> The client then can replace those automatically marked frames with new
->> frames using V4L2_CID_MPEG_VIDEO_MARKLTRFRAME and can ask
->> encoder to refer the newly marked frame for encoding the next frame
->> using V4L2_CID_MPEG_VIDEO_USELTRFRAME.
->> 
->>>>> 
->>>>> 2. V4L2_CID_MPEG_VIDEO_MARKLTRFRAME :
->>>>>     a. This signals to mark the current frame as LTR frame. It is a
->>>>> dynamic control and also provide the LTR index to be used.
->>>>>     b. the LTR index provided by this control should never exceed 
->>>>> the
->>>>> max LTR-1. Else it will be rejected.
->>>> 
->>>> The "current" frame seems a bit loose. Perhaps you wanted to use
->>>> buffer
->>>> flags ? A bit like what we have to signal TOP/BOTTOM fields in
->>>> alternate interlacing.
->>> 
->>> I was thinking the same thing. Using a control for this doesn't seem
->>> right.
->>> 
->> 
->> the client sets this to replace automatically marked frames by the
->> encoder with a particular frame.
->> this provides an index that ranges from 0 to LTR count-1 and then the
->> particular frame will be marked with that index.
->> this can be achieved through request by associating this control with 
->> a
->> specific buffer to make it synchronized.
->> 
->>>> 
->>>>> 
->>>>> 3. V4L2_CID_MPEG_VIDEO_USELTRFRAME :
->>>>>     a. This specifies the LTR frame(s) to be used for encoding the
->>>>> current frame. This is a dynamic control.
->>>>>     b. LTR Use Bitmap : this consists of bits [0, 15]. A total of N
->>>>> LSB bits of this field are valid,
->>>>>        where N is the maximum number of LTRs supported. All the 
->>>>> other
->>>>> bits are invalid and should be rejected.
->>>>>        The LSB corresponds to the LTR index 0. Bit N-1 from the LSB
->>>>> corresponds to the LTR index max LTR-1.
->>> 
->>> How would userspace know this? Esp. with auto marking since userspace
->>> would have
->>> to predict how auto marking works (if I understand this correctly).
->>> 
->> 
->> Client sets LTR count which tells about the number of LTR frames
->> automatically marked by the encoder.
->> so client can use LTR index (0 to LTR count -1) to ask encoder to 
->> refer
->> any particular
->> frame (marked automatically by driver or marked by client with
->> V4L2_CID_MPEG_VIDEO_MARKLTRFRAME) as a reference to encode the next
->> frame.
->> 
->>> For which HW encoder is this meant?
->>> 
->> This is primarily meant for H264 and HEVC.
-> 
-> The venus encoder?
-yes
-> 
-> Some more questions:
-> 
-> 1) How many LTR frames do h.264 and hevc allow?
-According to spec, MAX LTR allowed by H.264 is 15 and HEVC allows max 32 
-LTR frames.
-> 2) Given N LTR frames, is there a ordering of those frames? E.g.
->    the LTR frame with index 0 is processed/used differently from
->    LTR frame with index 1? Or are they all equal in that it is just a 
-> pool
->    of LTR frames that the encoder can use as it wishes?
-they are different frames marked to be used as LTR and stored in 
-available indices.
-Userspace notifies encoder which LTR frame index to use via USE LTR 
-control.
+On Mon, Jul 20, 2020 at 4:21 PM Mike Rapoport <rppt@kernel.org> wrote:
+> On Mon, Jul 20, 2020 at 01:30:13PM +0200, Arnd Bergmann wrote:
+> > On Mon, Jul 20, 2020 at 11:25 AM Mike Rapoport <rppt@kernel.org> wrote:
+> > >
+> > > From: Mike Rapoport <rppt@linux.ibm.com>
+> > >
+> > > Introduce "secretmemfd" system call with the ability to create memory areas
+> > > visible only in the context of the owning process and not mapped not only
+> > > to other processes but in the kernel page tables as well.
+> > >
+> > > The user will create a file descriptor using the secretmemfd system call
+> > > where flags supplied as a parameter to this system call will define the
+> > > desired protection mode for the memory associated with that file
+> > > descriptor. Currently there are two protection modes:
+> > >
+> > > * exclusive - the memory area is unmapped from the kernel direct map and it
+> > >               is present only in the page tables of the owning mm.
+> > > * uncached  - the memory area is present only in the page tables of the
+> > >               owning mm and it is mapped there as uncached.
+> > >
+> > > For instance, the following example will create an uncached mapping (error
+> > > handling is omitted):
+> > >
+> > >         fd = secretmemfd(SECRETMEM_UNCACHED);
+> > >         ftruncate(fd, MAP_SIZE);
+> > >         ptr = mmap(NULL, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED,
+> > >                    fd, 0);
+> > >
+> > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> >
+> > I wonder if this should be more closely related to dmabuf file
+> > descriptors, which
+> > are already used for a similar purpose: sharing access to secret memory areas
+> > that are not visible to the OS but can be shared with hardware through device
+> > drivers that can import a dmabuf file descriptor.
+>
+> TBH, I didn't think about dmabuf, but my undestanding is that is this
+> case memory areas are not visible to the OS because they are on device
+> memory rather than normal RAM and when dmabuf is backed by the normal
+> RAM, the memory is visible to the OS.
 
-Thanks,
-Dikshita
-> 
-> Regards,
-> 
-> 	Hans
-> 
->> 
->> Thanks,
->> Dikshita
->> 
->>>> 
->>>> Note, I haven't captured very well the userspace control flow, 
->>>> perhaps
->>>> this could be enhanced through writing some documentation.
->>>> 
->>>> As per all other generic encoder controls, we need to make sure it
->>>> will
->>>> be usable and flexible enough for multiple HW blocks, as it can be
->>>> tedious to extend later otherwise. It is important that along with
->>>> this
->>>> RFC you provide some comparisons with with other HW / SW APIs in 
->>>> order
->>>> to help justify the design decisions. I also think there should be
->>>> link made V4L2_CID_MPEG_VIDEO_GOP_* , number of B-Frames etc.
->>> 
->>> I agree with Nicolas.
->>> 
->>> Regards,
->>> 
->>> 	Hans
->>> 
->>>> 
->>>> regards,
->>>> Nicolas
->>>> 
->>>>> 
->>>>> Dikshita Agarwal (1):
->>>>>   media: v4l2-ctrls:  add control for ltr
->>>>> 
->>>>>  drivers/media/v4l2-core/v4l2-ctrls.c | 6 ++++++
->>>>>  include/uapi/linux/v4l2-controls.h   | 4 ++++
->>>>>  2 files changed, 10 insertions(+)
->>>>> 
->>>> 
+No, dmabuf is normally about normal RAM that is shared between multiple
+devices, the idea is that you can have one driver allocate a buffer in RAM
+and export it to user space through a file descriptor. The application can then
+go and mmap() it or pass it into one or more other drivers.
+
+This can be used e.g. for sharing a buffer between a video codec and the
+gpu, or between a crypto engine and another device that accesses
+unencrypted data while software can only observe the encrypted version.
+
+       Arnd
