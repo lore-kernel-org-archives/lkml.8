@@ -2,118 +2,173 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53156C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79820C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38F502070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604DD206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:35:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="kiYQdB66"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSoBcGlL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387894AbgGTReg (ORCPT
+        id S2388685AbgGTRfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:34:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56704 "EHLO
+        Mon, 20 Jul 2020 13:35:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729686AbgGTReg (ORCPT
+        with ESMTP id S1729307AbgGTRfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:34:36 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5C3CC0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:34:35 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id m22so10582178pgv.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:34:35 -0700 (PDT)
+        Mon, 20 Jul 2020 13:35:11 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6349C061794;
+        Mon, 20 Jul 2020 10:35:11 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a9so158487pjd.3;
+        Mon, 20 Jul 2020 10:35:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3j4oTHrOQZFqNUKygQYhUKPDy9BXvra1dSUQfhhnXXY=;
-        b=kiYQdB66t89992BS5/3S9zupYvM9r4MMFbvkwh/BwIde6d1+Nm7rLriJMEYYgMEiPt
-         KHARR+/kPm4txUgdOZB6Xgk2PrMunoQHuQkmL4WfRiaecPnLNiw84I5QsxXefK/yGn+k
-         YJpsLsa0nZCy8fFXPiIqZECdXLSarRTTcDMjbdnEJsnq4k7/Zxm3EeNwC0ShcH/1aSUM
-         j/rf2W5h8v1/UlhU9NA3KkELQ/8J3w+pNgD3jYv4HoD5B+cJbm7gsXd69YK4X599RO3S
-         9d2crLPc6DssvDlGUkCAUwo2ojDdvcBJZ/cf5zT2eLGAZCwCviUTJxfYh8HfcRaQyrz/
-         VrpQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WABzq59H5eUVYxXK83gQCdP2ji4pUab0s2f+SVe9EGI=;
+        b=KSoBcGlL4mpyA6z70T5c3zPdITp8j0hU0JwBgNNjrWFX5gJFyC40y/wPD+vC1X5Ajd
+         ACXnjLQu44r8pQzWggycGix7CiwdtpBQnqEs1eCd6mesISSUECDr7flMAuMdzat62+8x
+         UVp1LgUsiBBveXrK+fl3TO3mHwCguR7ltdYZ6QZY3moTWDy0N/o6ECEXEJxW6tMC/j33
+         XhrUsYk6MvuafN9d4/bh91e4TTBHGYXXYFnnaYS52DipCZ7kkysEwhfFm29RirNivCG0
+         6Ed4+rxF4UoZP3TZ1H1YfZuoymiKZ9W+OCHT3lfjwd0s0jxHSQGmqL1dhv1qH3T2NjWU
+         5TGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3j4oTHrOQZFqNUKygQYhUKPDy9BXvra1dSUQfhhnXXY=;
-        b=WbtnLpbFZUQ84b5OH9Zn94mASlliPfIsxlWGSq/3exsiUoUwbP0uqGz81uMml04e4m
-         lUhf3xjA9077Q4KB+krZFJFpyDcY4s9GqoY9nMK0TFM2mn+YXCeAonwF32lxuvg3bKHs
-         +fKLe7oOv8nPaNk6cwM/yc5duiw2upcaFx75wCLrWr33M65Zw++7N9FlHy9kGWX1wu9F
-         7xVV3SyrQAiLJuTvCQ5PcLknzMqWTWUX2EPnSQP0J9p20H7b+6yVOKnlUYy/sdIa7iHX
-         AJpONYj4bX/gfkRNz4TyLPT2TbBL2fmv11lZOtYxNNtI24ISlKAaiD3KfXoh41XtKkeY
-         wAYg==
-X-Gm-Message-State: AOAM532JJ0U9r//ds+vjGL1yc4wfjvDDPMWMBzwZglGls23oFJ6oUk5g
-        sErl3Z2emlMGKXg5MBquC8s1Kg==
-X-Google-Smtp-Source: ABdhPJwqGvI6Z0Nhi8vxXNKPmGnXcK131taD73JvVDDzYMIa4O6e1nUPDjgBxRkPDoQbBuL7kKglcA==
-X-Received: by 2002:a65:5c43:: with SMTP id v3mr19096111pgr.214.1595266475402;
-        Mon, 20 Jul 2020 10:34:35 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id o129sm18190152pfg.14.2020.07.20.10.34.33
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WABzq59H5eUVYxXK83gQCdP2ji4pUab0s2f+SVe9EGI=;
+        b=twKbNESBEusvaKmLqs43on29jSO3YFve6PdEx6oGzJ9fyidy9RaxKuOaVBS8qB/1pu
+         mPp3wrhyPbzYn8LSaMsrAB9QiOLLdy9oORVQM6ZRHHC1fK2qGha3eai129tbxIzv1Y3/
+         pp7PwWSy1Ol8kpCnc83Do2wyxGjf6MCDbTQeQOFVr6QC93f8iPxGepyK4+10JuJ7fg4Y
+         zjWcq8GEtRpWeL+qrUEWXKnkb7V8mmRxpA3w1qKztH7Bb6urfmd7qieXAGcaYzF6ZM7L
+         GXFYu1MYYnQ4E+uGgPCK/axQgB5Lu0WhwsL+FPh3YgWiceOpmQ2laVE00a85Z0ce7WtA
+         W5Fw==
+X-Gm-Message-State: AOAM530c6yYf4DjY5JL8Aqp1QOq85kPU2qszmdHiCjsqH0ctgjiY4OX3
+        6H6b4fhi7uf63Z2gDgCO5/Y=
+X-Google-Smtp-Source: ABdhPJzK0dZp9lmnB+R8F0pxEFC0wQCOX+oQUQyN7tpsTVwmYqbun2SGzjyQ8+lsh/JrEyyFSbnfrQ==
+X-Received: by 2002:a17:90b:488:: with SMTP id bh8mr516495pjb.49.1595266511403;
+        Mon, 20 Jul 2020 10:35:11 -0700 (PDT)
+Received: from localhost.localdomain ([103.51.73.161])
+        by smtp.gmail.com with ESMTPSA id b22sm175972pju.26.2020.07.20.10.35.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 10:34:34 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 10:34:25 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Sriram Krishnan <srirakr2@cisco.com>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, mbumgard@cisco.com,
-        ugm@cisco.com, nimm@cisco.com, xe-linux-external@cisco.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] net: hyperv: add support for vlans in netvsc driver
-Message-ID: <20200720103425.03a05912@hermes.lan>
-In-Reply-To: <20200720164551.14153-1-srirakr2@cisco.com>
-References: <20200720164551.14153-1-srirakr2@cisco.com>
+        Mon, 20 Jul 2020 10:35:10 -0700 (PDT)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH v5] phy: samsung: Use readl_poll_timeout function
+Date:   Mon, 20 Jul 2020 17:35:02 +0000
+Message-Id: <20200720173502.542-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 22:15:51 +0530
-Sriram Krishnan <srirakr2@cisco.com> wrote:
+Instead of a busy waiting while loop using udelay
+use readl_poll_timeout function to check the condition
+is met or timeout occurs in crport_handshake function.
+readl_poll_timeout is called in non atomic context so
+it safe to sleep until the condition is met.
 
->  
-> +	/* When using AF_PACKET we need to remove VLAN from frame
-> +	 * and indicate VLAN information in SKB so HOST OS will
-> +	 * transmit the VLAN frame
-> +	 */
-> +	if (skb->protocol == htons(ETH_P_8021Q)) {
-> +		u16 vlan_tci = 0;
-> +		skb_reset_mac_header(skb);
-> +		if (eth_type_vlan(eth_hdr(skb)->h_proto)) {
-> +			int pop_err;
-> +			pop_err = __skb_vlan_pop(skb, &vlan_tci);
-> +			if (likely(pop_err == 0)) {
-> +				__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vlan_tci);
-> +
-> +				/* Update the NDIS header pkt lengths */
-> +				packet->total_data_buflen -= VLAN_HLEN;
-> +				rndis_msg->msg_len = packet->total_data_buflen;
-> +				rndis_msg->msg.pkt.data_len = packet->total_data_buflen;
-> +
-> +			} else {
-> +				netdev_err(net,"Pop vlan err %x\n",pop_err);
-> +			}
-> +		}
-> +	}
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+Changes v5:
+--Fix the indentation, checkpatch warning.
+--Drop the Fix tags.
+Changes v4:
+Rebased on to of patch [0] https://patchwork.kernel.org/patch/11651673/
+--Fix the commit message.
+--Fix the error timeout condition for -ETIMEDOUT
+Changes v3:
+--Fix the commit message.
+--Drop the variable, used the value directly.
+Changes v2:
+--used the default timeout values.
+--Added missing Fixed tags.
+---
+ drivers/phy/samsung/phy-exynos5-usbdrd.c | 39 ++++++++----------------
+ 1 file changed, 12 insertions(+), 27 deletions(-)
 
-Minor comments.
+diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+index 7f6279fb4f8f..c45ed9cabc5e 100644
+--- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
++++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+@@ -16,6 +16,7 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
++#include <linux/iopoll.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/mutex.h>
+@@ -556,41 +557,25 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
+ static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
+ 			    u32 val, u32 cmd)
+ {
+-	u32 usec = 100;
+ 	unsigned int result;
++	int err;
+ 
+ 	writel(val | cmd, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+ 
+-	do {
+-		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
+-		if (result & PHYREG1_CR_ACK)
+-			break;
+-
+-		udelay(1);
+-	} while (usec-- > 0);
+-
+-	if (!usec) {
+-		dev_err(phy_drd->dev,
+-			"CRPORT handshake timeout1 (0x%08x)\n", val);
+-		return -ETIME;
++	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
++				 result, (result & PHYREG1_CR_ACK), 1, 100);
++	if (err == -ETIMEDOUT) {
++		dev_err(phy_drd->dev, "CRPORT handshake timeout1 (0x%08x)\n", val);
++		return err;
+ 	}
+ 
+-	usec = 100;
+-
+ 	writel(val, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+ 
+-	do {
+-		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
+-		if (!(result & PHYREG1_CR_ACK))
+-			break;
+-
+-		udelay(1);
+-	} while (usec-- > 0);
+-
+-	if (!usec) {
+-		dev_err(phy_drd->dev,
+-			"CRPORT handshake timeout2 (0x%08x)\n", val);
+-		return -ETIME;
++	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
++				 result, !(result & PHYREG1_CR_ACK), 1, 100);
++	if (err == -ETIMEDOUT) {
++		dev_err(phy_drd->dev, "CRPORT handshake timeout2 (0x%08x)\n", val);
++		return err;
+ 	}
+ 
+ 	return 0;
+-- 
+2.27.0
 
-1. Blank line between declaration and code.
-2. Error handling is different than other parts of this code.
-   probably just need a goto drop on error.
-
-It seems like you are putting into message, then driver is putting
-it into meta-data in next code block. Maybe it should be combined?
