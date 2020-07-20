@@ -2,57 +2,54 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1B5C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3955AC43457
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA6BB2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165EA206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263273;
-	bh=DLzUlWLcdovNYaTfAImL2JYNyT91aDYwHaEMaNIKqeE=;
+	s=default; t=1595263278;
+	bh=v7InIuk+EwKMrOnqi776Pp+2N959mlUc4pv3XI8qrA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ffDZcf5nkB+E1IkHUF+tG67tl+Yo1cTZp6Zw9VDx1slp0jfYOm5Pkh0D27azZyOMQ
-	 6vx9LgKCqW9CPrNUUJlt/LfPpUnWQDBjHHGijfu5CafGCLxta4Z0hOES4P0PSiW9OQ
-	 broibxxIb60T/zb07xOTFaWMJUxRHo4egsrDg/Sw=
+	b=hmGZ4toCIwA1r6jJJ/R1NyVFol8V5ydjc+exQpzHla6jw8W09jXsGassVfK5MWQva
+	 N7c6279fHPJZc+Ykwi3IWzLmgKu2zHALQb+gqzLcstBK47tbCVTOWJrCfT8dejmGiv
+	 SDmhi1qYmGYEceqesW3B13ZFg3fTaNd3sSTB8XV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731239AbgGTQlL (ORCPT
+        id S1730026AbgGTPpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:41:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40518 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:45:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730596AbgGTPp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:45:59 -0400
+        id S1730553AbgGTPpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:45:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 214782064B;
-        Mon, 20 Jul 2020 15:45:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6250922CAF;
+        Mon, 20 Jul 2020 15:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259958;
-        bh=DLzUlWLcdovNYaTfAImL2JYNyT91aDYwHaEMaNIKqeE=;
+        s=default; t=1595259941;
+        bh=v7InIuk+EwKMrOnqi776Pp+2N959mlUc4pv3XI8qrA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A8d82i842S4PYh+fOcKknowxH+MnGxr84/AGbVMH2kdkeyWjdcUloTJ8rXCp8Irt+
-         k0H4FDqER+bCcKy4xqZoZKS/N0aY2tLLzpe47i9DPtiE1Qho6iUFlyYof4Y9+ZP2pb
-         LjkRYSTIZb95MeCu6Bognmnn1VwWDwk5M3mGWWqU=
+        b=DP8/1ob8XGRj73E8jLmUe38V0dS1GzVnOe1BlS/k2/3a1WHT7vKPhrvin2nA6XrTb
+         Ga5l5NaHHjJR9p2AhZ7JE3kSpNuRyrRkdLbAoMiUAQpf9/Jcur54qMUFs9bZ0FNWC/
+         7avtJ8eX3ffnzcvpHc+ECfRaunBksUBaroeCeSew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Harini Katakam <harini.katakam@xilinx.com>,
-        Sergio Prado <sergio.prado@e-labworks.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 024/125] net: macb: mark device wake capable when "magic-packet" property present
-Date:   Mon, 20 Jul 2020 17:36:03 +0200
-Message-Id: <20200720152804.160386019@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Marco Elver <elver@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 048/125] tcp: md5: refine tcp_md5_do_add()/tcp_md5_hash_key() barriers
+Date:   Mon, 20 Jul 2020 17:36:27 +0200
+Message-Id: <20200720152805.330067760@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -65,49 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit ced4799d06375929e013eea04ba6908207afabbe ]
+[ Upstream commit e6ced831ef11a2a06e8d00aad9d4fc05b610bf38 ]
 
-Change the way the "magic-packet" DT property is handled in the
-macb_probe() function, matching DT binding documentation.
-Now we mark the device as "wakeup capable" instead of calling the
-device_init_wakeup() function that would enable the wakeup source.
+My prior fix went a bit too far, according to Herbert and Mathieu.
 
-For Ethernet WoL, enabling the wakeup_source is done by
-using ethtool and associated macb_set_wol() function that
-already calls device_set_wakeup_enable() for this purpose.
+Since we accept that concurrent TCP MD5 lookups might see inconsistent
+keys, we can use READ_ONCE()/WRITE_ONCE() instead of smp_rmb()/smp_wmb()
 
-That would reduce power consumption by cutting more clocks if
-"magic-packet" property is set but WoL is not configured by ethtool.
+Clearing all key->key[] is needed to avoid possible KMSAN reports,
+if key->keylen is increased. Since tcp_md5_do_add() is not fast path,
+using __GFP_ZERO to clear all struct tcp_md5sig_key is simpler.
 
-Fixes: 3e2a5e153906 ("net: macb: add wake-on-lan support via magic packet")
-Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: Harini Katakam <harini.katakam@xilinx.com>
-Cc: Sergio Prado <sergio.prado@e-labworks.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+data_race() was added in linux-5.8 and will prevent KCSAN reports,
+this can safely be removed in stable backports, if data_race() is
+not yet backported.
+
+v2: use data_race() both in tcp_md5_hash_key() and tcp_md5_do_add()
+
+Fixes: 6a2febec338d ("tcp: md5: add missing memory barriers in tcp_md5_do_add()/tcp_md5_hash_key()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Marco Elver <elver@google.com>
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cadence/macb_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/tcp.c      |    6 +++---
+ net/ipv4/tcp_ipv4.c |   14 ++++++++++----
+ 2 files changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index b01b242c2bf00..4d2a996ba4460 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -3516,7 +3516,7 @@ static int macb_probe(struct platform_device *pdev)
- 	bp->wol = 0;
- 	if (of_get_property(np, "magic-packet", NULL))
- 		bp->wol |= MACB_WOL_HAS_MAGIC_PACKET;
--	device_init_wakeup(&pdev->dev, bp->wol & MACB_WOL_HAS_MAGIC_PACKET);
-+	device_set_wakeup_capable(&pdev->dev, bp->wol & MACB_WOL_HAS_MAGIC_PACKET);
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3394,13 +3394,13 @@ EXPORT_SYMBOL(tcp_md5_hash_skb_data);
  
- 	spin_lock_init(&bp->lock);
+ int tcp_md5_hash_key(struct tcp_md5sig_pool *hp, const struct tcp_md5sig_key *key)
+ {
+-	u8 keylen = key->keylen;
++	u8 keylen = READ_ONCE(key->keylen); /* paired with WRITE_ONCE() in tcp_md5_do_add */
+ 	struct scatterlist sg;
  
--- 
-2.25.1
-
+-	smp_rmb(); /* paired with smp_wmb() in tcp_md5_do_add() */
+-
+ 	sg_init_one(&sg, key->key, keylen);
+ 	ahash_request_set_crypt(hp->md5_req, &sg, NULL, keylen);
++
++	/* tcp_md5_do_add() might change key->key under us */
+ 	return crypto_ahash_update(hp->md5_req);
+ }
+ EXPORT_SYMBOL(tcp_md5_hash_key);
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -995,12 +995,18 @@ int tcp_md5_do_add(struct sock *sk, cons
+ 
+ 	key = tcp_md5_do_lookup_exact(sk, addr, family, prefixlen);
+ 	if (key) {
+-		/* Pre-existing entry - just update that one. */
++		/* Pre-existing entry - just update that one.
++		 * Note that the key might be used concurrently.
++		 */
+ 		memcpy(key->key, newkey, newkeylen);
+ 
+-		smp_wmb(); /* pairs with smp_rmb() in tcp_md5_hash_key() */
++		/* Pairs with READ_ONCE() in tcp_md5_hash_key().
++		 * Also note that a reader could catch new key->keylen value
++		 * but old key->key[], this is the reason we use __GFP_ZERO
++		 * at sock_kmalloc() time below these lines.
++		 */
++		WRITE_ONCE(key->keylen, newkeylen);
+ 
+-		key->keylen = newkeylen;
+ 		return 0;
+ 	}
+ 
+@@ -1016,7 +1022,7 @@ int tcp_md5_do_add(struct sock *sk, cons
+ 		rcu_assign_pointer(tp->md5sig_info, md5sig);
+ 	}
+ 
+-	key = sock_kmalloc(sk, sizeof(*key), gfp);
++	key = sock_kmalloc(sk, sizeof(*key), gfp | __GFP_ZERO);
+ 	if (!key)
+ 		return -ENOMEM;
+ 	if (!tcp_alloc_md5sig_pool()) {
 
 
