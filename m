@@ -2,134 +2,141 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862A1C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C6CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 679712070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:06:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595268378;
-	bh=b60/FdC2t6HYruEEaVXkmCbb3k2s7nALgggU+wqVnII=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sORPc1aSH/x0oq/4xnmm300llqVO/IJO7aL8NShigOt+GeRT5VwO3IsTfPa4XDgMP
-	 I9PHCqIU3d1lbssb7Ar1AjlDq7laYQAtL8teh+Ju96OojbFtOObZgNS7dS4QraG1GC
-	 uCT4zXN6rcWLRkHLz4CopBLYGe05CIyOPEEDVr7E=
+	by mail.kernel.org (Postfix) with ESMTP id 8787C2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:08:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="V9hE3DXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730071AbgGTSGM (ORCPT
+        id S1730420AbgGTSI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 14:06:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729189AbgGTSGM (ORCPT
+        Mon, 20 Jul 2020 14:08:56 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:49852 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729029AbgGTSIz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 14:06:12 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E546C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 11:06:11 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u25so10227780lfm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 11:06:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uI8ot/2J0X8mcn9Zfp2J49mB1lp08I2jN3wbAeSC/Pw=;
-        b=Cz61HqTwOZ6IEwVnpU+vIjJ2UVZP/Mu4fKA2ydp8JL2VDpMC+nUU4axsRhH+TxIuMT
-         7h9Jetot2Q2oMe1da303RP61HjMA+kS64YBC7m4CKaPJ6ZkKqgFan1xJh394/xLoayCV
-         YJQKJ0gYeeODtQeM9+onNI6euuT5xsMXV1y1M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uI8ot/2J0X8mcn9Zfp2J49mB1lp08I2jN3wbAeSC/Pw=;
-        b=Vs8UnD4DHumd62b9Aug0sKLNmHoRjsk0nAi3qBaWiJgDodJUzWJGvXvkUTa1y5OnTz
-         Lo3CC16CqBy18Beg6dhNmUoH+dzHoc3jJyBROgOyWb6OIh5q1eWEX2Y5J1xIQjZYBqHE
-         0I2kF/mKm57J+BjuYKqxwv2Fjc5Lwf34rdv8r4eY2sVMcQ/7L3NhHQVvhz4VupBTXLng
-         3awKw0VbqFw+gBMhmyfP5RIWBznhbahb5CHeuPg6KL5UXpHscxutRk7l1UnGyPGIVkdW
-         nXazvm4mwIctfFwf0pN9QYql8xmMax0TEMuCGOvT9yuunNoQX0YcZ3YgqSmX74f/yV4A
-         cB8w==
-X-Gm-Message-State: AOAM530nqTDOwHuR2eUhe7TVZTAHmXDGeNE98VqNVg6R4OhhmuU3Syct
-        TF7VLWwk7midU+FFvIdzGuuTOnENrZk=
-X-Google-Smtp-Source: ABdhPJwmaVEjt2UWYaWUWfZiu3j56dRVxgOJfjwy3CcCry9X8+xAPNlWA3/FYLune2jXaZVEwKAnWQ==
-X-Received: by 2002:a05:6512:752:: with SMTP id c18mr3436125lfs.53.1595268368608;
-        Mon, 20 Jul 2020 11:06:08 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id i10sm3337079ljg.80.2020.07.20.11.06.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 11:06:07 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id y18so10206197lfh.11
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 11:06:07 -0700 (PDT)
-X-Received: by 2002:a05:6512:2082:: with SMTP id t2mr2412004lfr.142.1595268366796;
- Mon, 20 Jul 2020 11:06:06 -0700 (PDT)
+        Mon, 20 Jul 2020 14:08:55 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KHuAVl024321;
+        Mon, 20 Jul 2020 11:08:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=pfpt0818; bh=mn9ObnyjAHSe76pzAfu6gLa78PSQPQm8EO4sGZA7vGw=;
+ b=V9hE3DXeoS8r5n4firW07BN3FGtquowq9VNPgFZVL0DUaFiyDe2o1qvFyL4oHeySXKHZ
+ Tu5NYyrgN+x/c1dgSOoPO19h4ssQb1sLFw/8yS/AU3rV6TJfnPVWtSQzLgcEETug6M8G
+ cMHjXzCIO1NzZXYYdXxAgk57aablbF7mqkOQPZyKTNunuXe6798SIOtZlQ1CqvbGXaif
+ snwEbxPsDKG6BI1vaJVNYXRqZ031ucPPjeb4nL7ESoPod6NzqeBQENpdXutAGZqStVpW
+ 0XO+1lI3PIzlr5dnygOeTrYKhVEDw/1Q7bJl7FVbJ0i0ADuEj7iGr08r+y5+2Z0rbkwH cw== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkf8tq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 11:08:48 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 20 Jul
+ 2020 11:08:46 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 20 Jul 2020 11:08:46 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id 918EC3F7040;
+        Mon, 20 Jul 2020 11:08:42 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "Ariel Elior" <aelior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        <GR-everest-linux-l2@marvell.com>,
+        <QLogic-Storage-Upstream@marvell.com>, <netdev@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 net-next 00/16] qed, qede: add support for new operating modes
+Date:   Mon, 20 Jul 2020 21:07:59 +0300
+Message-ID: <20200720180815.107-1-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200720155902.181712-1-hch@lst.de> <20200720155902.181712-5-hch@lst.de>
-In-Reply-To: <20200720155902.181712-5-hch@lst.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 20 Jul 2020 11:05:50 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wimKMPiGP6n_HQUJ1rQ_6cT6hZH5rjQa_nfAgjB1mug+A@mail.gmail.com>
-Message-ID: <CAHk-=wimKMPiGP6n_HQUJ1rQ_6cT6hZH5rjQa_nfAgjB1mug+A@mail.gmail.com>
-Subject: Re: [PATCH 04/24] fs: move the putname from filename_create to the callers
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-raid@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 8:59 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> This allows reusing the struct filename for retries, and will also allow
-> pushing the getname up the stack for a few places to allower for better
-> handling of kernel space filenames.
+This series covers the support for the following:
+ - new port modes;
+ - loopback modes, previously missing;
+ - new speed/link modes;
+ - several FEC modes;
+ - multi-rate transceivers;
 
-I find this _very_ confusing.
+and also cleans up and optimizes several related parts of code.
 
-Now the rule is that filename_create() does the putname() if it fails,
-but not if it succeeds.
+v3 (from [2]):
+ - dropped custom link mode declaration; qed, qede and qedf switched to
+   Ethtool link modes and definitions (#0001, #0002, per Andrew Lunn's
+   suggestion);
+ - exchange more .text size to .initconst and .ro_after_init in qede
+   (#0003).
 
-That's just all kinds of messed up.
+v2 (from [1]):
+ - added a patch (#0010) that drops discussed dead struct member;
+ - addressed checkpatch complaints on #0014 (former #0013);
+ - rebased on top of latest net-next;
+ - no other changes.
 
-It was already slightly confusing how "getname()" was paired with
-"putname()", and how you didn't need to check for errors, but at least
-it was easy to explain: "filename_create() will  check errors and use
-the name we got".
+[1] https://lore.kernel.org/netdev/20200716115446.994-1-alobakin@marvell.com/
+[2] https://lore.kernel.org/netdev/20200719201453.3648-1-alobakin@marvell.com/
 
-That slightly confusing calling convention made the code much more
-compact, and nobody involved needed to do error checks on the name
-etc.
+Alexander Lobakin (16):
+  linkmode: introduce linkmode_intersects()
+  qed, qede, qedf: convert link mode from u32 to ETHTOOL_LINK_MODE
+  qede: populate supported link modes maps on module init
+  qed: reformat public_port::transceiver_data a bit
+  qed: add support for multi-rate transceivers
+  qed: use transceiver data to fill link partner's advertising speeds
+  qed: reformat several structures a bit
+  qed: add support for Forward Error Correction
+  qede: format qede{,_vf}_ethtool_ops
+  qede: introduce support for FEC control
+  qed: reformat several structures a bit
+  qed: remove unused qed_hw_info::port_mode and QED_PORT_MODE
+  qed: add support for new port modes
+  qed: add missing loopback modes
+  qed: populate supported link modes maps on module init
+  qed: add support for the extended speed and FEC modes
 
-Now that "slightly confusing" convention has gone from "slightly" to
-"outright", and the whole advantage of the interface has completely
-gone away, because now you not only need to do the putname() in the
-caller, you need to do it _conditionally_.
+ drivers/net/ethernet/qlogic/qed/qed.h         | 125 ++-
+ drivers/net/ethernet/qlogic/qed/qed_dev.c     | 172 +++-
+ drivers/net/ethernet/qlogic/qed/qed_hsi.h     | 786 ++++++++++--------
+ drivers/net/ethernet/qlogic/qed/qed_main.c    | 765 +++++++++++++----
+ drivers/net/ethernet/qlogic/qed/qed_mcp.c     | 126 ++-
+ drivers/net/ethernet/qlogic/qed/qed_mcp.h     | 146 ++--
+ drivers/net/ethernet/qlogic/qede/qede.h       |   2 +
+ .../net/ethernet/qlogic/qede/qede_ethtool.c   | 497 +++++------
+ drivers/net/ethernet/qlogic/qede/qede_main.c  |   2 +
+ drivers/scsi/qedf/qedf_main.c                 |  78 +-
+ include/linux/linkmode.h                      |   6 +
+ include/linux/qed/qed_if.h                    | 128 ++-
+ 12 files changed, 1829 insertions(+), 1004 deletions(-)
 
-So please don't do this.
+--
 
-The other patches also all make it *really* hard to follow when
-putname() is done - because depending on the context, you have to do
-it when returning an error, or when an error was not returned.
+Netdev maintainers, patch #0001 affects qedf under scsi tree, but could
+you take it through yours after all necessary acks? It will break
+incremental buildability and bisecting otherwise. Thanks.
 
-I really think this is a huge mistake. Don't do it this way. NAK NAK NAK.
+-- 
+2.25.1
 
-Please instead of making this all completely messy and completely
-impossible to follow the rule about exactly who does "putname()" and
-under what conditions, just leave the slight duplication in place.
-
-Duplicating simple helper routines is *good*. Complex and
-hard-to-understand and non-intuitive rules are *bad*.
-
-You're adding badness.
-
-                 Linus
