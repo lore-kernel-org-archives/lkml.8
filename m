@@ -2,46 +2,47 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C116C433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EB5C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00FF820709
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A9320674
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgGTHyD (ORCPT
+        id S1727042AbgGTHyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:54:03 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:41333 "EHLO
+        Mon, 20 Jul 2020 03:54:06 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:41286 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728187AbgGTHxw (ORCPT
+        with ESMTP id S1725815AbgGTHxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 03:53:52 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from eli@mellanox.com)
         with SMTP; 20 Jul 2020 10:53:45 +0300
 Received: from nps-server-21.mtl.labs.mlnx (nps-server-21.mtl.labs.mlnx [10.237.240.120])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06K7rjgb008217;
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06K7rjgL008217;
         Mon, 20 Jul 2020 10:53:45 +0300
 Received: from nps-server-21.mtl.labs.mlnx (localhost [127.0.0.1])
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 06K7EKHp032175;
-        Mon, 20 Jul 2020 10:14:20 +0300
+        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 06K6sqdA031178;
+        Mon, 20 Jul 2020 09:54:52 +0300
 Received: (from eli@localhost)
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 06K7EKfh032174;
-        Mon, 20 Jul 2020 10:14:20 +0300
+        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 06K6sqF7031177;
+        Mon, 20 Jul 2020 09:54:52 +0300
 From:   Eli Cohen <eli@mellanox.com>
 To:     mst@redhat.com, jasowang@redhat.com,
         virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
-Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com,
-        Eli Cohen <eli@mellanox.com>
-Subject: [PATCH V2 vhost next 00/10] VDPA support for Mellanox ConnectX devices
-Date:   Mon, 20 Jul 2020 10:14:06 +0300
-Message-Id: <20200720071416.32112-1-eli@mellanox.com>
+Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com
+Subject: [PATCH V2 vhost next 02/10] vdpa_sim: use the batching API
+Date:   Mon, 20 Jul 2020 09:54:35 +0300
+Message-Id: <20200720065443.31112-3-eli@mellanox.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200720065443.31112-1-eli@mellanox.com>
+References: <20200720065443.31112-1-eli@mellanox.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,99 +50,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
-please note that this series depends on mlx5 core device driver patches
-in mlx5-next branch in
-git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git.
+From: Jason Wang <jasowang@redhat.com>
 
-git pull git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git mlx5-next 
+Change-Id: I3751f1aecce285e0f61530c69616852d49e5f547
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/vdpa/vdpa_sim/vdpa_sim.c | 20 --------------------
+ drivers/vhost/vdpa.c             |  1 -
+ 2 files changed, 21 deletions(-)
 
-They also depend Jason Wang's patches submitted a couple of weeks ago.
-
-vdpa_sim: use the batching API
-vhost-vdpa: support batch updating
-
-
-The following series of patches provide VDPA support for Mellanox
-devices. The supported devices are ConnectX6 DX and newer.
-
-Currently, only a network driver is implemented; future patches will
-introduce a block device driver. iperf performance on a single queue is
-around 12 Gbps.  Future patches will introduce multi queue support.
-
-The files are organized in such a way that code that can be used by
-different VDPA implementations will be placed in a common are resides in
-drivers/vdpa/mlx5/core.
-
-Only virtual functions are currently supported. Also, certain firmware
-capabilities must be set to enable the driver. Physical functions (PFs)
-are skipped by the driver.
-
-To make use of the VDPA net driver, one must load mlx5_vdpa. In such
-case, VFs will be operated by the VDPA driver. Although one can see a
-regular instance of a network driver on the VF, the VDPA driver takes
-precedence over the NIC driver, steering-wize.
-
-Currently, the device/interface infrastructure in mlx5_core is used to
-probe drivers. Future patches will introduce virtbus as a means to
-register devices and drivers and VDPA will be adapted to it.
-
-The mlx5 mode of operation required to support VDPA is switchdev mode.
-Once can use Linux or OVS bridge to take care of layer 2 switching.
-
-In order to provide virtio networking to a guest, an updated version of
-qemu is required. This version has been tested by the following quemu
-version:
-
-url: https://github.com/jasowang/qemu.git
-branch: vdpa
-Commit ID: 6f4e59b807db
-
-Eli Cohen (7):
-  net/vdpa: Use struct for set/get vq state
-  vhost: Fix documentation
-  vdpa: Modify get_vq_state() to return error code
-  vdpa/mlx5: Add hardware descriptive header file
-  vdpa/mlx5: Add support library for mlx5 VDPA implementation
-  vdpa/mlx5: Add shared memory registration code
-  vdpa/mlx5: Add VDPA driver for supported mlx5 devices
-
-Jason Wang (2):
-  vhost-vdpa: support batch updating
-  vdpa_sim: use the batching API
-
-Max Gurtovoy (1):
-  vdpa: remove hard coded virtq num
-
- drivers/vdpa/Kconfig                   |   18 +
- drivers/vdpa/Makefile                  |    1 +
- drivers/vdpa/ifcvf/ifcvf_base.c        |    4 +-
- drivers/vdpa/ifcvf/ifcvf_base.h        |    4 +-
- drivers/vdpa/ifcvf/ifcvf_main.c        |   13 +-
- drivers/vdpa/mlx5/Makefile             |    4 +
- drivers/vdpa/mlx5/core/mlx5_vdpa.h     |   91 ++
- drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h |  168 ++
- drivers/vdpa/mlx5/core/mr.c            |  473 ++++++
- drivers/vdpa/mlx5/core/resources.c     |  284 ++++
- drivers/vdpa/mlx5/net/main.c           |   76 +
- drivers/vdpa/mlx5/net/mlx5_vnet.c      | 1950 ++++++++++++++++++++++++
- drivers/vdpa/mlx5/net/mlx5_vnet.h      |   24 +
- drivers/vdpa/vdpa.c                    |    3 +
- drivers/vdpa/vdpa_sim/vdpa_sim.c       |   35 +-
- drivers/vhost/iotlb.c                  |    4 +-
- drivers/vhost/vdpa.c                   |   46 +-
- include/linux/vdpa.h                   |   24 +-
- include/uapi/linux/vhost_types.h       |    2 +
- 19 files changed, 3165 insertions(+), 59 deletions(-)
- create mode 100644 drivers/vdpa/mlx5/Makefile
- create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa.h
- create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h
- create mode 100644 drivers/vdpa/mlx5/core/mr.c
- create mode 100644 drivers/vdpa/mlx5/core/resources.c
- create mode 100644 drivers/vdpa/mlx5/net/main.c
- create mode 100644 drivers/vdpa/mlx5/net/mlx5_vnet.c
- create mode 100644 drivers/vdpa/mlx5/net/mlx5_vnet.h
-
+diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+index c7334cc65bb2..82d1068af3ef 100644
+--- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
++++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+@@ -548,24 +548,6 @@ static int vdpasim_set_map(struct vdpa_device *vdpa,
+ 	return ret;
+ }
+ 
+-static int vdpasim_dma_map(struct vdpa_device *vdpa, u64 iova, u64 size,
+-			   u64 pa, u32 perm)
+-{
+-	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
+-
+-	return vhost_iotlb_add_range(vdpasim->iommu, iova,
+-				     iova + size - 1, pa, perm);
+-}
+-
+-static int vdpasim_dma_unmap(struct vdpa_device *vdpa, u64 iova, u64 size)
+-{
+-	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
+-
+-	vhost_iotlb_del_range(vdpasim->iommu, iova, iova + size - 1);
+-
+-	return 0;
+-}
+-
+ static void vdpasim_free(struct vdpa_device *vdpa)
+ {
+ 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
+@@ -598,8 +580,6 @@ static const struct vdpa_config_ops vdpasim_net_config_ops = {
+ 	.set_config             = vdpasim_set_config,
+ 	.get_generation         = vdpasim_get_generation,
+ 	.set_map                = vdpasim_set_map,
+-	.dma_map                = vdpasim_dma_map,
+-	.dma_unmap              = vdpasim_dma_unmap,
+ 	.free                   = vdpasim_free,
+ };
+ 
+diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+index 8827ae31f96d..65195b30133b 100644
+--- a/drivers/vhost/vdpa.c
++++ b/drivers/vhost/vdpa.c
+@@ -533,7 +533,6 @@ static int vhost_vdpa_map(struct vhost_vdpa *v,
+ 
+ static void vhost_vdpa_unmap(struct vhost_vdpa *v, u64 iova, u64 size)
+ {
+-	struct vhost_dev *dev = &v->vdev;
+ 	struct vdpa_device *vdpa = v->vdpa;
+ 	const struct vdpa_config_ops *ops = vdpa->config;
+ 
 -- 
 2.26.0
 
