@@ -2,112 +2,221 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2659C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AA3C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D013E22B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7954A207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:25:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P7kNkP1J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/UyPh1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbgGTUYv (ORCPT
+        id S1731141AbgGTUZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 16:24:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54702 "EHLO
+        Mon, 20 Jul 2020 16:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729103AbgGTUYv (ORCPT
+        with ESMTP id S1727123AbgGTUZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 16:24:51 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CC6BC0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:24:51 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id a24so9614903pfc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:24:51 -0700 (PDT)
+        Mon, 20 Jul 2020 16:25:01 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C27C061794;
+        Mon, 20 Jul 2020 13:25:01 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 1so9629954pfn.9;
+        Mon, 20 Jul 2020 13:25:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=4Ot9BSN65uwqjuzPt11oHFwPT284z0A1s3vHTUzwUuc=;
-        b=P7kNkP1J0vskqpeYwWoRwgS0pIRkpEhb9+IyXfYYWTqympKRjTVxOzshkA4wbQFkw1
-         xv9aA77wGusH5dc9v0Il+7wnwsbnpxhLK1PWdwacHM6/F2emh32Sb7s/jQvJX/xs9KlF
-         16yDXjDs1sHY/0t+BRFW3GFojUuvY8/lS8QWk=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lV6IEO34DQ5QN270Bu39re+3l43e4KkGz76UFGIKMPY=;
+        b=S/UyPh1SVbNXyTmocCZYmDKUTj5L9a220+TtVXBficI1O5knNPOcaGC2pXKDFGX51U
+         Vps02OhDwXqKhFv2dz9GRcPkCFRiO2ocUfFBW4lFFChHNeLjftmFsrQpio9fJUKHXtuK
+         LYPcfswEtbfQAfg+n3WB2SU6IclopRkZWehdj7hMiNjMkJO2Yw7MeyCTmSchBILyhko+
+         O9mFWYu6k3kqTmVisfuJyhYuZfddGqb60xAdc/a+UDtBihUdiTKupFhmuoqYwLMUFSXi
+         zRnB+L/DmnSkTwjsWQy5R4LD/XnXiQn5Ttgh7GyVfnJsgi1ZfIj4skEKLxtTipGR6SqW
+         B7EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=4Ot9BSN65uwqjuzPt11oHFwPT284z0A1s3vHTUzwUuc=;
-        b=EydOQOIjanqsOZjcuen4KVcv6wb/PWQQmwkH10ueETRxyF1JDGMDkZXYqAHAxxaY3U
-         fO7yZfaIBkx9o5PcpzFBTVaD9a5Er3AlTqKOisbZR91rjZuEt3HiXG8AYfaf6+jfkjGC
-         hAv96fAQL4ldlbLsCXGwdvwySlPwsBezlsBwAoF/AxjOLbgiI0r2r8vcNYH5o+g95iD4
-         c8Vu9Jk6KGZdyzCZxRqdKrKnr5xRjoVf5yqSQocVfl48EaRsPfdEoI5ulrs3+V87FRDW
-         stmE3Q8iQR+n5/zU1v+vZK3KsfKb0/uJMJDcV0VXFpVWPvLZblLy6xAAy2c1qRLaO4iZ
-         xoMw==
-X-Gm-Message-State: AOAM531pHg+pwyCuh8HwqJQk2t9TyxuYCVb+/yyrMd3ln1MGkHW6bfks
-        TPe+yDosxjQKcCmBnfU0iezZ2A==
-X-Google-Smtp-Source: ABdhPJx0ht90Y69rD5rQnfk78renCW+m6JoyhG8U2VU/215s6FVTp+kZISZ6zfOaaE+wVaD2kwNDvQ==
-X-Received: by 2002:a63:5220:: with SMTP id g32mr19401467pgb.78.1595276690630;
-        Mon, 20 Jul 2020 13:24:50 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id hg13sm433919pjb.21.2020.07.20.13.24.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 13:24:50 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lV6IEO34DQ5QN270Bu39re+3l43e4KkGz76UFGIKMPY=;
+        b=bL4SlI/5Trj2f1u9EFIJxTr58ewBlLcYU/Nc8RJJlQ1ytEZvE/OwItKsNdmvfPKzEU
+         +P0OBPrmGb1hZcf65qzznDS44y3q3Wh5HbeafYBprhmp1WHPKPBqbXXh4gJQzIArEsWl
+         vnqrhN4KiAIf6sTVz2q6NOzjG4GKkxTgQrPK56zQyk9VEwpMuSwTMFe4skrJS1CA9W+1
+         ZVdAAExKvwSkzBkUp5Zi0cqjBlkM20lF/g6fDqBYsddKpydvoWYBVsQJCkEsGzigleEx
+         nyfJrOULSgct2leE/AC/Bq75HoSwfG5IzHQdacShpywVH+1pwtGRdgOkJKhcl4AeO6fm
+         BONw==
+X-Gm-Message-State: AOAM5318/NdCvQwzOqLxhLY/z8O8qGTpipW2Mf4ALg3+fnztxpuDS0Xj
+        00L0b9aFl3P/z9YB2Th0wzqaXvWdB5ceruDAzyfu4MKVqGYaOTxx
+X-Google-Smtp-Source: ABdhPJyA5NiuDH5xG/UxH7vPxminMYJd6g32yNQTgAJi8Fay2X98YCRy6kYiQzVCB66lBwoaCg+fuB9uHt+Q1LKEDUs=
+X-Received: by 2002:a63:571e:: with SMTP id l30mr20617701pgb.220.1595276700348;
+ Mon, 20 Jul 2020 13:25:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5c2265e82af8f755d649c0c36a462f19@codeaurora.org>
-References: <20200217085842.28333-1-harigovi@codeaurora.org> <159304723830.62212.5069780400830519255@swboyd.mtv.corp.google.com> <5c2265e82af8f755d649c0c36a462f19@codeaurora.org>
-Subject: Re: [v3] arm64: dts: sc7180: add nodes for idp display
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-To:     harigovi@codeaurora.org
-Date:   Mon, 20 Jul 2020 13:24:49 -0700
-Message-ID: <159527668913.1987609.9777678660905277260@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+References: <20200720200916.31082-1-puilp0502@gmail.com>
+In-Reply-To: <20200720200916.31082-1-puilp0502@gmail.com>
+From:   Frank Yang <puilp0502@gmail.com>
+Date:   Tue, 21 Jul 2020 05:24:34 +0900
+Message-ID: <CA+rSvc7goy-h-Hu7MruaryngBs39_8oE1AijFAnybuDSiSRHhw@mail.gmail.com>
+Subject: Re: [PATCH] HID: Support Varmilo Keyboards' media hotkeys
+To:     linux-kernel@vger.kernel.org
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting harigovi@codeaurora.org (2020-06-29 06:50:09)
-> On 2020-06-25 06:37, Stephen Boyd wrote:
-> > Quoting Harigovindan P (2020-02-17 00:58:42)
-> >> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts=20
-> >> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> >> index 388f50ad4fde..349db8fe78a5 100644
-> >> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> >> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> >> @@ -232,6 +233,57 @@ vreg_bob: bob {
-[...]
-> >> +       ports {
-> >> +               port@1 {
-> >> +                       endpoint {
-> >> +                               remote-endpoint =3D <&panel0_in>;
-> >> +                               data-lanes =3D <0 1 2 3>;
-> >=20
-> > Is this property needed? If it's the default assumption it would be=20
-> > nice
-> > to omit it so that we don't have to think about it.
-> > This property is needed during panel probe. If this is not mentioned=20
-> > here,
-> mipi_dsi_attach() will fail during panel probe. In dsi_host.c,=20
-> dsi_host_attach()
-> fails since dsi lanes are greater than msm_host lanes. msm_host lanes=20
-> are updated
-> as part of dsi_host_parse_dt. If we dont provide data-lanes in dt, it'll =
+On Tue, 2020-07-21 at 05:10 +0900, Frank Yang <puilp0502@gmail.com> wrote:
+>
+> The Varmilo VA104M Keyboard (04b4:07b1, reported as Varmilo Z104M)
+> exposes media control hotkeys as a USB HID consumer control device,
+> but these keys do not work in the current (5.8-rc1) kernel due to
+> the incorrect HID report descriptor. Fix the problem by modifying
+> the internal HID report descriptor.
+>
+> More specifically, the keyboard report descriptor specifies the
+> logical boundary as 572~10754 (0x023c ~ 0x2a02) while the usage
+> boundary is specified as 0~10754 (0x00 ~ 0x2a02). This results in an
+> incorrect interpretation of input reports, causing inputs to be ignored.
+> By setting the Logical Minimum to zero, we align the logical boundary
+> with the Usage ID boundary.
+>
+> Some notes:
+>
+> * There seem to be multiple variants of the VA104M keyboard. This
+>   patch specifically targets 04b4:07b1 variant.
+>
+> * The device works out-of-the-box on Windows platform with the generic
+>   consumer control device driver (hidserv.inf). This suggests that
+>   Windows either ignores the Logical Minimum/Logical Maximum or
+>   interprets the Usage ID assignment differently from the linux
+>   implementation; Maybe there are other devices out there that only
+>   works on Windows due to this problem?
+>
+> Signed-off-by: Frank Yang <puilp0502@gmail.com>
+> ---
+>  drivers/hid/Kconfig       |  6 ++++
+>  drivers/hid/Makefile      |  1 +
+>  drivers/hid/hid-ids.h     |  2 ++
+>  drivers/hid/hid-varmilo.c | 58 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 67 insertions(+)
+>  create mode 100644 drivers/hid/hid-varmilo.c
+>
+> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+> index 443c5cbbde04..c9f0c9b79158 100644
+> --- a/drivers/hid/Kconfig
+> +++ b/drivers/hid/Kconfig
+> @@ -441,6 +441,12 @@ config HID_WALTOP
+>         ---help---
+>         Support for Waltop tablets.
+>
+> +config HID_VARMILO
+> +       tristate "Varmilo Keyboards"
+> +       depends on HID
+> +       help
+> +         Support for Varmilo keyboards.
+> +
+>  config HID_VIEWSONIC
+>         tristate "ViewSonic/Signotec"
+>         depends on HID
+> diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
+> index d8ea4b8c95af..e90a98090452 100644
+> --- a/drivers/hid/Makefile
+> +++ b/drivers/hid/Makefile
+> @@ -124,6 +124,7 @@ obj-$(CONFIG_HID_LED)               += hid-led.o
+>  obj-$(CONFIG_HID_XINMO)                += hid-xinmo.o
+>  obj-$(CONFIG_HID_ZEROPLUS)     += hid-zpff.o
+>  obj-$(CONFIG_HID_ZYDACRON)     += hid-zydacron.o
+> +obj-$(CONFIG_HID_VARMILO)      += hid-varmilo.o
+>  obj-$(CONFIG_HID_VIEWSONIC)    += hid-viewsonic.o
+>
+>  wacom-objs                     := wacom_wac.o wacom_sys.o
+> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+> index 874fc3791f3b..955be22fc69d 100644
+> --- a/drivers/hid/hid-ids.h
+> +++ b/drivers/hid/hid-ids.h
+> @@ -1189,6 +1189,8 @@
+>  #define USB_DEVICE_ID_UNITEC_USB_TOUCH_0709    0x0709
+>  #define USB_DEVICE_ID_UNITEC_USB_TOUCH_0A19    0x0a19
+>
+> +#define USB_DEVICE_ID_VARMILO_VA104M_07B1   0X07b1
+> +
+>  #define USB_VENDOR_ID_VELLEMAN         0x10cf
+>  #define USB_DEVICE_ID_VELLEMAN_K8055_FIRST     0x5500
+>  #define USB_DEVICE_ID_VELLEMAN_K8055_LAST      0x5503
+> diff --git a/drivers/hid/hid-varmilo.c b/drivers/hid/hid-varmilo.c
+> new file mode 100644
+> index 000000000000..10e50f2dca61
+> --- /dev/null
+> +++ b/drivers/hid/hid-varmilo.c
+> @@ -0,0 +1,58 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + *  HID report fixup for varmilo keyboards
+> + *
+> + *  Copyright (c) 2020 Frank Yang <puilp0502@gmail.com>
+> + *
+> + */
+> +
+> +#include <linux/hid.h>
+> +#include <linux/module.h>
+> +
+> +#include "hid-ids.h"
+> +
+> +/*
+> + * Varmilo VA104M with device ID of 07B1 incorrectly reports Logical Minimum as
+> + * 572 (0x02 0x3c). We fix this by setting Logical Minimum to zero.
+> + */
+> +static __u8 *varmilo_07b1_report_fixup(struct hid_device *hdev, __u8 *rdesc,
+> +                                      unsigned int *rsize)
+> +{
+> +       if (*rsize == 25 &&
+> +           rdesc[0] == 0x05 && rdesc[1] == 0x0c &&
+> +           rdesc[2] == 0x09 && rdesc[3] == 0x01 &&
+> +           rdesc[6] == 0x19 && rdesc[7] == 0x00 &&
+> +           rdesc[11] == 0x16 && rdesc[12] == 0x3c && rdesc[13] == 0x02) {
+> +               hid_info(hdev,
+> +                        "fixing up varmilo VA104M consumer control report descriptor\n");
+> +               rdesc[12] = 0x00;
+> +               rdesc[13] = 0x00;
+> +       }
+> +       return rdesc;
+> +}
+> +
+> +static __u8 *varmilo_report_fixup(struct hid_device *hdev, __u8 *rdesc,
+> +                                 unsigned int *rsize)
+> +{
+> +       if (hdev->product == USB_DEVICE_ID_VARMILO_VA104M_07B1 &&
+> +           hdev->vendor == USB_VENDOR_ID_CYPRESS)
+> +               rdesc = varmilo_07b1_report_fixup(hdev, rdesc, rsize);
+> +       return rdesc;
+> +}
+> +
+> +static const struct hid_device_id varmilo_devices[] = {
+> +       { HID_USB_DEVICE(USB_VENDOR_ID_CYPRESS, USB_DEVICE_ID_VARMILO_VA104M_07B1) },
+> +       {}
+> +};
+> +
+> +MODULE_DEVICE_TABLE(hid, varmilo_devices);
+> +
+> +static struct hid_driver varmilo_driver = {
+> +       .name = "varmilo",
+> +       .id_table = varmilo_devices,
+> +       .report_fixup = varmilo_report_fixup,
+> +};
+> +
+> +module_hid_driver(varmilo_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> --
+> 2.17.1
+>
+CCing linux-input mailing list.
 
-> have default
-> value and fail in dsi_host_attach().
-
-What is the default value? It looks like dsi_host_parse_dt() says it's
-using a default but I guess the default is 0 lanes? Why not make it the
-normal 4 lanes?
+Cc: linux-input@vger.kernel.org
