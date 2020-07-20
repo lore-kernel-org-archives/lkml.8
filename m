@@ -2,80 +2,118 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB133C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA791C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D201C22B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEEAE22CB2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbgGTO0L (ORCPT
+        id S1728739AbgGTO00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:26:11 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:43874 "EHLO inva020.nxp.com"
+        Mon, 20 Jul 2020 10:26:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:50158 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728579AbgGTO0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:26:10 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7CDEF1A020A;
-        Mon, 20 Jul 2020 16:26:08 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5ED471A020F;
-        Mon, 20 Jul 2020 16:25:58 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 16F6540305;
-        Mon, 20 Jul 2020 22:07:10 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     catalin.marinas@arm.com, will@kernel.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
-        p.zabel@pengutronix.de, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        bjorn.andersson@linaro.org, leoyang.li@nxp.com, vkoul@kernel.org,
-        geert+renesas@glider.be, olof@lixom.net,
-        amurray@thegoodpenguin.co.uk, treding@nvidia.com,
-        vidyas@nvidia.com, hayashi.kunihiko@socionext.com,
-        jonnyc@amazon.com, eswara.kota@linux.intel.com, krzk@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 2/3] arm64: defconfig: Select CONFIG_RESET_IMX7 as module by default
-Date:   Mon, 20 Jul 2020 22:22:00 +0800
-Message-Id: <1595254921-26050-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595254921-26050-1-git-send-email-Anson.Huang@nxp.com>
-References: <1595254921-26050-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725934AbgGTO0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 10:26:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67341D6E;
+        Mon, 20 Jul 2020 07:26:22 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14B763F718;
+        Mon, 20 Jul 2020 07:26:20 -0700 (PDT)
+References: <2c8ef23c-43b4-39d4-8e84-92769c948da9@kernel.org> <20200718171406.GB16791@redhat.com> <20200718174448.4btbjcvp6wbbdgts@wittgenstein> <badcb9d5-f628-2be1-7a72-902cf08010bd@kernel.org> <20200720064326.GA6612@redhat.com> <20200720082657.GC6612@redhat.com> <20200720084106.GJ10769@hirez.programming.kicks-ass.net> <20200720105924.GE43129@hirez.programming.kicks-ass.net> <20200720112623.GF43129@hirez.programming.kicks-ass.net> <jhjwo2yidit.mognet@arm.com> <20200720131747.GD119549@hirez.programming.kicks-ass.net>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     peterz@infradead.org
+Cc:     Oleg Nesterov <oleg@redhat.com>, Jiri Slaby <jirislaby@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        christian@brauner.io, "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Dave Jones <davej@codemonkey.org.uk>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
+In-reply-to: <20200720131747.GD119549@hirez.programming.kicks-ass.net>
+Date:   Mon, 20 Jul 2020 15:26:16 +0100
+Message-ID: <jhjv9iii7p3.mognet@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX7 reset driver now supports module build, it is no longer
-enabled by default, need to select it explicitly.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No change.
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On 20/07/20 14:17, peterz@infradead.org wrote:
+> On Mon, Jul 20, 2020 at 01:20:26PM +0100, Valentin Schneider wrote:
+>> On 20/07/20 12:26, peterz@infradead.org wrote:
+>
+>> > +	/*
+>> > +	 * We must re-load prev->state in case ttwu_remote() changed it
+>> > +	 * before we acquired rq->lock.
+>> > +	 */
+>> > +	tmp_state = prev->state;
+>> > +	if (unlikely(prev_state != tmp_state)) {
+>> > +		/*
+>> > +		 * ptrace_{,un}freeze_traced() think it is cool to change
+>> > +		 * ->state around behind our backs between TASK_TRACED and
+>> > +		 *  __TASK_TRACED.
+>> > +		 *
+>> > +		 * This is safe because this, as well as any __TASK_TRACED
+>> > +		 * wakeups are under siglock.
+>> > +		 *
+>> > +		 * For any other case, a changed prev_state must be to
+>> > +		 * TASK_RUNNING, such that when it blocks, the load has
+>> > +		 * happened before the smp_mb().
+>> > +		 *
+>> > +		 * Also see the comment with deactivate_task().
+>> > +		 */
+>> > +		SCHED_WARN_ON(tmp_state && (prev_state & __TASK_TRACED &&
+>> > +					   !(tmp_state & __TASK_TRACED)));
+>> > +
+>>
+>> IIUC if the state changed and isn't TASK_RUNNING it *has* to have
+>> __TASK_TRACED, so can't that be
+>>
+>>   SCHED_WARN_ON(tmp_state && !(tmp_state & __TASK_TRACED));
+>
+> Suppose task->state == TASK_UNINTERRUPTIBLE, and task != current, and
+> then someone goes and does task->state = __TASK_TRACED.
+>
+> That is, your statement is correct given the current code, but we also
+> want to verify no new code comes along and does something 'creative'.
+>
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 39b3ac7..6c764bd 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -921,6 +921,7 @@ CONFIG_PWM_SAMSUNG=y
- CONFIG_PWM_SUN4I=m
- CONFIG_PWM_TEGRA=m
- CONFIG_QCOM_PDC=y
-+CONFIG_RESET_IMX7=m
- CONFIG_RESET_QCOM_AOSS=y
- CONFIG_RESET_QCOM_PDC=m
- CONFIG_RESET_TI_SCI=y
--- 
-2.7.4
+That is what I was trying to go for; AFAICT your approach only warns if
+__TASK_TRACED gets removed between the two loads (IOW it was already
+there). The way I was seeing it is:
 
+- We only get here if prev_state != tmp_state; IOW we know we raced with
+  something
+- if (tmp_state), then it wasn't with ttwu_remote()
+- thus it must only be with ptrace shenanigans, IOW __TASK_TRACED must be
+  there.
+
+Now, what I suggested still doesn't detect what you pointed out, or some
+crazier thing that sets __TASK_TRACED *and* some other stuff. IIUC the
+ptrace transformation does TASK_TRACED -> __TASK_TRACED, so we could have
+it as:
+
+  /* TODO: name me */
+  #define foobar TASK_TRACED ^ __TASK_TRACED
+
+  ...
+
+  /* not TASK_RUNNING; check against allowed transformations
+  SCHED_WARN_ON(tmp_state && ((prev_state ^ tmp_state) & ~foobar));
+
+
+That said...
+
+> Or is the heat getting to me?
+
+... that may apply to me as well :-)
