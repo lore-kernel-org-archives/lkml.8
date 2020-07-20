@@ -2,52 +2,51 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95087C43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65540C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA1820684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F242064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262027;
-	bh=S+GbvqvYd5DQbyfyZrnVh7vsVEAGDL8ps5qUlMo54eQ=;
+	s=default; t=1595261746;
+	bh=brtp9yHjy3ziQVxTsjjgYfS8uVlOTxN4qyMt/fPozVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1iFpsSH3Cd1z3XqthZLqobWCuG3lxK1a8iP3477BZPtxzXfJG9gKGpZZS0Q2mLkrS
-	 SnPEY4lu2tgdd0lQLcEK67LLSbBEduhzMiHD0OAZl56j+T4Ez+n0f2ZZMuCpJhqmLW
-	 GxDgCI/gn7vvlEzWwPjt+WTGjA7gHdBJncW7LpnQ=
+	b=vjnda1z4VG5jzSDJzMhbBkviFagzvDLpusqoXCuKLN6uTGuZJf/H2nzXvxBjAnAvS
+	 0aEeuypsebv5sXJfnfcIuwjyPTNhKezHO88jdcZBARsYiaKeJtqpyk/eYtoEJ2yBYa
+	 LfiGttf0YMGG7HJMk//OLet8R6iZ/i/afod84KRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387632AbgGTQKK (ORCPT
+        id S2388453AbgGTQPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:10:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48366 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:15:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387618AbgGTQKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:10:06 -0400
+        id S2387763AbgGTQPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:15:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A33AB20734;
-        Mon, 20 Jul 2020 16:10:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 039052064B;
+        Mon, 20 Jul 2020 16:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261406;
-        bh=S+GbvqvYd5DQbyfyZrnVh7vsVEAGDL8ps5qUlMo54eQ=;
+        s=default; t=1595261738;
+        bh=brtp9yHjy3ziQVxTsjjgYfS8uVlOTxN4qyMt/fPozVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CgzGUYfyPwULE9TA8FWLSbPHV/M/AFv4CBGE4UUmOaxqAwAwblgpMcx27w2CGKLOh
-         wW83J2dzPvmJIuHcobb5d0LyHnp7O+GcFFn14101H1hRRgluO0klQp2jPuFeelMHi6
-         5aWQf+DF0AIcdqFTtj28GVOKH+4XTWaH/0bJb6Ms=
+        b=aUVpN8EA9sWGJZZblJeA6E4cC9IRy9bnRxf8HtLq92h+nk5BRoM8UQ4UvK8xUx5kH
+         crefVUta74gUuUBpsZrAZiKHA9fsrF4dsr3dzuDRkIIhm6RUX0+KIX9jD9ms6NVYeW
+         Fk3Up9OfCBgZ8zG4kIBkhDVHyGSj98YRD6wreeHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 103/244] xprtrdma: Fix double-free in rpcrdma_ep_create()
-Date:   Mon, 20 Jul 2020 17:36:14 +0200
-Message-Id: <20200720152830.728589241@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.7 207/244] dmaengine: mcf-edma: Fix NULL pointer exception in mcf_edma_tx_handler
+Date:   Mon, 20 Jul 2020 17:37:58 +0200
+Message-Id: <20200720152835.693987804@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,48 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit 85bfd71bc34e20d9fadb745131f6314c36d0f75b ]
+commit 8995aa3d164ddd9200e6abcf25c449cf5298c858 upstream.
 
-In the error paths, there's no need to call kfree(ep) after calling
-rpcrdma_ep_put(ep).
+On Toradex Colibri VF50 (Vybrid VF5xx) with fsl-edma driver NULL pointer
+exception happens occasionally on serial output initiated by login
+timeout.
 
-Fixes: e28ce90083f0 ("xprtrdma: kmalloc rpcrdma_ep separate from rpcrdma_xprt")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This was reproduced only if kernel was built with significant debugging
+options and EDMA driver is used with serial console.
+
+Issue looks like a race condition between interrupt handler
+fsl_edma_tx_handler() (called as a result of fsl_edma_xfer_desc()) and
+terminating the transfer with fsl_edma_terminate_all().
+
+The fsl_edma_tx_handler() handles interrupt for a transfer with already
+freed edesc and idle==true.
+
+The mcf-edma driver shares design and lot of code with fsl-edma.  It
+looks like being affected by same problem.  Fix this pattern the same
+way as fix for fsl-edma driver.
+
+Fixes: e7a3ff92eaf1 ("dmaengine: fsl-edma: add ColdFire mcf5441x edma support")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+Link: https://lore.kernel.org/r/1591881665-25592-1-git-send-email-krzk@kernel.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/sunrpc/xprtrdma/verbs.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/dma/mcf-edma.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index db0259c6467ef..4cb91dde849b9 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -404,8 +404,8 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+--- a/drivers/dma/mcf-edma.c
++++ b/drivers/dma/mcf-edma.c
+@@ -35,6 +35,13 @@ static irqreturn_t mcf_edma_tx_handler(i
+ 			mcf_chan = &mcf_edma->chans[ch];
  
- 	id = rpcrdma_create_id(r_xprt, ep);
- 	if (IS_ERR(id)) {
--		rc = PTR_ERR(id);
--		goto out_free;
-+		kfree(ep);
-+		return PTR_ERR(id);
- 	}
- 	__module_get(THIS_MODULE);
- 	device = id->device;
-@@ -504,9 +504,6 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
- out_destroy:
- 	rpcrdma_ep_put(ep);
- 	rdma_destroy_id(id);
--out_free:
--	kfree(ep);
--	r_xprt->rx_ep = NULL;
- 	return rc;
- }
- 
--- 
-2.25.1
-
+ 			spin_lock(&mcf_chan->vchan.lock);
++
++			if (!mcf_chan->edesc) {
++				/* terminate_all called before */
++				spin_unlock(&mcf_chan->vchan.lock);
++				continue;
++			}
++
+ 			if (!mcf_chan->edesc->iscyclic) {
+ 				list_del(&mcf_chan->edesc->vdesc.node);
+ 				vchan_cookie_complete(&mcf_chan->edesc->vdesc);
 
 
