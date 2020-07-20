@@ -2,110 +2,117 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DE2C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB0B22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595287875;
-	bh=sAPZKVWX3Z8asrnYoZ23NOhUHIa2gorGKKngOC75NsM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=xO34J1ltcmCa/2ePxI4vB6MNA5cDPVRrJ4p8Tz0A5N+CN86bEDrnnIr/cfw73m34v
-	 RzgS2Bq3UoMyybz5PBQ/S0PXPaxDl1vUuwt4qUFiZNSxdmVIa44skMMDpsoBjPzNKw
-	 9PeT1HSf/lVFCGVyqXvAfB13Njy+dZU4wtivcPIU=
+	by mail.kernel.org (Postfix) with ESMTP id 8178921702
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:32:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L3CaE1u0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgGTXbO (ORCPT
+        id S1726988AbgGTXc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726021AbgGTXbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 19:31:13 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B0E22080D;
-        Mon, 20 Jul 2020 23:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595287873;
-        bh=sAPZKVWX3Z8asrnYoZ23NOhUHIa2gorGKKngOC75NsM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=upDieZqHbOoq/fK1dHSW9gTNGzedB0zxg6JJqHBt9ph+uNVg5Nkkrr8yM/xOq2uDz
-         0aK7TDrhL4X+b4paWaWnJ6CONxXoHDFWLRabSdXdxN7KyCdp1zwDJ1436/gf7dnVnP
-         la9is/HX+QJ+cplZJ+7+PonYNwZADJTZvdomY62Q=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 0E3DA3522C1A; Mon, 20 Jul 2020 16:31:13 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 16:31:13 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     madhuparnabhowmik10@gmail.com,
-        Dexuan-Linux Cui <dexuan.linux@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, rcu@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, kvm list <kvm@vger.kernel.org>,
-        frextrite@gmail.com, lkft-triage@lists.linaro.org,
-        Dexuan Cui <decui@microsoft.com>, juhlee@microsoft.com,
-        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
-Subject: Re: [PATCH 2/2] kvm: mmu: page_track: Fix RCU list API usage
-Message-ID: <20200720233113.GZ9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200712131003.23271-2-madhuparnabhowmik10@gmail.com>
- <20200712160856.GW9247@paulmck-ThinkPad-P72>
- <CA+G9fYuVmTcttBpVtegwPbKxufupPOtk_WqEtOdS+HDQi7WS9Q@mail.gmail.com>
- <CAA42JLY2L6xFju_qZsVguGtXvDMqfCKbO_h1K9NJPjmqJEav=Q@mail.gmail.com>
- <20200717170747.GW9247@paulmck-ThinkPad-P72>
- <CA+G9fYvtYr0ri6j-auNOTs98xVj-a1AoZtUfwokwnvuFFWtFdQ@mail.gmail.com>
- <20200718001259.GY9247@paulmck-ThinkPad-P72>
- <CA+G9fYs7s34mmtard-ETjH2r94psgQFLDJWayznvN6UTvMYh5g@mail.gmail.com>
- <20200719160824.GF9247@paulmck-ThinkPad-P72>
- <CA+G9fYueEA0g4arZYQpZo803FHsYvh3WCq=PhYGULHEDa86pSg@mail.gmail.com>
+        Mon, 20 Jul 2020 19:32:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgGTXc2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 19:32:28 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE1B9C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:32:28 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id w17so9402624ply.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:32:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=+uXLuocAO8lxCToiXlu/ReZ2hnWMT9ytGR6dkaeKVcg=;
+        b=L3CaE1u0T+Opv+kLiWcX3Ec5X59jjbA9ANZp1cgG9bOS3DXa2o1L9a9YEcj4cXlKC2
+         YpsMhC0kPyoFSgBcTddfFOIKE7LiXt/QMGZWsarCu2NGjirgyXZxVIhiB74qP1gv62v9
+         Q1bvn8ox2SETeiMeFmiw8sTgBuT2J4USRqn5s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=+uXLuocAO8lxCToiXlu/ReZ2hnWMT9ytGR6dkaeKVcg=;
+        b=YhqOtSS1hheTeXENhGlBmufsj7y03BgzXreiHkSPMzXzPvRX0psnIuNk14sPeGGeHI
+         AOAeE4JfhAcXf3LSJbR903xv5D2OMOTtq/av4DMLFgc1Jkg+dZIx/hlo5L1U5GKkDw1m
+         e5CNi5pooqCTLNsk36JA2GqtNiNbCGcvcLyGneSYfjpQN01wUMLF+/Ej8p/OPCvoRL5f
+         4GnT5LE489zfGPPG5/uN1/WRxbV1VHbSRHWV4jMEjXbmB5y7VC1pc1921iHMLvRA42d2
+         lEoFEvfs5sSLDpW9bTJKhJTaDP/DmymdpsefbOnx37DjhO3vX23ABr+7N1Cft0w0+zWs
+         Ko7g==
+X-Gm-Message-State: AOAM532sy9zPOnOo4IQUOe4osm2Qa3bLs9cdt97uJLATwyXqKlyty/K1
+        GarNkOGC9Cq45to7KeX97ZSfPA==
+X-Google-Smtp-Source: ABdhPJyzZqIFkJvQhLWQiuq3uOD8kLbvlBxMBgJb3gbD3D7nIYizU92Vunzu1FrFGUCCZSH/KMaTmw==
+X-Received: by 2002:a17:90a:7487:: with SMTP id p7mr1715589pjk.233.1595287948100;
+        Mon, 20 Jul 2020 16:32:28 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id a9sm18301137pfr.103.2020.07.20.16.32.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 16:32:27 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYueEA0g4arZYQpZo803FHsYvh3WCq=PhYGULHEDa86pSg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <91a8eef836c1939cb57942c6fdcf2772@codeaurora.org>
+References: <20200707184125.15114-1-khsieh@codeaurora.org> <159527632812.1987609.6364896740387949838@swboyd.mtv.corp.google.com> <91a8eef836c1939cb57942c6fdcf2772@codeaurora.org>
+Subject: Re: [PATCH] drm/msm/dp: Add DP compliance tests on Snapdragon Chipsets
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     robdclark@gmail.com, sean@poorly.run, tanmay@codeaurora.org,
+        abhinavk@codeaurora.org, aravindh@codeaurora.org, airlied@linux.ie,
+        daniel@ffwll.ch, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+To:     khsieh@codeaurora.org
+Date:   Mon, 20 Jul 2020 16:32:26 -0700
+Message-ID: <159528794676.3847286.1584696687662833591@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 07:43:50PM +0530, Naresh Kamboju wrote:
-> On Sun, 19 Jul 2020 at 21:38, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Sun, Jul 19, 2020 at 05:52:44PM +0530, Naresh Kamboju wrote:
-> > > On Sat, 18 Jul 2020 at 05:43, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > >
-> > > > On Sat, Jul 18, 2020 at 12:35:12AM +0530, Naresh Kamboju wrote:
-> > > > > Hi Paul,
-> > > > >
-> > > > > > I am not seeing this here.
-> > > > >
-> > > > > Do you notice any warnings while building linux next master
-> > > > > for x86_64 architecture ?
-> > > >
-> > > > Idiot here was failing to enable building of KVM.  With that, I do see
-> > > > the error.  The patch resolves it for me.  Does it help for you?
-> > >
-> > > yes.
-> > > The below patch applied on top of linux -next 20200717 tag
-> > > and build pass.
-> >
-> > Thank you!  May I add your Tested-by?
-> 
-> That would be great please add
-> Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> 
-> Thank you !
+Quoting khsieh@codeaurora.org (2020-07-20 15:48:13)
+> On 2020-07-20 13:18, Stephen Boyd wrote:
+> > Quoting Kuogee Hsieh (2020-07-07 11:41:25)
+> >>  drivers/gpu/drm/msm/dp/dp_power.c           |  32 +-
+> >>  drivers/gpu/drm/msm/dp/dp_power.h           |   1 +
+> >>  drivers/gpu/drm/msm/dp/dp_reg.h             |   1 +
+> >>  17 files changed, 861 insertions(+), 424 deletions(-)
+> >=20
+> > It seems to spread various changes throughout the DP bits and only has =
 
-Done, and thank you for spotting this!
+> > a
+> > short description about what's changing. Given that the series above
+> > isn't merged it would be better to get rid of this change and make the
+> > changes in the patches that introduce these files.
+> >=20
+>=20
+> Yes, the base DP driver is not yet merged as its still in reviews and=20
+> has been for a while.
+> While it is being reviewed, different developers are working on=20
+> different aspects of DP such as base DP driver, DP compliance, audio etc =
 
-							Thanx, Paul
+> to keep things going in parallel.
+> To maintain the authorship of the different developers, we prefer having =
+
+> them as separate changes and not merge them.
+> We can make all these changes as part of the same series if that shall=20
+> help to keep things together but would prefer the changes themselves to=20
+> be separate.
+> Please consider this and let us know if that works.
+>=20
+
+I'm not the maintainer here so it's not really up to me, but this is why
+we have the Co-developed-by tag, to show that multiple people worked on
+some patch. The patch is supposed to logically stand on its own
+regardless of how many people worked on it. Authorship is a single
+person but the Co-developed-by tag helps express that more than one
+person is the actual author of the patch. Can you use that tag instead
+and then squash this into the other DP patches?
