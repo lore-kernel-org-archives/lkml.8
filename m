@@ -2,117 +2,105 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345ABC433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A64C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 104C822B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A174522B51
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ys6/60If"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WbDdGeNd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730516AbgGTTIE (ORCPT
+        id S1729342AbgGTTEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:08:04 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45243 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729027AbgGTTHy (ORCPT
+        Mon, 20 Jul 2020 15:04:41 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58816 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbgGTTEl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:07:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595272073;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8JGw1vp/HeS7n74dHX0UW8Z7hcMVJHzFu7NPlVByPJI=;
-        b=Ys6/60IfpPWzisoqjUKpjqTbOwh8IpuLX3hYUVzuKm9lMDTo1Ul/PGBvOsDzEAvZRo03Cw
-        yjoIWUFyYnWLJShx1jJehtth1mJ1AXhVB0WxZ98VqOl9uehdXUIotspBB4rFdle6cOO0OJ
-        2Kg3jnnyjPeNxBnWqZ7wwcxZ0Oe1JBo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-45--93WF80dNeGefZDqPZf9ZA-1; Mon, 20 Jul 2020 15:07:51 -0400
-X-MC-Unique: -93WF80dNeGefZDqPZf9ZA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B011E107ACCA;
-        Mon, 20 Jul 2020 19:07:49 +0000 (UTC)
-Received: from Ruby.redhat.com (ovpn-120-196.rdu2.redhat.com [10.10.120.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BA4745C22A;
-        Mon, 20 Jul 2020 19:07:48 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 4/5] drm/vblank: Use spin_(un)lock_irq() in drm_queue_vblank_event()
-Date:   Mon, 20 Jul 2020 15:07:35 -0400
-Message-Id: <20200720190736.180297-5-lyude@redhat.com>
-In-Reply-To: <20200720190736.180297-1-lyude@redhat.com>
-References: <20200720190736.180297-1-lyude@redhat.com>
+        Mon, 20 Jul 2020 15:04:41 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 53CDB2A4;
+        Mon, 20 Jul 2020 21:04:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1595271878;
+        bh=KNtCu6HocOzqYYKCsCcla3s8hAt3olADl6cr5CFqkeg=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WbDdGeNdkv05sl6Ov9CNPMuHACNQnhIp4Dc0zQjfZs5rfGa8+Quj9JrD/WxX8AiHu
+         353+vdl1fuLoKhPVVOEVYYISYvegNPtONOh+T/ZQyeJxp7YGFkX7TX3bmyI3fMX1NM
+         mwsN7iYnwSsPCXJcaqIN3/dP9piBOsd4zev3wN88=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH][next] media: i2c: fix error check on max9286_read call
+To:     Colin King <colin.king@canonical.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200720161335.339174-1-colin.king@canonical.com>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <ac2e793b-0f29-ac7b-d29f-3a4695c2eedc@ideasonboard.com>
+Date:   Mon, 20 Jul 2020 20:04:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200720161335.339174-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This one's easy - we're already calling kzalloc() in this function, so
-we must already be guaranteed to have IRQs enabled when calling this.
-So, use the plain _irq() variants of spin_(un)lock() to make this more
-obvious.
+Hi Colin,
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
----
- drivers/gpu/drm/drm_vblank.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+On 20/07/2020 17:13, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently the error return from the call to max9286_read is masked
+> with 0xf0 so the following check for a negative error return is
+> never true.  Fix this by checking for an error first, then masking
+> the return value for subsequent conflink_mask checking.
 
-diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index 51f2e988205e7..64610070ba473 100644
---- a/drivers/gpu/drm/drm_vblank.c
-+++ b/drivers/gpu/drm/drm_vblank.c
-@@ -1611,7 +1611,6 @@ static int drm_queue_vblank_event(struct drm_device *dev, unsigned int pipe,
- 	struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
- 	struct drm_pending_vblank_event *e;
- 	ktime_t now;
--	unsigned long flags;
- 	u64 seq;
- 	int ret;
- 
-@@ -1633,7 +1632,7 @@ static int drm_queue_vblank_event(struct drm_device *dev, unsigned int pipe,
- 			e->event.vbl.crtc_id = crtc->base.id;
- 	}
- 
--	spin_lock_irqsave(&dev->event_lock, flags);
-+	spin_lock_irq(&dev->event_lock);
- 
- 	/*
- 	 * drm_crtc_vblank_off() might have been called after we called
-@@ -1670,12 +1669,12 @@ static int drm_queue_vblank_event(struct drm_device *dev, unsigned int pipe,
- 		vblwait->reply.sequence = req_seq;
- 	}
- 
--	spin_unlock_irqrestore(&dev->event_lock, flags);
-+	spin_unlock_irq(&dev->event_lock);
- 
- 	return 0;
- 
- err_unlock:
--	spin_unlock_irqrestore(&dev->event_lock, flags);
-+	spin_unlock_irq(&dev->event_lock);
- 	kfree(e);
- err_put:
- 	drm_vblank_put(dev, pipe);
--- 
-2.26.2
+Ooops!
+
+> Addresses-Coverity: ("Logically dead code")
+> fixes: 66d8c9d2422d ("media: i2c: Add MAX9286 driver")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+
+Thanks,
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+> ---
+>  drivers/media/i2c/max9286.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/i2c/max9286.c b/drivers/media/i2c/max9286.c
+> index 47f280518fdb..b364a3f60486 100644
+> --- a/drivers/media/i2c/max9286.c
+> +++ b/drivers/media/i2c/max9286.c
+> @@ -405,10 +405,11 @@ static int max9286_check_config_link(struct max9286_priv *priv,
+>  	 * to 5 milliseconds.
+>  	 */
+>  	for (i = 0; i < 10; i++) {
+> -		ret = max9286_read(priv, 0x49) & 0xf0;
+> +		ret = max9286_read(priv, 0x49);
+>  		if (ret < 0)
+>  			return -EIO;
+>  
+> +		ret &= 0xf0;
+>  		if (ret == conflink_mask)
+>  			break;
+>  
+> 
 
