@@ -2,98 +2,72 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EBDC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65D222080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:03:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595235825;
-	bh=KcQt2EOigF1ebrTQ7hvGmXwS8Ro1HrFCMeZYHFhnS7o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O7IYsg2P+ZTpDfvV7bfFIACLd1tqmDB2oyZMIK507l0Zg1PfHBSwCcwHuIa3FxDY4
-	 RPpnKPPBqIt0u2YjSss7160SDyynf040kxX0VR4OfpSUaNykV7d2up3SkMqgmUYKPd
-	 2XyNjCvsFwP1OfieGlOuEc4RbG6K8ulYEAceEdgs=
+	by mail.kernel.org (Postfix) with ESMTP id CDCA7208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:04:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgGTJDo (ORCPT
+        id S1728133AbgGTJEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:03:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726030AbgGTJDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:03:44 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC263208E4;
-        Mon, 20 Jul 2020 09:03:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595235823;
-        bh=KcQt2EOigF1ebrTQ7hvGmXwS8Ro1HrFCMeZYHFhnS7o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2MQ1krqOi3hi5kU835rdrlryHLYqM1P79nmjhvl/68c5WzpyyCv+6MttAMk7f8ulC
-         YeFKtEdgbAcBW1900hLCi6R7J7eTvWGEVT8fSsekUCI9pgNtzklh3LRlfN5Yzz1rlp
-         QzmMdqjcenT2oFxV7+Mb/zf/kuE5sm2d2fy1q2pQ=
-Date:   Mon, 20 Jul 2020 10:03:38 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jonathan Marek <jonathan@marek.ca>,
-        linux-arm-msm@vger.kernel.org,
-        John Stultz <john.stultz@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, jcrouse@codeaurora.org
-Subject: Re: [PATCH v2 5/5] iommu/arm-smmu: Setup identity domain for boot
- mappings
-Message-ID: <20200720090338.GB11189@willie-the-truck>
-References: <20200717001619.325317-1-bjorn.andersson@linaro.org>
- <20200717001619.325317-6-bjorn.andersson@linaro.org>
+        Mon, 20 Jul 2020 05:04:09 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7793 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726030AbgGTJEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 05:04:09 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D7CC088D78A4E65EF398;
+        Mon, 20 Jul 2020 17:04:01 +0800 (CST)
+Received: from NRM-11.huawei.com (10.175.101.78) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 20 Jul 2020 17:03:34 +0800
+From:   Wang Yufen <wangyufen@huawei.com>
+To:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <brcm80211-dev-list@cypress.com>, <linux-wireless@vger.kernel.org>,
+        <davem@davemloft.net>, <kvalo@codeaurora.org>, <kuba@kernel.org>,
+        <franky.lin@broadcom.com>, <wright.feng@cypress.com>
+CC:     Wang Yufen <wangyufen@huawei.com>
+Subject: [PATCH net-next] brcm80211: fix possible memleak in brcmf_proto_msgbuf_attach
+Date:   Mon, 20 Jul 2020 17:36:05 +0800
+Message-ID: <1595237765-66238-1-git-send-email-wangyufen@huawei.com>
+X-Mailer: git-send-email 1.8.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717001619.325317-6-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.78]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 05:16:19PM -0700, Bjorn Andersson wrote:
-> With many Qualcomm platforms not having functional S2CR BYPASS a
-> temporary IOMMU domain, without translation, needs to be allocated in
-> order to allow these memory transactions.
-> 
-> Unfortunately the boot loader uses the first few context banks, so
-> rather than overwriting a active bank the last context bank is used and
-> streams are diverted here during initialization.
-> 
-> This also performs the readback of SMR registers for the Qualcomm
-> platform, to trigger the mechanism.
-> 
-> This is based on prior work by Thierry Reding and Laurentiu Tudor.
-> 
-> Tested-by: John Stultz <john.stultz@linaro.org>
-> Tested-by: Vinod Koul <vkoul@kernel.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v1:
-> - Rebased to avoid conflict
-> - Picked up tested-by
-> 
->  drivers/iommu/arm-smmu-qcom.c | 11 +++++
->  drivers/iommu/arm-smmu.c      | 79 +++++++++++++++++++++++++++++++++--
+When brcmf_proto_msgbuf_attach fail and msgbuf->txflow_wq != NULL,
+we should destroy the workqueue.
 
-Perhaps the CB allocator callback can help to reduce the changes to the core
-driver here. What do you think?
+Fixes: 05491d2ccf20 ("brcm80211: move under broadcom vendor directory")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Yufen <wangyufen@huawei.com>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Will
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
+index 8bb4f1f..1bb270e 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
+@@ -1619,6 +1619,8 @@ int brcmf_proto_msgbuf_attach(struct brcmf_pub *drvr)
+ 					  BRCMF_TX_IOCTL_MAX_MSG_SIZE,
+ 					  msgbuf->ioctbuf,
+ 					  msgbuf->ioctbuf_handle);
++		if (msgbuf->txflow_wq)
++			destroy_workqueue(msgbuf->txflow_wq);
+ 		kfree(msgbuf);
+ 	}
+ 	return -ENOMEM;
+-- 
+1.8.3
+
