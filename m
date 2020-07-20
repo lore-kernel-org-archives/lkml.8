@@ -2,52 +2,53 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD79C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21505C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61554206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F335A2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260075;
-	bh=Yqv4Iy4D7IpvZdWeRuwgS5y5415qBTlSh60EUkQfr4U=;
+	s=default; t=1595260077;
+	bh=PKbze4aIN2Tiq+hHX/fexUrT/75/AE9fmKBYSnkr+oY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZHIftMfIq/kT7YdYlALREUFe4yT0MhUEiFORCC6UlHhEpHUMtmNaihXn2lLVqSxc7
-	 Kg+xZXPEEMB2mohDEcJzSfDDk8pJYK0Cii4zRgLcVNiczGEpLYWDp2tI4uMPizmpoT
-	 I+YE5ZQb3NqIEDswIDA9/v8RmMHsWdH2NgL8qpE8=
+	b=J8VaXlwPeIe+3Oin3IlPae/Hmt+HiEXhzK+QkafoH2ug9xmC2Ot5bsMayQcqHbInA
+	 COIR2RD1/5vlfFPANkUlVOnaJLCI8yJ3SvFTXeSZnUrhDhitRHN1k+DJe/1pD7mLB4
+	 zaFyHZ/q8gQI4ZBvYwAfzUhfOXDVojpM9occ+KCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730828AbgGTPry (ORCPT
+        id S1730821AbgGTPrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:47:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43124 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:47:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730809AbgGTPrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:47:47 -0400
+        id S1730027AbgGTPru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:47:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43079206E9;
-        Mon, 20 Jul 2020 15:47:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E29942064B;
+        Mon, 20 Jul 2020 15:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260066;
-        bh=Yqv4Iy4D7IpvZdWeRuwgS5y5415qBTlSh60EUkQfr4U=;
+        s=default; t=1595260069;
+        bh=PKbze4aIN2Tiq+hHX/fexUrT/75/AE9fmKBYSnkr+oY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y1Wdyuzlh4q0ZI34tMM1RX3jaR4qu/6i27Yig4Vl1MZXq2lQuyaWjLbDlx5meVP4P
-         F05vKEOgD81TQKOEb/RWVjDSXlUNwF/r6BuQ0SJ1oeRjb6Q/0SqPDprR0tvnwAhfaX
-         yLPEIToazvFF0/eQtzBPQGguFlzYefA8qYTBzSEM=
+        b=Cy1Q5APRfLp5HtpMrHMtYrUt4pb6nWipBV6+LP+VaXPplDK5xcE4ea90GodTS3wqO
+         /hTGof6LTkePJ+JU1dsUrvkgddnozcVFoWSQeYlUrSJSM8fQCQTYsrO/fWU55pQjFf
+         UAhOpum9gtgiy6+n9/yA0ox9426C9GEGFBtLwDVk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 087/125] ARM: dts: socfpga: Align L2 cache-controller nodename with dtschema
-Date:   Mon, 20 Jul 2020 17:37:06 +0200
-Message-Id: <20200720152807.219607099@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+0f4ecfe6a2c322c81728@syzkaller.appspotmail.com,
+        syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 096/125] ALSA: usb-audio: Fix race against the error recovery URB submission
+Date:   Mon, 20 Jul 2020 17:37:15 +0200
+Message-Id: <20200720152807.662368832@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -60,51 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit d7adfe5ffed9faa05f8926223086b101e14f700d ]
+commit 9b7e5208a941e2e491a83eb5fa83d889e888fa2f upstream.
 
-Fix dtschema validator warnings like:
-    l2-cache@fffff000: $nodename:0:
-        'l2-cache@fffff000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+USB MIDI driver has an error recovery mechanism to resubmit the URB in
+the delayed timer handler, and this may race with the standard start /
+stop operations.  Although both start and stop operations themselves
+don't race with each other due to the umidi->mutex protection, but
+this isn't applied to the timer handler.
 
-Fixes: 475dc86d08de ("arm: dts: socfpga: Add a base DTSI for Altera's Arria10 SOC")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+For fixing this potential race, the following changes are applied:
+
+- Since the timer handler can't use the mutex, we apply the
+  umidi->disc_lock protection at each input stream URB submission;
+  this also needs to change the GFP flag to GFP_ATOMIC
+- Add a check of the URB refcount and skip if already submitted
+- Move the timer cancel call at disconnection to the beginning of the
+  procedure; this assures the in-flight timer handler is gone properly
+  before killing all pending URBs
+
+Reported-by: syzbot+0f4ecfe6a2c322c81728@syzkaller.appspotmail.com
+Reported-by: syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200710160656.16819-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm/boot/dts/socfpga.dtsi         | 2 +-
- arch/arm/boot/dts/socfpga_arria10.dtsi | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/usb/midi.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 10d2fa183a9ff..7ee99e11508ca 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -706,7 +706,7 @@ ocram-ecc@ffd08144 {
- 			};
- 		};
+--- a/sound/usb/midi.c
++++ b/sound/usb/midi.c
+@@ -1477,6 +1477,8 @@ void snd_usbmidi_disconnect(struct list_
+ 	spin_unlock_irq(&umidi->disc_lock);
+ 	up_write(&umidi->disc_rwsem);
  
--		L2: l2-cache@fffef000 {
-+		L2: cache-controller@fffef000 {
- 			compatible = "arm,pl310-cache";
- 			reg = <0xfffef000 0x1000>;
- 			interrupts = <0 38 0x04>;
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index bd1985694bcae..672e73e35228c 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -606,7 +606,7 @@ sdr: sdr@ffcfb100 {
- 			reg = <0xffcfb100 0x80>;
- 		};
++	del_timer_sync(&umidi->error_timer);
++
+ 	for (i = 0; i < MIDI_MAX_ENDPOINTS; ++i) {
+ 		struct snd_usb_midi_endpoint *ep = &umidi->endpoints[i];
+ 		if (ep->out)
+@@ -1503,7 +1505,6 @@ void snd_usbmidi_disconnect(struct list_
+ 			ep->in = NULL;
+ 		}
+ 	}
+-	del_timer_sync(&umidi->error_timer);
+ }
+ EXPORT_SYMBOL(snd_usbmidi_disconnect);
  
--		L2: l2-cache@fffff000 {
-+		L2: cache-controller@fffff000 {
- 			compatible = "arm,pl310-cache";
- 			reg = <0xfffff000 0x1000>;
- 			interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.25.1
-
+@@ -2260,16 +2261,22 @@ void snd_usbmidi_input_stop(struct list_
+ }
+ EXPORT_SYMBOL(snd_usbmidi_input_stop);
+ 
+-static void snd_usbmidi_input_start_ep(struct snd_usb_midi_in_endpoint *ep)
++static void snd_usbmidi_input_start_ep(struct snd_usb_midi *umidi,
++				       struct snd_usb_midi_in_endpoint *ep)
+ {
+ 	unsigned int i;
++	unsigned long flags;
+ 
+ 	if (!ep)
+ 		return;
+ 	for (i = 0; i < INPUT_URBS; ++i) {
+ 		struct urb *urb = ep->urbs[i];
+-		urb->dev = ep->umidi->dev;
+-		snd_usbmidi_submit_urb(urb, GFP_KERNEL);
++		spin_lock_irqsave(&umidi->disc_lock, flags);
++		if (!atomic_read(&urb->use_count)) {
++			urb->dev = ep->umidi->dev;
++			snd_usbmidi_submit_urb(urb, GFP_ATOMIC);
++		}
++		spin_unlock_irqrestore(&umidi->disc_lock, flags);
+ 	}
+ }
+ 
+@@ -2285,7 +2292,7 @@ void snd_usbmidi_input_start(struct list
+ 	if (umidi->input_running || !umidi->opened[1])
+ 		return;
+ 	for (i = 0; i < MIDI_MAX_ENDPOINTS; ++i)
+-		snd_usbmidi_input_start_ep(umidi->endpoints[i].in);
++		snd_usbmidi_input_start_ep(umidi, umidi->endpoints[i].in);
+ 	umidi->input_running = 1;
+ }
+ EXPORT_SYMBOL(snd_usbmidi_input_start);
 
 
