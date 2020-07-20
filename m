@@ -2,112 +2,159 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D07C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B40C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43D662176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F282176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:19:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e0F2J7/d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KuwTS0Ct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbgGTTS6 (ORCPT
+        id S1730990AbgGTTTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:18:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30117 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730944AbgGTTS4 (ORCPT
+        Mon, 20 Jul 2020 15:19:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729797AbgGTTTh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:18:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595272735;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=1Kbu8ZJB+PbpYpnvxeXN5DGnvBoImp+SwBun1XbwpDw=;
-        b=e0F2J7/dBWRF2ANA5jdbc3z5Pg+kkbBwr6HeWdkdtKCutJPjedNzSH3TyJ2WfqYRVrucgD
-        bThkCTzQ548BQZNFPmQd8hCbE1j3VK90oWcXBTtaFqJEYDdeLpXAL21ElII4O58GOQ1OV7
-        H9X3wIUCnjqfP17rffq89Exhw9CtoRc=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-138-MWnT-1tGO46ypihVECORuQ-1; Mon, 20 Jul 2020 15:18:53 -0400
-X-MC-Unique: MWnT-1tGO46ypihVECORuQ-1
-Received: by mail-qk1-f199.google.com with SMTP id 124so12090094qko.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 12:18:53 -0700 (PDT)
+        Mon, 20 Jul 2020 15:19:37 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2B17C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 12:19:36 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id s9so21451195ljm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 12:19:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c27QdDaalrBPTYx6Hz4qEdOcDXJQt2hGAF2f+ujhjF4=;
+        b=KuwTS0CtDg/KT6Vr6p1o4UTZ7HWalRZpW11IdhJWv6Yc5j/TD5gQ7zm5Jjh6B8XI5h
+         yfJNFC7eK2lRmItt7PjIn51fAIMXuBYxgWFd3bm23wg5S6Tq4aHjL48ntwLG1xpskAHd
+         IC9EtdXCtrNqzLjo5l8RV9NjG1QYz/6dbUsCE6VVhWXw48lAjBR5EyNpzl8NDfqOktSX
+         EPmX6U04po198OszhbuhONTWOov4Xd3WFtEE0kzJi4eP9qCQ8vQq88ZBwSDh8+1T4FRD
+         hbv4wlJXAUpI8yWYfRaNYst5gn2EOYKYC/8BLagM5mfRI31ySXxAV9tBd5D4Cr90agjs
+         Lvrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1Kbu8ZJB+PbpYpnvxeXN5DGnvBoImp+SwBun1XbwpDw=;
-        b=Ls+UhNN52gX4RKFuxHVNi8Oum9ZGudchAdOAeW+R3AOhlV0Q/rETNTZ3wJSj0173fB
-         8FeK8fyAOysMdxRdwaBWtEdT/wpABDsLXBUtwfTvKbyPHnfwmodeYV+v8rqZoyPJvM0n
-         H2x15oklbFHitE6NivDDfTkUjSqPTGYj46ZpkWjk8bYrUX6faAGN1DffjsuxseDejCwM
-         95Fos2rQ2DZAyo4kYbfY33+AOH968wXhe+TevH35nnt8fGn8cZMzt+uo0vY/WppLu0D7
-         r9GAiF/hHSavhr5FEpVqik50fAp4+Evd4+efXAEwAO1JJ/4Aa9v1MgkWH0mVY68HL/EU
-         fMfQ==
-X-Gm-Message-State: AOAM530BJu5IAxZ13oYla25LM/CgsIOnH3CymzaqEvnj1NJ/Ry0NImt4
-        1zeV7s/bFLS8b40+6OQ4Kl5Sm6TRcDRn5om761sgDRLy9FTkjtU+tgE5BqEFaO1BRUiNrM0DE4C
-        D6zem4gicl9Scv4YO27Xrwd+l
-X-Received: by 2002:ac8:bc2:: with SMTP id p2mr26252059qti.374.1595272733342;
-        Mon, 20 Jul 2020 12:18:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwnHhkZMNBQS0nyRzKMd1uLYdyrRKd2rgZ6H9zo8r0jm3gmVaJyLQcNPC2s6t9n52ICM5SvqQ==
-X-Received: by 2002:ac8:bc2:: with SMTP id p2mr26252034qti.374.1595272733050;
-        Mon, 20 Jul 2020 12:18:53 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id c80sm335957qkg.72.2020.07.20.12.18.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 12:18:52 -0700 (PDT)
-From:   trix@redhat.com
-To:     b.zolnierkie@samsung.com, jhubbard@nvidia.com, sam@ravnborg.org,
-        daniel.vetter@ffwll.ch, gustavo@embeddedor.com, arnd@arndb.de,
-        jani.nikula@intel.com
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
-Subject: [PATCH] video: fbdev: pvr2fb: initialize variables
-Date:   Mon, 20 Jul 2020 12:18:45 -0700
-Message-Id: <20200720191845.20115-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c27QdDaalrBPTYx6Hz4qEdOcDXJQt2hGAF2f+ujhjF4=;
+        b=UnSOZVT7QHt5ZB/tKvsTIASDLH5EUdrjYI2JR2UV2VUZ/d/3shs5ZFVgZswJlzvQB6
+         vXiyyEw/NrFZXDDo8SX1wz88U/iZC/kmMMgtLPUpb1nmVs09nv+YqITiAeF6ARpUQ00b
+         sH/BvGtUwil6hNY9OYwyEtwQNijyeUn+RMWTXV3eBIf6La+jALwjnxz/MKF5+IL4MH8m
+         VGAj6eS1NKcguqgCCgtY2GxkYp+e65C8Ll0iCeWDVUXRPbCV8NiZ+8tuznjcCWA+ZSPG
+         5s9yVf7RmnNhHnRY1WosKpjhEOvd5WFpYZigI/V86i8zZov+llH7eG2lXHjhDSyLcLeK
+         397g==
+X-Gm-Message-State: AOAM5336AMbmcDUxD/Q+jrvsHmzSA97uwvlOpseBIoXzF0jxEAGOFzVH
+        4V/+lhgK6ttVR5H9yG89vZxHNl4t/1voGD6nsv5rcw==
+X-Google-Smtp-Source: ABdhPJytd1L3t3odiIQNSjrPSpGOSnIfawPzcqrPm7XkSZxsxS8d6ysT2xoLHLvMBq1OahMA3S7JIs4XecxrzglTgn8=
+X-Received: by 2002:a2e:7401:: with SMTP id p1mr11812893ljc.366.1595272774987;
+ Mon, 20 Jul 2020 12:19:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <CA+G9fYuzqA0N6O-52uH9aHjsfF6HfhuxMby1Y6Yz7jGMAHW0zw@mail.gmail.com>
+ <CAK8P3a1SHQKNNCVj9Gp25BLuXUC2nf7FuVrqfpPYQkvMbhjzFg@mail.gmail.com>
+ <ad7ba016-c3eb-a833-e4d3-4cdcb53ca786@arm.com> <CAF6AEGsBRxFC918nNzJZnxMpFnNC6qcNGvMjjM8U3AAn6CusNA@mail.gmail.com>
+In-Reply-To: <CAF6AEGsBRxFC918nNzJZnxMpFnNC6qcNGvMjjM8U3AAn6CusNA@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 21 Jul 2020 00:49:23 +0530
+Message-ID: <CA+G9fYv9K3FqR6D9=2jvQ3s_eSTL=K-x4QW4-P7=AgfjjHCBwA@mail.gmail.com>
+Subject: Re: [Freedreno] arm64: Internal error: Oops: qcom_iommu_tlb_inv_context
+ free_io_pgtable_ops on db410c
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, Arnd Bergmann <arnd@arndb.de>,
+        Sean Paul <sean@poorly.run>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Andy Gross <agross@kernel.org>, lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Eric Anholt <eric@anholt.net>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+On Mon, 20 Jul 2020 at 21:27, Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Mon, Jul 20, 2020 at 4:28 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> >
+> > On 2020-07-20 08:17, Arnd Bergmann wrote:
+> > > On Mon, Jul 20, 2020 at 8:36 AM Naresh Kamboju
+> > > <naresh.kamboju@linaro.org> wrote:
+<>
+> > >> [    5.444121] Unable to handle kernel NULL pointer dereference at
+> > >> virtual address 0000000000000018
+> > >> [    5.456615]   ESR = 0x96000004
+> > >> [    5.464471]   SET = 0, FnV = 0
+> > >> [    5.464487]   EA = 0, S1PTW = 0
+> > >> [    5.466521] Data abort info:
+> > >> [    5.469971]   ISV = 0, ISS = 0x00000004
+> > >> [    5.472768]   CM = 0, WnR = 0
+> > >> [    5.476172] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000bacba000
+> > >> [    5.479349] [0000000000000018] pgd=0000000000000000, p4d=0000000000000000
+> > >> [    5.485820] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+> > >> [    5.492448] Modules linked in: crct10dif_ce adv7511(+)
+> > >> qcom_spmi_temp_alarm cec msm(+) mdt_loader qcom_camss videobuf2_dma_sg
+> > >> drm_kms_helper v4l2_fwnode videobuf2_memops videobuf2_v4l2 qcom_rng
+> > >> videobuf2_common i2c_qcom_cci display_connector socinfo drm qrtr ns
+> > >> rmtfs_mem fuse
+> > >> [    5.500256] CPU: 0 PID: 286 Comm: systemd-udevd Not tainted 5.8.0-rc5 #1
+> > >> [    5.522484] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+> > >> [    5.529170] pstate: 20000005 (nzCv daif -PAN -UAO BTYPE=--)
+> > >> [    5.535856] pc : qcom_iommu_tlb_inv_context+0x18/0xa8
+> > >> [    5.541148] lr : free_io_pgtable_ops+0x28/0x58
+<>
+> > >> [    5.628297] Call trace:
+> > >> [    5.633592]  qcom_iommu_tlb_inv_context+0x18/0xa8
+> > >
+> > > This means that dev_iommu_fwspec_get() has returned NULL
+> > > in qcom_iommu_tlb_inv_context(), either because dev->iommu
+> > > is NULL, or because dev->iommu->fwspec is NULL.
+> > >
+> > > qcom_iommu_tlb_inv_context() does not check for a NULL
+> > > pointer before using the returned object.
+> > >
+> > > The bug is either in the lack of error handling, or the fact
+> > > that it's possible to get into this function for a device
+> > > that has not been fully set up.
+> >
+> > Not quite - the device *was* properly set up, but has already been
+> > properly torn down again in the removal path by iommu_release_device().
+> > The problem is that qcom-iommu kept the device pointer as its TLB cookie
+> > for the domain, but the domain has a longer lifespan than the validity
+> > of that device - that's a fundamental design flaw in the driver.
+>
+> fwiw, I just sent "iommu/qcom: Use domain rather than dev as tlb
+> cookie".. untested but looks like a straightforward enough change to
+> switch over to using the domain rather than dev as cookie
 
-clang static analysis reports this repesentative error
+The proposed patch tested and confirmed the reported problem fixed.
 
-pvr2fb.c:1049:2: warning: 1st function call argument
-  is an uninitialized value [core.CallAndMessage]
-        if (*cable_arg)
-        ^~~~~~~~~~~~~~~
+ref:
+https://lore.kernel.org/linux-iommu/CA+G9fYtj1RBYcPhXZRm-qm5ygtdLj1jD8vFZSqQvwi_DNJLBwQ@mail.gmail.com/T/#m36a1fca18098f6c34275d928f9ba9c40c6d7fd63
+https://lkft.validation.linaro.org/scheduler/job/1593950#L3392
 
-Problem is that cable_arg depends on the input loop to
-set the cable_arg[0].  If it does not, then some random
-value from the stack is used.
 
-A similar problem exists for output_arg.
+>
+> BR,
+> -R
 
-So initialize cable_arg and output_arg.
 
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- drivers/video/fbdev/pvr2fb.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/video/fbdev/pvr2fb.c b/drivers/video/fbdev/pvr2fb.c
-index 2d9f69b93392..f4add36cb5f4 100644
---- a/drivers/video/fbdev/pvr2fb.c
-+++ b/drivers/video/fbdev/pvr2fb.c
-@@ -1028,6 +1028,8 @@ static int __init pvr2fb_setup(char *options)
- 	if (!options || !*options)
- 		return 0;
- 
-+	cable_arg[0] = output_arg[0] = 0;
-+
- 	while ((this_opt = strsep(&options, ","))) {
- 		if (!*this_opt)
- 			continue;
--- 
-2.18.1
-
+- Naresh
