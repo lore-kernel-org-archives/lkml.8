@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A510EC433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7703C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 740C02073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997EB2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262244;
-	bh=Hy3vcrLf+NBQZ5DCalf0KX8h04sbG4grI55+UKEruOQ=;
+	s=default; t=1595262249;
+	bh=RqNBEJqQUF1iD1QlbiKbl3gj6EvsNqaGw9wtMeIXKro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zsmp1Ic/OFHyRVHTpAgBnqRTbx5fYHKDkaUMzEHfinD55aNvP9srXTFmtSiQ8Tgsm
-	 laxk1CsLdurRF4jLjitpUmHFSf5n14eo3+psFQWFwBVzQsJKSNVuCFLKzvN0gQg8HV
-	 /s7bDjXHj6A3bBAns6NGnsSmeYyDI44yykXxcWpY=
+	b=GzqtPv+sApaKHa2J6fZOgMuKN22mnm5SXUte6/NR1d9xfMhzhyJBaQ4yc0NqjpcCT
+	 jHFKC9+gAH2oVuryuukhzWYArtbQ1GAwXz75uUIma6HwUe5u/yv7I3HRBIq7+29CVC
+	 Bv70IY7S+czUu1Ax9Hkkp5kcLg8FftsTMnY8g268=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388233AbgGTQYD (ORCPT
+        id S2388086AbgGTQYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:24:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39336 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:24:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732613AbgGTQE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:04:28 -0400
+        id S1732807AbgGTQEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:04:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91F212064B;
-        Mon, 20 Jul 2020 16:04:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B66720672;
+        Mon, 20 Jul 2020 16:04:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261068;
-        bh=Hy3vcrLf+NBQZ5DCalf0KX8h04sbG4grI55+UKEruOQ=;
+        s=default; t=1595261045;
+        bh=RqNBEJqQUF1iD1QlbiKbl3gj6EvsNqaGw9wtMeIXKro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lv/8wSReZ3XatQam0ErFzK7OHqNckBSOieZhjzBTNoTMqbyY/nB48rkYehVbY5qZx
-         pGnaphLrapQaQL2aPvVZwEDHqPETOGcRknFqXBk11OxqKr/pwlk6w35/6SMgoLR4je
-         7b2VMfLOlAEkuLOscv5q44dhyYKDeXeCEJRm5m/g=
+        b=hdvCiBt6HCic9AOoyIiRtEHQ+r1nfHS68ZewXLUi3fRRsBsjmXaiykFyS4eabk++1
+         fLXwnMYvIQ02PehLAbfsr11+TlWSTWCqs3Jxn+PkHo+W7a7sLZ5w+N3++miLlBRY/j
+         S0m1kQJG760xS23g27qwaqFyXrCkOkyXybKm1ir0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@pm.me>,
-        Amit Shah <amit@kernel.org>
-Subject: [PATCH 5.4 167/215] virtio: virtio_console: add missing MODULE_DEVICE_TABLE() for rproc serial
-Date:   Mon, 20 Jul 2020 17:37:29 +0200
-Message-Id: <20200720152828.112674813@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.4 189/215] intel_th: pci: Add Jasper Lake CPU support
+Date:   Mon, 20 Jul 2020 17:37:51 +0200
+Message-Id: <20200720152829.175275670@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,51 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@pm.me>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 897c44f0bae574c5fb318c759b060bebf9dd6013 upstream.
+commit 203c1f615052921901b7a8fbe2005d8ea6add076 upstream.
 
-rproc_serial_id_table lacks an exposure to module devicetable, so
-when remoteproc firmware requests VIRTIO_ID_RPROC_SERIAL, no uevent
-is generated and no module autoloading occurs.
-Add missing MODULE_DEVICE_TABLE() annotation and move the existing
-one for VIRTIO_ID_CONSOLE right to the table itself.
+This adds support for the Trace Hub in Jasper Lake CPU.
 
-Fixes: 1b6370463e88 ("virtio_console: Add support for remoteproc serial")
-Cc: <stable@vger.kernel.org> # v3.8+
-Signed-off-by: Alexander Lobakin <alobakin@pm.me>
-Reviewed-by: Amit Shah <amit@kernel.org>
-Link: https://lore.kernel.org/r/x7C_CbeJtoGMy258nwAXASYz3xgFMFpyzmUvOyZzRnQrgWCREBjaqBOpAUS7ol4NnZYvSVwmTsCG0Ohyfvta-ygw6HMHcoeKK0C3QFiAO_Q=@pm.me
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org # v4.14+
+Link: https://lore.kernel.org/r/20200706161339.55468-2-alexander.shishkin@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/virtio_console.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hwtracing/intel_th/pci.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/char/virtio_console.c
-+++ b/drivers/char/virtio_console.c
-@@ -2118,6 +2118,7 @@ static struct virtio_device_id id_table[
- 	{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
- 	{ 0 },
- };
-+MODULE_DEVICE_TABLE(virtio, id_table);
- 
- static unsigned int features[] = {
- 	VIRTIO_CONSOLE_F_SIZE,
-@@ -2130,6 +2131,7 @@ static struct virtio_device_id rproc_ser
- #endif
- 	{ 0 },
- };
-+MODULE_DEVICE_TABLE(virtio, rproc_serial_id_table);
- 
- static unsigned int rproc_serial_features[] = {
- };
-@@ -2282,6 +2284,5 @@ static void __exit fini(void)
- module_init(init);
- module_exit(fini);
- 
--MODULE_DEVICE_TABLE(virtio, id_table);
- MODULE_DESCRIPTION("Virtio console driver");
- MODULE_LICENSE("GPL");
+--- a/drivers/hwtracing/intel_th/pci.c
++++ b/drivers/hwtracing/intel_th/pci.c
+@@ -235,6 +235,11 @@ static const struct pci_device_id intel_
+ 		.driver_data = (kernel_ulong_t)&intel_th_2x,
+ 	},
+ 	{
++		/* Jasper Lake CPU */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4e29),
++		.driver_data = (kernel_ulong_t)&intel_th_2x,
++	},
++	{
+ 		/* Elkhart Lake CPU */
+ 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4529),
+ 		.driver_data = (kernel_ulong_t)&intel_th_2x,
 
 
