@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D482C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937AEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 509E12176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED3420773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259906;
-	bh=LJUl+vg1sUAgM3/aWo+82X5SN5T2AVXyXPOjZo5Upcs=;
+	s=default; t=1595259913;
+	bh=dMQRb6eL3N6kbnSI06CwekLsUO6WeYv69PRx7EWIyCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tFg0hI4CGg/8wc9HrRDA1oD/4i26edgJY7l+XUdFBIpu8XKigguRR/Nqc3Ox1CGPt
-	 g/nlrKhgVL7M7zQ4tDbHBo9Fn67PsNp+cqrEg/4BaSKrwZ3C8/cy7UzDoWwjVdz+GR
-	 dcSglKsMWD0x70CW2bgClX2D9Pwt0Qq/J5dtcLFw=
+	b=V3DPaSKI9FYh03Lq/3tOuOnqQZhL1B5cKUZpQVPgU3TdSCSybcGnS2nxAEvNbpled
+	 eFhPTia9LtEpZD5+swUGkRLuxu/KaKhDeZx/Klfcbeu950VUY4s6FrReo2oX5gIurX
+	 LCwpDLX0TY03t8x/17RAz1g03mAbTXrZ4Z09Kw4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730478AbgGTPpE (ORCPT
+        id S1730488AbgGTPpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:45:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39120 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729621AbgGTPo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:44:57 -0400
+        id S1730483AbgGTPpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:45:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0A292064B;
-        Mon, 20 Jul 2020 15:44:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4AA020773;
+        Mon, 20 Jul 2020 15:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259897;
-        bh=LJUl+vg1sUAgM3/aWo+82X5SN5T2AVXyXPOjZo5Upcs=;
+        s=default; t=1595259908;
+        bh=dMQRb6eL3N6kbnSI06CwekLsUO6WeYv69PRx7EWIyCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fyTJkPJtmfFUa1FKXpKLBS1dGIkjN9nGjIFpTtXP+ZV0E/wNEl0VvZEuDy3uuBnQR
-         uFl3DwPEhungTyiYhOGm+Pgcuu+yqVJWQYY5uchefKajlqkkMYLybnpdJORswGxoTx
-         i96we0FDdUpun7J3NdB3zllsrAcqDlHUs6znopPo=
+        b=MlN8qXk34XmGeYEPFkaZPLgJvuRuo5QIYK0cX2B0mss0z+2hfRRdctPiPt6LM8HwT
+         Rp2+Zy5BZajJpdkv8c/ERmxiteqsDJH3O9pRsUBxtfkLFDbvXak2/F8XijuV2WA2zU
+         uVZPy2CJfM/kGiy1eBmz3OicrscBiIKHHbX1VPfA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 033/125] KVM: x86: Mark CR4.TSD as being possibly owned by the guest
-Date:   Mon, 20 Jul 2020 17:36:12 +0200
-Message-Id: <20200720152804.584712772@linuxfoundation.org>
+        stable@vger.kernel.org, Khazhismel Kumykov <khazhy@google.com>,
+        Tahsin Erdogan <tahsin@google.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.14 037/125] dm: use noio when sending kobject event
+Date:   Mon, 20 Jul 2020 17:36:16 +0200
+Message-Id: <20200720152804.792063334@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -60,53 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 7c83d096aed055a7763a03384f92115363448b71 upstream.
+commit 6958c1c640af8c3f40fa8a2eee3b5b905d95b677 upstream.
 
-Mark CR4.TSD as being possibly owned by the guest as that is indeed the
-case on VMX.  Without TSD being tagged as possibly owned by the guest, a
-targeted read of CR4 to get TSD could observe a stale value.  This bug
-is benign in the current code base as the sole consumer of TSD is the
-emulator (for RDTSC) and the emulator always "reads" the entirety of CR4
-when grabbing bits.
+kobject_uevent may allocate memory and it may be called while there are dm
+devices suspended. The allocation may recurse into a suspended device,
+causing a deadlock. We must set the noio flag when sending a uevent.
 
-Add a build-time assertion in to ensure VMX doesn't hand over more CR4
-bits without also updating x86.
+The observed deadlock was reported here:
+https://www.redhat.com/archives/dm-devel/2020-March/msg00025.html
 
-Fixes: 52ce3c21aec3 ("x86,kvm,vmx: Don't trap writes to CR4.TSD")
+Reported-by: Khazhismel Kumykov <khazhy@google.com>
+Reported-by: Tahsin Erdogan <tahsin@google.com>
+Reported-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200703040422.31536-2-sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/kvm_cache_regs.h |    2 +-
- arch/x86/kvm/vmx.c            |    2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/md/dm.c |   15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kvm/kvm_cache_regs.h
-+++ b/arch/x86/kvm/kvm_cache_regs.h
-@@ -5,7 +5,7 @@
- #define KVM_POSSIBLE_CR0_GUEST_BITS X86_CR0_TS
- #define KVM_POSSIBLE_CR4_GUEST_BITS				  \
- 	(X86_CR4_PVI | X86_CR4_DE | X86_CR4_PCE | X86_CR4_OSFXSR  \
--	 | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_PGE)
-+	 | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_PGE | X86_CR4_TSD)
- 
- static inline unsigned long kvm_register_read(struct kvm_vcpu *vcpu,
- 					      enum kvm_reg reg)
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -5592,6 +5592,8 @@ static void vmx_set_constant_host_state(
- 
- static void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -12,6 +12,7 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/sched/mm.h>
+ #include <linux/sched/signal.h>
+ #include <linux/blkpg.h>
+ #include <linux/bio.h>
+@@ -2665,17 +2666,25 @@ EXPORT_SYMBOL_GPL(dm_internal_resume_fas
+ int dm_kobject_uevent(struct mapped_device *md, enum kobject_action action,
+ 		       unsigned cookie)
  {
-+	BUILD_BUG_ON(KVM_CR4_GUEST_OWNED_BITS & ~KVM_POSSIBLE_CR4_GUEST_BITS);
++	int r;
++	unsigned noio_flag;
+ 	char udev_cookie[DM_COOKIE_LENGTH];
+ 	char *envp[] = { udev_cookie, NULL };
+ 
++	noio_flag = memalloc_noio_save();
 +
- 	vmx->vcpu.arch.cr4_guest_owned_bits = KVM_CR4_GUEST_OWNED_BITS;
- 	if (enable_ept)
- 		vmx->vcpu.arch.cr4_guest_owned_bits |= X86_CR4_PGE;
+ 	if (!cookie)
+-		return kobject_uevent(&disk_to_dev(md->disk)->kobj, action);
++		r = kobject_uevent(&disk_to_dev(md->disk)->kobj, action);
+ 	else {
+ 		snprintf(udev_cookie, DM_COOKIE_LENGTH, "%s=%u",
+ 			 DM_COOKIE_ENV_VAR_NAME, cookie);
+-		return kobject_uevent_env(&disk_to_dev(md->disk)->kobj,
+-					  action, envp);
++		r = kobject_uevent_env(&disk_to_dev(md->disk)->kobj,
++				       action, envp);
+ 	}
++
++	memalloc_noio_restore(noio_flag);
++
++	return r;
+ }
+ 
+ uint32_t dm_next_uevent_seq(struct mapped_device *md)
 
 
