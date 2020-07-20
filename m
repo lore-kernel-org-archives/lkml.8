@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13963C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3829C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D859122CBE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8D9D22BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260556;
-	bh=ppTfgYb09TB9qxq+h+9fQ/bwVJO7A7SzJInWDp8mVuI=;
+	s=default; t=1595260560;
+	bh=/8OZCy/0KMlUsqPtaxFSHndILlRwA5ZBFrl1lWVTsh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pZzJveE0YBJpDYuI48W2XDOoIgwcCsbyDdGetkYLQpl/zcogJKysMvGMYxS6HN1sv
-	 MMKSkkW5oamhnMmjXrJD/Fuza8Pex7nGBleZ3fqIvzEcaBy4HJGRGHtU7Jplq6KnoU
-	 MUsRoXYIS+K4QW2nmx3urse1GqcuimYYIjtsTpmI=
+	b=gGINpDNsDXozAXdxkKy1WHP8WZYRnDKNtYpyP6+xETGXuqN93b1xlaqLPzE0Xy17P
+	 wXWmBm37S5zZgNnziQwBSNMhrwSz9XDc4FsRMomnkZOwoN4RzzTSoNf3siqUvL3fJ+
+	 9/MnyzqnfW2SX0lRqaA6vgoSVQFbHwL/7lXkxA+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbgGTPzz (ORCPT
+        id S1731248AbgGTPz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:55:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55120 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:55:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731724AbgGTPzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:55:50 -0400
+        id S1731732AbgGTPzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:55:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 240F022CBE;
-        Mon, 20 Jul 2020 15:55:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD2892065E;
+        Mon, 20 Jul 2020 15:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260549;
-        bh=ppTfgYb09TB9qxq+h+9fQ/bwVJO7A7SzJInWDp8mVuI=;
+        s=default; t=1595260552;
+        bh=/8OZCy/0KMlUsqPtaxFSHndILlRwA5ZBFrl1lWVTsh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=irsAUX3Ui8+Hz9nqcQ+UIFxs0c/SJf8VEAL2RvLt5olBfDwiNHH14HVrfHn03LU3p
-         xej4w9o+eCqiaOxC3YBjCdftKbYKc0HPiqPNwk73ZQ6DrmX6Q1kN/A+bylAvdVrTZ9
-         N2j2nJR1rR+96Gftt8RIUKP/ordYTe5XzvI3FigE=
+        b=OBdeIFhuR1vFWlLrJpoGxBoYauZGttLVJ6oQlERYDGUhLFkqjUM33tU/ldXzSk5gy
+         0SWo5IFGsB3Fv/91xmgj6/bhTh3T8ssJjlAKMYjYOvEd4+LUC6J0eeQQg0zl+xdawR
+         tcJBaPdjcEzZRhx89kuQYUwH+Rg2PHTjiqazV9G8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 001/215] crypto: atmel - Fix selection of CRYPTO_AUTHENC
-Date:   Mon, 20 Jul 2020 17:34:43 +0200
-Message-Id: <20200720152820.208935209@linuxfoundation.org>
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        James Chapman <jchapman@katalix.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 010/215] l2tp: remove skb_dst_set() from l2tp_xmit_skb()
+Date:   Mon, 20 Jul 2020 17:34:52 +0200
+Message-Id: <20200720152820.654695945@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,45 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit d158367682cd822aca811971e988be6a8d8f679f upstream.
+[ Upstream commit 27d53323664c549b5bb2dfaaf6f7ad6e0376a64e ]
 
-The following error is raised when CONFIG_CRYPTO_DEV_ATMEL_AES=y and
-CONFIG_CRYPTO_DEV_ATMEL_AUTHENC=m:
-drivers/crypto/atmel-aes.o: In function `atmel_aes_authenc_setkey':
-atmel-aes.c:(.text+0x9bc): undefined reference to `crypto_authenc_extractkeys'
-Makefile:1094: recipe for target 'vmlinux' failed
+In the tx path of l2tp, l2tp_xmit_skb() calls skb_dst_set() to set
+skb's dst. However, it will eventually call inet6_csk_xmit() or
+ip_queue_xmit() where skb's dst will be overwritten by:
 
-Fix it by moving the selection of CRYPTO_AUTHENC under
-config CRYPTO_DEV_ATMEL_AES.
+   skb_dst_set_noref(skb, dst);
 
-Fixes: 89a82ef87e01 ("crypto: atmel-authenc - add support to...")
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+without releasing the old dst in skb. Then it causes dst/dev refcnt leak:
+
+  unregister_netdevice: waiting for eth0 to become free. Usage count = 1
+
+This can be reproduced by simply running:
+
+  # modprobe l2tp_eth && modprobe l2tp_ip
+  # sh ./tools/testing/selftests/net/l2tp.sh
+
+So before going to inet6_csk_xmit() or ip_queue_xmit(), skb's dst
+should be dropped. This patch is to fix it by removing skb_dst_set()
+from l2tp_xmit_skb() and moving skb_dst_drop() into l2tp_xmit_core().
+
+Fixes: 3557baabf280 ("[L2TP]: PPP over L2TP driver core")
+Reported-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: James Chapman <jchapman@katalix.com>
+Tested-by: James Chapman <jchapman@katalix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/crypto/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/l2tp/l2tp_core.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -493,7 +493,6 @@ endif # if CRYPTO_DEV_UX500
- config CRYPTO_DEV_ATMEL_AUTHENC
- 	tristate "Support for Atmel IPSEC/SSL hw accelerator"
- 	depends on ARCH_AT91 || COMPILE_TEST
--	select CRYPTO_AUTHENC
- 	select CRYPTO_DEV_ATMEL_AES
- 	select CRYPTO_DEV_ATMEL_SHA
- 	help
-@@ -508,6 +507,7 @@ config CRYPTO_DEV_ATMEL_AES
- 	select CRYPTO_AES
- 	select CRYPTO_AEAD
- 	select CRYPTO_BLKCIPHER
-+	select CRYPTO_AUTHENC
- 	help
- 	  Some Atmel processors have AES hw accelerator.
- 	  Select this if you want to use the Atmel module for
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -1030,6 +1030,7 @@ static void l2tp_xmit_core(struct l2tp_s
+ 
+ 	/* Queue the packet to IP for output */
+ 	skb->ignore_df = 1;
++	skb_dst_drop(skb);
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	if (l2tp_sk_is_v6(tunnel->sock))
+ 		error = inet6_csk_xmit(tunnel->sock, skb, NULL);
+@@ -1101,10 +1102,6 @@ int l2tp_xmit_skb(struct l2tp_session *s
+ 		goto out_unlock;
+ 	}
+ 
+-	/* Get routing info from the tunnel socket */
+-	skb_dst_drop(skb);
+-	skb_dst_set(skb, sk_dst_check(sk, 0));
+-
+ 	inet = inet_sk(sk);
+ 	fl = &inet->cork.fl;
+ 	switch (tunnel->encap) {
 
 
