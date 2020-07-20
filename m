@@ -2,50 +2,51 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3966C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F30C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B161A22482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D50A22482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260177;
-	bh=H7D3Miw68vud+znh8t/BZ0rXpdV6OGMQUH0kWEm/MbU=;
+	s=default; t=1595260182;
+	bh=z90SUA8yAMYpJtIMgGjptFNO+JtRmJHjqVfLHzjGxO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZ0urS70VYaa5hMR/K95ZB96k4rjyWmfqbaDlwa+9Nx8li6413gIWV6dsYQDZFwy6
-	 vH46hQvkyn0aJ+EZXkP7UrF/+BeKxt9mxnCzP6Z8ODNQrYHfo1nkvprPke5mIUZuWw
-	 5WLru1eTciIVus5upz+tFzt7HAEIeUKtUhtGW2oc=
+	b=DO8ladGU/ajrsHW+wg2zqokBhKoJ54V7e2jCsx7AYv9seta6/RYDQ0hpWiYShHbdG
+	 otdcNHS2Dz7IPZG01TNjlbpXd0fokM3DspJa0G7u+35U69BEB3wSfat5TQBBO0Jru/
+	 y0aOns7ZlAcchFSEXUbixaM/Yb51ilcSJk0KW4P4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730410AbgGTPtg (ORCPT
+        id S1729783AbgGTPtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:49:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45682 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:49:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730589AbgGTPtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:49:32 -0400
+        id S1730274AbgGTPtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:49:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 913B02064B;
-        Mon, 20 Jul 2020 15:49:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7107B2064B;
+        Mon, 20 Jul 2020 15:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260172;
-        bh=H7D3Miw68vud+znh8t/BZ0rXpdV6OGMQUH0kWEm/MbU=;
+        s=default; t=1595260175;
+        bh=z90SUA8yAMYpJtIMgGjptFNO+JtRmJHjqVfLHzjGxO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NEBr++ajramMBlkf/mAH2LDllc/WVhZTcEiZVJ330rpIg2ptdJEYDG0axWARWJUhM
-         CwMDVR05PPt3YUHpnsT4jFQbQMNu9KNL/0+HUQDKpb8IWVFm94svfb63mCRw51/XF/
-         lxYh69poqt4qtA0K7J00SYPrQmHrXId5Kq38gjus=
+        b=hRlPUtAvdCbndswUuUBlQpfp5O+DDBDFQzv6gLvWqYL8Yf9OZc4jwLDsg/O6ckFlH
+         FWMaUFxKUdYnrpbuZD927gT2CgFPes7Ahey2rDLug2nB6OQdBTbEhpDCyZ1DSuDhjl
+         ufYvyb/Mw6aYrGmrApszQadJ2Ya3lf7/0cd6J/dM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 4.14 125/125] rxrpc: Fix trace string
-Date:   Mon, 20 Jul 2020 17:37:44 +0200
-Message-Id: <20200720152809.116132612@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH 4.14 119/125] misc: atmel-ssc: lock with mutex instead of spinlock
+Date:   Mon, 20 Jul 2020 17:37:38 +0200
+Message-Id: <20200720152808.792826228@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -58,34 +59,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit aadf9dcef9d4cd68c73a4ab934f93319c4becc47 upstream.
+commit b037d60a3b1d1227609fd858fa34321f41829911 upstream.
 
-The trace symbol printer (__print_symbolic()) ignores symbols that map to
-an empty string and prints the hex value instead.
+Uninterruptible context is not needed in the driver and causes lockdep
+warning because of mutex taken in of_alias_get_id(). Convert the lock to
+mutex to avoid the issue.
 
-Fix the symbol for rxrpc_cong_no_change to " -" instead of "" to avoid
-this.
-
-Fixes: b54a134a7de4 ("rxrpc: Fix handling of enums-to-string translation in tracing")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 099343c64e16 ("ARM: at91: atmel-ssc: add device tree support")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/50f0d7fa107f318296afb49477c3571e4d6978c5.1592998403.git.mirq-linux@rere.qmqm.pl
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/trace/events/rxrpc.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/atmel-ssc.c |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -333,7 +333,7 @@ enum rxrpc_congest_change {
- 	EM(rxrpc_cong_begin_retransmission,	" Retrans") \
- 	EM(rxrpc_cong_cleared_nacks,		" Cleared") \
- 	EM(rxrpc_cong_new_low_nack,		" NewLowN") \
--	EM(rxrpc_cong_no_change,		"") \
-+	EM(rxrpc_cong_no_change,		" -") \
- 	EM(rxrpc_cong_progress,			" Progres") \
- 	EM(rxrpc_cong_retransmit_again,		" ReTxAgn") \
- 	EM(rxrpc_cong_rtt_window_end,		" RttWinE") \
+--- a/drivers/misc/atmel-ssc.c
++++ b/drivers/misc/atmel-ssc.c
+@@ -13,7 +13,7 @@
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
+-#include <linux/spinlock.h>
++#include <linux/mutex.h>
+ #include <linux/atmel-ssc.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+@@ -23,7 +23,7 @@
+ #include "../../sound/soc/atmel/atmel_ssc_dai.h"
+ 
+ /* Serialize access to ssc_list and user count */
+-static DEFINE_SPINLOCK(user_lock);
++static DEFINE_MUTEX(user_lock);
+ static LIST_HEAD(ssc_list);
+ 
+ struct ssc_device *ssc_request(unsigned int ssc_num)
+@@ -31,7 +31,7 @@ struct ssc_device *ssc_request(unsigned
+ 	int ssc_valid = 0;
+ 	struct ssc_device *ssc;
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	list_for_each_entry(ssc, &ssc_list, list) {
+ 		if (ssc->pdev->dev.of_node) {
+ 			if (of_alias_get_id(ssc->pdev->dev.of_node, "ssc")
+@@ -47,18 +47,18 @@ struct ssc_device *ssc_request(unsigned
+ 	}
+ 
+ 	if (!ssc_valid) {
+-		spin_unlock(&user_lock);
++		mutex_unlock(&user_lock);
+ 		pr_err("ssc: ssc%d platform device is missing\n", ssc_num);
+ 		return ERR_PTR(-ENODEV);
+ 	}
+ 
+ 	if (ssc->user) {
+-		spin_unlock(&user_lock);
++		mutex_unlock(&user_lock);
+ 		dev_dbg(&ssc->pdev->dev, "module busy\n");
+ 		return ERR_PTR(-EBUSY);
+ 	}
+ 	ssc->user++;
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	clk_prepare(ssc->clk);
+ 
+@@ -70,14 +70,14 @@ void ssc_free(struct ssc_device *ssc)
+ {
+ 	bool disable_clk = true;
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	if (ssc->user)
+ 		ssc->user--;
+ 	else {
+ 		disable_clk = false;
+ 		dev_dbg(&ssc->pdev->dev, "device already free\n");
+ 	}
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	if (disable_clk)
+ 		clk_unprepare(ssc->clk);
+@@ -240,9 +240,9 @@ static int ssc_probe(struct platform_dev
+ 		return -ENXIO;
+ 	}
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	list_add_tail(&ssc->list, &ssc_list);
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	platform_set_drvdata(pdev, ssc);
+ 
+@@ -261,9 +261,9 @@ static int ssc_remove(struct platform_de
+ 
+ 	ssc_sound_dai_remove(ssc);
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	list_del(&ssc->list);
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	return 0;
+ }
 
 
