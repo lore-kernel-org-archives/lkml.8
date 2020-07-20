@@ -2,91 +2,96 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE83AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A810C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7AC22BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E87E20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o1nG60uw"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="i7Mf4L2g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgGTNkN (ORCPT
+        id S1727912AbgGTNkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:40:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbgGTNkM (ORCPT
+        Mon, 20 Jul 2020 09:40:35 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:6799 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726535AbgGTNke (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 09:40:12 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09364C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 06:40:12 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z24so20253414ljn.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 06:40:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2TqGaXLm1LJjNwD7BWd5nhWoW5T2uB1q67xa8MHwR3Q=;
-        b=o1nG60uwcHnTfy0TS2+LttQH6srPzrE5epdZJTdvwS4hM04a/5yT7RcAlxdCpbMtB3
-         yQvv7WH6G+LocxRPe8k6PBJoK/pvzZ1uN6RgnwvM2XEx+IM2HbvgD4Rt8sVLFhAdVCNA
-         R5Mcpz7NqlHG1sQE1CMs1uyAVGTfD5IhapoyRd0c1oGt8idD1OmAc3lFKmpdpOtg5mgJ
-         lGIAb7o5oTW23BPAwDiqIHM6WzhVOnSdVv175/qWrtpIXD0xgo220e+NP2Qp3qF7Fqsz
-         t4K+eL6rmzhtgSfji4lyCnh8ALa+1Q5v9u+kRO6fjY0Z+xkPGNtyIU+kTueQresiqIt5
-         QV+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2TqGaXLm1LJjNwD7BWd5nhWoW5T2uB1q67xa8MHwR3Q=;
-        b=YQIVWmM31wFig0BSv5a16rzvTcOVi6xii/zPxiML6MQPNfqhBivTsuvZkChz8HHaGA
-         NhfyMSPMfL7yQkKGWm7hfpjSFw7sJXcjT3rCcbj+SrEnj6qVYjuS23OzgXwhlgsnjOew
-         ugT0tvNnx+VFiNeimKA6FSWMqP84TW1f47TVwAAafMJREV9lyCQxsU5VTFeUiYqnvBAh
-         /oEUTPfhtEIfiz+2/St0hg4Ac7rwZu/sefHsP+MGQKu1+Iw3A+q+4Nou7tvGanpzOMKK
-         sKykpRf/uePM/X+mAd0Uf9A6HZbtD4dSf5JCBor7BP2QewRgfSBUdkkXTY7vh3h3RhnC
-         Z1wg==
-X-Gm-Message-State: AOAM532ll0LTuLbfMGlbUboGMvWKfZ0a/ccNMk1q12pPkg4Z5bCDPNRv
-        k/0j92DqYyY9bKSHcmwZl1eF/4KnNRIFrCcMuNepZw==
-X-Google-Smtp-Source: ABdhPJxsGScXp2ry3GuYVsKjsKyaCSkJk8FuHP5mvQ3dEZmQQwYdfTaLyEcMQlgVIHgPJkhPC51SVKPWJsvLAcY3TWE=
-X-Received: by 2002:a2e:9c3:: with SMTP id 186mr10705432ljj.293.1595252410517;
- Mon, 20 Jul 2020 06:40:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200716212317.GA17754@embeddedor>
-In-Reply-To: <20200716212317.GA17754@embeddedor>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 20 Jul 2020 15:39:59 +0200
-Message-ID: <CACRpkdY25NXNzAZhV6v9aQC7hUnxbMoniyYK=QMmVi6GJnG5dw@mail.gmail.com>
-Subject: Re: [PATCH][next] pinctrl: single: Use fallthrough pseudo-keyword
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+        Mon, 20 Jul 2020 09:40:34 -0400
+X-UUID: e6697f5f9bbd4450abe130800530c3de-20200720
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=yjrsMDbea0ajD15SAf9EUujh8AYZA8JCoirJ5p5xHCA=;
+        b=i7Mf4L2gZG92BzRUmc7p6ux/bmAuNWA3rJIpiJY0In3ntaNiRJA3wshccrHysRXE9YMGzsLaSGZYtlsA2AlMjUdvU449YSrHerKLF2cC1WGMiqKSD7ba7Vo8NDEgzOTbv0/r7U5ABpXGTLmi5NV+OeDrMihBDwFIYDrmBnZlTy8=;
+X-UUID: e6697f5f9bbd4450abe130800530c3de-20200720
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <frankie.chang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1297103856; Mon, 20 Jul 2020 21:40:32 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 20 Jul 2020 21:40:28 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 20 Jul 2020 21:40:28 +0800
+Message-ID: <1595252430.5899.6.camel@mtkswgap22>
+Subject: Re: [PATCH v5] binder: transaction latency tracking for user build
+From:   Frankie Chang <Frankie.Chang@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        ". Todd Kjos" <tkjos@google.com>
+CC:     Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Arve =?ISO-8859-1?Q?Hj=F8nnev=E5g?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Jian-Min Liu <Jian-Min.Liu@mediatek.com>
+Date:   Mon, 20 Jul 2020 21:40:30 +0800
+In-Reply-To: <1593696357.5899.3.camel@mtkswgap22>
+References: <20200507085544.GB1097552@kroah.com>
+         <1591791827-23871-1-git-send-email-Frankie.Chang@mediatek.com>
+         <1593696357.5899.3.camel@mtkswgap22>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 11:17 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
+SGkgR3JlZywgVG9kZCBhbmQgYWxsDQoNCkdlbnRsZSBwaW5nIGZvciB0aGlzIHBhdGNoIHNldA0K
+DQpUaGFua3MNCg0KT24gVGh1LCAyMDIwLTA3LTAyIGF0IDIxOjI1ICswODAwLCBGcmFua2llIENo
+YW5nIHdyb3RlOg0KPiBIaSBHcmVnLCBUb2RkIGFuZCBhbGwNCj4gDQo+IEdlbnRsZSByZW1pbmQg
+b2YgdGhpcyBwYXRjaCBzZXQNCj4gDQo+IFRoYW5rcy4NCj4gRnJhbmtpZQ0KPiANCj4gT24gV2Vk
+LCAyMDIwLTA2LTEwIGF0IDIwOjIzICswODAwLCBGcmFua2llIENoYW5nIHdyb3RlOg0KPiA+IEZy
+YW5raWUuQ2hhbmcgKDMpOg0KPiA+ICAgYmluZGVyOiBtb3ZlIHN0cnVjdHMgZnJvbSBjb3JlIGZp
+bGUgdG8gaGVhZGVyIGZpbGUNCj4gPiAgIGJpbmRlcjogYWRkIHRyYWNlIGF0IGZyZWUgdHJhbnNh
+Y3Rpb24uDQo+ID4gICBiaW5kZXI6IGFkZCB0cmFuc2FjdGlvbiBsYXRlbmN5IHRyYWNlcg0KPiA+
+IA0KPiA+ICBkcml2ZXJzL2FuZHJvaWQvS2NvbmZpZyAgICAgICAgICAgICAgICAgfCAgIDggKw0K
+PiA+ICBkcml2ZXJzL2FuZHJvaWQvTWFrZWZpbGUgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiA+
+ICBkcml2ZXJzL2FuZHJvaWQvYmluZGVyLmMgICAgICAgICAgICAgICAgfCA0MDggKy0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0NCj4gPiAgZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9pbnRlcm5hbC5oICAg
+ICAgIHwgNDE2ICsrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICBkcml2ZXJzL2FuZHJvaWQv
+YmluZGVyX2xhdGVuY3lfdHJhY2VyLmMgfCAxMDggKysrKysrDQo+ID4gIGRyaXZlcnMvYW5kcm9p
+ZC9iaW5kZXJfdHJhY2UuaCAgICAgICAgICB8ICA0OSArKysNCj4gPiAgNiBmaWxlcyBjaGFuZ2Vk
+LCA1ODYgaW5zZXJ0aW9ucygrKSwgNDA0IGRlbGV0aW9ucygtKSAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IGRyaXZlcnMvYW5kcm9pZC9iaW5kZXJfbGF0ZW5jeV90cmFjZXIuYw0KPiA+IA0KPiA+IENoYW5n
+ZSBmcm9tIHY1Og0KPiA+ICAgLSBjaGFuZ2UgY29uZmlnIG5hbWUgdG8gdGhlIHByb3BlciBvbmUs
+IENPTkZJR19CSU5ERVJfVFJBTlNBQ1RJT05fTEFURU5DWV9UUkFDS0lORy4NCj4gPiAgIC0gY2hh
+bmdlIHRyYWNlcG9pbnQgbmFtZSB0byBtb3JlIGRlc2NyaXB0aXZlIG9uZSwgdHJhY2VfYmluZGVy
+X3R4bl9sYXRlbmN5XyhhbGxvY3xpbmZvfGZyZWUpDQo+ID4gICAtIGVuaGFuY2Ugc29tZSBsb2Nr
+IHByb3RlY3Rpb24uDQo+ID4gDQo+ID4gQ2hhbmdlIGZyb20gdjQ6DQo+ID4gICAtIHNwbGl0IHVw
+IGludG8gcGF0Y2ggc2VyaWVzLg0KPiA+IA0KPiA+IENoYW5nZSBmcm9tIHYzOg0KPiA+ICAgLSB1
+c2UgdHJhY2Vwb2ludHMgZm9yIGJpbmRlcl91cGRhdGVfaW5mbyBhbmQgcHJpbnRfYmluZGVyX3Ry
+YW5zYWN0aW9uX2V4dCwNCj4gPiAgICAgaW5zdGVhZCBvZiBjdXN0b20gcmVnaXN0cmF0aW9uIGZ1
+bmN0aW9ucy4NCj4gPiANCj4gPiBDaGFuZ2UgZnJvbSB2MjoNCj4gPiAgIC0gY3JlYXRlIHRyYW5z
+YWN0aW9uIGxhdGVuY3kgbW9kdWxlIHRvIG1vbml0b3Igc2xvdyB0cmFuc2FjdGlvbi4NCj4gPiAN
+Cj4gPiBDaGFuZ2UgZnJvbSB2MToNCj4gPiAgIC0gZmlyc3QgcGF0Y2hzZXQuDQo+IA0KDQo=
 
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1].
->
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
->
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Patch applied. Nothing controversial about this.
-
-Yours,
-Linus Walleij
