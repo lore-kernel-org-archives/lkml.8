@@ -2,248 +2,131 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2320AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A66C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02A5722B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:29:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595244593;
-	bh=yFWdQeS2UjVpRt8SIG9rT+mebfOyARTCZy0XtkoKNxY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fvE9MC9LyaI4qtPA1WADmp3IHYzufifzFXEwon3DjJ/3oduwzuUprBgs5A+WU24xi
-	 ESz7jLOl2VaMh+r7YCiHol0pXLwTg6w6hBRxbca+F8y9u3haYFzj14ZmS0S3bhkOeW
-	 dfnTAGBXRWcF7pM1lh8rcBPPX43w376PRlZnk9fA=
+	by mail.kernel.org (Postfix) with ESMTP id DD11B20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:30:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbgGTL3v (ORCPT
+        id S1728597AbgGTLae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 07:29:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728058AbgGTL3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 07:29:51 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2978722B4D;
-        Mon, 20 Jul 2020 11:29:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595244590;
-        bh=yFWdQeS2UjVpRt8SIG9rT+mebfOyARTCZy0XtkoKNxY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pyLG10R8Wan7J8ce/CoGhMZRJgN1bhDR021+IlsrHuXZbkomCk3QbobDcUi8fBAeI
-         3ZhL2FXQBNyQv6N/YViAgcHmwp4hA0U6Jp7DoV128m5JMQYRtf8iJYkHcxHvfch/T3
-         eNEJpwGlgK3nMvOfIgM6CFEIU59chBc9K7Y0TvCk=
-Date:   Mon, 20 Jul 2020 12:29:47 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: adc: ad7124: move chip ID & name on the chip_info
- table
-Message-ID: <20200720122947.7c3cfc6e@archlinux>
-In-Reply-To: <20200714051111.17892-1-alexandru.ardelean@analog.com>
-References: <20200714051111.17892-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 20 Jul 2020 07:30:34 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:35313 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728058AbgGTLad (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 07:30:33 -0400
+Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MRSdf-1k9Ok72cqr-00NTol; Mon, 20 Jul 2020 13:30:30 +0200
+Received: by mail-qk1-f170.google.com with SMTP id 80so14817204qko.7;
+        Mon, 20 Jul 2020 04:30:30 -0700 (PDT)
+X-Gm-Message-State: AOAM533b9YzZWWSK2VaipD1h2AnkEirKKrzZLtfVzSdHYYCMguVcfIZV
+        XQGqfFuBGbZHRM6c7FcqDgXWQoYgJwKsrLkTPDg=
+X-Google-Smtp-Source: ABdhPJybaWn8qrmG7q01lgvZCZBti2IcqiiH7/UJUKpkh5l1pzukFrbCvJJFdRaOz1n0M6O3nf2Yvp55077wbmpCEEY=
+X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr20996310qko.138.1595244629225;
+ Mon, 20 Jul 2020 04:30:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200720092435.17469-1-rppt@kernel.org> <20200720092435.17469-4-rppt@kernel.org>
+In-Reply-To: <20200720092435.17469-4-rppt@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 Jul 2020 13:30:13 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0NyvRMqH7X0YNO5E6DGtvZXD5ZcD6Y6n7AkocufkMnHA@mail.gmail.com>
+Message-ID: <CAK8P3a0NyvRMqH7X0YNO5E6DGtvZXD5ZcD6Y6n7AkocufkMnHA@mail.gmail.com>
+Subject: Re: [PATCH 3/6] mm: introduce secretmemfd system call to create
+ "secret" memory areas
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linaro-mm-sig@lists.linaro.org,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:TfMVKI8Xwwil9I21P8OmonrH2jkQ8LQLt3AUMzzKE3uFso+l/Ie
+ dWFOAW34L1oerzNOfgd6/x4mRQaYHRpbfB5vnLm9Jc5BD+P3vDLbFxj9ZPunj8IhEkHh8yT
+ NpZP+/Dh2Vtk2D8LkfOIR3jZGQmfRIAwPyWb4mamJnPb00tX7n5moKVad9lP6bc2Sxsn/Zv
+ uJkF+a1KD/24lXRqsz0BQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:by+CjfWV5wU=:5W1HSFIYkjF1Xls7nDjsrF
+ zPOIOYqc6MG1WsW/TJkgz8B543REI1efhIjAZTCl8hl54UAoxo0qtrlUXi27OkDb06rCki8SE
+ PrH9QehiykmvXgC0CWGnP5UhgZJq88hRye+jhN+/c4q6JdMdLDdsfAKBZkbVJqHv4euRSHcCB
+ pMRldOesaZG68Ri01KstRYq+uO0qvC3cGFOgL7jE62JZwc1MZMVCNAAruGz6LyGDGZ5ffjlZu
+ cI+6BSG4/1Tuo0qd90tDZdQdLzdqbGbGvm9dRT4V42fJfmB1QaHt1jjrtDzWYc82XBKzC90WN
+ strBEtRNEN6rijs14n8XSpcfCoZBjCQdcXBvomqj2rbiTUJNpf7nD8WbtR0ijUN63PwOdr+qw
+ NLdAhi5bJWI16DWIfaabkdoK1O47W3P9Z0fQuFNw8TG0D9XKAPvrJGrP7Sypuly1/UPgiWrf3
+ 34/vTl1bkVSzZWfMi+J3YVwdec5oJ8AR58c+F69IBoBz8htFMSXfAjMQVBigZMgnVGkXqoYRy
+ 5xQe5sbB1GaaXEVgxVpZsTXlf2p/JuU3PZG2+ZpjCUWVrT1yVUGU6E+inuYNt5UarVcidxnS/
+ Kv/7GjAApsC1rmKxa0RGN1uWHd/b2I5CsaMyfilr3Up/Hib6etrERmTZUH/t6+UHQtYjpBL6G
+ HY7LqdFXjkXb2qPUm6BpCbyuWeqlJ2Y3ULn6o0TF/gOHv3nkqIL4IV2yvc5vmyrYGn9ISS2yy
+ 0ibKXIMN7KdKRllILtPYah2wamWjdw25ghSi3b6Yd1/uJZYzfL0ZQq1Zyjqog/Xyb0YnhthyD
+ ptQoabXcOne1rys3kOv80NTwZZzp2R+MtSQTJNil9zt1ZmbW0wRejytP8kBuM1SOJcnew6y/G
+ x/k/iNo+p9hCG/1dUA/DgqUBr9JWlPUNRqhi+Pijmj1sGzbXgl/L53e72cY7EfOjjzKDoVTBH
+ ISVSBtTHqZruPQS8vu9AvidlRNnn7ts46+P9XBMolGWhQBYjbhJQC
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 08:11:11 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+On Mon, Jul 20, 2020 at 11:25 AM Mike Rapoport <rppt@kernel.org> wrote:
+>
+> From: Mike Rapoport <rppt@linux.ibm.com>
+>
+> Introduce "secretmemfd" system call with the ability to create memory areas
+> visible only in the context of the owning process and not mapped not only
+> to other processes but in the kernel page tables as well.
+>
+> The user will create a file descriptor using the secretmemfd system call
+> where flags supplied as a parameter to this system call will define the
+> desired protection mode for the memory associated with that file
+> descriptor. Currently there are two protection modes:
+>
+> * exclusive - the memory area is unmapped from the kernel direct map and it
+>               is present only in the page tables of the owning mm.
+> * uncached  - the memory area is present only in the page tables of the
+>               owning mm and it is mapped there as uncached.
+>
+> For instance, the following example will create an uncached mapping (error
+> handling is omitted):
+>
+>         fd = secretmemfd(SECRETMEM_UNCACHED);
+>         ftruncate(fd, MAP_SIZE);
+>         ptr = mmap(NULL, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED,
+>                    fd, 0);
+>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 
-> This change does the following:
-> * removes the SPI device table in favor of the OF device table
-> * adds 'name' && 'chip_id' fields to chip_info
-> * implements chip ID & silicon revision checking; the device ID for
->   AD7124-4 is 0x0, so just checking that value can be useless;
->   but at least the silicon revision isn't 0, so a non-zero value can be
->   used to check that "a" device is on the SPI bus; it's probably the best
->   way to narrow it down to one of the 2 AD7124 chip IDs
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Nice patch.
+I wonder if this should be more closely related to dmabuf file
+descriptors, which
+are already used for a similar purpose: sharing access to secret memory areas
+that are not visible to the OS but can be shared with hardware through device
+drivers that can import a dmabuf file descriptor.
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the auto builders to play with it.
-
-At somepoint we could think about moving this driver over to generic
-fw interfaces, but that is a bigger job and no particular reason to
-do that now (if it's even possible!)
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/adc/ad7124.c | 73 ++++++++++++++++++++++++++++++++--------
->  1 file changed, 59 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-> index bb53ab265b64..8dce06e9e69c 100644
-> --- a/drivers/iio/adc/ad7124.c
-> +++ b/drivers/iio/adc/ad7124.c
-> @@ -12,6 +12,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/of_device.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/spi/spi.h>
->  
-> @@ -47,6 +48,15 @@
->  #define AD7124_ADC_CTRL_MODE_MSK	GENMASK(5, 2)
->  #define AD7124_ADC_CTRL_MODE(x)	FIELD_PREP(AD7124_ADC_CTRL_MODE_MSK, x)
->  
-> +/* AD7124 ID */
-> +#define AD7124_DEVICE_ID_MSK		GENMASK(7, 4)
-> +#define AD7124_DEVICE_ID_GET(x)		FIELD_GET(AD7124_DEVICE_ID_MSK, x)
-> +#define AD7124_SILICON_REV_MSK		GENMASK(3, 0)
-> +#define AD7124_SILICON_REV_GET(x)	FIELD_GET(AD7124_SILICON_REV_MSK, x)
-> +
-> +#define CHIPID_AD7124_4			0x0
-> +#define CHIPID_AD7124_8			0x1
-> +
->  /* AD7124_CHANNEL_X */
->  #define AD7124_CHANNEL_EN_MSK		BIT(15)
->  #define AD7124_CHANNEL_EN(x)		FIELD_PREP(AD7124_CHANNEL_EN_MSK, x)
-> @@ -120,6 +130,8 @@ static const char * const ad7124_ref_names[] = {
->  };
->  
->  struct ad7124_chip_info {
-> +	const char *name;
-> +	unsigned int chip_id;
->  	unsigned int num_inputs;
->  };
->  
-> @@ -165,9 +177,13 @@ static const struct iio_chan_spec ad7124_channel_template = {
->  
->  static struct ad7124_chip_info ad7124_chip_info_tbl[] = {
->  	[ID_AD7124_4] = {
-> +		.name = "ad7127-4",
-> +		.chip_id = CHIPID_AD7124_4,
->  		.num_inputs = 8,
->  	},
->  	[ID_AD7124_8] = {
-> +		.name = "ad7127-8",
-> +		.chip_id = CHIPID_AD7124_8,
->  		.num_inputs = 16,
->  	},
->  };
-> @@ -503,6 +519,34 @@ static int ad7124_soft_reset(struct ad7124_state *st)
->  	return -EIO;
->  }
->  
-> +static int ad7124_check_chip_id(struct ad7124_state *st)
-> +{
-> +	unsigned int readval, chip_id, silicon_rev;
-> +	int ret;
-> +
-> +	ret = ad_sd_read_reg(&st->sd, AD7124_ID, 1, &readval);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	chip_id = AD7124_DEVICE_ID_GET(readval);
-> +	silicon_rev = AD7124_SILICON_REV_GET(readval);
-> +
-> +	if (chip_id != st->chip_info->chip_id) {
-> +		dev_err(&st->sd.spi->dev,
-> +			"Chip ID mismatch: expected %u, got %u\n",
-> +			st->chip_info->chip_id, chip_id);
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (silicon_rev == 0) {
-> +		dev_err(&st->sd.spi->dev,
-> +			"Silicon revision empty. Chip may not be present\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int ad7124_init_channel_vref(struct ad7124_state *st,
->  				    unsigned int channel_number)
->  {
-> @@ -665,25 +709,28 @@ static int ad7124_setup(struct ad7124_state *st)
->  
->  static int ad7124_probe(struct spi_device *spi)
->  {
-> -	const struct spi_device_id *id;
-> +	const struct ad7124_chip_info *info;
->  	struct ad7124_state *st;
->  	struct iio_dev *indio_dev;
->  	int i, ret;
->  
-> +	info = of_device_get_match_data(&spi->dev);
-> +	if (!info)
-> +		return -ENODEV;
-> +
->  	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
->  	if (!indio_dev)
->  		return -ENOMEM;
->  
->  	st = iio_priv(indio_dev);
->  
-> -	id = spi_get_device_id(spi);
-> -	st->chip_info = &ad7124_chip_info_tbl[id->driver_data];
-> +	st->chip_info = info;
->  
->  	ad_sd_init(&st->sd, indio_dev, spi, &ad7124_sigma_delta_info);
->  
->  	spi_set_drvdata(spi, indio_dev);
->  
-> -	indio_dev->name = spi_get_device_id(spi)->name;
-> +	indio_dev->name = st->chip_info->name;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  	indio_dev->info = &ad7124_info;
->  
-> @@ -721,6 +768,10 @@ static int ad7124_probe(struct spi_device *spi)
->  	if (ret < 0)
->  		goto error_clk_disable_unprepare;
->  
-> +	ret = ad7124_check_chip_id(st);
-> +	if (ret)
-> +		goto error_clk_disable_unprepare;
-> +
->  	ret = ad7124_setup(st);
->  	if (ret < 0)
->  		goto error_clk_disable_unprepare;
-> @@ -768,16 +819,11 @@ static int ad7124_remove(struct spi_device *spi)
->  	return 0;
->  }
->  
-> -static const struct spi_device_id ad7124_id_table[] = {
-> -	{ "ad7124-4", ID_AD7124_4 },
-> -	{ "ad7124-8", ID_AD7124_8 },
-> -	{}
-> -};
-> -MODULE_DEVICE_TABLE(spi, ad7124_id_table);
-> -
->  static const struct of_device_id ad7124_of_match[] = {
-> -	{ .compatible = "adi,ad7124-4" },
-> -	{ .compatible = "adi,ad7124-8" },
-> +	{ .compatible = "adi,ad7124-4",
-> +		.data = &ad7124_chip_info_tbl[ID_AD7124_4], },
-> +	{ .compatible = "adi,ad7124-8",
-> +		.data = &ad7124_chip_info_tbl[ID_AD7124_8], },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, ad7124_of_match);
-> @@ -789,7 +835,6 @@ static struct spi_driver ad71124_driver = {
->  	},
->  	.probe = ad7124_probe,
->  	.remove	= ad7124_remove,
-> -	.id_table = ad7124_id_table,
->  };
->  module_spi_driver(ad71124_driver);
->  
-
+      Arnd
