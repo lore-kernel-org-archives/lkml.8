@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BCCC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D197C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEEBF22CB2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05C922CB2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259452;
-	bh=3AQAN1Qxu/m9Dtqgi0RZiG7hIv+XF0YYpsIK7Wz9AgQ=;
+	s=default; t=1595259450;
+	bh=0QmjNHIxQwQS03YAMYCOr/QYcQjnpNugdb16DA+i87M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LZyuxxcgGv8hf3LuLhxkXZ10Eg2qT/aLwhZyrVn4dkqy+nqBtldLwv/S0jgQjV6Oh
-	 PtO2nsZXenhk1wDOArv8L7dSwX8u91XCuvNFbascS+NcQ4cw7ykWTsXQ0s5YookWOr
-	 Tlw3SQRdsmWAXt/4WMgsWzwX8+x4dmM2IePMz9bo=
+	b=N2pnjgSuAOuTuc/nWldtpy0DPlqLnoo9EiTRDcWdEf3JGvFG0kzW/Ov+nrn4VEXEL
+	 JLXElv0LlBGNdKsfaJ6pG1YEOIF2/GWuANjLeNvcSC900Z02ekQ5t6CAQHJeD5GKTa
+	 RuddCRQn1r++ZiM7qsZpKf20fl35bWFs0Rixqiwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgGTPhb (ORCPT
+        id S1728558AbgGTPh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:37:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55576 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:37:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728448AbgGTPh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:37:28 -0400
+        id S1726389AbgGTPhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:37:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F00F22CB2;
-        Mon, 20 Jul 2020 15:37:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA0B322CB2;
+        Mon, 20 Jul 2020 15:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259448;
-        bh=3AQAN1Qxu/m9Dtqgi0RZiG7hIv+XF0YYpsIK7Wz9AgQ=;
+        s=default; t=1595259445;
+        bh=0QmjNHIxQwQS03YAMYCOr/QYcQjnpNugdb16DA+i87M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SohF6jMqMXyCvT/WMA8rPuwD5FctOs2r5MsNe6RuK2bdNMTZwEMJ750fTIZ/2CZV1
-         JjSQLJR0hKXieyTAFFox5JP9gJTSySrViu2IKCs18hWXBeCzfsCefMMK1SPh1Vv2o9
-         7GdsLJRzJzfFukfLc+WttvhowiEEBo5t7jwVT+HQ=
+        b=UKCMuBNVlY9FIzD4Fs0sXwvx1+/ACNXWwshlOUjLQa7gj0gRO+TA8I23LBEIMlFLI
+         wKFpZ59DEeRbQAN2b0e92mFhk9v15ectNGPSlVw4ZTMK5sLhh7Bzd6U/Oinotsc0DW
+         izLZEFFtKuoSS8diUyqWSFMBQQgQWFq9Ci5ea//w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 03/58] spi: spidev: fix a potential use-after-free in spidev_release()
-Date:   Mon, 20 Jul 2020 17:36:19 +0200
-Message-Id: <20200720152747.297093674@linuxfoundation.org>
+Subject: [PATCH 4.4 02/58] spi: spidev: fix a race between spidev_release and spidev_remove
+Date:   Mon, 20 Jul 2020 17:36:18 +0200
+Message-Id: <20200720152747.250050727@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
 References: <20200720152747.127988571@linuxfoundation.org>
@@ -62,72 +62,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-[ Upstream commit 06096cc6c5a84ced929634b0d79376b94c65a4bd ]
+[ Upstream commit abd42781c3d2155868821f1b947ae45bbc33330d ]
 
-If an spi device is unbounded from the driver before the release
-process, there will be an NULL pointer reference when it's
-referenced in spi_slave_abort().
+Imagine below scene, spidev is referenced after it's freed.
 
-Fix it by checking it's already freed before reference.
+spidev_release()                spidev_remove()
+...
+                                spin_lock_irq(&spidev->spi_lock);
+                                    spidev->spi = NULL;
+                                spin_unlock_irq(&spidev->spi_lock);
+mutex_lock(&device_list_lock);
+dofree = (spidev->spi == NULL);
+if (dofree)
+    kfree(spidev);
+mutex_unlock(&device_list_lock);
+                                mutex_lock(&device_list_lock);
+                                list_del(&spidev->device_entry);
+                                device_destroy(spidev_class, spidev->devt);
+                                clear_bit(MINOR(spidev->devt), minors);
+                                if (spidev->users == 0)
+                                    kfree(spidev);
+                                mutex_unlock(&device_list_lock);
+
+Fix it by resetting spidev->spi in device_list_lock's protection.
 
 Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Link: https://lore.kernel.org/r/20200618032125.4650-2-zhenzhong.duan@gmail.com
+Link: https://lore.kernel.org/r/20200618032125.4650-1-zhenzhong.duan@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spidev.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/spi/spidev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 80beb8406f200..7969f5484aee8 100644
+index 3709088d4d244..80beb8406f200 100644
 --- a/drivers/spi/spidev.c
 +++ b/drivers/spi/spidev.c
-@@ -635,15 +635,20 @@ err_find_dev:
- static int spidev_release(struct inode *inode, struct file *filp)
+@@ -769,13 +769,13 @@ static int spidev_remove(struct spi_device *spi)
  {
- 	struct spidev_data	*spidev;
-+	int			dofree;
+ 	struct spidev_data	*spidev = spi_get_drvdata(spi);
  
- 	mutex_lock(&device_list_lock);
- 	spidev = filp->private_data;
- 	filp->private_data = NULL;
++	/* prevent new opens */
++	mutex_lock(&device_list_lock);
+ 	/* make sure ops on existing fds can abort cleanly */
+ 	spin_lock_irq(&spidev->spi_lock);
+ 	spidev->spi = NULL;
+ 	spin_unlock_irq(&spidev->spi_lock);
  
-+	spin_lock_irq(&spidev->spi_lock);
-+	/* ... after we unbound from the underlying device? */
-+	dofree = (spidev->spi == NULL);
-+	spin_unlock_irq(&spidev->spi_lock);
-+
- 	/* last close? */
- 	spidev->users--;
- 	if (!spidev->users) {
--		int		dofree;
- 
- 		kfree(spidev->tx_buffer);
- 		spidev->tx_buffer = NULL;
-@@ -651,19 +656,14 @@ static int spidev_release(struct inode *inode, struct file *filp)
- 		kfree(spidev->rx_buffer);
- 		spidev->rx_buffer = NULL;
- 
--		spin_lock_irq(&spidev->spi_lock);
--		if (spidev->spi)
--			spidev->speed_hz = spidev->spi->max_speed_hz;
--
--		/* ... after we unbound from the underlying device? */
--		dofree = (spidev->spi == NULL);
--		spin_unlock_irq(&spidev->spi_lock);
--
- 		if (dofree)
- 			kfree(spidev);
-+		else
-+			spidev->speed_hz = spidev->spi->max_speed_hz;
- 	}
- #ifdef CONFIG_SPI_SLAVE
--	spi_slave_abort(spidev->spi);
-+	if (!dofree)
-+		spi_slave_abort(spidev->spi);
- #endif
- 	mutex_unlock(&device_list_lock);
- 
+-	/* prevent new opens */
+-	mutex_lock(&device_list_lock);
+ 	list_del(&spidev->device_entry);
+ 	device_destroy(spidev_class, spidev->devt);
+ 	clear_bit(MINOR(spidev->devt), minors);
 -- 
 2.25.1
 
