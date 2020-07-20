@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03481C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29D9E2176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9DDD20773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259630;
-	bh=HiOwwL2PD7FMOr0KZzLMBCmQbQEHfWXdnGdrVeZt+Ic=;
+	s=default; t=1595259633;
+	bh=LWG9/VN0Ttr6VoOg3Nb4cwToJeAEXxmILDGAmIp6JPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zpqvmBiOpMdZKj14KqPwzX7ziFhOatm1gvnC1vcF/XUSccMFtHTC+BJygi3rJTD3/
-	 upvsdOlyTJnNyI45PG4c/exQZZ+NsTL2XSlNQEhyPpRd9U6o/tOs0uiCYOytryzzII
-	 YkskirQD+UbpZ76aHYVWByhHLqwTHL9ShPPxBYiA=
+	b=EawQF45MV3BmRGdRnpqgEp5IsfOD1Pdxcx6dOIrLNrE6Sa79Tmfs1wlBtKVLsUDWQ
+	 F9fEjFpqpIStpGmBjo2xioImQB5PqqlR2vawcrHBx/Afe3izHp2Xd7wSv3DRRj97PL
+	 3h8AiNROkxT2gP9PEuQslHE6mNufXKHdH4F1awgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729715AbgGTPk2 (ORCPT
+        id S1729730AbgGTPkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:40:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59784 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:40:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729699AbgGTPkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:40:23 -0400
+        id S1729713AbgGTPk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:40:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C66F2064B;
-        Mon, 20 Jul 2020 15:40:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE75B2064B;
+        Mon, 20 Jul 2020 15:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259623;
-        bh=HiOwwL2PD7FMOr0KZzLMBCmQbQEHfWXdnGdrVeZt+Ic=;
+        s=default; t=1595259628;
+        bh=LWG9/VN0Ttr6VoOg3Nb4cwToJeAEXxmILDGAmIp6JPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qL3JQFq073QYFL3gJe7gj9Aahd4uFHAE5GdnHiglkjHswXp9SPnjhJPTIAstp+GJd
-         EA4umx3bm/RZkBkwR3coizFfkdPh0E4uKHKlVVmZ+Rx/ptpp50FioXx1UlyDcGdjvm
-         EuTZfvgtyaQHbNdy3rLy2Cx4pSlx4ah2yv5bz67o=
+        b=snqsrR3nsXS2qxWdccWYu/+VLJI27O7wc5m4uIIXN/En4lL+uGmS9KKMlRLAeG1IA
+         /p8sg8jZyJykl7kDPIA20aSChcuZ67TWQQQle5WjJH5f4aiYLJK8sQZKfHAh8e7aHW
+         nB1vBXpEpbFcsoWzef8gNQQ3a8/vyOlkN7iEyc38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.9 19/86] KVM: arm64: Fix definition of PAGE_HYP_DEVICE
-Date:   Mon, 20 Jul 2020 17:36:15 +0200
-Message-Id: <20200720152754.101481172@linuxfoundation.org>
+        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.9 20/86] KVM: x86: bit 8 of non-leaf PDPEs is not reserved
+Date:   Mon, 20 Jul 2020 17:36:16 +0200
+Message-Id: <20200720152754.157974606@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -61,41 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 68cf617309b5f6f3a651165f49f20af1494753ae upstream.
+commit 5ecad245de2ae23dc4e2dbece92f8ccfbaed2fa7 upstream.
 
-PAGE_HYP_DEVICE is intended to encode attribute bits for an EL2 stage-1
-pte mapping a device. Unfortunately, it includes PROT_DEVICE_nGnRE which
-encodes attributes for EL1 stage-1 mappings such as UXN and nG, which are
-RES0 for EL2, and DBM which is meaningless as TCR_EL2.HD is not set.
+Bit 8 would be the "global" bit, which does not quite make sense for non-leaf
+page table entries.  Intel ignores it; AMD ignores it in PDEs and PDPEs, but
+reserves it in PML4Es.
 
-Fix the definition of PAGE_HYP_DEVICE so that it doesn't set RES0 bits
-at EL2.
+Probably, earlier versions of the AMD manual documented it as reserved in PDPEs
+as well, and that behavior made it into KVM as well as kvm-unit-tests; fix it.
 
-Acked-by: Marc Zyngier <maz@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200708162546.26176-1-will@kernel.org
-Signed-off-by: Will Deacon <will@kernel.org>
+Cc: stable@vger.kernel.org
+Reported-by: Nadav Amit <namit@vmware.com>
+Fixes: a0c0feb57992 ("KVM: x86: reserve bit 8 of non-leaf PDPEs and PML4Es in 64-bit mode on AMD", 2014-09-03)
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/pgtable-prot.h |    2 +-
+ arch/x86/kvm/mmu.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/include/asm/pgtable-prot.h
-+++ b/arch/arm64/include/asm/pgtable-prot.h
-@@ -65,7 +65,7 @@
- #define PAGE_HYP		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
- #define PAGE_HYP_EXEC		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
- #define PAGE_HYP_RO		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY | PTE_HYP_XN)
--#define PAGE_HYP_DEVICE		__pgprot(PROT_DEVICE_nGnRE | PTE_HYP)
-+#define PAGE_HYP_DEVICE		__pgprot(_PROT_DEFAULT | PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_HYP | PTE_HYP_XN)
- 
- #define PAGE_S2			__pgprot(_PROT_DEFAULT | PTE_S2_MEMATTR(MT_S2_NORMAL) | PTE_S2_RDONLY)
- #define PAGE_S2_DEVICE		__pgprot(_PROT_DEFAULT | PTE_S2_MEMATTR(MT_S2_DEVICE_nGnRE) | PTE_S2_RDONLY | PTE_UXN)
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -3849,7 +3849,7 @@ __reset_rsvds_bits_mask(struct kvm_vcpu
+ 			nonleaf_bit8_rsvd | rsvd_bits(7, 7) |
+ 			rsvd_bits(maxphyaddr, 51);
+ 		rsvd_check->rsvd_bits_mask[0][2] = exb_bit_rsvd |
+-			nonleaf_bit8_rsvd | gbpages_bit_rsvd |
++			gbpages_bit_rsvd |
+ 			rsvd_bits(maxphyaddr, 51);
+ 		rsvd_check->rsvd_bits_mask[0][1] = exb_bit_rsvd |
+ 			rsvd_bits(maxphyaddr, 51);
 
 
