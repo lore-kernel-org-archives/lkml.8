@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9E9C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3966C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2462B206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B161A22482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260173;
-	bh=OjgaiCQzs5eRuiQBkUjYzjwgNf4AN97+M9j8ACKLbi4=;
+	s=default; t=1595260177;
+	bh=H7D3Miw68vud+znh8t/BZ0rXpdV6OGMQUH0kWEm/MbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SRPcfJNs5KJ0x91ob+hASuqabPZd4i9pkq/taheDg5PHXG8em4M6r0cmMLtcg2p+q
-	 JmfnO4f0XU2SiU5yBt0OYwVxrUytkloGgkXMyKLHpDACdeOLXRNW3hHWgY+e6dmH0+
-	 4JweHNrppB9q6QkHuv9rT7yB9wNh/iXiQYKZ6n0Y=
+	b=UZ0urS70VYaa5hMR/K95ZB96k4rjyWmfqbaDlwa+9Nx8li6413gIWV6dsYQDZFwy6
+	 vH46hQvkyn0aJ+EZXkP7UrF/+BeKxt9mxnCzP6Z8ODNQrYHfo1nkvprPke5mIUZuWw
+	 5WLru1eTciIVus5upz+tFzt7HAEIeUKtUhtGW2oc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731030AbgGTPtb (ORCPT
+        id S1730410AbgGTPtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:49:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45422 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:49:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731004AbgGTPtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:49:21 -0400
+        id S1730589AbgGTPtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:49:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 761902064B;
-        Mon, 20 Jul 2020 15:49:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 913B02064B;
+        Mon, 20 Jul 2020 15:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260161;
-        bh=OjgaiCQzs5eRuiQBkUjYzjwgNf4AN97+M9j8ACKLbi4=;
+        s=default; t=1595260172;
+        bh=H7D3Miw68vud+znh8t/BZ0rXpdV6OGMQUH0kWEm/MbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ldINVsGJ3D7MH3S+NO1Dc1hZdCvlzdCTDeRHcuxdDmFrxm73pLtNjgtRwgViaCAT/
-         vwsPfWsdec4uzFK7f0HGzB0BfJXyvxpj3Zyyhm3M9ih2bfLVOGTfhzGPYwRqEZmytF
-         nRpN1KdRof8JTma+okUoD3Ku4jxW/3BNCvk/UCYc=
+        b=NEBr++ajramMBlkf/mAH2LDllc/WVhZTcEiZVJ330rpIg2ptdJEYDG0axWARWJUhM
+         CwMDVR05PPt3YUHpnsT4jFQbQMNu9KNL/0+HUQDKpb8IWVFm94svfb63mCRw51/XF/
+         lxYh69poqt4qtA0K7J00SYPrQmHrXId5Kq38gjus=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Luis Machado <luis.machado@linaro.org>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.14 121/125] arm64: ptrace: Override SPSR.SS when single-stepping is enabled
-Date:   Mon, 20 Jul 2020 17:37:40 +0200
-Message-Id: <20200720152808.891866718@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 4.14 125/125] rxrpc: Fix trace string
+Date:   Mon, 20 Jul 2020 17:37:44 +0200
+Message-Id: <20200720152809.116132612@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -61,110 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: David Howells <dhowells@redhat.com>
 
-commit 3a5a4366cecc25daa300b9a9174f7fdd352b9068 upstream.
+commit aadf9dcef9d4cd68c73a4ab934f93319c4becc47 upstream.
 
-Luis reports that, when reverse debugging with GDB, single-step does not
-function as expected on arm64:
+The trace symbol printer (__print_symbolic()) ignores symbols that map to
+an empty string and prints the hex value instead.
 
-  | I've noticed, under very specific conditions, that a PTRACE_SINGLESTEP
-  | request by GDB won't execute the underlying instruction. As a consequence,
-  | the PC doesn't move, but we return a SIGTRAP just like we would for a
-  | regular successful PTRACE_SINGLESTEP request.
+Fix the symbol for rxrpc_cong_no_change to " -" instead of "" to avoid
+this.
 
-The underlying problem is that when the CPU register state is restored
-as part of a reverse step, the SPSR.SS bit is cleared and so the hardware
-single-step state can transition to the "active-pending" state, causing
-an unexpected step exception to be taken immediately if a step operation
-is attempted.
-
-In hindsight, we probably shouldn't have exposed SPSR.SS in the pstate
-accessible by the GPR regset, but it's a bit late for that now. Instead,
-simply prevent userspace from configuring the bit to a value which is
-inconsistent with the TIF_SINGLESTEP state for the task being traced.
-
-Cc: <stable@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Keno Fischer <keno@juliacomputing.com>
-Link: https://lore.kernel.org/r/1eed6d69-d53d-9657-1fc9-c089be07f98c@linaro.org
-Reported-by: Luis Machado <luis.machado@linaro.org>
-Tested-by: Luis Machado <luis.machado@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: b54a134a7de4 ("rxrpc: Fix handling of enums-to-string translation in tracing")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/debug-monitors.h |    2 ++
- arch/arm64/kernel/debug-monitors.c      |   20 ++++++++++++++++----
- arch/arm64/kernel/ptrace.c              |    4 ++--
- 3 files changed, 20 insertions(+), 6 deletions(-)
+ include/trace/events/rxrpc.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/include/asm/debug-monitors.h
-+++ b/arch/arm64/include/asm/debug-monitors.h
-@@ -119,6 +119,8 @@ void disable_debug_monitors(enum dbg_act
- 
- void user_rewind_single_step(struct task_struct *task);
- void user_fastforward_single_step(struct task_struct *task);
-+void user_regs_reset_single_step(struct user_pt_regs *regs,
-+				 struct task_struct *task);
- 
- void kernel_enable_single_step(struct pt_regs *regs);
- void kernel_disable_single_step(void);
---- a/arch/arm64/kernel/debug-monitors.c
-+++ b/arch/arm64/kernel/debug-monitors.c
-@@ -150,17 +150,20 @@ postcore_initcall(debug_monitors_init);
- /*
-  * Single step API and exception handling.
-  */
--static void set_regs_spsr_ss(struct pt_regs *regs)
-+static void set_user_regs_spsr_ss(struct user_pt_regs *regs)
- {
- 	regs->pstate |= DBG_SPSR_SS;
- }
--NOKPROBE_SYMBOL(set_regs_spsr_ss);
-+NOKPROBE_SYMBOL(set_user_regs_spsr_ss);
- 
--static void clear_regs_spsr_ss(struct pt_regs *regs)
-+static void clear_user_regs_spsr_ss(struct user_pt_regs *regs)
- {
- 	regs->pstate &= ~DBG_SPSR_SS;
- }
--NOKPROBE_SYMBOL(clear_regs_spsr_ss);
-+NOKPROBE_SYMBOL(clear_user_regs_spsr_ss);
-+
-+#define set_regs_spsr_ss(r)	set_user_regs_spsr_ss(&(r)->user_regs)
-+#define clear_regs_spsr_ss(r)	clear_user_regs_spsr_ss(&(r)->user_regs)
- 
- /* EL1 Single Step Handler hooks */
- static LIST_HEAD(step_hook);
-@@ -397,6 +400,15 @@ void user_fastforward_single_step(struct
- 		clear_regs_spsr_ss(task_pt_regs(task));
- }
- 
-+void user_regs_reset_single_step(struct user_pt_regs *regs,
-+				 struct task_struct *task)
-+{
-+	if (test_tsk_thread_flag(task, TIF_SINGLESTEP))
-+		set_user_regs_spsr_ss(regs);
-+	else
-+		clear_user_regs_spsr_ss(regs);
-+}
-+
- /* Kernel API */
- void kernel_enable_single_step(struct pt_regs *regs)
- {
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -1496,8 +1496,8 @@ static int valid_native_regs(struct user
-  */
- int valid_user_regs(struct user_pt_regs *regs, struct task_struct *task)
- {
--	if (!test_tsk_thread_flag(task, TIF_SINGLESTEP))
--		regs->pstate &= ~DBG_SPSR_SS;
-+	/* https://lore.kernel.org/lkml/20191118131525.GA4180@willie-the-truck */
-+	user_regs_reset_single_step(regs, task);
- 
- 	if (is_compat_thread(task_thread_info(task)))
- 		return valid_compat_regs(regs);
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -333,7 +333,7 @@ enum rxrpc_congest_change {
+ 	EM(rxrpc_cong_begin_retransmission,	" Retrans") \
+ 	EM(rxrpc_cong_cleared_nacks,		" Cleared") \
+ 	EM(rxrpc_cong_new_low_nack,		" NewLowN") \
+-	EM(rxrpc_cong_no_change,		"") \
++	EM(rxrpc_cong_no_change,		" -") \
+ 	EM(rxrpc_cong_progress,			" Progres") \
+ 	EM(rxrpc_cong_retransmit_again,		" ReTxAgn") \
+ 	EM(rxrpc_cong_rtt_window_end,		" RttWinE") \
 
 
