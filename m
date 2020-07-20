@@ -2,88 +2,64 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F862C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A9EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D58F208B3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89E220B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgGTBQi (ORCPT
+        id S1727829AbgGTBRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 21:16:38 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:56939 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726225AbgGTBQi (ORCPT
+        Sun, 19 Jul 2020 21:17:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgGTBRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 21:16:38 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U3AOGOv_1595207795;
-Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0U3AOGOv_1595207795)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 20 Jul 2020 09:16:36 +0800
-Subject: Re: [PATCH] ocfs2: fix remounting needed after setfacl command
-To:     Gang He <ghe@suse.com>, mark@fasheh.com, jlbec@evilplan.org
-Cc:     linux-kernel@vger.kernel.org, ocfs2-devel@oss.oracle.com,
-        akpm@linux-foundation.org
-References: <20200717023751.9922-1-ghe@suse.com>
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-Message-ID: <3bcaf181-9a1a-e9d1-c41b-0dd1edc79d63@linux.alibaba.com>
-Date:   Mon, 20 Jul 2020 09:16:35 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200717023751.9922-1-ghe@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Sun, 19 Jul 2020 21:17:01 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AAE1C0619D2;
+        Sun, 19 Jul 2020 18:17:01 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1B85F1284AF6B;
+        Sun, 19 Jul 2020 18:17:00 -0700 (PDT)
+Date:   Sun, 19 Jul 2020 18:16:59 -0700 (PDT)
+Message-Id: <20200719.181659.1807927650741641565.davem@davemloft.net>
+To:     hch@lst.de
+Cc:     ast@kernel.org, daniel@iogearbox.net, 3chas3@gmail.com,
+        pablo@netfilter.org, kadlec@netfilter.org, fw@strlen.de,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-wpan@vger.kernel.org, mptcp@lists.01.org
+Subject: Re: sockopt cleanups
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200717062331.691152-1-hch@lst.de>
+References: <20200717062331.691152-1-hch@lst.de>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 19 Jul 2020 18:17:00 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Christoph Hellwig <hch@lst.de>
+Date: Fri, 17 Jul 2020 08:23:09 +0200
 
+> this series cleans up various lose ends in the sockopt code, most
+> importantly removing the compat_{get,set}sockopt infrastructure in favor
+> of just using in_compat_syscall() in the few places that care.
 
-On 2020/7/17 10:37, Gang He wrote:
-> When use setfacl command to change a file's acl, the user cannot
-> get the latest acl information from the file via getfacl command,
-> until remounting the file system.
-> e.g.
-> setfacl -m u:ivan:rw /ocfs2/ivan
-> getfacl /ocfs2/ivan
-> getfacl: Removing leading '/' from absolute path names
-> file: ocfs2/ivan
-> owner: root
-> group: root
-> user::rw-
-> group::r--
-> mask::r--
-> other::r--
-> 
-> The latest acl record("u:ivan:rw") cannot be returned via getfacl
-> command until remounting.
-> 
-> Signed-off-by: Gang He <ghe@suse.com>
-
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-> ---
->  fs/ocfs2/acl.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/fs/ocfs2/acl.c b/fs/ocfs2/acl.c
-> index bb981ec76456..7b07f5df3a29 100644
-> --- a/fs/ocfs2/acl.c
-> +++ b/fs/ocfs2/acl.c
-> @@ -256,6 +256,8 @@ static int ocfs2_set_acl(handle_t *handle,
->  		ret = ocfs2_xattr_set(inode, name_index, "", value, size, 0);
->  
->  	kfree(value);
-> +	if (!ret)
-> +		set_cached_acl(inode, type, acl);
->  
->  	return ret;
->  }
-> 
+Series applied to net-next, thanks.
