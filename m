@@ -2,134 +2,123 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAE9C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99DEC433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3489720734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YS60SVfQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l4mOM5HO"
+	by mail.kernel.org (Postfix) with ESMTP id AF7C422CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:57:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595260658;
+	bh=egxt+OqgdvW57MofFR/h1DolS9Q1TbBM33DDluq4gHE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2pgbKCl2ggeVD5XArYHUy1Ckn46zNHqEnjyrNHY0RJeWuLIKsJCuXKxOPNExUeakA
+	 uVoyVxbq7GjPKQUXLkeoP59R5zGr2SM52d6m4dk2j6bJ0ZDLVjR/bilacvM+M4TAOR
+	 05ZsuUIHXD9VnWBQclEObBOBYkxw1cSk1mVkTV28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731930AbgGTP5f (ORCPT
+        id S1731937AbgGTP5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:57:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59024 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731630AbgGTP5a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:57:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731627AbgGTP5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 11:57:30 -0400
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595260647;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UmigHx4BW8UOIynqAPFCArO8Ak7spa6ugzxCvPtvbYY=;
-        b=YS60SVfQBxqT/Li2iQB5b0h4QDLCcgPMbHVGl1woTVLkVdAxPZ1gw6JcM0M8asl1zLB0FH
-        V2QRS+7qXcHD05dmdsRgbqxMqlSTpQ4mCacpY0fAd0V0tUNnxLsxdcU7nt4oVzPGfqBoU7
-        yH6d1QndFTzPTDvR8kaWgCm8+5z362PAItSXbi9IvflIanYn3Ivx+RAmrWT8guIdBBQVwY
-        GEkbKYHvWof9jGmtT0DZTKkeSZ4Q2VZRNd6Qja44UCDST7zaryrKkphMogVQhIL7LZlxvU
-        kkhkZfJpGXI6j+VY/PJq1Ua8lSVLqtT7476HPwXNKm2V3YyS3/3FbE0STm0aNQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595260647;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UmigHx4BW8UOIynqAPFCArO8Ak7spa6ugzxCvPtvbYY=;
-        b=l4mOM5HO2qcAozOIfeVDMN68nNfJxASG344/KNPrhaSuW+tVwWGl0+njfUd/TR3j5KGsfW
-        7J2DjFoy5TOd6eAQ==
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Subject: [PATCH v4 24/24] hrtimer: Use sequence counter with associated raw spinlock
-Date:   Mon, 20 Jul 2020 17:55:30 +0200
-Message-Id: <20200720155530.1173732-25-a.darwish@linutronix.de>
-In-Reply-To: <20200720155530.1173732-1-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200720155530.1173732-1-a.darwish@linutronix.de>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14BB72065E;
+        Mon, 20 Jul 2020 15:57:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260649;
+        bh=egxt+OqgdvW57MofFR/h1DolS9Q1TbBM33DDluq4gHE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yugVC8FI/y9+Jvc+wMxY01RADixhc+Z5RfBkLZluvwy9QG+QoR3hPV0EW1ERCy3+F
+         K+RSuV/eCO5nBKCtDyUr2n17dZLKN+aj4wXRHhBnl1pMwm3P+ry0W9i8bDgMxHbKC+
+         VsguS6vaqtelVw4lZx81kknopWR9sahkwkR2iNGQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 045/215] arm64/alternatives: dont patch up internal branches
+Date:   Mon, 20 Jul 2020 17:35:27 +0200
+Message-Id: <20200720152822.340606082@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A sequence counter write side critical section must be protected by some
-form of locking to serialize writers. A plain seqcount_t does not
-contain the information of which lock must be held when entering a write
-side critical section.
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Use the new seqcount_raw_spinlock_t data type, which allows to associate
-a raw spinlock with the sequence counter. This enables lockdep to verify
-that the raw spinlock used for writer serialization is held when the
-write side critical section is entered.
+[ Upstream commit 5679b28142193a62f6af93249c0477be9f0c669b ]
 
-If lockdep is disabled this lock association is compiled out and has
-neither storage size nor runtime overhead.
+Commit f7b93d42945c ("arm64/alternatives: use subsections for replacement
+sequences") moved the alternatives replacement sequences into subsections,
+in order to keep the as close as possible to the code that they replace.
 
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Unfortunately, this broke the logic in branch_insn_requires_update,
+which assumed that any branch into kernel executable code was a branch
+that required updating, which is no longer the case now that the code
+sequences that are patched in are in the same section as the patch site
+itself.
+
+So the only way to discriminate branches that require updating and ones
+that don't is to check whether the branch targets the replacement sequence
+itself, and so we can drop the call to kernel_text_address() entirely.
+
+Fixes: f7b93d42945c ("arm64/alternatives: use subsections for replacement sequences")
+Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Tested-by: Alexandru Elisei <alexandru.elisei@arm.com>
+Link: https://lore.kernel.org/r/20200709125953.30918-1-ardb@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/hrtimer.h |  2 +-
- kernel/time/hrtimer.c   | 13 ++++++++++---
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/alternative.c | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-index 15c8ac313678..25993b86ac5c 100644
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -159,7 +159,7 @@ struct hrtimer_clock_base {
- 	struct hrtimer_cpu_base	*cpu_base;
- 	unsigned int		index;
- 	clockid_t		clockid;
--	seqcount_t		seq;
-+	seqcount_raw_spinlock_t	seq;
- 	struct hrtimer		*running;
- 	struct timerqueue_head	active;
- 	ktime_t			(*get_time)(void);
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index d89da1c7e005..c4038511d5c9 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -135,7 +135,11 @@ static const int hrtimer_clock_to_base_table[MAX_CLOCKS] = {
-  * timer->base->cpu_base
+diff --git a/arch/arm64/kernel/alternative.c b/arch/arm64/kernel/alternative.c
+index d1757ef1b1e74..73039949b5ce2 100644
+--- a/arch/arm64/kernel/alternative.c
++++ b/arch/arm64/kernel/alternative.c
+@@ -43,20 +43,8 @@ bool alternative_is_applied(u16 cpufeature)
   */
- static struct hrtimer_cpu_base migration_cpu_base = {
--	.clock_base = { { .cpu_base = &migration_cpu_base, }, },
-+	.clock_base = { {
-+		.cpu_base = &migration_cpu_base,
-+		.seq      = SEQCNT_RAW_SPINLOCK_ZERO(migration_cpu_base.seq,
-+						     &migration_cpu_base.lock),
-+	}, },
- };
+ static bool branch_insn_requires_update(struct alt_instr *alt, unsigned long pc)
+ {
+-	unsigned long replptr;
+-
+-	if (kernel_text_address(pc))
+-		return true;
+-
+-	replptr = (unsigned long)ALT_REPL_PTR(alt);
+-	if (pc >= replptr && pc <= (replptr + alt->alt_len))
+-		return false;
+-
+-	/*
+-	 * Branching into *another* alternate sequence is doomed, and
+-	 * we're not even trying to fix it up.
+-	 */
+-	BUG();
++	unsigned long replptr = (unsigned long)ALT_REPL_PTR(alt);
++	return !(pc >= replptr && pc <= (replptr + alt->alt_len));
+ }
  
- #define migration_base	migration_cpu_base.clock_base[0]
-@@ -1998,8 +2002,11 @@ int hrtimers_prepare_cpu(unsigned int cpu)
- 	int i;
- 
- 	for (i = 0; i < HRTIMER_MAX_CLOCK_BASES; i++) {
--		cpu_base->clock_base[i].cpu_base = cpu_base;
--		timerqueue_init_head(&cpu_base->clock_base[i].active);
-+		struct hrtimer_clock_base *clock_b = &cpu_base->clock_base[i];
-+
-+		clock_b->cpu_base = cpu_base;
-+		seqcount_raw_spinlock_init(&clock_b->seq, &cpu_base->lock);
-+		timerqueue_init_head(&clock_b->active);
- 	}
- 
- 	cpu_base->cpu = cpu;
+ #define align_down(x, a)	((unsigned long)(x) & ~(((unsigned long)(a)) - 1))
 -- 
-2.20.1
+2.25.1
+
+
 
