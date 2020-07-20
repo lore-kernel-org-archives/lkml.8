@@ -2,53 +2,53 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C951C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4C9C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A101206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0729C2065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260358;
-	bh=WrJfgmj/gwUppoiQHyikB/X08pI4S01T2x1sGO1Xf1s=;
+	s=default; t=1595260360;
+	bh=PYHRM3/vuupAlPy3KFuJj1++LvMrnbsTNPrhIdDVqkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b4WQSo03UgijOB/nAdyRuV9RMgDSmbA/YBbXWE8JNze37OVI1w+jQ/OHkpUwoRw4L
-	 pw13Kpc5A+AIJHKY6ymqPXCnaiIh7RikwiGHr1LE0eR8/BsDwYLtiUNr7tppKqJrgJ
-	 Kt0ACG8ZDMllRpmx4/ZjrizOX6iSxKb0rz48Yxuw=
+	b=cStmMMoCnoNo58vUTLj++B3JVMjdjXgpncMF3UzBBJEXtZHZiWMrVDfGlH+tJynOb
+	 9tpjvMa8dyphARxqVBiQuIByFyij52zCuzE/Z3kPKlw/GCaJ1deNrACyWSaSq8ynRk
+	 OljrBMWkQ0Sf2HXC1MIqQFkGLYtX1IlBug3cW5Mg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731369AbgGTPwg (ORCPT
+        id S1731379AbgGTPwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:52:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50626 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:52:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731360AbgGTPw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:52:28 -0400
+        id S1731366AbgGTPwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:52:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6B432064B;
-        Mon, 20 Jul 2020 15:52:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D43D2065E;
+        Mon, 20 Jul 2020 15:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260347;
-        bh=WrJfgmj/gwUppoiQHyikB/X08pI4S01T2x1sGO1Xf1s=;
+        s=default; t=1595260350;
+        bh=PYHRM3/vuupAlPy3KFuJj1++LvMrnbsTNPrhIdDVqkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gRbAtLWIU42Rv6ACs7RIvckXl9hVZ54dJ7KI6I4+QlzsjwqAmXj5qAnHRiFwPy0Kt
-         WSBXwGSS7ceb/6UQJi6GUDBvQMa3w4SJWcnU+cTmJmsswAFlR0GedI2Lb/8M1G2AxS
-         6jSVUFjP35LycbZ+hBdWty3HIb6FmbMlvSs0AAPQ=
+        b=P+yEYzl9edIZ6BsIIIKZeAtyg/vurCv8gicZqBPAH+4FLEuXSNbwBtTbU7hoP+9TH
+         R9R7vpcPNm2BL6AhD1tp2403n1MskAt/VED/Tts9qHKefCMjZh/LBtC54SeP6wAiWg
+         Xv/aMysCYOTfEp6GxCjZgBnEc6hEZr0eXnqCmq5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 040/133] of: of_mdio: Correct loop scanning logic
-Date:   Mon, 20 Jul 2020 17:36:27 +0200
-Message-Id: <20200720152805.657834536@linuxfoundation.org>
+        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 031/133] iio: magnetometer: ak8974: Fix runtime PM imbalance on error
+Date:   Mon, 20 Jul 2020 17:36:18 +0200
+Message-Id: <20200720152805.241721533@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -61,54 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit 5a8d7f126c97d04d893f5e5be2b286437a0d01b0 ]
+commit 0187294d227dfc42889e1da8f8ce1e44fc25f147 upstream.
 
-Commit 209c65b61d94 ("drivers/of/of_mdio.c:fix of_mdiobus_register()")
-introduced a break of the loop on the premise that a successful
-registration should exit the loop. The premise is correct but not to
-code, because rc && rc != -ENODEV is just a special error condition,
-that means we would exit the loop even with rc == -ENODEV which is
-absolutely not correct since this is the error code to indicate to the
-MDIO bus layer that scanning should continue.
+When devm_regmap_init_i2c() returns an error code, a pairing
+runtime PM usage counter decrement is needed to keep the
+counter balanced. For error paths after ak8974_set_power(),
+ak8974_detect() and ak8974_reset(), things are the same.
 
-Fix this by explicitly checking for rc = 0 as the only valid condition
-to break out of the loop.
+However, When iio_triggered_buffer_setup() returns an error
+code, there will be two PM usgae counter decrements.
 
-Fixes: 209c65b61d94 ("drivers/of/of_mdio.c:fix of_mdiobus_register()")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Fixes: 7c94a8b2ee8c ("iio: magn: add a driver for AK8974")
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/of/of_mdio.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/iio/magnetometer/ak8974.c |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index af7572fe090fd..100adacfdca94 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -267,10 +267,15 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 				 child, addr);
- 
- 			if (of_mdiobus_child_is_phy(child)) {
-+				/* -ENODEV is the return code that PHYLIB has
-+				 * standardized on to indicate that bus
-+				 * scanning should continue.
-+				 */
- 				rc = of_mdiobus_register_phy(mdio, child, addr);
--				if (rc && rc != -ENODEV)
-+				if (!rc)
-+					break;
-+				if (rc != -ENODEV)
- 					goto unregister;
--				break;
- 			}
- 		}
+--- a/drivers/iio/magnetometer/ak8974.c
++++ b/drivers/iio/magnetometer/ak8974.c
+@@ -768,19 +768,21 @@ static int ak8974_probe(struct i2c_clien
+ 	ak8974->map = devm_regmap_init_i2c(i2c, &ak8974_regmap_config);
+ 	if (IS_ERR(ak8974->map)) {
+ 		dev_err(&i2c->dev, "failed to allocate register map\n");
++		pm_runtime_put_noidle(&i2c->dev);
++		pm_runtime_disable(&i2c->dev);
+ 		return PTR_ERR(ak8974->map);
  	}
--- 
-2.25.1
-
+ 
+ 	ret = ak8974_set_power(ak8974, AK8974_PWR_ON);
+ 	if (ret) {
+ 		dev_err(&i2c->dev, "could not power on\n");
+-		goto power_off;
++		goto disable_pm;
+ 	}
+ 
+ 	ret = ak8974_detect(ak8974);
+ 	if (ret) {
+ 		dev_err(&i2c->dev, "neither AK8974 nor AMI30x found\n");
+-		goto power_off;
++		goto disable_pm;
+ 	}
+ 
+ 	ret = ak8974_selftest(ak8974);
+@@ -790,14 +792,9 @@ static int ak8974_probe(struct i2c_clien
+ 	ret = ak8974_reset(ak8974);
+ 	if (ret) {
+ 		dev_err(&i2c->dev, "AK8974 reset failed\n");
+-		goto power_off;
++		goto disable_pm;
+ 	}
+ 
+-	pm_runtime_set_autosuspend_delay(&i2c->dev,
+-					 AK8974_AUTOSUSPEND_DELAY);
+-	pm_runtime_use_autosuspend(&i2c->dev);
+-	pm_runtime_put(&i2c->dev);
+-
+ 	indio_dev->dev.parent = &i2c->dev;
+ 	indio_dev->channels = ak8974_channels;
+ 	indio_dev->num_channels = ARRAY_SIZE(ak8974_channels);
+@@ -850,6 +847,11 @@ no_irq:
+ 		goto cleanup_buffer;
+ 	}
+ 
++	pm_runtime_set_autosuspend_delay(&i2c->dev,
++					 AK8974_AUTOSUSPEND_DELAY);
++	pm_runtime_use_autosuspend(&i2c->dev);
++	pm_runtime_put(&i2c->dev);
++
+ 	return 0;
+ 
+ cleanup_buffer:
+@@ -858,7 +860,6 @@ disable_pm:
+ 	pm_runtime_put_noidle(&i2c->dev);
+ 	pm_runtime_disable(&i2c->dev);
+ 	ak8974_set_power(ak8974, AK8974_PWR_OFF);
+-power_off:
+ 	regulator_bulk_disable(ARRAY_SIZE(ak8974->regs), ak8974->regs);
+ 
+ 	return ret;
 
 
