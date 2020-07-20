@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4B6C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE41C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B81C20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD60207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261476;
-	bh=YkZhxolwuafrRRgXW9py0/9Z7mDIDrnIT8YPURoty0Q=;
+	s=default; t=1595261483;
+	bh=PORYz7Wbze4EhD0RcXJzdnktzYcKspJ3cuEg6I8qGx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l4xt9vD6Tx3y9IcwrLxzQNpqZz4nOyU4rxpTyH5qqTdAGRg36SKOGCneeIbzW1Zei
-	 fhFD31K8f4+q6wUUE68Doh80KU0sb9+UEBhVXX+tfxpX6yNCEdmdMd9BonKIaAOyHu
-	 28q8fOTL1VzN3mGDw55psnOSE+3i86IZ2VjvZ/s4=
+	b=xKcPG+cH/T1ycdDNxGrxSEDmVC6Z81QDcZKdTnJ0ex9VIhBuq8nGTv6FfG4yTkQHi
+	 N0Wnu1boGBmTS2a2EdOf4kWTlSuMbeIF1+3ixGRr1anQzMdM1I6avUkRO7VoRpqOQy
+	 rDs+CFA1xVD3RRXklmpgIDEOz20DLS4qLKsShWoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387775AbgGTQLO (ORCPT
+        id S2387790AbgGTQLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:11:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50076 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:11:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387759AbgGTQLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:11:10 -0400
+        id S1733100AbgGTQLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:11:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5717E2065E;
-        Mon, 20 Jul 2020 16:11:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2625F2065E;
+        Mon, 20 Jul 2020 16:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261469;
-        bh=YkZhxolwuafrRRgXW9py0/9Z7mDIDrnIT8YPURoty0Q=;
+        s=default; t=1595261475;
+        bh=PORYz7Wbze4EhD0RcXJzdnktzYcKspJ3cuEg6I8qGx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZYRVZHaRRa94oJ5aacdC0Pe/2SdCC2xM63nsdITc9k6AYBmgzQyfM/xuW1rzUogjO
-         MxvxCWZGx+gzEKv1qq/VXL12qvPSDnGP3Rss8tT9kMlCmK7vTEXGRjKWBVvntJfep2
-         UUuNKUx04Wy0r+E4rldBo3+hN79JMzB7bUBRUFvQ=
+        b=LFVyZRmINIpI53TF1UrxRNdI1Fj1R6fYeGOaWBh1GSuf6lZYcaLMTJTwZCHmQ8Ccn
+         L4Om5KnMQuAtk/8eiOrF3mwOCsDZCkaVeq0VtMLClvE26b0kA0qLaOD0Cr6iNoT786
+         yNdGpmsP6khGD06m/jV1LY8IpmBJm3SaQUmzSp5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Douglas Anderson <dianders@chromium.org>,
         Stephen Boyd <swboyd@chromium.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.7 127/244] soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes before flushing new data
-Date:   Mon, 20 Jul 2020 17:36:38 +0200
-Message-Id: <20200720152831.886702951@linuxfoundation.org>
+Subject: [PATCH 5.7 129/244] soc: qcom: rpmh-rsc: Allow using free WAKE TCS for active request
+Date:   Mon, 20 Jul 2020 17:36:40 +0200
+Message-Id: <20200720152831.975115957@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -63,101 +63,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maulik Shah <mkshah@codeaurora.org>
 
-commit f5ac95f9ca2f439179a5baf48e1c0f22f83d936e upstream.
+commit 38427e5a47bf83299da930bd474c6cb2632ad810 upstream.
 
-TCSes have previously programmed data when rpmh_flush() is called.
-This can cause old data to trigger along with newly flushed.
+When there are more than one WAKE TCS available and there is no dedicated
+ACTIVE TCS available, invalidating all WAKE TCSes and waiting for current
+transfer to complete in first WAKE TCS blocks using another free WAKE TCS
+to complete current request.
 
-Fix this by cleaning SLEEP and WAKE TCSes before new data is flushed.
+Remove rpmh_rsc_invalidate() to happen from tcs_write() when WAKE TCSes
+is re-purposed to be used for Active mode. Clear only currently used
+WAKE TCS's register configuration.
 
-With this there is no need to invoke rpmh_rsc_invalidate() call from
-rpmh_invalidate().
-
-Simplify rpmh_invalidate() by moving invalidate_batch() inside.
-
-Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
+Fixes: 2de4b8d33eab (drivers: qcom: rpmh-rsc: allow active requests from wake TCS)
 Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Link: https://lore.kernel.org/r/1586703004-13674-4-git-send-email-mkshah@codeaurora.org
+Link: https://lore.kernel.org/r/1586703004-13674-7-git-send-email-mkshah@codeaurora.org
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/soc/qcom/rpmh.c |   41 ++++++++++++++++++-----------------------
- 1 file changed, 18 insertions(+), 23 deletions(-)
+ drivers/soc/qcom/rpmh-rsc.c |   23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
---- a/drivers/soc/qcom/rpmh.c
-+++ b/drivers/soc/qcom/rpmh.c
-@@ -317,19 +317,6 @@ static int flush_batch(struct rpmh_ctrlr
- 	return ret;
- }
- 
--static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
--{
--	struct batch_cache_req *req, *tmp;
--	unsigned long flags;
--
--	spin_lock_irqsave(&ctrlr->cache_lock, flags);
--	list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
--		kfree(req);
--	INIT_LIST_HEAD(&ctrlr->batch_cache);
--	ctrlr->dirty = true;
--	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
--}
--
- /**
-  * rpmh_write_batch: Write multiple sets of RPMH commands and wait for the
-  * batch to finish.
-@@ -467,6 +454,13 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
- 		return 0;
- 	}
- 
-+	/* Invalidate the TCSes first to avoid stale data */
-+	do {
-+		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
-+	} while (ret == -EAGAIN);
-+	if (ret)
-+		return ret;
-+
- 	/* First flush the cached batch requests */
- 	ret = flush_batch(ctrlr);
- 	if (ret)
-@@ -498,24 +492,25 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
- }
- 
- /**
-- * rpmh_invalidate: Invalidate all sleep and active sets
-- * sets.
-+ * rpmh_invalidate: Invalidate sleep and wake sets in batch_cache
-  *
-  * @dev: The device making the request
-  *
-- * Invalidate the sleep and active values in the TCS blocks.
-+ * Invalidate the sleep and wake values in batch_cache.
-  */
- int rpmh_invalidate(const struct device *dev)
+--- a/drivers/soc/qcom/rpmh-rsc.c
++++ b/drivers/soc/qcom/rpmh-rsc.c
+@@ -148,7 +148,7 @@ int rpmh_rsc_invalidate(struct rsc_drv *
+ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
+ 					 const struct tcs_request *msg)
  {
- 	struct rpmh_ctrlr *ctrlr = get_rpmh_ctrlr(dev);
--	int ret;
--
--	invalidate_batch(ctrlr);
-+	struct batch_cache_req *req, *tmp;
-+	unsigned long flags;
+-	int type, ret;
++	int type;
+ 	struct tcs_group *tcs;
  
--	do {
--		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
--	} while (ret == -EAGAIN);
-+	spin_lock_irqsave(&ctrlr->cache_lock, flags);
-+	list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
-+		kfree(req);
-+	INIT_LIST_HEAD(&ctrlr->batch_cache);
-+	ctrlr->dirty = true;
-+	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+ 	switch (msg->state) {
+@@ -169,19 +169,10 @@ static struct tcs_group *get_tcs_for_msg
+ 	 * If we are making an active request on a RSC that does not have a
+ 	 * dedicated TCS for active state use, then re-purpose a wake TCS to
+ 	 * send active votes.
+-	 * NOTE: The driver must be aware that this RSC does not have a
+-	 * dedicated AMC, and therefore would invalidate the sleep and wake
+-	 * TCSes before making an active state request.
+ 	 */
+ 	tcs = get_tcs_of_type(drv, type);
+-	if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs) {
++	if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs)
+ 		tcs = get_tcs_of_type(drv, WAKE_TCS);
+-		if (tcs->num_tcs) {
+-			ret = rpmh_rsc_invalidate(drv);
+-			if (ret)
+-				return ERR_PTR(ret);
+-		}
+-	}
  
--	return ret;
-+	return 0;
+ 	return tcs;
  }
- EXPORT_SYMBOL(rpmh_invalidate);
+@@ -406,8 +397,16 @@ static int tcs_write(struct rsc_drv *drv
+ 
+ 	tcs->req[tcs_id - tcs->offset] = msg;
+ 	set_bit(tcs_id, drv->tcs_in_use);
+-	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS)
++	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS) {
++		/*
++		 * Clear previously programmed WAKE commands in selected
++		 * repurposed TCS to avoid triggering them. tcs->slots will be
++		 * cleaned from rpmh_flush() by invoking rpmh_rsc_invalidate()
++		 */
++		write_tcs_reg_sync(drv, RSC_DRV_CMD_ENABLE, tcs_id, 0);
++		write_tcs_reg_sync(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, 0);
+ 		enable_tcs_irq(drv, tcs_id, true);
++	}
+ 	spin_unlock(&drv->lock);
+ 
+ 	__tcs_buffer_write(drv, tcs_id, 0, msg);
 
 
