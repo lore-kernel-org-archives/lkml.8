@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1B2C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADE0C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF2CB2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4515F2176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259744;
-	bh=KVERyIVniKZI9PZuy0pPdXHajTF/Ms0p1vqQa5OrA10=;
+	s=default; t=1595259749;
+	bh=cUT6ml9QtOqvlLfbMNEBKAVIA9b3PkIIl2rBuDmt58A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pqk5QIJvocwKhZ74asvbEEExffhUx2QUVpWWlxApEouGSAFBjCTcZ+gt4kza5Rm94
-	 qO7HePIX2qxUg4pSZDH/nXOg6cp0/UQ+4ulDeOJaUCxb2/Ky9Ki+m3ftsDuJJscaaq
-	 gN6xBhiRa/IfCKp5iJqlW2X8/I8qBQtwj7OgwqWg=
+	b=F6748/tWvgTIIYuXBuHIsr/boGIElUby7zFkpDWQCVa+j57eiC8ADRW6TEb7JN134
+	 4FZ+XJHBVjCfY0utvww8pDuJ20TcH3Mc1hHKwMq128ClN8xJEsUkM8r3/7lF5kdIoq
+	 HZifoy+I2Z3T1rwBPgldrx3LXojiGgWeoul4Uo48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbgGTPmW (ORCPT
+        id S1730084AbgGTPm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:42:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35128 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:42:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730054AbgGTPmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:42:20 -0400
+        id S1730068AbgGTPmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:42:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E82E82065E;
-        Mon, 20 Jul 2020 15:42:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A915120773;
+        Mon, 20 Jul 2020 15:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259739;
-        bh=KVERyIVniKZI9PZuy0pPdXHajTF/Ms0p1vqQa5OrA10=;
+        s=default; t=1595259745;
+        bh=cUT6ml9QtOqvlLfbMNEBKAVIA9b3PkIIl2rBuDmt58A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XASPxTJFIM5gEU7U/StW5RIi0W1AZwR64eSqecEv/qRusFpaDJPmZuE6GQQkY8May
-         NTdCC4gTorGoFXk+GBrUsyt2p973/etDD4ojGpaMs2xdmcN5q4UTQTmgR6/HPwLEFC
-         1KbJ6jkpRmc2iaSDK1AmQbPyeAtxKjWM3mSd1j+w=
+        b=XiHiuAxjYx8zkn9B4YnEatVEG8bXieE3LpTNsN5vZ8OTFmAEOeczjsriKC7Jc7ln7
+         44mL1FNi9zzfSZ3YLPDm7F1BvljqZ+B3fLBaSaSRgtzFecwE2F75O1WvoWuCczQmKw
+         X0nzxzQQ40tRAtzAaPurOx3Tyhfta0NJkdxcGCPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 61/86] usb: core: Add a helper function to check the validity of EP type in URB
-Date:   Mon, 20 Jul 2020 17:36:57 +0200
-Message-Id: <20200720152756.241710263@linuxfoundation.org>
+        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        kernel test robot <lkp@intel.com>,
+        Sean Tranchetti <stranche@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 34/86] genetlink: remove genl_bind
+Date:   Mon, 20 Jul 2020 17:36:30 +0200
+Message-Id: <20200720152754.869489049@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -59,93 +62,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Sean Tranchetti <stranche@codeaurora.org>
 
-commit e901b9873876ca30a09253731bd3a6b00c44b5b0 upstream.
+[ Upstream commit 1e82a62fec613844da9e558f3493540a5b7a7b67 ]
 
-This patch adds a new helper function to perform a sanity check of the
-given URB to see whether it contains a valid endpoint.  It's a light-
-weight version of what usb_submit_urb() does, but without the kernel
-warning followed by the stack trace, just returns an error code.
+A potential deadlock can occur during registering or unregistering a
+new generic netlink family between the main nl_table_lock and the
+cb_lock where each thread wants the lock held by the other, as
+demonstrated below.
 
-Especially for a driver that doesn't parse the descriptor but fills
-the URB with the fixed endpoint (e.g. some quirks for non-compliant
-devices), this kind of check is preferable at the probe phase before
-actually submitting the urb.
+1) Thread 1 is performing a netlink_bind() operation on a socket. As part
+   of this call, it will call netlink_lock_table(), incrementing the
+   nl_table_users count to 1.
+2) Thread 2 is registering (or unregistering) a genl_family via the
+   genl_(un)register_family() API. The cb_lock semaphore will be taken for
+   writing.
+3) Thread 1 will call genl_bind() as part of the bind operation to handle
+   subscribing to GENL multicast groups at the request of the user. It will
+   attempt to take the cb_lock semaphore for reading, but it will fail and
+   be scheduled away, waiting for Thread 2 to finish the write.
+4) Thread 2 will call netlink_table_grab() during the (un)registration
+   call. However, as Thread 1 has incremented nl_table_users, it will not
+   be able to proceed, and both threads will be stuck waiting for the
+   other.
 
-Tested-by: Andrey Konovalov <andreyknvl@google.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+genl_bind() is a noop, unless a genl_family implements the mcast_bind()
+function to handle setting up family-specific multicast operations. Since
+no one in-tree uses this functionality as Cong pointed out, simply removing
+the genl_bind() function will remove the possibility for deadlock, as there
+is no attempt by Thread 1 above to take the cb_lock semaphore.
+
+Fixes: c380d9a7afff ("genetlink: pass multicast bind/unbind to families")
+Suggested-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Johannes Berg <johannes.berg@intel.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/core/urb.c |   30 ++++++++++++++++++++++++++----
- include/linux/usb.h    |    2 ++
- 2 files changed, 28 insertions(+), 4 deletions(-)
+ include/net/genetlink.h |    8 -------
+ net/netlink/genetlink.c |   52 ------------------------------------------------
+ 2 files changed, 60 deletions(-)
 
---- a/drivers/usb/core/urb.c
-+++ b/drivers/usb/core/urb.c
-@@ -183,6 +183,31 @@ EXPORT_SYMBOL_GPL(usb_unanchor_urb);
+--- a/include/net/genetlink.h
++++ b/include/net/genetlink.h
+@@ -33,12 +33,6 @@ struct genl_info;
+  *	do additional, common, filtering and return an error
+  * @post_doit: called after an operation's doit callback, it may
+  *	undo operations done by pre_doit, for example release locks
+- * @mcast_bind: a socket bound to the given multicast group (which
+- *	is given as the offset into the groups array)
+- * @mcast_unbind: a socket was unbound from the given multicast group.
+- *	Note that unbind() will not be called symmetrically if the
+- *	generic netlink family is removed while there are still open
+- *	sockets.
+  * @attrbuf: buffer to store parsed attributes
+  * @family_list: family list
+  * @mcgrps: multicast groups used by this family (private)
+@@ -61,8 +55,6 @@ struct genl_family {
+ 	void			(*post_doit)(const struct genl_ops *ops,
+ 					     struct sk_buff *skb,
+ 					     struct genl_info *info);
+-	int			(*mcast_bind)(struct net *net, int group);
+-	void			(*mcast_unbind)(struct net *net, int group);
+ 	struct nlattr **	attrbuf;	/* private */
+ 	const struct genl_ops *	ops;		/* private */
+ 	const struct genl_multicast_group *mcgrps; /* private */
+--- a/net/netlink/genetlink.c
++++ b/net/netlink/genetlink.c
+@@ -992,63 +992,11 @@ static const struct genl_multicast_group
+ 	{ .name = "notify", },
+ };
  
- /*-------------------------------------------------------------------*/
- 
-+static const int pipetypes[4] = {
-+	PIPE_CONTROL, PIPE_ISOCHRONOUS, PIPE_BULK, PIPE_INTERRUPT
-+};
-+
-+/**
-+ * usb_urb_ep_type_check - sanity check of endpoint in the given urb
-+ * @urb: urb to be checked
-+ *
-+ * This performs a light-weight sanity check for the endpoint in the
-+ * given urb.  It returns 0 if the urb contains a valid endpoint, otherwise
-+ * a negative error code.
-+ */
-+int usb_urb_ep_type_check(const struct urb *urb)
-+{
-+	const struct usb_host_endpoint *ep;
-+
-+	ep = usb_pipe_endpoint(urb->dev, urb->pipe);
-+	if (!ep)
-+		return -EINVAL;
-+	if (usb_pipetype(urb->pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
-+		return -EINVAL;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(usb_urb_ep_type_check);
-+
- /**
-  * usb_submit_urb - issue an asynchronous transfer request for an endpoint
-  * @urb: pointer to the urb describing the request
-@@ -322,9 +347,6 @@ EXPORT_SYMBOL_GPL(usb_unanchor_urb);
-  */
- int usb_submit_urb(struct urb *urb, gfp_t mem_flags)
+-static int genl_bind(struct net *net, int group)
+-{
+-	int i, err = -ENOENT;
+-
+-	down_read(&cb_lock);
+-	for (i = 0; i < GENL_FAM_TAB_SIZE; i++) {
+-		struct genl_family *f;
+-
+-		list_for_each_entry(f, genl_family_chain(i), family_list) {
+-			if (group >= f->mcgrp_offset &&
+-			    group < f->mcgrp_offset + f->n_mcgrps) {
+-				int fam_grp = group - f->mcgrp_offset;
+-
+-				if (!f->netnsok && net != &init_net)
+-					err = -ENOENT;
+-				else if (f->mcast_bind)
+-					err = f->mcast_bind(net, fam_grp);
+-				else
+-					err = 0;
+-				break;
+-			}
+-		}
+-	}
+-	up_read(&cb_lock);
+-
+-	return err;
+-}
+-
+-static void genl_unbind(struct net *net, int group)
+-{
+-	int i;
+-
+-	down_read(&cb_lock);
+-	for (i = 0; i < GENL_FAM_TAB_SIZE; i++) {
+-		struct genl_family *f;
+-
+-		list_for_each_entry(f, genl_family_chain(i), family_list) {
+-			if (group >= f->mcgrp_offset &&
+-			    group < f->mcgrp_offset + f->n_mcgrps) {
+-				int fam_grp = group - f->mcgrp_offset;
+-
+-				if (f->mcast_unbind)
+-					f->mcast_unbind(net, fam_grp);
+-				break;
+-			}
+-		}
+-	}
+-	up_read(&cb_lock);
+-}
+-
+ static int __net_init genl_pernet_init(struct net *net)
  {
--	static int			pipetypes[4] = {
--		PIPE_CONTROL, PIPE_ISOCHRONOUS, PIPE_BULK, PIPE_INTERRUPT
--	};
- 	int				xfertype, max;
- 	struct usb_device		*dev;
- 	struct usb_host_endpoint	*ep;
-@@ -443,7 +465,7 @@ int usb_submit_urb(struct urb *urb, gfp_
- 	 */
+ 	struct netlink_kernel_cfg cfg = {
+ 		.input		= genl_rcv,
+ 		.flags		= NL_CFG_F_NONROOT_RECV,
+-		.bind		= genl_bind,
+-		.unbind		= genl_unbind,
+ 	};
  
- 	/* Check that the pipe's type matches the endpoint's type */
--	if (usb_pipetype(urb->pipe) != pipetypes[xfertype])
-+	if (usb_urb_ep_type_check(urb))
- 		dev_WARN(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
- 			usb_pipetype(urb->pipe), pipetypes[xfertype]);
- 
---- a/include/linux/usb.h
-+++ b/include/linux/usb.h
-@@ -1655,6 +1655,8 @@ static inline int usb_urb_dir_out(struct
- 	return (urb->transfer_flags & URB_DIR_MASK) == URB_DIR_OUT;
- }
- 
-+int usb_urb_ep_type_check(const struct urb *urb);
-+
- void *usb_alloc_coherent(struct usb_device *dev, size_t size,
- 	gfp_t mem_flags, dma_addr_t *dma);
- void usb_free_coherent(struct usb_device *dev, size_t size,
+ 	/* we'll bump the group number right afterwards */
 
 
