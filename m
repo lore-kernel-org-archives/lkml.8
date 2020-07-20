@@ -2,100 +2,124 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFCCC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE25EC433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E748F2176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC89221775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:25:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595237129;
+	bh=vyyX1LP4325hfnYgliYCjSjLjNxzM/CYe+v7FBLTqDc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FhtzxCKu3z5ipT/eOax3SnbMMNK6ZoYpxhDMWcKp1kYL0InggB53GApov/dOOfQ63
+	 KN8esYSuce9mc9NCjZ5DcTPin9+93B1SOlmvj/U2hWOE2GCQZSXT+XMrJf6kC+xxjT
+	 eebgtgAdI7woJ7W9ym5eyv7Hk8I4Lr+IFrcbqhsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgGTJXz (ORCPT
+        id S1728278AbgGTJZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:23:55 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50256 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727961AbgGTJXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:23:52 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0EF2B8CE758EB4A7A53B;
-        Mon, 20 Jul 2020 17:23:51 +0800 (CST)
-Received: from DESKTOP-8RFUVS3.china.huawei.com (10.174.185.226) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 20 Jul 2020 17:23:44 +0800
-From:   Zenghui Yu <yuzenghui@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <maz@kernel.org>
-CC:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <wanghaibin.wang@huawei.com>, Zenghui Yu <yuzenghui@huawei.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v2] irqchip/gic-v4.1: Ensure accessing the correct RD when writing INVALLR
-Date:   Mon, 20 Jul 2020 17:23:28 +0800
-Message-ID: <20200720092328.708-1-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.23.0.windows.1
+        Mon, 20 Jul 2020 05:25:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38964 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727769AbgGTJZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 05:25:27 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 738D922482;
+        Mon, 20 Jul 2020 09:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595237127;
+        bh=vyyX1LP4325hfnYgliYCjSjLjNxzM/CYe+v7FBLTqDc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=g5qTGQIOWj1V9NU4yK00jz5UQP5Nt5v+OLzEYnJ2fYYF2s2RpuPHOjWCkAadxsvBt
+         KfGvj5cZa5KE3IDq7FgOMY35cboLHnI1EYroJXHTtzwIE4rD8KANUXvfFp/YUVmUzZ
+         gfaX0xMnS7xqZREdic3XBeaF92Yg2TjKzwFszmFw=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-riscv@lists.infradead.org,
+        x86@kernel.org
+Subject: [PATCH 2/6] mmap: make mlock_future_check() global
+Date:   Mon, 20 Jul 2020 12:24:31 +0300
+Message-Id: <20200720092435.17469-3-rppt@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200720092435.17469-1-rppt@kernel.org>
+References: <20200720092435.17469-1-rppt@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.185.226]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GICv4.1 spec tells us that it's CONSTRAINED UNPREDICTABLE to issue a
-register-based invalidation operation for a vPEID not mapped to that RD,
-or another RD within the same CommonLPIAff group.
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-To follow this rule, commit f3a059219bc7 ("irqchip/gic-v4.1: Ensure mutual
-exclusion between vPE affinity change and RD access") tried to address the
-race between the RD accesses and the vPE affinity change, but somehow
-forgot to take GICR_INVALLR into account. Let's take the vpe_lock before
-evaluating vpe->col_idx to fix it.
+It will be used by the upcoming secret memory implementation.
 
-Fixes: f3a059219bc7 ("irqchip/gic-v4.1: Ensure mutual exclusion between vPE affinity change and RD access")
-Cc: stable@vger.kernel.org
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
-* From v1:
-  - Add a proper Fixes: tag
-  - Cc stable
+ mm/internal.h | 3 +++
+ mm/mmap.c     | 5 ++---
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
- drivers/irqchip/irq-gic-v3-its.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index beac4caefad9..5bf2263bdbcc 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -4087,18 +4087,22 @@ static void its_vpe_4_1_deschedule(struct its_vpe *vpe,
- static void its_vpe_4_1_invall(struct its_vpe *vpe)
- {
- 	void __iomem *rdbase;
-+	unsigned long flags;
- 	u64 val;
-+	int cpu;
+diff --git a/mm/internal.h b/mm/internal.h
+index 9886db20d94f..af0a92f8f6bc 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -349,6 +349,9 @@ static inline void munlock_vma_pages_all(struct vm_area_struct *vma)
+ extern void mlock_vma_page(struct page *page);
+ extern unsigned int munlock_vma_page(struct page *page);
  
- 	val  = GICR_INVALLR_V;
- 	val |= FIELD_PREP(GICR_INVALLR_VPEID, vpe->vpe_id);
- 
- 	/* Target the redistributor this vPE is currently known on */
--	raw_spin_lock(&gic_data_rdist_cpu(vpe->col_idx)->rd_lock);
--	rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
-+	cpu = vpe_to_cpuid_lock(vpe, &flags);
-+	raw_spin_lock(&gic_data_rdist_cpu(cpu)->rd_lock);
-+	rdbase = per_cpu_ptr(gic_rdists->rdist, cpu)->rd_base;
- 	gic_write_lpir(val, rdbase + GICR_INVALLR);
- 
- 	wait_for_syncr(rdbase);
--	raw_spin_unlock(&gic_data_rdist_cpu(vpe->col_idx)->rd_lock);
-+	raw_spin_unlock(&gic_data_rdist_cpu(cpu)->rd_lock);
-+	vpe_to_cpuid_unlock(vpe, flags);
++extern int mlock_future_check(struct mm_struct *mm, unsigned long flags,
++			      unsigned long len);
++
+ /*
+  * Clear the page's PageMlocked().  This can be useful in a situation where
+  * we want to unconditionally remove a page from the pagecache -- e.g.,
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 59a4682ebf3f..4dd40a4fedfb 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1310,9 +1310,8 @@ static inline unsigned long round_hint_to_min(unsigned long hint)
+ 	return hint;
  }
  
- static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
+-static inline int mlock_future_check(struct mm_struct *mm,
+-				     unsigned long flags,
+-				     unsigned long len)
++int mlock_future_check(struct mm_struct *mm, unsigned long flags,
++		       unsigned long len)
+ {
+ 	unsigned long locked, lock_limit;
+ 
 -- 
-2.19.1
+2.26.2
 
