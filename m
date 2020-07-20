@@ -2,194 +2,98 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15990C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45731C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E510B21775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2081521775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:01:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uEn13EOK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgGTKBV (ORCPT
+        id S1728250AbgGTKB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 06:01:21 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34354 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728310AbgGTKBT (ORCPT
+        Mon, 20 Jul 2020 06:01:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbgGTKBz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 06:01:19 -0400
-Received: by mail-io1-f66.google.com with SMTP id q74so16979572iod.1;
-        Mon, 20 Jul 2020 03:01:19 -0700 (PDT)
+        Mon, 20 Jul 2020 06:01:55 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F75C0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:01:55 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id t11so8790818pfq.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:01:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IBVdyP/pegZa7dgnXrwm5PyIQ+8xTCyFcnvPtdN5UVI=;
+        b=uEn13EOKkQKFmK34APcGHbkL6i0Bc78BZn67EQvfn41Fc9a/MMheX8xL7adrdOlRhe
+         hA2C2jqTAw/OZQy5HoNYNIepnDobJJplfM9mycMWrip+JIS2XLNFGzIzAkuRh7ZUhaG8
+         y3q1VEXw7Cn2jnWMWlkYLFIpb7vCyn0pJ33WI7EQYk3hsxdmVtgX94P5euF9A6tqDoUy
+         fwdDQqX4/TzfjC/i4+SRlySFWwVcW1jE+qt8KCTytCVjIiEMnvJzZtfSBYFKDvA8QMk1
+         h9tKOxaoLTZRumfefxVu+hY8zE/HdKWaHTcyuBxVMhuwcc6fx/+CCeheDEyf3gKcMOxQ
+         qvEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KYxjoHTv6uKj3n82G+0SsQK8lIYz9oQYev2/3hv38x8=;
-        b=l1A9RaESSIv9LCpOJcjB+lYwQoR48Iyyp8lTYOEmofQn76sU46CBTgW6LI9mRv8tFM
-         z943HuHltQ520CuiVkALpTpnABK40jg9+HD2U4b7vrYXl4g9x9fbbNCtP9k3/2FzY9ry
-         05GSlwxYopmXxqtIwGR7P6ib0nEKGg86SLCPs4Vee44FITghccbaIu+HiZxxpUI+Cokl
-         kpU/n51Jwrug/TYUuHdO0uAgAz4cmStZcYN1llsBCE4ZEwrmKTZeqfFfxcZvQorwvYE1
-         TP0Wdk4rOwphPiLb4C62jf5ykyw8x4nXiSox9YtRHuDazqc1Q894oRJu0/XTQOM4rsxr
-         7uAg==
-X-Gm-Message-State: AOAM530Z7g+UGrMNG0ipo7qKO3tNcGvxU6FNYqavrPcnlyPBqXShIGuZ
-        wtiqnL/0P3Qa6a5hsy5xZ5jgtDk+u1dY3g2DjzY=
-X-Google-Smtp-Source: ABdhPJxV6pAPGfa2GlMeYrPfo3O8mGIdY1f8QN1EuHpGCMVzgot8SC6RrqrpcHDVHe6pI9EGohzO21pxRbGKfeAPToY=
-X-Received: by 2002:a5d:97d9:: with SMTP id k25mr22200787ios.42.1595239278579;
- Mon, 20 Jul 2020 03:01:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IBVdyP/pegZa7dgnXrwm5PyIQ+8xTCyFcnvPtdN5UVI=;
+        b=NVq2U/f9J86C4whjj10TkNCskVzMinsRIyEqQVDQFD8kHUAnCtkBE+4ZbPCsLlb7lw
+         u2XynLXNWVIQp3DVJt8eBFBylCVN0RAgEd5VqjNDJpDOv/LHAt/xsASk4mUlTM9cGTz0
+         Xmv4JdDQq2qbFfGFDgI7DmSlt/3N1+1vdSimQFdQYQ4Ne6jBWZ6QwzqUBe5fHVUMCEXk
+         YLK9w2OuhbHVaJQGZkM07wDapWdzhXatWY9ejQHiPFga5HM+xbi+A0Jzq/88NO6YjX4w
+         ++oCONcRFE8RpFzDuTSL+mVUjRtRhRSvAAwImky09y9kz1oAYmkADRpLMG9aRVAUDhD7
+         hfgA==
+X-Gm-Message-State: AOAM532oAy9pyoeOGYEcMoCMJtwfpdqcyyNrVmBRRIoBEVSKL/iSD/RR
+        T2na+cP9LGod4OSRXbDJe3xrsg==
+X-Google-Smtp-Source: ABdhPJzhEikt8tP6/CpS6b+B437wPhrsq9S5Jz+w2SuVdMMdAy5NITpEubsktWnoJlAezd0lmVwv8A==
+X-Received: by 2002:a62:cd89:: with SMTP id o131mr18638388pfg.195.1595239314908;
+        Mon, 20 Jul 2020 03:01:54 -0700 (PDT)
+Received: from localhost ([223.179.133.67])
+        by smtp.gmail.com with ESMTPSA id g8sm14821824pgr.70.2020.07.20.03.01.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Jul 2020 03:01:53 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 15:31:31 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
+        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
+        Jonathan <jonathan@marek.ca>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
+Message-ID: <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu>
+References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
+ <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200720074249.596364-1-jiaxun.yang@flygoat.com> <20200720074249.596364-3-jiaxun.yang@flygoat.com>
-In-Reply-To: <20200720074249.596364-3-jiaxun.yang@flygoat.com>
-From:   Huacai Chen <chenhc@lemote.com>
-Date:   Mon, 20 Jul 2020 18:01:07 +0800
-Message-ID: <CAAhV-H52=2-Hij0AFBGuZWhQ4kWqEwLsvzXPR-ZndQKtkjnMbw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] MIPS: Loongson64: Process ISA Node in DeviceTree
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jiaxun,
+On 15-07-20, 08:36, Rob Clark wrote:
+> I can take the first two into msm-next, the 3rd will need to wait
+> until dev_pm_opp_set_bw() lands
 
-On Mon, Jul 20, 2020 at 3:44 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> Previously, we're hardcoding resserved ISA I/O Space in code, now
-> we're processing reverved I/O via DeviceTree directly. Using the ranges
-> property to determine the size and address of reserved I/O space.
-Maybe it is better to reserve a default legacy io range if there is no
-"isa" node in the .dts file?
+You can base that on a8351c12c6c7 in linux-next, I will make sure not to rebase
+it anymore.
 
-Huacai
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  arch/mips/loongson64/init.c | 85 ++++++++++++++++++++++++++-----------
->  1 file changed, 60 insertions(+), 25 deletions(-)
->
-> diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
-> index 59ddadace83f..028d7b324ec2 100644
-> --- a/arch/mips/loongson64/init.c
-> +++ b/arch/mips/loongson64/init.c
-> @@ -7,6 +7,8 @@
->  #include <linux/irqchip.h>
->  #include <linux/logic_pio.h>
->  #include <linux/memblock.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <asm/bootinfo.h>
->  #include <asm/traps.h>
->  #include <asm/smp-ops.h>
-> @@ -63,41 +65,74 @@ void __init prom_free_prom_memory(void)
->  {
->  }
->
-> -static __init void reserve_pio_range(void)
-> +static int __init add_legacy_isa_io(struct fwnode_handle *fwnode, phys_addr_t addr,
-> +                            resource_size_t    size)
->  {
-> +       int ret = 0;
->         struct logic_pio_hwaddr *range;
-> +       unsigned long vaddr;
->
->         range = kzalloc(sizeof(*range), GFP_ATOMIC);
->         if (!range)
-> -               return;
-> +               return -ENOMEM;
->
-> -       range->fwnode = &of_root->fwnode;
-> -       range->size = MMIO_LOWER_RESERVED;
-> -       range->hw_start = LOONGSON_PCIIO_BASE;
-> +       range->fwnode = fwnode;
-> +       range->size = size;
-> +       range->hw_start = addr;
->         range->flags = LOGIC_PIO_CPU_MMIO;
->
-> -       if (logic_pio_register_range(range)) {
-> -               pr_err("Failed to reserve PIO range for legacy ISA\n");
-> -               goto free_range;
-> +       ret = logic_pio_register_range(range);
-> +       if (ret) {
-> +               kfree(range);
-> +               return ret;
-> +       }
-> +
-> +       /* Legacy ISA must placed at the start of PCI_IOBASE */
-> +       if (range->io_start != 0) {
-> +               logic_pio_unregister_range(range);
-> +               kfree(range);
-> +               return -EINVAL;
->         }
->
-> -       if (WARN(range->io_start != 0,
-> -                       "Reserved PIO range does not start from 0\n"))
-> -               goto unregister;
-> -
-> -       /*
-> -        * i8259 would access I/O space, so mapping must be done here.
-> -        * Please remove it when all drivers can be managed by logic_pio.
-> -        */
-> -       ioremap_page_range(PCI_IOBASE, PCI_IOBASE + MMIO_LOWER_RESERVED,
-> -                               LOONGSON_PCIIO_BASE,
-> -                               pgprot_device(PAGE_KERNEL));
-> -
-> -       return;
-> -unregister:
-> -       logic_pio_unregister_range(range);
-> -free_range:
-> -       kfree(range);
-> +       vaddr = PCI_IOBASE + range->io_start;
-> +
-> +       ioremap_page_range(vaddr, vaddr + size, addr, pgprot_device(PAGE_KERNEL));
-> +
-> +       return 0;
-> +}
-> +
-> +static __init void reserve_pio_range(void)
-> +{
-> +       struct device_node *np;
-> +
-> +       for_each_node_by_name(np, "isa") {
-> +               struct of_pci_range range;
-> +               struct of_pci_range_parser parser;
-> +
-> +               pr_info("ISA Bridge: %pOF\n", np);
-> +
-> +               if (of_pci_range_parser_init(&parser, np)) {
-> +                       pr_info("Failed to parse resources.\n");
-> +                       break;
-> +               }
-> +
-> +               for_each_of_pci_range(&parser, &range) {
-> +                       switch (range.flags & IORESOURCE_TYPE_BITS) {
-> +                       case IORESOURCE_IO:
-> +                               pr_info(" IO 0x%016llx..0x%016llx\n",
-> +                                       range.cpu_addr,
-> +                                       range.cpu_addr + range.size - 1);
-> +                               if (add_legacy_isa_io(&np->fwnode, range.cpu_addr, range.size))
-> +                                       pr_warn("Failed to reserve legacy IO in Logic PIO\n");
-> +                               break;
-> +                       case IORESOURCE_MEM:
-> +                               pr_info(" MEM 0x%016llx..0x%016llx\n",
-> +                                       range.cpu_addr,
-> +                                       range.cpu_addr + range.size - 1);
-> +                               break;
-> +                       }
-> +               }
-> +       }
->  }
->
->  void __init arch_init_irq(void)
-> --
-> 2.28.0.rc1
->
+-- 
+viresh
