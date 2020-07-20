@@ -2,117 +2,232 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A524E206F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62D66206F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:57:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z37c3HRE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YQZ4RKcK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgGTN4l (ORCPT
+        id S1728368AbgGTN5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:56:41 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26398 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725936AbgGTN4k (ORCPT
+        Mon, 20 Jul 2020 09:57:19 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44068 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgGTN5S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 09:56:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595253399;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=7tMCyaXprYGfI8LnX0MbcX5R8eRYMM3w9rSz3694Vjs=;
-        b=Z37c3HRENcZX6otal4B0K9k0TeFsKe0+J6memKTJOiqduwBkY/vCEm5yNmaDsnfS5K0gsO
-        q6HQOlF9RW4TDit/ooVA9w57eBK2bRcV/dBYdNiM706ujBPjAbZehGKHSWhyNoR9NiXpc+
-        d3fZCF63dfSEl/uOOGNHElJrXdb6toc=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-132-zBukdWr1MWmcHSWRXBrgnQ-1; Mon, 20 Jul 2020 09:56:37 -0400
-X-MC-Unique: zBukdWr1MWmcHSWRXBrgnQ-1
-Received: by mail-qv1-f70.google.com with SMTP id s2so10178214qvn.19
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 06:56:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7tMCyaXprYGfI8LnX0MbcX5R8eRYMM3w9rSz3694Vjs=;
-        b=JaU99wIpDK+0NBlFouK8dojbF75SPgNYIXkDyNW6WqzMvhd/qMJPuAz6caLWmsd+Ce
-         FFNnbafZ4lStWlHYiak1U+PuWTHAs4r5MeIkMkq1stwUqnZlp24kmWL78GKRFj3xdTc7
-         rMSKcgYpbyZI7786j6rbN79JQOZA3Ph2sSxm1QQFqHQ8BzDlSZ0zTnHBSdnLdHa6UzFo
-         /iqpVTf991eX+8iLhLK340P56KEjbVGrWA3z5cwA7XGGNm2A+/zJFXASUpkzeznztWa2
-         B9yLdflU1QfC2sSQtcRoIJZcCtcj278J0B/u4mDAsmPcSibkJK7EtLsQZZHLwwr9/OjK
-         uKxQ==
-X-Gm-Message-State: AOAM5312aQusj6K8KH4s1Hy0iNfazcMwm18cjL/KOFUpV3wECogMfkZK
-        KVSv6pwpCP30wQt5QOqm56tEaE1I6Qmn8bUvipNDv8YKL3FJp+hEVICrpeqCdVtNNbUl3PvfUV+
-        Y5cEuYzH5DiUY/CnUtTYnUpN7
-X-Received: by 2002:a37:7d86:: with SMTP id y128mr19798347qkc.343.1595253397392;
-        Mon, 20 Jul 2020 06:56:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzTMQGtS9l84oZcTdxSM7bf/4qQeuw9Loq8FVtpq/6KNdrsJ6rg9R8UUqWj/PRUzlKliYjXiQ==
-X-Received: by 2002:a37:7d86:: with SMTP id y128mr19798327qkc.343.1595253397127;
-        Mon, 20 Jul 2020 06:56:37 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id s128sm18471192qkd.108.2020.07.20.06.56.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 06:56:36 -0700 (PDT)
-From:   trix@redhat.com
-To:     eric@anholt.net, airlied@linux.ie, daniel@ffwll.ch,
-        itoral@igalia.com, navid.emamdoost@gmail.com
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] drm/v3d: remove second free in v3d_submit_cl_ioctl
-Date:   Mon, 20 Jul 2020 06:56:31 -0700
-Message-Id: <20200720135631.2854-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Mon, 20 Jul 2020 09:57:18 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06KDuqSn106024;
+        Mon, 20 Jul 2020 08:56:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595253412;
+        bh=iPhBau1YEYPBK8bU4HxjLBRitHMLoy2Hor5v8YlhoNw=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=YQZ4RKcKbXVdvUwC+IlWyVztBSoQQB7JkpKTUmTyY8/arcGhvAtKpZV4PolF7+EWf
+         RwCMiw42rgM/89LmKt4niR7zeInJIfyK9Mlk539yv6/rIqWBP35aS++oOr1AEhDvFp
+         EM68OA7M3P+EtJUSpNvDUUlQruSlLDaxMsPJo0vk=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06KDuqeM129191
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 Jul 2020 08:56:52 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
+ Jul 2020 08:56:52 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 20 Jul 2020 08:56:52 -0500
+Received: from [158.218.117.90] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KDuoJ9106794;
+        Mon, 20 Jul 2020 08:56:51 -0500
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Fix suspend and resume
+ for am3 and am4
+From:   Carlos Hernandez <ceh@ti.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200713162601.6829-1-tony@atomide.com>
+ <1ac1ac81-1335-8ba2-590c-8f57c2df1910@linaro.org>
+ <f96cb9d8-c940-672a-b1d2-a26570d6f775@ti.com>
+Message-ID: <10b49f3f-7778-b391-27ca-0d28b282a55d@ti.com>
+Date:   Mon, 20 Jul 2020 09:56:50 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <f96cb9d8-c940-672a-b1d2-a26570d6f775@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
 
-clang static analysis reports this error
+On 7/17/20 5:34 PM, Carlos Hernandez wrote:
+>
+>
+> On 7/17/20 6:29 AM, Daniel Lezcano wrote:
+>> On 13/07/2020 18:26, Tony Lindgren wrote:
+>>> Carlos Hernandez<ceh@ti.com>  reported that we now have a suspend and
+>>> resume regresssion on am3 and am4 compared to the earlier kernels. While
+>>> suspend and resume works with v5.8-rc3, we now get errors with rtcwake:
+>>>
+>>> pm33xx pm33xx: PM: Could not transition all powerdomains to target state
+>>> ...
+>>> rtcwake: write error
+>>>
+>>> This is because we now fail to idle the system timer clocks that the
+>>> idle code checks and the error gets propagated to the rtcwake.
+>>>
+>>> Turns out there are several issues that need to be fixed:
+>>>
+>>> 1. Ignore no-idle and no-reset configured timers for the ti-sysc
+>>>     interconnect target driver as otherwise it will keep the system timer
+>>>     clocks enabled
+>>>
+>>> 2. Toggle the system timer functional clock for suspend for am3 and am4
+>>>     (but not for clocksource on am3)
+>>>
+>>> 3. Only reconfigure type1 timers in dmtimer_systimer_disable()
+>>>
+>>> 4. Use of_machine_is_compatible() instead of of_device_is_compatible()
+>>>     for checking the SoC type
+>>>
+>>> Fixes: 52762fbd1c47 ("clocksource/drivers/timer-ti-dm: Add clockevent and clocksource support")
+>>> Reported-by: Carlos Hernandez<ceh@ti.com>
+>>> Signed-off-by: Tony Lindgren<tony@atomide.com>
+>>> ---
+>> Carlos, were you able to test this patch ?
+>
+> Tested the patch on top of 5.8-rc5.
+>
+> cbdb2617290d (HEAD) clocksource/drivers/timer-ti-dm: Fix suspend and 
+> resume for am3 and am4
+> 11ba468877bb (tag: v5.8-rc5) Linux 5.8-rc5
+>
+> It works on am335x-evm but fails on am437x-evm
+>
+> am3:
+>
+> [ 122.541423] PM: suspend entry (deep)
+> [ 122.545498] Filesystems sync: 0.000 seconds
+> [ 122.549711] PM: Preparing system for sleep (deep)
+> [ 122.564217] Freezing user space processes ... (elapsed 0.003 
+> seconds) done.
+> [ 122.575110] OOM killer disabled.
+> [ 122.578370] Freezing remaining freezable tasks ... (elapsed 0.001 
+> seconds) done.
+> [ 122.587604] PM: Suspending system (deep)
+> [ 122.591572] printk: Suspending console(s) (use no_console_suspend to 
+> debug)
+> [ 122.735877] cpsw 4a100000.ethernet eth0: Link is Down
+> [ 122.742365] PM: suspend of devices complete after 142.546 msecs
+> [ 122.742397] PM: start suspend of devices complete after 143.777 msecs
+> [ 122.748722] PM: late suspend of devices complete after 6.257 msecs
+> [ 122.754662] PM: noirq suspend of devices complete after 5.632 msecs
+> [ 122.754689] Disabling non-boot CPUs ...
+> [ 122.754715] pm33xx pm33xx: PM: Successfully put all powerdomains to 
+> target state
+> [ 122.754715] PM: Wakeup source RTC Alarm
+> [ 122.766169] ti-sysc 4a101200.target-module: OCP softreset timed out
+> [ 122.769222] PM: noirq resume of devices complete after 14.367 msecs
+> [ 122.772956] PM: early resume of devices complete after 3.428 msecs
+> [ 122.775749] cpsw 4a100000.ethernet: initializing cpsw version 1.12 (0)
+> [ 122.857132] Qualcomm Atheros AR8031/AR8033 4a101000.mdio:00: 
+> attached PHY driver [Qualcomm Atheros AR8031/AR8033] 
+> (mii_bus:phy_addr=4a101000.mdio:00, irq=POLL)
+> [ 122.874236] ti-sysc 4802a000.target-module: OCP softreset timed out
+> [ 122.879559] PM: Timekeeping suspended for 18.212 seconds
+> [ 122.994120] PM: resume of devices complete after 221.091 msecs
+> [ 123.101133] PM: Finishing wakeup.
+> [ 123.104493] OOM killer enabled.
+> [ 123.107657] Restarting tasks ... done.
+> [ 123.168294] PM: suspend exit
+> [ 126.005262] cpsw 4a100000.ethernet eth0: Link is Up - 1Gbps/Full - 
+> flow control off
+> [ 122.742365] PM: suspend of devices complete after 142.546 msecs
+>
+>
+> am4:
+>
+> |TRACE LOG|Inside do_cmd:CMD=echo 1 > /sys/kernel/debug/pm_debug/enable_off_mode|
+> |TRACE LOG|suspend function: power_state: mem|
+> |TRACE LOG|suspend function: max_stime: 10|
+> |TRACE LOG|suspend function: max_atime: 5|
+> |TRACE LOG|suspend function: iterations: 2|
+> |TRACE LOG|suspend function: usb_remove: 0|
+> |TRACE LOG|suspend function: usb_module: |
+> |TRACE LOG|===suspend iteration 0===|
+> sh1577:1590898691->1590898692(1):: wakeup - 9 sec 0 msec
+> sh1577:1590898691->1590898692(1):: Use rtc to suspend resume, adding 10 secs to suspend time
+> rtcwake: wakeup from "mem" using /dev/rtc0 at Sun May 31 04:18:33 2020
+> [  106.401004] PM: suspend entry (deep)
+> [  106.420151] Filesystems sync: 0.015 seconds
+> [  106.424598] PM: Preparing system for sleep (deep)
+> [  106.434312] Freezing user space processes ... (elapsed 0.001 seconds) done.
+> [  106.442808] OOM killer disabled.
+> [  106.446152] Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+> [  106.454894] PM: Suspending system (deep)
+> [  106.458893] printk: Suspending console(s) (use no_console_suspend to debug)
+> CCCCCCCC** 1196 printk messages dropped **
+> [  107.379605] [<c0573bd8>] (gic_handle_irq) from [<c0100b6c>] (__irq_svc+0x6c/0x90)
+> ** 41 printk messages dropped **
+> [  107.412635] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W         5.8.0-rc5-00001-gcbdb2617290d #1
+> ** 37 printk messages dropped **
+> [  107.429822] [<c0198358>] (handle_irq_event) from [<c019cdf8>] (handle_fasteoi_irq+0xc4/0x188)
+> ** 37 printk messages dropped **
+> [  107.446915] [<c09573f8>] (cpu_idle_poll) from [<c016d0e4>] (do_idle+0x7c/0x2b4)
+> [  107.446946] [<c016d0e4>] (do_idle) from [<c016d5d4>] (cpu_startup_entry+0x18/0x1c)
+> ** 34 printk messages dropped **
+> [  107.479851] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W         5.8.0-rc5-00001-gcbdb2617290d #1
+> ** 42 printk messages dropped **
+> [  107.497182] Exception stack(0xc0e01f10 to 0xc0e01f58)
+> [  107.497202] 1f00:                                     000429e8 00000000 c0e00000 00000001
+> ** 34 printk messages dropped **
+> [  107.514208] ---[ end trace c18ea2591ccbc697 ]---
+> [  107.524884] usb 1-1: reset high-speed USB device number 2 using xhci-hcd
+> ** 34 printk messages dropped **
+> [  107.547126] [<c0111b08>] (unwind_backtrace) from [<c010ba54>] (show_stack+0x10/0x14)
+> [  107.547164] [<c010ba54>] (show_stack) from [<c055ad98>] (dump_stack+0xc4/0xe0)
+> ** 42 printk messages dropped **
+> [  107.564441] 1e60: c0e00000 00000002 ffffb4d5 c0e01e88 c013f95c c01012fc 60000153 ffffffff
+> [  107.564473] [<c0100b6c>] (__irq_svc) from [<c01012fc>] (__do_softirq+0x7c/0x390)
+> ** 43 printk messages dropped **
+> [  107.597112] 44000000.ocp:L3 Custom Error: MASTER DSS TARGET GPMC (Read): Data Access in User mode during Functional access
+> ** 34 printk messages dropped **
+> [  107.614456] [<c0138a40>] (__warn) from [<c0138e08>] (warn_slowpath_fmt+0x90/0xc0)
+> [  107.614491] [<c0138e08>] (warn_slowpath_fmt) from [<c057581c>] (l3_interrupt_handler+0x250/0x370)
+> ** 42 printk messages dropped **
+> [  107.631781] [<c016d0e4>] (do_idle) from [<c016d5d4>] (cpu_startup_entry+0x18/0x1c)
+> ** 35 printk messages dropped **
+> [  107.664649] Hardware name: Generic AM43 (Flattened Device Tree)
+> [  107.664711] [<c0111b08>] (unwind_backtrace) from [<c010ba54>] (show_stack+0x10/0x14)
+> ** 42 printk messages dropped **
+> [  107.682068] 1f20: c0e00000 c0e05234 c0ec3b9c c0e05234 00000000 c0d48a40 c0d766b0 c0e055e0
+> [  107.682089] 1f40: 00000000 c0e01f60 c0957380 c09573d0 20000153 ffffffff
+> ** 38 printk messages dropped **
+> [  107.720215] CPU: 0 PID: 1604 Comm: rtcwake Tainted: G        W         5.8.0-rc5-00001-gcbdb2617290d #1
+> ** 44 printk messages dropped **
+> [  107.734583] CPU: 0 PID: 1604 Comm: rtcwake Tainted: G        W         5.8.0-rc5-00001-gcbdb2617290d #1
+> [  107.734594] Hardware name: Generic AM43 (Flattened Device Tree)
+> ** 39 printk messages dropped **
+> [  107.747964] ti-sysc 44e0b000.target-module: OCP softreset timed out
+>
+> -- 
+> Carlos
 
-v3d_gem.c:573:4: warning: Attempt to free released
-  memory [unix.Malloc]
-    kfree(bin);
-    ^~~~~~~~~~
-
-Problem is in the block of code
-
-	if (ret) {
-		kfree(bin);
-		v3d_job_put(&render->base);
-		kfree(bin);
-		return ret;
-	}
-
-Obviously bin is freed twice.
-So remove one.
-
-Fixes: 0d352a3a8a1f ("drm/v3d: don't leak bin job if v3d_job_init fails.")
-Fixes: 29cd13cfd762 ("drm/v3d: Fix memory leak in v3d_submit_cl_ioctl")
-
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- drivers/gpu/drm/v3d/v3d_gem.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
-index 915f8bfdb58c..3cfbdb8e6a91 100644
---- a/drivers/gpu/drm/v3d/v3d_gem.c
-+++ b/drivers/gpu/drm/v3d/v3d_gem.c
-@@ -570,7 +570,6 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void *data,
- 		if (ret) {
- 			kfree(bin);
- 			v3d_job_put(&render->base);
--			kfree(bin);
- 			return ret;
- 		}
- 
 -- 
-2.18.1
+Carlos
 
