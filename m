@@ -2,153 +2,123 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1559C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF40C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5A8F22482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:24:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="jNANyFXg"
+	by mail.kernel.org (Postfix) with ESMTP id D4C6D2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731334AbgGTRYx (ORCPT
+        id S1731539AbgGTR1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:24:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728939AbgGTRYw (ORCPT
+        Mon, 20 Jul 2020 13:27:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22386 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728939AbgGTR1E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:24:52 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CDDEC0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:24:52 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id w2so10575000pgg.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6tXbJd4oEVmSqiGnziAAflmb4MGrnOQpZX5+lHSdW3g=;
-        b=jNANyFXgAgqogkWNgrJoj6QtdoyB0yR54rUSu+O4nZVCVb/7hJZiOX6O4uSHF5Atso
-         ItdU4dvRixI5slgLsUGF6Z1uawSBBTJnKZgWo11KLDx8JECBDRW8nr4j9+sM0peyA8vo
-         /qfKucK6NlSY6FRrqC4W3rIolIkfF7MNoNV7GmIXgaGQZ+vB1QwC075G84MoosS5n4wS
-         OJQ8ihNqJZJFZcnWopsyZUXi0T9t6mm8xYD799vZpU14tj3GftLFIaG4pJhETMBK4OSb
-         EDenfd10pqs5KddO/+hBoHqqMxC/qyPXviQ/6TDYt7Q8FpxSSQKDQn9LEdgAgWdURRWJ
-         LCeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6tXbJd4oEVmSqiGnziAAflmb4MGrnOQpZX5+lHSdW3g=;
-        b=KICBf+4JlbBXWa1xWCTQ4UJCswPVGNYkxmMobc3bflZpyz3JD/vcf1jVjlbneRb6b6
-         XNky6NMTeJFXob1ji2WaDDtJnhXTIoswwzFVSkXswrOz9VmlEi1XIgSSddLemR0Fms4T
-         S7zSVLIEky1nVv1W8rHUIwNRSp4h2J47M1xzonOCHBK7elpUcadoGZyyCyWMkypb9P+M
-         OXOYPoImB/yJMP8dngPP19MRu1dQHdDJG9/hI1y5NZJ5/YFtMrKq5HG0Le6b1uD5uuAl
-         YEQXN66wkwnErec6kcNcZH5XWf3IAen/XT5cyI1wlAUdhGU2nkFcRb704WftLp9e/9TW
-         sZtQ==
-X-Gm-Message-State: AOAM530gXE8dSn86YEOQHsWpCpeCdZfDCO1v6+Ji02lpOorstlrLZEnG
-        ltwaY6YdyVRjyuqIQFkZjTTeGA==
-X-Google-Smtp-Source: ABdhPJx2Og1skqUry9DiKMzcmFRiYWZ31mk7FqDM7ufVQ3k37RbqfBypuApaoSr5H7ormO+7hIXfVQ==
-X-Received: by 2002:a63:f90f:: with SMTP id h15mr19068452pgi.53.1595265891947;
-        Mon, 20 Jul 2020 10:24:51 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id z11sm17365435pfk.46.2020.07.20.10.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 10:24:51 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 10:24:43 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Chi Song <chisong@linux.microsoft.com>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 net-next] net: hyperv: Add attributes to show TX
- indirection table
-Message-ID: <20200720102443.63d8ddf2@hermes.lan>
-In-Reply-To: <alpine.LRH.2.23.451.2007192357400.30908@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-References: <alpine.LRH.2.23.451.2007192357400.30908@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 20 Jul 2020 13:27:04 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KH0oxJ094313;
+        Mon, 20 Jul 2020 13:26:59 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32bw90ccyu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 13:26:59 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KH0sYQ094749;
+        Mon, 20 Jul 2020 13:26:58 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32bw90ccy7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 13:26:58 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KHOd0J028918;
+        Mon, 20 Jul 2020 17:26:56 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04fra.de.ibm.com with ESMTP id 32dbmn0435-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 17:26:56 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KHQs8K51970208
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 17:26:54 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 29DE142063;
+        Mon, 20 Jul 2020 17:26:54 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0690F42066;
+        Mon, 20 Jul 2020 17:26:53 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.145.253])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jul 2020 17:26:52 +0000 (GMT)
+Message-ID: <1595266012.5055.51.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 4/5] LSM: Define SELinux function to measure security
+ state
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Mon, 20 Jul 2020 13:26:52 -0400
+In-Reply-To: <CAEjxPJ7VH18bEo6+U1GWrx=tHVGr=6XtF5_ygcfQYgdtZ74J+g@mail.gmail.com>
+References: <20200717222819.26198-1-nramas@linux.microsoft.com>
+         <20200717222819.26198-5-nramas@linux.microsoft.com>
+         <CAEjxPJ7xQtZToF4d2w_o8SXFKG9kPZaWTWTFqyC-7GwBWnQa0A@mail.gmail.com>
+         <c0fbfcf3-ec36-872a-c389-b3fea214848c@linux.microsoft.com>
+         <CAEjxPJ7VH18bEo6+U1GWrx=tHVGr=6XtF5_ygcfQYgdtZ74J+g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 malwarescore=0 adultscore=0 phishscore=0 mlxscore=0
+ suspectscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1011
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 00:12:10 -0700 (PDT)
-Chi Song <chisong@linux.microsoft.com> wrote:
-
-> An imbalanced TX indirection table causes netvsc to have low
-> performance. This table is created and managed during runtime. To help
-> better diagnose performance issues caused by imbalanced tables, add
-> device attributes to show the content of TX indirection tables.
+On Mon, 2020-07-20 at 13:06 -0400, Stephen Smalley wrote:
 > 
-> Signed-off-by: Chi Song <chisong@microsoft.com>
-> ---
-
-
-> v2: remove RX as it's in ethtool already, show single value in each file,
->  and update description.
 > 
-> Thank you for comments. Let me know, if I miss something.
+> I applied the patch series on top of the next-integrity branch, added
+> measure func=LSM_STATE to ima-policy, and booted that kernel.  I get
+> the following entries in ascii_runtime_measurements, but seemingly
+> missing the final field:
 > 
-> ---
->  drivers/net/hyperv/netvsc_drv.c | 53 +++++++++++++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
+> 10 8a09c48af4f8a817f59b495bd82971e096e2e367 ima-ng
+> sha256:21c3d7b09b62b4d0b3ed15ba990f816b94808f90b76787bfae755c4b3a44cd24
+> selinux-state
+> 10 e610908931d70990a2855ddb33c16af2d82ce56a ima-ng
+> sha256:c8898652afd5527ef4eaf8d85f5fee1d91fcccee34bc97f6e55b96746bedb318
+> selinux-policy-hash
 > 
-> diff --git a/drivers/net/hyperv/netvsc_drv.c
-> b/drivers/net/hyperv/netvsc_drv.c
-> index 6267f706e8ee..222c2fad9300 100644
-> --- a/drivers/net/hyperv/netvsc_drv.c
-> +++ b/drivers/net/hyperv/netvsc_drv.c
-> @@ -2370,6 +2370,55 @@ static int netvsc_unregister_vf(struct net_device
-> *vf_netdev)
->  	return NOTIFY_OK;
->  }
-> 
-> +static struct device_attribute
-> dev_attr_netvsc_dev_attrs[VRSS_SEND_TAB_SIZE];
-> +static struct attribute *netvsc_dev_attrs[VRSS_SEND_TAB_SIZE + 1];
-> +
-> +const struct attribute_group netvsc_dev_group = {
-> +	.name = NULL,
-> +	.attrs = netvsc_dev_attrs,
-> +};
-> +
-> +static ssize_t tx_indirection_table_show(struct device *dev,
-> +					 struct device_attribute
-> *dev_attr,
-> +					 char *buf)
-> +{
-> +	struct net_device *ndev = to_net_dev(dev);
-> +	struct net_device_context *ndc = netdev_priv(ndev);
-> +	ssize_t offset = 0;
+> Thus, I cannot verify. What am I missing?
 
-useless initialization
+Missing is "template=ima-buf" on the policy rule.
 
-> +	int index = dev_attr - dev_attr_netvsc_dev_attrs;
-> +
-> +	offset = sprintf(buf, "%u\n", ndc->tx_table[index]);
-> +
-> +	return offset;
-why not just
-	return sprintf(buf, "%u\n", ndc->tx_table[index]);
-> +}
-> +
-> +static void netvsc_attrs_init(void)
-> +{
-> +	int i;
-> +	char buffer[32];
-> +
-> +	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++) {
-> +		sprintf(buffer, "tx_indirection_table_%02u", i);
+Tyler's patch set just added some support for verifying the policy.
+ Refer to ima_validate_rule().  There are still some things missing.
+ For example, nayna noticed that making sure that asymmetric key
+support is enabled.  Another example is requiring "template=" for any
+of the buffer measurements.  Template names can be defined
+dynamically, so it will need to support either format:
 
-Although this has one value per file it leads to a mess.
-Why not put it in a separate directory (/sys/class/net/eth0/tx_indirection/N)?
+measure func=KEXEC_CMDLINE template=ima-buf 
+measure func=KEXEC_CMDLINE template=d-ng|n-ng|buf
+
+Mimi
