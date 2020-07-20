@@ -2,94 +2,166 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B24C43470
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBE8C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7CE522BF5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281108;
-	bh=z2IM2Mu9HSt9sLr6cNZQIScq87Wopxln51FoHO14OGA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BDYjVOowHkPOBhkqrBDMg6P9JiB6dZ8NBYG15axn3Px+g/xIDPAB7ALD1rbTgu226
-	 jySLAApAZmQIOePuLf40I/VIF3n+26Eh9V2QSd/AioQY9EJkI3prEmNJeRky7WrJ1d
-	 djiOZWNomHf5cwBnTmoxQCS6A4gElJPIhcudoyb0=
+	by mail.kernel.org (Postfix) with ESMTP id 0151E207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:38:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgGTVi1 (ORCPT
+        id S1728117AbgGTViX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:38:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727991AbgGTViJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:09 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C5FE22BEF;
-        Mon, 20 Jul 2020 21:38:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281089;
-        bh=z2IM2Mu9HSt9sLr6cNZQIScq87Wopxln51FoHO14OGA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XHPHkG76k7QWZ8XcfEl/zLCFEXr+0lTPIihOrn+tHvbYaBasNq4QZpX0zDIsR2MvY
-         qck7dD5ROTxOwZAWyR/SB3WET35HE8AWQTu+eqa9S+jx/Q7jAMuyaXhVnoBuK38UQA
-         pMM71yT/Js0gvFHfKKWpvWhmq6/EmXoLxcqVz1qU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Federico Ricchiuto <fed.ricchiuto@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 01/34] HID: i2c-hid: add Mediacom FlexBook edge13 to descriptor override
-Date:   Mon, 20 Jul 2020 17:37:34 -0400
-Message-Id: <20200720213807.407380-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Mon, 20 Jul 2020 17:38:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727986AbgGTViI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:08 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15BBDC061794;
+        Mon, 20 Jul 2020 14:38:08 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 890D1BC17B;
+        Mon, 20 Jul 2020 21:38:04 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     jeffrey.t.kirsher@intel.com, davem@davemloft.net, kuba@kernel.org,
+        corbet@lwn.net, intel-wired-lan@lists.osuosl.org,
+        netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH v2] Documentation: intel: Replace HTTP links with HTTPS ones
+Date:   Mon, 20 Jul 2020 23:37:58 +0200
+Message-Id: <20200720213758.64556-1-grandmaster@al2klimov.de>
+In-Reply-To: <CAKgT0Ud4jwxD_NHqLdcWXJSdVJ3CZtzosCwODtdfKnV48GfPfQ@mail.gmail.com>
+References: <CAKgT0Ud4jwxD_NHqLdcWXJSdVJ3CZtzosCwODtdfKnV48GfPfQ@mail.gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Federico Ricchiuto <fed.ricchiuto@gmail.com>
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-[ Upstream commit 43e666acb79f3d355dd89bf20f4d25d3b15da13e ]
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-The Mediacom FlexBook edge13 uses the SIPODEV SP1064 touchpad, which does not
-supply descriptors, so it has to be added to the override list.
-
-Signed-off-by: Federico Ricchiuto <fed.ricchiuto@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ v2: Undone broken link.
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-index ec142bc8c1daf..35f3bfc3e6f59 100644
---- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-@@ -373,6 +373,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
- 		},
- 		.driver_data = (void *)&sipodev_desc
- 	},
-+	{
-+		.ident = "Mediacom FlexBook edge 13",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "MEDIACOM"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "FlexBook_edge13-M-FBE13"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
- 	{
- 		.ident = "Odys Winbook 13",
- 		.matches = {
+ Documentation/networking/device_drivers/intel/e100.rst  | 4 ++--
+ Documentation/networking/device_drivers/intel/fm10k.rst | 2 +-
+ Documentation/networking/device_drivers/intel/iavf.rst  | 2 +-
+ Documentation/networking/device_drivers/intel/igb.rst   | 2 +-
+ Documentation/networking/device_drivers/intel/igbvf.rst | 2 +-
+ Documentation/networking/device_drivers/intel/ixgb.rst  | 2 +-
+ 6 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/networking/device_drivers/intel/e100.rst b/Documentation/networking/device_drivers/intel/e100.rst
+index 3ac21e7119a7..3d4a9ba21946 100644
+--- a/Documentation/networking/device_drivers/intel/e100.rst
++++ b/Documentation/networking/device_drivers/intel/e100.rst
+@@ -41,7 +41,7 @@ Identifying Your Adapter
+ 
+ For information on how to identify your adapter, and for the latest Intel
+ network drivers, refer to the Intel Support website:
+-http://www.intel.com/support
++https://www.intel.com/support
+ 
+ Driver Configuration Parameters
+ ===============================
+@@ -179,7 +179,7 @@ filtering by
+ Support
+ =======
+ For general information, go to the Intel support website at:
+-http://www.intel.com/support/
++https://www.intel.com/support/
+ 
+ or the Intel Wired Networking project hosted by Sourceforge at:
+ http://sourceforge.net/projects/e1000
+diff --git a/Documentation/networking/device_drivers/intel/fm10k.rst b/Documentation/networking/device_drivers/intel/fm10k.rst
+index 4d279e64e221..9258ef6f515c 100644
+--- a/Documentation/networking/device_drivers/intel/fm10k.rst
++++ b/Documentation/networking/device_drivers/intel/fm10k.rst
+@@ -22,7 +22,7 @@ Ethernet Multi-host Controller.
+ 
+ For information on how to identify your adapter, and for the latest Intel
+ network drivers, refer to the Intel Support website:
+-http://www.intel.com/support
++https://www.intel.com/support
+ 
+ 
+ Flow Control
+diff --git a/Documentation/networking/device_drivers/intel/iavf.rst b/Documentation/networking/device_drivers/intel/iavf.rst
+index 84ac7e75f363..52e037b11c97 100644
+--- a/Documentation/networking/device_drivers/intel/iavf.rst
++++ b/Documentation/networking/device_drivers/intel/iavf.rst
+@@ -43,7 +43,7 @@ device.
+ 
+ For information on how to identify your adapter, and for the latest NVM/FW
+ images and Intel network drivers, refer to the Intel Support website:
+-http://www.intel.com/support
++https://www.intel.com/support
+ 
+ 
+ Additional Features and Configurations
+diff --git a/Documentation/networking/device_drivers/intel/igb.rst b/Documentation/networking/device_drivers/intel/igb.rst
+index 87e560fe5eaa..d46289e182cf 100644
+--- a/Documentation/networking/device_drivers/intel/igb.rst
++++ b/Documentation/networking/device_drivers/intel/igb.rst
+@@ -20,7 +20,7 @@ Identifying Your Adapter
+ ========================
+ For information on how to identify your adapter, and for the latest Intel
+ network drivers, refer to the Intel Support website:
+-http://www.intel.com/support
++https://www.intel.com/support
+ 
+ 
+ Command Line Parameters
+diff --git a/Documentation/networking/device_drivers/intel/igbvf.rst b/Documentation/networking/device_drivers/intel/igbvf.rst
+index 557fc020ef31..40fa210c5e14 100644
+--- a/Documentation/networking/device_drivers/intel/igbvf.rst
++++ b/Documentation/networking/device_drivers/intel/igbvf.rst
+@@ -35,7 +35,7 @@ Identifying Your Adapter
+ ========================
+ For information on how to identify your adapter, and for the latest Intel
+ network drivers, refer to the Intel Support website:
+-http://www.intel.com/support
++https://www.intel.com/support
+ 
+ 
+ Additional Features and Configurations
+diff --git a/Documentation/networking/device_drivers/intel/ixgb.rst b/Documentation/networking/device_drivers/intel/ixgb.rst
+index ab624f1a44a8..c6a233e68ad6 100644
+--- a/Documentation/networking/device_drivers/intel/ixgb.rst
++++ b/Documentation/networking/device_drivers/intel/ixgb.rst
+@@ -203,7 +203,7 @@ With the 10 Gigabit server adapters, the default Linux configuration will
+ very likely limit the total available throughput artificially.  There is a set
+ of configuration changes that, when applied together, will increase the ability
+ of Linux to transmit and receive data.  The following enhancements were
+-originally acquired from settings published at http://www.spec.org/web99/ for
++originally acquired from settings published at https://www.spec.org/web99/ for
+ various submitted results using Linux.
+ 
+ NOTE:
 -- 
-2.25.1
+2.27.0
 
