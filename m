@@ -2,113 +2,221 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FF7C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F89C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D21D122B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:58:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ahX/MvXl"
+	by mail.kernel.org (Postfix) with ESMTP id E693322B51
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:59:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595275181;
+	bh=Y/VFPcBEH/6RudEltXYK1AwhXD4qhdonOqY6rcbsqT4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=g8VCbmwpJBg9PGoi9/BeWlBU8SekPsQFm1cZWhjiWILygWN9rlsUzp1lNXJzldgQG
+	 CaHyTG15Wzrv9OY7QVsccBwnhEYFWYNvGUEhsneIHRUm3UdGutP5Ge6tY/TB3kaWf5
+	 cy1Bj6SBw7KVoYd9IxNdvUINl77TTuyuYwWkq2ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730866AbgGTT6b (ORCPT
+        id S1731063AbgGTT7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:58:31 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17859 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgGTT6a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:58:30 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f15f7280000>; Mon, 20 Jul 2020 12:57:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 20 Jul 2020 12:58:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 20 Jul 2020 12:58:29 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jul
- 2020 19:58:20 +0000
-Subject: Re: [PATCH v2 0/5] mm/migrate: avoid device private invalidations
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        <nouveau@lists.freedesktop.org>, <kvm-ppc@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Jerome Glisse" <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Christoph Hellwig" <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, Ben Skeggs <bskeggs@redhat.com>,
-        Bharata B Rao <bharata@linux.ibm.com>
-References: <20200713172149.2310-1-rcampbell@nvidia.com>
- <20200720184119.GT2021248@mellanox.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <dd6ffaeb-df26-99e1-f6c5-bbe3e4153f04@nvidia.com>
-Date:   Mon, 20 Jul 2020 12:58:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 20 Jul 2020 15:59:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbgGTT7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 15:59:40 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 465B82080D;
+        Mon, 20 Jul 2020 19:59:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595275179;
+        bh=Y/VFPcBEH/6RudEltXYK1AwhXD4qhdonOqY6rcbsqT4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=AjfVpUKdd9D3Tlh6jf2Oh7w5t/vZRb/FbBoNC5C1EvViGdM0KTAAq3KmHFQD1rKG4
+         xCrGkt7gmixykMQE1Gh9IXLeZz67DXvvsz37UW+BVCzsvAjY8QTySrzjMKGlpIGMkF
+         RHri6t3NpS9IH9BBmz812DtpZEJWHHU/iSo+0VVQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 2B96435230B0; Mon, 20 Jul 2020 12:59:39 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 12:59:39 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: Re: linux-next: Tree for Jul 20 (arch/x86/kvm/)
+Message-ID: <20200720195939.GU9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200720194225.17de9962@canb.auug.org.au>
+ <1d2aa97d-4a94-673c-dc82-509da221c5d6@infradead.org>
+ <20200721044307.6b263e5b@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200720184119.GT2021248@mellanox.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595275048; bh=nzFOiv8srTT17ev3ghl4SD5N/vrNK9T/lRfmkfDWwCU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ahX/MvXl4mWKZL8bYsSpYXFYCF1j2H+WklPaJedYNC3izYDz9/gEonxVY8pWvelei
-         8D5HOaf2ed1XTdHmNi1S+Dmfpw6FfW3jDV0wxxAUHWcL+XbRSHRhnPC10HZ5SoJ8v+
-         +JKqpTxedtabfVYuXbLvQrDLTvxs1Pl5o10Zot+RNKPkXf8qKBryS+JFksXL8Jswf0
-         kOOahoqG8L6OAuur6M62q/QUxaaCD/c0flHJNkAopEGJA0g+2D9XKwpRj8AwIbmRBk
-         1EEgH+iNpcDPOqmxRzE2T+83FriwpqLm2mQPCSL/RFOMHrnK7T5ZTkw3bGZddKsQCJ
-         pVe1IpnYO28Jg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200721044307.6b263e5b@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 7/20/20 11:41 AM, Jason Gunthorpe wrote:
-> On Mon, Jul 13, 2020 at 10:21:44AM -0700, Ralph Campbell wrote:
->> The goal for this series is to avoid device private memory TLB
->> invalidations when migrating a range of addresses from system
->> memory to device private memory and some of those pages have already
->> been migrated. The approach taken is to introduce a new mmu notifier
->> invalidation event type and use that in the device driver to skip
->> invalidation callbacks from migrate_vma_setup(). The device driver is
->> also then expected to handle device MMU invalidations as part of the
->> migrate_vma_setup(), migrate_vma_pages(), migrate_vma_finalize() process.
->> Note that this is opt-in. A device driver can simply invalidate its MMU
->> in the mmu notifier callback and not handle MMU invalidations in the
->> migration sequence.
->>
->> This series is based on Jason Gunthorpe's HMM tree (linux-5.8.0-rc4).
->>
->> Also, this replaces the need for the following two patches I sent:
->> ("mm: fix migrate_vma_setup() src_owner and normal pages")
->> https://lore.kernel.org/linux-mm/20200622222008.9971-1-rcampbell@nvidia.com
->> ("nouveau: fix mixed normal and device private page migration")
->> https://lore.kernel.org/lkml/20200622233854.10889-3-rcampbell@nvidia.com
->>
->> Changes in v2:
->> Rebase to Jason Gunthorpe's HMM tree.
->> Added reviewed-by from Bharata B Rao.
->> Rename the mmu_notifier_range::data field to migrate_pgmap_owner as
->>    suggested by Jason Gunthorpe.
+On Tue, Jul 21, 2020 at 04:43:07AM +1000, Stephen Rothwell wrote:
+> Hi Randy,
 > 
-> I didn't see anything stand out in this at this point, did you intend
-> this to go to the HMM tree?
+> On Mon, 20 Jul 2020 09:56:08 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+> >
+> > on x86_64:
+> > 
+> >   CC [M]  arch/x86/kvm/mmu/page_track.o
+> > In file included from ../include/linux/pid.h:5:0,
+> >                  from ../include/linux/sched.h:14,
+> >                  from ../include/linux/kvm_host.h:12,
+> >                  from ../arch/x86/kvm/mmu/page_track.c:14:
+> > ../arch/x86/kvm/mmu/page_track.c: In function ‘kvm_page_track_write’:
+> > ../include/linux/rculist.h:727:30: error: left-hand operand of comma expression has no effect [-Werror=unused-value]
+> >   for (__list_check_srcu(cond),     \
+> >                               ^
+> > ../arch/x86/kvm/mmu/page_track.c:232:2: note: in expansion of macro ‘hlist_for_each_entry_srcu’
+> >   hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+> >   ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > ../arch/x86/kvm/mmu/page_track.c: In function ‘kvm_page_track_flush_slot’:
+> > ../include/linux/rculist.h:727:30: error: left-hand operand of comma expression has no effect [-Werror=unused-value]
+> >   for (__list_check_srcu(cond),     \
+> >                               ^
+> > ../arch/x86/kvm/mmu/page_track.c:258:2: note: in expansion of macro ‘hlist_for_each_entry_srcu’
+> >   hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+> >   ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > cc1: all warnings being treated as errors
 > 
-> Thanks,
-> Jason
+> Caused by commit
+> 
+>   bd4444c47de9 ("rculist : Introduce list/hlist_for_each_entry_srcu() macros")
+> 
+> presumably with CONFIG_PROVE_RCU_LIST not set.
 
-Yes, please.
+This commit has been obsoleted by the commit shown below, which should
+be included in -rcu branch "rcu/next" as of a few hours ago.  The commit
+below eliminates this error in my local builds.
+
+So as far as I know, this one is not Randy's fault, fun though it might
+be to blame him.  ;-)
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit ddd3f0494784e63546816888ba3fbc5aac9d9a54
+Author: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Date:   Sun Jul 12 18:40:02 2020 +0530
+
+    rculist : Introduce list/hlist_for_each_entry_srcu() macros
+    
+    list/hlist_for_each_entry_rcu() provides an optional cond argument
+    to specify the lock held in the updater side.
+    However for SRCU read side, not providing the cond argument results
+    into false positive as whether srcu_read_lock is held or not is not
+    checked implicitly. Therefore, on read side the lockdep expression
+    srcu_read_lock_held(srcu struct) can solve this issue.
+    
+    However, the function still fails to check the cases where srcu
+    protected list is traversed with rcu_read_lock() instead of
+    srcu_read_lock(). Therefore, to remove the false negative,
+    this patch introduces two new list traversal primitives :
+    list_for_each_entry_srcu() and hlist_for_each_entry_srcu().
+    
+    Both of the functions have non-optional cond argument
+    as it is required for both read and update side, and simply checks
+    if the cond is true. For regular read side the lockdep expression
+    srcu_read_lock_head() can be passed as the cond argument to
+    list/hlist_for_each_entry_srcu().
+    
+    Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+    Tested-by: Suraj Upadhyay <usuraj35@gmail.com>
+    Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+    [ paulmck: Add "true" per kbuild test robot feedback. ]
+    Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+index 7a6fc99..f8633d3 100644
+--- a/include/linux/rculist.h
++++ b/include/linux/rculist.h
+@@ -63,9 +63,17 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+ 	RCU_LOCKDEP_WARN(!(cond) && !rcu_read_lock_any_held(),		\
+ 			 "RCU-list traversed in non-reader section!");	\
+ 	})
++
++#define __list_check_srcu(cond)					 \
++	({								 \
++	RCU_LOCKDEP_WARN(!(cond),					 \
++		"RCU-list traversed without holding the required lock!");\
++	})
+ #else
+ #define __list_check_rcu(dummy, cond, extra...)				\
+ 	({ check_arg_count_one(extra); })
++
++#define __list_check_srcu(cond) ({ })
+ #endif
+ 
+ /*
+@@ -386,6 +394,25 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
+ 		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
+ 
+ /**
++ * list_for_each_entry_srcu	-	iterate over rcu list of given type
++ * @pos:	the type * to use as a loop cursor.
++ * @head:	the head for your list.
++ * @member:	the name of the list_head within the struct.
++ * @cond:	lockdep expression for the lock required to traverse the list.
++ *
++ * This list-traversal primitive may safely run concurrently with
++ * the _rcu list-mutation primitives such as list_add_rcu()
++ * as long as the traversal is guarded by srcu_read_lock().
++ * The lockdep expression srcu_read_lock_held() can be passed as the
++ * cond argument from read side.
++ */
++#define list_for_each_entry_srcu(pos, head, member, cond)		\
++	for (__list_check_srcu(cond),					\
++	     pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
++		&pos->member != (head);					\
++		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
++
++/**
+  * list_entry_lockless - get the struct for this entry
+  * @ptr:        the &struct list_head pointer.
+  * @type:       the type of the struct this is embedded in.
+@@ -684,6 +711,27 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
+ 			&(pos)->member)), typeof(*(pos)), member))
+ 
+ /**
++ * hlist_for_each_entry_srcu - iterate over rcu list of given type
++ * @pos:	the type * to use as a loop cursor.
++ * @head:	the head for your list.
++ * @member:	the name of the hlist_node within the struct.
++ * @cond:	lockdep expression for the lock required to traverse the list.
++ *
++ * This list-traversal primitive may safely run concurrently with
++ * the _rcu list-mutation primitives such as hlist_add_head_rcu()
++ * as long as the traversal is guarded by srcu_read_lock().
++ * The lockdep expression srcu_read_lock_held() can be passed as the
++ * cond argument from read side.
++ */
++#define hlist_for_each_entry_srcu(pos, head, member, cond)		\
++	for (__list_check_srcu(cond),					\
++	     pos = hlist_entry_safe(rcu_dereference_raw(hlist_first_rcu(head)),\
++			typeof(*(pos)), member);			\
++		pos;							\
++		pos = hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
++			&(pos)->member)), typeof(*(pos)), member))
++
++/**
+  * hlist_for_each_entry_rcu_notrace - iterate over rcu list of given type (for tracing)
+  * @pos:	the type * to use as a loop cursor.
+  * @head:	the head for your list.
