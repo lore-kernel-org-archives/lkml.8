@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DF7C388CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27934C43470
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4438022D02
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2C5206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281288;
-	bh=5UrXs5K40IkwuyX6XDwLrEXO6fTXoOdDk5vlpHZthbg=;
+	s=default; t=1595281293;
+	bh=YOEldPYJZAz74gN0FsnvGPJW3gx6+vxdlBeAMEtsElw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PiePJ6s/iWsJx4Q8dQMq8qYAnwad/2zQa3ZvT42H4TYWVK3zecwTKLfv6nfXptqBq
-	 0H0PaDAyFWq79FBBvgSp99L7JKU8O1ZjdO6tJaz18TkJlc1Yrd3f5HvgdSznoEa0jI
-	 txCASGDrESefODzMraoJJxT//kJNFFhcW+ynW3Vo=
+	b=ISDfuw8y3td1N6HNdJJWAqSERl6OqujbzDr1iMMSu2v7B5wIxqXZ7suHPi8Qxpmn/
+	 FGGaUj3QC2IxFBXXoQ8z9SmfWDMBgVf2Ib5xqDFc/0pQNxAdA8ZJ/T4hQg6cDjSKH0
+	 ZE/v3kRJaC7p/vnilcuvdeoP7rx/UKx7SdKNB+pU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgGTVjc (ORCPT
+        id S1728774AbgGTVla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:39:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58018 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:41:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728308AbgGTVjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:01 -0400
+        id S1728463AbgGTVj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7609322CAF;
-        Mon, 20 Jul 2020 21:38:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1919622BF5;
+        Mon, 20 Jul 2020 21:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281140;
-        bh=5UrXs5K40IkwuyX6XDwLrEXO6fTXoOdDk5vlpHZthbg=;
+        s=default; t=1595281166;
+        bh=YOEldPYJZAz74gN0FsnvGPJW3gx6+vxdlBeAMEtsElw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d+qqjX2+2B8nr9SL3tj+uWAfmi3EyqylZIzGlvIRwV8EF8N0wE6fHGJ0jhxgL4rOE
-         GH5A7TtbmbDV7F3oCSn1caDZWbb09LpuNyAznY2C6Uu6uCT6SB+0ITVRMoRmNuoAc8
-         DF1hYXWX3MKv1ny5ZLZBnICCpiG4ZLv+4P3JELYY=
+        b=B4/qRExMdy1lGDExI7RTqNRnhq1GwTeQa+vJOJG7SiO0SZdGtUvFjuHIabB2c4VK7
+         gqv0CypkD/7DXKcQ8oknwG6ZhlhcxqdzhrpnvpPM5qFK0VLTpzAQhI1sjTlKnpsLRD
+         RUUmm7oFp0lbkxYMAm0vmRHrFrlypzBTtaQclHfM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "leilk.liu" <leilk.liu@mediatek.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 07/19] spi: mediatek: use correct SPI_CFG2_REG MACRO
-Date:   Mon, 20 Jul 2020 17:38:38 -0400
-Message-Id: <20200720213851.407715-7-sashal@kernel.org>
+Cc:     Ilya Katsnelson <me@0upti.me>, Lyude Paul <lyude@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/13] Input: synaptics - enable InterTouch for ThinkPad X1E 1st gen
+Date:   Mon, 20 Jul 2020 17:39:10 -0400
+Message-Id: <20200720213914.407919-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213851.407715-1-sashal@kernel.org>
-References: <20200720213851.407715-1-sashal@kernel.org>
+In-Reply-To: <20200720213914.407919-1-sashal@kernel.org>
+References: <20200720213914.407919-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,74 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "leilk.liu" <leilk.liu@mediatek.com>
+From: Ilya Katsnelson <me@0upti.me>
 
-[ Upstream commit 44b37eb79e16a56cb30ba55b2da452396b941e7a ]
+[ Upstream commit dcb00fc799dc03fd320e123e4c81b3278c763ea5 ]
 
-this patch use correct SPI_CFG2_REG offset.
+Tested on my own laptop, touchpad feels slightly more responsive with
+this on, though it might just be placebo.
 
-Signed-off-by: leilk.liu <leilk.liu@mediatek.com>
-Link: https://lore.kernel.org/r/20200701090020.7935-1-leilk.liu@mediatek.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Ilya Katsnelson <me@0upti.me>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Link: https://lore.kernel.org/r/20200703143457.132373-1-me@0upti.me
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-mt65xx.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/input/mouse/synaptics.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-index 0c2867deb36fc..da28c52c9da19 100644
---- a/drivers/spi/spi-mt65xx.c
-+++ b/drivers/spi/spi-mt65xx.c
-@@ -41,7 +41,6 @@
- #define SPI_CFG0_SCK_LOW_OFFSET           8
- #define SPI_CFG0_CS_HOLD_OFFSET           16
- #define SPI_CFG0_CS_SETUP_OFFSET          24
--#define SPI_ADJUST_CFG0_SCK_LOW_OFFSET    16
- #define SPI_ADJUST_CFG0_CS_HOLD_OFFSET    0
- #define SPI_ADJUST_CFG0_CS_SETUP_OFFSET   16
- 
-@@ -53,6 +52,8 @@
- #define SPI_CFG1_CS_IDLE_MASK             0xff
- #define SPI_CFG1_PACKET_LOOP_MASK         0xff00
- #define SPI_CFG1_PACKET_LENGTH_MASK       0x3ff0000
-+#define SPI_CFG2_SCK_HIGH_OFFSET          0
-+#define SPI_CFG2_SCK_LOW_OFFSET           16
- 
- #define SPI_CMD_ACT                  BIT(0)
- #define SPI_CMD_RESUME               BIT(1)
-@@ -259,7 +260,7 @@ static void mtk_spi_set_cs(struct spi_device *spi, bool enable)
- static void mtk_spi_prepare_transfer(struct spi_master *master,
- 				     struct spi_transfer *xfer)
- {
--	u32 spi_clk_hz, div, sck_time, cs_time, reg_val = 0;
-+	u32 spi_clk_hz, div, sck_time, cs_time, reg_val;
- 	struct mtk_spi *mdata = spi_master_get_devdata(master);
- 
- 	spi_clk_hz = clk_get_rate(mdata->spi_clk);
-@@ -272,18 +273,18 @@ static void mtk_spi_prepare_transfer(struct spi_master *master,
- 	cs_time = sck_time * 2;
- 
- 	if (mdata->dev_comp->enhance_timing) {
-+		reg_val = (((sck_time - 1) & 0xffff)
-+			   << SPI_CFG2_SCK_HIGH_OFFSET);
- 		reg_val |= (((sck_time - 1) & 0xffff)
--			   << SPI_CFG0_SCK_HIGH_OFFSET);
--		reg_val |= (((sck_time - 1) & 0xffff)
--			   << SPI_ADJUST_CFG0_SCK_LOW_OFFSET);
-+			   << SPI_CFG2_SCK_LOW_OFFSET);
- 		writel(reg_val, mdata->base + SPI_CFG2_REG);
--		reg_val |= (((cs_time - 1) & 0xffff)
-+		reg_val = (((cs_time - 1) & 0xffff)
- 			   << SPI_ADJUST_CFG0_CS_HOLD_OFFSET);
- 		reg_val |= (((cs_time - 1) & 0xffff)
- 			   << SPI_ADJUST_CFG0_CS_SETUP_OFFSET);
- 		writel(reg_val, mdata->base + SPI_CFG0_REG);
- 	} else {
--		reg_val |= (((sck_time - 1) & 0xff)
-+		reg_val = (((sck_time - 1) & 0xff)
- 			   << SPI_CFG0_SCK_HIGH_OFFSET);
- 		reg_val |= (((sck_time - 1) & 0xff) << SPI_CFG0_SCK_LOW_OFFSET);
- 		reg_val |= (((cs_time - 1) & 0xff) << SPI_CFG0_CS_HOLD_OFFSET);
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+index 85db184321f78..0714d572e49a3 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -182,6 +182,7 @@ static const char * const smbus_pnp_ids[] = {
+ 	"LEN0093", /* T480 */
+ 	"LEN0096", /* X280 */
+ 	"LEN0097", /* X280 -> ALPS trackpoint */
++	"LEN0099", /* X1 Extreme 1st */
+ 	"LEN009b", /* T580 */
+ 	"LEN200f", /* T450s */
+ 	"LEN2044", /* L470  */
 -- 
 2.25.1
 
