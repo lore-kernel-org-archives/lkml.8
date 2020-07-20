@@ -2,41 +2,39 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1F3C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FF7C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64E962080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21D122B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="R1BoJhWZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ahX/MvXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731055AbgGTTy4 (ORCPT
+        id S1730866AbgGTT6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:54:56 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17615 "EHLO
+        Mon, 20 Jul 2020 15:58:31 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17859 "EHLO
         hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgGTTyz (ORCPT
+        with ESMTP id S1726619AbgGTT6a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:54:55 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f15f6510000>; Mon, 20 Jul 2020 12:53:53 -0700
+        Mon, 20 Jul 2020 15:58:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f15f7280000>; Mon, 20 Jul 2020 12:57:28 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 20 Jul 2020 12:54:55 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 20 Jul 2020 12:58:29 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 20 Jul 2020 12:54:55 -0700
+        by hqpgpgate101.nvidia.com on Mon, 20 Jul 2020 12:58:29 -0700
 Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jul
- 2020 19:54:54 +0000
-Subject: Re: [PATCH v2 2/5] mm/migrate: add a direction parameter to
- migrate_vma
-To:     Jason Gunthorpe <jgg@nvidia.com>
+ 2020 19:58:20 +0000
+Subject: Re: [PATCH v2 0/5] mm/migrate: avoid device private invalidations
+To:     Jason Gunthorpe <jgg@mellanox.com>
 CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
         <nouveau@lists.freedesktop.org>, <kvm-ppc@vger.kernel.org>,
         <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -47,16 +45,14 @@ CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
         Shuah Khan <shuah@kernel.org>, Ben Skeggs <bskeggs@redhat.com>,
         Bharata B Rao <bharata@linux.ibm.com>
 References: <20200713172149.2310-1-rcampbell@nvidia.com>
- <20200713172149.2310-3-rcampbell@nvidia.com>
- <20200720183643.GA3028737@nvidia.com>
+ <20200720184119.GT2021248@mellanox.com>
 From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <2e775a5d-9d62-de52-6799-3bbb09c88c5a@nvidia.com>
-Date:   Mon, 20 Jul 2020 12:54:53 -0700
+Message-ID: <dd6ffaeb-df26-99e1-f6c5-bbe3e4153f04@nvidia.com>
+Date:   Mon, 20 Jul 2020 12:58:20 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200720183643.GA3028737@nvidia.com>
+In-Reply-To: <20200720184119.GT2021248@mellanox.com>
 X-Originating-IP: [172.20.13.39]
 X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
  HQMAIL107.nvidia.com (172.20.187.13)
@@ -64,107 +60,55 @@ Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595274833; bh=xe0NlTll7koBWxfHzF7xMR2/rT2YI2SjQkBbzGUMHBo=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+        t=1595275048; bh=nzFOiv8srTT17ev3ghl4SD5N/vrNK9T/lRfmkfDWwCU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
          Content-Transfer-Encoding;
-        b=R1BoJhWZIo+phXPvLeBHb9GE3Ir3Ca2lGqCHZ7NOF28da9GouiDynuAzy0gXwHK3b
-         0SMyfaA0vmSyeRjgDlnXk6jyQwdL9gxZzJ3BWM0f8xL7QCDDUC7gC4urSU3lvrIwhr
-         Q/QFFZ3p5SX+tx1mFrH3nTwS4SZvc1GgkIjJyuIxTdmoGO4JaYLWNAVAIH3tTHYv2Q
-         jU03JZBll7tMF8wszpfoFUpydK44DBij3jJxuXMpE1rw9qoEFZuC34Z+f8iN+kYHTg
-         8Hip24/wshZhcjucEB6XpxKQZQEdfUZ2VK4A8GhafEtptM2onG1cGmjF48lb52H7+a
-         kpV37ju9KbY2w==
+        b=ahX/MvXl4mWKZL8bYsSpYXFYCF1j2H+WklPaJedYNC3izYDz9/gEonxVY8pWvelei
+         8D5HOaf2ed1XTdHmNi1S+Dmfpw6FfW3jDV0wxxAUHWcL+XbRSHRhnPC10HZ5SoJ8v+
+         +JKqpTxedtabfVYuXbLvQrDLTvxs1Pl5o10Zot+RNKPkXf8qKBryS+JFksXL8Jswf0
+         kOOahoqG8L6OAuur6M62q/QUxaaCD/c0flHJNkAopEGJA0g+2D9XKwpRj8AwIbmRBk
+         1EEgH+iNpcDPOqmxRzE2T+83FriwpqLm2mQPCSL/RFOMHrnK7T5ZTkw3bGZddKsQCJ
+         pVe1IpnYO28Jg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 7/20/20 11:36 AM, Jason Gunthorpe wrote:
-> On Mon, Jul 13, 2020 at 10:21:46AM -0700, Ralph Campbell wrote:
->> The src_owner field in struct migrate_vma is being used for two purposes,
->> it implies the direction of the migration and it identifies device private
->> pages owned by the caller. Split this into separate parameters so the
->> src_owner field can be used just to identify device private pages owned
->> by the caller of migrate_vma_setup().
+On 7/20/20 11:41 AM, Jason Gunthorpe wrote:
+> On Mon, Jul 13, 2020 at 10:21:44AM -0700, Ralph Campbell wrote:
+>> The goal for this series is to avoid device private memory TLB
+>> invalidations when migrating a range of addresses from system
+>> memory to device private memory and some of those pages have already
+>> been migrated. The approach taken is to introduce a new mmu notifier
+>> invalidation event type and use that in the device driver to skip
+>> invalidation callbacks from migrate_vma_setup(). The device driver is
+>> also then expected to handle device MMU invalidations as part of the
+>> migrate_vma_setup(), migrate_vma_pages(), migrate_vma_finalize() process.
+>> Note that this is opt-in. A device driver can simply invalidate its MMU
+>> in the mmu notifier callback and not handle MMU invalidations in the
+>> migration sequence.
 >>
->> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
->> Reviewed-by: Bharata B Rao <bharata@linux.ibm.com>
->>   arch/powerpc/kvm/book3s_hv_uvmem.c     |  2 ++
->>   drivers/gpu/drm/nouveau/nouveau_dmem.c |  2 ++
->>   include/linux/migrate.h                | 12 +++++++++---
->>   lib/test_hmm.c                         |  2 ++
->>   mm/migrate.c                           |  5 +++--
->>   5 files changed, 18 insertions(+), 5 deletions(-)
+>> This series is based on Jason Gunthorpe's HMM tree (linux-5.8.0-rc4).
 >>
->> diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
->> index 09d8119024db..acbf14cd2d72 100644
->> +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
->> @@ -400,6 +400,7 @@ kvmppc_svm_page_in(struct vm_area_struct *vma, unsigned long start,
->>   	mig.end = end;
->>   	mig.src = &src_pfn;
->>   	mig.dst = &dst_pfn;
->> +	mig.dir = MIGRATE_VMA_FROM_SYSTEM;
->>   
->>   	/*
->>   	 * We come here with mmap_lock write lock held just for
->> @@ -578,6 +579,7 @@ kvmppc_svm_page_out(struct vm_area_struct *vma, unsigned long start,
->>   	mig.src = &src_pfn;
->>   	mig.dst = &dst_pfn;
->>   	mig.src_owner = &kvmppc_uvmem_pgmap;
->> +	mig.dir = MIGRATE_VMA_FROM_DEVICE_PRIVATE;
->>   
->>   	mutex_lock(&kvm->arch.uvmem_lock);
->>   	/* The requested page is already paged-out, nothing to do */
->> diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
->> index e5c230d9ae24..e5c83b8ee82e 100644
->> +++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
->> @@ -183,6 +183,7 @@ static vm_fault_t nouveau_dmem_migrate_to_ram(struct vm_fault *vmf)
->>   		.src		= &src,
->>   		.dst		= &dst,
->>   		.src_owner	= drm->dev,
->> +		.dir		= MIGRATE_VMA_FROM_DEVICE_PRIVATE,
->>   	};
->>   
->>   	/*
->> @@ -615,6 +616,7 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
->>   	struct migrate_vma args = {
->>   		.vma		= vma,
->>   		.start		= start,
->> +		.dir		= MIGRATE_VMA_FROM_SYSTEM,
->>   	};
->>   	unsigned long i;
->>   	u64 *pfns;
->> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
->> index 3e546cbf03dd..620f2235d7d4 100644
->> +++ b/include/linux/migrate.h
->> @@ -180,6 +180,11 @@ static inline unsigned long migrate_pfn(unsigned long pfn)
->>   	return (pfn << MIGRATE_PFN_SHIFT) | MIGRATE_PFN_VALID;
->>   }
->>   
->> +enum migrate_vma_direction {
->> +	MIGRATE_VMA_FROM_SYSTEM,
->> +	MIGRATE_VMA_FROM_DEVICE_PRIVATE,
->> +};
+>> Also, this replaces the need for the following two patches I sent:
+>> ("mm: fix migrate_vma_setup() src_owner and normal pages")
+>> https://lore.kernel.org/linux-mm/20200622222008.9971-1-rcampbell@nvidia.com
+>> ("nouveau: fix mixed normal and device private page migration")
+>> https://lore.kernel.org/lkml/20200622233854.10889-3-rcampbell@nvidia.com
+>>
+>> Changes in v2:
+>> Rebase to Jason Gunthorpe's HMM tree.
+>> Added reviewed-by from Bharata B Rao.
+>> Rename the mmu_notifier_range::data field to migrate_pgmap_owner as
+>>    suggested by Jason Gunthorpe.
 > 
-> I would have guessed this is more natural as _FROM_DEVICE_ and
-> TO_DEVICE_ ?
-
-The caller controls where the destination memory is allocated so it isn't
-necessarily device private memory, it could be from system to system.
-The use case for system to system memory migration is for hardware
-like ARM SMMU or PCIe ATS where a single set of page tables is shared by
-the device and a CPU process over a coherent system memory bus.
-Also many integrated GPUs in SOCs fall into this category too.
-
-So to me, it makes more sense to specify the direction based on the
-source location.
-
-> All the callers of this API are device drivers managing their
-> DEVICE_PRIVATE, right?
-
-True for now, yes.
-
+> I didn't see anything stand out in this at this point, did you intend
+> this to go to the HMM tree?
+> 
+> Thanks,
 > Jason
-> 
+
+Yes, please.
