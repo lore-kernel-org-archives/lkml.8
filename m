@@ -2,109 +2,120 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59246C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A3BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37B2A20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7274B2176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:29:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NikpLS+N"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="jTwsphCW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgGTJ3o (ORCPT
+        id S1728178AbgGTJ34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:29:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgGTJ3n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:29:43 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9385C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:29:43 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x9so8436826plr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:29:43 -0700 (PDT)
+        Mon, 20 Jul 2020 05:29:56 -0400
+Received: from mail-bn8nam12on2085.outbound.protection.outlook.com ([40.107.237.85]:62688
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726520AbgGTJ3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 05:29:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b8vdar3sv6FNjXXesVHGnEXZbTptboNeBxEPSHDHGdK5JUUMHdQVIUZnuja9sA1qQS9N7vL8KAoEG14y5IFxnI1QhMDHYlGWUt/OTbDLq52du/YdTGdAyWfr3TROSsXo36ZTSVU9AhsIU9/ExBSX7+Veo+zYsVLDUPBL3hmCmCGo6Gb0GAH9OP53rhgbf2ynMAXKpTApDBl5C7GGiV97ZMdDfNbyz4MZuodDufi8A0aPsg2fSCPGWlHtXIR9c+6yBNNoZhDLBW+pW1n/BDjT2bNZ8mP5QmOhWTxUdPtwmeAJC0J8aNKqS9fSjkvTQJycyYZ9BzDty8n8LRQVEt3OGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nek5Zqf8hx2vS9vYzikSMCmAdVX/iYhKdicyqZ+RA7w=;
+ b=A1LU3owdLwy1hdozXHPZCo02MUsNImeaEpOP+9bzexj0W55nTS2edaYYrJ7etcJMKC06oKg7Rw96xAPBq+IRCM8vTLLwrnKDlLfxmigu7I8fpJpJ9UezXDwWHgIeaagPXZj22F7ZLfwJHuy0N4fIwD6Cuu2TAyFY+u1Ugvpw56wrzFFdCNW1h/EbHXSPvSGeha5n6+kpKATvwPJwLi4isOH4eOU44ye1aL9+D40GKtoSqY6KL/ROqaj7lqNNdISZLEfCidVCqIPoJVUxybfwGmuwhRceMXYrLRRxcEOLiCNTEPo+XQd7edpB3sTb236kJir2uIwhqzt5hVNIo+/eVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B2DSO/aWAoJzWSJL4puh7QjtP9M2G0vX5SgGCTFfnts=;
-        b=NikpLS+N3qR2sHdhR++q/DgmRGoIAbwJDPZKGfWUAcTIcUw9TlzB5FnpPDt1sPSC8M
-         Mk1NNk5XGn7yY2BPr8ug25MWnXMYXXuIY6FffQ9Cuct0k6OhyykTdx6MnypRI9vKclRx
-         P8GI+xWh/nlO6Y8TpDcDUh1fqoYJqxCoGaVCI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B2DSO/aWAoJzWSJL4puh7QjtP9M2G0vX5SgGCTFfnts=;
-        b=ladolUT9O9x7pj706DmBkSzDTXJpwz7snxThJwCwzZ3wWdf0f88AVdoQusgtGuFkAm
-         2y5SZcI7w5R+9af80EL4CAPFxNUSJfq6ybGZf9GygF2dVep5TUim3G76CMVGJtAV7IQP
-         aq1H8avVu5BXjqvVZQejrfFFRha34f/wGhcGi4xspcI3bwRF8wy16plmdjDAQllpT2rd
-         tGu4I8RTBZmgCZjw9vcWf3+z8Ldq7CN2wHbm/+lBnqU/FU0r3MeZX999xyYlcvY7DP2o
-         wx1oqml6cUY6awU3izMi7U/PITYjwO6LohlO4g+1rTa5zBI0LVgwHWJDJlyKx9gI4drH
-         oFkg==
-X-Gm-Message-State: AOAM530WqCdTnW3aUTXUspnBrY/IXHUAg3W/GSWtho8+S2YdjlkPyPIW
-        yvw52QvYfCwwbQp6LYvaTg8pEg==
-X-Google-Smtp-Source: ABdhPJyUJqTu1oMIZdT1XQQeuBWfeUW3vYNGSn8M+KxvAA1dCrmEuEg2ct9wwK30sAebekF1pTzQeA==
-X-Received: by 2002:a17:90a:66c7:: with SMTP id z7mr23079390pjl.172.1595237383150;
-        Mon, 20 Jul 2020 02:29:43 -0700 (PDT)
-Received: from jjsu-p920.tpe.corp.google.com ([2401:fa00:1:10:a6ae:11ff:fe11:67])
-        by smtp.gmail.com with ESMTPSA id v2sm11197363pje.19.2020.07.20.02.29.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 02:29:42 -0700 (PDT)
-From:   Jian-Jia Su <jjsu@chromium.org>
-To:     linux-media@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jian-Jia Su <jjsu@chromium.org>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nek5Zqf8hx2vS9vYzikSMCmAdVX/iYhKdicyqZ+RA7w=;
+ b=jTwsphCW2Uhz2vgCPlAoo/QbWkSuSIDyCSoJzicWemZMLzrzzKkbQfMglpm+OzTatNKYAwY25V3qI939G+AaHs6pi5Y3c4oVJQqu87vr80sTo0pWJnxu8IjxdwhZQvYQREQzjfEJpBmZbBA4bMVvKxUtyjbq8Ic1CdAgcSwvK7c=
+Authentication-Results: chris-wilson.co.uk; dkim=none (message not signed)
+ header.d=none;chris-wilson.co.uk; dmarc=none action=none
+ header.from=synaptics.com;
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
+ by BY5PR03MB5347.namprd03.prod.outlook.com (2603:10b6:a03:218::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Mon, 20 Jul
+ 2020 09:29:53 +0000
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::b5cc:ca6b:3c25:a99c]) by BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::b5cc:ca6b:3c25:a99c%4]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
+ 09:29:53 +0000
+Date:   Mon, 20 Jul 2020 17:29:00 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] media: v4l2-dev/ioctl: Fix document for VIDIOC_QUERYCAP
-Date:   Mon, 20 Jul 2020 17:29:33 +0800
-Message-Id: <20200720092933.2089288-1-jjsu@chromium.org>
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+Subject: Re: [PATCH] drm/i915: Don't force IOSF_MBI
+Message-ID: <20200720170950.75c989d4@xhacker.debian>
+In-Reply-To: <159501436493.15672.10863611355648667796@build.alporthouse.com>
+References: <20200717141138.4a4289ac@xhacker.debian>
+        <159501436493.15672.10863611355648667796@build.alporthouse.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HKAPR03CA0005.apcprd03.prod.outlook.com
+ (2603:1096:203:c8::10) To BYAPR03MB3573.namprd03.prod.outlook.com
+ (2603:10b6:a02:ae::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by HKAPR03CA0005.apcprd03.prod.outlook.com (2603:1096:203:c8::10) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.17 via Frontend Transport; Mon, 20 Jul 2020 09:29:50 +0000
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 442aebe8-4a0f-4fe6-2073-08d82c8f7529
+X-MS-TrafficTypeDiagnostic: BY5PR03MB5347:
+X-Microsoft-Antispam-PRVS: <BY5PR03MB53472B7CA6A28186D02220B9ED7B0@BY5PR03MB5347.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: EkrP5L7WUDKCZQbJQXoac8Y2AkxsY5wxyjIyEw2mW8SIILo41lxg/+BBQfSjNXhn7mqHx0L7XexKmkwaGqQQ7uVg3ncg2TlII4J6218Y+UKF8X+EkeVEDEiqkovus4cYGOXmIRRneEEZR0/fIU0OFcKODPEfB7t0cYjx3Aa2aflHCaLzk9HvRWkoaAze0RFEEgAmZ0ohh8rB1rhE3u1zYyE8FRm08t/nlwWLxVOdRsv41pBJl6Bfbxke4xL/PutFgOA4bt986iMl4vxnlf4xTXhPNy2jAe2oLZ5y8S2Am9bgVNR6+zRx3pj+keNFB8INecI7xwf/mQmRCkQMxs+CwQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(39860400002)(396003)(136003)(376002)(346002)(55016002)(4744005)(9686003)(66476007)(66946007)(66556008)(5660300002)(1076003)(83380400001)(16526019)(2906002)(6666004)(26005)(8936002)(6506007)(7696005)(52116002)(478600001)(6916009)(186003)(54906003)(4326008)(8676002)(316002)(86362001)(956004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ZNjqKIVarPanUTX4KRSDU+x0CmwXqZl4ffDw89Hs1ZeAEnluxc+M6eFY+h92J/nKiss+cxvffbH7sMwSDSwkAgc5DTOMY5rUzgorSFwarD+6g9MypMtmK8zyFzDf3pNW2JsVBFtX9FEkHDZEr9MxjYVT50Fkz4lv7mwrZEaQaaDFLcIhPYIOmrVC1anuBraCkFpsQOthzjDZWrMHRe6zVkcGKxNlODJ3SE2NekaIRbA6kS9/yubulqUbMejvQT2lgIqSoHC1gPVkxFfsshRU5gD2PDDFfDgrBTQieDSrm2F6e+0WJX1jQ24o3K2p8zTimrhPSfaXFqIcSDXLyPv/MxZEZ8TUBKlvvM1Y8k60UjSBHBEiGD/Tr7bLenljEUedThs8dIq5mbIVaAM/2+AZsZ8BIbpku88tG9EA4BiDiw4ZgV/ID2XF9Q0QANZQgozlDAtQUYZloXeMq7sPyDJXcBTJ122yaFY+xr+sqEMPTfzTTQ8Z5EC5SgdIjKO3OqN7
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 442aebe8-4a0f-4fe6-2073-08d82c8f7529
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3573.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 09:29:53.3318
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: V+aNbSjdgogNjveQ6Mx2unXum4BKV5C24Y7tZ5Sb2Fgw5NFkCMxZ0G7BFWOO7opRMfEN0smjpEGCKN8uHCWifA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR03MB5347
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V4L2_CAP_VIDEO_M2M is documented as 0x00004000
-V4L2_CAP_VIDEO_M2M_MPLANE is documented as 0x00008000
-This is different from the definition in include/uapi/linux/videodev2.h
+On Fri, 17 Jul 2020 20:32:44 +0100 Chris Wilson  wrote:
 
-Signed-off-by: Jian-Jia Su <jjsu@chromium.org>
----
- Documentation/userspace-api/media/v4l/vidioc-querycap.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> 
+> Quoting Jisheng Zhang (2020-07-17 07:11:38)
+> > The i915 doesn't depend on IOSF_MBI, asm/iosf_mbi.h already defines
+> > isof_mbi_* APIs when ISOF_MBI is disabled.
+> >
+> > Don't force IOSF_MBI to allow disabling IOSF_MBI for non SoC platforms.  
+> 
+> But it is required for Valleyview/Cherryview and we want to support
+> those by default. Tricky.
 
-diff --git a/Documentation/userspace-api/media/v4l/vidioc-querycap.rst b/Documentation/userspace-api/media/v4l/vidioc-querycap.rst
-index 666ac4d420519..90347367ef06a 100644
---- a/Documentation/userspace-api/media/v4l/vidioc-querycap.rst
-+++ b/Documentation/userspace-api/media/v4l/vidioc-querycap.rst
-@@ -168,11 +168,11 @@ specification the ioctl returns an ``EINVAL`` error code.
-       - The device supports the :ref:`multi-planar API <planar-apis>`
- 	through the :ref:`Video Output <output>` interface.
-     * - ``V4L2_CAP_VIDEO_M2M``
--      - 0x00004000
-+      - 0x00008000
-       - The device supports the single-planar API through the Video
- 	Memory-To-Memory interface.
-     * - ``V4L2_CAP_VIDEO_M2M_MPLANE``
--      - 0x00008000
-+      - 0x00004000
-       - The device supports the :ref:`multi-planar API <planar-apis>`
- 	through the Video Memory-To-Memory interface.
-     * - ``V4L2_CAP_VIDEO_OVERLAY``
--- 
-2.28.0.rc0.105.gf9edc3c819-goog
+If linux kernel is built for Valleyview/Cherryview, ISOF_MBI has to be
+enabled. The dependency is met there.
+
+Thanks
 
