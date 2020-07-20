@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1C7C43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15795C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 338DF22D04
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E394B22B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259542;
-	bh=ko0uM49NweAZFWVgp1NkQ10g5w/KsTKdbttdn0rNZKM=;
+	s=default; t=1595259547;
+	bh=gHMFfJOi8qxKoVrEySmfFxRRRt2jZd3dP9BATkzoiZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gkiALZ1JUNhO3/QL17v9fS8ilT8FbrimSbtenijZIpNQxj+0H4Globt501OW3JdLm
-	 Lj44P7bALr1t/O8/b/hlyeMqWrZMZcnSi40dbuNUwoDAYy0scQIIyGFpQOwXpBlram
-	 iqrubMyI4+fLZPYVz70gJhvzFgxfcmdezy0/sQos=
+	b=dTRJpPUQibpHeGteRi61qSjUaNTrDUKBqzfaBNAPyXDrA4vuAsBmH+KGC0R19SZF2
+	 K5n0P4H4bQj1mUuf83PDCrlcfGeJjdfOxAeEWs2WbDjOEBxP2XFs/m4GApmM3UpAwt
+	 SqRPX4vkkMqEU3Th7ipkJCjccY16/HXu7F9++/dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbgGTPjB (ORCPT
+        id S1729396AbgGTPjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:39:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57678 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:39:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729327AbgGTPix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:38:53 -0400
+        id S1729363AbgGTPjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:39:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EB5C22CBB;
-        Mon, 20 Jul 2020 15:38:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53E7A22CAF;
+        Mon, 20 Jul 2020 15:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259533;
-        bh=ko0uM49NweAZFWVgp1NkQ10g5w/KsTKdbttdn0rNZKM=;
+        s=default; t=1595259540;
+        bh=gHMFfJOi8qxKoVrEySmfFxRRRt2jZd3dP9BATkzoiZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kgl3ajnEdiSOBWO8eUadManJCZvbmCyCpr4d91+USUghMlUQha9XEPfocCRRiEPht
-         4K2vnSonMhTFL/92InBaxzFQlGTXnOod8AeQTeNia5wXWWkVUbbgAxWe9z1EMeS9+f
-         D5yJEpbkU/ydQp2p8UoivyeppvFtpoDqtu4FhtaQ=
+        b=vRrqM03MjXa/dGaquKOnoZTS64lrb6U0qzzym6jjD0S6k49qrTHd42bYOImd7OKH2
+         WMcyVhDe+le1RTzOlLrBNgMqEwuA0yDpIwPJgu1gpP58KpVSFrfouRmLs8OVX/on7c
+         gNkmc+TYTsC2LPaoi44oIPVa8xT5CAqgpMCaIJmA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 12/58] ALSA: usb-audio: add quirk for MacroSilicon MS2109
-Date:   Mon, 20 Jul 2020 17:36:28 +0200
-Message-Id: <20200720152747.752005167@linuxfoundation.org>
+Subject: [PATCH 4.4 38/58] usb: core: Add a helper function to check the validity of EP type in URB
+Date:   Mon, 20 Jul 2020 17:36:54 +0200
+Message-Id: <20200720152749.118768122@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
 References: <20200720152747.127988571@linuxfoundation.org>
@@ -59,81 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hector Martin <marcan@marcan.st>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit e337bf19f6af38d5c3fa6d06cd594e0f890ca1ac upstream.
+commit e901b9873876ca30a09253731bd3a6b00c44b5b0 upstream.
 
-These devices claim to be 96kHz mono, but actually are 48kHz stereo with
-swapped channels and unaligned transfers.
+This patch adds a new helper function to perform a sanity check of the
+given URB to see whether it contains a valid endpoint.  It's a light-
+weight version of what usb_submit_urb() does, but without the kernel
+warning followed by the stack trace, just returns an error code.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Link: https://lore.kernel.org/r/20200702071433.237843-1-marcan@marcan.st
+Especially for a driver that doesn't parse the descriptor but fills
+the URB with the fixed endpoint (e.g. some quirks for non-compliant
+devices), this kind of check is preferable at the probe phase before
+actually submitting the urb.
+
+Tested-by: Andrey Konovalov <andreyknvl@google.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/quirks-table.h |   52 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ drivers/usb/core/urb.c |   30 ++++++++++++++++++++++++++----
+ include/linux/usb.h    |    2 ++
+ 2 files changed, 28 insertions(+), 4 deletions(-)
 
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3323,4 +3323,56 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge
- 	}
- },
+--- a/drivers/usb/core/urb.c
++++ b/drivers/usb/core/urb.c
+@@ -185,6 +185,31 @@ EXPORT_SYMBOL_GPL(usb_unanchor_urb);
  
-+/*
-+ * MacroSilicon MS2109 based HDMI capture cards
-+ *
-+ * These claim 96kHz 1ch in the descriptors, but are actually 48kHz 2ch.
-+ * They also need QUIRK_AUDIO_ALIGN_TRANSFER, which makes one wonder if
-+ * they pretend to be 96kHz mono as a workaround for stereo being broken
-+ * by that...
-+ *
-+ * They also have swapped L-R channels, but that's for userspace to deal
-+ * with.
-+ */
-+{
-+	USB_DEVICE(0x534d, 0x2109),
-+	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
-+		.vendor_name = "MacroSilicon",
-+		.product_name = "MS2109",
-+		.ifnum = QUIRK_ANY_INTERFACE,
-+		.type = QUIRK_COMPOSITE,
-+		.data = &(const struct snd_usb_audio_quirk[]) {
-+			{
-+				.ifnum = 2,
-+				.type = QUIRK_AUDIO_ALIGN_TRANSFER,
-+			},
-+			{
-+				.ifnum = 2,
-+				.type = QUIRK_AUDIO_STANDARD_MIXER,
-+			},
-+			{
-+				.ifnum = 3,
-+				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
-+				.data = &(const struct audioformat) {
-+					.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+					.channels = 2,
-+					.iface = 3,
-+					.altsetting = 1,
-+					.altset_idx = 1,
-+					.attributes = 0,
-+					.endpoint = 0x82,
-+					.ep_attr = USB_ENDPOINT_XFER_ISOC |
-+						USB_ENDPOINT_SYNC_ASYNC,
-+					.rates = SNDRV_PCM_RATE_CONTINUOUS,
-+					.rate_min = 48000,
-+					.rate_max = 48000,
-+				}
-+			},
-+			{
-+				.ifnum = -1
-+			}
-+		}
-+	}
-+},
+ /*-------------------------------------------------------------------*/
+ 
++static const int pipetypes[4] = {
++	PIPE_CONTROL, PIPE_ISOCHRONOUS, PIPE_BULK, PIPE_INTERRUPT
++};
 +
- #undef USB_DEVICE_VENDOR_SPEC
++/**
++ * usb_urb_ep_type_check - sanity check of endpoint in the given urb
++ * @urb: urb to be checked
++ *
++ * This performs a light-weight sanity check for the endpoint in the
++ * given urb.  It returns 0 if the urb contains a valid endpoint, otherwise
++ * a negative error code.
++ */
++int usb_urb_ep_type_check(const struct urb *urb)
++{
++	const struct usb_host_endpoint *ep;
++
++	ep = usb_pipe_endpoint(urb->dev, urb->pipe);
++	if (!ep)
++		return -EINVAL;
++	if (usb_pipetype(urb->pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
++		return -EINVAL;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(usb_urb_ep_type_check);
++
+ /**
+  * usb_submit_urb - issue an asynchronous transfer request for an endpoint
+  * @urb: pointer to the urb describing the request
+@@ -324,9 +349,6 @@ EXPORT_SYMBOL_GPL(usb_unanchor_urb);
+  */
+ int usb_submit_urb(struct urb *urb, gfp_t mem_flags)
+ {
+-	static int			pipetypes[4] = {
+-		PIPE_CONTROL, PIPE_ISOCHRONOUS, PIPE_BULK, PIPE_INTERRUPT
+-	};
+ 	int				xfertype, max;
+ 	struct usb_device		*dev;
+ 	struct usb_host_endpoint	*ep;
+@@ -445,7 +467,7 @@ int usb_submit_urb(struct urb *urb, gfp_
+ 	 */
+ 
+ 	/* Check that the pipe's type matches the endpoint's type */
+-	if (usb_pipetype(urb->pipe) != pipetypes[xfertype])
++	if (usb_urb_ep_type_check(urb))
+ 		dev_WARN(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
+ 			usb_pipetype(urb->pipe), pipetypes[xfertype]);
+ 
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -1655,6 +1655,8 @@ static inline int usb_urb_dir_out(struct
+ 	return (urb->transfer_flags & URB_DIR_MASK) == URB_DIR_OUT;
+ }
+ 
++int usb_urb_ep_type_check(const struct urb *urb);
++
+ void *usb_alloc_coherent(struct usb_device *dev, size_t size,
+ 	gfp_t mem_flags, dma_addr_t *dma);
+ void usb_free_coherent(struct usb_device *dev, size_t size,
 
 
