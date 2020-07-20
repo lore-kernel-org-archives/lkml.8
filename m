@@ -2,51 +2,53 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6072C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD6420773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A97E920734
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261092;
-	bh=tZbcvL0Yom+uemumx//KXJkqlGT24AfbHXyZqMG8DTY=;
+	s=default; t=1595261094;
+	bh=7PZOFXk17VGnGVAqGGJMfRQ5uY/5PQ1p83UE4wOgt2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vfhs2UOHjobQoF/Nr+Mg7s+8gs9urs6ZgwmY37sCCF2G8jiWZq6hEoxStlg659mwX
-	 3lzMK0rkgT3INqCdfuP+VFgEgYfcVEhfWHfLCINTWFaKMEV2LeJqnrFFl2Co8usRwp
-	 nh7YIkVTvBFUSdxLXdK7V7VviqwGnGbgvexuLLs4=
+	b=r4jVJaumIyjX7FktpquGc/0cVs2vmGtKirdFNCTzHG0Y2A5dLyBmuaV/0OekRfPGd
+	 noZm3NAZYvAJe6497/l0uUvovlyNb+4vtl+n4/ut6BcvFFVmT4T9rDfp5+SnYsXHoy
+	 K9hGTK0bqDOxPfe7G7CpmJWkxK32BowIwNHw9pEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbgGTQEu (ORCPT
+        id S1732905AbgGTQEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:04:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39828 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:04:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732882AbgGTQEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:04:45 -0400
+        id S1732900AbgGTQEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:04:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 855182064B;
-        Mon, 20 Jul 2020 16:04:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C80C42064B;
+        Mon, 20 Jul 2020 16:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261085;
-        bh=tZbcvL0Yom+uemumx//KXJkqlGT24AfbHXyZqMG8DTY=;
+        s=default; t=1595261090;
+        bh=7PZOFXk17VGnGVAqGGJMfRQ5uY/5PQ1p83UE4wOgt2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0VN8r6BxjphBUiuVbAd3cxtJudvOaFaLfpnW5q0vfLRuUGggBajFjng/7eNT/7Y+3
-         zz7aXWUOphqz2bjLc5mA+WB51g8xl8NnXfLx5HXfRiBW0XFxGHo4+f+KMFOrEqFFk+
-         aEmXo/8kCfdzbcHCsmcL89yeIEjXi7ahls5OJEsY=
+        b=SD4nRsjmegGuoD8lGeCxgIE9C+fdwxkWTW9zliwnMM34RanKsUCfO243LOywjSXzQ
+         apyB7UCr/QN3YP8C4/ek5LKdbv3sM/fHoRv9/MQ0I8cjIH0N6DNoUgk6rFUAjS4rrG
+         VAatWG4lWOtZ74uny71g3TnbBBM18J4AHd6bkoFs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 5.4 196/215] misc: atmel-ssc: lock with mutex instead of spinlock
-Date:   Mon, 20 Jul 2020 17:37:58 +0200
-Message-Id: <20200720152829.495186822@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.4 206/215] drm/i915/gt: Ignore irq enabling on the virtual engines
+Date:   Mon, 20 Jul 2020 17:38:08 +0200
+Message-Id: <20200720152829.960018885@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,115 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit b037d60a3b1d1227609fd858fa34321f41829911 upstream.
+commit 858f1299fd6f7518ddef19ddd304c8398ac79fa5 upstream.
 
-Uninterruptible context is not needed in the driver and causes lockdep
-warning because of mutex taken in of_alias_get_id(). Convert the lock to
-mutex to avoid the issue.
+We do not use the virtual engines for interrupts (they have physical
+components), but we do use them to decouple the fence signaling during
+submission. Currently, when we submit a completed request, we try to
+enable the interrupt handler for the virtual engine, but we never disarm
+it. A quick fix is then to mark the irq as enabled, and it will then
+remain enabled -- and this prevents us from waking the device and never
+letting it sleep again.
 
-Cc: stable@vger.kernel.org
-Fixes: 099343c64e16 ("ARM: at91: atmel-ssc: add device tree support")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Link: https://lore.kernel.org/r/50f0d7fa107f318296afb49477c3571e4d6978c5.1592998403.git.mirq-linux@rere.qmqm.pl
+Fixes: f8db4d051b5e ("drm/i915: Initialise breadcrumb lists on the virtual engine")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: <stable@vger.kernel.org> # v5.5+
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200711203236.12330-1-chris@chris-wilson.co.uk
+(cherry picked from commit 4fe6abb8f51355224808ab02a9febf65d184c40b)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/atmel-ssc.c |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/i915/gt/intel_lrc.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/misc/atmel-ssc.c
-+++ b/drivers/misc/atmel-ssc.c
-@@ -10,7 +10,7 @@
- #include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/io.h>
--#include <linux/spinlock.h>
-+#include <linux/mutex.h>
- #include <linux/atmel-ssc.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-@@ -20,7 +20,7 @@
- #include "../../sound/soc/atmel/atmel_ssc_dai.h"
+--- a/drivers/gpu/drm/i915/gt/intel_lrc.c
++++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
+@@ -3751,6 +3751,7 @@ intel_execlists_create_virtual(struct i9
+ 	intel_engine_init_active(&ve->base, ENGINE_VIRTUAL);
  
- /* Serialize access to ssc_list and user count */
--static DEFINE_SPINLOCK(user_lock);
-+static DEFINE_MUTEX(user_lock);
- static LIST_HEAD(ssc_list);
+ 	intel_engine_init_execlists(&ve->base);
++	ve->base.breadcrumbs.irq_armed = true; /* fake HW, used for irq_work */
  
- struct ssc_device *ssc_request(unsigned int ssc_num)
-@@ -28,7 +28,7 @@ struct ssc_device *ssc_request(unsigned
- 	int ssc_valid = 0;
- 	struct ssc_device *ssc;
- 
--	spin_lock(&user_lock);
-+	mutex_lock(&user_lock);
- 	list_for_each_entry(ssc, &ssc_list, list) {
- 		if (ssc->pdev->dev.of_node) {
- 			if (of_alias_get_id(ssc->pdev->dev.of_node, "ssc")
-@@ -44,18 +44,18 @@ struct ssc_device *ssc_request(unsigned
- 	}
- 
- 	if (!ssc_valid) {
--		spin_unlock(&user_lock);
-+		mutex_unlock(&user_lock);
- 		pr_err("ssc: ssc%d platform device is missing\n", ssc_num);
- 		return ERR_PTR(-ENODEV);
- 	}
- 
- 	if (ssc->user) {
--		spin_unlock(&user_lock);
-+		mutex_unlock(&user_lock);
- 		dev_dbg(&ssc->pdev->dev, "module busy\n");
- 		return ERR_PTR(-EBUSY);
- 	}
- 	ssc->user++;
--	spin_unlock(&user_lock);
-+	mutex_unlock(&user_lock);
- 
- 	clk_prepare(ssc->clk);
- 
-@@ -67,14 +67,14 @@ void ssc_free(struct ssc_device *ssc)
- {
- 	bool disable_clk = true;
- 
--	spin_lock(&user_lock);
-+	mutex_lock(&user_lock);
- 	if (ssc->user)
- 		ssc->user--;
- 	else {
- 		disable_clk = false;
- 		dev_dbg(&ssc->pdev->dev, "device already free\n");
- 	}
--	spin_unlock(&user_lock);
-+	mutex_unlock(&user_lock);
- 
- 	if (disable_clk)
- 		clk_unprepare(ssc->clk);
-@@ -237,9 +237,9 @@ static int ssc_probe(struct platform_dev
- 		return -ENXIO;
- 	}
- 
--	spin_lock(&user_lock);
-+	mutex_lock(&user_lock);
- 	list_add_tail(&ssc->list, &ssc_list);
--	spin_unlock(&user_lock);
-+	mutex_unlock(&user_lock);
- 
- 	platform_set_drvdata(pdev, ssc);
- 
-@@ -258,9 +258,9 @@ static int ssc_remove(struct platform_de
- 
- 	ssc_sound_dai_remove(ssc);
- 
--	spin_lock(&user_lock);
-+	mutex_lock(&user_lock);
- 	list_del(&ssc->list);
--	spin_unlock(&user_lock);
-+	mutex_unlock(&user_lock);
- 
- 	return 0;
- }
+ 	ve->base.cops = &virtual_context_ops;
+ 	ve->base.request_alloc = execlists_request_alloc;
 
 
