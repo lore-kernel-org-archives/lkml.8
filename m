@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D02DC433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0022C433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB9720672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE08B20773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260998;
-	bh=1vh0gccBO5E8zyO6PG9oR09WipYYJAhhq0ytHAR8VZY=;
+	s=default; t=1595261001;
+	bh=SxD1oQn/lgwmVRfk0IwFybvo8joUrX9xW8VgBvv2jiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uE6PgFIMCVVZU98ixNwqEbNOQM6kohEnT56mavtp3DRqeP/JAq4IzwM8rT6zG+GWk
-	 +ylr7al5ck8LQ0TycECDElJxOl5RgS5O81rlgdSk+A2ecdbuveL55/IdxuiVj05cfS
-	 c1rEXXVv7k3k5Rrk0Gsek/8ASFfkRSDnirmKTBwA=
+	b=gn6uVMwcqK30iWgucz/3yHMGTxWs/UAYQ1IEXAl4aHKpgerSlfDNj4T1H2G1Ea5KX
+	 xVFUNn4GdQKfyCLSA59qnqqjKoiZ19qK5UV1Qu5jqrpcmA8cTWylElkkWSHMtTDauy
+	 +jr+RqPDknxq7FwpuG6bGCYCCkHFnsMWq/8oOfXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbgGTQDQ (ORCPT
+        id S1732432AbgGTQDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:03:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37466 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:03:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731994AbgGTQDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:03:14 -0400
+        id S1732729AbgGTQDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:03:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24FBC20672;
-        Mon, 20 Jul 2020 16:03:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E032D2064B;
+        Mon, 20 Jul 2020 16:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260993;
-        bh=1vh0gccBO5E8zyO6PG9oR09WipYYJAhhq0ytHAR8VZY=;
+        s=default; t=1595260996;
+        bh=SxD1oQn/lgwmVRfk0IwFybvo8joUrX9xW8VgBvv2jiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rgHur857fLqwdN6DmWfvxwixbQb22zxh1JM+cnE2+QEg1oWEJKlr7cPn3NbaNSoVH
-         NI231gM15qaBJlYXRUfQmA8Z5/tYsO+wpmh7c7fbzxQ2Rah6fy0ZEvurEsJCx0wZik
-         ZLKpXO/1WOVHF9OSDWmefy/ZO2HP/P/5bU2UhkEk=
+        b=du87SHDVEk80wQoAvBc7XYM0hSx814fJGAkyVx2eoqZe0aKigl1g4yU0oaaYp9dZF
+         pxqqVWUtY2usnkzfdTVtARcPfkG7XmF0Wl9OA3btezrTzedGj5e/1aQVGSbCR+jhe8
+         pEFTEQHZ2qNOfkvyawqm8KJYuHlWHRoeX8B+34UA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 163/215] USB: serial: option: add Quectel EG95 LTE modem
-Date:   Mon, 20 Jul 2020 17:37:25 +0200
-Message-Id: <20200720152827.934538009@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.4 172/215] ovl: fix unneeded call to ovl_change_flags()
+Date:   Mon, 20 Jul 2020 17:37:34 +0200
+Message-Id: <20200720152828.358690559@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,51 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: AceLan Kao <acelan.kao@canonical.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit da6902e5b6dbca9081e3d377f9802d4fd0c5ea59 upstream.
+commit 81a33c1ee941c3bb9ffc6bac8f676be13351344e upstream.
 
-Add support for Quectel Wireless Solutions Co., Ltd. EG95 LTE modem
+The check if user has changed the overlay file was wrong, causing unneeded
+call to ovl_change_flags() including taking f_lock on every file access.
 
-T:  Bus=01 Lev=01 Prnt=01 Port=02 Cnt=02 Dev#=  5 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=2c7c ProdID=0195 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-
-Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: d989903058a8 ("ovl: do not generate duplicate fsnotify events for "fake" path")
+Cc: <stable@vger.kernel.org> # v4.19+
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/overlayfs/file.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -245,6 +245,7 @@ static void option_instat_callback(struc
- /* These Quectel products use Quectel's vendor ID */
- #define QUECTEL_PRODUCT_EC21			0x0121
- #define QUECTEL_PRODUCT_EC25			0x0125
-+#define QUECTEL_PRODUCT_EG95			0x0195
- #define QUECTEL_PRODUCT_BG96			0x0296
- #define QUECTEL_PRODUCT_EP06			0x0306
- #define QUECTEL_PRODUCT_EM12			0x0512
-@@ -1097,6 +1098,8 @@ static const struct usb_device_id option
- 	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EC25),
- 	  .driver_info = RSVD(4) },
-+	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EG95),
-+	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_BG96),
- 	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EP06, 0xff, 0xff, 0xff),
+--- a/fs/overlayfs/file.c
++++ b/fs/overlayfs/file.c
+@@ -21,13 +21,16 @@ static char ovl_whatisit(struct inode *i
+ 		return 'm';
+ }
+ 
++/* No atime modificaton nor notify on underlying */
++#define OVL_OPEN_FLAGS (O_NOATIME | FMODE_NONOTIFY)
++
+ static struct file *ovl_open_realfile(const struct file *file,
+ 				      struct inode *realinode)
+ {
+ 	struct inode *inode = file_inode(file);
+ 	struct file *realfile;
+ 	const struct cred *old_cred;
+-	int flags = file->f_flags | O_NOATIME | FMODE_NONOTIFY;
++	int flags = file->f_flags | OVL_OPEN_FLAGS;
+ 
+ 	old_cred = ovl_override_creds(inode->i_sb);
+ 	realfile = open_with_fake_path(&file->f_path, flags, realinode,
+@@ -48,8 +51,7 @@ static int ovl_change_flags(struct file
+ 	struct inode *inode = file_inode(file);
+ 	int err;
+ 
+-	/* No atime modificaton on underlying */
+-	flags |= O_NOATIME | FMODE_NONOTIFY;
++	flags |= OVL_OPEN_FLAGS;
+ 
+ 	/* If some flag changed that cannot be changed then something's amiss */
+ 	if (WARN_ON((file->f_flags ^ flags) & ~OVL_SETFL_MASK))
+@@ -102,7 +104,7 @@ static int ovl_real_fdget_meta(const str
+ 	}
+ 
+ 	/* Did the flags change since open? */
+-	if (unlikely((file->f_flags ^ real->file->f_flags) & ~O_NOATIME))
++	if (unlikely((file->f_flags ^ real->file->f_flags) & ~OVL_OPEN_FLAGS))
+ 		return ovl_change_flags(real->file, file->f_flags);
+ 
+ 	return 0;
 
 
