@@ -2,109 +2,123 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52B2C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9DA2206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262430;
-	bh=NomYTq+0FW0vXa/NUBZAOXpeDTLafjBT7dbllml5m18=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iUXmcuX6QLZKW5N73rxB7v2rlISqzshRp4WR05ueP9IIFCFPn+5evO0iJ45nsALgP
-	 qIzTTep5Tae8X6QjhYFq8RYc2iFsrvZ3q/BYWDeWqlfMw2Ca27XvhbrTv61STjnYIB
-	 h0RslVYVZ+/MUlTTsG84hD4eR9EiAHhejeFwvxPQ=
+	by mail.kernel.org (Postfix) with ESMTP id A5ACD206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zvw2Zpbh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387697AbgGTQ1I (ORCPT
+        id S2388613AbgGTQ1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:27:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732297AbgGTP7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13D0D22D00;
-        Mon, 20 Jul 2020 15:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260785;
-        bh=NomYTq+0FW0vXa/NUBZAOXpeDTLafjBT7dbllml5m18=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vkZpeT0j65smYhvGFv2Jz0rEiRZVo3ZXsCw+qDdJbvEVB+uIK17kyX93cJHcIGpbl
-         trr64GmwVM78OSpg0YTpx/7V3PWS0VgGFLz4PPDHKkzU/YK4hAl9QCi1bm6gQpPcDU
-         skXOoevBPHZa/YyJHKK6QiKt+0Y/stWuo/6htGiA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+        Mon, 20 Jul 2020 12:27:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732283AbgGTP7o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:44 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74DE6C0619D2;
+        Mon, 20 Jul 2020 08:59:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=QosMaJ9e4wJ6Jpqetx8GoN2rz3W82HkGcZbMWAJHqpI=; b=Zvw2Zpbh6ELKUZp4eA+LFdqEOA
+        mhQXwlnv+VWdxfh0zCUCR8yWZdRUvAyOnMxgqICdGaE87zo8BiNnoly6UZCiuX5dxwtPcMIlHxK9B
+        virJCHC1ITJDwb+T4GArGGe+vEgyYZkreQ3X9R3DDSIP82geqE3KBKqFHrN0YTW8EMPdqpuoLCPJ0
+        WYc1inr5Tu7l0G4UFDzlpU+cEl9KskC96v12xEwJXYLpN2G9ANKQh+Q8KwrLjxvaJgJEpi4XJ1RC6
+        c+3C3PheoSWKLX3QMfcWpUhZ5Wt48e6vnW8oFtxMUujkWpSmnS6LGTp0ph1n6ON0zIoYr1JyHd+gu
+        RQvHO8Gw==;
+Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxYCa-0007rn-Gk; Mon, 20 Jul 2020 15:59:40 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@gmail.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 094/215] soundwire: intel: fix memory leak with devm_kasprintf
-Date:   Mon, 20 Jul 2020 17:36:16 +0200
-Message-Id: <20200720152824.683390342@linuxfoundation.org>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH 21/24] fs: move vfs_fstatat out of line
+Date:   Mon, 20 Jul 2020 17:58:59 +0200
+Message-Id: <20200720155902.181712-22-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
-References: <20200720152820.122442056@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200720155902.181712-1-hch@lst.de>
+References: <20200720155902.181712-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+This allows to keep vfs_statx static in fs/stat.c to prepare for the following
+changes.
 
-[ Upstream commit bf6d6e68d2028a2d82f4c106f50ec75cc1e6ef89 ]
-
-The dais are allocated with devm_kcalloc() but their name isn't
-resourced managed and never freed. Fix by also using devm_ for the dai
-names as well.
-
-Fixes: c46302ec554c5 ('soundwire: intel: Add audio DAI ops')
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@gmail.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Link: https://lore.kernel.org/r/20200617163536.17401-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/soundwire/intel.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/stat.c          | 9 +++++++--
+ include/linux/fs.h | 9 ++-------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index d1839707128a8..243af8198d1c6 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -842,8 +842,9 @@ static int intel_create_dai(struct sdw_cdns *cdns,
+diff --git a/fs/stat.c b/fs/stat.c
+index 2683a051ce07fa..ddf0176d4dbcd7 100644
+--- a/fs/stat.c
++++ b/fs/stat.c
+@@ -181,7 +181,7 @@ static inline unsigned vfs_stat_set_lookup_flags(unsigned *lookup_flags,
+  *
+  * 0 will be returned on success, and a -ve error code if unsuccessful.
+  */
+-int vfs_statx(int dfd, const char __user *filename, int flags,
++static int vfs_statx(int dfd, const char __user *filename, int flags,
+ 	      struct kstat *stat, u32 request_mask)
+ {
+ 	struct path path;
+@@ -209,8 +209,13 @@ int vfs_statx(int dfd, const char __user *filename, int flags,
+ out:
+ 	return error;
+ }
+-EXPORT_SYMBOL(vfs_statx);
  
- 	 /* TODO: Read supported rates/formats from hardware */
- 	for (i = off; i < (off + num); i++) {
--		dais[i].name = kasprintf(GFP_KERNEL, "SDW%d Pin%d",
--					 cdns->instance, i);
-+		dais[i].name = devm_kasprintf(cdns->dev, GFP_KERNEL,
-+					      "SDW%d Pin%d",
-+					      cdns->instance, i);
- 		if (!dais[i].name)
- 			return -ENOMEM;
++int vfs_fstatat(int dfd, const char __user *filename,
++			      struct kstat *stat, int flags)
++{
++	return vfs_statx(dfd, filename, flags | AT_NO_AUTOMOUNT,
++			 stat, STATX_BASIC_STATS);
++}
  
+ #ifdef __ARCH_WANT_OLD_STAT
+ 
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 4d9d33c62fa2e5..0e0cd6a988bb38 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3296,15 +3296,10 @@ extern const struct inode_operations simple_symlink_inode_operations;
+ 
+ extern int iterate_dir(struct file *, struct dir_context *);
+ 
+-extern int vfs_statx(int, const char __user *, int, struct kstat *, u32);
++int vfs_fstatat(int dfd, const char __user *filename, struct kstat *stat,
++		int flags);
+ int vfs_fstat(int fd, struct kstat *stat);
+ 
+-static inline int vfs_fstatat(int dfd, const char __user *filename,
+-			      struct kstat *stat, int flags)
+-{
+-	return vfs_statx(dfd, filename, flags | AT_NO_AUTOMOUNT,
+-			 stat, STATX_BASIC_STATS);
+-}
+ static inline int vfs_stat(const char __user *filename, struct kstat *stat)
+ {
+ 	return vfs_fstatat(AT_FDCWD, filename, stat, 0);
 -- 
-2.25.1
-
-
+2.27.0
 
