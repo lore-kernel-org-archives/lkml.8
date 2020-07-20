@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4D7C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4680BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1607B20773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B56D22CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260853;
-	bh=WWdC/8JRDZCpZNHg7v589mBckIuYNk/cwpy8NeYCGjI=;
+	s=default; t=1595260855;
+	bh=LorpaEKQ7nhoObZ9HTfrCrS8FOrlHSM8/j9dc66NydE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yWEV+u/F0Frl2oUU3FAk/Vkpcm54wfMgmsQzyYlCAE/oMWEA/7YQ3UmF2AtfHc5qw
-	 CTG20LwAk3oagkoUh5Kx3uSNt5aV1uh3xc1SWeN8rl6OBcrowePRZ6wrEalXRMy2Qj
-	 Eyq+Vpay8cxtBxc5THVFWNOn/Xtw3X0ttTabg4OY=
+	b=ruSJscsspRsEf4vWVp6nVmn3wjj++R7F7B+v3AL5m1zBLWLE/XrImIIxaggtPt/dG
+	 IkQjltFK7UsOHlJRQMiJaFzlSCJ7ILoSAtqTy/s3DlCiChDQBMMOoBHBxFcK/8pjPr
+	 nZiUWOVA9kw2ExJ+TZkDZ5ZAaTGHrgJKPTOZoypo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732064AbgGTQAv (ORCPT
+        id S1732451AbgGTQAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:00:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33900 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:00:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732073AbgGTQAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:00:47 -0400
+        id S1732429AbgGTQAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:00:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3318820684;
-        Mon, 20 Jul 2020 16:00:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8715B20684;
+        Mon, 20 Jul 2020 16:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260846;
-        bh=WWdC/8JRDZCpZNHg7v589mBckIuYNk/cwpy8NeYCGjI=;
+        s=default; t=1595260844;
+        bh=LorpaEKQ7nhoObZ9HTfrCrS8FOrlHSM8/j9dc66NydE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QqxRr1SIg7JeNxYNAfSz4BFqhVA/5RNjJotMq9MfB7IHjkMjHSET4khI9HCqi1xOZ
-         rn+zqVAFGftEzjNGOy95JGXkL8iOD2GxfzgViQA2WITz8x2bTzpR0s83qdLDp9VuW3
-         iGcxUfT/+WX1why3nwhTjJGZvVkaLKWmh2bfHthc=
+        b=TKkVVd3mImuGQHr1czBg1cszhGNMdGUrgattY1kJ8uwX5wobwpHAiYRVlzyhtHVRj
+         lkPv6Vn70wUPL5kMZeyH/FMeKG7kY8vp2PGXD/dpXGD0W0nj087sigs0IxIBcPt0u4
+         1DfXpKgsv7mV5nYkDXCguuVrQkjD0PAaqmKzwrp0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 117/215] keys: asymmetric: fix error return code in software_key_query()
-Date:   Mon, 20 Jul 2020 17:36:39 +0200
-Message-Id: <20200720152825.762641619@linuxfoundation.org>
+Subject: [PATCH 5.4 116/215] arm64: dts: spcfpga: Align GIC, NAND and UART nodenames with dtschema
+Date:   Mon, 20 Jul 2020 17:36:38 +0200
+Message-Id: <20200720152825.721813062@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -61,34 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit 6cbba1f9114a8134cff9138c79add15012fd52b9 ]
+[ Upstream commit 681a5c71fb829fc2193e3bb524af41525477f5c3 ]
 
-Fix to return negative error code -ENOMEM from kmalloc() error handling
-case instead of 0, as done elsewhere in this function.
+Fix dtschema validator warnings like:
+    intc@fffc1000: $nodename:0:
+        'intc@fffc1000' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
 
-Fixes: f1774cb8956a ("X.509: parse public key parameters from x509 for akcipher")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 78cd6a9d8e15 ("arm64: dts: Add base stratix 10 dtsi")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/asymmetric_keys/public_key.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys/public_key.c
-index d7f43d4ea925a..e5fae4e838c06 100644
---- a/crypto/asymmetric_keys/public_key.c
-+++ b/crypto/asymmetric_keys/public_key.c
-@@ -119,6 +119,7 @@ static int software_key_query(const struct kernel_pkey_params *params,
- 	if (IS_ERR(tfm))
- 		return PTR_ERR(tfm);
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index d1fc9c2055f49..9498d1de730ce 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -77,7 +77,7 @@ psci {
+ 		method = "smc";
+ 	};
  
-+	ret = -ENOMEM;
- 	key = kmalloc(pkey->keylen + sizeof(u32) * 2 + pkey->paramlen,
- 		      GFP_KERNEL);
- 	if (!key)
+-	intc: intc@fffc1000 {
++	intc: interrupt-controller@fffc1000 {
+ 		compatible = "arm,gic-400", "arm,cortex-a15-gic";
+ 		#interrupt-cells = <3>;
+ 		interrupt-controller;
+@@ -302,7 +302,7 @@ mmc: dwmmc0@ff808000 {
+ 			status = "disabled";
+ 		};
+ 
+-		nand: nand@ffb90000 {
++		nand: nand-controller@ffb90000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			compatible = "altr,socfpga-denali-nand";
+@@ -445,7 +445,7 @@ timer3: timer3@ffd00100 {
+ 			clock-names = "timer";
+ 		};
+ 
+-		uart0: serial0@ffc02000 {
++		uart0: serial@ffc02000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0xffc02000 0x100>;
+ 			interrupts = <0 108 4>;
+@@ -456,7 +456,7 @@ uart0: serial0@ffc02000 {
+ 			status = "disabled";
+ 		};
+ 
+-		uart1: serial1@ffc02100 {
++		uart1: serial@ffc02100 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0xffc02100 0x100>;
+ 			interrupts = <0 109 4>;
 -- 
 2.25.1
 
