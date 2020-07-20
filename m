@@ -2,388 +2,118 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8C0C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74E8222B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F4F2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:40:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="MijXTMv2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y54+52P/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgGTWo0 (ORCPT
+        id S1726994AbgGTWkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 18:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47820 "EHLO
+        Mon, 20 Jul 2020 18:40:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgGTWoZ (ORCPT
+        with ESMTP id S1726030AbgGTWkV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 18:44:25 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F06C1C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 15:44:24 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id 6so14753571qtt.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 15:44:24 -0700 (PDT)
+        Mon, 20 Jul 2020 18:40:21 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DCCEC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 15:40:21 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id r12so19238471wrj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 15:40:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ag3CH9gIrCGq60wqLtIh8GQRzVO4EAvpufO2Zb/zlwc=;
-        b=MijXTMv2wmOpRT0tSxn67usaHrw7v5/wM9T09O2XbEPBquJps5+8tk8hPgi+9s8haX
-         DwenNjaAEUmqapQyTASXTIMFLrqfJ5maiAbJQLOCfogISvfTxHrXjb/P3vx8ORIPJZON
-         IKLq7gwEwA4XcBWmR2Z24Pi7TAlfL9mNK6ntT2H9RvN/4/UbbmwNRY/A9QLg8S1sVL4p
-         kQBzA5Al3O8Ct7hjyr+Q6j6YqSAcL+/GJIPjnN6I9OuxTl2lrbQPHmJy048u9YeXUZDo
-         /0Y5h6zcEukIuboddjdF2QFrEnX1ablLh0vlr2c8qn2PzSq2CTzpap7gEEC7oJdQxH6k
-         JlYw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tdzStXPHhn/lPCcmGPCaBvtaXY8ZKM9Cp45GAKfxt9s=;
+        b=Y54+52P/XnjtilisJNCnGinNUWBD1b9Cvz+O4isdAveWxDMPbnyfUL7l8PH2vQGasT
+         vl3INNIKsFFzrET9BFHvb+Ue0N3aZ4z75lX0PzZpTLERLsjAXYUd84XeeCJt+whtg/n+
+         AzY6AQ64NTNFlEgiVdsU6QsgFUBdbR2SjY+cAGcED1wahHvRR8vY5/ICQ9L4an3LDNVC
+         /k3EpFMu853pFmtQOWpfE/xLcgBsChLYtYfh1k2d+lqevnP98D0iDMW/11k5723XfJlD
+         MuEksnUiyX+c/oF2wwGA43PgPCDU027fBzfMN8/XRYzdP+waUPU1Zvxwrg0fvUn05JNG
+         1PBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ag3CH9gIrCGq60wqLtIh8GQRzVO4EAvpufO2Zb/zlwc=;
-        b=smsMSjmBGI0PImZtxpMW3sQdYQTY/xlOjnIH47uk/ivALD1Q/PuuJR5oaC7YxTdxbv
-         5v1FVe1fQLZodOzInpcFUC2yw/8PsXGgdZ8o5kdt92C8kvaX0Njzy2ZFSPQtyBZbtHCS
-         Bd6uCyOS2HZCzzEaN1quEmN48ftjUp1pvVzbajEZuEY+q/7m5Qbi1N1WSjpJy4j9+EoE
-         VooSjp0IFx60kEgEWBPsIzSRJBBHEw2g2i5AZukSGgRvkdq2F0PcLaU4NrsyY8UhvZwJ
-         f5UsHb7IiUHaxc8urspO2HQXAQEhYI1IxoABg6MGREPYfv8T3QU3AfM8I6zt0S5mOboC
-         OLoQ==
-X-Gm-Message-State: AOAM530qXDq7cpat/BjqdN20u2O/Sa5kqB6k0jrVFOIGFylIWkwQZtDX
-        BTZza4hvmvJZxKKQORDR+RNh2g==
-X-Google-Smtp-Source: ABdhPJwpZN6+9Bs9wz4nAsemF8PM8GzrSfDmAGPEYHHS4VKn288EfCse8gYvM/GJ6JWxwBpXQ1D0RQ==
-X-Received: by 2002:ac8:3985:: with SMTP id v5mr25758367qte.337.1595285064006;
-        Mon, 20 Jul 2020 15:44:24 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id g136sm795513qke.82.2020.07.20.15.44.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 15:44:22 -0700 (PDT)
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     kunit-dev@googlegroups.com
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com, keescook@chromium.org,
-        davidgow@google.com, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH v3] lib: overflow_kunit: add KUnit test conversion of check_*_overflow
-Date:   Mon, 20 Jul 2020 19:44:18 -0300
-Message-Id: <20200720224418.200495-1-vitor@massaru.org>
-X-Mailer: git-send-email 2.26.2
+        bh=tdzStXPHhn/lPCcmGPCaBvtaXY8ZKM9Cp45GAKfxt9s=;
+        b=XvQEVRHZB28IxpNye2vCp8OzBzYimwp2d23J09f4eNZfOBcEPgQ1cQS+CQSsQ3GA01
+         57Q+HhYQdMvFX7CRYMJKFHW4RVw0d6vm21D3qkkIIbzwdJBLUaLcfS3Pw0CCpv5q8GWo
+         aVhK28joSgGpdpCWsNxxHeu48CN0GL9vZbq2OEmDrzKIMuaOPssuw3PLD0PXdrsD+T5v
+         lE1qBkJITQA8x21lnOg5BLp5gHkVANiWEI0NXKZBE1LtMF0pKJ62AFNNu5tQ9/bxSf58
+         ueAPnr1oe4pw2JeTS/9qOmNIBX8BCW5NvwBTBRVqhQnDHoxEFAyFnZZVfv3mMp8eRzZT
+         OQlw==
+X-Gm-Message-State: AOAM5306G4fh7QdB/kZU83gybUAL+xLDJetFGzcpRnmd1LyIdphIfiRY
+        5kLLuXox/alR5zCzi2Q/LvTtYcuA
+X-Google-Smtp-Source: ABdhPJxMuvjHZthcawt8WUmiSHPwNllUGkXx5YnfTh7/mggvie8pQKteaMNu69ak3ikuRjX9cBkcVQ==
+X-Received: by 2002:a5d:4bc4:: with SMTP id l4mr22765783wrt.97.1595284819931;
+        Mon, 20 Jul 2020 15:40:19 -0700 (PDT)
+Received: from [192.168.0.74] ([178.233.178.9])
+        by smtp.gmail.com with ESMTPSA id i67sm1153944wma.12.2020.07.20.15.40.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2020 15:40:19 -0700 (PDT)
+Subject: Re: Speaker pops with max98357a on rk3399-gru-kevin since v5.7
+To:     Tzung-Bi Shih <tzungbi@google.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rockchip@lists.infradead.org
+References: <f2ca985f-7dbd-847a-1875-dd0e1044ef02@gmail.com>
+ <CA+Px+wU1S1EqtW-yZH9z9aCF3ggSriBqy73SRYy8q61x0GkdQQ@mail.gmail.com>
+From:   Alper Nebi Yasak <alpernebiyasak@gmail.com>
+Message-ID: <846feea6-e2b6-3a0e-b05f-d70e898f9ea5@gmail.com>
+Date:   Tue, 21 Jul 2020 01:40:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+Px+wU1S1EqtW-yZH9z9aCF3ggSriBqy73SRYy8q61x0GkdQQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the conversion of the runtime tests of check_*_overflow functions,
-from `lib/test_overflow.c`to KUnit tests.
+On 17/07/2020 05:27, Tzung-Bi Shih wrote:
+> I am not convinced the pop comes from 128f825aeab7.
 
-The log similar to the one seen in dmesg running test_overflow.c can be
-seen in `test.log`.
+Maybe some pre-existing defect in rk3399_gru_sound got exposed by
+128f825aeab7 or the machine driver needs some changes to complement
+that commit?
 
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-Tested-by: David Gow <davidgow@google.com>
----
-v2:
-  * moved lib/test_overflow.c to lib/overflow-test.c;
-    * back to original license;
-    * fixed style code;
-    * keeps __initconst and added _refdata on overflow_test_cases variable;
-    * keeps macros intact making asserts with the variable err;
-    * removed duplicate test_s8_overflow();
-  * fixed typos on commit message;
+> (I don't have a rk3399-gru-kevin so I got another test machine with MAX98357A.)
+> (I was testing with and without an audio server.)
 
-v3:
-  * changed filename to overflow_kunit.c;
-  * replace _refdata by _inidata;
-  * added expects/asserts on individual tests;
----
- lib/Kconfig.debug                         |  20 +++-
- lib/Makefile                              |   2 +-
- lib/{test_overflow.c => overflow_kunit.c} | 122 +++++++++-------------
- 3 files changed, 70 insertions(+), 74 deletions(-)
- rename lib/{test_overflow.c => overflow_kunit.c} (91%)
+Your observations are also a bit different from mine, which IMO also
+suggests the machine driver is the true culprit -- I'd guess the pops
+you hear would be from a different problem in your test machine's
+machine driver?
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 9ad9210d70a1..230aaf418dc0 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1999,9 +1999,6 @@ config TEST_UUID
- config TEST_XARRAY
- 	tristate "Test the XArray code at runtime"
+(Let me restate my observations to contrast with yours, as I feel my
+previous explanation was too wordy:)
 
--config TEST_OVERFLOW
--	tristate "Test check_*_overflow() functions at runtime"
--
- config TEST_RHASHTABLE
- 	tristate "Perform selftest on resizable hash table"
- 	help
-@@ -2154,6 +2151,23 @@ config SYSCTL_KUNIT_TEST
+> Observations:
+> - I can hear the pop either with or without 128f825aeab7 (with and
+> without sdmode-delay).
 
- 	  If unsure, say N.
+I never hear pops without 128f825aeab7, but always hear pops with it.
+(no change when I remove "sdmode-delay" from the device-tree)
 
-+config OVERFLOW_KUNIT
-+	tristate "KUnit test for overflow" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  This builds the overflow KUnit tests.
-+
-+	  KUnit tests run during boot and output the results to the debug log
-+	  in TAP format (http://testanything.org/). Only useful for kernel devs
-+	  running KUnit test harness and are not for inclusion into a production
-+	  build.
-+
-+	  For more information on KUnit and unit tests in general please refer
-+	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-+
-+	  If unsure, say N.
-+
- config LIST_KUNIT_TEST
- 	tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
-diff --git a/lib/Makefile b/lib/Makefile
-index b1c42c10073b..c3cf72ec6c52 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -75,7 +75,6 @@ obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
- obj-$(CONFIG_TEST_MIN_HEAP) += test_min_heap.o
- obj-$(CONFIG_TEST_LKM) += test_module.o
- obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
--obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
- obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
- obj-$(CONFIG_TEST_SORT) += test_sort.o
- obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
-@@ -318,3 +317,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
- # KUnit tests
- obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
- obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
-+obj-$(CONFIG_OVERFLOW_KUNIT) += overflow_kunit.o
-diff --git a/lib/test_overflow.c b/lib/overflow_kunit.c
-similarity index 91%
-rename from lib/test_overflow.c
-rename to lib/overflow_kunit.c
-index 7a4b6f6c5473..475d0daeb801 100644
---- a/lib/test_overflow.c
-+++ b/lib/overflow_kunit.c
-@@ -4,14 +4,11 @@
-  */
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> - The pop noise is not always.  Higher probability after stopping
+> playback than before starting.
 
-+#include <kunit/test.h>
- #include <linux/device.h>
- #include <linux/init.h>
--#include <linux/kernel.h>
- #include <linux/mm.h>
--#include <linux/module.h>
- #include <linux/overflow.h>
--#include <linux/slab.h>
--#include <linux/types.h>
- #include <linux/vmalloc.h>
-
- #define DEFINE_TEST_ARRAY(t)			\
-@@ -248,7 +245,7 @@ static int __init do_test_ ## t(const struct test_ ## t *p)		\
- 	return err;							\
- }									\
- 									\
--static int __init test_ ## t ## _overflow(void) {			\
-+static int __init test_ ## t ## _overflow(struct kunit *test) {	\
- 	int err = 0;							\
- 	unsigned i;							\
- 									\
-@@ -256,6 +253,7 @@ static int __init test_ ## t ## _overflow(void) {			\
- 		ARRAY_SIZE(t ## _tests));				\
- 	for (i = 0; i < ARRAY_SIZE(t ## _tests); ++i)			\
- 		err |= do_test_ ## t(&t ## _tests[i]);			\
-+	KUNIT_EXPECT_FALSE(test, err);					\
- 	return err;							\
- }
-
-@@ -270,25 +268,25 @@ DEFINE_TEST_FUNC(u64, "%llu");
- DEFINE_TEST_FUNC(s64, "%lld");
- #endif
-
--static int __init test_overflow_calculation(void)
-+static void __init overflow_calculation_test(struct kunit *test)
- {
- 	int err = 0;
-
--	err |= test_u8_overflow();
--	err |= test_s8_overflow();
--	err |= test_u16_overflow();
--	err |= test_s16_overflow();
--	err |= test_u32_overflow();
--	err |= test_s32_overflow();
-+	err |= test_u8_overflow(test);
-+	err |= test_s8_overflow(test);
-+	err |= test_u16_overflow(test);
-+	err |= test_s16_overflow(test);
-+	err |= test_u32_overflow(test);
-+	err |= test_s32_overflow(test);
- #if BITS_PER_LONG == 64
--	err |= test_u64_overflow();
--	err |= test_s64_overflow();
-+	err |= test_u64_overflow(test);
-+	err |= test_s64_overflow(test);
- #endif
-
--	return err;
-+	KUNIT_EXPECT_FALSE(test, err);
- }
-
--static int __init test_overflow_shift(void)
-+static void __init overflow_shift_test(struct kunit *test)
- {
- 	int err = 0;
-
-@@ -313,9 +311,9 @@ static int __init test_overflow_shift(void)
- 			pr_warn("got %llu\n", (u64)__d);		\
- 		__failed = 1;						\
- 	}								\
--	if (!__failed)							\
--		pr_info("ok: (%s)(%s << %s) == %s\n", #t, #a, #s,	\
--			of ? "overflow" : #expect);			\
-+	KUNIT_EXPECT_FALSE_MSG(test, __failed,				\
-+			       "ok: (%s)(%s << %s) == %s\n", #t, #a, #s,\
-+			       of ? "overflow" : #expect);		\
- 	__failed;							\
- })
-
-@@ -479,7 +477,7 @@ static int __init test_overflow_shift(void)
- 	err |= TEST_ONE_SHIFT(0, 31, s32, 0, false);
- 	err |= TEST_ONE_SHIFT(0, 63, s64, 0, false);
-
--	return err;
-+	KUNIT_EXPECT_FALSE(test, err);
- }
-
- /*
-@@ -499,7 +497,7 @@ static int __init test_overflow_shift(void)
- #define TEST_SIZE		(5 * 4096)
-
- #define DEFINE_TEST_ALLOC(func, free_func, want_arg, want_gfp, want_node)\
--static int __init test_ ## func (void *arg)				\
-+static int __init test_ ## func (struct kunit *test, void *arg)		\
- {									\
- 	volatile size_t a = TEST_SIZE;					\
- 	volatile size_t b = (SIZE_MAX / TEST_SIZE) + 1;			\
-@@ -507,19 +505,15 @@ static int __init test_ ## func (void *arg)				\
- 									\
- 	/* Tiny allocation test. */					\
- 	ptr = alloc ## want_arg ## want_gfp ## want_node (func, arg, 1);\
--	if (!ptr) {							\
--		pr_warn(#func " failed regular allocation?!\n");	\
--		return 1;						\
--	}								\
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL_MSG(test, ptr,			\
-+			#func " failed regular allocation?!\n");	\
- 	free ## want_arg (free_func, arg, ptr);				\
- 									\
- 	/* Wrapped allocation test. */					\
- 	ptr = alloc ## want_arg ## want_gfp ## want_node (func, arg,	\
- 							  a * b);	\
--	if (!ptr) {							\
--		pr_warn(#func " unexpectedly failed bad wrapping?!\n");	\
--		return 1;						\
--	}								\
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL_MSG(test, ptr,			\
-+			#func " unexpectedly failed bad wrapping?!\n"); \
- 	free ## want_arg (free_func, arg, ptr);				\
- 									\
- 	/* Saturated allocation test. */				\
-@@ -555,7 +549,7 @@ DEFINE_TEST_ALLOC(kvzalloc_node, kvfree,     0, 1, 1);
- DEFINE_TEST_ALLOC(devm_kmalloc,  devm_kfree, 1, 1, 0);
- DEFINE_TEST_ALLOC(devm_kzalloc,  devm_kfree, 1, 1, 0);
-
--static int __init test_overflow_allocation(void)
-+static void __init overflow_allocation_test(struct kunit *test)
- {
- 	const char device_name[] = "overflow-test";
- 	struct device *dev;
-@@ -563,52 +557,40 @@ static int __init test_overflow_allocation(void)
-
- 	/* Create dummy device for devm_kmalloc()-family tests. */
- 	dev = root_device_register(device_name);
--	if (IS_ERR(dev)) {
--		pr_warn("Cannot register test device\n");
--		return 1;
--	}
--
--	err |= test_kmalloc(NULL);
--	err |= test_kmalloc_node(NULL);
--	err |= test_kzalloc(NULL);
--	err |= test_kzalloc_node(NULL);
--	err |= test_kvmalloc(NULL);
--	err |= test_kvmalloc_node(NULL);
--	err |= test_kvzalloc(NULL);
--	err |= test_kvzalloc_node(NULL);
--	err |= test_vmalloc(NULL);
--	err |= test_vmalloc_node(NULL);
--	err |= test_vzalloc(NULL);
--	err |= test_vzalloc_node(NULL);
--	err |= test_devm_kmalloc(dev);
--	err |= test_devm_kzalloc(dev);
-+	KUNIT_ASSERT_FALSE_MSG(test, IS_ERR(dev), "Cannot register test device\n");
-+
-+	err |= test_kmalloc(test, NULL);
-+	err |= test_kmalloc_node(test, NULL);
-+	err |= test_kzalloc(test, NULL);
-+	err |= test_kzalloc_node(test, NULL);
-+	err |= test_kvmalloc(test, NULL);
-+	err |= test_kvmalloc_node(test, NULL);
-+	err |= test_kvzalloc(test, NULL);
-+	err |= test_kvzalloc_node(test, NULL);
-+	err |= test_vmalloc(test, NULL);
-+	err |= test_vmalloc_node(test, NULL);
-+	err |= test_vzalloc(test, NULL);
-+	err |= test_vzalloc_node(test, NULL);
-+	err |= test_devm_kmalloc(test, dev);
-+	err |= test_devm_kzalloc(test, dev);
-
- 	device_unregister(dev);
-
--	return err;
-+	KUNIT_EXPECT_FALSE(test, err);
- }
-
--static int __init test_module_init(void)
--{
--	int err = 0;
--
--	err |= test_overflow_calculation();
--	err |= test_overflow_shift();
--	err |= test_overflow_allocation();
--
--	if (err) {
--		pr_warn("FAIL!\n");
--		err = -EINVAL;
--	} else {
--		pr_info("all tests passed\n");
--	}
-+static struct kunit_case __initdata overflow_test_cases[] = {
-+	KUNIT_CASE(overflow_calculation_test),
-+	KUNIT_CASE(overflow_shift_test),
-+	KUNIT_CASE(overflow_allocation_test),
-+	{}
-+};
-
--	return err;
--}
-+static struct kunit_suite __initdata overflow_test_suite = {
-+	.name = "overflow",
-+	.test_cases = overflow_test_cases,
-+};
-
--static void __exit test_module_exit(void)
--{ }
-+kunit_test_suites(&overflow_test_suite);
-
--module_init(test_module_init);
--module_exit(test_module_exit);
- MODULE_LICENSE("Dual MIT/GPL");
-
-base-commit: c63d2dd7e134ebddce4745c51f9572b3f0d92b26
---
-2.26.2
-
+I always hear one pop when starting playback, and two pops (with a few
+seconds between them) when stopping playback.
