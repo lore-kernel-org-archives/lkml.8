@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8660EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A9CC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64E8920773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DA32068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:56:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="MM+l6kte"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Ly3MetxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgGTK4C (ORCPT
+        id S1728483AbgGTK40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 06:56:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51472 "EHLO
+        Mon, 20 Jul 2020 06:56:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728348AbgGTK4B (ORCPT
+        with ESMTP id S1728356AbgGTK4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 06:56:01 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08058C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:56:00 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mn17so10050360pjb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:56:00 -0700 (PDT)
+        Mon, 20 Jul 2020 06:56:25 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAABBC0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:56:25 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id m16so8522562pls.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:56:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=87hFulUMTLYcYtfb5/q1HiR84qe1kMeDg6xrZ7BQkqI=;
-        b=MM+l6kteqQzEpnQ/ywvSjIFlpM9azD+mxwXxGGlCUwlkklIaJBa9+GDaW7Htux8/Ze
-         N6XiO0NF+0Rt5PgioLbTBsUPJWJT7tSKInjVLe88qAYGJsoTaJ0xKY5i5+7lLVFUhPGq
-         6ZfRVWeLAL/lW1q+B4w9Ofv9plQJdHNYspXjk=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nSOMoYdoeN3ixxkr9HyJ0ziUQqzOG9TSyjql14cVs8g=;
+        b=Ly3MetxYtUoLy7ynvT0emxlziJSTT/D0jOHRm5pDALE3DZJaM8QzJ2qCR3ODASwLZY
+         u67HLCCTU4JjwUIKlm7QI6xbux4D0bYILmWDp7keoxSrJ5TEwIQzu4n5reDvv8ehElJn
+         0VCESqXe1wWf+PEz5fnyZhjm3g3ze4X0aMeb0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=87hFulUMTLYcYtfb5/q1HiR84qe1kMeDg6xrZ7BQkqI=;
-        b=F2myHMUl9641hIW8Jv2K0BHtlbT9W73Q3LjD2li6HbBN5b/ruP8OM7wccRq0eIM4BC
-         bGD24/ntSW5gsFkxUResv6rxi3308mXqahLXH7SeZnHynPXs3U2fbLNTkNXaSjtyO0V+
-         LorRkCxSOqPIKoj9m2uATkG7i7+BOJuLVuVEfOd6Q9QjGr90MxYzVniWwXJXu1WNVwn1
-         xf21yYgxqYXPj10FtYmZ5Ear3IarowvbXBOFrm1BSocGNGyA7fPmkmTw+YkuJHhjbt17
-         qYkWf37QoBGRaDp/UcCPGGjb0pA5wIOZgpPfwCu9yM68KfyRFc5kMevSlb+1uYWOc2LW
-         GZdw==
-X-Gm-Message-State: AOAM533HnjcMif+U/n/U9GilL0HWn9ZdH6HRaROOaNnrKm452dicHP9w
-        IVCfKoeFYY+v6wxrNZ0EuYvQ5g==
-X-Google-Smtp-Source: ABdhPJzjoQNKzZ+yDhrVCkGBwPkfdrqM2z3JHRSN3Qbebmu8oZ0F7c5A9NPns6yP/9LViF/8Ba/LMA==
-X-Received: by 2002:a17:90a:a0a:: with SMTP id o10mr22464206pjo.12.1595242560305;
-        Mon, 20 Jul 2020 03:56:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nSOMoYdoeN3ixxkr9HyJ0ziUQqzOG9TSyjql14cVs8g=;
+        b=ioOVeEXy1xCHtlgKOJlnyLQSxvXfOL0Um7lDuVpDZwNVs592+wfl3uEyEuENEATwnl
+         hfv3dKlempP0sSsC8GOjG5j1XUWdK4twdRH3kOXMshBOV2f3uP0jrfriOF6HqrUPaPqI
+         FZYbpj119aZWWCo4AztEAXOzPr6ibfF7LmdN848kz6Vl5n8/TuLlSH6J6w/0yQB5+nOs
+         LBu8hi2rgJTqqZMPu/Lxjs5zrTmgdJkS1P5zrfAIzjDD58CcsKxT98/Ki0WiRUhaTps5
+         SUIYv6dQiZspA/kSzrEAFDIWNzrnf3XZkGtcdpZqfaPPXsTon+miQL1B3AXKJu95i40K
+         m9Og==
+X-Gm-Message-State: AOAM53281FXbrvhqKHVfWqkmiRqAIlYMijLb5wMZkWOhsRuAdnBo0EEm
+        cMvxIcMA9ZtXTL6swUyY8EzpHw==
+X-Google-Smtp-Source: ABdhPJxtpGiGl5nfJ/WlbO97twEDAKENawlViepi1t92UU+FBph92dN8QPL/JfxxH5UeJmFl+YUKrg==
+X-Received: by 2002:a17:90b:2350:: with SMTP id ms16mr14056450pjb.127.1595242585402;
+        Mon, 20 Jul 2020 03:56:25 -0700 (PDT)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:8c21:db7b:4558:fba3])
-        by smtp.gmail.com with ESMTPSA id j5sm13984721pgi.42.2020.07.20.03.55.50
+        by smtp.gmail.com with ESMTPSA id j5sm13984721pgi.42.2020.07.20.03.56.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 03:55:59 -0700 (PDT)
+        Mon, 20 Jul 2020 03:56:24 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
 Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
@@ -65,10 +65,12 @@ Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
         linux-kernel@vger.kernel.org,
         linux-amarula <linux-amarula@amarulasolutions.com>,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 1/3] arm64: dts: rockchip: Mark rock-pi-4 as rock-pi-4a dts
-Date:   Mon, 20 Jul 2020 16:25:29 +0530
-Message-Id: <20200720105531.367671-1-jagan@amarulasolutions.com>
+Subject: [PATCH 3/3] arm64: dts: rockchip: Add Radxa ROCK Pi 4C support
+Date:   Mon, 20 Jul 2020 16:25:31 +0530
+Message-Id: <20200720105531.367671-3-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200720105531.367671-1-jagan@amarulasolutions.com>
+References: <20200720105531.367671-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,74 +78,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rock PI 4 has 3 variants of hardware platforms called
-RockPI 4A, 4B, and 4C.
+Rock PI 4C has AP6256 Wifi/BT, PoE, miniDP, USB Host enabled
+GPIO pin change compared to 4B, 4C.
 
-- Rock PI 4A has no Wif/BT.
-- Rock PI 4B has AP6256 Wifi/BT, PoE.
-- Rock PI 4C has AP6256 Wifi/BT, PoE, miniDP, USB Host enable
-  GPIO pin change compared to 4B, 4C
-
-So move common nodes, properties into dtsi file and include
-on respective variant dts files.
+So, add or enable difference nodes/properties in 4C dts
+by including common dtsi.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm64/boot/dts/rockchip/Makefile               |  2 +-
- .../{rk3399-rock-pi-4.dts => rk3399-rock-pi-4.dtsi} |  3 ---
- arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4a.dts  | 13 +++++++++++++
- 3 files changed, 14 insertions(+), 4 deletions(-)
- rename arch/arm64/boot/dts/rockchip/{rk3399-rock-pi-4.dts => rk3399-rock-pi-4.dtsi} (99%)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4a.dts
+ arch/arm64/boot/dts/rockchip/Makefile         |  1 +
+ .../boot/dts/rockchip/rk3399-rock-pi-4c.dts   | 51 +++++++++++++++++++
+ 2 files changed, 52 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts
 
 diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index b87b1f773083..42f9e1861461 100644
+index 8832d05c2571..02cdb3c4a6c1 100644
 --- a/arch/arm64/boot/dts/rockchip/Makefile
 +++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -33,7 +33,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-pinebook-pro.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
+@@ -35,6 +35,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc-mezzanine.dtb
--dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4a.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4a.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4b.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4c.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64-v2.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-similarity index 99%
-rename from arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-rename to arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-index 3923ec01ef66..c39334b139cc 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-@@ -11,9 +11,6 @@
- #include "rk3399-opp.dtsi"
- 
- / {
--	model = "Radxa ROCK Pi 4";
--	compatible = "radxa,rockpi4", "rockchip,rk3399";
--
- 	chosen {
- 		stdout-path = "serial2:1500000n8";
- 	};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4a.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4a.dts
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts
 new file mode 100644
-index 000000000000..d96dd3ebd3e0
+index 000000000000..9d07ebd1ec82
 --- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4a.dts
-@@ -0,0 +1,13 @@
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts
+@@ -0,0 +1,51 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
-+ * Copyright (c) 2019 Akash Gajjar <Akash_Gajjar@mentor.com>
-+ * Copyright (c) 2019 Pragnesh Patel <Pragnesh_Patel@mentor.com>
++ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
++ * Copyright (c) 2019 Radxa Limited
++ * Copyright (c) 2019 Amarula Solutions(India)
 + */
 +
 +/dts-v1/;
 +#include "rk3399-rock-pi-4.dtsi"
 +
 +/ {
-+	model = "Radxa ROCK Pi 4A";
++	model = "Radxa ROCK Pi 4C";
 +	compatible = "radxa,rockpi4", "rockchip,rk3399";
++};
++
++&sdio0 {
++	status = "okay";
++
++	brcmf: wifi@1 {
++		compatible = "brcm,bcm4329-fmac";
++		reg = <1>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
++		interrupt-names = "host-wake";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_host_wake_l>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		clocks = <&rk808 1>;
++		clock-names = "ext_clock";
++		device-wakeup-gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
++		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
++		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
++	};
++};
++
++&vcc5v0_host {
++	gpio = <&gpio3 RK_PD6 GPIO_ACTIVE_HIGH>;
++};
++
++&vcc5v0_host_en {
++	rockchip,pins = <3 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
 +};
 -- 
 2.25.1
