@@ -2,53 +2,53 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76708C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EDDC433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 571CE206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91C7206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262701;
-	bh=FAokqGgeK6mWcP265Yn4T2/8YECIOHBdNrkvb9y7XbA=;
+	s=default; t=1595262708;
+	bh=EEaYoc/pEyzEgkAYaFBflSjPGHg/lWurb1kBnI+GpFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qQmMpLKxH544UHuDq+gYmR7bkUSwna2kR4MEaef1aH51kwh1Yqia9sVyeBSIs7Bp7
-	 K8lbZXhouZN0WU5Tw15duyxCTo2E9R5tRg5SS07PuKr47XMplB2F3nLhbhts/WYfWI
-	 SLMhpGohb241XCkEn1Bf2PUZ0/tbIZClia8XU6mQ=
+	b=aVr2xVcXTzhv1l2kINXWJuK+YBFFmuE2pC0dCUqtJIu6MsvTSHTymUBWvgBoa7wYJ
+	 13HSiiuXJYYLb7f/w6mLwiX2jPk0BSPKsRipBzYUn1ZHEGHS9/6Q9dPdUmaPENPAlz
+	 TJIPoPPe1xYBPA72yz2HdQbP6rbh0moCFoARQhRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388823AbgGTQbj (ORCPT
+        id S1731639AbgGTP5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:31:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57082 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731887AbgGTP5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:57:16 -0400
+        id S1731850AbgGTP44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:56:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5969620773;
-        Mon, 20 Jul 2020 15:57:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A7222065E;
+        Mon, 20 Jul 2020 15:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260636;
-        bh=FAokqGgeK6mWcP265Yn4T2/8YECIOHBdNrkvb9y7XbA=;
+        s=default; t=1595260616;
+        bh=EEaYoc/pEyzEgkAYaFBflSjPGHg/lWurb1kBnI+GpFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WvwyELylzVQwEXboB1uqC8TwZCn8+9S5HpubI7Q/BSewB7SVSFyrpQfcHIyGgabkn
-         EMmFjLmlqV6KgX730vnkehPsnzy/c0g7P3z+eZgEGPf9BjoL6N3me9mUf1eKG2s+d+
-         eEjSGf4Hn/War+iVbIXrFiZg36w6+6+Ox28/PYvg=
+        b=s8rTWwi1ty2K10FlslRcW0KXl2nHQt/boegtH8GD3BGK+IZleLy0bVA+l1FcUsOmI
+         /zqLy0Bp59r86SVH8hFRhu1/eVcqCLKzUQlwXAPc1AXAnB4ajZJloRx/3wOgRk/b8r
+         cztSXajUayEYWYFZ2fSkVAS9Fm4xqLZHC6JBE5QY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marshall Midden <marshallmidden@gmail.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 040/215] cifs: prevent truncation from long to int in wait_for_free_credits
-Date:   Mon, 20 Jul 2020 17:35:22 +0200
-Message-Id: <20200720152822.093089179@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 005/215] bridge: mcast: Fix MLD2 Report IPv6 payload length check
+Date:   Mon, 20 Jul 2020 17:34:47 +0200
+Message-Id: <20200720152820.400624245@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -61,36 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: "Linus Lüssing" <linus.luessing@c0d3.blue>
 
-[ Upstream commit 19e888678bac8c82206eb915eaf72741b2a2615c ]
+[ Upstream commit 5fc6266af7b427243da24f3443a50cd4584aac06 ]
 
-The wait_event_... defines evaluate to long so we should not assign it an int as this may truncate
-the value.
+Commit e57f61858b7c ("net: bridge: mcast: fix stale nsrcs pointer in
+igmp3/mld2 report handling") introduced a bug in the IPv6 header payload
+length check which would potentially lead to rejecting a valid MLD2 Report:
 
-Reported-by: Marshall Midden <marshallmidden@gmail.com>
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The check needs to take into account the 2 bytes for the "Number of
+Sources" field in the "Multicast Address Record" before reading it.
+And not the size of a pointer to this field.
+
+Fixes: e57f61858b7c ("net: bridge: mcast: fix stale nsrcs pointer in igmp3/mld2 report handling")
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: Linus LÃ¼ssing <linus.luessing@c0d3.blue>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/cifs/transport.c | 2 +-
+ net/bridge/br_multicast.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
-index fe1552cc8a0a7..eafc49de4d7f7 100644
---- a/fs/cifs/transport.c
-+++ b/fs/cifs/transport.c
-@@ -528,7 +528,7 @@ wait_for_free_credits(struct TCP_Server_Info *server, const int num_credits,
- 		      const int timeout, const int flags,
- 		      unsigned int *instance)
- {
--	int rc;
-+	long rc;
- 	int *credits;
- 	int optype;
- 	long int t;
--- 
-2.25.1
-
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -1007,7 +1007,7 @@ static int br_ip6_multicast_mld2_report(
+ 		nsrcs_offset = len + offsetof(struct mld2_grec, grec_nsrcs);
+ 
+ 		if (skb_transport_offset(skb) + ipv6_transport_len(skb) <
+-		    nsrcs_offset + sizeof(_nsrcs))
++		    nsrcs_offset + sizeof(__nsrcs))
+ 			return -EINVAL;
+ 
+ 		_nsrcs = skb_header_pointer(skb, nsrcs_offset,
 
 
