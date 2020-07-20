@@ -2,98 +2,137 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3860C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE85C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA60E2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E7822B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595255254;
-	bh=wCOr3mse6oiM8PQV1VmHspmG3oXfFI/zAL+aeccIQhw=;
+	s=default; t=1595255289;
+	bh=jyRggwB3bfNpTpeprxhV4TjRHOze4OkPB8o1SEWCrM4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aSp9cJB4B/PO7TQrQCIJRZDIxd2rPPIKU9k1l4sVwRsRWASC+wJMdyIja1JbBx3Hr
-	 KDphY1s/l+OpHaDOq3BoS1K2DMH2FlcxH8WgxWGEfOXq7yHEOlAsJiHYD980W75Dlu
-	 LHky+o/ufSafqK+EFx+2/+bSazGotsO/xUB2ynBA=
+	b=WVAm0/jZlR68P5LUzMxwL6XkpuaY1Jvhu++E/P+WZkzQYrg9zw7iAPDBNW7ragYCA
+	 y72gG2FjubEjciwGzq4iC9o+RprxDoa2RrLbmlcEWWRkzvK1wD50BycaPuC3O/+l2a
+	 tpdEfQSznQRDPFdlJ92TyI6ybfCYg9FyIE9Ygif8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgGTO1d (ORCPT
+        id S1728403AbgGTO2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:27:33 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36204 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgGTO1c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:27:32 -0400
-Received: by mail-ed1-f65.google.com with SMTP id dg28so12918969edb.3;
-        Mon, 20 Jul 2020 07:27:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WUqMYmm1tBjWN8rDa5/lH0f29faFioQqlLBrnGrzJjU=;
-        b=ASXK/hNWr4IbhRGz/rTNTPghP1BlEP1uX7YODjnM7wtIyMy7tVfiwi3iQ2qkBAfehp
-         NWF12WprensGa07qlWtp/o4ZFKcm+/JF2Jxnij+a1NKfKQGx/7mgnKRhTAmSYfQN+ixI
-         RImkyv2zBUw6RkfzQB/ZTt+sMRPWIGYecJNudyBVDdC15g75QUJh86vBOteN3ea4f6oD
-         Y0kHF09JBw5Oo1NFDNHBFhG2WirMSfn98Q5PtzuEPTYlOUv26ps7ViDXhvdXwpbgt6lH
-         VeA4cbEqGpyykM4HhXhN87YGbQP2IkZj6IAZcBrtetfJLat8ENRaOWyQ5jaoYhddkwkV
-         zkag==
-X-Gm-Message-State: AOAM5323yyyG0aCgTMA4detbAjbjQG+YAOOoIUUuV/jBOa1BTVtU328C
-        FfFfPdeiNSg7Ox0jScZkMIQ=
-X-Google-Smtp-Source: ABdhPJzDYhs5S+ljtAHKafQIXjPtBz0lcQj1UO/SMFfCr8WneiloeP41cEVnNDjJTOKAXi8ok/P3uw==
-X-Received: by 2002:a05:6402:1777:: with SMTP id da23mr21188357edb.260.1595255250573;
-        Mon, 20 Jul 2020 07:27:30 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.200])
-        by smtp.googlemail.com with ESMTPSA id s21sm15351891edw.37.2020.07.20.07.27.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 Jul 2020 07:27:29 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 16:27:27 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 07/25] pinctrl: samsung: pinctrl-s3c24xx: Fix formatting
- issues
-Message-ID: <20200720142727.GB6747@kozik-lap>
-References: <20200713144930.1034632-1-lee.jones@linaro.org>
- <20200713144930.1034632-8-lee.jones@linaro.org>
+        Mon, 20 Jul 2020 10:28:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726458AbgGTO2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 10:28:07 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCE9F2065E;
+        Mon, 20 Jul 2020 14:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595255286;
+        bh=jyRggwB3bfNpTpeprxhV4TjRHOze4OkPB8o1SEWCrM4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gr9Eaq+omUbSnhnxksbHeS/wAnqkASYSWLF/neiGhHoCSVwYTc+dOcHtgLqFD95XX
+         Fryabpbh2xXTNVtcarFIdwiO+FiItN2Z8zvTu7xNeIdWiuN36YaDS6dNWc+B7uyqBf
+         LJ0+R1nDwSUHpR9iRvDN+P7ucjAYppLv+M321y0A=
+Date:   Mon, 20 Jul 2020 15:27:53 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v3 3/4] regulator: core: Add basic enable/disable support
+ for sync_state() callbacks
+Message-ID: <20200720142753.GF4601@sirena.org.uk>
+References: <20200716042053.1927676-4-saravanak@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gneEPciiIl/aKvOT"
 Content-Disposition: inline
-In-Reply-To: <20200713144930.1034632-8-lee.jones@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200716042053.1927676-4-saravanak@google.com>
+X-Cookie: Be different: conform.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 03:49:12PM +0100, Lee Jones wrote:
-> Kerneldoc struct titles must be followed by whitespace.  Also attributes
-> need to be in the format '@.*: ' else the checker gets confused.
-> 
-> Fixes the following W=1 kernel build warning(s):
-> 
->  drivers/pinctrl/samsung/pinctrl-s3c24xx.c:100: warning: cannot understand function prototype: 'struct s3c24xx_eint_domain_data '
-> 
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: linux-samsung-soc@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/pinctrl/samsung/pinctrl-s3c24xx.c | 6 +++---
 
-Thanks, applied.
+--gneEPciiIl/aKvOT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Best regards,
-Krzysztof
+On Wed, Jul 15, 2020 at 09:20:52PM -0700, Saravana Kannan wrote:
 
+> There are Android devices that exhibit the issue in the example where
+> regulator-X is an LDO, device-A is a camera device and device-B and
+> device-C are UFS and USB. To avoid this, they have their own downstream
+> changes to the regulator framework.
+
+Can you provide any references to these bodges?
+
+> 1. When a regulator is registered,
+>    a. The sync_state() callback for the regulator's device is set to
+>       regulator_sync_state(). The sync_state() callback is called when
+>       all the consumers of the regulator's device have probed
+>       successfully.
+
+As I indicated on my previous review this doesn't seem OK, given that a
+huge proportion of the regulators on most systems are part of a single
+PMIC this means that devices won't be able to fully control regulators
+for the majority of the boot process, possibly quite a long time after
+userspace has started in systems where not all devices have drivers.
+That seems unreasonably restrictive, it seems like this is shifting the
+problem around so we have this new very late init phase where we
+actually implement changes that devices asked for.  Devices can work
+around it by using _get_exclusive() but that makes things more complex
+if they can also support non-exclusive use.
+
+I don't understand the motivation for doing things this way.  Like I
+said last time it really feels like this turns the whole mechanism into
+a very complicated way of implementing a new initcall.
+
+>    b. If the regulator is ON at boot, a BOOT-LIMITS consumer is created
+>       for the regulator and an enable vote is made.
+
+If something was left partially set up by the bootloader this means that
+drivers are no longer able to remove power from the device as part of
+getting it into a known good state even if they are the only consumer.
+Having to tune things in the bootloader isn't great for some development
+flows.
+
+> +	/*
+> +	 * If regulator_cleanup_timeout is set to a non-zero value, it probably
+> +	 * means some of the consumers will never probe or the regulators have
+> +	 * some restrictions on how long they can stay ON. So, don't wait
+> +	 * forever for consumer devices to probe.
+> +	 */
+> +	if (regulator_cleanup_timeout)
+> +		class_for_each_device(&regulator_class, NULL, NULL,
+> +				      regulator_boot_limits_timeout);
+
+It feels like this should be a negative value rather than zero, if the
+timeout is 0 someone might reasonably expect things to happen
+immediately rather than never.
+
+--gneEPciiIl/aKvOT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8VqekACgkQJNaLcl1U
+h9Cm2wf+M/0ivrwr2bBxjGc6df3+tAuqVXG1sq+77QTRKXLm4iAE1mvhl5fHqxZO
+xKPp0Wx98PkCnJ6XmtQrXTMGYzktH2MZiUsy2Ph1vCno/bAI/K8A2wOKR5OSx/zr
+IB8mMU/drE2o42rxT+ArpoxjeRGGCMmqzCllS8Z6aw6iOB4igCMsUN3p5ze0spC1
+JUDz1ic0NlplsV62ursdetC75vpD97x3xUJkEGUS7ypenDSs1fEBldS4WR4MuXNB
+Ycnzc0JNJjG94y1VWxzNocHqlifvt0tf0ZYVPLwoftERUGhmyHMUz51MPNYEiJ0w
+h28pZWvuFXyuBkKIUOidHoxmC/JUEw==
+=tuz3
+-----END PGP SIGNATURE-----
+
+--gneEPciiIl/aKvOT--
