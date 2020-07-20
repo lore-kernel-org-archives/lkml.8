@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D87C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D538C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 348A720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC08E20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261717;
-	bh=8n6WyCnf4uOT8u/UC9lAYwFf3DIBEdlqg7odhu7VMNA=;
+	s=default; t=1595261722;
+	bh=UHTBCsg/QqgvyNMNI2gyYcukzr/gTi8xEjWWr4Et+xA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a8HZ8m9O8cxudWUbzl1vEUluz1QiUjGyp9JfWqbN9dB7CLKFuHA+oT2hI1NFiFK5H
-	 a6DVF078WK50YNBUquLuuvGYnzPJ0pAdNag/r7T1d/PjEOXSFri5R3eV1W/jnNA7jG
-	 UibwLEju8rhp7TIzPNI+LBkigAvShawapAN6zfyE=
+	b=Myo4kQbu9KW8Hov+TKIj7jRuwdjTstrb8pKuLqZ3sCzlEBMfEL5br0l7fxdNKkF9i
+	 cc5SZPw4WZpNi2AMetOHMbCIKCQMhTF1QIAUYneJ0RKyd7kJ81Ku8IrXYV/MjA/oOH
+	 VpMsjtvO+SO0gQllEGZL5/sravVGLthr3lJ8ZS+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387990AbgGTQPP (ORCPT
+        id S2388400AbgGTQPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:15:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388353AbgGTQPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:15:09 -0400
+        id S2387446AbgGTQPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:15:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4C8420684;
-        Mon, 20 Jul 2020 16:15:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7538B20734;
+        Mon, 20 Jul 2020 16:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261708;
-        bh=8n6WyCnf4uOT8u/UC9lAYwFf3DIBEdlqg7odhu7VMNA=;
+        s=default; t=1595261714;
+        bh=UHTBCsg/QqgvyNMNI2gyYcukzr/gTi8xEjWWr4Et+xA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wXOU3XAXim3f1DYeXZLiJihWx77i9L7/SYKdiJk7LfbdjM7+fFfqBiNR65zSPLww3
-         F6Xg7qsaw09hzHbcIwj+8I4EvDgHYsxGHmKhDbBshpdircPgcGP2vn8Ts7DqeKSXU0
-         BDJFGtfLNzy/RICAyY7WbcrS6IdrM9xPtrNa8lC4=
+        b=qVfD2gPRYEDmTplHddp1ZNT06/E3fs4msOIdiKts9yXQG1V982Y8op26m8NOLtuxo
+         e0qVEhNIdG88CExn74MkPD6C/bwcS+RH8VFbWSYo6q+g78/iLElcy49GNmc9ByZaOx
+         hdMKhqVvpZIUGitnmS1d0p7v176TfonNAxOxSafI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.7 206/244] dmaengine: fsl-edma: Fix NULL pointer exception in fsl_edma_tx_handler
-Date:   Mon, 20 Jul 2020 17:37:57 +0200
-Message-Id: <20200720152835.649076541@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Luis Machado <luis.machado@linaro.org>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.7 216/244] arm64: ptrace: Override SPSR.SS when single-stepping is enabled
+Date:   Mon, 20 Jul 2020 17:38:07 +0200
+Message-Id: <20200720152836.116413945@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,77 +61,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Will Deacon <will@kernel.org>
 
-commit f5e5677c420346b4e9788051c2e4d750996c428c upstream.
+commit 3a5a4366cecc25daa300b9a9174f7fdd352b9068 upstream.
 
-NULL pointer exception happens occasionally on serial output initiated
-by login timeout.  This was reproduced only if kernel was built with
-significant debugging options and EDMA driver is used with serial
-console.
+Luis reports that, when reverse debugging with GDB, single-step does not
+function as expected on arm64:
 
-    col-vf50 login: root
-    Password:
-    Login timed out after 60 seconds.
-    Unable to handle kernel NULL pointer dereference at virtual address 00000044
-    Internal error: Oops: 5 [#1] ARM
-    CPU: 0 PID: 157 Comm: login Not tainted 5.7.0-next-20200610-dirty #4
-    Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
-      (fsl_edma_tx_handler) from [<8016eb10>] (__handle_irq_event_percpu+0x64/0x304)
-      (__handle_irq_event_percpu) from [<8016eddc>] (handle_irq_event_percpu+0x2c/0x7c)
-      (handle_irq_event_percpu) from [<8016ee64>] (handle_irq_event+0x38/0x5c)
-      (handle_irq_event) from [<801729e4>] (handle_fasteoi_irq+0xa4/0x160)
-      (handle_fasteoi_irq) from [<8016ddcc>] (generic_handle_irq+0x34/0x44)
-      (generic_handle_irq) from [<8016e40c>] (__handle_domain_irq+0x54/0xa8)
-      (__handle_domain_irq) from [<80508bc8>] (gic_handle_irq+0x4c/0x80)
-      (gic_handle_irq) from [<80100af0>] (__irq_svc+0x70/0x98)
-    Exception stack(0x8459fe80 to 0x8459fec8)
-    fe80: 72286b00 e3359f64 00000001 0000412d a0070013 85c98840 85c98840 a0070013
-    fea0: 8054e0d4 00000000 00000002 00000000 00000002 8459fed0 8081fbe8 8081fbec
-    fec0: 60070013 ffffffff
-      (__irq_svc) from [<8081fbec>] (_raw_spin_unlock_irqrestore+0x30/0x58)
-      (_raw_spin_unlock_irqrestore) from [<8056cb48>] (uart_flush_buffer+0x88/0xf8)
-      (uart_flush_buffer) from [<80554e60>] (tty_ldisc_hangup+0x38/0x1ac)
-      (tty_ldisc_hangup) from [<8054c7f4>] (__tty_hangup+0x158/0x2bc)
-      (__tty_hangup) from [<80557b90>] (disassociate_ctty.part.1+0x30/0x23c)
-      (disassociate_ctty.part.1) from [<8011fc18>] (do_exit+0x580/0xba0)
-      (do_exit) from [<801214f8>] (do_group_exit+0x3c/0xb4)
-      (do_group_exit) from [<80121580>] (__wake_up_parent+0x0/0x14)
+  | I've noticed, under very specific conditions, that a PTRACE_SINGLESTEP
+  | request by GDB won't execute the underlying instruction. As a consequence,
+  | the PC doesn't move, but we return a SIGTRAP just like we would for a
+  | regular successful PTRACE_SINGLESTEP request.
 
-Issue looks like race condition between interrupt handler fsl_edma_tx_handler()
-(called as result of fsl_edma_xfer_desc()) and terminating the transfer with
-fsl_edma_terminate_all().
+The underlying problem is that when the CPU register state is restored
+as part of a reverse step, the SPSR.SS bit is cleared and so the hardware
+single-step state can transition to the "active-pending" state, causing
+an unexpected step exception to be taken immediately if a step operation
+is attempted.
 
-The fsl_edma_tx_handler() handles interrupt for a transfer with already freed
-edesc and idle==true.
+In hindsight, we probably shouldn't have exposed SPSR.SS in the pstate
+accessible by the GPR regset, but it's a bit late for that now. Instead,
+simply prevent userspace from configuring the bit to a value which is
+inconsistent with the TIF_SINGLESTEP state for the task being traced.
 
-Fixes: d6be34fbd39b ("dma: Add Freescale eDMA engine driver support")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Robin Gong <yibin.gong@nxp.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1591877861-28156-2-git-send-email-krzk@kernel.org
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Keno Fischer <keno@juliacomputing.com>
+Link: https://lore.kernel.org/r/1eed6d69-d53d-9657-1fc9-c089be07f98c@linaro.org
+Reported-by: Luis Machado <luis.machado@linaro.org>
+Tested-by: Luis Machado <luis.machado@linaro.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/fsl-edma.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/include/asm/debug-monitors.h |    2 ++
+ arch/arm64/kernel/debug-monitors.c      |   20 ++++++++++++++++----
+ arch/arm64/kernel/ptrace.c              |    4 ++--
+ 3 files changed, 20 insertions(+), 6 deletions(-)
 
---- a/drivers/dma/fsl-edma.c
-+++ b/drivers/dma/fsl-edma.c
-@@ -45,6 +45,13 @@ static irqreturn_t fsl_edma_tx_handler(i
- 			fsl_chan = &fsl_edma->chans[ch];
+--- a/arch/arm64/include/asm/debug-monitors.h
++++ b/arch/arm64/include/asm/debug-monitors.h
+@@ -109,6 +109,8 @@ void disable_debug_monitors(enum dbg_act
  
- 			spin_lock(&fsl_chan->vchan.lock);
+ void user_rewind_single_step(struct task_struct *task);
+ void user_fastforward_single_step(struct task_struct *task);
++void user_regs_reset_single_step(struct user_pt_regs *regs,
++				 struct task_struct *task);
+ 
+ void kernel_enable_single_step(struct pt_regs *regs);
+ void kernel_disable_single_step(void);
+--- a/arch/arm64/kernel/debug-monitors.c
++++ b/arch/arm64/kernel/debug-monitors.c
+@@ -141,17 +141,20 @@ postcore_initcall(debug_monitors_init);
+ /*
+  * Single step API and exception handling.
+  */
+-static void set_regs_spsr_ss(struct pt_regs *regs)
++static void set_user_regs_spsr_ss(struct user_pt_regs *regs)
+ {
+ 	regs->pstate |= DBG_SPSR_SS;
+ }
+-NOKPROBE_SYMBOL(set_regs_spsr_ss);
++NOKPROBE_SYMBOL(set_user_regs_spsr_ss);
+ 
+-static void clear_regs_spsr_ss(struct pt_regs *regs)
++static void clear_user_regs_spsr_ss(struct user_pt_regs *regs)
+ {
+ 	regs->pstate &= ~DBG_SPSR_SS;
+ }
+-NOKPROBE_SYMBOL(clear_regs_spsr_ss);
++NOKPROBE_SYMBOL(clear_user_regs_spsr_ss);
 +
-+			if (!fsl_chan->edesc) {
-+				/* terminate_all called before */
-+				spin_unlock(&fsl_chan->vchan.lock);
-+				continue;
-+			}
++#define set_regs_spsr_ss(r)	set_user_regs_spsr_ss(&(r)->user_regs)
++#define clear_regs_spsr_ss(r)	clear_user_regs_spsr_ss(&(r)->user_regs)
+ 
+ static DEFINE_SPINLOCK(debug_hook_lock);
+ static LIST_HEAD(user_step_hook);
+@@ -404,6 +407,15 @@ void user_fastforward_single_step(struct
+ 		clear_regs_spsr_ss(task_pt_regs(task));
+ }
+ 
++void user_regs_reset_single_step(struct user_pt_regs *regs,
++				 struct task_struct *task)
++{
++	if (test_tsk_thread_flag(task, TIF_SINGLESTEP))
++		set_user_regs_spsr_ss(regs);
++	else
++		clear_user_regs_spsr_ss(regs);
++}
 +
- 			if (!fsl_chan->edesc->iscyclic) {
- 				list_del(&fsl_chan->edesc->vdesc.node);
- 				vchan_cookie_complete(&fsl_chan->edesc->vdesc);
+ /* Kernel API */
+ void kernel_enable_single_step(struct pt_regs *regs)
+ {
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -1935,8 +1935,8 @@ static int valid_native_regs(struct user
+  */
+ int valid_user_regs(struct user_pt_regs *regs, struct task_struct *task)
+ {
+-	if (!test_tsk_thread_flag(task, TIF_SINGLESTEP))
+-		regs->pstate &= ~DBG_SPSR_SS;
++	/* https://lore.kernel.org/lkml/20191118131525.GA4180@willie-the-truck */
++	user_regs_reset_single_step(regs, task);
+ 
+ 	if (is_compat_thread(task_thread_info(task)))
+ 		return valid_compat_regs(regs);
 
 
