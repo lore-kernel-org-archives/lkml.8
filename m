@@ -2,117 +2,197 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3BAC433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9E0C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0800A2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aE6HVWQ7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8sQVdjG9"
+	by mail.kernel.org (Postfix) with ESMTP id DA5A62073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262687;
+	bh=77Pwbz2Ibtd3eXN44zEppeNjg+PFIjq22Z3J+DkX3Co=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yKGq04BkRA5RT7CyOFGcJe0nVwEBII3fzr5puE2xdfPfMqpN/y4sXXL2deRjK3U7b
+	 bLtD14GfJO1Q4yPkhyEgGvkF/X72BCTSqSN3qlDpb18OdxepxL0fc83NkJgspMazfy
+	 zS0nwCYVcTnslaDbjYLNDvVCfDomvZDE/9AwkdMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbgGTP5U (ORCPT
+        id S2388822AbgGTQbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:57:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58948 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731865AbgGTP5F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:57:05 -0400
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595260623;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xAbB9oKLEGHYN+w+z0ndpRUVlVFavwl3/3bbk6nkTI4=;
-        b=aE6HVWQ7elJ3Wu43Nx5S0EQ9uUnwoWtplV7pqe9NN1rsZuauKrP9qAmb6mHlhJ7U1sFSgw
-        AxExVzSlqPCo7f2hJBEUQ9fxPD9kfIMD9fn/jzMWs+qYfqBdFwIBDMFtaR+nroor6T2IO7
-        B/lq1xpYO7qfSDgiEwK/u5bUU4jAo1f4liQajoKBqfgyKSWxKOhglHIcUJDJ/uovzhkW3t
-        /r/U3lkl0ScjCT828osOd2wnToGbfvCzbQjnfJFcm9G20jbVFIei/qonANgpXdfibLORrG
-        LXIwwdJ69ykwevM0BHecoxt3L9lD15kOCm2dUBPivw0BpPHrBTBCvQOtdWMd2Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595260623;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xAbB9oKLEGHYN+w+z0ndpRUVlVFavwl3/3bbk6nkTI4=;
-        b=8sQVdjG9J9NWk5nP1uFu8LkSAunXaXDWeXbROR0vV/v1xYMoVS1qTisuyD7tE97Y+Dlut3
-        5SAPGx+i1aRtshCQ==
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Song Liu <song@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH v4 19/24] raid5: Use sequence counter with associated spinlock
-Date:   Mon, 20 Jul 2020 17:55:25 +0200
-Message-Id: <20200720155530.1173732-20-a.darwish@linutronix.de>
-In-Reply-To: <20200720155530.1173732-1-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200720155530.1173732-1-a.darwish@linutronix.de>
+        Mon, 20 Jul 2020 12:31:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57126 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731897AbgGTP5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:57:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E13A42065E;
+        Mon, 20 Jul 2020 15:57:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260638;
+        bh=77Pwbz2Ibtd3eXN44zEppeNjg+PFIjq22Z3J+DkX3Co=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QMiEmdbB2+Uoan+VA8pZnDkaqGqZSVO3+Tg5vmxXK8GdgV1PE2nT0moWX1qCrYJGp
+         mMPy7OaqZTJ+0zCwIlAY37jmw8EaMSuBT8HLUIJAcO2fM/C9IDrMcCScrhi00IzzJ9
+         lzeCV8hBRKZUP62h0H2yaHoxJcFzlzq4ZfOu5/1Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Dave P Martin <dave.martin@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 041/215] arm64/alternatives: use subsections for replacement sequences
+Date:   Mon, 20 Jul 2020 17:35:23 +0200
+Message-Id: <20200720152822.143645992@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A sequence counter write side critical section must be protected by some
-form of locking to serialize writers. A plain seqcount_t does not
-contain the information of which lock must be held when entering a write
-side critical section.
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Use the new seqcount_spinlock_t data type, which allows to associate a
-spinlock with the sequence counter. This enables lockdep to verify that
-the spinlock used for writer serialization is held when the write side
-critical section is entered.
+[ Upstream commit f7b93d42945cc71e1346dd5ae07c59061d56745e ]
 
-If lockdep is disabled this lock association is compiled out and has
-neither storage size nor runtime overhead.
+When building very large kernels, the logic that emits replacement
+sequences for alternatives fails when relative branches are present
+in the code that is emitted into the .altinstr_replacement section
+and patched in at the original site and fixed up. The reason is that
+the linker will insert veneers if relative branches go out of range,
+and due to the relative distance of the .altinstr_replacement from
+the .text section where its branch targets usually live, veneers
+may be emitted at the end of the .altinstr_replacement section, with
+the relative branches in the sequence pointed at the veneers instead
+of the actual target.
 
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+The alternatives patching logic will attempt to fix up the branch to
+point to its original target, which will be the veneer in this case,
+but given that the patch site is likely to be far away as well, it
+will be out of range and so patching will fail. There are other cases
+where these veneers are problematic, e.g., when the target of the
+branch is in .text while the patch site is in .init.text, in which
+case putting the replacement sequence inside .text may not help either.
+
+So let's use subsections to emit the replacement code as closely as
+possible to the patch site, to ensure that veneers are only likely to
+be emitted if they are required at the patch site as well, in which
+case they will be in range for the replacement sequence both before
+and after it is transported to the patch site.
+
+This will prevent alternative sequences in non-init code from being
+released from memory after boot, but this is tolerable given that the
+entire section is only 512 KB on an allyesconfig build (which weighs in
+at 500+ MB for the entire Image). Also, note that modules today carry
+the replacement sequences in non-init sections as well, and any of
+those that target init code will be emitted into init sections after
+this change.
+
+This fixes an early crash when booting an allyesconfig kernel on a
+system where any of the alternatives sequences containing relative
+branches are activated at boot (e.g., ARM64_HAS_PAN on TX2)
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Andre Przywara <andre.przywara@arm.com>
+Cc: Dave P Martin <dave.martin@arm.com>
+Link: https://lore.kernel.org/r/20200630081921.13443-1-ardb@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid5.c | 2 +-
- drivers/md/raid5.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/alternative.h | 16 ++++++++--------
+ arch/arm64/kernel/vmlinux.lds.S      |  3 ---
+ 2 files changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index ab8067f9ce8c..892aefe88fa7 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6935,7 +6935,7 @@ static struct r5conf *setup_conf(struct mddev *mddev)
- 	} else
- 		goto abort;
- 	spin_lock_init(&conf->device_lock);
--	seqcount_init(&conf->gen_lock);
-+	seqcount_spinlock_init(&conf->gen_lock, &conf->device_lock);
- 	mutex_init(&conf->cache_size_mutex);
- 	init_waitqueue_head(&conf->wait_for_quiescent);
- 	init_waitqueue_head(&conf->wait_for_stripe);
-diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
-index f90e0704bed9..a2c9e9e9f5ac 100644
---- a/drivers/md/raid5.h
-+++ b/drivers/md/raid5.h
-@@ -589,7 +589,7 @@ struct r5conf {
- 	int			prev_chunk_sectors;
- 	int			prev_algo;
- 	short			generation; /* increments with every reshape */
--	seqcount_t		gen_lock;	/* lock against generation changes */
-+	seqcount_spinlock_t	gen_lock;	/* lock against generation changes */
- 	unsigned long		reshape_checkpoint; /* Time we last updated
- 						     * metadata */
- 	long long		min_offset_diff; /* minimum difference between
+diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
+index 5e5dc05d63a06..12f0eb56a1cc3 100644
+--- a/arch/arm64/include/asm/alternative.h
++++ b/arch/arm64/include/asm/alternative.h
+@@ -73,11 +73,11 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ 	".pushsection .altinstructions,\"a\"\n"				\
+ 	ALTINSTR_ENTRY(feature)						\
+ 	".popsection\n"							\
+-	".pushsection .altinstr_replacement, \"a\"\n"			\
++	".subsection 1\n"						\
+ 	"663:\n\t"							\
+ 	newinstr "\n"							\
+ 	"664:\n\t"							\
+-	".popsection\n\t"						\
++	".previous\n\t"							\
+ 	".org	. - (664b-663b) + (662b-661b)\n\t"			\
+ 	".org	. - (662b-661b) + (664b-663b)\n"			\
+ 	".endif\n"
+@@ -117,9 +117,9 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ 662:	.pushsection .altinstructions, "a"
+ 	altinstruction_entry 661b, 663f, \cap, 662b-661b, 664f-663f
+ 	.popsection
+-	.pushsection .altinstr_replacement, "ax"
++	.subsection 1
+ 663:	\insn2
+-664:	.popsection
++664:	.previous
+ 	.org	. - (664b-663b) + (662b-661b)
+ 	.org	. - (662b-661b) + (664b-663b)
+ 	.endif
+@@ -160,7 +160,7 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ 	.pushsection .altinstructions, "a"
+ 	altinstruction_entry 663f, 661f, \cap, 664f-663f, 662f-661f
+ 	.popsection
+-	.pushsection .altinstr_replacement, "ax"
++	.subsection 1
+ 	.align 2	/* So GAS knows label 661 is suitably aligned */
+ 661:
+ .endm
+@@ -179,9 +179,9 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ .macro alternative_else
+ 662:
+ 	.if .Lasm_alt_mode==0
+-	.pushsection .altinstr_replacement, "ax"
++	.subsection 1
+ 	.else
+-	.popsection
++	.previous
+ 	.endif
+ 663:
+ .endm
+@@ -192,7 +192,7 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ .macro alternative_endif
+ 664:
+ 	.if .Lasm_alt_mode==0
+-	.popsection
++	.previous
+ 	.endif
+ 	.org	. - (664b-663b) + (662b-661b)
+ 	.org	. - (662b-661b) + (664b-663b)
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index e1af25dbc57ea..8d0374ffdd2d6 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -172,9 +172,6 @@ SECTIONS
+ 		*(.altinstructions)
+ 		__alt_instructions_end = .;
+ 	}
+-	.altinstr_replacement : {
+-		*(.altinstr_replacement)
+-	}
+ 
+ 	. = ALIGN(PAGE_SIZE);
+ 	__inittext_end = .;
 -- 
-2.20.1
+2.25.1
+
+
 
