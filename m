@@ -2,123 +2,123 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF40C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42678C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4C6D2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC6722BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:29:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="a1MsoLna"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731539AbgGTR1F (ORCPT
+        id S1730576AbgGTR27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:27:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22386 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728939AbgGTR1E (ORCPT
+        Mon, 20 Jul 2020 13:28:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729307AbgGTR26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:27:04 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KH0oxJ094313;
-        Mon, 20 Jul 2020 13:26:59 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32bw90ccyu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 13:26:59 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KH0sYQ094749;
-        Mon, 20 Jul 2020 13:26:58 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32bw90ccy7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 13:26:58 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KHOd0J028918;
-        Mon, 20 Jul 2020 17:26:56 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04fra.de.ibm.com with ESMTP id 32dbmn0435-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 17:26:56 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KHQs8K51970208
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 17:26:54 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 29DE142063;
-        Mon, 20 Jul 2020 17:26:54 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0690F42066;
-        Mon, 20 Jul 2020 17:26:53 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.145.253])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Jul 2020 17:26:52 +0000 (GMT)
-Message-ID: <1595266012.5055.51.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 4/5] LSM: Define SELinux function to measure security
- state
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Mon, 20 Jul 2020 13:26:52 -0400
-In-Reply-To: <CAEjxPJ7VH18bEo6+U1GWrx=tHVGr=6XtF5_ygcfQYgdtZ74J+g@mail.gmail.com>
-References: <20200717222819.26198-1-nramas@linux.microsoft.com>
-         <20200717222819.26198-5-nramas@linux.microsoft.com>
-         <CAEjxPJ7xQtZToF4d2w_o8SXFKG9kPZaWTWTFqyC-7GwBWnQa0A@mail.gmail.com>
-         <c0fbfcf3-ec36-872a-c389-b3fea214848c@linux.microsoft.com>
-         <CAEjxPJ7VH18bEo6+U1GWrx=tHVGr=6XtF5_ygcfQYgdtZ74J+g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- impostorscore=0 malwarescore=0 adultscore=0 phishscore=0 mlxscore=0
- suspectscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1011
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007200111
+        Mon, 20 Jul 2020 13:28:58 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33774C0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:28:58 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e8so10593100pgc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:28:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=xHiR/oaIUa5pbgNSUHGq5QFpcwnJQsNkMFGVCEqO8so=;
+        b=a1MsoLnahfulhQyk3sQsJrIU0k/+OszU3zBP0cJH82Ram+mo+waJkr1NTjIeMwkiqn
+         ed9V1qkSCCh7AMcPedy3Ec5w+9GPs5vum5IXSsQiRy0zdzFN2oktRwyJ9S6bOkASAJHQ
+         J5kbITP0bxBBJHKljVCnY5OzhNgXH3IUG8QTLjr5GGwIPYblTMvorMwFOZKX3pQptQuD
+         Z9cwzEtJcIoupOadWfvGjTH/UfcgqbRTo4EUQvX/KTyygXaGUF9ELU2D7595CYK/IHW7
+         bgV+8Btko85b47omINODDlL7L+UfFa38WNmSs01PM2yzgR9sl/M5bNlUXAtUa4NsGF1y
+         Pzjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=xHiR/oaIUa5pbgNSUHGq5QFpcwnJQsNkMFGVCEqO8so=;
+        b=i9Rzxkn2DXHqYVP3hfOTCakx/ugAonpFrmFFTBBdcAZ/HyZxOlGRX4oXh+w5iao8Yg
+         ezqiZ9dXNRpqZo2ZCJEeHl0/JNE/FnWUzzD0X1L5FpVkCHkPoGOrfIGz3uIQmOeUqUus
+         IOsyx8RJwGfYASTgqu52Fl7XnoC7Mf3lyHSpwgl2Z9OvSZ/km72F40xjO+qzl+Z/N8aD
+         T2BthLpI0B7BwMlZXkAYvaxH8hFAeapY8dpvP29sUCI7fCq6RTRjWAoFSNNijengLZ8M
+         AGRp515J38MDkyQbL8zow6Vw2ux+PsmX6pzOeulYigAHPI8AofdKPHxKX/ooUZpFKIth
+         3yVQ==
+X-Gm-Message-State: AOAM530rWXxcmKh21zt+kF7hTU373tAoLvfueyrA5MWt0CpLQCXXIMGT
+        RQ/RbSiY38COrmoyQ5XuwxSWIg==
+X-Google-Smtp-Source: ABdhPJzw98Kgq+brxFH0izVyuVi0opuOriMG8dW3/iCgRExLS3kbTbxih/QZd30S6kgN2/SxOMHx5g==
+X-Received: by 2002:a62:3744:: with SMTP id e65mr21637646pfa.20.1595266137524;
+        Mon, 20 Jul 2020 10:28:57 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:600f:2f5b:3d86:4df5? ([2601:646:c200:1ef2:600f:2f5b:3d86:4df5])
+        by smtp.gmail.com with ESMTPSA id ji2sm189425pjb.1.2020.07.20.10.28.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2020 10:28:56 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: io_uring vs in_compat_syscall()
+Date:   Mon, 20 Jul 2020 10:28:55 -0700
+Message-Id: <8987E376-6B13-4798-BDBA-616A457447CF@amacapital.net>
+References: <b754dad5-ee85-8a2f-f41a-8bdc56de42e8@kernel.dk>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-arch@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        io-uring@vger.kernel.org
+In-Reply-To: <b754dad5-ee85-8a2f-f41a-8bdc56de42e8@kernel.dk>
+To:     Jens Axboe <axboe@kernel.dk>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-07-20 at 13:06 -0400, Stephen Smalley wrote:
-> 
-> 
-> I applied the patch series on top of the next-integrity branch, added
-> measure func=LSM_STATE to ima-policy, and booted that kernel.  I get
-> the following entries in ascii_runtime_measurements, but seemingly
-> missing the final field:
-> 
-> 10 8a09c48af4f8a817f59b495bd82971e096e2e367 ima-ng
-> sha256:21c3d7b09b62b4d0b3ed15ba990f816b94808f90b76787bfae755c4b3a44cd24
-> selinux-state
-> 10 e610908931d70990a2855ddb33c16af2d82ce56a ima-ng
-> sha256:c8898652afd5527ef4eaf8d85f5fee1d91fcccee34bc97f6e55b96746bedb318
-> selinux-policy-hash
-> 
-> Thus, I cannot verify. What am I missing?
 
-Missing is "template=ima-buf" on the policy rule.
 
-Tyler's patch set just added some support for verifying the policy.
- Refer to ima_validate_rule().  There are still some things missing.
- For example, nayna noticed that making sure that asymmetric key
-support is enabled.  Another example is requiring "template=" for any
-of the buffer measurements.  Template names can be defined
-dynamically, so it will need to support either format:
+> On Jul 20, 2020, at 10:02 AM, Jens Axboe <axboe@kernel.dk> wrote:
+>=20
+> =EF=BB=BFOn 7/20/20 10:58 AM, Andy Lutomirski wrote:
+>>=20
+>>>> On Jul 20, 2020, at 9:37 AM, Jens Axboe <axboe@kernel.dk> wrote:
+>>>=20
+>>> =EF=BB=BFOn 7/20/20 12:10 AM, Christoph Hellwig wrote:
+>>>> Hi Jens,
+>>>>=20
+>>>> I just found a (so far theoretical) issue with the io_uring submission
+>>>> offloading to workqueues or threads.  We have lots of places using
+>>>> in_compat_syscall() to check if a syscall needs compat treatmenet.
+>>>> While the biggest users is iocttl(), we also have a fair amount of
+>>>> places using in_compat_task() in read and write methods, and these
+>>>> will not do the wrong thing when used with io_uring under certain
+>>>> conditions.  I'm not sure how to best fix this, except for making sure
+>>>> in_compat_syscall() returns true one way or another for these cases.
+>>>=20
+>>> We can probably propagate this information in the io_kiocb via a flag,
+>>> and have the io-wq worker set TS_COMPAT if that's the case.
+>>>=20
+>>=20
+>> Is TS_COMPAT actually a cross-arch concept for which this is safe?
+>> Having a real arch helper for =E2=80=9Cset the current syscall arch for t=
+he
+>> current kernel thread=E2=80=9D seems more sensible to me.=20
+>=20
+> Sure, I'd consider that implementation detail for the actual patch(es)
+> for this issue.
 
-measure func=KEXEC_CMDLINE template=ima-buf 
-measure func=KEXEC_CMDLINE template=d-ng|n-ng|buf
+There=E2=80=99s a corner case, though: doesn=E2=80=99t io_uring submission f=
+requently do the work synchronously in the context of the calling thread?  I=
+f so, can a thread do a 64-bit submit with 32-bit work or vice versa?
 
-Mimi
+Sometimes I think that in_compat_syscall() should have a mode in which calli=
+ng it warns (e.g. not actually in a syscall when doing things in io_uring). =
+ And the relevant operations should be properly wired up to avoid global sta=
+te like this.
+
+>=20
+> --=20
+> Jens Axboe
+>=20
