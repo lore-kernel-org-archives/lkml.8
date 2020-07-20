@@ -2,128 +2,169 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94351C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B868C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79BD122CB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E92122CB2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:53:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nrN7FoGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgGTG5r (ORCPT
+        id S1726815AbgGTGxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 02:57:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42276 "EHLO
+        Mon, 20 Jul 2020 02:53:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbgGTG5q (ORCPT
+        with ESMTP id S1725893AbgGTGxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:57:46 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADFDFC0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 23:57:46 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jxPjv-00026Q-NH; Mon, 20 Jul 2020 08:57:31 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jxPjv-0000j4-1T; Mon, 20 Jul 2020 08:57:31 +0200
-Date:   Mon, 20 Jul 2020 08:57:32 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     robh+dt@kernel.org, kernel@pengutronix.de, linux@armlinux.org.uk,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH for v5.9] ARM: dts: efm32: Replace HTTP links with HTTPS
- ones
-Message-ID: <20200720065732.pudnfzn4eyu33eig@pengutronix.de>
-References: <20200719095958.57555-1-grandmaster@al2klimov.de>
+        Mon, 20 Jul 2020 02:53:37 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F40FC0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 23:53:37 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id k18so12164502qtm.10
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 23:53:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qs1cbe46cVElxY/Q1LwL0+3SEDSLDhjdnDiZLYzmQpA=;
+        b=nrN7FoGzPXdOvPS9oQHCkzTRZBHfDINd8EiU7EJWQAFx5dMLj9u7Jn+l4kYZAXu4L6
+         St7Eqt99nOCXDyBDLkimje1F8ZSm8HOAYuMVYErEbqmplEgZ9xnbXasKoalX9aT2gj9F
+         8HmdL3JokxG6oVre95PYVkqcX2IDJKBQGgkCZorlrTlGsw8nqbTUvJTeJrLPgsXWNWYU
+         1AJvJZc7YL0ogUpZkUZTV0/5XTG1L2aecZIVATHWLm/eq3diJehH3K2/YlfpVjJFd3gG
+         tZss3RqjweUp5sTzc/NQgqmigoghvmkcl3d5bTHsjci+fl+Hpzm2s/j6PXs2bDP3MQyw
+         aC+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qs1cbe46cVElxY/Q1LwL0+3SEDSLDhjdnDiZLYzmQpA=;
+        b=OQqFQEHt1K+BI2hu9d+wDjDwYjZbf+bZTZZmSTyxtnRuKd5aCxvh80S00ussp7G6kJ
+         zQyLzOTQb5rl5DmdnhIQIx+NYlhCb0kTV/Yaz6j+oJRbnm5B8o6XYfXQyaOH/ved4q0S
+         +5dpyNdYLuK68xJKOAPi5zNVa7DysNcAuMUIbrP8LkwHN2Y1VltfQdEE1qu8Nf57F7Ub
+         di95csbnUaqZB7cmfvWnrZJmSks4pgov/ovn3m/dOYfUAN8Ztlvm6xE0CYSEHbOX6GUc
+         4NruI1XnfSSSWGaKAb72cPbCn6ALGQFZfSIq0T5iP1XN0/CjF3AoV9v+0/TlqUjpjJDf
+         ying==
+X-Gm-Message-State: AOAM5336Yh2a1FudMvxDgUt3vZo+JSII6b41ZY8APt4eIgyU7HALx+B8
+        790FS6H3qO97MegD1RAywpysXuxWBr3gW/PeZzc=
+X-Google-Smtp-Source: ABdhPJxGi5zxL6JpDFNy9iMtWweFL0iBl8jt/EO1VPcigijc5OZQPs3jZrBbRSx8iMGl+Jkxr2awoUISlyE59SAEl5k=
+X-Received: by 2002:ac8:7b23:: with SMTP id l3mr22698974qtu.65.1595228016399;
+ Sun, 19 Jul 2020 23:53:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="igplwgecwcj5vega"
-Content-Disposition: inline
-In-Reply-To: <20200719095958.57555-1-grandmaster@al2klimov.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <1592371583-30672-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1592371583-30672-3-git-send-email-iamjoonsoo.kim@lge.com> <20200717135849.GA265107@cmpxchg.org>
+In-Reply-To: <20200717135849.GA265107@cmpxchg.org>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Mon, 20 Jul 2020 15:53:25 +0900
+Message-ID: <CAAmzW4OeCdcAnj2yUJWw_XuC8eVBF-wWjA+7vJ3J1Oju68kfJA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/6] mm/vmscan: protect the workingset on anonymous LRU
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+2020=EB=85=84 7=EC=9B=94 17=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 10:59, =
+Johannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On Wed, Jun 17, 2020 at 02:26:19PM +0900, js1304@gmail.com wrote:
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> >
+> > In current implementation, newly created or swap-in anonymous page
+> > is started on active list. Growing active list results in rebalancing
+> > active/inactive list so old pages on active list are demoted to inactiv=
+e
+> > list. Hence, the page on active list isn't protected at all.
+> >
+> > Following is an example of this situation.
+> >
+> > Assume that 50 hot pages on active list. Numbers denote the number of
+> > pages on active/inactive list (active | inactive).
+> >
+> > 1. 50 hot pages on active list
+> > 50(h) | 0
+> >
+> > 2. workload: 50 newly created (used-once) pages
+> > 50(uo) | 50(h)
+> >
+> > 3. workload: another 50 newly created (used-once) pages
+> > 50(uo) | 50(uo), swap-out 50(h)
+> >
+> > This patch tries to fix this issue.
+> > Like as file LRU, newly created or swap-in anonymous pages will be
+> > inserted to the inactive list. They are promoted to active list if
+> > enough reference happens. This simple modification changes the above
+> > example as following.
+> >
+> > 1. 50 hot pages on active list
+> > 50(h) | 0
+> >
+> > 2. workload: 50 newly created (used-once) pages
+> > 50(h) | 50(uo)
+> >
+> > 3. workload: another 50 newly created (used-once) pages
+> > 50(h) | 50(uo), swap-out 50(uo)
+> >
+> > As you can see, hot pages on active list would be protected.
+> >
+> > Note that, this implementation has a drawback that the page cannot
+> > be promoted and will be swapped-out if re-access interval is greater th=
+an
+> > the size of inactive list but less than the size of total(active+inacti=
+ve).
+> > To solve this potential issue, following patch will apply workingset
+> > detection that is applied to file LRU some day before.
+> >
+> > v6: Before this patch, all anon pages (inactive + active) are considere=
+d
+> > as workingset. However, with this patch, only active pages are consider=
+ed
+> > as workingset. So, file refault formula which uses the number of all
+> > anon pages is changed to use only the number of active anon pages.
+>
+> I can see that also from the code, but it doesn't explain why.
+>
+> And I'm not sure this is correct. I can see two problems with it.
+>
+> After your patch series, there is still one difference between anon
+> and file: cache trim mode. If the "use-once" anon dominate most of
+> memory and you have a small set of heavily thrashing files, it would
+> not get recognized. File refaults *have* to compare their distance to
+> the *entire* anon set, or we could get trapped in cache trimming mode
+> even as file pages with access frequencies <=3D RAM are thrashing.
+>
+> On the anon side, there is no cache trimming mode. But even if we're
+> not in cache trimming mode and active file is already being reclaimed,
+> we have to recognize thrashing on the anon side when reuse frequencies
+> are within available RAM. Otherwise we treat an inactive file that is
+> not being reused as having the same value as an anon page that is
+> being reused. And then we may reclaim file and anon at the same rate
+> even as anon is thrashing and file is not. That's not right.
+>
+> We need to activate everything with a reuse frequency <=3D RAM. Reuse
+> frequency is refault distance plus size of the inactive list the page
+> was on. This means anon distances should be compared to active anon +
+> inactive file + active file, and file distances should be compared to
+> active file + inactive_anon + active anon.
 
---igplwgecwcj5vega
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You're right. Maybe, I'm confused about something at that time. I will chan=
+ge
+it as you suggested.
 
-Hello,
-
-On Sun, Jul 19, 2020 at 11:59:58AM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
->=20
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-
-I would have described this in prose instead. (Something like: Replace
-http: URL scheme with https:. As of today the old and new URLs result in
-the same content to be accessed.)
-
-Other than that:
-
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-> diff --git a/arch/arm/mach-efm32/Makefile.boot b/arch/arm/mach-efm32/Make=
-file.boot
-> index cec195d4fcba..5dde7328a7a9 100644
-> --- a/arch/arm/mach-efm32/Makefile.boot
-> +++ b/arch/arm/mach-efm32/Makefile.boot
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  # Empty file waiting for deletion once Makefile.boot isn't needed any mo=
-re.
->  # Patch waits for application at
-> -# http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=3D7889/=
-1 .
-> +# https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=3D7889=
-/1 .
-
-:-|
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---igplwgecwcj5vega
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8VQFkACgkQwfwUeK3K
-7AmsZQf/RhLZJkQ45VLwZJmaOR12/ZsWU29kLWYvQv3peDjl6mF7vNG3TjaZwD4G
-DN8R92udQ+T/TRm2PnJ6+p8O1/aQNN7373Bh8x5k/MOTHqDFrxy9gKeTsMRTBXK4
-oiaZh0r91vB7DEHVkr8UuIFsme91ItVtWhKuTy/C06N4OyzX/yKIFKbcscMq/xQO
-OpzmvbhS8RDCJBo9rPG0V1cRzR9FVQVIG8aty/q0n0bFtYJ+ZhdiKsvS6mKMlsCA
-tUd9JqW04TMzADHQmolWJOm35YkzaDG6RHigNP7vYjxJW74S2iy5bkgXcgk/SVUc
-ApdMaoGFBMGrfOhs2coGjxaeu7foGA==
-=NbK5
------END PGP SIGNATURE-----
-
---igplwgecwcj5vega--
+Thanks.
