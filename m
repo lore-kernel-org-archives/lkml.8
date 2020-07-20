@@ -2,53 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA76C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B219DC433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64C6C206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DB02064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261251;
-	bh=Z2htqa2dXGdiLe8LEYYF6dxXROeh8uCmDMGLdZQbiTI=;
+	s=default; t=1595261255;
+	bh=45jm8z0oH/KPMCdl/hxMxI2KDUiB/6BgrBctVihFt0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gFWvOWUauMvzxKDM2kVwyp65V29lhMJbJevZPqz12tarNiPTz0kdVYq8jr4gBYujA
-	 fazEbszwE7hdfkpbUaNJQgaPyILvN4XtFeZXoQhXgDAeb+1B+n6OVbBwr4UCc4SO6z
-	 bepeKTykcI5iPZFG2qwdW4iZtkLbBOl0A71A1Cak=
+	b=1rsin027ZfU6DCDsPUDzqioJ0me1K1Dlbi7IVvIej/Jn5RGgHJ9+6Ft20q6oM5c7s
+	 PZpGrxy9b+/j0Zt1tBv1tosmvj6ZLI6aCna6Jot8P0qkfU3yYeOcVPp84eD4VVkOv/
+	 nVm6DIV6hCsAOoqK/OvKb5ck3moQZmlGggT4rgLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733171AbgGTQH3 (ORCPT
+        id S1732940AbgGTQHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:07:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44360 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:07:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732691AbgGTQH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:07:26 -0400
+        id S1733168AbgGTQH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:07:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B349206E9;
-        Mon, 20 Jul 2020 16:07:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D486A2064B;
+        Mon, 20 Jul 2020 16:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261245;
-        bh=Z2htqa2dXGdiLe8LEYYF6dxXROeh8uCmDMGLdZQbiTI=;
+        s=default; t=1595261248;
+        bh=45jm8z0oH/KPMCdl/hxMxI2KDUiB/6BgrBctVihFt0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O+uj4gYeZvFZRS4uWUMaLGB56ADeBalv3GhPJkuIft+zJhjd/QCA2mCOMg/ixSPZt
-         TDf+vmk61lT/2u94OGR4uKGr2vJ5o+qhAOnDTWR5H2TuGaXrzWuBT0ppNiXH0E3kr6
-         0gqZi3yYJkoMfXLPNsor0103ugheU3HCI0XL22yM=
+        b=O60q35PvT9Q28+yyy70Wtmwlr4WuG0POwrz/IrYA+XZvROFmodX35gd4TVRbEyWQB
+         IF9/U47/dcvioKR5rAzHNxnNupZv5uu/SHMuEw7+5bd8k6piKZt4SO1Ap+5BuEKXE0
+         JY4vaNyyPJCoCvn92RHkwdt/rl459G+5e4NLMaTQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        James Chapman <jchapman@katalix.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 006/244] l2tp: remove skb_dst_set() from l2tp_xmit_skb()
-Date:   Mon, 20 Jul 2020 17:34:37 +0200
-Message-Id: <20200720152826.173967471@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 040/244] m68k: nommu: register start of the memory with memblock
+Date:   Mon, 20 Jul 2020 17:35:11 +0200
+Message-Id: <20200720152827.758543859@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -61,60 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit 27d53323664c549b5bb2dfaaf6f7ad6e0376a64e ]
+[ Upstream commit d63bd8c81d8ab64db506ffde569cc8ff197516e2 ]
 
-In the tx path of l2tp, l2tp_xmit_skb() calls skb_dst_set() to set
-skb's dst. However, it will eventually call inet6_csk_xmit() or
-ip_queue_xmit() where skb's dst will be overwritten by:
+The m68k nommu setup code didn't register the beginning of the physical
+memory with memblock because it was anyway occupied by the kernel. However,
+commit fa3354e4ea39 ("mm: free_area_init: use maximal zone PFNs rather than
+zone sizes") changed zones initialization to use memblock.memory to detect
+the zone extents and this caused inconsistency between zone PFNs and the
+actual PFNs:
 
-   skb_dst_set_noref(skb, dst);
+BUG: Bad page state in process swapper  pfn:20165
+page:41fe0ca0 refcount:0 mapcount:1 mapping:00000000 index:0x0 flags: 0x0()
+raw: 00000000 00000100 00000122 00000000 00000000 00000000 00000000 00000000
+page dumped because: nonzero mapcount
+CPU: 0 PID: 1 Comm: swapper Not tainted 5.8.0-rc1-00001-g3a38f8a60c65-dirty #1
+Stack from 404c9ebc:
+        404c9ebc 4029ab28 4029ab28 40088470 41fe0ca0 40299e21 40299df1 404ba2a4
+        00020165 00000000 41fd2c10 402c7ba0 41fd2c04 40088504 41fe0ca0 40299e21
+        00000000 40088a12 41fe0ca0 41fe0ca4 0000020a 00000000 00000001 402ca000
+        00000000 41fe0ca0 41fd2c10 41fd2c10 00000000 00000000 402b2388 00000001
+        400a0934 40091056 404c9f44 404c9f44 40088db4 402c7ba0 00000001 41fd2c04
+        41fe0ca0 41fd2000 41fe0ca0 40089e02 4026ecf4 40089e4e 41fe0ca0 ffffffff
+Call Trace:
+        [<40088470>] 0x40088470
+ [<40088504>] 0x40088504
+ [<40088a12>] 0x40088a12
+ [<402ca000>] 0x402ca000
+ [<400a0934>] 0x400a0934
 
-without releasing the old dst in skb. Then it causes dst/dev refcnt leak:
+Adjust the memory registration with memblock to include the beginning of
+the physical memory and make sure that the area occupied by the kernel is
+marked as reserved.
 
-  unregister_netdevice: waiting for eth0 to become free. Usage count = 1
-
-This can be reproduced by simply running:
-
-  # modprobe l2tp_eth && modprobe l2tp_ip
-  # sh ./tools/testing/selftests/net/l2tp.sh
-
-So before going to inet6_csk_xmit() or ip_queue_xmit(), skb's dst
-should be dropped. This patch is to fix it by removing skb_dst_set()
-from l2tp_xmit_skb() and moving skb_dst_drop() into l2tp_xmit_core().
-
-Fixes: 3557baabf280 ("[L2TP]: PPP over L2TP driver core")
-Reported-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: James Chapman <jchapman@katalix.com>
-Tested-by: James Chapman <jchapman@katalix.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/l2tp/l2tp_core.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/m68k/kernel/setup_no.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -1028,6 +1028,7 @@ static void l2tp_xmit_core(struct l2tp_s
+diff --git a/arch/m68k/kernel/setup_no.c b/arch/m68k/kernel/setup_no.c
+index a63483de7a422..5dacba392c74e 100644
+--- a/arch/m68k/kernel/setup_no.c
++++ b/arch/m68k/kernel/setup_no.c
+@@ -139,7 +139,8 @@ void __init setup_arch(char **cmdline_p)
+ 	pr_debug("MEMORY -> ROMFS=0x%p-0x%06lx MEM=0x%06lx-0x%06lx\n ",
+ 		 __bss_stop, memory_start, memory_start, memory_end);
  
- 	/* Queue the packet to IP for output */
- 	skb->ignore_df = 1;
-+	skb_dst_drop(skb);
- #if IS_ENABLED(CONFIG_IPV6)
- 	if (l2tp_sk_is_v6(tunnel->sock))
- 		error = inet6_csk_xmit(tunnel->sock, skb, NULL);
-@@ -1099,10 +1100,6 @@ int l2tp_xmit_skb(struct l2tp_session *s
- 		goto out_unlock;
- 	}
+-	memblock_add(memory_start, memory_end - memory_start);
++	memblock_add(_rambase, memory_end - _rambase);
++	memblock_reserve(_rambase, memory_start - _rambase);
  
--	/* Get routing info from the tunnel socket */
--	skb_dst_drop(skb);
--	skb_dst_set(skb, sk_dst_check(sk, 0));
--
- 	inet = inet_sk(sk);
- 	fl = &inet->cork.fl;
- 	switch (tunnel->encap) {
+ 	/* Keep a copy of command line */
+ 	*cmdline_p = &command_line[0];
+-- 
+2.25.1
+
 
 
