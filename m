@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F8AC43446
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26777C433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB5B720773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECCFA22CF6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259786;
-	bh=DXLAr5j7ALohIYXYzgIQ2RAIOINQVU4y/G/xFu1etEE=;
+	s=default; t=1595259790;
+	bh=3nBhr8KvHL41nT9MeEU1tSZse/nQrdOPicJryuGPjBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O0Mf06L5wSyL5yz1cpzjXyAGhL/GBtxOR4gH4rBiKe2gATt9m7ZCLltvL+AtJ7H2Z
-	 IEVCMrHjjSQqh64nJWDcDwmUBsvnS0f6MS9Znn2kvfHlfkcW6wEVXClaQ1iJOdeMva
-	 l2pW14DkFivrP48pujzTEZuvSfQ23V/VjYupjalc=
+	b=WQtXAzER/PKyQin+3/SJ7T9u6HhDoFnKoc50LpydPRCPAC0Ibd2+yGit1I+7YBgZH
+	 AUqDw9l+qeVcm3v4j9KzzfgvSPVw1y54CxkVG7Bxl8U0MKeCuMmdDPBfSrmyoiiIqh
+	 D3zGfv4L4v0pLD+dcgqtF90AdCeSgKBs82/tSUPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730198AbgGTPnE (ORCPT
+        id S1730207AbgGTPnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:43:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36222 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730190AbgGTPnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:43:02 -0400
+        id S1730200AbgGTPnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:43:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D16320773;
-        Mon, 20 Jul 2020 15:43:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00F8D2064B;
+        Mon, 20 Jul 2020 15:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259782;
-        bh=DXLAr5j7ALohIYXYzgIQ2RAIOINQVU4y/G/xFu1etEE=;
+        s=default; t=1595259784;
+        bh=3nBhr8KvHL41nT9MeEU1tSZse/nQrdOPicJryuGPjBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GeqrYmV8aOxAnzL5p9RHbXSj8oHyW0cTWO3fHA2kVsQywJpyaSY4oCayjGRM8qMPr
-         Eae7+WCnPZ6Q2vEPnb8rb6C5WJPG1/mPuxPGbc5old74sp1FKpfW+KJnbO9MVckXfU
-         KcHcyVFDuY7HwgaviCkEHH62YNitC/BFVMsFtO9c=
+        b=sFdi6y94cufMltUlCzEqmie7Pf1gcQ1dnZhzoAaTp4WDpPwySm/Ct4FbQyjlQSUYt
+         uMe8H1rt/1XzJtIADzZM34G26CdD/g+CaEpbmUXFHgNDHt3VXIdJNKoHzzi7SAf0DN
+         Jct2zED7b0vlvHSxCzEPBEq2oXO2TrupD6sL0pt0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.9 78/86] timer: Fix wheel index calculation on last level
-Date:   Mon, 20 Jul 2020 17:37:14 +0200
-Message-Id: <20200720152757.164109862@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Huacai Chen <chenhc@lemote.com>
+Subject: [PATCH 4.9 79/86] MIPS: Fix build for LTS kernel caused by backporting lpj adjustment
+Date:   Mon, 20 Jul 2020 17:37:15 +0200
+Message-Id: <20200720152757.215444569@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -59,44 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Weisbecker <frederic@kernel.org>
+From: Huacai Chen <chenhc@lemote.com>
 
-commit e2a71bdea81690b6ef11f4368261ec6f5b6891aa upstream.
+Commit ed26aacfb5f71eecb20a ("mips: Add udelay lpj numbers adjustment")
+has backported to 4.4~5.4, but the "struct cpufreq_freqs" (and also the
+cpufreq notifier machanism) of 4.4~4.19 are different from the upstream
+kernel. These differences cause build errors, and this patch can fix the
+build.
 
-When an expiration delta falls into the last level of the wheel, that delta
-has be compared against the maximum possible delay and reduced to fit in if
-necessary.
-
-However instead of comparing the delta against the maximum, the code
-compares the actual expiry against the maximum. Then instead of fixing the
-delta to fit in, it sets the maximum delta as the expiry value.
-
-This can result in various undesired outcomes, the worst possible one
-being a timer expiring 15 days ahead to fire immediately.
-
-Fixes: 500462a9de65 ("timers: Switch to a non-cascading wheel")
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200717140551.29076-2-frederic@kernel.org
+Cc: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Stable <stable@vger.kernel.org> # 4.4/4.9/4.14/4.19
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/time/timer.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/kernel/time.c |   13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -500,8 +500,8 @@ static int calc_wheel_index(unsigned lon
- 		 * Force expire obscene large timeouts to expire at the
- 		 * capacity limit of the wheel.
- 		 */
--		if (expires >= WHEEL_TIMEOUT_CUTOFF)
--			expires = WHEEL_TIMEOUT_MAX;
-+		if (delta >= WHEEL_TIMEOUT_CUTOFF)
-+			expires = clk + WHEEL_TIMEOUT_MAX;
+--- a/arch/mips/kernel/time.c
++++ b/arch/mips/kernel/time.c
+@@ -40,10 +40,8 @@ static unsigned long glb_lpj_ref_freq;
+ static int cpufreq_callback(struct notifier_block *nb,
+ 			    unsigned long val, void *data)
+ {
+-	struct cpufreq_freqs *freq = data;
+-	struct cpumask *cpus = freq->policy->cpus;
+-	unsigned long lpj;
+ 	int cpu;
++	struct cpufreq_freqs *freq = data;
  
- 		idx = calc_index(expires, LVL_DEPTH - 1);
+ 	/*
+ 	 * Skip lpj numbers adjustment if the CPU-freq transition is safe for
+@@ -64,6 +62,7 @@ static int cpufreq_callback(struct notif
+ 		}
  	}
+ 
++	cpu = freq->cpu;
+ 	/*
+ 	 * Adjust global lpj variable and per-CPU udelay_val number in
+ 	 * accordance with the new CPU frequency.
+@@ -74,12 +73,8 @@ static int cpufreq_callback(struct notif
+ 						glb_lpj_ref_freq,
+ 						freq->new);
+ 
+-		for_each_cpu(cpu, cpus) {
+-			lpj = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
+-					    per_cpu(pcp_lpj_ref_freq, cpu),
+-					    freq->new);
+-			cpu_data[cpu].udelay_val = (unsigned int)lpj;
+-		}
++		cpu_data[cpu].udelay_val = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
++					   per_cpu(pcp_lpj_ref_freq, cpu), freq->new);
+ 	}
+ 
+ 	return NOTIFY_OK;
 
 
