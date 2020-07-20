@@ -2,52 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178BCC433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8650C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E423E206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A20206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263310;
-	bh=QrB0GLO1+eGEiV2vHlBovMDa1m16XB2JbX9lRJbpMvw=;
+	s=default; t=1595263313;
+	bh=+FFRpCGBVYGGelObaKd24kLkurRJe2LrOSrGWEhyLSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E071wayQCYQncxmOCNUHGb5g6Iu69dfDEcAWob60pBDHmfp9HlDCEjF5/JRvwIbyM
-	 78KE4F3qPE5ctJG66iv7ndn1LcfXohxTKUgud4wGb9lqZ9Tn3nL2fTEE0mJbRFPq6X
-	 eqa7S3bvj/0kU4xoOhPQOQSVv4y68StwL5Xn7pQk=
+	b=r0itQJmXcw6l5ezpVWLGF/Rww1f7cf+maYGYRDL9uPHxeJU8QUb9hXu/XF0rJOwJ8
+	 LsGWyd1goeR9cmEsSMgOatDkR0HHvV/W6yKYAcca/MpXk1wxFvniWUjzbyG86ZLJeg
+	 7H79fUJFib2XjJKyzmqU1zIRdR/oo+KB5KGmsZ0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgGTQlt (ORCPT
+        id S1729595AbgGTPou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:41:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39180 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:44:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729861AbgGTPpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:45:01 -0400
+        id S1730429AbgGTPol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:44:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96FD62065E;
-        Mon, 20 Jul 2020 15:44:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E98362176B;
+        Mon, 20 Jul 2020 15:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259900;
-        bh=QrB0GLO1+eGEiV2vHlBovMDa1m16XB2JbX9lRJbpMvw=;
+        s=default; t=1595259880;
+        bh=+FFRpCGBVYGGelObaKd24kLkurRJe2LrOSrGWEhyLSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YVA4zx6lHIikqquWC3cgyDwF03BrTUte2vK4BaxCnDP7x+4g2OzQ1L/gVhdiaYLNX
-         p4xxtOF7cePgl56fcymapfn0Nru2UMN0aXdxReIOhGBt0/0hRHRA+ygAigr5NXWqOF
-         +PXXwEnJCGLbH4X6+97ChxYyz4HtjrYfN5ticJ0o=
+        b=KoSZEXphzr3GjT4ty4QX1ltc3RmN6FHQyBTn77+GMCXzcCTUg6scYc/iMkR4VK+j+
+         u/1wwQOB8vVB/ctpi7hFXUgDLeSaJLpYfwslJWbWlEkWaGONEq4C2nT4cU6X7LUrKy
+         voraSkrnIWDbFFdI/ZWloP5baR31A+fhRzNmpJvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Qiujun Huang <hqjagain@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 034/125] Revert "ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb"
-Date:   Mon, 20 Jul 2020 17:36:13 +0200
-Message-Id: <20200720152804.626578633@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 009/125] spi: spidev: fix a potential use-after-free in spidev_release()
+Date:   Mon, 20 Jul 2020 17:35:48 +0200
+Message-Id: <20200720152803.400402939@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -60,184 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-This reverts commit 97efdabe90f035d16d3f79218055e87c76ec02e6 which is
-commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
+[ Upstream commit 06096cc6c5a84ced929634b0d79376b94c65a4bd ]
 
-It is being reverted upstream, just hasn't made it there yet and is
-causing lots of problems.
+If an spi device is unbounded from the driver before the release
+process, there will be an NULL pointer reference when it's
+referenced in spi_slave_abort().
 
-Reported-by: Hans de Goede <hdegoede@redhat.com>
-Cc: Qiujun Huang <hqjagain@gmail.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix it by checking it's already freed before reference.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Link: https://lore.kernel.org/r/20200618032125.4650-2-zhenzhong.duan@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/hif_usb.c |   48 +++++++------------------------
- drivers/net/wireless/ath/ath9k/hif_usb.h |    5 ---
- 2 files changed, 11 insertions(+), 42 deletions(-)
+ drivers/spi/spidev.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -641,9 +641,9 @@ err:
- 
- static void ath9k_hif_usb_rx_cb(struct urb *urb)
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index 5edf4029a3486..167047760d79a 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -607,15 +607,20 @@ err_find_dev:
+ static int spidev_release(struct inode *inode, struct file *filp)
  {
--	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
--	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
--	struct sk_buff *skb = rx_buf->skb;
-+	struct sk_buff *skb = (struct sk_buff *) urb->context;
-+	struct hif_device_usb *hif_dev =
-+		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
- 	int ret;
+ 	struct spidev_data	*spidev;
++	int			dofree;
  
- 	if (!skb)
-@@ -683,15 +683,14 @@ resubmit:
- 	return;
- free:
- 	kfree_skb(skb);
--	kfree(rx_buf);
- }
+ 	mutex_lock(&device_list_lock);
+ 	spidev = filp->private_data;
+ 	filp->private_data = NULL;
  
- static void ath9k_hif_usb_reg_in_cb(struct urb *urb)
- {
--	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
--	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
--	struct sk_buff *skb = rx_buf->skb;
-+	struct sk_buff *skb = (struct sk_buff *) urb->context;
- 	struct sk_buff *nskb;
-+	struct hif_device_usb *hif_dev =
-+		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
- 	int ret;
++	spin_lock_irq(&spidev->spi_lock);
++	/* ... after we unbound from the underlying device? */
++	dofree = (spidev->spi == NULL);
++	spin_unlock_irq(&spidev->spi_lock);
++
+ 	/* last close? */
+ 	spidev->users--;
+ 	if (!spidev->users) {
+-		int		dofree;
  
- 	if (!skb)
-@@ -749,7 +748,6 @@ resubmit:
- 	return;
- free:
- 	kfree_skb(skb);
--	kfree(rx_buf);
- 	urb->context = NULL;
- }
+ 		kfree(spidev->tx_buffer);
+ 		spidev->tx_buffer = NULL;
+@@ -623,19 +628,14 @@ static int spidev_release(struct inode *inode, struct file *filp)
+ 		kfree(spidev->rx_buffer);
+ 		spidev->rx_buffer = NULL;
  
-@@ -795,7 +793,7 @@ static int ath9k_hif_usb_alloc_tx_urbs(s
- 	init_usb_anchor(&hif_dev->mgmt_submitted);
- 
- 	for (i = 0; i < MAX_TX_URB_NUM; i++) {
--		tx_buf = kzalloc(sizeof(*tx_buf), GFP_KERNEL);
-+		tx_buf = kzalloc(sizeof(struct tx_buf), GFP_KERNEL);
- 		if (!tx_buf)
- 			goto err;
- 
-@@ -832,9 +830,8 @@ static void ath9k_hif_usb_dealloc_rx_urb
- 
- static int ath9k_hif_usb_alloc_rx_urbs(struct hif_device_usb *hif_dev)
- {
--	struct rx_buf *rx_buf = NULL;
--	struct sk_buff *skb = NULL;
- 	struct urb *urb = NULL;
-+	struct sk_buff *skb = NULL;
- 	int i, ret;
- 
- 	init_usb_anchor(&hif_dev->rx_submitted);
-@@ -842,12 +839,6 @@ static int ath9k_hif_usb_alloc_rx_urbs(s
- 
- 	for (i = 0; i < MAX_RX_URB_NUM; i++) {
- 
--		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
--		if (!rx_buf) {
--			ret = -ENOMEM;
--			goto err_rxb;
--		}
+-		spin_lock_irq(&spidev->spi_lock);
+-		if (spidev->spi)
+-			spidev->speed_hz = spidev->spi->max_speed_hz;
 -
- 		/* Allocate URB */
- 		urb = usb_alloc_urb(0, GFP_KERNEL);
- 		if (urb == NULL) {
-@@ -862,14 +853,11 @@ static int ath9k_hif_usb_alloc_rx_urbs(s
- 			goto err_skb;
- 		}
- 
--		rx_buf->hif_dev = hif_dev;
--		rx_buf->skb = skb;
+-		/* ... after we unbound from the underlying device? */
+-		dofree = (spidev->spi == NULL);
+-		spin_unlock_irq(&spidev->spi_lock);
 -
- 		usb_fill_bulk_urb(urb, hif_dev->udev,
- 				  usb_rcvbulkpipe(hif_dev->udev,
- 						  USB_WLAN_RX_PIPE),
- 				  skb->data, MAX_RX_BUF_SIZE,
--				  ath9k_hif_usb_rx_cb, rx_buf);
-+				  ath9k_hif_usb_rx_cb, skb);
+ 		if (dofree)
+ 			kfree(spidev);
++		else
++			spidev->speed_hz = spidev->spi->max_speed_hz;
+ 	}
+ #ifdef CONFIG_SPI_SLAVE
+-	spi_slave_abort(spidev->spi);
++	if (!dofree)
++		spi_slave_abort(spidev->spi);
+ #endif
+ 	mutex_unlock(&device_list_lock);
  
- 		/* Anchor URB */
- 		usb_anchor_urb(urb, &hif_dev->rx_submitted);
-@@ -895,8 +883,6 @@ err_submit:
- err_skb:
- 	usb_free_urb(urb);
- err_urb:
--	kfree(rx_buf);
--err_rxb:
- 	ath9k_hif_usb_dealloc_rx_urbs(hif_dev);
- 	return ret;
- }
-@@ -908,21 +894,14 @@ static void ath9k_hif_usb_dealloc_reg_in
- 
- static int ath9k_hif_usb_alloc_reg_in_urbs(struct hif_device_usb *hif_dev)
- {
--	struct rx_buf *rx_buf = NULL;
--	struct sk_buff *skb = NULL;
- 	struct urb *urb = NULL;
-+	struct sk_buff *skb = NULL;
- 	int i, ret;
- 
- 	init_usb_anchor(&hif_dev->reg_in_submitted);
- 
- 	for (i = 0; i < MAX_REG_IN_URB_NUM; i++) {
- 
--		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
--		if (!rx_buf) {
--			ret = -ENOMEM;
--			goto err_rxb;
--		}
--
- 		/* Allocate URB */
- 		urb = usb_alloc_urb(0, GFP_KERNEL);
- 		if (urb == NULL) {
-@@ -937,14 +916,11 @@ static int ath9k_hif_usb_alloc_reg_in_ur
- 			goto err_skb;
- 		}
- 
--		rx_buf->hif_dev = hif_dev;
--		rx_buf->skb = skb;
--
- 		usb_fill_int_urb(urb, hif_dev->udev,
- 				  usb_rcvintpipe(hif_dev->udev,
- 						  USB_REG_IN_PIPE),
- 				  skb->data, MAX_REG_IN_BUF_SIZE,
--				  ath9k_hif_usb_reg_in_cb, rx_buf, 1);
-+				  ath9k_hif_usb_reg_in_cb, skb, 1);
- 
- 		/* Anchor URB */
- 		usb_anchor_urb(urb, &hif_dev->reg_in_submitted);
-@@ -970,8 +946,6 @@ err_submit:
- err_skb:
- 	usb_free_urb(urb);
- err_urb:
--	kfree(rx_buf);
--err_rxb:
- 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
- 	return ret;
- }
---- a/drivers/net/wireless/ath/ath9k/hif_usb.h
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
-@@ -86,11 +86,6 @@ struct tx_buf {
- 	struct list_head list;
- };
- 
--struct rx_buf {
--	struct sk_buff *skb;
--	struct hif_device_usb *hif_dev;
--};
--
- #define HIF_USB_TX_STOP  BIT(0)
- #define HIF_USB_TX_FLUSH BIT(1)
- 
+-- 
+2.25.1
+
 
 
