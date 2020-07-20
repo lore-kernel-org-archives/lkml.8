@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 141C7C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC564C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD439206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32C22073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262148;
-	bh=IBeX/K7ZLpKlahU1D8dyagLQTR4qxIS1ebDK1Hys0jk=;
+	s=default; t=1595262152;
+	bh=VdVyY6ajQASi1w84rj2mr2Dr1KheJ7ziIiNolP7mMCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q+Zh+j6pOqRqMHQtPSSmhqx8MkxEKoRmC4mUt3uaw7WcsZ6wWAwhpl/Pw/b8pQ//+
-	 mVyyNzLa7mvUo9IsXpDjfHIqMCaGM3fs71Qli3n2aSbKxJJB7O9fCzLmTNKTAYEkAr
-	 oSajV4LR1kjhTwyAua9LpqpqOad7BTrzpa+8U2J4=
+	b=EqlCUBkFuBmOPkkOCTZ/UiiJ7ys9npTVyHVhmWpQwqNRubdEYXwPlvx/XE9DBXrrq
+	 ZGV6NCRg6LqKm0zapqVg0ORNv1DDED0UjNfVxEYZm3i/Uy3rNG/B9ghmt/FCrCHOQy
+	 deFUMAV5rWcLqvnqJUsLr7P64C95lRtylPcz9upA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733082AbgGTQGq (ORCPT
+        id S1729516AbgGTQWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:06:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42934 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:22:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733064AbgGTQGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:06:33 -0400
+        id S1733074AbgGTQGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:06:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35F47206E9;
-        Mon, 20 Jul 2020 16:06:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C86FD2065E;
+        Mon, 20 Jul 2020 16:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261192;
-        bh=IBeX/K7ZLpKlahU1D8dyagLQTR4qxIS1ebDK1Hys0jk=;
+        s=default; t=1595261201;
+        bh=VdVyY6ajQASi1w84rj2mr2Dr1KheJ7ziIiNolP7mMCE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZvrTBVsArLgW5j2xkpx82vIzkEedNHBpQOKbrDvp824Ga6WtZvSj2x/Nq/HtLPlFa
-         ZIl1/5r0KaGuXZ/A/9YnCCHbkG/2SwQ9bchAUm8MQZSn7m++cBXgiNWrptCSGUxaUD
-         CV6D0goCDbrGjGD6tcs0Bae4ssi13RAru/u0E/kc=
+        b=BGZeP0RWxpcZkSRtozVHD/f0A653xvW7XdAbjETAMptKzVwly+zNPBu9QVMufbbps
+         bINmWH1Kx2l8aLlM5LeV47vvjepnekI9RSaENtNqASa9KJFqcZSPmvFCU7R7XpPqG1
+         rxbEyGckxaUm5jcXHsJvrfvFsvqvae+aFOx3g1bY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+3039ddf6d7b13daf3787@syzkaller.appspotmail.com,
-        syzbot+80cad1e3cb4c41cde6ff@syzkaller.appspotmail.com,
-        syzbot+736bcbcb11b60d0c0792@syzkaller.appspotmail.com,
-        syzbot+520f8704db2b68091d44@syzkaller.appspotmail.com,
-        syzbot+c96e4dfb32f8987fdeed@syzkaller.appspotmail.com
-Subject: [PATCH 5.7 026/244] genetlink: get rid of family->attrbuf
-Date:   Mon, 20 Jul 2020 17:34:57 +0200
-Message-Id: <20200720152827.104605282@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+42a07faa5923cfaeb9c9@syzkaller.appspotmail.com,
+        Christoph Paasch <cpaasch@apple.com>,
+        Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 029/244] mptcp: fix DSS map generation on fin retransmission
+Date:   Mon, 20 Jul 2020 17:35:00 +0200
+Message-Id: <20200720152827.250329081@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -65,202 +63,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit bf64ff4c2aac65d680dc639a511c781cf6b6ec08 ]
+[ Upstream commit 9c29e36152748fd623fcff6cc8f538550f9eeafc ]
 
-genl_family_rcv_msg_attrs_parse() reuses the global family->attrbuf
-when family->parallel_ops is false. However, family->attrbuf is not
-protected by any lock on the genl_family_rcv_msg_doit() code path.
+The RFC 8684 mandates that no-data DATA FIN packets should carry
+a DSS with 0 sequence number and data len equal to 1. Currently,
+on FIN retransmission we re-use the existing mapping; if the previous
+fin transmission was part of a partially acked data packet, we could
+end-up writing in the egress packet a non-compliant DSS.
 
-This leads to several different consequences, one of them is UAF,
-like the following:
+The above will be detected by a "Bad mapping" warning on the receiver
+side.
 
-genl_family_rcv_msg_doit():		genl_start():
-					  genl_family_rcv_msg_attrs_parse()
-					    attrbuf = family->attrbuf
-					    __nlmsg_parse(attrbuf);
-  genl_family_rcv_msg_attrs_parse()
-    attrbuf = family->attrbuf
-    __nlmsg_parse(attrbuf);
-					  info->attrs = attrs;
-					  cb->data = info;
+This change addresses the issue explicitly checking for 0 len packet
+when adding the DATA_FIN option.
 
-netlink_unicast_kernel():
- consume_skb()
-					genl_lock_dumpit():
-					  genl_dumpit_info(cb)->attrs
-
-Note family->attrbuf is an array of pointers to the skb data, once
-the skb is freed, any dereference of family->attrbuf will be a UAF.
-
-Maybe we could serialize the family->attrbuf with genl_mutex too, but
-that would make the locking more complicated. Instead, we can just get
-rid of family->attrbuf and always allocate attrbuf from heap like the
-family->parallel_ops==true code path. This may add some performance
-overhead but comparing with taking the global genl_mutex, it still
-looks better.
-
-Fixes: 75cdbdd08900 ("net: ieee802154: have genetlink code to parse the attrs during dumpit")
-Fixes: 057af7071344 ("net: tipc: have genetlink code to parse the attrs during dumpit")
-Reported-and-tested-by: syzbot+3039ddf6d7b13daf3787@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+80cad1e3cb4c41cde6ff@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+736bcbcb11b60d0c0792@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+520f8704db2b68091d44@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+c96e4dfb32f8987fdeed@syzkaller.appspotmail.com
-Cc: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data packets")
+Reported-by: syzbot+42a07faa5923cfaeb9c9@syzkaller.appspotmail.com
+Tested-by: Christoph Paasch <cpaasch@apple.com>
+Reviewed-by: Christoph Paasch <cpaasch@apple.com>
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/genetlink.h |    2 --
- net/netlink/genetlink.c |   48 +++++++++++++-----------------------------------
- 2 files changed, 13 insertions(+), 37 deletions(-)
+ net/mptcp/options.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/include/net/genetlink.h
-+++ b/include/net/genetlink.h
-@@ -35,7 +35,6 @@ struct genl_info;
-  *	do additional, common, filtering and return an error
-  * @post_doit: called after an operation's doit callback, it may
-  *	undo operations done by pre_doit, for example release locks
-- * @attrbuf: buffer to store parsed attributes (private)
-  * @mcgrps: multicast groups used by this family
-  * @n_mcgrps: number of multicast groups
-  * @mcgrp_offset: starting number of multicast group IDs in this family
-@@ -58,7 +57,6 @@ struct genl_family {
- 	void			(*post_doit)(const struct genl_ops *ops,
- 					     struct sk_buff *skb,
- 					     struct genl_info *info);
--	struct nlattr **	attrbuf;	/* private */
- 	const struct genl_ops *	ops;
- 	const struct genl_multicast_group *mcgrps;
- 	unsigned int		n_ops;
---- a/net/netlink/genetlink.c
-+++ b/net/netlink/genetlink.c
-@@ -351,22 +351,11 @@ int genl_register_family(struct genl_fam
- 		start = end = GENL_ID_VFS_DQUOT;
- 	}
- 
--	if (family->maxattr && !family->parallel_ops) {
--		family->attrbuf = kmalloc_array(family->maxattr + 1,
--						sizeof(struct nlattr *),
--						GFP_KERNEL);
--		if (family->attrbuf == NULL) {
--			err = -ENOMEM;
--			goto errout_locked;
--		}
--	} else
--		family->attrbuf = NULL;
--
- 	family->id = idr_alloc_cyclic(&genl_fam_idr, family,
- 				      start, end + 1, GFP_KERNEL);
- 	if (family->id < 0) {
- 		err = family->id;
--		goto errout_free;
-+		goto errout_locked;
- 	}
- 
- 	err = genl_validate_assign_mc_groups(family);
-@@ -385,8 +374,6 @@ int genl_register_family(struct genl_fam
- 
- errout_remove:
- 	idr_remove(&genl_fam_idr, family->id);
--errout_free:
--	kfree(family->attrbuf);
- errout_locked:
- 	genl_unlock_all();
- 	return err;
-@@ -419,8 +406,6 @@ int genl_unregister_family(const struct
- 		   atomic_read(&genl_sk_destructing_cnt) == 0);
- 	genl_unlock();
- 
--	kfree(family->attrbuf);
--
- 	genl_ctrl_event(CTRL_CMD_DELFAMILY, family, NULL, 0);
- 
- 	return 0;
-@@ -485,30 +470,23 @@ genl_family_rcv_msg_attrs_parse(const st
- 	if (!family->maxattr)
- 		return NULL;
- 
--	if (family->parallel_ops) {
--		attrbuf = kmalloc_array(family->maxattr + 1,
--					sizeof(struct nlattr *), GFP_KERNEL);
--		if (!attrbuf)
--			return ERR_PTR(-ENOMEM);
--	} else {
--		attrbuf = family->attrbuf;
--	}
-+	attrbuf = kmalloc_array(family->maxattr + 1,
-+				sizeof(struct nlattr *), GFP_KERNEL);
-+	if (!attrbuf)
-+		return ERR_PTR(-ENOMEM);
- 
- 	err = __nlmsg_parse(nlh, hdrlen, attrbuf, family->maxattr,
- 			    family->policy, validate, extack);
- 	if (err) {
--		if (family->parallel_ops)
--			kfree(attrbuf);
-+		kfree(attrbuf);
- 		return ERR_PTR(err);
- 	}
- 	return attrbuf;
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -449,9 +449,9 @@ static bool mptcp_established_options_mp
  }
  
--static void genl_family_rcv_msg_attrs_free(const struct genl_family *family,
--					   struct nlattr **attrbuf)
-+static void genl_family_rcv_msg_attrs_free(struct nlattr **attrbuf)
+ static void mptcp_write_data_fin(struct mptcp_subflow_context *subflow,
+-				 struct mptcp_ext *ext)
++				 struct sk_buff *skb, struct mptcp_ext *ext)
  {
--	if (family->parallel_ops)
--		kfree(attrbuf);
-+	kfree(attrbuf);
- }
+-	if (!ext->use_map) {
++	if (!ext->use_map || !skb->len) {
+ 		/* RFC6824 requires a DSS mapping with specific values
+ 		 * if DATA_FIN is set but no data payload is mapped
+ 		 */
+@@ -503,7 +503,7 @@ static bool mptcp_established_options_ds
+ 			opts->ext_copy = *mpext;
  
- struct genl_start_context {
-@@ -542,7 +520,7 @@ static int genl_start(struct netlink_cal
- no_attrs:
- 	info = genl_dumpit_info_alloc();
- 	if (!info) {
--		genl_family_rcv_msg_attrs_free(ctx->family, attrs);
-+		genl_family_rcv_msg_attrs_free(attrs);
- 		return -ENOMEM;
- 	}
- 	info->family = ctx->family;
-@@ -559,7 +537,7 @@ no_attrs:
+ 		if (skb && tcp_fin && subflow->data_fin_tx_enable)
+-			mptcp_write_data_fin(subflow, &opts->ext_copy);
++			mptcp_write_data_fin(subflow, skb, &opts->ext_copy);
+ 		ret = true;
  	}
  
- 	if (rc) {
--		genl_family_rcv_msg_attrs_free(info->family, info->attrs);
-+		genl_family_rcv_msg_attrs_free(info->attrs);
- 		genl_dumpit_info_free(info);
- 		cb->data = NULL;
- 	}
-@@ -588,7 +566,7 @@ static int genl_lock_done(struct netlink
- 		rc = ops->done(cb);
- 		genl_unlock();
- 	}
--	genl_family_rcv_msg_attrs_free(info->family, info->attrs);
-+	genl_family_rcv_msg_attrs_free(info->attrs);
- 	genl_dumpit_info_free(info);
- 	return rc;
- }
-@@ -601,7 +579,7 @@ static int genl_parallel_done(struct net
- 
- 	if (ops->done)
- 		rc = ops->done(cb);
--	genl_family_rcv_msg_attrs_free(info->family, info->attrs);
-+	genl_family_rcv_msg_attrs_free(info->attrs);
- 	genl_dumpit_info_free(info);
- 	return rc;
- }
-@@ -694,7 +672,7 @@ static int genl_family_rcv_msg_doit(cons
- 		family->post_doit(ops, skb, &info);
- 
- out:
--	genl_family_rcv_msg_attrs_free(family, attrbuf);
-+	genl_family_rcv_msg_attrs_free(attrbuf);
- 
- 	return err;
- }
 
 
