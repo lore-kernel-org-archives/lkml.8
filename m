@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3330C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCCDC433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A62D82176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF26A2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263527;
-	bh=YTCTQWdpjhQ595I9mUzMFZlufhUKG+bLo2BPcRNmJPQ=;
+	s=default; t=1595263530;
+	bh=1jJqtYt05ZOEPAKdh+DDpoIQtFY9KcGcRX89suQ9w18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PngIpSbNBpQtE40gquD0Hh2rtQVI1myOOh80ogGq3Vz+lQwurxy3/rRMXf6PMCJ8K
-	 mvtOJ6cyKxwrzdpjzZ8ryogDHXcCLtTXASeGZu7//6p+6KHXKeeO0z6pAM07fsu5lp
-	 qJeowxR3C5/DSSyjbz6zaj6SWX4ErScr0zRMxH+s=
+	b=yljJ74PDtnnilaaB87v11FykXJZCJp3aKiDlWFnZjDsMgIwjC+Y7uvZXEESi5qJil
+	 xzVnSV3NHWugUZouDN12t1iCZzaSzUBUCYq0Bbp0LOVsqUpyvqg2TR9qMx2JzEhSC+
+	 G5ceWQCQk/b//Rlt+UfWAoxBT6EqSyUoaqNdZixU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbgGTPlQ (ORCPT
+        id S2389102AbgGTQp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:41:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60800 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:45:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729069AbgGTPlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:41:03 -0400
+        id S1729847AbgGTPlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:41:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58DA420773;
-        Mon, 20 Jul 2020 15:41:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E824B20773;
+        Mon, 20 Jul 2020 15:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259663;
-        bh=YTCTQWdpjhQ595I9mUzMFZlufhUKG+bLo2BPcRNmJPQ=;
+        s=default; t=1595259675;
+        bh=1jJqtYt05ZOEPAKdh+DDpoIQtFY9KcGcRX89suQ9w18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TbShGHRXwC3rkdPrC5L1LhHCg2fkQeO3UgQICNhWM6vnpd2A8Z2sIk76MTT7axwmS
-         GakAJvEAVXWreajxTmnahNIGcsRrCDTWR79Way1GA6GB7tfahO5lBrPpSkJSbgTHqX
-         AipmZ2m0fMpjo0s67vKKfCqYbyLPoSU6bUSHWoAU=
+        b=iXn/fpmb0s8Wa/zZCbPToeaysGRKxNz4/dFYPCXo62G//dATxT6rQBfBABIThogVV
+         u/dBLyrUzRY9w8H8fp2K7gVuKe/OGO1QFuV4z7r3pLEqo3vB3DDZrqm/NkK1894dzc
+         k6IE3Vm47FvJwFGfaU9GwBSGQ+unTD0o7GTWyswk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 07/86] ARM: imx6: add missing put_device() call in imx6q_suspend_init()
-Date:   Mon, 20 Jul 2020 17:36:03 +0200
-Message-Id: <20200720152753.486641372@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 40/86] i2c: eg20t: Load module automatically if ID matches
+Date:   Mon, 20 Jul 2020 17:36:36 +0200
+Message-Id: <20200720152755.184025694@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -60,68 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 4845446036fc9c13f43b54a65c9b757c14f5141b ]
+[ Upstream commit 5f90786b31fb7d1e199a8999d46c4e3aea672e11 ]
 
-if of_find_device_by_node() succeed, imx6q_suspend_init() doesn't have a
-corresponding put_device(). Thus add a jump target to fix the exception
-handling for this function implementation.
+The driver can't be loaded automatically because it misses
+module alias to be provided. Add corresponding MODULE_DEVICE_TABLE()
+call to the driver.
 
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-imx/pm-imx6.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-eg20t.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
-index dd9eb3f14f45c..6da26692f2fde 100644
---- a/arch/arm/mach-imx/pm-imx6.c
-+++ b/arch/arm/mach-imx/pm-imx6.c
-@@ -481,14 +481,14 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
- 	}
+diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
+index 5ce71ce7b6c43..39f05e784566d 100644
+--- a/drivers/i2c/busses/i2c-eg20t.c
++++ b/drivers/i2c/busses/i2c-eg20t.c
+@@ -189,6 +189,7 @@ static const struct pci_device_id pch_pcidev_id[] = {
+ 	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_I2C), 1, },
+ 	{0,}
+ };
++MODULE_DEVICE_TABLE(pci, pch_pcidev_id);
  
- 	ocram_base = gen_pool_alloc(ocram_pool, MX6Q_SUSPEND_OCRAM_SIZE);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -511,7 +511,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 	ret = imx6_pm_get_base(&pm_info->mmdc_base, socdata->mmdc_compat);
- 	if (ret) {
- 		pr_warn("%s: failed to get mmdc base %d!\n", __func__, ret);
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ret = imx6_pm_get_base(&pm_info->src_base, socdata->src_compat);
-@@ -558,7 +558,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 		&imx6_suspend,
- 		MX6Q_SUSPEND_OCRAM_SIZE - sizeof(*pm_info));
- 
--	goto put_node;
-+	goto put_device;
- 
- pl310_cache_map_failed:
- 	iounmap(pm_info->gpc_base.vbase);
-@@ -568,6 +568,8 @@ iomuxc_map_failed:
- 	iounmap(pm_info->src_base.vbase);
- src_map_failed:
- 	iounmap(pm_info->mmdc_base.vbase);
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(node);
+ static irqreturn_t pch_i2c_handler(int irq, void *pData);
  
 -- 
 2.25.1
