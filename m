@@ -2,118 +2,132 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC16C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7A8C433FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 969F02176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B622176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:24:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Gck+mCm9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="obAnsss+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgGTJXf (ORCPT
+        id S1728235AbgGTJX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:23:35 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:36468 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727961AbgGTJXf (ORCPT
+        Mon, 20 Jul 2020 05:23:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727961AbgGTJX6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:23:35 -0400
+        Mon, 20 Jul 2020 05:23:58 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6738CC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:23:58 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o2so24480657wmh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:23:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1595237015; x=1626773015;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=+7yAVZl6mHmUHzH/+LVL6YAFykoxwPD4jg9C2cO3LOg=;
-  b=Gck+mCm9qzRnNinmRnf/iKM96JnoffpbBhBSNgKYX6nxJU04JNI2CEhT
-   0TzJMLniH+8c3NRAq1oTb0yVReHQo5/jojJadHb6KfMAH9w970P1JYNm4
-   qyFzWbm6Ja2VTOqb52J6RE5Ak88nc8N86L+Cs4X8N08CLv8hX/tgVFFwI
-   4=;
-IronPort-SDR: C8cd0F9M+jjP4jsjmMLL96Y3EX8+slPuwv4bDevIK7M6h+ACb+rK0U7pTSR7KPZ6ZH4KOOylOT
- kxavO417bAmw==
-X-IronPort-AV: E=Sophos;i="5.75,374,1589241600"; 
-   d="scan'208";a="59807333"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 20 Jul 2020 09:23:33 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id C72D2A28E3;
-        Mon, 20 Jul 2020 09:23:31 +0000 (UTC)
-Received: from EX13D28EUC001.ant.amazon.com (10.43.164.4) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 20 Jul 2020 09:23:31 +0000
-Received: from ua97a68a4e7db56.ant.amazon.com.amazon.com (10.43.161.146) by
- EX13D28EUC001.ant.amazon.com (10.43.164.4) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 20 Jul 2020 09:23:25 +0000
-References: <20200720075614.35676-1-wanghai38@huawei.com>
-User-agent: mu4e 1.4.10; emacs 26.3
-From:   Shay Agroskin <shayagr@amazon.com>
-To:     Wang Hai <wanghai38@huawei.com>
-CC:     <joe@perches.com>, <gtzalik@amazon.com>, <saeedb@amazon.com>,
-        <zorik@amazon.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-        <sameehj@amazon.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v3] net: ena: Fix using plain integer as NULL pointer in ena_init_napi_in_range
-In-Reply-To: <20200720075614.35676-1-wanghai38@huawei.com>
-Date:   Mon, 20 Jul 2020 12:23:20 +0300
-Message-ID: <pj41zlimeibkvr.fsf@ua97a68a4e7db56.ant.amazon.com>
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nLaI7SKqPmkCBwaiQh58vRC+ysbWJDB3m7E0+rdbv3A=;
+        b=obAnsss+nlP86FHUb5s8+uhL+5pjtkD9xG7fKn6GelmnWvgY5KoRp1oFKBAn6v7D+b
+         g7DeUgSySgnCm60xJRk70mknhnE6CJ6o3xJau2iJKzn+AIHm20LUovbz3dceaOpxBh7I
+         +cypOtf3PFEyOqirsvSURucYoXT/maPOH9uDyJML3pT/5eAfFwjBSmyzohUR3zJoZNvq
+         MGMMgPTPamiXiczSfsPl+F6xNfyr6diNyM2/bvzOyO2ZGsp+QGXzcwNZlNDqFtgHMtjm
+         WyZLRlV56zGG4G986rk93+Pt1WFwvB1d3eRcth5Ac0k99brZVLmR/pDPdvGsSFlEHPhY
+         nyOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nLaI7SKqPmkCBwaiQh58vRC+ysbWJDB3m7E0+rdbv3A=;
+        b=eTLUn7PYVo1C01Da71fzJv5RF88obb4OALRvweu/ECh5k/6fw9P0ybQY0wAChTz9NG
+         awXC082ANVl9esI9GkJQMs2KCgHFdYJx5Zyc+6zPtv3EF71EuvkQ4wbl0qk5oC/5H/em
+         J2uG9GjnlBI10a00mj1Wexk/sbT2FR2LTrWSKtI+fGi1edD9DGkSpdT7VKag8Ej9+rOM
+         TnCyaEgWPlsMS7NnXm25qblJLW4ex5VCbH8TX34K2Xww0VgxcJ5Mif+Qkph6OO2WsFDf
+         F2xNWrEfmgwr6A79m/47m5l5el0QYXE54I3fKCOsj8/OZdvQO9jEgcP0kyV5UbYnIb1V
+         6KIQ==
+X-Gm-Message-State: AOAM533rK6L4k3bBP7TWYxR7SrZ/FbUm8OAyFnH0j39AOHP2D3niZKhC
+        IncPNislVIt/3o2OJy9LQg/STg==
+X-Google-Smtp-Source: ABdhPJzkFoxqVa8pR1mDs4a+spsOvWgEprH0ioCHkRabVmP8EVd/JeUsi1P9xaCGElP2GWdbnfXVag==
+X-Received: by 2002:a1c:59c2:: with SMTP id n185mr21663373wmb.104.1595237037144;
+        Mon, 20 Jul 2020 02:23:57 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id c17sm17623763wrc.42.2020.07.20.02.23.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jul 2020 02:23:56 -0700 (PDT)
+Subject: Re: [PATCH v4 06/16] dt-bindings: nvmem: SID: add binding for A100's
+ SID controller
+To:     Frank Lee <frank@allwinnertech.com>, robh+dt@kernel.org,
+        mripard@kernel.org, wens@csie.org, devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com
+References: <cover.1594708863.git.frank@allwinnertech.com>
+ <6899200489cb4236650ba90646057874b82ed6b7.1594708864.git.frank@allwinnertech.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <76773e96-7a63-1362-dcf9-8cc49e386603@linaro.org>
+Date:   Mon, 20 Jul 2020 10:23:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Originating-IP: [10.43.161.146]
-X-ClientProxiedBy: EX13D20UWC001.ant.amazon.com (10.43.162.244) To
- EX13D28EUC001.ant.amazon.com (10.43.164.4)
+In-Reply-To: <6899200489cb4236650ba90646057874b82ed6b7.1594708864.git.frank@allwinnertech.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Wang Hai <wanghai38@huawei.com> writes:
 
-> Fix sparse build warning:
->
-> drivers/net/ethernet/amazon/ena/ena_netdev.c:2193:34: warning:
->  Using plain integer as NULL pointer
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
-> Suggested-by: Joe Perches <joe@perches.com>
-> Acked-by: Shay Agroskin <shayagr@amazon.com>
+On 14/07/2020 08:08, Frank Lee wrote:
+> From: Yangtao Li <frank@allwinnertech.com>
+> 
+> Add a binding for A100's SID controller.
+> 
+> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
 > ---
-> v1->v2:
->  Improve code readability based on Joe Perches's suggestion 
-> v2->v3:
->  Simplify code based on Joe Perches's suggestion
->  drivers/net/ethernet/amazon/ena/ena_netdev.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c 
-> b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-> index 91be3ffa1c5c..3eb63b12dd68 100644
-> --- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-> +++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-> @@ -2190,14 +2190,13 @@ static void ena_del_napi_in_range(struct 
-> ena_adapter *adapter,
->  static void ena_init_napi_in_range(struct ena_adapter *adapter,
->  				   int first_index, int count)
->  {
-> -	struct ena_napi *napi = {0};
->  	int i;
->  
->  	for (i = first_index; i < first_index + count; i++) {
-> -		napi = &adapter->ena_napi[i];
-> +		struct ena_napi *napi = &adapter->ena_napi[i];
->  
->  		netif_napi_add(adapter->netdev,
-> -			       &adapter->ena_napi[i].napi,
-> +			       &napi->napi,
->  			       ENA_IS_XDP_INDEX(adapter, i) ? 
->  ena_xdp_io_poll : ena_io_poll,
->  			       ENA_NAPI_BUDGET);
 
-Acked-by: Shay Agroskin <shayagr@amazon.com>
-
-Thanks a lot for your work
+Applied thanks,
+srini
+>   .../nvmem/allwinner,sun4i-a10-sid.yaml        | 19 +++++++++++--------
+>   1 file changed, 11 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+> index daf1321d76ad..6687ab720304 100644
+> --- a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+> +++ b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+> @@ -15,14 +15,17 @@ allOf:
+>   
+>   properties:
+>     compatible:
+> -    enum:
+> -      - allwinner,sun4i-a10-sid
+> -      - allwinner,sun7i-a20-sid
+> -      - allwinner,sun8i-a83t-sid
+> -      - allwinner,sun8i-h3-sid
+> -      - allwinner,sun50i-a64-sid
+> -      - allwinner,sun50i-h5-sid
+> -      - allwinner,sun50i-h6-sid
+> +    oneOf:
+> +      - const: allwinner,sun4i-a10-sid
+> +      - const: allwinner,sun7i-a20-sid
+> +      - const: allwinner,sun8i-a83t-sid
+> +      - const: allwinner,sun8i-h3-sid
+> +      - const: allwinner,sun50i-a64-sid
+> +      - items:
+> +          - const: allwinner,sun50i-a100-sid
+> +          - const: allwinner,sun50i-a64-sid
+> +      - const: allwinner,sun50i-h5-sid
+> +      - const: allwinner,sun50i-h6-sid
+>   
+>     reg:
+>       maxItems: 1
+> 
