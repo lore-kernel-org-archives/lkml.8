@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87C0C433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 005E2C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7979B206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D494E206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263257;
-	bh=6TvSZAHBNwIOER1p9mZeazrQSDICKsX8iOf9RBznyvI=;
+	s=default; t=1595263259;
+	bh=fmeWhdhvaGBZT1EJ8XDeUQppJvMJz/VxtSuhIKoeQ58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AQhG43nfJLBFmigpeNsqwyvf/UUyzH3i7fcAh5v29VX40icOfbjhk/YMC9VyAaLmG
-	 kRXL7RuZoea+YkdqKpGraVJ9gSUMgov3pV+JzBp9HABY6ycVeXWWd2cFivApPWFV0p
-	 AQ2wOGqPok4h5TBxDkipE8N2xjtFLOWFHk5fUnF0=
+	b=bL/s0zpCXXbAUvOpmvXP85vjKFXwcTbbubK2Tm0bZ9udX6f8hW+HJ25B0si+gJ3T7
+	 LCxHQAOI0VojWHXBLIX1QnoL+blZjFpDqPkiTIbNwNAz43Q/a6JqyKJUJdhO73QwPc
+	 sxr7VuHJT5G/PzBg/fmQYpzyj8GpumEici6iaPLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732286AbgGTQk4 (ORCPT
+        id S1730660AbgGTPqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:40:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41298 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:46:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730192AbgGTPqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:46:35 -0400
+        id S1730004AbgGTPqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:46:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEFFE22CBE;
-        Mon, 20 Jul 2020 15:46:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3110A22BF3;
+        Mon, 20 Jul 2020 15:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259994;
-        bh=6TvSZAHBNwIOER1p9mZeazrQSDICKsX8iOf9RBznyvI=;
+        s=default; t=1595259980;
+        bh=fmeWhdhvaGBZT1EJ8XDeUQppJvMJz/VxtSuhIKoeQ58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ec+9gGWSF5fwRqh2SrpMmgniyz+uZOie8s5k+43CRD3bDRp51a/2cOHSowRfqgsN9
-         hcYbbRZLZ9k34zrKtes7O2dACl5H6fBe3W+Kdpus43bo+5u2/6aNHzR0bxjXUuCFp5
-         AQCexQTYC9wt0rF3ulHoW02GlyH4EJpCTGKu7Mi0=
+        b=sfSONZa7+XLw/+6YLh7Txo39qeyDkF0JXEHwG6r1HaIzMGvyun+t8NzSzy2EgTCPp
+         2UctzHYC24EvDar41nsw1VP6F44tufkhEmWyhaKYqttieE2gvOTgiipZw4o35/b4WM
+         VE3r1jnTQ2nC57YDMOR6n/EPTq4J8kxnHml6jaU4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        Alison Schofield <amsfield22@gmail.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Andrew F. Davis" <afd@ti.com>, Stable@vger.kernel.org
-Subject: [PATCH 4.14 068/125] iio:health:afe4403 Fix timestamp alignment and prevent data leak.
-Date:   Mon, 20 Jul 2020 17:36:47 +0200
-Message-Id: <20200720152806.301444420@linuxfoundation.org>
+        Stable@vger.kernel.org
+Subject: [PATCH 4.14 063/125] iio:humidity:hdc100x Fix alignment and data leak issues
+Date:   Mon, 20 Jul 2020 17:36:42 +0200
+Message-Id: <20200720152806.068859819@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -62,79 +64,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-commit 3f9c6d38797e9903937b007a341dad0c251765d6 upstream.
+commit ea5e7a7bb6205d24371373cd80325db1bc15eded upstream.
 
 One of a class of bugs pointed out by Lars in a recent review.
 iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
 to the size of the timestamp (8 bytes).  This is not guaranteed in
-this driver which uses a 32 byte array of smaller elements on the stack.
+this driver which uses an array of smaller elements on the stack.
 As Lars also noted this anti pattern can involve a leak of data to
 userspace and that indeed can happen here.  We close both issues by
-moving to a suitable structure in the iio_priv() data with alignment
-explicitly requested.  This data is allocated with kzalloc so no
-data can leak appart from previous readings.
+moving to a suitable structure in the iio_priv() data.
+This data is allocated with kzalloc so no data can leak apart
+from previous readings.
 
-Fixes: eec96d1e2d31 ("iio: health: Add driver for the TI AFE4403 heart monitor")
+Fixes: 16bf793f86b2 ("iio: humidity: hdc100x: add triggered buffer support for HDC100X")
 Reported-by: Lars-Peter Clausen <lars@metafoo.de>
+Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Cc: Alison Schofield <amsfield22@gmail.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Andrew F. Davis <afd@ti.com>
 Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/health/afe4403.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/iio/humidity/hdc100x.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/health/afe4403.c
-+++ b/drivers/iio/health/afe4403.c
-@@ -71,6 +71,7 @@ static const struct reg_field afe4403_re
-  * @regulator: Pointer to the regulator for the IC
-  * @trig: IIO trigger for this device
-  * @irq: ADC_RDY line interrupt number
-+ * @buffer: Used to construct data layout to push into IIO buffer.
-  */
- struct afe4403_data {
- 	struct device *dev;
-@@ -80,6 +81,8 @@ struct afe4403_data {
- 	struct regulator *regulator;
- 	struct iio_trigger *trig;
- 	int irq;
-+	/* Ensure suitable alignment for timestamp */
-+	s32 buffer[8] __aligned(8);
+--- a/drivers/iio/humidity/hdc100x.c
++++ b/drivers/iio/humidity/hdc100x.c
+@@ -46,6 +46,11 @@ struct hdc100x_data {
+ 
+ 	/* integration time of the sensor */
+ 	int adc_int_us[2];
++	/* Ensure natural alignment of timestamp */
++	struct {
++		__be16 channels[2];
++		s64 ts __aligned(8);
++	} scan;
  };
  
- enum afe4403_chan_id {
-@@ -318,7 +321,6 @@ static irqreturn_t afe4403_trigger_handl
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct afe4403_data *afe = iio_priv(indio_dev);
- 	int ret, bit, i = 0;
--	s32 buffer[8];
- 	u8 tx[4] = {AFE440X_CONTROL0, 0x0, 0x0, AFE440X_CONTROL0_READ};
- 	u8 rx[3];
+ /* integration time in us */
+@@ -327,7 +332,6 @@ static irqreturn_t hdc100x_trigger_handl
+ 	struct i2c_client *client = data->client;
+ 	int delay = data->adc_int_us[0] + data->adc_int_us[1];
+ 	int ret;
+-	s16 buf[8];  /* 2x s16 + padding + 8 byte timestamp */
  
-@@ -335,9 +337,9 @@ static irqreturn_t afe4403_trigger_handl
- 		if (ret)
- 			goto err;
+ 	/* dual read starts at temp register */
+ 	mutex_lock(&data->lock);
+@@ -338,13 +342,13 @@ static irqreturn_t hdc100x_trigger_handl
+ 	}
+ 	usleep_range(delay, delay + 1000);
  
--		buffer[i++] = (rx[0] << 16) |
--				(rx[1] << 8) |
--				(rx[2]);
-+		afe->buffer[i++] = (rx[0] << 16) |
-+				   (rx[1] << 8) |
-+				   (rx[2]);
+-	ret = i2c_master_recv(client, (u8 *)buf, 4);
++	ret = i2c_master_recv(client, (u8 *)data->scan.channels, 4);
+ 	if (ret < 0) {
+ 		dev_err(&client->dev, "cannot read sensor data\n");
+ 		goto err;
  	}
  
- 	/* Disable reading from the device */
-@@ -346,7 +348,8 @@ static irqreturn_t afe4403_trigger_handl
- 	if (ret)
- 		goto err;
- 
--	iio_push_to_buffers_with_timestamp(indio_dev, buffer, pf->timestamp);
-+	iio_push_to_buffers_with_timestamp(indio_dev, afe->buffer,
-+					   pf->timestamp);
+-	iio_push_to_buffers_with_timestamp(indio_dev, buf,
++	iio_push_to_buffers_with_timestamp(indio_dev, &data->scan,
+ 					   iio_get_time_ns(indio_dev));
  err:
- 	iio_trigger_notify_done(indio_dev->trig);
- 
+ 	mutex_unlock(&data->lock);
 
 
