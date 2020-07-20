@@ -2,99 +2,175 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE887C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200B9C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93AD122BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281295;
-	bh=3Ntu81l2iPqRZi+s6BEQIwuKCV0gzsZOWwcMMWUJBYE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wDnrY7aPGC3kTGod47RZDFW83Jh/IAO8TFNne40hJaOHyo7iKVjLBQV1J5aBm/d03
-	 fQwHMwHbxSX3SPOWlnqQfZG/XIDB2kTcKjFGNnX4ktea541i2qpuV5bGZknIbboNor
-	 Bttcw2KjEjHBs7lvkX+nrMj8yiUz4+gCU6u0+BL4=
+	by mail.kernel.org (Postfix) with ESMTP id 03A7D207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgGTVle (ORCPT
+        id S1728782AbgGTVlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:41:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728473AbgGTVj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:28 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5511E22CBB;
-        Mon, 20 Jul 2020 21:39:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281168;
-        bh=3Ntu81l2iPqRZi+s6BEQIwuKCV0gzsZOWwcMMWUJBYE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YuGVxMyw99FMPeqj4uQ90yzwWEhQSwdnAoKrxwtLct+ZN4Lm3dLVj18acf4kPXKHq
-         BnrVetd5Dp4YdY4IAxA692VGVW13QsmWxiXhcdW1H3G3p/+JL28ln1f1yXD/yepZVn
-         t3ox6olt+Jk7D0j4vhJf+CTuXUsX16R0GRPAAZ5A=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evgeny Novikov <novikov@ispras.ru>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/13] usb: gadget: udc: gr_udc: fix memleak on error handling path in gr_ep_init()
-Date:   Mon, 20 Jul 2020 17:39:11 -0400
-Message-Id: <20200720213914.407919-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213914.407919-1-sashal@kernel.org>
-References: <20200720213914.407919-1-sashal@kernel.org>
+        Mon, 20 Jul 2020 17:41:39 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:34514 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbgGTVlb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:41:31 -0400
+Date:   Mon, 20 Jul 2020 17:41:28 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+Cc:     helgaas@kernel.org, Yoshinori Sato <ysato@users.sourceforge.jp>,
+        bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
+Subject: Re: [RFC PATCH 24/35] sh: Change PCIBIOS_SUCCESSFUL to 0
+Message-ID: <20200720214128.GN14669@brightrain.aerifal.cx>
+References: <20200713122247.10985-1-refactormyself@gmail.com>
+ <20200713122247.10985-25-refactormyself@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713122247.10985-25-refactormyself@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+On Mon, Jul 13, 2020 at 02:22:36PM +0200, Saheed O. Bolarinwa wrote:
+> In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
+> Their scope should be limited within arch/x86.
+> 
+> Change all PCIBIOS_SUCCESSFUL to 0
+> 
+> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+> ---
+>  arch/sh/drivers/pci/common.c        | 2 +-
+>  arch/sh/drivers/pci/ops-dreamcast.c | 4 ++--
+>  arch/sh/drivers/pci/ops-sh4.c       | 4 ++--
+>  arch/sh/drivers/pci/ops-sh7786.c    | 8 ++++----
+>  arch/sh/drivers/pci/pci.c           | 2 +-
+>  5 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/sh/drivers/pci/common.c b/arch/sh/drivers/pci/common.c
+> index fe163ecd0719..ee27cdfd3e68 100644
+> --- a/arch/sh/drivers/pci/common.c
+> +++ b/arch/sh/drivers/pci/common.c
+> @@ -61,7 +61,7 @@ int __init pci_is_66mhz_capable(struct pci_channel *hose,
+>  			continue;
+>  		if (early_read_config_word(hose, top_bus, current_bus,
+>  					   pci_devfn, PCI_VENDOR_ID, &vid) !=
+> -		    PCIBIOS_SUCCESSFUL)
+> +		    0)
+>  			continue;
+>  		if (vid == 0xffff)
+>  			continue;
+> diff --git a/arch/sh/drivers/pci/ops-dreamcast.c b/arch/sh/drivers/pci/ops-dreamcast.c
+> index 517a8a9702f6..431cd006951f 100644
+> --- a/arch/sh/drivers/pci/ops-dreamcast.c
+> +++ b/arch/sh/drivers/pci/ops-dreamcast.c
+> @@ -56,7 +56,7 @@ static int gapspci_read(struct pci_bus *bus, unsigned int devfn, int where, int
+>  	case 4: *val = inl(GAPSPCI_BBA_CONFIG+where); break;
+>  	}
+>  
+> -        return PCIBIOS_SUCCESSFUL;
+> +	return 0;
+>  }
+>  
+>  static int gapspci_write(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val)
+> @@ -70,7 +70,7 @@ static int gapspci_write(struct pci_bus *bus, unsigned int devfn, int where, int
+>  	case 4: outl((u32)val, GAPSPCI_BBA_CONFIG+where); break;
+>  	}
+>  
+> -        return PCIBIOS_SUCCESSFUL;
+> +	return 0;
+>  }
+>  
+>  struct pci_ops gapspci_pci_ops = {
+> diff --git a/arch/sh/drivers/pci/ops-sh4.c b/arch/sh/drivers/pci/ops-sh4.c
+> index a205be3bfc4a..4d757e5f38c6 100644
+> --- a/arch/sh/drivers/pci/ops-sh4.c
+> +++ b/arch/sh/drivers/pci/ops-sh4.c
+> @@ -49,7 +49,7 @@ static int sh4_pci_read(struct pci_bus *bus, unsigned int devfn,
+>  		return PCIBIOS_FUNC_NOT_SUPPORTED;
+>  	}
+>  
+> -	return PCIBIOS_SUCCESSFUL;
+> +	return 0;
+>  }
+>  
+>  /*
+> @@ -90,7 +90,7 @@ static int sh4_pci_write(struct pci_bus *bus, unsigned int devfn,
+>  
+>  	pci_write_reg(chan, data, SH4_PCIPDR);
+>  
+> -	return PCIBIOS_SUCCESSFUL;
+> +	return 0;
+>  }
+>  
+>  struct pci_ops sh4_pci_ops = {
+> diff --git a/arch/sh/drivers/pci/ops-sh7786.c b/arch/sh/drivers/pci/ops-sh7786.c
+> index a10f9f4ebd7f..7c329e467360 100644
+> --- a/arch/sh/drivers/pci/ops-sh7786.c
+> +++ b/arch/sh/drivers/pci/ops-sh7786.c
+> @@ -52,7 +52,7 @@ static int sh7786_pcie_config_access(unsigned char access_type,
+>  			else
+>  				pci_write_reg(chan, *data, PCI_REG(reg));
+>  
+> -			return PCIBIOS_SUCCESSFUL;
+> +			return 0;
+>  		} else if (dev > 1)
+>  			return PCIBIOS_DEVICE_NOT_FOUND;
+>  	}
+> @@ -83,7 +83,7 @@ static int sh7786_pcie_config_access(unsigned char access_type,
+>  	/* Disable the configuration access */
+>  	pci_write_reg(chan, 0, SH4A_PCIEPCTLR);
+>  
+> -	return PCIBIOS_SUCCESSFUL;
+> +	return 0;
+>  }
+>  
+>  static int sh7786_pcie_read(struct pci_bus *bus, unsigned int devfn,
+> @@ -101,7 +101,7 @@ static int sh7786_pcie_read(struct pci_bus *bus, unsigned int devfn,
+>  	raw_spin_lock_irqsave(&pci_config_lock, flags);
+>  	ret = sh7786_pcie_config_access(PCI_ACCESS_READ, bus,
+>  					devfn, where, &data);
+> -	if (ret != PCIBIOS_SUCCESSFUL) {
+> +	if (ret != 0) {
+>  		*val = 0xffffffff;
+>  		goto out;
+>  	}
+> @@ -137,7 +137,7 @@ static int sh7786_pcie_write(struct pci_bus *bus, unsigned int devfn,
+>  	raw_spin_lock_irqsave(&pci_config_lock, flags);
+>  	ret = sh7786_pcie_config_access(PCI_ACCESS_READ, bus,
+>  					devfn, where, &data);
+> -	if (ret != PCIBIOS_SUCCESSFUL)
+> +	if (ret != 0)
+>  		goto out;
+>  
+>  	dev_dbg(&bus->dev, "pcie-config-write: bus=%3d devfn=0x%04x "
+> diff --git a/arch/sh/drivers/pci/pci.c b/arch/sh/drivers/pci/pci.c
+> index c7784e156964..77130f035fdd 100644
+> --- a/arch/sh/drivers/pci/pci.c
+> +++ b/arch/sh/drivers/pci/pci.c
+> @@ -204,7 +204,7 @@ pcibios_bus_report_status_early(struct pci_channel *hose,
+>  			continue;
+>  		ret = early_read_config_word(hose, top_bus, current_bus,
+>  					     pci_devfn, PCI_STATUS, &status);
+> -		if (ret != PCIBIOS_SUCCESSFUL)
+> +		if (ret != 0)
+>  			continue;
+>  		if (status == 0xffff)
+>  			continue;
+> -- 
+> 2.18.2
 
-[ Upstream commit c8f8529e2c4141afa2ebb487ad48e8a6ec3e8c99 ]
+Acked-by: Rich Felker <dalias@libc.org>
 
-gr_ep_init() does not assign the allocated request anywhere if allocation
-of memory for the buffer fails. This is a memory leak fixed by the given
-patch.
-
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/gadget/udc/gr_udc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
-index feb73a1c42ef9..be094f4e116b1 100644
---- a/drivers/usb/gadget/udc/gr_udc.c
-+++ b/drivers/usb/gadget/udc/gr_udc.c
-@@ -2000,9 +2000,12 @@ static int gr_ep_init(struct gr_udc *dev, int num, int is_in, u32 maxplimit)
- 
- 	if (num == 0) {
- 		_req = gr_alloc_request(&ep->ep, GFP_ATOMIC);
-+		if (!_req)
-+			return -ENOMEM;
-+
- 		buf = devm_kzalloc(dev->dev, PAGE_SIZE, GFP_DMA | GFP_ATOMIC);
--		if (!_req || !buf) {
--			/* possible _req freed by gr_probe via gr_remove */
-+		if (!buf) {
-+			gr_free_request(&ep->ep, _req);
- 			return -ENOMEM;
- 		}
- 
--- 
-2.25.1
-
+(for both this and the following one in the series)
