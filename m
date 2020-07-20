@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211DEC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B014C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00A962070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14FA620729
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:50:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MVvmIcHl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jViuHJvr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgGTDuF (ORCPT
+        id S1726784AbgGTDuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 23:50:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41784 "EHLO
+        Sun, 19 Jul 2020 23:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726123AbgGTDuD (ORCPT
+        with ESMTP id S1726719AbgGTDuJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 23:50:03 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3062C0619D2;
-        Sun, 19 Jul 2020 20:50:03 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 207so8386007pfu.3;
-        Sun, 19 Jul 2020 20:50:03 -0700 (PDT)
+        Sun, 19 Jul 2020 23:50:09 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49AEBC0619D4;
+        Sun, 19 Jul 2020 20:50:09 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gc9so9497102pjb.2;
+        Sun, 19 Jul 2020 20:50:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YH5Ac89Q4DpBjkm7EXUDOjaAGjnjWFyt277PJmQDNsE=;
-        b=MVvmIcHlT557Sh1XefG+9U5EDY6JttOiXXx+c63j17II7CM6Y+PAzyUO8+IGTFUY5d
-         lo6RtCcJYZ92zo4Ca3q09+CEEkxTsmFy41RtujrjqkWrHLrva/+25xyHgQdpddxkHC7L
-         5N2mtk9/d3F1oEk+GHY3ZRPBhvmpOOoqbkHEmHdBmid6hCafE8TibQVUvwSLf/3q4OOv
-         Nx8h5h1u20IRLobl/y8W+ZRXJxM9Yj/6IVi5IslqDExclYwXuzuyNZ0VwxnF9OLzR/aF
-         HqRJ7GspvgRmh8VKmM34BsnPveTVYePC+vyrUVoLYAnv8p1sDH458fX1x9eNmXefIF94
-         UDYA==
+        bh=nG0iPsD5QdkdQaph/ibFlBdWV0TfbW/UttIf3Q4vXdA=;
+        b=jViuHJvrdhaQg3FS2W9I3rv84tB4aLPhLI24ZW+zHZOYroh3hmghwhhaWfmGcUhoEM
+         EzDrkgOA0EtoZTqqCb8R/lkm9WTeNzQd6gvP8RmSqhs4l6WrxHb+0hwDW+Gyu9WJGlsU
+         vyLDQ1ZCM3Qvk7yhttgnoC+uoD1rm2Ibf8RYSjwggtjDnAa/SnnxlGhPkVQBmS2eyxw0
+         QDjPaflW20UIuQdt9ijtJs2HSSaI2RUW13NqGIWILx21eGP0DNSzgXqpgNf9DjgSy0wx
+         BcODhOpJIXvyIPMEUk1N8PsTAltTcbQIPMuOn71RCapv5JmulHHTE4DClOKK9989we70
+         VHWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YH5Ac89Q4DpBjkm7EXUDOjaAGjnjWFyt277PJmQDNsE=;
-        b=nUGcy4GrXZCs8i82JoZQNYOgWSGEn1PhIELid8kpCBzNXfevyBLxpGMRURe0GFrCXO
-         o3p4QhMyWIEUcJP5CXiirO7XyaUQnbdLX0J1UQgk2VtqUaHQh4r4Gdyef+c3opW4wo9l
-         1lpR7WiCBWRYrzmUKR0fXrCh2l8TEQuz6BdgvS8EfOLvN0jqRVnq4aEB8fDWyYFclvYu
-         NOOGNn90/rCYFtcT4gjVRswmZdhYcWrr1yEqVQX2i/Yng00prfkYX04ZqZRlhuxotkyO
-         vQrpRl7E32cizh1EygBPWZLifg8n4DOhPi9oiEN5f/eYwd7HC1VxE1iewUViQa02CkBu
-         UIYw==
-X-Gm-Message-State: AOAM533r6w1ZW2u+Kw+LkVq7o+TjeIHCi8auJ0R7Z3WS0BUpGboHjPJY
-        t3FswAzDDMK13/TfJtrRY6Ufy5wt
-X-Google-Smtp-Source: ABdhPJztFOPl178CyUsEQCSSbKiiOUseHDDiIXb7XQnCW15wuySTsJafHE8jrhNgkXBoareZuvgsjA==
-X-Received: by 2002:a62:140e:: with SMTP id 14mr17284700pfu.196.1595217002470;
-        Sun, 19 Jul 2020 20:50:02 -0700 (PDT)
+        bh=nG0iPsD5QdkdQaph/ibFlBdWV0TfbW/UttIf3Q4vXdA=;
+        b=st1jC5dGmpTRohJkenfuKAmLA3SWfMl8V1zRmpNYpUx9wLLSpt2fMXz7HqaRV210sb
+         pwFjGluJmk35KxXP/jJz9u7xyUguFOBFrqWSSRbOvpnrsNp3s8EKG2qnBtEAKWD/8rV2
+         3+Nsd0DwxgjD1R2QgNvqMHPJsYQ9f832n3p/p+JQ6yW9UW3mXZOGkcs+6t3DCOUDkyaW
+         kBqS+OfRX6eVGpfXKc93YAU7C/fDBQEanD5R6rlThudffhRhPKLJhK6mzIWuSnuA4g4f
+         vEpjBZC6bJucJLHr5L0Arwl76GJuVKSWZwQzUIwhjP+2LUovS5qYVsq+L2RCQL9Sz4j5
+         0BWA==
+X-Gm-Message-State: AOAM533IvfHsptSwifORPSJNo54oBKa5YHCXmNbuv/eIGOsvb3OuvKD5
+        cpfpjwzGR3EOreZJC9+CKlhxJ/BT
+X-Google-Smtp-Source: ABdhPJwf8BzhJpEXLmJ/cI0ofcipsewX/PEGNwbcMs2ksgdgIZVORiXquhl5ZYtY2fUMnpcopdIi0A==
+X-Received: by 2002:a17:90b:4d0f:: with SMTP id mw15mr21480190pjb.68.1595217008347;
+        Sun, 19 Jul 2020 20:50:08 -0700 (PDT)
 Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id z11sm15183445pfj.104.2020.07.19.20.50.00
+        by smtp.gmail.com with ESMTPSA id z11sm15183445pfj.104.2020.07.19.20.50.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 20:50:01 -0700 (PDT)
+        Sun, 19 Jul 2020 20:50:07 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -75,9 +75,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Richard Cochran <richardcochran@gmail.com>,
         Michal Kubecek <mkubecek@suse.cz>,
         linux-kernel@vger.kernel.org (open list), olteanv@gmail.com
-Subject: [PATCH net-next v2 1/4] net: Wrap ndo_do_ioctl() to prepare for DSA stacked ops
-Date:   Sun, 19 Jul 2020 20:49:51 -0700
-Message-Id: <20200720034954.66895-2-f.fainelli@gmail.com>
+Subject: [PATCH net-next v2 4/4] net: dsa: Setup dsa_netdev_ops
+Date:   Sun, 19 Jul 2020 20:49:54 -0700
+Message-Id: <20200720034954.66895-5-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720034954.66895-1-f.fainelli@gmail.com>
 References: <20200720034954.66895-1-f.fainelli@gmail.com>
@@ -88,56 +88,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for adding another layer of call into a DSA stacked ops
-singleton, wrap the ndo_do_ioctl() call into dev_do_ioctl().
+Now that we have all the infrastructure in place for calling into the
+dsa_ptr->netdev_ops function pointers, install them when we configure
+the DSA CPU/management interface and tear them down. The flow is
+unchanged from before, but now we preserve equality of tests when
+network device drivers do tests like dev->netdev_ops == &foo_ops which
+was not the case before since we were allocating an entirely new
+structure.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- net/core/dev_ioctl.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ include/net/dsa.h |  1 -
+ net/dsa/master.c  | 52 ++++++++++++-----------------------------------
+ 2 files changed, 13 insertions(+), 40 deletions(-)
 
-diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
-index 547b587c1950..a213c703c90a 100644
---- a/net/core/dev_ioctl.c
-+++ b/net/core/dev_ioctl.c
-@@ -225,6 +225,22 @@ static int net_hwtstamp_validate(struct ifreq *ifr)
- 	return 0;
+diff --git a/include/net/dsa.h b/include/net/dsa.h
+index 343642ca4f63..f1b63d06d132 100644
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -230,7 +230,6 @@ struct dsa_port {
+ 	 * Original copy of the master netdev net_device_ops
+ 	 */
+ 	const struct dsa_netdevice_ops *netdev_ops;
+-	const struct net_device_ops *orig_ndo_ops;
+ 
+ 	bool setup;
+ };
+diff --git a/net/dsa/master.c b/net/dsa/master.c
+index 480a61460c23..0a90911ae31b 100644
+--- a/net/dsa/master.c
++++ b/net/dsa/master.c
+@@ -220,12 +220,17 @@ static int dsa_master_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
+ 		break;
+ 	}
+ 
+-	if (cpu_dp->orig_ndo_ops && cpu_dp->orig_ndo_ops->ndo_do_ioctl)
+-		err = cpu_dp->orig_ndo_ops->ndo_do_ioctl(dev, ifr, cmd);
++	if (dev->netdev_ops->ndo_do_ioctl)
++		err = dev->netdev_ops->ndo_do_ioctl(dev, ifr, cmd);
+ 
+ 	return err;
  }
  
-+static int dev_do_ioctl(struct net_device *dev,
-+			struct ifreq *ifr, unsigned int cmd)
-+{
-+	const struct net_device_ops *ops = dev->netdev_ops;
-+	int err = -EOPNOTSUPP;
++static const struct dsa_netdevice_ops dsa_netdev_ops = {
++	.ndo_do_ioctl = dsa_master_ioctl,
++	.ndo_get_phys_port_name = dsa_master_get_phys_port_name,
++};
 +
-+	if (ops->ndo_do_ioctl) {
-+		if (netif_device_present(dev))
-+			err = ops->ndo_do_ioctl(dev, ifr, cmd);
-+		else
-+			err = -ENODEV;
-+	}
-+
-+	return err;
-+}
-+
- /*
-  *	Perform the SIOCxIFxxx calls, inside rtnl_lock()
-  */
-@@ -323,13 +339,7 @@ static int dev_ifsioc(struct net *net, struct ifreq *ifr, unsigned int cmd)
- 		    cmd == SIOCSHWTSTAMP ||
- 		    cmd == SIOCGHWTSTAMP ||
- 		    cmd == SIOCWANDEV) {
--			err = -EOPNOTSUPP;
--			if (ops->ndo_do_ioctl) {
--				if (netif_device_present(dev))
--					err = ops->ndo_do_ioctl(dev, ifr, cmd);
--				else
--					err = -ENODEV;
--			}
-+			err = dev_do_ioctl(dev, ifr, cmd);
- 		} else
- 			err = -EINVAL;
+ static int dsa_master_ethtool_setup(struct net_device *dev)
+ {
+ 	struct dsa_port *cpu_dp = dev->dsa_ptr;
+@@ -260,38 +265,10 @@ static void dsa_master_ethtool_teardown(struct net_device *dev)
+ 	cpu_dp->orig_ethtool_ops = NULL;
+ }
+ 
+-static int dsa_master_ndo_setup(struct net_device *dev)
+-{
+-	struct dsa_port *cpu_dp = dev->dsa_ptr;
+-	struct dsa_switch *ds = cpu_dp->ds;
+-	struct net_device_ops *ops;
+-
+-	if (dev->netdev_ops->ndo_get_phys_port_name)
+-		return 0;
+-
+-	ops = devm_kzalloc(ds->dev, sizeof(*ops), GFP_KERNEL);
+-	if (!ops)
+-		return -ENOMEM;
+-
+-	cpu_dp->orig_ndo_ops = dev->netdev_ops;
+-	if (cpu_dp->orig_ndo_ops)
+-		memcpy(ops, cpu_dp->orig_ndo_ops, sizeof(*ops));
+-
+-	ops->ndo_get_phys_port_name = dsa_master_get_phys_port_name;
+-	ops->ndo_do_ioctl = dsa_master_ioctl;
+-
+-	dev->netdev_ops  = ops;
+-
+-	return 0;
+-}
+-
+-static void dsa_master_ndo_teardown(struct net_device *dev)
++static void dsa_netdev_ops_set(struct net_device *dev,
++			       const struct dsa_netdevice_ops *ops)
+ {
+-	struct dsa_port *cpu_dp = dev->dsa_ptr;
+-
+-	if (cpu_dp->orig_ndo_ops)
+-		dev->netdev_ops = cpu_dp->orig_ndo_ops;
+-	cpu_dp->orig_ndo_ops = NULL;
++	dev->dsa_ptr->netdev_ops = ops;
+ }
+ 
+ static ssize_t tagging_show(struct device *d, struct device_attribute *attr,
+@@ -353,9 +330,7 @@ int dsa_master_setup(struct net_device *dev, struct dsa_port *cpu_dp)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = dsa_master_ndo_setup(dev);
+-	if (ret)
+-		goto out_err_ethtool_teardown;
++	dsa_netdev_ops_set(dev, &dsa_netdev_ops);
+ 
+ 	ret = sysfs_create_group(&dev->dev.kobj, &dsa_group);
+ 	if (ret)
+@@ -364,8 +339,7 @@ int dsa_master_setup(struct net_device *dev, struct dsa_port *cpu_dp)
+ 	return ret;
+ 
+ out_err_ndo_teardown:
+-	dsa_master_ndo_teardown(dev);
+-out_err_ethtool_teardown:
++	dsa_netdev_ops_set(dev, NULL);
+ 	dsa_master_ethtool_teardown(dev);
+ 	return ret;
+ }
+@@ -373,7 +347,7 @@ int dsa_master_setup(struct net_device *dev, struct dsa_port *cpu_dp)
+ void dsa_master_teardown(struct net_device *dev)
+ {
+ 	sysfs_remove_group(&dev->dev.kobj, &dsa_group);
+-	dsa_master_ndo_teardown(dev);
++	dsa_netdev_ops_set(dev, NULL);
+ 	dsa_master_ethtool_teardown(dev);
+ 	dsa_master_reset_mtu(dev);
  
 -- 
 2.25.1
