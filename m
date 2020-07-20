@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59000C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CB2C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC7B2176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D2E22CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261108;
-	bh=erffx3k8jVgl0Xf9ti2xAmllVE/bSCxeXZxcgTckQvE=;
+	s=default; t=1595261109;
+	bh=skdvEiz7c1Tv5JbxH89mctTRqiNTBfFs1t1/vJk7+Ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WQwz7M0JeFVHwfOGDvbL7Pj+jtlklg3HHp8ZWBREkHV5NtD5TCjwxorebUgLBrdII
-	 8WHSy+OVIUYHzlEpwF19hXUYnL5vecB4X7MEwher0zgiuPm+y73CIYdEr6R5hdjO9r
-	 Mv1W9bD3UI97YJSUBdJNdhnrA0uqq32yUSzSAVJ4=
+	b=CQcUjamhtPa0hlpnYtwWyjOW8TfJVqAs5G5iH8Eqt7Z7ePxAWlUbjVyyYr8+cJeN+
+	 nboEJAsUswShO3tNvoVkcZZ7Sba3Ba6eyZr5vFbmxWD01gYkIU36gL/eaw8/lIcHRU
+	 70dgqLVe0czBXjWggtuOiPVmsBp7X1iAi7944q0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732938AbgGTQFH (ORCPT
+        id S1732944AbgGTQFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:05:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40228 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732930AbgGTQFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:05:01 -0400
+        id S1732921AbgGTQFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:05:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8B582176B;
-        Mon, 20 Jul 2020 16:05:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1DB62064B;
+        Mon, 20 Jul 2020 16:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261101;
-        bh=erffx3k8jVgl0Xf9ti2xAmllVE/bSCxeXZxcgTckQvE=;
+        s=default; t=1595261104;
+        bh=skdvEiz7c1Tv5JbxH89mctTRqiNTBfFs1t1/vJk7+Ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rg2UuTPtxG3m+eQNB5kSjtEdiu4IBAqG70iYPcyiWu6SCfPDH5qsiHyTANd7U4mKI
-         s65IqWBtINNHBVvQ88UguAxaYOA8uSnFSzvjpoWpJRs8pFqZ/vtg2+EuyNvOxEa+NH
-         BhkccSouwlqXdC6FO6IJCVR2ScKcGq1eZlndil7Q=
+        b=ejaCOhViYwvtqHKD/cK1iBH+t+VVyC+aAzyhmym0OSDeQnXCvdG0RfHqbxbpnJ5mm
+         i8rM/abN2Rms/VryZqG/gegWYBf+RriCcGpMVtVqxp6fVigW2VOZP44DCNsUKl5pIw
+         zRsH6rAg+3xvyVt2SwDzpBjeTOPfS9E/70JsuBaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 5.4 210/215] rxrpc: Fix trace string
-Date:   Mon, 20 Jul 2020 17:38:12 +0200
-Message-Id: <20200720152830.139485092@linuxfoundation.org>
+        stable@vger.kernel.org, Lingling Xu <ling_ling.xu@unisoc.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 211/215] spi: sprd: switch the sequence of setting WDG_LOAD_LOW and _HIGH
+Date:   Mon, 20 Jul 2020 17:38:13 +0200
+Message-Id: <20200720152830.185982858@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -58,34 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Lingling Xu <ling_ling.xu@unisoc.com>
 
-commit aadf9dcef9d4cd68c73a4ab934f93319c4becc47 upstream.
+commit 8bdd79dae1ff5397351b95e249abcae126572617 upstream.
 
-The trace symbol printer (__print_symbolic()) ignores symbols that map to
-an empty string and prints the hex value instead.
+The watchdog counter consists of WDG_LOAD_LOW and WDG_LOAD_HIGH,
+which would be loaded to watchdog counter once writing WDG_LOAD_LOW.
 
-Fix the symbol for rxrpc_cong_no_change to " -" instead of "" to avoid
-this.
-
-Fixes: b54a134a7de4 ("rxrpc: Fix handling of enums-to-string translation in tracing")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: ac1775012058 ("spi: sprd: Add the support of restarting the system")
+Signed-off-by: Lingling Xu <ling_ling.xu@unisoc.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Link: https://lore.kernel.org/r/20200602082415.5848-1-zhang.lyra@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/trace/events/rxrpc.h |    2 +-
+ drivers/spi/spi-sprd-adi.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -400,7 +400,7 @@ enum rxrpc_tx_point {
- 	EM(rxrpc_cong_begin_retransmission,	" Retrans") \
- 	EM(rxrpc_cong_cleared_nacks,		" Cleared") \
- 	EM(rxrpc_cong_new_low_nack,		" NewLowN") \
--	EM(rxrpc_cong_no_change,		"") \
-+	EM(rxrpc_cong_no_change,		" -") \
- 	EM(rxrpc_cong_progress,			" Progres") \
- 	EM(rxrpc_cong_retransmit_again,		" ReTxAgn") \
- 	EM(rxrpc_cong_rtt_window_end,		" RttWinE") \
+--- a/drivers/spi/spi-sprd-adi.c
++++ b/drivers/spi/spi-sprd-adi.c
+@@ -384,9 +384,9 @@ static int sprd_adi_restart_handler(stru
+ 	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOCK, WDG_UNLOCK_KEY);
+ 
+ 	/* Load the watchdog timeout value, 50ms is always enough. */
++	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOAD_HIGH, 0);
+ 	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOAD_LOW,
+ 		       WDG_LOAD_VAL & WDG_LOAD_MASK);
+-	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOAD_HIGH, 0);
+ 
+ 	/* Start the watchdog to reset system */
+ 	sprd_adi_read(sadi, sadi->slave_pbase + REG_WDG_CTRL, &val);
 
 
