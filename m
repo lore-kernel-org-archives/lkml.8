@@ -2,139 +2,141 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F80C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7AEC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1E4B2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vglMCEkJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WpXgsBkD"
+	by mail.kernel.org (Postfix) with ESMTP id 160D7207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262790;
+	bh=BkPO0/2fL6hpC8xe81q/tQxSzpf/UbXGVlGV5BZe/eE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rVkjV8QYupQNWz9X35ABWuK6EmisZQuRu2wa4wM9gTjueceYrgJZ1/GHZsezgRad2
+	 //zc8H4FIGTRLvoHKur8ASCfSezpE7REgOKGNVbSV3C91wbxrQdkVDS/Rf19Kw9Y3r
+	 Kzc8Oxj5XuQ8UFi9V00yi+484xVExfef752jJWOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388933AbgGTQdF (ORCPT
+        id S2388940AbgGTQdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:33:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58808 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731799AbgGTP40 (ORCPT
+        Mon, 20 Jul 2020 12:33:08 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33744 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731802AbgGTQdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:56:26 -0400
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595260584;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0LvtODdt/qpdhh8rPzhryXa7h9i3Brijmjrucqb9JZE=;
-        b=vglMCEkJnKDV9C9gl5yiBKv0rsKn11X9rca8Uhpd3/JzUjkB47eLDwg6mZl97/X2A2NMnG
-        V3ZDjFK4/lRiCusV+cMPKqzQOtUdVfXa374NtTVhr4TC7kdylQPMhRZvfcx3ao+ZmoGmjM
-        tSNqPKvU16oVkHkVxg7PsrRsKb0J4KJUB+4M2pX2shxzzI9kgesqHEMJOtaCcBzDZTTbCB
-        BBazox5RJdIF/VstuK9W8fGJbuIjb23AHo1fhai95H8qNCsH5tCz0W4P6VbWOSbDLvvFpb
-        J8D8lB47W1gTIkkdxD/OGSXo4kmGYVEqmxxstrwZexLx4wyuH3AO4JupskwSGA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595260584;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0LvtODdt/qpdhh8rPzhryXa7h9i3Brijmjrucqb9JZE=;
-        b=WpXgsBkD0uNt1Rx2RbQ3QwKmY4xJgRuU8KSbTtQiQUGfnAxseItKzSI6FvDBIRrtttKqbN
-        PUR+FecPEzFoL8Dw==
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v4 11/24] dma-buf: Remove custom seqcount lockdep class key
-Date:   Mon, 20 Jul 2020 17:55:17 +0200
-Message-Id: <20200720155530.1173732-12-a.darwish@linutronix.de>
-In-Reply-To: <20200720155530.1173732-1-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200720155530.1173732-1-a.darwish@linutronix.de>
+        Mon, 20 Jul 2020 12:33:01 -0400
+Received: by mail-io1-f65.google.com with SMTP id d18so18264091ion.0;
+        Mon, 20 Jul 2020 09:33:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Jnt8NGEcb9QuspToNkCE0B8uWDCkviqvtXBWs7ndp7U=;
+        b=dR3hTB7BiWw/IcwA5DjFjczFD2oDyELi2GOkahBJZT88PZ/PU8EGrz/VWOi6vPkCUb
+         0Z7/OyQEyU7mE5T7tLMWYaqGShtJkduHX++9Id4Ahj1viAODKwx9eaTEMdyvUpUBbJny
+         /FopgqQHKiUTu2vjwr5NwDg+thAako4p9sk55eNNPDQK/z436OvdKgeODv6eIAipd2yf
+         KZSMY3V1ygXtuJDuwgWKYoV3UdZs+6Bfw1Ds4TTTqpsTFx3YOip9gQfyZxpO1oS+UAJK
+         Q4IrbYLdbGdtrjLDA5A2mWOOF6j/P1aOt01GuRk2bEtPFb/6HqKXzKxr4Q7a8iZ8QCUB
+         FeFg==
+X-Gm-Message-State: AOAM532SsRu9U7wrB/r6ZcvzjopEdvZNNi9JBfc24wuoKksHV9HHJHbW
+        R64LpDdQ+ggwowZBET+/2w==
+X-Google-Smtp-Source: ABdhPJwcUlO64ABhqVtn8AX7Eodm+sHDVMi+gLO66Zc7WYwVg0XRJFukPDma212P5nj5hmFTmdHLSw==
+X-Received: by 2002:a6b:c343:: with SMTP id t64mr24390076iof.66.1595262779894;
+        Mon, 20 Jul 2020 09:32:59 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id j17sm8948918ilq.7.2020.07.20.09.32.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 09:32:58 -0700 (PDT)
+Received: (nullmailer pid 2625794 invoked by uid 1000);
+        Mon, 20 Jul 2020 16:32:56 -0000
+Date:   Mon, 20 Jul 2020 10:32:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v8 1/2] dt-bindings: input: Add docs for ADC driven
+ joystick.
+Message-ID: <20200720163256.GA2625563@bogus>
+References: <20200719221103.91644-1-contact@artur-rojek.eu>
+ <20200719221103.91644-2-contact@artur-rojek.eu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200719221103.91644-2-contact@artur-rojek.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 3c3b177a9369 ("reservation: add support for read-only access
-using rcu") introduced a sequence counter to manage updates to
-reservations. Back then, the reservation object initializer
-reservation_object_init() was always inlined.
+On Mon, 20 Jul 2020 00:11:02 +0200, Artur Rojek wrote:
+> Add documentation for the adc-joystick driver, used to provide support
+> for joysticks connected over ADC.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> 
+>  Changes:
+> 
+>  v2: - Add `reg` property to axis subnode in order to enumerate the axes,
+>      - rename `linux,abs-code` property to `linux,code`,
+>      - drop `linux,` prefix from the remaining properties of axis subnode
+> 
+>  v3: no change
+> 
+>  v4: - remove "bindings" from the unique identifier string,
+>      - replace `|` with `>` for all description properties,
+>      - specify the number of items for `io-channels`,
+>      - correct the regex pattern of `axis` property,
+>      - specify the value range of `reg` property for each axis,
+>      - put `abs-range` properties under `allOf`
+> 
+>  v5: add `a-f` to the regex pattern of `axis` property
+> 
+>  v6-v8: no change
+> 
+>  Notes:
+> 
+>  Rob, the bindings example in this patch depends on changes introduced
+>  in another patchset, still to be merged:
+>  https://lore.kernel.org/linux-iio/20200719205307.87385-4-contact@artur-rojek.eu/
+>  Your scripts will most likely fail to validate this.
+> 
+>  .../bindings/input/adc-joystick.yaml          | 121 ++++++++++++++++++
+>  1 file changed, 121 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
+> 
 
-Having the sequence counter initialization inlined meant that each of
-the call sites would have a different lockdep class key, which would've
-broken lockdep's deadlock detection. The aforementioned commit thus
-introduced, and exported, a custom seqcount lockdep class key and name.
 
-The commit 8735f16803f00 ("dma-buf: cleanup reservation_object_init...")
-transformed the reservation object initializer to a normal non-inlined C
-function. seqcount_init(), which automatically defines the seqcount
-lockdep class key and must be called non-inlined, can now be safely used.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Remove the seqcount custom lockdep class key, name, and export. Use
-seqcount_init() inside the dma reservation object initializer.
+Error: Documentation/devicetree/bindings/input/adc-joystick.example.dts:24.31-32 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
----
- drivers/dma-buf/dma-resv.c | 9 +--------
- include/linux/dma-resv.h   | 2 --
- 2 files changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
-index b45f8514dc82..15efa0c2dacb 100644
---- a/drivers/dma-buf/dma-resv.c
-+++ b/drivers/dma-buf/dma-resv.c
-@@ -51,12 +51,6 @@
- DEFINE_WD_CLASS(reservation_ww_class);
- EXPORT_SYMBOL(reservation_ww_class);
- 
--struct lock_class_key reservation_seqcount_class;
--EXPORT_SYMBOL(reservation_seqcount_class);
--
--const char reservation_seqcount_string[] = "reservation_seqcount";
--EXPORT_SYMBOL(reservation_seqcount_string);
--
- /**
-  * dma_resv_list_alloc - allocate fence list
-  * @shared_max: number of fences we need space for
-@@ -135,9 +129,8 @@ subsys_initcall(dma_resv_lockdep);
- void dma_resv_init(struct dma_resv *obj)
- {
- 	ww_mutex_init(&obj->lock, &reservation_ww_class);
-+	seqcount_init(&obj->seq);
- 
--	__seqcount_init(&obj->seq, reservation_seqcount_string,
--			&reservation_seqcount_class);
- 	RCU_INIT_POINTER(obj->fence, NULL);
- 	RCU_INIT_POINTER(obj->fence_excl, NULL);
- }
-diff --git a/include/linux/dma-resv.h b/include/linux/dma-resv.h
-index ee50d10f052b..a6538ae7d93f 100644
---- a/include/linux/dma-resv.h
-+++ b/include/linux/dma-resv.h
-@@ -46,8 +46,6 @@
- #include <linux/rcupdate.h>
- 
- extern struct ww_class reservation_ww_class;
--extern struct lock_class_key reservation_seqcount_class;
--extern const char reservation_seqcount_string[];
- 
- /**
-  * struct dma_resv_list - a list of shared fences
--- 
-2.20.1
+See https://patchwork.ozlabs.org/patch/1331964
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
