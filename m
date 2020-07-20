@@ -2,201 +2,407 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123FDC433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A98C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF78A208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7D5208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DYHrncoy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yZt7NZfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgGTJmH (ORCPT
+        id S1728285AbgGTJlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:42:07 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40809 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728043AbgGTJmH (ORCPT
+        Mon, 20 Jul 2020 05:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgGTJlj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:42:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595238125;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WDW4X00PY40xLtN9P1zgfvv+w8tBCqWK1/ojx/SjtYA=;
-        b=DYHrncoy7RHGma2VWpd06fmw2G9cuhPASxCSk/O139sGso7mI3BKFKjy8qEjKcdzbKyZfe
-        8ZD80EJ2EAzmlRHZXDt4xb7kzJsJ0GVFAHg+Fg8ZM5F9mnhlBuSiujByEZDm+KujbVg5G0
-        nR4HMpxTbcAOCNG3WJ6W7onqzjizF3s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-0kBE9218NKmVA08xfcG3Xw-1; Mon, 20 Jul 2020 05:42:02 -0400
-X-MC-Unique: 0kBE9218NKmVA08xfcG3Xw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 58C86100960F;
-        Mon, 20 Jul 2020 09:42:00 +0000 (UTC)
-Received: from [10.36.115.54] (ovpn-115-54.ams2.redhat.com [10.36.115.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F1A51619C4;
-        Mon, 20 Jul 2020 09:41:48 +0000 (UTC)
-Subject: Re: [PATCH v5 11/15] vfio/type1: Allow invalidating first-level/stage
- IOMMU cache
-To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
-        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
-        stefanha@gmail.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
- <1594552870-55687-12-git-send-email-yi.l.liu@intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <3b44dc59-cd78-2b72-965e-2f169cacdade@redhat.com>
-Date:   Mon, 20 Jul 2020 11:41:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 20 Jul 2020 05:41:39 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84464C0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:41:38 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id b30so7046979lfj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:41:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=at+QEntTN8tIzBsJW6lDsR27yAHJtcty+c8qrx/R4Ec=;
+        b=yZt7NZfetII/mxT+7TK3OgU30EJGteMwJHU8TEr9hQy/B8taZTyptBpjIUE29Dwjtu
+         V2nZ+qsloQDRy6BSfYNkDW7TNF55tqDC//nicNZROt4+ogwjjamD9Uc/7a+eQhhimI0h
+         E9iMS9n+WAY7TY0f0taWELZze1iiDcUegB+wT6TbhssRQ9rilcOSvMm4ilMAr1VaYMPP
+         P53A+biG+sAdbeQ1az72qmmEgJHcMDXFfbsTv79r8b47HFTqL76ZAQtNsXrjxtJPdSYX
+         xrTmWsO8R4Sh7zai2SWITpWwYD5qOkC8CfKBUujzytawoeVXmjkOnog2mkTSITPPzPqg
+         nkMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=at+QEntTN8tIzBsJW6lDsR27yAHJtcty+c8qrx/R4Ec=;
+        b=MJ/7HQJHzKESDzgEj7cXvJrgE0snYVnGYWEjRHLnccOTwcxqALbYjhZJsnVd9NOUC5
+         4+GSh/RgB2+gwWF441RU6yXQ245l9d9UF1B2+vt+zro8HkCAl7vAJaCm8VvHbUp4Sotj
+         uKGNr2cIQSqf1a56qDv3vhzcQ+vM4Jwul4k3vhTzMkAueOYHw6DcL8xPVfLvrQ/UReb1
+         hghm+HQ0+rTdJEVVBXeY6KGdOVNV29j/WcTYdLVP8uHyPItP/U9x1HAYGUby4ZMNZtdp
+         WSdHOFMbmtHbfEoKPnLrSXgP0OzwjVFd4uLWd/u4+2YXHKD468tSBKxLxIRTW2AlvJZC
+         eRLw==
+X-Gm-Message-State: AOAM532pBvdDw5AN0y+on/RnpJqu0LJZN0eGX3sJ85OBLke5HwT3Te1g
+        WM0p8riQ12piCs811zMAk9l25Splg7PZKzesEPRheA==
+X-Google-Smtp-Source: ABdhPJzpwzoyx99AFq9yKhy/I3mul7Crm62F4HOxAzv1QMBg+AtQ2dQsQ6fikEaQMa4XU5TZRFqwx+RHOI9MkXQxM3I=
+X-Received: by 2002:a19:8505:: with SMTP id h5mr4801980lfd.7.1595238095662;
+ Mon, 20 Jul 2020 02:41:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1594552870-55687-12-git-send-email-yi.l.liu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200716022817.30439-1-ansuelsmth@gmail.com> <20200716022817.30439-6-ansuelsmth@gmail.com>
+In-Reply-To: <20200716022817.30439-6-ansuelsmth@gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 20 Jul 2020 15:11:24 +0530
+Message-ID: <CAP245DUGM7BgNvBEXvgA6xFiNr0a4BFhSorYwkyRDN5r99y=8w@mail.gmail.com>
+Subject: Re: [PATCH v4 5/7] drivers: thermal: tsens: add interrupt support for
+ 9860 driver
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yi,
+Hi Ansuel,
 
-On 7/12/20 1:21 PM, Liu Yi L wrote:
-> This patch provides an interface allowing the userspace to invalidate
-> IOMMU cache for first-level page table. It is required when the first
-> level IOMMU page table is not managed by the host kernel in the nested
-> translation setup.
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Thanks for this patch.
+
+On Thu, Jul 16, 2020 at 7:58 AM Ansuel Smith <ansuelsmth@gmail.com> wrote:
+>
+> Add interrupt support for 9860 tsens driver used to set thermal trip
+> point for the system.
+
+typo: 8960
+
+You've used the names 8960 and ipq8064 interchangeably throughout the
+series. AFAICT, msm8960, ipq8064 and apq8064 use the same IP version
+of tsens. Please use 8960 in all patches, descriptions and dt-binding.
+to reflect the filename for the driver.
+Then add ipq8064 and apq8064 in a comment in the driver like here to
+show that the driver also supports these other SoCs:
+https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/thermal/qcom/tsens-v0_1.c#L328
+
+You can also add a new compatible string for ipq8064 as a separate
+patch at the end of the series.
+
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 > ---
-> v1 -> v2:
-> *) rename from "vfio/type1: Flush stage-1 IOMMU cache for nesting type"
-> *) rename vfio_cache_inv_fn() to vfio_dev_cache_invalidate_fn()
-> *) vfio_dev_cache_inv_fn() always successful
-> *) remove VFIO_IOMMU_CACHE_INVALIDATE, and reuse VFIO_IOMMU_NESTING_OP
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 50 +++++++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/vfio.h       |  3 +++
->  2 files changed, 53 insertions(+)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index f0f21ff..960cc59 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -3073,6 +3073,53 @@ static long vfio_iommu_handle_pgtbl_op(struct vfio_iommu *iommu,
->  	return ret;
->  }
->  
-> +static int vfio_dev_cache_invalidate_fn(struct device *dev, void *data)
-> +{
-> +	struct domain_capsule *dc = (struct domain_capsule *)data;
-> +	unsigned long arg = *(unsigned long *)dc->data;
+>  drivers/thermal/qcom/tsens-8960.c | 197 +++++++++++++++++++++++++++---
+>  drivers/thermal/qcom/tsens.h      |   3 +
+>  2 files changed, 186 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/thermal/qcom/tsens-8960.c b/drivers/thermal/qcom/tsens-8960.c
+> index 45788eb3c666..20d0bfb10f1f 100644
+> --- a/drivers/thermal/qcom/tsens-8960.c
+> +++ b/drivers/thermal/qcom/tsens-8960.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/bitops.h>
+>  #include <linux/regmap.h>
+>  #include <linux/mfd/syscon.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/thermal.h>
+>  #include "tsens.h"
+>
+> @@ -27,7 +28,6 @@
+>  /* CNTL_ADDR bitmasks */
+>  #define EN                     BIT(0)
+>  #define SW_RST                 BIT(1)
+> -#define SENSOR0_EN             BIT(3)
+>  #define SLP_CLK_ENA            BIT(26)
+>  #define SLP_CLK_ENA_8660       BIT(24)
+>  #define MEASURE_PERIOD         1
+> @@ -41,14 +41,26 @@
+>
+>  #define THRESHOLD_ADDR         0x3624
+>  /* THRESHOLD_ADDR bitmasks */
+> +#define THRESHOLD_MAX_CODE             0x20000
+> +#define THRESHOLD_MIN_CODE             0
+>  #define THRESHOLD_MAX_LIMIT_SHIFT      24
+>  #define THRESHOLD_MIN_LIMIT_SHIFT      16
+>  #define THRESHOLD_UPPER_LIMIT_SHIFT    8
+>  #define THRESHOLD_LOWER_LIMIT_SHIFT    0
+> +#define THRESHOLD_MAX_LIMIT_MASK       (THRESHOLD_MAX_CODE << \
+> +                                               THRESHOLD_MAX_LIMIT_SHIFT)
+> +#define THRESHOLD_MIN_LIMIT_MASK       (THRESHOLD_MAX_CODE << \
+> +                                               THRESHOLD_MIN_LIMIT_SHIFT)
+> +#define THRESHOLD_UPPER_LIMIT_MASK     (THRESHOLD_MAX_CODE << \
+> +                                               THRESHOLD_UPPER_LIMIT_SHIFT)
+> +#define THRESHOLD_LOWER_LIMIT_MASK     (THRESHOLD_MAX_CODE << \
+> +                                               THRESHOLD_LOWER_LIMIT_SHIFT)
+>
+>  /* Initial temperature threshold values */
+> -#define LOWER_LIMIT_TH         0x50
+> -#define UPPER_LIMIT_TH         0xdf
+> +#define LOWER_LIMIT_TH_8960    0x50
+> +#define UPPER_LIMIT_TH_8960    0xdf
+> +#define LOWER_LIMIT_TH_8064    0x9d /* 95C */
+> +#define UPPER_LIMIT_TH_8064    0xa6 /* 105C */
+>  #define MIN_LIMIT_TH           0x0
+>  #define MAX_LIMIT_TH           0xff
+>
+> @@ -57,6 +69,170 @@
+>  #define TRDY_MASK              BIT(7)
+>  #define TIMEOUT_US             100
+>
+> +#define TSENS_EN               BIT(0)
+> +#define TSENS_SW_RST           BIT(1)
+> +#define TSENS_ADC_CLK_SEL      BIT(2)
+> +#define SENSOR0_EN             BIT(3)
+> +#define SENSOR1_EN             BIT(4)
+> +#define SENSOR2_EN             BIT(5)
+> +#define SENSOR3_EN             BIT(6)
+> +#define SENSOR4_EN             BIT(7)
+> +#define SENSORS_EN             (SENSOR0_EN | SENSOR1_EN | \
+> +                               SENSOR2_EN | SENSOR3_EN | SENSOR4_EN)
+> +#define TSENS_8064_SENSOR5_EN                          BIT(8)
+> +#define TSENS_8064_SENSOR6_EN                          BIT(9)
+> +#define TSENS_8064_SENSOR7_EN                          BIT(10)
+> +#define TSENS_8064_SENSOR8_EN                          BIT(11)
+> +#define TSENS_8064_SENSOR9_EN                          BIT(12)
+> +#define TSENS_8064_SENSOR10_EN                         BIT(13)
+> +#define TSENS_8064_SENSORS_EN                          (SENSORS_EN | \
+> +                                               TSENS_8064_SENSOR5_EN | \
+> +                                               TSENS_8064_SENSOR6_EN | \
+> +                                               TSENS_8064_SENSOR7_EN | \
+> +                                               TSENS_8064_SENSOR8_EN | \
+> +                                               TSENS_8064_SENSOR9_EN | \
+> +                                               TSENS_8064_SENSOR10_EN)
 > +
-> +	iommu_cache_invalidate(dc->domain, dev, (void __user *)arg);
-> +	return 0;
+> +u32 tsens_8960_slope[] = {
+> +                       1176, 1176, 1154, 1176,
+> +                       1111, 1132, 1132, 1199,
+> +                       1132, 1199, 1132
+> +                       };
+> +
+> +/* Temperature on y axis and ADC-code on x-axis */
+> +static inline int code_to_mdegC(u32 adc_code, const struct tsens_sensor *s)
+> +{
+> +       int slope, offset;
+> +
+> +       slope = thermal_zone_get_slope(s->tzd);
+> +       offset = CAL_MDEGC - slope * s->offset;
+> +
+> +       return adc_code * slope + offset;
 > +}
 > +
-> +static long vfio_iommu_invalidate_cache(struct vfio_iommu *iommu,
-> +					unsigned long arg)
+> +static void notify_uspace_tsens_fn(struct work_struct *work)
 > +{
-> +	struct domain_capsule dc = { .data = &arg };
-> +	struct vfio_group *group;
-> +	struct vfio_domain *domain;
-> +	int ret = 0;
-> +	struct iommu_nesting_info *info;
+> +       struct tsens_sensor *s = container_of(work, struct tsens_sensor,
+> +                                                               notify_work);
 > +
-> +	mutex_lock(&iommu->lock);
-> +	/*
-> +	 * Cache invalidation is required for any nesting IOMMU,
-> +	 * so no need to check system-wide PASID support.
-> +	 */
-> +	info = iommu->nesting_info;
-> +	if (!info || !(info->features & IOMMU_NESTING_FEAT_CACHE_INVLD)) {
-> +		ret = -EOPNOTSUPP;
-> +		goto out_unlock;
-> +	}
-> +
-> +	group = vfio_find_nesting_group(iommu);
-so I see you reuse it here. But still wondering if you cant't directly
-set dc.domain and dc.group group below using list_firt_entry?
-> +	if (!group) {
-> +		ret = -EINVAL;
-> +		goto out_unlock;
-> +	}
-> +
-> +	domain = list_first_entry(&iommu->domain_list,
-> +				  struct vfio_domain, next);
-> +	dc.group = group;
-> +	dc.domain = domain->domain;
-> +	iommu_group_for_each_dev(group->iommu_group, &dc,
-> +				 vfio_dev_cache_invalidate_fn);
-> +
-> +out_unlock:
-> +	mutex_unlock(&iommu->lock);
-> +	return ret;
+> +       sysfs_notify(&s->tzd->device.kobj, NULL, "type");
 > +}
 > +
->  static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
->  					unsigned long arg)
+> +static void tsens_scheduler_fn(struct work_struct *work)
+> +{
+> +       struct tsens_priv *priv =
+> +               container_of(work, struct tsens_priv, tsens_work);
+> +       unsigned int threshold, threshold_low, code, reg, sensor;
+> +       unsigned long mask;
+> +       bool upper_th_x, lower_th_x;
+> +       int ret;
+> +
+> +       ret = regmap_read(priv->tm_map, STATUS_CNTL_ADDR_8064, &reg);
+> +       if (ret)
+> +               return;
+> +       reg = reg | LOWER_STATUS_CLR | UPPER_STATUS_CLR;
+> +       ret = regmap_write(priv->tm_map, STATUS_CNTL_ADDR_8064, reg);
+> +       if (ret)
+> +               return;
+> +
+> +       mask = ~(LOWER_STATUS_CLR | UPPER_STATUS_CLR);
+> +       ret = regmap_read(priv->tm_map, THRESHOLD_ADDR, &threshold);
+> +       if (ret)
+> +               return;
+> +       threshold_low = (threshold & THRESHOLD_LOWER_LIMIT_MASK) >>
+> +                       THRESHOLD_LOWER_LIMIT_SHIFT;
+> +       threshold = (threshold & THRESHOLD_UPPER_LIMIT_MASK) >>
+> +                   THRESHOLD_UPPER_LIMIT_SHIFT;
+> +
+> +       ret = regmap_read(priv->tm_map, STATUS_CNTL_ADDR_8064, &reg);
+> +       if (ret)
+> +               return;
+> +
+> +       ret = regmap_read(priv->tm_map, CNTL_ADDR, &sensor);
+> +       if (ret)
+> +               return;
+> +       sensor &= (uint32_t)TSENS_8064_SENSORS_EN;
+> +       sensor >>= SENSOR0_SHIFT;
+> +
+> +       /* Constraint: There is only 1 interrupt control register for all
+> +        * 11 temperature sensor. So monitoring more than 1 sensor based
+> +        * on interrupts will yield inconsistent result. To overcome this
+> +        * issue we will monitor only sensor 0 which is the master sensor.
+> +        */
+> +
+> +       /* Skip if the sensor is disabled */
+> +       if (sensor & 1) {
+> +               ret = regmap_read(priv->tm_map, priv->sensor[0].status, &code);
+> +               if (ret)
+> +                       return;
+> +               upper_th_x = code >= threshold;
+> +               lower_th_x = code <= threshold_low;
+> +               if (upper_th_x)
+> +                       mask |= UPPER_STATUS_CLR;
+> +               if (lower_th_x)
+> +                       mask |= LOWER_STATUS_CLR;
+> +               if (upper_th_x || lower_th_x) {
+> +                       /* Notify user space */
+> +                       schedule_work(&priv->sensor[0].notify_work);
+> +                       pr_debug("Trigger (%d degrees) for sensor %d\n",
+> +                                code_to_mdegC(code, &priv->sensor[0]), 0);
+> +               }
+> +       }
+> +       regmap_write(priv->tm_map, STATUS_CNTL_ADDR_8064, reg & mask);
+> +}
+> +
+> +static irqreturn_t tsens_isr(int irq, void *data)
+> +{
+> +       struct tsens_priv *priv = data;
+> +
+> +       schedule_work(&priv->tsens_work);
+> +       return IRQ_HANDLED;
+
+
+Have you considered trying to reuse the regmap and interrupt handling
+infrastructure in tsens.c that I used to convert over everything after
+IP version 0.1?
+
+I started converting over 8960 but never managed to finish testing
+this[1]. I'd be happy for you to take this over and get it working so
+the 8960 doesn't end up being a completely separate driver from the
+other platforms.
+
+[1] https://git.linaro.org/people/amit.kucheria/kernel.git/log/?h=wrk3/tsens-8960-breakage
+
+> +}
+> +
+> +static void hw_init(struct tsens_priv *priv)
+> +{
+> +       int ret;
+> +       unsigned int reg_cntl = 0, reg_cfg = 0, reg_thr = 0;
+> +       unsigned int reg_status_cntl = 0;
+> +
+> +       regmap_read(priv->tm_map, CNTL_ADDR, &reg_cntl);
+> +       regmap_write(priv->tm_map, CNTL_ADDR, reg_cntl | TSENS_SW_RST);
+> +
+> +       reg_cntl |= SLP_CLK_ENA | (MEASURE_PERIOD << 18) |
+> +                   (((1 << priv->num_sensors) - 1) << SENSOR0_SHIFT);
+> +       regmap_write(priv->tm_map, CNTL_ADDR, reg_cntl);
+> +       regmap_read(priv->tm_map, STATUS_CNTL_ADDR_8064, &reg_status_cntl);
+> +       reg_status_cntl |= LOWER_STATUS_CLR | UPPER_STATUS_CLR |
+> +                          MIN_STATUS_MASK | MAX_STATUS_MASK;
+> +       regmap_write(priv->tm_map, STATUS_CNTL_ADDR_8064, reg_status_cntl);
+> +       reg_cntl |= TSENS_EN;
+> +       regmap_write(priv->tm_map, CNTL_ADDR, reg_cntl);
+> +
+> +       regmap_read(priv->tm_map, CONFIG_ADDR, &reg_cfg);
+> +       if (priv->num_sensors > 1)
+> +               reg_cfg = (reg_cfg & ~CONFIG_MASK) | CONFIG;
+> +       else
+> +               reg_cfg = (reg_cfg & ~CONFIG_MASK) |
+> +                         (CONFIG << CONFIG_SHIFT_8660);
+> +       regmap_write(priv->tm_map, CONFIG_ADDR, reg_cfg);
+> +
+> +       reg_thr |= (LOWER_LIMIT_TH_8064 << THRESHOLD_LOWER_LIMIT_SHIFT) |
+> +                  (UPPER_LIMIT_TH_8064 << THRESHOLD_UPPER_LIMIT_SHIFT) |
+> +                  (MIN_LIMIT_TH << THRESHOLD_MIN_LIMIT_SHIFT) |
+> +                  (MAX_LIMIT_TH << THRESHOLD_MAX_LIMIT_SHIFT);
+> +
+> +       regmap_write(priv->tm_map, THRESHOLD_ADDR, reg_thr);
+> +
+> +       ret = devm_request_irq(priv->dev, priv->tsens_irq, tsens_isr,
+> +                              IRQF_TRIGGER_RISING, "tsens_interrupt", priv);
+> +       if (ret < 0) {
+> +               dev_err(priv->dev, "request_irq FAIL: %d", ret);
+> +               return;
+> +       }
+> +
+> +       INIT_WORK(&priv->tsens_work, tsens_scheduler_fn);
+> +}
+> +
+>  static int suspend_8960(struct tsens_priv *priv)
 >  {
-> @@ -3095,6 +3142,9 @@ static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
->  	case VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL:
->  		ret = vfio_iommu_handle_pgtbl_op(iommu, false, arg + minsz);
->  		break;
-> +	case VFIO_IOMMU_NESTING_OP_CACHE_INVLD:
-> +		ret = vfio_iommu_invalidate_cache(iommu, arg + minsz);
-> +		break;
->  	default:
->  		ret = -EINVAL;
->  	}
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index a8ad786..845a5800 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -1225,6 +1225,8 @@ struct vfio_iommu_type1_pasid_request {
->   * +-----------------+-----------------------------------------------+
->   * | UNBIND_PGTBL    |      struct iommu_gpasid_bind_data            |
->   * +-----------------+-----------------------------------------------+
-> + * | CACHE_INVLD     |      struct iommu_cache_invalidate_info       |
-> + * +-----------------+-----------------------------------------------+
->   *
->   * returns: 0 on success, -errno on failure.
->   */
-> @@ -1237,6 +1239,7 @@ struct vfio_iommu_type1_nesting_op {
->  
->  #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL	(0)
->  #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL	(1)
-> +#define VFIO_IOMMU_NESTING_OP_CACHE_INVLD	(2)
->  
->  #define VFIO_IOMMU_NESTING_OP		_IO(VFIO_TYPE, VFIO_BASE + 19)
->  
-> 
-Otherwise looks good to me
+>         int ret;
+> @@ -191,6 +367,8 @@ static int init_8960(struct tsens_priv *priv)
+>                 if (i >= 5)
+>                         priv->sensor[i].status = S0_STATUS_ADDR + 40;
+>                 priv->sensor[i].status += i * 4;
+> +               priv->sensor[i].slope = tsens_8960_slope[i];
+> +               INIT_WORK(&priv->sensor[i].notify_work, notify_uspace_tsens_fn);
+>         }
+>
+>         reg_cntl = SW_RST;
+> @@ -241,18 +419,9 @@ static int calibrate_8960(struct tsens_priv *priv)
+>
+>         kfree(data);
+>
+> -       return 0;
+> -}
+> -
+> -/* Temperature on y axis and ADC-code on x-axis */
+> -static inline int code_to_mdegC(u32 adc_code, const struct tsens_sensor *s)
+> -{
+> -       int slope, offset;
+> +       hw_init(priv);
+>
+> -       slope = thermal_zone_get_slope(s->tzd);
+> -       offset = CAL_MDEGC - slope * s->offset;
+> -
+> -       return adc_code * slope + offset;
 
-Thanks
+This code move hunk belongs in a separate patch.
 
-Eric
-
+> +       return 0;
+>  }
+>
+>  static int get_temp_8960(const struct tsens_sensor *s, int *temp)
+> diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+> index 59d01162c66a..e66048fabcc7 100644
+> --- a/drivers/thermal/qcom/tsens.h
+> +++ b/drivers/thermal/qcom/tsens.h
+> @@ -48,6 +48,7 @@ enum tsens_irq_type {
+>  struct tsens_sensor {
+>         struct tsens_priv               *priv;
+>         struct thermal_zone_device      *tzd;
+> +       struct work_struct              notify_work;
+>         int                             offset;
+>         unsigned int                    hw_id;
+>         int                             slope;
+> @@ -559,6 +560,7 @@ struct tsens_priv {
+>         struct regmap                   *tm_map;
+>         struct regmap                   *srot_map;
+>         u32                             tm_offset;
+> +       u32                             tsens_irq;
+>
+>         /* lock for upper/lower threshold interrupts */
+>         spinlock_t                      ul_lock;
+> @@ -568,6 +570,7 @@ struct tsens_priv {
+>         struct tsens_features           *feat;
+>         const struct reg_field          *fields;
+>         const struct tsens_ops          *ops;
+> +       struct work_struct              tsens_work;
+>
+>         struct dentry                   *debug_root;
+>         struct dentry                   *debug;
+> --
+> 2.27.0
+>
