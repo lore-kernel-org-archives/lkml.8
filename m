@@ -2,153 +2,107 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10790C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 354D0208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5FA822B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:06:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qGH3EGZr"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ejfi+Hoz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729620AbgGTTFM (ORCPT
+        id S1729785AbgGTTGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:05:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgGTTFM (ORCPT
+        Mon, 20 Jul 2020 15:06:11 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33308 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728324AbgGTTGL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:05:12 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08F26C061794;
-        Mon, 20 Jul 2020 12:05:12 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id g26so6433808qka.3;
-        Mon, 20 Jul 2020 12:05:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6xNou+cHACWFvHGNXzPofMh+CBZIQ8xW+dhFT3jGEbo=;
-        b=qGH3EGZrbBYJFFXLpy9788889L91tGMGugiOZhBG5mkmuOaHr8qDM4J+IGuyanGPhu
-         Vxw9qvA8wjLil9OOQMqcA36LhPMFBJkuR0e9m5fhddTmTp9pHfA5IGt9YTi+3ndcaQuR
-         L4iHvaYG3FlYLQNaKPSDnM/F4BFGwLPeEeqHRxhnjrRM0rM5cBpm0jx1vXcUuQGFT8e3
-         gDjYTnWK7GtT4p+w6abgKeVqvOO0ncOtFM2MFragZvc27GLYAM0zDQ9xVdCtz4YlFta7
-         IhjYfdyVkfF3bEeAeEZ5QtiyT0AN2J4NIEHs561V0bBVGf9tE1zwOcx6W6cHIDxqNI8F
-         TQ3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=6xNou+cHACWFvHGNXzPofMh+CBZIQ8xW+dhFT3jGEbo=;
-        b=hyHMdevaBGNI0RExZtvqrNxVzTO56PWJhF1K8eH7vnlyr5in+aMbfqvzGGSHxYb0Nk
-         JvVdhzCnhD7m9Cjp3s2Kuk8JpAO5uoJGTkg2PRt6bWFd2KwhqN/nj3VTktM9svpFQEF0
-         /8tyv871D3q7z7gtZZBWR4X/sdffvRBd3vYwPvgdEcsGYFCqpky27t2WbfjwYbiMNk44
-         kwlzIlHLmDdnvi96QliJ+L1GyFoIPMuLHYCS9QNw9PeRDeHZdULjhqAIldrao95RGjHy
-         DfS7+CLnYiF+Gyf35pqMmRDQPbjHXUB+l/EOxZCWeu4KLZpdruWyEwWbPJRXiUn/CyvV
-         rC0A==
-X-Gm-Message-State: AOAM531QnWJdqdIrzujGLmpTr5qQ55OMUHZSGsCnqsxeT2E07M72ZDML
-        1byPTWSaf1jILN8WaDNI1A==
-X-Google-Smtp-Source: ABdhPJzrXQwdWF+qa2wzWCIT1nZ5JLyIGIeu284ZR14tqRjIjGzf7/7OV2hINf0xqBRSi/yBapdmYQ==
-X-Received: by 2002:a37:80c:: with SMTP id 12mr7349989qki.149.1595271911228;
-        Mon, 20 Jul 2020 12:05:11 -0700 (PDT)
-Received: from PWN (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id r2sm19318751qtn.27.2020.07.20.12.05.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 12:05:10 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 15:05:08 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v1] usbhid: Fix slab-out-of-bounds
- write in hiddev_ioctl_usage()
-Message-ID: <20200720190508.GA1946@PWN>
-Reply-To: 20200720121257.GJ2571@kadam
-References: <20200718231218.170730-1-yepeilin.cs@gmail.com>
- <20200720115400.GI2549@kadam>
- <20200720121257.GJ2571@kadam>
+        Mon, 20 Jul 2020 15:06:11 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06KJ5r7H112895;
+        Mon, 20 Jul 2020 14:05:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595271953;
+        bh=N75Wh7ZzcWXLgwUMfugPduR0KXHPJ9OzKFWdt1ltmt8=;
+        h=From:To:CC:Subject:Date;
+        b=ejfi+HozrSt109jvnNblVQdeKIxvRY8O72pEX1XKjATmUKMKz1ltFbucdxqFiNwxh
+         TiAyRuHE4RYwumqB901UOWEZNXm49UwpXwmk/qbhcn9c/h5A+6waFtxC+7+KXkpuW+
+         8Yhf9iXrAeTxrM6FevZJ6MaxlliGQhO3PzZZ5b2Q=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06KJ5rov055290
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 Jul 2020 14:05:53 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
+ Jul 2020 14:05:53 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 20 Jul 2020 14:05:52 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KJ5qhS075552;
+        Mon, 20 Jul 2020 14:05:52 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
+        <marek.behun@nic.cz>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH] leds: multicolor: Fix camel case in documentation
+Date:   Mon, 20 Jul 2020 14:05:47 -0500
+Message-ID: <20200720190547.4735-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720121257.GJ2571@kadam>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 03:12:57PM +0300, Dan Carpenter wrote:
-> So another option would be to just add HIDIOCGUSAGE and HIDIOCSUSAGE to
-> the earlier check.  That risks breaking userspace.  Another option is to
-> just add a check like you did earlier to the HIDIOCGUSAGE case.
-> Probably just do option #2 and resend.
+Fix the camel case of MultiColor to Multicolor.
 
-Sure, I will just add the same check to the HIDIOCGUSAGE case for the
-time being. Thank you for the detailed explanation.
+Fixes: f5a6eb5c5e38 ("leds: multicolor: Introduce a multicolor class definition")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ Documentation/leds/leds-class-multicolor.rst | 2 +-
+ drivers/leds/Kconfig                         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Here's what I found after digging a bit further though:
+diff --git a/Documentation/leds/leds-class-multicolor.rst b/Documentation/leds/leds-class-multicolor.rst
+index 6204f391fd40..c57b98bfd387 100644
+--- a/Documentation/leds/leds-class-multicolor.rst
++++ b/Documentation/leds/leds-class-multicolor.rst
+@@ -1,7 +1,7 @@
+ .. SPDX-License-Identifier: GPL-2.0
+ 
+ ====================================
+-MultiColor LED handling under Linux
++Multicolor LED handling under Linux
+ ====================================
+ 
+ Description
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index a2c72212ddfc..1de6e8e264a0 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -31,7 +31,7 @@ config LEDS_CLASS_FLASH
+ 	  as a module.
+ 
+ config LEDS_CLASS_MULTICOLOR
+-	tristate "LED MultiColor Class Support"
++	tristate "LED Multicolor Class Support"
+ 	depends on LEDS_CLASS
+ 	help
+ 	  This option enables the multicolor LED sysfs class in /sys/class/leds.
+-- 
+2.27.0
 
-hid_parser_main() calls different functions in order to process
-different type of items:
-
-drivers/hid/hid-core.c:1193:
-
-	static int (*dispatch_type[])(struct hid_parser *parser,
-				      struct hid_item *item) = {
-		hid_parser_main,
-		hid_parser_global,
-		hid_parser_local,
-		hid_parser_reserved
-	};
-
-In this case, hid_parser_main() calls hid_add_field(), which in turn
-calls hid_register_field(), which allocates the `field` object as you
-mentioned:
-
-drivers/hid/hid-core.c:102:
-
-	field = kzalloc((sizeof(struct hid_field) +
-			 usages * sizeof(struct hid_usage) +
-			 values * sizeof(unsigned)), GFP_KERNEL);
-
-Here, `values` equals to `global.report_count`. See how it is being
-called:
-
-drivers/hid/hid-core.c:303:
-
-	field = hid_register_field(report, usages, parser->global.report_count);
-
-In hid_parser_main(), `global.report_count` can be set by calling
-hid_parser_global().
-
-However, the syzkaller reproducer made hid_parser_main() to call
-hid_parser_global() __before__ `global.report_count` is properly set. It's
-zero. So hid_register_field() allocated `field` with `values` equals to
-zero - No room for value[] at all. I believe this caused the bug.
-
-Apparently hid_parser_main() doesn't care about which item (main, local,
-global and reserved) gets processed first. I am new to this code and I
-don't know whether this is by design, but this arbitrarity is
-apparently causing some issues.
-
-As another example, in hid_add_field():
-
-drivers/hid/hid-core.c:289:
-
-	report->size += parser->global.report_size * parser->global.report_count;
-
-If `global.report_count` is zero, `report->size` gets increased by zero.
-Is this working as intended? It seems weird to me.
-
-Thank you,
-
-Peilin Ye
