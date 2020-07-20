@@ -4,40 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20032C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F95C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F318820773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE1AD22B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:44:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="UcP5zdYg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ASX+t96h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgGTHpD (ORCPT
+        id S1727095AbgGTHom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:45:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgGTHpD (ORCPT
+        Mon, 20 Jul 2020 03:44:42 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:41356 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgGTHom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 03:45:03 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B9FC061794;
-        Mon, 20 Jul 2020 00:45:03 -0700 (PDT)
+        Mon, 20 Jul 2020 03:44:42 -0400
 Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 190F41FECC;
-        Mon, 20 Jul 2020 07:45:00 +0000 (UTC)
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 6B7C71FEC7;
+        Mon, 20 Jul 2020 07:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1595231103; bh=JQPKVllLBhjegV8oJ4/3W4Dq3jbR4Ki6pJQ0tsIkbus=;
+        t=1595231081; bh=cp+frRMJbDSmQF0aHJsiydb5cvCrlCDWTwGZKrqtUy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UcP5zdYgnNjqWjgyXOUFxxE2au/BJgpu+BZxvJyy0LkKw5yM1G2koAxT2P59M7IXj
-         pf6QtfVs0jdUgEfOeR2QQ9JCNB2AhpBtUkD1RbMGAV+R36zIh9vwjK5RyHzpIQKI37
-         nNodzXKkPbbCcpFRf2jNeHnojHlygLJvlLyQR2MfhzwokXFxai9b76xQuDaowd13sD
-         vlgXpxgbC6X4q+DnXhCrFursWHf9RX05he0i1304vE0h2uhXxJIUmL2RxPZpLoiO8D
-         c9Ob2q2Gnc38gy03meWBq7YAB8aCL6v0fgOlTqr+fgCMOtEDwhDZAf0CRyN8+Q/3/w
-         NN/D/3r77Gvgw==
+        b=ASX+t96hntqJaytBufC3nJUDijiewiMVBuDyDErO8UE5xAmylMffgM2To0T5GKkTo
+         0uE9D73nBInSL4OYPqNdZ/dJszcqZwWANaEY3JKAclGO08/MSEwhuwflbKCjHp/z3f
+         tkdj2eDUGOl/DcvBe8Qs1aaq02E9CJIBtNIHK1fZrgo1/RUc7twgA6+DhvvnyctMaq
+         8td2uxoQmYYk1q7n4aj+d1s7Znu4JxID8pTFHyBpQrEWTYSG49I5pDHcmJLFx7LEgW
+         EhYEpxTYZdRUFxLNEfOVARYnr0OT1P3k76NFkRFJI8sAFbN57arWt9XqB/9Tbcnuyh
+         6G5eUZqRy9udg==
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-mips@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -47,11 +44,12 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Frank Rowand <frowand.list@gmail.com>,
         Paul Burton <paulburton@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] MIPS: Loongson64: Add ISA node for LS7A PCH
-Date:   Mon, 20 Jul 2020 15:42:38 +0800
-Message-Id: <20200720074249.596364-6-jiaxun.yang@flygoat.com>
+Subject: [PATCH 3/5] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
+Date:   Mon, 20 Jul 2020 15:42:36 +0800
+Message-Id: <20200720074249.596364-4-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.28.0.rc1
 In-Reply-To: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
 References: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
@@ -62,33 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although currently we're not enabling any ISA device in devicetree,
-but this node is required to express the ranges of address reserved
-for ISA.
+It can be very big on LS7A PCH systems.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- arch/mips/boot/dts/loongson/ls7a-pch.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/mips/include/asm/io.h                     | 3 ++-
+ arch/mips/include/asm/mach-loongson64/spaces.h | 3 +--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-index 1c286bb8c703..724929ea3f5f 100644
---- a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-+++ b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-@@ -19,6 +19,13 @@ pic: interrupt-controller@10000000 {
- 			#interrupt-cells = <2>;
- 		};
+diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+index 346fffd9e972..0072489325fa 100644
+--- a/arch/mips/include/asm/io.h
++++ b/arch/mips/include/asm/io.h
+@@ -50,8 +50,9 @@
+ # define __relaxed_ioswabq ioswabq
  
-+		isa {
-+			compatible = "isa";
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+			ranges = <1 0 0 0x18000000 0x20000>;
-+		};
-+
- 		pci@1a000000 {
- 			compatible = "loongson,ls7a-pci";
- 			device_type = "pci";
+ /* ioswab[bwlq], __mem_ioswab[bwlq] are defined in mangle-port.h */
+-
++#ifndef IO_SPACE_LIMIT
+ #define IO_SPACE_LIMIT 0xffff
++#endif
+ 
+ /*
+  * On MIPS I/O ports are memory mapped, so we access them using normal
+diff --git a/arch/mips/include/asm/mach-loongson64/spaces.h b/arch/mips/include/asm/mach-loongson64/spaces.h
+index 3de0ac9d8829..b99b43854929 100644
+--- a/arch/mips/include/asm/mach-loongson64/spaces.h
++++ b/arch/mips/include/asm/mach-loongson64/spaces.h
+@@ -11,8 +11,7 @@
+ #define PCI_IOSIZE	SZ_16M
+ #define MAP_BASE	(PCI_IOBASE + PCI_IOSIZE)
+ 
+-/* Reserved at the start of PCI_IOBASE for legacy drivers */
+-#define MMIO_LOWER_RESERVED	0x10000
++#define IO_SPACE_LIMIT 0x00ffffff
+ 
+ #include <asm/mach-generic/spaces.h>
+ #endif
 -- 
 2.28.0.rc1
 
