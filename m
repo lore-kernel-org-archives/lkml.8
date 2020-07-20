@@ -2,52 +2,53 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A339C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB00C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49E5B206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F1E206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262356;
-	bh=VOn3E9Nh/f4SbKSg56eUn11qUNZWroK602TZX/M6gNM=;
+	s=default; t=1595262363;
+	bh=EQyByGgZwCdppCC+pTcTPiScPbQ5HgHvHHw/SGK4auQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vIMO5llNX4C2OXi4sktj1ro12m8ztcSAClLnWlvfRhZsigb1UfDef00g6cyEwdR/p
-	 47mbCAoICZ0XoU3KZKLofwIKT1uGjvrQPzJVKSG4kedYcVdLImvu/KP9gaAeA/gyy9
-	 QRD0YnySccjeqlfqEu09exrwkORhXko8c/gvMIPo=
+	b=mXjupetkJFbbtT/czR++ji0OBkXnGX/PWW4M2BSUPvcWvDpHNkng0UIjOHf++dmhe
+	 GgLY7B7KZ+DTxx56EKHocxMsS+6YWEVDm6VZOcvn1TAUWaeKRLvfYf6KBhvkLxiFjQ
+	 n6/VdQaHhneq/5WywT3SQEZUHUIUvlzjyxWMNbj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732460AbgGTQA4 (ORCPT
+        id S2387729AbgGTQ0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:00:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33968 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:26:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726699AbgGTQAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:00:50 -0400
+        id S1732439AbgGTQAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:00:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13D5122CF7;
-        Mon, 20 Jul 2020 16:00:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9E6A22D00;
+        Mon, 20 Jul 2020 16:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260849;
-        bh=VOn3E9Nh/f4SbKSg56eUn11qUNZWroK602TZX/M6gNM=;
+        s=default; t=1595260852;
+        bh=EQyByGgZwCdppCC+pTcTPiScPbQ5HgHvHHw/SGK4auQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sn/UXPBTq+BZgtIAcHDjTeVOWI/10hAFpgCv8Os0PyciViPweDYuzgndG9hNQ9VAs
-         +HaeRP4amBy6Ti1bE4BEHNE0AW+SSqGHkXtI/lJ1QRD21Z1bkYj0F2HQ4LqczbNgfU
-         frTcdxHrANdlojx3GpbGkf89OkaCQv82+ELkOXmQ=
+        b=tCouV1MP7vi5Ig5UDlurfA87XcYXC2DbyTKBtqb5d8mGGJ8cNr+4XmXJn/+VBUThU
+         h/D21L9ZzJyVdItSJsPvNJLonBuP9XkfEdqzuZbt+2Y2x6JqdZ85Op2x5Rm/6S+rVS
+         lVG2dwgfg1MW7bzhIoy9BV8D4kvOvSW9VkoqdY0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 118/215] regmap: debugfs: Dont sleep while atomic for fast_io regmaps
-Date:   Mon, 20 Jul 2020 17:36:40 +0200
-Message-Id: <20200720152825.811173454@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Buettner <kevinb@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dave Airlie <airlied@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 119/215] copy_xstate_to_kernel: Fix typo which caused GDB regression
+Date:   Mon, 20 Jul 2020 17:36:41 +0200
+Message-Id: <20200720152825.858152774@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -60,137 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Kevin Buettner <kevinb@redhat.com>
 
-[ Upstream commit 299632e54b2e692d2830af84be51172480dc1e26 ]
+commit 5714ee50bb4375bd586858ad800b1d9772847452 upstream.
 
-If a regmap has "fast_io" set then its lock function uses a spinlock.
-That doesn't work so well with the functions:
-* regmap_cache_only_write_file()
-* regmap_cache_bypass_write_file()
+This fixes a regression encountered while running the
+gdb.base/corefile.exp test in GDB's test suite.
 
-Both of the above functions have the pattern:
-1. Lock the regmap.
-2. Call:
-   debugfs_write_file_bool()
-     copy_from_user()
-       __might_fault()
-         __might_sleep()
+In my testing, the typo prevented the sw_reserved field of struct
+fxregs_state from being output to the kernel XSAVES area.  Thus the
+correct mask corresponding to XCR0 was not present in the core file for
+GDB to interrogate, resulting in the following behavior:
 
-Let's reorder things a bit so that we do all of our sleepable
-functions before we grab the lock.
+   [kev@f32-1 gdb]$ ./gdb -q testsuite/outputs/gdb.base/corefile/corefile testsuite/outputs/gdb.base/corefile/corefile.core
+   Reading symbols from testsuite/outputs/gdb.base/corefile/corefile...
+   [New LWP 232880]
 
-Fixes: d3dc5430d68f ("regmap: debugfs: Allow writes to cache state settings")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200715164611.1.I35b3533e8a80efde0cec1cc70f71e1e74b2fa0da@changeid
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+   warning: Unexpected size of section `.reg-xstate/232880' in core file.
+
+With the typo fixed, the test works again as expected.
+
+Signed-off-by: Kevin Buettner <kevinb@redhat.com>
+Fixes: 9e4636545933 ("copy_xstate_to_kernel(): don't leave parts of destination uninitialized")
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Dave Airlie <airlied@gmail.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/base/regmap/regmap-debugfs.c | 52 ++++++++++++++++------------
- 1 file changed, 29 insertions(+), 23 deletions(-)
+ arch/x86/kernel/fpu/xstate.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
-index e72843fe41dfe..e16afa27700db 100644
---- a/drivers/base/regmap/regmap-debugfs.c
-+++ b/drivers/base/regmap/regmap-debugfs.c
-@@ -457,29 +457,31 @@ static ssize_t regmap_cache_only_write_file(struct file *file,
- {
- 	struct regmap *map = container_of(file->private_data,
- 					  struct regmap, cache_only);
--	ssize_t result;
--	bool was_enabled, require_sync = false;
-+	bool new_val, require_sync = false;
- 	int err;
- 
--	map->lock(map->lock_arg);
-+	err = kstrtobool_from_user(user_buf, count, &new_val);
-+	/* Ignore malforned data like debugfs_write_file_bool() */
-+	if (err)
-+		return count;
- 
--	was_enabled = map->cache_only;
-+	err = debugfs_file_get(file->f_path.dentry);
-+	if (err)
-+		return err;
- 
--	result = debugfs_write_file_bool(file, user_buf, count, ppos);
--	if (result < 0) {
--		map->unlock(map->lock_arg);
--		return result;
--	}
-+	map->lock(map->lock_arg);
- 
--	if (map->cache_only && !was_enabled) {
-+	if (new_val && !map->cache_only) {
- 		dev_warn(map->dev, "debugfs cache_only=Y forced\n");
- 		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
--	} else if (!map->cache_only && was_enabled) {
-+	} else if (!new_val && map->cache_only) {
- 		dev_warn(map->dev, "debugfs cache_only=N forced: syncing cache\n");
- 		require_sync = true;
- 	}
-+	map->cache_only = new_val;
- 
- 	map->unlock(map->lock_arg);
-+	debugfs_file_put(file->f_path.dentry);
- 
- 	if (require_sync) {
- 		err = regcache_sync(map);
-@@ -487,7 +489,7 @@ static ssize_t regmap_cache_only_write_file(struct file *file,
- 			dev_err(map->dev, "Failed to sync cache %d\n", err);
- 	}
- 
--	return result;
-+	return count;
- }
- 
- static const struct file_operations regmap_cache_only_fops = {
-@@ -502,28 +504,32 @@ static ssize_t regmap_cache_bypass_write_file(struct file *file,
- {
- 	struct regmap *map = container_of(file->private_data,
- 					  struct regmap, cache_bypass);
--	ssize_t result;
--	bool was_enabled;
-+	bool new_val;
-+	int err;
- 
--	map->lock(map->lock_arg);
-+	err = kstrtobool_from_user(user_buf, count, &new_val);
-+	/* Ignore malforned data like debugfs_write_file_bool() */
-+	if (err)
-+		return count;
- 
--	was_enabled = map->cache_bypass;
-+	err = debugfs_file_get(file->f_path.dentry);
-+	if (err)
-+		return err;
- 
--	result = debugfs_write_file_bool(file, user_buf, count, ppos);
--	if (result < 0)
--		goto out;
-+	map->lock(map->lock_arg);
- 
--	if (map->cache_bypass && !was_enabled) {
-+	if (new_val && !map->cache_bypass) {
- 		dev_warn(map->dev, "debugfs cache_bypass=Y forced\n");
- 		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
--	} else if (!map->cache_bypass && was_enabled) {
-+	} else if (!new_val && map->cache_bypass) {
- 		dev_warn(map->dev, "debugfs cache_bypass=N forced\n");
- 	}
-+	map->cache_bypass = new_val;
- 
--out:
- 	map->unlock(map->lock_arg);
-+	debugfs_file_put(file->f_path.dentry);
- 
--	return result;
-+	return count;
- }
- 
- static const struct file_operations regmap_cache_bypass_fops = {
--- 
-2.25.1
-
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -1017,7 +1017,7 @@ int copy_xstate_to_kernel(void *kbuf, st
+ 		copy_part(offsetof(struct fxregs_state, st_space), 128,
+ 			  &xsave->i387.st_space, &kbuf, &offset_start, &count);
+ 	if (header.xfeatures & XFEATURE_MASK_SSE)
+-		copy_part(xstate_offsets[XFEATURE_MASK_SSE], 256,
++		copy_part(xstate_offsets[XFEATURE_SSE], 256,
+ 			  &xsave->i387.xmm_space, &kbuf, &offset_start, &count);
+ 	/*
+ 	 * Fill xsave->i387.sw_reserved value for ptrace frame:
 
 
