@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA50C4743A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FF0C4743D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6D67206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CBFC206F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281524;
-	bh=myRiqgsrgu8L7BwSvXexwZdTgvqMXP0UprAQ0a3Razo=;
+	s=default; t=1595281527;
+	bh=CNA2UcGDHuCk9lpCPB6VSEaq6G3lroCk8+yxTtXAEhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SrfnUF5ccl4068C1uskrPSaH9zm0gR+ktvI4sJ3yV7cWFeqsCFU4Me8v+kWAcUNlI
-	 crTbLmX6b3ZYOfoZy1jQpoYW/X7hiZSzi2YZ1MHNLEReUefIDs6u9J3Y3D8Lf3/2DK
-	 dElDb7E7Bh0mkzmMK0PVMGOgVqrBF0dBzXEQMS48=
+	b=NOPX8R/xlKz6xGn9u4abFGCrYIuKzS7hMrKuq1vhJNf/sByG4oLtZX4K2bQ76wIr8
+	 ieUyKx5UUIgPnBw+TiGkRxAKuZLinCmaa69bnpBw8ojbQCW5+wDukBQZkoYo27ieK9
+	 qljlrDiX/n7Lt2INgNr4/syEUtO7VBOP7dUi+7xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgGTVpW (ORCPT
+        id S1727037AbgGTVh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:45:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55524 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:37:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727095AbgGTVhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:37:36 -0400
+        id S1726930AbgGTVhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:37:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B47122CBB;
-        Mon, 20 Jul 2020 21:37:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71F6B207FC;
+        Mon, 20 Jul 2020 21:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281056;
-        bh=myRiqgsrgu8L7BwSvXexwZdTgvqMXP0UprAQ0a3Razo=;
+        s=default; t=1595281042;
+        bh=CNA2UcGDHuCk9lpCPB6VSEaq6G3lroCk8+yxTtXAEhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sh9daKaNcXiSbHfgTv4CPbPSBwtAhuKeyIk1BGLq7wxNpFUQWwRvFiXHgFmQu+xlZ
-         PDLz9TXkQG+B9xU2Qu+cyQfpyL/ONYhJlhc6vEn+9O6QdtjHj8NdSRH4qXHwBD3r+T
-         UI1FKzP8JjZViuRxqnQKFUi6MS9x1RhZzqKiBf3o=
+        b=U9TnaTcMmAVF6LRvoveXp2CxTj9IsAmQCGvegSGEeOz6QVFSWTubf3LENJ1ywJUmK
+         j4BTP2D9svt6an8ATL3cQDmx9La68/5HZfsdjsy0dZt5/Pifqg8gfwSEt8JIxUEqOZ
+         N2rwumMcvEpSgW3k/xGAP7nS/ZPXl1FXwOSI7EfI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Angelo Dureghello <angelo.dureghello@timesys.com>,
-        kbuild test robot <lkp@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 16/40] dmaengine: fsl-edma: fix wrong tcd endianness for big-endian cpu
-Date:   Mon, 20 Jul 2020 17:36:51 -0400
-Message-Id: <20200720213715.406997-16-sashal@kernel.org>
+Cc:     Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>,
+        Siarhei Vishniakou <svv@google.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 05/40] HID: steam: fixes race in handling device list.
+Date:   Mon, 20 Jul 2020 17:36:40 -0400
+Message-Id: <20200720213715.406997-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213715.406997-1-sashal@kernel.org>
 References: <20200720213715.406997-1-sashal@kernel.org>
@@ -60,73 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Angelo Dureghello <angelo.dureghello@timesys.com>
+From: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
 
-[ Upstream commit 8678c71c17721e0f771f135967ef0cce8f69ce9a ]
+[ Upstream commit 2d3f53a80e4eed078669853a178ed96d88f74143 ]
 
-Due to recent fixes in m68k arch-specific I/O accessor macros, this
-driver is not working anymore for ColdFire. Fix wrong tcd endianness
-removing additional swaps, since edma_writex() functions should already
-take care of any eventual swap if needed.
+Using uhid and KASAN this driver crashed because it was getting
+several connection events where it only expected one. Then the
+device was added several times to the static device list and it got
+corrupted.
 
-Note, i could only test the change in ColdFire mcf54415 and Vybrid
-vf50 / Colibri where i don't see any issue. So, every feedback and
-test for all other SoCs involved is really appreciated.
+This patch checks if the device is already in the list before adding
+it.
 
-Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Link: https://lore.kernel.org/r/20200701225205.1674463-1-angelo.dureghello@timesys.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
+Tested-by: Siarhei Vishniakou <svv@google.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/fsl-edma-common.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ drivers/hid/hid-steam.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index 5697c3622699b..9285884758b27 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -352,26 +352,28 @@ static void fsl_edma_set_tcd_regs(struct fsl_edma_chan *fsl_chan,
- 	/*
- 	 * TCD parameters are stored in struct fsl_edma_hw_tcd in little
- 	 * endian format. However, we need to load the TCD registers in
--	 * big- or little-endian obeying the eDMA engine model endian.
-+	 * big- or little-endian obeying the eDMA engine model endian,
-+	 * and this is performed from specific edma_write functions
- 	 */
- 	edma_writew(edma, 0,  &regs->tcd[ch].csr);
--	edma_writel(edma, le32_to_cpu(tcd->saddr), &regs->tcd[ch].saddr);
--	edma_writel(edma, le32_to_cpu(tcd->daddr), &regs->tcd[ch].daddr);
+diff --git a/drivers/hid/hid-steam.c b/drivers/hid/hid-steam.c
+index 6286204d4c560..a3b151b29bd71 100644
+--- a/drivers/hid/hid-steam.c
++++ b/drivers/hid/hid-steam.c
+@@ -526,7 +526,8 @@ static int steam_register(struct steam_device *steam)
+ 			steam_battery_register(steam);
  
--	edma_writew(edma, le16_to_cpu(tcd->attr), &regs->tcd[ch].attr);
--	edma_writew(edma, le16_to_cpu(tcd->soff), &regs->tcd[ch].soff);
-+	edma_writel(edma, (s32)tcd->saddr, &regs->tcd[ch].saddr);
-+	edma_writel(edma, (s32)tcd->daddr, &regs->tcd[ch].daddr);
+ 		mutex_lock(&steam_devices_lock);
+-		list_add(&steam->list, &steam_devices);
++		if (list_empty(&steam->list))
++			list_add(&steam->list, &steam_devices);
+ 		mutex_unlock(&steam_devices_lock);
+ 	}
  
--	edma_writel(edma, le32_to_cpu(tcd->nbytes), &regs->tcd[ch].nbytes);
--	edma_writel(edma, le32_to_cpu(tcd->slast), &regs->tcd[ch].slast);
-+	edma_writew(edma, (s16)tcd->attr, &regs->tcd[ch].attr);
-+	edma_writew(edma, tcd->soff, &regs->tcd[ch].soff);
+@@ -552,7 +553,7 @@ static void steam_unregister(struct steam_device *steam)
+ 		hid_info(steam->hdev, "Steam Controller '%s' disconnected",
+ 				steam->serial_no);
+ 		mutex_lock(&steam_devices_lock);
+-		list_del(&steam->list);
++		list_del_init(&steam->list);
+ 		mutex_unlock(&steam_devices_lock);
+ 		steam->serial_no[0] = 0;
+ 	}
+@@ -738,6 +739,7 @@ static int steam_probe(struct hid_device *hdev,
+ 	mutex_init(&steam->mutex);
+ 	steam->quirks = id->driver_data;
+ 	INIT_WORK(&steam->work_connect, steam_work_connect_cb);
++	INIT_LIST_HEAD(&steam->list);
  
--	edma_writew(edma, le16_to_cpu(tcd->citer), &regs->tcd[ch].citer);
--	edma_writew(edma, le16_to_cpu(tcd->biter), &regs->tcd[ch].biter);
--	edma_writew(edma, le16_to_cpu(tcd->doff), &regs->tcd[ch].doff);
-+	edma_writel(edma, (s32)tcd->nbytes, &regs->tcd[ch].nbytes);
-+	edma_writel(edma, (s32)tcd->slast, &regs->tcd[ch].slast);
- 
--	edma_writel(edma, le32_to_cpu(tcd->dlast_sga),
-+	edma_writew(edma, (s16)tcd->citer, &regs->tcd[ch].citer);
-+	edma_writew(edma, (s16)tcd->biter, &regs->tcd[ch].biter);
-+	edma_writew(edma, (s16)tcd->doff, &regs->tcd[ch].doff);
-+
-+	edma_writel(edma, (s32)tcd->dlast_sga,
- 			&regs->tcd[ch].dlast_sga);
- 
--	edma_writew(edma, le16_to_cpu(tcd->csr), &regs->tcd[ch].csr);
-+	edma_writew(edma, (s16)tcd->csr, &regs->tcd[ch].csr);
- }
- 
- static inline
+ 	steam->client_hdev = steam_create_client_hid(hdev);
+ 	if (IS_ERR(steam->client_hdev)) {
 -- 
 2.25.1
 
