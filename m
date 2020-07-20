@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43407C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D930206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E3320734
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260705;
-	bh=U96DsrVJZj0nKlPKw5oqQP2nOz9oZwby6gkSTE66v/k=;
+	s=default; t=1595260709;
+	bh=GEJJCDdVm8pUbVjvqKgHBBMZkXtSqzUnyt6nkVra9C4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vBY3fn70NSyui1aZRTLEs6UnLV4pcsqH8O1NKZYRGqv7fD36gxVN+20w2YTEnaJgK
-	 eP5hOxkwdRgiXCGpWzguwa3xZ5iiKd9Q18sZ9j8rS5t+pMOqVlYcvJfyHNJUHNogfu
-	 zbnGhCEq5rO2pKjxyCRx3L4KD/a9kh0++fw7vUF0=
+	b=FWsNNK6UXAM611ig6OPBJ9mWDKsG073CymA6H3d+7phOYlzxNFUjutyiFTryj81b2
+	 BLD/hXQOuJSov2iUSrpSARVCc9FVOqC7mxHBd51/Dwn2j1yhSZAIecnRlT2kJSUZp+
+	 MaHIa3sMe12ygLLcsq2TIKTheNoBcH+k5zRl+bco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732021AbgGTP6U (ORCPT
+        id S1730748AbgGTP61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:58:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58428 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:58:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731599AbgGTP6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:58:15 -0400
+        id S1732020AbgGTP6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:58:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 601E72065E;
-        Mon, 20 Jul 2020 15:58:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4CD02065E;
+        Mon, 20 Jul 2020 15:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260694;
-        bh=U96DsrVJZj0nKlPKw5oqQP2nOz9oZwby6gkSTE66v/k=;
+        s=default; t=1595260700;
+        bh=GEJJCDdVm8pUbVjvqKgHBBMZkXtSqzUnyt6nkVra9C4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PDlHroCfFuNEvnvXjRJzhp07y7E/lLmNPWneQBRiJ/6H4SvugjBj7bCquV4pGofh4
-         PGx8IVzTxwDTXy/ibuHo6+ZMnxhrX0uvrrfGW0DK4KSvyFgLVWrpn+IRNbpmiL/grA
-         /KluO/OVbddCUjK1C8qKLM7p4mekCk47ButaMc9g=
+        b=pYCJGBokZIMj/Kn4NZLqtzYDkh+tuTZA1CPSish/ykYT2CZBkUm87EzzQWF5EoXx4
+         QbzZHCn8R7nT4qMor8Cv/d9QVNo08Y4/tew/1rqotaMeKzWEgAkzddpwbBQ0bAxtU0
+         gv7N1pjvzGa2E/G3S3LNak8T6m5BV6pyjd82nT2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 060/215] net: ethernet: mvneta: Add back interface mode validation
-Date:   Mon, 20 Jul 2020 17:35:42 +0200
-Message-Id: <20200720152823.064205838@linuxfoundation.org>
+        stable@vger.kernel.org, Petteri Aimonen <jpa@git.mail.kapsi.fi>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 034/215] x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
+Date:   Mon, 20 Jul 2020 17:35:16 +0200
+Message-Id: <20200720152821.811063427@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -61,78 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Petteri Aimonen <jpa@git.mail.kapsi.fi>
 
-[ Upstream commit 41c2b6b4f0f807803bb49f65835d136941a70f85 ]
+[ Upstream commit 7ad816762f9bf89e940e618ea40c43138b479e10 ]
 
-When writing the serdes configuration register was moved to
-mvneta_config_interface() the whole code block was removed from
-mvneta_port_power_up() in the assumption that its only purpose was to
-write the serdes configuration register. As mentioned by Russell King
-its purpose was also to check for valid interface modes early so that
-later in the driver we do not have to care for unexpected interface
-modes.
-Add back the test to let the driver bail out early on unhandled
-interface modes.
+Previously, kernel floating point code would run with the MXCSR control
+register value last set by userland code by the thread that was active
+on the CPU core just before kernel call. This could affect calculation
+results if rounding mode was changed, or a crash if a FPU/SIMD exception
+was unmasked.
 
-Fixes: b4748553f53f ("net: ethernet: mvneta: Fix Serdes configuration for SoCs without comphy")
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Restore MXCSR to the kernel's default value.
+
+ [ bp: Carve out from a bigger patch by Petteri, add feature check, add
+   FNINIT call too (amluto). ]
+
+Signed-off-by: Petteri Aimonen <jpa@git.mail.kapsi.fi>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=207979
+Link: https://lkml.kernel.org/r/20200624114646.28953-2-bp@alien8.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvneta.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/fpu/internal.h | 5 +++++
+ arch/x86/kernel/fpu/core.c          | 6 ++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index d443cd19e8951..ccb2abd18d6c7 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -4496,10 +4496,18 @@ static void mvneta_conf_mbus_windows(struct mvneta_port *pp,
- }
+diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+index 44c48e34d7994..00eac7f1529b0 100644
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -619,6 +619,11 @@ static inline void switch_fpu_finish(struct fpu *new_fpu)
+  * MXCSR and XCR definitions:
+  */
  
- /* Power up the port */
--static void mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
-+static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
- {
- 	/* MAC Cause register should be cleared */
- 	mvreg_write(pp, MVNETA_UNIT_INTR_CAUSE, 0);
++static inline void ldmxcsr(u32 mxcsr)
++{
++	asm volatile("ldmxcsr %0" :: "m" (mxcsr));
++}
 +
-+	if (phy_mode != PHY_INTERFACE_MODE_QSGMII &&
-+	    phy_mode != PHY_INTERFACE_MODE_SGMII &&
-+	    !phy_interface_mode_is_8023z(phy_mode) &&
-+	    !phy_interface_mode_is_rgmii(phy_mode))
-+		return -EINVAL;
-+
-+	return 0;
- }
+ extern unsigned int mxcsr_feature_mask;
  
- /* Device initialization routine */
-@@ -4683,7 +4691,11 @@ static int mvneta_probe(struct platform_device *pdev)
- 	if (err < 0)
- 		goto err_netdev;
- 
--	mvneta_port_power_up(pp, phy_mode);
-+	err = mvneta_port_power_up(pp, pp->phy_interface);
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "can't power up port\n");
-+		return err;
-+	}
- 
- 	/* Armada3700 network controller does not support per-cpu
- 	 * operation, so only single NAPI should be initialized.
-@@ -4836,7 +4848,11 @@ static int mvneta_resume(struct device *device)
- 		}
+ #define XCR_XFEATURE_ENABLED_MASK	0x00000000
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 12c70840980e4..cd8839027f66d 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -101,6 +101,12 @@ void kernel_fpu_begin(void)
+ 		copy_fpregs_to_fpstate(&current->thread.fpu);
  	}
- 	mvneta_defaults_set(pp);
--	mvneta_port_power_up(pp, pp->phy_interface);
-+	err = mvneta_port_power_up(pp, pp->phy_interface);
-+	if (err < 0) {
-+		dev_err(device, "can't power up port\n");
-+		return err;
-+	}
- 
- 	netif_device_attach(dev);
+ 	__cpu_invalidate_fpregs_state();
++
++	if (boot_cpu_has(X86_FEATURE_XMM))
++		ldmxcsr(MXCSR_DEFAULT);
++
++	if (boot_cpu_has(X86_FEATURE_FPU))
++		asm volatile ("fninit");
+ }
+ EXPORT_SYMBOL_GPL(kernel_fpu_begin);
  
 -- 
 2.25.1
