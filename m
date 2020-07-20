@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF41C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1577C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF62A206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD87122482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260045;
-	bh=Vk7IagyqnoRmnENC1u/iaiaXIz648HETL5Ky4FZuhwo=;
+	s=default; t=1595260049;
+	bh=OoESAnnsNphandLeCs8CakH27dQGYZJjXEuVriqzIbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HyCbZVOmoAarSdLlcY981L+bRyrNfZJwBC6CekO4vyy3rH+VYvmIc55TXnngAHTZf
-	 V+qA6uy+NEdMzhKpiPKD/t70+2AfRfoi21IZNAhRsmEOldDLDRfF9CLIWxHjxpMEEv
-	 MWDph2NyCuywuLvnWf3q99MEXsaividMo9jHG658=
+	b=M2tRoMyxKhqNJ//s0zapjJWwtoIksAmsf709d/lPuTz9OLWc6yHWt4gPgSht68Yzy
+	 mj213WsD75FDv80aunJbjOy7l7RrZnfNEzIyzMprOzJwwt1+r724KfcsEl8Dau0PgE
+	 MWiX9HhoOCvgOuMcFbsVZlZXeXJeQLm/emVLoR04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730766AbgGTPrY (ORCPT
+        id S1730359AbgGTPr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:47:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42166 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:47:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730386AbgGTPrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:47:08 -0400
+        id S1730738AbgGTPrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:47:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97655206E9;
-        Mon, 20 Jul 2020 15:47:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2624C22BF3;
+        Mon, 20 Jul 2020 15:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260028;
-        bh=Vk7IagyqnoRmnENC1u/iaiaXIz648HETL5Ky4FZuhwo=;
+        s=default; t=1595260033;
+        bh=OoESAnnsNphandLeCs8CakH27dQGYZJjXEuVriqzIbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JrOTbe/bTWtPsCwiqmhBWBtm3r6EvTq31LOF4ClAOUFI6Mx5EH5KbwYxmiLuq+zln
-         ypAZJL1VwKFcIx3T8s0IKHp3iJe1OxkWxAAGat1duffhADxspO9u/qMMwVYxDyXqIx
-         poPFcsASKcACrNifCIzyNeaddLNFX8hgGd09yQ3c=
+        b=otAkzqO5f8ZonqpyuJ0rxYRaOHDVW9nRn5pdgU0Shl1x308uEtY62wrKd76g6NzEi
+         ru5dOCAOBpY3M1RVWbxTLBx80OQuzpaVKyjJQn4Xnbx+CMvlCF7D45c9YTNB5AGkJA
+         Rob8jM2EEGmCb4+27hiHqp5eusRWjPijhfXJ7RfA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Andrew F. Davis" <afd@ti.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 080/125] iio:health:afe4404 Fix timestamp alignment and prevent data leak.
-Date:   Mon, 20 Jul 2020 17:36:59 +0200
-Message-Id: <20200720152806.883617444@linuxfoundation.org>
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 082/125] arm64: dts: meson: add missing gxl rng clock
+Date:   Mon, 20 Jul 2020 17:37:01 +0200
+Message-Id: <20200720152806.979464857@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -60,71 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit f88ecccac4be348bbcc6d056bdbc622a8955c04d ]
+[ Upstream commit 95ca6f06dd4827ff63be5154120c7a8511cd9a41 ]
 
-One of a class of bugs pointed out by Lars in a recent review.
-iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
-to the size of the timestamp (8 bytes).  This is not guaranteed in
-this driver which uses a 40 byte array of smaller elements on the stack.
-As Lars also noted this anti pattern can involve a leak of data to
-userspace and that indeed can happen here.  We close both issues by
-moving to a suitable structure in the iio_priv() data with alignment
-explicitly requested.  This data is allocated with kzalloc so no
-data can leak appart from previous readings.
+The peripheral clock of the RNG is missing for gxl while it is present
+for gxbb.
 
-Fixes: 87aec56e27ef ("iio: health: Add driver for the TI AFE4404 heart monitor")
-Reported-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Andrew F. Davis <afd@ti.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 1b3f6d148692 ("ARM64: dts: meson-gx: add clock CLKID_RNG0 to hwrng node")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://lore.kernel.org/r/20200617125346.1163527-1-jbrunet@baylibre.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/health/afe4404.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/iio/health/afe4404.c b/drivers/iio/health/afe4404.c
-index 964f5231a831c..5e256b11ac877 100644
---- a/drivers/iio/health/afe4404.c
-+++ b/drivers/iio/health/afe4404.c
-@@ -91,6 +91,7 @@ static const struct reg_field afe4404_reg_fields[] = {
-  * @regulator: Pointer to the regulator for the IC
-  * @trig: IIO trigger for this device
-  * @irq: ADC_RDY line interrupt number
-+ * @buffer: Used to construct a scan to push to the iio buffer.
-  */
- struct afe4404_data {
- 	struct device *dev;
-@@ -99,6 +100,7 @@ struct afe4404_data {
- 	struct regulator *regulator;
- 	struct iio_trigger *trig;
- 	int irq;
-+	s32 buffer[10] __aligned(8);
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 3c30579449608..3ee6c4bae08f6 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -245,6 +245,11 @@ clkc: clock-controller@0 {
+ 	};
  };
  
- enum afe4404_chan_id {
-@@ -337,17 +339,17 @@ static irqreturn_t afe4404_trigger_handler(int irq, void *private)
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct afe4404_data *afe = iio_priv(indio_dev);
- 	int ret, bit, i = 0;
--	s32 buffer[10];
- 
- 	for_each_set_bit(bit, indio_dev->active_scan_mask,
- 			 indio_dev->masklength) {
- 		ret = regmap_read(afe->regmap, afe4404_channel_values[bit],
--				  &buffer[i++]);
-+				  &afe->buffer[i++]);
- 		if (ret)
- 			goto err;
- 	}
- 
--	iio_push_to_buffers_with_timestamp(indio_dev, buffer, pf->timestamp);
-+	iio_push_to_buffers_with_timestamp(indio_dev, afe->buffer,
-+					   pf->timestamp);
- err:
- 	iio_trigger_notify_done(indio_dev->trig);
- 
++&hwrng {
++	clocks = <&clkc CLKID_RNG0>;
++	clock-names = "core";
++};
++
+ &i2c_A {
+ 	clocks = <&clkc CLKID_I2C>;
+ };
 -- 
 2.25.1
 
