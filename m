@@ -2,110 +2,131 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A955C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B2AC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D77CB22B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C8821775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:28:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RUixrVyL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="u7nt3GoC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgGTI2S (ORCPT
+        id S1726832AbgGTI2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:28:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56222 "EHLO
+        Mon, 20 Jul 2020 04:28:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgGTI2S (ORCPT
+        with ESMTP id S1725815AbgGTI2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:28:18 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17695C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 01:28:18 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id f16so9719219pjt.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 01:28:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VHz+fh9KhorFs1TLxN9L3mwYW6buhjiKAJZKsFMcKOQ=;
-        b=RUixrVyLy/D6O2GPVqA+VLNharw26Ydp8E7gQETyGg2n+yz8QV2yP9c627s6o9FBtP
-         MEiLFH6mIj/cYiE1xnchA3oTTEdJ/mhJPqA2OwY6A6DFyy+L4/94Rbv/yganEIEkwDA7
-         mamNcbjGwGuugX769pTgiVCIUvVXaMoiSczwQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VHz+fh9KhorFs1TLxN9L3mwYW6buhjiKAJZKsFMcKOQ=;
-        b=STckcrNJICmz87OmwNzvlbIyHS4rJrqggnXYFEiEuxAzvMO0hvsNRUXZN/EAVTEZV5
-         K16l5a/YcNxp89gtkOMt39naneEL+DS7qnVQQ6EQVRpBTMCqHKt0xJ9u4SQBy64Xf58E
-         UMOXzWER7vvnk4Zu7UQLe70u8jup3qG79FzYMI4JjoZXQKwHAbySi19YXhqGChQ0ckuc
-         WTl0aSsHtyuiTcWugby0u2w5U0oniHBEtbGKJdDR6/6kKEaGL61MnZm7wHaJrMavhps1
-         54qNayV+33jhbLeV5yUemME/+QtXN9+xi+xeyc8dCfp+X3acWCiIoZCQoKkyGoE59769
-         ewdA==
-X-Gm-Message-State: AOAM532h1Pf7YzaqGdWMFfdqRen/HM3s/LyEvQs+aY2nqkpThfMA4d63
-        Sc2XiHXK4l9XDmeD1didGjzqYQ==
-X-Google-Smtp-Source: ABdhPJxjWtKCUQClEpnzDStDZ5GTTSbi6ahDhohPe7UgMv64xFCLOT5tOfGZayicdbBejh/Vj0PJyQ==
-X-Received: by 2002:a17:902:8e86:: with SMTP id bg6mr14845530plb.57.1595233697582;
-        Mon, 20 Jul 2020 01:28:17 -0700 (PDT)
-Received: from kafuu-chino.c.googlers.com.com (105.219.229.35.bc.googleusercontent.com. [35.229.219.105])
-        by smtp.googlemail.com with ESMTPSA id o3sm5513095pfu.81.2020.07.20.01.28.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 01:28:16 -0700 (PDT)
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>, Shik Chen <shik@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] scripts/decode_stacktrace: Strip basepath from all paths.
-Date:   Mon, 20 Jul 2020 08:27:07 +0000
-Message-Id: <20200720082709.252805-1-pihsun@chromium.org>
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+        Mon, 20 Jul 2020 04:28:14 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D63C061794;
+        Mon, 20 Jul 2020 01:28:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=O6HfgQ+/4qiZLGt2UojtUQ3Ga/x/jgpuR6s1a87yytM=; b=u7nt3GoCT7WBM27aXRtZnWNUD
+        bXmH223IdV7epuWwcz8hui1tkCQJvtfRu5hvQZkEMVcZmE60DFtMY8VD0hNJF0UubpeKhjIsXV0KV
+        wQml0xJTy9YZPIFESQKbMFRQY60X5KxoYD+m9vVq/30t4DlNFeJ74X0DZFJ31zENrDfg0+5XChBMX
+        87NF0WKQXOkI7CpKZnM+RFs8y8HtoYgi00zTMK9U3om7Pv5aPxBmcCtvotb9ASctJZcL52BbW6iaN
+        ag23tbDPGsTcJCtj6GmQypV1xEXZSJxh7N56EzdK+u3BZNeqU0YuZqMpVsbmrfqihoSQCkOba0Wvx
+        SXgUBjiBg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41816)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jxR9b-0002m6-AD; Mon, 20 Jul 2020 09:28:07 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jxR9X-0004pY-Ga; Mon, 20 Jul 2020 09:28:03 +0100
+Date:   Mon, 20 Jul 2020 09:28:03 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        linux-sunxi@googlegroups.com, Zhang Rui <rui.zhang@intel.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
+Message-ID: <20200720082803.GS1551@shell.armlinux.org.uk>
+References: <20200708105527.868987-1-megous@megous.com>
+ <20200708110301.GB1551@shell.armlinux.org.uk>
+ <86689f81367716e3f88ec363edd0d302deca0a1f.camel@aosc.io>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <86689f81367716e3f88ec363edd0d302deca0a1f.camel@aosc.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the basepath is removed only from the beginning of the string.
-When the symbol is inlined and there's multiple line outputs of
-addr2line, only the first line would have basepath removed.
+On Mon, Jul 20, 2020 at 03:55:26PM +0800, Icenowy Zheng wrote:
+> 在 2020-07-08星期三的 12:03 +0100，Russell King - ARM Linux admin写道：
+> > On Wed, Jul 08, 2020 at 12:55:27PM +0200, Ondrej Jirman wrote:
+> > > I noticed several mobile Linux distributions failing to enable the
+> > > thermal regulation correctly, because the kernel is silent
+> > > when thermal driver fails to probe. Add enough error reporting
+> > > to debug issues and warn users in case thermal sensor is failing
+> > > to probe.
+> > > 
+> > > Failing to notify users means, that SoC can easily overheat under
+> > > load.
+> > > 
+> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > > ---
+> > >  drivers/thermal/sun8i_thermal.c | 55 ++++++++++++++++++++++++++---
+> > > ----
+> > >  1 file changed, 43 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/drivers/thermal/sun8i_thermal.c
+> > > b/drivers/thermal/sun8i_thermal.c
+> > > index 74d73be16496..9065e79ae743 100644
+> > > --- a/drivers/thermal/sun8i_thermal.c
+> > > +++ b/drivers/thermal/sun8i_thermal.c
+> > > @@ -287,8 +287,12 @@ static int sun8i_ths_calibrate(struct
+> > > ths_device *tmdev)
+> > >  
+> > >  	calcell = devm_nvmem_cell_get(dev, "calibration");
+> > >  	if (IS_ERR(calcell)) {
+> > > +		dev_err(dev, "Failed to get calibration nvmem cell
+> > > (%ld)\n",
+> > > +			PTR_ERR(calcell));
+> > 
+> > Consider using:
+> > 
+> > 		dev_err(dev, "Failed to get calibration nvmem cell
+> > (%pe)\n",
+> > 			calcell);
+> > 
+> > which means the kernel can print the symbolic errno value.
+> 
+> Oh interesting format here.
+> 
+> When we need to deal with a int return value, is it "%e"?
 
-Change to remove the basepath prefix from all lines.
+No, because that will lose the ability for the compiler to check the
+format string and arguments correspond.  All the extensions are
+documented at Documentation/core-api/printk-formats.rst.
 
-Fixes: 31013836a71e ("scripts/decode_stacktrace: match basepath using shell prefix operator, not regex")
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Co-developed-by: Shik Chen <shik@chromium.org>
-Signed-off-by: Shik Chen <shik@chromium.org>
----
- scripts/decode_stacktrace.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Use %pe and ERR_PTR(...) to print an integer -ve errno return value.
 
-diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
-index 66a6d511b524..0869def435ee 100755
---- a/scripts/decode_stacktrace.sh
-+++ b/scripts/decode_stacktrace.sh
-@@ -87,8 +87,8 @@ parse_symbol() {
- 		return
- 	fi
- 
--	# Strip out the base of the path
--	code=${code#$basepath/}
-+	# Strip out the base of the path on each line
-+	code=$(while read -r line; do echo "${line#$basepath/}"; done <<< "$code")
- 
- 	# In the case of inlines, move everything to same line
- 	code=${code//$'\n'/' '}
-
-base-commit: 5714ee50bb4375bd586858ad800b1d9772847452
 -- 
-2.28.0.rc0.105.gf9edc3c819-goog
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
