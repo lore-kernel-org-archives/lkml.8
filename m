@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB32C433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6F5C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08FD820773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1072070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262209;
-	bh=9fcM8UNcJIVaRWwp8+SdABCME/wG7n29B/fICmrFgRw=;
+	s=default; t=1595262218;
+	bh=UHTBCsg/QqgvyNMNI2gyYcukzr/gTi8xEjWWr4Et+xA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0/EWMeu7wDtwPIChqGpEZZVzhotHSghPMQsfqGYI+yZdQKdGpqpWJ6E6iVzfNbavI
-	 rW6+1Zm8101cVJk6mIIXBLxjO0VSIhp9b+lhvfprI+X/dgHT04y5a60/q+JA6GBJxS
-	 c16x0SS55R17xvy+pZvKf3opiM24C/YxMUtzTvzg=
+	b=1gJEwJb3vbdA3dqRPa3HVYI+u2YY6hwx4Yt/hWu3XXmP5oAzmu8oIz31VJM2/4Syd
+	 BIDmD+BbDMfjadxPzlhwK9gzVYly/GgPFis8UxTloeDwnL+wIflpn/DyPAqR3Mrxkn
+	 b9i1Ghyon3nFu9LimCexsApDqBy0KK8ur3znB/dY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388738AbgGTQX2 (ORCPT
+        id S2388682AbgGTQXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:23:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41196 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:23:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732644AbgGTQFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:05:35 -0400
+        id S1732690AbgGTQFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:05:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26B5A2064B;
-        Mon, 20 Jul 2020 16:05:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 109842065E;
+        Mon, 20 Jul 2020 16:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261134;
-        bh=9fcM8UNcJIVaRWwp8+SdABCME/wG7n29B/fICmrFgRw=;
+        s=default; t=1595261123;
+        bh=UHTBCsg/QqgvyNMNI2gyYcukzr/gTi8xEjWWr4Et+xA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uao4MNRY0FK3yurvQKkMp0eNXoRFUkIY0SOCu9aaS1EJ0QKBc+z2DZpkKm6glRxV4
-         TZ+htyWveymbDOjNwcmQwhPabI2chlXkis4s5aqfYaMcy2eOW6S6KrniBtA8e7u8oE
-         Kx4U7Dy4Nc37JuJDC5gRqdI2Ye4/q1yUEkU7giWE=
+        b=Ufn+tk/gv8QQFk8btnDubpQmCyi2mkt5Gq2sT0TVC/6E7sI5jiNRmoD/d/XQkBhMO
+         LgFiG0yljjPiJa4PsFhEGgtzIzxKP7qZZCG+fu4iJ9dr4Jn81K8BaYGNL7FbMqcR2r
+         0Zv3h/tNwx5idWQfGl3apIS/K2JUcIAnstWXTHXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: [PATCH 5.4 203/215] sched/fair: handle case of task_h_load() returning 0
-Date:   Mon, 20 Jul 2020 17:38:05 +0200
-Message-Id: <20200720152829.823407143@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Luis Machado <luis.machado@linaro.org>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.4 199/215] arm64: ptrace: Override SPSR.SS when single-stepping is enabled
+Date:   Mon, 20 Jul 2020 17:38:01 +0200
+Message-Id: <20200720152829.633398618@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -62,69 +61,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Will Deacon <will@kernel.org>
 
-commit 01cfcde9c26d8555f0e6e9aea9d6049f87683998 upstream.
+commit 3a5a4366cecc25daa300b9a9174f7fdd352b9068 upstream.
 
-task_h_load() can return 0 in some situations like running stress-ng
-mmapfork, which forks thousands of threads, in a sched group on a 224 cores
-system. The load balance doesn't handle this correctly because
-env->imbalance never decreases and it will stop pulling tasks only after
-reaching loop_max, which can be equal to the number of running tasks of
-the cfs. Make sure that imbalance will be decreased by at least 1.
+Luis reports that, when reverse debugging with GDB, single-step does not
+function as expected on arm64:
 
-misfit task is the other feature that doesn't handle correctly such
-situation although it's probably more difficult to face the problem
-because of the smaller number of CPUs and running tasks on heterogenous
-system.
+  | I've noticed, under very specific conditions, that a PTRACE_SINGLESTEP
+  | request by GDB won't execute the underlying instruction. As a consequence,
+  | the PC doesn't move, but we return a SIGTRAP just like we would for a
+  | regular successful PTRACE_SINGLESTEP request.
 
-We can't simply ensure that task_h_load() returns at least one because it
-would imply to handle underflow in other places.
+The underlying problem is that when the CPU register state is restored
+as part of a reverse step, the SPSR.SS bit is cleared and so the hardware
+single-step state can transition to the "active-pending" state, causing
+an unexpected step exception to be taken immediately if a step operation
+is attempted.
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: <stable@vger.kernel.org> # v4.4+
-Link: https://lkml.kernel.org/r/20200710152426.16981-1-vincent.guittot@linaro.org
+In hindsight, we probably shouldn't have exposed SPSR.SS in the pstate
+accessible by the GPR regset, but it's a bit late for that now. Instead,
+simply prevent userspace from configuring the bit to a value which is
+inconsistent with the TIF_SINGLESTEP state for the task being traced.
+
+Cc: <stable@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Keno Fischer <keno@juliacomputing.com>
+Link: https://lore.kernel.org/r/1eed6d69-d53d-9657-1fc9-c089be07f98c@linaro.org
+Reported-by: Luis Machado <luis.machado@linaro.org>
+Tested-by: Luis Machado <luis.machado@linaro.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/fair.c |   16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/debug-monitors.h |    2 ++
+ arch/arm64/kernel/debug-monitors.c      |   20 ++++++++++++++++----
+ arch/arm64/kernel/ptrace.c              |    4 ++--
+ 3 files changed, 20 insertions(+), 6 deletions(-)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3824,7 +3824,11 @@ static inline void update_misfit_status(
- 		return;
- 	}
+--- a/arch/arm64/include/asm/debug-monitors.h
++++ b/arch/arm64/include/asm/debug-monitors.h
+@@ -109,6 +109,8 @@ void disable_debug_monitors(enum dbg_act
  
--	rq->misfit_task_load = task_h_load(p);
-+	/*
-+	 * Make sure that misfit_task_load will not be null even if
-+	 * task_h_load() returns 0.
-+	 */
-+	rq->misfit_task_load = max_t(unsigned long, task_h_load(p), 1);
+ void user_rewind_single_step(struct task_struct *task);
+ void user_fastforward_single_step(struct task_struct *task);
++void user_regs_reset_single_step(struct user_pt_regs *regs,
++				 struct task_struct *task);
+ 
+ void kernel_enable_single_step(struct pt_regs *regs);
+ void kernel_disable_single_step(void);
+--- a/arch/arm64/kernel/debug-monitors.c
++++ b/arch/arm64/kernel/debug-monitors.c
+@@ -141,17 +141,20 @@ postcore_initcall(debug_monitors_init);
+ /*
+  * Single step API and exception handling.
+  */
+-static void set_regs_spsr_ss(struct pt_regs *regs)
++static void set_user_regs_spsr_ss(struct user_pt_regs *regs)
+ {
+ 	regs->pstate |= DBG_SPSR_SS;
+ }
+-NOKPROBE_SYMBOL(set_regs_spsr_ss);
++NOKPROBE_SYMBOL(set_user_regs_spsr_ss);
+ 
+-static void clear_regs_spsr_ss(struct pt_regs *regs)
++static void clear_user_regs_spsr_ss(struct user_pt_regs *regs)
+ {
+ 	regs->pstate &= ~DBG_SPSR_SS;
+ }
+-NOKPROBE_SYMBOL(clear_regs_spsr_ss);
++NOKPROBE_SYMBOL(clear_user_regs_spsr_ss);
++
++#define set_regs_spsr_ss(r)	set_user_regs_spsr_ss(&(r)->user_regs)
++#define clear_regs_spsr_ss(r)	clear_user_regs_spsr_ss(&(r)->user_regs)
+ 
+ static DEFINE_SPINLOCK(debug_hook_lock);
+ static LIST_HEAD(user_step_hook);
+@@ -404,6 +407,15 @@ void user_fastforward_single_step(struct
+ 		clear_regs_spsr_ss(task_pt_regs(task));
  }
  
- #else /* CONFIG_SMP */
-@@ -7407,7 +7411,15 @@ static int detach_tasks(struct lb_env *e
- 		if (!can_migrate_task(p, env))
- 			goto next;
- 
--		load = task_h_load(p);
-+		/*
-+		 * Depending of the number of CPUs and tasks and the
-+		 * cgroup hierarchy, task_h_load() can return a null
-+		 * value. Make sure that env->imbalance decreases
-+		 * otherwise detach_tasks() will stop only after
-+		 * detaching up to loop_max tasks.
-+		 */
-+		load = max_t(unsigned long, task_h_load(p), 1);
++void user_regs_reset_single_step(struct user_pt_regs *regs,
++				 struct task_struct *task)
++{
++	if (test_tsk_thread_flag(task, TIF_SINGLESTEP))
++		set_user_regs_spsr_ss(regs);
++	else
++		clear_user_regs_spsr_ss(regs);
++}
 +
+ /* Kernel API */
+ void kernel_enable_single_step(struct pt_regs *regs)
+ {
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -1935,8 +1935,8 @@ static int valid_native_regs(struct user
+  */
+ int valid_user_regs(struct user_pt_regs *regs, struct task_struct *task)
+ {
+-	if (!test_tsk_thread_flag(task, TIF_SINGLESTEP))
+-		regs->pstate &= ~DBG_SPSR_SS;
++	/* https://lore.kernel.org/lkml/20191118131525.GA4180@willie-the-truck */
++	user_regs_reset_single_step(regs, task);
  
- 		if (sched_feat(LB_MIN) && load < 16 && !env->sd->nr_balance_failed)
- 			goto next;
+ 	if (is_compat_thread(task_thread_info(task)))
+ 		return valid_compat_regs(regs);
 
 
