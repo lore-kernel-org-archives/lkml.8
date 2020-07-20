@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECA8C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1CEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAC1A22CE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE85207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261420;
-	bh=OrUqV8JJjkoxK8FuCM07uleGXeKVco3gz7e0rfHRBo0=;
+	s=default; t=1595261423;
+	bh=SctYfMR3QP81Kg16x2UXd6MhWrHdYmtqjLLE50S52Qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rEr+Xr5isez3F8Fem3qH2o0uy09SHU3wJVTE+iqd0w+6pUopDHIXHvotvrNNMDx2k
-	 R8ycsqo90zwpy06kurqclm56h65KCvKjFEX4g7c93gQCOGzJ9v8TWTOzzC0Djf2CW5
-	 5twPc4y1uunRE9CT0OY4SXJ30VyHB9C+OBIWQdo4=
+	b=owuGxKbpJ538iymhyWnRE0eR9djJ6G8F64f+pX5Sdj5xPP8D/tlQJv5OTNanxntYy
+	 NDkDFKMIhUROVMErhB9OPF5v8LOljZXqcVVTdMjHe+lWV9p9H2csZ/GhAoAckrzTtQ
+	 CsDvzGV1Dvy5Msf5XaoNSXQ8vLPcjXqpIE0JpbF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387654AbgGTQKS (ORCPT
+        id S1733241AbgGTQKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:10:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48674 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:10:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387647AbgGTQKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:10:15 -0400
+        id S1731840AbgGTQKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:10:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 367872064B;
-        Mon, 20 Jul 2020 16:10:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F168322CBB;
+        Mon, 20 Jul 2020 16:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261414;
-        bh=OrUqV8JJjkoxK8FuCM07uleGXeKVco3gz7e0rfHRBo0=;
+        s=default; t=1595261417;
+        bh=SctYfMR3QP81Kg16x2UXd6MhWrHdYmtqjLLE50S52Qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dk+TabjISWf+jQvVHxUpUH4insW+w74SbeN3oj+FMUiaXcfU8GFCcu/xsJkDFZbL/
-         +ERkAvS1s0WWKz2NRidAvMqkjcLJETK1LRdX89b204LhWloEWgSydDUJbia5YCzbBn
-         oh+/2SCPuBbKWkzQewVDHs7euP32RWhyoTdmzuTk=
+        b=eazYyY2TkPI8QVLzNoo+0T/TQ4LjNUEQk/8Wqh2NIKh30gHbvmsJy3sijGYrSrxmP
+         FxpIW8C3qRj0Yq5OksbUsaO56k2Vfx2pQDuNquR7c9YTPan3Vg4/8HOk0T9qMAhNUQ
+         5sAHIkc+zeLIzfTGsXW9QsY1msUkxjNKayIetpgw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        stable@vger.kernel.org, Syed Nayyar Waris <syednwaris@gmail.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Andrew F. Davis" <afd@ti.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 077/244] iio:health:afe4404 Fix timestamp alignment and prevent data leak.
-Date:   Mon, 20 Jul 2020 17:35:48 +0200
-Message-Id: <20200720152829.503117733@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 078/244] counter: 104-quad-8: Add lock guards - differential encoder
+Date:   Mon, 20 Jul 2020 17:35:49 +0200
+Message-Id: <20200720152829.552887673@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,70 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Syed Nayyar Waris <syednwaris@gmail.com>
 
-[ Upstream commit f88ecccac4be348bbcc6d056bdbc622a8955c04d ]
+[ Upstream commit 708d98932893cea609386cefdfd190f757f5a61c ]
 
-One of a class of bugs pointed out by Lars in a recent review.
-iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
-to the size of the timestamp (8 bytes).  This is not guaranteed in
-this driver which uses a 40 byte array of smaller elements on the stack.
-As Lars also noted this anti pattern can involve a leak of data to
-userspace and that indeed can happen here.  We close both issues by
-moving to a suitable structure in the iio_priv() data with alignment
-explicitly requested.  This data is allocated with kzalloc so no
-data can leak appart from previous readings.
+Add lock protection from race conditions to 104-quad-8 counter driver
+for differential encoder status code changes. Mutex lock calls used for
+protection.
 
-Fixes: 87aec56e27ef ("iio: health: Add driver for the TI AFE4404 heart monitor")
-Reported-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+Fixes: 954ab5cc5f3e ("counter: 104-quad-8: Support Differential Encoder Cable Status")
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/health/afe4404.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/counter/104-quad-8.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/health/afe4404.c b/drivers/iio/health/afe4404.c
-index e728bbb21ca88..cebb1fd4d0b15 100644
---- a/drivers/iio/health/afe4404.c
-+++ b/drivers/iio/health/afe4404.c
-@@ -83,6 +83,7 @@ static const struct reg_field afe4404_reg_fields[] = {
-  * @regulator: Pointer to the regulator for the IC
-  * @trig: IIO trigger for this device
-  * @irq: ADC_RDY line interrupt number
-+ * @buffer: Used to construct a scan to push to the iio buffer.
-  */
- struct afe4404_data {
- 	struct device *dev;
-@@ -91,6 +92,7 @@ struct afe4404_data {
- 	struct regulator *regulator;
- 	struct iio_trigger *trig;
- 	int irq;
-+	s32 buffer[10] __aligned(8);
- };
+diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+index aa13708c2bc30..9364dc188f8ff 100644
+--- a/drivers/counter/104-quad-8.c
++++ b/drivers/counter/104-quad-8.c
+@@ -1274,18 +1274,26 @@ static ssize_t quad8_signal_cable_fault_read(struct counter_device *counter,
+ 					     struct counter_signal *signal,
+ 					     void *private, char *buf)
+ {
+-	const struct quad8_iio *const priv = counter->priv;
++	struct quad8_iio *const priv = counter->priv;
+ 	const size_t channel_id = signal->id / 2;
+-	const bool disabled = !(priv->cable_fault_enable & BIT(channel_id));
++	bool disabled;
+ 	unsigned int status;
+ 	unsigned int fault;
  
- enum afe4404_chan_id {
-@@ -328,17 +330,17 @@ static irqreturn_t afe4404_trigger_handler(int irq, void *private)
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct afe4404_data *afe = iio_priv(indio_dev);
- 	int ret, bit, i = 0;
--	s32 buffer[10];
+-	if (disabled)
++	mutex_lock(&priv->lock);
++
++	disabled = !(priv->cable_fault_enable & BIT(channel_id));
++
++	if (disabled) {
++		mutex_unlock(&priv->lock);
+ 		return -EINVAL;
++	}
  
- 	for_each_set_bit(bit, indio_dev->active_scan_mask,
- 			 indio_dev->masklength) {
- 		ret = regmap_read(afe->regmap, afe4404_channel_values[bit],
--				  &buffer[i++]);
-+				  &afe->buffer[i++]);
- 		if (ret)
- 			goto err;
- 	}
+ 	/* Logic 0 = cable fault */
+ 	status = inb(priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
  
--	iio_push_to_buffers_with_timestamp(indio_dev, buffer, pf->timestamp);
-+	iio_push_to_buffers_with_timestamp(indio_dev, afe->buffer,
-+					   pf->timestamp);
- err:
- 	iio_trigger_notify_done(indio_dev->trig);
++	mutex_unlock(&priv->lock);
++
+ 	/* Mask respective channel and invert logic */
+ 	fault = !(status & BIT(channel_id));
+ 
+@@ -1317,6 +1325,8 @@ static ssize_t quad8_signal_cable_fault_enable_write(
+ 	if (ret)
+ 		return ret;
+ 
++	mutex_lock(&priv->lock);
++
+ 	if (enable)
+ 		priv->cable_fault_enable |= BIT(channel_id);
+ 	else
+@@ -1327,6 +1337,8 @@ static ssize_t quad8_signal_cable_fault_enable_write(
+ 
+ 	outb(cable_fault_enable, priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
+ 
++	mutex_unlock(&priv->lock);
++
+ 	return len;
+ }
  
 -- 
 2.25.1
