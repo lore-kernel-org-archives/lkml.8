@@ -2,143 +2,197 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FECAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C69C207EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09CA1207EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:49:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Orx+a9RB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rOXPGIWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726301AbgGTEsJ (ORCPT
+        id S1726436AbgGTEtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 00:48:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50616 "EHLO
+        Mon, 20 Jul 2020 00:49:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbgGTEsI (ORCPT
+        with ESMTP id S1725287AbgGTEtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 00:48:08 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24FD7C0619D4
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 21:48:08 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id n24so11164658otr.13
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 21:48:08 -0700 (PDT)
+        Mon, 20 Jul 2020 00:49:03 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD910C0619D2;
+        Sun, 19 Jul 2020 21:49:02 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id t27so12130927ill.9;
+        Sun, 19 Jul 2020 21:49:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=6Nps254wO3Vku/AMs/COcTPJnAHzxFnu9/tet83Jczo=;
-        b=Orx+a9RBBcSgVIEOHFVB374CoAHh0H+dcciHwze7bjd/evrRLoNHoEeHX6AUUXAWPE
-         rlEZJuyYrLtfrbxBEr1f6tOk1hUCeuxitWVtbHQSm1gD5eBMeQnnQmiecOui/n+Wy+CH
-         lVR+yKJxXOVRAwcOkkKdPQDX9l0WSRYT55r6M1O9qVGNeakNm5eWCBq/poyfEr+Mh+xO
-         fvXDBer896r9lWpDPRKLzlOfw7HMuYx8YhXqqDQ9X/jiqcowwnnertv+u6tOMyTf4L6x
-         VhxLTL6Tuzj5Wcb/bIoRfQ7SJeG3OQOLcWf9uL2ccqf9yxAULz7Zp0JITwEJl9p0MruI
-         UiVg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hykuBzcQ6JT3wzEabWJ6sI/goux4rgrhcf0X//gbPRY=;
+        b=rOXPGIWdn6zcC4rUUB7g7aKt7IlknEPmZGirbVCRmNoSa/ISlUoxy2qQQJXmjJXFiZ
+         SKYcvaBbYwvmTJDG9Wkyj4jN4QTH1419wfnS0uHOowdvdhrOrQmg331XJAKc3k+kTfm8
+         W4iIJuNL+Rvg7Kyq+8ZLr7vnztCJ+DCgjola3CNBgIa+l5YD2Lma09yf7btHE9G6RT6l
+         5DLeY/Gxai/EuQa2QdAlfwVltgffOwk4Tx22pzrAGEkaSLQ5zTcg4UgYyZv8xGkh01Uv
+         EoRD0uv/X8Ra0PV3jqbtae3MBRY9bJ7XMoQrXbNd+H+FVy38uikZSi+PCPgVbPKwQCTB
+         VWjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=6Nps254wO3Vku/AMs/COcTPJnAHzxFnu9/tet83Jczo=;
-        b=i8aBqb6nRavNnqcYOyQtLNfBkTn2r3HCxebxOIU8e20KKUcocVBED1TVD4TA1EDp4A
-         MpFkmIXshxqfwDYl0QVCYvcy5+VGSxrhnegITBmbOT7SjeXBRuaWBQulpW7DO4JES0TE
-         ehzIvuMt/oP45bmQsBczigfgksMJXLsp2YrXhu6vf5EZHhWdu7+jjiUF9iGRvbvJYuH4
-         dKTOcFgkrkdwoc9R07730RoKYuKZ1IU3uXOxu8+FschosMPumzo75WadGXRMHSSYyVZm
-         agaLbNwjRE8oDFLy8n/K3CWchYVuX8pogtlko0OxRhAOn1LfP34apxBc2fq+YkJXxxW2
-         EQ+Q==
-X-Gm-Message-State: AOAM5302AFbECBNsehfehdoLoOII6sx0zXuHi7dMo/3QWwiCOgW+bd0V
-        mnZZBkAlfzjcb6zVkaH3KbW9dA==
-X-Google-Smtp-Source: ABdhPJyxUSbYws6hgiXi/FXNrgA6DQiqHyVhJ/vCcW5ZcJVVBJfAngGkSI4Kx13zzYcqaz/Mipp0kQ==
-X-Received: by 2002:a9d:480d:: with SMTP id c13mr18932515otf.224.1595220487215;
-        Sun, 19 Jul 2020 21:48:07 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id w17sm3914020oia.16.2020.07.19.21.48.04
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Sun, 19 Jul 2020 21:48:06 -0700 (PDT)
-Date:   Sun, 19 Jul 2020 21:47:49 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-cc:     Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH v16 00/22] per memcg lru_lock
-In-Reply-To: <5f2401d3-dd4f-cbc6-8cb4-4e92fc64998c@linux.alibaba.com>
-Message-ID: <alpine.LSU.2.11.2007192144150.1478@eggly.anvils>
-References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com> <CAKgT0UcKVyTXQ=tGv_uMV+fSvoH_-cuG9zA_zhE+S8Ou11gt=w@mail.gmail.com> <57c619e7-da7e-198e-3de8-530bf19b9450@linux.alibaba.com> <alpine.LSU.2.11.2007190801490.3521@eggly.anvils>
- <5f2401d3-dd4f-cbc6-8cb4-4e92fc64998c@linux.alibaba.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hykuBzcQ6JT3wzEabWJ6sI/goux4rgrhcf0X//gbPRY=;
+        b=ZOwM5MII57GvY/kFGOIjxP+BiIdHLEjy5DiO+wGwmvdeaTCih/CFkQLXqqk/Q/0i5a
+         RwrO1XcssG7aIPPdgX0vsKzWbOWMfRAtdjbjCEf6t6fObfFYyASxCI7+PI9PgJ8vraVN
+         rlFt8cCFH9V5v3cPkLPXJr6hHjvPbFJFMR0LcWlowydT6J5b+o2+/SRGULflFNfdW7pd
+         Tt8he8FzUEgC/iATYkOgTwlMTmuooQY+2YDJMbL26nARmtjR726TMXydrQkK9X+oBg9d
+         AkBbgDXsoYaRjyMyfQXdsC0GW2z8PvGGKC7p3aLAqujotOD5gfiPD6DaF8LH0yfL377k
+         IWKg==
+X-Gm-Message-State: AOAM531PQ0q7IW6S10TixSO/Yz9uxmLAe7qhqU/Xo80vwExbG5k9nN3T
+        +SscVj8TKPhT/0ETPDUNYGSzb3P2HYlpLBWGOEE=
+X-Google-Smtp-Source: ABdhPJzhCufX0FYkh/NJ8xIrGFKFZlshKwqWHB0QcwGE6RQ3jDvOM2oYeSZg+1CrugUcYu1S1tNhgdH7OZb+TjHmsyg=
+X-Received: by 2002:a92:5b4b:: with SMTP id p72mr21120945ilb.285.1595220542254;
+ Sun, 19 Jul 2020 21:49:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="0-1916823428-1595220486=:1478"
+References: <20200715212227.26436-1-cphealy@gmail.com> <20200720031534.GJ11560@dragon>
+In-Reply-To: <20200720031534.GJ11560@dragon>
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Sun, 19 Jul 2020 21:48:51 -0700
+Message-ID: <CAFXsbZqfC2zq7OFCYYDCMY6YQghjSawAAhm4Hwvc6FVRuwt2wA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: ZII: Disable HW Ethernet switch reset GPIO
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sun, Jul 19, 2020 at 8:15 PM Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Wed, Jul 15, 2020 at 02:22:27PM -0700, Chris Healy wrote:
+> > Disable Ethernet switch reset GPIO with ZII platforms that have it
+> > enabled to sync up with existing ZII platforms that already have
+> > it disabled.
+>
+> I do not follow it.  The reset GPIO is part of hardware description.  We
+> shouldn't add or remove it for sake of sync-up with other platforms.
 
---0-1916823428-1595220486=:1478
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+I see that my description is not very good.  What I should have said
+is that we don't want to use the HW reset GPIO as it results in things
+being done that we do not want done.  Specifically, when the switch is
+hit with the HW reset GPIO, it results in the switch's copper PHYs
+being HW reset which we want to avoid as this results in unnecessary
+network downtime on a soft reboot of the processor.  With the HW reset
+GPIO not in the devicetree description, the switch driver resorts to
+doing a SW reset which resets the switch core but not the switch's
+copper PHYs.  This results in a much shorter network downtime on a
+soft reboot of the processor.
 
-On Mon, 20 Jul 2020, Alex Shi wrote:
-> =E5=9C=A8 2020/7/19 =E4=B8=8B=E5=8D=8811:23, Hugh Dickins =E5=86=99=E9=81=
-=93:
-> > I noticed that 5.8-rc5, with lrulock v16 applied, took significantly
-> > longer to run loads than without it applied, when there should have bee=
-n
-> > only slight differences in system time. Comparing /proc/vmstat, somethi=
-ng
-> > that stood out was "pgrotated 0" for the patched kernels, which led her=
-e:
-> >=20
-> > If pagevec_lru_move_fn() is now to TestClearPageLRU (I have still not
-> > decided whether that's good or not, but assume here that it is good),
-> > then functions called though it must be changed not to expect PageLRU!
-> >=20
-> > Signed-off-by: Hugh Dickins <hughd@google.com>
->=20
-> Good catch!
->=20
-> Thanks a lot, Hugh!=20
-> except 6 changes should apply, looks we add one more in swap.c file to st=
-op
-> !PageRLU further actions!
+I can do a v2 of the patch with the description updated if you think
+it would be appropriate.
 
-Agreed, that's a minor optimization that wasn't done before,
-that can be added (but it's not a fix like the rest of them).
-
->=20
-> Many Thanks!
-> Alex
->=20
-> @@ -649,7 +647,7 @@ void deactivate_file_page(struct page *page)
->          * In a workload with many unevictable page such as mprotect,
->          * unevictable page deactivation for accelerating reclaim is poin=
-tless.
->          */
-> -       if (PageUnevictable(page))
-> +       if (PageUnevictable(page) || !PageLRU(page))
->                 return;
->=20
->         if (likely(get_page_unless_zero(page))) {
---0-1916823428-1595220486=:1478--
+>
+> Shawn
+>
+> >
+> > Signed-off-by: Chris Healy <cphealy@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/vf610-zii-cfu1.dts      | 2 --
+> >  arch/arm/boot/dts/vf610-zii-spb4.dts      | 2 --
+> >  arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts  | 2 --
+> >  arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts | 2 --
+> >  4 files changed, 8 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+> > index ce1920c052fc..c2668230a4c0 100644
+> > --- a/arch/arm/boot/dts/vf610-zii-cfu1.dts
+> > +++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+> > @@ -170,7 +170,6 @@
+> >                       interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+> >                       interrupt-controller;
+> >                       #interrupt-cells = <2>;
+> > -                     reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
+> >
+> >                       ports {
+> >                               #address-cells = <1>;
+> > @@ -354,7 +353,6 @@
+> >       pinctrl_switch: switch-grp {
+> >               fsl,pins = <
+> >                       VF610_PAD_PTB28__GPIO_98                0x3061
+> > -                     VF610_PAD_PTE2__GPIO_107                0x1042
+> >               >;
+> >       };
+> >
+> > diff --git a/arch/arm/boot/dts/vf610-zii-spb4.dts b/arch/arm/boot/dts/vf610-zii-spb4.dts
+> > index 55b4201e27f6..261317340189 100644
+> > --- a/arch/arm/boot/dts/vf610-zii-spb4.dts
+> > +++ b/arch/arm/boot/dts/vf610-zii-spb4.dts
+> > @@ -127,7 +127,6 @@
+> >                       pinctrl-names = "default";
+> >                       reg = <0>;
+> >                       eeprom-length = <65536>;
+> > -                     reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
+> >                       interrupt-parent = <&gpio3>;
+> >                       interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+> >                       interrupt-controller;
+> > @@ -312,7 +311,6 @@
+> >
+> >       pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
+> >               fsl,pins = <
+> > -                     VF610_PAD_PTE2__GPIO_107                0x31c2
+> >                       VF610_PAD_PTB28__GPIO_98                0x219d
+> >               >;
+> >       };
+> > diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+> > index a6c22a79779e..e37b9643269b 100644
+> > --- a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+> > +++ b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+> > @@ -113,7 +113,6 @@
+> >                       pinctrl-names = "default";
+> >                       reg = <0>;
+> >                       eeprom-length = <65536>;
+> > -                     reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
+> >                       interrupt-parent = <&gpio3>;
+> >                       interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+> >                       interrupt-controller;
+> > @@ -288,7 +287,6 @@
+> >
+> >       pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
+> >               fsl,pins = <
+> > -                     VF610_PAD_PTE2__GPIO_107                0x31c2
+> >                       VF610_PAD_PTB28__GPIO_98                0x219d
+> >               >;
+> >       };
+> > diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+> > index 3d05c894bdc0..b3d6d4b9fa9c 100644
+> > --- a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+> > +++ b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+> > @@ -141,7 +141,6 @@
+> >                       pinctrl-names = "default";
+> >                       reg = <0>;
+> >                       eeprom-length = <65536>;
+> > -                     reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
+> >                       interrupt-parent = <&gpio3>;
+> >                       interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+> >                       interrupt-controller;
+> > @@ -319,7 +318,6 @@
+> >
+> >       pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
+> >               fsl,pins = <
+> > -                     VF610_PAD_PTE2__GPIO_107                0x31c2
+> >                       VF610_PAD_PTB28__GPIO_98                0x219d
+> >               >;
+> >       };
+> > --
+> > 2.21.3
+> >
