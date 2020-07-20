@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0E3C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDDEC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 082B620773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F502073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262230;
-	bh=gY7M0vHhcIvdmRdJ5D1OZsFINYfqQm6+7Tw5ej3VREQ=;
+	s=default; t=1595262232;
+	bh=qUgvMVeuGCwJse6LZQTi1a4mzS0/QlP8Jmm/3rSEGEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xlNzbZoJIZ0qIcqlKS/2E9GjKg2YFME5wPJ+VmL2OK7qyVINvkKxBEZbZ1ABSstHb
-	 3lU+3i105zPnEKSsYjogamuppH0/AZlAeFeTOFTQcMsFY8EEfHJbyW/nio3ps3zhps
-	 1Zw6n4BkWeekRwxAFjB84UMT13T4hUiXW2AM/clA=
+	b=BMKq8FX7paI5hxmLNiV7PdlsJ8WfPcWZtdxW8gI9Ti2/xjlXEF4DpFfjHGSnuTTId
+	 G20mjqrNcGivBRpjrGwCvbPIbzORkg2DTIySZsen9NVkpa4F14SDCv3gRndwboTQdA
+	 lCdoNJDrtW1ADELYSHDrI/Blyr7F+EQOVSJ+D27o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387643AbgGTQXs (ORCPT
+        id S1732887AbgGTQEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:23:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39892 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:04:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732893AbgGTQEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:04:48 -0400
+        id S1732861AbgGTQEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:04:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F41C20734;
-        Mon, 20 Jul 2020 16:04:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30D2F20773;
+        Mon, 20 Jul 2020 16:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261087;
-        bh=gY7M0vHhcIvdmRdJ5D1OZsFINYfqQm6+7Tw5ej3VREQ=;
+        s=default; t=1595261076;
+        bh=qUgvMVeuGCwJse6LZQTi1a4mzS0/QlP8Jmm/3rSEGEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uq5N5tSoHfZOw01btgiM11rZ/lLIRDmX5lJs8AGDYyf3Z/uJJdLdGRUnB+Rp8lt76
-         PupVg6Lu721wnyyy1P+5sJ7V2wvT0BUnaL0NAbmBzkO4sPU/z1D2FR4mxm5OCEojzj
-         3UDcQx9CQe5pjZOlZ43O31Z955Tw63yUkLkah5Eg=
+        b=0njkhF+stRpGifFNT+8XBH1nIuSDdCK+wzOXImL1H6gWr4KlemktsBH3ZxgPBUpdX
+         CcIn2S+R4lGm1x/7Le0TUikJ1BzVRbq3EjPR0YsP9GqWuwPTTj1DSPsdVtbhphP5fx
+         aqW+6SeyngT6u9kiw3MGXHjSAQjF9tKaEtwPlUj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Le Ma <le.ma@amd.com>,
-        Xiaojie Yuan <xiaojie.yuan@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 205/215] drm/amdgpu/sdma5: fix wptr overwritten in ->get_wptr()
-Date:   Mon, 20 Jul 2020 17:38:07 +0200
-Message-Id: <20200720152829.915314645@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        youngjun <her0gyugyu@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.4 170/215] ovl: inode reference leak in ovl_is_inuse true case.
+Date:   Mon, 20 Jul 2020 17:37:32 +0200
+Message-Id: <20200720152828.259729336@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -61,73 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaojie Yuan <xiaojie.yuan@amd.com>
+From: youngjun <her0gyugyu@gmail.com>
 
-commit 05051496b2622e4d12e2036b35165969aa502f89 upstream.
+commit 24f14009b8f1754ec2ae4c168940c01259b0f88a upstream.
 
-"u64 *wptr" points to the the wptr value in write back buffer and
-"*wptr = (*wptr) >> 2;" results in the value being overwritten each time
-when ->get_wptr() is called.
+When "ovl_is_inuse" true case, trap inode reference not put.  plus adding
+the comment explaining sequence of ovl_is_inuse after ovl_setup_trap.
 
-umr uses /sys/kernel/debug/dri/0/amdgpu_ring_sdma0 to get rptr/wptr and
-decode ring content and it is affected by this issue.
-
-fix and simplify the logic similar as sdma_v4_0_ring_get_wptr().
-
-v2: fix for sdma5.2 as well
-v3: drop sdma 5.2 changes for 5.8 and stable
-
-Suggested-by: Le Ma <le.ma@amd.com>
-Signed-off-by: Xiaojie Yuan <xiaojie.yuan@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Fixes: 0be0bfd2de9d ("ovl: fix regression caused by overlapping layers detection")
+Cc: <stable@vger.kernel.org> # v4.19+
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: youngjun <her0gyugyu@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c |   26 ++++++++------------------
- 1 file changed, 8 insertions(+), 18 deletions(-)
+ fs/overlayfs/super.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-@@ -286,30 +286,20 @@ static uint64_t sdma_v5_0_ring_get_rptr(
- static uint64_t sdma_v5_0_ring_get_wptr(struct amdgpu_ring *ring)
- {
- 	struct amdgpu_device *adev = ring->adev;
--	u64 *wptr = NULL;
--	uint64_t local_wptr = 0;
-+	u64 wptr;
+--- a/fs/overlayfs/super.c
++++ b/fs/overlayfs/super.c
+@@ -1356,14 +1356,23 @@ static int ovl_get_lower_layers(struct s
+ 		if (err < 0)
+ 			goto out;
  
- 	if (ring->use_doorbell) {
- 		/* XXX check if swapping is necessary on BE */
--		wptr = ((u64 *)&adev->wb.wb[ring->wptr_offs]);
--		DRM_DEBUG("wptr/doorbell before shift == 0x%016llx\n", *wptr);
--		*wptr = (*wptr) >> 2;
--		DRM_DEBUG("wptr/doorbell after shift == 0x%016llx\n", *wptr);
-+		wptr = READ_ONCE(*((u64 *)&adev->wb.wb[ring->wptr_offs]));
-+		DRM_DEBUG("wptr/doorbell before shift == 0x%016llx\n", wptr);
- 	} else {
--		u32 lowbit, highbit;
--
--		wptr = &local_wptr;
--		lowbit = RREG32(sdma_v5_0_get_reg_offset(adev, ring->me, mmSDMA0_GFX_RB_WPTR)) >> 2;
--		highbit = RREG32(sdma_v5_0_get_reg_offset(adev, ring->me, mmSDMA0_GFX_RB_WPTR_HI)) >> 2;
--
--		DRM_DEBUG("wptr [%i]high== 0x%08x low==0x%08x\n",
--				ring->me, highbit, lowbit);
--		*wptr = highbit;
--		*wptr = (*wptr) << 32;
--		*wptr |= lowbit;
-+		wptr = RREG32(sdma_v5_0_get_reg_offset(adev, ring->me, mmSDMA0_GFX_RB_WPTR_HI));
-+		wptr = wptr << 32;
-+		wptr |= RREG32(sdma_v5_0_get_reg_offset(adev, ring->me, mmSDMA0_GFX_RB_WPTR));
-+		DRM_DEBUG("wptr before shift [%i] wptr == 0x%016llx\n", ring->me, wptr);
- 	}
++		/*
++		 * Check if lower root conflicts with this overlay layers before
++		 * checking if it is in-use as upperdir/workdir of "another"
++		 * mount, because we do not bother to check in ovl_is_inuse() if
++		 * the upperdir/workdir is in fact in-use by our
++		 * upperdir/workdir.
++		 */
+ 		err = ovl_setup_trap(sb, stack[i].dentry, &trap, "lowerdir");
+ 		if (err)
+ 			goto out;
  
--	return *wptr;
-+	return wptr >> 2;
- }
+ 		if (ovl_is_inuse(stack[i].dentry)) {
+ 			err = ovl_report_in_use(ofs, "lowerdir");
+-			if (err)
++			if (err) {
++				iput(trap);
+ 				goto out;
++			}
+ 		}
  
- /**
+ 		mnt = clone_private_mount(&stack[i]);
 
 
