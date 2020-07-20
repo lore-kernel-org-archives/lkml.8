@@ -2,100 +2,153 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE663C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D54BC22482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354D0208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:05:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qGH3EGZr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbgGTTCz (ORCPT
+        id S1729620AbgGTTFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:02:55 -0400
-Received: from mga09.intel.com ([134.134.136.24]:30271 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgGTTCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:02:54 -0400
-IronPort-SDR: 2ZpN6OTaCMM8tQ+CKZBaVMIhfC1VQ2/ifZkuaKJNXEZFUJfBp/mD5IrJlk4UWi8rZx//qZfhoi
- KaNrvplFrSOw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="151337478"
-X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="scan'208";a="151337478"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 12:02:53 -0700
-IronPort-SDR: CqcdSqdzBE48X13xHT08Le1SiJa9oSrPGw/UWMKkGmAAZrt953WTZBHj4glxQHHYKOefE9QZKC
- funQyprRdaig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="scan'208";a="327627634"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 20 Jul 2020 12:02:53 -0700
-Received: from [10.255.230.139] (kliang2-mobl.ccr.corp.intel.com [10.255.230.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id C507E580824;
-        Mon, 20 Jul 2020 12:02:52 -0700 (PDT)
-Subject: Re: [PATCH V6 06/14] perf/x86/intel: Use switch in
- intel_pmu_disable/enable_event
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-References: <20200717140554.22863-1-kan.liang@linux.intel.com>
- <20200717140554.22863-7-kan.liang@linux.intel.com>
- <20200720162241.GU10769@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <f6be644e-5ec8-edd8-a451-0e0cbd0943eb@linux.intel.com>
-Date:   Mon, 20 Jul 2020 15:02:50 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 15:05:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbgGTTFM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 15:05:12 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08F26C061794;
+        Mon, 20 Jul 2020 12:05:12 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id g26so6433808qka.3;
+        Mon, 20 Jul 2020 12:05:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6xNou+cHACWFvHGNXzPofMh+CBZIQ8xW+dhFT3jGEbo=;
+        b=qGH3EGZrbBYJFFXLpy9788889L91tGMGugiOZhBG5mkmuOaHr8qDM4J+IGuyanGPhu
+         Vxw9qvA8wjLil9OOQMqcA36LhPMFBJkuR0e9m5fhddTmTp9pHfA5IGt9YTi+3ndcaQuR
+         L4iHvaYG3FlYLQNaKPSDnM/F4BFGwLPeEeqHRxhnjrRM0rM5cBpm0jx1vXcUuQGFT8e3
+         gDjYTnWK7GtT4p+w6abgKeVqvOO0ncOtFM2MFragZvc27GLYAM0zDQ9xVdCtz4YlFta7
+         IhjYfdyVkfF3bEeAeEZ5QtiyT0AN2J4NIEHs561V0bBVGf9tE1zwOcx6W6cHIDxqNI8F
+         TQ3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=6xNou+cHACWFvHGNXzPofMh+CBZIQ8xW+dhFT3jGEbo=;
+        b=hyHMdevaBGNI0RExZtvqrNxVzTO56PWJhF1K8eH7vnlyr5in+aMbfqvzGGSHxYb0Nk
+         JvVdhzCnhD7m9Cjp3s2Kuk8JpAO5uoJGTkg2PRt6bWFd2KwhqN/nj3VTktM9svpFQEF0
+         /8tyv871D3q7z7gtZZBWR4X/sdffvRBd3vYwPvgdEcsGYFCqpky27t2WbfjwYbiMNk44
+         kwlzIlHLmDdnvi96QliJ+L1GyFoIPMuLHYCS9QNw9PeRDeHZdULjhqAIldrao95RGjHy
+         DfS7+CLnYiF+Gyf35pqMmRDQPbjHXUB+l/EOxZCWeu4KLZpdruWyEwWbPJRXiUn/CyvV
+         rC0A==
+X-Gm-Message-State: AOAM531QnWJdqdIrzujGLmpTr5qQ55OMUHZSGsCnqsxeT2E07M72ZDML
+        1byPTWSaf1jILN8WaDNI1A==
+X-Google-Smtp-Source: ABdhPJzrXQwdWF+qa2wzWCIT1nZ5JLyIGIeu284ZR14tqRjIjGzf7/7OV2hINf0xqBRSi/yBapdmYQ==
+X-Received: by 2002:a37:80c:: with SMTP id 12mr7349989qki.149.1595271911228;
+        Mon, 20 Jul 2020 12:05:11 -0700 (PDT)
+Received: from PWN (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
+        by smtp.gmail.com with ESMTPSA id r2sm19318751qtn.27.2020.07.20.12.05.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 12:05:10 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 15:05:08 -0400
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs@googlegroups.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v1] usbhid: Fix slab-out-of-bounds
+ write in hiddev_ioctl_usage()
+Message-ID: <20200720190508.GA1946@PWN>
+Reply-To: 20200720121257.GJ2571@kadam
+References: <20200718231218.170730-1-yepeilin.cs@gmail.com>
+ <20200720115400.GI2549@kadam>
+ <20200720121257.GJ2571@kadam>
 MIME-Version: 1.0
-In-Reply-To: <20200720162241.GU10769@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720121257.GJ2571@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 20, 2020 at 03:12:57PM +0300, Dan Carpenter wrote:
+> So another option would be to just add HIDIOCGUSAGE and HIDIOCSUSAGE to
+> the earlier check.  That risks breaking userspace.  Another option is to
+> just add a check like you did earlier to the HIDIOCGUSAGE case.
+> Probably just do option #2 and resend.
 
+Sure, I will just add the same check to the HIDIOCGUSAGE case for the
+time being. Thank you for the detailed explanation.
 
-On 7/20/2020 12:22 PM, Peter Zijlstra wrote:
-> On Fri, Jul 17, 2020 at 07:05:46AM -0700, kan.liang@linux.intel.com wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> Many items are checked in the intel_pmu_disable/enable_event. More items
->> will be added later, e.g. perf metrics events.
->>
->> Use switch, which is more efficient, to replace the if-else.
-> 
-> Perhaps explain how; does this actually generate a jump-table?
+Here's what I found after digging a bit further though:
 
-As my understanding, some optimizing compilers may compile a switch 
-statement into a jump-table. So it depends.
+hid_parser_main() calls different functions in order to process
+different type of items:
 
-Another advantage of switch statement is to improve the readability of 
-the code. I think I missed it in the commit message.
+drivers/hid/hid-core.c:1193:
 
-I will change the commit message as below in V7.
+	static int (*dispatch_type[])(struct hid_parser *parser,
+				      struct hid_item *item) = {
+		hid_parser_main,
+		hid_parser_global,
+		hid_parser_local,
+		hid_parser_reserved
+	};
 
-"Currently, the if-else is used in the intel_pmu_disable/enable_event to 
-check the type of an event. It works well, but with more and more types 
-added later, e.g., perf metrics, compared to the switch statement, the 
-if-else may impair the readability of the code.
+In this case, hid_parser_main() calls hid_add_field(), which in turn
+calls hid_register_field(), which allocates the `field` object as you
+mentioned:
 
-Also, some optimizing compilers may compile a switch statement into a 
-jump-table which is more efficient than if-else.
+drivers/hid/hid-core.c:102:
 
-Use switch to replace the if-else in the intel_pmu_disable/enable_event()."
+	field = kzalloc((sizeof(struct hid_field) +
+			 usages * sizeof(struct hid_usage) +
+			 values * sizeof(unsigned)), GFP_KERNEL);
 
+Here, `values` equals to `global.report_count`. See how it is being
+called:
 
-Thanks,
-Kan
+drivers/hid/hid-core.c:303:
+
+	field = hid_register_field(report, usages, parser->global.report_count);
+
+In hid_parser_main(), `global.report_count` can be set by calling
+hid_parser_global().
+
+However, the syzkaller reproducer made hid_parser_main() to call
+hid_parser_global() __before__ `global.report_count` is properly set. It's
+zero. So hid_register_field() allocated `field` with `values` equals to
+zero - No room for value[] at all. I believe this caused the bug.
+
+Apparently hid_parser_main() doesn't care about which item (main, local,
+global and reserved) gets processed first. I am new to this code and I
+don't know whether this is by design, but this arbitrarity is
+apparently causing some issues.
+
+As another example, in hid_add_field():
+
+drivers/hid/hid-core.c:289:
+
+	report->size += parser->global.report_size * parser->global.report_count;
+
+If `global.report_count` is zero, `report->size` gets increased by zero.
+Is this working as intended? It seems weird to me.
+
+Thank you,
+
+Peilin Ye
