@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E33C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FA8C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17BF6206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CEA720773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262050;
-	bh=wUEdoBuxpspvQ+0Qz+jfMspqSrnAzZN/7y/7hGPDsmw=;
+	s=default; t=1595262052;
+	bh=m1vrAI3M4keS+E/alhoTU7+dmNsnDQK4b3MZvYIXHlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PKh9U7KiDbWolKNBNHS3FcsIIhBfZ6eX3ZPZxuu35Z63rqI8TgthtYa9ET3DNEml6
-	 Tikp6D5UfmYca/FvCuvRTMpPruOmRWXOz52DWLHwSkjD4/OlJpDWzHZtODxI+vp3bj
-	 PH9vk9RHyMwaVVbyV+O4rXjrpeZTrhDAMAb0XMzw=
+	b=toFH3K/jDzi9LbSPPQMuDv6vASnCy/2ZiLP9IDAooks5zaEgjVa89zsujUJGA7YXI
+	 Ka5pJSdNLpRfxREoC9fxezCBImkkykviyeKvQ9VkCufC5JwJlKZDzKrnRfbEmyxu3p
+	 VR0femzkUxyBcph8LRezoMVDyWoSUxcAQJArCrnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388514AbgGTQUs (ORCPT
+        id S2387530AbgGTQJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:20:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47466 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:09:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387513AbgGTQJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:09:31 -0400
+        id S2387513AbgGTQJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:09:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEF4A2064B;
-        Mon, 20 Jul 2020 16:09:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 917F72064B;
+        Mon, 20 Jul 2020 16:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261370;
-        bh=wUEdoBuxpspvQ+0Qz+jfMspqSrnAzZN/7y/7hGPDsmw=;
+        s=default; t=1595261362;
+        bh=m1vrAI3M4keS+E/alhoTU7+dmNsnDQK4b3MZvYIXHlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=APVkoegAVXRUhCiT7NvMNMa/zOcwi2tMd9+Ydt58bt6ZbvYH5QdePhxMmcqkbVDRZ
-         qiApi5XSn0iM6M0LWMGCGbAe7kl/JatC0xiJiOv5Wpl6kFORpqiMPACvEYB32on2f0
-         1Hw55PMFI+ARDcx6cBd0XZ3EkmrpKLj0Vx3OHwIc=
+        b=FH1pkzPVktEP5jRTwRLU+/6OrSSVu517aFRlvNG0n61qZeJXlEY0jgTRwge0pGYQi
+         qmqM6z5o+UP2u9i6hIQndaZzhfGLSb1KX3hmUVulHscfI3cSOK3ifsssZ0STk4Qsra
+         HjmgcixKDbVT/AQUeVIWM+UUb6K6+/WGJClaEQh4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 074/244] spi: spi-fsl-dspi: Fix lockup if device is shutdown during SPI transfer
-Date:   Mon, 20 Jul 2020 17:35:45 +0200
-Message-Id: <20200720152829.358504083@linuxfoundation.org>
+        stable@vger.kernel.org, Yixin Zhang <yixin.zhang@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 089/244] dmaengine: idxd: cleanup workqueue config after disabling
+Date:   Mon, 20 Jul 2020 17:36:00 +0200
+Message-Id: <20200720152830.075252592@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -62,57 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Dave Jiang <dave.jiang@intel.com>
 
-[ Upstream commit 3c525b69e8c1a9a6944e976603c7a1a713e728f9 ]
+[ Upstream commit da32b28c95a79e399e18c03f8178f41aec9c66e4 ]
 
-During shutdown, the driver should unregister the SPI controller
-and stop the hardware.  Otherwise the dspi_transfer_one_message() could
-wait on completion infinitely.
+After disabling a device, we should clean up the internal state for
+the wqs and zero out the configuration registers. Without doing so can cause
+issues when the user reprogram the wqs.
 
-Additionally, calling spi_unregister_controller() first in device
-shutdown reverse-matches the probe function, where SPI controller is
-registered at the end.
-
-Fixes: dc234825997e ("spi: spi-fsl-dspi: Adding shutdown hook")
-Reported-by: Vladimir Oltean <olteanv@gmail.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200622110543.5035-2-krzk@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: c52ca478233c ("dmaengine: idxd: add configuration component of driver")
+Reported-by: Yixin Zhang <yixin.zhang@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Tested-by: Yixin Zhang <yixin.zhang@intel.com>
+Link: https://lore.kernel.org/r/159311264246.1198.11955791213681679428.stgit@djiang5-desk3.ch.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-dspi.c | 15 +--------------
- 1 file changed, 1 insertion(+), 14 deletions(-)
+ drivers/dma/idxd/device.c | 25 +++++++++++++++++++++++++
+ drivers/dma/idxd/idxd.h   |  1 +
+ drivers/dma/idxd/sysfs.c  |  5 +++++
+ 3 files changed, 31 insertions(+)
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 38d337f0967db..e0b30e4b1b695 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -1461,20 +1461,7 @@ static int dspi_remove(struct platform_device *pdev)
- 
- static void dspi_shutdown(struct platform_device *pdev)
- {
--	struct spi_controller *ctlr = platform_get_drvdata(pdev);
--	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
--
--	/* Disable RX and TX */
--	regmap_update_bits(dspi->regmap, SPI_MCR,
--			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF,
--			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF);
--
--	/* Stop Running */
--	regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
--
--	dspi_release_dma(dspi);
--	clk_disable_unprepare(dspi->clk);
--	spi_unregister_controller(dspi->ctlr);
-+	dspi_remove(pdev);
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 8d79a8787104d..8d2718c585dc6 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -320,6 +320,31 @@ void idxd_wq_unmap_portal(struct idxd_wq *wq)
+ 	devm_iounmap(dev, wq->dportal);
  }
  
- static struct platform_driver fsl_dspi_driver = {
++void idxd_wq_disable_cleanup(struct idxd_wq *wq)
++{
++	struct idxd_device *idxd = wq->idxd;
++	struct device *dev = &idxd->pdev->dev;
++	int i, wq_offset;
++
++	lockdep_assert_held(&idxd->dev_lock);
++	memset(&wq->wqcfg, 0, sizeof(wq->wqcfg));
++	wq->type = IDXD_WQT_NONE;
++	wq->size = 0;
++	wq->group = NULL;
++	wq->threshold = 0;
++	wq->priority = 0;
++	clear_bit(WQ_FLAG_DEDICATED, &wq->flags);
++	memset(wq->name, 0, WQ_NAME_SIZE);
++
++	for (i = 0; i < 8; i++) {
++		wq_offset = idxd->wqcfg_offset + wq->id * 32 + i * sizeof(u32);
++		iowrite32(0, idxd->reg_base + wq_offset);
++		dev_dbg(dev, "WQ[%d][%d][%#x]: %#x\n",
++			wq->id, i, wq_offset,
++			ioread32(idxd->reg_base + wq_offset));
++	}
++}
++
+ /* Device control bits */
+ static inline bool idxd_is_enabled(struct idxd_device *idxd)
+ {
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index b8f8a363b4a71..908c8d0ef3ab6 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -290,6 +290,7 @@ int idxd_wq_enable(struct idxd_wq *wq);
+ int idxd_wq_disable(struct idxd_wq *wq);
+ int idxd_wq_map_portal(struct idxd_wq *wq);
+ void idxd_wq_unmap_portal(struct idxd_wq *wq);
++void idxd_wq_disable_cleanup(struct idxd_wq *wq);
+ 
+ /* submission */
+ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc);
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index 3999827970aba..fbb455ece81e8 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -315,6 +315,11 @@ static int idxd_config_bus_remove(struct device *dev)
+ 		idxd_unregister_dma_device(idxd);
+ 		spin_lock_irqsave(&idxd->dev_lock, flags);
+ 		rc = idxd_device_disable(idxd);
++		for (i = 0; i < idxd->max_wqs; i++) {
++			struct idxd_wq *wq = &idxd->wqs[i];
++
++			idxd_wq_disable_cleanup(wq);
++		}
+ 		spin_unlock_irqrestore(&idxd->dev_lock, flags);
+ 		module_put(THIS_MODULE);
+ 		if (rc < 0)
 -- 
 2.25.1
 
