@@ -2,1008 +2,221 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE56C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8ADFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6A96208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B188122CB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:20:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lzTdQNSB"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="fBfhXqeR";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ck4SimZf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbgGTUSv (ORCPT
+        id S1731157AbgGTUUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 16:18:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730142AbgGTUSv (ORCPT
+        Mon, 20 Jul 2020 16:20:38 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:35144 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729223AbgGTUUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 16:18:51 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BFB0C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:18:50 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id l6so9205781plt.7
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:18:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=IYWIdH+NGn9f+uT9+p8Svev5ztA1QXiSTHkvwPECjIk=;
-        b=lzTdQNSBlRpMrLjIcHSSvmo+F43QULnJblFSjXX0+ameOokbH3dbzODrESZLq/8mPW
-         pZVyMqvN2PHt+yfQQKSXP86BmNAqOqG8tVFUvlcU2iXKRnc1AlBj122e60gAFWj1ZJMb
-         eLBMYBDH3tBBHm01aCnoM0EqfKB+1pFfwBiig=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=IYWIdH+NGn9f+uT9+p8Svev5ztA1QXiSTHkvwPECjIk=;
-        b=LCTlL6OAsu03ATGNCp8wJxm6AHNQpzb7sh23mlMURoKCKoiypGewkyBoXCAiUCoh2H
-         d8Dx6BWhvVtzK5r4hPeQN6MTuqNeHJyEJDyfBTJseE9oxZkk3jxIUSM54tRHF2C60vfr
-         xbCNv/2e5shJWuhsh5skwUJm/7pAsABKHoNKrwrkZPxlJ5WQn4NWl34z1MJ0608fInFp
-         SR6pPgyBrDWtk0goTF6tqBai72YGYzVQ/Us1/WsJnRCrqByah4OvV6nYS5rNY0as7SD8
-         /lmUMthuGHxSRwi6Hb0+eHHoELft5Gr4OtIA/PF3AsBWNdXiMq2g3DD0/6br6EAXGAOi
-         hJQg==
-X-Gm-Message-State: AOAM5323LDyV1LLo6gwfKxyf4sKIxPhdW5bUDMIEWBItpDIT0pwZIIwm
-        w35W0ryrthWuP/CV5kzIPgDoCQ==
-X-Google-Smtp-Source: ABdhPJworTTfrzaRNagC5m0TTCXTLt6OYiqnjY8NCoQmRmsnhw2DgNuIH+QZUwEIAu8qd6rM/ZyZ7A==
-X-Received: by 2002:a17:90b:1103:: with SMTP id gi3mr1007863pjb.132.1595276329602;
-        Mon, 20 Jul 2020 13:18:49 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id f207sm18251219pfa.107.2020.07.20.13.18.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 13:18:48 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 20 Jul 2020 16:20:37 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KKB0rM015585;
+        Mon, 20 Jul 2020 13:20:30 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=vTcIDB03+L5aGMFWHmfciXOnzsXOVk7qficFIxXYiGI=;
+ b=fBfhXqeRxwwFIcxeipSMhXueMVfYtkLTv2i9E8+KM4gdK1sBwlW3V0LA1WTa6IAW2LAl
+ BrU62W6pjR90NXBxf/dozpGz9Ji97KqKxwZoTj/daXmQiQ8MCzeaSSQLcUYblOMUOZBZ
+ aFMhjGmrnAcdPPeYz0SaUQ4M7nNEuswU5pY= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 32bxu0gd3u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 20 Jul 2020 13:20:29 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 20 Jul 2020 13:20:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K4trZpMUQHFTP7lv2ERUVw+CmHLnqclqKq7JUfRS5yyK85M75dfF5EnXy0G+9cAG+4SkcfveQmXPbtPMKq0aIgaJCD1yxvQ/ej5bHYDVna1v8X0PJuB1YfPyCjK/aCxVtcxHb9MYhxP9ddSNtO1cqUykOWWjmej53lDOx+LC5FkGV8DOaSusInkCDJ4doLV8X8+iEzdMFJJV2+Vo2C4Xw3cfPzbrNhlMKuOwatlWCCE4maMivzD8iynw6jug7w9jZtZtPHl2faqgCD9hbP8p4atg8201nLRUge5JmoWagRNd0Ga5ojfuYl308B2wAY5QJMm0ll3LIPy9kJPnLmO08Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vTcIDB03+L5aGMFWHmfciXOnzsXOVk7qficFIxXYiGI=;
+ b=K8dpQxRt3tsd1sP1Ynu2OUuVYxIJ7z3G16AUuad4WQwxXA/hYAh6/rpfllHU7QtSFbwm4COePO69nUfu4WTuA00qPm0XJe2BCRsQ4gHjUlZXetlus9eSoZJnXEF3kly8ZHsZzT8mVqiXHa7aQQj+mtyT/bkHftyKOLWyD//4V4nvWDGYGOqjsamxqL7E6f0xyM5SgBM8kbMPoiXTDX6U73/FFmWW1Mu4UA7DTjKXsG7mCLC1Aot0gRjnheS6LhC4sSreQaxdBd/WQMrrbMvstlLPMgQRcqkm23DzeOuVEBLWCoWNMgMkUyC9Yfs16+cyDVj7bYZxXKkGvzHYuqWCBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vTcIDB03+L5aGMFWHmfciXOnzsXOVk7qficFIxXYiGI=;
+ b=ck4SimZf42otD5e07i8H4oZuLPJulVdWI1CMi7/khhvFCUhetnIe7y7OSHJS1xWCy+O9Gsbim+rDCT6w+DMorNgIO0ESXJPhO5y7fcfvrIlHRzB+V5Ema2ubdEaK1F2ClkzbdezGGC5obptJ46vbH5FkmBVonO6xPn+Q1kGRGoI=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BY5PR15MB3603.namprd15.prod.outlook.com (2603:10b6:a03:1f7::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Mon, 20 Jul
+ 2020 20:20:25 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
+ 20:20:25 +0000
+Date:   Mon, 20 Jul 2020 13:20:21 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH v2] mm: vmstat: fix /proc/sys/vm/stat_refresh generating
+ false warnings
+Message-ID: <20200720202021.GE139672@carbon.dhcp.thefacebook.com>
+References: <20200714173920.3319063-1-guro@fb.com>
+ <20200720080349.GC18535@dhcp22.suse.cz>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720080349.GC18535@dhcp22.suse.cz>
+X-ClientProxiedBy: BY3PR05CA0023.namprd05.prod.outlook.com
+ (2603:10b6:a03:254::28) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200707184125.15114-1-khsieh@codeaurora.org>
-References: <20200707184125.15114-1-khsieh@codeaurora.org>
-Subject: Re: [PATCH] drm/msm/dp: Add DP compliance tests on Snapdragon Chipsets
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     tanmay@codeaurora.org, abhinavk@codeaurora.org,
-        aravindh@codeaurora.org, khsieh@codeaurora.org, airlied@linux.ie,
-        daniel@ffwll.ch, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-To:     Kuogee Hsieh <khsieh@codeaurora.org>, robdclark@gmail.com,
-        sean@poorly.run
-Date:   Mon, 20 Jul 2020 13:18:48 -0700
-Message-ID: <159527632812.1987609.6364896740387949838@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:4691) by BY3PR05CA0023.namprd05.prod.outlook.com (2603:10b6:a03:254::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.14 via Frontend Transport; Mon, 20 Jul 2020 20:20:24 +0000
+X-Originating-IP: [2620:10d:c090:400::5:4691]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 50d94c70-cc37-451a-a5ec-08d82cea55e4
+X-MS-TrafficTypeDiagnostic: BY5PR15MB3603:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR15MB3603563625988E56922CD3F9BE7B0@BY5PR15MB3603.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Vyd7UzNTjhXZM8n69MHxXDLkA94bawS3dA9nCcQlOTyfmoS87AWKb3i185LE7Suim6P+IcDT52vfbV1dEXxPG5OzulZvekjI17iszirw0HimV4OhBOj3rbfJLSuBxyrukYK03b5bzZYtbvmqpakhlThSPr2ndq67QSqdkaEdc1LlImX7iRXm6FSqgyetaGvjQwXgSXzlJqbqMqa38zNkXWOxFEO+fPuGN5m1IZhoH2TojoB8f7/UluJiRnYl8ilwgbAK9mTWpkD3MMRo+ooNjgGynlAPbqQ+3lJf2S2mEPWBO2ACnjOgvCfKQ/adtQ4LeC/2soNMZfBmYudsMj0JIA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(136003)(366004)(396003)(39860400002)(8936002)(2906002)(83380400001)(5660300002)(54906003)(316002)(6506007)(33656002)(6916009)(86362001)(7696005)(186003)(1076003)(16526019)(6666004)(52116002)(55016002)(4326008)(8676002)(9686003)(66946007)(66556008)(66476007)(478600001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: SCRNNo2HI0e/iP4BbS/wYsWltvcvNGM712X8lhqysFVFbgWDuRx8ydpONpT7el9Tq3zV22UkQ1PlUIPmJVxNyzrj/v7S2J8tacviM6g8vtHR6EPcSiXNzG/fwao+9d69wl1Rb43qlDVQ0OV8vYSNM0fLkVCqcJ2Xm/eZejwxQnTd5nPaaMjbRndmjgWjlQTrjCYLkUckNsKT4dAP5Imde9L/yfdCBHLLwcDAqjt10RyJzYCWs0bTCAeRfm4NoKFcO5kvdSpj+3/4E962m7iBjh+TXruet2NeHCJayWrrktwnxb6eMhYkFd+58BoyEVBzWSMHHoCDZlpGwAprMmyh+mAWQGz66i7cqVtLrevG7TUs14FIj055dn1DNckkfhI33b2LiOnc3wO1cc0I2LTckSmeMkMXao1FfvZzZ+7YfY5x7zVA3Lh+ZrA498XhgzseWsnGch9j59prcUzEpzJCmlKIF28siRUqw8b5wwlE8o6OWO1RW8NbobWGgt1e9Rr/nzzMoxPvpBYqmtyyyZ4oJw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50d94c70-cc37-451a-a5ec-08d82cea55e4
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 20:20:25.4908
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nUHjOjlzkQImQEysh46DvFPZQHS3lSJ1QRU/3T/n4K4fS+KMdsCbkQ0UdVqSL/Wq
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR15MB3603
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
+ clxscore=1015 mlxscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
+ spamscore=0 phishscore=0 adultscore=0 suspectscore=5 lowpriorityscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200136
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Kuogee Hsieh (2020-07-07 11:41:25)
-> add event thread to execute events serially from event queue. Also
-> timeout mode is supported  which allow an event be deferred to be
-> executed at later time. Both link and phy compliant tests had been
-> done successfully.
->=20
-> This change depends-on following series:
->         https://lore.kernel.org/dri-devel/20200630184507.15589-1-tanmay@c=
-odeaurora.org/
->=20
+On Mon, Jul 20, 2020 at 10:03:49AM +0200, Michal Hocko wrote:
+> On Tue 14-07-20 10:39:20, Roman Gushchin wrote:
+> > I've noticed a number of warnings like "vmstat_refresh: nr_free_cma
+> > -5" or "vmstat_refresh: nr_zone_write_pending -11" on our production
+> > hosts. The numbers of these warnings were relatively low and stable,
+> > so it didn't look like we are systematically leaking the counters.
+> > The corresponding vmstat counters also looked sane.
+> > 
+> > These warnings are generated by the vmstat_refresh() function, which
+> > assumes that atomic zone and numa counters can't go below zero.
+> > However, on a SMP machine it's not quite right: due to per-cpu
+> > caching it can in theory be as low as -(zone threshold) * NR_CPUs.
+> > 
+> > For instance, let's say all cma pages are in use and NR_FREE_CMA_PAGES
+> > reached 0. Then we've reclaimed a small number of cma pages on each
+> > CPU except CPU0, so that most percpu NR_FREE_CMA_PAGES counters are
+> > slightly positive (the atomic counter is still 0). Then somebody on
+> > CPU0 consumes all these pages. The number of pages can easily exceed
+> > the threshold and a negative value will be committed to the atomic
+> > counter.
+> > 
+> > To fix the problem and avoid generating false warnings, let's just
+> > relax the condition and warn only if the value is less than minus
+> > the maximum theoretically possible drift value, which is 125 *
+> > number of online CPUs. It will still allow to catch systematic leaks,
+> > but will not generate bogus warnings.
+> > 
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > Cc: Hugh Dickins <hughd@google.com>
+> 
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> 
+> One minor nit which can be handled by a separate patch but now that you
+> are touching this code...
 
-Can this be sent along with that series?=20
+Thank you!
 
-> Signed-off-by: Kuogee Hsieh <khsieh@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c |  12 +-
->  drivers/gpu/drm/msm/dp/dp_aux.c             |   4 +
->  drivers/gpu/drm/msm/dp/dp_aux.h             |   1 +
->  drivers/gpu/drm/msm/dp/dp_catalog.c         |  78 ++-
->  drivers/gpu/drm/msm/dp/dp_ctrl.c            | 361 +++++++----
->  drivers/gpu/drm/msm/dp/dp_ctrl.h            |   3 +-
->  drivers/gpu/drm/msm/dp/dp_display.c         | 654 +++++++++++++-------
->  drivers/gpu/drm/msm/dp/dp_hpd.c             |   2 +-
->  drivers/gpu/drm/msm/dp/dp_hpd.h             |   1 +
->  drivers/gpu/drm/msm/dp/dp_link.c            |  22 +-
->  drivers/gpu/drm/msm/dp/dp_panel.c           |  56 +-
->  drivers/gpu/drm/msm/dp/dp_panel.h           |  10 +-
->  drivers/gpu/drm/msm/dp/dp_parser.c          |  45 +-
->  drivers/gpu/drm/msm/dp/dp_parser.h          |   2 +
->  drivers/gpu/drm/msm/dp/dp_power.c           |  32 +-
->  drivers/gpu/drm/msm/dp/dp_power.h           |   1 +
->  drivers/gpu/drm/msm/dp/dp_reg.h             |   1 +
->  17 files changed, 861 insertions(+), 424 deletions(-)
+> 
+> > ---
+> >  Documentation/admin-guide/sysctl/vm.rst |  4 ++--
+> >  mm/vmstat.c                             | 30 ++++++++++++++++---------
+> >  2 files changed, 21 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
+> > index 4b9d2e8e9142..95fb80d0c606 100644
+> > --- a/Documentation/admin-guide/sysctl/vm.rst
+> > +++ b/Documentation/admin-guide/sysctl/vm.rst
+> > @@ -822,8 +822,8 @@ e.g. cat /proc/sys/vm/stat_refresh /proc/meminfo
+> >  
+> >  As a side-effect, it also checks for negative totals (elsewhere reported
+> >  as 0) and "fails" with EINVAL if any are found, with a warning in dmesg.
+> > -(At time of writing, a few stats are known sometimes to be found negative,
+> > -with no ill effects: errors and warnings on these stats are suppressed.)
+> > +(On a SMP machine some stats can temporarily become negative, with no ill
+> > +effects: errors and warnings on these stats are suppressed.)
+> >  
+> >  
+> >  numa_stat
+> > diff --git a/mm/vmstat.c b/mm/vmstat.c
+> > index a21140373edb..8f0ef8aaf8ee 100644
+> > --- a/mm/vmstat.c
+> > +++ b/mm/vmstat.c
+> > @@ -169,6 +169,8 @@ EXPORT_SYMBOL(vm_node_stat);
+> >  
+> >  #ifdef CONFIG_SMP
+> >  
+> > +#define MAX_THRESHOLD 125
+> 
+> This would deserve a comment. 88f5acf88ae6a didn't really explain why
+> this specific value has been selected but the specific value shouldn't
+> really matter much. I would go with the following at least.
+> "
+> Maximum sync threshold for per-cpu vmstat counters. 
+> "
 
-It seems to spread various changes throughout the DP bits and only has a
-short description about what's changing. Given that the series above
-isn't merged it would be better to get rid of this change and make the
-changes in the patches that introduce these files.
+Agree. Below is the diff to be squashed into the original patch.
 
->=20
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/dr=
-m/msm/disp/dpu1/dpu_encoder.c
-> index b439e482fc80..87b291b8d7b7 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> @@ -1183,13 +1183,6 @@ static void dpu_encoder_virt_disable(struct drm_en=
-coder *drm_enc)
->         dpu_kms =3D to_dpu_kms(priv->kms);
->         global_state =3D dpu_kms_get_existing_global_state(dpu_kms);
-> =20
-> -       if (drm_enc->encoder_type =3D=3D DRM_MODE_ENCODER_TMDS && priv->d=
-p) {
-> -               if (msm_dp_display_disable(priv->dp, drm_enc)) {
-> -                       DPU_ERROR_ENC(dpu_enc, "dp display disable failed=
-\n");
-> -                       return;
-> -               }
-> -       }
-> -
->         trace_dpu_enc_disable(DRMID(drm_enc));
-> =20
->         /* wait for idle */
-> @@ -1220,6 +1213,11 @@ static void dpu_encoder_virt_disable(struct drm_en=
-coder *drm_enc)
-> =20
->         dpu_rm_release(global_state, drm_enc);
-> =20
-> +       if (drm_enc->encoder_type =3D=3D DRM_MODE_ENCODER_TMDS && priv->d=
-p) {
-> +               if (msm_dp_display_disable(priv->dp, drm_enc))
-> +                       DPU_ERROR_ENC(dpu_enc, "dp display disable failed=
-\n");
-> +       }
-> +
->         mutex_unlock(&dpu_enc->enc_lock);
->  }
-> =20
-> diff --git a/drivers/gpu/drm/msm/dp/dp_aux.c b/drivers/gpu/drm/msm/dp/dp_=
-aux.c
-> index 696dc8741f1e..c0e8ad031895 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_aux.c
-> +++ b/drivers/gpu/drm/msm/dp/dp_aux.c
-> @@ -189,6 +189,8 @@ static void dp_aux_native_handler(struct dp_aux_priva=
-te *aux)
->                 aux->aux_error_num =3D DP_AUX_ERR_TOUT;
->         if (isr & DP_INTR_NACK_DEFER)
->                 aux->aux_error_num =3D DP_AUX_ERR_NACK;
-> +       if (isr & DP_INTR_AUX_ERROR)
-> +               aux->aux_error_num =3D DP_AUX_ERR_DPPHY_AUX;
-> =20
->         complete(&aux->comp);
->  }
-> @@ -359,6 +361,8 @@ static ssize_t dp_aux_transfer(struct drm_dp_aux *dp_=
-aux,
->                                         PHY_AUX_CFG1);
->                         dp_catalog_aux_reset(aux->catalog);
->                 }
-> +               if (aux->aux_error_num =3D=3D DP_AUX_ERR_DPPHY_AUX)
-> +                       usleep_range(400, 400); /* need 400us before next=
- try */
+Thanks!
 
-Typically usleep_range() should be a range, and not the same number
-for both ends of the range.
+--
 
->                 goto unlock_exit;
->         }
-> =20
-> diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.c b/drivers/gpu/drm/msm/dp=
-/dp_catalog.c
-> index ab69ae3e2dbd..367eb54c9a68 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_catalog.c
-> +++ b/drivers/gpu/drm/msm/dp/dp_catalog.c
-> @@ -452,7 +452,6 @@ void dp_catalog_aux_setup(struct dp_catalog *dp_catal=
-og)
->         dp_write_phy(catalog, REG_DP_PHY_PD_CTL, DP_PHY_PD_CTL_PSR_PWRDN);
-> =20
->         /* Make sure that hardware is done with  PSR power down */
-> -       wmb();
-
-Is that comment above now not needed?
-
->         dp_write_phy(catalog, REG_DP_PHY_PD_CTL, DP_PHY_PD_CTL_PWRDN |
->                 DP_PHY_PD_CTL_AUX_PWRDN | DP_PHY_PD_CTL_LANE_0_1_PWRDN
->                 | DP_PHY_PD_CTL_LANE_2_3_PWRDN | DP_PHY_PD_CTL_PLL_PWRDN
-> diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.c b/drivers/gpu/drm/msm/dp/dp=
-_ctrl.c
-> index 98654f39806c..100ab84375f7 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_ctrl.c
-> +++ b/drivers/gpu/drm/msm/dp/dp_ctrl.c
-> @@ -26,6 +26,13 @@
->  #define MR_LINK_SYMBOL_ERM 0x80
->  #define MR_LINK_PRBS7 0x100
->  #define MR_LINK_CUSTOM80 0x200
-> +#define MR_LINK_TRAINING4  0x40
-> +
-> +enum {
-> +       DP_TRAINING_NONE,
-> +       DP_TRAINING_1,
-> +       DP_TRAINING_2,
-> +};
-> =20
->  struct dp_tu_calc_input {
->         u64 lclk;        /* 162, 270, 540 and 810 */
-> @@ -58,7 +65,6 @@ struct dp_vc_tu_mapping_table {
-> =20
->  struct dp_ctrl_private {
->         struct dp_ctrl dp_ctrl;
-> -
->         struct device *dev;
->         struct drm_dp_aux *aux;
->         struct dp_panel *panel;
-> @@ -68,10 +74,16 @@ struct dp_ctrl_private {
->         struct dp_catalog *catalog;
-> =20
->         struct completion idle_comp;
-> -       struct mutex push_idle_mutex;
->         struct completion video_comp;
->  };
-> =20
-> +struct dp_cr_status {
-> +       u8 lane_0_1;
-> +       u8 lane_2_3;
-> +};
-> +
-> +#define DP_LANE0_1_CR_DONE     0x11
-> +
->  static int dp_aux_link_configure(struct drm_dp_aux *aux,
->                                         struct dp_link_info *link)
->  {
-> @@ -97,8 +109,6 @@ void dp_ctrl_push_idle(struct dp_ctrl *dp_ctrl)
-> =20
->         ctrl =3D container_of(dp_ctrl, struct dp_ctrl_private, dp_ctrl);
-> =20
-> -       mutex_lock(&ctrl->push_idle_mutex);
-> -
->         reinit_completion(&ctrl->idle_comp);
->         dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_PUSH_IDLE=
-);
-> =20
-> @@ -106,7 +116,6 @@ void dp_ctrl_push_idle(struct dp_ctrl *dp_ctrl)
->                         IDLE_PATTERN_COMPLETION_TIMEOUT_JIFFIES))
->                 pr_warn("PUSH_IDLE pattern timedout\n");
-> =20
-> -       mutex_unlock(&ctrl->push_idle_mutex);
->         pr_debug("mainlink off done\n");
->  }
-> =20
-> @@ -985,7 +994,7 @@ static int dp_ctrl_wait4video_ready(struct dp_ctrl_pr=
-ivate *ctrl)
-> =20
->         if (!wait_for_completion_timeout(&ctrl->video_comp,
->                                 WAIT_FOR_VIDEO_READY_TIMEOUT_JIFFIES)) {
-> -               DRM_ERROR("Link Train timedout\n");
-> +               DRM_ERROR("wait4video timedout\n");
->                 ret =3D -ETIMEDOUT;
->         }
->         return ret;
-> @@ -1006,13 +1015,13 @@ static int dp_ctrl_update_vx_px(struct dp_ctrl_pr=
-ivate *ctrl)
->         if (ret)
->                 return ret;
-> =20
-> -       if (voltage_swing_level > DP_TRAIN_VOLTAGE_SWING_MAX) {
-> +       if (voltage_swing_level >=3D DP_TRAIN_VOLTAGE_SWING_MAX) {
->                 DRM_DEBUG_DP("max. voltage swing level reached %d\n",
->                                 voltage_swing_level);
->                 max_level_reached |=3D DP_TRAIN_MAX_SWING_REACHED;
->         }
-> =20
-> -       if (pre_emphasis_level =3D=3D DP_TRAIN_PRE_EMPHASIS_MAX) {
-> +       if (pre_emphasis_level >=3D DP_TRAIN_PRE_EMPHASIS_MAX) {
->                 DRM_DEBUG_DP("max. pre-emphasis level reached %d\n",
->                                 pre_emphasis_level);
->                 max_level_reached  |=3D DP_TRAIN_MAX_PRE_EMPHASIS_REACHED;
-> @@ -1044,8 +1053,11 @@ static bool dp_ctrl_train_pattern_set(struct dp_ct=
-rl_private *ctrl,
->         DRM_DEBUG_DP("sink: pattern=3D%x\n", pattern);
-> =20
->         buf =3D pattern;
-> -       ret =3D drm_dp_dpcd_writeb(ctrl->aux,
-> -                                       DP_TRAINING_PATTERN_SET, buf);
-> +
-> +       if (pattern && pattern !=3D DP_TRAINING_PATTERN_4)
-> +               buf |=3D DP_LINK_SCRAMBLING_DISABLE;
-> +
-> +       ret =3D drm_dp_dpcd_writeb(ctrl->aux, DP_TRAINING_PATTERN_SET, bu=
-f);
->         return ret =3D=3D 1;
->  }
-> =20
-> @@ -1071,19 +1083,23 @@ static int dp_ctrl_read_link_status(struct dp_ctr=
-l_private *ctrl,
->         return -ETIMEDOUT;
->  }
-> =20
-> -static int dp_ctrl_link_train_1(struct dp_ctrl_private *ctrl)
-> +static int dp_ctrl_link_train_1(struct dp_ctrl_private *ctrl,
-> +               struct dp_cr_status *cr, int *training_step)
->  {
->         int tries, old_v_level, ret =3D 0;
->         u8 link_status[DP_LINK_STATUS_SIZE];
-> -       int const maximum_retries =3D 5;
-> +       int const maximum_retries =3D 4;
-> =20
->         dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
-> =20
-> +       *training_step =3D DP_TRAINING_1;
-> +
->         ret =3D dp_catalog_ctrl_set_pattern(ctrl->catalog, DP_TRAINING_PA=
-TTERN_1);
->         if (ret)
->                 return ret;
->         dp_ctrl_train_pattern_set(ctrl, DP_TRAINING_PATTERN_1 |
->                 DP_LINK_SCRAMBLING_DISABLE);
-> +
->         ret =3D dp_ctrl_update_vx_px(ctrl);
->         if (ret)
->                 return ret;
-> @@ -1097,12 +1113,15 @@ static int dp_ctrl_link_train_1(struct dp_ctrl_pr=
-ivate *ctrl)
->                 if (ret)
->                         return ret;
-> =20
-> +               cr->lane_0_1 =3D link_status[0];
-> +               cr->lane_2_3 =3D link_status[1];
-> +
->                 if (drm_dp_clock_recovery_ok(link_status,
->                         ctrl->link->link_params.num_lanes)) {
-> -                       return ret;
-> +                       return 0;
->                 }
-> =20
-> -               if (ctrl->link->phy_params.v_level >
-> +               if (ctrl->link->phy_params.v_level >=3D
->                         DP_TRAIN_VOLTAGE_SWING_MAX) {
->                         DRM_ERROR_RATELIMITED("max v_level reached\n");
->                         return -EAGAIN;
-> @@ -1125,8 +1144,10 @@ static int dp_ctrl_link_train_1(struct dp_ctrl_pri=
-vate *ctrl)
->         return -ETIMEDOUT;
->  }
-> =20
-> -static void dp_ctrl_link_rate_down_shift(struct dp_ctrl_private *ctrl)
-> +static int dp_ctrl_link_rate_down_shift(struct dp_ctrl_private *ctrl)
->  {
-> +       int ret =3D 0;
-> +
->         switch (ctrl->link->link_params.rate) {
->         case 810000:
->                 ctrl->link->link_params.rate =3D 540000;
-> @@ -1135,13 +1156,32 @@ static void dp_ctrl_link_rate_down_shift(struct d=
-p_ctrl_private *ctrl)
->                 ctrl->link->link_params.rate =3D 270000;
->                 break;
->         case 270000:
-> +               ctrl->link->link_params.rate =3D 162000;
-> +               break;
->         case 162000:
->         default:
-> -               ctrl->link->link_params.rate =3D 162000;
-> +               ret =3D -1;
-
-Use a real error code instead of -1?
-
->                 break;
->         };
-> =20
->         DRM_DEBUG_DP("new rate=3D0x%x\n", ctrl->link->link_params.rate);
-
-Maybe this should be under a condition like if (!ret)?
-
-> +
-> +       return ret;
-> +}
-> +
->  static void dp_ctrl_clear_training_pattern(struct dp_ctrl_private *ctrl)
-> @@ -1214,18 +1260,20 @@ static int dp_ctrl_link_train(struct dp_ctrl_priv=
-ate *ctrl)
->         drm_dp_dpcd_write(ctrl->aux, DP_MAIN_LINK_CHANNEL_CODING_SET,
->                                 &encoding, 1);
-> =20
-> -       ret =3D dp_ctrl_link_train_1(ctrl);
-> +       ret =3D dp_ctrl_link_train_1(ctrl, cr, training_step);
->         if (ret) {
->                 DRM_ERROR("link training #1 failed. ret=3D%d\n", ret);
-> +               ret =3D -EAGAIN;
->                 goto end;
->         }
-> =20
->         /* print success info as this is a result of user initiated actio=
-n */
->         DRM_DEBUG_DP("link training #1 successful\n");
-> =20
-> -       ret =3D dp_ctrl_link_training_2(ctrl);
-> +       ret =3D dp_ctrl_link_train_2(ctrl, cr, training_step);
->         if (ret) {
->                 DRM_ERROR("link training #2 failed. ret=3D%d\n", ret);
-> +               ret =3D -EAGAIN;
-
-Why override ret?
-
->                 goto end;
->         }
-> =20
-> @@ -1235,58 +1283,36 @@ static int dp_ctrl_link_train(struct dp_ctrl_priv=
-ate *ctrl)
-> -static int dp_ctrl_setup_main_link(struct dp_ctrl_private *ctrl, bool tr=
-ain)
-> +static int dp_ctrl_setup_main_link(struct dp_ctrl_private *ctrl,
-> +               struct dp_cr_status *cr, int *training_step)
->  {
-> -       bool mainlink_ready =3D false;
->         int ret =3D 0;
-> =20
->         dp_catalog_ctrl_mainlink_ctrl(ctrl->catalog, true);
-> =20
-> -       ret =3D dp_link_psm_config(ctrl->link, &ctrl->panel->link_info, f=
-alse);
-> -       if (ret)
-> -               return ret;
-> -
->         if (ctrl->link->sink_request & DP_TEST_LINK_PHY_TEST_PATTERN)
->                 return ret;
-> =20
-> -       if (train) {
-> -               /*
-> -                * As part of previous calls, DP controller state might h=
-ave
-> -                * transitioned to PUSH_IDLE. In order to start transmitt=
-ing
-> -                * a link training pattern, we have to first do soft rese=
-t.
-> -                */
-> -               dp_catalog_ctrl_reset(ctrl->catalog);
-> -
-> -               ret =3D dp_ctrl_link_train(ctrl);
-> -               if (ret)
-> -                       return ret;
-> -       }
-> -
->         /*
-> -        * Set up transfer unit values and set controller state to send
-> -        * video.
-> +        * As part of previous calls, DP controller state might have
-> +        * transitioned to PUSH_IDLE. In order to start transmitting
-> +        * a link training pattern, we have to first do soft reset.
->          */
-> -       dp_ctrl_setup_tr_unit(ctrl);
-> -       dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_SEND_VIDE=
-O);
-> +       dp_catalog_ctrl_reset(ctrl->catalog);
-> =20
-> -       ret =3D dp_ctrl_wait4video_ready(ctrl);
-> -       if (ret)
-> -               return ret;
-> +       ret =3D dp_ctrl_link_train(ctrl, cr, training_step);
-> =20
-> -       mainlink_ready =3D dp_catalog_ctrl_mainlink_ready(ctrl->catalog);
-> -       DRM_DEBUG_DP("mainlink %s\n", mainlink_ready ? "READY" : "NOT REA=
-DY");
->         return ret;
->  }
-> =20
->  static void dp_ctrl_set_clock_rate(struct dp_ctrl_private *ctrl,
-> -                                  char *name, u32 rate)
-> +                       enum dp_pm_type module, char *name, u32 rate)
->  {
-> -       u32 num =3D ctrl->parser->mp[DP_CTRL_PM].num_clk;
-> -       struct dss_clk *cfg =3D ctrl->parser->mp[DP_CTRL_PM].clk_config;
-> +       u32 num =3D ctrl->parser->mp[module].num_clk;
-> +       struct dss_clk *cfg =3D ctrl->parser->mp[module].clk_config;
-> =20
->         while (num && strcmp(cfg->clk_name, name)) {
->                 num--;
-> @@ -1308,16 +1334,33 @@ static int dp_ctrl_enable_mainlink_clocks(struct =
-dp_ctrl_private *ctrl)
-> =20
->         dp_power_set_link_clk_parent(ctrl->power);
-> =20
-> -       dp_ctrl_set_clock_rate(ctrl, "ctrl_link",
-> +       dp_ctrl_set_clock_rate(ctrl, DP_CTRL_PM, "ctrl_link",
->                                         ctrl->link->link_params.rate);
-> =20
-> -       dp_ctrl_set_clock_rate(ctrl, "stream_pixel",
-> -                                       ctrl->dp_ctrl.pixel_rate);
-> -
->         ret =3D dp_power_clk_enable(ctrl->power, DP_CTRL_PM, true);
->         if (ret)
->                 DRM_ERROR("Unable to start link clocks. ret=3D%d\n", ret);
-> =20
-> +       DRM_DEBUG_DP("link rate=3D%d pixel_clk=3D%d\n",
-> +               ctrl->link->link_params.rate, ctrl->dp_ctrl.pixel_rate);
-> +
-> +       return ret;
-> +}
-> +
-> +static int dp_ctrl_enable_stream_clocks(struct dp_ctrl_private *ctrl)
-> +{
-> +       int ret =3D 0;
-> +
-> +       dp_ctrl_set_clock_rate(ctrl, DP_STREAM_PM, "stream_pixel",
-> +                                       ctrl->dp_ctrl.pixel_rate);
-> +
-> +       ret =3D dp_power_clk_enable(ctrl->power, DP_STREAM_PM, true);
-> +       if (ret)
-> +               DRM_ERROR("Unabled to start pixel clocks. ret=3D%d\n", re=
-t);
-> +
-> +       DRM_DEBUG_DP("link rate=3D%d pixel_clk=3D%d\n",
-> +                       ctrl->link->link_params.rate, ctrl->dp_ctrl.pixel=
-_rate);
-> +
->         return ret;
->  }
-> =20
-> @@ -1407,37 +1450,30 @@ static int dp_ctrl_reinitialize_mainlink(struct d=
-p_ctrl_private *ctrl)
->                 return ret;
->         }
-> =20
-> -       dp_ctrl_configure_source_params(ctrl);
-> -       dp_catalog_ctrl_config_msa(ctrl->catalog,
-> -               ctrl->link->link_params.rate,
-> -               ctrl->dp_ctrl.pixel_rate, dp_ctrl_use_fixed_nvid(ctrl));
-> -       reinit_completion(&ctrl->idle_comp);
-> -
->         return ret;
->  }
-> =20
->  static int dp_ctrl_link_maintenance(struct dp_ctrl_private *ctrl)
->  {
->         int ret =3D 0;
-> -       int tries;
-> +       struct dp_cr_status cr;
-> +       int training_step =3D DP_TRAINING_NONE;
-> =20
->         dp_ctrl_push_idle(&ctrl->dp_ctrl);
->         dp_catalog_ctrl_reset(ctrl->catalog);
-> =20
->         ctrl->dp_ctrl.pixel_rate =3D ctrl->panel->dp_mode.drm_mode.clock;
-> =20
-> -       for (tries =3D 0; tries < 10; tries++) {
-> -               ret =3D dp_ctrl_reinitialize_mainlink(ctrl);
-> -               if (ret) {
-> -                       DRM_ERROR("Failed to reinitialize mainlink. ret=
-=3D%d\n",
-> -                                       ret);
-> -                       break;
-> -               }
-> +       ret =3D dp_ctrl_setup_main_link(ctrl, &cr, &training_step);
-> +       if (ret)
-> +               goto end;
-> =20
-> -               ret =3D dp_ctrl_setup_main_link(ctrl, true);
-> -               if (ret =3D=3D -EAGAIN) /* try with lower link rate */
-> -                       dp_ctrl_link_rate_down_shift(ctrl);
-> -       }
-> +       dp_ctrl_clear_training_pattern(ctrl);
-> +
-> +       dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_SEND_VIDE=
-O);
-> +
-> +       ret =3D dp_ctrl_wait4video_ready(ctrl);
-> +end:
->         return ret;
->  }
-> =20
-> @@ -1450,22 +1486,22 @@ static int dp_ctrl_process_phy_test_request(struc=
-t dp_ctrl_private *ctrl)
->                 return ret;
->         }
-> =20
-> -       dp_ctrl_push_idle(&ctrl->dp_ctrl);
->         /*
->          * The global reset will need DP link related clocks to be
->          * running. Add the global reset just before disabling the
->          * link clocks and core clocks.
->          */
-> -       dp_catalog_ctrl_reset(ctrl->catalog);
->         ret =3D dp_ctrl_off(&ctrl->dp_ctrl);
->         if (ret) {
->                 DRM_ERROR("failed to disable DP controller\n");
->                 return ret;
->         }
-> =20
-> -       ret =3D dp_ctrl_on(&ctrl->dp_ctrl);
-> -       if (ret)
-> -               DRM_ERROR("failed to enable DP controller\n");
-> +       ret =3D dp_ctrl_on_link(&ctrl->dp_ctrl);
-> +       if (!ret)
-> +               ret =3D dp_ctrl_on_stream(&ctrl->dp_ctrl);
-> +       else
-> +               DRM_ERROR("failed to enable DP link controller\n");
-> =20
->         return ret;
->  }
-> @@ -1485,27 +1521,33 @@ static bool dp_ctrl_send_phy_test_pattern(struct =
-dp_ctrl_private *ctrl)
->                 return false;
->         }
->         dp_catalog_ctrl_send_phy_pattern(ctrl->catalog, pattern_requested=
-);
-> +       dp_ctrl_update_vx_px(ctrl);
->         dp_link_send_test_response(ctrl->link);
-> =20
->         pattern_sent =3D dp_catalog_ctrl_read_phy_pattern(ctrl->catalog);
-> =20
->         switch (pattern_sent) {
->         case MR_LINK_TRAINING1:
-> -               success =3D pattern_requested =3D=3D
-> -                               DP_LINK_QUAL_PATTERN_D10_2;
-> +               success =3D (pattern_requested =3D=3D
-> +                               DP_PHY_TEST_PATTERN_D10_2);
->                 break;
->         case MR_LINK_SYMBOL_ERM:
-> -               success =3D (pattern_requested =3D=3D
-> -                               DP_LINK_QUAL_PATTERN_ERROR_RATE)
-> -                       || (pattern_requested =3D=3D
-> -                               DP_LINK_QUAL_PATTERN_HBR2_EYE);
-> +               success =3D ((pattern_requested =3D=3D
-> +                               DP_PHY_TEST_PATTERN_ERROR_COUNT) ||
-> +                               (pattern_requested =3D=3D
-> +                               DP_PHY_TEST_PATTERN_CP2520));
->                 break;
->         case MR_LINK_PRBS7:
-> -               success =3D pattern_requested =3D=3D DP_LINK_QUAL_PATTERN=
-_PRBS7;
-> +               success =3D (pattern_requested =3D=3D
-> +                               DP_PHY_TEST_PATTERN_PRBS7);
->                 break;
->         case MR_LINK_CUSTOM80:
-> -               success =3D pattern_requested =3D=3D
-> -                               DP_LINK_QUAL_PATTERN_80BIT_CUSTOM;
-> +               success =3D (pattern_requested =3D=3D
-> +                               DP_PHY_TEST_PATTERN_80BIT_CUSTOM);
-> +               break;
-> +       case MR_LINK_TRAINING4:
-> +               success =3D (pattern_requested =3D=3D
-> +                               DP_PHY_TEST_PATTERN_SEL_MASK);
->                 break;
->         default:
->                 success =3D false;
-> @@ -1537,12 +1579,12 @@ void dp_ctrl_handle_sink_request(struct dp_ctrl *=
-dp_ctrl)
->                 }
->         }
-> =20
-> -       if (sink_request & DP_LINK_STATUS_UPDATED)
-> +       if (sink_request & DP_LINK_STATUS_UPDATED) {
->                 if (dp_ctrl_link_maintenance(ctrl)) {
-> -                       DRM_ERROR("LM failed: STATUS_UPDATED\n");
-> +                       DRM_ERROR("LM failed: TEST_LINK_TRAINING\n");
->                         return;
->                 }
-> -
-> +       }
-> =20
->         if (sink_request & DP_TEST_LINK_TRAINING) {
->                 dp_link_send_test_response(ctrl->link);
-> @@ -1553,13 +1595,15 @@ void dp_ctrl_handle_sink_request(struct dp_ctrl *=
-dp_ctrl)
->         }
->  }
-> =20
-> -int dp_ctrl_on(struct dp_ctrl *dp_ctrl)
-> +int dp_ctrl_on_link(struct dp_ctrl *dp_ctrl)
->  {
->         int rc =3D 0;
->         struct dp_ctrl_private *ctrl;
->         u32 rate =3D 0;
-> -       u32 link_train_max_retries =3D 10;
-> +       u32 link_train_max_retries =3D 5;
-
-Any reason these variables are u32 instead of unsigned int? Does the
-size of the variable matter if we're counting things?
-
->         u32 const phy_cts_pixel_clk_khz =3D 148500;
-> +       struct dp_cr_status cr;
-> +       int training_step;
-
-Any reason to be int vs unsigned int?
-
-> =20
->         if (!dp_ctrl)
->                 return -EINVAL;
-> @@ -1601,16 +1648,115 @@ int dp_ctrl_on(struct dp_ctrl *dp_ctrl)
->                                         rc);
->                         break;
->                 }
-> -               rc =3D dp_ctrl_setup_main_link(ctrl, true);
-> -               if (!rc)
-> +
-> +               training_step =3D DP_TRAINING_NONE;
-> +               rc =3D dp_ctrl_setup_main_link(ctrl, &cr, &training_step);
-> +               if (rc =3D=3D 0) {
-> +                       /* training completed successfully */
->                         break;
-> -               /* try with lower link rate */
-> -               dp_ctrl_link_rate_down_shift(ctrl);
-> +               } else if (training_step =3D=3D DP_TRAINING_1) {
-> +                       /* link train_1 failed */
-> +                       rc =3D dp_ctrl_link_rate_down_shift(ctrl);
-> +                       if (rc < 0) { /* alread in RBR =3D 1.6G */
-
-already?
-
-> +                               if (cr.lane_0_1 & DP_LANE0_1_CR_DONE) {
-> +                                       /*
-> +                                        * some lanes are ready,
-> +                                        * reduce lane number
-> +                                        */
-> +                                       rc =3D dp_ctrl_link_lane_down_shi=
-ft(ctrl);
-> +                                       if (rc < 0) { /* lane =3D=3D 1 al=
-ready */
-> +                                               /* end with failure */
-> +                                               break;
-[..]
-> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp=
-/dp_display.c
-> index 36b6ee4131bb..23ff23a5259f 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_display.c
-> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
-> @@ -783,6 +807,182 @@ int dp_display_get_test_bpp(struct msm_dp *dp)
->                 dp_display->link->test_video.test_bit_depth);
->  }
-> =20
-> +static void dp_display_config_hpd(struct dp_display_private *dp)
-> +{
-> +
-> +       dp_display_host_init(dp);
-> +       dp_catalog_ctrl_hpd_config(dp->catalog);
-> +
-> +       /* Enable interrupt first time
-> +        * we are leaving dp clocks on during disconnect
-> +        * and never disable interrupt
-> +        */
-> +       enable_irq(dp->irq);
-> +}
-> +
-> +static int hpd_event_thread(void *data)
-> +{
-> +       struct dp_display_private *dp_priv;
-> +       unsigned long flag;
-> +       struct dp_event *todo;
-> +       int timeout_mode =3D 0;
-> +       int ret;
-> +
-> +       dp_priv =3D (struct dp_display_private *)data;
-> +
-> +       while (1) {
-> +               if (timeout_mode) {
-> +                       ret =3D wait_event_timeout(dp_priv->event_q,
-> +                               (dp_priv->event_pndx =3D=3D dp_priv->even=
-t_gndx),
-> +                                               EVENT_TIMEOUT);
-> +               } else {
-> +                       ret =3D wait_event_timeout(dp_priv->event_q,
-> +                               (dp_priv->event_pndx !=3D dp_priv->event_=
-gndx),
-> +                                               EVENT_TIMEOUT);
-> +               }
-> +               spin_lock_irqsave(&dp_priv->event_lock, flag);
-> +               todo =3D &dp_priv->event_list[dp_priv->event_gndx];
-> +               if (todo->delay) {
-> +                       struct dp_event *todo_next;
-> +
-> +                       dp_priv->event_gndx++;
-> +                       dp_priv->event_gndx %=3D DP_EVENT_Q_MAX;
-> +
-> +                       /* re enter delay event into q */
-> +                       todo_next =3D &dp_priv->event_list[dp_priv->event=
-_pndx++];
-> +                       dp_priv->event_pndx %=3D DP_EVENT_Q_MAX;
-> +                       todo_next->event_id =3D todo->event_id;
-> +                       todo_next->data =3D todo->data;
-> +                       todo_next->delay =3D todo->delay - 1;
-> +
-> +                       /* clean up older event */
-> +                       todo->event_id =3D EV_NO_EVENT;
-> +                       todo->delay =3D 0;
-> +
-> +                       /* switch to timeout mode */
-> +                       timeout_mode =3D 1;
-> +                       spin_unlock_irqrestore(&dp_priv->event_lock, flag=
-);
-> +                       continue;
-> +               }
-> +
-> +               /* timeout with no events in q */
-> +               if (dp_priv->event_pndx =3D=3D dp_priv->event_gndx) {
-> +                       spin_unlock_irqrestore(&dp_priv->event_lock, flag=
-);
-> +                       continue;
-> +               }
-> +
-> +               dp_priv->event_gndx++;
-> +               dp_priv->event_gndx %=3D DP_EVENT_Q_MAX;
-> +               timeout_mode =3D 0;
-> +               spin_unlock_irqrestore(&dp_priv->event_lock, flag);
-> +
-> +               switch (todo->event_id) {
-> +               case EV_HPD_INIT_SETUP:
-> +                       dp_display_config_hpd(dp_priv);
-> +                       break;
-> +               case EV_HPD_PLUG_INT:
-> +                       dp_hpd_plug_handle(dp_priv, todo->data);
-> +                       break;
-> +               case EV_HPD_UNPLUG_INT:
-> +                       dp_hpd_unplug_handle(dp_priv, todo->data);
-> +                       break;
-> +               case EV_IRQ_HPD_INT:
-> +                       dp_irq_hpd_handle(dp_priv, todo->data);
-> +                       break;
-> +               case EV_HPD_REPLUG_INT:
-> +                       /* do nothing */
-> +                       break;
-> +               case EV_USER_NOTIFICATION:
-> +                       dp_display_send_hpd_notification(dp_priv,
-> +                                               todo->data);
-> +                       break;
-> +               default:
-> +                       break;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static void dp_hpd_event_setup(struct dp_display_private *dp_priv)
-> +{
-> +       init_waitqueue_head(&dp_priv->event_q);
-> +       spin_lock_init(&dp_priv->event_lock);
-> +
-> +       kthread_run(hpd_event_thread, (void *)dp_priv, "dp_hpd_handler");
-
-Is the cast necessary?
-
-> +}
-> +
-> @@ -890,8 +1069,13 @@ void msm_dp_irq_postinstall(struct msm_dp *dp_displ=
-ay)
-> =20
->         dp =3D container_of(dp_display, struct dp_display_private, dp_dis=
-play);
-> =20
-> -       INIT_DELAYED_WORK(&dp->config_hpd_work, dp_display_config_hpd_wor=
-k);
-> -       queue_delayed_work(system_wq, &dp->config_hpd_work, HZ * 10);
-> +       dp_hpd_event_setup(dp);
-> +
-> +       /* This hack Delays HPD configuration by 10 sec
-> +        * ToDo(User): Implement correct boot sequence of
-
-Typically todo is written "TODO(email@domain)" instead of User.
-
-> +        * HPD configuration and remove this hack
-> +        */
-> +       dp_add_event(dp, EV_HPD_INIT_SETUP, 0, 100);
->  }
-> =20
->  int msm_dp_modeset_init(struct msm_dp *dp_display, struct drm_device *de=
-v,
-> @@ -938,37 +1122,47 @@ int msm_dp_display_enable(struct msm_dp *dp, struc=
-t drm_encoder *encoder)
->                 return -EINVAL;
->         }
-> =20
-> +       mutex_lock(&dp_display->event_mutex);
-> +
->         rc =3D dp_display_set_mode(dp, &dp_display->dp_mode);
->         if (rc) {
->                 DRM_ERROR("Failed to perform a mode set, rc=3D%d\n", rc);
-> +               mutex_unlock(&dp_display->event_mutex);
->                 return rc;
->         }
-> =20
->         rc =3D dp_display_prepare(dp);
->         if (rc) {
->                 DRM_ERROR("DP display prepare failed, rc=3D%d\n", rc);
-> +               mutex_unlock(&dp_display->event_mutex);
->                 return rc;
->         }
-> =20
-> -       rc =3D dp_display_enable(dp);
-> -       if (rc) {
-> -               DRM_ERROR("DP display enable failed, rc=3D%d\n", rc);
-> -               dp_display_unprepare(dp);
-> -               return rc;
-> -       }
-> +       dp_display_enable(dp_display, 0);
-> =20
->         rc =3D dp_display_post_enable(dp);
->         if (rc) {
->                 DRM_ERROR("DP display post enable failed, rc=3D%d\n", rc);
-> -               dp_display_disable(dp);
-> +               dp_display_disable(dp_display, 0);
->                 dp_display_unprepare(dp);
->         }
-> +
-> +       /* completed connection */
-> +       atomic_set(&dp_display->hpd_state, ST_CONNECTED);
-> +
-> +       mutex_unlock(&dp_display->event_mutex);
-> +
->         return rc;
->  }
-> =20
->  int msm_dp_display_disable(struct msm_dp *dp, struct drm_encoder *encode=
-r)
->  {
->         int rc =3D 0;
-> +       struct dp_display_private *dp_display;
-> +
-> +       dp_display =3D container_of(dp, struct dp_display_private, dp_dis=
-play);
-> +
-> +       mutex_lock(&dp_display->event_mutex);
-> =20
->         rc =3D dp_display_pre_disable(dp);
->         if (rc) {
-> @@ -976,16 +1170,16 @@ int msm_dp_display_disable(struct msm_dp *dp, stru=
-ct drm_encoder *encoder)
->                 return rc;
->         }
-> =20
-> -       rc =3D dp_display_disable(dp);
-> -       if (rc) {
-> -               DRM_ERROR("DP display disable failed, rc=3D%d\n", rc);
-> -               return rc;
-> -       }
-> +       dp_display_disable(dp_display, 0);
-> =20
->         rc =3D dp_display_unprepare(dp);
->         if (rc)
->                 DRM_ERROR("DP display unprepare failed, rc=3D%d\n", rc);
-> =20
-> +       /* completed disconnection */
-> +       atomic_set(&dp_display->hpd_state, ST_DISCONNECTED);
-> +
-> +       mutex_unlock(&dp_display->event_mutex);
->         return rc;
->  }
-> =20
-> diff --git a/drivers/gpu/drm/msm/dp/dp_hpd.c b/drivers/gpu/drm/msm/dp/dp_=
-hpd.c
-> index 5b08ce580702..5b8fe32022b5 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_hpd.c
-> +++ b/drivers/gpu/drm/msm/dp/dp_hpd.c
-> @@ -24,7 +24,7 @@ struct dp_hpd_private {
->         struct dp_usbpd dp_usbpd;
->  };
-> =20
-> -static int dp_hpd_connect(struct dp_usbpd *dp_usbpd, bool hpd)
-> +int dp_hpd_connect(struct dp_usbpd *dp_usbpd, bool hpd)
->  {
->         int rc =3D 0;
->         struct dp_hpd_private *hpd_priv;
-> diff --git a/drivers/gpu/drm/msm/dp/dp_hpd.h b/drivers/gpu/drm/msm/dp/dp_=
-hpd.h
-> index c0178524bec7..5bc5bb64680f 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_hpd.h
-> +++ b/drivers/gpu/drm/msm/dp/dp_hpd.h
-> @@ -75,5 +75,6 @@ struct dp_usbpd *dp_hpd_get(struct device *dev, struct =
-dp_usbpd_cb *cb);
-> =20
->  int dp_hpd_register(struct dp_usbpd *dp_usbpd);
->  void dp_hpd_unregister(struct dp_usbpd *dp_usbpd);
-> +int dp_hpd_connect(struct dp_usbpd *dp_usbpd, bool hpd);
-> =20
->  #endif /* _DP_HPD_H_ */
-> diff --git a/drivers/gpu/drm/msm/dp/dp_link.c b/drivers/gpu/drm/msm/dp/dp=
-_link.c
-> index 9c75a4d327bb..f5e51c7988cb 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_link.c
-> +++ b/drivers/gpu/drm/msm/dp/dp_link.c
-> @@ -661,7 +661,6 @@ static int dp_link_parse_request(struct dp_link_priva=
-te *link)
-> =20
->         DRM_DEBUG_DP("Test:(0x%x) requested\n", data);
->         link->request.test_requested =3D data;
-> -
->         if (link->request.test_requested =3D=3D DP_TEST_LINK_PHY_TEST_PAT=
-TERN) {
->                 ret =3D dp_link_parse_phy_test_params(link);
->                 if (ret)
-
-Drop this hunk?
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index 08e415e0a15d..ddc59b533599 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -167,6 +167,9 @@ EXPORT_SYMBOL(vm_zone_stat);
+ EXPORT_SYMBOL(vm_numa_stat);
+ EXPORT_SYMBOL(vm_node_stat);
+ 
++/*
++ * Maximum sync threshold for per-cpu vmstat counters.
++ */
+ #ifdef CONFIG_SMP
+ #define MAX_THRESHOLD 125
+ #else
