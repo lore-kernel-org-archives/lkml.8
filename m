@@ -2,145 +2,316 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A79C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F67C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 116882070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F292070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:09:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="mmbjBXEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731774AbgGTSJH (ORCPT
+        id S2389217AbgGTSJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 14:09:07 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:58215 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729029AbgGTSJF (ORCPT
+        Mon, 20 Jul 2020 14:09:12 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:10650 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729029AbgGTSJJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 14:09:05 -0400
-Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MqbI0-1kb3l72gnw-00mbhT; Mon, 20 Jul 2020 20:09:01 +0200
-Received: by mail-qk1-f177.google.com with SMTP id h7so488677qkk.7;
-        Mon, 20 Jul 2020 11:09:01 -0700 (PDT)
-X-Gm-Message-State: AOAM532LQ8HuYgMqhLlbzb6YY2X2/QtBTW0FSzbZAAlDn3gv8mcRSjt6
-        XWA2t0IqODVxLfyOqHpTpKnJW5G8B3CxF5IkwjQ=
-X-Google-Smtp-Source: ABdhPJxk8AXvQoaaSyG6TPpWGlRFg6r3NFnqCF1QtWJiuwzUOgkiVS3DL9DQU7SzABQpPR/Um1zIkILDDVb8zZFAISI=
-X-Received: by 2002:a37:b484:: with SMTP id d126mr22851253qkf.394.1595268540113;
- Mon, 20 Jul 2020 11:09:00 -0700 (PDT)
+        Mon, 20 Jul 2020 14:09:09 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KHtqtF024216;
+        Mon, 20 Jul 2020 11:09:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=dj2hvRHTv7WmYRoePHxiWZT0a+Yyb8TB3pWFl6TCnF8=;
+ b=mmbjBXEl1eI2/TjFnxC2ivqx3N+RRqByzq6rz7fqUN5bu+7D8Rf6N6YR3ijBCuVJ89O+
+ 78ZcUDQzlxny8FnoZzWrtkFfxvmz1/5McK1Kzo9CEOYf2NOyFkhLbApLyjs7t897AkN2
+ kA5c9vVeTCfUMqmFJ6uYmGkh/1cU8FUcQNI81IvXOwdOj0/lhp42Q+fe/SIiNlNonXiz
+ 6wIbYfEBc+pAmd4v0NvAGFE2ZRbQqnyvswpBP4DyW/bZOVc55DEkyVQaiKCeUeIykI7/
+ PyuoBKAH3Ac9my2zdtse2LtW7uCSMt6r7691Gu4D1qRy5eWWcCYllnsY5Ueo90gmYYB9 +g== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkf8vq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 11:09:03 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 20 Jul
+ 2020 11:09:02 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 20 Jul
+ 2020 11:09:01 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 20 Jul 2020 11:09:01 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id C8B0A3F7040;
+        Mon, 20 Jul 2020 11:08:56 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "Ariel Elior" <aelior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        <GR-everest-linux-l2@marvell.com>,
+        <QLogic-Storage-Upstream@marvell.com>, <netdev@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 net-next 03/16] qede: populate supported link modes maps on module init
+Date:   Mon, 20 Jul 2020 21:08:02 +0300
+Message-ID: <20200720180815.107-4-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200720180815.107-1-alobakin@marvell.com>
+References: <20200720180815.107-1-alobakin@marvell.com>
 MIME-Version: 1.0
-References: <20200720092435.17469-1-rppt@kernel.org> <20200720092435.17469-4-rppt@kernel.org>
- <CAK8P3a0NyvRMqH7X0YNO5E6DGtvZXD5ZcD6Y6n7AkocufkMnHA@mail.gmail.com> <1595260305.4554.9.camel@linux.ibm.com>
-In-Reply-To: <1595260305.4554.9.camel@linux.ibm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 20 Jul 2020 20:08:43 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a34kx4aAFY=-SBHX3suCLwxeZY7+YSRzct93YM_OFbSWA@mail.gmail.com>
-Message-ID: <CAK8P3a34kx4aAFY=-SBHX3suCLwxeZY7+YSRzct93YM_OFbSWA@mail.gmail.com>
-Subject: Re: [PATCH 3/6] mm: introduce secretmemfd system call to create
- "secret" memory areas
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linaro-mm-sig@lists.linaro.org,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:mMIslIN9LPglY3J5UjtYLyGRTynVj4G4C03NTxE+HIOHtsP3EDW
- 6vmwXQ/rDd95A8R1jRHFPgcyZMoWnj/4hN3OEW3EpFjaNSHtXpDYrL9Uh6LIjaX+/ZQfhyJ
- B12aXsIQkzUBTOJPJ/HhZPOj1VlOAmNTTwbYN0w8ueDy6Zyx5dxUKhnNVtTvXoqrqjYtebO
- RTzwoOPaMa8GXoCUdWs9Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dt3ajiaLIoE=:8lPDfmMJiVDwnBROjMIocG
- tGAzx7/zLHCoN1MZgnxqBlxX6FThpKjK7O6ofp2Yw8dIr8mDFbnxbgvstpnukhQhBuosGvt/P
- KaGO5OISWQ4gxbcxsUU8M/L8yxHpuFZGRq6S2LTuauxo3V/v/a2YJVq3B/uQCjjvnK/VbsEy7
- pR6fa8bJI9aVHZ3DgLuBSTKcWxdTbNubrUU3FNViOSG1VgktOgwfjBJwFKzMontW1Z3QsREng
- mMBUJ7OBpw/Fj5ue/t9VFEjrPmE30w71rF4OWFmL8XVDIzU8pGmFiWAtFmjKg5pkDL/XSFEMi
- 5nTB5zX+I4MqreHz/MI+jSEE28ftMdi5rPB7Ex0LoMeSz8bUejNnYn9hKBbrSzaullCoJKGu4
- QfTo5R9rVeiNYWwpT4ygereWpfHJEf4nfVq/4FHlDl0b1GdVmfpE8S2VWozJYoZKMdpAe0Yv6
- ucTWi37ZY+8JV2dxhdY3pto1wNDKVhm3ts+rS9bIde/a1rvaiVAYHZ8G64kgTmBWKlX+iCN3f
- UheXvSyqWHaqR5IMwEJdW2A78l2GDhM8zTFBhH/LaPeGMTHFoK58CuwEzEd68SqT0GSJfxrOb
- lVZ1Twq78ZvFdFxnBqDdw6vwJSpF4rM+nSZo+Fs426CfaT7vLYZXBO5raAwXDxZUAKk9GBfHG
- jhunTBDmPA1x2q3g5daoNpAFzXp3JXK+9iXHLd32D4DCLdh3VP0mi53ib+HCIsrUkdSbiVwW7
- 5SkKDILDy5UVTZugXj0QFnnp+/iA0caVqf/SoHYR7Em/znOlACY8xTCJLAs5c5I5MDO0N223i
- CR+jPo9UqaBJcTsNFCXLmZdo4EaHJn4wshEZ7Ud+bX+QHKG1F32j5Yc0zUG63xIVdlr9ENaBd
- a3WrKZiEeCqmPMVFkbEtFg4gO1QNrZlsNKDiIq5mh6KWAzxG8DOBt527XkG0Ff5syd9/OYBk+
- HnblSI7zF4+xHOoKeORALKWXkERQX6zg1lpkHtwnbqoHDFivCd4q7
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 5:52 PM James Bottomley <jejb@linux.ibm.com> wrote:
-> On Mon, 2020-07-20 at 13:30 +0200, Arnd Bergmann wrote:
->
-> I'll assume you mean the dmabuf userspace API?  Because the kernel API
-> is completely device exchange specific and wholly inappropriate for
-> this use case.
->
-> The user space API of dmabuf uses a pseudo-filesystem.  So you mount
-> the dmabuf file type (and by "you" I mean root because an ordinary user
-> doesn't have sufficient privilege).  This is basically because every
-> dmabuf is usable by any user who has permissions.  This really isn't
-> the initial interface we want for secret memory because secret regions
-> are supposed to be per process and not shared (at least we don't want
-> other tenants to see who's using what).
->
-> Once you have the fd, you can seek to find the size, mmap, poll and
-> ioctl it.  The ioctls are all to do with memory synchronization (as
-> you'd expect from a device backed region) and the mmap is handled by
-> the dma_buf_ops, which is device specific.  Sizing is missing because
-> that's reported by the device not settable by the user.
+Simplify and lighten qede_set_link_ksettings() by declaring static link
+modes maps and populating them on module init. This way we save plenty
+of text size at the low expense of __ro_after_init and __initconst data
+(the latter will be purged after module init is done).
 
-I was mainly talking about the in-kernel interface that is used for
-sharing a buffer with hardware. Aside from the limited ioctls, anything
-in the kernel can decide on how it wants to export a dma_buf by
-calling dma_buf_export()/dma_buf_fd(), which is roughly what the
-new syscall does as well. Using dma_buf vs the proposed
-implementation for this is not a big difference in complexity.
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+---
+ drivers/net/ethernet/qlogic/qede/qede.h       |   2 +
+ .../net/ethernet/qlogic/qede/qede_ethtool.c   | 158 ++++++++++++------
+ drivers/net/ethernet/qlogic/qede/qede_main.c  |   2 +
+ 3 files changed, 108 insertions(+), 54 deletions(-)
 
-The one thing that a dma_buf does is that it allows devices to
-do DMA on it. This is either something that can turn out to be
-useful later, or it is not. From the description, it sounded like
-the sharing might be useful, since we already have known use
-cases in which "secret" data is exchanged with a trusted execution
-environment using the dma-buf interface.
+diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
+index 8adda5dc9e88..f1d7f73de902 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede.h
++++ b/drivers/net/ethernet/qlogic/qede/qede.h
+@@ -557,6 +557,8 @@ void qede_update_rx_prod(struct qede_dev *edev, struct qede_rx_queue *rxq);
+ int qede_add_tc_flower_fltr(struct qede_dev *edev, __be16 proto,
+ 			    struct flow_cls_offload *f);
+ 
++void qede_forced_speed_maps_init(void);
++
+ #define RX_RING_SIZE_POW	13
+ #define RX_RING_SIZE		((u16)BIT(RX_RING_SIZE_POW))
+ #define NUM_RX_BDS_MAX		(RX_RING_SIZE - 1)
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
+index 0a564b06d697..7a985307cdd5 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
+@@ -196,6 +196,96 @@ static const char qede_tests_str_arr[QEDE_ETHTOOL_TEST_MAX][ETH_GSTRING_LEN] = {
+ 	"Nvram (online)\t\t",
+ };
+ 
++/* Forced speed capabilities maps */
++
++struct qede_forced_speed_map {
++	u32		speed;
++	__ETHTOOL_DECLARE_LINK_MODE_MASK(caps);
++
++	const u32	*cap_arr;
++	u32		arr_size;
++};
++
++#define QEDE_FORCED_SPEED_MAP(value)					\
++{									\
++	.speed		= SPEED_##value,				\
++	.cap_arr	= qede_forced_speed_##value,			\
++	.arr_size	= ARRAY_SIZE(qede_forced_speed_##value),	\
++}
++
++static const u32 qede_forced_speed_1000[] __initconst = {
++	ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
++	ETHTOOL_LINK_MODE_1000baseKX_Full_BIT,
++	ETHTOOL_LINK_MODE_1000baseX_Full_BIT,
++};
++
++static const u32 qede_forced_speed_10000[] __initconst = {
++	ETHTOOL_LINK_MODE_10000baseT_Full_BIT,
++	ETHTOOL_LINK_MODE_10000baseKR_Full_BIT,
++	ETHTOOL_LINK_MODE_10000baseKX4_Full_BIT,
++	ETHTOOL_LINK_MODE_10000baseR_FEC_BIT,
++	ETHTOOL_LINK_MODE_10000baseCR_Full_BIT,
++	ETHTOOL_LINK_MODE_10000baseSR_Full_BIT,
++	ETHTOOL_LINK_MODE_10000baseLR_Full_BIT,
++	ETHTOOL_LINK_MODE_10000baseLRM_Full_BIT,
++};
++
++static const u32 qede_forced_speed_20000[] __initconst = {
++	ETHTOOL_LINK_MODE_20000baseKR2_Full_BIT,
++};
++
++static const u32 qede_forced_speed_25000[] __initconst = {
++	ETHTOOL_LINK_MODE_25000baseKR_Full_BIT,
++	ETHTOOL_LINK_MODE_25000baseCR_Full_BIT,
++	ETHTOOL_LINK_MODE_25000baseSR_Full_BIT,
++};
++
++static const u32 qede_forced_speed_40000[] __initconst = {
++	ETHTOOL_LINK_MODE_40000baseLR4_Full_BIT,
++	ETHTOOL_LINK_MODE_40000baseKR4_Full_BIT,
++	ETHTOOL_LINK_MODE_40000baseCR4_Full_BIT,
++	ETHTOOL_LINK_MODE_40000baseSR4_Full_BIT,
++};
++
++static const u32 qede_forced_speed_50000[] __initconst = {
++	ETHTOOL_LINK_MODE_50000baseKR2_Full_BIT,
++	ETHTOOL_LINK_MODE_50000baseCR2_Full_BIT,
++	ETHTOOL_LINK_MODE_50000baseSR2_Full_BIT,
++};
++
++static const u32 qede_forced_speed_100000[] __initconst = {
++	ETHTOOL_LINK_MODE_100000baseKR4_Full_BIT,
++	ETHTOOL_LINK_MODE_100000baseSR4_Full_BIT,
++	ETHTOOL_LINK_MODE_100000baseCR4_Full_BIT,
++	ETHTOOL_LINK_MODE_100000baseLR4_ER4_Full_BIT,
++};
++
++static struct qede_forced_speed_map qede_forced_speed_maps[] __ro_after_init = {
++	QEDE_FORCED_SPEED_MAP(1000),
++	QEDE_FORCED_SPEED_MAP(10000),
++	QEDE_FORCED_SPEED_MAP(20000),
++	QEDE_FORCED_SPEED_MAP(25000),
++	QEDE_FORCED_SPEED_MAP(40000),
++	QEDE_FORCED_SPEED_MAP(50000),
++	QEDE_FORCED_SPEED_MAP(100000),
++};
++
++void __init qede_forced_speed_maps_init(void)
++{
++	struct qede_forced_speed_map *map;
++	u32 i;
++
++	for (i = 0; i < ARRAY_SIZE(qede_forced_speed_maps); i++) {
++		map = qede_forced_speed_maps + i;
++
++		linkmode_set_bit_array(map->cap_arr, map->arr_size, map->caps);
++		map->cap_arr = NULL;
++		map->arr_size = 0;
++	}
++}
++
++/* Ethtool callbacks */
++
+ static void qede_get_strings_stats_txq(struct qede_dev *edev,
+ 				       struct qede_tx_queue *txq, u8 **buf)
+ {
+@@ -458,10 +548,11 @@ static int qede_set_link_ksettings(struct net_device *dev,
+ 				   const struct ethtool_link_ksettings *cmd)
+ {
+ 	const struct ethtool_link_settings *base = &cmd->base;
+-	__ETHTOOL_DECLARE_LINK_MODE_MASK(sup_caps);
+ 	struct qede_dev *edev = netdev_priv(dev);
++	const struct qede_forced_speed_map *map;
+ 	struct qed_link_output current_link;
+ 	struct qed_link_params params;
++	u32 i;
+ 
+ 	if (!edev->ops || !edev->ops->common->can_link_change(edev->cdev)) {
+ 		DP_INFO(edev, "Link settings are not allowed to be changed\n");
+@@ -489,65 +580,24 @@ static int qede_set_link_ksettings(struct net_device *dev,
+ 		params.autoneg = false;
+ 		params.forced_speed = base->speed;
+ 
+-		phylink_zero(sup_caps);
++		for (i = 0; i < ARRAY_SIZE(qede_forced_speed_maps); i++) {
++			map = qede_forced_speed_maps + i;
+ 
+-		switch (base->speed) {
+-		case SPEED_1000:
+-			phylink_set(sup_caps, 1000baseT_Full);
+-			phylink_set(sup_caps, 1000baseKX_Full);
+-			phylink_set(sup_caps, 1000baseX_Full);
+-			break;
+-		case SPEED_10000:
+-			phylink_set(sup_caps, 10000baseT_Full);
+-			phylink_set(sup_caps, 10000baseKR_Full);
+-			phylink_set(sup_caps, 10000baseKX4_Full);
+-			phylink_set(sup_caps, 10000baseR_FEC);
+-			phylink_set(sup_caps, 10000baseCR_Full);
+-			phylink_set(sup_caps, 10000baseSR_Full);
+-			phylink_set(sup_caps, 10000baseLR_Full);
+-			phylink_set(sup_caps, 10000baseLRM_Full);
+-			break;
+-		case SPEED_20000:
+-			phylink_set(sup_caps, 20000baseKR2_Full);
+-			break;
+-		case SPEED_25000:
+-			phylink_set(sup_caps, 25000baseKR_Full);
+-			phylink_set(sup_caps, 25000baseCR_Full);
+-			phylink_set(sup_caps, 25000baseSR_Full);
+-			break;
+-		case SPEED_40000:
+-			phylink_set(sup_caps, 40000baseLR4_Full);
+-			phylink_set(sup_caps, 40000baseKR4_Full);
+-			phylink_set(sup_caps, 40000baseCR4_Full);
+-			phylink_set(sup_caps, 40000baseSR4_Full);
+-			break;
+-		case SPEED_50000:
+-			phylink_set(sup_caps, 50000baseKR2_Full);
+-			phylink_set(sup_caps, 50000baseCR2_Full);
+-			phylink_set(sup_caps, 50000baseSR2_Full);
+-			break;
+-		case SPEED_100000:
+-			phylink_set(sup_caps, 100000baseKR4_Full);
+-			phylink_set(sup_caps, 100000baseSR4_Full);
+-			phylink_set(sup_caps, 100000baseCR4_Full);
+-			phylink_set(sup_caps, 100000baseLR4_ER4_Full);
+-			break;
+-		default:
+-			DP_INFO(edev, "Unsupported speed %u\n", base->speed);
+-			return -EINVAL;
+-		}
++			if (base->speed != map->speed ||
++			    !linkmode_intersects(current_link.supported_caps,
++						 map->caps))
++				continue;
+ 
+-		if (!linkmode_intersects(current_link.supported_caps,
+-					 sup_caps)) {
+-			DP_INFO(edev, "%uG speed not supported\n",
+-				base->speed / 1000);
+-			return -EINVAL;
++			linkmode_and(params.adv_speeds,
++				     current_link.supported_caps, map->caps);
++			goto set_link;
+ 		}
+ 
+-		linkmode_and(params.adv_speeds, current_link.supported_caps,
+-			     sup_caps);
++		DP_INFO(edev, "Unsupported speed %u\n", base->speed);
++		return -EINVAL;
+ 	}
+ 
++set_link:
+ 	params.link_up = true;
+ 	edev->ops->common->set_link(edev->cdev, &params);
+ 
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
+index a653dd0e5c22..6f2171dc0dea 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_main.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
+@@ -263,6 +263,8 @@ int __init qede_init(void)
+ 
+ 	pr_info("qede_init: %s\n", version);
+ 
++	qede_forced_speed_maps_init();
++
+ 	qed_ops = qed_get_eth_ops();
+ 	if (!qed_ops) {
+ 		pr_notice("Failed to get qed ethtool operations\n");
+-- 
+2.25.1
 
-If there is no way the data stored in this new secret memory area
-would relate to secret data in a TEE or some other hardware
-device, then I agree that dma-buf has no value.
-
-> What we want is the ability to get an fd, set the properties and the
-> size and mmap it.  This is pretty much a 100% overlap with the memfd
-> API and not much overlap with the dmabuf one, which is why I don't
-> think the interface is very well suited.
-
-Does that mean you are suggesting to use additional flags on
-memfd_create() instead of a new system call?
-
-      Arnd
