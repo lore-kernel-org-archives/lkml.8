@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7C8C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931BAC433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6BC322CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EF7E22CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261409;
-	bh=+Yu0yXXoWm65CQbTb8rEu8e9JDG41uLdmHPn23u0NFs=;
+	s=default; t=1595261414;
+	bh=BP5p3xvMdM2LHrjqsnq4+2Ifc19baMI8Cqa1u5Fe9vI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1jCzh4MR4EC9U0m8WjRobcC8Qho/GngPxmGpdJ/eIvL2CvUTn1t/RRla5Ph1DxESv
-	 ePqJtneCkLfHbCNh6PJRKBjJnQaXzZkZidtu7brhUMHtfVnGBMYJmnA3b12ZpWpMCF
-	 1fHM5KVsBdT2SCwpOqzbh+mSHis+V17+/184hgQs=
+	b=XaJ0EwiKCPkYggNetftvlqf48h4vtrXYVaZHVyo9YWqYnTJT4nxBg/OElgM3upplj
+	 6DqTX8lFqV8PxzmkERob8MN7jclsBL+Yii9JBolHIiU4azehvd7rabB1F7jPV+rT0u
+	 mkJv6nHcn1fyk6xHQTcPICXtmHFc5cAZ/Qbr/wyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387625AbgGTQKG (ORCPT
+        id S2387640AbgGTQKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:10:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48306 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:10:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387607AbgGTQKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:10:04 -0400
+        id S2387628AbgGTQKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:10:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27D382064B;
-        Mon, 20 Jul 2020 16:10:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FA1320672;
+        Mon, 20 Jul 2020 16:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261403;
-        bh=+Yu0yXXoWm65CQbTb8rEu8e9JDG41uLdmHPn23u0NFs=;
+        s=default; t=1595261409;
+        bh=BP5p3xvMdM2LHrjqsnq4+2Ifc19baMI8Cqa1u5Fe9vI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mfKcPSTSyKrEUKFgxc6IAmQlYiiGAZVRjtOtG5QGyICK1nxOBlqLiO4QMuF4t5r+2
-         JEK3uEI3MqCE6X+DnT2e+hUOB3gzWvnbOUaoTOnh0rcH4x2xZrsOcpolO2toOU7uf1
-         8PqrB+Kz0SJnMrG5d6T4J/yhaXmOq9/KCPQ2YrC0=
+        b=Nd20TkyZau7HN2ZogBj8gCRXC6PB5EeKm2h/oS/P+4OPXow4IbBjIOug/UHtcQgvI
+         gJUPYqx9Jg1iP+CsVO7KKt/2HsJmTp0LrmWbeLwPvASut7SLA5tfughV61EpR8w6Y+
+         bNKKOcmILxEETTomW50HW2xVP85vZK5uDBHEKdxk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Joel Stanley <joel@jms.id.au>, Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Dan Aloni <dan@kernelim.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 102/244] clk: AST2600: Add mux for EMMC clock
-Date:   Mon, 20 Jul 2020 17:36:13 +0200
-Message-Id: <20200720152830.684860477@linuxfoundation.org>
+Subject: [PATCH 5.7 104/244] xprtrdma: Fix recursion into rpcrdma_xprt_disconnect()
+Date:   Mon, 20 Jul 2020 17:36:15 +0200
+Message-Id: <20200720152830.777325100@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -61,101 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eddie James <eajames@linux.ibm.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit c2407ab3bd55064d459bc822efd1c134e852798c ]
+[ Upstream commit 4cf44be6f1e86da302085bf3e1dc2c86f3cdaaaa ]
 
-The EMMC clock can be derived from either the HPLL or the MPLL. Register
-a clock mux so that the rate is calculated correctly based upon the
-parent.
+Both Dan and I have observed two processes invoking
+rpcrdma_xprt_disconnect() concurrently. In my case:
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-Link: https://lore.kernel.org/r/20200709195706.12741-2-eajames@linux.ibm.com
-Acked-by: Joel Stanley <joel@jms.id.au>
-Fixes: d3d04f6c330a ("clk: Add support for AST2600 SoC")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+1. The connect worker invokes rpcrdma_xprt_disconnect(), which
+   drains the QP and waits for the final completion
+2. This causes the newly posted Receive to flush and invoke
+   xprt_force_disconnect()
+3. xprt_force_disconnect() sets CLOSE_WAIT and wakes up the RPC task
+   that is holding the transport lock
+4. The RPC task invokes xprt_connect(), which calls ->ops->close
+5. xprt_rdma_close() invokes rpcrdma_xprt_disconnect(), which tries
+   to destroy the QP.
+
+Deadlock.
+
+To prevent xprt_force_disconnect() from waking anything, handle the
+clean up after a failed connection attempt in the xprt's sndtask.
+
+The retry loop is removed from rpcrdma_xprt_connect() to ensure
+that the newly allocated ep and id are properly released before
+a REJECTED connection attempt can be retried.
+
+Reported-by: Dan Aloni <dan@kernelim.com>
+Fixes: e28ce90083f0 ("xprtrdma: kmalloc rpcrdma_ep separate from rpcrdma_xprt")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-ast2600.c | 49 ++++++++++++++++++++++++++++++++-------
- 1 file changed, 41 insertions(+), 8 deletions(-)
+ net/sunrpc/xprtrdma/transport.c |  5 +++++
+ net/sunrpc/xprtrdma/verbs.c     | 10 ++--------
+ 2 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
-index 99afc949925f0..177368cac6dd6 100644
---- a/drivers/clk/clk-ast2600.c
-+++ b/drivers/clk/clk-ast2600.c
-@@ -131,6 +131,18 @@ static const struct clk_div_table ast2600_eclk_div_table[] = {
- 	{ 0 }
- };
- 
-+static const struct clk_div_table ast2600_emmc_extclk_div_table[] = {
-+	{ 0x0, 2 },
-+	{ 0x1, 4 },
-+	{ 0x2, 6 },
-+	{ 0x3, 8 },
-+	{ 0x4, 10 },
-+	{ 0x5, 12 },
-+	{ 0x6, 14 },
-+	{ 0x7, 16 },
-+	{ 0 }
-+};
-+
- static const struct clk_div_table ast2600_mac_div_table[] = {
- 	{ 0x0, 4 },
- 	{ 0x1, 4 },
-@@ -390,6 +402,11 @@ static struct clk_hw *aspeed_g6_clk_hw_register_gate(struct device *dev,
- 	return hw;
+diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+index 659da37020a46..3b5fb1f57aeb7 100644
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -249,6 +249,11 @@ xprt_rdma_connect_worker(struct work_struct *work)
+ 					   xprt->stat.connect_start;
+ 		xprt_set_connected(xprt);
+ 		rc = -EAGAIN;
++	} else {
++		/* Force a call to xprt_rdma_close to clean up */
++		spin_lock(&xprt->transport_lock);
++		set_bit(XPRT_CLOSE_WAIT, &xprt->state);
++		spin_unlock(&xprt->transport_lock);
+ 	}
+ 	xprt_wake_pending_tasks(xprt, rc);
  }
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 4cb91dde849b9..00ee62579137b 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -288,7 +288,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+ 			sap, rdma_reject_msg(id, event->status));
+ 		ep->re_connect_status = -ECONNREFUSED;
+ 		if (event->status == IB_CM_REJ_STALE_CONN)
+-			ep->re_connect_status = -EAGAIN;
++			ep->re_connect_status = -ENOTCONN;
+ 		goto disconnected;
+ 	case RDMA_CM_EVENT_DISCONNECTED:
+ 		ep->re_connect_status = -ECONNABORTED;
+@@ -519,8 +519,6 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
+ 	struct rpcrdma_ep *ep;
+ 	int rc;
  
-+static const char *const emmc_extclk_parent_names[] = {
-+	"emmc_extclk_hpll_in",
-+	"mpll",
-+};
-+
- static const char * const vclk_parent_names[] = {
- 	"dpll",
- 	"d1pll",
-@@ -459,16 +476,32 @@ static int aspeed_g6_clk_probe(struct platform_device *pdev)
- 		return PTR_ERR(hw);
- 	aspeed_g6_clk_data->hws[ASPEED_CLK_UARTX] = hw;
+-retry:
+-	rpcrdma_xprt_disconnect(r_xprt);
+ 	rc = rpcrdma_ep_create(r_xprt);
+ 	if (rc)
+ 		return rc;
+@@ -549,17 +547,13 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
+ 	wait_event_interruptible(ep->re_connect_wait,
+ 				 ep->re_connect_status != 0);
+ 	if (ep->re_connect_status <= 0) {
+-		if (ep->re_connect_status == -EAGAIN)
+-			goto retry;
+ 		rc = ep->re_connect_status;
+ 		goto out;
+ 	}
  
--	/* EMMC ext clock divider */
--	hw = clk_hw_register_gate(dev, "emmc_extclk_gate", "hpll", 0,
--			scu_g6_base + ASPEED_G6_CLK_SELECTION1, 15, 0,
--			&aspeed_g6_clk_lock);
-+	/* EMMC ext clock */
-+	hw = clk_hw_register_fixed_factor(dev, "emmc_extclk_hpll_in", "hpll",
-+					  0, 1, 2);
- 	if (IS_ERR(hw))
- 		return PTR_ERR(hw);
--	hw = clk_hw_register_divider_table(dev, "emmc_extclk", "emmc_extclk_gate", 0,
--			scu_g6_base + ASPEED_G6_CLK_SELECTION1, 12, 3, 0,
--			ast2600_div_table,
--			&aspeed_g6_clk_lock);
-+
-+	hw = clk_hw_register_mux(dev, "emmc_extclk_mux",
-+				 emmc_extclk_parent_names,
-+				 ARRAY_SIZE(emmc_extclk_parent_names), 0,
-+				 scu_g6_base + ASPEED_G6_CLK_SELECTION1, 11, 1,
-+				 0, &aspeed_g6_clk_lock);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	hw = clk_hw_register_gate(dev, "emmc_extclk_gate", "emmc_extclk_mux",
-+				  0, scu_g6_base + ASPEED_G6_CLK_SELECTION1,
-+				  15, 0, &aspeed_g6_clk_lock);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	hw = clk_hw_register_divider_table(dev, "emmc_extclk",
-+					   "emmc_extclk_gate", 0,
-+					   scu_g6_base +
-+						ASPEED_G6_CLK_SELECTION1, 12,
-+					   3, 0, ast2600_emmc_extclk_div_table,
-+					   &aspeed_g6_clk_lock);
- 	if (IS_ERR(hw))
- 		return PTR_ERR(hw);
- 	aspeed_g6_clk_data->hws[ASPEED_CLK_EMMC] = hw;
+ 	rc = rpcrdma_reqs_setup(r_xprt);
+-	if (rc) {
+-		rpcrdma_xprt_disconnect(r_xprt);
++	if (rc)
+ 		goto out;
+-	}
+ 	rpcrdma_mrs_create(r_xprt);
+ 
+ out:
 -- 
 2.25.1
 
