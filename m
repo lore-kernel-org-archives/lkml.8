@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9934DC433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB55C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67A6122CB2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BEBE22CB2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259480;
-	bh=yXP0nJ0lUk90ViUe6imEiLf5QQSGcmAp58EZXQIHB78=;
+	s=default; t=1595259473;
+	bh=MoG130qKw2K0VYhIYMfKUqMrYbRavy5oYSw1eC9DEnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B9sNATvGZpKsfUlnJb9XyiaYSSsxpOwD9zjDq2gddl6O4tJNc8XR8Ba2H9pj+kTL+
-	 rZkPiDrev1RecIupdE91fqDeReA49NCEu6a9OSqAR0u/YER7L6/I3k+17j8FMbP5VG
-	 q4N8qS+h1uE9Awgjbf1w6JAbfuL0WjtFHRruyvt4=
+	b=a/tiHvt//blgUdXgmyP1HIgD66XdLF0lvIgRq7wMbY/0fXqhUW8QUbaMHw4UR4tP8
+	 hl9EqZw/dGTsvApuc6s34jBjVP9mtEJKMaPflPRVteC3FkOIjXSPXkU5cxiozQ7wYL
+	 DL0oX54IEVZWiB1K9grrPTgCBXwU1YQbZEiUSpKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgGTPh7 (ORCPT
+        id S1728972AbgGTPhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:37:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56240 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:37:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728993AbgGTPhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:37:55 -0400
+        id S1728966AbgGTPhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:37:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EEF422CB2;
-        Mon, 20 Jul 2020 15:37:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E103F22CB2;
+        Mon, 20 Jul 2020 15:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259475;
-        bh=yXP0nJ0lUk90ViUe6imEiLf5QQSGcmAp58EZXQIHB78=;
+        s=default; t=1595259469;
+        bh=MoG130qKw2K0VYhIYMfKUqMrYbRavy5oYSw1eC9DEnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=my2yGPiZ5PvQREjSENR1Y711COv7/hVNQ3tDCRNHoO0CNbizgnx54g0OMMO07c4Bz
-         9nBXeo2giIiw3vRkD+PhEG0RUIn/Eq7PHWWa479T5qnyugFpVvc3Sj9L9tuMUTIeBe
-         C76VuzRf9s3zbSfiS8cMLcRJ2izHA7OpPp5AmQdk=
+        b=QQV0eJDkxikcMyAOhkNzmWRPmiJJOgFkhGyMoOlwuRhs1Ro3gbk2dqxD0y9+qBPPd
+         LGmDhIAwSigdkGpqkSON/ch4MJrfmNPQ9G7DC5UoImQrd82wo4P8L3povqgBQAXEN5
+         sxaJ6O2pvGE61KbCQ/DLOtK8xRNUMLMdIpGBQG80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        James Chapman <jchapman@katalix.com>,
+        stable@vger.kernel.org, Fei Liu <feliu@redhat.com>,
+        Jonathan Toppins <jtoppins@redhat.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Davide Caratti <dcaratti@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 21/58] l2tp: remove skb_dst_set() from l2tp_xmit_skb()
-Date:   Mon, 20 Jul 2020 17:36:37 +0200
-Message-Id: <20200720152748.201004849@linuxfoundation.org>
+Subject: [PATCH 4.4 19/58] bnxt_en: fix NULL dereference in case SR-IOV configuration fails
+Date:   Mon, 20 Jul 2020 17:36:35 +0200
+Message-Id: <20200720152748.099791825@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
 References: <20200720152747.127988571@linuxfoundation.org>
@@ -61,60 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit 27d53323664c549b5bb2dfaaf6f7ad6e0376a64e ]
+commit c8b1d7436045d3599bae56aef1682813ecccaad7 upstream.
 
-In the tx path of l2tp, l2tp_xmit_skb() calls skb_dst_set() to set
-skb's dst. However, it will eventually call inet6_csk_xmit() or
-ip_queue_xmit() where skb's dst will be overwritten by:
+we need to set 'active_vfs' back to 0, if something goes wrong during the
+allocation of SR-IOV resources: otherwise, further VF configurations will
+wrongly assume that bp->pf.vf[x] are valid memory locations, and commands
+like the ones in the following sequence:
 
-   skb_dst_set_noref(skb, dst);
+ # echo 2 >/sys/bus/pci/devices/${ADDR}/sriov_numvfs
+ # ip link set dev ens1f0np0 up
+ # ip link set dev ens1f0np0 vf 0 trust on
 
-without releasing the old dst in skb. Then it causes dst/dev refcnt leak:
+will cause a kernel crash similar to this:
 
-  unregister_netdevice: waiting for eth0 to become free. Usage count = 1
+ bnxt_en 0000:3b:00.0: not enough MMIO resources for SR-IOV
+ BUG: kernel NULL pointer dereference, address: 0000000000000014
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 0 P4D 0
+ Oops: 0000 [#1] SMP PTI
+ CPU: 43 PID: 2059 Comm: ip Tainted: G          I       5.8.0-rc2.upstream+ #871
+ Hardware name: Dell Inc. PowerEdge R740/08D89F, BIOS 2.2.11 06/13/2019
+ RIP: 0010:bnxt_set_vf_trust+0x5b/0x110 [bnxt_en]
+ Code: 44 24 58 31 c0 e8 f5 fb ff ff 85 c0 0f 85 b6 00 00 00 48 8d 1c 5b 41 89 c6 b9 0b 00 00 00 48 c1 e3 04 49 03 9c 24 f0 0e 00 00 <8b> 43 14 89 c2 83 c8 10 83 e2 ef 45 84 ed 49 89 e5 0f 44 c2 4c 89
+ RSP: 0018:ffffac6246a1f570 EFLAGS: 00010246
+ RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000000000000b
+ RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff98b28f538900
+ RBP: ffff98b28f538900 R08: 0000000000000000 R09: 0000000000000008
+ R10: ffffffffb9515be0 R11: ffffac6246a1f678 R12: ffff98b28f538000
+ R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffc05451e0
+ FS:  00007fde0f688800(0000) GS:ffff98baffd40000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000014 CR3: 000000104bb0a003 CR4: 00000000007606e0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ PKRU: 55555554
+ Call Trace:
+  do_setlink+0x994/0xfe0
+  __rtnl_newlink+0x544/0x8d0
+  rtnl_newlink+0x47/0x70
+  rtnetlink_rcv_msg+0x29f/0x350
+  netlink_rcv_skb+0x4a/0x110
+  netlink_unicast+0x21d/0x300
+  netlink_sendmsg+0x329/0x450
+  sock_sendmsg+0x5b/0x60
+  ____sys_sendmsg+0x204/0x280
+  ___sys_sendmsg+0x88/0xd0
+  __sys_sendmsg+0x5e/0xa0
+  do_syscall_64+0x47/0x80
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-This can be reproduced by simply running:
-
-  # modprobe l2tp_eth && modprobe l2tp_ip
-  # sh ./tools/testing/selftests/net/l2tp.sh
-
-So before going to inet6_csk_xmit() or ip_queue_xmit(), skb's dst
-should be dropped. This patch is to fix it by removing skb_dst_set()
-from l2tp_xmit_skb() and moving skb_dst_drop() into l2tp_xmit_core().
-
-Fixes: 3557baabf280 ("[L2TP]: PPP over L2TP driver core")
-Reported-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: James Chapman <jchapman@katalix.com>
-Tested-by: James Chapman <jchapman@katalix.com>
+Fixes: c0c050c58d840 ("bnxt_en: New Broadcom ethernet driver.")
+Reported-by: Fei Liu <feliu@redhat.com>
+CC: Jonathan Toppins <jtoppins@redhat.com>
+CC: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+Acked-by: Jonathan Toppins <jtoppins@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/l2tp/l2tp_core.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -1139,6 +1139,7 @@ static int l2tp_xmit_core(struct l2tp_se
- 
- 	/* Queue the packet to IP for output */
- 	skb->ignore_df = 1;
-+	skb_dst_drop(skb);
- #if IS_ENABLED(CONFIG_IPV6)
- 	if (tunnel->sock->sk_family == PF_INET6 && !tunnel->v4mapped)
- 		error = inet6_csk_xmit(tunnel->sock, skb, NULL);
-@@ -1203,10 +1204,6 @@ int l2tp_xmit_skb(struct l2tp_session *s
- 		goto out_unlock;
+---
+ drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c
+@@ -295,6 +295,7 @@ static void bnxt_free_vf_resources(struc
+ 		}
  	}
  
--	/* Get routing info from the tunnel socket */
--	skb_dst_drop(skb);
--	skb_dst_set(skb, sk_dst_check(sk, 0));
--
- 	inet = inet_sk(sk);
- 	fl = &inet->cork.fl;
- 	switch (tunnel->encap) {
++	bp->pf.active_vfs = 0;
+ 	kfree(bp->pf.vf);
+ 	bp->pf.vf = NULL;
+ }
+@@ -535,7 +536,6 @@ void bnxt_sriov_disable(struct bnxt *bp)
+ 
+ 	bnxt_free_vf_resources(bp);
+ 
+-	bp->pf.active_vfs = 0;
+ 	bp->pf.max_pf_rx_rings = bp->pf.max_rx_rings;
+ 	bp->pf.max_pf_tx_rings = bp->pf.max_tx_rings;
+ }
 
 
