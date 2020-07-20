@@ -2,140 +2,220 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795B1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF207C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4E92070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:44:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nBZEVVUo"
+	by mail.kernel.org (Postfix) with ESMTP id B2B472070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgGTLoE (ORCPT
+        id S1728634AbgGTLoY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 07:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728524AbgGTLoD (ORCPT
+        Mon, 20 Jul 2020 07:44:24 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36001 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728058AbgGTLoY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 07:44:03 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EF30C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 04:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=8KcdwEeAcx3Daxv4E4fZ7SRipQ6fOdSHere+LTZwYW8=; b=nBZEVVUoHciyNHdl3+6SWgtTJB
-        BTHgvq9FVMMxdUxsjriWx3XfyCyRS7+oesSd8yydoxB/Z2o9EY5MkOcknNt9nbKZPuvpPGmljmImR
-        3jkfd94VWqMXBLkzONh6klhSOyFP2nFUtQWm+o1hi1gj0LelLUkZargrpw+FBsa6H071EjPCqI7yi
-        fWUn14+BvT3/A0bn0yiTzHeg0pvcdm19YrDVsqzkuXssA5ZmN7EbJfCpW5VxyaNWMTPuyAVzwx/T+
-        sXQbEZZXPSgUdgk/RGdZ/GfxoPNd6ZcI2qvWCefOJ0po4Z01c1/eCr0QX1DzOzhDz2hYJ3+Xa0K/O
-        QtCTu6KQ==;
-Received: from [2001:4bb8:105:4a81:ec09:aa20:3c1e:ebea] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxUD9-00012J-6C; Mon, 20 Jul 2020 11:43:59 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     gxt@pku.edu.cn
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] unicore32: use get_kernel_nofault in dump mem and dump_instr
-Date:   Mon, 20 Jul 2020 13:43:58 +0200
-Message-Id: <20200720114358.201161-1-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
+        Mon, 20 Jul 2020 07:44:24 -0400
+Received: by mail-io1-f67.google.com with SMTP id y2so17218005ioy.3;
+        Mon, 20 Jul 2020 04:44:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+GN39BSEPAUfJ0bpjcxQHGly9Se3lNLoksrqMlxAACI=;
+        b=kEUcdS8XOKileHZATRLxqzaBDBZHx8ePPXyU//4NBgasjV5meACd+T3anZ77V6IvM4
+         AD0Bf3aKxIFHFHEq6octXjALzM7KxGlcBEcWQ43zHIHe+NcKzjZxoAfKdmpMwBbK8Os3
+         zlyCxFKKpuiku2xBRrzPUZ4KjNfZiw8pRSUHuRP3TN1mJjzy+yrmidXToioycrXzP6wS
+         KmjUZu/KO2qBPnguodSh5oowJHvAYxM00o0SIn05snRwI7/Bs6mBUQcXHYak2jRrJ5U8
+         +SaPXnZU/bDAMwoqjwadNJv0GQg0zjEh7aU8VMWmj0UUAZFnqM9nN4OBB6DjwF2RsrtT
+         eIhQ==
+X-Gm-Message-State: AOAM532E4xQonKSlZk5l6nUkIVs9T5whxGNVBNPfrsZq8xiWyV13h615
+        jZ3i//Zg3RMmPazZ6vghn5bLCXIZvTu+AkU+xJg=
+X-Google-Smtp-Source: ABdhPJwHsT+22EimMWWdW5XiMz9g20yj0zPkGPGv0lZLPIwCzNsJkybtQeO7vSlQlH+9nyTdmMI+jz/itVffUz0hzmE=
+X-Received: by 2002:a5d:97d9:: with SMTP id k25mr22575386ios.42.1595245462494;
+ Mon, 20 Jul 2020 04:44:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
+ <20200720074249.596364-3-jiaxun.yang@flygoat.com> <CAAhV-H52=2-Hij0AFBGuZWhQ4kWqEwLsvzXPR-ZndQKtkjnMbw@mail.gmail.com>
+ <618053d0-57ea-8675-99ee-2f0b93faa334@flygoat.com>
+In-Reply-To: <618053d0-57ea-8675-99ee-2f0b93faa334@flygoat.com>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Mon, 20 Jul 2020 19:44:10 +0800
+Message-ID: <CAAhV-H7n3Uy-X6ePgTsC6VfV0HbV22SM-BV9Q0i6BS=oxw__yA@mail.gmail.com>
+Subject: Re: [PATCH 2/5] MIPS: Loongson64: Process ISA Node in DeviceTree
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the proper get_kernel_nofault helper to access an unsafe kernel
-pointer without faulting instead of playing with set_fs and get_user.
+Hi, Jiaxun,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/unicore32/kernel/traps.c | 28 +++-------------------------
- 1 file changed, 3 insertions(+), 25 deletions(-)
+On Mon, Jul 20, 2020 at 6:20 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+>
+>
+> 在 2020/7/20 下午6:01, Huacai Chen 写道:
+> > Hi, Jiaxun,
+> >
+> > On Mon, Jul 20, 2020 at 3:44 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+> >> Previously, we're hardcoding resserved ISA I/O Space in code, now
+> >> we're processing reverved I/O via DeviceTree directly. Using the ranges
+> >> property to determine the size and address of reserved I/O space.
+> > Maybe it is better to reserve a default legacy io range if there is no
+> > "isa" node in the .dts file?
+>
+> As currently all dts is built-in in Kernel, I don't think it's necessary.
+>
+> Also the only ISA driver remaining that can't be probed by dts is i8042.
+> We can convert it to DeviceTree based, and then we'll always be safe.
+>
+If you don't reserve a default legacy io range, then I should define
+an "isa" node for KVM guests even if the VM doesn't have i8042 and
+i8259. Because some pci devices still have legacy i/o ports, such as
+qxl. I have tested your patches and found that KVM guests with qxl
+cannot work without an "isa" node.
 
-diff --git a/arch/unicore32/kernel/traps.c b/arch/unicore32/kernel/traps.c
-index a3ac01df1a2e43..c1964a4a1edbb0 100644
---- a/arch/unicore32/kernel/traps.c
-+++ b/arch/unicore32/kernel/traps.c
-@@ -65,17 +65,8 @@ static void dump_mem(const char *lvl, const char *str, unsigned long bottom,
- 		     unsigned long top)
- {
- 	unsigned long first;
--	mm_segment_t fs;
- 	int i;
- 
--	/*
--	 * We need to switch to kernel mode so that we can use __get_user
--	 * to safely read from kernel space.  Note that we now dump the
--	 * code first, just in case the backtrace kills us.
--	 */
--	fs = get_fs();
--	set_fs(KERNEL_DS);
--
- 	printk(KERN_DEFAULT "%s%s(0x%08lx to 0x%08lx)\n",
- 			lvl, str, bottom, top);
- 
-@@ -89,7 +80,8 @@ static void dump_mem(const char *lvl, const char *str, unsigned long bottom,
- 		for (p = first, i = 0; i < 8 && p < top; i++, p += 4) {
- 			if (p >= bottom && p < top) {
- 				unsigned long val;
--				if (__get_user(val, (unsigned long *)p) == 0)
-+				if (get_kernel_nofault(val, (unsigned long *)p)
-+						== 0)
- 					sprintf(str + i * 9, " %08lx", val);
- 				else
- 					sprintf(str + i * 9, " ????????");
-@@ -97,31 +89,19 @@ static void dump_mem(const char *lvl, const char *str, unsigned long bottom,
- 		}
- 		printk(KERN_DEFAULT "%s%04lx:%s\n", lvl, first & 0xffff, str);
- 	}
--
--	set_fs(fs);
- }
- 
- static void dump_instr(const char *lvl, struct pt_regs *regs)
- {
- 	unsigned long addr = instruction_pointer(regs);
- 	const int width = 8;
--	mm_segment_t fs;
- 	char str[sizeof("00000000 ") * 5 + 2 + 1], *p = str;
- 	int i;
- 
--	/*
--	 * We need to switch to kernel mode so that we can use __get_user
--	 * to safely read from kernel space.  Note that we now dump the
--	 * code first, just in case the backtrace kills us.
--	 */
--	fs = get_fs();
--	set_fs(KERNEL_DS);
--
- 	for (i = -4; i < 1; i++) {
- 		unsigned int val, bad;
- 
--		bad = __get_user(val, &((u32 *)addr)[i]);
--
-+		bad = get_kernel_nofault(val, &((u32 *)addr)[i]);
- 		if (!bad)
- 			p += sprintf(p, i == 0 ? "(%0*x) " : "%0*x ",
- 					width, val);
-@@ -131,8 +111,6 @@ static void dump_instr(const char *lvl, struct pt_regs *regs)
- 		}
- 	}
- 	printk(KERN_DEFAULT "%sCode: %s\n", lvl, str);
--
--	set_fs(fs);
- }
- 
- static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk,
--- 
-2.27.0
-
+Huacai
+> Thanks.
+>
+> - Jiaxun
+>
+> >
+> > Huacai
+> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> >> ---
+> >>   arch/mips/loongson64/init.c | 85 ++++++++++++++++++++++++++-----------
+> >>   1 file changed, 60 insertions(+), 25 deletions(-)
+> >>
+> >> diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
+> >> index 59ddadace83f..028d7b324ec2 100644
+> >> --- a/arch/mips/loongson64/init.c
+> >> +++ b/arch/mips/loongson64/init.c
+> >> @@ -7,6 +7,8 @@
+> >>   #include <linux/irqchip.h>
+> >>   #include <linux/logic_pio.h>
+> >>   #include <linux/memblock.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_address.h>
+> >>   #include <asm/bootinfo.h>
+> >>   #include <asm/traps.h>
+> >>   #include <asm/smp-ops.h>
+> >> @@ -63,41 +65,74 @@ void __init prom_free_prom_memory(void)
+> >>   {
+> >>   }
+> >>
+> >> -static __init void reserve_pio_range(void)
+> >> +static int __init add_legacy_isa_io(struct fwnode_handle *fwnode, phys_addr_t addr,
+> >> +                            resource_size_t    size)
+> >>   {
+> >> +       int ret = 0;
+> >>          struct logic_pio_hwaddr *range;
+> >> +       unsigned long vaddr;
+> >>
+> >>          range = kzalloc(sizeof(*range), GFP_ATOMIC);
+> >>          if (!range)
+> >> -               return;
+> >> +               return -ENOMEM;
+> >>
+> >> -       range->fwnode = &of_root->fwnode;
+> >> -       range->size = MMIO_LOWER_RESERVED;
+> >> -       range->hw_start = LOONGSON_PCIIO_BASE;
+> >> +       range->fwnode = fwnode;
+> >> +       range->size = size;
+> >> +       range->hw_start = addr;
+> >>          range->flags = LOGIC_PIO_CPU_MMIO;
+> >>
+> >> -       if (logic_pio_register_range(range)) {
+> >> -               pr_err("Failed to reserve PIO range for legacy ISA\n");
+> >> -               goto free_range;
+> >> +       ret = logic_pio_register_range(range);
+> >> +       if (ret) {
+> >> +               kfree(range);
+> >> +               return ret;
+> >> +       }
+> >> +
+> >> +       /* Legacy ISA must placed at the start of PCI_IOBASE */
+> >> +       if (range->io_start != 0) {
+> >> +               logic_pio_unregister_range(range);
+> >> +               kfree(range);
+> >> +               return -EINVAL;
+> >>          }
+> >>
+> >> -       if (WARN(range->io_start != 0,
+> >> -                       "Reserved PIO range does not start from 0\n"))
+> >> -               goto unregister;
+> >> -
+> >> -       /*
+> >> -        * i8259 would access I/O space, so mapping must be done here.
+> >> -        * Please remove it when all drivers can be managed by logic_pio.
+> >> -        */
+> >> -       ioremap_page_range(PCI_IOBASE, PCI_IOBASE + MMIO_LOWER_RESERVED,
+> >> -                               LOONGSON_PCIIO_BASE,
+> >> -                               pgprot_device(PAGE_KERNEL));
+> >> -
+> >> -       return;
+> >> -unregister:
+> >> -       logic_pio_unregister_range(range);
+> >> -free_range:
+> >> -       kfree(range);
+> >> +       vaddr = PCI_IOBASE + range->io_start;
+> >> +
+> >> +       ioremap_page_range(vaddr, vaddr + size, addr, pgprot_device(PAGE_KERNEL));
+> >> +
+> >> +       return 0;
+> >> +}
+> >> +
+> >> +static __init void reserve_pio_range(void)
+> >> +{
+> >> +       struct device_node *np;
+> >> +
+> >> +       for_each_node_by_name(np, "isa") {
+> >> +               struct of_pci_range range;
+> >> +               struct of_pci_range_parser parser;
+> >> +
+> >> +               pr_info("ISA Bridge: %pOF\n", np);
+> >> +
+> >> +               if (of_pci_range_parser_init(&parser, np)) {
+> >> +                       pr_info("Failed to parse resources.\n");
+> >> +                       break;
+> >> +               }
+> >> +
+> >> +               for_each_of_pci_range(&parser, &range) {
+> >> +                       switch (range.flags & IORESOURCE_TYPE_BITS) {
+> >> +                       case IORESOURCE_IO:
+> >> +                               pr_info(" IO 0x%016llx..0x%016llx\n",
+> >> +                                       range.cpu_addr,
+> >> +                                       range.cpu_addr + range.size - 1);
+> >> +                               if (add_legacy_isa_io(&np->fwnode, range.cpu_addr, range.size))
+> >> +                                       pr_warn("Failed to reserve legacy IO in Logic PIO\n");
+> >> +                               break;
+> >> +                       case IORESOURCE_MEM:
+> >> +                               pr_info(" MEM 0x%016llx..0x%016llx\n",
+> >> +                                       range.cpu_addr,
+> >> +                                       range.cpu_addr + range.size - 1);
+> >> +                               break;
+> >> +                       }
+> >> +               }
+> >> +       }
+> >>   }
+> >>
+> >>   void __init arch_init_irq(void)
+> >> --
+> >> 2.28.0.rc1
+> >>
