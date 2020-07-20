@@ -2,51 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2A2C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B46C122CBB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B36D622482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260389;
-	bh=w3L0ltA9Lm03hwxJdwEednYK1OeTpgermLdcgX8ulc8=;
+	s=default; t=1595260392;
+	bh=a1wX56O3UUk6wUvl7vJKE53fpz3FbSKZ3H8oA4dNQJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rq81M5TSjwRNDkDqARrBXjjOCTfB4+povlbX1ZCU2kLKXX0bik/B3D621YddsTM4E
-	 88k7k1AunHQgqtVR8milo/5rGAXdSeezeo3oUkICXwvYSWPMDj1FpHuThi78/x436Q
-	 lP5IfQCBn/rlTId6lc/dCHt4HqatJ5HeP2/lz8YQ=
+	b=Uwv5bUYBmUK/gChZDU2DN+aWIqBVodnSjmT2nelzBU6qilWFGxu7lZHTMAwG5ekE+
+	 Azs+xTNyKUmplaGHjaj3qH9ftNkOBWLstyZEwcbBkjHCtI/aaItDK1YDVPDS+juXWG
+	 uvgOIxtXKMLZDMGYb395gUyR0iwlXlXItqn4u+NE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731137AbgGTPxH (ORCPT
+        id S1730446AbgGTPxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:53:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51448 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:53:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729995AbgGTPxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:53:05 -0400
+        id S1730407AbgGTPxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:53:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F36CD206E9;
-        Mon, 20 Jul 2020 15:53:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 534392065E;
+        Mon, 20 Jul 2020 15:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260385;
-        bh=w3L0ltA9Lm03hwxJdwEednYK1OeTpgermLdcgX8ulc8=;
+        s=default; t=1595260382;
+        bh=a1wX56O3UUk6wUvl7vJKE53fpz3FbSKZ3H8oA4dNQJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vRw+Q0IgnoipkTUjkLIHrFf8FRtGC4dFOYCyw0Vzn67X9o4Xg3m+2m2lKrCW5qf9X
-         ltgD02OoWXkEkLC29OW9d/6Annhtrv/7i/pcC0RK6edd0G/4m4zlC7MxSqls6dplg6
-         G+G4afMFAj21dtiMO5cyh5Ga9ks+GfLcbCcQxkvQ=
+        b=ThFE8RRhKDAfbVxwt0HguHxU3srI1HxO/oq6kxSs33jb8HvM2xnUYhfffabWl/hmU
+         ZaDGWjZ8d7qW0Id74IvQq9PMXqT6zLFo1umCO9sRZbm3b6OIYhLzSQhxmQJMNYpG7P
+         ULoGLDkFBGfokyhnhFFFywuJR3+LGnBa0rInGppI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sebastian Parschauer <s.parschauer@gmx.de>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.19 083/133] HID: quirks: Always poll Obins Anne Pro 2 keyboard
-Date:   Mon, 20 Jul 2020 17:37:10 +0200
-Message-Id: <20200720152807.722207307@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 065/133] ARM: dts: socfpga: Align L2 cache-controller nodename with dtschema
+Date:   Mon, 20 Jul 2020 17:36:52 +0200
+Message-Id: <20200720152806.877714633@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -59,50 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Parschauer <s.parschauer@gmx.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit ca28aff0e1dc7dce9e12a7fd9276b7118ce5e73a upstream.
+[ Upstream commit d7adfe5ffed9faa05f8926223086b101e14f700d ]
 
-The Obins Anne Pro 2 keyboard (04d9:a293) disconnects after a few
-minutes of inactivity when using it wired and typing does not result
-in any input events any more. This is a common firmware flaw. So add
-the ALWAYS_POLL quirk for this device.
+Fix dtschema validator warnings like:
+    l2-cache@fffff000: $nodename:0:
+        'l2-cache@fffff000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
-GitHub user Dietrich Moerman (dietrichm) tested the quirk and
-requested my help in my project
-https://github.com/sriemer/fix-linux-mouse issue 22 to provide
-this patch.
-
-Link: https://www.reddit.com/r/AnnePro/comments/gruzcb/anne_pro_2_linux_cant_type_after_inactivity/
-Signed-off-by: Sebastian Parschauer <s.parschauer@gmx.de>
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 475dc86d08de ("arm: dts: socfpga: Add a base DTSI for Altera's Arria10 SOC")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    |    1 +
- drivers/hid/hid-quirks.c |    1 +
- 2 files changed, 2 insertions(+)
+ arch/arm/boot/dts/socfpga.dtsi         | 2 +-
+ arch/arm/boot/dts/socfpga_arria10.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -609,6 +609,7 @@
- #define USB_DEVICE_ID_HOLTEK_ALT_MOUSE_A081	0xa081
- #define USB_DEVICE_ID_HOLTEK_ALT_MOUSE_A0C2	0xa0c2
- #define USB_DEVICE_ID_HOLTEK_ALT_KEYBOARD_A096	0xa096
-+#define USB_DEVICE_ID_HOLTEK_ALT_KEYBOARD_A293	0xa293
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index b38f8c2405580..602511ccad6f6 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -710,7 +710,7 @@ ocram-ecc@ffd08144 {
+ 			};
+ 		};
  
- #define USB_VENDOR_ID_IMATION		0x0718
- #define USB_DEVICE_ID_DISC_STAKKA	0xd000
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -90,6 +90,7 @@ static const struct hid_device_id hid_qu
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_HAPP, USB_DEVICE_ID_UGCI_FIGHTING), HID_QUIRK_BADPAD | HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_HAPP, USB_DEVICE_ID_UGCI_FLYING), HID_QUIRK_BADPAD | HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_HOLTEK_ALT, USB_DEVICE_ID_HOLTEK_ALT_KEYBOARD_A096), HID_QUIRK_NO_INIT_REPORTS },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_HOLTEK_ALT, USB_DEVICE_ID_HOLTEK_ALT_KEYBOARD_A293), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0A4A), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0B4A), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
+-		L2: l2-cache@fffef000 {
++		L2: cache-controller@fffef000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfffef000 0x1000>;
+ 			interrupts = <0 38 0x04>;
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index b4dd3846e8cc9..ba5657574d9bb 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -618,7 +618,7 @@ sdr: sdr@ffcfb100 {
+ 			reg = <0xffcfb100 0x80>;
+ 		};
+ 
+-		L2: l2-cache@fffff000 {
++		L2: cache-controller@fffff000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfffff000 0x1000>;
+ 			interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.25.1
+
 
 
