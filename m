@@ -2,278 +2,98 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,
+	BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2518C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49F6C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2CD420773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C8521775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:20:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UQ5YkFr0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xe6GrYBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgGTKP0 (ORCPT
+        id S1728371AbgGTKUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 06:15:26 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:33930 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728007AbgGTKP0 (ORCPT
+        Mon, 20 Jul 2020 06:20:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56688 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728025AbgGTKUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 06:15:26 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id BB5631C0BE5; Mon, 20 Jul 2020 12:15:23 +0200 (CEST)
-Date:   Mon, 20 Jul 2020 12:15:22 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     stable@kernel.org, kernel list <linux-kernel@vger.kernel.org>,
-        gregkh@duo.ucw.cz, erosca@de.adit-jv.com, roscaeugeniu@gmail.com,
-        stern@rowland.harvard.edu, qais.yousef@arm.com,
-        linux@prisktech.co.nz, mathias.nyman@intel.com, oneukum@suse.de,
-        linux-usb@vger.kernel.org
-Subject: hibernation reverts in 4.19.134: better alternative?
-Message-ID: <20200720101522.GB13137@amd>
+        Mon, 20 Jul 2020 06:20:47 -0400
+From:   John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595240446;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CGN4a9T4+fArx80G7sxmBScW+YSeCVCeIRIwBpZpeX0=;
+        b=UQ5YkFr0mg8eiuyWrTq4fE3KBax1O6REpEbo5oMP+x1m9Lb7i68DY49dHuRy2+XPTzhIMX
+        bRgSCdwumNFLcvALIt9WixzO5KFvskOd8To47WH44AmTtQ8HZVGdv9+x3FmgSetPkaBAA/
+        8F9IZCVrGtbIckxPukk0egDAXAFeHUKEvVL4Bo0agore0wXrICOfzPz6G4R1BxcmOR3rKk
+        K7fM+DDdcgeWRLdfh+EjjFKpc7oFbWPUsm8l9UqZKhSwWshi10Nx7SakLg0rLOvzuAMT0e
+        EvhcJea4d6uJUSzcjf3SzdzwIJ0TZ12G2IJLrc8vYgC02OL9CVowvLnwy/rQiA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595240446;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CGN4a9T4+fArx80G7sxmBScW+YSeCVCeIRIwBpZpeX0=;
+        b=Xe6GrYBaP1ZMyjoCOp049r76FvbckLFJ7ozR6d4Hkfx75QMHsESyTSNxzk7S07wUotoLaI
+        F3IP9S+xkz/wWHCw==
+To:     Marco Elver <elver@google.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 4/4] printk: use the lockless ringbuffer
+In-Reply-To: <20200718121053.GA691245@elver.google.com>
+References: <20200709132344.760-1-john.ogness@linutronix.de> <20200709132344.760-5-john.ogness@linutronix.de> <20200718121053.GA691245@elver.google.com>
+Date:   Mon, 20 Jul 2020 12:26:45 +0206
+Message-ID: <87eep6sd1e.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-07-18, Marco Elver <elver@google.com> wrote:
+> It seems this causes a regression observed at least with newline-only
+> printks.
+> [...]
+> ------ >8 ------
+>
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -1039,6 +1039,10 @@ asmlinkage __visible void __init start_kernel(void)
+>  	sfi_init_late();
+>  	kcsan_init();
+>  
+> +	pr_info("EXPECT BLANK LINE --vv\n");
+> +	pr_info("\n");
+> +	pr_info("EXPECT BLANK LINE --^^\n");
+> +
+>  	/* Do the rest non-__init'ed, we're now alive */
+>  	arch_call_rest_init();
 
---ZfOjI3PrQbgiZnxM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the example. This is an unintentional regression in the
+series. I will submit a patch to fix this.
 
-Hi!
+Note that this regression does not exist when the followup series [0]
+(reimplementing LOG_CONT) is applied. All the more reason that the 1st
+series should be fixed before pushing the 2nd series to linux-next.
 
-This is queued for 4.19.134-stable, reverting 3 patches. But it seems
-better alternative is available...
+John Ogness
 
-commit f3e697b7b6f5e2c570226f8f8692fb7db57215ec
-Author: Sasha Levin <sashal@kernel.org>
-Date:   Fri Jul 17 12:58:32 2020 -0400
-
-    Revert "usb/ohci-platform: Fix a warning when hibernating"
-   =20
-    This reverts commit c83258a757687ffccce37ed73dba56cc6d4b8a1b.
-   =20
-    Eugeniu Rosca writes:
-
-=2E..
-
-    > - Backporting 987351e1ea7772 ("phy: core: Add consumer device
-    >   link support") to v4.14.187 looks challenging enough, so probably n=
-ot
-    >   worth it. Anybody to contradict this?
-
-Backporting 987351e1ea7772 to 4.4 may be "interesting", but backport
-to 4.19 seems trivial, here, and it seems to work ok according to CIP
-test suites:
-
-https://gitlab.com/cip-project/cip-kernel/linux-cip/-/pipelines/168487477
-
-(You can simply apply 987351e1ea7772 ignoring one file that is not yet
-present in 4.19.)
-
-Eugeniu, can you verify this works for you?
-
-Best regards,
-								Pavel
-
-Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
-
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index 35fd38c5a4a1..600a4e554d17 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -33,7 +33,7 @@ static void devm_phy_release(struct device *dev, void *re=
-s)
- {
- 	struct phy *phy =3D *(struct phy **)res;
-=20
--	phy_put(phy);
-+	phy_put(dev, phy);
- }
-=20
- static void devm_phy_provider_release(struct device *dev, void *res)
-@@ -490,12 +490,12 @@ struct phy *of_phy_get(struct device_node *np, const =
-char *con_id)
- EXPORT_SYMBOL_GPL(of_phy_get);
-=20
- /**
-- * phy_put() - release the PHY
-- * @phy: the phy returned by phy_get()
-+ * of_phy_put() - release the PHY
-+ * @phy: the phy returned by of_phy_get()
-  *
-- * Releases a refcount the caller received from phy_get().
-+ * Releases a refcount the caller received from of_phy_get().
-  */
--void phy_put(struct phy *phy)
-+void of_phy_put(struct phy *phy)
- {
- 	if (!phy || IS_ERR(phy))
- 		return;
-@@ -503,6 +503,20 @@ void phy_put(struct phy *phy)
- 	module_put(phy->ops->owner);
- 	put_device(&phy->dev);
- }
-+EXPORT_SYMBOL_GPL(of_phy_put);
-+
-+/**
-+ * phy_put() - release the PHY
-+ * @dev: device that wants to release this phy
-+ * @phy: the phy returned by phy_get()
-+ *
-+ * Releases a refcount the caller received from phy_get().
-+ */
-+void phy_put(struct device *dev, struct phy *phy)
-+{
-+	device_link_remove(dev, &phy->dev);
-+	of_phy_put(phy);
-+}
- EXPORT_SYMBOL_GPL(phy_put);
-=20
- /**
-@@ -570,6 +584,7 @@ struct phy *phy_get(struct device *dev, const char *str=
-ing)
- {
- 	int index =3D 0;
- 	struct phy *phy;
-+	struct device_link *link;
-=20
- 	if (string =3D=3D NULL) {
- 		dev_WARN(dev, "missing string\n");
-@@ -591,6 +606,13 @@ struct phy *phy_get(struct device *dev, const char *st=
-ring)
-=20
- 	get_device(&phy->dev);
-=20
-+	link =3D device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
-+	if (!link) {
-+		dev_err(dev, "failed to create device link to %s\n",
-+			dev_name(phy->dev.parent));
-+		return ERR_PTR(-EINVAL);
-+	}
-+
- 	return phy;
- }
- EXPORT_SYMBOL_GPL(phy_get);
-@@ -684,6 +706,7 @@ struct phy *devm_of_phy_get(struct device *dev, struct =
-device_node *np,
- 			    const char *con_id)
- {
- 	struct phy **ptr, *phy;
-+	struct device_link *link;
-=20
- 	ptr =3D devres_alloc(devm_phy_release, sizeof(*ptr), GFP_KERNEL);
- 	if (!ptr)
-@@ -695,6 +718,14 @@ struct phy *devm_of_phy_get(struct device *dev, struct=
- device_node *np,
- 		devres_add(dev, ptr);
- 	} else {
- 		devres_free(ptr);
-+		return phy;
-+	}
-+
-+	link =3D device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
-+	if (!link) {
-+		dev_err(dev, "failed to create device link to %s\n",
-+			dev_name(phy->dev.parent));
-+		return ERR_PTR(-EINVAL);
- 	}
-=20
- 	return phy;
-@@ -717,6 +748,7 @@ struct phy *devm_of_phy_get_by_index(struct device *dev=
-, struct device_node *np,
- 				     int index)
- {
- 	struct phy **ptr, *phy;
-+	struct device_link *link;
-=20
- 	ptr =3D devres_alloc(devm_phy_release, sizeof(*ptr), GFP_KERNEL);
- 	if (!ptr)
-@@ -738,6 +770,13 @@ struct phy *devm_of_phy_get_by_index(struct device *de=
-v, struct device_node *np,
- 	*ptr =3D phy;
- 	devres_add(dev, ptr);
-=20
-+	link =3D device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
-+	if (!link) {
-+		dev_err(dev, "failed to create device link to %s\n",
-+			dev_name(phy->dev.parent));
-+		return ERR_PTR(-EINVAL);
-+	}
-+
- 	return phy;
- }
- EXPORT_SYMBOL_GPL(devm_of_phy_get_by_index);
-diff --git a/drivers/usb/renesas_usbhs/rcar2.c b/drivers/usb/renesas_usbhs/=
-rcar2.c
-index 0027092b1118..c52d36c384e7 100644
---- a/drivers/usb/renesas_usbhs/rcar2.c
-+++ b/drivers/usb/renesas_usbhs/rcar2.c
-@@ -33,7 +33,7 @@ static int usbhs_rcar2_hardware_exit(struct platform_devi=
-ce *pdev)
- 	struct usbhs_priv *priv =3D usbhs_pdev_to_priv(pdev);
-=20
- 	if (priv->phy) {
--		phy_put(priv->phy);
-+		phy_put(&pdev->dev, priv->phy);
- 		priv->phy =3D NULL;
- 	}
-=20
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 9713aebdd348..e969b604cb54 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -185,7 +185,8 @@ struct phy *devm_of_phy_get(struct device *dev, struct =
-device_node *np,
- 			    const char *con_id);
- struct phy *devm_of_phy_get_by_index(struct device *dev, struct device_nod=
-e *np,
- 				     int index);
--void phy_put(struct phy *phy);
-+void of_phy_put(struct phy *phy);
-+void phy_put(struct device *dev, struct phy *phy);
- void devm_phy_put(struct device *dev, struct phy *phy);
- struct phy *of_phy_get(struct device_node *np, const char *con_id);
- struct phy *of_phy_simple_xlate(struct device *dev,
-@@ -348,7 +349,11 @@ static inline struct phy *devm_of_phy_get_by_index(str=
-uct device *dev,
- 	return ERR_PTR(-ENOSYS);
- }
-=20
--static inline void phy_put(struct phy *phy)
-+static inline void of_phy_put(struct phy *phy)
-+{
-+}
-+
-+static inline void phy_put(struct device *dev, struct phy *phy)
- {
- }
-=20
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ZfOjI3PrQbgiZnxM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8VbroACgkQMOfwapXb+vIsdgCeN8e0SOmPQhjKnsYZaF90xKl4
-lCEAoIOXJk+fLM5ZKytKp2EmossZ1aME
-=DooB
------END PGP SIGNATURE-----
-
---ZfOjI3PrQbgiZnxM--
+[0] https://lkml.kernel.org/r/20200717234818.8622-1-john.ogness@linutronix.de
