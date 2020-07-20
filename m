@@ -2,213 +2,76 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52ED2C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A115BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD6522B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:13:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XJlNiMDM"
+	by mail.kernel.org (Postfix) with ESMTP id 7C33922B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:15:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595247335;
+	bh=JG8/Ze1juBDB4GBsfoY4AdUSsaGsRqBkeIuY8+rKj8k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e9G1eNMKhjUiP/IWfwrhhnHhFPbNNpLH0P27hJuW2XHt/hnzDbL0STplfnTWzTV0I
+	 gqoSgBegXgB7XiwUHWC6Ku+EIxNyYmhoPzc0kWniYhyqYR84EYMIZYnmqti35MIrWx
+	 kMe919TE64wVaGtQyle+agu+/BYpSxwIo1/Gg2Ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbgGTMNQ (ORCPT
+        id S1728673AbgGTMPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:13:16 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53768 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728532AbgGTMNP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 08:13:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06KC6NxC057775;
-        Mon, 20 Jul 2020 12:13:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=0+ix7ZEm4VFAuwo6OlsOeoc/om4TtnCdHwDbQ5/UpYY=;
- b=XJlNiMDM/cpQljikRcQE0OX4lCB2ryAb5aSUcb70TjOXv4g1LQkX6X2FjTSGUsfjtT62
- DGG7SQvmjzRhdHIV5UT5OtdzreW7vsCogJA2v16KYwAFzRxh0lCpKF3hct8t4ndoIdOt
- 4o0LE0LMkFrygh7pO/6kBl+xbuFPQMA+wnAOGmpPFQw8CRrADU8ItZdFcFc0JrZjzuqc
- laHkJF9cMrfp4kguC2LxN+K/hoi5WMERGt8pVIY89Owv3BXaUfTV4XQa3zVd501Al6y+
- lwt9F3d9BAvoQ+6yqQ2NuMP4Zl7UbI7NRnUGeuU3NWl0WfTCOtcmsGzdGQplCKPxB/bv gg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 32brgr6hpd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 20 Jul 2020 12:13:07 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06KC8AOE032829;
-        Mon, 20 Jul 2020 12:13:06 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 32d9wb3jw5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 12:13:06 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06KCD4JR009291;
-        Mon, 20 Jul 2020 12:13:05 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 Jul 2020 12:13:04 +0000
-Date:   Mon, 20 Jul 2020 15:12:57 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+        Mon, 20 Jul 2020 08:15:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728564AbgGTMPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 08:15:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CD6020B1F;
+        Mon, 20 Jul 2020 12:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595247333;
+        bh=JG8/Ze1juBDB4GBsfoY4AdUSsaGsRqBkeIuY8+rKj8k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IlyM2eEJDDnSaO6IdwKYyB1UsgR+Bp3k2QXZ6J3+x8QlkHgqVxVEtyDyH4wn85anJ
+         U5Qc+KmbzRUZzsN7w0AYM400hUzHUCsyAPDxw+m65BD7riLv/19m7XZAbul8G+wzNl
+         xdq/VnIsMh6Fmft/NKC5OeJATwg0Qjau8KD2OG/c=
+Date:   Mon, 20 Jul 2020 14:15:43 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     sashal@kernel.org, stable@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v1] usbhid: Fix slab-out-of-bounds
- write in hiddev_ioctl_usage()
-Message-ID: <20200720121257.GJ2571@kadam>
-References: <20200718231218.170730-1-yepeilin.cs@gmail.com>
- <20200720115400.GI2549@kadam>
+Subject: Re: Upstream fixes not merged in 5.4.y
+Message-ID: <20200720121543.GA2984743@kroah.com>
+References: <20200629142805.28013-1-sjpark@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200720115400.GI2549@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9687 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=983 mlxscore=0
- spamscore=0 adultscore=0 bulkscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007200084
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9687 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=992
- priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007200084
+In-Reply-To: <20200629142805.28013-1-sjpark@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The problem is there is another bug on the lines before...
+On Mon, Jun 29, 2020 at 04:28:05PM +0200, SeongJae Park wrote:
+> Hello,
+> 
+> 
+> With my little script, I found below commits in the mainline tree are more than
+> 1 week old and fixing commits that back-ported in v5.4..v5.4.49, but not merged
+> in the stable/linux-5.4.y tree.  Are those need to be merged in but missed or
+> dealyed?
+> 
+> 9210c075cef2 ("nvme-pci: avoid race between nvme_reap_pending_cqes() and nvme_poll()")
 
-drivers/hid/usbhid/hiddev.c
-   475          default:
-   476                  if (cmd != HIDIOCGUSAGE &&
-   477                      cmd != HIDIOCGUSAGES &&
-   478                      uref->report_type == HID_REPORT_TYPE_INPUT)
-   479                          goto inval;
-   480  
-   481                  if (uref->report_id == HID_REPORT_ID_UNKNOWN) {
-   482                          field = hiddev_lookup_usage(hid, uref);
+I tried this first patch, and it doesn't apply to the 5.4.y tree, so are
+you sure you tried these yourself?
 
-This code is obviously buggy because syzkaller triggers an Oops and it's
-pretty complicated to review (meaning that you have to jump around to a
-lot of different places instead of just reading it from top to bottom
-as static analysis would).
+If so, please send a series of backported patches that you have
+successfully tested, or if a patch applies cleanly, just the git id.
 
-The user controlls "uref->report_id".  If hiddev_lookup_usage() finds
-something we know that uref->usage_index is a valid offset into the
-field->usage[] array but it might be too large for the field->value[]
-array.
+thanks,
 
-   483                          if (field == NULL)
-   484                                  goto inval;
-   485                  } else {
-   486                          rinfo.report_type = uref->report_type;
-   487                          rinfo.report_id = uref->report_id;
-   488                          if ((report = hiddev_lookup_report(hid, &rinfo)) == NULL)
-   489                                  goto inval;
-   490  
-   491                          if (uref->field_index >= report->maxfield)
-   492                                  goto inval;
-   493                          uref->field_index = array_index_nospec(uref->field_index,
-   494                                                                 report->maxfield);
-   495  
-   496                          field = report->field[uref->field_index];
-   497  
-   498                          if (cmd == HIDIOCGCOLLECTIONINDEX) {
-   499                                  if (uref->usage_index >= field->maxusage)
-   500                                          goto inval;
-   501                                  uref->usage_index =
-   502                                          array_index_nospec(uref->usage_index,
-   503                                                             field->maxusage);
-   504                          } else if (uref->usage_index >= field->report_count)
-   505                                  goto inval;
-   506                  }
-   507  
-   508                  if (cmd == HIDIOCGUSAGES || cmd == HIDIOCSUSAGES) {
-   509                          if (uref_multi->num_values > HID_MAX_MULTI_USAGES ||
-   510                              uref->usage_index + uref_multi->num_values >
-   511                              field->report_count)
-   512                                  goto inval;
-   513  
-   514                          uref->usage_index =
-   515                                  array_index_nospec(uref->usage_index,
-   516                                                     field->report_count -
-   517                                                     uref_multi->num_values);
-
-We check that it is a valid offset into the ->value[] array for these
-two ioctl cmds.
-
-   518                  }
-   519  
-   520                  switch (cmd) {
-   521                  case HIDIOCGUSAGE:
-   522                          uref->value = field->value[uref->usage_index];
-                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Not checked.
-
-   523                          if (copy_to_user(user_arg, uref, sizeof(*uref)))
-   524                                  goto fault;
-   525                          goto goodreturn;
-   526  
-   527                  case HIDIOCSUSAGE:
-   528                          field->value[uref->usage_index] = uref->value;
-                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-This one you fixed.
-
-   529                          goto goodreturn;
-   530  
-   531                  case HIDIOCGCOLLECTIONINDEX:
-   532                          i = field->usage[uref->usage_index].collection_index;
-   533                          kfree(uref_multi);
-   534                          return i;
-   535                  case HIDIOCGUSAGES:
-   536                          for (i = 0; i < uref_multi->num_values; i++)
-   537                                  uref_multi->values[i] =
-   538                                      field->value[uref->usage_index + i];
-
-fine.
-
-   539                          if (copy_to_user(user_arg, uref_multi,
-   540                                           sizeof(*uref_multi)))
-   541                                  goto fault;
-   542                          goto goodreturn;
-   543                  case HIDIOCSUSAGES:
-   544                          for (i = 0; i < uref_multi->num_values; i++)
-   545                                  field->value[uref->usage_index + i] =
-
-also fine.
-
-   546                                      uref_multi->values[i];
-   547                          goto goodreturn;
-   548                  }
-   549  
-   550  goodreturn:
-   551                  kfree(uref_multi);
-   552                  return 0;
-   553  fault:
-   554                  kfree(uref_multi);
-   555                  return -EFAULT;
-   556  inval:
-   557                  kfree(uref_multi);
-   558                  return -EINVAL;
-   559          }
-   560  }
-
-So another option would be to just add HIDIOCGUSAGE and HIDIOCSUSAGE to
-the earlier check.  That risks breaking userspace.  Another option is to
-just add a check like you did earlier to the HIDIOCGUSAGE case.
-Probably just do option #2 and resend.
-
-regards,
-dan carpenter
+greg k-h
