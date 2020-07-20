@@ -2,91 +2,110 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A07EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A28BF2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DB0B22CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595287875;
+	bh=sAPZKVWX3Z8asrnYoZ23NOhUHIa2gorGKKngOC75NsM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=xO34J1ltcmCa/2ePxI4vB6MNA5cDPVRrJ4p8Tz0A5N+CN86bEDrnnIr/cfw73m34v
+	 RzgS2Bq3UoMyybz5PBQ/S0PXPaxDl1vUuwt4qUFiZNSxdmVIa44skMMDpsoBjPzNKw
+	 9PeT1HSf/lVFCGVyqXvAfB13Njy+dZU4wtivcPIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgGTX23 (ORCPT
+        id S1726815AbgGTXbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:28:29 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:34165 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgGTX22 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 19:28:28 -0400
-Received: by mail-pj1-f67.google.com with SMTP id cv18so575819pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:28:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sIfyFvfqHZ+qa2NLs8qwPqjhpDOmDh/lGN1827apR70=;
-        b=TSa+g/aS9lBoPbTrtnyroWBL5wXStV41syKfBDDyuuKWmXB6MSXX0OdtIAIIxzDO1M
-         FJiq6E1xNeP0u25DueuNG2YAiku4VaDzwqrO/2rxFkrXnC76yH1RDju4KENpR6dIBBV7
-         c99rZNPM9XDr/3pY152f+DEnMGaJlN26S7LFAb7y+wPH2t33YMzsEvuwotvvzovByXVU
-         Z/aGH12InnCMaQ59aoAM3SNVOM+i66oYiv28EB/rD3JTDlXAetDvPLutEI1cofslmD7l
-         hw/n1CPbCajJpFhgV3jmwopp0bIoytRpcXbVuBbJywCJTcHU7F6q80BLUc98+pJshoB3
-         PSAw==
-X-Gm-Message-State: AOAM530PAGHkSaUffgyXz0Eh8nt/6Sh2gbQR1DqVFvXPA9MMAbr6HFg/
-        khRbdwMChUWYYvWnKIeKDv4=
-X-Google-Smtp-Source: ABdhPJxkUk+ewAsf2iX7NQ1DfinhMORAq1Wmdh2HMcvooKPGLXvtlkxgsRlW/i8v2MuCEUkJhRG2ig==
-X-Received: by 2002:a17:90b:390e:: with SMTP id ob14mr1533589pjb.221.1595287708205;
-        Mon, 20 Jul 2020 16:28:28 -0700 (PDT)
-Received: from ?IPv6:2601:647:4802:9070:81fd:84d6:3c38:f7ef? ([2601:647:4802:9070:81fd:84d6:3c38:f7ef])
-        by smtp.gmail.com with ESMTPSA id o129sm18689520pfg.14.2020.07.20.16.28.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 16:28:27 -0700 (PDT)
-Subject: Re: [PATCH v15 7/9] nvmet-passthru: Add passthru code to process
- commands
-To:     Keith Busch <kbusch@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Stephen Bates <sbates@raithlin.com>, Jens Axboe <axboe@fb.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20200716203319.16022-1-logang@deltatee.com>
- <20200716203319.16022-8-logang@deltatee.com> <20200720141606.GF4627@lst.de>
- <e939dd43-9e7f-8ef0-162b-2a27f53e6e1a@grimberg.me>
- <5cc390cf-9b0b-b48b-7447-37934be51ee0@deltatee.com>
- <2dc39232-4042-1f93-3dcc-3266e70cf6f0@grimberg.me>
- <b8fc47a2-0b53-3316-775f-0e9a8eddfdc2@deltatee.com>
- <20200720231701.GA682160@dhcp-10-100-145-180.wdl.wdc.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <d7596065-f33b-5533-7254-153b82e6b88b@grimberg.me>
-Date:   Mon, 20 Jul 2020 16:28:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 19:31:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57452 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726021AbgGTXbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 19:31:13 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B0E22080D;
+        Mon, 20 Jul 2020 23:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595287873;
+        bh=sAPZKVWX3Z8asrnYoZ23NOhUHIa2gorGKKngOC75NsM=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=upDieZqHbOoq/fK1dHSW9gTNGzedB0zxg6JJqHBt9ph+uNVg5Nkkrr8yM/xOq2uDz
+         0aK7TDrhL4X+b4paWaWnJ6CONxXoHDFWLRabSdXdxN7KyCdp1zwDJ1436/gf7dnVnP
+         la9is/HX+QJ+cplZJ+7+PonYNwZADJTZvdomY62Q=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0E3DA3522C1A; Mon, 20 Jul 2020 16:31:13 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 16:31:13 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     madhuparnabhowmik10@gmail.com,
+        Dexuan-Linux Cui <dexuan.linux@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, rcu@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, kvm list <kvm@vger.kernel.org>,
+        frextrite@gmail.com, lkft-triage@lists.linaro.org,
+        Dexuan Cui <decui@microsoft.com>, juhlee@microsoft.com,
+        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
+Subject: Re: [PATCH 2/2] kvm: mmu: page_track: Fix RCU list API usage
+Message-ID: <20200720233113.GZ9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200712131003.23271-2-madhuparnabhowmik10@gmail.com>
+ <20200712160856.GW9247@paulmck-ThinkPad-P72>
+ <CA+G9fYuVmTcttBpVtegwPbKxufupPOtk_WqEtOdS+HDQi7WS9Q@mail.gmail.com>
+ <CAA42JLY2L6xFju_qZsVguGtXvDMqfCKbO_h1K9NJPjmqJEav=Q@mail.gmail.com>
+ <20200717170747.GW9247@paulmck-ThinkPad-P72>
+ <CA+G9fYvtYr0ri6j-auNOTs98xVj-a1AoZtUfwokwnvuFFWtFdQ@mail.gmail.com>
+ <20200718001259.GY9247@paulmck-ThinkPad-P72>
+ <CA+G9fYs7s34mmtard-ETjH2r94psgQFLDJWayznvN6UTvMYh5g@mail.gmail.com>
+ <20200719160824.GF9247@paulmck-ThinkPad-P72>
+ <CA+G9fYueEA0g4arZYQpZo803FHsYvh3WCq=PhYGULHEDa86pSg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200720231701.GA682160@dhcp-10-100-145-180.wdl.wdc.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYueEA0g4arZYQpZo803FHsYvh3WCq=PhYGULHEDa86pSg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/20/20 4:17 PM, Keith Busch wrote:
-> On Mon, Jul 20, 2020 at 05:01:19PM -0600, Logan Gunthorpe wrote:
->> On 2020-07-20 4:35 p.m., Sagi Grimberg wrote:
->>
->>> passthru commands are in essence REQ_OP_DRV_IN/REQ_OP_DRV_OUT, which
->>> means that the driver shouldn't need the ns at all. So if you have a
->>> dedicated request queue (mapped to the I/O tagset), you don't need the
->>> ns->queue and we can lose the ns lookup altogether.
+On Mon, Jul 20, 2020 at 07:43:50PM +0530, Naresh Kamboju wrote:
+> On Sun, 19 Jul 2020 at 21:38, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Sun, Jul 19, 2020 at 05:52:44PM +0530, Naresh Kamboju wrote:
+> > > On Sat, 18 Jul 2020 at 05:43, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > >
+> > > > On Sat, Jul 18, 2020 at 12:35:12AM +0530, Naresh Kamboju wrote:
+> > > > > Hi Paul,
+> > > > >
+> > > > > > I am not seeing this here.
+> > > > >
+> > > > > Do you notice any warnings while building linux next master
+> > > > > for x86_64 architecture ?
+> > > >
+> > > > Idiot here was failing to enable building of KVM.  With that, I do see
+> > > > the error.  The patch resolves it for me.  Does it help for you?
+> > >
+> > > yes.
+> > > The below patch applied on top of linux -next 20200717 tag
+> > > and build pass.
+> >
+> > Thank you!  May I add your Tested-by?
 > 
-> We still need a request_queue to dispatch the command. I guess you could
-> make a generic one for the controller that isn't tied to a namespace,
-> but we lose the fair shared tag allocation.
+> That would be great please add
+> Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> 
+> Thank you !
 
-What do you mean fair shared tag allocation?
+Done, and thank you for spotting this!
+
+							Thanx, Paul
