@@ -2,157 +2,104 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57309C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDC3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C09420B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D7B020B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:08:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AzIDzgxQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gbQDoGph"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgGTOII (ORCPT
+        id S1728300AbgGTOIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:08:08 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47972 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgGTOII (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:08:08 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06KE82WL122938;
-        Mon, 20 Jul 2020 09:08:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595254083;
-        bh=WQqhwdxJ663Ia7EcUnMz0X2DPv/osz4DluxYJnOHhdg=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=AzIDzgxQEvUnLaiRrTOVf9Xx4gpcpnYbO3KYw17wmCWEnkzBanFZunBWmZBPWgMsm
-         t+o5YECfndW5Vkshw6mjzixH/oKbmR/R5TTqfOzPeOLlQE356qHyH+Khuf9a7ghCds
-         sa8Aw0/kmYNK6NRDfkyLj49J2Jzalb/0nhcvqKNs=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06KE829e121852
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 20 Jul 2020 09:08:02 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
- Jul 2020 09:08:01 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 20 Jul 2020 09:08:01 -0500
-Received: from [10.250.74.234] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KE81U5047112;
-        Mon, 20 Jul 2020 09:08:01 -0500
-Subject: Re: [PATCH 1/2 v2] net: hsr: fix incorrect lsdu size in the tag of
- HSR frames for small frames
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <nsekhar@ti.com>,
-        <vinicius.gomes@intel.com>
-References: <20200717145510.30433-1-m-karicheri2@ti.com>
- <0e064d93-546d-e999-e36a-499d37137ba4@ti.com>
-From:   Murali Karicheri <m-karicheri2@ti.com>
-Message-ID: <ad869a7c-fe39-8b75-c235-d65005cd9c32@ti.com>
-Date:   Mon, 20 Jul 2020 10:08:00 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 10:08:43 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:35938 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbgGTOIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 10:08:43 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595254122; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=u84s0Oh8TMQ1rIjjsEb2S8vXqRDL0j7r71i7Aou5Cjw=;
+ b=gbQDoGph16sTV3Hmm0ZG/ry3N9pizSssXim+2wc8N4VcE7+prbF6paS+xWM/PYfLyx2lAD94
+ oCFvqa7n6ORMBXrQXzE9YIoWnvgjePt0KNYMlzkFkfI4T+aInwsLEb+pJpA4s28yT9Sc/Mej
+ JR2nR8/VPqF1L/Ii7khPBFZ/VJY=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
+ 5f15a55be3bee12510a03fba (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 14:08:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 65DDEC43395; Mon, 20 Jul 2020 14:08:26 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C4C77C433C9;
+        Mon, 20 Jul 2020 14:08:25 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <0e064d93-546d-e999-e36a-499d37137ba4@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 20 Jul 2020 19:38:25 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     robdclark@gmail.com, sean@poorly.run,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH] drm/msm: dsi: dev_pm_opp_put_clkname() only when an
+ opp_table exists
+In-Reply-To: <1595246509-6584-1-git-send-email-rnayak@codeaurora.org>
+References: <1595246509-6584-1-git-send-email-rnayak@codeaurora.org>
+Message-ID: <9a03714af98ea8fefa491d049f142789@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Grygorii,
-
-On 7/17/20 1:39 PM, Grygorii Strashko wrote:
+On 2020-07-20 17:31, Rajendra Nayak wrote:
+> Its possible for msm_dsi_host_init() to fail early, before
+> dev_pm_opp_set_clkname() is called. In such cases, unconditionally
+> calling dev_pm_opp_put_clkname() in msm_dsi_host_destroy() results
+> in a crash. Put an additional check so that dev_pm_opp_put_clkname()
+> is called only when an opp_table exists.
 > 
+> Fixes: f99131fa7a23 ("drm/msm: dsi: Use OPP API to set clk/perf state")
+> Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  drivers/gpu/drm/msm/dsi/dsi_host.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> On 17/07/2020 17:55, Murali Karicheri wrote:
->> For small Ethernet frames with size less than minimum size 66 for HSR
->> vs 60 for regular Ethernet frames, hsr driver currently doesn't pad the
->> frame to make it minimum size. This results in incorrect LSDU size being
->> populated in the HSR tag for these frames. Fix this by padding the frame
->> to the minimum size applicable for HSR.
->>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->> ---
->>   no change from original version
->>   Sending this bug fix ahead of PRP patch series as per comment
->>   net/hsr/hsr_forward.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->>   Sending this bug fix ahead of PRP patch series as per comment
->> diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
->> index ed13760463de..e42fd356f073 100644
->> --- a/net/hsr/hsr_forward.c
->> +++ b/net/hsr/hsr_forward.c
->> @@ -127,6 +127,9 @@ static void hsr_fill_tag(struct sk_buff *skb, 
->> struct hsr_frame_info *frame,
->>       int lane_id;
->>       int lsdu_size;
->> +    /* pad to minimum packet size which is 60 + 6 (HSR tag) */
->> +    skb_put_padto(skb, ETH_ZLEN + HSR_HLEN);
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c
+> b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> index 0a14c4a..4f580f7 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> @@ -1936,7 +1936,8 @@ void msm_dsi_host_destroy(struct mipi_dsi_host 
+> *host)
 > 
-> It may fail.
-> And i worry that it might be not the right place to do that
-> (if packet is small it will be called for every copy of the packet).
-> May be it has to be done once when packet enters LRE device?
-> 
-A better place may be to add it at the beginning of
-hsr_fill_frame_info() at which point there is one copy and after that
-code enters hsr_forward_do() to replicate. I don't think we can place it
-anywhere before that code.
+>  	if (msm_host->has_opp_table)
+>  		dev_pm_opp_of_remove_table(&msm_host->pdev->dev);
+> -	dev_pm_opp_put_clkname(msm_host->opp_table);
+> +	if (msm_host->opp_table)
+> +		dev_pm_opp_put_clkname(msm_host->opp_table);
+>  	pm_runtime_disable(&msm_host->pdev->dev);
+>  }
 
-hsr_dev_xmit()
-    - hsr_forward_skb()
-       - hsr_fill_frame_info()
-
-Inside hsr_fill_frame_info() we could do
-
-	if (ethhdr->h_proto == htons(ETH_P_8021Q)) {
-		frame->is_vlan = true;
-		/* FIXME: */
-		netdev_warn_once(skb->dev, "VLAN not yet supported");
-	}
-+	min_size = ETH_ZLEN + HSR_HLEN;
-+       if (frame->is_vlan)
-+		min_size += 4;
-+	ret = skb_put_padto(skb, min_size))
-+	if (ret)
-+	     return ret;
-
-At this point, it will be ready to tag the frame. Frame will be either a
-supervision frame which is already tagged or standard frame from upper
-layer. Either case, padto() is required. So looks like the right place
-to avoid doing it twice.
-
-And packet would get dropped at the caller if skb_put_padto() fails. So
-we could return the return value to the caller.
-
-This also eliminates similar padto() call in 
-send_hsr_supervision_frame() as well.
-
-What do you think?
-
-Murali
->> +
->>       if (port->type == HSR_PT_SLAVE_A)
->>           lane_id = 0;
->>       else
->>
-> 
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
 -- 
-Murali Karicheri
-Texas Instruments
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
