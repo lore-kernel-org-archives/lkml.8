@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1852C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2534CC433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B65AF2176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDAFC2176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261775;
-	bh=yJdQ9x0NnxcJSbyMWotm4xSTdoYpqFfOHOchrswNJ7k=;
+	s=default; t=1595261780;
+	bh=H+smV+qEcnqWC28KdhQAXgm2WNqvM/MrL5wnUDP/we4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YuymfuMC4G1CLInXcQlBfNk6rnLjgqzc4r+/1t0OkiCK1ym+JC1nYQblaSuoohbiK
-	 F6Fqxbms58MguCw9h99epqUHYEqLtTsA48edtUmy25Bs0Xotm21iVYaJ2ZNVD/cILO
-	 ZusinXpfTEgux4U2NHndquPtc/uxa2qYrOegTRVg=
+	b=j8BeCG44Cp89RrjR3bsdppgCXQynAgTMDRTy3Pe9vHuVHOxWmmhFaZgAACRBPta2H
+	 m9x+30lvkr6qpucXKiSza3MziNBvFx5bEIp3OxlDfCHg+I9kZ+L3CNfBF2wy7zJEGc
+	 uTmzY0mUkcOVjEbpvHxKIubQtv+/g+FLItf0aWcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388513AbgGTQQN (ORCPT
+        id S2388508AbgGTQQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:16:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57248 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:16:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388508AbgGTQQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:16:09 -0400
+        id S2388496AbgGTQQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:16:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D671E2176B;
-        Mon, 20 Jul 2020 16:16:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 930212064B;
+        Mon, 20 Jul 2020 16:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261769;
-        bh=yJdQ9x0NnxcJSbyMWotm4xSTdoYpqFfOHOchrswNJ7k=;
+        s=default; t=1595261772;
+        bh=H+smV+qEcnqWC28KdhQAXgm2WNqvM/MrL5wnUDP/we4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rdt+9FEhxqo9L6o73JIVjMKXd4/MB9fedHuOF8xzKqd5hlJLcGARcuA8ofkZgHIBU
-         BJRZpWcSXCRgJuQPTL7IBseC/3OiXtu+AMAbIkzCDfuvqv83xe2WSmHUVMA0Hql0qm
-         s25mpTfxe94WsUozxZhRPwc3Nkol3tbedSujEyIo=
+        b=DoAx2e/473xJ5E/a5VGZcc8KszTQxDQAk2mjI7ZlM3vp842oNxFt5QWC2G60Guikz
+         FH3sZ8ArzUYzdDM56u+HQkT3VvdHk+q6UfAHLMMN8rwf5UjxqXVSQea4HSIRI+Grh5
+         K5jFTMBNrf+Kuvi7IdRE+DZUWH3TafdEcgwRrrDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Gong <yibin.gong@nxp.com>,
-        Angelo Dureghello <angelo@sysam.it>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.7 208/244] dmaengine: fsl-edma-common: correct DSIZE_32BYTE
-Date:   Mon, 20 Jul 2020 17:37:59 +0200
-Message-Id: <20200720152835.743666337@linuxfoundation.org>
+        stable@vger.kernel.org, Lingling Xu <ling_ling.xu@unisoc.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.7 235/244] spi: sprd: switch the sequence of setting WDG_LOAD_LOW and _HIGH
+Date:   Mon, 20 Jul 2020 17:38:26 +0200
+Message-Id: <20200720152837.016645798@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,35 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+From: Lingling Xu <ling_ling.xu@unisoc.com>
 
-commit e142087b15960a4e1e5932942e5abae1f49d2318 upstream.
+commit 8bdd79dae1ff5397351b95e249abcae126572617 upstream.
 
-Correct EDMA_TCD_ATTR_DSIZE_32BYTE define since it's broken by the below:
-'0x0005 --> BIT(3) | BIT(0))'
+The watchdog counter consists of WDG_LOAD_LOW and WDG_LOAD_HIGH,
+which would be loaded to watchdog counter once writing WDG_LOAD_LOW.
 
-Fixes: 4d6d3a90e4ac ("dmaengine: fsl-edma: fix macros")
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Tested-by: Angelo Dureghello <angelo@sysam.it>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/1593449998-32091-1-git-send-email-yibin.gong@nxp.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: ac1775012058 ("spi: sprd: Add the support of restarting the system")
+Signed-off-by: Lingling Xu <ling_ling.xu@unisoc.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Link: https://lore.kernel.org/r/20200602082415.5848-1-zhang.lyra@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/fsl-edma-common.h |    2 +-
+ drivers/spi/spi-sprd-adi.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/dma/fsl-edma-common.h
-+++ b/drivers/dma/fsl-edma-common.h
-@@ -33,7 +33,7 @@
- #define EDMA_TCD_ATTR_DSIZE_16BIT	BIT(0)
- #define EDMA_TCD_ATTR_DSIZE_32BIT	BIT(1)
- #define EDMA_TCD_ATTR_DSIZE_64BIT	(BIT(0) | BIT(1))
--#define EDMA_TCD_ATTR_DSIZE_32BYTE	(BIT(3) | BIT(0))
-+#define EDMA_TCD_ATTR_DSIZE_32BYTE	(BIT(2) | BIT(0))
- #define EDMA_TCD_ATTR_SSIZE_8BIT	0
- #define EDMA_TCD_ATTR_SSIZE_16BIT	(EDMA_TCD_ATTR_DSIZE_16BIT << 8)
- #define EDMA_TCD_ATTR_SSIZE_32BIT	(EDMA_TCD_ATTR_DSIZE_32BIT << 8)
+--- a/drivers/spi/spi-sprd-adi.c
++++ b/drivers/spi/spi-sprd-adi.c
+@@ -389,9 +389,9 @@ static int sprd_adi_restart_handler(stru
+ 	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_CTRL, val);
+ 
+ 	/* Load the watchdog timeout value, 50ms is always enough. */
++	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOAD_HIGH, 0);
+ 	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOAD_LOW,
+ 		       WDG_LOAD_VAL & WDG_LOAD_MASK);
+-	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOAD_HIGH, 0);
+ 
+ 	/* Start the watchdog to reset system */
+ 	sprd_adi_read(sadi, sadi->slave_pbase + REG_WDG_CTRL, &val);
 
 
