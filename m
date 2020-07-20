@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064B9C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433ACC43459
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB907206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3F02073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263673;
-	bh=X8PR27mtiDVSOjoj6WXm/0kCnqOW2iEJDp/FO2s/w4s=;
+	s=default; t=1595263676;
+	bh=5ne+sNpcnmECSNmX2RunIzgW66pQk1+y/sfjGuTWTE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gPl2Sdz+gleSs6XXFCDPbJ0sx+Bw3W2AN5EeVZuMnzEf3umjVBX/+yqV5IhtDlm6U
-	 9ee3bJYVJXzXXSvMooDWoMFLRCMEq4ravToSsXpcPcGu80P2LqUzAaXN5BlQmM1vG6
-	 GxmFdnb3XwrGmx95E8iCtYaiPzPZ0opkG6XWlvFs=
+	b=1F6fLBvyKGGj3naK2FvZWHhN8BqpFeu/AebjUwAfxQKYzUWPK8M+5folcDh45Zxim
+	 FlajDz3lDhpBeS02x/N3s1rG830xnzlJmyerG9B6YZbWI3mnYLSWwby+iRGltuYTcr
+	 1903CQ40WElBBp9UPPsuEIM5npHDPGPngK/az02M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389055AbgGTQrw (ORCPT
+        id S1729349AbgGTPi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:47:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57974 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:38:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728477AbgGTPjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:39:04 -0400
+        id S1729318AbgGTPi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:38:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC1A622D0B;
-        Mon, 20 Jul 2020 15:39:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45CC322CAF;
+        Mon, 20 Jul 2020 15:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259543;
-        bh=X8PR27mtiDVSOjoj6WXm/0kCnqOW2iEJDp/FO2s/w4s=;
+        s=default; t=1595259535;
+        bh=5ne+sNpcnmECSNmX2RunIzgW66pQk1+y/sfjGuTWTE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gfyo6ZU4+hwaMDZo/Lm0k3J4YgfzBtqnlU6aEGO5zW8wH1b7SMGY486o5uqX5y1Ly
-         a+qV5a2bJBodQfM9GnQl6kHoEFiDUeH6LIMC92ZtbV5sB9lWx9IJAFFSez0MsUzSPB
-         +XKeg7mg9X1T65W8uwRo84X1VYzahwPGaB74Gr4c=
+        b=Y1LLVfkXrVfHgTClG/522KxhsMtK6l7TyxW/OFxzuG5dR9l+8zYNUHZJanQ3u5XqX
+         xritlaNI1CzeZKeYKwHJQRu14I2JR9jIcJMTfzf3F3yE1+AEkMuVlV/i9T3N9zGv8K
+         uy2chDRATY8Zs1lOT4LRRnT8UpfgUuHMiFndUp7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=B6rgen=20Storvist?= <jorgen.storvist@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 47/58] USB: serial: option: add GosunCn GM500 series
-Date:   Mon, 20 Jul 2020 17:37:03 +0200
-Message-Id: <20200720152749.585556745@linuxfoundation.org>
+        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.4 13/58] KVM: x86: bit 8 of non-leaf PDPEs is not reserved
+Date:   Mon, 20 Jul 2020 17:36:29 +0200
+Message-Id: <20200720152747.800794113@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
 References: <20200720152747.127988571@linuxfoundation.org>
@@ -60,77 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jörgen Storvist <jorgen.storvist@gmail.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 08d4ef5cc9203a113702f24725f6cf4db476c958 upstream.
+commit 5ecad245de2ae23dc4e2dbece92f8ccfbaed2fa7 upstream.
 
-Add USB IDs for GosunCn GM500 series cellular modules.
+Bit 8 would be the "global" bit, which does not quite make sense for non-leaf
+page table entries.  Intel ignores it; AMD ignores it in PDEs and PDPEs, but
+reserves it in PML4Es.
 
-RNDIS config:
-usb-devices
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 12 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=305a ProdID=1404 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 1 Cls=e0(wlcon) Sub=01 Prot=03 Driver=rndis_host
-I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
-I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+Probably, earlier versions of the AMD manual documented it as reserved in PDPEs
+as well, and that behavior made it into KVM as well as kvm-unit-tests; fix it.
 
-MBIM config:
-usb-devices
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 11 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=305a ProdID=1405 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
-I:  If#=0x4 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
-
-ECM config:
-usb-devices
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 13 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=305a ProdID=1406 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 1 Cls=02(commc) Sub=06 Prot=00 Driver=cdc_ether
-I:  If#=0x4 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=cdc_ether
-
-Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Reported-by: Nadav Amit <namit@vmware.com>
+Fixes: a0c0feb57992 ("KVM: x86: reserve bit 8 of non-leaf PDPEs and PML4Es in 64-bit mode on AMD", 2014-09-03)
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kvm/mmu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -2019,6 +2019,9 @@ static const struct usb_device_id option
- 	  .driver_info = RSVD(4) | RSVD(5) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0105, 0xff),			/* Fibocom NL678 series */
- 	  .driver_info = RSVD(6) },
-+	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1404, 0xff) },			/* GosunCn GM500 RNDIS */
-+	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1405, 0xff) },			/* GosunCn GM500 MBIM */
-+	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1406, 0xff) },			/* GosunCn GM500 ECM/NCM */
- 	{ } /* Terminating entry */
- };
- MODULE_DEVICE_TABLE(usb, option_ids);
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -3679,7 +3679,7 @@ __reset_rsvds_bits_mask(struct kvm_vcpu
+ 			nonleaf_bit8_rsvd | rsvd_bits(7, 7) |
+ 			rsvd_bits(maxphyaddr, 51);
+ 		rsvd_check->rsvd_bits_mask[0][2] = exb_bit_rsvd |
+-			nonleaf_bit8_rsvd | gbpages_bit_rsvd |
++			gbpages_bit_rsvd |
+ 			rsvd_bits(maxphyaddr, 51);
+ 		rsvd_check->rsvd_bits_mask[0][1] = exb_bit_rsvd |
+ 			rsvd_bits(maxphyaddr, 51);
 
 
