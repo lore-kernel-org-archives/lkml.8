@@ -2,137 +2,95 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA91EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7999FC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD26B206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48974206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:56:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="A0z6xpUw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H7oC7q4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729734AbgGTQzr (ORCPT
+        id S1729930AbgGTQ4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:55:47 -0400
-Received: from mail-am6eur05on2081.outbound.protection.outlook.com ([40.107.22.81]:27233
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728894AbgGTQzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:55:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Eu5AZXhy8CiOuGHY5CXUAj4hQto3FxHz0KZQYHkExg8Xha6GnZQv22FuAP+kai5U6xFto/P6hakYZK8TViYUbBLFyhCrq7O2zgFTcsYWm/E+Z6cAgCh9SAmnkdnbTzev+oADnm2q3XNyQvIiczfboAGCgo4OH+zLTM0MKbTUrgsCOjYyD3jD5C5CRTtatMhO28SwPd25LRhYuCfrj0hsZO/iImW/dlDNvfO98GLnIXyUvhv+CimCAZd2iJu0DZmSa1S6y+Ks/4e99cDa/gZHm+mzTE5QdVzOu3z6VczIsJQeXcQbmtSMlsjhz6fPwmwaK3C3iiQPnsBP7M5g6jEahw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DelM3/pjuO4Si8rqX3dy5uh5+5XXUCQdbUflbvJ+07A=;
- b=TGbrGADzI9O6HqMJ84ks5mp/qxdBdJjhuiUhpgBJKM+st6Ruh1CR5AYlQIoFkU+dGLkuKxEkVgAp0sJX25mm0i6KjOhOOTmMLZvQI+qA1+g/9bL1MnvCnhS7P2+j0GJMPQvzTeUKfzRTHV+/eUct3WRmGu6dw3FoV7JYBEYXOS+8SLx/fOxLTtKDQR2+VDvYP11VxD8NC2hfuLlanDp7cOWkbf7gtj8j/FfQWOOSzeB06ROKBlDUh8oduZ0l7Gm20i91eJG1Cn+4Ii712HDmCZDO9Oi41RA1zBNZWNjg9DrGICntsilZq7yyCHlVCU81czAK4zt0MGCaEPWGGoEuxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DelM3/pjuO4Si8rqX3dy5uh5+5XXUCQdbUflbvJ+07A=;
- b=A0z6xpUwxI/O30fZV06MWrUW/gA1TdNVQdkvAXoMzIysR9elPYjcZE1e4DQmegyaDhqEZXMTrbjcnxJ5Dwtk8f13EmwgeTNI6LveJGVM0aVTwQosD6ApPy4LRRiJvBjHRL3Ih6qOVYrPIz0rMKLOcfe14VyNQquPQpjNhPk1Bnk=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27) by VI1PR0402MB2736.eurprd04.prod.outlook.com
- (2603:10a6:800:b1::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Mon, 20 Jul
- 2020 16:55:41 +0000
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::4c0:79dd:b734:9ea7]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::4c0:79dd:b734:9ea7%5]) with mapi id 15.20.3195.024; Mon, 20 Jul 2020
- 16:55:41 +0000
-Date:   Mon, 20 Jul 2020 19:55:37 +0300
-From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        devicetree@vger.kernel.org, lukas@mntmn.com,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>, agx@sigxcpu.org
-Subject: Re: [PATCH v6 4/4] dt-bindings: display: imx: add bindings for DCSS
-Message-ID: <20200720165537.kwlxwrtlmlijhuoh@fsr-ub1864-141>
-References: <20200717144132.2206-1-laurentiu.palcu@oss.nxp.com>
- <20200717144132.2206-5-laurentiu.palcu@oss.nxp.com>
- <20200720164927.GA2650420@bogus>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720164927.GA2650420@bogus>
-User-Agent: NeoMutt/20171215
-X-ClientProxiedBy: AM3PR05CA0089.eurprd05.prod.outlook.com
- (2603:10a6:207:1::15) To VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27)
+        Mon, 20 Jul 2020 12:56:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729270AbgGTQ4O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:56:14 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2BAEC061794;
+        Mon, 20 Jul 2020 09:56:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=yEZNkurgufx3ZCb4un54sl+Zam6nWfgmzTVWvZxSg20=; b=H7oC7q4e5JxlLxxTULi3bOB4rS
+        w6Cr/4ehI3EIGohxKjayYspKcodudDbHHHdKLokO5GAtwd7irSWAWka/2XXgfba668SjHbjt4Y7/s
+        FORgV8iC42DaNFVGgClVy7YC/7wxOfAxlw0Y55SbPETQhMXDXOkh+XW/EJyKKNVEEStOl63flDUrf
+        4G1BeE57RMUmf8pvEe5CAI3ES7lIvyq8uJpE9hk9JlqoTZ2rQL3eNCA3Py1mLLhrHXWPRxOE3JMIx
+        kMz2/2z8/QZVRSKHbiCL0kulXD40C+91ZovsuU1NQKUnJrSpIml94wGAWaUgGVOH9pD8UdN6Jcy2b
+        eIm/Fc3w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxZ5H-0008W2-QN; Mon, 20 Jul 2020 16:56:12 +0000
+Subject: Re: linux-next: Tree for Jul 20 (arch/x86/kvm/)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
+References: <20200720194225.17de9962@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1d2aa97d-4a94-673c-dc82-509da221c5d6@infradead.org>
+Date:   Mon, 20 Jul 2020 09:56:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-141 (83.217.231.2) by AM3PR05CA0089.eurprd05.prod.outlook.com (2603:10a6:207:1::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.19 via Frontend Transport; Mon, 20 Jul 2020 16:55:39 +0000
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 31f90c2d-f735-460c-b71f-08d82ccdbc16
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB2736:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB273677C3461D01EB1B85C7F3BE7B0@VI1PR0402MB2736.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Ms6qWBxE5AiqsENu+F64WyJdJdV1bzMv3LnjER0uC21jBjNP7yRg0w6sR46GMVK0EhUZnj9CoHbu2f2at7d+cu6XS3dlAmP5UK4yW9TXtm/jD0ibliv0EKOjOk+wAVKwFEaTMMYZo8myB5b1fhxBztnfD9hrbGZqyT2zOPfQBuI0UFAaMk2mvGVy24raivJ2u8nlatzMGwTYw6/0QnjvVNzvXdhu26tB9rQ1NqMF1UmrfnEhPu3t+B2tnhsaP+UF31kpaxY/k68qPMc6ZN0JhtfehdB+qfsq64ARGPObG/NB9gxpCURN7bhHhgei9vyqjEIU4Q4bGT+damIkZ9tU5A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(346002)(136003)(376002)(39860400002)(66476007)(66556008)(8676002)(44832011)(2906002)(6496006)(478600001)(9686003)(4326008)(186003)(8936002)(16526019)(26005)(66946007)(52116002)(55016002)(6916009)(5660300002)(4744005)(1076003)(33716001)(3716004)(7416002)(316002)(956004)(86362001)(54906003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: gvfsB/lIxavmnB19EYLxajQqutyxGE1Aa+egv3RmqnlDd9GQEQ2jkQmaioqr3zfz8Te0UocIf2ghGva06XdiHjVU0SKItmz9WIkYEErg/P/EaDRlo6c0biXgJy+SlSGG7fINzot+FpdSD2qHuKAmv0ubFQmFsvAdwh39NwDQjHjbYKkd73VAfZ5eybowATsz0YeS42CKcIn2RUizcrulrhmMP/6Q1sNKHwdGXKdnSQLNycQcPXxMllPeH1fK8dRA6E2EsSWy/s+dwhinKWGydExXb1JuqaDcSj7b+XnK8NMTHJ9dNd2G0AdasrS/a2BCFU/NKxprJlLHBaPLQNR1q4C746YBOaonwO/73m5nePrcgOMdX1rvhbp/kV+o8hXuC8FFX10qyap3YRzjEXSWeBpFzCmmmqEYBh4yMfE3FNwM47Yxl+7vtcyzN2PdMATueeGDy80kx8RJty8ByTtpUG9Zf+8/vnVIaUThmkmpQk0=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31f90c2d-f735-460c-b71f-08d82ccdbc16
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 16:55:41.0866
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KgoDyZJYNbodAx6FUmy2gKlK++2PEZTRFiwZdhE5I9WiughmWxId32xMdtf+Q1h1QLTqguiHssGHzJsGf0ctnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2736
+In-Reply-To: <20200720194225.17de9962@canb.auug.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On Mon, Jul 20, 2020 at 10:49:27AM -0600, Rob Herring wrote:
-> On Fri, 17 Jul 2020 17:41:29 +0300, Laurentiu Palcu wrote:
-> > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > 
-> > Add bindings for iMX8MQ Display Controller Subsystem.
-> > 
-> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > ---
-> >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 ++++++++++++++++++
-> >  1 file changed, 104 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
-> > 
+On 7/20/20 2:42 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
+> Changes since 20200717:
 > 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
 
-Well, I kind of did exactly that... in the cover letter. I stated
-clearly why this patch needs another look... :/
+on x86_64:
 
-Thanks,
-laurentiu
+  CC [M]  arch/x86/kvm/mmu/page_track.o
+In file included from ../include/linux/pid.h:5:0,
+                 from ../include/linux/sched.h:14,
+                 from ../include/linux/kvm_host.h:12,
+                 from ../arch/x86/kvm/mmu/page_track.c:14:
+../arch/x86/kvm/mmu/page_track.c: In function ‘kvm_page_track_write’:
+../include/linux/rculist.h:727:30: error: left-hand operand of comma expression has no effect [-Werror=unused-value]
+  for (__list_check_srcu(cond),     \
+                              ^
+../arch/x86/kvm/mmu/page_track.c:232:2: note: in expansion of macro ‘hlist_for_each_entry_srcu’
+  hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+  ^~~~~~~~~~~~~~~~~~~~~~~~~
+../arch/x86/kvm/mmu/page_track.c: In function ‘kvm_page_track_flush_slot’:
+../include/linux/rculist.h:727:30: error: left-hand operand of comma expression has no effect [-Werror=unused-value]
+  for (__list_check_srcu(cond),     \
+                              ^
+../arch/x86/kvm/mmu/page_track.c:258:2: note: in expansion of macro ‘hlist_for_each_entry_srcu’
+  hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+  ^~~~~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+
+
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
