@@ -2,53 +2,51 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAA3C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D780C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4B32065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4959D2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260443;
-	bh=/Jj+U6siC94ko60rqolLaoqkcuyH+GqVj3Q8RrcO8fA=;
+	s=default; t=1595260448;
+	bh=lye9nEJslbJYSdaSkBheYwWegDQY9ewGWMpaayLWwxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g+pTMWFJBAmH0lflcvKBUggs1SQApXBcI5ahx4x8H/dCOwxZWVd4WLJ7QYNarar2J
-	 0VcQcKtI7XoqxzG1ZokzV8Q1eaTybLlZ6Ue1PeYKDbKOiK3LUrfOG8Ng9XE8TCzCXd
-	 lAdzdNhCYXv7wuzhUfv80RLmAPuiMhfybjxfD3GI=
+	b=yBoCxQHKqlVmnG8ZGslBDh6lz2x6QScLBjOJK+peA2ShLac4a+bJyILRZADFqKEPM
+	 42P9mt4+NFDKme9Q9cHyFCjK3GAiazDdyhI8ZrEunODlvotZk8fhGxKqWz0/fUkp19
+	 axifui9jvCCw4KW3pg/gAgaiLSg7j6DwbwbiHaUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730976AbgGTPyB (ORCPT
+        id S1731533AbgGTPyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:54:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52580 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:54:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730946AbgGTPx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:53:59 -0400
+        id S1731265AbgGTPyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:54:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0599206E9;
-        Mon, 20 Jul 2020 15:53:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 588FB2064B;
+        Mon, 20 Jul 2020 15:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260438;
-        bh=/Jj+U6siC94ko60rqolLaoqkcuyH+GqVj3Q8RrcO8fA=;
+        s=default; t=1595260443;
+        bh=lye9nEJslbJYSdaSkBheYwWegDQY9ewGWMpaayLWwxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C3cU2AV88jgN5XB/hV7GFqk95mFcj5Utrai7HlgpS7HC+45XA65UaSSj/OfNEDgSi
-         zirAoI0SxJS93hh744no6CapTm/PnAwBWMUM6EIEav9iTnCs9y3un0zgK7VzGTPiPD
-         mmaJZEf1aeReMqFRQ1ehELSfzpJNhWsdHxlg8dXE=
+        b=LbuNc0MKgQJw3CKAe7WMcnhcRsISFbSHPJ83O7WhK0G25iluwmm/IbXa03lyp7iNK
+         DbtoMufk6wg5LmokPcrAITIKDDDvwiriW/AHJysYM/sIBg0zegI11I/EI5sSMytuS6
+         /FJ3i1pyF/jgLxfG0fhuOyd3pzsQO7ruZEFO1HyQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 4.19 071/133] soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes before flushing new data
-Date:   Mon, 20 Jul 2020 17:36:58 +0200
-Message-Id: <20200720152807.144144806@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Ian Abbott <abbotti@mev.co.uk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 063/133] staging: comedi: verify array index is correct before using it
+Date:   Mon, 20 Jul 2020 17:36:50 +0200
+Message-Id: <20200720152806.781603649@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -61,103 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maulik Shah <mkshah@codeaurora.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit f5ac95f9ca2f439179a5baf48e1c0f22f83d936e upstream.
+[ Upstream commit ef75e14a6c935eec82abac07ab68e388514e39bc ]
 
-TCSes have previously programmed data when rpmh_flush() is called.
-This can cause old data to trigger along with newly flushed.
+This code reads from the array before verifying that "trig" is a valid
+index.  If the index is wildly out of bounds then reading from an
+invalid address could lead to an Oops.
 
-Fix this by cleaning SLEEP and WAKE TCSes before new data is flushed.
-
-With this there is no need to invoke rpmh_rsc_invalidate() call from
-rpmh_invalidate().
-
-Simplify rpmh_invalidate() by moving invalidate_batch() inside.
-
-Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Link: https://lore.kernel.org/r/1586703004-13674-4-git-send-email-mkshah@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: a8c66b684efa ("staging: comedi: addi_apci_1500: rewrite the subdevice support functions")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20200709102936.GA20875@mwanda
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/qcom/rpmh.c |   41 ++++++++++++++++++-----------------------
- 1 file changed, 18 insertions(+), 23 deletions(-)
+ drivers/staging/comedi/drivers/addi_apci_1500.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/soc/qcom/rpmh.c
-+++ b/drivers/soc/qcom/rpmh.c
-@@ -318,19 +318,6 @@ static int flush_batch(struct rpmh_ctrlr
- 	return ret;
- }
+diff --git a/drivers/staging/comedi/drivers/addi_apci_1500.c b/drivers/staging/comedi/drivers/addi_apci_1500.c
+index 45ad4ba92f94f..689acd69a1b9c 100644
+--- a/drivers/staging/comedi/drivers/addi_apci_1500.c
++++ b/drivers/staging/comedi/drivers/addi_apci_1500.c
+@@ -456,9 +456,9 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
+ 	unsigned int lo_mask = data[5] << shift;
+ 	unsigned int chan_mask = hi_mask | lo_mask;
+ 	unsigned int old_mask = (1 << shift) - 1;
+-	unsigned int pm = devpriv->pm[trig] & old_mask;
+-	unsigned int pt = devpriv->pt[trig] & old_mask;
+-	unsigned int pp = devpriv->pp[trig] & old_mask;
++	unsigned int pm;
++	unsigned int pt;
++	unsigned int pp;
  
--static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
--{
--	struct batch_cache_req *req, *tmp;
--	unsigned long flags;
--
--	spin_lock_irqsave(&ctrlr->cache_lock, flags);
--	list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
--		kfree(req);
--	INIT_LIST_HEAD(&ctrlr->batch_cache);
--	ctrlr->dirty = true;
--	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
--}
--
- /**
-  * rpmh_write_batch: Write multiple sets of RPMH commands and wait for the
-  * batch to finish.
-@@ -470,6 +457,13 @@ int rpmh_flush(const struct device *dev)
- 		return 0;
+ 	if (trig > 1) {
+ 		dev_dbg(dev->class_dev,
+@@ -471,6 +471,10 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
+ 		return -EINVAL;
  	}
  
-+	/* Invalidate the TCSes first to avoid stale data */
-+	do {
-+		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
-+	} while (ret == -EAGAIN);
-+	if (ret)
-+		return ret;
++	pm = devpriv->pm[trig] & old_mask;
++	pt = devpriv->pt[trig] & old_mask;
++	pp = devpriv->pp[trig] & old_mask;
 +
- 	/* First flush the cached batch requests */
- 	ret = flush_batch(ctrlr);
- 	if (ret)
-@@ -501,24 +495,25 @@ int rpmh_flush(const struct device *dev)
- EXPORT_SYMBOL(rpmh_flush);
- 
- /**
-- * rpmh_invalidate: Invalidate all sleep and active sets
-- * sets.
-+ * rpmh_invalidate: Invalidate sleep and wake sets in batch_cache
-  *
-  * @dev: The device making the request
-  *
-- * Invalidate the sleep and active values in the TCS blocks.
-+ * Invalidate the sleep and wake values in batch_cache.
-  */
- int rpmh_invalidate(const struct device *dev)
- {
- 	struct rpmh_ctrlr *ctrlr = get_rpmh_ctrlr(dev);
--	int ret;
--
--	invalidate_batch(ctrlr);
-+	struct batch_cache_req *req, *tmp;
-+	unsigned long flags;
- 
--	do {
--		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
--	} while (ret == -EAGAIN);
-+	spin_lock_irqsave(&ctrlr->cache_lock, flags);
-+	list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
-+		kfree(req);
-+	INIT_LIST_HEAD(&ctrlr->batch_cache);
-+	ctrlr->dirty = true;
-+	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
- 
--	return ret;
-+	return 0;
- }
- EXPORT_SYMBOL(rpmh_invalidate);
+ 	switch (data[2]) {
+ 	case COMEDI_DIGITAL_TRIG_DISABLE:
+ 		/* clear trigger configuration */
+-- 
+2.25.1
+
 
 
