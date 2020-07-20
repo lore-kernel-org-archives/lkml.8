@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB52C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D58C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 963EF2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817762070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262718;
-	bh=Lq/iLVlTUmFV6X6/WutpskWczPlTAuL7l95c3MwIo78=;
+	s=default; t=1595262725;
+	bh=TA4OKq56WwSJrJvuzIW2SP28zlpOlEdWsUf274FhZXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QYZPGRBcZ7cXGr9Vs1BvAROAz7odvZZEoxQp16d1j1V61WhhciYxaXiOAdaQi8G8Z
-	 diS9vaMnjNIUeKKfsEAP10CjHdwKdPxKUe5JoEeHGqcCKsc0aRuuL7VbKTqmHGkXje
-	 y0RyGmtd9GLI8tS27G+CqGN8mwX8mDma/4xH5+lU=
+	b=thocAizYMUSg4tFWifT8ZGRP068PSgSTgl+jop6nuYAj0MtCKwVCUSe0h1gbBGCwA
+	 5P/NbOZlCDHcc6u0fybxhlNTaOfMrMhefGpQwKYbIsT/X3/VuB5+3NG1JzUsByQwFQ
+	 LdiKpVcVnRz1mw5gHSR11tguFSUscBdFM98NraIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388851AbgGTQb5 (ORCPT
+        id S1731601AbgGTP5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:31:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56856 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:57:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731847AbgGTP5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:57:07 -0400
+        id S1731826AbgGTP4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:56:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECDA1206E9;
-        Mon, 20 Jul 2020 15:57:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B5502065E;
+        Mon, 20 Jul 2020 15:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260627;
-        bh=Lq/iLVlTUmFV6X6/WutpskWczPlTAuL7l95c3MwIo78=;
+        s=default; t=1595260607;
+        bh=TA4OKq56WwSJrJvuzIW2SP28zlpOlEdWsUf274FhZXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AueYldwUEpI3ap9II8cdgK0NfV55vti3wb2ALbie3KNIB++Xi32spJNnujjShgrAg
-         apZkMwAaMfroIMMy3s0yayyBJ8KXTXYc2UN7d2Tnn0yfynOifv/xNwQyOQ0Xa11PfD
-         /aG5U7Tx6FJCLLHIMvQj5tBud5iUQ4l/j7cZLcu4=
+        b=OFyEAMzq5kU4IIFAaMkr/1ZEIznkAO+kQyZc70Do8JEZL+12dCx2GzqUkuscE3TNE
+         LFtdavXBUaWdcALENGn/f1YYktxe7yBDwc1DSMIXLYTxNnmPuEoKTFDQgeMBzuSj7f
+         RgCtePllROSNECoePAplmVKCc5GoneIP3FV9k12U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, thomas.gambier@nexedi.com,
-        David Ahern <dsahern@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 009/215] ipv6: Fix use of anycast address with loopback
-Date:   Mon, 20 Jul 2020 17:34:51 +0200
-Message-Id: <20200720152820.606913284@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.4 029/215] arm64: arch_timer: Disable the compat vdso for cores affected by ARM64_WORKAROUND_1418040
+Date:   Mon, 20 Jul 2020 17:35:11 +0200
+Message-Id: <20200720152821.568380173@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -60,43 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit aea23c323d89836bcdcee67e49def997ffca043b ]
+commit 4b661d6133c5d3a7c9aca0b4ee5a78c7766eff3f upstream.
 
-Thomas reported a regression with IPv6 and anycast using the following
-reproducer:
+ARM64_WORKAROUND_1418040 requires that AArch32 EL0 accesses to
+the virtual counter register are trapped and emulated by the kernel.
+This makes the vdso pretty pointless, and in some cases livelock
+prone.
 
-    echo 1 >  /proc/sys/net/ipv6/conf/all/forwarding
-    ip -6 a add fc12::1/16 dev lo
-    sleep 2
-    echo "pinging lo"
-    ping6 -c 2 fc12::
+Provide a workaround entry that limits the vdso to 64bit tasks.
 
-The conversion of addrconf_f6i_alloc to use ip6_route_info_create missed
-the use of fib6_is_reject which checks addresses added to the loopback
-interface and sets the REJECT flag as needed. Update fib6_is_reject for
-loopback checks to handle RTF_ANYCAST addresses.
-
-Fixes: c7a1ce397ada ("ipv6: Change addrconf_f6i_alloc to use ip6_route_info_create")
-Reported-by: thomas.gambier@nexedi.com
-Signed-off-by: David Ahern <dsahern@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200706163802.1836732-4-maz@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/route.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clocksource/arm_arch_timer.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -3409,7 +3409,7 @@ static bool fib6_is_reject(u32 flags, st
- 	if ((flags & RTF_REJECT) ||
- 	    (dev && (dev->flags & IFF_LOOPBACK) &&
- 	     !(addr_type & IPV6_ADDR_LOOPBACK) &&
--	     !(flags & RTF_LOCAL)))
-+	     !(flags & (RTF_ANYCAST | RTF_LOCAL))))
- 		return true;
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -476,6 +476,14 @@ static const struct arch_timer_erratum_w
+ 		.set_next_event_virt = erratum_set_next_event_tval_virt,
+ 	},
+ #endif
++#ifdef CONFIG_ARM64_ERRATUM_1418040
++	{
++		.match_type = ate_match_local_cap_id,
++		.id = (void *)ARM64_WORKAROUND_1418040,
++		.desc = "ARM erratum 1418040",
++		.disable_compat_vdso = true,
++	},
++#endif
+ };
  
- 	return false;
+ typedef bool (*ate_match_fn_t)(const struct arch_timer_erratum_workaround *,
 
 
