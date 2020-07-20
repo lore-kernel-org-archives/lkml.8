@@ -8,72 +8,77 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29D3C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967B8C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7738F2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CFF122CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:14:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ORFXjj2p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrwG+gcq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgGTJOw (ORCPT
+        id S1728177AbgGTJOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:14:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35814 "EHLO
+        Mon, 20 Jul 2020 05:14:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728017AbgGTJOt (ORCPT
+        with ESMTP id S1728017AbgGTJOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:14:49 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63264C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:14:49 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k5so9786638pjg.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:14:49 -0700 (PDT)
+        Mon, 20 Jul 2020 05:14:52 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E59C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:14:52 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id gc9so9918526pjb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:14:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=OgGatn92pn/mnj6HtZstu6jkm6gd4UA0RdQ6VPZ+TmQ=;
-        b=ORFXjj2peS1SWBYqeUz/r7LE24pHwRsT7JPbfVH5mFcqrhoaN2VaPtjoL8nkwzOySk
-         zxoLTupZcFLfRAyHU32QRUsPLAVJ+FATtKxtkPL2wJ+Z4Pexien2UZBWRMJcnUhxGjaj
-         AsKkGlbbX94dWxrc3TLBH54mRxZoI9Cs0loEJxPJGA650ol7C2FFM/D7RTGfn4IqRx52
-         oLPHVoglWudrxthhhXOZzkwJ/9XqKyhOttot/Sp9toFv/yCwY5EzJmECihM9JvONgHYk
-         zmQPIxPvUFdULB5auiQgL3eMCV1uP+/YHigcto7hprR+wN3qOh+Ql4wuQ0mDnFpw9ZsT
-         5JTQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=3MJRQvkP4/KEQ3YX92tLGGCX4xlP9dMdupK8mDNvHRM=;
+        b=lrwG+gcqco5EXJEp5+BBTvUvMntRPXvMd7UxLgzRohyP6Ef4S80wXxLB4VfuCt69II
+         +yuHAA0b/3RLQ7yXlCVXGFuCVqN5bO/b+FVoOJz7h/P4AgrxGMIMq7SpyZ1VvV2VP90X
+         RiO0Vxks+c9Nn6ZnXBjQhbTPL3oKOQgHXKXGavVkyQDdDK86PEnkDhwcRFB/FBV8PTLx
+         uoDEUWZoFChv2hYOzc21xkGIjFFUurscKCGq+A6MzYP7pYdkaXzo6n4BY3+XYgGPtnUz
+         hfnnpxjgUz8jHXHsiz01zvh8gPupRp+9wBAcvBM2qFsyxPraGH3DyAnESFIvno/lFJ3+
+         bi8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=OgGatn92pn/mnj6HtZstu6jkm6gd4UA0RdQ6VPZ+TmQ=;
-        b=oQLbEA+JqFn6GfJAlN2O6HUU/YXXuP3xf0z1Az7D7iVosqGZKUPJmIt6KfRdaFtYoQ
-         FMZLRLhVpfQrWJUScF07hSGEG4PBdbEEqv/JAmO6ZTrt6/MViM7xXgV/KehLlF4R/m1a
-         U37SGhsEK/+xOvssMtIW0/is4Z+Z3SCdE4KW/X8NofZ//mbg84F0Q9FSIoq8ZSFVtOSB
-         EnjiKvnvPL53DDg7TPqPsgArsBHpTwG3xnaS1t1yqr/gi19f3FCKapQOaphEwwDSsEWz
-         YFVmJUh+4aCouhLKkGrj00854N0igM1mjM5JcnkMmZqqEicfcpnDvLh9yReF75zZqwBa
-         n8kA==
-X-Gm-Message-State: AOAM533y6/rhbjUMxXNtx9mKk1Y/gFQUrlVv+YognU0XIt+vVldkMmzq
-        E0c6kcfkxbbg1quePG/FbrRi1yGdo7mEGQ==
-X-Google-Smtp-Source: ABdhPJzM+4thIezZhVyXpy0+FfrJpNjkiinA17WMz2ifXMSx/ZTjIapWv8xXyQjatRoREGNSR5cF7w==
-X-Received: by 2002:a17:90a:26ac:: with SMTP id m41mr21877321pje.169.1595236488926;
-        Mon, 20 Jul 2020 02:14:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=3MJRQvkP4/KEQ3YX92tLGGCX4xlP9dMdupK8mDNvHRM=;
+        b=ZBn/AACyEBei/qv9lnI96O5LEs/pmAfNtg4b7SX+72ccENtUJvJRrR2PIFbixzBDWt
+         mG0YZFumYS1xJqzFQfPZWXiShwrShGcMCzXXPtNiDcbtBhH8j2xDvAJcoJvO3eGIYhve
+         m924o/8xLQ2rKlc52NeYVw3wcpMMLzSsFtCfPi66hgSEiOZ4boKtlXNAWCvo3znB9Ju4
+         NZeLSD18vFQBCqapCFFWzlXiF3kDnFtsfSUFDT2fkx0sMYv8togmqtfY6YLy37soMlD9
+         Ixhz9ctyrSplGxAz2fIhZXj6evy+RYgRtjophKG5Sn7MTPzGQCe9aFJX1ZOkRi/xcYCu
+         q6NQ==
+X-Gm-Message-State: AOAM532LAEjhAVyEwW+qEeaU6RU1eAJTppsvH5kOlsCvYt3u5ioluyOI
+        M4IK2/T1u3GZkm0W9J0HrJc=
+X-Google-Smtp-Source: ABdhPJwcDdQiYZrT6Xt27ssEBjfGgjZKMTlTJiwCwuzXssXvqjudMzfeGID+NidWCek0wok0LfxCEg==
+X-Received: by 2002:a17:90a:e50c:: with SMTP id t12mr22441080pjy.209.1595236492232;
+        Mon, 20 Jul 2020 02:14:52 -0700 (PDT)
 Received: from DV.bbrouter ([117.242.250.233])
-        by smtp.gmail.com with ESMTPSA id w9sm16276548pfq.178.2020.07.20.02.14.45
+        by smtp.gmail.com with ESMTPSA id w9sm16276548pfq.178.2020.07.20.02.14.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 02:14:48 -0700 (PDT)
+        Mon, 20 Jul 2020 02:14:51 -0700 (PDT)
 From:   Darshan D V <darshandv10@gmail.com>
 To:     gregkh@linuxfoundation.org, yuehaibing@huawei.com, ardb@kernel.org,
         contact@christina-quast.de
 Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
         darshandv10@gmail.com
-Subject: [PATCH 1/2] staging: rtl8192e: add space before open parenthesis
-Date:   Mon, 20 Jul 2020 14:44:41 +0530
-Message-Id: <20200720091442.19532-1-darshandv10@gmail.com>
+Subject: [PATCH 2/2] staging: rtl8192e: add proper code indent
+Date:   Mon, 20 Jul 2020 14:44:42 +0530
+Message-Id: <20200720091442.19532-2-darshandv10@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200720091442.19532-1-darshandv10@gmail.com>
+References: <20200720091442.19532-1-darshandv10@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the coding style error by adding a space before
-open parenthesis '(' in a conditional statement.
+As the code indent for a conditional statement is
+not according to the preferred coding style for
+the linux kernel, add code indent as necessary
+after a conditional statement.
 
 Signed-off-by: Darshan D V <darshandv10@gmail.com>
 ---
@@ -81,18 +86,18 @@ Signed-off-by: Darshan D V <darshandv10@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/staging/rtl8192e/rtllib_crypt_ccmp.c b/drivers/staging/rtl8192e/rtllib_crypt_ccmp.c
-index 0cbf4a1a326b..b2af802b9451 100644
+index b2af802b9451..b60e2a109ce4 100644
 --- a/drivers/staging/rtl8192e/rtllib_crypt_ccmp.c
 +++ b/drivers/staging/rtl8192e/rtllib_crypt_ccmp.c
-@@ -278,7 +278,7 @@ static int rtllib_ccmp_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
- 		int aad_len, ret;
- 
- 		req = aead_request_alloc(key->tfm, GFP_ATOMIC);
--		if(!req)
-+		if (!req)
- 			return -ENOMEM;
- 
- 		aad_len = ccmp_init_iv_and_aad(hdr, pn, iv, aad);
+@@ -337,7 +337,7 @@ static int rtllib_ccmp_set_key(void *key, int len, u8 *seq, void *priv)
+ 		}
+ 		if (crypto_aead_setauthsize(data->tfm, CCMP_MIC_LEN) ||
+ 			crypto_aead_setkey(data->tfm, data->key, CCMP_TK_LEN))
+-				return -1;
++			return -1;
+ 	} else if (len == 0) {
+ 		data->key_set = 0;
+ 	} else {
 -- 
 2.17.1
 
