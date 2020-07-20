@@ -2,89 +2,102 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67C3C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246E3C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B941422CF6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260547;
-	bh=g0DGVhTj7Hg3uonLOIEB3WSq78xgYXKFOvG8xk7uMNM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PC5761qAAyHSQDgSg9Uj6OMWb7sbuJ34uKmPSZQ/WVliv/hBMZVHw65lS8x/tTjQM
-	 8KLCl6u4T7hBYO4LeSRhuI8JJzVE63wUlOMxTpbMVjxUxXyWQwvsHkhKodstkeDBjZ
-	 xyfmthC6pYJF5bwAj+niC+iNbOhJVpESx1X3lOeM=
+	by mail.kernel.org (Postfix) with ESMTP id F07F022BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TfWsK5Ll";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LzpcNZ4J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731719AbgGTPzq (ORCPT
+        id S1731734AbgGTPzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:55:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54816 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731704AbgGTPzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:55:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C11AE2065E;
-        Mon, 20 Jul 2020 15:55:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260538;
-        bh=g0DGVhTj7Hg3uonLOIEB3WSq78xgYXKFOvG8xk7uMNM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wZTrGM3CLYlNNeUCH3jbNRA4Rb96coukX0Cycq+FEalNvKndaWoY05A4qIwq8QdSj
-         Tr6PwAjBiQ7fr9l7+GkNr9mX1/GB+pi2/M1HCgzjLU6bL8NfjV6tQP/d3tOg9jxN3q
-         fFrQjPAFCApQBBXFzR9rVhjEzolSH/054p+UufQY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH 4.19 131/133] libceph: dont omit recovery_deletes in target_copy()
-Date:   Mon, 20 Jul 2020 17:37:58 +0200
-Message-Id: <20200720152810.060099252@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
-References: <20200720152803.732195882@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 11:55:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58716 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731721AbgGTPzs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:55:48 -0400
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595260546;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Lxj2BSbfHGhHMuFbOE5Dp6tKgfMEdQXkX/SHFacv524=;
+        b=TfWsK5LlJxWN6ogr8If+8LGufidgHyJaPnvcGfE8x4ZZFbLui/neaVuJqayIY53HiHGx4I
+        htFziISbkiGjSV4RWYuIua9e1ifjkOjzj2fw36GppnQAK2Y07wFVkiqQe1GUXqeh9HqPjl
+        lrFyPb9ez8PE6S7VCf7bz5TTbyTX9mgWB4KwHmioWckLtolsZYSezl5pUJji6NO043YSaq
+        Ttr2LZ7ALYzL1DDgk2gN7Sl9uOUyrEf2M5KO2oq1FppRkHfyvsaxWeJKzzaMA0wJjfraf0
+        xolWe3mYvBiM7/bytIniWUnXGgqrrCUfXmB8lBtfNwuhY4cb7eLDWS/kKVZKTQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595260546;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Lxj2BSbfHGhHMuFbOE5Dp6tKgfMEdQXkX/SHFacv524=;
+        b=LzpcNZ4JxHs46EEF+FUaEbcYTy1ebAgod5Csz7yWQvGeFvA9bf4+kEVqi0cl/9gIvNVK08
+        Mh6t75PSEypVFXDw==
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: [PATCH v4 03/24] seqlock: seqcount_t latch: End read sections with read_seqcount_retry()
+Date:   Mon, 20 Jul 2020 17:55:09 +0200
+Message-Id: <20200720155530.1173732-4-a.darwish@linutronix.de>
+In-Reply-To: <20200720155530.1173732-1-a.darwish@linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200720155530.1173732-1-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+The seqcount_t latch reader example at the raw_write_seqcount_latch()
+kernel-doc comment ends the latch read section with a manual smp memory
+barrier and sequence counter comparison.
 
-commit 2f3fead62144002557f322c2a7c15e1255df0653 upstream.
+This is technically correct, but it is suboptimal: read_seqcount_retry()
+already contains the same logic of an smp memory barrier and sequence
+counter comparison.
 
-Currently target_copy() is used only for sending linger pings, so
-this doesn't come up, but generally omitting recovery_deletes can
-result in unneeded resends (force_resend in calc_target()).
+End the latch read critical section example with read_seqcount_retry().
 
-Fixes: ae78dd8139ce ("libceph: make RECOVERY_DELETES feature create a new interval")
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- net/ceph/osd_client.c |    1 +
- 1 file changed, 1 insertion(+)
+ include/linux/seqlock.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/ceph/osd_client.c
-+++ b/net/ceph/osd_client.c
-@@ -442,6 +442,7 @@ static void target_copy(struct ceph_osd_
- 	dest->size = src->size;
- 	dest->min_size = src->min_size;
- 	dest->sort_bitwise = src->sort_bitwise;
-+	dest->recovery_deletes = src->recovery_deletes;
- 
- 	dest->flags = src->flags;
- 	dest->paused = src->paused;
-
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index 6c4f68ef1393..d724b5e5408d 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -363,8 +363,8 @@ static inline int raw_read_seqcount_latch(seqcount_t *s)
+  *			idx = seq & 0x01;
+  *			entry = data_query(latch->data[idx], ...);
+  *
+- *			smp_rmb();
+- *		} while (seq != latch->seq);
++ *		// read_seqcount_retry() includes needed smp_rmb()
++ *		} while (read_seqcount_retry(&latch->seq, seq));
+  *
+  *		return entry;
+  *	}
+-- 
+2.20.1
 
