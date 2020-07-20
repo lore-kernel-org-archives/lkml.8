@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FBDC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA62C43446
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7C22070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3822070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262223;
-	bh=B84vW3i6LhYNV9Qy5YCm6lo1N980fOTbMc0xgJ0V5Wg=;
+	s=default; t=1595262225;
+	bh=KJc236Beqe715ZNP7qUMd5cLfYkrychBQiDwOL6cJeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ewsX62VWXKdJmVMQ0AD5ekhiGNu5VktC5cc7DWm50yGPMDm74iadOEySCkUr59+uH
-	 vTRZeplANQL3UKYFdp4wPILBxrzF+wM0JflKVM/3GOAKhD1LfiBbXClPoIiir7zSG6
-	 QN4AmeU1rSrR64L/A7X2BZlLuRQ7mnuuw8Jh3W2g=
+	b=sKoUXc26w6lfR5v/HfZT0vu76Fe7jkG5Jc7wClBg1kfchEBcqhySmX5x8XENIfKJ9
+	 dSjXUbEFy7ynUdKArkKX//NYBSTRy0VoPkl/xuCIDXLc2zpgAMwwWFuqWYJiCKE6+X
+	 ij1f/ip3P3EDeihDrYLhJNse7+PPLO7XI5VHgzbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732914AbgGTQE5 (ORCPT
+        id S1732895AbgGTQEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:04:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40014 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:04:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732907AbgGTQEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:04:54 -0400
+        id S1732045AbgGTQEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:04:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C035020773;
-        Mon, 20 Jul 2020 16:04:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAD8320734;
+        Mon, 20 Jul 2020 16:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261093;
-        bh=B84vW3i6LhYNV9Qy5YCm6lo1N980fOTbMc0xgJ0V5Wg=;
+        s=default; t=1595261082;
+        bh=KJc236Beqe715ZNP7qUMd5cLfYkrychBQiDwOL6cJeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ox4X0ztw0+ICUGCb92o8adJd0FPvOmxf/hlxPBKGLXxCMgS6uJV+JDAEP1QpkmN/f
-         LQtyHBJSE38H9elmXT5+5dIuyPRrV3X0LErcDUlUHhitKPsaDoYhV/mUjvHMAINqhr
-         Aj6WTYD5lVtMZGY8ATWasyC1/19QVNTTVBKoLJ/U=
+        b=kIA+4GE0/2elSQjbaXk2dNQGoH9HAbxTF6n2A8aLRCOHcaG4GE3NXrIElgF0bZVO6
+         ExMocb+NwvfDTl1a6RSEWQwbrLMWeghdJqFxYZUv6isjlRyhhlskB3WKqoyFcWpNm9
+         Z2fZFxSeZanXBsCoPYK4S2SpwkTehw88KxyQhjxw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Mason <clm@fb.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 207/215] block: fix splitting segments on boundary masks
-Date:   Mon, 20 Jul 2020 17:38:09 +0200
-Message-Id: <20200720152830.003114062@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=B6rgen=20Storvist?= <jorgen.storvist@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 162/215] USB: serial: option: add GosunCn GM500 series
+Date:   Mon, 20 Jul 2020 17:37:24 +0200
+Message-Id: <20200720152827.888827755@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,88 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Jörgen Storvist <jorgen.storvist@gmail.com>
 
-commit 429120f3df2dba2bf3a4a19f4212a53ecefc7102 upstream.
+commit 08d4ef5cc9203a113702f24725f6cf4db476c958 upstream.
 
-We ran into a problem with a mpt3sas based controller, where we would
-see random (and hard to reproduce) file corruption). The issue seemed
-specific to this controller, but wasn't specific to the file system.
-After a lot of debugging, we find out that it's caused by segments
-spanning a 4G memory boundary. This shouldn't happen, as the default
-setting for segment boundary masks is 4G.
+Add USB IDs for GosunCn GM500 series cellular modules.
 
-Turns out there are two issues in get_max_segment_size():
+RNDIS config:
+usb-devices
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 12 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=305a ProdID=1404 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 1 Cls=e0(wlcon) Sub=01 Prot=03 Driver=rndis_host
+I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
+I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
 
-1) The default segment boundary mask is bypassed
+MBIM config:
+usb-devices
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 11 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=305a ProdID=1405 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
+I:  If#=0x4 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
 
-2) The segment start address isn't taken into account when checking
-   segment boundary limit
+ECM config:
+usb-devices
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 13 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=305a ProdID=1406 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 1 Cls=02(commc) Sub=06 Prot=00 Driver=cdc_ether
+I:  If#=0x4 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=cdc_ether
 
-Fix these two issues by removing the bypass of the segment boundary
-check even if the mask is set to the default value, and taking into
-account the actual start address of the request when checking if a
-segment needs splitting.
-
-Cc: stable@vger.kernel.org # v5.1+
-Reviewed-by: Chris Mason <clm@fb.com>
-Tested-by: Chris Mason <clm@fb.com>
-Fixes: dcebd755926b ("block: use bio_for_each_bvec() to compute multi-page bvec count")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Dropped const on the page pointer, ppc page_to_phys() doesn't mark the
-page as const...
-
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-
 ---
- block/blk-merge.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/usb/serial/option.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -157,16 +157,14 @@ static inline unsigned get_max_io_size(s
- 	return sectors & (lbs - 1);
- }
- 
--static unsigned get_max_segment_size(const struct request_queue *q,
--				     unsigned offset)
-+static inline unsigned get_max_segment_size(const struct request_queue *q,
-+					    struct page *start_page,
-+					    unsigned long offset)
- {
- 	unsigned long mask = queue_segment_boundary(q);
- 
--	/* default segment boundary mask means no boundary limit */
--	if (mask == BLK_SEG_BOUNDARY_MASK)
--		return queue_max_segment_size(q);
--
--	return min_t(unsigned long, mask - (mask & offset) + 1,
-+	offset = mask & (page_to_phys(start_page) + offset);
-+	return min_t(unsigned long, mask - offset + 1,
- 		     queue_max_segment_size(q));
- }
- 
-@@ -201,7 +199,8 @@ static bool bvec_split_segs(const struct
- 	unsigned seg_size = 0;
- 
- 	while (len && *nsegs < max_segs) {
--		seg_size = get_max_segment_size(q, bv->bv_offset + total_len);
-+		seg_size = get_max_segment_size(q, bv->bv_page,
-+						bv->bv_offset + total_len);
- 		seg_size = min(seg_size, len);
- 
- 		(*nsegs)++;
-@@ -404,7 +403,8 @@ static unsigned blk_bvec_map_sg(struct r
- 
- 	while (nbytes > 0) {
- 		unsigned offset = bvec->bv_offset + total;
--		unsigned len = min(get_max_segment_size(q, offset), nbytes);
-+		unsigned len = min(get_max_segment_size(q, bvec->bv_page,
-+					offset), nbytes);
- 		struct page *page = bvec->bv_page;
- 
- 		/*
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -2028,6 +2028,9 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(4) | RSVD(5) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0105, 0xff),			/* Fibocom NL678 series */
+ 	  .driver_info = RSVD(6) },
++	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1404, 0xff) },			/* GosunCn GM500 RNDIS */
++	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1405, 0xff) },			/* GosunCn GM500 MBIM */
++	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1406, 0xff) },			/* GosunCn GM500 ECM/NCM */
+ 	{ } /* Terminating entry */
+ };
+ MODULE_DEVICE_TABLE(usb, option_ids);
 
 
