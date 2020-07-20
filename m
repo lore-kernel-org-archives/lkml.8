@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC16C433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64919C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83E6D2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4395B20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261729;
-	bh=JPEzLH6tKL+WMDuIPV6rnfvXsiGH+MU8f5d/RrU/mdU=;
+	s=default; t=1595261731;
+	bh=O4eP/NKmV7wu26F7duh9E93B4ABGq1Ryvk3eaq82wS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vheuBElmuNlGgIsMZUamqGINwNMbsRSPFUZAl5NqjcSFnVmQs/mqhQqo2+75bUSCH
-	 WjW/DWJE2O2T+2tHbm2dbHquEP9VtC9nBGdHA57xzEPsTZLQBHF32yqyr9DShwyk5S
-	 dE14ypc/4UnWSY5Iw8wJInO1C11e04MGlJLjimJ8=
+	b=QP+UOO63Bm1/O020O5bYUgIBSNNWQWbQrXvLTmwmPA8aZpbdP4Nw3dNPmzQV3UWzN
+	 exJ5JC2LbB+JJnlmYyWBtbR3IpqP7aYxQ/qeHLhBxBzSCNUe2iTGJzh4kYv8/R3nVT
+	 oH/sDtemsLBjYLQzkUYxC7DOmddSSscC0zTtc6vI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388416AbgGTQP2 (ORCPT
+        id S2388423AbgGTQP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:15:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56284 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:15:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388410AbgGTQPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:15:25 -0400
+        id S2388405AbgGTQPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:15:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52CDF20656;
-        Mon, 20 Jul 2020 16:15:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80C962064B;
+        Mon, 20 Jul 2020 16:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261724;
-        bh=JPEzLH6tKL+WMDuIPV6rnfvXsiGH+MU8f5d/RrU/mdU=;
+        s=default; t=1595261722;
+        bh=O4eP/NKmV7wu26F7duh9E93B4ABGq1Ryvk3eaq82wS0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jV6qWQxJjbtpWQxUffQXqYE0HJkIZse2luGdK5apWavP772u1YGdu7/7EOqbzdqAG
-         yTaRFlfEE2nNuCdYpBUs2d76uDyYWxqwA07jUXcSEjQxZKal5F/VqpRNUccHBKDxrh
-         zE/u5kEFhjqCx5c9qa/pOwnXL8CJUBw4DPsY0Ir8=
+        b=aCtkycHAr9N9oS+IZQrE7oYbF9S4Jbd1+YRLDQ5VNHKjVjyzmjSWU4UPp7U2XAUV4
+         bMKnvH5WpW+8goB1KIBGZ75gD8m4SMVVORrlI44ZB3qoL0Ubm9UR9Ejs8K34AwNOS9
+         iipSSd+d5Ed1PfmvkWivF82Dmajm00Lg3B3+M0NA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: [PATCH 5.7 220/244] sched/fair: handle case of task_h_load() returning 0
-Date:   Mon, 20 Jul 2020 17:38:11 +0200
-Message-Id: <20200720152836.312927779@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 5.7 219/244] sched: Fix unreliable rseq cpu_id for new tasks
+Date:   Mon, 20 Jul 2020 17:38:10 +0200
+Message-Id: <20200720152836.264812230@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -62,68 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-commit 01cfcde9c26d8555f0e6e9aea9d6049f87683998 upstream.
+commit ce3614daabea8a2d01c1dd17ae41d1ec5e5ae7db upstream.
 
-task_h_load() can return 0 in some situations like running stress-ng
-mmapfork, which forks thousands of threads, in a sched group on a 224 cores
-system. The load balance doesn't handle this correctly because
-env->imbalance never decreases and it will stop pulling tasks only after
-reaching loop_max, which can be equal to the number of running tasks of
-the cfs. Make sure that imbalance will be decreased by at least 1.
+While integrating rseq into glibc and replacing glibc's sched_getcpu
+implementation with rseq, glibc's tests discovered an issue with
+incorrect __rseq_abi.cpu_id field value right after the first time
+a newly created process issues sched_setaffinity.
 
-misfit task is the other feature that doesn't handle correctly such
-situation although it's probably more difficult to face the problem
-because of the smaller number of CPUs and running tasks on heterogenous
-system.
+For the records, it triggers after building glibc and running tests, and
+then issuing:
 
-We can't simply ensure that task_h_load() returns at least one because it
-would imply to handle underflow in other places.
+  for x in {1..2000} ; do posix/tst-affinity-static  & done
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+and shows up as:
+
+error: Unexpected CPU 2, expected 0
+error: Unexpected CPU 2, expected 0
+error: Unexpected CPU 2, expected 0
+error: Unexpected CPU 2, expected 0
+error: Unexpected CPU 138, expected 0
+error: Unexpected CPU 138, expected 0
+error: Unexpected CPU 138, expected 0
+error: Unexpected CPU 138, expected 0
+
+This is caused by the scheduler invoking __set_task_cpu() directly from
+sched_fork() and wake_up_new_task(), thus bypassing rseq_migrate() which
+is done by set_task_cpu().
+
+Add the missing rseq_migrate() to both functions. The only other direct
+use of __set_task_cpu() is done by init_idle(), which does not involve a
+user-space task.
+
+Based on my testing with the glibc test-case, just adding rseq_migrate()
+to wake_up_new_task() is sufficient to fix the observed issue. Also add
+it to sched_fork() to keep things consistent.
+
+The reason why this never triggered so far with the rseq/basic_test
+selftest is unclear.
+
+The current use of sched_getcpu(3) does not typically require it to be
+always accurate. However, use of the __rseq_abi.cpu_id field within rseq
+critical sections requires it to be accurate. If it is not accurate, it
+can cause corruption in the per-cpu data targeted by rseq critical
+sections in user-space.
+
+Reported-By: Florian Weimer <fweimer@redhat.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: <stable@vger.kernel.org> # v4.4+
-Link: https://lkml.kernel.org/r/20200710152426.16981-1-vincent.guittot@linaro.org
+Tested-By: Florian Weimer <fweimer@redhat.com>
+Cc: stable@vger.kernel.org # v4.18+
+Link: https://lkml.kernel.org/r/20200707201505.2632-1-mathieu.desnoyers@efficios.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/fair.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ kernel/sched/core.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4033,7 +4033,11 @@ static inline void update_misfit_status(
- 		return;
- 	}
- 
--	rq->misfit_task_load = task_h_load(p);
-+	/*
-+	 * Make sure that misfit_task_load will not be null even if
-+	 * task_h_load() returns 0.
-+	 */
-+	rq->misfit_task_load = max_t(unsigned long, task_h_load(p), 1);
- }
- 
- #else /* CONFIG_SMP */
-@@ -7633,7 +7637,14 @@ static int detach_tasks(struct lb_env *e
- 
- 		switch (env->migration_type) {
- 		case migrate_load:
--			load = task_h_load(p);
-+			/*
-+			 * Depending of the number of CPUs and tasks and the
-+			 * cgroup hierarchy, task_h_load() can return a null
-+			 * value. Make sure that env->imbalance decreases
-+			 * otherwise detach_tasks() will stop only after
-+			 * detaching up to loop_max tasks.
-+			 */
-+			load = max_t(unsigned long, task_h_load(p), 1);
- 
- 			if (sched_feat(LB_MIN) &&
- 			    load < 16 && !env->sd->nr_balance_failed)
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2876,6 +2876,7 @@ int sched_fork(unsigned long clone_flags
+ 	 * Silence PROVE_RCU.
+ 	 */
+ 	raw_spin_lock_irqsave(&p->pi_lock, flags);
++	rseq_migrate(p);
+ 	/*
+ 	 * We're setting the CPU for the first time, we don't migrate,
+ 	 * so use __set_task_cpu().
+@@ -2940,6 +2941,7 @@ void wake_up_new_task(struct task_struct
+ 	 * as we're not fully set-up yet.
+ 	 */
+ 	p->recent_used_cpu = task_cpu(p);
++	rseq_migrate(p);
+ 	__set_task_cpu(p, select_task_rq(p, task_cpu(p), SD_BALANCE_FORK, 0));
+ #endif
+ 	rq = __task_rq_lock(p, &rf);
 
 
