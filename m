@@ -2,133 +2,117 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD570C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95BF420709
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1622176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:53:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Yoty4xJH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SX8NYsOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389169AbgGTRva (ORCPT
+        id S1731643AbgGTRxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:51:30 -0400
-Received: from mail-co1nam11on2120.outbound.protection.outlook.com ([40.107.220.120]:18209
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726437AbgGTRv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:51:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Urb/WLge3sCGJOcqzaaSUudenjXjs6YOFYkPb3o4ywaENUDtSvtjB/RBTWwrVE5ZOD9J8piCPPvr4+vm+ITZKX0GVhl+Jrq+8xuZazCvPmHh2CVMYncbSo2IfwlceGVXu1577O+ltpXr9vGogGAQ6BliSjMBybElqTolE9yTqF5w+dQrUr1WIF0y6UQRfaKbIK/zugQceqp+Zs11T7cBzl/mKl5efgzmMXXGNFHupxhVhMiWME/ryju7ffpkvLJCzu+21VOgU+EgYANPpqhfGRk17ka6yq2G5Pjwz/vDX9gDIpy6jJUpkZiyQapyN2aAKQuiznM02N4LLU3i0UzyPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QR+Y2fAkmPe6JYkFP/rOoE4jDpQ1qxzH1x2DnzpA4fE=;
- b=eJI+7C6USuRD/uxgJYrKOzIrPHl06hXn3+eBFIZVmEbLjYxNEdJipokEutcN5mncIDwkIxAEklhsCGFMig2Tf++veo4QdOydPvYgkKUm9G/UYXixNukxTlZ7bssi+WZ814TYYNFElAiU+mJeL6V3SUjcS9N1NOGYIIBLSVyN9McLOtSTnStZk0cge66ffZxR+RutrxuFSr6Ga6j61JBg++2F6eUiM+Iaq7eDKUFCarS05UpW3TulNT8Hp12N9sCL289F9N8MWcp0vhFYvh+7Tb3Le5tXtWe2irwrE7ExtGsXnpfOhwOyabZUAt6+NbU4SsFVrQPOIgmEu2gh9dtNkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QR+Y2fAkmPe6JYkFP/rOoE4jDpQ1qxzH1x2DnzpA4fE=;
- b=Yoty4xJH2UNTTuGPSkmn7KVHS+6auojj/l0qD/tO3JRQNZEM5bdaVtMFBBSxlzOGT+TWAGFSvDJ9hl+Zr3U9ulAXg356abMwpDJlJ9E1WhSUGw67S6Hkp9AkmQFjlM6qfPcPKQOnpPfzkdnj1F8PvKta7Kr0sbO9TZi/c7HvaAU=
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- (2603:10b6:207:30::18) by BL0PR2101MB1090.namprd21.prod.outlook.com
- (2603:10b6:207:37::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.1; Mon, 20 Jul
- 2020 17:51:26 +0000
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::f5a4:d43f:75c1:1b33]) by BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::f5a4:d43f:75c1:1b33%5]) with mapi id 15.20.3239.001; Mon, 20 Jul 2020
- 17:51:26 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Sriram Krishnan <srirakr2@cisco.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-CC:     "mbumgard@cisco.com" <mbumgard@cisco.com>,
-        "ugm@cisco.com" <ugm@cisco.com>, "nimm@cisco.com" <nimm@cisco.com>,
-        "xe-linux-external@cisco.com" <xe-linux-external@cisco.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3] net: hyperv: add support for vlans in netvsc driver
-Thread-Topic: [PATCH v3] net: hyperv: add support for vlans in netvsc driver
-Thread-Index: AQHWXrU+cNEwHb7+0Uu0LFIibsmHIakQvsqA
-Date:   Mon, 20 Jul 2020 17:51:25 +0000
-Message-ID: <BL0PR2101MB09302E2F00839462B1D70F08CA7B0@BL0PR2101MB0930.namprd21.prod.outlook.com>
-References: <20200720164551.14153-1-srirakr2@cisco.com>
-In-Reply-To: <20200720164551.14153-1-srirakr2@cisco.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-20T17:51:24Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5d0d978b-5779-4471-9133-f33f9c4aa39f;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: cisco.com; dkim=none (message not signed)
- header.d=none;cisco.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [75.100.88.238]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 51924ae2-ab90-4c76-3fd5-08d82cd58618
-x-ms-traffictypediagnostic: BL0PR2101MB1090:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR2101MB10900066DEDFFE9274FF84D1CA7B0@BL0PR2101MB1090.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: p0KCYCwfadksexxs4PyOBnHX6gYvya/rglYbYD5L4no0dvZedOkIvH+M2iXMrRpMIOfx3G8WFxCdf0Al0SyjWdxiBTMmKgp6T9HlGfJ26SzhBq5Pi77oJFJzq5vY9miAei7xc+DU3So+TSGnsS7OUs4ICAf/xEHoj10NeAyvGJRJqNlBwdagBWFl+Y4TGHQJkdEMiTDKcOvwLaO+rNrGbCIIaeWLtG/guW3wEeTagTk7NPCz5XZVYMk+gEly7Z829jwEr1Z86azS02vYHeeArV0iBxskojTc1b8YHkcDvX+/Dv8Wm4YDduxiGUypKgYE7ZWanxG03ZZGM/u1l/Vlkw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB0930.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(366004)(136003)(346002)(396003)(86362001)(478600001)(316002)(33656002)(5660300002)(54906003)(76116006)(82950400001)(8936002)(10290500003)(71200400001)(8990500004)(82960400001)(4326008)(66946007)(4744005)(66556008)(52536014)(6506007)(7696005)(8676002)(9686003)(186003)(83380400001)(2906002)(55016002)(66446008)(64756008)(110136005)(66476007)(26005)(7416002)(53546011);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: c3BBgYKftfZ7MK6tHsel5smm3sEsCtcEgbCXyG5BFczk8eh5nvFx8qVZXGD3E/SULjKK9riD3RLPeaHWoTVjcVPuDiS7i/oiBrATCLJr80WJ5pMi554o3/naiavBB+riTEYo0HZz2QjIJ/H47KMDZXDSOOt40zBD4P9Zcy7/e+GPfO8HCFPCGI35pGVAdVdAGtNOItDb1Phf6EfQd9zOjkakaIUUEryv48In5K8AGgQQifMVJWb7gApuX0+S7s+K7JV4qnQ7kJZdl+Z7UmwcmquNzLuecL5W7YFZRLlF8T7ZZPrgAtLMeXlhD4CO4f+j0nU67Za6vhpf0Mvkb8DcgBmL4ErX5fZp1JueBJIR6VOPy9iPytZ2Jv6OZ+Nvp4hcptqiIazOX0Dn4M5zTdZWQnvMLbJov9Y3wfBTEqUAbG9pekgH6p29/Z30H00S4c7WRnT0I6CfmaMF79Qh7WAE/NzVQSwkS84EAV100vLQ8+ZdRCZ2WH23QIXqbTfDzc6rB9tGDatj4VzUcoQHOuMCqya8ruhWDch6cysTxAz5dobBPSHsmAeXQTRzrLJOny1TClS3X3zBVm8W5PEqEYnwkRAUCiHBxdTgpT7RrJ64sX1AFS3fhobjAZaMI6XSu6v6X4xLguNDvAHqCiEg7owz4Q==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Jul 2020 13:53:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729378AbgGTRxJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 13:53:09 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78582C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:53:09 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h19so21159525ljg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:53:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kya9ou2H4xCIeg2jTugLQPDLPsUiSPAXkhjVJRHMDG8=;
+        b=SX8NYsOLgCeGmFxjb3Z0RzsYrlrHY6Njtfv46WXbScI3rw3tkdMvNy7qsqcNAy91ok
+         EmnOsjkBbRSUSYO4/Q+Cx/xTEf85/D7y3ubLVL9GrTTaC883stkN/jVXYzE2FCCqF7eB
+         9s7gGZej8MgWwlJIFwC85V0qxylpm5PoPDao/u8vX7pBu4QWu3w4EYzNHhOsY3D9UTQv
+         wZ7VKxvMYrxM6QJlB3KwFInEXd5SELo26Gs2/yM5C+3lGgUkJm4gOG1yFNX6CZ+WQun4
+         2A746f0YswL5r2QB7a0ry1PuFLvHVFwRkJvX+AeFb1QZo7ouw1eWDpQA/DMeKnb180Pl
+         r/LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kya9ou2H4xCIeg2jTugLQPDLPsUiSPAXkhjVJRHMDG8=;
+        b=DlofNJlmu6KkayB5Dql8+lcsNcvK5s2YmlpjpvAG695JhcYilPSfp/gSTlPy6k+Qx/
+         y1AH0TUWlypxodOqG0yVvvL7Tbq1r6TeomOwz/7Vow1nAo9t/leR16cjTrH/SVcp5h4p
+         ocY5ChpLNwHMumzWbiWOGTSJ9Bi9YMxOwuNtHllbOixchp2XdEUvPWArb+6rFvmn/Wm3
+         4d3ii5nDewej3e2eu5fd7O3fKnPKM8FFUSXTIYMLF8x0zm8K/mnYCxe/i+e6YBAc3oYp
+         E+bQzgxtApgWjEzz0eSr8lBybwd28EM1U1jyzcFqMIqQs2Vy1cfuI4/7y8r2eXVM2EVf
+         ZtKQ==
+X-Gm-Message-State: AOAM530ldbZVrNN/jXrz5nFbdK1LIJkMwfMZ8GJY4CJQclitqD6Kg+aV
+        lXyRlJ4RDAoEgr+1sGDl5ueE2dIGEgiK7z8PoU+BzA==
+X-Google-Smtp-Source: ABdhPJxVEb/gDZEkvQ7LMo203fIZqznHvbPDVwx5Y0R9jHwZ6CsaSCd83ZH/mrB+5f45z4TkFHBNvGDSXrXZqTZC034=
+X-Received: by 2002:a2e:8e36:: with SMTP id r22mr10983662ljk.77.1595267587620;
+ Mon, 20 Jul 2020 10:53:07 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB0930.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51924ae2-ab90-4c76-3fd5-08d82cd58618
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 17:51:26.1028
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bDeKlYB3O3DdPti9FTkwGKOjF2jXG1RCcw3uvyrjwjRb4kvU+EjhGE5NP+UC5muyEBcH4uDhJ+sGX8Cowa4lxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1090
+References: <20200720075148.172156-1-hch@lst.de> <20200720075148.172156-12-hch@lst.de>
+In-Reply-To: <20200720075148.172156-12-hch@lst.de>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 20 Jul 2020 10:52:55 -0700
+Message-ID: <CALvZod7ACBnNX5W-gtTzheh8R-rxv1nB-5q7UcDUZ7BvtpakpA@mail.gmail.com>
+Subject: Re: [PATCH 11/14] mm: use SWP_SYNCHRONOUS_IO more intelligently
+To:     Christoph Hellwig <hch@lst.de>, Minchan Kim <minchan@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, drbd-dev@lists.linbit.com,
+        linux-raid@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++Minchan Kim
 
+On Mon, Jul 20, 2020 at 12:52 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> There is no point in trying to call bdev_read_page if SWP_SYNCHRONOUS_IO
+> is not set, as the device won't support it.  Also there is no point in
+> trying a bio submission if bdev_read_page failed.
 
-> -----Original Message-----
-> From: Sriram Krishnan <srirakr2@cisco.com>
-> Sent: Monday, July 20, 2020 12:46 PM
-> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> Wei Liu <wei.liu@kernel.org>
-> Cc: mbumgard@cisco.com; ugm@cisco.com; nimm@cisco.com; xe-linux-
-> external@cisco.com; David S. Miller <davem@davemloft.net>; Jakub Kicinski
-> <kuba@kernel.org>; linux-hyperv@vger.kernel.org; netdev@vger.kernel.org;
-> linux-kernel@vger.kernel.org
-> Subject: [PATCH v3] net: hyperv: add support for vlans in netvsc driver
+This will at least break the failure path of zram_rw_page().
 
-Also netvsc already supports vlan in "regular" cases. Please be more specif=
-ic in the subject.
-Suggested subject: hv_netvsc: add support for vlans in AF_PACKET mode
-
-Thanks,
-- Haiyang
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  mm/page_io.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/mm/page_io.c b/mm/page_io.c
+> index ccda7679008851..63b44b8221af0f 100644
+> --- a/mm/page_io.c
+> +++ b/mm/page_io.c
+> @@ -403,8 +403,11 @@ int swap_readpage(struct page *page, bool synchronous)
+>                 goto out;
+>         }
+>
+> -       ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
+> -       if (!ret) {
+> +       if (sis->flags & SWP_SYNCHRONOUS_IO) {
+> +               ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
+> +               if (ret)
+> +                       goto out;
+> +
+>                 if (trylock_page(page)) {
+>                         swap_slot_free_notify(page);
+>                         unlock_page(page);
+> --
+> 2.27.0
+>
