@@ -2,95 +2,83 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34593C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2AEC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA2822B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:09:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tOnLehSB"
+	by mail.kernel.org (Postfix) with ESMTP id 96E3F22482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595264997;
+	bh=OthK/AQBHEtdjBBAz0n/15WPSHBWT0arVmiBxqHTdbo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AJmQcM0PzPtsJQ/4W88+0kBId83wfUjSx5iEBtrWM6mjdEbyh9MnfqLx1Cfk4uBGY
+	 G01RLZrG7Z1GHylZnMmoi+VY8m0S4jRiSDFQ5ti55bBLkfTRg4sRbXCOC8wFVoAumk
+	 8c+sL4H64crZzAjG3ntYtU2qW/pEEboEa6APBCts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730418AbgGTRJx (ORCPT
+        id S1731749AbgGTRJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:09:53 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:57390 "EHLO m43-7.mailgun.net"
+        Mon, 20 Jul 2020 13:09:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728782AbgGTRJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729084AbgGTRJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 13:09:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595264992; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=pEBC16t+YV4FGYaWikogHtEEGJZCLsu+AxuloV4iKJY=;
- b=tOnLehSBWnR0AOkfgrAxdPff9iK/cirOQ+uQS6bt2ah95qtaH+Dt0UkUvvjC8CRC+jvA3LE7
- zBtPxKkZ8jtZ9n+V2aL46GuCLooFKXoiBqUgtGT95yqzyqKYI/W6/vmtDS4H00+5sn6ghJHo
- 2s8Nhu8Nw+cse0CiLkUKweDzYW8=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f15cfdfeef925b694313ec4 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 17:09:51
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3BFFDC433C9; Mon, 20 Jul 2020 17:09:51 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+Received: from gmail.com (unknown [104.132.1.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CCB1CC433C9;
-        Mon, 20 Jul 2020 17:09:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CCB1CC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mail.kernel.org (Postfix) with ESMTPSA id D5796207DF;
+        Mon, 20 Jul 2020 17:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595264993;
+        bh=OthK/AQBHEtdjBBAz0n/15WPSHBWT0arVmiBxqHTdbo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Rwg++Qqd28JZ8teR6Wn7NDm2yRrPKRUXPCfuzh8ZpZPAWd0YfMmSXjxHQP4nWQF0o
+         FrYFN3RpBW5U2NGYXWhrdk4coaezy1WR6SdlptXgG5oxgriJtgAPEw45ju74Rm4iSZ
+         eBhgXcl8BUAPAe6EtMV4CKHIMUm9uD+CIwQNfKks=
+Date:   Mon, 20 Jul 2020 10:09:51 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     Daniel Rosenberg <drosen@google.com>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH v12 0/4] Prepare for upcoming Casefolding/Encryption
+ patches
+Message-ID: <20200720170951.GE1292162@gmail.com>
+References: <20200708091237.3922153-1-drosen@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 3/14 v3] ath9k: Check the return value of
- pcie_capability_read_*()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200713175529.29715-2-refactormyself@gmail.com>
-References: <20200713175529.29715-2-refactormyself@gmail.com>
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Cc:     skhan@linuxfoundation.org, linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200720170951.3BFFDC433C9@smtp.codeaurora.org>
-Date:   Mon, 20 Jul 2020 17:09:51 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708091237.3922153-1-drosen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Saheed O. Bolarinwa" <refactormyself@gmail.com> wrote:
-
-> On failure pcie_capability_read_dword() sets it's last parameter, val
-> to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
-> failure. This would introduce a bug because (x & x) == (~0 & x).
+On Wed, Jul 08, 2020 at 02:12:33AM -0700, Daniel Rosenberg wrote:
+> This lays the ground work for enabling casefolding and encryption at the
+> same time for ext4 and f2fs. A future set of patches will enable that
+> functionality.
 > 
-> This bug can be avoided without changing the function's behaviour if the
-> return value of pcie_capability_read_dword is checked to confirm success.
+> These unify the highly similar dentry_operations that ext4 and f2fs both
+> use for casefolding. In addition, they improve d_hash by not requiring a
+> new string allocation.
 > 
-> Check the return value of pcie_capability_read_dword() to ensure success.
+> Daniel Rosenberg (4):
+>   unicode: Add utf8_casefold_hash
+>   fs: Add standard casefolding support
+>   f2fs: Use generic casefolding support
+>   ext4: Use generic casefolding support
 > 
-> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-Patch applied to ath-next branch of ath.git, thanks.
+Ted, are you interested in taking this through the ext4 tree for 5.9?
 
-9a8ab2bfb678 ath9k: Check the return value of pcie_capability_read_*()
-
--- 
-https://patchwork.kernel.org/patch/11660731/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+- Eric
