@@ -2,98 +2,194 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D74C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15990C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 020CA22BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:01:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595239281;
-	bh=LVubc+F0JQI4FQaSy7JIShrF/KXQ3v3Jg/s4/IEFm8o=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BEpzoZUIGpaBIo6F5rhspiplBFMQ4AIilQVxVzFbcidoopkABmJw7bDZtTqfdz4hl
-	 ALQwXje6qRwu6z0x5Tb+txppy/63W5Ok7bGpWAApC33Ct269MX8aV/NuR3LcLXuWgv
-	 NgveW5xLWQZ2nbkHCJXjEZ4ESvQecXmCUIqlKTQQ=
+	by mail.kernel.org (Postfix) with ESMTP id E510B21775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgGTKBT (ORCPT
+        id S1728432AbgGTKBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Jul 2020 06:01:21 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34354 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728310AbgGTKBT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 06:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbgGTKBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 06:01:19 -0400
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.194.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FB1B21775;
-        Mon, 20 Jul 2020 10:01:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595239278;
-        bh=LVubc+F0JQI4FQaSy7JIShrF/KXQ3v3Jg/s4/IEFm8o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RfDRxT0LglMSisisyD29I5hbPDUDhHBF/mLSSNWuh950m1n7hZY6rKeN9DgcmxrDc
-         Bj/CQ3C67v6hzRfQw9ydcgEUF8s9MASPhnZEgtWzD1oFJiekLmyT5bE4cSu3+ZjYqB
-         W/r+tioH9xGDGzjD3QNFFnbEWExF27ijOziYLqaQ=
-Received: by wens.tw (Postfix, from userid 1000)
-        id 29FF95FC86; Mon, 20 Jul 2020 18:01:16 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH v2] regulator: gpio: Honor regulator-boot-on property
-Date:   Mon, 20 Jul 2020 18:01:13 +0800
-Message-Id: <20200720100113.6481-1-wens@kernel.org>
-X-Mailer: git-send-email 2.27.0
+Received: by mail-io1-f66.google.com with SMTP id q74so16979572iod.1;
+        Mon, 20 Jul 2020 03:01:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KYxjoHTv6uKj3n82G+0SsQK8lIYz9oQYev2/3hv38x8=;
+        b=l1A9RaESSIv9LCpOJcjB+lYwQoR48Iyyp8lTYOEmofQn76sU46CBTgW6LI9mRv8tFM
+         z943HuHltQ520CuiVkALpTpnABK40jg9+HD2U4b7vrYXl4g9x9fbbNCtP9k3/2FzY9ry
+         05GSlwxYopmXxqtIwGR7P6ib0nEKGg86SLCPs4Vee44FITghccbaIu+HiZxxpUI+Cokl
+         kpU/n51Jwrug/TYUuHdO0uAgAz4cmStZcYN1llsBCE4ZEwrmKTZeqfFfxcZvQorwvYE1
+         TP0Wdk4rOwphPiLb4C62jf5ykyw8x4nXiSox9YtRHuDazqc1Q894oRJu0/XTQOM4rsxr
+         7uAg==
+X-Gm-Message-State: AOAM530Z7g+UGrMNG0ipo7qKO3tNcGvxU6FNYqavrPcnlyPBqXShIGuZ
+        wtiqnL/0P3Qa6a5hsy5xZ5jgtDk+u1dY3g2DjzY=
+X-Google-Smtp-Source: ABdhPJxV6pAPGfa2GlMeYrPfo3O8mGIdY1f8QN1EuHpGCMVzgot8SC6RrqrpcHDVHe6pI9EGohzO21pxRbGKfeAPToY=
+X-Received: by 2002:a5d:97d9:: with SMTP id k25mr22200787ios.42.1595239278579;
+ Mon, 20 Jul 2020 03:01:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200720074249.596364-1-jiaxun.yang@flygoat.com> <20200720074249.596364-3-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200720074249.596364-3-jiaxun.yang@flygoat.com>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Mon, 20 Jul 2020 18:01:07 +0800
+Message-ID: <CAAhV-H52=2-Hij0AFBGuZWhQ4kWqEwLsvzXPR-ZndQKtkjnMbw@mail.gmail.com>
+Subject: Re: [PATCH 2/5] MIPS: Loongson64: Process ISA Node in DeviceTree
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+Hi, Jiaxun,
 
-When requesting the enable GPIO, the driver should do so with the
-correct output level matching some expected state. This is especially
-important if the regulator is a critical one, such as a supply for
-the boot CPU. This is currently done by checking for the enable-at-boot
-property, but this is not documented in the device tree binding, nor
-does it match the common regulator properties.
+On Mon, Jul 20, 2020 at 3:44 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+> Previously, we're hardcoding resserved ISA I/O Space in code, now
+> we're processing reverved I/O via DeviceTree directly. Using the ranges
+> property to determine the size and address of reserved I/O space.
+Maybe it is better to reserve a default legacy io range if there is no
+"isa" node in the .dts file?
 
-Honor the common regulator-boot-on property by checking the boot_on
-constraint setting within the DT probe path. This is the same as what
-is done in the fixed regulator driver.
-
-Also drop support for the undocumented enable-at-boot property. This
-property was not documented in the original commit introducing DT
-support, nor is it now, and there are no in-tree device trees that use
-this property.
-
-Fixes: 006694d099e8 ("regulator: gpio-regulator: Allow use of GPIO controlled regulators though DT")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- drivers/regulator/gpio-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/regulator/gpio-regulator.c b/drivers/regulator/gpio-regulator.c
-index 110ee6fe76c4..5646b7a26288 100644
---- a/drivers/regulator/gpio-regulator.c
-+++ b/drivers/regulator/gpio-regulator.c
-@@ -148,7 +148,7 @@ of_get_gpio_regulator_config(struct device *dev, struct device_node *np,
- 
- 	config->supply_name = config->init_data->constraints.name;
- 
--	if (of_property_read_bool(np, "enable-at-boot"))
-+	if (config->init_data->constraints.boot_on)
- 		config->enabled_at_boot = true;
- 
- 	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
--- 
-2.27.0
-
+Huacai
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  arch/mips/loongson64/init.c | 85 ++++++++++++++++++++++++++-----------
+>  1 file changed, 60 insertions(+), 25 deletions(-)
+>
+> diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
+> index 59ddadace83f..028d7b324ec2 100644
+> --- a/arch/mips/loongson64/init.c
+> +++ b/arch/mips/loongson64/init.c
+> @@ -7,6 +7,8 @@
+>  #include <linux/irqchip.h>
+>  #include <linux/logic_pio.h>
+>  #include <linux/memblock.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+>  #include <asm/bootinfo.h>
+>  #include <asm/traps.h>
+>  #include <asm/smp-ops.h>
+> @@ -63,41 +65,74 @@ void __init prom_free_prom_memory(void)
+>  {
+>  }
+>
+> -static __init void reserve_pio_range(void)
+> +static int __init add_legacy_isa_io(struct fwnode_handle *fwnode, phys_addr_t addr,
+> +                            resource_size_t    size)
+>  {
+> +       int ret = 0;
+>         struct logic_pio_hwaddr *range;
+> +       unsigned long vaddr;
+>
+>         range = kzalloc(sizeof(*range), GFP_ATOMIC);
+>         if (!range)
+> -               return;
+> +               return -ENOMEM;
+>
+> -       range->fwnode = &of_root->fwnode;
+> -       range->size = MMIO_LOWER_RESERVED;
+> -       range->hw_start = LOONGSON_PCIIO_BASE;
+> +       range->fwnode = fwnode;
+> +       range->size = size;
+> +       range->hw_start = addr;
+>         range->flags = LOGIC_PIO_CPU_MMIO;
+>
+> -       if (logic_pio_register_range(range)) {
+> -               pr_err("Failed to reserve PIO range for legacy ISA\n");
+> -               goto free_range;
+> +       ret = logic_pio_register_range(range);
+> +       if (ret) {
+> +               kfree(range);
+> +               return ret;
+> +       }
+> +
+> +       /* Legacy ISA must placed at the start of PCI_IOBASE */
+> +       if (range->io_start != 0) {
+> +               logic_pio_unregister_range(range);
+> +               kfree(range);
+> +               return -EINVAL;
+>         }
+>
+> -       if (WARN(range->io_start != 0,
+> -                       "Reserved PIO range does not start from 0\n"))
+> -               goto unregister;
+> -
+> -       /*
+> -        * i8259 would access I/O space, so mapping must be done here.
+> -        * Please remove it when all drivers can be managed by logic_pio.
+> -        */
+> -       ioremap_page_range(PCI_IOBASE, PCI_IOBASE + MMIO_LOWER_RESERVED,
+> -                               LOONGSON_PCIIO_BASE,
+> -                               pgprot_device(PAGE_KERNEL));
+> -
+> -       return;
+> -unregister:
+> -       logic_pio_unregister_range(range);
+> -free_range:
+> -       kfree(range);
+> +       vaddr = PCI_IOBASE + range->io_start;
+> +
+> +       ioremap_page_range(vaddr, vaddr + size, addr, pgprot_device(PAGE_KERNEL));
+> +
+> +       return 0;
+> +}
+> +
+> +static __init void reserve_pio_range(void)
+> +{
+> +       struct device_node *np;
+> +
+> +       for_each_node_by_name(np, "isa") {
+> +               struct of_pci_range range;
+> +               struct of_pci_range_parser parser;
+> +
+> +               pr_info("ISA Bridge: %pOF\n", np);
+> +
+> +               if (of_pci_range_parser_init(&parser, np)) {
+> +                       pr_info("Failed to parse resources.\n");
+> +                       break;
+> +               }
+> +
+> +               for_each_of_pci_range(&parser, &range) {
+> +                       switch (range.flags & IORESOURCE_TYPE_BITS) {
+> +                       case IORESOURCE_IO:
+> +                               pr_info(" IO 0x%016llx..0x%016llx\n",
+> +                                       range.cpu_addr,
+> +                                       range.cpu_addr + range.size - 1);
+> +                               if (add_legacy_isa_io(&np->fwnode, range.cpu_addr, range.size))
+> +                                       pr_warn("Failed to reserve legacy IO in Logic PIO\n");
+> +                               break;
+> +                       case IORESOURCE_MEM:
+> +                               pr_info(" MEM 0x%016llx..0x%016llx\n",
+> +                                       range.cpu_addr,
+> +                                       range.cpu_addr + range.size - 1);
+> +                               break;
+> +                       }
+> +               }
+> +       }
+>  }
+>
+>  void __init arch_init_irq(void)
+> --
+> 2.28.0.rc1
+>
