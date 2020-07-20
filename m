@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02CDC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980E9C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B113F20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FCE20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgGTHyl (ORCPT
+        id S1728344AbgGTHyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:54:41 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:41450 "EHLO
+        Mon, 20 Jul 2020 03:54:46 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:41406 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728195AbgGTHxy (ORCPT
+        with ESMTP id S1728194AbgGTHxy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 03:53:54 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from eli@mellanox.com)
         with SMTP; 20 Jul 2020 10:53:46 +0300
 Received: from nps-server-21.mtl.labs.mlnx (nps-server-21.mtl.labs.mlnx [10.237.240.120])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06K7rjgn008217;
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06K7rjgl008217;
         Mon, 20 Jul 2020 10:53:46 +0300
 Received: from nps-server-21.mtl.labs.mlnx (localhost [127.0.0.1])
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 06K7EXPo032189;
-        Mon, 20 Jul 2020 10:14:33 +0300
+        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 06K6sqUi031182;
+        Mon, 20 Jul 2020 09:54:52 +0300
 Received: (from eli@localhost)
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 06K7EXeB032188;
-        Mon, 20 Jul 2020 10:14:33 +0300
+        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 06K6sqUr031181;
+        Mon, 20 Jul 2020 09:54:52 +0300
 From:   Eli Cohen <eli@mellanox.com>
 To:     mst@redhat.com, jasowang@redhat.com,
         virtualization@lists.linux-foundation.org,
@@ -39,11 +39,11 @@ To:     mst@redhat.com, jasowang@redhat.com,
 Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com,
         Eli Cohen <eli@mellanox.com>
 Subject: [PATCH V2 vhost next 04/10] net/vdpa: Use struct for set/get vq state
-Date:   Mon, 20 Jul 2020 10:14:10 +0300
-Message-Id: <20200720071416.32112-5-eli@mellanox.com>
+Date:   Mon, 20 Jul 2020 09:54:37 +0300
+Message-Id: <20200720065443.31112-5-eli@mellanox.com>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200720071416.32112-1-eli@mellanox.com>
-References: <20200720071416.32112-1-eli@mellanox.com>
+In-Reply-To: <20200720065443.31112-1-eli@mellanox.com>
+References: <20200720065443.31112-1-eli@mellanox.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
