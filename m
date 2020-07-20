@@ -2,52 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012F9C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6BFC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D632120684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E41F522D02
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261687;
-	bh=20oi58UnR4BgY4g4QrVTdSrQ7JvKaf3s34bO79kePEw=;
+	s=default; t=1595261689;
+	bh=Rsssxhr5ZDxVKD9RnrovIRqJwtyh3+qcK/WyD3wN0Z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gX6pYmykUtnmucg4oLEUO5IqCHGh3aRTkhEPUEp6nQJNa7QghuALdIS5SAqkK6Eit
-	 /iE2W6ronJdUjkmlko133cYW78IKCaRTBvwMll09u31+/qgjozuj3K413vXR2Up1WC
-	 wAxjNu/UaM8/0lsgcCHf4ox/0YZMImmbvQkKQoz4=
+	b=ksDlPxQhUGV/lh+GKVg6gqBWZ6zY55Xx4nMVtKFum2j/nP+Qt0NLzj1GB/R7rIoie
+	 pQxfSeLnE5sDqPCf+jDzj1sdsk1cJCqlqqeKw/VDE2dqdiRvAXG1vqQKlMiIOxZett
+	 24cGc95Vj6kKd6miNCMRME/F4gl7vrIqjbm1RqwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388310AbgGTQOq (ORCPT
+        id S2388316AbgGTQOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:14:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55294 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:14:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387612AbgGTQOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:14:43 -0400
+        id S2387909AbgGTQOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:14:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76978207DD;
-        Mon, 20 Jul 2020 16:14:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0042520684;
+        Mon, 20 Jul 2020 16:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261683;
-        bh=20oi58UnR4BgY4g4QrVTdSrQ7JvKaf3s34bO79kePEw=;
+        s=default; t=1595261680;
+        bh=Rsssxhr5ZDxVKD9RnrovIRqJwtyh3+qcK/WyD3wN0Z8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IbF9yuhdBzZzaADstgd8lSj3mkeB9uNtqiem49xY7uwsrrsIh4/TDkD700NEB4Bkv
-         I8dIosn/kRS+4ZxIQdzCiZbnCR7tdHuhzdhu4VKnVbJjps2gK41uMuav6aoFE+bN1n
-         TN/jR7Fce7VM/LeS9JcM95vb8fT6uCLAzq26PgMg=
+        b=wSaoo7ta+ib9FPBqSOLGP7lJhyL/SjDfbXCCDYk+bS90c1ff/Or/tMaaaHUnrBH3G
+         f6Zed94NOTYCFb9QmkzzFyzZfcbROl/IjoHLCfr7IDhnYXZqiUu75+YnCCZJ3wfgQY
+         9lrwDtQzQjS5FXJS7fbnR85u7kPDcJ7CEueIJA/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.7 203/244] intel_th: pci: Add Emmitsburg PCH support
-Date:   Mon, 20 Jul 2020 17:37:54 +0200
-Message-Id: <20200720152835.510096162@linuxfoundation.org>
+Subject: [PATCH 5.7 202/244] intel_th: pci: Add Tiger Lake PCH-H support
+Date:   Mon, 20 Jul 2020 17:37:53 +0200
+Message-Id: <20200720152835.460662100@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -62,14 +62,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit fd73d74a32bfaaf259441322cc5a1c83caaa94f2 upstream.
+commit 6227585dc7b6a5405fc08dc322f98cb95e2f0eb4 upstream.
 
-This adds support for the Trace Hub in Emmitsburg PCH.
+This adds support for the Trace Hub in Tiger Lake PCH-H.
 
 Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: stable@vger.kernel.org # v4.14+
-Link: https://lore.kernel.org/r/20200706161339.55468-4-alexander.shishkin@linux.intel.com
+Link: https://lore.kernel.org/r/20200706161339.55468-3-alexander.shishkin@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
@@ -78,17 +78,17 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/hwtracing/intel_th/pci.c
 +++ b/drivers/hwtracing/intel_th/pci.c
-@@ -258,6 +258,11 @@ static const struct pci_device_id intel_
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4b26),
+@@ -234,6 +234,11 @@ static const struct pci_device_id intel_
  		.driver_data = (kernel_ulong_t)&intel_th_2x,
  	},
-+	{
-+		/* Emmitsburg PCH */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x1bcc),
+ 	{
++		/* Tiger Lake PCH-H */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x43a6),
 +		.driver_data = (kernel_ulong_t)&intel_th_2x,
 +	},
- 	{ 0 },
- };
- 
++	{
+ 		/* Jasper Lake PCH */
+ 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4da6),
+ 		.driver_data = (kernel_ulong_t)&intel_th_2x,
 
 
