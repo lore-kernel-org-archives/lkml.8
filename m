@@ -2,183 +2,175 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE6CC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE90C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB1C82065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260626;
-	bh=ugJYhbxxGAZU5V6TounsoDdJ5tMN2omWJB9OYCm3MWc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wTjiWovQal+yVpATVwBd9zFISU7+8y/S2ybs/W8RVgWoM5MNAgCVmwvxl3Goegppa
-	 fOJCPF6SEZLhUHSIDRg8TC1BUJi2kdlYGGQydBaiAuEGTDqalzcEFS5Z32t6cnPWLZ
-	 iomJCcJ/RHNTyrjb0JP2alNhT856/0BXgO0KWxgg=
+	by mail.kernel.org (Postfix) with ESMTP id 698002065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:57:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="16nlfSb7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Dyx0bOiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731866AbgGTP5F (ORCPT
+        id S1731240AbgGTP5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:57:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731841AbgGTP4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:56:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DEC22065E;
-        Mon, 20 Jul 2020 15:56:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260612;
-        bh=ugJYhbxxGAZU5V6TounsoDdJ5tMN2omWJB9OYCm3MWc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bu86R7NSxf/0HLQjf2Pui1k5myaOVp3oO9OHGMWPqkFqFZvLdAi98yDJu7hYX/FO2
-         F2YFkYLpuvPvgWohRWrEB5fD4lAUZgLXnWZKzG+r2unSRfyntqD76hqjKT11yh9jYM
-         P7UJ6tvPwEGGNiPT/d9rZMO5oIGLJjer/FDJE1e0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 004/215] net: rmnet: fix lower interface leak
-Date:   Mon, 20 Jul 2020 17:34:46 +0200
-Message-Id: <20200720152820.353269258@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
-References: <20200720152820.122442056@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 11:57:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731847AbgGTP4z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:56:55 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15EB4C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 08:56:55 -0700 (PDT)
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595260613;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GofmFicM0Ot7KWATWSSEdP5X+bhnBzrS2jXewofFGIY=;
+        b=16nlfSb7azsXMWMEMvEtSOSVubLJdJQdEV656N9+CvaVTIxwUdRyzS9+B1/8IqqdCKW9UQ
+        +wLJR2HrTS20MBkwdkPL8ssO0h5fW5GVNZ3nJDG7XsscLGyDPQm3BQ8JS5HjExPuNBxtXf
+        Ijq9PmQ2loNWNXdjz9cAA8/52/ujI0odGquxPBYxnQO4WBJkOqBHEMfc8Yx3f2XSb5+2t9
+        /bojX8Ogj44Nd5qJGlMZqCHU4q03gmkZfao3sY7a1pewRgh4IZppSoZuHRj5x3I8JV+Rof
+        8pH4hHkN95Yqv64JUHKzP3wTJvRkb3PR1IUpFJvmPmTpWhPaR+dcBnbCqsrUTg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595260613;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GofmFicM0Ot7KWATWSSEdP5X+bhnBzrS2jXewofFGIY=;
+        b=Dyx0bOiSvQkyLB5IVcXI9gRlyAiNdB50fPit3CGyVnZYSmeG8KskOwWf/hszSqR9vUNXyr
+        6NkwneErroU1LmDA==
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH v4 17/24] timekeeping: Use sequence counter with associated raw spinlock
+Date:   Mon, 20 Jul 2020 17:55:23 +0200
+Message-Id: <20200720155530.1173732-18-a.darwish@linutronix.de>
+In-Reply-To: <20200720155530.1173732-1-a.darwish@linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200720155530.1173732-1-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+A sequence counter write side critical section must be protected by some
+form of locking to serialize writers. A plain seqcount_t does not
+contain the information of which lock must be held when entering a write
+side critical section.
 
-commit 2a762e9e8cd1cf1242e4269a2244666ed02eecd1 upstream.
+Use the new seqcount_raw_spinlock_t data type, which allows to associate
+a raw spinlock with the sequence counter. This enables lockdep to verify
+that the raw spinlock used for writer serialization is held when the
+write side critical section is entered.
 
-There are two types of the lower interface of rmnet that are VND
-and BRIDGE.
-Each lower interface can have only one type either VND or BRIDGE.
-But, there is a case, which uses both lower interface types.
-Due to this unexpected behavior, lower interface leak occurs.
+If lockdep is disabled this lock association is compiled out and has
+neither storage size nor runtime overhead.
 
-Test commands:
-    ip link add dummy0 type dummy
-    ip link add dummy1 type dummy
-    ip link add rmnet0 link dummy0 type rmnet mux_id 1
-    ip link set dummy1 master rmnet0
-    ip link add rmnet1 link dummy1 type rmnet mux_id 2
-    ip link del rmnet0
-
-The dummy1 was attached as BRIDGE interface of rmnet0.
-Then, it also was attached as VND interface of rmnet1.
-This is unexpected behavior and there is no code for handling this case.
-So that below splat occurs when the rmnet0 interface is deleted.
-
-Splat looks like:
-[   53.254112][    C1] WARNING: CPU: 1 PID: 1192 at net/core/dev.c:8992 rollback_registered_many+0x986/0xcf0
-[   53.254117][    C1] Modules linked in: rmnet dummy openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nfx
-[   53.254182][    C1] CPU: 1 PID: 1192 Comm: ip Not tainted 5.8.0-rc1+ #620
-[   53.254188][    C1] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   53.254192][    C1] RIP: 0010:rollback_registered_many+0x986/0xcf0
-[   53.254200][    C1] Code: 41 8b 4e cc 45 31 c0 31 d2 4c 89 ee 48 89 df e8 e0 47 ff ff 85 c0 0f 84 cd fc ff ff 0f 0b e5
-[   53.254205][    C1] RSP: 0018:ffff888050a5f2e0 EFLAGS: 00010287
-[   53.254214][    C1] RAX: ffff88805756d658 RBX: ffff88804d99c000 RCX: ffffffff8329d323
-[   53.254219][    C1] RDX: 1ffffffff0be6410 RSI: 0000000000000008 RDI: ffffffff85f32080
-[   53.254223][    C1] RBP: dffffc0000000000 R08: fffffbfff0be6411 R09: fffffbfff0be6411
-[   53.254228][    C1] R10: ffffffff85f32087 R11: 0000000000000001 R12: ffff888050a5f480
-[   53.254233][    C1] R13: ffff88804d99c0b8 R14: ffff888050a5f400 R15: ffff8880548ebe40
-[   53.254238][    C1] FS:  00007f6b86b370c0(0000) GS:ffff88806c200000(0000) knlGS:0000000000000000
-[   53.254243][    C1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   53.254248][    C1] CR2: 0000562c62438758 CR3: 000000003f600005 CR4: 00000000000606e0
-[   53.254253][    C1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   53.254257][    C1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   53.254261][    C1] Call Trace:
-[   53.254266][    C1]  ? lockdep_hardirqs_on_prepare+0x379/0x540
-[   53.254270][    C1]  ? netif_set_real_num_tx_queues+0x780/0x780
-[   53.254275][    C1]  ? rmnet_unregister_real_device+0x56/0x90 [rmnet]
-[   53.254279][    C1]  ? __kasan_slab_free+0x126/0x150
-[   53.254283][    C1]  ? kfree+0xdc/0x320
-[   53.254288][    C1]  ? rmnet_unregister_real_device+0x56/0x90 [rmnet]
-[   53.254293][    C1]  unregister_netdevice_many.part.135+0x13/0x1b0
-[   53.254297][    C1]  rtnl_delete_link+0xbc/0x100
-[   53.254301][    C1]  ? rtnl_af_register+0xc0/0xc0
-[   53.254305][    C1]  rtnl_dellink+0x2dc/0x840
-[   53.254309][    C1]  ? find_held_lock+0x39/0x1d0
-[   53.254314][    C1]  ? valid_fdb_dump_strict+0x620/0x620
-[   53.254318][    C1]  ? rtnetlink_rcv_msg+0x457/0x890
-[   53.254322][    C1]  ? lock_contended+0xd20/0xd20
-[   53.254326][    C1]  rtnetlink_rcv_msg+0x4a8/0x890
-[ ... ]
-[   73.813696][ T1192] unregister_netdevice: waiting for rmnet0 to become free. Usage count = 1
-
-Fixes: 037f9cdf72fb ("net: rmnet: use upper/lower device infrastructure")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c |   19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ kernel/time/timekeeping.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -47,15 +47,23 @@ static int rmnet_unregister_real_device(
- 	return 0;
- }
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index d20d489841c8..05ecfd8a3314 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -39,18 +39,19 @@ enum timekeeping_adv_mode {
+ 	TK_ADV_FREQ
+ };
  
--static int rmnet_register_real_device(struct net_device *real_dev)
-+static int rmnet_register_real_device(struct net_device *real_dev,
-+				      struct netlink_ext_ack *extack)
- {
- 	struct rmnet_port *port;
- 	int rc, entry;
- 
- 	ASSERT_RTNL();
- 
--	if (rmnet_is_real_dev_registered(real_dev))
-+	if (rmnet_is_real_dev_registered(real_dev)) {
-+		port = rmnet_get_port_rtnl(real_dev);
-+		if (port->rmnet_mode != RMNET_EPMODE_VND) {
-+			NL_SET_ERR_MSG_MOD(extack, "bridge device already exists");
-+			return -EINVAL;
-+		}
++static DEFINE_RAW_SPINLOCK(timekeeper_lock);
 +
- 		return 0;
-+	}
+ /*
+  * The most important data for readout fits into a single 64 byte
+  * cache line.
+  */
+ static struct {
+-	seqcount_t		seq;
++	seqcount_raw_spinlock_t	seq;
+ 	struct timekeeper	timekeeper;
+ } tk_core ____cacheline_aligned = {
+-	.seq = SEQCNT_ZERO(tk_core.seq),
++	.seq = SEQCNT_RAW_SPINLOCK_ZERO(tk_core.seq, &timekeeper_lock),
+ };
  
- 	port = kzalloc(sizeof(*port), GFP_ATOMIC);
- 	if (!port)
-@@ -134,7 +142,7 @@ static int rmnet_newlink(struct net *src
+-static DEFINE_RAW_SPINLOCK(timekeeper_lock);
+ static struct timekeeper shadow_timekeeper;
  
- 	mux_id = nla_get_u16(data[IFLA_RMNET_MUX_ID]);
+ /**
+@@ -63,7 +64,7 @@ static struct timekeeper shadow_timekeeper;
+  * See @update_fast_timekeeper() below.
+  */
+ struct tk_fast {
+-	seqcount_t		seq;
++	seqcount_raw_spinlock_t	seq;
+ 	struct tk_read_base	base[2];
+ };
  
--	err = rmnet_register_real_device(real_dev);
-+	err = rmnet_register_real_device(real_dev, extack);
- 	if (err)
- 		goto err0;
+@@ -80,11 +81,13 @@ static struct clocksource dummy_clock = {
+ };
  
-@@ -416,13 +424,10 @@ int rmnet_add_bridge(struct net_device *
- 	if (port->nr_rmnet_devs > 1)
- 		return -EINVAL;
+ static struct tk_fast tk_fast_mono ____cacheline_aligned = {
++	.seq     = SEQCNT_RAW_SPINLOCK_ZERO(tk_fast_mono.seq, &timekeeper_lock),
+ 	.base[0] = { .clock = &dummy_clock, },
+ 	.base[1] = { .clock = &dummy_clock, },
+ };
  
--	if (port->rmnet_mode != RMNET_EPMODE_VND)
--		return -EINVAL;
--
- 	if (rmnet_is_real_dev_registered(slave_dev))
- 		return -EBUSY;
+ static struct tk_fast tk_fast_raw  ____cacheline_aligned = {
++	.seq     = SEQCNT_RAW_SPINLOCK_ZERO(tk_fast_raw.seq, &timekeeper_lock),
+ 	.base[0] = { .clock = &dummy_clock, },
+ 	.base[1] = { .clock = &dummy_clock, },
+ };
+@@ -157,7 +160,7 @@ static inline void tk_update_sleep_time(struct timekeeper *tk, ktime_t delta)
+  * tk_clock_read - atomic clocksource read() helper
+  *
+  * This helper is necessary to use in the read paths because, while the
+- * seqlock ensures we don't return a bad value while structures are updated,
++ * seqcount ensures we don't return a bad value while structures are updated,
+  * it doesn't protect from potential crashes. There is the possibility that
+  * the tkr's clocksource may change between the read reference, and the
+  * clock reference passed to the read function.  This can cause crashes if
+@@ -222,10 +225,10 @@ static inline u64 timekeeping_get_delta(const struct tk_read_base *tkr)
+ 	unsigned int seq;
  
--	err = rmnet_register_real_device(slave_dev);
-+	err = rmnet_register_real_device(slave_dev, extack);
- 	if (err)
- 		return -EBUSY;
- 
-
+ 	/*
+-	 * Since we're called holding a seqlock, the data may shift
++	 * Since we're called holding a seqcount, the data may shift
+ 	 * under us while we're doing the calculation. This can cause
+ 	 * false positives, since we'd note a problem but throw the
+-	 * results away. So nest another seqlock here to atomically
++	 * results away. So nest another seqcount here to atomically
+ 	 * grab the points we are checking with.
+ 	 */
+ 	do {
+@@ -486,7 +489,7 @@ EXPORT_SYMBOL_GPL(ktime_get_raw_fast_ns);
+  *
+  * To keep it NMI safe since we're accessing from tracing, we're not using a
+  * separate timekeeper with updates to monotonic clock and boot offset
+- * protected with seqlocks. This has the following minor side effects:
++ * protected with seqcounts. This has the following minor side effects:
+  *
+  * (1) Its possible that a timestamp be taken after the boot offset is updated
+  * but before the timekeeper is updated. If this happens, the new boot offset
+-- 
+2.20.1
 
