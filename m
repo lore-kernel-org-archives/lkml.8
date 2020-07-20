@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874D8C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58EB422BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 876FD22D00
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260847;
-	bh=Qg6TVuwJkgK/nqLQ+vyedbQ43HGyb3v9UlsWhO8FsWY=;
+	s=default; t=1595260849;
+	bh=8+F1xvidluSTrZ/um2PpFkWZI11lB1bsHhGjws3CU2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XxPu0Cg6A7sAkS04RpKiYiAGXAslmBSxiHGdLV0DqB54cNhRYgZR0EosUQC2VNTgf
-	 lkXdp5Xqpc3maKCOjHnEYh2QTIf17v7XMtyNtAZcbOUqZj32y0MCVU0mRRMmx6FbTj
-	 KeXWB9QLcvyKBwqgk7KCsXNW2MWgfEoVOMf4vWz0=
+	b=L+6g803AzBaxDH0x+hfCcny0fj0IjUvwlajshV2AFz6C0WNEtB1Ka2PYP77uI4azu
+	 Fvt4DYjnR7bdfYpsz2YcirBmCrLF0oDfKf/6TvpU/27Vf55jIWDMVfAp1JepDE1lwo
+	 QZbjGEIGUuWVzRGcl/UkcvTX0bU4dwSw1dqnFmk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732443AbgGTQAq (ORCPT
+        id S1732437AbgGTQAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:00:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33798 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:00:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732431AbgGTQAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:00:42 -0400
+        id S1732429AbgGTQAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:00:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7C6B22CAF;
-        Mon, 20 Jul 2020 16:00:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CF1A20684;
+        Mon, 20 Jul 2020 16:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260841;
-        bh=Qg6TVuwJkgK/nqLQ+vyedbQ43HGyb3v9UlsWhO8FsWY=;
+        s=default; t=1595260838;
+        bh=8+F1xvidluSTrZ/um2PpFkWZI11lB1bsHhGjws3CU2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SgMKHaeQd/3dT3ZchNBUFz03gigJ1xx5UUx59+wgCwm1T9wq3ChNkm1eJovpQokIF
-         p8b89Ioc5pbAb12fDkIAk77ZG9bJADg5QjADrPR5Iqc0bJGieGmT8P9RXB0r6sFErU
-         7lblwQP1Q1/PdWKa7t/xo6/9WRUptA5OnlwI4UyQ=
+        b=OigXwxwOthGw+A3QBQnN7W4Hdaur0bYll9cE7R2rSZAjkPH2IJR/Kz5UlXlHo5ykD
+         T9ys5yH2PnRXpDqWcWXfrDl9qZl+Oe3KhNREZdKUshwQxlWGOPJdCD+0dIH03+44Dg
+         kxHxD4lMXxuR8s5+NP7AzxpGMSc6b9h8Q4WRZ/qk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 115/215] ARM: dts: socfpga: Align L2 cache-controller nodename with dtschema
-Date:   Mon, 20 Jul 2020 17:36:37 +0200
-Message-Id: <20200720152825.670637440@linuxfoundation.org>
+Subject: [PATCH 5.4 097/215] arm64: dts: meson: add missing gxl rng clock
+Date:   Mon, 20 Jul 2020 17:36:19 +0200
+Message-Id: <20200720152824.826299352@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -60,49 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit d7adfe5ffed9faa05f8926223086b101e14f700d ]
+[ Upstream commit 95ca6f06dd4827ff63be5154120c7a8511cd9a41 ]
 
-Fix dtschema validator warnings like:
-    l2-cache@fffff000: $nodename:0:
-        'l2-cache@fffff000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+The peripheral clock of the RNG is missing for gxl while it is present
+for gxbb.
 
-Fixes: 475dc86d08de ("arm: dts: socfpga: Add a base DTSI for Altera's Arria10 SOC")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+Fixes: 1b3f6d148692 ("ARM64: dts: meson-gx: add clock CLKID_RNG0 to hwrng node")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://lore.kernel.org/r/20200617125346.1163527-1-jbrunet@baylibre.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/socfpga.dtsi         | 2 +-
- arch/arm/boot/dts/socfpga_arria10.dtsi | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 4f3993cc02279..4510308972209 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -710,7 +710,7 @@ ocram-ecc@ffd08144 {
- 			};
- 		};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 49ff0a7d0210f..e3cfa24dca5ab 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -288,6 +288,11 @@ clkc: clock-controller {
+ 	};
+ };
  
--		L2: l2-cache@fffef000 {
-+		L2: cache-controller@fffef000 {
- 			compatible = "arm,pl310-cache";
- 			reg = <0xfffef000 0x1000>;
- 			interrupts = <0 38 0x04>;
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index 2a86e72d97918..906bfb580e9e7 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -636,7 +636,7 @@ sdr: sdr@ffcfb100 {
- 			reg = <0xffcfb100 0x80>;
- 		};
- 
--		L2: l2-cache@fffff000 {
-+		L2: cache-controller@fffff000 {
- 			compatible = "arm,pl310-cache";
- 			reg = <0xfffff000 0x1000>;
- 			interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
++&hwrng {
++	clocks = <&clkc CLKID_RNG0>;
++	clock-names = "core";
++};
++
+ &i2c_A {
+ 	clocks = <&clkc CLKID_I2C>;
+ };
 -- 
 2.25.1
 
