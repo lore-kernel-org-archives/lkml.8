@@ -3,128 +3,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E25C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6679722B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26FC822B51
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:44:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oNf6dSVe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MqA1QBnc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbgGTSnM (ORCPT
+        id S1730252AbgGTSoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 14:43:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39024 "EHLO
+        Mon, 20 Jul 2020 14:44:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgGTSnK (ORCPT
+        with ESMTP id S1728068AbgGTSoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 14:43:10 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4DF8C061794;
-        Mon, 20 Jul 2020 11:43:09 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9VwX0y0wz9sRN;
-        Tue, 21 Jul 2020 04:43:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595270588;
-        bh=+4fZqzsxFnaIHx+7cpxpLq2jR5BVjVxJXGeJc3V+N54=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oNf6dSVe+1GCC6DdMmOM6g41j/tzXitGuhZQ5kHOppikTOVuC95a5RjRfR42RwTgW
-         Gn4ew68xSvE2S1IUtY1PrkYHbdXk14wG7DBOZJ8qghWYup5Qa3cASFBPxvj8V14+r0
-         utRi8p+WiDb/QuAoK7rp5TAV1qGtJ3Nd/E/TkJ1vfs754Op58JxLhtw2NuhZQ3Gn7r
-         TM0bQH5F9/V0zc0hxlWkkPozNTaLeDwQn9tiCkwTpn+ghBDRuF6Edc+odxgP4Kt4Vc
-         yVoTizRhXpVtge/wNgT5zxBILXrwtQcGgXDs6zJOCsxlUm/8PXMShNDKwnpnSwDygz
-         tlpp7jecoc1HQ==
-Date:   Tue, 21 Jul 2020 04:43:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: Re: linux-next: Tree for Jul 20 (arch/x86/kvm/)
-Message-ID: <20200721044307.6b263e5b@canb.auug.org.au>
-In-Reply-To: <1d2aa97d-4a94-673c-dc82-509da221c5d6@infradead.org>
-References: <20200720194225.17de9962@canb.auug.org.au>
-        <1d2aa97d-4a94-673c-dc82-509da221c5d6@infradead.org>
+        Mon, 20 Jul 2020 14:44:19 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47556C061794;
+        Mon, 20 Jul 2020 11:44:19 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id y9so3387479oot.9;
+        Mon, 20 Jul 2020 11:44:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aCbgyprCpv5zpqintIcYum/YWgpLdnYdNsT160BVscU=;
+        b=MqA1QBncRXeHqrSw+D9BJYzKgHEiDmWtVKqX3bSjZgXmBmd6zpF4cQWCzZq10h0CA3
+         athEZ1vHT98oFgV1u5Xrq7SIUdYFFDJweUOqE/9dAedg5r1E+1wUR4GCgjrB96tcY/oW
+         eRPMgsTx93B4fM1CBPPt+BYnUy+SKpvnDZb84tQzPwV8RrB/O6GPq9FpLKtvGOAsM390
+         C7MWF2OlPkVQwDk7XXBKHOaIfJP+cSPOMetp2zdeIqSqvIGGFuwHmUWypGeLDGvbZ5XA
+         /LJYfKsKKQ3GagLFgzCqrfWNONB11jIfoxaDh7WFhi8q1GPz+bzP6N2POUhiM43D/SpJ
+         PZCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aCbgyprCpv5zpqintIcYum/YWgpLdnYdNsT160BVscU=;
+        b=LIrWcHEJSXZNux0yE+Og8ay3acuYUIOVCil8DnQqRZOpdUCDlO+ObAcPJwujkNR5FD
+         /BoZeS2otxmO2mEzizf5u/zM62Vpj1lCxIuAExWVIYfe4YE07HrY9uSIuonUTi4Mm3DP
+         /IFzaukDUxjhz1wICCgqUftlitj6NEVrmv7oQNAnIwA0zcWmUFhgnDeVoUxhlWTP2WIR
+         J6qBKaQGAKWfA04u+a2uyrog8gNxGKsBvdU4MjxW+FZNeBWcXngZW1L7XbRYQIic/ntn
+         QeXdG8LqELd1onZ5+AdEqfTlAbQlHfDck7WyRveJvoXXrWCjAaXEYBzre7oUj0q48iOM
+         sdtA==
+X-Gm-Message-State: AOAM530JHQ5TemDWKyvFoMH7pxny39GOsb4YY/0eiZWcZGykTMGt5OBp
+        ZzP9epea+Sg0+R/NziaOguzcOCGxepR2n8khmBO6zQ==
+X-Google-Smtp-Source: ABdhPJxxdpu7f6maFj8dhB9dVzclW3hoj40UmwmfiLyTPbY4FdQO2aoMX/tGthJiy4XqhpNjr1TPi/shKoe1NFr1EKE=
+X-Received: by 2002:a4a:b006:: with SMTP id f6mr20757376oon.13.1595270658680;
+ Mon, 20 Jul 2020 11:44:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qigNzgqNSb8xRKNnC2ybGUo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200717222819.26198-1-nramas@linux.microsoft.com>
+ <20200717222819.26198-5-nramas@linux.microsoft.com> <CAEjxPJ7xQtZToF4d2w_o8SXFKG9kPZaWTWTFqyC-7GwBWnQa0A@mail.gmail.com>
+ <c0fbfcf3-ec36-872a-c389-b3fea214848c@linux.microsoft.com>
+ <CAEjxPJ7VH18bEo6+U1GWrx=tHVGr=6XtF5_ygcfQYgdtZ74J+g@mail.gmail.com>
+ <bea0cb52-2e13-fb14-b66c-b57287c23c3f@linux.microsoft.com>
+ <CAEjxPJ6Rt7u3shLbxoPRHgr-D=CD9d_eXRB07A9qN7RmJwZAwA@mail.gmail.com>
+ <CAEjxPJ6-jHha+CeqSdQ2O0bpyQe_9buj2ENZz6FNj6S87XSSfg@mail.gmail.com> <dccfc56b-c3ab-327e-19b2-7a70d15afe5b@linux.microsoft.com>
+In-Reply-To: <dccfc56b-c3ab-327e-19b2-7a70d15afe5b@linux.microsoft.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Mon, 20 Jul 2020 14:44:07 -0400
+Message-ID: <CAEjxPJ6_pxEh6HG9F3r=4B5ZgEpNPkgLHHfJp6ze=F1wKt4wCw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] LSM: Define SELinux function to measure security state
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qigNzgqNSb8xRKNnC2ybGUo
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi Randy,
-
-On Mon, 20 Jul 2020 09:56:08 -0700 Randy Dunlap <rdunlap@infradead.org> wro=
-te:
+On Mon, Jul 20, 2020 at 2:27 PM Lakshmi Ramasubramanian
+<nramas@linux.microsoft.com> wrote:
 >
-> on x86_64:
->=20
->   CC [M]  arch/x86/kvm/mmu/page_track.o
-> In file included from ../include/linux/pid.h:5:0,
->                  from ../include/linux/sched.h:14,
->                  from ../include/linux/kvm_host.h:12,
->                  from ../arch/x86/kvm/mmu/page_track.c:14:
-> ../arch/x86/kvm/mmu/page_track.c: In function =E2=80=98kvm_page_track_wri=
-te=E2=80=99:
-> ../include/linux/rculist.h:727:30: error: left-hand operand of comma expr=
-ession has no effect [-Werror=3Dunused-value]
->   for (__list_check_srcu(cond),     \
->                               ^
-> ../arch/x86/kvm/mmu/page_track.c:232:2: note: in expansion of macro =E2=
-=80=98hlist_for_each_entry_srcu=E2=80=99
->   hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
->   ^~~~~~~~~~~~~~~~~~~~~~~~~
-> ../arch/x86/kvm/mmu/page_track.c: In function =E2=80=98kvm_page_track_flu=
-sh_slot=E2=80=99:
-> ../include/linux/rculist.h:727:30: error: left-hand operand of comma expr=
-ession has no effect [-Werror=3Dunused-value]
->   for (__list_check_srcu(cond),     \
->                               ^
-> ../arch/x86/kvm/mmu/page_track.c:258:2: note: in expansion of macro =E2=
-=80=98hlist_for_each_entry_srcu=E2=80=99
->   hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
->   ^~~~~~~~~~~~~~~~~~~~~~~~~
-> cc1: all warnings being treated as errors
+> On 7/20/20 10:49 AM, Stephen Smalley wrote:
+>
+> >>>
+> >>> Looks like the template used is ima-ng which doesn't include the
+> >>> measured buffer. Please set template to "ima-buf" in the policy.
+> >>>
+> >>> For example,
+> >>> measure func=LSM_STATE template=ima-buf
+> >>
+> >> It seems like one shouldn't need to manually specify it if it is the
+> >> only template that yields a useful result for the LSM_STATE function?
+> >
+> > Actually, if we used ima-ng template for selinux-policy-hash, then
+> > instead of needing to hash the policy
+> > first and passing the hash to IMA, we could just pass the policy as
+> > the buffer and IMA would take care of the hashing, right?
+>
+> That is correct.
+>
+> The IMA hook I've added to measure LSM structures is a generic one that
+> can be used by any security module (SM). I feel it would be better to
+> not have policy or state or any such SM specific logic in IMA, but leave
+> that to the individual SM to handle.
+>
+> What do you think?
 
-Caused by commit
-
-  bd4444c47de9 ("rculist : Introduce list/hlist_for_each_entry_srcu() macro=
-s")
-
-presumably with CONFIG_PROVE_RCU_LIST not set.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/qigNzgqNSb8xRKNnC2ybGUo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8V5bsACgkQAVBC80lX
-0GyVQAf8D59dKFMeuZe4W5Ay7oGvQOtXZXcQFnrIz1U5Jf54S+6swjErCT7v51Cx
-kh+RVzGarJD4xwa/hz9keR+csECE0RTJN1OGPmYOmpBe3X42++vGGo7lDg5DNn+S
-X3eP/8AEd13g/Ll4Cu461y5j40aW4tiuaj9NGACWUxzjSEaGde3oRqgtL51iAjEC
-9RCSZrPkaagEWpqIrKvPZaSQpS73k0Jgq6HoQrsz/3wWYYpbzWEOoa2MyyR0ciUk
-DpPngJ0lqrzYJhFfAIQfnHudD49i33aRfdTAfVsXTD5KMidyjWfxAKDpNNXzl0Fh
-SK9pOD0e8aI1xa6izuDbjiwbPa3/TA==
-=ZrJA
------END PGP SIGNATURE-----
-
---Sig_/qigNzgqNSb8xRKNnC2ybGUo--
+It is correct to remain security module agnostic.  However, I think
+you can remain LSM-neutral while still avoiding the double hashing of
+the policy here.  Can't you just pass in the policy itself as the
+buffer and let IMA hash it?  Then you can let the policy author decide
+on the template to be used (ima-buf versus ima-ng).  If you want to
+support the use of different templates for different "kinds" of LSM
+state (e.g. state versus policy) you could either provide two funcs
+(LSM_STATE, LSM_POLICY) or otherwise support selection based on some
+other attribute.
