@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C31FC47276
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724B1C4727B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15F83207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C63622BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281402;
-	bh=KHiEmeSDHEk36Ap081u5lxBnesPSBOC4MwK1QNOPB98=;
+	s=default; t=1595281404;
+	bh=9FOnQYGHVN4dOx8fmzyzmZVhYjbLjfdb9/yh2ELR+Ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=icaScNOLB7QRX0Jq1hdjO+l/21pqolKCUavQcpEIQH5B7GDWB5/tjx7oKYQfWMyVb
-	 Jk7c8xeEkRSKwag3BKXYnnhTWV76Kj4Vtyv9limEOgDgzt8yYx6O1jHp5v+vo+VRfZ
-	 3l0T/2N3suzZwz26ZJigKo4mE4HWzZbC6ukdb1vE=
+	b=IfQPrl1kOJZs+f1I8OnFTod61OAhqT7AFrZzZUXxqb4jQR7fpdzs2wn1nYGvz7fiv
+	 iy7ESxatHJDFFg+hzUxBe6Md+VvRZV5pi9V0380p4l4Aw4EsgqTUBgGfyZ7doWzWH8
+	 ykZjnxD8/274K48RzSACYaYKxzIybnYXT3jJFa0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgGTVnU (ORCPT
+        id S1728186AbgGTVif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:43:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57288 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:38:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728195AbgGTVig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:36 -0400
+        id S1728032AbgGTViN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 191F522BEF;
-        Mon, 20 Jul 2020 21:38:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF87D22BEF;
+        Mon, 20 Jul 2020 21:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281115;
-        bh=KHiEmeSDHEk36Ap081u5lxBnesPSBOC4MwK1QNOPB98=;
+        s=default; t=1595281092;
+        bh=9FOnQYGHVN4dOx8fmzyzmZVhYjbLjfdb9/yh2ELR+Ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E5zkPh6dKXvEFFbGbR2HykUWp7wGuI0mU2MTECnBEwIv1Atzow/9PS3eKLWG5SNVA
-         7htmZJLyDfCzQjTSafIEA5GyVnqeRo6fxXdFGXNJ2hFCUyyiIRdhEfoLEnd1Pv9lqe
-         MFgjCQMYtOBmm21OAN9CsJuU1I/t6WER6Kw/mIJ8=
+        b=f4pSxgy4aPtCSf3tMXeD3lLJ0RJzgWomLYvsc5kwNKI/+/boJqXFUvUEB3pucUJGZ
+         cxoyBxLQARBBfte0ARdka1BGLcRpy9HuiMoBiLe6SV36IZli2hVWgmQndqyQ535bln
+         oQwgX4NqQOvwrhRFG/CdaNSFkm9BU2HEMdqcOFBg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>, Stefan Dietrich <roots@gmx.de>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 23/34] hwmon: (nct6775) Accept PECI Calibration as temperature source for NCT6798D
-Date:   Mon, 20 Jul 2020 17:37:56 -0400
-Message-Id: <20200720213807.407380-23-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Joao Moreno <mail@joaomoreno.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 04/34] HID: apple: Disable Fn-key key-re-mapping on clone keyboards
+Date:   Mon, 20 Jul 2020 17:37:37 -0400
+Message-Id: <20200720213807.407380-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
 References: <20200720213807.407380-1-sashal@kernel.org>
@@ -58,49 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 8a03746c8baf82e1616f05a1a716d34378dcf780 ]
+[ Upstream commit a5d81646fa294eed57786a9310b06ca48902adf8 ]
 
-Stefan Dietrich reports invalid temperature source messages on Asus Formula
-XII Z490.
+The Maxxter KB-BT-001 Bluetooth keyboard, which looks somewhat like the
+Apple Wireless Keyboard, is using the vendor and product IDs (05AC:0239)
+of the Apple Wireless Keyboard (2009 ANSI version) <sigh>.
 
-nct6775 nct6775.656: Invalid temperature source 28 at index 0,
-		source register 0x100, temp register 0x73
+But its F1 - F10 keys are marked as sending F1 - F10, not the special
+functions hid-apple.c maps them too; and since its descriptors do not
+contain the HID_UP_CUSTOM | 0x0003 usage apple-hid looks for for the
+Fn-key, apple_setup_input() never gets called, so F1 - F6 are mapped
+to key-codes which have not been set in the keybit array causing them
+to not send any events at all.
 
-Debugging suggests that temperature source 28 reports the CPU temperature.
-Let's assume that temperature sources 28 and 29 reflect "PECI Agent {0,1}
-Calibration", similar to other chips of the series.
+The lack of a usage code matching the Fn key in the clone is actually
+useful as this allows solving this problem in a generic way.
 
-Reported-by: Stefan Dietrich <roots@gmx.de>
-Cc: Stefan Dietrich <roots@gmx.de>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+This commits adds a fn_found flag and it adds a input_configured
+callback which checks if this flag is set once all usages have been
+mapped. If it is not set, then assume this is a clone and clear the
+quirks bitmap so that the hid-apple code does not add any special
+handling to this keyboard.
+
+This fixes F1 - F6 not sending anything at all and F7 - F12 sending
+the wrong codes on the Maxxter KB-BT-001 Bluetooth keyboard and on
+similar clones.
+
+Cc: Joao Moreno <mail@joaomoreno.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/nct6775.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/hid/hid-apple.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
-index 7efa6bfef0609..ba9b96973e808 100644
---- a/drivers/hwmon/nct6775.c
-+++ b/drivers/hwmon/nct6775.c
-@@ -786,13 +786,13 @@ static const char *const nct6798_temp_label[] = {
- 	"Agent1 Dimm1",
- 	"BYTE_TEMP0",
- 	"BYTE_TEMP1",
--	"",
--	"",
-+	"PECI Agent 0 Calibration",	/* undocumented */
-+	"PECI Agent 1 Calibration",	/* undocumented */
- 	"",
- 	"Virtual_TEMP"
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index d732d1d10cafb..6909c045fece1 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -54,6 +54,7 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
+ struct apple_sc {
+ 	unsigned long quirks;
+ 	unsigned int fn_on;
++	unsigned int fn_found;
+ 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
  };
  
--#define NCT6798_TEMP_MASK	0x8fff0ffe
-+#define NCT6798_TEMP_MASK	0xbfff0ffe
- #define NCT6798_VIRT_TEMP_MASK	0x80000c00
+@@ -339,12 +340,15 @@ static int apple_input_mapping(struct hid_device *hdev, struct hid_input *hi,
+ 		struct hid_field *field, struct hid_usage *usage,
+ 		unsigned long **bit, int *max)
+ {
++	struct apple_sc *asc = hid_get_drvdata(hdev);
++
+ 	if (usage->hid == (HID_UP_CUSTOM | 0x0003) ||
+ 			usage->hid == (HID_UP_MSVENDOR | 0x0003) ||
+ 			usage->hid == (HID_UP_HPVENDOR2 | 0x0003)) {
+ 		/* The fn key on Apple USB keyboards */
+ 		set_bit(EV_REP, hi->input->evbit);
+ 		hid_map_usage_clear(hi, usage, bit, max, EV_KEY, KEY_FN);
++		asc->fn_found = true;
+ 		apple_setup_input(hi->input);
+ 		return 1;
+ 	}
+@@ -371,6 +375,19 @@ static int apple_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+ 	return 0;
+ }
  
- /* NCT6102D/NCT6106D specific data */
++static int apple_input_configured(struct hid_device *hdev,
++		struct hid_input *hidinput)
++{
++	struct apple_sc *asc = hid_get_drvdata(hdev);
++
++	if ((asc->quirks & APPLE_HAS_FN) && !asc->fn_found) {
++		hid_info(hdev, "Fn key not found (Apple Wireless Keyboard clone?), disabling Fn key handling\n");
++		asc->quirks = 0;
++	}
++
++	return 0;
++}
++
+ static int apple_probe(struct hid_device *hdev,
+ 		const struct hid_device_id *id)
+ {
+@@ -585,6 +602,7 @@ static struct hid_driver apple_driver = {
+ 	.event = apple_event,
+ 	.input_mapping = apple_input_mapping,
+ 	.input_mapped = apple_input_mapped,
++	.input_configured = apple_input_configured,
+ };
+ module_hid_driver(apple_driver);
+ 
 -- 
 2.25.1
 
