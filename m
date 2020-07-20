@@ -7,146 +7,109 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB97C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6F9C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF21A20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1E120B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:14:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="DvcOMRPY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="q9O851UY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y2/c2wfU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgGTOLp (ORCPT
+        id S1727862AbgGTOOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:11:45 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:47837 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725934AbgGTOLo (ORCPT
+        Mon, 20 Jul 2020 10:14:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgGTOOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:11:44 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5FBD35C014B;
-        Mon, 20 Jul 2020 10:11:43 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 20 Jul 2020 10:11:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=prraTOjwRw0ez/AQwdcYRGL2HR1
-        rZLnwK1FuDQttWNA=; b=DvcOMRPY+pJWNLOKoDY54i5Bn1HEpvxm7hABYr+fNIo
-        VrqaK86jSXGpz7DOSuv/e4SRqQh6++L/4zAT8jRW6nXVPi9IkNDpLCZEBEUApW4Y
-        T433UIRrDZv4oD29H3kutVL8hbIEvXRHlgxtjsgt4p9vvhBrnPvTrPPVLtSmys2O
-        HtoQjDJ/RCsnyxSAUC+QPfanwy5+1xWnDthoEY9V4N9wusCXsaKxCkapKqvmM8SM
-        APZrUc19myOo39SBIlRbYBovuR0K4IetbijVCo+Ek5KSZqLlEfsI3NJT/rO25Apg
-        GpPzveoSISAOjrfZZYqvkUNRc6Ik0LwmRpHHOZTMHDg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=prraTO
-        jwRw0ez/AQwdcYRGL2HR1rZLnwK1FuDQttWNA=; b=q9O851UYlpvYofqSu04xWU
-        POAsDzN7gJoZMDVTx9m1dD7SsMlHNjNF2EQ1lXBy1Uch2Bk5iJLbOLFBIl4OAIjz
-        KvdKqy2ql3fTaYNDKupzLAnZRSaanE6rbLt0lEJN0wk/YTjpUO8KST5vy1moxGin
-        51rtmnNj/w9c8P1PpBELGeEAgN4Evzb98OKEjlOz/jpPFPAvMyBYEGx2wYjqQpRM
-        lUxp8GQcvNxVt/soyuS5LMV2v3AGI1Ww/YCaUnEheFVZ658ylAnBYW3xR7oziWev
-        zb9lNv72i5l9kERvhp8Vme/W+VN9C/Bf2RSnjkEKvogzu21x3iMeYKPOmmkzjbQg
-        ==
-X-ME-Sender: <xms:HaYVX1h9FI_r4lr2KI8kCPef_--T1KqYltV7SHBrNWckQX15Cailyw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrgeeggdeglecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehgtderre
-    dttddvnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimhgvsegtvghr
-    nhhordhtvggthheqnecuggftrfgrthhtvghrnhepleekgeehhfdutdeljefgleejffehff
-    fgieejhffgueefhfdtveetgeehieehgedunecukfhppeeltddrkeelrdeikedrjeeinecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimh
-    gvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:HaYVX6CKbHmnrMNbeKn4e0xcnTdEI1aUWsve5e2aGeNDcVbqSTLEsQ>
-    <xmx:HaYVX1Eeo7r25FHA3VhyNK20DNrHylb0OBrJHS46uf-bdGgk9Lp4VA>
-    <xmx:HaYVX6QaQHo_vad_gGj8dBPIinWpBoj2liB1Ss7NzJJA8z8VrIDHzA>
-    <xmx:H6YVX99ay_N8V1Er25QFIOHWibIQP2G3SqcEfDxJHAcmAjqmHWSQjg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0FDF43280065;
-        Mon, 20 Jul 2020 10:11:40 -0400 (EDT)
-Date:   Mon, 20 Jul 2020 16:11:39 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/8] arm64: dts: allwinner: h5: Enable CPU DVFS
- (cpufreq)
-Message-ID: <20200720141139.w3pgnoozqqfjhj3r@gilmour.lan>
-References: <20200717160053.31191-1-wens@kernel.org>
+        Mon, 20 Jul 2020 10:14:04 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C71C6C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 07:14:03 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h22so20400847lji.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 07:14:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9DiHRnFNVQtLplAiqEhupb7TqEx9zvruD96MwLMbFL0=;
+        b=Y2/c2wfUdN3DKORe7zeCca30O63TjzpDby0GTXv/vSxick4THyzfpL/d6o1Jc5zduK
+         Qu8auVrQKid69N6GvMksvMzon7vw07vHmkJAnFdT6c6SNiP7/m1pNxD9lzzdZdPqCpa+
+         BExD1qbSWx17l1TDVTT5fLzEAm36DS7lD2HcHooxy12pWtxIVMZAlI6gYat3q5VhCUd7
+         CRDmCfKu3B2OaHgvOaBnPWbeObhX0xEniWddkPm3KOrHYDZI9YYhEbu618+0QllwhgO3
+         pegp8c5wfrZVUc/rgHYILb2hzRAlgeJM0J4EkX6LxIQj8dQjts5OCSNsdc18rrDZIG1o
+         zs7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9DiHRnFNVQtLplAiqEhupb7TqEx9zvruD96MwLMbFL0=;
+        b=rlm2wkzkEzXLlXnroV88VG+iw39kt0IIwUgXJHGqv7Ar5MEe/1uq4NVkbBEV9gaXkq
+         RLU3MDzwsb27yy6anjixAMzgAOzZ93+QFpeXVMmvrlRGPBka1GLpvrKmXspmRVX6J+bn
+         jUrXoIWeDwxSoMCm029l4zwCFjAnnE/S3rlvulOGyBs1AkdFrYWq/InMixMwbiGlUG9w
+         zk6SJxgcR3HqCIhhWXA/s/7RVxjt0scOCA4kVaOfIG5l8dvE/HQMzJI5NuLBBX3br3tY
+         SQi1Y9+EDKxSbciTEQ/psRJQsCMtsh9vJ8YFMXbIjqA3bYn1FAxiVbDTJ2c8UvbBvs7p
+         /ssg==
+X-Gm-Message-State: AOAM533daqy7CMsf2IxxT4Lq8/DbzeifQoCo8ni+0bVYYav57Fxb29uW
+        wA8tXMk2pW4Kq5hWxFuRzc8/s4YIlIp8pdm7lS6e9Q==
+X-Google-Smtp-Source: ABdhPJxdre1sEy80DzhnFCDjTrs8GKVeM3fBJ9cozNo11ss0SEiHRDDHrpXirEVm6TiEGg0DbCOnl43o/rAgf3lKoj4=
+X-Received: by 2002:a2e:9089:: with SMTP id l9mr10612838ljg.431.1595254442239;
+ Mon, 20 Jul 2020 07:14:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ypd46vk4pvx5y2fo"
-Content-Disposition: inline
-In-Reply-To: <20200717160053.31191-1-wens@kernel.org>
+References: <20200712131003.23271-1-madhuparnabhowmik10@gmail.com>
+ <20200712131003.23271-2-madhuparnabhowmik10@gmail.com> <20200712160856.GW9247@paulmck-ThinkPad-P72>
+ <CA+G9fYuVmTcttBpVtegwPbKxufupPOtk_WqEtOdS+HDQi7WS9Q@mail.gmail.com>
+ <CAA42JLY2L6xFju_qZsVguGtXvDMqfCKbO_h1K9NJPjmqJEav=Q@mail.gmail.com>
+ <20200717170747.GW9247@paulmck-ThinkPad-P72> <CA+G9fYvtYr0ri6j-auNOTs98xVj-a1AoZtUfwokwnvuFFWtFdQ@mail.gmail.com>
+ <20200718001259.GY9247@paulmck-ThinkPad-P72> <CA+G9fYs7s34mmtard-ETjH2r94psgQFLDJWayznvN6UTvMYh5g@mail.gmail.com>
+ <20200719160824.GF9247@paulmck-ThinkPad-P72>
+In-Reply-To: <20200719160824.GF9247@paulmck-ThinkPad-P72>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 20 Jul 2020 19:43:50 +0530
+Message-ID: <CA+G9fYueEA0g4arZYQpZo803FHsYvh3WCq=PhYGULHEDa86pSg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kvm: mmu: page_track: Fix RCU list API usage
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     madhuparnabhowmik10@gmail.com,
+        Dexuan-Linux Cui <dexuan.linux@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, rcu@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, kvm list <kvm@vger.kernel.org>,
+        frextrite@gmail.com, lkft-triage@lists.linaro.org,
+        Dexuan Cui <decui@microsoft.com>, juhlee@microsoft.com,
+        =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 19 Jul 2020 at 21:38, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Sun, Jul 19, 2020 at 05:52:44PM +0530, Naresh Kamboju wrote:
+> > On Sat, 18 Jul 2020 at 05:43, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > >
+> > > On Sat, Jul 18, 2020 at 12:35:12AM +0530, Naresh Kamboju wrote:
+> > > > Hi Paul,
+> > > >
+> > > > > I am not seeing this here.
+> > > >
+> > > > Do you notice any warnings while building linux next master
+> > > > for x86_64 architecture ?
+> > >
+> > > Idiot here was failing to enable building of KVM.  With that, I do see
+> > > the error.  The patch resolves it for me.  Does it help for you?
+> >
+> > yes.
+> > The below patch applied on top of linux -next 20200717 tag
+> > and build pass.
+>
+> Thank you!  May I add your Tested-by?
 
---ypd46vk4pvx5y2fo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That would be great please add
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
-On Sat, Jul 18, 2020 at 12:00:45AM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->=20
-> Hi everyone,
->=20
-> This is v2 of my Allwinner H5 SoC cpufreq support series from way
-> back [1]. The series enables DVFS for the CPU cores (aka cpufreq)
-> on the Allwinner H5 SoC. The OPP table was taken from Armbian, with
-> minor tweaks to the maximum voltage to account for slightly increased
-> voltage on some of the boards.
->=20
-> In this version, the OPP table and tie in to the CPU cores has been
-> split out into a separate file, like what was done for the H6. The
-> patches adding CPU regulator supplies for all the boards that I don't
-> have have been removed. The series now only enables cpufreq for Libre
-> Computer ALL-H3-CC and ALL-H5-CC, and Bananapi M2+ v1.2.
->=20
-> For the original Bananapi M2+, if I add the fixed regulator with the
-> enable pin, it ends up causing some sort of glitch or lock up on the
-> v1.2, which includes the original dts file. Since I haven't been able
-> to sort it out yet, I've left it out for now.
->=20
-> Patch 1 assigns the CPU regulator supply to all the CPU cores on the
-> Libre Computer ALL-H3-CC.
->=20
-> Patch 2 assigns the CPU regulator supply to all the CPU cores on the
-> Bananapi M2+ v1.2.
->=20
-> Patch 3 fixes the voltages specified for the GPIO-controlled regulator
-> on the Bananapi M2+ v1.2. The voltages are slightly higher than what
-> was originally written.
->=20
-> Patch 4 ties the CPU clock to the CPU cores.
->=20
-> Patch 5 adds trip points and cooling maps to the CPU thermal zones.
->=20
-> Patch 6 adds the OPP table, based on the one from Armbian.
->=20
-> Patch 7 hooks up the CPU regulator supply for the Libre Computer
-> ALL-H3-CC H5 variant, and by extension, the ALL-H5-CC.
->=20
-> Patch 8 hooks up the CPU regulator supply for the Bananapi M2+ v1.2.
+Thank you !
 
-Applied all of them (and fixed the OPP node names in the patch 6)
-
-Maxime
-
---ypd46vk4pvx5y2fo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXxWmGwAKCRDj7w1vZxhR
-xbADAQDypKO/+2UXD6CXAqQv1jmyMM0AyMRN0DCiYMXR765BXgD/Y04IeT/7Iix5
-tiaIRU+WePHpysLDKYAZ4XfY+/t0qAk=
-=bJbC
------END PGP SIGNATURE-----
-
---ypd46vk4pvx5y2fo--
+- Naresh
