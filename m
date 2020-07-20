@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D54C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE737C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 627F120773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41DD2065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259671;
-	bh=HQ0RL3PqNuqnPSDpWahWC774iELBt8xrsGRygVPHgJ0=;
+	s=default; t=1595259674;
+	bh=KRAQrt4cEMUpPn5RaeHRePdc5z4AWcF+tQrH/o+Tr7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AqXsnUyTSUWo8f8uxZoBMxoi/yFpd0oUVADn3+B25bJJKxaa7U2lLVCL6Gsnk+qd3
-	 oiwSfEY9BMCMGPnF0W3bpLLbBMEoWl9rKJFhogCV6l+jawbPiwhkUfynAjClHaHZIr
-	 0JXioS3e3U5i3/8I4nB/U9w8M1H6r4ZRi/26c8gA=
+	b=runSE+0ylr4/RMfC+O3v/qd+iiWvhCgAQ9Qw178cJ7HD7treFmcPHmsUHU/70WGG3
+	 nTLDKzG73O5w/ECRP1WsO6Rsl+X5RVCiiTld5gBrX71jYEYGLARsTSmpzq7RIA1pX6
+	 A8vSLVq7o8j2kIQBffeZHO26WgKm7o8/jUYndxqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgGTPlK (ORCPT
+        id S1729842AbgGTPlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:41:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:41:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729802AbgGTPk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:40:58 -0400
+        id S1729798AbgGTPlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:41:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B278520773;
-        Mon, 20 Jul 2020 15:40:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1866F2065E;
+        Mon, 20 Jul 2020 15:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259658;
-        bh=HQ0RL3PqNuqnPSDpWahWC774iELBt8xrsGRygVPHgJ0=;
+        s=default; t=1595259660;
+        bh=KRAQrt4cEMUpPn5RaeHRePdc5z4AWcF+tQrH/o+Tr7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ae2B5aIIqiZtrG/PO8OXJnZQ1Q9fgLoVLFz6c02exID6NVmBaA3wsY1dqmoXx9uTE
-         CmMADztzMe01Eu4/Wd+1Lyzq+jwM1DOn+agytFIbGi2NirBUa+t/lRqiPpUtxS5RSw
-         f7G5ELapS3O2q5B35ZHgZyob+YzuUozXC64ErkPM=
+        b=tDKHKPr+kdWuOgRRFRCsj0pzeCE0SnhsKXj7WOmSxw4QyqNQ44dPPIAKgGteGRhjo
+         I3HCAsNfkGJwoPu4XMl0AoQWo09+T71rv3nU+7cVdYAQPDEwwtqExhlEzqfdWmIj3d
+         4h13QLFyH32hNU0Xopkfm3ARMf6WGqFFhDxbCSuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Alexander Egorenkov <egorenar@linux.ibm.com>
-Subject: [PATCH 4.9 05/86] s390/kasan: fix early pgm check handler execution
-Date:   Mon, 20 Jul 2020 17:36:01 +0200
-Message-Id: <20200720152753.400716769@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 06/86] cifs: update ctime and mtime during truncate
+Date:   Mon, 20 Jul 2020 17:36:02 +0200
+Message-Id: <20200720152753.442168934@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -61,40 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 
-[ Upstream commit 998f5bbe3dbdab81c1cfb1aef7c3892f5d24f6c7 ]
+[ Upstream commit 5618303d8516f8ac5ecfe53ee8e8bc9a40eaf066 ]
 
-Currently if early_pgm_check_handler is called it ends up in pgm check
-loop. The problem is that early_pgm_check_handler is instrumented by
-KASAN but executed without DAT flag enabled which leads to addressing
-exception when KASAN checks try to access shadow memory.
+As the man description of the truncate, if the size changed,
+then the st_ctime and st_mtime fields should be updated. But
+in cifs, we doesn't do it.
 
-Fix that by executing early handlers with DAT flag on under KASAN as
-expected.
+It lead the xfstests generic/313 failed.
 
-Reported-and-tested-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+So, add the ATTR_MTIME|ATTR_CTIME flags on attrs when change
+the file size
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/early.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/cifs/inode.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/s390/kernel/early.c b/arch/s390/kernel/early.c
-index a651c2bc94ef8..f862cc27fe98f 100644
---- a/arch/s390/kernel/early.c
-+++ b/arch/s390/kernel/early.c
-@@ -288,6 +288,8 @@ static noinline __init void setup_lowcore_early(void)
- 	psw_t psw;
+diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+index 3dad943da956f..acd8e0dccab4c 100644
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -2194,6 +2194,15 @@ set_size_out:
+ 	if (rc == 0) {
+ 		cifsInode->server_eof = attrs->ia_size;
+ 		cifs_setsize(inode, attrs->ia_size);
++
++		/*
++		 * The man page of truncate says if the size changed,
++		 * then the st_ctime and st_mtime fields for the file
++		 * are updated.
++		 */
++		attrs->ia_ctime = attrs->ia_mtime = current_time(inode);
++		attrs->ia_valid |= ATTR_CTIME | ATTR_MTIME;
++
+ 		cifs_truncate_page(inode->i_mapping, inode->i_size);
+ 	}
  
- 	psw.mask = PSW_MASK_BASE | PSW_DEFAULT_KEY | PSW_MASK_EA | PSW_MASK_BA;
-+	if (IS_ENABLED(CONFIG_KASAN))
-+		psw.mask |= PSW_MASK_DAT;
- 	psw.addr = (unsigned long) s390_base_ext_handler;
- 	S390_lowcore.external_new_psw = psw;
- 	psw.addr = (unsigned long) s390_base_pgm_handler;
 -- 
 2.25.1
 
