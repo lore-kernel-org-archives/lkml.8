@@ -2,155 +2,106 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6512AC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4377C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44ED22065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:44:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="dqdxmTZ6"
+	by mail.kernel.org (Postfix) with ESMTP id 8AB2520709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:45:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbgGTKos (ORCPT
+        id S1728459AbgGTKpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 06:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728407AbgGTKoq (ORCPT
+        Mon, 20 Jul 2020 06:45:35 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:43951 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728232AbgGTKpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 06:44:46 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEAF4C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:44:45 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id 88so7060253wrh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=wG7K0uq8mpLNpl6r6yyIK1jp2dXYWitOo/oUfoeSlAo=;
-        b=dqdxmTZ6+gN++MK7rDSC7D5QKx04y3ZsSX2bGExyrfDLLkwc3HAre+/5CJjXb8DRCG
-         L1b+S+GhVUwfYW/t1Y7dqnLxaAe75m8yZlBo+767cn+ilAhdFEu5ix23YEbE+8xiRUl/
-         kbTW8xI6L8oQb24MX72zy2OlV4vKU/QhRL/Xc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wG7K0uq8mpLNpl6r6yyIK1jp2dXYWitOo/oUfoeSlAo=;
-        b=gIeRgwb2jLksHzt4ekyHK5UOARJ04TLlGrgrUg8Kd4Px5xGEDOEKCeAM2OJDXFzkFI
-         XedaTIWaoNeTmMaH4HG+U92mfs7pVBbGpiLF2opAIUqtYVB7gN5411XbPne0fROWq92E
-         mT10P5eBbq16Ua4WdTN/56kES5xXDhrMov7NHe8k9l6MxPcAverb46jFTbkV3NoN3LzW
-         A/GfGdPi5uTLVPg/NqGUujIGoGs+guMdKAD3iE7qb+8+rlEEQ0cnIjz3G1AJGH9tb/Ij
-         8jRyEApCXDsSMdGC2HhrJ3f+SJOBCdIiiknQ2+T0uPs+ZZnszaSsNEnmp95QqG9nskRE
-         uIpw==
-X-Gm-Message-State: AOAM5322QXS/6NFB1cppp2cnrQ2GMOc0h8spzURv+YZvgUmLNfSsCBg8
-        fDZUxvebQmGyTdg6/N9hPA6hYw==
-X-Google-Smtp-Source: ABdhPJycW9SMvCj+IwJIi5ruNoHI7H4Hqf0HBuMTqROBaRA08TgGoNei9d52jp9Pa0Kxd2bDH0z0qQ==
-X-Received: by 2002:a5d:4c8a:: with SMTP id z10mr21330200wrs.384.1595241884483;
-        Mon, 20 Jul 2020 03:44:44 -0700 (PDT)
-Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id x7sm31909992wrr.72.2020.07.20.03.44.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 03:44:43 -0700 (PDT)
-Subject: Re: [PATCH 1/2] net: dsa: Add flag for 802.1AD when adding VLAN for
- dsa switch and port
-To:     hongbo.wang@nxp.com, xiaoliang.yang_1@nxp.com,
-        allan.nielsen@microchip.com, po.liu@nxp.com,
-        claudiu.manoil@nxp.com, alexandru.marginean@nxp.com,
-        vladimir.oltean@nxp.com, leoyang.li@nxp.com, mingkai.hu@nxp.com,
-        andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com,
-        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
-        kuba@kernel.org, vinicius.gomes@intel.com,
-        roopa@cumulusnetworks.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, horatiu.vultur@microchip.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        linux-devel@linux.nxdi.nxp.com
-References: <20200720104119.19146-1-hongbo.wang@nxp.com>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <05b06d46-d705-7d06-b4dd-2bee90f75168@cumulusnetworks.com>
-Date:   Mon, 20 Jul 2020 13:44:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 20 Jul 2020 06:45:34 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M42Ss-1jxTIZ46T2-0003I2; Mon, 20 Jul 2020 12:45:32 +0200
+Received: by mail-qt1-f177.google.com with SMTP id k18so12496427qtm.10;
+        Mon, 20 Jul 2020 03:45:31 -0700 (PDT)
+X-Gm-Message-State: AOAM533wRoO7L7l3KNVDnVj0MwnUMTxSvrDR9zZRWI7GE7+hSau13fCt
+        qWGj+BIafh4uxeweRJra5r2JMpfrj+32ZJE7QWU=
+X-Google-Smtp-Source: ABdhPJyveE09U5DOyjZw3YD0auFd/AcGtjZ7tGnHfjeOnNRKPaTJocr9ClHFJbUiY0/o5kQ5Bq1u1bhlyLaVg4bN9i4=
+X-Received: by 2002:ac8:83d:: with SMTP id u58mr16596516qth.188.1595241930633;
+ Mon, 20 Jul 2020 03:45:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200720104119.19146-1-hongbo.wang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200720074249.596364-1-jiaxun.yang@flygoat.com> <20200720074249.596364-4-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200720074249.596364-4-jiaxun.yang@flygoat.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 Jul 2020 12:45:14 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a13vZJyOGZ1FpS98ytVC57P6NgmQpSfhf2h9b7meQLtcw@mail.gmail.com>
+Message-ID: <CAK8P3a13vZJyOGZ1FpS98ytVC57P6NgmQpSfhf2h9b7meQLtcw@mail.gmail.com>
+Subject: Re: [PATCH 3/5] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:wxeTemO9I9qgRPajk466puVV0AUS0rUjtzK82g1IgJxYsxM8hZf
+ 8drL7XzB88nzF7YnDKnnLRQDeDRnuXPzCp7vEtn6RKhDI7DJ5bBBEKZ0X/S4wfZHnhHLlJv
+ oM9nOlCLLhEoldO5rJwP5lzqo2KxWCMD+Mf5ZxKXnbExaXaGe8bEbsjqT0og9CEnpOItzl+
+ 1vnmr+IHLQwxhkhzzHHLw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nVSe/g0VnjQ=:UFJn06VN8QV8JK/lm+7VCg
+ xn2/3+TfCt6XbD0xE2iE9jNYkXX1CMbmjJRRYj5j3XiGbBmMGJU4x14S2Mt6XcZbRHkQ04K0W
+ mp/dfifUhNJny1E19dYiFZ6GYWKY0UXeZkRHesmfzRnq/jTzRj0varPZYnB+Asi+Ga9TCD8xd
+ sL7mG5LrMw6K8DRKmiLKeRQIAsy9u/V4BHHziqSEq7fypx94brn8WIQEDLlCNbF0EXiOnU60P
+ sz4bk5W5JKjND9wDyIzZpf2ZrtWGxmguumXJckHsF+gGXLf76aa7H/3Q5m8UG7qudpCMWZqY+
+ TrntflQNP0qBMip4trQZYHLNm/oUqYM7z187y0sDRVuxzAg2HS4YPNYemV5oDuwDZ5tgbjqRW
+ u6uRhGXz54kDgbgQeO8FMAgG+gFOA4J4rRWv5BFOzPD+qh8GjVdnelZKJTe9hkLd9xlSn01gg
+ SYdXPG26m8aFfreY/okFPk7Tv8y48i6z1Z6++ylyDsHNtuftepOqtM5nFNVMVN/WalFDr7n+S
+ VBbh9Zfy55Y9LKPeLwjQdTX/byCazPOXjhdjOl17lPMcyUl0bbkSInZpRrAANd7k21s+T61Rm
+ HctU9rAV38lbAUxL5iGn0l9uix8dPRJyhaPGqOH5RjC6ZTPSAX7FTFvOWcXqc5xUTgUANO08U
+ VcCMpRriu6MnA1MKqbrZi2Zzu1wieN3XIQR4EZobn3uffDiLpXRu2FKhqLnlG6W89thz4RHg1
+ VvWGpUaDy9Bc6duKBln/29htbyb2aKW/qyWOq79Ox1Zt/ES7qkYKyk5MPSNQ12CAav97cmTxM
+ LzJF7H/O2wBlf16pwfoHhRabQZdeTl8xV9wcq4E2CXu+Qd2aP5na4lCCzpWnc1d4xs/dcDvqP
+ kfCF5Si1cohX7BUjIwNR5oief6deYeYTm6Ak8FnPmGATPc+oUEzBvecWFLXx1ndU06nALNoLH
+ sj9uQR2mv3NbxXURIJNHOKPyvkuFmvZC2LXxo8wGUgNaCarjfRSm1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/07/2020 13:41, hongbo.wang@nxp.com wrote:
-> From: "hongbo.wang" <hongbo.wang@nxp.com>
-> 
-> the following command can be supported:
-> ip link add link swp1 name swp1.100 type vlan protocol 802.1ad id 100
-> 
-> Signed-off-by: hongbo.wang <hongbo.wang@nxp.com>
+On Mon, Jul 20, 2020 at 9:44 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+> It can be very big on LS7A PCH systems.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  include/uapi/linux/if_bridge.h | 1 +
->  net/dsa/slave.c                | 9 +++++++--
->  2 files changed, 8 insertions(+), 2 deletions(-)
-> 
+>   * On MIPS I/O ports are memory mapped, so we access them using normal
+> diff --git a/arch/mips/include/asm/mach-loongson64/spaces.h b/arch/mips/include/asm/mach-loongson64/spaces.h
+> index 3de0ac9d8829..b99b43854929 100644
+> --- a/arch/mips/include/asm/mach-loongson64/spaces.h
+> +++ b/arch/mips/include/asm/mach-loongson64/spaces.h
+> @@ -11,8 +11,7 @@
+>  #define PCI_IOSIZE     SZ_16M
+>  #define MAP_BASE       (PCI_IOBASE + PCI_IOSIZE)
+>
+> -/* Reserved at the start of PCI_IOBASE for legacy drivers */
+> -#define MMIO_LOWER_RESERVED    0x10000
+> +#define IO_SPACE_LIMIT 0x00ffffff
 
-This is not bridge related at all, please leave its flags out of it.
+Does this mean that firmware may already have assigned "high" I/O space
+numbers for devices? I'm not sure how well device drivers can generally
+deal with port numbers that don't fit into a 16-bit integer.
 
-Nacked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Is it possible to run a 32-bit kernel on these machines? If yes, than
+taking up 16MB of virtual addresses may also become a problem.
 
+In practice, one should rarely need more than a few kb worth of
+port numbers, unless you expect to see hundreds of legacy PCI
+devices.
 
-
-> diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-> index caa6914a3e53..ecd960aa65c7 100644
-> --- a/include/uapi/linux/if_bridge.h
-> +++ b/include/uapi/linux/if_bridge.h
-> @@ -132,6 +132,7 @@ enum {
->  #define BRIDGE_VLAN_INFO_RANGE_END	(1<<4) /* VLAN is end of vlan range */
->  #define BRIDGE_VLAN_INFO_BRENTRY	(1<<5) /* Global bridge VLAN entry */
->  #define BRIDGE_VLAN_INFO_ONLY_OPTS	(1<<6) /* Skip create/delete/flags */
-> +#define BRIDGE_VLAN_INFO_8021AD	(1<<7) /* VLAN is 802.1AD protocol */
->  
->  struct bridge_vlan_info {
->  	__u16 flags;
-> diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-> index 4c7f086a047b..376d7ac5f1e5 100644
-> --- a/net/dsa/slave.c
-> +++ b/net/dsa/slave.c
-> @@ -1232,6 +1232,7 @@ static int dsa_slave_get_ts_info(struct net_device *dev,
->  static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
->  				     u16 vid)
->  {
-> +	u16 flags = 0;
->  	struct dsa_port *dp = dsa_slave_to_port(dev);
->  	struct bridge_vlan_info info;
->  	int ret;
-> @@ -1252,7 +1253,10 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
->  			return -EBUSY;
->  	}
->  
-> -	ret = dsa_port_vid_add(dp, vid, 0);
-> +	if (ntohs(proto) == ETH_P_8021AD)
-> +		flags |= BRIDGE_VLAN_INFO_8021AD;
-> +
-> +	ret = dsa_port_vid_add(dp, vid, flags);
->  	if (ret)
->  		return ret;
->  
-> @@ -1744,7 +1748,8 @@ int dsa_slave_create(struct dsa_port *port)
->  
->  	slave_dev->features = master->vlan_features | NETIF_F_HW_TC;
->  	if (ds->ops->port_vlan_add && ds->ops->port_vlan_del)
-> -		slave_dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER;
-> +		slave_dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER |
-> +				       NETIF_F_HW_VLAN_STAG_FILTER;
->  	slave_dev->hw_features |= NETIF_F_HW_TC;
->  	slave_dev->features |= NETIF_F_LLTX;
->  	slave_dev->ethtool_ops = &dsa_slave_ethtool_ops;
-> 
-
+       Arnd
