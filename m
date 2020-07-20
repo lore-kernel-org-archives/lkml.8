@@ -2,55 +2,60 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE367C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6757C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC04322B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D9A22CB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259595;
-	bh=GjzTNAD2SRCoK8sJDxSQRELwKr0irgmWB87gKjOlOwM=;
+	s=default; t=1595259601;
+	bh=B9gTgsRnJ6Jb5Avn40ZVdg5wna0N9GvqMZGk67s4Xn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BtH45o2W3b5EJpze0eD+yJFx2JpnYoPe9wul0P54Bkv7HOJv0DSYxlvQaKfhyqnqa
-	 T3/aAtEnUN8mmhRzfWHmkxhJjsJAvhm7VePDXc6X1E7wYrIh0OXmukbKgM0j60ADTg
-	 5JXh/IGal6MPtYUNg1Nb7QfCDF7Fu6TyQ+iKgwUo=
+	b=FI/dWDctw+Gprhp9IFaOJd1AnpLQlRr7I9EwaLCbgwt5tPZmvX0tsG80DXHEfOR5O
+	 uR/SXachkCUzb2qGEt5k9YqCiDX3RoUyx7yGFjAxoaUBqyJoFWCq4z7MHJ8Lq9m6z+
+	 MR5umzkJOU+o0sjCk/ZYFK8/Z3+3HL9XXsLFiv9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbgGTPjy (ORCPT
+        id S1729635AbgGTPkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:39:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59116 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:40:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728093AbgGTPjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:39:51 -0400
+        id S1729621AbgGTPj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:39:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCCCA22B4E;
-        Mon, 20 Jul 2020 15:39:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE0AE22CB2;
+        Mon, 20 Jul 2020 15:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259591;
-        bh=GjzTNAD2SRCoK8sJDxSQRELwKr0irgmWB87gKjOlOwM=;
+        s=default; t=1595259596;
+        bh=B9gTgsRnJ6Jb5Avn40ZVdg5wna0N9GvqMZGk67s4Xn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HxcbpdTChaqauxquYR1XRzXoSzAwbRrw57zkxzeb7cP08QC33Mg822j+zB2x66f2M
-         hwienKBCdpR09kEo1I3udOuHDb9/aqVY/RF+6oB78cz5jKMpx/Xi2AnI0KMI8VispK
-         iVCo8YC5l4UpEMRuMu97GPTDhYMSc833YxDLGD10=
+        b=d8g+e9RY4+qbJ+TgNG6hS0D7XLJj/phhBPzzQocLEphIU2WFfT2CQxIXloWPGvHsh
+         SodsNp9VsdZZugTv/wv/uFVVZSQbxG4l14bUYyuKeoniviq4kg7sdPF7ACxAbC3+3Z
+         fcdCoGyuVLOmP/GXCH/vQaRc+r+waMm7vl/jtazQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Igor Moura <imphilippini@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 46/58] USB: serial: ch341: add new Product ID for CH340
-Date:   Mon, 20 Jul 2020 17:37:02 +0200
-Message-Id: <20200720152749.536769940@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 01/86] KVM: s390: reduce number of IO pins to 1
+Date:   Mon, 20 Jul 2020 17:35:57 +0200
+Message-Id: <20200720152753.217332840@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
-References: <20200720152747.127988571@linuxfoundation.org>
+In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
+References: <20200720152753.138974850@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,38 +64,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Moura <imphilippini@gmail.com>
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-commit 5d0136f8e79f8287e6a36780601f0ce797cf11c2 upstream.
+[ Upstream commit 774911290c589e98e3638e73b24b0a4d4530e97c ]
 
-Add PID for CH340 that's found on some ESP8266 dev boards made by
-LilyGO. The specific device that contains such serial converter can be
-seen here: https://github.com/LilyGO/LILYGO-T-OI.
+The current number of KVM_IRQCHIP_NUM_PINS results in an order 3
+allocation (32kb) for each guest start/restart. This can result in OOM
+killer activity even with free swap when the memory is fragmented
+enough:
 
-Apparently, it's a regular CH340, but I've confirmed with others that
-also bought this board that the PID found on this device (0x7522)
-differs from other devices with the "same" converter (0x7523).
-Simply adding its PID to the driver and rebuilding it made it work
-as expected.
+kernel: qemu-system-s39 invoked oom-killer: gfp_mask=0x440dc0(GFP_KERNEL_ACCOUNT|__GFP_COMP|__GFP_ZERO), order=3, oom_score_adj=0
+kernel: CPU: 1 PID: 357274 Comm: qemu-system-s39 Kdump: loaded Not tainted 5.4.0-29-generic #33-Ubuntu
+kernel: Hardware name: IBM 8562 T02 Z06 (LPAR)
+kernel: Call Trace:
+kernel: ([<00000001f848fe2a>] show_stack+0x7a/0xc0)
+kernel:  [<00000001f8d3437a>] dump_stack+0x8a/0xc0
+kernel:  [<00000001f8687032>] dump_header+0x62/0x258
+kernel:  [<00000001f8686122>] oom_kill_process+0x172/0x180
+kernel:  [<00000001f8686abe>] out_of_memory+0xee/0x580
+kernel:  [<00000001f86e66b8>] __alloc_pages_slowpath+0xd18/0xe90
+kernel:  [<00000001f86e6ad4>] __alloc_pages_nodemask+0x2a4/0x320
+kernel:  [<00000001f86b1ab4>] kmalloc_order+0x34/0xb0
+kernel:  [<00000001f86b1b62>] kmalloc_order_trace+0x32/0xe0
+kernel:  [<00000001f84bb806>] kvm_set_irq_routing+0xa6/0x2e0
+kernel:  [<00000001f84c99a4>] kvm_arch_vm_ioctl+0x544/0x9e0
+kernel:  [<00000001f84b8936>] kvm_vm_ioctl+0x396/0x760
+kernel:  [<00000001f875df66>] do_vfs_ioctl+0x376/0x690
+kernel:  [<00000001f875e304>] ksys_ioctl+0x84/0xb0
+kernel:  [<00000001f875e39a>] __s390x_sys_ioctl+0x2a/0x40
+kernel:  [<00000001f8d55424>] system_call+0xd8/0x2c8
 
-Signed-off-by: Igor Moura <imphilippini@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+As far as I can tell s390x does not use the iopins as we bail our for
+anything other than KVM_IRQ_ROUTING_S390_ADAPTER and the chip/pin is
+only used for KVM_IRQ_ROUTING_IRQCHIP. So let us use a small number to
+reduce the memory footprint.
 
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Link: https://lore.kernel.org/r/20200617083620.5409-1-borntraeger@de.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/ch341.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/s390/include/asm/kvm_host.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/serial/ch341.c
-+++ b/drivers/usb/serial/ch341.c
-@@ -71,6 +71,7 @@
+diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+index 5792590d0e7c4..0b3c26e6930d9 100644
+--- a/arch/s390/include/asm/kvm_host.h
++++ b/arch/s390/include/asm/kvm_host.h
+@@ -32,12 +32,12 @@
+ #define KVM_USER_MEM_SLOTS 32
  
- static const struct usb_device_id id_table[] = {
- 	{ USB_DEVICE(0x4348, 0x5523) },
-+	{ USB_DEVICE(0x1a86, 0x7522) },
- 	{ USB_DEVICE(0x1a86, 0x7523) },
- 	{ USB_DEVICE(0x1a86, 0x5523) },
- 	{ },
+ /*
+- * These seem to be used for allocating ->chip in the routing table,
+- * which we don't use. 4096 is an out-of-thin-air value. If we need
+- * to look at ->chip later on, we'll need to revisit this.
++ * These seem to be used for allocating ->chip in the routing table, which we
++ * don't use. 1 is as small as we can get to reduce the needed memory. If we
++ * need to look at ->chip later on, we'll need to revisit this.
+  */
+ #define KVM_NR_IRQCHIPS 1
+-#define KVM_IRQCHIP_NUM_PINS 4096
++#define KVM_IRQCHIP_NUM_PINS 1
+ #define KVM_HALT_POLL_NS_DEFAULT 80000
+ 
+ /* s390-specific vcpu->requests bit members */
+-- 
+2.25.1
+
 
 
