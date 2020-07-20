@@ -2,54 +2,82 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24006C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5558DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E95B422C9C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595251703;
-	bh=NJ2250te8v8tlFOpV4OLmV7BWL8Xr/txR4PHTbvuTSc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=11nGgFtRMW4Ao4Gh8BsKlYwjwI186Dhwjplc+/5sGOiKZyi3uS7mDBlvNrk7jHRf+
-	 +buMAsxQKZmMNq/Fkb8XnOxGtc3OTnbwTqvr1QmI5XR4y4QjJcm3G41WKRxvx2+uQ/
-	 M46CSEX9xaWFWrjDYWhixc74mrIKwqhm2tzIFC9I=
+	by mail.kernel.org (Postfix) with ESMTP id 35C1C20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:31:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D32GZ2Bp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbgGTN2V (ORCPT
+        id S1726603AbgGTNbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:28:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgGTN2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 09:28:20 -0400
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.194.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 421F120729;
-        Mon, 20 Jul 2020 13:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595251700;
-        bh=NJ2250te8v8tlFOpV4OLmV7BWL8Xr/txR4PHTbvuTSc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=O7PlODg5hjUPIR3iNkhJ1WhJw3YJQ7pknCH6+wrbRPJi5hGiOcdeMmyBhpzXu6X2w
-         +GGXhN+GeejEXiIvJJ3xu42rfGpwI74LxDPmA8l0UH7ulnWOEFT9US9PGdI0gNCTia
-         oCxYTc+47UxBjAx93qtnPOa/bu2Qr8VmYbOq5oOU=
-Received: by wens.tw (Postfix, from userid 1000)
-        id CFAD55FC86; Mon, 20 Jul 2020 21:28:17 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH v3] regulator: gpio: Honor regulator-boot-on property
-Date:   Mon, 20 Jul 2020 21:28:09 +0800
-Message-Id: <20200720132809.26908-1-wens@kernel.org>
+        Mon, 20 Jul 2020 09:31:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbgGTNbq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 09:31:46 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BD9EC061794;
+        Mon, 20 Jul 2020 06:31:46 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id j19so10269184pgm.11;
+        Mon, 20 Jul 2020 06:31:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2j7F1HjD2jzSyI51YBZeo083TYMZE0e0Hdg/cz2X4VI=;
+        b=D32GZ2Bp4Ly7Go7cvCAa/xliGYDiUIQ4KG5Td0C3myu4gUz1tzMvJX5VRRqY118d6B
+         pq3MkAD/iR270VcfmMjcFOw0iA2cfmsUX07KUGICTcEpH7SZoMS9uae1bQ71rjJ22mLG
+         oKWeKgu3JvKlpQhTCFOzeDjrkIpPP+aJqGvfl2XxoMEw9/w6TFt0WSFQbl+CJ5bW0PAg
+         9mKfPwHtt4gEafsuexAMoFrfYvjYXCkTTtE+sisxLiduORIt6VU9et34NOaUFK96RgdT
+         voISzaGZ03r9LW7pSejyHSQ+RnCQ9NAWbdSfqS0T8KurChe9IfV0J4WHIlAJV47DrwSd
+         yEWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2j7F1HjD2jzSyI51YBZeo083TYMZE0e0Hdg/cz2X4VI=;
+        b=VvqS8Uv6WWuDCv1ZFHBF/LSBh0gCUFBdnvQpMVhNvOR4ba/+DH7xP+LsvWrkNjDLYN
+         7lR5qkUctG6g4OPkSjyph36PTd4EStXSugfCDK09nQwEdf2lI68yiEPrK2OF8uOV0KeJ
+         NVtmZllYpJf5GiOkje63BRioDzOP6pl6law5Ol74UBr97fJpinqE1zvqwYPeK2O8/wL/
+         hwbOgPbz/KumjRDtHxh4cmnaMhYfE+jRxEu+ERz8HewlvmJmKIcjs+ljQCC1lPKzJTN4
+         QcmCi4iW1jM8UChNw/DwMGMLHMXp+Hb8YyojWnMoBCR3eGivuHI0kQbUDWnhCKf0ONki
+         Jq2A==
+X-Gm-Message-State: AOAM533tO05XH5mEJRKCPZSLUuTWzCmlV49wQCAkT2Oz7b9LtTQ/5XAE
+        ba4Ej8TDGPyt8yECcNgPkCNpISi96dPR7w==
+X-Google-Smtp-Source: ABdhPJxRfPYOZ2kQOUeqsklFhHcGfFshgBoge8E4hL44dnX+aeo2UlHAwFo7JebDMKfTrr7sUzEXcA==
+X-Received: by 2002:a63:8f18:: with SMTP id n24mr18024912pgd.432.1595251905596;
+        Mon, 20 Jul 2020 06:31:45 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.67])
+        by smtp.gmail.com with ESMTPSA id t5sm14814356pgl.38.2020.07.20.06.31.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 06:31:44 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v2 0/3] block: use generic power management
+Date:   Mon, 20 Jul 2020 18:59:59 +0530
+Message-Id: <20200720133002.448809-1-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <CY4PR04MB37516C5544A7DCAD84921937E77B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+References: <CY4PR04MB37516C5544A7DCAD84921937E77B0@CY4PR04MB3751.namprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,54 +85,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-When requesting the enable GPIO, the driver should do so with the
-correct output level matching some expected state. This is especially
-important if the regulator is a critical one, such as a supply for
-the boot CPU. This is currently done by checking for the enable-at-boot
-property, but this is not documented in the device tree binding, nor
-does it match the common regulator properties.
+The purpose of this patch series is to upgrade power management in block
+drivers. This has been done by upgrading .suspend() and .resume() callbacks.
 
-Honor the common regulator-boot-on property by checking the boot_on
-constraint setting within the DT probe path. This is the same as what
-is done in the fixed regulator driver.
+The upgrade makes sure that the involvement of PCI Core does not change the
+order of operations executed in a driver. Thus, does not change its behavior.
 
-Also add a comment stating that the enable-at-boot property should not
-be used.
+In general, drivers with legacy PM, .suspend() and .resume() make use of PCI
+helper functions like pci_enable/disable_device_mem(), pci_set_power_state(),
+pci_save/restore_state(), pci_enable/disable_device(), etc. to complete
+their job.
 
-Fixes: 006694d099e8 ("regulator: gpio-regulator: Allow use of GPIO controlled regulators though DT")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
-Changes since v2:
-  - Keep enable-at-boot property support
-  - Add comment stating enable-at-boot should not be used
+The conversion requires the removal of those function calls, change the
+callbacks' definition accordingly and make use of dev_pm_ops structure.
 
-Changes since v1:
-  - Reworded commit log
-  - Fixed typo in subject
----
- drivers/regulator/gpio-regulator.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+All patches are compile-tested only.
 
-diff --git a/drivers/regulator/gpio-regulator.c b/drivers/regulator/gpio-regulator.c
-index 110ee6fe76c4..044e45ee9629 100644
---- a/drivers/regulator/gpio-regulator.c
-+++ b/drivers/regulator/gpio-regulator.c
-@@ -148,6 +148,13 @@ of_get_gpio_regulator_config(struct device *dev, struct device_node *np,
- 
- 	config->supply_name = config->init_data->constraints.name;
- 
-+	if (config->init_data->constraints.boot_on)
-+		config->enabled_at_boot = true;
-+
-+	/*
-+	 * Do not use: undocumented device tree property.
-+	 * This is kept around solely for device tree ABI stability.
-+	 */
- 	if (of_property_read_bool(np, "enable-at-boot"))
- 		config->enabled_at_boot = true;
- 
+Test tools:
+    - Compiler: gcc (GCC) 10.1.0
+    - allmodconfig build: make -j$(nproc) W=1 all
+
+Vaibhav Gupta (3):
+  mtip32xx: use generic power management
+  rsxx: use generic power management
+  skd: use generic power management
+
+ drivers/block/mtip32xx/mtip32xx.c | 54 +++++++------------------------
+ drivers/block/rsxx/core.c         |  9 ++++--
+ drivers/block/skd_main.c          | 30 +++++------------
+ 3 files changed, 27 insertions(+), 66 deletions(-)
+
 -- 
 2.27.0
 
