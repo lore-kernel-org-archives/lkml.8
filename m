@@ -2,126 +2,116 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1720BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBFEC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E50CF20729
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43033207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uNRe80qD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ofeKnhF0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgGTNLp (ORCPT
+        id S1726977AbgGTNSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:11:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44214 "EHLO
+        Mon, 20 Jul 2020 09:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgGTNLp (ORCPT
+        with ESMTP id S1725815AbgGTNSA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 09:11:45 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF485C061794;
-        Mon, 20 Jul 2020 06:11:44 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id g13so12841676qtv.8;
-        Mon, 20 Jul 2020 06:11:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3cui7NTSv7/kxnwczpZltAgKV4Z+Rc/nVHOHoo00mt0=;
-        b=uNRe80qDgULTIFXx4OHuYhkc0Mpj53lEAjIFOUYGUnu52k6u5XpbNzpADcrAj0TwhH
-         PtwJgfCjC7RnjsHiFKPUsKfB3wrHmwAYnYsXriN6INNNR8F2yLyKUqJVV0lGR87bQaC5
-         tiRlIvqeO2GfTOc7ZyeEQ3vrX7jI36egwEP8OeWMJuOdLHzYINcGTKvNPXRAoTM7KA03
-         gXwNxtBed+6vnedhvVlPZyWoEKvvCLjJfryO7BO7nSSYOHdsjLWfQOEKc0UMahq3mofn
-         HVRztVJmh+fxfT3g4X3EpUEoiPltJZJOCc2XXsGznYjzE0Fl6IdUwNKc50Hrpsz8HVPe
-         uUYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3cui7NTSv7/kxnwczpZltAgKV4Z+Rc/nVHOHoo00mt0=;
-        b=e2J6IMy+Pl1y7tZFkHpFvHtQ9MffJmi3sD12OAIOI6npMEOCCnB274f8D5M2UCULEH
-         qon6d0/4q7RDJgpylSdBdWN1KievkwXe9hj/36zbhWzddWO0GF6/8BaPf6vwiWwpCsJI
-         y3M/KpQUTOqYJVEuUvhpGWZtsO81I5+pR8/WFJ1krAgampu1H60mXSPux3jIvJWEVxje
-         1L+6XJPkn/utsg3aqgabWnyRVC565uqPJ9oPa2X3OhWJwR+kiyjQa6hXmoVBliib2vs4
-         iNqIJFGeJjf0BT50NvShCY3/qeCPwLRX5v7LGNznW7lKYSHf+dQyaPtMg4/bYglKQwTm
-         MT/Q==
-X-Gm-Message-State: AOAM530iwx4GuVX5EevIYPOySdgH8WiFtkkCTf5HkLA4Jlc4mYZ6XmV5
-        3iCzi04vDw5eXq3kDuhGiDFkwLkt6ms=
-X-Google-Smtp-Source: ABdhPJzkTvyvK2oiUrfiK08SdQcxW/halGCzgjN0K8Lo2vmt1zrrynU7udSjN8SZNGSXjGsqZBRI2w==
-X-Received: by 2002:ac8:5411:: with SMTP id b17mr23502044qtq.238.1595250704133;
-        Mon, 20 Jul 2020 06:11:44 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f013:97d4:431e:ed87:df3d:c941])
-        by smtp.gmail.com with ESMTPSA id h18sm9409224qkh.61.2020.07.20.06.11.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 06:11:42 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 5B162C50C5; Mon, 20 Jul 2020 10:11:40 -0300 (-03)
-Date:   Mon, 20 Jul 2020 10:11:40 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, davem@davemloft.net,
-        kuba@kernel.org, corbet@lwn.net, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH for v5.9] sctp: Replace HTTP links with HTTPS ones
-Message-ID: <20200720131140.GC2491@localhost.localdomain>
-References: <20200719202644.61663-1-grandmaster@al2klimov.de>
+        Mon, 20 Jul 2020 09:18:00 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 895E6C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 06:18:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=fka4lgVIRhwxWY7wdGf+lk4haYXHjArIUWvf5xU498Y=; b=ofeKnhF0/s4PM7m8Ts7xEgAm6e
+        4XrK/EID/UoZrHIy/XUy80Kfb2IsCqgIozBD+tgBLQIk4X/hzgi/XKoV87bcYRGyH8Gk8babQ6SEw
+        VRR9r2xkDJMxuE1mX6MywVCKdScWqgW2WgXyf3QPZn30ZBYQBfslwnZmqSKSaaoodSy18XjuZ8EZO
+        exHhxhNrizW3i2EOpmHDAzbynm0srJK6PTYw5qMswZoAoCvLMFIfFviLMXUkLp+mZGCtTq/zlKue+
+        hRxAqkju2pOYZCsfH3CElYC6st8qlBATrA8RbK08wAFvOKOQ5AN3K5ewGH9Ae7bY8XENNVtCLvsXB
+        2eulvBhQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxVfy-0000P8-9l; Mon, 20 Jul 2020 13:17:50 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E40B6300446;
+        Mon, 20 Jul 2020 15:17:47 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CDD592215BE46; Mon, 20 Jul 2020 15:17:47 +0200 (CEST)
+Date:   Mon, 20 Jul 2020 15:17:47 +0200
+From:   peterz@infradead.org
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Jiri Slaby <jirislaby@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        christian@brauner.io, "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Dave Jones <davej@codemonkey.org.uk>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
+Message-ID: <20200720131747.GD119549@hirez.programming.kicks-ass.net>
+References: <2c8ef23c-43b4-39d4-8e84-92769c948da9@kernel.org>
+ <20200718171406.GB16791@redhat.com>
+ <20200718174448.4btbjcvp6wbbdgts@wittgenstein>
+ <badcb9d5-f628-2be1-7a72-902cf08010bd@kernel.org>
+ <20200720064326.GA6612@redhat.com>
+ <20200720082657.GC6612@redhat.com>
+ <20200720084106.GJ10769@hirez.programming.kicks-ass.net>
+ <20200720105924.GE43129@hirez.programming.kicks-ass.net>
+ <20200720112623.GF43129@hirez.programming.kicks-ass.net>
+ <jhjwo2yidit.mognet@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200719202644.61663-1-grandmaster@al2klimov.de>
+In-Reply-To: <jhjwo2yidit.mognet@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 19, 2020 at 10:26:44PM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
-> 
->  If there are any URLs to be removed completely
->  or at least not (just) HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
+On Mon, Jul 20, 2020 at 01:20:26PM +0100, Valentin Schneider wrote:
+> On 20/07/20 12:26, peterz@infradead.org wrote:
 
-The subject prefix is right for sctp, but the patch tag should have
-been "PATCH net-next" instead. :-)
+> > +	/*
+> > +	 * We must re-load prev->state in case ttwu_remote() changed it
+> > +	 * before we acquired rq->lock.
+> > +	 */
+> > +	tmp_state = prev->state;
+> > +	if (unlikely(prev_state != tmp_state)) {
+> > +		/*
+> > +		 * ptrace_{,un}freeze_traced() think it is cool to change
+> > +		 * ->state around behind our backs between TASK_TRACED and
+> > +		 *  __TASK_TRACED.
+> > +		 *
+> > +		 * This is safe because this, as well as any __TASK_TRACED
+> > +		 * wakeups are under siglock.
+> > +		 *
+> > +		 * For any other case, a changed prev_state must be to
+> > +		 * TASK_RUNNING, such that when it blocks, the load has
+> > +		 * happened before the smp_mb().
+> > +		 *
+> > +		 * Also see the comment with deactivate_task().
+> > +		 */
+> > +		SCHED_WARN_ON(tmp_state && (prev_state & __TASK_TRACED &&
+> > +					   !(tmp_state & __TASK_TRACED)));
+> > +
+> 
+> IIUC if the state changed and isn't TASK_RUNNING it *has* to have
+> __TASK_TRACED, so can't that be
+> 
+>   SCHED_WARN_ON(tmp_state && !(tmp_state & __TASK_TRACED));
 
-Thankfully, they can fix it for us.
+Suppose task->state == TASK_UNINTERRUPTIBLE, and task != current, and
+then someone goes and does task->state = __TASK_TRACED.
 
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+That is, your statement is correct given the current code, but we also
+want to verify no new code comes along and does something 'creative'.
+
+Or is the heat getting to me?
