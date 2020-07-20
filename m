@@ -2,50 +2,51 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8B6C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F31EC433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7365920734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49FC20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261583;
-	bh=9E8tCn8B1REP6QE0p9BkYDQzOaEYDhmoKu1jFzTu63g=;
+	s=default; t=1595261585;
+	bh=C1U1PmMo0YTldV1XKI6BtQHf31Kwn3NBrgyuxgxwsqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CXMZ82GCx93QIXQB6sMcMgWQuhacu0VomJ4fv7erXixu8lxYuFwVatVXLXL9jAoVJ
-	 KHLL2r7RuZ4vDux6D5cyudgcnfgip6sehGe/6RnnhrZ1G9XGOkJaARw//G0RH/1BkE
-	 Czg/t9d3P+YJ2S5H0hl/2ZNocOFJZ1HAipb4NG/g=
+	b=XH5NGSg4RPUSrmgIOTJZ6usFARSndaLYo/cqp8UF5d52lWOu+PvTXmUu4V3q7tc3T
+	 UUJx1KcAO57lYGf2aCOQWC+5Z8oOZqmF+AOw+rjbbtteM9KsEVO8shHBwaYWS19h0n
+	 /9SRHLSNpZVpJWqawQVaWKTiFLYaGCCDTP2zn7pE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388063AbgGTQNC (ORCPT
+        id S2388071AbgGTQNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:13:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52358 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:13:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387993AbgGTQMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:12:41 -0400
+        id S2388046AbgGTQM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:12:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF8CA2065E;
-        Mon, 20 Jul 2020 16:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 544022176B;
+        Mon, 20 Jul 2020 16:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261561;
-        bh=9E8tCn8B1REP6QE0p9BkYDQzOaEYDhmoKu1jFzTu63g=;
+        s=default; t=1595261577;
+        bh=C1U1PmMo0YTldV1XKI6BtQHf31Kwn3NBrgyuxgxwsqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ML5gsODdvceLWaVAViG9rB4qruc6twsnLtHWswVaHsLVs1J7d+3sS4gB1F2z5zrrn
-         bwWZTZGyLkiUXpDcBvBBYKb3Yly5l42BaSSU81ffGZTFVmq5yA8CqMu6XRds/2qwvP
-         vMufzwC7/oJQptG93Rc9kQKXd3oss3jAOIJ37r8E=
+        b=n+UTIC6KDYtZSjSPPhMDL6W5GBEwe5k420EHEKAIHtUPxg6bAs4vgDGwxBD+JvqrL
+         Yy0Vmdu2JoBZT2oA5q/kgCaa2xRFNBJZiNCriYkMTHdHC2qvXho10PHPTCLhGul9jF
+         /FDq6DmhDiVq96tIQM/QmxoJ56tS0wCU95I5pPqU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>
-Subject: [PATCH 5.7 160/244] USB: c67x00: fix use after free in c67x00_giveback_urb
-Date:   Mon, 20 Jul 2020 17:37:11 +0200
-Message-Id: <20200720152833.456364927@linuxfoundation.org>
+        stable@vger.kernel.org, Igor Moura <imphilippini@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.7 166/244] USB: serial: ch341: add new Product ID for CH340
+Date:   Mon, 20 Jul 2020 17:37:17 +0200
+Message-Id: <20200720152833.738122288@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -58,55 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Igor Moura <imphilippini@gmail.com>
 
-commit 211f08347355cba1f769bbf3355816a12b3ddd55 upstream.
+commit 5d0136f8e79f8287e6a36780601f0ce797cf11c2 upstream.
 
-clang static analysis flags this error
+Add PID for CH340 that's found on some ESP8266 dev boards made by
+LilyGO. The specific device that contains such serial converter can be
+seen here: https://github.com/LilyGO/LILYGO-T-OI.
 
-c67x00-sched.c:489:55: warning: Use of memory after it is freed [unix.Malloc]
-        usb_hcd_giveback_urb(c67x00_hcd_to_hcd(c67x00), urb, urbp->status);
-                                                             ^~~~~~~~~~~~
-Problem happens in this block of code
+Apparently, it's a regular CH340, but I've confirmed with others that
+also bought this board that the PID found on this device (0x7522)
+differs from other devices with the "same" converter (0x7523).
+Simply adding its PID to the driver and rebuilding it made it work
+as expected.
 
-	c67x00_release_urb(c67x00, urb);
-	usb_hcd_unlink_urb_from_ep(c67x00_hcd_to_hcd(c67x00), urb);
-	spin_unlock(&c67x00->lock);
-	usb_hcd_giveback_urb(c67x00_hcd_to_hcd(c67x00), urb, urbp->status);
-
-In the call to c67x00_release_urb has this freeing of urbp
-
-	urbp = urb->hcpriv;
-	urb->hcpriv = NULL;
-	list_del(&urbp->hep_node);
-	kfree(urbp);
-
-And so urbp is freed before usb_hcd_giveback_urb uses it as its 3rd
-parameter.
-
-Since all is required is the status, pass the status directly as is
-done in c64x00_urb_dequeue
-
-Fixes: e9b29ffc519b ("USB: add Cypress c67x00 OTG controller HCD driver")
-Signed-off-by: Tom Rix <trix@redhat.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200708131243.24336-1-trix@redhat.com
+Signed-off-by: Igor Moura <imphilippini@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/c67x00/c67x00-sched.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/ch341.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/c67x00/c67x00-sched.c
-+++ b/drivers/usb/c67x00/c67x00-sched.c
-@@ -486,7 +486,7 @@ c67x00_giveback_urb(struct c67x00_hcd *c
- 	c67x00_release_urb(c67x00, urb);
- 	usb_hcd_unlink_urb_from_ep(c67x00_hcd_to_hcd(c67x00), urb);
- 	spin_unlock(&c67x00->lock);
--	usb_hcd_giveback_urb(c67x00_hcd_to_hcd(c67x00), urb, urbp->status);
-+	usb_hcd_giveback_urb(c67x00_hcd_to_hcd(c67x00), urb, status);
- 	spin_lock(&c67x00->lock);
- }
+--- a/drivers/usb/serial/ch341.c
++++ b/drivers/usb/serial/ch341.c
+@@ -77,6 +77,7 @@
  
+ static const struct usb_device_id id_table[] = {
+ 	{ USB_DEVICE(0x4348, 0x5523) },
++	{ USB_DEVICE(0x1a86, 0x7522) },
+ 	{ USB_DEVICE(0x1a86, 0x7523) },
+ 	{ USB_DEVICE(0x1a86, 0x5523) },
+ 	{ },
 
 
