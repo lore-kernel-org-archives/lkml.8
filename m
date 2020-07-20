@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEECC433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26230C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 397122065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018AB22CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260104;
-	bh=0vN9ldW4dl4UP1zx716nsKtBzsTg8JvdS54xIkDdDHE=;
+	s=default; t=1595260107;
+	bh=xYNtf1K9Clxoc111B6sXE1QVfCLFVpgTKazDwptjWFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EPw1GZOSYk5R4jvfamoxHkWbTU18FBfj0Kw5V/R9NG6oONoq+gz4buIPt9xWlSl1+
-	 T1vjM4vEviee/YCiI9LudWAAN54Mung0IKYmZu094BXi7DNFHWoKMCJNZ77lxwmd/b
-	 fZRFSspe82m/wcLGHfwntFiLNJ2WhKOyzPNU2VHw=
+	b=hfITBd0Z2jXsCxdKV2rWKjc4JFWlR+ZqMExdI5yNkHzc9Hkb/6tIpAwIyVNpQDP7S
+	 NoxJ3pqmPyV1+090uUUybDTQ9wgWQk7q7HzT769268mTtMzzcqm8BsGOcKcIGKo3xN
+	 IkGjWWNbIIoCZ/H82qmL1FhB8SH6NPAUfOY4BA5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730886AbgGTPsW (ORCPT
+        id S1729417AbgGTPsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:48:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43836 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:48:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730089AbgGTPsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:48:17 -0400
+        id S1730145AbgGTPsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:48:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AB222064B;
-        Mon, 20 Jul 2020 15:48:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 031EA22CAF;
+        Mon, 20 Jul 2020 15:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260096;
-        bh=0vN9ldW4dl4UP1zx716nsKtBzsTg8JvdS54xIkDdDHE=;
+        s=default; t=1595260102;
+        bh=xYNtf1K9Clxoc111B6sXE1QVfCLFVpgTKazDwptjWFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SLpOz8pnWhAc0SQPh/m1YDd52fcedlpZHMbpMC9+qyD2ngK8m/ilTSbGml/WzLK0N
-         I6A3oPYEF9+JbHdVDfFDhEIu9F3WKnYmAvdSIudMM8IZQVQatrVFDeLqjFvpbGOMi4
-         wDV8z9MalK+PfcMB6gDYrstgd+4CHYs8lKJCNSPs=
+        b=wKNqzX02VAQYAs1JGzbGZvScfDJqm7I9ot8+zVEsuOw4DhY4XR9b5vQjere6P8/MO
+         G5OHrYnPMkEbzRTs125E8MTL99HzE8oFTAfMMVuItu7/cLmX5pl4htwG/Hdtf1aeO/
+         UFfKUQJRQoArOTGhnM4dxiKEOvOa/ndjFdzFNOFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Buettner <kevinb@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dave Airlie <airlied@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 088/125] copy_xstate_to_kernel: Fix typo which caused GDB regression
-Date:   Mon, 20 Jul 2020 17:37:07 +0200
-Message-Id: <20200720152807.272231710@linuxfoundation.org>
+        stable@vger.kernel.org, Chirantan Ekbote <chirantan@chromium.org>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.14 107/125] fuse: Fix parameter for FS_IOC_{GET,SET}FLAGS
+Date:   Mon, 20 Jul 2020 17:37:26 +0200
+Message-Id: <20200720152808.195336396@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -61,47 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Buettner <kevinb@redhat.com>
+From: Chirantan Ekbote <chirantan@chromium.org>
 
-commit 5714ee50bb4375bd586858ad800b1d9772847452 upstream.
+commit 31070f6ccec09f3bd4f1e28cd1e592fa4f3ba0b6 upstream.
 
-This fixes a regression encountered while running the
-gdb.base/corefile.exp test in GDB's test suite.
+The ioctl encoding for this parameter is a long but the documentation says
+it should be an int and the kernel drivers expect it to be an int.  If the
+fuse driver treats this as a long it might end up scribbling over the stack
+of a userspace process that only allocated enough space for an int.
 
-In my testing, the typo prevented the sw_reserved field of struct
-fxregs_state from being output to the kernel XSAVES area.  Thus the
-correct mask corresponding to XCR0 was not present in the core file for
-GDB to interrogate, resulting in the following behavior:
+This was previously discussed in [1] and a patch for fuse was proposed in
+[2].  From what I can tell the patch in [2] was nacked in favor of adding
+new, "fixed" ioctls and using those from userspace.  However there is still
+no "fixed" version of these ioctls and the fact is that it's sometimes
+infeasible to change all userspace to use the new one.
 
-   [kev@f32-1 gdb]$ ./gdb -q testsuite/outputs/gdb.base/corefile/corefile testsuite/outputs/gdb.base/corefile/corefile.core
-   Reading symbols from testsuite/outputs/gdb.base/corefile/corefile...
-   [New LWP 232880]
+Handling the ioctls specially in the fuse driver seems like the most
+pragmatic way for fuse servers to support them without causing crashes in
+userspace applications that call them.
 
-   warning: Unexpected size of section `.reg-xstate/232880' in core file.
+[1]: https://lore.kernel.org/linux-fsdevel/20131126200559.GH20559@hall.aurel32.net/T/
+[2]: https://sourceforge.net/p/fuse/mailman/message/31771759/
 
-With the typo fixed, the test works again as expected.
-
-Signed-off-by: Kevin Buettner <kevinb@redhat.com>
-Fixes: 9e4636545933 ("copy_xstate_to_kernel(): don't leave parts of destination uninitialized")
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Dave Airlie <airlied@gmail.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Chirantan Ekbote <chirantan@chromium.org>
+Fixes: 59efec7b9039 ("fuse: implement ioctl support")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/fpu/xstate.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/fuse/file.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -1029,7 +1029,7 @@ int copy_xstate_to_kernel(void *kbuf, st
- 		copy_part(offsetof(struct fxregs_state, st_space), 128,
- 			  &xsave->i387.st_space, &kbuf, &offset_start, &count);
- 	if (header.xfeatures & XFEATURE_MASK_SSE)
--		copy_part(xstate_offsets[XFEATURE_MASK_SSE], 256,
-+		copy_part(xstate_offsets[XFEATURE_SSE], 256,
- 			  &xsave->i387.xmm_space, &kbuf, &offset_start, &count);
- 	/*
- 	 * Fill xsave->i387.sw_reserved value for ptrace frame:
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -17,6 +17,7 @@
+ #include <linux/swap.h>
+ #include <linux/falloc.h>
+ #include <linux/uio.h>
++#include <linux/fs.h>
+ 
+ static const struct file_operations fuse_direct_io_file_operations;
+ 
+@@ -2534,7 +2535,16 @@ long fuse_do_ioctl(struct file *file, un
+ 		struct iovec *iov = iov_page;
+ 
+ 		iov->iov_base = (void __user *)arg;
+-		iov->iov_len = _IOC_SIZE(cmd);
++
++		switch (cmd) {
++		case FS_IOC_GETFLAGS:
++		case FS_IOC_SETFLAGS:
++			iov->iov_len = sizeof(int);
++			break;
++		default:
++			iov->iov_len = _IOC_SIZE(cmd);
++			break;
++		}
+ 
+ 		if (_IOC_DIR(cmd) & _IOC_WRITE) {
+ 			in_iov = iov;
 
 
