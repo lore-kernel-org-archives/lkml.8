@@ -2,216 +2,192 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLACK,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7494BC433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75581C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4433F2176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259657;
-	bh=CJmmLoIlOe20HPYX9dqLE/ufDhQbzH3wrYt/RsjBqCw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CE3Ef50VgOkFW40hTkUP11T92mmLVsKUz9nceMP8sWVsDfZrDW3LnAK8CYL0BF7A+
-	 PSRjmPUfnQu1n7wPWUst8cdYXxuAJ/t5sJv5dinCwJO9z2iyUg2dFqxci96avEM3Is
-	 vsq17khpNNJ96s5SlUN79RDBJJKYjtR33TAf489o=
+	by mail.kernel.org (Postfix) with ESMTP id 535D32176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vKD+R2Kh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbgGTPkz (ORCPT
+        id S1729823AbgGTPlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:40:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729786AbgGTPkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:40:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6533E22CB3;
-        Mon, 20 Jul 2020 15:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259650;
-        bh=CJmmLoIlOe20HPYX9dqLE/ufDhQbzH3wrYt/RsjBqCw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R3qR028HB7UTmlNC9X2js1e5x+f2/ZAo7HRxamLruBSZdwMdGF4yPc5IcGeFHfLu7
-         5sZYIVUZS1A78gkPdJuzzEKIsPb2FnhEM9rbzHP3b/qOI52IuQVi08PgLhefAVtONd
-         yp44xbBpAm6l1PfPmUJ2G0/LLr+UyIt0lIjqUawg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 29/86] llc: make sure applications use ARPHRD_ETHER
-Date:   Mon, 20 Jul 2020 17:36:25 +0200
-Message-Id: <20200720152754.627486593@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
-References: <20200720152753.138974850@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 11:41:06 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:43954 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729792AbgGTPkw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:40:52 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06KFYQS5100382;
+        Mon, 20 Jul 2020 15:40:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=9AOYkY5vBY5rwY8KcpNfZyRPuwyIKO/Xf9p6BfszgcA=;
+ b=vKD+R2Khsr7sBNaxysSfYFsSaT5VAwVC+h5n7qA4ib9Ej2ui/+05dGiA6w5619dEw61W
+ a5aqb5ze/61F2AMrgPQnwT7YEFVxR3Ia6twTg9H+NleVW3zEVxQY23T98B9gG+HvwtP8
+ WI9wGGgwiiON3GsY0jn66q/IdGjDQ0jph5doZgy30wvkR2GQAkjBWfywHzfU+hGnbYoT
+ 0jYXYOLICZGpRuhFO34/920RzsONJVMkSjB1HAYxrYz8V4Dl6PqmdYh/qnGJ8aIBoCgY
+ nnByUkVs6oPHq3Im2JPNPpcqKa/Yq8zQjHBATpbeENcTGFqe+66LCl1DHZj+iKg7Uu7H sQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 32bs1m7qgb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 Jul 2020 15:40:47 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06KFYCPA171328;
+        Mon, 20 Jul 2020 15:40:47 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 32d8m09f9u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 15:40:47 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06KFej9n013486;
+        Mon, 20 Jul 2020 15:40:45 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 20 Jul 2020 15:40:45 +0000
+Date:   Mon, 20 Jul 2020 08:40:43 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
+        Eric Sandeen <sandeen@redhat.com>
+Subject: Re: [PATCH v6] xfs: Fix false positive lockdep warning with
+ sb_internal & fs_reclaim
+Message-ID: <20200720154043.GV7625@magnolia>
+References: <20200707191629.13911-1-longman@redhat.com>
+ <20200713164112.GZ7606@magnolia>
+ <104087053.24407245.1595259123778.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <104087053.24407245.1595259123778.JavaMail.zimbra@redhat.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9688 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ suspectscore=56 adultscore=0 phishscore=0 bulkscore=0 mlxlogscore=999
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9688 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=56 bulkscore=0
+ adultscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0
+ clxscore=1015 spamscore=0 mlxscore=0 impostorscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+On Mon, Jul 20, 2020 at 11:32:03AM -0400, Waiman Long wrote:
+> 
+> 
+> ----- Original Message -----
+> From: "Darrick J. Wong" <darrick.wong@oracle.com>
+> To: "Waiman Long" <longman@redhat.com>
+> Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, "Dave Chinner" <david@fromorbit.com>, "Qian Cai" <cai@lca.pw>, "Eric Sandeen" <sandeen@redhat.com>
+> Sent: Monday, July 13, 2020 12:41:12 PM
+> Subject: Re: [PATCH v6] xfs: Fix false positive lockdep warning with sb_internal & fs_reclaim
+> 
+> On Tue, Jul 07, 2020 at 03:16:29PM -0400, Waiman Long wrote:
+> > Depending on the workloads, the following circular locking dependency
+> > warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
+> > lock) may show up:
+> > 
+> > ======================================================
+> > WARNING: possible circular locking dependency detected
+> > 5.0.0-rc1+ #60 Tainted: G        W
+> > ------------------------------------------------------
+> > fsfreeze/4346 is trying to acquire lock:
+> > 0000000026f1d784 (fs_reclaim){+.+.}, at:
+> > fs_reclaim_acquire.part.19+0x5/0x30
+> > 
+> > but task is already holding lock:
+> > 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+> > 
+> > which lock already depends on the new lock.
+> >   :
+> >  Possible unsafe locking scenario:
+> > 
+> >        CPU0                    CPU1
+> >        ----                    ----
+> >   lock(sb_internal);
+> >                                lock(fs_reclaim);
+> >                                lock(sb_internal);
+> >   lock(fs_reclaim);
+> > 
+> >  *** DEADLOCK ***
+> > 
+> > 4 locks held by fsfreeze/4346:
+> >  #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
+> >  #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
+> >  #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
+> >  #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+> > 
+> > stack backtrace:
+> > Call Trace:
+> >  dump_stack+0xe0/0x19a
+> >  print_circular_bug.isra.10.cold.34+0x2f4/0x435
+> >  check_prev_add.constprop.19+0xca1/0x15f0
+> >  validate_chain.isra.14+0x11af/0x3b50
+> >  __lock_acquire+0x728/0x1200
+> >  lock_acquire+0x269/0x5a0
+> >  fs_reclaim_acquire.part.19+0x29/0x30
+> >  fs_reclaim_acquire+0x19/0x20
+> >  kmem_cache_alloc+0x3e/0x3f0
+> >  kmem_zone_alloc+0x79/0x150
+> >  xfs_trans_alloc+0xfa/0x9d0
+> >  xfs_sync_sb+0x86/0x170
+> >  xfs_log_sbcount+0x10f/0x140
+> >  xfs_quiesce_attr+0x134/0x270
+> >  xfs_fs_freeze+0x4a/0x70
+> >  freeze_super+0x1af/0x290
+> >  do_vfs_ioctl+0xedc/0x16c0
+> >  ksys_ioctl+0x41/0x80
+> >  __x64_sys_ioctl+0x73/0xa9
+> >  do_syscall_64+0x18f/0xd23
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > 
+> > This is a false positive as all the dirty pages are flushed out before
+> > the filesystem can be frozen.
+> > 
+> > One way to avoid this splat is to add GFP_NOFS to the affected allocation
+> > calls by using the memalloc_nofs_save()/memalloc_nofs_restore() pair.
+> > This shouldn't matter unless the system is really running out of memory.
+> > In that particular case, the filesystem freeze operation may fail while
+> > it was succeeding previously.
+> > 
+> > Without this patch, the command sequence below will show that the lock
+> > dependency chain sb_internal -> fs_reclaim exists.
+> > 
+> >  # fsfreeze -f /home
+> >  # fsfreeze --unfreeze /home
+> >  # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
+> > 
+> > After applying the patch, such sb_internal -> fs_reclaim lock dependency
+> > chain can no longer be found. Because of that, the locking dependency
+> > warning will not be shown.
+> > 
+> > Suggested-by: Dave Chinner <david@fromorbit.com>
+> > Signed-off-by: Waiman Long <longman@redhat.com>
+> 
+> Looks good to me,
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Will this patch be merged into the xfs tree soon?
 
-[ Upstream commit a9b1110162357689a34992d5c925852948e5b9fd ]
+It should appear in for-next in the next day or so.  I am trying to push
+there only every other couple of weeks to reduce the amount of developer
+tree rebasing that has to go on when people are trying to land a complex
+series.
 
-syzbot was to trigger a bug by tricking AF_LLC with
-non sensible addr->sllc_arphrd
+--D
 
-It seems clear LLC requires an Ethernet device.
-
-Back in commit abf9d537fea2 ("llc: add support for SO_BINDTODEVICE")
-Octavian Purdila added possibility for application to use a zero
-value for sllc_arphrd, convert it to ARPHRD_ETHER to not cause
-regressions on existing applications.
-
-BUG: KASAN: use-after-free in __read_once_size include/linux/compiler.h:199 [inline]
-BUG: KASAN: use-after-free in list_empty include/linux/list.h:268 [inline]
-BUG: KASAN: use-after-free in waitqueue_active include/linux/wait.h:126 [inline]
-BUG: KASAN: use-after-free in wq_has_sleeper include/linux/wait.h:160 [inline]
-BUG: KASAN: use-after-free in skwq_has_sleeper include/net/sock.h:2092 [inline]
-BUG: KASAN: use-after-free in sock_def_write_space+0x642/0x670 net/core/sock.c:2813
-Read of size 8 at addr ffff88801e0b4078 by task ksoftirqd/3/27
-
-CPU: 3 PID: 27 Comm: ksoftirqd/3 Not tainted 5.5.0-rc1-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
- __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:639
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- __read_once_size include/linux/compiler.h:199 [inline]
- list_empty include/linux/list.h:268 [inline]
- waitqueue_active include/linux/wait.h:126 [inline]
- wq_has_sleeper include/linux/wait.h:160 [inline]
- skwq_has_sleeper include/net/sock.h:2092 [inline]
- sock_def_write_space+0x642/0x670 net/core/sock.c:2813
- sock_wfree+0x1e1/0x260 net/core/sock.c:1958
- skb_release_head_state+0xeb/0x260 net/core/skbuff.c:652
- skb_release_all+0x16/0x60 net/core/skbuff.c:663
- __kfree_skb net/core/skbuff.c:679 [inline]
- consume_skb net/core/skbuff.c:838 [inline]
- consume_skb+0xfb/0x410 net/core/skbuff.c:832
- __dev_kfree_skb_any+0xa4/0xd0 net/core/dev.c:2967
- dev_kfree_skb_any include/linux/netdevice.h:3650 [inline]
- e1000_unmap_and_free_tx_resource.isra.0+0x21b/0x3a0 drivers/net/ethernet/intel/e1000/e1000_main.c:1963
- e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3854 [inline]
- e1000_clean+0x4cc/0x1d10 drivers/net/ethernet/intel/e1000/e1000_main.c:3796
- napi_poll net/core/dev.c:6532 [inline]
- net_rx_action+0x508/0x1120 net/core/dev.c:6600
- __do_softirq+0x262/0x98c kernel/softirq.c:292
- run_ksoftirqd kernel/softirq.c:603 [inline]
- run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
- smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
- kthread+0x361/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 8247:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:513 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
- kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:521
- slab_post_alloc_hook mm/slab.h:584 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x121/0x710 mm/slab.c:3484
- sock_alloc_inode+0x1c/0x1d0 net/socket.c:240
- alloc_inode+0x68/0x1e0 fs/inode.c:230
- new_inode_pseudo+0x19/0xf0 fs/inode.c:919
- sock_alloc+0x41/0x270 net/socket.c:560
- __sock_create+0xc2/0x730 net/socket.c:1384
- sock_create net/socket.c:1471 [inline]
- __sys_socket+0x103/0x220 net/socket.c:1513
- __do_sys_socket net/socket.c:1522 [inline]
- __se_sys_socket net/socket.c:1520 [inline]
- __ia32_sys_socket+0x73/0xb0 net/socket.c:1520
- do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
- do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
- entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-
-Freed by task 17:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:335 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
- __cache_free mm/slab.c:3426 [inline]
- kmem_cache_free+0x86/0x320 mm/slab.c:3694
- sock_free_inode+0x20/0x30 net/socket.c:261
- i_callback+0x44/0x80 fs/inode.c:219
- __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
- rcu_do_batch kernel/rcu/tree.c:2183 [inline]
- rcu_core+0x570/0x1540 kernel/rcu/tree.c:2408
- rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2417
- __do_softirq+0x262/0x98c kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff88801e0b4000
- which belongs to the cache sock_inode_cache of size 1152
-The buggy address is located 120 bytes inside of
- 1152-byte region [ffff88801e0b4000, ffff88801e0b4480)
-The buggy address belongs to the page:
-page:ffffea0000782d00 refcount:1 mapcount:0 mapping:ffff88807aa59c40 index:0xffff88801e0b4ffd
-raw: 00fffe0000000200 ffffea00008e6c88 ffffea0000782d48 ffff88807aa59c40
-raw: ffff88801e0b4ffd ffff88801e0b4000 0000000100000003 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88801e0b3f00: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
- ffff88801e0b3f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88801e0b4000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                                ^
- ffff88801e0b4080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88801e0b4100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-Fixes: abf9d537fea2 ("llc: add support for SO_BINDTODEVICE")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/llc/af_llc.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
---- a/net/llc/af_llc.c
-+++ b/net/llc/af_llc.c
-@@ -271,6 +271,10 @@ static int llc_ui_autobind(struct socket
- 
- 	if (!sock_flag(sk, SOCK_ZAPPED))
- 		goto out;
-+	if (!addr->sllc_arphrd)
-+		addr->sllc_arphrd = ARPHRD_ETHER;
-+	if (addr->sllc_arphrd != ARPHRD_ETHER)
-+		goto out;
- 	rc = -ENODEV;
- 	if (sk->sk_bound_dev_if) {
- 		llc->dev = dev_get_by_index(&init_net, sk->sk_bound_dev_if);
-@@ -328,15 +332,15 @@ static int llc_ui_bind(struct socket *so
- 	if (unlikely(!sock_flag(sk, SOCK_ZAPPED) || addrlen != sizeof(*addr)))
- 		goto out;
- 	rc = -EAFNOSUPPORT;
--	if (unlikely(addr->sllc_family != AF_LLC))
-+	if (!addr->sllc_arphrd)
-+		addr->sllc_arphrd = ARPHRD_ETHER;
-+	if (unlikely(addr->sllc_family != AF_LLC || addr->sllc_arphrd != ARPHRD_ETHER))
- 		goto out;
- 	rc = -ENODEV;
- 	rcu_read_lock();
- 	if (sk->sk_bound_dev_if) {
- 		llc->dev = dev_get_by_index_rcu(&init_net, sk->sk_bound_dev_if);
- 		if (llc->dev) {
--			if (!addr->sllc_arphrd)
--				addr->sllc_arphrd = llc->dev->type;
- 			if (is_zero_ether_addr(addr->sllc_mac))
- 				memcpy(addr->sllc_mac, llc->dev->dev_addr,
- 				       IFHWADDRLEN);
-
-
+> Thanks,
+> Longman
+> 
