@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6335AC433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25178C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 376FB2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D842065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261272;
-	bh=wcXrPlNU92fNHOYzsphttanqN5uK0/1282v1ohVH6sY=;
+	s=default; t=1595261280;
+	bh=3oPGSMJ+CCoMWNyzcSZvQciZmoZMmXKBLO7zBC0880Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z5eumAb4ddT+RJ2poAgEfKB7jrcSRsykb6Vr3yKD5/MeLJulOZ+qywktrD751bdPq
-	 V4gRf1DXZVNs1hU8gnP+FK893A9tzEgjycvb3mmXqsKytWilCtt/BzLefL+SfQtB5A
-	 M/BQH5J4imSgZ0QT7tyhZ4qW6aQjQU2q7G76rLkU=
+	b=s2vR53GwK77QSTy9shur4kjOlxYBuVcbtfVG0suskYHjhHQwqK7Hn5Fc1etnBzLev
+	 BwzJCexFGEGQujIjKg8WdmAKgFOIdhsQXgkYA7P0S9k9px43TaUqis0d4YqB9YapUe
+	 2V7VTtyxnOqp3vvxeD6pFmZw2RKlGCzZy8+T3ve0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733218AbgGTQHv (ORCPT
+        id S1733231AbgGTQH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:07:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44930 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:07:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733209AbgGTQHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:07:48 -0400
+        id S1732979AbgGTQHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:07:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D46EB20672;
-        Mon, 20 Jul 2020 16:07:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62FD722CB1;
+        Mon, 20 Jul 2020 16:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261267;
-        bh=wcXrPlNU92fNHOYzsphttanqN5uK0/1282v1ohVH6sY=;
+        s=default; t=1595261273;
+        bh=3oPGSMJ+CCoMWNyzcSZvQciZmoZMmXKBLO7zBC0880Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IUpnAPVdV0oTQGpZdHsbDnkm1bS6GsRls96yNRmR9dE3GkEBIlXGVx9Cc452JgYzj
-         fVuNOalJDdudQevqCayW+mPC6cQ937u3JolK92MIiZAtGVNESMNktsqgPctZ3T5P6D
-         XAUOqFoIUy3sdW8afZy+U9JFapv2CEhgTj2XSJs4=
+        b=2Fy05nynvX59/23A9xIgaqUWh8Yq0NG5AyJcJDhqqztRHluhlook0qS9MGOc2FRBD
+         AcODWRtXeZgWnas2nQSrSHvpvzNjHi0DEaPMidZ3IWX5qJUKx7wCWZExyKB2iT/Lgy
+         djw5n2b04qF1h8tCzp5+cWgPLb3Pi8RA1/29u3ig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 055/244] arm64: Add MIDR value for KRYO4XX gold CPU cores
-Date:   Mon, 20 Jul 2020 17:35:26 +0200
-Message-Id: <20200720152828.477207430@linuxfoundation.org>
+Subject: [PATCH 5.7 057/244] arm64: Add KRYO4XX silver CPU cores to erratum list 1530923 and 1024718
+Date:   Mon, 20 Jul 2020 17:35:28 +0200
+Message-Id: <20200720152828.568239183@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -62,41 +62,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-[ Upstream commit dce4f2807f6920bb907eb4cd4f95e7f42d918bc6 ]
+[ Upstream commit 9b23d95c539ebc5d6d6b5d6f20d2d7922384e76e ]
 
-Add MIDR value for KRYO4XX gold/big CPU cores which are
-used in Qualcomm Technologies, Inc. SoCs. This will be
-used to identify and apply erratum which are applicable
-for these CPU cores.
+KRYO4XX silver/LITTLE CPU cores with revision r1p0 are affected by
+erratum 1530923 and 1024718, so add them to the respective list.
+The variant and revision bits are implementation defined and are
+different from the their Cortex CPU counterparts on which they are
+based on, i.e., r1p0 is equivalent to rdpe.
 
 Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Link: https://lore.kernel.org/r/9093fb82e22441076280ca1b729242ffde80c432.1593539394.git.saiprakash.ranjan@codeaurora.org
+Link: https://lore.kernel.org/r/7013e8a3f857ca7e82863cc9e34a614293d7f80c.1593539394.git.saiprakash.ranjan@codeaurora.org
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/cputype.h | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/arm64/silicon-errata.rst | 4 ++++
+ arch/arm64/kernel/cpu_errata.c         | 2 ++
+ arch/arm64/kernel/cpufeature.c         | 2 ++
+ 3 files changed, 8 insertions(+)
 
-diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-index a87a93f67671d..7219cddeba669 100644
---- a/arch/arm64/include/asm/cputype.h
-+++ b/arch/arm64/include/asm/cputype.h
-@@ -86,6 +86,7 @@
- #define QCOM_CPU_PART_FALKOR		0xC00
- #define QCOM_CPU_PART_KRYO		0x200
- #define QCOM_CPU_PART_KRYO_3XX_SILVER	0x803
-+#define QCOM_CPU_PART_KRYO_4XX_GOLD	0x804
- #define QCOM_CPU_PART_KRYO_4XX_SILVER	0x805
- 
- #define NVIDIA_CPU_PART_DENVER		0x003
-@@ -114,6 +115,7 @@
- #define MIDR_QCOM_FALKOR MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_FALKOR)
- #define MIDR_QCOM_KRYO MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO)
- #define MIDR_QCOM_KRYO_3XX_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_3XX_SILVER)
-+#define MIDR_QCOM_KRYO_4XX_GOLD MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_4XX_GOLD)
- #define MIDR_QCOM_KRYO_4XX_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_4XX_SILVER)
- #define MIDR_NVIDIA_DENVER MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_DENVER)
- #define MIDR_NVIDIA_CARMEL MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_CARMEL)
+diff --git a/Documentation/arm64/silicon-errata.rst b/Documentation/arm64/silicon-errata.rst
+index 6902feba6b412..7dc8f8ac69eea 100644
+--- a/Documentation/arm64/silicon-errata.rst
++++ b/Documentation/arm64/silicon-errata.rst
+@@ -151,6 +151,10 @@ stable kernels.
+ +----------------+-----------------+-----------------+-----------------------------+
+ | Qualcomm Tech. | Kryo4xx Gold    | N/A             | ARM64_ERRATUM_1418040       |
+ +----------------+-----------------+-----------------+-----------------------------+
++| Qualcomm Tech. | Kryo4xx Silver  | N/A             | ARM64_ERRATUM_1530923       |
+++----------------+-----------------+-----------------+-----------------------------+
++| Qualcomm Tech. | Kryo4xx Silver  | N/A             | ARM64_ERRATUM_1024718       |
+++----------------+-----------------+-----------------+-----------------------------+
+ +----------------+-----------------+-----------------+-----------------------------+
+ | Fujitsu        | A64FX           | E#010001        | FUJITSU_ERRATUM_010001      |
+ +----------------+-----------------+-----------------+-----------------------------+
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index e0f8474979b19..dbf266212808e 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -765,6 +765,8 @@ static const struct midr_range erratum_speculative_at_vhe_list[] = {
+ #ifdef CONFIG_ARM64_ERRATUM_1530923
+ 	/* Cortex A55 r0p0 to r2p0 */
+ 	MIDR_RANGE(MIDR_CORTEX_A55, 0, 0, 2, 0),
++	/* Kryo4xx Silver (rdpe => r1p0) */
++	MIDR_REV(MIDR_QCOM_KRYO_4XX_SILVER, 0xd, 0xe),
+ #endif
+ 	{},
+ };
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index b0fb1d5bf2235..cadc9d9a7477b 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1177,6 +1177,8 @@ static bool cpu_has_broken_dbm(void)
+ 	static const struct midr_range cpus[] = {
+ #ifdef CONFIG_ARM64_ERRATUM_1024718
+ 		MIDR_RANGE(MIDR_CORTEX_A55, 0, 0, 1, 0),  // A55 r0p0 -r1p0
++		/* Kryo4xx Silver (rdpe => r1p0) */
++		MIDR_REV(MIDR_QCOM_KRYO_4XX_SILVER, 0xd, 0xe),
+ #endif
+ 		{},
+ 	};
 -- 
 2.25.1
 
