@@ -2,150 +2,116 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F056EC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED7FC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2D992070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="RWntARiq"
+	by mail.kernel.org (Postfix) with ESMTP id 3F64C206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262484;
+	bh=tcGMKR5WdAThsy1xT6ryAEhkxohIpEi3AlS1Ix3p688=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iI1mTiQXV3Y3afQix6vOfvZ4PqHIRAlWnCnP8q9kgy15P703oSsGzkKZonsaaH28M
+	 65d08YthQYQHdpRbEBYH9Tsc/4CcUDXdQfW/DmYwr7Pnj5A4YoGZ7TFneVKFInWCQN
+	 bKvfwTentgIxPQizzy2zbhMpTxPIuq8z9Av/lRFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388778AbgGTQ2I (ORCPT
+        id S2388766AbgGTQ2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:28:08 -0400
-Received: from mail-co1nam11on2104.outbound.protection.outlook.com ([40.107.220.104]:64608
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731806AbgGTQ2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:28:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MaUcUBjOsor64sdejMk9uQ3+ovjrJJjTTegbEj2C4bU8zCDkTnr9b4XeYKq7IGLfPE3d3IJ8u1GH7KK/PYR6RQxFGtUapCHWDK6mlDfWAiGQK9PhfTvswJ01KXQ5lIAHn7F5Yf4l380/MD1JtR6rtp2duz6tnELct7QKa/RzfEzNsTPUbRIrvxv4QWIAQrURo/UsVYlgePaEkCWFLDABawxhv2G7V4S7iY5O72ldemyWUO4lrAFCFZeQca3Oxmc8UV/m22lveb4H6b13VqFGsU2DcfwsT/5qS127cfIm2ZowlUgJutd54dFnvaqn9XyEaMHPvH1MBdmTM+Av0LuV9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hRE7On7IabZ1eW1cwefivFmIBZ6/+O1wpQDJLQdghj8=;
- b=U4dWFz+xJgQB3i5JwFS11nFlMwY+kzGkTBxmm6eV3z3YAoxKBKaINvdpcgcI5QVK7qZJ/7iyWNcioLUdeiMXAwmT3LV3vdnXy3xX7UywR8+ELVI8elIaOeb402eKSndZ8LP83hMoqGPpscwHXRUcJ8Pvqh10hP7lKkhU6j+sAcm6VBlcDwMl6WeXK+ywCtHmahWtB7a/38v35xP1yEN6FXp677JoS89zyNxnOp6CwkxRkxezQJR8AoOWFp8h/EoRH/EboGukUE21//syzKhU81bMlKFLzSpFIG7bVcIBldgfrUqWTFujhxAuuUEbMP5s1QF/NWlVMo9XL8cXFjpEAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hRE7On7IabZ1eW1cwefivFmIBZ6/+O1wpQDJLQdghj8=;
- b=RWntARiq5XpcXrLXw9o2TbTH4X1ej/dTC8sN/Ibw+aTRDlIH98h19/gtw2ve/do/Dz2fcHkS104tKDcb9BroIvix7WIuCzFSdXcb7xlwqk0vMl5anWylr6Nv9k3DeNtCJhogkeugMJcZACtfsM3tloHzYokP+KrrmtVYNnnAl2o=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB1001.namprd21.prod.outlook.com (2603:10b6:302:4::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.7; Mon, 20 Jul
- 2020 16:27:59 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::fc14:3ca6:8a8:7407]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::fc14:3ca6:8a8:7407%8]) with mapi id 15.20.3239.005; Mon, 20 Jul 2020
- 16:27:59 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Wei Hu <weh@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: RE: [PATCH v3] PCI: hv: Fix a timing issue which causes kdump to fail
- occasionally
-Thread-Topic: [PATCH v3] PCI: hv: Fix a timing issue which causes kdump to
- fail occasionally
-Thread-Index: AQHWXLZO4rg806/YAkqpm5I8FMMzTqkQq3Jg
-Date:   Mon, 20 Jul 2020 16:27:59 +0000
-Message-ID: <MW2PR2101MB105217EA920CDA1600449D3AD77B0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200718034752.4843-1-weh@microsoft.com>
-In-Reply-To: <20200718034752.4843-1-weh@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-20T16:27:57Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=89844ab3-3063-440d-bd17-ed0f5aafdec9;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9f63397b-24f2-4a5a-bcf3-08d82cc9ddb7
-x-ms-traffictypediagnostic: MW2PR2101MB1001:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB1001A08CF8D32AFFC6BB5014D77B0@MW2PR2101MB1001.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: T/aurKXNEAmpYSL5DJicJWJtMjp6LeBh0cFkql4habiquUosg/YQbL17PSE8z6EofCSZCEBZNmTLDcHXKta8Vma6fNvEjLWqHAJS2kKPTZDGa6NoYMKb4Y3KULi0vdv8ednBzRUTURwYq2IjLRmxK2fm8ypCBVqpUqT1MMfBk8TpQP49uxtNRxJa6V472fX1/8GyyTDxSRkrD29xUBrLW8ueUTUCAwSdn0rQaPTXNO366da5dZKV+ucuUfTOSwbEfuCLBSNBkeIyHiJWdaiULNaWJxpXrUTwRwdiw2jRrXONPmK5mhWzCEb8TlmD44rIouMPHtEkCdDSMVg0vo8YQ9Nc/4COpTrdwsrUqZejqHd2tHVmvrsMHoRKYz9LidzC
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(376002)(39860400002)(136003)(346002)(5660300002)(83380400001)(478600001)(8676002)(53546011)(55016002)(9686003)(7696005)(33656002)(52536014)(86362001)(110136005)(316002)(6506007)(82950400001)(82960400001)(8936002)(71200400001)(10290500003)(64756008)(66476007)(2906002)(6636002)(186003)(26005)(66946007)(66446008)(8990500004)(66556008)(76116006)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 9Qyt013VsU6ZEL6ELrXi33DXkiA4Mrb3MqMS58bm4uGTF6lDzOE1RtYFRZ7QxmvIpysrl+wm4sp9+iC3udeX2+298fnB9AI4LAzEp2RaLLVMC8mxrHnKWqd1BNlCkzxJWdF0272IP6g4gVxDk+78LdnYeLvjb5C4Mm7lmG55pMWiZ8ECRV/gChalvkUuil6gnwYKp+ix6BrWyPGDX1koJLSJVwqEahefO2kTvEGgWNSkaQ1pcYLH4MgTxjbvbTtllVGSO51u2eh1yVEmqFx2hJS8ksQokM+xF/slS/wIqHqYewLZ8FtkCBgC79I2JhBJfZxPVfXkXLcaQlg3+Y8jXgXx9nC1P0zWKlFBDbTsLzO+lpIPM+SPg+8rlrv0jW1s2PWhs1VlwtVr92528mRt7WnnjXkfgtABW0g1RmZaD/GIxE/Il///Tfy0UR9cnuw5W1aO36fglkY9fnOZSnVfCa//HjrBpAxqVa6i17tmTh/P6isnNO3FG7e8aVrRztVR
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Jul 2020 12:28:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732245AbgGTP7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA1762176B;
+        Mon, 20 Jul 2020 15:59:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260772;
+        bh=tcGMKR5WdAThsy1xT6ryAEhkxohIpEi3AlS1Ix3p688=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=w3TpsZvjYEQCY9IuuKIropNm4/SrMcG7q3appc0b5863zFYX5MrwmjlQqTQbzJFlu
+         akLE7f9g5q1D5ldOX4RN4otdzqjRBkZtow7HCUFUh2ejJh3D1PfMEEnSu9dhiKswM2
+         RqMJ+0Y9BkJHv7ig9Na0uuIwG4b/1cqI0KnqqImc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 090/215] ACPI: video: Use native backlight on Acer TravelMate 5735Z
+Date:   Mon, 20 Jul 2020 17:36:12 +0200
+Message-Id: <20200720152824.488069546@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f63397b-24f2-4a5a-bcf3-08d82cc9ddb7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 16:27:59.0651
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QOcLCjfBZCCGrgWSvdQdqt8vL442oampXosuCCDO1vBarmZXiGwX9Cd8rlstZ+2xgAoVy2G7kJJ6ucsjUeATcsQT0kfOoQe9H0Q/2+X5Lvk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Hu <weh@microsoft.com> Sent: Friday, July 17, 2020 8:48 PM
-> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.=
-com>;
-> Stephen Hemminger <sthemmin@microsoft.com>; wei.liu@kernel.org;
-> lorenzo.pieralisi@arm.com; robh@kernel.org; bhelgaas@google.com; linux-
-> hyperv@vger.kernel.org; linux-pci@vger.kernel.org; linux-kernel@vger.kern=
-el.org; Dexuan
-> Cui <decui@microsoft.com>; Michael Kelley <mikelley@microsoft.com>
-> Cc: Wei Hu <weh@microsoft.com>
-> Subject: [PATCH v3] PCI: hv: Fix a timing issue which causes kdump to fai=
-l occasionally
->=20
-> Kdump could fail sometime on Hyper-V guest over Accelerated Network
-> interface. This is because the retry in hv_pci_enter_d0() relies on
-> an asynchronous host event arriving before the guest calls
-> hv_send_resources_allocated(). Fix the problem by moving retry
-> to hv_pci_probe(), removing this dependency and making the calling
-> sequence synchronous.
->=20
-> Fixes: c81992e7f4aa ("PCI: hv: Retry PCI bus D0 entry on invalid device s=
-tate")
-> Signed-off-by: Wei Hu <weh@microsoft.com>
-> ---
->     v2: Adding Fixes tag according to Michael Kelley's review comment.
->     v3: Fix couple typos and reword commit message to make it clearer.
->     Thanks the comments from Bjorn Helgaas.
->=20
->  drivers/pci/controller/pci-hyperv.c | 66 ++++++++++++++---------------
->  1 file changed, 32 insertions(+), 34 deletions(-)
->=20
+From: Paul Menzel <pmenzel@molgen.mpg.de>
 
-I gave my Reviewed-by on the earlier v1 of this patch, but reiterating it
-here:
+[ Upstream commit c41c36e900a337b4132b12ccabc97f5578248b44 ]
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Currently, changing the brightness of the internal display of the Acer
+TravelMate 5735Z does not work. Pressing the function keys or changing the
+slider, GNOME Shell 3.36.2 displays the OSD (five steps), but the
+brightness does not change.
+
+The Acer TravelMate 5735Z shipped with Windows 7 and as such does not
+trigger our "win8 ready" heuristic for preferring the native backlight
+interface.
+
+Still ACPI backlight control doesn't work on this model, where as the
+native (intel_video) backlight interface does work by adding
+`acpi_backlight=native` or `acpi_backlight=none` to Linux’ command line.
+
+So, add a quirk to force using native backlight control on this model.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=207835
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/acpi/video_detect.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 8daeeb5e3eb67..5bcb4c01ec5f0 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -345,6 +345,16 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
+ 		DMI_MATCH(DMI_BOARD_NAME, "JV50"),
+ 		},
+ 	},
++	{
++	 /* https://bugzilla.kernel.org/show_bug.cgi?id=207835 */
++	 .callback = video_detect_force_native,
++	 .ident = "Acer TravelMate 5735Z",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++		DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate 5735Z"),
++		DMI_MATCH(DMI_BOARD_NAME, "BA51_MV"),
++		},
++	},
+ 
+ 	/*
+ 	 * Desktops which falsely report a backlight and which our heuristics
+-- 
+2.25.1
+
+
+
