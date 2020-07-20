@@ -2,205 +2,264 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1517C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD03C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE3CF22CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N32TaqnP"
+	by mail.kernel.org (Postfix) with ESMTP id 1068B22CBB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595260808;
+	bh=NU3TG0s7MfbTzVYgvNToxG5Yjvfw1M2N6dcL0zCmgGw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aKNSW+14HHRCCqQXGcOdta733hWaLQDANp0OSHnnG+faPABFzYa1vsbPSf937mnEQ
+	 zQ0DfmIGzO6IoiXpeqcO7pZgL2xDfXi9cfqN1SsOcTD3GlXUUavMInnKq9b8sH1Nh1
+	 X5pa/A0NBfBEu2x8pcSshYQ7tnOXwOlOQU45Nyt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732346AbgGTQAB (ORCPT
+        id S1731979AbgGTQAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:00:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732237AbgGTP7v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:51 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94334C0619D2;
-        Mon, 20 Jul 2020 08:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=10VRYCf+X0T5z2Mm4tKRRm7BN7GX5B7QP0oqeGQ3VHk=; b=N32TaqnPGTYyL3tptrjXUcK4Bw
-        u/x5h3vZxh5F/yaK3rJqefBmJZFOuuge05j+epNumOLaZ5Y4C8jvnzqD7JU5Mr2mJwWrfHJzkaSuf
-        Kw75ktWVqKaEm39YW60rAlh3DFTh6jNnxzCmU29TPejKqZ3wWXuZ/Irr7BMEJ2mc+n4A4wMHyfndn
-        8BmIARbKLdvpSSHv+yyo8VyXga2KAjo7VcAsQMLuoMni3ZpTseyGg4VZVKXy9Cz5qYZUNRbG/u9Va
-        zehOBMnUsGipesKDsl8DW/vdCHizUr483W3eHI6wOQN1mhGXt+go0gUW0HuDyqpXXFttPUKRwBgPE
-        KawhYODg==;
-Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxYCf-0007sO-3P; Mon, 20 Jul 2020 15:59:46 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
+        Mon, 20 Jul 2020 12:00:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732329AbgGTP75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3999E20773;
+        Mon, 20 Jul 2020 15:59:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260796;
+        bh=NU3TG0s7MfbTzVYgvNToxG5Yjvfw1M2N6dcL0zCmgGw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1GQ4dOtZoXFWFvAmbQLCp3Pmhvey7EE41b/wYWRzLfieEsQBZNAdUdByna8+5bUpZ
+         zwPYiHbPVvqQn5z/nPXapP4WumhhoW6rh0/nLCzbhevsfoZzHmgX6RHIiyp1llXruS
+         MSmvJoQ3WWqryjxFNVYMeL0oTVmyxNh2wl1X+1Ew=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 24/24] fs: add a kern_stat helper
-Date:   Mon, 20 Jul 2020 17:59:02 +0200
-Message-Id: <20200720155902.181712-25-hch@lst.de>
+        stable@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 069/215] mmc: mmci: Support any block sizes for ux500v2 and qcom variant
+Date:   Mon, 20 Jul 2020 17:35:51 +0200
+Message-Id: <20200720152823.494421593@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720155902.181712-1-hch@lst.de>
-References: <20200720155902.181712-1-hch@lst.de>
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a simple helper to stat/lstat with a kernel space file name and
-switch the early init code over to it.
+From: Linus Walleij <linus.walleij@linaro.org>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+[ Upstream commit 2253ed4b36dc876d1598c4dab5587e537ec68c34 ]
+
+For the ux500v2 variant of the PL18x block, any block sizes
+are supported. This is necessary to support some SDIO
+transfers. This also affects the QCOM MMCI variant and the
+ST micro variant.
+
+For Ux500 an additional quirk only allowing DMA on blocks
+that are a power of two is needed. This might be a bug in
+the DMA engine (DMA40) or the MMCI or in the interconnect,
+but the most likely is the MMCI, as transfers of these
+sizes work fine for other devices using the same DMA
+engine. DMA works fine also with SDIO as long as the
+blocksize is a power of 2.
+
+This patch has proven necessary for enabling SDIO for WLAN on
+PostmarketOS-based Ux500 platforms.
+
+What we managed to test in practice is Broadcom WiFi over
+SDIO on the Ux500 based Samsung GT-I8190 and GT-S7710.
+This WiFi chip, BCM4334 works fine after the patch.
+
+Before this patch:
+
+brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4334-sdio
+	  for chip BCM4334/3
+mmci-pl18x 80118000.sdi1_per2: unsupported block size (60 bytes)
+brcmfmac: brcmf_sdiod_ramrw: membytes transfer failed
+brcmfmac: brcmf_sdio_download_code_file: error -22 on writing
+	  434236 membytes at 0x00000000
+brcmfmac: brcmf_sdio_download_firmware: dongle image file download
+	  failed
+
+After this patch:
+
+brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4334/3 wl0:
+	  Nov 21 2012 00:21:28 version 6.10.58.813 (B2) FWID 01-0
+
+Bringing up networks, discovering networks with "iw dev wlan0 scan"
+and connecting works fine from this point.
+
+This patch is inspired by Ulf Hansson's patch
+http://www.spinics.net/lists/linux-mmc/msg12160.html
+
+As the DMA engines on these platforms may now get block sizes
+they were not used to before, make sure to also respect if
+the DMA engine says "no" to a transfer.
+
+Make a drive-by fix for datactrl_blocksz, misspelled.
+
+Cc: Ludovic Barre <ludovic.barre@st.com>
+Cc: Brian Masney <masneyb@onstation.org>
+Cc: Stephan Gerhold <stephan@gerhold.net>
+Cc: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20191217143952.2885-1-linus.walleij@linaro.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md-autodetect.c |  2 +-
- fs/stat.c                  | 32 ++++++++++++++++++++++----------
- include/linux/fs.h         |  1 +
- init/initramfs.c           |  3 ++-
- 4 files changed, 26 insertions(+), 12 deletions(-)
+ drivers/mmc/host/mmci.c | 34 ++++++++++++++++++++++++++++++----
+ drivers/mmc/host/mmci.h |  8 +++++++-
+ 2 files changed, 37 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/md/md-autodetect.c b/drivers/md/md-autodetect.c
-index 14b6e86814c061..5bd52ec05ed821 100644
---- a/drivers/md/md-autodetect.c
-+++ b/drivers/md/md-autodetect.c
-@@ -151,7 +151,7 @@ static void __init md_setup_drive(struct md_setup_args *args)
- 		if (strncmp(devname, "/dev/", 5) == 0)
- 			devname += 5;
- 		snprintf(comp_name, 63, "/dev/%s", devname);
--		if (vfs_stat(comp_name, &stat) == 0 && S_ISBLK(stat.mode))
-+		if (kern_stat(comp_name, &stat, 0) == 0 && S_ISBLK(stat.mode))
- 			dev = new_decode_dev(stat.rdev);
- 		if (!dev) {
- 			pr_warn("md: Unknown device name: %s\n", devname);
-diff --git a/fs/stat.c b/fs/stat.c
-index dacecdda2e7967..3c976b92db00ca 100644
---- a/fs/stat.c
-+++ b/fs/stat.c
-@@ -151,7 +151,7 @@ int vfs_fstat(int fd, struct kstat *stat)
- /**
-  * vfs_statx - Get basic and extra attributes by filename
-  * @dfd: A file descriptor representing the base dir for a relative filename
-- * @filename: The name of the file of interest
-+ * @name: The name of the file of interest
-  * @flags: Flags to control the query
-  * @stat: The result structure to fill in.
-  * @request_mask: STATX_xxx flags indicating what the caller wants
-@@ -163,16 +163,16 @@ int vfs_fstat(int fd, struct kstat *stat)
-  *
-  * 0 will be returned on success, and a -ve error code if unsuccessful.
-  */
--static int vfs_statx(int dfd, const char __user *filename, int flags,
-+static int vfs_statx(int dfd, struct filename *name, int flags,
- 	      struct kstat *stat, u32 request_mask)
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index c37e70dbe250e..7e4bc9124efde 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -168,6 +168,8 @@ static struct variant_data variant_ux500 = {
+ 	.cmdreg_srsp		= MCI_CPSM_RESPONSE,
+ 	.datalength_bits	= 24,
+ 	.datactrl_blocksz	= 11,
++	.datactrl_any_blocksz	= true,
++	.dma_power_of_2		= true,
+ 	.datactrl_mask_sdio	= MCI_DPSM_ST_SDIOEN,
+ 	.st_sdio		= true,
+ 	.st_clkdiv		= true,
+@@ -201,6 +203,8 @@ static struct variant_data variant_ux500v2 = {
+ 	.datactrl_mask_ddrmode	= MCI_DPSM_ST_DDRMODE,
+ 	.datalength_bits	= 24,
+ 	.datactrl_blocksz	= 11,
++	.datactrl_any_blocksz	= true,
++	.dma_power_of_2		= true,
+ 	.datactrl_mask_sdio	= MCI_DPSM_ST_SDIOEN,
+ 	.st_sdio		= true,
+ 	.st_clkdiv		= true,
+@@ -260,6 +264,7 @@ static struct variant_data variant_stm32_sdmmc = {
+ 	.datacnt_useless	= true,
+ 	.datalength_bits	= 25,
+ 	.datactrl_blocksz	= 14,
++	.datactrl_any_blocksz	= true,
+ 	.stm32_idmabsize_mask	= GENMASK(12, 5),
+ 	.init			= sdmmc_variant_init,
+ };
+@@ -279,6 +284,7 @@ static struct variant_data variant_qcom = {
+ 	.data_cmd_enable	= MCI_CPSM_QCOM_DATCMD,
+ 	.datalength_bits	= 24,
+ 	.datactrl_blocksz	= 11,
++	.datactrl_any_blocksz	= true,
+ 	.pwrreg_powerup		= MCI_PWR_UP,
+ 	.f_max			= 208000000,
+ 	.explicit_mclk_control	= true,
+@@ -447,10 +453,11 @@ void mmci_dma_setup(struct mmci_host *host)
+ static int mmci_validate_data(struct mmci_host *host,
+ 			      struct mmc_data *data)
  {
- 	struct path path;
- 	unsigned lookup_flags = 0;
--	int error;
-+	int error = -EINVAL;
- 
- 	if (flags & ~(AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT | AT_EMPTY_PATH |
- 		      AT_STATX_SYNC_TYPE))
--		return -EINVAL;
-+		goto out_putname;
- 
- 	if (!(flags & AT_SYMLINK_NOFOLLOW))
- 		lookup_flags |= LOOKUP_FOLLOW;
-@@ -182,9 +182,9 @@ static int vfs_statx(int dfd, const char __user *filename, int flags,
- 		lookup_flags |= LOOKUP_EMPTY;
- 
- retry:
--	error = user_path_at(dfd, filename, lookup_flags, &path);
-+	error = filename_lookup(dfd, name, lookup_flags, &path, NULL);
- 	if (error)
--		goto out;
-+		return error;
- 
- 	error = vfs_getattr(&path, stat, request_mask, flags);
- 	stat->mnt_id = real_mount(path.mnt)->mnt_id;
-@@ -197,15 +197,25 @@ static int vfs_statx(int dfd, const char __user *filename, int flags,
- 		lookup_flags |= LOOKUP_REVAL;
- 		goto retry;
- 	}
--out:
-+out_putname:
-+	if (!IS_ERR(name))
-+		putname(name);
- 	return error;
- }
- 
-+int __init kern_stat(const char *filename, struct kstat *stat, int flags)
-+{
-+	return vfs_statx(AT_FDCWD, getname_kernel(filename),
-+			 flags | AT_NO_AUTOMOUNT, stat, STATX_BASIC_STATS);
-+}
++	struct variant_data *variant = host->variant;
 +
- int vfs_fstatat(int dfd, const char __user *filename,
- 			      struct kstat *stat, int flags)
- {
--	return vfs_statx(dfd, filename, flags | AT_NO_AUTOMOUNT,
--			 stat, STATX_BASIC_STATS);
-+	int lookup_flags = (flags & AT_EMPTY_PATH) ? LOOKUP_EMPTY : 0;
-+
-+	return vfs_statx(dfd, getname_flags(filename, lookup_flags, NULL),
-+			 flags | AT_NO_AUTOMOUNT, stat, STATX_BASIC_STATS);
- }
+ 	if (!data)
+ 		return 0;
+-
+-	if (!is_power_of_2(data->blksz)) {
++	if (!is_power_of_2(data->blksz) && !variant->datactrl_any_blocksz) {
+ 		dev_err(mmc_dev(host->mmc),
+ 			"unsupported block size (%d bytes)\n", data->blksz);
+ 		return -EINVAL;
+@@ -515,7 +522,9 @@ int mmci_dma_start(struct mmci_host *host, unsigned int datactrl)
+ 		 "Submit MMCI DMA job, sglen %d blksz %04x blks %04x flags %08x\n",
+ 		 data->sg_len, data->blksz, data->blocks, data->flags);
  
- #ifdef __ARCH_WANT_OLD_STAT
-@@ -569,6 +579,7 @@ cp_statx(const struct kstat *stat, struct statx __user *buffer)
- int do_statx(int dfd, const char __user *filename, unsigned flags,
- 	     unsigned int mask, struct statx __user *buffer)
- {
-+	int lookup_flags = (flags & AT_EMPTY_PATH) ? LOOKUP_EMPTY : 0;
- 	struct kstat stat;
- 	int error;
+-	host->ops->dma_start(host, &datactrl);
++	ret = host->ops->dma_start(host, &datactrl);
++	if (ret)
++		return ret;
  
-@@ -577,7 +588,8 @@ int do_statx(int dfd, const char __user *filename, unsigned flags,
- 	if ((flags & AT_STATX_SYNC_TYPE) == AT_STATX_SYNC_TYPE)
+ 	/* Trigger the DMA transfer */
+ 	mmci_write_datactrlreg(host, datactrl);
+@@ -822,6 +831,18 @@ static int _mmci_dmae_prep_data(struct mmci_host *host, struct mmc_data *data,
+ 	if (data->blksz * data->blocks <= variant->fifosize)
  		return -EINVAL;
  
--	error = vfs_statx(dfd, filename, flags, &stat, mask);
-+	error = vfs_statx(dfd, getname_flags(filename, lookup_flags, NULL),
-+			  flags, &stat, mask);
- 	if (error)
- 		return error;
- 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 0e0cd6a988bb38..d1f8edb39cf969 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3671,5 +3671,6 @@ int __init kern_link(const char *oldname, const char *newname);
- int __init kern_symlink(const char *oldname, const char *newname);
- int kern_unlink(const char *pathname);
- int __init kern_rmdir(const char *pathname);
-+int __init kern_stat(const char *filename, struct kstat *stat, int flags);
- 
- #endif /* _LINUX_FS_H */
-diff --git a/init/initramfs.c b/init/initramfs.c
-index d72594298133a7..6c605f23900fa1 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -296,7 +296,8 @@ static void __init clean_path(char *path, umode_t fmode)
++	/*
++	 * This is necessary to get SDIO working on the Ux500. We do not yet
++	 * know if this is a bug in:
++	 * - The Ux500 DMA controller (DMA40)
++	 * - The MMCI DMA interface on the Ux500
++	 * some power of two blocks (such as 64 bytes) are sent regularly
++	 * during SDIO traffic and those work fine so for these we enable DMA
++	 * transfers.
++	 */
++	if (host->variant->dma_power_of_2 && !is_power_of_2(data->blksz))
++		return -EINVAL;
++
+ 	device = chan->device;
+ 	nr_sg = dma_map_sg(device->dev, data->sg, data->sg_len,
+ 			   mmc_get_dma_dir(data));
+@@ -872,9 +893,14 @@ int mmci_dmae_prep_data(struct mmci_host *host,
+ int mmci_dmae_start(struct mmci_host *host, unsigned int *datactrl)
  {
- 	struct kstat st;
+ 	struct mmci_dmae_priv *dmae = host->dma_priv;
++	int ret;
  
--	if (!vfs_lstat(path, &st) && (st.mode ^ fmode) & S_IFMT) {
-+	if (kern_stat(path, &st, AT_SYMLINK_NOFOLLOW) &&
-+	    (st.mode ^ fmode) & S_IFMT) {
- 		if (S_ISDIR(st.mode))
- 			kern_rmdir(path);
- 		else
+ 	host->dma_in_progress = true;
+-	dmaengine_submit(dmae->desc_current);
++	ret = dma_submit_error(dmaengine_submit(dmae->desc_current));
++	if (ret < 0) {
++		host->dma_in_progress = false;
++		return ret;
++	}
+ 	dma_async_issue_pending(dmae->cur);
+ 
+ 	*datactrl |= MCI_DPSM_DMAENABLE;
+diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+index 833236ecb31e6..89ab73343cf30 100644
+--- a/drivers/mmc/host/mmci.h
++++ b/drivers/mmc/host/mmci.h
+@@ -278,7 +278,11 @@ struct mmci_host;
+  * @stm32_clkdiv: true if using a STM32-specific clock divider algorithm
+  * @datactrl_mask_ddrmode: ddr mode mask in datactrl register.
+  * @datactrl_mask_sdio: SDIO enable mask in datactrl register
+- * @datactrl_blksz: block size in power of two
++ * @datactrl_blocksz: block size in power of two
++ * @datactrl_any_blocksz: true if block any block sizes are accepted by
++ *		  hardware, such as with some SDIO traffic that send
++ *		  odd packets.
++ * @dma_power_of_2: DMA only works with blocks that are a power of 2.
+  * @datactrl_first: true if data must be setup before send command
+  * @datacnt_useless: true if you could not use datacnt register to read
+  *		     remaining data
+@@ -323,6 +327,8 @@ struct variant_data {
+ 	unsigned int		datactrl_mask_ddrmode;
+ 	unsigned int		datactrl_mask_sdio;
+ 	unsigned int		datactrl_blocksz;
++	u8			datactrl_any_blocksz:1;
++	u8			dma_power_of_2:1;
+ 	u8			datactrl_first:1;
+ 	u8			datacnt_useless:1;
+ 	u8			st_sdio:1;
 -- 
-2.27.0
+2.25.1
+
+
 
