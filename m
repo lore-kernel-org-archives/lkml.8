@@ -2,116 +2,220 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED7FC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7203C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F64C206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262484;
-	bh=tcGMKR5WdAThsy1xT6ryAEhkxohIpEi3AlS1Ix3p688=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iI1mTiQXV3Y3afQix6vOfvZ4PqHIRAlWnCnP8q9kgy15P703oSsGzkKZonsaaH28M
-	 65d08YthQYQHdpRbEBYH9Tsc/4CcUDXdQfW/DmYwr7Pnj5A4YoGZ7TFneVKFInWCQN
-	 bKvfwTentgIxPQizzy2zbhMpTxPIuq8z9Av/lRFs=
+	by mail.kernel.org (Postfix) with ESMTP id B6E872070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gmt3XCN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388766AbgGTQ2D (ORCPT
+        id S1732015AbgGTQ2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:28:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732245AbgGTP7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:28:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731666AbgGTP7e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 11:59:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA1762176B;
-        Mon, 20 Jul 2020 15:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260772;
-        bh=tcGMKR5WdAThsy1xT6ryAEhkxohIpEi3AlS1Ix3p688=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w3TpsZvjYEQCY9IuuKIropNm4/SrMcG7q3appc0b5863zFYX5MrwmjlQqTQbzJFlu
-         akLE7f9g5q1D5ldOX4RN4otdzqjRBkZtow7HCUFUh2ejJh3D1PfMEEnSu9dhiKswM2
-         RqMJ+0Y9BkJHv7ig9Na0uuIwG4b/1cqI0KnqqImc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30BCCC0619D2;
+        Mon, 20 Jul 2020 08:59:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=XtKbJfUY0htwIU/78gyJOqreH1PlwtUCpyJDhG740TM=; b=gmt3XCN9feAo1YAuGdu9navR+G
+        8BrdFglp2VOV/+CP/I4h7VZqAxt52C+A7ctdwsWXbFOltzFgEKz846CyO9VrYlRdfpYkU4xd+PAuW
+        LgrGo6cHCPgDJB507alf5CX42A5EegxZ9ovUT6foN390oAxMUcosqR99cnzqR1pe2kQBYwU50f5RC
+        0OGPdRmoMLVWbqIB05Cok6t1GBHF+MZh6n89jSVhKOLf6AVkYGs3KBoh93LdT8OCvKZbyla9XApna
+        ThMQyWW9hkZ4zdOYt8sU8EiX/VhCNy/RXg3sV9AZLfpiWWJYlsPtam8GUWvCEq+iL83QglPDRvT4h
+        Fe6fpQTA==;
+Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxYCO-0007q7-9Q; Mon, 20 Jul 2020 15:59:28 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 090/215] ACPI: video: Use native backlight on Acer TravelMate 5735Z
-Date:   Mon, 20 Jul 2020 17:36:12 +0200
-Message-Id: <20200720152824.488069546@linuxfoundation.org>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH 14/24] fs: add a kern_mknod helper
+Date:   Mon, 20 Jul 2020 17:58:52 +0200
+Message-Id: <20200720155902.181712-15-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
-References: <20200720152820.122442056@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200720155902.181712-1-hch@lst.de>
+References: <20200720155902.181712-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Menzel <pmenzel@molgen.mpg.de>
+Add a simple helper perform a mknod with a kernel space file name and use
+it in the early init code instead of relying on the implicit
+set_fs(KERNEL_DS) there.  To do so push the getname from do_mknodat into the
+callers.  Remove the now unused ksys_mknod.
 
-[ Upstream commit c41c36e900a337b4132b12ccabc97f5578248b44 ]
-
-Currently, changing the brightness of the internal display of the Acer
-TravelMate 5735Z does not work. Pressing the function keys or changing the
-slider, GNOME Shell 3.36.2 displays the OSD (five steps), but the
-brightness does not change.
-
-The Acer TravelMate 5735Z shipped with Windows 7 and as such does not
-trigger our "win8 ready" heuristic for preferring the native backlight
-interface.
-
-Still ACPI backlight control doesn't work on this model, where as the
-native (intel_video) backlight interface does work by adding
-`acpi_backlight=native` or `acpi_backlight=none` to Linux’ command line.
-
-So, add a quirk to force using native backlight control on this model.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=207835
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/acpi/video_detect.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ fs/internal.h            |  2 --
+ fs/namei.c               | 18 +++++++++++++-----
+ include/linux/fs.h       |  1 +
+ include/linux/syscalls.h |  9 ---------
+ init/do_mounts.h         |  2 +-
+ init/initramfs.c         |  2 +-
+ init/noinitramfs.c       |  5 ++---
+ 7 files changed, 18 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index 8daeeb5e3eb67..5bcb4c01ec5f0 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -345,6 +345,16 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
- 		DMI_MATCH(DMI_BOARD_NAME, "JV50"),
- 		},
- 	},
-+	{
-+	 /* https://bugzilla.kernel.org/show_bug.cgi?id=207835 */
-+	 .callback = video_detect_force_native,
-+	 .ident = "Acer TravelMate 5735Z",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate 5735Z"),
-+		DMI_MATCH(DMI_BOARD_NAME, "BA51_MV"),
-+		},
-+	},
+diff --git a/fs/internal.h b/fs/internal.h
+index 722d33a66d9645..1e7a72bd183e63 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -62,8 +62,6 @@ extern int filename_lookup(int dfd, struct filename *name, unsigned flags,
+ 			   struct path *path, struct path *root);
+ extern int vfs_path_lookup(struct dentry *, struct vfsmount *,
+ 			   const char *, unsigned int, struct path *);
+-long do_mknodat(int dfd, const char __user *filename, umode_t mode,
+-		unsigned int dev);
+ long do_rmdir(int dfd, const char __user *pathname);
+ long do_unlinkat(int dfd, struct filename *name);
+ long do_symlinkat(const char __user *oldname, int newdfd,
+diff --git a/fs/namei.c b/fs/namei.c
+index 3545623495d1f4..de97edac21849d 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3584,7 +3584,7 @@ static int may_mknod(umode_t mode)
+ 	}
+ }
  
- 	/*
- 	 * Desktops which falsely report a backlight and which our heuristics
+-long do_mknodat(int dfd, const char __user *filename, umode_t mode,
++static int do_mknodat(int dfd, struct filename *name, umode_t mode,
+ 		unsigned int dev)
+ {
+ 	struct dentry *dentry;
+@@ -3594,9 +3594,9 @@ long do_mknodat(int dfd, const char __user *filename, umode_t mode,
+ 
+ 	error = may_mknod(mode);
+ 	if (error)
+-		return error;
++		goto out_putname;
+ retry:
+-	dentry = user_path_create(dfd, filename, &path, lookup_flags);
++	dentry = filename_create(dfd, name, &path, lookup_flags);
+ 	if (IS_ERR(dentry))
+ 		return PTR_ERR(dentry);
+ 
+@@ -3625,18 +3625,26 @@ long do_mknodat(int dfd, const char __user *filename, umode_t mode,
+ 		lookup_flags |= LOOKUP_REVAL;
+ 		goto retry;
+ 	}
++out_putname:
++	if (!IS_ERR(name))
++		putname(name);
+ 	return error;
+ }
+ 
++int kern_mknod(const char *filename, umode_t mode, unsigned int dev)
++{
++	return do_mknodat(AT_FDCWD, getname_kernel(filename), mode, dev);
++}
++
+ SYSCALL_DEFINE4(mknodat, int, dfd, const char __user *, filename, umode_t, mode,
+ 		unsigned int, dev)
+ {
+-	return do_mknodat(dfd, filename, mode, dev);
++	return do_mknodat(dfd, getname(filename), mode, dev);
+ }
+ 
+ SYSCALL_DEFINE3(mknod, const char __user *, filename, umode_t, mode, unsigned, dev)
+ {
+-	return do_mknodat(AT_FDCWD, filename, mode, dev);
++	return do_mknodat(AT_FDCWD, getname(filename), mode, dev);
+ }
+ 
+ int vfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 3bbeeadf2ddd98..846a21a9b3e14c 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3678,5 +3678,6 @@ int __init kern_chown(const char *filename, uid_t user, gid_t group, int flag);
+ int __init kern_chmod(const char *filename, umode_t mode);
+ int __init kern_utimes(const char *filename, struct timespec64 *tv, int flags);
+ int kern_mkdir(const char *pathname, umode_t mode);
++int kern_mknod(const char *filename, umode_t mode, unsigned int dev);
+ 
+ #endif /* _LINUX_FS_H */
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 6aa1cd200425a4..3dfcae351a077d 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1293,15 +1293,6 @@ static inline long ksys_symlink(const char __user *oldname,
+ 	return do_symlinkat(oldname, AT_FDCWD, newname);
+ }
+ 
+-extern long do_mknodat(int dfd, const char __user *filename, umode_t mode,
+-		       unsigned int dev);
+-
+-static inline long ksys_mknod(const char __user *filename, umode_t mode,
+-			      unsigned int dev)
+-{
+-	return do_mknodat(AT_FDCWD, filename, mode, dev);
+-}
+-
+ extern int do_linkat(int olddfd, const char __user *oldname, int newdfd,
+ 		     const char __user *newname, int flags);
+ 
+diff --git a/init/do_mounts.h b/init/do_mounts.h
+index c855b3f0e06d19..b9ec1d522f0ce1 100644
+--- a/init/do_mounts.h
++++ b/init/do_mounts.h
+@@ -16,7 +16,7 @@ extern int root_mountflags;
+ static inline int create_dev(char *name, dev_t dev)
+ {
+ 	ksys_unlink(name);
+-	return ksys_mknod(name, S_IFBLK|0600, new_encode_dev(dev));
++	return kern_mknod(name, S_IFBLK|0600, new_encode_dev(dev));
+ }
+ 
+ #ifdef CONFIG_BLK_DEV_RAM
+diff --git a/init/initramfs.c b/init/initramfs.c
+index 40b97ca5fe8cde..f32226d0388100 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -351,7 +351,7 @@ static int __init do_name(void)
+ 	} else if (S_ISBLK(mode) || S_ISCHR(mode) ||
+ 		   S_ISFIFO(mode) || S_ISSOCK(mode)) {
+ 		if (maybe_link() == 0) {
+-			ksys_mknod(collected, mode, rdev);
++			kern_mknod(collected, mode, rdev);
+ 			kern_chown(collected, uid, gid, 0);
+ 			kern_chmod(collected, mode);
+ 			do_utime(collected, mtime);
+diff --git a/init/noinitramfs.c b/init/noinitramfs.c
+index 89109c1d633adb..8048777874e4f1 100644
+--- a/init/noinitramfs.c
++++ b/init/noinitramfs.c
+@@ -21,9 +21,8 @@ static int __init default_rootfs(void)
+ 	if (err < 0)
+ 		goto out;
+ 
+-	err = ksys_mknod((const char __user __force *) "/dev/console",
+-			S_IFCHR | S_IRUSR | S_IWUSR,
+-			new_encode_dev(MKDEV(5, 1)));
++	err = kern_mknod("/dev/console", S_IFCHR | S_IRUSR | S_IWUSR,
++			 new_encode_dev(MKDEV(5, 1)));
+ 	if (err < 0)
+ 		goto out;
+ 
 -- 
-2.25.1
-
-
+2.27.0
 
