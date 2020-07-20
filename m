@@ -2,135 +2,87 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10037C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C222AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E64F52176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E602176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jm0wsL/N";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PhOAz/NP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgGTJW6 convert rfc822-to-8bit (ORCPT
+        id S1728112AbgGTJXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:22:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbgGTJW6 (ORCPT
+        Mon, 20 Jul 2020 05:23:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56320 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728017AbgGTJXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:22:58 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A7B8C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:22:58 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jxS0B-00035o-7c; Mon, 20 Jul 2020 11:22:27 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jxS06-0004dK-6S; Mon, 20 Jul 2020 11:22:22 +0200
-Message-ID: <9c2d6c888817880974f850622b14905a9338b60e.camel@pengutronix.de>
-Subject: Re: [PATCH V2 1/3] reset: imx7: Support module build
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Anson Huang <Anson.Huang@nxp.com>, catalin.marinas@arm.com,
-        will@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        bjorn.andersson@linaro.org, leoyang.li@nxp.com, vkoul@kernel.org,
-        geert+renesas@glider.be, olof@lixom.net, treding@nvidia.com,
-        gustavo.pimentel@synopsys.com, amurray@thegoodpenguin.co.uk,
-        vidyas@nvidia.com, xiaowei.bao@nxp.com, jonnyc@amazon.com,
-        hayashi.kunihiko@socionext.com, eswara.kota@linux.intel.com,
-        krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Date:   Mon, 20 Jul 2020 11:22:22 +0200
-In-Reply-To: <1593443129-18766-1-git-send-email-Anson.Huang@nxp.com>
-References: <1593443129-18766-1-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 20 Jul 2020 05:23:16 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595236993;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=g9BNAc85U7zjpSEDSfX62xvbyUEcp+gIOP471mP4nTA=;
+        b=jm0wsL/NI+UtXEk9215WIQhOEpwW4iQZptuYBnRfUdN9VoE0HgdaQQciiNlYcYG6WkvR/F
+        NxMF7kCpLhkU2Nw8tqyG7jHj0dltSxf57M9+WzCOHOCwEZufuEbt7v1j7neTIMsLjirP0R
+        df1nWCPIY+LYytI1h5+2XP0nn0Y+6nRwtOHk7rPMFJZwhMyADGZ+M+IlyroTyryi7SzRZ/
+        7YnJcBpxisaMFjqLA4/N9AkE0H0OQcrh6K/zLhHox/5JHAY57WDLbKF9Z/JJ43+GhKk53b
+        VLIB++aFNksw2F9hRxu7IfjiCh8uzvulz2EZX+fB2YG06C1KpDZC0iHYsC3t7g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595236993;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=g9BNAc85U7zjpSEDSfX62xvbyUEcp+gIOP471mP4nTA=;
+        b=PhOAz/NPRfnvR/VW+21DZgtdobYVbCKiQuopwntd9GWEaikRV4Y6q7S5ncz/S60pmTn2dD
+        vvQMaYZ5uDN+f1Bg==
+To:     Andy Lutomirski <luto@kernel.org>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kernel@collabora.com,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Paul Gofman <gofmanp@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        "open list\:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v4 1/2] kernel: Implement selective syscall userspace redirection
+In-Reply-To: <CALCETrWdCN5KsRUkrb8VoYGRBhy71P-MAHGWhuJ5y4Z3vByyvg@mail.gmail.com>
+References: <20200716193141.4068476-1-krisman@collabora.com> <20200716193141.4068476-2-krisman@collabora.com> <CALCETrWdCN5KsRUkrb8VoYGRBhy71P-MAHGWhuJ5y4Z3vByyvg@mail.gmail.com>
+Date:   Mon, 20 Jul 2020 11:23:13 +0200
+Message-ID: <874kq2o7zy.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-06-29 at 23:05 +0800, Anson Huang wrote:
-> Add module device table, author, description and license to support
-> module build, and CONFIG_RESET_IMX7 is changed to default 'y' ONLY
-> for i.MX7D, other platforms need to select it in defconfig.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
-> 	- make it default 'y' for SOC_IMX7D;
-> 	- add module author, description;
-> 	- use device_initcall instead of builtin_platform_driver() to support
-> 	  module unload.
-> ---
->  drivers/reset/Kconfig      |  5 +++--
->  drivers/reset/reset-imx7.c | 14 ++++++++++++--
->  2 files changed, 15 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index d9efbfd..19f9773 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -65,9 +65,10 @@ config RESET_HSDK
->  	  This enables the reset controller driver for HSDK board.
->  
->  config RESET_IMX7
-> -	bool "i.MX7/8 Reset Driver" if COMPILE_TEST
-> +	tristate "i.MX7/8 Reset Driver"
->  	depends on HAS_IOMEM
-> -	default SOC_IMX7D || (ARM64 && ARCH_MXC)
-> +	depends on SOC_IMX7D || (ARM64 && ARCH_MXC) || COMPILE_TEST
-> +	default y if SOC_IMX7D
->  	select MFD_SYSCON
->  	help
->  	  This enables the reset controller driver for i.MX7 SoCs.
-> diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
-> index d170fe6..c710f789 100644
-> --- a/drivers/reset/reset-imx7.c
-> +++ b/drivers/reset/reset-imx7.c
-> @@ -8,7 +8,7 @@
->   */
->  
->  #include <linux/mfd/syscon.h>
-> -#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/reset-controller.h>
-> @@ -386,6 +386,7 @@ static const struct of_device_id imx7_reset_dt_ids[] = {
->  	{ .compatible = "fsl,imx8mp-src", .data = &variant_imx8mp },
->  	{ /* sentinel */ },
->  };
-> +MODULE_DEVICE_TABLE(of, imx7_reset_dt_ids);
->  
->  static struct platform_driver imx7_reset_driver = {
->  	.probe	= imx7_reset_probe,
-> @@ -394,4 +395,13 @@ static struct platform_driver imx7_reset_driver = {
->  		.of_match_table	= imx7_reset_dt_ids,
->  	},
->  };
-> -builtin_platform_driver(imx7_reset_driver);
-> +
-> +static int __init imx7_reset_init(void)
-> +{
-> +	return platform_driver_register(&imx7_reset_driver);
-> +}
-> +device_initcall(imx7_reset_init);
+Andy Lutomirski <luto@kernel.org> writes:
+> On Thu, Jul 16, 2020 at 12:31 PM Gabriel Krisman Bertazi
+> <krisman@collabora.com> wrote:
+> The amount of syscall entry wiring that arches need to do is IMO
+> already a bit out of hand.  Should we instead rename TIF_SECCOMP to
+> TIF_SYSCALL_INTERCEPTION and have one generic callback that handles
+> seccomp and this new thing?
 
-Shouldn't this use module_platform_driver instead?
+The right way to go is to consolidate all the stupidly different
+entry/exit work handling implementations and have exactly one in generic
+code, i.e. what I posted a few days ago.
 
-regards
-Philipp
+Then we can make new features only available in the generic version by
+hiding the new functionality in the core code and not exposing the
+functions to architecture implementations.
+
+Making it easy for architectures to keep their own variant forever just
+proliferates the mess we have right now.
+
+Thanks,
+
+        tglx
