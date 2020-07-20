@@ -2,52 +2,51 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1BFC433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 364AD2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58CBF22CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259892;
-	bh=1juGMQQm5Ka5WMyJpEl87U3CHACYAqPJ+oTZO7rdE30=;
+	s=default; t=1595259895;
+	bh=dxPAn9gjsJi3cfQmbFjDRfi/Ywh6j3TDJZWaFzsP95U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PLRopGO8Klh1BUdZe47Yujs5kVULhE1+W+U02caJ1VVWGjj7amVYrgZAsx90+0IvE
-	 ZfZrhVcFsVvMheLxMDfy5dGuIH+nN0226xNaNZapAfuIvIBko/zCB8uRKIQwmEYqVk
-	 u7ab7E/JcVXXH1GkhaeyDNIio4LrDR5s9neHFv0Y=
+	b=VRBdK/UJ5UVew8TD/3DiBpr2DUUExbhU1OEMypsYBiPqalw9iLt6w+nEEAIHzffBP
+	 70YOoYUPxXvwgJQ6tPrB5kPQ6uu3EOKEqUfm7jZ182mGMsWyAJ9t+YdgdY/BH3MuR2
+	 WrLRKBomcipcpg6rdnGZslddiu5BRmZX4yFYW44g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730454AbgGTPov (ORCPT
+        id S1730463AbgGTPox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:44:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38872 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:44:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730441AbgGTPos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:44:48 -0400
+        id S1730447AbgGTPot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:44:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DBB52176B;
-        Mon, 20 Jul 2020 15:44:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88FED2065E;
+        Mon, 20 Jul 2020 15:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259886;
-        bh=1juGMQQm5Ka5WMyJpEl87U3CHACYAqPJ+oTZO7rdE30=;
+        s=default; t=1595259889;
+        bh=dxPAn9gjsJi3cfQmbFjDRfi/Ywh6j3TDJZWaFzsP95U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=khDFd8TDhp5Qit5OCMMfb0DCYuf04DwTWxVSNcbH6X2uDdIZtpRTpgrL7EGzUlL/5
-         Fa4ihGEr75jYkH+YI+rBrOVIeg6D9VFR2MdKX/eYjUNr9U15RponuRYQE/kny3nwuX
-         s7IYYOgWvkx3e0BLyJ+8uNp0ngrcwf8PtD7FKono=
+        b=WTMnzJBJ+MzSp2UrOZzanoP0FRy4k3RL2r9/jXvKqMSLwuYHCh+QU90Iz/EAebDs9
+         Q4OB59HCkZ5VebqEctR5k1eXzBQsPX0U/i7qJvdNEOjU4VTOq9Wg2swoU9ybpxxH+4
+         MUrfXry+D5rYlrUv34CINRBVK77/dOP29y1AlwCY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 021/125] arm64: kgdb: Fix single-step exception handling oops
-Date:   Mon, 20 Jul 2020 17:36:00 +0200
-Message-Id: <20200720152804.012614041@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Scull <ascull@google.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.14 030/125] KVM: arm64: Stop clobbering x0 for HVC_SOFT_RESTART
+Date:   Mon, 20 Jul 2020 17:36:09 +0200
+Message-Id: <20200720152804.435058832@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -60,115 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+From: Andrew Scull <ascull@google.com>
 
-[ Upstream commit 8523c006264df65aac7d77284cc69aac46a6f842 ]
+commit b9e10d4a6c9f5cbe6369ce2c17ebc67d2e5a4be5 upstream.
 
-After entering kdb due to breakpoint, when we execute 'ss' or 'go' (will
-delay installing breakpoints, do single-step first), it won't work
-correctly, and it will enter kdb due to oops.
+HVC_SOFT_RESTART is given values for x0-2 that it should installed
+before exiting to the new address so should not set x0 to stub HVC
+success or failure code.
 
-It's because the reason gotten in kdb_stub() is not as expected, and it
-seems that the ex_vector for single-step should be 0, like what arch
-powerpc/sh/parisc has implemented.
+Fixes: af42f20480bf1 ("arm64: hyp-stub: Zero x0 on successful stub handling")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andrew Scull <ascull@google.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200706095259.1338221-1-ascull@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Before the patch:
-Entering kdb (current=0xffff8000119e2dc0, pid 0) on processor 0 due to Keyboard Entry
-[0]kdb> bp printk
-Instruction(i) BP #0 at 0xffff8000101486cc (printk)
-    is enabled   addr at ffff8000101486cc, hardtype=0 installed=0
-
-[0]kdb> g
-
-/ # echo h > /proc/sysrq-trigger
-
-Entering kdb (current=0xffff0000fa878040, pid 266) on processor 3 due to Breakpoint @ 0xffff8000101486cc
-[3]kdb> ss
-
-Entering kdb (current=0xffff0000fa878040, pid 266) on processor 3 Oops: (null)
-due to oops @ 0xffff800010082ab8
-CPU: 3 PID: 266 Comm: sh Not tainted 5.7.0-rc4-13839-gf0e5ad491718 #6
-Hardware name: linux,dummy-virt (DT)
-pstate: 00000085 (nzcv daIf -PAN -UAO)
-pc : el1_irq+0x78/0x180
-lr : __handle_sysrq+0x80/0x190
-sp : ffff800015003bf0
-x29: ffff800015003d20 x28: ffff0000fa878040
-x27: 0000000000000000 x26: ffff80001126b1f0
-x25: ffff800011b6a0d8 x24: 0000000000000000
-x23: 0000000080200005 x22: ffff8000101486cc
-x21: ffff800015003d30 x20: 0000ffffffffffff
-x19: ffff8000119f2000 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000000000000 x14: 0000000000000000
-x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000000 x10: 0000000000000000
-x9 : 0000000000000000 x8 : ffff800015003e50
-x7 : 0000000000000002 x6 : 00000000380b9990
-x5 : ffff8000106e99e8 x4 : ffff0000fadd83c0
-x3 : 0000ffffffffffff x2 : ffff800011b6a0d8
-x1 : ffff800011b6a000 x0 : ffff80001130c9d8
-Call trace:
- el1_irq+0x78/0x180
- printk+0x0/0x84
- write_sysrq_trigger+0xb0/0x118
- proc_reg_write+0xb4/0xe0
- __vfs_write+0x18/0x40
- vfs_write+0xb0/0x1b8
- ksys_write+0x64/0xf0
- __arm64_sys_write+0x14/0x20
- el0_svc_common.constprop.2+0xb0/0x168
- do_el0_svc+0x20/0x98
- el0_sync_handler+0xec/0x1a8
- el0_sync+0x140/0x180
-
-[3]kdb>
-
-After the patch:
-Entering kdb (current=0xffff8000119e2dc0, pid 0) on processor 0 due to Keyboard Entry
-[0]kdb> bp printk
-Instruction(i) BP #0 at 0xffff8000101486cc (printk)
-    is enabled   addr at ffff8000101486cc, hardtype=0 installed=0
-
-[0]kdb> g
-
-/ # echo h > /proc/sysrq-trigger
-
-Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to Breakpoint @ 0xffff8000101486cc
-[0]kdb> g
-
-Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to Breakpoint @ 0xffff8000101486cc
-[0]kdb> ss
-
-Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to SS trap @ 0xffff800010082ab8
-[0]kdb>
-
-Fixes: 44679a4f142b ("arm64: KGDB: Add step debugging support")
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200509214159.19680-2-liwei391@huawei.com
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/kgdb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kvm/hyp-init.S |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index 470afb3a04ca9..7fd7a9cd86161 100644
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -258,7 +258,7 @@ static int kgdb_step_brk_fn(struct pt_regs *regs, unsigned int esr)
- 	if (user_mode(regs) || !kgdb_single_step)
- 		return DBG_HOOK_ERROR;
+--- a/arch/arm64/kvm/hyp-init.S
++++ b/arch/arm64/kvm/hyp-init.S
+@@ -147,11 +147,15 @@ ENTRY(__kvm_handle_stub_hvc)
  
--	kgdb_handle_exception(1, SIGTRAP, 0, regs);
-+	kgdb_handle_exception(0, SIGTRAP, 0, regs);
- 	return DBG_HOOK_HANDLED;
- }
- NOKPROBE_SYMBOL(kgdb_step_brk_fn);
--- 
-2.25.1
-
+ 1:	cmp	x0, #HVC_RESET_VECTORS
+ 	b.ne	1f
+-reset:
++
+ 	/*
+-	 * Reset kvm back to the hyp stub. Do not clobber x0-x4 in
+-	 * case we coming via HVC_SOFT_RESTART.
++	 * Set the HVC_RESET_VECTORS return code before entering the common
++	 * path so that we do not clobber x0-x2 in case we are coming via
++	 * HVC_SOFT_RESTART.
+ 	 */
++	mov	x0, xzr
++reset:
++	/* Reset kvm back to the hyp stub. */
+ 	mrs	x5, sctlr_el2
+ 	ldr	x6, =SCTLR_ELx_FLAGS
+ 	bic	x5, x5, x6		// Clear SCTL_M and etc
+@@ -162,7 +166,6 @@ reset:
+ 	/* Install stub vectors */
+ 	adr_l	x5, __hyp_stub_vectors
+ 	msr	vbar_el2, x5
+-	mov	x0, xzr
+ 	eret
+ 
+ 1:	/* Bad stub call */
 
 
