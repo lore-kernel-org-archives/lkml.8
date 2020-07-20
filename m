@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59292C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29664C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3697420684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0771B207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261939;
-	bh=bTZfeAWR2pBaRtAlL/mVt3xpRqcquaU//lEAkN+K/r4=;
+	s=default; t=1595261942;
+	bh=3DIIuFvolpU1ejUNjM2ZXn6NWLeSQpweIh1U63zDc4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o1pMdGT7MuJibv4ckty78l7sdn6YBnBebINGsmCXFHmGXSL6EA2iR5Ev3bIlhDjIr
-	 wpieR4AioH40aVtvYZcNSYBHN+92SnI/vbTfO3uj//Y4G7/MFeatfSfaghSgv2AxAM
-	 YWBzXahgUtKibX+bBYJcJdowVye4NWU+ALQ2lZvg=
+	b=LvMLUMjBrUToWx3C0RePEYx92s6q43WBFrriMCwKAlYE0xXX5BdpNnK26PlJjZ+AQ
+	 cSboFn4q2BS1nWFV/8u7VdA5o1IKfW/2q00jgOb55WUbNoZLBIDN92p6/eJCiXZRib
+	 OGSwV4V0lFUboQMPKQrEhwKMQLQHdZgbMrleNa4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730222AbgGTQM6 (ORCPT
+        id S2387998AbgGTQMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:12:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52668 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:12:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733224AbgGTQMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:12:55 -0400
+        id S2387985AbgGTQMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:12:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C009E2065E;
-        Mon, 20 Jul 2020 16:12:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B5C120684;
+        Mon, 20 Jul 2020 16:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261575;
-        bh=bTZfeAWR2pBaRtAlL/mVt3xpRqcquaU//lEAkN+K/r4=;
+        s=default; t=1595261556;
+        bh=3DIIuFvolpU1ejUNjM2ZXn6NWLeSQpweIh1U63zDc4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tt+J/o2xOx+G3sJemFad7Q8OKUdTOgVFgTPSDm3zdaE7F0GudqjO4bu6tURXTKvSU
-         LFe46AopPDKOGIPngYgiDnpmn27xQej3wHGe1l4Ok14x2Dhrx8LXHk09mZ+v353/7n
-         WaWJ9xgIyIRZUScwjlHpj5LgVPMKtkEJRzpoUqVU=
+        b=lMPBrbVY40RBdcgE4vh3PmDgFO7xTex1VDtsdHScQ167nyAox1Cl5zrCV1vx0mCfp
+         KGxqyg0QK3lhGwFuGj2ePq1ygiUwKJIBBNOSk4KjFuwX3sflnfXG36K/knl2BtlUvS
+         rxQuW4PMdY0t46n/zaOLUJe1/qvvHrksVEREGZwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.7 165/244] USB: serial: cypress_m8: enable Simply Automated UPB PIM
-Date:   Mon, 20 Jul 2020 17:37:16 +0200
-Message-Id: <20200720152833.690464083@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.7 141/244] mtd: rawnand: oxnas: Unregister all devices on error
+Date:   Mon, 20 Jul 2020 17:36:52 +0200
+Message-Id: <20200720152832.559295181@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,75 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hilliard <james.hilliard1@gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit 5c45d04c5081c1830d674f4d22d4400ea2083afe upstream.
+commit b60391eb17b2956ff2fc4c348e5a464da21ff9cb upstream.
 
-This is a UPB (Universal Powerline Bus) PIM (Powerline Interface Module)
-which allows for controlling multiple UPB compatible devices from Linux
-using the standard serial interface.
+On error, the oxnas probe path just frees the device which failed and
+aborts the probe, leaving unreleased resources.
 
-Based on vendor application source code there are two different models
-of USB based PIM devices in addition to a number of RS232 based PIM's.
+Fix this situation by calling mtd_device_unregister()/nand_cleanup()
+on these.
 
-The vendor UPB application source contains the following USB ID's:
-
-	#define USB_PCS_VENDOR_ID 0x04b4
-	#define USB_PCS_PIM_PRODUCT_ID 0x5500
-
-	#define USB_SAI_VENDOR_ID 0x17dd
-	#define USB_SAI_PIM_PRODUCT_ID 0x5500
-
-The first set of ID's correspond to the PIM variant sold by Powerline
-Control Systems while the second corresponds to the Simply Automated
-Incorporated PIM. As the product ID for both of these match the default
-cypress HID->COM RS232 product ID it assumed that they both use an
-internal variant of this HID->COM RS232 converter hardware. However
-as the vendor ID for the Simply Automated variant is different we need
-to also add it to the cypress_M8 driver so that it is properly
-detected.
-
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-Link: https://lore.kernel.org/r/20200616220403.1807003-1-james.hilliard1@gmail.com
-Cc: stable@vger.kernel.org
-[ johan: amend VID define entry ]
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: 668592492409 ("mtd: nand: Add OX820 NAND Support")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-38-miquel.raynal@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/cypress_m8.c |    2 ++
- drivers/usb/serial/cypress_m8.h |    3 +++
- 2 files changed, 5 insertions(+)
+ drivers/mtd/nand/raw/oxnas_nand.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/usb/serial/cypress_m8.c
-+++ b/drivers/usb/serial/cypress_m8.c
-@@ -59,6 +59,7 @@ static const struct usb_device_id id_tab
+--- a/drivers/mtd/nand/raw/oxnas_nand.c
++++ b/drivers/mtd/nand/raw/oxnas_nand.c
+@@ -82,6 +82,7 @@ static int oxnas_nand_probe(struct platf
+ 	struct resource *res;
+ 	int count = 0;
+ 	int err = 0;
++	int i;
  
- static const struct usb_device_id id_table_cyphidcomrs232[] = {
- 	{ USB_DEVICE(VENDOR_ID_CYPRESS, PRODUCT_ID_CYPHIDCOM) },
-+	{ USB_DEVICE(VENDOR_ID_SAI, PRODUCT_ID_CYPHIDCOM) },
- 	{ USB_DEVICE(VENDOR_ID_POWERCOM, PRODUCT_ID_UPS) },
- 	{ USB_DEVICE(VENDOR_ID_FRWD, PRODUCT_ID_CYPHIDCOM_FRWD) },
- 	{ }						/* Terminating entry */
-@@ -73,6 +74,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(VENDOR_ID_DELORME, PRODUCT_ID_EARTHMATEUSB) },
- 	{ USB_DEVICE(VENDOR_ID_DELORME, PRODUCT_ID_EARTHMATEUSB_LT20) },
- 	{ USB_DEVICE(VENDOR_ID_CYPRESS, PRODUCT_ID_CYPHIDCOM) },
-+	{ USB_DEVICE(VENDOR_ID_SAI, PRODUCT_ID_CYPHIDCOM) },
- 	{ USB_DEVICE(VENDOR_ID_POWERCOM, PRODUCT_ID_UPS) },
- 	{ USB_DEVICE(VENDOR_ID_FRWD, PRODUCT_ID_CYPHIDCOM_FRWD) },
- 	{ USB_DEVICE(VENDOR_ID_DAZZLE, PRODUCT_ID_CA42) },
---- a/drivers/usb/serial/cypress_m8.h
-+++ b/drivers/usb/serial/cypress_m8.h
-@@ -25,6 +25,9 @@
- #define VENDOR_ID_CYPRESS		0x04b4
- #define PRODUCT_ID_CYPHIDCOM		0x5500
- 
-+/* Simply Automated HID->COM UPB PIM (using Cypress PID 0x5500) */
-+#define VENDOR_ID_SAI			0x17dd
+ 	/* Allocate memory for the device structure (and zero it) */
+ 	oxnas = devm_kzalloc(&pdev->dev, sizeof(*oxnas),
+@@ -161,6 +162,13 @@ err_cleanup_nand:
+ 	nand_cleanup(chip);
+ err_release_child:
+ 	of_node_put(nand_np);
 +
- /* FRWD Dongle - a GPS sports watch */
- #define VENDOR_ID_FRWD			0x6737
- #define PRODUCT_ID_CYPHIDCOM_FRWD	0x0001
++	for (i = 0; i < oxnas->nchips; i++) {
++		chip = oxnas->chips[i];
++		WARN_ON(mtd_device_unregister(nand_to_mtd(chip)));
++		nand_cleanup(chip);
++	}
++
+ err_clk_unprepare:
+ 	clk_disable_unprepare(oxnas->clk);
+ 	return err;
 
 
