@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50916C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2564C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3CA20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E852206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261433;
-	bh=u0ikDbyX9GOqbbaXAuuFaHnxV4s/a95o1MGijX8LtEs=;
+	s=default; t=1595261436;
+	bh=fvKTvQppfJjOPm9ev9R0LLaRbKSdKwZuxaEYJ+Ekcjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xNzu8euw4IkMVDiPKYzIBgoKiIJzhSu6EO47h6PJ9jRGsX/mC5ERNnBVbk7iR5wZa
-	 sE+DLox2gABEtko2NoED4B1EWddozNkauBgaHJk/A+lXOy2J2D6DtNELiuL1WIBrfq
-	 +RVzC+s66jftQavIpchVUcvvp1ZwEOiju8b2tAvY=
+	b=ChrEfoFW40Ffq3qh/VSyioSmj0r0re1mSwRGVTthRtQb6n0wix7AGckhkR1dVp767
+	 gdqRP98IAuqmCzb0TbI/9f4gYffLSiuiyahmIy0ZVqLuaybChKexdNwsafbZbwsffK
+	 dBtBW/LOBPAOcm3joslF8ewUOgZt9tJIyhTOs4ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731822AbgGTQKb (ORCPT
+        id S1732954AbgGTQKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:10:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:10:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731840AbgGTQK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:10:28 -0400
+        id S2387656AbgGTQK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:10:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B48C02064B;
-        Mon, 20 Jul 2020 16:10:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 081D42065E;
+        Mon, 20 Jul 2020 16:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261428;
-        bh=u0ikDbyX9GOqbbaXAuuFaHnxV4s/a95o1MGijX8LtEs=;
+        s=default; t=1595261425;
+        bh=fvKTvQppfJjOPm9ev9R0LLaRbKSdKwZuxaEYJ+Ekcjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d0v46QKZVDQF0JjXUGKd+NpPB74F6SBLpP3WH5Bv60+3FgPdc3od23Nc65IhW7b0a
-         N1i92nWyTEmYQSGz/Ug4EvO6F0JfllfmFMzHTVVpKlYwl266UfXBJKkHyrSvJumnSy
-         c300lGDGjB7JNkf/EjZsE78dobPkRwwXhDivq2eE=
+        b=fXbZnC8n4w50Cy4shKIIZ+oZ/0Jm5OusJ6anO9Dc/B3iWobqY5rDcuMiZLAZnTCoV
+         CvCe4XDV/tCuQIiz/Rh0gz/qHaE5a70e42uzXUuUwmWoi2UDni0Eex7npP1pkkR0Va
+         klUVRpnF/Y446u0jqJAVNfKIYMitxVM93t8fhDFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 072/244] net: ethernet: mvneta: Add back interface mode validation
-Date:   Mon, 20 Jul 2020 17:35:43 +0200
-Message-Id: <20200720152829.265726913@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@gmail.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 081/244] soundwire: intel: fix memory leak with devm_kasprintf
+Date:   Mon, 20 Jul 2020 17:35:52 +0200
+Message-Id: <20200720152829.695257062@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -61,78 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 41c2b6b4f0f807803bb49f65835d136941a70f85 ]
+[ Upstream commit bf6d6e68d2028a2d82f4c106f50ec75cc1e6ef89 ]
 
-When writing the serdes configuration register was moved to
-mvneta_config_interface() the whole code block was removed from
-mvneta_port_power_up() in the assumption that its only purpose was to
-write the serdes configuration register. As mentioned by Russell King
-its purpose was also to check for valid interface modes early so that
-later in the driver we do not have to care for unexpected interface
-modes.
-Add back the test to let the driver bail out early on unhandled
-interface modes.
+The dais are allocated with devm_kcalloc() but their name isn't
+resourced managed and never freed. Fix by also using devm_ for the dai
+names as well.
 
-Fixes: b4748553f53f ("net: ethernet: mvneta: Fix Serdes configuration for SoCs without comphy")
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: c46302ec554c5 ('soundwire: intel: Add audio DAI ops')
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Daniel Baluta <daniel.baluta@gmail.com>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
+Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Link: https://lore.kernel.org/r/20200617163536.17401-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvneta.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ drivers/soundwire/intel.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index 7faeb4bfc282e..b2da295e2fc01 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -5003,10 +5003,18 @@ static void mvneta_conf_mbus_windows(struct mvneta_port *pp,
- }
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index 3c83e76c6bf90..cab425070e641 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -930,8 +930,9 @@ static int intel_create_dai(struct sdw_cdns *cdns,
  
- /* Power up the port */
--static void mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
-+static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
- {
- 	/* MAC Cause register should be cleared */
- 	mvreg_write(pp, MVNETA_UNIT_INTR_CAUSE, 0);
-+
-+	if (phy_mode != PHY_INTERFACE_MODE_QSGMII &&
-+	    phy_mode != PHY_INTERFACE_MODE_SGMII &&
-+	    !phy_interface_mode_is_8023z(phy_mode) &&
-+	    !phy_interface_mode_is_rgmii(phy_mode))
-+		return -EINVAL;
-+
-+	return 0;
- }
- 
- /* Device initialization routine */
-@@ -5192,7 +5200,11 @@ static int mvneta_probe(struct platform_device *pdev)
- 	if (err < 0)
- 		goto err_netdev;
- 
--	mvneta_port_power_up(pp, phy_mode);
-+	err = mvneta_port_power_up(pp, pp->phy_interface);
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "can't power up port\n");
-+		return err;
-+	}
- 
- 	/* Armada3700 network controller does not support per-cpu
- 	 * operation, so only single NAPI should be initialized.
-@@ -5346,7 +5358,11 @@ static int mvneta_resume(struct device *device)
- 		}
- 	}
- 	mvneta_defaults_set(pp);
--	mvneta_port_power_up(pp, pp->phy_interface);
-+	err = mvneta_port_power_up(pp, pp->phy_interface);
-+	if (err < 0) {
-+		dev_err(device, "can't power up port\n");
-+		return err;
-+	}
- 
- 	netif_device_attach(dev);
+ 	 /* TODO: Read supported rates/formats from hardware */
+ 	for (i = off; i < (off + num); i++) {
+-		dais[i].name = kasprintf(GFP_KERNEL, "SDW%d Pin%d",
+-					 cdns->instance, i);
++		dais[i].name = devm_kasprintf(cdns->dev, GFP_KERNEL,
++					      "SDW%d Pin%d",
++					      cdns->instance, i);
+ 		if (!dais[i].name)
+ 			return -ENOMEM;
  
 -- 
 2.25.1
