@@ -2,301 +2,229 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9456C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E70C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9743220709
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:08:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ulzf4J2v"
+	by mail.kernel.org (Postfix) with ESMTP id 06B0920709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:09:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgGTIIG (ORCPT
+        id S1726758AbgGTIJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:08:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgGTIIF (ORCPT
+        Mon, 20 Jul 2020 04:09:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3712 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725815AbgGTIJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:08:05 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85136C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 01:08:05 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a15so1895330wrh.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 01:08:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1yXIPlBUH+EmDdZmp8j+ju0kw8iWENSTR87nU7J3gic=;
-        b=Ulzf4J2vqLs8NwLETT7bcd+u4HAAwBmYUgFdDA6OzvG7chP9Dc2iYoP4a8g0hXIW4j
-         uSSxTog/gDT29zrDukJMfV+m6rPQiFTeOmhUFeIPbqB8Cuo8d2kRH+nCv+Ce3TgIQ13s
-         rW0RNcsEE6bjYWi3sW2IPbXdNppOguJKq5J4UWv1LMYrAWJBNfpCF8J/f0CJlvBeAwVY
-         hONG9p634fn5Bgtts2YlmScANiWJ3Qllujg13dBWuHVyZHhKM9aVRAqdoUQVyPCeqehR
-         9NsRXV+LWdRhodtQySz6C4jgES2XKiZ+l0/mbutdRvezINxHHFxPwlJ7d/DD9rmZ4lU+
-         Js2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1yXIPlBUH+EmDdZmp8j+ju0kw8iWENSTR87nU7J3gic=;
-        b=ha0sdumhw5mq+oNSN2HMITo2sOw9nB/OUWwn51VybeYW4o0hNLkUk2azScaC6UxNGb
-         Blemf80dlX5ZqRatCjX2wVLGqs0Qi4rsHKqUBXsrvgm9t3YF8XTv30UMbEZgwY0ER8rS
-         Sy1lJdhTWx7WxJZZcMZKWteoVRVOOUEPep87p48HE1B3av+jTzRvXxdbGdeHNiUMr6lI
-         V57L/mqNNIPPshbeCqJg8cwN1fwW2a5CP6sZpIVWxs/3mhmQ27XdXca9qx1W9h/yd5GO
-         x7TmsHBQpvR92DD02hbySFD9PHt2KOBlaoO7MJvhsyg0oilBY6kwIVBsecKJkAPG51ol
-         Y8og==
-X-Gm-Message-State: AOAM531wGx3DjRqpPwq1QbWEzFa4gwCRry3UxIfh+y86HOYrpI7w/x2P
-        xr3SKfKXs2MKRRWefLNHHc49SA==
-X-Google-Smtp-Source: ABdhPJz7eMPdqXW2QxkgN3v4OfLKvoMLVgo05mEGxQDWE0w9I97CQ/L+CeevJ5aEqAiM+mZL+O5AGg==
-X-Received: by 2002:adf:f54b:: with SMTP id j11mr21195819wrp.206.1595232484043;
-        Mon, 20 Jul 2020 01:08:04 -0700 (PDT)
-Received: from holly.lan (82-132-214-103.dab.02.net. [82.132.214.103])
-        by smtp.gmail.com with ESMTPSA id s19sm8354717wrb.54.2020.07.20.01.08.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 01:08:03 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 09:07:59 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        Patch Tracking <patches@linaro.org>
-Subject: Re: [PATCH v2 2/3] kgdb: Use the kprobe blocklist to limit single
- stepping
-Message-ID: <20200720080759.tyq4rq4qxmkwdk2g@holly.lan>
-References: <20200716151943.2167652-1-daniel.thompson@linaro.org>
- <20200716151943.2167652-3-daniel.thompson@linaro.org>
- <CAD=FV=UDVjwy5=OiDCrMbn8o9N5GGMiG8JnL0j+9fy3m5Vf4Eg@mail.gmail.com>
+        Mon, 20 Jul 2020 04:09:42 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06K84XEP013647;
+        Mon, 20 Jul 2020 04:09:34 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32bvqub1g0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 04:09:33 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06K85oXn019395;
+        Mon, 20 Jul 2020 04:09:32 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32bvqub1f7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 04:09:32 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06K89MTr008984;
+        Mon, 20 Jul 2020 08:09:31 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04wdc.us.ibm.com with ESMTP id 32brq8qfm1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 08:09:31 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06K89RB162652750
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 08:09:27 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2F76F6E04C;
+        Mon, 20 Jul 2020 08:09:30 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA91F6E053;
+        Mon, 20 Jul 2020 08:09:25 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.114.242])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jul 2020 08:09:25 +0000 (GMT)
+Subject: Re: [PATCHv3 00/19] perf metric: Add support to reuse metric
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+References: <20200719181320.785305-1-jolsa@kernel.org>
+ <dbe59791-937d-de95-4ba0-c34e7a1cd273@linux.ibm.com>
+ <20200720072237.GC760733@krava>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <6cb72b48-5244-9faf-a9e5-67858c732b83@linux.ibm.com>
+Date:   Mon, 20 Jul 2020 13:39:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=UDVjwy5=OiDCrMbn8o9N5GGMiG8JnL0j+9fy3m5Vf4Eg@mail.gmail.com>
+In-Reply-To: <20200720072237.GC760733@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_04:2020-07-17,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ bulkscore=0 impostorscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 adultscore=0 clxscore=1015 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007200056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 03:39:51PM -0700, Doug Anderson wrote:
-> Hi,
+
+
+On 7/20/20 12:52 PM, Jiri Olsa wrote:
+> On Mon, Jul 20, 2020 at 12:14:00PM +0530, kajoljain wrote:
+>>
+>>
+>> On 7/19/20 11:43 PM, Jiri Olsa wrote:
+>>> hi,
+>>> this patchset is adding the support to reused metric in
+>>> another metric.
+>>>
+>>> For example, to define IPC by using CPI with change like:
+>>>
+>>>      {
+>>>          "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+>>> -        "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+>>> +        "MetricExpr": "1/CPI",
+>>>          "MetricGroup": "TopDownL1",
+>>>          "MetricName": "IPC"
+>>>      },
+>>>
+>>> I won't be able to find all the possible places we could
+>>> use this at, so I wonder you guys (who was asking for this)
+>>> would try it and come up with comments if there's something
+>>> missing or we could already use it at some places.
+>>>
+>>> It's based on Arnaldo's tmp.perf/core.
+>>>
+>>> v3 changes:
+>>>   - added some acks
+>>>   - some patches got merged
+>>>   - added missing zalloc include [John Garry]
+>>>   - added ids array outside the egroup object [Ian]
+>>>   - removed wrong m->has_constraint assignment [Ian]
+>>>   - renamed 'list' to 'metric_list' [Ian]
+>>>   - fixed group metric and added test for it [Paul A. Clarke]
+>>>   - fixed memory leak [Arnaldo]
+>>>   - using lowercase keys for metrics in hashmap, because jevents
+>>>     converts metric_expr to lowercase
+>>>
+>>> Also available in here:
+>>>   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+>>>   perf/metric
+>>>
+>>
+>> Hi Jiri,
+>>    I am trying to review these patches and also test it in power box. I am testing your `perf/metric` branch.
+>> With your current patches,some of hv-24x7 events not giving appropriate result
+>> while doing "--metric-only" command. I can't see corresponding output for all chips.
 > 
-> On Thu, Jul 16, 2020 at 8:20 AM Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
-> >
-> > If we are running in a part of the kernel that dislikes breakpoint
-> > debugging then it is very unlikely to be safe to single step. Add
-> > some safety rails to prevent stepping through anything on the kprobe
-> > blocklist.
-> >
-> > As part of this kdb_ss() will no longer set the DOING_SS flags when it
-> > requests a step. This is safe because this flag is already redundant,
-> > returning KDB_CMD_SS is all that is needed to request a step (and this
-> > saves us from having to unset the flag if the safety check fails).
-> >
-> > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > ---
-> >  include/linux/kgdb.h        |  1 +
-> >  kernel/debug/debug_core.c   | 13 +++++++++++++
-> >  kernel/debug/gdbstub.c      | 10 +++++++++-
-> >  kernel/debug/kdb/kdb_bp.c   |  8 ++------
-> >  kernel/debug/kdb/kdb_main.c | 10 ++++++++--
-> >  5 files changed, 33 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-> > index 7caba4604edc..aefe823998cb 100644
-> > --- a/include/linux/kgdb.h
-> > +++ b/include/linux/kgdb.h
-> > @@ -214,6 +214,7 @@ extern void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc);
-> >
-> >  /* Optional functions. */
-> >  extern int kgdb_validate_break_address(unsigned long addr);
-> > +extern int kgdb_validate_single_step_address(unsigned long addr);
-> >  extern int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt);
-> >  extern int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt);
-> >
-> > diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-> > index 133a361578dc..4b59bcc90c5d 100644
-> > --- a/kernel/debug/debug_core.c
-> > +++ b/kernel/debug/debug_core.c
-> > @@ -208,6 +208,19 @@ int __weak kgdb_validate_break_address(unsigned long addr)
-> >         return err;
-> >  }
-> >
-> > +int __weak kgdb_validate_single_step_address(unsigned long addr)
-> > +{
-> > +       /*
-> > +        * Disallow stepping when we are executing code that is marked
-> > +        * as unsuitable for breakpointing... stepping won't be safe
-> > +        * either!
-> > +        */
-> > +       if (kgdb_within_blocklist(addr))
-> > +               return -EINVAL;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >  unsigned long __weak kgdb_arch_pc(int exception, struct pt_regs *regs)
-> >  {
-> >         return instruction_pointer(regs);
-> > diff --git a/kernel/debug/gdbstub.c b/kernel/debug/gdbstub.c
-> > index 61774aec46b4..f1c88007cc2b 100644
-> > --- a/kernel/debug/gdbstub.c
-> > +++ b/kernel/debug/gdbstub.c
-> > @@ -1041,8 +1041,16 @@ int gdb_serial_stub(struct kgdb_state *ks)
-> >                         if (tmp == 0)
-> >                                 break;
-> >                         /* Fall through - on tmp < 0 */
-> > -               case 'c': /* Continue packet */
-> >                 case 's': /* Single step packet */
-> > +                       error = kgdb_validate_single_step_address(
-> > +                                       kgdb_arch_pc(ks->ex_vector,
-> > +                                                    ks->linux_regs));
+> hi,
+> is that just for --metric-only option?
+
+Hi Jiri,
+   So basically, this issue is for both with/without metric-only option. Without metric-only option,
+I am not able to see aggregate result for other chips.
+
+This is with upstream kernel:
+
+command# ./perf stat -M PowerBUS_Frequency -C 0 -I 1000
+#           time             counts unit events
+     1.000076370          7,807,494      hv_24x7/pm_pb_cyc,chip=0/ #      2.0 GHz  PowerBUS_Frequency_0
+     1.000076370          7,807,456      hv_24x7/pm_pb_cyc,chip=1/ #      2.0 GHz  PowerBUS_Frequency_1
+     2.000259226          7,807,490      hv_24x7/pm_pb_cyc,chip=0/ #      2.0 GHz  PowerBUS_Frequency_0
+     2.000259226          7,799,691      hv_24x7/pm_pb_cyc,chip=1/ #      1.9 GHz  PowerBUS_Frequency_1
+^C     2.745238246          5,816,562      hv_24x7/pm_pb_cyc,chip=0/ #      1.5 GHz  PowerBUS_Frequency_0
+     2.745238246          5,816,580      hv_24x7/pm_pb_cyc,chip=1/ #      1.5 GHz  PowerBUS_Frequency_1
+
+ Performance counter stats for 'CPU(s) 0':
+
+        21,431,546      hv_24x7/pm_pb_cyc,chip=0/ #      5.4 GHz  PowerBUS_Frequency_0
+        21,423,727      hv_24x7/pm_pb_cyc,chip=1/ #      5.4 GHz  PowerBUS_Frequency_1
+
+This is with your perf/metric branch:
+command# ./perf stat -M PowerBUS_Frequency -C 0 -I 1000
+assertion failed at util/metricgroup.c:709
+#           time             counts unit events
+     1.000054545          7,807,505      hv_24x7/pm_pb_cyc,chip=0/ #      2.0 GHz  PowerBUS_Frequency_0
+     1.000054545          7,807,485      hv_24x7/pm_pb_cyc,chip=1/                                   
+     2.000232761          7,807,500      hv_24x7/pm_pb_cyc,chip=0/ #      2.0 GHz  PowerBUS_Frequency_0
+     2.000232761          7,807,478      hv_24x7/pm_pb_cyc,chip=1/                                   
+     3.000363762          7,799,665      hv_24x7/pm_pb_cyc,chip=0/ #      1.9 GHz  PowerBUS_Frequency_0
+     3.000363762          7,807,502      hv_24x7/pm_pb_cyc,chip=1/                                   
+^C     3.259418599          2,022,150      hv_24x7/pm_pb_cyc,chip=0/ #      0.5 GHz  PowerBUS_Frequency_0
+     3.259418599          2,022,164      hv_24x7/pm_pb_cyc,chip=1/                                   
+
+ Performance counter stats for 'CPU(s) 0':
+
+        25,436,820      hv_24x7/pm_pb_cyc,chip=0/ #      6.4 GHz  PowerBUS_Frequency_0
+        25,444,629      hv_24x7/pm_pb_cyc,chip=1/                                   
+
+       3.259505529 seconds time elapsed
+Thanks,
+Kajol Jain
 > 
-> I'm a little confused.  Isn't this like saying "if
-> (i_am_standing_in_acid) dont_step_into_acid"?
-
-I describe it more as:
-
-    if (we_know_there_is_acid_nearby)
-        dont_step_forward
-
-It is possible we are currently stepping in acid but it is also possible
-(and reasonably likely) that we haven't stepped in it yet but will do so
-soon.
-
-
-> Specifically you're checking the _current_ PC to see if it's in the
-> blocklist, right?  ...but you've already (effectively) dropped into
-> the debugger at that location, so if it really was a problem wouldn't
-> we already be in trouble?
-
-The basic use case is where someone is stepping and we reach a PC that
-would be blocked for a breakpoint. This will typically be due (although
-I think it does generalize) to a function call and the safety rail will
-be reached after we have jumped to the blocked function but before we
-actually execute any instructions within it.
-
-Or putting it another way, there is no reason to worry if we start
-somewhere "safe" and start stepping towards something on the blocklist.
-We won't melt our shoes!
-
-There are more complex cases when we drop into the debugger in the
-middle of blocked code with a not-breakpoint-or-step trap. You're right
-that we'd been in touble and the debugger it probably a bit fragile.
-However that certainly doesn't mean blocking stepping at this point
-is a bad thing!
-
-
-> What you really want (I think?) is to know if the instruction that
-> you're stepping into is in the blocklist, right?  ...but you can't
-> know that because it requires a full instruction emulator (that's why
-> CPUs have "single step mode").
-
-As above, I don't think this is needed but if there was an architecture
-that did then it can override the default implementation if it wanted
-to.
-
- 
-> I guess you get a marginal benefit if someone manually set their
-> instruction pointer to be an address in the middle of a blocklisted
-> function and then trying to step, but I'm not sure that's really
-> something we need to add code for?
-
-Perhaps off-topic given this isn't why we add the satefy rails but...
-
-I think people who directly set PC should be regarded as very
-sophisticated users (and therefore do not need safety rails) so I have
-little interest in honouring the blocklist for direct writes to the
-PC. More generally sophisticated users should be able to find
-KGDB_HONOUR_BLOCKLIST pretty quickly if they need to!
-
-
-> It feels like the right solution is that the architecture-specific
-> single-step code should simply consider a single-step through a
-> blocklisted area to be a step through one giant instruction.
-
-For kgdb this feature is already implemented (next or finish).
-
-
-> > +                       if (error != 0) {
-> > +                               error_packet(remcom_out_buffer, error);
-> > +                               break;
-> > +                       }
-> > +                       fallthrough;
-> > +               case 'c': /* Continue packet */
-> >                         if (kgdb_contthread && kgdb_contthread != current) {
-> >                                 /* Can't switch threads in kgdb */
-> >                                 error_packet(remcom_out_buffer, -EINVAL);
-> > diff --git a/kernel/debug/kdb/kdb_bp.c b/kernel/debug/kdb/kdb_bp.c
-> > index ec4940146612..4853c413f579 100644
-> > --- a/kernel/debug/kdb/kdb_bp.c
-> > +++ b/kernel/debug/kdb/kdb_bp.c
-> > @@ -507,18 +507,14 @@ static int kdb_bc(int argc, const char **argv)
-> >   *     None.
-> >   * Remarks:
-> >   *
-> > - *     Set the arch specific option to trigger a debug trap after the next
-> > - *     instruction.
-> > + *     KDB_CMD_SS is a command that our caller acts on to effect the step.
-> >   */
-> >
-> >  static int kdb_ss(int argc, const char **argv)
-> >  {
-> >         if (argc != 0)
-> >                 return KDB_ARGCOUNT;
-> > -       /*
-> > -        * Set trace flag and go.
-> > -        */
-> > -       KDB_STATE_SET(DOING_SS);
-> > +
-> >         return KDB_CMD_SS;
-> >  }
-> >
-> > diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-> > index 5c7949061671..cd40bf780b93 100644
-> > --- a/kernel/debug/kdb/kdb_main.c
-> > +++ b/kernel/debug/kdb/kdb_main.c
-> > @@ -1189,7 +1189,7 @@ static int kdb_local(kdb_reason_t reason, int error, struct pt_regs *regs,
-> >                      kdb_dbtrap_t db_result)
-> >  {
-> >         char *cmdbuf;
-> > -       int diag;
-> > +       int diag, res;
-> >         struct task_struct *kdb_current =
-> >                 kdb_curr_task(raw_smp_processor_id());
-> >
-> > @@ -1346,10 +1346,16 @@ static int kdb_local(kdb_reason_t reason, int error, struct pt_regs *regs,
-> >                 }
-> >                 if (diag == KDB_CMD_GO
-> >                  || diag == KDB_CMD_CPU
-> > -                || diag == KDB_CMD_SS
-> >                  || diag == KDB_CMD_KGDB)
-> >                         break;
-> >
-> > +               if (diag == KDB_CMD_SS) {
-> > +                       res = kgdb_validate_single_step_address(instruction_pointer(regs));
+>>
+>> This is output on power9 machine:
+>>
+>> Without your patches on upstream kernel:
+>>
+>> command# ./perf stat --metric-only -M PowerBUS_Frequency -I 1000 -C 0
+>> #           time GHz  PowerBUS_Frequency_0 GHz  PowerBUS_Frequency_1 
+>>      1.000073877                        2.0                        2.0 
+>>      2.000240551                        2.0                        1.9 
+>> ^C     2.452590532                        0.9                        0.9 
+>>
+>>  Performance counter stats for 'CPU(s) 0':
+>>
+>>                        4.8                        4.8 
+>>
+>>        2.452654834 seconds time elapsed
+>>
+>> With your patches on perf/metric branch:
+>>
+>> command# ./perf stat --metric-only -M PowerBUS_Frequency -I 1000 -C 0
+>> assertion failed at util/metricgroup.c:709
+>> #           time GHz  PowerBUS_Frequency_0 
+>>      1.000073875                        2.0 
+>>      2.000380706                        2.0 
+>> ^C     2.658962182                        1.3 
+>>
+>>  Performance counter stats for 'CPU(s) 0':
+>>
+>>                        5.2 
+>>
+>> Please let me know, if I am missing something. 
 > 
-> Is it legit to use instruction_pointer() directly?  Should you be
-> calling kgdb_arch_pc()  ...or does that just account for having just
-> hit a breakpoint?
-
-I decided between kgdb_arch_pc() and instruction_pointer() based on the
-usage of regs in the rest of this file (which is exclusively
-instruction_pointer() ). I didn't want the lookup to mismatch what the
-user has been told in the console.
-
-On the other hand, I did cross my mind that every PC lookup could be
-broken and I made a note for the future...
-
-
-Daniel.
+> hum, I'll need to add test for metric with hv-24x7 events
+> 
+> thanks,
+> jirka
+> 
