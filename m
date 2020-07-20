@@ -2,57 +2,51 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF98C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D85C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7322064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0984F22CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261402;
-	bh=za21BTmLuUrLxiNm+BJdCpjd7tubdIm6RmXG4QxQBx8=;
+	s=default; t=1595261404;
+	bh=xl9nwhS+TDJzVbY2Eaky79FtTQ1uMPn+x8ZkN+mNhXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h5aH+VOaqz40gzXHS3KsFHGo8AmO2ffmheAMFYelYFiSBVVER6RxnufRIKtUDDeim
-	 EyG4+3SPXsqPdhWttuUelBC07HEsyshEvwQvp3uAGWwYxj9FwngXaIxC8YCSbbXkdG
-	 WhmeeSOaRWPi/lOR513OeMQNwcsFVWUJElzJEhkY=
+	b=XOr6lODU62P6MVP4swUqdv4Cg+s8kiXZ+3BA2/N49gbgpaj0LbmGunHXOGaJzz4Xy
+	 SEP2PhryEiWSL+FAC87mmpOA0ZLcY1j0GhW/fBEsY2E9kWjXHLzUr8/gMCjCTzVNwv
+	 YMUupaS8wABLwT95lInOzzlUaQh9gNCs5NjDQJv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387609AbgGTQKA (ORCPT
+        id S1732779AbgGTQKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:10:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48102 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:10:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732900AbgGTQJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:09:55 -0400
+        id S2387607AbgGTQKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:10:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED6A42065E;
-        Mon, 20 Jul 2020 16:09:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 162AD2064B;
+        Mon, 20 Jul 2020 16:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261395;
-        bh=za21BTmLuUrLxiNm+BJdCpjd7tubdIm6RmXG4QxQBx8=;
+        s=default; t=1595261400;
+        bh=xl9nwhS+TDJzVbY2Eaky79FtTQ1uMPn+x8ZkN+mNhXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pFm0ShJ6R0Fsc6VsDFbYy09m6sDv+7eCSCQlCWvyV/CaVe/wd25bS9OdPl1qTVXGk
-         VuwXL7WW/vaz4u41WS6rSR1cNLpkouPcr/H/7sSml59I8Pfx5pCU0OYPIHAPOXR7YM
-         ThSyuzjjWeIR22+lVCw2ouxFu8rg6Nw4WaQliRQk=
+        b=sJRi4CvBtonEK/49ce5E3EPfLP31W0vfV3n2klJamgVgrcIwUDNfRWeLlGydbpQ7n
+         uxV7I+KIVRj4dfmfgMsH0n/KQEZX1yKFW7z/HO3eXONKjKKGIQCx408D3yj0trBJOU
+         Fi5x3U0jn3LNSbaanANgN5uaYYEt2lENfqN24qLM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Anatoly Pugachev <matorola@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 100/244] serial: core: Initialise spin lock before use in uart_configure_port()
-Date:   Mon, 20 Jul 2020 17:36:11 +0200
-Message-Id: <20200720152830.589414341@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.7 075/244] io_uring: fix recvmsg memory leak with buffer selection
+Date:   Mon, 20 Jul 2020 17:35:46 +0200
+Message-Id: <20200720152829.407965865@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -65,85 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-[ Upstream commit f743061a85f5e9989df22ccbf07c80c98fc90e08 ]
+commit 681fda8d27a66f7e65ff7f2d200d7635e64a8d05 upstream.
 
-The comment near to uart_port_spin_lock_init() says:
+io_recvmsg() doesn't free memory allocated for struct io_buffer. This can
+causes a leak when used with automatic buffer selection.
 
-  Ensure that the serial console lock is initialised early.
-  If this port is a console, then the spinlock is already initialised.
-
-and there is nothing about enabled or disabled consoles. The commit
-a3cb39d258ef ("serial: core: Allow detach and attach serial device
-for console") made a change, which follows the comment, and also to
-prevent reinitialisation of the lock in use, when user detaches and
-attaches back the same console device. But this change discovers
-another issue, that uart_add_one_port() tries to access a spin lock
-that now may be uninitialised. This happens when a driver expects
-the serial core to register a console on its behalf. In this case
-we must initialise a spin lock before use.
-
-Fixes: a3cb39d258ef ("serial: core: Allow detach and attach serial device for console")
-Reported-by: Marc Zyngier <maz@kernel.org>
-Reported-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Reported-by: Anatoly Pugachev <matorola@gmail.com>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Tony Lindgren <tony@atomide.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Link: https://lore.kernel.org/r/20200706214903.56148-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/tty/serial/serial_core.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ fs/io_uring.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 66a5e2faf57ea..ca5e6212bf1ce 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -1916,6 +1916,12 @@ static inline bool uart_console_enabled(struct uart_port *port)
- 	return uart_console(port) && (port->cons->flags & CON_ENABLED);
- }
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -3884,10 +3884,16 @@ static int io_recvmsg(struct io_kiocb *r
  
-+static void __uart_port_spin_lock_init(struct uart_port *port)
-+{
-+	spin_lock_init(&port->lock);
-+	lockdep_set_class(&port->lock, &port_lock_key);
-+}
-+
- /*
-  * Ensure that the serial console lock is initialised early.
-  * If this port is a console, then the spinlock is already initialised.
-@@ -1925,8 +1931,7 @@ static inline void uart_port_spin_lock_init(struct uart_port *port)
- 	if (uart_console(port))
- 		return;
+ 		ret = __sys_recvmsg_sock(sock, &kmsg->msg, req->sr_msg.msg,
+ 						kmsg->uaddr, flags);
+-		if (force_nonblock && ret == -EAGAIN)
+-			return io_setup_async_msg(req, kmsg);
++		if (force_nonblock && ret == -EAGAIN) {
++			ret = io_setup_async_msg(req, kmsg);
++			if (ret != -EAGAIN)
++				kfree(kbuf);
++			return ret;
++		}
+ 		if (ret == -ERESTARTSYS)
+ 			ret = -EINTR;
++		if (kbuf)
++			kfree(kbuf);
+ 	}
  
--	spin_lock_init(&port->lock);
--	lockdep_set_class(&port->lock, &port_lock_key);
-+	__uart_port_spin_lock_init(port);
- }
- 
- #if defined(CONFIG_SERIAL_CORE_CONSOLE) || defined(CONFIG_CONSOLE_POLL)
-@@ -2372,6 +2377,13 @@ uart_configure_port(struct uart_driver *drv, struct uart_state *state,
- 		/* Power up port for set_mctrl() */
- 		uart_change_pm(state, UART_PM_STATE_ON);
- 
-+		/*
-+		 * If this driver supports console, and it hasn't been
-+		 * successfully registered yet, initialise spin lock for it.
-+		 */
-+		if (port->cons && !(port->cons->flags & CON_ENABLED))
-+			__uart_port_spin_lock_init(port);
-+
- 		/*
- 		 * Ensure that the modem control lines are de-activated.
- 		 * keep the DTR setting that is set in uart_set_options()
--- 
-2.25.1
-
+ 	if (kmsg && kmsg->iov != kmsg->fast_iov)
 
 
