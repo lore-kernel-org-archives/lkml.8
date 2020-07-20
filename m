@@ -2,118 +2,121 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA791C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA9BC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEEAE22CB2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A482622C9D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ztJXSb87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgGTO00 (ORCPT
+        id S1728768AbgGTO0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:26:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:50158 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbgGTO0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:26:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67341D6E;
-        Mon, 20 Jul 2020 07:26:22 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14B763F718;
-        Mon, 20 Jul 2020 07:26:20 -0700 (PDT)
-References: <2c8ef23c-43b4-39d4-8e84-92769c948da9@kernel.org> <20200718171406.GB16791@redhat.com> <20200718174448.4btbjcvp6wbbdgts@wittgenstein> <badcb9d5-f628-2be1-7a72-902cf08010bd@kernel.org> <20200720064326.GA6612@redhat.com> <20200720082657.GC6612@redhat.com> <20200720084106.GJ10769@hirez.programming.kicks-ass.net> <20200720105924.GE43129@hirez.programming.kicks-ass.net> <20200720112623.GF43129@hirez.programming.kicks-ass.net> <jhjwo2yidit.mognet@arm.com> <20200720131747.GD119549@hirez.programming.kicks-ass.net>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     peterz@infradead.org
-Cc:     Oleg Nesterov <oleg@redhat.com>, Jiri Slaby <jirislaby@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        christian@brauner.io, "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Dave Jones <davej@codemonkey.org.uk>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
-In-reply-to: <20200720131747.GD119549@hirez.programming.kicks-ass.net>
-Date:   Mon, 20 Jul 2020 15:26:16 +0100
-Message-ID: <jhjv9iii7p3.mognet@arm.com>
+        Mon, 20 Jul 2020 10:26:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728650AbgGTO0e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 10:26:34 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E4CC0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 07:26:33 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id ga4so18238291ejb.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 07:26:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KAyErvrsmsg2yl8HJaeI8qkyJy7u6qTS/Aw3lCZAIlQ=;
+        b=ztJXSb87r/qQfxKi+7vOos/B89RV26brZQVQ6s1aAVVoG2JdLyuYRol/QYC3/moMz5
+         /F3w7LaaCk4u2rDR1b0RmRFQCnTJsX7Dy2CGHqqZQQne3XLDa9D4O80hbGBDDog9/0C8
+         zpjzS6Z5/bH5iL92Q9bPLoWXNAGl6jQWzteTcz8+JVmyD9AKyoFw6nC0XR0P3EIySCnQ
+         bE+0sJD+i6+OBvRl5os3uQSnSc/jE7Nd/gEftLTbiH6SLrhYS2DVaIIPiLIfDxUg0NnD
+         BVdgRjGXMhvr6p+wqdHhQcz8WDjd//QpVzqk74JLrfTLhUhr4oLLJYfUkDTJMtsaxVRN
+         sl1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KAyErvrsmsg2yl8HJaeI8qkyJy7u6qTS/Aw3lCZAIlQ=;
+        b=YjdzFSjiR9b1ZktyIKX43vVvV+nt0+WCNt4UxitjPP+mF7u0h3p60bGR1YA0Q6HjYi
+         9MRL3eCGeJUT5kaT+Pg7oCCyUjkINN5lso76682YoW+yWP5Dp9DIjYDL1Kw+GyPD9JUZ
+         esoAVeWClIRd6XNoAH8eNQ1CQv5Nr/+XgWy2AgeapnkKgHyNOG2Jrbl2vnaxWjWv2FlE
+         cGQxUK22KNnCK+kBD/hZVJOuiJr+k0sOYXrWOnvUFhLwshlnQRw+QxX+U+NOzGxYECYB
+         S0HZKjsFrzqdOzvNV0zK5CewB4grkHBgyahJ+DzYjPoyBfWWKqsxGV1VxgaDh+CkQFA1
+         zGnA==
+X-Gm-Message-State: AOAM530WABEOeuQ9zuSvDI6RthzMbR0dRWUTuYrX2wosjdPTVOmyaIFH
+        y+oejf/VUvibjyxsDtDJjlJ5iVgylO3+jE2QbL9WFA==
+X-Google-Smtp-Source: ABdhPJw0is1LrzDGO+RSe9ZgSBD3yon69XrfPOGSyQdsM4gQolQ+anP1PVWoq7gNuJoTStTzoel7kjPpeB+rZDstYzI=
+X-Received: by 2002:a17:906:a44:: with SMTP id x4mr21956032ejf.193.1595255192387;
+ Mon, 20 Jul 2020 07:26:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200718154908.1816031-1-drew@beagleboard.org>
+In-Reply-To: <20200718154908.1816031-1-drew@beagleboard.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 20 Jul 2020 16:26:21 +0200
+Message-ID: <CACRpkdapJj5Q3MBKrJkd3CBeJJDuuS-Cj6D=Gk67uyt4O_Oj-A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: core: print gpio in pins debugfs file
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Drew,
 
-On 20/07/20 14:17, peterz@infradead.org wrote:
-> On Mon, Jul 20, 2020 at 01:20:26PM +0100, Valentin Schneider wrote:
->> On 20/07/20 12:26, peterz@infradead.org wrote:
->
->> > +	/*
->> > +	 * We must re-load prev->state in case ttwu_remote() changed it
->> > +	 * before we acquired rq->lock.
->> > +	 */
->> > +	tmp_state = prev->state;
->> > +	if (unlikely(prev_state != tmp_state)) {
->> > +		/*
->> > +		 * ptrace_{,un}freeze_traced() think it is cool to change
->> > +		 * ->state around behind our backs between TASK_TRACED and
->> > +		 *  __TASK_TRACED.
->> > +		 *
->> > +		 * This is safe because this, as well as any __TASK_TRACED
->> > +		 * wakeups are under siglock.
->> > +		 *
->> > +		 * For any other case, a changed prev_state must be to
->> > +		 * TASK_RUNNING, such that when it blocks, the load has
->> > +		 * happened before the smp_mb().
->> > +		 *
->> > +		 * Also see the comment with deactivate_task().
->> > +		 */
->> > +		SCHED_WARN_ON(tmp_state && (prev_state & __TASK_TRACED &&
->> > +					   !(tmp_state & __TASK_TRACED)));
->> > +
->>
->> IIUC if the state changed and isn't TASK_RUNNING it *has* to have
->> __TASK_TRACED, so can't that be
->>
->>   SCHED_WARN_ON(tmp_state && !(tmp_state & __TASK_TRACED));
->
-> Suppose task->state == TASK_UNINTERRUPTIBLE, and task != current, and
-> then someone goes and does task->state = __TASK_TRACED.
->
-> That is, your statement is correct given the current code, but we also
-> want to verify no new code comes along and does something 'creative'.
->
+thanks for this patch, we're going the right direction here
+and creating things that are generically useful.
 
-That is what I was trying to go for; AFAICT your approach only warns if
-__TASK_TRACED gets removed between the two loads (IOW it was already
-there). The way I was seeing it is:
+On Sat, Jul 18, 2020 at 5:53 PM Drew Fustini <drew@beagleboard.org> wrote:
 
-- We only get here if prev_state != tmp_state; IOW we know we raced with
-  something
-- if (tmp_state), then it wasn't with ttwu_remote()
-- thus it must only be with ptrace shenanigans, IOW __TASK_TRACED must be
-  there.
+> pin 103 (PIN103) GPIO-113 44e1099c 00000027 pinctrl-single
+> pin 104 (PIN104) GPIO-114 44e109a0 0000002c pinctrl-single
+(...)
 
-Now, what I suggested still doesn't detect what you pointed out, or some
-crazier thing that sets __TASK_TRACED *and* some other stuff. IIUC the
-ptrace transformation does TASK_TRACED -> __TASK_TRACED, so we could have
-it as:
+Uh oh, that is the global GPIO number that we want to get
+rid of.
 
-  /* TODO: name me */
-  #define foobar TASK_TRACED ^ __TASK_TRACED
+> +               gpio_num = 0;
+> +               list_for_each_entry(range, &pctldev->gpio_ranges, node) {
+> +                       if ((pin >= range->pin_base) &&
+> +                           (pin < (range->pin_base + range->npins)))
+> +                               gpio_num = range->base + (pin - range->pin_base);
 
-  ...
+There should be a break; here should it not?
 
-  /* not TASK_RUNNING; check against allowed transformations
-  SCHED_WARN_ON(tmp_state && ((prev_state ^ tmp_state) & ~foobar));
+> +               }
+> +
+> +               if (gpio_num > 0)
+> +                       seq_printf(s, "GPIO-%u ", gpio_num);
 
+Can we print the gpio_chip name and offset instead?
+I want to discourage the world from thinking about these
+global GPIO numbers.
 
-That said...
+You can fetch the gpio_chip for the range pretty easily
+with
 
-> Or is the heat getting to me?
+struct gpio_chip *chip = gpio_to_chip(gpio_num);
 
-... that may apply to me as well :-)
+Also notice that this code needs to be
+#ifdef CONFIG_GPIOLIB somehow
+(maybe IS_ENABLED() works) because there
+are pin controllers in use without gpiolib believe it
+or not.
+
+Yours,
+Linus Walleij
