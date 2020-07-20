@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B69C433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9C7C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACB352065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1EF022CBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261519;
-	bh=b1wRNHv/dyy9Fznm4/kkK9cKxWRCq9ZfND03vxVq+YM=;
+	s=default; t=1595261523;
+	bh=8nVuL5pP/LK3WooaryO0C8yncwFL5019wyEZ7sCH9sg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YRj51kZytdcI6w+jSy6oPHjmIpkLlRWmEoXFkInFvSj05OrE5GR96zkDdtq4N7M3D
-	 xchXKrGifvI0n3aBhYCYomNbSOUSpDg59s5CWDGQK1bJg1MRAVSMTXaN1qcnzLk5nL
-	 Ojtz/JIG4TPF7z4OJCP0quwNXNjtreg5kaulgLrM=
+	b=m1bG31sZ/h6HwlHjs3z+YfcDxf16gDipBdtLeRKLGUXbgg5Mkxig/YQYpKo1ZpzgD
+	 hj2fT7tGBj4MQaSfrmKz2tagasYZzWvgIE2Ce9eaFCL/Gw9rWo9jOcsQHpwKwa8Hxf
+	 tLlc2MhKJdWq5HHemObOwRxCSTR4ClgO27mX92z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387883AbgGTQL6 (ORCPT
+        id S2387900AbgGTQMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:11:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:12:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387855AbgGTQLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:11:49 -0400
+        id S1733104AbgGTQLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:11:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EDB02065E;
-        Mon, 20 Jul 2020 16:11:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C88082065E;
+        Mon, 20 Jul 2020 16:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261508;
-        bh=b1wRNHv/dyy9Fznm4/kkK9cKxWRCq9ZfND03vxVq+YM=;
+        s=default; t=1595261514;
+        bh=8nVuL5pP/LK3WooaryO0C8yncwFL5019wyEZ7sCH9sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cWi+qm9lEW1YWsOavTMuWxjSApdsToyvwTAjqOWB7VyQevFQgBVigE2YDO/N9WnyD
-         Ip9ZcA6UFSuZxJPgeURrbl/PbthgvIJuretMlVeMBPtRnHjjTWK50s01lqsj+5aNli
-         eziX7bo2iL4RMQFsPsYKbGDKq5SZ7HcjsTncbp2s=
+        b=DGH6/l+WMcI79spwazTeSGKbVgj+sgS281ZMpIV3Vtp1gKiT4a5a5HI5BMqT2m4FF
+         q/CqeyeokhdRXeF8THL8YL6FAZeYVQBFOymtFNcpli2P3z8/Zzgdm3hmu6hhK6kAb3
+         M2Kl3Lgl73WecHy/L5MrxwrHxW77m0Cd6yGnq++o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kao <michael.kao@mediatek.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 110/244] Revert "thermal: mediatek: fix register index error"
-Date:   Mon, 20 Jul 2020 17:36:21 +0200
-Message-Id: <20200720152831.066171211@linuxfoundation.org>
+Subject: [PATCH 5.7 112/244] ARM: dts: socfpga: Align L2 cache-controller nodename with dtschema
+Date:   Mon, 20 Jul 2020 17:36:23 +0200
+Message-Id: <20200720152831.168116408@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -62,128 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit a8f62f183021be389561570ab5f8c701a5e70298 ]
+[ Upstream commit d7adfe5ffed9faa05f8926223086b101e14f700d ]
 
-This reverts commit eb9aecd90d1a39601e91cd08b90d5fee51d321a6
+Fix dtschema validator warnings like:
+    l2-cache@fffff000: $nodename:0:
+        'l2-cache@fffff000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
-The above patch is supposed to fix a register index error on mt2701. It
-is not clear if the problem solved is a hang or just an invalid value
-returned, my guess is the second. The patch introduces, though, a new
-hang on MT8173 device making them unusable. So, seems reasonable, revert
-the patch because introduces a worst issue.
-
-The reason I send a revert instead of trying to fix the issue for MT8173
-is because the information needed to fix the issue is in the datasheet
-and is not public. So I am not really able to fix it.
-
-Fixes the following bug when CONFIG_MTK_THERMAL is set on MT8173
-devices.
-
-[    2.222488] Unable to handle kernel paging request at virtual address ffff8000125f5001
-[    2.230421] Mem abort info:
-[    2.233207]   ESR = 0x96000021
-[    2.236261]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    2.241571]   SET = 0, FnV = 0
-[    2.244623]   EA = 0, S1PTW = 0
-[    2.247762] Data abort info:
-[    2.250640]   ISV = 0, ISS = 0x00000021
-[    2.254473]   CM = 0, WnR = 0
-[    2.257544] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000041850000
-[    2.264251] [ffff8000125f5001] pgd=000000013ffff003, pud=000000013fffe003, pmd=000000013fff9003, pte=006800001100b707
-[    2.274867] Internal error: Oops: 96000021 [#1] PREEMPT SMP
-[    2.280432] Modules linked in:
-[    2.283483] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc6+ #162
-[    2.289914] Hardware name: Google Elm (DT)
-[    2.294003] pstate: 20000005 (nzCv daif -PAN -UAO)
-[    2.298792] pc : mtk_read_temp+0xb8/0x1c8
-[    2.302793] lr : mtk_read_temp+0x7c/0x1c8
-[    2.306794] sp : ffff80001003b930
-[    2.310100] x29: ffff80001003b930 x28: 0000000000000000
-[    2.315404] x27: 0000000000000002 x26: ffff0000f9550b10
-[    2.320709] x25: ffff0000f9550a80 x24: 0000000000000090
-[    2.326014] x23: ffff80001003ba24 x22: 00000000610344c0
-[    2.331318] x21: 0000000000002710 x20: 00000000000001f4
-[    2.336622] x19: 0000000000030d40 x18: ffff800011742ec0
-[    2.341926] x17: 0000000000000001 x16: 0000000000000001
-[    2.347230] x15: ffffffffffffffff x14: ffffff0000000000
-[    2.352535] x13: ffffffffffffffff x12: 0000000000000028
-[    2.357839] x11: 0000000000000003 x10: ffff800011295ec8
-[    2.363143] x9 : 000000000000291b x8 : 0000000000000002
-[    2.368447] x7 : 00000000000000a8 x6 : 0000000000000004
-[    2.373751] x5 : 0000000000000000 x4 : ffff800011295cb0
-[    2.379055] x3 : 0000000000000002 x2 : ffff8000125f5001
-[    2.384359] x1 : 0000000000000001 x0 : ffff0000f9550a80
-[    2.389665] Call trace:
-[    2.392105]  mtk_read_temp+0xb8/0x1c8
-[    2.395760]  of_thermal_get_temp+0x2c/0x40
-[    2.399849]  thermal_zone_get_temp+0x78/0x160
-[    2.404198]  thermal_zone_device_update.part.0+0x3c/0x1f8
-[    2.409589]  thermal_zone_device_update+0x34/0x48
-[    2.414286]  of_thermal_set_mode+0x58/0x88
-[    2.418375]  thermal_zone_of_sensor_register+0x1a8/0x1d8
-[    2.423679]  devm_thermal_zone_of_sensor_register+0x64/0xb0
-[    2.429242]  mtk_thermal_probe+0x690/0x7d0
-[    2.433333]  platform_drv_probe+0x5c/0xb0
-[    2.437335]  really_probe+0xe4/0x448
-[    2.440901]  driver_probe_device+0xe8/0x140
-[    2.445077]  device_driver_attach+0x7c/0x88
-[    2.449252]  __driver_attach+0xac/0x178
-[    2.453082]  bus_for_each_dev+0x78/0xc8
-[    2.456909]  driver_attach+0x2c/0x38
-[    2.460476]  bus_add_driver+0x14c/0x230
-[    2.464304]  driver_register+0x6c/0x128
-[    2.468131]  __platform_driver_register+0x50/0x60
-[    2.472831]  mtk_thermal_driver_init+0x24/0x30
-[    2.477268]  do_one_initcall+0x50/0x298
-[    2.481098]  kernel_init_freeable+0x1ec/0x264
-[    2.485450]  kernel_init+0x1c/0x110
-[    2.488931]  ret_from_fork+0x10/0x1c
-[    2.492502] Code: f9401081 f9400402 b8a67821 8b010042 (b9400042)
-[    2.498599] ---[ end trace e43e3105ed27dc99 ]---
-[    2.503367] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-[    2.511020] SMP: stopping secondary CPUs
-[    2.514941] Kernel Offset: disabled
-[    2.518421] CPU features: 0x090002,25006005
-[    2.522595] Memory Limit: none
-[    2.525644] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]--
-
-Cc: Michael Kao <michael.kao@mediatek.com>
-Fixes: eb9aecd90d1a ("thermal: mediatek: fix register index error")
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200707103412.1010823-1-enric.balletbo@collabora.com
+Fixes: 475dc86d08de ("arm: dts: socfpga: Add a base DTSI for Altera's Arria10 SOC")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/mtk_thermal.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/socfpga.dtsi         | 2 +-
+ arch/arm/boot/dts/socfpga_arria10.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-index 6b7ef1993d7e2..42c9cd0e5f775 100644
---- a/drivers/thermal/mtk_thermal.c
-+++ b/drivers/thermal/mtk_thermal.c
-@@ -594,8 +594,7 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
- 	u32 raw;
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 4f3993cc02279..4510308972209 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -710,7 +710,7 @@ ocram-ecc@ffd08144 {
+ 			};
+ 		};
  
- 	for (i = 0; i < conf->bank_data[bank->id].num_sensors; i++) {
--		raw = readl(mt->thermal_base +
--			    conf->msr[conf->bank_data[bank->id].sensors[i]]);
-+		raw = readl(mt->thermal_base + conf->msr[i]);
+-		L2: l2-cache@fffef000 {
++		L2: cache-controller@fffef000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfffef000 0x1000>;
+ 			interrupts = <0 38 0x04>;
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index 3b8571b8b4129..8f614c4b0e3eb 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -636,7 +636,7 @@ sdr: sdr@ffcfb100 {
+ 			reg = <0xffcfb100 0x80>;
+ 		};
  
- 		temp = raw_to_mcelsius(mt,
- 				       conf->bank_data[bank->id].sensors[i],
-@@ -736,8 +735,7 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
- 
- 	for (i = 0; i < conf->bank_data[num].num_sensors; i++)
- 		writel(conf->sensor_mux_values[conf->bank_data[num].sensors[i]],
--		       mt->thermal_base +
--		       conf->adcpnp[conf->bank_data[num].sensors[i]]);
-+		       mt->thermal_base + conf->adcpnp[i]);
- 
- 	writel((1 << conf->bank_data[num].num_sensors) - 1,
- 	       controller_base + TEMP_MONCTL0);
+-		L2: l2-cache@fffff000 {
++		L2: cache-controller@fffff000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfffff000 0x1000>;
+ 			interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.25.1
 
