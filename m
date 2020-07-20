@@ -2,52 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC20C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C0AC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1702070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D93206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262079;
-	bh=JPe1lrDpA9xuwFElMoTI7X4eMCC3D4qGTTzu5bmtCbg=;
+	s=default; t=1595262091;
+	bh=uS/VHDOeTqAKB0h1mFUTacmcMs+EdrhTXDggYJ5xUOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gDnvOT4KAImpXn1FwMHRpSBUG7ofW485b+Apwqmj9n0glZx7pWFwFZk5TqibqcOf3
-	 qg2J8dXPz7+2/mHuvTxC8AsSx2aIMXDOqTKtHATQ1Emy/ZM0B9YxYj4zRZ/Q8jzusq
-	 1zBqw7lSi8WSiIgVpWoEu/B8yNcufFJgWH9FdmiQ=
+	b=Z1bcPJdOKK1avorYXWXxNEV6oh6jzM46bYiE8wKDDMvNkkwOWvaM1Df6LWARsqSJW
+	 w/wrflJd1tl1HgLVYWOFQjSH3YOtHt9E28eXtTXKa1hzUTO4vsp32JpUEm5O9n8Tg6
+	 DuJAVQO9Pxb9SVYmjqMq7lE9OHTVhcD06Dk9t4gY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388279AbgGTQVR (ORCPT
+        id S1733286AbgGTQIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:21:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46006 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:08:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387404AbgGTQIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:08:32 -0400
+        id S1733265AbgGTQIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:08:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAECA206E9;
-        Mon, 20 Jul 2020 16:08:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E22E222CBB;
+        Mon, 20 Jul 2020 16:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261312;
-        bh=JPe1lrDpA9xuwFElMoTI7X4eMCC3D4qGTTzu5bmtCbg=;
+        s=default; t=1595261295;
+        bh=uS/VHDOeTqAKB0h1mFUTacmcMs+EdrhTXDggYJ5xUOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tkrcc3rPYa/Yyy/hYybYNgPwfShShAOsGgsD6VkHOzUnL2IEB+tZo/XH95CCWMEly
-         LRLe09G4dhLCcSY7O26N4NoAxirU0YFGyBBzc73glAqV52Vk6524p0VxlGnPkb1Bu2
-         tl7viYOgfXf+SG/wf5wjlYkLYvwJvG/MLqKA/Iuw=
+        b=ir0G2ObazGZFMUg7ZJudkWQpPe9KkJv2bQN/gQPy8xgnECco2ivLcMxS4K50h99Dz
+         LwkolcIj4qm4enFNh/MZqBPbbPec7ZXdqC+Msg+oOXeB/S6/qWinY9kVkJABwcy3rI
+         FIlyz/qckIhY5yZZgWqUSQPDM9xYGCFgzTV3XIIU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 069/244] arm64: Add missing sentinel to erratum_1463225
-Date:   Mon, 20 Jul 2020 17:35:40 +0200
-Message-Id: <20200720152829.133440198@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.7 064/244] iio: mma8452: Add missed iio_device_unregister() call in mma8452_probe()
+Date:   Mon, 20 Jul 2020 17:35:35 +0200
+Message-Id: <20200720152828.901124048@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,39 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 09c717c92b52df54918e12cbfe6a4658233fda69 ]
+commit d7369ae1f4d7cffa7574d15e1f787dcca184c49d upstream.
 
-When the erratum_1463225 array was introduced a sentinel at the end was
-missing thus causing a KASAN: global-out-of-bounds in
-is_affected_midr_range_list on arm64 error.
+The function iio_device_register() was called in mma8452_probe().
+But the function iio_device_unregister() was not called after
+a call of the function mma8452_set_freefall_mode() failed.
+Thus add the missed function call for one error case.
 
-Fixes: a9e821b89daa ("arm64: Add KRYO4XX gold CPU cores to erratum list 1463225 and 1418040")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Link: https://lore.kernel.org/linux-arm-kernel/CA+G9fYs3EavpU89-rTQfqQ9GgxAMgMAk7jiiVrfP0yxj5s+Q6g@mail.gmail.com/
-Link: https://lore.kernel.org/r/20200709051345.14544-1-f.fainelli@gmail.com
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 1a965d405fc6 ("drivers:iio:accel:mma8452: added cleanup provision in case of failure.")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/kernel/cpu_errata.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/accel/mma8452.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index dbf266212808e..f9387c1252325 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -778,6 +778,7 @@ static const struct midr_range erratum_1463225[] = {
- 	MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 3, 1),
- 	/* Kryo4xx Gold (rcpe to rfpf) => (r0p0 to r3p1) */
- 	MIDR_RANGE(MIDR_QCOM_KRYO_4XX_GOLD, 0xc, 0xe, 0xf, 0xf),
-+	{},
- };
- #endif
+--- a/drivers/iio/accel/mma8452.c
++++ b/drivers/iio/accel/mma8452.c
+@@ -1685,10 +1685,13 @@ static int mma8452_probe(struct i2c_clie
  
--- 
-2.25.1
-
+ 	ret = mma8452_set_freefall_mode(data, false);
+ 	if (ret < 0)
+-		goto buffer_cleanup;
++		goto unregister_device;
+ 
+ 	return 0;
+ 
++unregister_device:
++	iio_device_unregister(indio_dev);
++
+ buffer_cleanup:
+ 	iio_triggered_buffer_cleanup(indio_dev);
+ 
 
 
