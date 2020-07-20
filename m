@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA030C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D73C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E610206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68E5206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260157;
-	bh=Ii21Y4dB2dtPOuktMfoSercnM/W9406kERuSR4p265M=;
+	s=default; t=1595260161;
+	bh=FvbEbj9zDmGUluItPBrqCuYmOC1pzcSCb26Tocy+TK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PL0l4ayF8nER9EnxCH9oTucIPDXSUIFoR/TvDOTVFzRXbLYDL/i6mw7qKBXewoF/X
-	 KMfHp797aXNfj3K+my1NCdz1OJuUx76iRTi9AuRrEt4gn33w9zqTdS/4vVkbGj+eRE
-	 bU30fc0cuQuwwNXInyAfnprjH/vQFJXzkGCFqPyA=
+	b=X47QqH/vNK9rIzebVBTxtF0E2Jw3kjIHEoSy5SubZXDzJIhMmhOXTbJVmzjkBWkd/
+	 FgIQRwmvY6Cs0HaMhPws81aIRR+oVRbuA3M5i8sLdB1PUiux9PgELlEaD3bT54PTSg
+	 6jZB2ZvlkxOhrF+6eGAj2iTkOhS1gkGeiL2j52zY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730994AbgGTPtQ (ORCPT
+        id S1731001AbgGTPtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:49:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45134 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:49:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729386AbgGTPtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:49:10 -0400
+        id S1730984AbgGTPtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:49:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33B1C206E9;
-        Mon, 20 Jul 2020 15:49:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6F132064B;
+        Mon, 20 Jul 2020 15:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260149;
-        bh=Ii21Y4dB2dtPOuktMfoSercnM/W9406kERuSR4p265M=;
+        s=default; t=1595260152;
+        bh=FvbEbj9zDmGUluItPBrqCuYmOC1pzcSCb26Tocy+TK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZEbaydjhJyAuZUP1r2VgqgIYFSkx36RWvIJWxTbwTZm82RRcddvUKvStVYKhV8ak7
-         tJ5Mzd/lrJlmgrDduB/ZLPMbHV9VOryMxnmQAXu29xwMK/YKmDckwt7c71icb350DB
-         O6w2YYm3+mx9JyK4c9UAIECHTxl+kyorraezLbS8=
+        b=mKbV+eqtRgEJW6TZn6haY6DfUCLgInu2ytXNdIOL74JX0t8uFGgqnmyTSDetLaop4
+         zrrkcQh/mCvDuTcSlBkDRIgW6Z9vxbOPhOB4A8VJ5ERXuctHIVV2cFo3mJpMh8U1qB
+         51VeDu7uIVj+E+LQ06FVcDrG31u13eTSWgbNaup8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yariv <oigevald+kernel@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.14 094/125] HID: magicmouse: do not set up autorepeat
-Date:   Mon, 20 Jul 2020 17:37:13 +0200
-Message-Id: <20200720152807.562768192@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c190f6858a04ea7fbc52@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 095/125] ALSA: line6: Perform sanity check for each URB creation
+Date:   Mon, 20 Jul 2020 17:37:14 +0200
+Message-Id: <20200720152807.614682877@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -60,39 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 6363d2065cd399cf9d6dc9d08c437f8658831100 upstream.
+commit 6e8a914ad619042c5f25a4feb663357c4170fd8d upstream.
 
-Neither the trackpad, nor the mouse want input core to generate autorepeat
-events for their buttons, so let's reset the bit (as hid-input sets it for
-these devices based on the usage vendor code).
+LINE6 drivers create stream URBs with a fixed pipe without checking
+its validity, and this may lead to a kernel WARNING at the submission
+when a malformed USB descriptor is passed.
 
-Cc: stable@vger.kernel.org
-Reported-by: Yariv <oigevald+kernel@gmail.com>
-Tested-by: Yariv <oigevald+kernel@gmail.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+For avoiding the kernel warning, perform the similar sanity checks for
+each pipe type at creating a URB.
+
+Reported-by: syzbot+c190f6858a04ea7fbc52@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/s5hv9iv4hq8.wl-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-magicmouse.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/usb/line6/capture.c  |    2 ++
+ sound/usb/line6/playback.c |    2 ++
+ 2 files changed, 4 insertions(+)
 
---- a/drivers/hid/hid-magicmouse.c
-+++ b/drivers/hid/hid-magicmouse.c
-@@ -451,6 +451,12 @@ static int magicmouse_setup_input(struct
- 		__set_bit(MSC_RAW, input->mscbit);
+--- a/sound/usb/line6/capture.c
++++ b/sound/usb/line6/capture.c
+@@ -291,6 +291,8 @@ int line6_create_audio_in_urbs(struct sn
+ 		urb->interval = LINE6_ISO_INTERVAL;
+ 		urb->error_count = 0;
+ 		urb->complete = audio_in_callback;
++		if (usb_urb_ep_type_check(urb))
++			return -EINVAL;
  	}
  
-+	/*
-+	 * hid-input may mark device as using autorepeat, but neither
-+	 * the trackpad, nor the mouse actually want it.
-+	 */
-+	__clear_bit(EV_REP, input->evbit);
-+
  	return 0;
- }
+--- a/sound/usb/line6/playback.c
++++ b/sound/usb/line6/playback.c
+@@ -436,6 +436,8 @@ int line6_create_audio_out_urbs(struct s
+ 		urb->interval = LINE6_ISO_INTERVAL;
+ 		urb->error_count = 0;
+ 		urb->complete = audio_out_callback;
++		if (usb_urb_ep_type_check(urb))
++			return -EINVAL;
+ 	}
  
+ 	return 0;
 
 
