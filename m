@@ -2,85 +2,126 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EA1C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 021F322BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595287026;
-	bh=Q9szxRrPwCdNe0hZlylV+fReFObbkgbW4HzTvN549GY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JOLTxbG1+PBcNXeaCiNwG0fRN9A3UG1r1CfrzUeZgM01pFlBvkRMp2O0D2uzSmD3v
-	 eR/gLoSOI0rd5QwY+x0fyk1W1LZxgJoaP+R2ArNeJlaT+FSrfzss1BPNV4G9jj+7/t
-	 nM8w27j0tnB+Q4C6yXY9t/ew3VU4/cjtQprjdfSU=
+	by mail.kernel.org (Postfix) with ESMTP id 25436208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:17:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="U53XZbq3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgGTXRE (ORCPT
+        id S1728063AbgGTXRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:17:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45478 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 19:17:08 -0400
+Received: from crapouillou.net ([89.234.176.41]:40192 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbgGTXRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 19:17:04 -0400
-Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 763672065E;
-        Mon, 20 Jul 2020 23:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595287024;
-        bh=Q9szxRrPwCdNe0hZlylV+fReFObbkgbW4HzTvN549GY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oeiDJ4dqGgKNXkswJJXqxLf3XMqabNSt9swlgnWgDf+4gzGRHA46FKsSzzjGk7BYG
-         MZQUiyzTZYVZDb6s4bzI0YHwRny9nxYI9la+SacZJaws/lJTaHdXjE5Q6u/Vimg4Wu
-         3pNXo3teER48NQDE988vkw/RW1ldz4LLJwKWZTOo=
-Date:   Mon, 20 Jul 2020 16:17:01 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH v15 7/9] nvmet-passthru: Add passthru code to process
- commands
-Message-ID: <20200720231701.GA682160@dhcp-10-100-145-180.wdl.wdc.com>
-References: <20200716203319.16022-1-logang@deltatee.com>
- <20200716203319.16022-8-logang@deltatee.com>
- <20200720141606.GF4627@lst.de>
- <e939dd43-9e7f-8ef0-162b-2a27f53e6e1a@grimberg.me>
- <5cc390cf-9b0b-b48b-7447-37934be51ee0@deltatee.com>
- <2dc39232-4042-1f93-3dcc-3266e70cf6f0@grimberg.me>
- <b8fc47a2-0b53-3316-775f-0e9a8eddfdc2@deltatee.com>
+        id S1727986AbgGTXRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 19:17:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1595287023; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QAeOX6l8QHvY1cS+Pj+8mgaWEO4yfMys+MgR7AGFpTc=;
+        b=U53XZbq33UJn2lny40KSf1gG/0qtpEB2GbT6b/g3WuYiLhArTZjfEvus04HJ76lUp2ELdI
+        qryOCWQRCzY/7j2oWBwxjB8oEslzgv72Mrp2TKghohFenpaw77ekGim+49jvdD+SceJ9f5
+        9Y6+UNrfdR3sLZVpbmNTBOWkHX5SjQQ=
+Date:   Tue, 21 Jul 2020 01:16:55 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/2] iio: afe: rescale: Implement write_raw
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Peter Rosin <peda@axentia.se>, od@zcrc.me,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <7CJSDQ.D8SUUUMJPNE02@crapouillou.net>
+In-Reply-To: <20200215183249.2100b6e9@archlinux>
+References: <20200210225438.112660-1-paul@crapouillou.net>
+        <20200210225438.112660-2-paul@crapouillou.net>
+        <20200215183249.2100b6e9@archlinux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b8fc47a2-0b53-3316-775f-0e9a8eddfdc2@deltatee.com>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 05:01:19PM -0600, Logan Gunthorpe wrote:
-> On 2020-07-20 4:35 p.m., Sagi Grimberg wrote:
->
-> > passthru commands are in essence REQ_OP_DRV_IN/REQ_OP_DRV_OUT, which
-> > means that the driver shouldn't need the ns at all. So if you have a
-> > dedicated request queue (mapped to the I/O tagset), you don't need the
-> > ns->queue and we can lose the ns lookup altogether.
+Hi Jonathan,
 
-We still need a request_queue to dispatch the command. I guess you could
-make a generic one for the controller that isn't tied to a namespace,
-but we lose the fair shared tag allocation.
- 
-> Thanks, that helps clarify things a bit, but which xarray were you
-> talking about
+Le sam. 15 f=E9vr. 2020 =E0 18:32, Jonathan Cameron <jic23@kernel.org> a=20
+=E9crit :
+> On Mon, 10 Feb 2020 19:54:38 -0300
+> Paul Cercueil <paul@crapouillou.net> wrote:
+>=20
+>>  Implement write_raw by converting the value if writing the scale, or
+>>  just calling the managed channel driver's write_raw otherwise.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>   drivers/iio/afe/iio-rescale.c | 22 ++++++++++++++++++++++
+>>   1 file changed, 22 insertions(+)
+>>=20
+>>  diff --git a/drivers/iio/afe/iio-rescale.c=20
+>> b/drivers/iio/afe/iio-rescale.c
+>>  index 95802d9ee25e..a48f6af9316d 100644
+>>  --- a/drivers/iio/afe/iio-rescale.c
+>>  +++ b/drivers/iio/afe/iio-rescale.c
+>>  @@ -35,6 +35,27 @@ struct rescale {
+>>   	int *scale_data;
+>>   };
+>>=20
+>>  +static int rescale_write_raw(struct iio_dev *indio_dev,
+>>  +			     struct iio_chan_spec const *chan,
+>>  +			     int val, int val2, long mask)
+>>  +{
+>>  +	struct rescale *rescale =3D iio_priv(indio_dev);
+>>  +	unsigned long long tmp;
+>>  +
+>>  +	switch (mask) {
+>>  +	case IIO_CHAN_INFO_SCALE:
+>>  +		tmp =3D val * 1000000000LL;
+>>  +		do_div(tmp, rescale->numerator);
+>>  +		tmp *=3D rescale->denominator;
+>>  +		do_div(tmp, 1000000000LL);
+>>  +		return iio_write_channel_attribute(rescale->source, tmp, 0,
+>>  +						   IIO_CHAN_INFO_SCALE);
+>=20
+> Why is val2 always 0?  Won't that only work if the backend device
+> has integer scales?
 
-That was something that was replacing the list lookup:
+Sorry, somehow I didn't see your answer.
 
-  http://lists.infradead.org/pipermail/linux-nvme/2020-July/018242.html
+Indeed, this will only work if the backend device has integer scales,=20
+but what should I do? Just pass 'val2' instead of 0? Will the value be=20
+correct if I only apply the scale ratio to 'val'?
+
+Cheers,
+-Paul
+
+
+>>  +	default:
+>>  +		return iio_write_channel_attribute(rescale->source,
+>>  +						   val, val2, mask);
+>>  +	}
+>>  +}
+>>  +
+>>   static int rescale_convert(struct rescale *rescale, int type,
+>>   			   const int val, const int val2,
+>>   			   int *val_out, int *val2_out)
+>>  @@ -110,6 +131,7 @@ static int rescale_read_avail(struct iio_dev=20
+>> *indio_dev,
+>>   }
+>>=20
+>>   static const struct iio_info rescale_info =3D {
+>>  +	.write_raw =3D rescale_write_raw,
+>>   	.read_raw =3D rescale_read_raw,
+>>   	.read_avail =3D rescale_read_avail,
+>>   };
+>=20
+
+
