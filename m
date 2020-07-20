@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849B5C433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C605EC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51E38207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48212065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261487;
-	bh=PwYgY0PClXBj/wQ9kZvqrTpH+5i2U9MhVT4YdPtSaoQ=;
+	s=default; t=1595261489;
+	bh=jGU+jkNnnj/kn9S/wd1betA8iMZQHV6GRZuejkRpqMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m9H9OIRCog5FFSW+15mDjIk8ld6cK7RHwIJeyt1TBGa1vu+RtNenQrRRjylGRhFRQ
-	 Mzg1M/MsbKiRi/CKDVaSMMTqpQmqmy25w0a53niqaJEugBoYv+K1f96KiY6kdIPaRE
-	 /r0SIUrA9ZxRR27qK++45dZWfYe5k3wic1u3XovQ=
+	b=mpCa69ufpRCWRaWZOREdMgKJtP7TFL39e0qJnYE4cN9513wD912FMPsBPBEGsYg+h
+	 6jCPX7bqzzCY2D/8SYEoxekXCJMxj/Xasz+jwa7mUqNzBNj7NtqTHIy1izU+vqe2vy
+	 q9yai5dYaYKcFwV7pWC/oHUFlGq1l7GO2+e0CZ6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733072AbgGTQL0 (ORCPT
+        id S2387807AbgGTQL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50314 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:11:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732732AbgGTQLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:11:18 -0400
+        id S2387787AbgGTQLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:11:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EFA82065E;
-        Mon, 20 Jul 2020 16:11:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73F6320684;
+        Mon, 20 Jul 2020 16:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261478;
-        bh=PwYgY0PClXBj/wQ9kZvqrTpH+5i2U9MhVT4YdPtSaoQ=;
+        s=default; t=1595261480;
+        bh=jGU+jkNnnj/kn9S/wd1betA8iMZQHV6GRZuejkRpqMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NHp3ulDoslfUyP1LIUvxA7/gJ71rjB4NMsQ9UGez/9c8ZKNE80v+gCfydpdp0VmKg
-         rUs2SGd4ivy3b+X4w5S2w2Xn8a4yH+32O5NpgUirJLrSyMLdgI4YfHqVOLzrYWbmJE
-         O1Ik+8sdMNrJ+if+j5Kpg5NnIkzXjwjxegwRGIsc=
+        b=zHMX1FcqSl1yM6y1Dszj7TtOzNYTWIIgUAIze4zC1b1vGXIry1E9TMeRpOxUNYZGO
+         M3nqxy7GIlWbO81VjBGdble/NcCToKSkTOEJX77mSDMwddAKtDzo8jjEbvmw0zSyqy
+         F/qo7YDV/jsiH/BtaDeDrHtgmK12Y6WXY0fXKMUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aharon Landau <aharonl@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.7 130/244] RDMA/mlx5: Verify that QP is created with RQ or SQ
-Date:   Mon, 20 Jul 2020 17:36:41 +0200
-Message-Id: <20200720152832.023451568@linuxfoundation.org>
+        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.7 131/244] clk: qcom: Add missing msm8998 ufs_unipro_core_clk_src
+Date:   Mon, 20 Jul 2020 17:36:42 +0200
+Message-Id: <20200720152832.074521884@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -61,35 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aharon Landau <aharonl@mellanox.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-commit 0eacc574aae7300bf46c10c7116c3ba5825505b7 upstream.
+commit b1e8d713e6b2d59ee3a7b57c0dab88a19ec0cf33 upstream.
 
-RAW packet QP and underlay QP must be created with either
-RQ or SQ, check that.
+ufs_unipro_core_clk_src is required to allow UFS to clock scale for power
+savings.
 
-Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
-Link: https://lore.kernel.org/r/20200427154636.381474-37-leon@kernel.org
-Signed-off-by: Aharon Landau <aharonl@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: b5f5f525c547 ("clk: qcom: Add MSM8998 Global Clock Control (GCC) driver")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Link: https://lkml.kernel.org/r/20200528142205.44003-1-jeffrey.l.hugo@gmail.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx5/qp.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/qcom/gcc-msm8998.c               |   27 +++++++++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-msm8998.h |    1 +
+ 2 files changed, 28 insertions(+)
 
---- a/drivers/infiniband/hw/mlx5/qp.c
-+++ b/drivers/infiniband/hw/mlx5/qp.c
-@@ -1525,6 +1525,8 @@ static int create_raw_packet_qp(struct m
- 	u16 uid = to_mpd(pd)->uid;
- 	u32 out[MLX5_ST_SZ_DW(create_tir_out)] = {};
+--- a/drivers/clk/qcom/gcc-msm8998.c
++++ b/drivers/clk/qcom/gcc-msm8998.c
+@@ -1110,6 +1110,27 @@ static struct clk_rcg2 ufs_axi_clk_src =
+ 	},
+ };
  
-+	if (!qp->sq.wqe_cnt && !qp->rq.wqe_cnt)
-+		return -EINVAL;
- 	if (qp->sq.wqe_cnt) {
- 		err = create_raw_packet_qp_tis(dev, qp, sq, tdn, pd);
- 		if (err)
++static const struct freq_tbl ftbl_ufs_unipro_core_clk_src[] = {
++	F(37500000, P_GPLL0_OUT_MAIN, 16, 0, 0),
++	F(75000000, P_GPLL0_OUT_MAIN, 8, 0, 0),
++	F(150000000, P_GPLL0_OUT_MAIN, 4, 0, 0),
++	{ }
++};
++
++static struct clk_rcg2 ufs_unipro_core_clk_src = {
++	.cmd_rcgr = 0x76028,
++	.mnd_width = 8,
++	.hid_width = 5,
++	.parent_map = gcc_parent_map_0,
++	.freq_tbl = ftbl_ufs_unipro_core_clk_src,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "ufs_unipro_core_clk_src",
++		.parent_names = gcc_parent_names_0,
++		.num_parents = 4,
++		.ops = &clk_rcg2_ops,
++	},
++};
++
+ static const struct freq_tbl ftbl_usb30_master_clk_src[] = {
+ 	F(19200000, P_XO, 1, 0, 0),
+ 	F(60000000, P_GPLL0_OUT_MAIN, 10, 0, 0),
+@@ -2549,6 +2570,11 @@ static struct clk_branch gcc_ufs_unipro_
+ 		.enable_mask = BIT(0),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gcc_ufs_unipro_core_clk",
++			.parent_names = (const char *[]){
++				"ufs_unipro_core_clk_src",
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -2904,6 +2930,7 @@ static struct clk_regmap *gcc_msm8998_cl
+ 	[SDCC4_APPS_CLK_SRC] = &sdcc4_apps_clk_src.clkr,
+ 	[TSIF_REF_CLK_SRC] = &tsif_ref_clk_src.clkr,
+ 	[UFS_AXI_CLK_SRC] = &ufs_axi_clk_src.clkr,
++	[UFS_UNIPRO_CORE_CLK_SRC] = &ufs_unipro_core_clk_src.clkr,
+ 	[USB30_MASTER_CLK_SRC] = &usb30_master_clk_src.clkr,
+ 	[USB30_MOCK_UTMI_CLK_SRC] = &usb30_mock_utmi_clk_src.clkr,
+ 	[USB3_PHY_AUX_CLK_SRC] = &usb3_phy_aux_clk_src.clkr,
+--- a/include/dt-bindings/clock/qcom,gcc-msm8998.h
++++ b/include/dt-bindings/clock/qcom,gcc-msm8998.h
+@@ -183,6 +183,7 @@
+ #define GCC_MSS_SNOC_AXI_CLK					174
+ #define GCC_MSS_MNOC_BIMC_AXI_CLK				175
+ #define GCC_BIMC_GFX_CLK					176
++#define UFS_UNIPRO_CORE_CLK_SRC					177
+ 
+ #define PCIE_0_GDSC						0
+ #define UFS_GDSC						1
 
 
