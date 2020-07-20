@@ -2,52 +2,50 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9582AC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6638BC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73AB522CBB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318EE22CB2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259506;
-	bh=i+6zrUarBuoZb9acXfYp9YXSrYCEPIsGcYDwM0+L6F4=;
+	s=default; t=1595259508;
+	bh=NC02vQO9vkiY6szZMaGQgMnJXZthHj8j/2YEAFCYUR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BVGol/gkzKfa4eKCcWyGO8JXsjQ0XdK+Wgzo4P+wumb4i1gwlcrDs2MG+xCNMNeug
-	 PuSBgqp3Kug9ratCiAD2J4AcSOXr49jjy9pjXee3sqvIV623hAL/YDnvISGwh7Rn+B
-	 hx2fSGZvTo/Kq1z3+XEoLFcB3QdP3c6/kk4Ntyt8=
+	b=gs1tDnlTR4X2M7Ei9DNNb89vhvH1UM93/84v8LirM2vIoU91yWMmQ1GnHoAzR7pIx
+	 y6wybTrlJn5QL/FP4x/1odQCyZZMOKO9Kjb68niVAvE4HUB2qF3vNmUJmmOrlPrz3G
+	 rsbGghQqSNjvYrQSUSl1bQ1fTHYn7sN7Tz1lSGoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgGTPiX (ORCPT
+        id S1729183AbgGTPi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:38:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56766 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:38:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729134AbgGTPiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:38:16 -0400
+        id S1729164AbgGTPiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:38:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 211C322CB3;
-        Mon, 20 Jul 2020 15:38:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D494F22CB2;
+        Mon, 20 Jul 2020 15:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259495;
-        bh=i+6zrUarBuoZb9acXfYp9YXSrYCEPIsGcYDwM0+L6F4=;
+        s=default; t=1595259501;
+        bh=NC02vQO9vkiY6szZMaGQgMnJXZthHj8j/2YEAFCYUR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hDuK939slsBl5Ismt0gEcXOLRV7yynvtHKTA36tA8Ydg0ALV0ern9tZOYpxWpxeIl
-         PG3cGpzbXbWMGZhjgw8A5KeuATiMacuIwffMeCMYeSp7HoaI8PF2FWW0urFxVL3Dhs
-         ceNZ73MMqcHqRI5wU2QGiM0ly3MkvZb33U3Oy8I8=
+        b=ydeOjgu25U/UHnfYorcDzINcsxU4GjVqCFj4ePaKr+hHCkK7N5bRBEHhrF+AIQXj3
+         KhFAmKa7dRJmDhPfBcsKGXU/33KbJxt31jE56MOJlGnnyBndoMn9MSFLe806lDVpJn
+         +hdVFd+HvnyO7q2OfYaNXI6iLgTJWQIDZnslBX7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 28/58] tcp: md5: allow changing MD5 keys in all socket states
-Date:   Mon, 20 Jul 2020 17:36:44 +0200
-Message-Id: <20200720152748.548737759@linuxfoundation.org>
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 30/58] Revert "usb/ehci-platform: Set PM runtime as active on resume"
+Date:   Mon, 20 Jul 2020 17:36:46 +0200
+Message-Id: <20200720152748.659311001@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
 References: <20200720152747.127988571@linuxfoundation.org>
@@ -60,66 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+This reverts commit 13af14dfadcb95030dc8e2e0cacbffc1990a9772.
 
-[ Upstream commit 1ca0fafd73c5268e8fc4b997094b8bb2bfe8deea ]
+Eugeniu Rosca writes:
 
-This essentially reverts commit 721230326891 ("tcp: md5: reject TCP_MD5SIG
-or TCP_MD5SIG_EXT on established sockets")
+On Thu, Jul 09, 2020 at 09:00:23AM +0200, Eugeniu Rosca wrote:
+>After integrating v4.14.186 commit 5410d158ca2a50 ("usb/ehci-platform:
+>Set PM runtime as active on resume") into downstream v4.14.x, we started
+>to consistently experience below panic [1] on every second s2ram of
+>R-Car H3 Salvator-X Renesas reference board.
+>
+>After some investigations, we concluded the following:
+> - the issue does not exist in vanilla v5.8-rc4+
+> - [bisecting shows that] the panic on v4.14.186 is caused by the lack
+>   of v5.6-rc1 commit 987351e1ea7772 ("phy: core: Add consumer device
+>   link support"). Getting evidence for that is easy. Reverting
+>   987351e1ea7772 in vanilla leads to a similar backtrace [2].
+>
+>Questions:
+> - Backporting 987351e1ea7772 ("phy: core: Add consumer device
+>   link support") to v4.14.187 looks challenging enough, so probably not
+>   worth it. Anybody to contradict this?
+> - Assuming no plans to backport the missing mainline commit to v4.14.x,
+>   should the following three v4.14.186 commits be reverted on v4.14.x?
+>   * baef809ea497a4 ("usb/ohci-platform: Fix a warning when hibernating")
+>   * 9f33eff4958885 ("usb/xhci-plat: Set PM runtime as active on resume")
+>   * 5410d158ca2a50 ("usb/ehci-platform: Set PM runtime as active on resume")
 
-Mathieu reported that many vendors BGP implementations can
-actually switch TCP MD5 on established flows.
-
-Quoting Mathieu :
-   Here is a list of a few network vendors along with their behavior
-   with respect to TCP MD5:
-
-   - Cisco: Allows for password to be changed, but within the hold-down
-     timer (~180 seconds).
-   - Juniper: When password is initially set on active connection it will
-     reset, but after that any subsequent password changes no network
-     resets.
-   - Nokia: No notes on if they flap the tcp connection or not.
-   - Ericsson/RedBack: Allows for 2 password (old/new) to co-exist until
-     both sides are ok with new passwords.
-   - Meta-Switch: Expects the password to be set before a connection is
-     attempted, but no further info on whether they reset the TCP
-     connection on a change.
-   - Avaya: Disable the neighbor, then set password, then re-enable.
-   - Zebos: Would normally allow the change when socket connected.
-
-We can revert my prior change because commit 9424e2e7ad93 ("tcp: md5: fix potential
-overestimation of TCP option space") removed the leak of 4 kernel bytes to
-the wire that was the main reason for my patch.
-
-While doing my investigations, I found a bug when a MD5 key is changed, leading
-to these commits that stable teams want to consider before backporting this revert :
-
- Commit 6a2febec338d ("tcp: md5: add missing memory barriers in tcp_md5_do_add()/tcp_md5_hash_key()")
- Commit e6ced831ef11 ("tcp: md5: refine tcp_md5_do_add()/tcp_md5_hash_key() barriers")
-
-Fixes: 721230326891 "tcp: md5: reject TCP_MD5SIG or TCP_MD5SIG_EXT on established sockets"
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/usb/host/ehci-platform.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2596,10 +2596,7 @@ static int do_tcp_setsockopt(struct sock
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index 56200650b46b4..bd7082f297bbe 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -375,11 +375,6 @@ static int ehci_platform_resume(struct device *dev)
+ 	}
  
- #ifdef CONFIG_TCP_MD5SIG
- 	case TCP_MD5SIG:
--		if ((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN))
--			err = tp->af_specific->md5_parse(sk, optval, optlen);
--		else
--			err = -EINVAL;
-+		err = tp->af_specific->md5_parse(sk, optval, optlen);
- 		break;
- #endif
- 	case TCP_USER_TIMEOUT:
+ 	ehci_resume(hcd, priv->reset_on_resume);
+-
+-	pm_runtime_disable(dev);
+-	pm_runtime_set_active(dev);
+-	pm_runtime_enable(dev);
+-
+ 	return 0;
+ }
+ #endif /* CONFIG_PM_SLEEP */
+-- 
+2.25.1
+
 
 
