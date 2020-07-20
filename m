@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C61C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052A5C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 414E7206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D455D22CE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260210;
-	bh=fZWb8ttIQF3pIPm3ZvK1vmR1FULy9MR5Cv2srkPRs9k=;
+	s=default; t=1595260211;
+	bh=tM77MYMbLXLD63ViZTKdj8RJrczrY0sKHYTffu6UZSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eHWY07jJPs51L/XeBCBBZSii3ryw80s1jCbth5ajd4dS6L58K0NArduAeEahSHxyJ
-	 SF/bI1WYlx/ry4A/30KSAyHgg+tJaqshdVlZPln18/okMTAmTXdFobCZbKD/K+MDEA
-	 w0JVhZm1cgkAUUELOO+ES7YrLbsjyjGyiGY1Bqn0=
+	b=iq4XZmTC4YkDuY2/GdtHyiFXWFm8cTT+k72VbLnj3+JaxxsXlqMDWyiDOvHpNs+Ju
+	 rSPTWTbKbLQfwXrvnkBzX8KEZYcadBQMWm3vLcNnI52u+YpcxPwRWH5fVOiYv4Qrv7
+	 ysxvoFPvBK5glzB40HBzfziYNvXaz+Ixo4sfJO1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbgGTPuI (ORCPT
+        id S1731103AbgGTPuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:50:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46386 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:50:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731075AbgGTPuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:50:04 -0400
+        id S1731059AbgGTPuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:50:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC5A3206E9;
-        Mon, 20 Jul 2020 15:50:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D88B22482;
+        Mon, 20 Jul 2020 15:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260203;
-        bh=fZWb8ttIQF3pIPm3ZvK1vmR1FULy9MR5Cv2srkPRs9k=;
+        s=default; t=1595260206;
+        bh=tM77MYMbLXLD63ViZTKdj8RJrczrY0sKHYTffu6UZSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+WuLSru+zZKwsdK+a1zZZajeIYAWGqDsbeRIJE+Zh0saA6ViRiS1aDfAMK+TP4RE
-         +/H2KPLGb4qVze9FE1V0R6VTr8WxuGvO358kaowb4AcWvL8PmDbnXiKVPKRvesqVN0
-         6GQCWD4DG0KAE+0xWMqVgIq1NofvvScHDH/g7/kk=
+        b=LMLEqIzmXrL7khgjDlYaeNc+1W5+FRYGJDAS9+hQ8htCYERbY31E9VlTukzHLRGhL
+         igcQmHLDJeWbRGc24EIPi+Ik47iB7kKodly/pXnSfrZAyGQD34RiVHxAPU3IUiwhBH
+         WHOZ17DGyu7n2coaGSsItWVidh72n6miQvOFgbPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Ponetayev <i.ponetaev@ndmsystems.com>,
+        stable@vger.kernel.org,
+        Toshiaki Makita <toshiaki.makita1@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 018/133] sched: consistently handle layer3 header accesses in the presence of VLANs
-Date:   Mon, 20 Jul 2020 17:36:05 +0200
-Message-Id: <20200720152804.604174594@linuxfoundation.org>
+Subject: [PATCH 4.19 019/133] vlan: consolidate VLAN parsing code and limit max parsing depth
+Date:   Mon, 20 Jul 2020 17:36:06 +0200
+Message-Id: <20200720152804.657170432@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -62,67 +64,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Toke Høiland-Jørgensen" <toke@redhat.com>
 
-[ Upstream commit d7bf2ebebc2bd61ab95e2a8e33541ef282f303d4 ]
+[ Upstream commit 469aceddfa3ed16e17ee30533fae45e90f62efd8 ]
 
-There are a couple of places in net/sched/ that check skb->protocol and act
-on the value there. However, in the presence of VLAN tags, the value stored
-in skb->protocol can be inconsistent based on whether VLAN acceleration is
-enabled. The commit quoted in the Fixes tag below fixed the users of
-skb->protocol to use a helper that will always see the VLAN ethertype.
+Toshiaki pointed out that we now have two very similar functions to extract
+the L3 protocol number in the presence of VLAN tags. And Daniel pointed out
+that the unbounded parsing loop makes it possible for maliciously crafted
+packets to loop through potentially hundreds of tags.
 
-However, most of the callers don't actually handle the VLAN ethertype, but
-expect to find the IP header type in the protocol field. This means that
-things like changing the ECN field, or parsing diffserv values, stops
-working if there's a VLAN tag, or if there are multiple nested VLAN
-tags (QinQ).
-
-To fix this, change the helper to take an argument that indicates whether
-the caller wants to skip the VLAN tags or not. When skipping VLAN tags, we
-make sure to skip all of them, so behaviour is consistent even in QinQ
-mode.
-
-To make the helper usable from the ECN code, move it to if_vlan.h instead
-of pkt_sched.h.
-
-v3:
-- Remove empty lines
-- Move vlan variable definitions inside loop in skb_protocol()
-- Also use skb_protocol() helper in IP{,6}_ECN_decapsulate() and
-  bpf_skb_ecn_set_ce()
+Fix both of these issues by consolidating the two parsing functions and
+limiting the VLAN tag parsing to a max depth of 8 tags. As part of this,
+switch over __vlan_get_protocol() to use skb_header_pointer() instead of
+pskb_may_pull(), to avoid the possible side effects of the latter and keep
+the skb pointer 'const' through all the parsing functions.
 
 v2:
-- Use eth_type_vlan() helper in skb_protocol()
-- Also fix code that reads skb->protocol directly
-- Change a couple of 'if/else if' statements to switch constructs to avoid
-  calling the helper twice
+- Use limit of 8 tags instead of 32 (matching XMIT_RECURSION_LIMIT)
 
-Reported-by: Ilya Ponetayev <i.ponetaev@ndmsystems.com>
-Fixes: d8b9605d2697 ("net: sched: fix skb->protocol use in case of accelerated vlan path")
+Reported-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
+Reported-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: d7bf2ebebc2b ("sched: consistently handle layer3 header accesses in the presence of VLANs")
 Signed-off-by: Toke HÃ¸iland-JÃ¸rgensen <toke@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/if_vlan.h  |   28 ++++++++++++++++++++++++++++
- include/net/inet_ecn.h   |   23 ++++++++++++++++-------
- include/net/pkt_sched.h  |   11 -----------
- net/core/filter.c        |    8 ++++----
- net/sched/act_connmark.c |    9 ++++++---
- net/sched/act_csum.c     |    2 +-
- net/sched/act_skbedit.c  |    2 +-
- net/sched/cls_api.c      |    2 +-
- net/sched/cls_flow.c     |    8 ++++----
- net/sched/cls_flower.c   |    2 +-
- net/sched/em_ipset.c     |    2 +-
- net/sched/em_meta.c      |    2 +-
- net/sched/sch_cake.c     |    4 ++--
- net/sched/sch_dsmark.c   |    6 +++---
- net/sched/sch_teql.c     |    2 +-
- 15 files changed, 70 insertions(+), 41 deletions(-)
+ include/linux/if_vlan.h |   57 ++++++++++++++++++------------------------------
+ 1 file changed, 22 insertions(+), 35 deletions(-)
 
 --- a/include/linux/if_vlan.h
 +++ b/include/linux/if_vlan.h
-@@ -313,6 +313,34 @@ static inline bool eth_type_vlan(__be16
+@@ -30,6 +30,8 @@
+ #define VLAN_ETH_DATA_LEN	1500	/* Max. octets in payload	 */
+ #define VLAN_ETH_FRAME_LEN	1518	/* Max. octets in frame sans FCS */
+ 
++#define VLAN_MAX_DEPTH	8		/* Max. number of nested VLAN tags parsed */
++
+ /*
+  * 	struct vlan_hdr - vlan header
+  * 	@h_vlan_TCI: priority and VLAN ID
+@@ -313,34 +315,6 @@ static inline bool eth_type_vlan(__be16
  	}
+ }
+ 
+-/* A getter for the SKB protocol field which will handle VLAN tags consistently
+- * whether VLAN acceleration is enabled or not.
+- */
+-static inline __be16 skb_protocol(const struct sk_buff *skb, bool skip_vlan)
+-{
+-	unsigned int offset = skb_mac_offset(skb) + sizeof(struct ethhdr);
+-	__be16 proto = skb->protocol;
+-
+-	if (!skip_vlan)
+-		/* VLAN acceleration strips the VLAN header from the skb and
+-		 * moves it to skb->vlan_proto
+-		 */
+-		return skb_vlan_tag_present(skb) ? skb->vlan_proto : proto;
+-
+-	while (eth_type_vlan(proto)) {
+-		struct vlan_hdr vhdr, *vh;
+-
+-		vh = skb_header_pointer(skb, offset, sizeof(vhdr), &vhdr);
+-		if (!vh)
+-			break;
+-
+-		proto = vh->h_vlan_encapsulated_proto;
+-		offset += sizeof(vhdr);
+-	}
+-
+-	return proto;
+-}
+-
+ static inline bool vlan_hw_offload_capable(netdev_features_t features,
+ 					   __be16 proto)
+ {
+@@ -586,10 +560,10 @@ static inline int vlan_get_tag(const str
+  * Returns the EtherType of the packet, regardless of whether it is
+  * vlan encapsulated (normal or hardware accelerated) or not.
+  */
+-static inline __be16 __vlan_get_protocol(struct sk_buff *skb, __be16 type,
++static inline __be16 __vlan_get_protocol(const struct sk_buff *skb, __be16 type,
+ 					 int *depth)
+ {
+-	unsigned int vlan_depth = skb->mac_len;
++	unsigned int vlan_depth = skb->mac_len, parse_depth = VLAN_MAX_DEPTH;
+ 
+ 	/* if type is 802.1Q/AD then the header should already be
+ 	 * present at mac_len - VLAN_HLEN (if mac_len > 0), or at
+@@ -604,13 +578,12 @@ static inline __be16 __vlan_get_protocol
+ 			vlan_depth = ETH_HLEN;
+ 		}
+ 		do {
+-			struct vlan_hdr *vh;
++			struct vlan_hdr vhdr, *vh;
+ 
+-			if (unlikely(!pskb_may_pull(skb,
+-						    vlan_depth + VLAN_HLEN)))
++			vh = skb_header_pointer(skb, vlan_depth, sizeof(vhdr), &vhdr);
++			if (unlikely(!vh || !--parse_depth))
+ 				return 0;
+ 
+-			vh = (struct vlan_hdr *)(skb->data + vlan_depth);
+ 			type = vh->h_vlan_encapsulated_proto;
+ 			vlan_depth += VLAN_HLEN;
+ 		} while (eth_type_vlan(type));
+@@ -629,11 +602,25 @@ static inline __be16 __vlan_get_protocol
+  * Returns the EtherType of the packet, regardless of whether it is
+  * vlan encapsulated (normal or hardware accelerated) or not.
+  */
+-static inline __be16 vlan_get_protocol(struct sk_buff *skb)
++static inline __be16 vlan_get_protocol(const struct sk_buff *skb)
+ {
+ 	return __vlan_get_protocol(skb, skb->protocol, NULL);
  }
  
 +/* A getter for the SKB protocol field which will handle VLAN tags consistently
@@ -130,338 +181,17 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 + */
 +static inline __be16 skb_protocol(const struct sk_buff *skb, bool skip_vlan)
 +{
-+	unsigned int offset = skb_mac_offset(skb) + sizeof(struct ethhdr);
-+	__be16 proto = skb->protocol;
-+
 +	if (!skip_vlan)
 +		/* VLAN acceleration strips the VLAN header from the skb and
 +		 * moves it to skb->vlan_proto
 +		 */
-+		return skb_vlan_tag_present(skb) ? skb->vlan_proto : proto;
++		return skb_vlan_tag_present(skb) ? skb->vlan_proto : skb->protocol;
 +
-+	while (eth_type_vlan(proto)) {
-+		struct vlan_hdr vhdr, *vh;
-+
-+		vh = skb_header_pointer(skb, offset, sizeof(vhdr), &vhdr);
-+		if (!vh)
-+			break;
-+
-+		proto = vh->h_vlan_encapsulated_proto;
-+		offset += sizeof(vhdr);
-+	}
-+
-+	return proto;
++	return vlan_get_protocol(skb);
 +}
 +
- static inline bool vlan_hw_offload_capable(netdev_features_t features,
- 					   __be16 proto)
+ static inline void vlan_set_encap_proto(struct sk_buff *skb,
+ 					struct vlan_hdr *vhdr)
  {
---- a/include/net/inet_ecn.h
-+++ b/include/net/inet_ecn.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/ip.h>
- #include <linux/skbuff.h>
-+#include <linux/if_vlan.h>
- 
- #include <net/inet_sock.h>
- #include <net/dsfield.h>
-@@ -142,7 +143,7 @@ static inline void ipv6_copy_dscp(unsign
- 
- static inline int INET_ECN_set_ce(struct sk_buff *skb)
- {
--	switch (skb->protocol) {
-+	switch (skb_protocol(skb, true)) {
- 	case cpu_to_be16(ETH_P_IP):
- 		if (skb_network_header(skb) + sizeof(struct iphdr) <=
- 		    skb_tail_pointer(skb))
-@@ -209,12 +210,16 @@ static inline int IP_ECN_decapsulate(con
- {
- 	__u8 inner;
- 
--	if (skb->protocol == htons(ETH_P_IP))
-+	switch (skb_protocol(skb, true)) {
-+	case htons(ETH_P_IP):
- 		inner = ip_hdr(skb)->tos;
--	else if (skb->protocol == htons(ETH_P_IPV6))
-+		break;
-+	case htons(ETH_P_IPV6):
- 		inner = ipv6_get_dsfield(ipv6_hdr(skb));
--	else
-+		break;
-+	default:
- 		return 0;
-+	}
- 
- 	return INET_ECN_decapsulate(skb, oiph->tos, inner);
- }
-@@ -224,12 +229,16 @@ static inline int IP6_ECN_decapsulate(co
- {
- 	__u8 inner;
- 
--	if (skb->protocol == htons(ETH_P_IP))
-+	switch (skb_protocol(skb, true)) {
-+	case htons(ETH_P_IP):
- 		inner = ip_hdr(skb)->tos;
--	else if (skb->protocol == htons(ETH_P_IPV6))
-+		break;
-+	case htons(ETH_P_IPV6):
- 		inner = ipv6_get_dsfield(ipv6_hdr(skb));
--	else
-+		break;
-+	default:
- 		return 0;
-+	}
- 
- 	return INET_ECN_decapsulate(skb, ipv6_get_dsfield(oipv6h), inner);
- }
---- a/include/net/pkt_sched.h
-+++ b/include/net/pkt_sched.h
-@@ -122,17 +122,6 @@ static inline void qdisc_run(struct Qdis
- 	}
- }
- 
--static inline __be16 tc_skb_protocol(const struct sk_buff *skb)
--{
--	/* We need to take extra care in case the skb came via
--	 * vlan accelerated path. In that case, use skb->vlan_proto
--	 * as the original vlan header was already stripped.
--	 */
--	if (skb_vlan_tag_present(skb))
--		return skb->vlan_proto;
--	return skb->protocol;
--}
--
- /* Calculate maximal size of packet seen by hard_start_xmit
-    routine of this device.
-  */
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2695,7 +2695,7 @@ static int bpf_skb_proto_6_to_4(struct s
- 
- static int bpf_skb_proto_xlat(struct sk_buff *skb, __be16 to_proto)
- {
--	__be16 from_proto = skb->protocol;
-+	__be16 from_proto = skb_protocol(skb, true);
- 
- 	if (from_proto == htons(ETH_P_IP) &&
- 	      to_proto == htons(ETH_P_IPV6))
-@@ -2768,7 +2768,7 @@ static const struct bpf_func_proto bpf_s
- 
- static u32 bpf_skb_net_base_len(const struct sk_buff *skb)
- {
--	switch (skb->protocol) {
-+	switch (skb_protocol(skb, true)) {
- 	case htons(ETH_P_IP):
- 		return sizeof(struct iphdr);
- 	case htons(ETH_P_IPV6):
-@@ -2848,7 +2848,7 @@ static int bpf_skb_adjust_net(struct sk_
- 	u32 len_cur, len_diff_abs = abs(len_diff);
- 	u32 len_min = bpf_skb_net_base_len(skb);
- 	u32 len_max = __bpf_skb_max_len(skb);
--	__be16 proto = skb->protocol;
-+	__be16 proto = skb_protocol(skb, true);
- 	bool shrink = len_diff < 0;
- 	int ret;
- 
-@@ -4552,7 +4552,7 @@ static int bpf_push_seg6_encap(struct sk
- 
- 	switch (type) {
- 	case BPF_LWT_ENCAP_SEG6_INLINE:
--		if (skb->protocol != htons(ETH_P_IPV6))
-+		if (skb_protocol(skb, true) != htons(ETH_P_IPV6))
- 			return -EBADMSG;
- 
- 		err = seg6_do_srh_inline(skb, srh);
---- a/net/sched/act_connmark.c
-+++ b/net/sched/act_connmark.c
-@@ -46,17 +46,20 @@ static int tcf_connmark_act(struct sk_bu
- 	tcf_lastuse_update(&ca->tcf_tm);
- 	bstats_update(&ca->tcf_bstats, skb);
- 
--	if (skb->protocol == htons(ETH_P_IP)) {
-+	switch (skb_protocol(skb, true)) {
-+	case htons(ETH_P_IP):
- 		if (skb->len < sizeof(struct iphdr))
- 			goto out;
- 
- 		proto = NFPROTO_IPV4;
--	} else if (skb->protocol == htons(ETH_P_IPV6)) {
-+		break;
-+	case htons(ETH_P_IPV6):
- 		if (skb->len < sizeof(struct ipv6hdr))
- 			goto out;
- 
- 		proto = NFPROTO_IPV6;
--	} else {
-+		break;
-+	default:
- 		goto out;
- 	}
- 
---- a/net/sched/act_csum.c
-+++ b/net/sched/act_csum.c
-@@ -577,7 +577,7 @@ static int tcf_csum_act(struct sk_buff *
- 		goto drop;
- 
- 	update_flags = params->update_flags;
--	protocol = tc_skb_protocol(skb);
-+	protocol = skb_protocol(skb, false);
- again:
- 	switch (protocol) {
- 	case cpu_to_be16(ETH_P_IP):
---- a/net/sched/act_skbedit.c
-+++ b/net/sched/act_skbedit.c
-@@ -51,7 +51,7 @@ static int tcf_skbedit_act(struct sk_buf
- 	if (params->flags & SKBEDIT_F_INHERITDSFIELD) {
- 		int wlen = skb_network_offset(skb);
- 
--		switch (tc_skb_protocol(skb)) {
-+		switch (skb_protocol(skb, true)) {
- 		case htons(ETH_P_IP):
- 			wlen += sizeof(struct iphdr);
- 			if (!pskb_may_pull(skb, wlen))
---- a/net/sched/cls_api.c
-+++ b/net/sched/cls_api.c
-@@ -969,7 +969,7 @@ int tcf_classify(struct sk_buff *skb, co
- reclassify:
- #endif
- 	for (; tp; tp = rcu_dereference_bh(tp->next)) {
--		__be16 protocol = tc_skb_protocol(skb);
-+		__be16 protocol = skb_protocol(skb, false);
- 		int err;
- 
- 		if (tp->protocol != protocol &&
---- a/net/sched/cls_flow.c
-+++ b/net/sched/cls_flow.c
-@@ -84,7 +84,7 @@ static u32 flow_get_dst(const struct sk_
- 	if (dst)
- 		return ntohl(dst);
- 
--	return addr_fold(skb_dst(skb)) ^ (__force u16) tc_skb_protocol(skb);
-+	return addr_fold(skb_dst(skb)) ^ (__force u16)skb_protocol(skb, true);
- }
- 
- static u32 flow_get_proto(const struct sk_buff *skb,
-@@ -108,7 +108,7 @@ static u32 flow_get_proto_dst(const stru
- 	if (flow->ports.ports)
- 		return ntohs(flow->ports.dst);
- 
--	return addr_fold(skb_dst(skb)) ^ (__force u16) tc_skb_protocol(skb);
-+	return addr_fold(skb_dst(skb)) ^ (__force u16)skb_protocol(skb, true);
- }
- 
- static u32 flow_get_iif(const struct sk_buff *skb)
-@@ -155,7 +155,7 @@ static u32 flow_get_nfct(const struct sk
- static u32 flow_get_nfct_src(const struct sk_buff *skb,
- 			     const struct flow_keys *flow)
- {
--	switch (tc_skb_protocol(skb)) {
-+	switch (skb_protocol(skb, true)) {
- 	case htons(ETH_P_IP):
- 		return ntohl(CTTUPLE(skb, src.u3.ip));
- 	case htons(ETH_P_IPV6):
-@@ -168,7 +168,7 @@ fallback:
- static u32 flow_get_nfct_dst(const struct sk_buff *skb,
- 			     const struct flow_keys *flow)
- {
--	switch (tc_skb_protocol(skb)) {
-+	switch (skb_protocol(skb, true)) {
- 	case htons(ETH_P_IP):
- 		return ntohl(CTTUPLE(skb, dst.u3.ip));
- 	case htons(ETH_P_IPV6):
---- a/net/sched/cls_flower.c
-+++ b/net/sched/cls_flower.c
-@@ -203,7 +203,7 @@ static int fl_classify(struct sk_buff *s
- 		/* skb_flow_dissect() does not set n_proto in case an unknown
- 		 * protocol, so do it rather here.
- 		 */
--		skb_key.basic.n_proto = skb->protocol;
-+		skb_key.basic.n_proto = skb_protocol(skb, false);
- 		skb_flow_dissect_tunnel_info(skb, &mask->dissector, &skb_key);
- 		skb_flow_dissect(skb, &mask->dissector, &skb_key, 0);
- 
---- a/net/sched/em_ipset.c
-+++ b/net/sched/em_ipset.c
-@@ -62,7 +62,7 @@ static int em_ipset_match(struct sk_buff
- 	};
- 	int ret, network_offset;
- 
--	switch (tc_skb_protocol(skb)) {
-+	switch (skb_protocol(skb, true)) {
- 	case htons(ETH_P_IP):
- 		state.pf = NFPROTO_IPV4;
- 		if (!pskb_network_may_pull(skb, sizeof(struct iphdr)))
---- a/net/sched/em_meta.c
-+++ b/net/sched/em_meta.c
-@@ -199,7 +199,7 @@ META_COLLECTOR(int_priority)
- META_COLLECTOR(int_protocol)
- {
- 	/* Let userspace take care of the byte ordering */
--	dst->value = tc_skb_protocol(skb);
-+	dst->value = skb_protocol(skb, false);
- }
- 
- META_COLLECTOR(int_pkttype)
---- a/net/sched/sch_cake.c
-+++ b/net/sched/sch_cake.c
-@@ -589,7 +589,7 @@ static void cake_update_flowkeys(struct
- 	struct nf_conntrack_tuple tuple = {};
- 	bool rev = !skb->_nfct;
- 
--	if (tc_skb_protocol(skb) != htons(ETH_P_IP))
-+	if (skb_protocol(skb, true) != htons(ETH_P_IP))
- 		return;
- 
- 	if (!nf_ct_get_tuple_skb(&tuple, skb))
-@@ -1514,7 +1514,7 @@ static u8 cake_handle_diffserv(struct sk
- 	u16 *buf, buf_;
- 	u8 dscp;
- 
--	switch (tc_skb_protocol(skb)) {
-+	switch (skb_protocol(skb, true)) {
- 	case htons(ETH_P_IP):
- 		buf = skb_header_pointer(skb, offset, sizeof(buf_), &buf_);
- 		if (unlikely(!buf))
---- a/net/sched/sch_dsmark.c
-+++ b/net/sched/sch_dsmark.c
-@@ -207,7 +207,7 @@ static int dsmark_enqueue(struct sk_buff
- 	if (p->set_tc_index) {
- 		int wlen = skb_network_offset(skb);
- 
--		switch (tc_skb_protocol(skb)) {
-+		switch (skb_protocol(skb, true)) {
- 		case htons(ETH_P_IP):
- 			wlen += sizeof(struct iphdr);
- 			if (!pskb_may_pull(skb, wlen) ||
-@@ -300,7 +300,7 @@ static struct sk_buff *dsmark_dequeue(st
- 	index = skb->tc_index & (p->indices - 1);
- 	pr_debug("index %d->%d\n", skb->tc_index, index);
- 
--	switch (tc_skb_protocol(skb)) {
-+	switch (skb_protocol(skb, true)) {
- 	case htons(ETH_P_IP):
- 		ipv4_change_dsfield(ip_hdr(skb), p->mv[index].mask,
- 				    p->mv[index].value);
-@@ -317,7 +317,7 @@ static struct sk_buff *dsmark_dequeue(st
- 		 */
- 		if (p->mv[index].mask != 0xff || p->mv[index].value)
- 			pr_warn("%s: unsupported protocol %d\n",
--				__func__, ntohs(tc_skb_protocol(skb)));
-+				__func__, ntohs(skb_protocol(skb, true)));
- 		break;
- 	}
- 
---- a/net/sched/sch_teql.c
-+++ b/net/sched/sch_teql.c
-@@ -243,7 +243,7 @@ __teql_resolve(struct sk_buff *skb, stru
- 		char haddr[MAX_ADDR_LEN];
- 
- 		neigh_ha_snapshot(haddr, n, dev);
--		err = dev_hard_header(skb, dev, ntohs(tc_skb_protocol(skb)),
-+		err = dev_hard_header(skb, dev, ntohs(skb_protocol(skb, false)),
- 				      haddr, NULL, skb->len);
- 
- 		if (err < 0)
 
 
