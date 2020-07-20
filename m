@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2522C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C334620656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C6620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261913;
-	bh=KiPVoFkWqXoOMvSZ98d4FiJrMC62nVa/LYDq0eJYjQg=;
+	s=default; t=1595261919;
+	bh=2VjVDT0gFe8cQ3yxWyfhdTGBpQoSpI9OFZRQlmlxDNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2KA0lOS7VNU/68b4F1XRLr451Pv+3N0NFN7FQlKYejJ2iu1enG1+2xm1WdXOKjC9r
-	 2iFfr9HglqhQOlqckq1pZ84Qr9veNhuahp7sJlMUr0okLcjnPV9bLynyiaeQqZC0ut
-	 YgR1813MLO+MN+Gf+uk2T210DM/cl5SHuWsj6byA=
+	b=HYNaX4eB3LtH/9cm6hnIAR3CSoatLHKE5e8NNvqPflPp04dxR9EX9ukz0ZJULpiLA
+	 oaglD59rv8gkd3IpW2zQRUrdgWzXQcd+b6XLGuFoX0ufdUuajVcoqIK5OchNLAZrXi
+	 Fzi3f0z/638c6OYldyKwHEmbjplWXCCCizvVWGoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387600AbgGTQSb (ORCPT
+        id S2388150AbgGTQSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:18:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53476 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:18:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388121AbgGTQNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:13:31 -0400
+        id S1732566AbgGTQN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:13:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8302064B;
-        Mon, 20 Jul 2020 16:13:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3479620734;
+        Mon, 20 Jul 2020 16:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261611;
-        bh=KiPVoFkWqXoOMvSZ98d4FiJrMC62nVa/LYDq0eJYjQg=;
+        s=default; t=1595261608;
+        bh=2VjVDT0gFe8cQ3yxWyfhdTGBpQoSpI9OFZRQlmlxDNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sBqQh9OHeUTI7BjPCFSVdGYsMGIQsntJyCRvnomwqud0ApVgKxpZZ5YsuLPjGulze
-         u0Kcou1ellu/Ze99TYUBqfU5iXsEiEyghlTVTIhKc9jCgN4E8Qgf33TAi9+ZZT+aSV
-         Ea1ypUuGOy+jygEQuNBtLXRIWxXe1ObbByLtv5r0=
+        b=0kW4COPlRrOsQFW8PzzrZfpssVkDuttvsHzJiWEx6AdnaUEBxdor66JkjGOPqUIps
+         Yq8JVaM6kIHyTUvCRh03HrGD+FP5V9KKW7POVSaqNgqgSl1rpSZQccmz5DFBtjrDuZ
+         L9xACPoFRDUGe3fvZiIE/tBy4Ze9I0GoNKyy0Ucw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yariv <oigevald+kernel@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org,
+        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Harry Cutts <hcutts@chromium.org>,
         Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.7 148/244] HID: magicmouse: do not set up autorepeat
-Date:   Mon, 20 Jul 2020 17:36:59 +0200
-Message-Id: <20200720152832.890892511@linuxfoundation.org>
+Subject: [PATCH 5.7 147/244] HID: logitech-hidpp: avoid repeated "multiplier = " log messages
+Date:   Mon, 20 Jul 2020 17:36:58 +0200
+Message-Id: <20200720152832.843175218@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,37 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
 
-commit 6363d2065cd399cf9d6dc9d08c437f8658831100 upstream.
+commit e13762abf38ead29071407f32b9dcec38f21dc34 upstream.
 
-Neither the trackpad, nor the mouse want input core to generate autorepeat
-events for their buttons, so let's reset the bit (as hid-input sets it for
-these devices based on the usage vendor code).
+These messages appear each time the mouse wakes from sleep, in my case
+(Logitech M705), every minute or so.
+Let's downgrade them to the "debug" level so they don't fill the kernel log
+by default.
 
+While we are at it, let's make clear that this is a wheel multiplier (and
+not, for example, XY movement multiplier).
+
+Fixes: 4435ff2f09a2 ("HID: logitech: Enable high-resolution scrolling on Logitech mice")
 Cc: stable@vger.kernel.org
-Reported-by: Yariv <oigevald+kernel@gmail.com>
-Tested-by: Yariv <oigevald+kernel@gmail.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+Reviewed-by: Harry Cutts <hcutts@chromium.org>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-magicmouse.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/hid/hid-logitech-hidpp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hid/hid-magicmouse.c
-+++ b/drivers/hid/hid-magicmouse.c
-@@ -535,6 +535,12 @@ static int magicmouse_setup_input(struct
- 		__set_bit(MSC_RAW, input->mscbit);
- 	}
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -3146,7 +3146,7 @@ static int hi_res_scroll_enable(struct h
+ 		multiplier = 1;
  
-+	/*
-+	 * hid-input may mark device as using autorepeat, but neither
-+	 * the trackpad, nor the mouse actually want it.
-+	 */
-+	__clear_bit(EV_REP, input->evbit);
-+
+ 	hidpp->vertical_wheel_counter.wheel_multiplier = multiplier;
+-	hid_info(hidpp->hid_dev, "multiplier = %d\n", multiplier);
++	hid_dbg(hidpp->hid_dev, "wheel multiplier = %d\n", multiplier);
  	return 0;
  }
  
