@@ -2,152 +2,301 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F0CC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9456C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1077920702
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9743220709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:08:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="G9Gz7b85"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ulzf4J2v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgGTIG1 (ORCPT
+        id S1726740AbgGTIIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:06:27 -0400
-Received: from mail-eopbgr70083.outbound.protection.outlook.com ([40.107.7.83]:53216
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725815AbgGTIG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:06:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dk5uqkE27ATbG91Q2EASEeV8PmX5RRuJPcjYke7RAqpDfPEp9v8fb4/Xe5dEnaw+fk+TmuCSIWRB1jCaZQqok2Yk8Eaf3iW0h6FtooY+yJlT/KyU7y4hb/EfWtv/qFs4ava/MJ5H9xvT8+4wOV2X0rF+rVEGcPOmQWlB4A/Zj/YnRT6xkUOWv9QaSdjqPpiLzFBLGVu2YYNaAYHmkTrDFmiHfjK8Z7dIiliE3RIYfYyYMmK+q1Lb40GRxDooL66gLU4jLZW/aAD38AktSYOYNjWMYNjELVSrotUpuOlgsKql23kHsaQlB2Q2pEghL6pKxzbzIvtMfaQyCNmz9Lnyuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yP4d0VpOex5Z6qYkvlIGx3wQBh3pbDR9g+3h5cbexyY=;
- b=BXhKrLv5vFt0lZDJqTq44FUVZylsA7NozsJzKf7U16tO8qRRsoUKzSa+fXgimQXw315vKUCxuDuMrhj9rsZQlWYID4zavBjo/xXa8QXsEgIxDLf25rDlZBNZJWjJrxpCI+124HKlszJsyRC7b+jzMsbdBmEBfzoYavilpZHn3pIquCiOs7sciHvhDYM5oeW0h5BndtalNqSO6Mj+CU4nXYagFB+EBeRdsecvo1KfMIAHD9jhheQJ5nvmEy24kS3YvEmd3s9LsEsKPE8voot2eQRFA9M1X0X5eQkDkn19BCmpfm92AzOlF24tVOERy0YAETr0L1PcKdYgcR/IBvIyBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yP4d0VpOex5Z6qYkvlIGx3wQBh3pbDR9g+3h5cbexyY=;
- b=G9Gz7b85qr9044NjR61uHwMon0Ke57e5J2bX4NQHQ26jmg/0SERRZ0lBFRvx6bQ5igJI9ktq4qiw+TCKHT/CuWsArpSpxTGtSNkfSjUM4jiNSDk5s+Bk35OOMmL2Lh4klEAXIbW9c/r/w8kIBtx8wDeUG9vMtdxRsdbWVb0dLEI=
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
- by AM6PR04MB4165.eurprd04.prod.outlook.com (2603:10a6:209:44::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Mon, 20 Jul
- 2020 08:06:21 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
- 08:06:21 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Philippe Schenker <philippe.schenker@toradex.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     Jun Li <jun.li@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v2 2/3] usb: chipidea: imx: support disabling runtime-pm
-Thread-Topic: [PATCH v2 2/3] usb: chipidea: imx: support disabling runtime-pm
-Thread-Index: AQHWWfIPNKRf0OmdJ0GCrPpelAWmTKkHzuSggAChQYCAB2sK0IAARhSAgAAC5LA=
-Date:   Mon, 20 Jul 2020 08:06:21 +0000
-Message-ID: <AM7PR04MB715721D95968DDB78B45A3AF8B7B0@AM7PR04MB7157.eurprd04.prod.outlook.com>
-References: <20200714151822.250783-1-philippe.schenker@toradex.com>
-         <20200714151822.250783-2-philippe.schenker@toradex.com>
-         <AM7PR04MB7157793C6395C200DF5646C98B7E0@AM7PR04MB7157.eurprd04.prod.outlook.com>
-         <08251297f72fe745be43205d0a73631f009681cc.camel@toradex.com>
-         <AM7PR04MB71572600CE73140FE13CB17C8B7B0@AM7PR04MB7157.eurprd04.prod.outlook.com>
- <163befb5f97724a1279a33023980da3264f0c00e.camel@toradex.com>
-In-Reply-To: <163befb5f97724a1279a33023980da3264f0c00e.camel@toradex.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: toradex.com; dkim=none (message not signed)
- header.d=none;toradex.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cc71eed7-245a-48ea-4e91-08d82c83ca05
-x-ms-traffictypediagnostic: AM6PR04MB4165:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB4165548AE08370AF09D9E9B78B7B0@AM6PR04MB4165.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3vtqnGpFnuTFnnLCcXEMD+TQGr3ROr92wcDa0WwYeHloR3j+A8K7CTrwyG72f5bpP9GYy65F6iWYi8KS+MyBcQ9FCKQuN9t/TjlYqr1hnOQwg0VYOwH2yhISWC3QNpg/hJ301c2flVLSrCbE8Afctb8/SZzdBTTsIN2r+jzcZoBFqI9DnVLC47EqQQLtBkGuf5VpLvEizEngrVPpzo2xSp47vPgbb8LQ/s+Ev6XwB2evGSlBR+IJVl1dNbMTSS6t6ZIe+DxuXCHTE0uMD00pZIKU0H0lTLZrvbGHSEKe/WfWlr2INjh3aD2OclNZx7BbvlK1AuQqkwjzSKGmYuK+mQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(39860400002)(346002)(396003)(366004)(2906002)(7696005)(8936002)(64756008)(5660300002)(76116006)(66446008)(186003)(52536014)(66946007)(66556008)(66476007)(86362001)(71200400001)(9686003)(33656002)(44832011)(4326008)(54906003)(110136005)(6506007)(7416002)(26005)(478600001)(8676002)(83380400001)(316002)(55016002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: td21z0aiHHczWatx9125/BjrjVBI3t05guDCH3iVcmhlw5Q5cXJgEYPd+agSI2PtYX4NwOo5K2sNXjebKvDrHGLBeK0nNlIOqC12flTcP7GJhpCDAQyeTU6vmNrekSwyOoJN2HXqkHIjJ+NgiPtck6x0N8MBuNIjKekiDwZFzc53yb0SjjYKvjcAsHyA7IRF5UabzHcNWHy0wDBjaP74InrqCndNQcheZYZWWhesAX3Ps5x4MOQCAT7SeuiNwsjLRVl1/BnL7aYubBIJhLikAeRrLjYUBcfZ1nPWC6ywThp7h40kxS42suPHUmcKD81QakO8kGPNoXNneHZOMogi6tYxmoKFNTNPs+o/fAT1bMmTUBXK7TFSka/SHeXJ1DznYb8/9yVxmusT4ShXOoGASuth2p98FWpd9X/HelpRtNwEP2OzBXQiY+kYmXQm8lZdnp7YcTwiHm4QeYy/vLCVXQhJLKDfI7sOwGnME/T6wxw=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 20 Jul 2020 04:08:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgGTIIF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 04:08:05 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85136C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 01:08:05 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a15so1895330wrh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 01:08:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1yXIPlBUH+EmDdZmp8j+ju0kw8iWENSTR87nU7J3gic=;
+        b=Ulzf4J2vqLs8NwLETT7bcd+u4HAAwBmYUgFdDA6OzvG7chP9Dc2iYoP4a8g0hXIW4j
+         uSSxTog/gDT29zrDukJMfV+m6rPQiFTeOmhUFeIPbqB8Cuo8d2kRH+nCv+Ce3TgIQ13s
+         rW0RNcsEE6bjYWi3sW2IPbXdNppOguJKq5J4UWv1LMYrAWJBNfpCF8J/f0CJlvBeAwVY
+         hONG9p634fn5Bgtts2YlmScANiWJ3Qllujg13dBWuHVyZHhKM9aVRAqdoUQVyPCeqehR
+         9NsRXV+LWdRhodtQySz6C4jgES2XKiZ+l0/mbutdRvezINxHHFxPwlJ7d/DD9rmZ4lU+
+         Js2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1yXIPlBUH+EmDdZmp8j+ju0kw8iWENSTR87nU7J3gic=;
+        b=ha0sdumhw5mq+oNSN2HMITo2sOw9nB/OUWwn51VybeYW4o0hNLkUk2azScaC6UxNGb
+         Blemf80dlX5ZqRatCjX2wVLGqs0Qi4rsHKqUBXsrvgm9t3YF8XTv30UMbEZgwY0ER8rS
+         Sy1lJdhTWx7WxJZZcMZKWteoVRVOOUEPep87p48HE1B3av+jTzRvXxdbGdeHNiUMr6lI
+         V57L/mqNNIPPshbeCqJg8cwN1fwW2a5CP6sZpIVWxs/3mhmQ27XdXca9qx1W9h/yd5GO
+         x7TmsHBQpvR92DD02hbySFD9PHt2KOBlaoO7MJvhsyg0oilBY6kwIVBsecKJkAPG51ol
+         Y8og==
+X-Gm-Message-State: AOAM531wGx3DjRqpPwq1QbWEzFa4gwCRry3UxIfh+y86HOYrpI7w/x2P
+        xr3SKfKXs2MKRRWefLNHHc49SA==
+X-Google-Smtp-Source: ABdhPJz7eMPdqXW2QxkgN3v4OfLKvoMLVgo05mEGxQDWE0w9I97CQ/L+CeevJ5aEqAiM+mZL+O5AGg==
+X-Received: by 2002:adf:f54b:: with SMTP id j11mr21195819wrp.206.1595232484043;
+        Mon, 20 Jul 2020 01:08:04 -0700 (PDT)
+Received: from holly.lan (82-132-214-103.dab.02.net. [82.132.214.103])
+        by smtp.gmail.com with ESMTPSA id s19sm8354717wrb.54.2020.07.20.01.08.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 01:08:03 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 09:07:59 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        LKML <linux-kernel@vger.kernel.org>,
+        Patch Tracking <patches@linaro.org>
+Subject: Re: [PATCH v2 2/3] kgdb: Use the kprobe blocklist to limit single
+ stepping
+Message-ID: <20200720080759.tyq4rq4qxmkwdk2g@holly.lan>
+References: <20200716151943.2167652-1-daniel.thompson@linaro.org>
+ <20200716151943.2167652-3-daniel.thompson@linaro.org>
+ <CAD=FV=UDVjwy5=OiDCrMbn8o9N5GGMiG8JnL0j+9fy3m5Vf4Eg@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc71eed7-245a-48ea-4e91-08d82c83ca05
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 08:06:21.3403
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7PeAEyRF/yqqYYBYaZJTJAmvQ0AeM0gamU/sNDliwWUwciWm9l+GRDudtc1FrBWMKE0VEciSGtuL1JxXr/orlw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4165
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=UDVjwy5=OiDCrMbn8o9N5GGMiG8JnL0j+9fy3m5Vf4Eg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IA0KPiBPbiBNb24sIDIwMjAtMDctMjAgYXQgMDM6NDQgKzAwMDAsIFBldGVyIENoZW4gd3JvdGU6
-DQo+ID4NCj4gPiA+IE9uIFdlZCwgMjAyMC0wNy0xNSBhdCAwMDo1MSArMDAwMCwgUGV0ZXIgQ2hl
-biB3cm90ZToNCj4gPiA+ID4gPiBUaGUgVG9yYWRleCBDb2xpYnJpIGlNWDZVTEwgYm9hcmQgaGFz
-IGEgc3BlY2lhbCBVU0IgaGFyZHdhcmUNCj4gPiA+ID4gPiBkZXNpZ24uDQo+ID4gPiA+ID4gV2l0
-aCBydW50aW1lLXBtIGVuYWJsZWQgVVNCIHJlc2V0IGl0c2VsZiBjb250aW51b3VzbHkuDQo+ID4g
-PiA+ID4gRnVydGhlcm1vcmUNCj4gPiA+ID4gPiB0aGUgT1RHIHBvcnQgaXMgYWxzbyBub3QgZW51
-bWVyYXRpbmcgZGV2aWNlcyBpZiB0aGUgQ2hpcGlkZWEgSVANCj4gPiA+ID4gPiBpcyBpbiBydW50
-aW1lIHNsZWVwIG1vZGUgYW5kIGEgZGV2aWNlIG9yIGhvc3QgZ2V0cyBwbHVnZ2VkIGluLg0KPiA+
-ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+IEhpIFBoaWxpcHBlLA0KPiA+ID4gPg0KPiA+ID4gPiBZ
-b3UgbWF5IGRlc2NyaWJlIHRoZSBkZXRhaWwgd2hhdCdzIHRoZSBzcGVjaWFsIFVTQiBoYXJkd2Fy
-ZSBkZXNpZ24NCj4gPiA+ID4gZm9yIHlvdXIgYm9hcmQsDQo+ID4gPg0KPiA+ID4gSWYgSSBvbmx5
-IGtuZXcgdGhlIHJvb3QtY2F1c2Ugb2YgdGhhdCBwcm9ibGVtIC0gdW5mb3J0dW5hdGVseSBJDQo+
-ID4gPiBkb24ndC4NCj4gPiA+IFRoYXQncyBhbHNvIHdoeSBJIGhhdmUgc3VjaCBhIGhhcmQgdGlt
-ZSB0byBkZXNjcmliZSBpdC4NCj4gPiA+DQo+ID4gPiA+IGFuZCB3aHkgaXQgY2F1c2VzIHRoZSBw
-cm9ibGVtLCBhbmQgd2h5IGRpc2FibGUgcnVudGltZSBwbSBjb3VsZA0KPiA+ID4gPiBmaXggdGhp
-cyBpc3N1ZSwgdGhlbiwNCj4gPiA+DQo+ID4gPiBJIGNhbm5vdCBwcm92aWRlIHRoZSAnd2h5JyBw
-YXJ0IHlldC4gSSdsbCB0cnkgc29tZXRoaW5nIG1vcmUgYW5kDQo+ID4gPiBob3BlIEkgY2FuIHBy
-b3ZpZGUgeW91IGd1eXMgd2l0aCB0aGUgZXhhY3QgZGVzY3JpcHRpb24uDQo+ID4gPg0KPiA+ID4g
-PiB0aGUgb3RoZXIgdXNlcnMgY291bGQga25vdyBpZiBpdCBjb3VsZCBhcHBseSB0byB0aGVpciBw
-bGF0Zm9ybXMgb3INCj4gPiA+ID4gbm90IGluIGZ1dHVyZS4NCj4gPiA+DQo+ID4gPiBJIG9ubHkg
-Zm91bmQgb3V0IGFib3V0IGl0IGJlY2F1c2UgeW91IHdlcmUgcG9pbnRpbmcgbWUgaW4gdGhhdA0K
-PiA+ID4gZGlyZWN0aW9uLiBJIGRlYnVnZ2VkIGZvciBob3VycyBub3cgYW5kIGRpZG4ndCBjYW1l
-IHRvIHRoZQ0KPiA+ID4gcm9vdC1jYXVzZSBvZiB0aGUgaXNzdWUuIEkgdGhpbmsgdG8gcmVhbGx5
-IHVuZGVyc3RhbmQgaXQgSSB3b3VsZA0KPiA+ID4gbmVlZCB0byBrbm93IG11Y2ggbW9yZSBhYm91
-dCB0aGUgQ2hpcGlkZWEgSVAuDQo+ID4gPg0KPiA+ID4gSSdsbCBnZXQgYmFjayB0byB5b3UgZ3V5
-cyB3aXRoIGEgcHJvcG9zYWwgZm9yIGEgbmV3IGRlc2NyaXB0aW9uLg0KPiA+ID4NCj4gPg0KPiA+
-IFBoaWxpcHBlLCBpcyBpdCBwb3NzaWJsZSB0byBzaGFyZSB5b3VyIFVTQiBoYXJkd2FyZSBkZXNp
-Z24gYXQgNlVMTD8NCj4gDQo+IEl0J3MgYWN0dWFsbHkgcHJldHR5IHNpbXBsZTogV2UgaGF2ZSBv
-biBVU0JfT1RHMV9WQlVTIGEgMXVGIGNhcGFjaXRvciBhbmQNCj4gKzMuMFYgb24gVkREX1VTQl9D
-QVAgdG9nZXRoZXIgd2l0aCAxMDBuIGFuZCAxMHUgYnlwYXNzIGNhcHMuIE5vdyB0aGUgYmlnDQo+
-IHByb2JsZW0gaXMgdGhhdCB0aGUgZHJpdmVyIGNhbiBub3QgZGV0ZWN0IHRoZSA1ViBvbiBWQlVT
-IHNpZ25hbC4NCj4gDQoNCkNvdWxkIHlvdSBjb25maXJtIGl0IGRvZXMgbm90IHNlZSBWQlVTIGF0
-IHJlZ2lzdGVyIE9UR1NDPyBJZiBpdCBpcywgaG93IGNhbiBpdCB3b3JrIHdpdGggcnVudGltZQ0K
-ZGlzYWJsZWQsIHRoZSBVU0JDTUQuUlMgc2V0dGluZyAoY2lfaGRyY19nYWRnZXRfY29ubmVjdCBp
-cyBjYWxsZWQpIGRlcGVuZHMgb24gVkJVUy4NCg0KUGV0ZXINCg0KPiBJIHRyaWVkIHRvICdpbmpl
-Y3QnIDVWIHRvIHRoYXQgcGluIGxhc3Qgd2VlayBhbmQgdGhpbmdzIGdvdCByZWFsbHkgYmV0dGVy
-IHdpdGggcnVudGltZS1wbS4NCj4gQnV0IEkgc3RpbGwgdGhpbmtzIGRpc2FibGluZyBpdCBmb3Ig
-b3VyIGJvYXJkIHdvdWxkIG1ha2Ugc2Vuc2UuDQo+IA0KPiBJJ2xsIHNlbmQgYSBuZXcgZGVzY3Jp
-cHRpb24gdG9kYXkgd2hlcmUgSSB0cnkgdG8gcG9pbnQgdG8gVkJVUyBzaWduYWwgbm90IGNvbm5l
-Y3RlZC4NCj4gDQo+IFBoaWxpcHBlDQo+IA0KPiA+IEFuZCBob3cgY2lfaGRyY19nYWRnZXRfY29u
-bmVjdCBpcyBjYWxsZWQgd2hlbiB0aGUgcnVudGltZSBwbSBpcw0KPiA+IGRpc2FibGVkPw0KPiA+
-DQo+ID4gVGhhbmtzLA0KPiA+IFBldGVyDQo+ID4NCg==
+On Fri, Jul 17, 2020 at 03:39:51PM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Thu, Jul 16, 2020 at 8:20 AM Daniel Thompson
+> <daniel.thompson@linaro.org> wrote:
+> >
+> > If we are running in a part of the kernel that dislikes breakpoint
+> > debugging then it is very unlikely to be safe to single step. Add
+> > some safety rails to prevent stepping through anything on the kprobe
+> > blocklist.
+> >
+> > As part of this kdb_ss() will no longer set the DOING_SS flags when it
+> > requests a step. This is safe because this flag is already redundant,
+> > returning KDB_CMD_SS is all that is needed to request a step (and this
+> > saves us from having to unset the flag if the safety check fails).
+> >
+> > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > ---
+> >  include/linux/kgdb.h        |  1 +
+> >  kernel/debug/debug_core.c   | 13 +++++++++++++
+> >  kernel/debug/gdbstub.c      | 10 +++++++++-
+> >  kernel/debug/kdb/kdb_bp.c   |  8 ++------
+> >  kernel/debug/kdb/kdb_main.c | 10 ++++++++--
+> >  5 files changed, 33 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+> > index 7caba4604edc..aefe823998cb 100644
+> > --- a/include/linux/kgdb.h
+> > +++ b/include/linux/kgdb.h
+> > @@ -214,6 +214,7 @@ extern void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc);
+> >
+> >  /* Optional functions. */
+> >  extern int kgdb_validate_break_address(unsigned long addr);
+> > +extern int kgdb_validate_single_step_address(unsigned long addr);
+> >  extern int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt);
+> >  extern int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt);
+> >
+> > diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+> > index 133a361578dc..4b59bcc90c5d 100644
+> > --- a/kernel/debug/debug_core.c
+> > +++ b/kernel/debug/debug_core.c
+> > @@ -208,6 +208,19 @@ int __weak kgdb_validate_break_address(unsigned long addr)
+> >         return err;
+> >  }
+> >
+> > +int __weak kgdb_validate_single_step_address(unsigned long addr)
+> > +{
+> > +       /*
+> > +        * Disallow stepping when we are executing code that is marked
+> > +        * as unsuitable for breakpointing... stepping won't be safe
+> > +        * either!
+> > +        */
+> > +       if (kgdb_within_blocklist(addr))
+> > +               return -EINVAL;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  unsigned long __weak kgdb_arch_pc(int exception, struct pt_regs *regs)
+> >  {
+> >         return instruction_pointer(regs);
+> > diff --git a/kernel/debug/gdbstub.c b/kernel/debug/gdbstub.c
+> > index 61774aec46b4..f1c88007cc2b 100644
+> > --- a/kernel/debug/gdbstub.c
+> > +++ b/kernel/debug/gdbstub.c
+> > @@ -1041,8 +1041,16 @@ int gdb_serial_stub(struct kgdb_state *ks)
+> >                         if (tmp == 0)
+> >                                 break;
+> >                         /* Fall through - on tmp < 0 */
+> > -               case 'c': /* Continue packet */
+> >                 case 's': /* Single step packet */
+> > +                       error = kgdb_validate_single_step_address(
+> > +                                       kgdb_arch_pc(ks->ex_vector,
+> > +                                                    ks->linux_regs));
+> 
+> I'm a little confused.  Isn't this like saying "if
+> (i_am_standing_in_acid) dont_step_into_acid"?
+
+I describe it more as:
+
+    if (we_know_there_is_acid_nearby)
+        dont_step_forward
+
+It is possible we are currently stepping in acid but it is also possible
+(and reasonably likely) that we haven't stepped in it yet but will do so
+soon.
+
+
+> Specifically you're checking the _current_ PC to see if it's in the
+> blocklist, right?  ...but you've already (effectively) dropped into
+> the debugger at that location, so if it really was a problem wouldn't
+> we already be in trouble?
+
+The basic use case is where someone is stepping and we reach a PC that
+would be blocked for a breakpoint. This will typically be due (although
+I think it does generalize) to a function call and the safety rail will
+be reached after we have jumped to the blocked function but before we
+actually execute any instructions within it.
+
+Or putting it another way, there is no reason to worry if we start
+somewhere "safe" and start stepping towards something on the blocklist.
+We won't melt our shoes!
+
+There are more complex cases when we drop into the debugger in the
+middle of blocked code with a not-breakpoint-or-step trap. You're right
+that we'd been in touble and the debugger it probably a bit fragile.
+However that certainly doesn't mean blocking stepping at this point
+is a bad thing!
+
+
+> What you really want (I think?) is to know if the instruction that
+> you're stepping into is in the blocklist, right?  ...but you can't
+> know that because it requires a full instruction emulator (that's why
+> CPUs have "single step mode").
+
+As above, I don't think this is needed but if there was an architecture
+that did then it can override the default implementation if it wanted
+to.
+
+ 
+> I guess you get a marginal benefit if someone manually set their
+> instruction pointer to be an address in the middle of a blocklisted
+> function and then trying to step, but I'm not sure that's really
+> something we need to add code for?
+
+Perhaps off-topic given this isn't why we add the satefy rails but...
+
+I think people who directly set PC should be regarded as very
+sophisticated users (and therefore do not need safety rails) so I have
+little interest in honouring the blocklist for direct writes to the
+PC. More generally sophisticated users should be able to find
+KGDB_HONOUR_BLOCKLIST pretty quickly if they need to!
+
+
+> It feels like the right solution is that the architecture-specific
+> single-step code should simply consider a single-step through a
+> blocklisted area to be a step through one giant instruction.
+
+For kgdb this feature is already implemented (next or finish).
+
+
+> > +                       if (error != 0) {
+> > +                               error_packet(remcom_out_buffer, error);
+> > +                               break;
+> > +                       }
+> > +                       fallthrough;
+> > +               case 'c': /* Continue packet */
+> >                         if (kgdb_contthread && kgdb_contthread != current) {
+> >                                 /* Can't switch threads in kgdb */
+> >                                 error_packet(remcom_out_buffer, -EINVAL);
+> > diff --git a/kernel/debug/kdb/kdb_bp.c b/kernel/debug/kdb/kdb_bp.c
+> > index ec4940146612..4853c413f579 100644
+> > --- a/kernel/debug/kdb/kdb_bp.c
+> > +++ b/kernel/debug/kdb/kdb_bp.c
+> > @@ -507,18 +507,14 @@ static int kdb_bc(int argc, const char **argv)
+> >   *     None.
+> >   * Remarks:
+> >   *
+> > - *     Set the arch specific option to trigger a debug trap after the next
+> > - *     instruction.
+> > + *     KDB_CMD_SS is a command that our caller acts on to effect the step.
+> >   */
+> >
+> >  static int kdb_ss(int argc, const char **argv)
+> >  {
+> >         if (argc != 0)
+> >                 return KDB_ARGCOUNT;
+> > -       /*
+> > -        * Set trace flag and go.
+> > -        */
+> > -       KDB_STATE_SET(DOING_SS);
+> > +
+> >         return KDB_CMD_SS;
+> >  }
+> >
+> > diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+> > index 5c7949061671..cd40bf780b93 100644
+> > --- a/kernel/debug/kdb/kdb_main.c
+> > +++ b/kernel/debug/kdb/kdb_main.c
+> > @@ -1189,7 +1189,7 @@ static int kdb_local(kdb_reason_t reason, int error, struct pt_regs *regs,
+> >                      kdb_dbtrap_t db_result)
+> >  {
+> >         char *cmdbuf;
+> > -       int diag;
+> > +       int diag, res;
+> >         struct task_struct *kdb_current =
+> >                 kdb_curr_task(raw_smp_processor_id());
+> >
+> > @@ -1346,10 +1346,16 @@ static int kdb_local(kdb_reason_t reason, int error, struct pt_regs *regs,
+> >                 }
+> >                 if (diag == KDB_CMD_GO
+> >                  || diag == KDB_CMD_CPU
+> > -                || diag == KDB_CMD_SS
+> >                  || diag == KDB_CMD_KGDB)
+> >                         break;
+> >
+> > +               if (diag == KDB_CMD_SS) {
+> > +                       res = kgdb_validate_single_step_address(instruction_pointer(regs));
+> 
+> Is it legit to use instruction_pointer() directly?  Should you be
+> calling kgdb_arch_pc()  ...or does that just account for having just
+> hit a breakpoint?
+
+I decided between kgdb_arch_pc() and instruction_pointer() based on the
+usage of regs in the rest of this file (which is exclusively
+instruction_pointer() ). I didn't want the lookup to mismatch what the
+user has been told in the console.
+
+On the other hand, I did cross my mind that every PC lookup could be
+broken and I made a note for the future...
+
+
+Daniel.
