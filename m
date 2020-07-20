@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7762BC43457
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A19AC43459
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5375D2176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED622206F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261945;
-	bh=YKuN1e9nj+vT0ZACDA0Wb9WbZ52t3QdCAHvvnz8SdeM=;
+	s=default; t=1595261949;
+	bh=6TbSfa2y/8EXceWHAV40DoXSA3xriKUaaTKYitemB04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KMXmEiFF0HNu5z2Q0UQTqDEDkPO45sP1zqiG7fK5kz+K4kH3Zg3XbiGzj3bmq1N24
-	 UmzxGqJx8mN4ofnfNw5Yk16Tw7UvtEhfhmz+PDEyzZuAnhFH8LgJMNG45GdX+eOISm
-	 5o9rqmKFc6ZdYIuQm5mRvOwITpnD860Phmf75Bbo=
+	b=ObJHK1d1ct86mG7HcSnX2uMse43ck6dG8XzfYD0a4OkL0tSX/0+QAOXdGlm2pnBoj
+	 ZWKKx1i6+Oz7eu712QvOPe1OESMSgaq9RNTeBVv2W8DrRHEsjcfYGr2V3zKuFugn7E
+	 u3ep50KDlZ7m/byh81/fcclrbxZ6NQOOwi2Z87l4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387977AbgGTQMe (ORCPT
+        id S2387607AbgGTQMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:12:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387947AbgGTQMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 12:12:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387947AbgGTQMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:12:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5871206E9;
-        Mon, 20 Jul 2020 16:12:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98D5620684;
+        Mon, 20 Jul 2020 16:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261550;
-        bh=YKuN1e9nj+vT0ZACDA0Wb9WbZ52t3QdCAHvvnz8SdeM=;
+        s=default; t=1595261545;
+        bh=6TbSfa2y/8EXceWHAV40DoXSA3xriKUaaTKYitemB04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ad0kb+YZsYz5/dgtLTRqnAeDLDdO6hDVsKY2S+94n1TSkVbM6X/Zr8ELOamFiB+KM
-         gi3mKK2LzztW8cuigqVK1EbFsE2OUoPTiNS75n/ZWuqGkufLrgH77o/TDRDEIsPM4p
-         GjhIq2pe/tTlduHOLVcZ/2XKXvYh+8mteWP9WIvc=
+        b=CYjctm99IiuLJd5fsf7C9x6yhV6q6e4FZNYkDX3mLYWL4/8fixEVSL6sg+1LQNvlV
+         WwREvN8fj1XPgba2SDMd6EtrbfrFXB4fOYd0CU/+JiaKIhnJ8EfmVIzGksWcSV7wFQ
+         aemxcVxpoJDQbvKETpBW5XKqaTK/MCjunyf+0/uY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        stable@vger.kernel.org, Armas Spann <zappel@retarded.farm>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 157/244] ALSA: hda/realtek - Enable Speaker for ASUS UX533 and UX534
-Date:   Mon, 20 Jul 2020 17:37:08 +0200
-Message-Id: <20200720152833.320563906@linuxfoundation.org>
+Subject: [PATCH 5.7 155/244] ALSA: hda/realtek: enable headset mic of ASUS ROG Zephyrus G14(G401) series with ALC289
+Date:   Mon, 20 Jul 2020 17:37:06 +0200
+Message-Id: <20200720152833.226256949@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,35 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Armas Spann <zappel@retarded.farm>
 
-commit 473fbe13fd6f9082e413aea37e624ecbce5463cc upstream.
+commit ff53664daff2a65f4bf2479ac56dfb3e908deff0 upstream.
 
-ASUS UX533 and UX534 speaker still can't output.
-End User feedback speaker didn't have output.
-Add this COEF value will enable it.
+This patch adds support for headset mic to the ASUS ROG Zephyrus
+G14(GA401) notebook series by adding the corresponding
+vendor/pci_device id, as well as adding a new fixup for the used
+realtek ALC289. The fixup stets the correct pin to get the headset mic
+correctly recognized on audio-jack.
 
-Fixes: 4e051106730d ("ALSA: hda/realtek: Enable audio jacks of ASUS UX533FD with ALC294")
+Signed-off-by: Armas Spann <zappel@retarded.farm>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Link: https://lore.kernel.org/r/80334402a93b48e385f8f4841b59ae09@realtek.com
+Link: https://lore.kernel.org/r/20200711110557.18681-1-zappel@retarded.farm
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/pci/hda/patch_realtek.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -7101,6 +7101,8 @@ static const struct hda_fixup alc269_fix
- 			/* Set EAPD high */
- 			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x40 },
- 			{ 0x20, AC_VERB_SET_PROC_COEF, 0x8800 },
-+			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x0f },
-+			{ 0x20, AC_VERB_SET_PROC_COEF, 0x7774 },
- 			{ }
- 		},
+@@ -6117,6 +6117,7 @@ enum {
+ 	ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS,
+ 	ALC269VC_FIXUP_ACER_HEADSET_MIC,
+ 	ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE,
++	ALC289_FIXUP_ASUS_G401,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7324,6 +7325,13 @@ static const struct hda_fixup alc269_fix
  		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MIC
+ 	},
++	[ALC289_FIXUP_ASUS_G401] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x19, 0x03a11020 }, /* headset mic with jack detect */
++			{ }
++		},
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7504,6 +7512,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1043, 0x1bbd, "ASUS Z550MA", ALC255_FIXUP_ASUS_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1043, 0x1c23, "Asus X55U", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+ 	SND_PCI_QUIRK(0x1043, 0x1ccd, "ASUS X555UB", ALC256_FIXUP_ASUS_MIC),
++	SND_PCI_QUIRK(0x1043, 0x1f11, "ASUS Zephyrus G14", ALC289_FIXUP_ASUS_G401),
+ 	SND_PCI_QUIRK(0x1043, 0x3030, "ASUS ZN270IE", ALC256_FIXUP_ASUS_AIO_GPIO2),
+ 	SND_PCI_QUIRK(0x1043, 0x831a, "ASUS P901", ALC269_FIXUP_STEREO_DMIC),
+ 	SND_PCI_QUIRK(0x1043, 0x834a, "ASUS S101", ALC269_FIXUP_STEREO_DMIC),
 
 
