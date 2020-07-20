@@ -2,216 +2,359 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB35C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4B8C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDE6322482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B18C722B51
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:51:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="VyB8AgUv";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="EjmR6ik1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U0XUa3D/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730457AbgGTSuR (ORCPT
+        id S1730597AbgGTSvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 14:50:17 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:41268 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgGTSuO (ORCPT
+        Mon, 20 Jul 2020 14:51:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgGTSvX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 14:50:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1595271013; x=1626807013;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=P/W1J3hZS+8w0MkBh/RR0ZB6VOf4WFLeddvFV49hxfA=;
-  b=VyB8AgUvpg8SXDD24L/50o3b2okrjmaO0tvMcGyx7ej/mnEu42ndmlhf
-   CuJOMIHTPFrpnFcp4CJsr229vKsM4EDmCbeIpojavNXmH/pFgCjcJ8ybR
-   C4MkE/k197PeqqiT1BBw1Ws1g36t5+C/Ns2NkIlP/HquOnxcwXA7WJ4lj
-   PYs8s/bmo1PD257aRN4oL/qkMoMV1TS5toW8cNQi+Oczs+ZFWFUXnBVsQ
-   rBuBgdBK0yvKNsvKJ6cHutlIb74yBvUSyV3ZjmmMTuwA+wUo13+i7ahWV
-   gKeCPXig6z+OUKvMMvo+im33SpWUxKLIxYvrtAbuwogPYG9HGZzS1cggW
-   Q==;
-IronPort-SDR: PKIJsneeEsAZIZJW9AV4xE3CG8Cgo8BLk4JcNyZw7rLW6xYb9oyNw0TAqfK8MigS4ObuhYw2BL
- r2TJfu2e1LPUKNRf3dCPirpOTMdHLZQ7K6GOobS2y202YFfhNh4fkLEGeRCVXm9BgKD5Grp1av
- Hn7sWKfAVLJsKs+XV7f71TCkGBm6TcWs4zr+tcQtE0n142LyhTr8mzzgCdfKTIcxFu3geoJXif
- Yn33ucGX5gyfajXBGMzkPNfAV0i49H+P8y3QbvWMDGf82bKSjeB181oyx++gUNQB3RPJmlV5vy
- pmE=
-X-IronPort-AV: E=Sophos;i="5.75,375,1589212800"; 
-   d="scan'208";a="142943759"
-Received: from mail-dm6nam10lp2104.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.104])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Jul 2020 02:50:11 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MWJu8UGd8s9xsYiFOHUNziTy0Ly6Des8UhPX/EWuv6lvfVz2wddRNzN0+unwtmZBajigRoT7fiLukfR0sibB+o4untafUSGR1CBzS2sWbfHLzZt6W+xdfSIzr98fZVLob6M0nvr+ySqEXb34Ixwmz7ks9fA4d8w5+iqg5iC6QZ+jGmtLCn/e+u7HAFPS/4CUmGcRO1ULUXq03yrKvvR8kjHdRj8DC6+v00/sNrna3GEqxTypsNbC9pxwCs04WPemfbJEuXr6/1yhwMVaNHqJeIXl08HJWeBIpRe7TdkIcWIdbsVHVf2mjOfYpelJXjY9jttiaUOiRoUk3NnQJw5L+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P/W1J3hZS+8w0MkBh/RR0ZB6VOf4WFLeddvFV49hxfA=;
- b=Lrs3PqQ7NG7lpdpOGwfkT5qWApWHeIj4Xba5QOPvmh7sgcLFk0wSOOHDjzfvv8unkGRnU+KV0eZdAGLUPZRpWUhfwJFtqelMmWkFaxhmfd5hmxIpX8scEOukSVQrjy6NeAe8E/eRMMHRdeO0cWTeN98h8AaLBVed6c7wfBsikogdkAsIeewIXcmvhrWzR/1S/Q1D6YFVay0OWVnrc6K74Lk9t7+VpVB8nc+RRENlOKercNIIjx+vFTrEBrs+JgZVsXxT5vUs6bLeEGeil/dv/wATHnNGHJJBpNtiIj29N6fGyJxvdjXBAM1dj23JgSOKK9HLi+NNS00KqY207pL99w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Mon, 20 Jul 2020 14:51:23 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8796DC061794;
+        Mon, 20 Jul 2020 11:51:23 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id v6so18724297iob.4;
+        Mon, 20 Jul 2020 11:51:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P/W1J3hZS+8w0MkBh/RR0ZB6VOf4WFLeddvFV49hxfA=;
- b=EjmR6ik1GBY65pEO/fKEZg4tNeRUb0V5Tg2jQRL/artNKLKCp0HEezQNe+ktymvLSZbtLxy63ibCQsAySF+kS5NgU+xly/hthSMYY81/MjU17OzYOIPqergJh8BcH4dXIZMmnKeZ0uHBZSARCczwhLznDBNm5IPKSACpP36St4c=
-Received: from CH2PR04MB6725.namprd04.prod.outlook.com (2603:10b6:610:94::15)
- by CH2PR04MB6999.namprd04.prod.outlook.com (2603:10b6:610:91::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Mon, 20 Jul
- 2020 18:50:11 +0000
-Received: from CH2PR04MB6725.namprd04.prod.outlook.com
- ([fe80::cc92:ebd4:685c:7f1]) by CH2PR04MB6725.namprd04.prod.outlook.com
- ([fe80::cc92:ebd4:685c:7f1%3]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
- 18:50:10 +0000
-From:   Atish Patra <Atish.Patra@wdc.com>
-To:     "naresh.kamboju@linaro.org" <naresh.kamboju@linaro.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-CC:     "walken@google.com" <walken@google.com>,
-        "palmerdabbelt@google.com" <palmerdabbelt@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zong.li@sifive.com" <zong.li@sifive.com>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>
-Subject: Re: [PATCH 5.7 233/244] RISC-V: Acquire mmap lock before invoking
- walk_page_range
-Thread-Topic: [PATCH 5.7 233/244] RISC-V: Acquire mmap lock before invoking
- walk_page_range
-Thread-Index: AQHWXrETjDxZGeRGbk6/4QyqHlR0zKkQvJIAgAATOoA=
-Date:   Mon, 20 Jul 2020 18:50:10 +0000
-Message-ID: <194a70d4428b96b59594efc5cae7ed26f6da45b3.camel@wdc.com>
-References: <20200720152825.863040590@linuxfoundation.org>
-         <20200720152836.926007002@linuxfoundation.org>
-         <CA+G9fYteJs0X1Ctjbt-51Q9J2JHM--cOpYg+02jSdfnbWbwr2g@mail.gmail.com>
-In-Reply-To: <CA+G9fYteJs0X1Ctjbt-51Q9J2JHM--cOpYg+02jSdfnbWbwr2g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.3 
-authentication-results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [98.248.240.128]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 12570b70-3c73-47a2-2108-08d82cddbaf6
-x-ms-traffictypediagnostic: CH2PR04MB6999:
-x-microsoft-antispam-prvs: <CH2PR04MB699987C696F5060F3386B6DBFA7B0@CH2PR04MB6999.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2201;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: P5IyxX0Vmc2dNjdi3JDN/pWfFDHOD2rFQKn9fzOIMWZj0uKQS/WT9vPZKyQ4nghuQ9NK+9xhbNOmVOIlrmu+ixzbD/918RPXFAV2KkA3N9Cm78z9SE1hKKvJtqDLzp8xIx/3npjLnYu9LeiDRJTSTkd4oL7W+0m4bzLZdro+G9gdNVb57YnjgCZfgC1AMmfBbzv+fVlBBE9QfcUon+O6pzt04LyaqWX2c8wRlO+EorRAVe68MwXPAvHRRLzFxH0IUU+kX/deW/5SqZhEjqABWAqHcSnEO0CZXcDXTMcKQskaFLCAmleJsvhBLMMGhbjNUDhPhsxpECnq3vlm+IbDQt+bEXl0NQ8MDIV7BpYostYFre1xLC8fow6pIj/roIwqzBU1+h4h8gTDeLjqKI6M2A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR04MB6725.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(346002)(396003)(136003)(376002)(316002)(110136005)(83380400001)(186003)(54906003)(4326008)(2616005)(966005)(71200400001)(8676002)(6506007)(5660300002)(66946007)(66556008)(66446008)(6486002)(26005)(478600001)(2906002)(8936002)(36756003)(66476007)(76116006)(91956017)(86362001)(64756008)(6512007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: rPsiLD95ygDzM4RR3oeF7lCh/IdthXeCCJqbvI7jImoIAB+DkXQSrrf+76WFRiqNFMp3imoEHbp0x/SFwmGxH+9q7EL4etZGAZInIcgUImq4nVUjFB9NZ+OsGOKT+kgA/OEAlwL6FJTSHCwISvRvqZrTmHUwwW68byt4Wiyzq5WUtbYmw8Fs5T+CcRrLmVpXpUQkhm9wVkMQRtofW/J/A8zu373hUqnFx954x3y6/I4JhX7nPjRfqwnx6R50Zr6UZFmezUXAl1lBbU9s04MkTKMRADHlgivO43n26MF4B9ayGPn4iU+DVOcxVQNq6gjaZ+36wiYVbTzR0Fe+Yzb9OhZtYA052Q8L6rhkw0lPB2oclvyKOPZ4Q5QFuI+hn373A2Wu0Y8sRnNW/S6vtxDIiz6mMlXWoEd/JeYEbes3YUDRisobo8TqZs7Fms9VkYtTY1lT3jfjAZqStFFcIfvZUV8yLtQeNyDY/iWeZzL3elyeKFf6tZj90s+9R+aapQWh
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EB17025FCBE89143BFE321E38BA8BA97@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ys1byASwNVkEu+Q246YpVHsvBGXxnK17v4Z5vC/gYdM=;
+        b=U0XUa3D/KFqLSLlbaEmkhi2sfIX7Nm1z6b0d44Zr5cHSCJXWVrYFW2VkIMm0bchIIl
+         3kdRHlqtq2Vjs/WbEkSHGStNwviIUl7D2Bcm2OMTxc6bPsshFj5DlQvTza9FrssBA02h
+         IWqByP5kBmWKAq+ND7dHTAZ1W+KeSGSrR2W24mNEDn+rtAHIMnc85KsnPy/CR/BUiPup
+         a0r6fzYHN4s8pqPuOzCZiuKwssG1j5UzrWd9BSCukkvW/u/EI4NcuulTn/c23RHuXVdi
+         BAyPdNP0ZQaIJQSgqlr5RbHuWYojrO0u8SV9Rp7+jH1lLTs+tGFf5x2KVcJ8XFaUBohw
+         FprA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ys1byASwNVkEu+Q246YpVHsvBGXxnK17v4Z5vC/gYdM=;
+        b=pZkR5B9RZLB6MRpk+dkCLP3KXh1lEOFmLf+rOL14zA8/YiVqh4Gw5SkZR0a7DFXi4N
+         wv4X8T1x7ZhDuvJnHlkCtH2hqp7rcN9qtMKk4up35/nUarTC4BFII/iwlKB4fsehL/Zb
+         UqOaiRYV4rsH+dERTjjKOaLFfZOyTWVXtn+N4xc01En8yTdfXmQx0I7EweMy61zR46c2
+         Kk2I5ob1PTrzTsjmBgVRaHOnhcSBfKkzL4ttmmu3dZUX1hLNJGyy/SzMqiBYp828pciq
+         tvpWWjjXhG15xjr27C/C/NYDZgDfdGytZzSywXle96d97shJlQdufmAqGPfmukaB81Hp
+         QzYg==
+X-Gm-Message-State: AOAM531wW+cMsHEZxwtL8t68tKdN1LQcgBtQLA0GL+4Jtp6UZ3149ToK
+        6ZzQZ8pHHm0So9ZFqOtFjUWW3kRoWcBQTs+XUO4=
+X-Google-Smtp-Source: ABdhPJzzmabbaD388dpz4291CkIrsYE9OGZpb9+pWy+XCsWK5uxsU6BjTAj1Fy3wt0ID+VRMhQ/1jE89UOiqLtSxPqk=
+X-Received: by 2002:a6b:f012:: with SMTP id w18mr24125041ioc.5.1595271082782;
+ Mon, 20 Jul 2020 11:51:22 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR04MB6725.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12570b70-3c73-47a2-2108-08d82cddbaf6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 18:50:10.8409
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tPxDot96IV9MO9tBEKog6eJkm7swDjecmX1m3wl0un74YjKsgAkaKZTA6kjFWfHSh09g3msec8v4Ml9CHyAsWA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR04MB6999
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1594429136-20002-17-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0Udcry01samXT54RkurNqFKnVmv-686ZFHF+iw4b+12T_A@mail.gmail.com> <6e37ee32-c6c5-fcc5-3cad-74f7ae41fb67@linux.alibaba.com>
+In-Reply-To: <6e37ee32-c6c5-fcc5-3cad-74f7ae41fb67@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 20 Jul 2020 11:51:12 -0700
+Message-ID: <CAKgT0Ue2i96gL=Tqx_wFmsBj_b1cnM1KQHh8b+oYr5iRg0Tcpw@mail.gmail.com>
+Subject: Re: [PATCH v16 16/22] mm/mlock: reorder isolation sequence during munlock
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA3LTIwIGF0IDIzOjExICswNTMwLCBOYXJlc2ggS2FtYm9qdSB3cm90ZToN
-Cj4gUklTQy1WIGJ1aWxkIGJyZWFrcyBvbiBzdGFibGUtcmMgNS43IGJyYW5jaC4NCj4gYnVpbGQg
-ZmFpbGVkIHdpdGggZ2NjLTgsIGdjYy05IGFuZCBnY2MtOS4NCj4gDQoNClNvcnJ5IGZvciB0aGUg
-Y29tcGlsYXRpb24gaXNzdWUuDQoNCm1tYXBfcmVhZF9sb2NrIHdhcyBpbnRyZG91Y2VkIGluIHRo
-ZSBmb2xsb3dpbmcgY29tbWl0Lg0KDQpjb21taXQgOTc0MGNhNGU5NWI0DQpBdXRob3I6IE1pY2hl
-bCBMZXNwaW5hc3NlIDx3YWxrZW5AZ29vZ2xlLmNvbT4NCkRhdGU6ICAgTW9uIEp1biA4IDIxOjMz
-OjE0IDIwMjAgLTA3MDANCg0KICAgIG1tYXAgbG9ja2luZyBBUEk6IGluaXRpYWwgaW1wbGVtZW50
-YXRpb24gYXMgcndzZW0gd3JhcHBlcnMNCg0KVGhlIGZvbGxvd2luZyB0d28gY29tbWl0cyByZXBs
-YWNlZCB0aGUgdXNhZ2Ugb2YgbW1hcF9zZW0gcndzZW0gY2FsbHMNCndpdGggbW1hcF9sb2NrLg0K
-DQpkOGVkNDVjNWRjZDQgKG1tYXAgbG9ja2luZyBBUEk6IHVzZSBjb2NjaW5lbGxlIHRvIGNvbnZl
-cnQgbW1hcF9zZW0NCnJ3c2VtIGNhbGwgc2l0ZXMpDQo4OTE1NGRkNTMxM2YgKG1tYXAgbG9ja2lu
-ZyBBUEk6IGNvbnZlcnQgbW1hcF9zZW0gY2FsbCBzaXRlcyBtaXNzZWQgYnkNCmNvY2NpbmVsbGUp
-DQoNClRoZSBmaXJzdCBjb21taXQgaXMgbm90IHByZXNlbnQgaW4gc3RhbGUgNS43LXkgZm9yIG9i
-dmlvdXMgcmVhc29ucy4NCg0KRG8gd2UgbmVlZCB0byBzZW5kIGEgc2VwYXJhdGUgcGF0Y2ggb25s
-eSBmb3Igc3RhYmxlIGJyYW5jaCB3aXRoDQptbWFwX3NlbSA/IEkgYW0gbm90IHN1cmUgaWYgdGhh
-dCB3aWxsIGNhdXNlIGEgY29uZmxpY3QgYWdhaW4gaW4gZnV0dXJlLg0KDQo+IE9uIE1vbiwgMjAg
-SnVsIDIwMjAgYXQgMjE6NDYsIEdyZWcgS3JvYWgtSGFydG1hbg0KPiA8Z3JlZ2toQGxpbnV4Zm91
-bmRhdGlvbi5vcmc+IHdyb3RlOg0KPiA+IEZyb206IEF0aXNoIFBhdHJhIDxhdGlzaC5wYXRyYUB3
-ZGMuY29tPg0KPiA+IA0KPiA+IGNvbW1pdCAwZTJjMDkwMTFkNGRlNDE2MWY2MTVmZjg2MGE2MDVh
-OTE4NmNmNjJhIHVwc3RyZWFtLg0KPiA+IA0KPiA+IEFzIHBlciB3YWxrX3BhZ2VfcmFuZ2UgZG9j
-dW1lbnRhdGlvbiwgbW1hcCBsb2NrIHNob3VsZCBiZSBhY3F1aXJlZA0KPiA+IGJ5IHRoZQ0KPiA+
-IGNhbGxlciBiZWZvcmUgaW52b2tpbmcgd2Fsa19wYWdlX3JhbmdlLiBtbWFwX2Fzc2VydF9sb2Nr
-ZWQgZ2V0cw0KPiA+IHRyaWdnZXJlZA0KPiA+IHdpdGhvdXQgdGhhdC4gVGhlIGRldGFpbHMgY2Fu
-IGJlIGZvdW5kIGhlcmUuDQo+ID4gDQo+ID4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlw
-ZXJtYWlsL2xpbnV4LXJpc2N2LzIwMjAtSnVuZS8wMTAzMzUuaHRtbA0KPiA+IA0KPiA+IEZpeGVz
-OiAzOTVhMjFmZjg1OWMocmlzY3Y6IGFkZCBBUkNIX0hBU19TRVRfRElSRUNUX01BUCBzdXBwb3J0
-KQ0KPiA+IFNpZ25lZC1vZmYtYnk6IEF0aXNoIFBhdHJhIDxhdGlzaC5wYXRyYUB3ZGMuY29tPg0K
-PiA+IFJldmlld2VkLWJ5OiBNaWNoZWwgTGVzcGluYXNzZSA8d2Fsa2VuQGdvb2dsZS5jb20+DQo+
-ID4gUmV2aWV3ZWQtYnk6IFpvbmcgTGkgPHpvbmcubGlAc2lmaXZlLmNvbT4NCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBQYWxtZXIgRGFiYmVsdCA8cGFsbWVyZGFiYmVsdEBnb29nbGUuY29tPg0KPiA+IFNp
-Z25lZC1vZmYtYnk6IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5v
-cmc+DQo+ID4gDQo+ID4gLS0tDQo+ID4gIGFyY2gvcmlzY3YvbW0vcGFnZWF0dHIuYyB8ICAgMTQg
-KysrKysrKysrKysrLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDIg
-ZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gLS0tIGEvYXJjaC9yaXNjdi9tbS9wYWdlYXR0ci5jDQo+
-ID4gKysrIGIvYXJjaC9yaXNjdi9tbS9wYWdlYXR0ci5jDQo+ID4gQEAgLTE1MSw2ICsxNTEsNyBA
-QCBpbnQgc2V0X21lbW9yeV9ueCh1bnNpZ25lZCBsb25nIGFkZHIsIGluDQo+ID4gDQo+ID4gIGlu
-dCBzZXRfZGlyZWN0X21hcF9pbnZhbGlkX25vZmx1c2goc3RydWN0IHBhZ2UgKnBhZ2UpDQo+ID4g
-IHsNCj4gPiArICAgICAgIGludCByZXQ7DQo+ID4gICAgICAgICB1bnNpZ25lZCBsb25nIHN0YXJ0
-ID0gKHVuc2lnbmVkIGxvbmcpcGFnZV9hZGRyZXNzKHBhZ2UpOw0KPiA+ICAgICAgICAgdW5zaWdu
-ZWQgbG9uZyBlbmQgPSBzdGFydCArIFBBR0VfU0laRTsNCj4gPiAgICAgICAgIHN0cnVjdCBwYWdl
-YXR0cl9tYXNrcyBtYXNrcyA9IHsNCj4gPiBAQCAtMTU4LDExICsxNTksMTYgQEAgaW50IHNldF9k
-aXJlY3RfbWFwX2ludmFsaWRfbm9mbHVzaChzdHJ1Yw0KPiA+ICAgICAgICAgICAgICAgICAuY2xl
-YXJfbWFzayA9IF9fcGdwcm90KF9QQUdFX1BSRVNFTlQpDQo+ID4gICAgICAgICB9Ow0KPiA+IA0K
-PiA+IC0gICAgICAgcmV0dXJuIHdhbGtfcGFnZV9yYW5nZSgmaW5pdF9tbSwgc3RhcnQsIGVuZCwg
-JnBhZ2VhdHRyX29wcywNCj4gPiAmbWFza3MpOw0KPiA+ICsgICAgICAgbW1hcF9yZWFkX2xvY2so
-JmluaXRfbW0pOw0KPiA+ICsgICAgICAgcmV0ID0gd2Fsa19wYWdlX3JhbmdlKCZpbml0X21tLCBz
-dGFydCwgZW5kLCAmcGFnZWF0dHJfb3BzLA0KPiA+ICZtYXNrcyk7DQo+ID4gKyAgICAgICBtbWFw
-X3JlYWRfdW5sb2NrKCZpbml0X21tKTsNCj4gDQo+IG1ha2UgLXNrIEtCVUlMRF9CVUlMRF9VU0VS
-PVR1eEJ1aWxkIC1DL2xpbnV4IEFSQ0g9cmlzY3YNCj4gQ1JPU1NfQ09NUElMRT1yaXNjdjY0LWxp
-bnV4LWdudS0gSE9TVENDPWdjYyBDQz0ic2NjYWNoZQ0KPiByaXNjdjY0LWxpbnV4LWdudS1nY2Mi
-IE89YnVpbGQgZGVmY29uZmlnDQo+ICMNCj4gIw0KPiBtYWtlIC1zayBLQlVJTERfQlVJTERfVVNF
-Uj1UdXhCdWlsZCAtQy9saW51eCAtajMyIEFSQ0g9cmlzY3YNCj4gQ1JPU1NfQ09NUElMRT1yaXNj
-djY0LWxpbnV4LWdudS0gSE9TVENDPWdjYyBDQz0ic2NjYWNoZQ0KPiByaXNjdjY0LWxpbnV4LWdu
-dS1nY2MiIE89YnVpbGQNCj4gIw0KPiAuLi9hcmNoL3Jpc2N2L21tL3BhZ2VhdHRyLmM6IEluIGZ1
-bmN0aW9uDQo+IOKAmHNldF9kaXJlY3RfbWFwX2ludmFsaWRfbm9mbHVzaOKAmToNCj4gLi4vYXJj
-aC9yaXNjdi9tbS9wYWdlYXR0ci5jOjE2MjoyOiBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24g
-b2YNCj4gZnVuY3Rpb24g4oCYbW1hcF9yZWFkX2xvY2vigJk7IGRpZCB5b3UgbWVhbiDigJhfcmF3
-X3JlYWRfbG9ja+KAmT8NCj4gWy1XZXJyb3I9aW1wbGljaXQtZnVuY3Rpb24tZGVjbGFyYXRpb25d
-DQo+ICAgMTYyIHwgIG1tYXBfcmVhZF9sb2NrKCZpbml0X21tKTsNCj4gICAgICAgfCAgXn5+fn5+
-fn5+fn5+fn4NCj4gICAgICAgfCAgX3Jhd19yZWFkX2xvY2sNCj4gLi4vYXJjaC9yaXNjdi9tbS9w
-YWdlYXR0ci5jOjE2NDoyOiBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24gb2YNCj4gZnVuY3Rp
-b24g4oCYbW1hcF9yZWFkX3VubG9ja+KAmTsgZGlkIHlvdSBtZWFuIOKAmF9yYXdfcmVhZF91bmxv
-Y2vigJk/DQo+IFstV2Vycm9yPWltcGxpY2l0LWZ1bmN0aW9uLWRlY2xhcmF0aW9uXQ0KPiAgIDE2
-NCB8ICBtbWFwX3JlYWRfdW5sb2NrKCZpbml0X21tKTsNCj4gICAgICAgfCAgXn5+fn5+fn5+fn5+
-fn5+fg0KPiAgICAgICB8ICBfcmF3X3JlYWRfdW5sb2NrDQo+IGNjMTogc29tZSB3YXJuaW5ncyBi
-ZWluZyB0cmVhdGVkIGFzIGVycm9ycw0KPiANCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gcmV0
-Ow0KPiA+ICB9DQo+ID4gDQo+ID4gIGludCBzZXRfZGlyZWN0X21hcF9kZWZhdWx0X25vZmx1c2go
-c3RydWN0IHBhZ2UgKnBhZ2UpDQo+ID4gIHsNCj4gPiArICAgICAgIGludCByZXQ7DQo+ID4gICAg
-ICAgICB1bnNpZ25lZCBsb25nIHN0YXJ0ID0gKHVuc2lnbmVkIGxvbmcpcGFnZV9hZGRyZXNzKHBh
-Z2UpOw0KPiA+ICAgICAgICAgdW5zaWduZWQgbG9uZyBlbmQgPSBzdGFydCArIFBBR0VfU0laRTsN
-Cj4gPiAgICAgICAgIHN0cnVjdCBwYWdlYXR0cl9tYXNrcyBtYXNrcyA9IHsNCj4gPiBAQCAtMTcw
-LDcgKzE3NiwxMSBAQCBpbnQgc2V0X2RpcmVjdF9tYXBfZGVmYXVsdF9ub2ZsdXNoKHN0cnVjDQo+
-ID4gICAgICAgICAgICAgICAgIC5jbGVhcl9tYXNrID0gX19wZ3Byb3QoMCkNCj4gPiAgICAgICAg
-IH07DQo+ID4gDQo+ID4gLSAgICAgICByZXR1cm4gd2Fsa19wYWdlX3JhbmdlKCZpbml0X21tLCBz
-dGFydCwgZW5kLCAmcGFnZWF0dHJfb3BzLA0KPiA+ICZtYXNrcyk7DQo+ID4gKyAgICAgICBtbWFw
-X3JlYWRfbG9jaygmaW5pdF9tbSk7DQo+ID4gKyAgICAgICByZXQgPSB3YWxrX3BhZ2VfcmFuZ2Uo
-JmluaXRfbW0sIHN0YXJ0LCBlbmQsICZwYWdlYXR0cl9vcHMsDQo+ID4gJm1hc2tzKTsNCj4gPiAr
-ICAgICAgIG1tYXBfcmVhZF91bmxvY2soJmluaXRfbW0pOw0KPiA+ICsNCj4gPiArICAgICAgIHJl
-dHVybiByZXQ7DQo+ID4gIH0NCj4gPiANCj4gPiAgdm9pZCBfX2tlcm5lbF9tYXBfcGFnZXMoc3Ry
-dWN0IHBhZ2UgKnBhZ2UsIGludCBudW1wYWdlcywgaW50DQo+ID4gZW5hYmxlKQ0KPiA+IA0KPiAN
-Cj4gcmVmOg0KPiBmdWxsIGJ1aWxkIGxvZyB3aXRoIGRlZmF1bHQgY29uZmlnLg0KPiBodHRwczov
-L2dpdGxhYi5jb20vTGluYXJvL2xrZnQva2VybmVsLXJ1bnMvLS9qb2JzLzY0NzE1NDk1MA0KPiAN
-Cg0KLS0gDQpSZWdhcmRzLA0KQXRpc2gNCg==
+On Sat, Jul 18, 2020 at 8:56 PM Alex Shi <alex.shi@linux.alibaba.com> wrote=
+:
+>
+>
+>
+> =E5=9C=A8 2020/7/18 =E4=B8=8A=E5=8D=884:30, Alexander Duyck =E5=86=99=E9=
+=81=93:
+> > On Fri, Jul 10, 2020 at 5:59 PM Alex Shi <alex.shi@linux.alibaba.com> w=
+rote:
+> >>
+> >> This patch reorder the isolation steps during munlock, move the lru lo=
+ck
+> >> to guard each pages, unfold __munlock_isolate_lru_page func, to do the
+> >> preparation for lru lock change.
+> >>
+> >> __split_huge_page_refcount doesn't exist, but we still have to guard
+> >> PageMlocked and PageLRU for tail page in __split_huge_page_tail.
+> >>
+> >> [lkp@intel.com: found a sleeping function bug ... at mm/rmap.c]
+> >> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> >> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+> >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> >> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> >> Cc: Matthew Wilcox <willy@infradead.org>
+> >> Cc: Hugh Dickins <hughd@google.com>
+> >> Cc: linux-mm@kvack.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> ---
+> >>  mm/mlock.c | 93 ++++++++++++++++++++++++++++++++++-------------------=
+---------
+> >>  1 file changed, 51 insertions(+), 42 deletions(-)
+> >>
+> >> diff --git a/mm/mlock.c b/mm/mlock.c
+> >> index 228ba5a8e0a5..0bdde88b4438 100644
+> >> --- a/mm/mlock.c
+> >> +++ b/mm/mlock.c
+> >> @@ -103,25 +103,6 @@ void mlock_vma_page(struct page *page)
+> >>  }
+> >>
+> >>  /*
+> >> - * Isolate a page from LRU with optional get_page() pin.
+> >> - * Assumes lru_lock already held and page already pinned.
+> >> - */
+> >> -static bool __munlock_isolate_lru_page(struct page *page, bool getpag=
+e)
+> >> -{
+> >> -       if (TestClearPageLRU(page)) {
+> >> -               struct lruvec *lruvec;
+> >> -
+> >> -               lruvec =3D mem_cgroup_page_lruvec(page, page_pgdat(pag=
+e));
+> >> -               if (getpage)
+> >> -                       get_page(page);
+> >> -               del_page_from_lru_list(page, lruvec, page_lru(page));
+> >> -               return true;
+> >> -       }
+> >> -
+> >> -       return false;
+> >> -}
+> >> -
+> >> -/*
+> >>   * Finish munlock after successful page isolation
+> >>   *
+> >>   * Page must be locked. This is a wrapper for try_to_munlock()
+> >> @@ -181,6 +162,7 @@ static void __munlock_isolation_failed(struct page=
+ *page)
+> >>  unsigned int munlock_vma_page(struct page *page)
+> >>  {
+> >>         int nr_pages;
+> >> +       bool clearlru =3D false;
+> >>         pg_data_t *pgdat =3D page_pgdat(page);
+> >>
+> >>         /* For try_to_munlock() and to serialize with page migration *=
+/
+> >> @@ -189,32 +171,42 @@ unsigned int munlock_vma_page(struct page *page)
+> >>         VM_BUG_ON_PAGE(PageTail(page), page);
+> >>
+> >>         /*
+> >> -        * Serialize with any parallel __split_huge_page_refcount() wh=
+ich
+> >> +        * Serialize split tail pages in __split_huge_page_tail() whic=
+h
+> >>          * might otherwise copy PageMlocked to part of the tail pages =
+before
+> >>          * we clear it in the head page. It also stabilizes hpage_nr_p=
+ages().
+> >>          */
+> >> +       get_page(page);
+> >
+> > I don't think this get_page() call needs to be up here. It could be
+> > left down before we delete the page from the LRU list as it is really
+> > needed to take a reference on the page before we call
+> > __munlock_isolated_page(), or at least that is the way it looks to me.
+> > By doing that you can avoid a bunch of cleanup in these exception
+> > cases.
+>
+> Uh, It seems unlikely for !page->_refcount, and then got to release_pages=
+(),
+> if so, get_page do could move down.
+> Thanks
+>
+> >
+> >> +       clearlru =3D TestClearPageLRU(page);
+> >
+> > I'm not sure I fully understand the reason for moving this here. By
+> > clearing this flag before you clear Mlocked does this give you some
+> > sort of extra protection? I don't see how since Mlocked doesn't
+> > necessarily imply the page is on LRU.
+> >
+>
+> Above comments give a reason for the lru_lock usage,
+
+I think things are getting confused here. The problem is that clearing
+the page LRU flag is not the same as acquiring the LRU lock.
+
+I was looking through patch 22 and it occured to me that the
+documentation in __pagevec_lru_add_fn was never updated. My worry is
+that it might have been overlooked, either that or maybe you discussed
+it previously and I missed the discussion. There it calls out that you
+either have to hold onto the LRU lock, or you have to test PageLRU
+after clearing the Mlocked flag otherwise you risk introducing a race.
+It seems to me like you could potentially just collapse the lock down
+further if you are using it more inline with the 2b case as defined
+there rather than trying to still use it to protect the Mlocked flag
+even though you have already pulled the LRU bit before taking the
+lock. Either that or this is more like the pagevec_lru_move_fn in
+which case you are already holding the LRU lock so you just need to
+call the test and clear before trying to pull the page off of the LRU
+list.
+
+> >> +        * Serialize split tail pages in __split_huge_page_tail() whic=
+h
+> >>          * might otherwise copy PageMlocked to part of the tail pages =
+before
+> >>          * we clear it in the head page. It also stabilizes hpage_nr_p=
+ages().
+>
+> Look into the __split_huge_page_tail, there is a tiny gap between tail pa=
+ge
+> get PG_mlocked, and it is added into lru list.
+> The TestClearPageLRU could blocked memcg changes of the page from stoppin=
+g
+> isolate_lru_page.
+
+I get that there is a gap between the two in __split_huge_page_tail.
+My concern is more the fact that you are pulling the bit testing
+outside of the locked region when I don't think it needs to be. The
+lock is being taken unconditionally, so why pull the testing out when
+you could just do it inside the lock anyway? My worry is that you
+might be addressing __split_huge_page_tail but in the process you
+might be introducing a new race with something like
+__pagevec_lru_add_fn.
+
+If I am not mistaken the Mlocked flag can still be cleared regardless
+of if the LRU bit is set or not. So you can still clear the LRU bit
+before you pull the page out of the list, but it can be done after
+clearing the Mlocked flag instead of before you have even taken the
+LRU lock. In that way it would function more similar to how you
+handled pagevec_lru_move_fn() as all this function is really doing is
+moving the pages out of the unevictable list into one of the other LRU
+lists anyway since the Mlocked flag was cleared.
+
+> >>         spin_lock_irq(&pgdat->lru_lock);
+> >>
+> >>         if (!TestClearPageMlocked(page)) {
+> >> -               /* Potentially, PTE-mapped THP: do not skip the rest P=
+TEs */
+> >> -               nr_pages =3D 1;
+> >> -               goto unlock_out;
+> >> +               if (clearlru)
+> >> +                       SetPageLRU(page);
+> >> +               /*
+> >> +                * Potentially, PTE-mapped THP: do not skip the rest P=
+TEs
+> >> +                * Reuse lock as memory barrier for release_pages raci=
+ng.
+> >> +                */
+> >> +               spin_unlock_irq(&pgdat->lru_lock);
+> >> +               put_page(page);
+> >> +               return 0;
+> >>         }
+> >>
+> >>         nr_pages =3D hpage_nr_pages(page);
+> >>         __mod_zone_page_state(page_zone(page), NR_MLOCK, -nr_pages);
+> >>
+> >> -       if (__munlock_isolate_lru_page(page, true)) {
+> >> +       if (clearlru) {
+> >> +               struct lruvec *lruvec;
+> >> +
+> >
+> > You could just place the get_page() call here.
+> >
+> >> +               lruvec =3D mem_cgroup_page_lruvec(page, page_pgdat(pag=
+e));
+> >> +               del_page_from_lru_list(page, lruvec, page_lru(page));
+> >>                 spin_unlock_irq(&pgdat->lru_lock);
+> >>                 __munlock_isolated_page(page);
+> >> -               goto out;
+> >> +       } else {
+> >> +               spin_unlock_irq(&pgdat->lru_lock);
+> >> +               put_page(page);
+> >> +               __munlock_isolation_failed(page);
+> >
+> > If you move the get_page() as I suggested above there wouldn't be a
+> > need for the put_page(). It then becomes possible to simplify the code
+> > a bit by merging the unlock paths and doing an if/else with the
+> > __munlock functions like so:
+> > if (clearlru) {
+> >     ...
+> >     del_page_from_lru..
+> > }
+> >
+> > spin_unlock_irq()
+> >
+> > if (clearlru)
+> >     __munlock_isolated_page();
+> > else
+> >     __munlock_isolated_failed();
+> >
+> >>         }
+> >> -       __munlock_isolation_failed(page);
+> >> -
+> >> -unlock_out:
+> >> -       spin_unlock_irq(&pgdat->lru_lock);
+> >>
+> >> -out:
+> >>         return nr_pages - 1;
+> >>  }
+> >>
+> >> @@ -297,34 +289,51 @@ static void __munlock_pagevec(struct pagevec *pv=
+ec, struct zone *zone)
+> >>         pagevec_init(&pvec_putback);
+> >>
+> >>         /* Phase 1: page isolation */
+> >> -       spin_lock_irq(&zone->zone_pgdat->lru_lock);
+> >>         for (i =3D 0; i < nr; i++) {
+> >>                 struct page *page =3D pvec->pages[i];
+> >> +               struct lruvec *lruvec;
+> >> +               bool clearlru;
+> >>
+> >> -               if (TestClearPageMlocked(page)) {
+> >> -                       /*
+> >> -                        * We already have pin from follow_page_mask()
+> >> -                        * so we can spare the get_page() here.
+> >> -                        */
+> >> -                       if (__munlock_isolate_lru_page(page, false))
+> >> -                               continue;
+> >> -                       else
+> >> -                               __munlock_isolation_failed(page);
+> >> -               } else {
+> >> +               clearlru =3D TestClearPageLRU(page);
+> >> +               spin_lock_irq(&zone->zone_pgdat->lru_lock);
+> >
+> > I still don't see what you are gaining by moving the bit test up to
+> > this point. Seems like it would be better left below with the lock
+> > just being used to prevent a possible race while you are pulling the
+> > page out of the LRU list.
+> >
+>
+> the same reason as above comments mentained __split_huge_page_tail()
+> issue.
+
+I have the same argument here as above. The LRU lock is being used to
+protect the Mlocked flag, as such there isn't a need to move the
+get_page and clearing of the LRU flag up.  The get_page() call isn't
+needed until just before we delete the page from the LRU list, and the
+clearing isn't really needed until after we have already cleared the
+Mlocked flag to see if we even have any work that we have to do, but
+we do need to clear it before we are allowed to delete the page from
+the LRU list.
