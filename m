@@ -7,55 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D56C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E013C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D372822CBE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD3722D02
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263155;
-	bh=QWomaSWkjjnUOE3JHpwZM6v7w6P+3b2LhhvfZ9XRwW0=;
+	s=default; t=1595263161;
+	bh=iUjDdbv2Y/n23mmUox5x/FmP5yHwFrC1cy3kp+kyGRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hU+SC+xvNImRwL/tYoiPIAhijeHSWaEI43ie2xW+KZJTvZrYguMQeKvZxMp3J1Whh
-	 Kb3xpURxJcwlYjFAWC03NSrokucMNdYnCFOKlOPebw9hN9yRjdWX2Gh6N5c4l5t8LC
-	 ov8uCGz6cE/ht29RK9482TwkYU3ODKuhSxHMuLZU=
+	b=gLSK08utxkR/wIR4PUsvue+xT5l5cX/ufNI5QNULgx6ToeMCafyuwAQCDi/RzPZoz
+	 VYP6qxJfnCksI/VBSlWkpUiZxLl9upZn5uU6GmuItrhCSVkaNjlGCaBLwqdi1kv8LP
+	 oQMyNcnclDGkxHSz3Ukjo/Hsl71aqCayvk0YsMNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731731AbgGTQjO (ORCPT
+        id S1731868AbgGTQjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:39:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45778 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:39:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgGTPti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:49:38 -0400
+        id S1731026AbgGTPt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:49:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38FCA206E9;
-        Mon, 20 Jul 2020 15:49:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B17E5206E9;
+        Mon, 20 Jul 2020 15:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260177;
-        bh=QWomaSWkjjnUOE3JHpwZM6v7w6P+3b2LhhvfZ9XRwW0=;
+        s=default; t=1595260169;
+        bh=iUjDdbv2Y/n23mmUox5x/FmP5yHwFrC1cy3kp+kyGRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=awxVHk95MMPFcoKgGAK/FS6C6j3ANdx4US/YGYZ+p6ZDV2Dpajly3V7xcgS5rSNmW
-         9b82QrmHGGF6MVbFD1igD07ULdUD5lF5xghx1X0/DU5ZyOlkoIWhksqxSfkgDdOYBK
-         y1cNYbyRwPwP/XmWmysS4FEmiaJCBYq4ZZDBFkOg=
+        b=xTmd17pbNFHqUmAWmrjgTGztzak7lYJsIsP2PRlu5bRXxeDEcPJg+GEGIJG/k7SIP
+         jDqC4KU3+anQCLcGcvvE7LSin25MNGrh3V4Mu5VAlAyUmxOmnftsgA2ndfFMyC75pl
+         /PSCPkGlWw4RzYYdbjZ1jtBnU24QqakocQIzq5dc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jianmin Wang <jianmin@iscas.ac.cn>
-Subject: [PATCH 4.19 001/133] perf: Make perf able to build with latest libbfd
-Date:   Mon, 20 Jul 2020 17:35:48 +0200
-Message-Id: <20200720152803.800974142@linuxfoundation.org>
+        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 4.14 124/125] libceph: dont omit recovery_deletes in target_copy()
+Date:   Mon, 20 Jul 2020 17:37:43 +0200
+Message-Id: <20200720152809.061854551@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
-References: <20200720152803.732195882@linuxfoundation.org>
+In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
+References: <20200720152802.929969555@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,62 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-commit 0ada120c883d4f1f6aafd01cf0fbb10d8bbba015 upstream.
+commit 2f3fead62144002557f322c2a7c15e1255df0653 upstream.
 
-libbfd has changed the bfd_section_* macros to inline functions
-bfd_section_<field> since 2019-09-18. See below two commits:
-  o http://www.sourceware.org/ml/gdb-cvs/2019-09/msg00064.html
-  o https://www.sourceware.org/ml/gdb-cvs/2019-09/msg00072.html
+Currently target_copy() is used only for sending linger pings, so
+this doesn't come up, but generally omitting recovery_deletes can
+result in unneeded resends (force_resend in calc_target()).
 
-This fix make perf able to build with both old and new libbfd.
-
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200128152938.31413-1-changbin.du@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jianmin Wang <jianmin@iscas.ac.cn>
+Fixes: ae78dd8139ce ("libceph: make RECOVERY_DELETES feature create a new interval")
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/srcline.c |   16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ net/ceph/osd_client.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -191,16 +191,30 @@ static void find_address_in_section(bfd
- 	bfd_vma pc, vma;
- 	bfd_size_type size;
- 	struct a2l_data *a2l = data;
-+	flagword flags;
+--- a/net/ceph/osd_client.c
++++ b/net/ceph/osd_client.c
+@@ -384,6 +384,7 @@ static void target_copy(struct ceph_osd_
+ 	dest->size = src->size;
+ 	dest->min_size = src->min_size;
+ 	dest->sort_bitwise = src->sort_bitwise;
++	dest->recovery_deletes = src->recovery_deletes;
  
- 	if (a2l->found)
- 		return;
- 
--	if ((bfd_get_section_flags(abfd, section) & SEC_ALLOC) == 0)
-+#ifdef bfd_get_section_flags
-+	flags = bfd_get_section_flags(abfd, section);
-+#else
-+	flags = bfd_section_flags(section);
-+#endif
-+	if ((flags & SEC_ALLOC) == 0)
- 		return;
- 
- 	pc = a2l->addr;
-+#ifdef bfd_get_section_vma
- 	vma = bfd_get_section_vma(abfd, section);
-+#else
-+	vma = bfd_section_vma(section);
-+#endif
-+#ifdef bfd_get_section_size
- 	size = bfd_get_section_size(section);
-+#else
-+	size = bfd_section_size(section);
-+#endif
- 
- 	if (pc < vma || pc >= vma + size)
- 		return;
+ 	dest->flags = src->flags;
+ 	dest->paused = src->paused;
 
 
