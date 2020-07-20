@@ -2,83 +2,156 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A162C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43A6C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCED020758
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E8720758
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:43:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y6UNTuC8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jj1lurMJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbgGTFn1 (ORCPT
+        id S1726700AbgGTFne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 01:43:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59176 "EHLO
+        Mon, 20 Jul 2020 01:43:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgGTFn1 (ORCPT
+        with ESMTP id S1725845AbgGTFnd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 01:43:27 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D917C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 22:43:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=wsw8+GZRXil4kU2zK21Y94R9+/rr2HFNiXIhdlvuwUY=; b=Y6UNTuC8A2uYkyQ0k2IRGq1zcJ
-        5P/7Nqf9Q6KFGKyMXzq8SSUfvaAAkmMTtQ+I8HvfNf08g/Own3BZm4AuXQ9Jc0gzVw4KiSpON4//p
-        2GhyWsLXWnCe1ZQc8p9O6MbnyzmQwdTzjdRPNCSUDJ1bEKy+aKAlbaW/0SJTySPtvsJiEa3tZF+r3
-        UTAKtDZo+lJTCIyec5IJWu7bDkLSe5HKMmvPiSx5mPdsSmzzbeExcJWCBFDqsfr95XKXomsjAgFxI
-        cp+E0HbdYes4azEesT+XuoX4MMXyOw+Ry23xsxxxbPOvlJ6I3PuvqnUiuNoDzMuOkNSGG/p7pAK8F
-        +IqS6EAA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxOaA-0004q5-UP; Mon, 20 Jul 2020 05:43:25 +0000
-Subject: Re: [PATCH] platform_data: cros_ec_commands.h: drop a duplicated word
-To:     Tzung-Bi Shih <tzungbi@google.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>
-References: <20200719003053.20899-1-rdunlap@infradead.org>
- <CA+Px+wVL09UepuyfXrdGiesJb=Bn0S_TuYS3oX52DWBK-QVnMQ@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f5446d37-af95-274d-690e-4d98553922aa@infradead.org>
-Date:   Sun, 19 Jul 2020 22:43:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 01:43:33 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE14DC0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 22:43:33 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id x13so7828457vsx.13
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 22:43:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bbLapiGcJOFTbUyK//8Fe9PD8yV2JZi5AG9HjtvvQrA=;
+        b=jj1lurMJabflLy5RgODdvDSsqwg4LNBBvV2vJXasXqtYgo0+msjC1M2ABFQX2Hx0S5
+         JWRrVYPqvC6wx21kAa9FwFts+z6ojJytWWnpeK0SPmUSZortpePdjvlDiVu2PQnIcM/S
+         RsUIgoiQLAjSFOnQgadcWhqlix+fY4oThTwOJ95eghx9hxzF/NUGG347CBv/+2yQSd2v
+         ac9XPl9rkZpSEFqgHhK8ffVqcCUvfCEJJrDtuVT7HWHQWYx2YFmBfbM4G/hJweli/Zfn
+         ikouE1LntmptRTsrCvV19wZcTWEEsvSGyw+TAA5K/N07kmoqvT275Vq1a5AhRZS47OcC
+         FtLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bbLapiGcJOFTbUyK//8Fe9PD8yV2JZi5AG9HjtvvQrA=;
+        b=Ci4BS8YV0ixabw/XIj8+T/rZdBiia9rWHT/NmlSbH/WZaUPdUerozdSGaV7cbi7yBR
+         pCI9kAtE6Jsd/rpQzcet46bdNvILxf9wFiIxhGo86oiWe/xOOpccK3bNfcpilV6RqnEn
+         oisagquP3BEqOLodb2lqCc73chwTAF/afOHQd1oPEVkeuHBPQZ63tClAAXh+aX8JoZGv
+         9OJRbMSNQoEsOUcEarytW7X4OkJacQc4Eqw72UXoft5n+FayRY+iu0oCOlVxCBxHV+xa
+         S+mYUElTYpWnyGXmeDKhnv+Zxg+QIB/pPEO+Tq3LqRVVeRT4AaQylWT0FDAAvf6IsIuj
+         fSRw==
+X-Gm-Message-State: AOAM531YOvSYXB+12xKxzAxKq9KsigKoGLFzibjxuwnWvYWDARY0iCX+
+        NKOpgDa1yREdFeaNw1ZhKZegyVCfixWccrKDRWgaqQ==
+X-Google-Smtp-Source: ABdhPJyjgOlgkreB2uvU8zXbH7F+KFhG4EFoZL6NjUMOyUv9H1nqnfOF2ArdbefVQmvPiC+CFEQwocwOCYmxkSO99Cg=
+X-Received: by 2002:a67:2285:: with SMTP id i127mr14138213vsi.159.1595223812879;
+ Sun, 19 Jul 2020 22:43:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CA+Px+wVL09UepuyfXrdGiesJb=Bn0S_TuYS3oX52DWBK-QVnMQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200717164217.18819-1-daniel.lezcano@linaro.org>
+In-Reply-To: <20200717164217.18819-1-daniel.lezcano@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 20 Jul 2020 11:13:21 +0530
+Message-ID: <CAHLCerNfKGmEz9g98VA6iMYy7MjfwfH=gaF9KR0o_qpJwFPekA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] thermal: netlink: Improve the initcall ordering
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/19/20 9:42 PM, Tzung-Bi Shih wrote:
-> On Sun, Jul 19, 2020 at 8:30 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> Drop the repeated word "using" in a comment.
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Tzung-Bi Shih <tzungbi@google.com>
->> Cc: Mark Brown <broonie@kernel.org>
->> ---
-> 
-> I guess you didn't include the maintainers:
-> Benson Leung <bleung@chromium.org> (maintainer:CHROMEOS EC SUBDRIVERS)
-> Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> (maintainer:CHROMEOS EC SUBDRIVERS)
-> Guenter Roeck <groeck@chromium.org> (reviewer:CHROMEOS EC SUBDRIVERS)
-> 
+On Fri, Jul 17, 2020 at 10:12 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> The initcalls like to play joke. In our case, the thermal-netlink
+> initcall is called after the thermal-core initcall but this one sends
+> a notification before the former is initialzed. No issue was spotted,
 
-Thanks. I'll add them and resend the patch.
+typo: initialized
 
--- 
-~Randy
+> but it could lead to a memory corruption, so instead of relying on the
+> core_initcall for the thermal-netlink, let's initialize directly from
+> the thermal-core init routine, so we have full control of the init
+> ordering.
 
+> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+
+> ---
+>  drivers/thermal/thermal_core.c    | 4 ++++
+>  drivers/thermal/thermal_netlink.c | 3 +--
+>  drivers/thermal/thermal_netlink.h | 6 ++++++
+>  3 files changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 25ef29123f72..c2e7d7aaa354 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -1581,6 +1581,10 @@ static int __init thermal_init(void)
+>  {
+>         int result;
+>
+> +       result = thermal_netlink_init();
+> +       if (result)
+> +               goto error;
+> +
+>         mutex_init(&poweroff_lock);
+>         result = thermal_register_governors();
+>         if (result)
+> diff --git a/drivers/thermal/thermal_netlink.c b/drivers/thermal/thermal_netlink.c
+> index dd0a3b889674..42eace7401da 100644
+> --- a/drivers/thermal/thermal_netlink.c
+> +++ b/drivers/thermal/thermal_netlink.c
+> @@ -641,8 +641,7 @@ static struct genl_family thermal_gnl_family __ro_after_init = {
+>         .n_mcgrps       = ARRAY_SIZE(thermal_genl_mcgrps),
+>  };
+>
+> -static int __init thermal_netlink_init(void)
+> +int __init thermal_netlink_init(void)
+>  {
+>         return genl_register_family(&thermal_gnl_family);
+>  }
+> -core_initcall(thermal_netlink_init);
+> diff --git a/drivers/thermal/thermal_netlink.h b/drivers/thermal/thermal_netlink.h
+> index 0ec28d105da5..828d1dddfa98 100644
+> --- a/drivers/thermal/thermal_netlink.h
+> +++ b/drivers/thermal/thermal_netlink.h
+> @@ -6,6 +6,7 @@
+>
+>  /* Netlink notification function */
+>  #ifdef CONFIG_THERMAL_NETLINK
+> +int __init thermal_netlink_init(void);
+>  int thermal_notify_tz_create(int tz_id, const char *name);
+>  int thermal_notify_tz_delete(int tz_id);
+>  int thermal_notify_tz_enable(int tz_id);
+> @@ -23,6 +24,11 @@ int thermal_notify_cdev_delete(int cdev_id);
+>  int thermal_notify_tz_gov_change(int tz_id, const char *name);
+>  int thermal_genl_sampling_temp(int id, int temp);
+>  #else
+> +static inline int thermal_netlink_init(void)
+> +{
+> +       return 0;
+> +}
+> +
+>  static inline int thermal_notify_tz_create(int tz_id, const char *name)
+>  {
+>         return 0;
+> --
+> 2.17.1
+>
