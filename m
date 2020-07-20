@@ -2,236 +2,121 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_SIGNED,DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E91C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFA0C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C03C822B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:19:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="WGDxLeap"
+	by mail.kernel.org (Postfix) with ESMTP id DBEBF22CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgGTMTp (ORCPT
+        id S1728752AbgGTMUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:19:45 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:55510 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728532AbgGTMTp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 08:19:45 -0400
-Received: from iva8-d077482f1536.qloud-c.yandex.net (iva8-d077482f1536.qloud-c.yandex.net [IPv6:2a02:6b8:c0c:2f26:0:640:d077:482f])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 0814C2E162A;
-        Mon, 20 Jul 2020 15:19:40 +0300 (MSK)
-Received: from iva8-88b7aa9dc799.qloud-c.yandex.net (iva8-88b7aa9dc799.qloud-c.yandex.net [2a02:6b8:c0c:77a0:0:640:88b7:aa9d])
-        by iva8-d077482f1536.qloud-c.yandex.net (mxbackcorp/Yandex) with ESMTP id xJBw567LDK-Jat8OKM7;
-        Mon, 20 Jul 2020 15:19:39 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1595247579; bh=n7ex4YljjUEmP9kvd56elLJcLM01f3QwSMI1g4OIT4s=;
-        h=Message-ID:Subject:Date:References:To:From:In-Reply-To:Cc;
-        b=WGDxLeap5zR3kpIWYajS3Av+8d+0dATpQ7gqmy5gWzVT8pfMIwRXcO9Wxtl73gtFD
-         04CCV8EZCJAVDEPLUPwiIZun6emy5asS6ljlwrbYVXivyxeM0N1CIjfh+fF6ck5ZPm
-         DFsiPLmzLgr+8L/jiSmKWvmiZgPQHI/OUEdi11VU=
-Authentication-Results: iva8-d077482f1536.qloud-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from 95.108.174.193-red.dhcp.yndx.net (95.108.174.193-red.dhcp.yndx.net [95.108.174.193])
-        by iva8-88b7aa9dc799.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id UP5F2zyCql-JaiSViDa;
-        Mon, 20 Jul 2020 15:19:36 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-From:   Dmitry Monakhov <dmonakhov@gmail.com>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
-        axboe@kernel.dk
-Subject: Re: [PATCH] bfq: fix blkio cgroup leakage
-In-Reply-To: <22087F19-BC93-447E-848A-109392E0622D@linaro.org>
-References: <20200702105751.20482-1-dmonakhov@gmail.com> <429E50C6-83BA-4A3F-BE9C-06C7C762AF33@linaro.org> <87k0zdrj7s.fsf@dmws.yandex.net> <545F1ABF-B2B2-4523-9259-D3F93A9BB330@linaro.org> <87h7uhqewn.fsf@dmws.yandex.net> <22087F19-BC93-447E-848A-109392E0622D@linaro.org>
-Date:   Mon, 20 Jul 2020 15:19:36 +0300
-Message-ID: <87tuy2ml9j.fsf@dmws.yandex.net>
+        Mon, 20 Jul 2020 08:20:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:41222 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728732AbgGTMUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 08:20:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DD1D106F;
+        Mon, 20 Jul 2020 05:20:33 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D1B73F66E;
+        Mon, 20 Jul 2020 05:20:32 -0700 (PDT)
+References: <20200717122651.GA6067@redhat.com> <20200717124017.GB6067@redhat.com> <2c8ef23c-43b4-39d4-8e84-92769c948da9@kernel.org> <20200718171406.GB16791@redhat.com> <20200718174448.4btbjcvp6wbbdgts@wittgenstein> <badcb9d5-f628-2be1-7a72-902cf08010bd@kernel.org> <20200720064326.GA6612@redhat.com> <20200720082657.GC6612@redhat.com> <20200720084106.GJ10769@hirez.programming.kicks-ass.net> <20200720105924.GE43129@hirez.programming.kicks-ass.net> <20200720112623.GF43129@hirez.programming.kicks-ass.net>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     peterz@infradead.org
+Cc:     Oleg Nesterov <oleg@redhat.com>, Jiri Slaby <jirislaby@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        christian@brauner.io, "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Dave Jones <davej@codemonkey.org.uk>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
+In-reply-to: <20200720112623.GF43129@hirez.programming.kicks-ass.net>
+Date:   Mon, 20 Jul 2020 13:20:26 +0100
+Message-ID: <jhjwo2yidit.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="=-=-="
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
 
-Paolo Valente <paolo.valente@linaro.org> writes:
-
->> Il giorno 9 lug 2020, alle ore 10:19, Dmitry Monakhov <dmonakhov@gmail.com> ha scritto:
->> 
->> Paolo Valente <paolo.valente@linaro.org> writes:
->> 
->>>> Il giorno 8 lug 2020, alle ore 19:48, Dmitry Monakhov <dmonakhov@gmail.com> ha scritto:
->>>> 
->>>> Paolo Valente <paolo.valente@linaro.org> writes:
->>>> 
->>>>> Hi,
->>>>> sorry for the delay.  The commit you propose to drop fix the issues
->>>>> reported in [1].
->>>>> 
->>>>> Such a commit does introduce the leak that you report (thank you for
->>>>> spotting it).  Yet, according to the threads mentioned in [1],
->>>>> dropping that commit would take us back to those issues.
->>>>> 
->>>>> Maybe the solution is to fix the unbalance that you spotted?
->>>> I'm not quite shure that do I understand which bug was addressed for commit db37a34c563b.
->>>> AFAIU both bugs mentioned in original patchset was fixed by:
->>>> 478de3380 ("block, bfq: deschedule empty bfq_queues not referred by any proces")
->>>> f718b0932 ( block, bfq: do not plug I/O for bfq_queues with no proc refs)"
->>>> 
->>>> So I review commit db37a34c563b as independent one.
->>>> It introduces extra reference for bfq_groups via bfqg_and_blkg_get(),
->>>> but do we actually need it here?
->>>> 
->>>> #IF CONFIG_BFQ_GROUP_IOSCHED is enabled:
->>>> bfqd->root_group is holded by bfqd from bfq_init_queue()
->>>> other bfq_queue objects are owned by corresponding blkcg from bfq_pd_alloc()
->>>> So bfq_queue can not disappear under us.
->>>> 
->>> 
->>> You are right, but incomplete.  No extra ref is needed for an entity
->>> that represents a bfq_queue.  And this consideration mistook me before
->>> I realized that that commit was needed.  The problem is that an entity
->>> may also represent a group of entities.  In that case no reference is
->>> taken through any bfq_queue.  The commit you want to remove takes this
->>> missing reference.
->> Sorry, It looks like I've mistyped sentance above, I ment to say bfq_group.
->> So here is my statement corrected:
->> #IF CONFIG_BFQ_GROUP_IOSCHED is enabled:
->> bfqd->root_group is holded by bfqd from bfq_init_queue()
->> other *bfq_group* objects are owned by corresponding blkcg, reference get from bfq_pd_alloc()
->> So *bfq_group* can not disappear under us.
->> 
->> So no extra reference is required for entity represents bfq_group. Commit is not required.
+On 20/07/20 12:26, peterz@infradead.org wrote:
+> ---
+>  kernel/sched/core.c | 34 ++++++++++++++++++++++++++++------
+>  1 file changed, 28 insertions(+), 6 deletions(-)
 >
-> No, the entity may remain alive and on some tree after bfq_pd_offline has been invoked.
-Ok you right, we should drop the group reference inside __bfq_bfqd_reset_in_service() 
-as we do for queue's entities. Please see updated patch version.
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index e15543cb84812..b5973d7fa521c 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -4100,9 +4100,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>   */
+>  static void __sched notrace __schedule(bool preempt)
+>  {
+> +	unsigned long prev_state, tmp_state;
+>       struct task_struct *prev, *next;
+>       unsigned long *switch_count;
+> -	unsigned long prev_state;
+>       struct rq_flags rf;
+>       struct rq *rq;
+>       int cpu;
+> @@ -4140,16 +4140,38 @@ static void __sched notrace __schedule(bool preempt)
+>       rq_lock(rq, &rf);
+>       smp_mb__after_spinlock();
+>
+> +	/*
+> +	 * We must re-load prev->state in case ttwu_remote() changed it
+> +	 * before we acquired rq->lock.
+> +	 */
+> +	tmp_state = prev->state;
+> +	if (unlikely(prev_state != tmp_state)) {
+> +		/*
+> +		 * ptrace_{,un}freeze_traced() think it is cool to change
+> +		 * ->state around behind our backs between TASK_TRACED and
+> +		 *  __TASK_TRACED.
+> +		 *
+> +		 * This is safe because this, as well as any __TASK_TRACED
+> +		 * wakeups are under siglock.
+> +		 *
+> +		 * For any other case, a changed prev_state must be to
+> +		 * TASK_RUNNING, such that when it blocks, the load has
+> +		 * happened before the smp_mb().
+> +		 *
+> +		 * Also see the comment with deactivate_task().
+> +		 */
+> +		SCHED_WARN_ON(tmp_state && (prev_state & __TASK_TRACED &&
+> +					   !(tmp_state & __TASK_TRACED)));
+> +
 
---=-=-=
-Content-Type: text/x-diff
-Content-Disposition: inline;
- filename=0001-block-bfq-fix-blkio-cgroup-leakage-v2.patch
+IIUC if the state changed and isn't TASK_RUNNING it *has* to have
+__TASK_TRACED, so can't that be
 
-From d708067cfa570f80b43c5716adf81d2a29b3d523 Mon Sep 17 00:00:00 2001
-From: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Date: Mon, 20 Jul 2020 15:10:34 +0300
-Subject: [PATCH] block: bfq fix blkio cgroup leakage v2
+  SCHED_WARN_ON(tmp_state && !(tmp_state & __TASK_TRACED));
 
-commit db37a34c563b ("block, bfq: get a ref to a group when adding it to a service tree")
-introduce leak forbfq_group and blkcg_gq objects because of get/put
-imbalance. See trace balow:
--> blkg_alloc
-   -> bfq_pq_alloc
-     -> bfqg_get (+1)
-->bfq_activate_bfqq
-  ->bfq_activate_requeue_entity
-    -> __bfq_activate_entity
-       ->bfq_get_entity
-         ->bfqg_and_blkg_get (+1)  <==== : Note1
-->bfq_del_bfqq_busy
-  ->bfq_deactivate_entity+0x53/0xc0 [bfq]
-    ->__bfq_deactivate_entity+0x1b8/0x210 [bfq]
-      -> bfq_forget_entity(is_in_service = true)
-	 entity->on_st_or_in_serv = false   <=== :Note2
-	 if (is_in_service)
-	     return;  ==> do not touch reference
--> blkcg_css_offline
- -> blkcg_destroy_blkgs
-  -> blkg_destroy
-   -> bfq_pd_offline
-    -> __bfq_deactivate_entity
-         if (!entity->on_st_or_in_serv) /* true, because (Note2)
-		return false;
- -> bfq_pd_free
-    -> bfqg_put() (-1, byt bfqg->ref == 2) because of (Note2)
-So bfq_group and blkcg_gq  will leak forever, see test-case below.
+Other than that, LGTM.
 
-We should drop group reference once it finaly removed from service
-inside __bfq_bfqd_reset_in_service, as we do with queue entities.
-
-##TESTCASE_BEGIN:
-#!/bin/bash
-
-max_iters=${1:-100}
-#prep cgroup mounts
-mount -t tmpfs cgroup_root /sys/fs/cgroup
-mkdir /sys/fs/cgroup/blkio
-mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
-
-# Prepare blkdev
-grep blkio /proc/cgroups
-truncate -s 1M img
-losetup /dev/loop0 img
-echo bfq > /sys/block/loop0/queue/scheduler
-
-grep blkio /proc/cgroups
-for ((i=0;i<max_iters;i++))
-do
-    mkdir -p /sys/fs/cgroup/blkio/a
-    echo 0 > /sys/fs/cgroup/blkio/a/cgroup.procs
-    dd if=/dev/loop0 bs=4k count=1 of=/dev/null iflag=direct 2> /dev/null
-    echo 0 > /sys/fs/cgroup/blkio/cgroup.procs
-    rmdir /sys/fs/cgroup/blkio/a
-    grep blkio /proc/cgroups
-done
-##TESTCASE_END:
-
-Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
----
- block/bfq-wf2q.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
-
-diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-index 8113138..93b236c 100644
---- a/block/bfq-wf2q.c
-+++ b/block/bfq-wf2q.c
-@@ -635,14 +635,10 @@ static void bfq_idle_insert(struct bfq_service_tree *st,
-  * @entity: the entity being removed.
-  * @is_in_service: true if entity is currently the in-service entity.
-  *
-- * Forget everything about @entity. In addition, if entity represents
-- * a queue, and the latter is not in service, then release the service
-- * reference to the queue (the one taken through bfq_get_entity). In
-- * fact, in this case, there is really no more service reference to
-- * the queue, as the latter is also outside any service tree. If,
-- * instead, the queue is in service, then __bfq_bfqd_reset_in_service
-- * will take care of putting the reference when the queue finally
-- * stops being served.
-+ * Forget everything about @entity. If entity is not in service, then release
-+ * the service reference to the entity (the one taken through  bfq_get_entity).
-+ * If the entity is in service, then __bfq_bfqd_reset_in_service will take care
-+ * of putting the reference when the entity finally stops being served.
-  */
- static void bfq_forget_entity(struct bfq_service_tree *st,
- 			      struct bfq_entity *entity,
-@@ -1626,9 +1622,16 @@ bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
- 	 * execute the final step: reset in_service_entity along the
- 	 * path from entity to the root.
- 	 */
--	for_each_entity(entity)
-+	for_each_entity(entity) {
- 		entity->sched_data->in_service_entity = NULL;
--
-+		/*
-+		 * Release bfq_groups reference if it was not released in
-+		 * bfq_forget_entity, which was taken in bfq_get_entity.
-+		 */
-+		if (!bfq_entity_to_bfqq(entity) && !entity->on_st_or_in_serv)
-+			bfqg_and_blkg_put(container_of(entity, struct bfq_group,
-+						       entity));
-+	}
- 	/*
- 	 * in_serv_entity is no longer in service, so, if it is in no
- 	 * service tree either, then release the service reference to
--- 
-2.7.4
-
-
---=-=-=--
+> +		prev_state = tmp_state;
+> +	}
+> +
+>       /* Promote REQ to ACT */
+>       rq->clock_update_flags <<= 1;
+>       update_rq_clock(rq);
+>
+>       switch_count = &prev->nivcsw;
+> -	/*
+> -	 * We must re-load prev->state in case ttwu_remote() changed it
+> -	 * before we acquired rq->lock.
+> -	 */
+> -	if (!preempt && prev_state && prev_state == prev->state) {
+> +	if (!preempt && prev_state) {
+>               if (signal_pending_state(prev_state, prev)) {
+>                       prev->state = TASK_RUNNING;
+>               } else {
