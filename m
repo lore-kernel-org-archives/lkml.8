@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C89C433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7336BC43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD476206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46ED4206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281450;
-	bh=tH+bZieuhKiCAe1crHPmNpD1ivBEEIf7aWZ7DUPOZ+k=;
+	s=default; t=1595281456;
+	bh=K/QnzBnxSz8nRtmvwhBj2GIp+N4PtdWh0qolEym6wG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n7/2UJutmQG+t+MmUe3C0S800G2sU6h8BNLAsTsNyvGY5ECMDIy3AiFU0BXG9t9nL
-	 GBX8ncPPVZ4PnGaZE2YgUHvMJcNlCT4Vz0YNOJ01SWFJTLFT+on96mL+ltYIU5m9+6
-	 5m2/tEgxZrucWhmQDEt/G0gegX2wS8ulqKymA6eA=
+	b=WMJOb/+I3cjcHBMndv46WBPCSr8wk1nGCMp+ngjavvHF01i5sreVNdaQbcy4GT09h
+	 /W0dL4Ou76Z6+SssjnUsJChodheTV9+pi6SaLwZmXih78MOTnA7U117Q8na1/jxStV
+	 2T71Q8BJShFbB9Ma/c4aIH5WePwuyn030Dzrawng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgGTVoJ (ORCPT
+        id S1728728AbgGTVoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:44:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56610 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:44:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727914AbgGTViO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:14 -0400
+        id S1727906AbgGTViK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0958F22CB2;
-        Mon, 20 Jul 2020 21:38:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C92A22CF8;
+        Mon, 20 Jul 2020 21:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281093;
-        bh=tH+bZieuhKiCAe1crHPmNpD1ivBEEIf7aWZ7DUPOZ+k=;
+        s=default; t=1595281090;
+        bh=K/QnzBnxSz8nRtmvwhBj2GIp+N4PtdWh0qolEym6wG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D1sPmJVPabbygoj7HaDZpmJnr+92bWi/Gsbe5KI+ttpYcFs7cxM6oFpn9Ta4c6a77
-         a2/MGPSOGsm4VvBxjKRZYdJX8xxWWGblQ6+t9RY8eQ1K8zRqRuV71qxVx7qJtm90rR
-         9zuWKGVVYIhRqPG6RNH2q+tSWKYLkVPnUrP7tsys=
+        b=zUCoVSwu+8TeAppB80QXIm01ceQvLrLO8zSlemGDovOrCPwR5wVYcEfHtHptUu2E8
+         jyihYNj7pYUXKsLuhT/OEXau6N8rGhJ0hk2E6yqEKZsWs7jxmBtOfVce/jDqMKAcPZ
+         Q1R2PO/jwKt0EhyF5AYE4cWTdwEPJSt2jmk5a4v4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/34] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
-Date:   Mon, 20 Jul 2020 17:37:38 -0400
-Message-Id: <20200720213807.407380-5-sashal@kernel.org>
+Cc:     Caiyuan Xie <caiyuan.xie@cn.alps.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 02/34] HID: alps: support devices with report id 2
+Date:   Mon, 20 Jul 2020 17:37:35 -0400
+Message-Id: <20200720213807.407380-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
 References: <20200720213807.407380-1-sashal@kernel.org>
@@ -60,47 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Caiyuan Xie <caiyuan.xie@cn.alps.com>
 
-[ Upstream commit 5b78fac4b1ba731cf4177fdbc1e3a4661521bcd0 ]
+[ Upstream commit aa3c439c144f0a465ed1f28f11c772886fb02b35 ]
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+Add support for devices which that have reports with id == 2
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20200624064626.19855-1-dinghao.liu@zju.edu.cn
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Caiyuan Xie <caiyuan.xie@cn.alps.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/hid/hid-alps.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index 914901a680c8a..9068591bd684b 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -658,6 +658,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
+diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
+index b2ad319a74b9a..d33f5abc8f64d 100644
+--- a/drivers/hid/hid-alps.c
++++ b/drivers/hid/hid-alps.c
+@@ -25,6 +25,7 @@
  
- 	ret = pm_runtime_get_sync(tdc2dev(tdc));
- 	if (ret < 0) {
-+		pm_runtime_put_noidle(tdc2dev(tdc));
- 		free_irq(tdc->irq, tdc);
- 		return ret;
- 	}
-@@ -869,8 +870,10 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	pm_runtime_enable(&pdev->dev);
+ #define U1_MOUSE_REPORT_ID			0x01 /* Mouse data ReportID */
+ #define U1_ABSOLUTE_REPORT_ID		0x03 /* Absolute data ReportID */
++#define U1_ABSOLUTE_REPORT_ID_SECD  0x02 /* FW-PTP Absolute data ReportID */
+ #define U1_FEATURE_REPORT_ID		0x05 /* Feature ReportID */
+ #define U1_SP_ABSOLUTE_REPORT_ID	0x06 /* Feature ReportID */
  
- 	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
- 		goto rpm_disable;
-+	}
+@@ -368,6 +369,7 @@ static int u1_raw_event(struct alps_dev *hdata, u8 *data, int size)
+ 	case U1_FEATURE_REPORT_ID:
+ 		break;
+ 	case U1_ABSOLUTE_REPORT_ID:
++	case U1_ABSOLUTE_REPORT_ID_SECD:
+ 		for (i = 0; i < hdata->max_fingers; i++) {
+ 			u8 *contact = &data[i * 5];
  
- 	ret = tegra_adma_init(tdma);
- 	if (ret)
 -- 
 2.25.1
 
