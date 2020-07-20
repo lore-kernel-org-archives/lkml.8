@@ -2,202 +2,157 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBCFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38813C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 238D422B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC7F20709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:49:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jg/iEt+0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N49dDLbt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730718AbgGTRtO (ORCPT
+        id S2388922AbgGTRtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:49:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58942 "EHLO
+        Mon, 20 Jul 2020 13:49:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbgGTRtN (ORCPT
+        with ESMTP id S1726437AbgGTRty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:49:13 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023AAC0619D4;
-        Mon, 20 Jul 2020 10:49:12 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id k71so188795pje.0;
-        Mon, 20 Jul 2020 10:49:12 -0700 (PDT)
+        Mon, 20 Jul 2020 13:49:54 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB883C061794;
+        Mon, 20 Jul 2020 10:49:54 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id t4so15027610oij.9;
+        Mon, 20 Jul 2020 10:49:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=96y7EAtauwpST2sJvN1xqRaaYTBW7xFiifRwkpVmX4I=;
-        b=jg/iEt+0wHY/FV3Q81wX9QAl/uJk+XggykUcXKKHxIkxhXQ0AXB7HJA1n+VKyzthkI
-         8hDC3mxxB86xuU1/zjVG17x2pWdnLQaexcu/kE5SYCLbJnNv7QyCO/RocBC4IeE3Dnk0
-         xp/Q7wTP6ClTeePLDl1t4OkFpMCXWMCKPrc/6DqTxBF4PXQHHdQyPjQpJLlkFEffPB/w
-         TStkgpuAiE0YkT/QEqdMS/wxmHQMVQNSg/Os+aDFc0ZvUo4Hyjn8j6VP15VVQN1Hf83S
-         x1X9YrqeLocpYpqr7t4cjHsyYliRRciPUN+e/QX/p/1Op9g4bjSFRz/wdv21jNcjKgI0
-         EKJA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E/WF9LmUo71c0bgV0jc9EPEVEVSzt8bdBdlMxd+6u9o=;
+        b=N49dDLbtcc8GbCc/rK6VzmC408aRyQNWvV2bsAzf2369GrbLTIqe/8AIHtgH8i6iaW
+         h/LY7IMO/tCttISFJNT44Z/7d4MHx61mUdhl7VwwPWWqMa7MU4SX9WD9axAZXlQyrzoC
+         kN4uyoHIBMFMYgKDZWHQFOJZ5bQvHz38NdxFbHVTQlijvrcuRDRDpXxVewmi8WAAd8cX
+         A5VIQvWKJvdLBpNbj2tA13i1Dq+V0c71YItqmQR+p3kOTaJbFHiqfuJ+RzS4PiX7/7NZ
+         WdNXkAuLJ9mudeJFNhLM5OsCtgF1Sjtk58ZvJJlZLVt9S8IjPNtMd7P0ghmaYvKCIW6K
+         E8pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=96y7EAtauwpST2sJvN1xqRaaYTBW7xFiifRwkpVmX4I=;
-        b=kjxEUdM/vHh/4+kxlZ9HEReD6vhk/OebZwOwXSI1QRrJ+/5ecqN2paUAhRAOG4FMG1
-         xux6J6oKc7hFh5IzbzlHEPSDNom6hqlXnITcdYUAFa2pPBQ/dO6JTz98beRWyPgsdLy0
-         Q3HytJLc7SydfU655hr6DB+DeHJ873GH/oQNeGomAWe3cEtiVoeZaPBWqiSHsS6uvMlD
-         dPB7/UfJD5czKDY8ktnwBDhHXhAj+oDdb+8QmB/0bsGyEObMZmbwAqAksMDh84trg6Q1
-         p5K816kwj5ol+4AX9/mwmJ/MZyWBLum/KLMvSuFMXQeB1IE4IzMp/6wwUhQ5lydhiatG
-         iuwQ==
-X-Gm-Message-State: AOAM531iWiQpSIxdgpaskvI3C+okkXRXJntK2Tj1vz77ZD5OhUje0r0h
-        8Xw8QwEMKhKN53KH9Vs7adY=
-X-Google-Smtp-Source: ABdhPJy/P1ezLwGpEG0knayswF4R/ww4dDpu6dy1QBZUaQEiSB0wwVhOtmGxkQyhBFmAypl7LGgj1g==
-X-Received: by 2002:a17:90a:c295:: with SMTP id f21mr562409pjt.208.1595267352276;
-        Mon, 20 Jul 2020 10:49:12 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.67])
-        by smtp.gmail.com with ESMTPSA id i196sm15538658pgc.55.2020.07.20.10.49.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 10:49:11 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v1] media: cafe-driver: use generic power management
-Date:   Mon, 20 Jul 2020 23:15:46 +0530
-Message-Id: <20200720174545.827778-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E/WF9LmUo71c0bgV0jc9EPEVEVSzt8bdBdlMxd+6u9o=;
+        b=COKKPd7ki6sFuMgWhtMAt5skMZoXs2N0z4k8cXCVZsvozpX2jHHJ5ctanYp+dXzAco
+         loNEuzpjZLGfe9/kn4NtLArzZq6k1yymTefgF/eXuwISlmObRNyqQzNvp5pRnPqgdDYB
+         zTMG4DrE3M/F6pSCXdm3eZHEHvMRURzH5jVyGKyS+rEXCa1iCfKeqlpjowexysAeTiPS
+         IOKXwo7qPU25sV/bPXJtHsu+aDDh6nVdA3/Sw1lEKdFCzO4IHofDIWwmRLv6YeVEJw6Q
+         Nctk5ONNlDjbicOWFV2Yg8VuDTDyRrPrgHQ0ncZBkfStIXJt2qcBb1xUYqyc9WKhcatr
+         YHrg==
+X-Gm-Message-State: AOAM5320/3+d1YFo05t2kp/eCMSY5YdGlGJiDvWrpE4HUeSS4sqG/+FE
+        PBEq++8rz1o4EnMOz6OTzbQt2GwTYJSq+Z43Y81MVA==
+X-Google-Smtp-Source: ABdhPJw1Ddg81VAJhNmhtE0Qulu8T/IcFBqzefZSxTWJ1RiLL7hGzoUJLJYUNL3KckdDR7CVcAzOxVuv71RyuDv3w+0=
+X-Received: by 2002:aca:2807:: with SMTP id 7mr374627oix.140.1595267394146;
+ Mon, 20 Jul 2020 10:49:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200717222819.26198-1-nramas@linux.microsoft.com>
+ <20200717222819.26198-5-nramas@linux.microsoft.com> <CAEjxPJ7xQtZToF4d2w_o8SXFKG9kPZaWTWTFqyC-7GwBWnQa0A@mail.gmail.com>
+ <c0fbfcf3-ec36-872a-c389-b3fea214848c@linux.microsoft.com>
+ <CAEjxPJ7VH18bEo6+U1GWrx=tHVGr=6XtF5_ygcfQYgdtZ74J+g@mail.gmail.com>
+ <bea0cb52-2e13-fb14-b66c-b57287c23c3f@linux.microsoft.com> <CAEjxPJ6Rt7u3shLbxoPRHgr-D=CD9d_eXRB07A9qN7RmJwZAwA@mail.gmail.com>
+In-Reply-To: <CAEjxPJ6Rt7u3shLbxoPRHgr-D=CD9d_eXRB07A9qN7RmJwZAwA@mail.gmail.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Mon, 20 Jul 2020 13:49:43 -0400
+Message-ID: <CAEjxPJ6-jHha+CeqSdQ2O0bpyQe_9buj2ENZz6FNj6S87XSSfg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] LSM: Define SELinux function to measure security state
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers using legacy PM have to manage PCI states and device's PM states
-themselves. They also need to take care of configuration registers.
+On Mon, Jul 20, 2020 at 1:40 PM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+>
+> On Mon, Jul 20, 2020 at 1:34 PM Lakshmi Ramasubramanian
+> <nramas@linux.microsoft.com> wrote:
+> >
+> > On 7/20/20 10:06 AM, Stephen Smalley wrote:
+> >
+> > >> The above will ensure the following sequence will be measured:
+> > >>    #1 State A - Measured
+> > >>    #2 Change from State A to State B - Measured
+> > >>    #3 Change from State B back to State A - Since the measured data is
+> > >> same as in #1, the change will be measured only if the event name is
+> > >> different between #1 and #3
+> > >
+> > > Perhaps the timestamp / sequence number should be part of the hashed
+> > > data instead of the event name?
+> >
+> > If the timestamp/seqno is part of the hashed data, on every call to
+> > measure IMA will add a new entry in the IMA log. This would fill up the
+> > IMA log - even when there is no change in the measured data.
+> >
+> > To avoid that I keep the last measurement in SELinux and measure only
+> > when there is a change with the timestamp in the event name.
+> >
+> > > I can see the appraiser wanting to know two things:
+> > > 1) The current state of the system (e.g. is it enforcing, is the
+> > > currently loaded policy the expected one?).
+> > > 2) Has the system ever been in an unexpected state (e.g. was it
+> > > temporarily switched to permissive or had an unexpected policy
+> > > loaded?)
+> >
+> > Yes - you are right.
+> > The appraiser will have to look at the entire IMA log (and the
+> > corresponding TPM PCR data) to know the above.
+> >
+> > Time t0 => State of the system measured
+> > Time tn => State changed and the new state measured
+> > Time tm => State changed again and the new state measured.
+> >
+> > Say, the measurement at "Time tn" was an illegal change, the appraiser
+> > would know.
+> >
+> > >
+> > > I applied the patch series on top of the next-integrity branch, added
+> > > measure func=LSM_STATE to ima-policy, and booted that kernel.  I get
+> > > the following entries in ascii_runtime_measurements, but seemingly
+> > > missing the final field:
+> > >
+> > > 10 8a09c48af4f8a817f59b495bd82971e096e2e367 ima-ng
+> > > sha256:21c3d7b09b62b4d0b3ed15ba990f816b94808f90b76787bfae755c4b3a44cd24
+> > > selinux-state
+> > > 10 e610908931d70990a2855ddb33c16af2d82ce56a ima-ng
+> > > sha256:c8898652afd5527ef4eaf8d85f5fee1d91fcccee34bc97f6e55b96746bedb318
+> > > selinux-policy-hash
+> > >
+> > > Thus, I cannot verify. What am I missing?
+> > >
+> >
+> > Looks like the template used is ima-ng which doesn't include the
+> > measured buffer. Please set template to "ima-buf" in the policy.
+> >
+> > For example,
+> > measure func=LSM_STATE template=ima-buf
+>
+> It seems like one shouldn't need to manually specify it if it is the
+> only template that yields a useful result for the LSM_STATE function?
 
-With improved and powerful support of generic PM, PCI Core takes care of
-above mentioned, device-independent, jobs.
-
-This driver makes use of PCI helper functions like
-pci_save/restore_state() and pci_enable/disable_device() to do required
-operations. In generic mode, they are no longer needed.
-
-Change function parameter in both .suspend() and .resume() to
-"struct device*" type.
-
-Compile-tested only.
-
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- .../media/platform/marvell-ccic/cafe-driver.c | 31 +++++--------------
- .../media/platform/marvell-ccic/mcam-core.c   |  3 --
- 2 files changed, 7 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/media/platform/marvell-ccic/cafe-driver.c b/drivers/media/platform/marvell-ccic/cafe-driver.c
-index 9a09a10a3631..58b9915ac7a4 100644
---- a/drivers/media/platform/marvell-ccic/cafe-driver.c
-+++ b/drivers/media/platform/marvell-ccic/cafe-driver.c
-@@ -604,44 +604,28 @@ static void cafe_pci_remove(struct pci_dev *pdev)
- }
- 
- 
--#ifdef CONFIG_PM
- /*
-  * Basic power management.
-  */
--static int cafe_pci_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused cafe_pci_suspend(struct device *dev)
- {
--	struct v4l2_device *v4l2_dev = dev_get_drvdata(&pdev->dev);
-+	struct v4l2_device *v4l2_dev = dev_get_drvdata(dev);
- 	struct cafe_camera *cam = to_cam(v4l2_dev);
--	int ret;
- 
--	ret = pci_save_state(pdev);
--	if (ret)
--		return ret;
- 	mccic_suspend(&cam->mcam);
--	pci_disable_device(pdev);
- 	return 0;
- }
- 
- 
--static int cafe_pci_resume(struct pci_dev *pdev)
-+static int __maybe_unused cafe_pci_resume(struct device *dev)
- {
--	struct v4l2_device *v4l2_dev = dev_get_drvdata(&pdev->dev);
-+	struct v4l2_device *v4l2_dev = dev_get_drvdata(dev);
- 	struct cafe_camera *cam = to_cam(v4l2_dev);
--	int ret = 0;
- 
--	pci_restore_state(pdev);
--	ret = pci_enable_device(pdev);
--
--	if (ret) {
--		cam_warn(cam, "Unable to re-enable device on resume!\n");
--		return ret;
--	}
- 	cafe_ctlr_init(&cam->mcam);
- 	return mccic_resume(&cam->mcam);
- }
- 
--#endif  /* CONFIG_PM */
--
- static const struct pci_device_id cafe_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL,
- 		     PCI_DEVICE_ID_MARVELL_88ALP01_CCIC) },
-@@ -650,15 +634,14 @@ static const struct pci_device_id cafe_ids[] = {
- 
- MODULE_DEVICE_TABLE(pci, cafe_ids);
- 
-+static SIMPLE_DEV_PM_OPS(cafe_pci_pm_ops, cafe_pci_suspend, cafe_pci_resume);
-+
- static struct pci_driver cafe_pci_driver = {
- 	.name = "cafe1000-ccic",
- 	.id_table = cafe_ids,
- 	.probe = cafe_pci_probe,
- 	.remove = cafe_pci_remove,
--#ifdef CONFIG_PM
--	.suspend = cafe_pci_suspend,
--	.resume = cafe_pci_resume,
--#endif
-+	.driver.pm = &cafe_pci_pm_ops,
- };
- 
- 
-diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
-index 09775b6624c6..d81d0c130e3c 100644
---- a/drivers/media/platform/marvell-ccic/mcam-core.c
-+++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-@@ -1967,8 +1967,6 @@ EXPORT_SYMBOL_GPL(mccic_shutdown);
- /*
-  * Power management
-  */
--#ifdef CONFIG_PM
--
- void mccic_suspend(struct mcam_camera *cam)
- {
- 	mutex_lock(&cam->s_mutex);
-@@ -2015,7 +2013,6 @@ int mccic_resume(struct mcam_camera *cam)
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(mccic_resume);
--#endif /* CONFIG_PM */
- 
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("Jonathan Corbet <corbet@lwn.net>");
--- 
-2.27.0
-
+Actually, if we used ima-ng template for selinux-policy-hash, then
+instead of needing to hash the policy
+first and passing the hash to IMA, we could just pass the policy as
+the buffer and IMA would take care of the hashing, right?
+And we only need to use ima-buf for the selinux-state if we want the
+measurement list to include the string value that
+was hashed; if we just want to compare against a known-good, it would
+suffice to use ima-ng for it as well, right?
