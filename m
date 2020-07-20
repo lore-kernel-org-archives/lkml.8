@@ -2,80 +2,57 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75804C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84A882070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A17M+Gb9"
+	by mail.kernel.org (Postfix) with ESMTP id 593EA2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388603AbgGTQW5 (ORCPT
+        id S2388434AbgGTQXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:22:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388434AbgGTQWq (ORCPT
+        Mon, 20 Jul 2020 12:23:07 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35007 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387905AbgGTQXC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:22:46 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F495C061794;
-        Mon, 20 Jul 2020 09:22:46 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id k27so10517552pgm.2;
-        Mon, 20 Jul 2020 09:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nnDDY7IX3v4medtpXGPdXY1iT0mYb0tLN6RrGWdwErQ=;
-        b=A17M+Gb9yAQCkiEsHp1GN5Hgm6to1S70lc+I5sny7onNXnTMXpIGw0rxYa3HyRAFTF
-         EHzuXZiN0PrVqSXi/QmZ03PpuxD3wqo0Ej0MHbfYpufERXznei6xPYaU2pnpr1hEw/P3
-         YXdYohfyeDlnFXpgWw0Gj/3uIueARBVT7JkmuVXfoU+CAYtgBaBBntTcYkNOJtuLAhBS
-         3CeUProdPmHFMcuj8pjLxjbKYjndPF4TKbcwUepCmwBSSHdw/1VqtNpJTqu1n7W73/j/
-         Ohc2uW7Wkl9CfjwBq4+3cw5TTMOAX/vmAuNeTiC4xAHSGmffrUWcOew6eoDXU29nlS7i
-         SgvQ==
+        Mon, 20 Jul 2020 12:23:02 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q4so20959929lji.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:23:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nnDDY7IX3v4medtpXGPdXY1iT0mYb0tLN6RrGWdwErQ=;
-        b=kvYiCGY2FEhzCGwU3+PB54ZD2/OR3+xcfk8l9R1MIj0JLLUpp0lh5OM4K2gvjBxZR8
-         ippgZV6QncMMxAlnfWOMRK+QmVs12rFVjOk4kwG7DRFgsLd5owHvZJKoo1Jmz6Qj2scL
-         WFZrjU62OeNYNQJgEsXxL4m4wmbnqonwNnr1wCUAU8YOA44ct+3JdDS964RA+R/khv4v
-         f0PTc++7X4VBlacndXQ8x5e1PnK/Nnb0lYZ4x9Dcxpu2yHHj1q2hrvHKo/IuCeROWXSj
-         yIGHAb4XaJjkTlWoXIFONt5MGvL8WsUOyPS34V+bYSaLI6pYWYmEjNfHol2dP3CtFNET
-         b0lA==
-X-Gm-Message-State: AOAM530vqxAs7BkCtv/ZaPy2NII6vaU1SDcIgVD1sO3GgOJ5rKaxL7VL
-        ToJMSLVTOiknN2GJNOgJ+is=
-X-Google-Smtp-Source: ABdhPJyV19tnS/w6rmKS67FPtr8WvyuBYwXnr0WSfBWxPzcPsoHAVVNX2vFNeLQe7tQxnvt+Ak0Alg==
-X-Received: by 2002:a62:7e51:: with SMTP id z78mr20531383pfc.3.1595262165631;
-        Mon, 20 Jul 2020 09:22:45 -0700 (PDT)
-Received: from varodek.localdomain ([110.225.71.189])
-        by smtp.gmail.com with ESMTPSA id z25sm17314468pfg.140.2020.07.20.09.22.39
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+wuyYMorTCCTA+H9Rs20Q97XbYGdbTwxjgGpl65WNYw=;
+        b=qetmZYaXoFQKnCswkBxDV/Q4hu+2x72N5BXjmFcBj2S1dOHIds4vBR5aEn1WAhIbp5
+         NCw78JH73x/U9aTXCugUaHCDhuzJAR0JlsJGIdQV5fDayR5YvCpf/fjZOemDlIPyiQFf
+         78dB1aHnG0+aijD5I/wokk0Vphl9rUyCGd+eAW6iIY8ZPh8paYts2IuFqnzwC10z+hci
+         x2XZoLxPkUVm6joAk3BEdZeNi57VkogB2H4aaMuhNPTMNGuhzQTlNFD3TKoWzxulspb3
+         uzYkW5WyH5Irw6PkEraCkywtvKIFLmNCiIgPDA3Jh0o7chTlavwwbDgc00auerQf8QEo
+         O7Xw==
+X-Gm-Message-State: AOAM532vl8ZMiNpSJxxyTiZxTlBi4rUtT4uiHh6Jmxaqk2i45ox1L4MJ
+        PuExJ2rmX1L16r0UzcJt4OY=
+X-Google-Smtp-Source: ABdhPJwtuvD0JnLUZ74IJSS/UopcAkQaN3dcV/vkq3tMTs874syqhMAmZqLdcLgbz57nt9UeIk+bUQ==
+X-Received: by 2002:a2e:7a03:: with SMTP id v3mr11527773ljc.141.1595262180283;
+        Mon, 20 Jul 2020 09:23:00 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id a19sm925855lff.25.2020.07.20.09.22.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 09:22:44 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Chris Lee <christopher.lee@cspi.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>, netdev@vger.kernel.org
-Subject: [PATCH v1] ethernet: myri10ge: use generic power management
-Date:   Mon, 20 Jul 2020 21:49:31 +0530
-Message-Id: <20200720161930.777974-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 20 Jul 2020 09:22:59 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/3] coccinelle: api: extend memdup_user transformation with GFP_USER
+Date:   Mon, 20 Jul 2020 19:22:14 +0300
+Message-Id: <20200720162216.13248-2-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200720162216.13248-1-efremov@linux.com>
+References: <20200720162216.13248-1-efremov@linux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,129 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers using legacy PM have to manage PCI states and device's PM states
-themselves. They also need to take care of configuration registers.
+Match GFP_USER and optional __GFP_NOWARN allocations with
+memdup_user.cocci rule.
+Commit 6c2c97a24f09 ("memdup_user(): switch to GFP_USER") switched
+memdup_user() from GFP_KERNEL to GFP_USER. In almost all cases it
+is still a good idea to recommend memdup_user() for GFP_KERNEL
+allocations. The motivation behind altering memdup_user() to GFP_USER:
+https://lkml.org/lkml/2018/1/6/333
 
-With improved and powerful support of generic PM, PCI Core takes care of
-above mentioned, device-independent, jobs.
-
-This driver makes use of PCI helper functions like
-pci_save/restore_state(), pci_enable/disable_device(),
-pci_set_power_state() and pci_set_master() to do required operations. In
-generic mode, they are no longer needed.
-
-Change function parameter in both .suspend() and .resume() to
-"struct device*" type. Use to_pci_dev() and dev_get_drvdata() to get
-"struct pci_dev*" variable and drv data.
-
-Compile-tested only.
-
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- .../net/ethernet/myricom/myri10ge/myri10ge.c  | 37 ++++---------------
- 1 file changed, 8 insertions(+), 29 deletions(-)
+ scripts/coccinelle/api/memdup_user.cocci | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-index e1e1f4e3639e..4a5beafa0493 100644
---- a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-+++ b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-@@ -3257,13 +3257,12 @@ static void myri10ge_mask_surprise_down(struct pci_dev *pdev)
- 	}
- }
+diff --git a/scripts/coccinelle/api/memdup_user.cocci b/scripts/coccinelle/api/memdup_user.cocci
+index c809ab10bbce..0e29d41ecab8 100644
+--- a/scripts/coccinelle/api/memdup_user.cocci
++++ b/scripts/coccinelle/api/memdup_user.cocci
+@@ -20,7 +20,9 @@ expression from,to,size;
+ identifier l1,l2;
+ @@
  
--#ifdef CONFIG_PM
--static int myri10ge_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused myri10ge_suspend(struct device *dev)
- {
- 	struct myri10ge_priv *mgp;
- 	struct net_device *netdev;
+--  to = \(kmalloc\|kzalloc\)(size,GFP_KERNEL);
++-  to = \(kmalloc\|kzalloc\)
++-		(size,\(GFP_KERNEL\|GFP_USER\|
++-		      \(GFP_KERNEL\|GFP_USER\)|__GFP_NOWARN\));
+ +  to = memdup_user(from,size);
+    if (
+ -      to==NULL
+@@ -43,7 +45,9 @@ position p;
+ statement S1,S2;
+ @@
  
--	mgp = pci_get_drvdata(pdev);
-+	mgp = dev_get_drvdata(dev);
- 	if (mgp == NULL)
- 		return -EINVAL;
- 	netdev = mgp->dev;
-@@ -3276,14 +3275,13 @@ static int myri10ge_suspend(struct pci_dev *pdev, pm_message_t state)
- 		rtnl_unlock();
- 	}
- 	myri10ge_dummy_rdma(mgp, 0);
--	pci_save_state(pdev);
--	pci_disable_device(pdev);
- 
--	return pci_set_power_state(pdev, pci_choose_state(pdev, state));
-+	return 0;
- }
- 
--static int myri10ge_resume(struct pci_dev *pdev)
-+static int __maybe_unused myri10ge_resume(struct device *dev)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct myri10ge_priv *mgp;
- 	struct net_device *netdev;
- 	int status;
-@@ -3293,7 +3291,6 @@ static int myri10ge_resume(struct pci_dev *pdev)
- 	if (mgp == NULL)
- 		return -EINVAL;
- 	netdev = mgp->dev;
--	pci_set_power_state(pdev, PCI_D0);	/* zeros conf space as a side effect */
- 	msleep(5);		/* give card time to respond */
- 	pci_read_config_word(mgp->pdev, PCI_VENDOR_ID, &vendor);
- 	if (vendor == 0xffff) {
-@@ -3301,23 +3298,9 @@ static int myri10ge_resume(struct pci_dev *pdev)
- 		return -EIO;
- 	}
- 
--	pci_restore_state(pdev);
--
--	status = pci_enable_device(pdev);
--	if (status) {
--		dev_err(&pdev->dev, "failed to enable device\n");
--		return status;
--	}
--
--	pci_set_master(pdev);
--
- 	myri10ge_reset(mgp);
- 	myri10ge_dummy_rdma(mgp, 1);
- 
--	/* Save configuration space to be restored if the
--	 * nic resets due to a parity error */
--	pci_save_state(pdev);
--
- 	if (netif_running(netdev)) {
- 		rtnl_lock();
- 		status = myri10ge_open(netdev);
-@@ -3331,11 +3314,8 @@ static int myri10ge_resume(struct pci_dev *pdev)
- 	return 0;
- 
- abort_with_enabled:
--	pci_disable_device(pdev);
- 	return -EIO;
--
- }
--#endif				/* CONFIG_PM */
- 
- static u32 myri10ge_read_reboot(struct myri10ge_priv *mgp)
- {
-@@ -4017,15 +3997,14 @@ static const struct pci_device_id myri10ge_pci_tbl[] = {
- 
- MODULE_DEVICE_TABLE(pci, myri10ge_pci_tbl);
- 
-+static SIMPLE_DEV_PM_OPS(myri10ge_pm_ops, myri10ge_suspend, myri10ge_resume);
-+
- static struct pci_driver myri10ge_driver = {
- 	.name = "myri10ge",
- 	.probe = myri10ge_probe,
- 	.remove = myri10ge_remove,
- 	.id_table = myri10ge_pci_tbl,
--#ifdef CONFIG_PM
--	.suspend = myri10ge_suspend,
--	.resume = myri10ge_resume,
--#endif
-+	.driver.pm = &myri10ge_pm_ops,
- };
- 
- #ifdef CONFIG_MYRI10GE_DCA
+-*  to = \(kmalloc@p\|kzalloc@p\)(size,GFP_KERNEL);
++*  to = \(kmalloc@p\|kzalloc@p\)
++		(size,\(GFP_KERNEL\|GFP_USER\|
++		      \(GFP_KERNEL\|GFP_USER\)|__GFP_NOWARN\));
+    if (to==NULL || ...) S1
+    if (copy_from_user(to, from, size) != 0)
+    S2
 -- 
-2.27.0
+2.26.2
 
