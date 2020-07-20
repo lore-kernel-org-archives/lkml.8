@@ -2,80 +2,606 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9EBC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1429C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D511222B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B810F20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:29:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgGTM2i (ORCPT
+        id S1728614AbgGTM30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:28:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7797 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727989AbgGTM2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 08:28:38 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 365FC1BA019343E1DE06;
-        Mon, 20 Jul 2020 20:28:37 +0800 (CST)
-Received: from [10.164.122.247] (10.164.122.247) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 20 Jul
- 2020 20:28:35 +0800
-Subject: Re: [PATCH] f2fs: compress: fix to avoid memory leak on cc->cpages
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200720085250.47279-1-yuchao0@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <a24a282f-895f-39b1-181b-1208d6f1803c@huawei.com>
-Date:   Mon, 20 Jul 2020 20:28:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 20 Jul 2020 08:29:26 -0400
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:48914 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728508AbgGTM30 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 08:29:26 -0400
+Received: from localhost.localdomain ([93.22.38.146])
+        by mwinf5d51 with ME
+        id 5QVF2300M39BigV03QVGlh; Mon, 20 Jul 2020 14:29:19 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 20 Jul 2020 14:29:19 +0200
+X-ME-IP: 93.22.38.146
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     kuba@kernel.org, davem@davemloft.net, mhabets@solarflare.com,
+        hkallweit1@gmail.com, snelson@pensando.io, mst@redhat.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] net: packetengines: switch from 'pci_' to 'dma_' API
+Date:   Mon, 20 Jul 2020 14:29:12 +0200
+Message-Id: <20200720122912.365571-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200720085250.47279-1-yuchao0@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.164.122.247]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/20 16:52, Chao Yu wrote:
-> Memory allocated for storing compressed pages' poitner should be
-> released after f2fs_write_compressed_pages(), otherwise it will
-> cause memory leak issue.
+The wrappers in include/linux/pci-dma-compat.h should go away.
 
-Jaegeuk,
+The patch has been generated with the coccinelle script below and has been
+hand modified to replace GFP_ with a correct flag.
+It has been compile tested.
 
-Please help to add below tag when merging, thanks.
+When memory is allocated in 'hamachi_init_one()' (hamachi.c), GFP_KERNEL
+can be used because it is a probe function and no lock is acquired.
 
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
+When memory is allocated in 'yellowfin_init_one()' (yellowfin.c),
+GFP_KERNEL can be used because it is a probe function and no lock is
+acquired.
 
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->   fs/f2fs/compress.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-> index 3a847bc36748..a20c9f3272af 100644
-> --- a/fs/f2fs/compress.c
-> +++ b/fs/f2fs/compress.c
-> @@ -1385,6 +1385,8 @@ int f2fs_write_multi_pages(struct compress_ctx *cc,
->   		err = f2fs_write_compressed_pages(cc, submitted,
->   							wbc, io_type);
->   		cops->destroy_compress_ctx(cc);
-> +		kfree(cc->cpages);
-> +		cc->cpages = NULL;
->   		if (!err)
->   			return 0;
->   		f2fs_bug_on(F2FS_I_SB(cc->inode), err != -EAGAIN);
-> 
+
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
+
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
+
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
+
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+---
+ drivers/net/ethernet/packetengines/hamachi.c  | 111 ++++++++++--------
+ .../net/ethernet/packetengines/yellowfin.c    |  83 +++++++------
+ 2 files changed, 110 insertions(+), 84 deletions(-)
+
+diff --git a/drivers/net/ethernet/packetengines/hamachi.c b/drivers/net/ethernet/packetengines/hamachi.c
+index 70816d2e2990..d058a63602a9 100644
+--- a/drivers/net/ethernet/packetengines/hamachi.c
++++ b/drivers/net/ethernet/packetengines/hamachi.c
+@@ -644,13 +644,15 @@ static int hamachi_init_one(struct pci_dev *pdev,
+ 	hmp->mii_if.phy_id_mask = 0x1f;
+ 	hmp->mii_if.reg_num_mask = 0x1f;
+ 
+-	ring_space = pci_alloc_consistent(pdev, TX_TOTAL_SIZE, &ring_dma);
++	ring_space = dma_alloc_coherent(&pdev->dev, TX_TOTAL_SIZE, &ring_dma,
++					GFP_KERNEL);
+ 	if (!ring_space)
+ 		goto err_out_cleardev;
+ 	hmp->tx_ring = ring_space;
+ 	hmp->tx_ring_dma = ring_dma;
+ 
+-	ring_space = pci_alloc_consistent(pdev, RX_TOTAL_SIZE, &ring_dma);
++	ring_space = dma_alloc_coherent(&pdev->dev, RX_TOTAL_SIZE, &ring_dma,
++					GFP_KERNEL);
+ 	if (!ring_space)
+ 		goto err_out_unmap_tx;
+ 	hmp->rx_ring = ring_space;
+@@ -773,11 +775,11 @@ static int hamachi_init_one(struct pci_dev *pdev,
+ 	return 0;
+ 
+ err_out_unmap_rx:
+-	pci_free_consistent(pdev, RX_TOTAL_SIZE, hmp->rx_ring,
+-		hmp->rx_ring_dma);
++	dma_free_coherent(&pdev->dev, RX_TOTAL_SIZE, hmp->rx_ring,
++			  hmp->rx_ring_dma);
+ err_out_unmap_tx:
+-	pci_free_consistent(pdev, TX_TOTAL_SIZE, hmp->tx_ring,
+-		hmp->tx_ring_dma);
++	dma_free_coherent(&pdev->dev, TX_TOTAL_SIZE, hmp->tx_ring,
++			  hmp->tx_ring_dma);
+ err_out_cleardev:
+ 	free_netdev (dev);
+ err_out_iounmap:
+@@ -1001,9 +1003,9 @@ static inline int hamachi_tx(struct net_device *dev)
+ 		/* Free the original skb. */
+ 		skb = hmp->tx_skbuff[entry];
+ 		if (skb) {
+-			pci_unmap_single(hmp->pci_dev,
+-				leXX_to_cpu(hmp->tx_ring[entry].addr),
+-				skb->len, PCI_DMA_TODEVICE);
++			dma_unmap_single(&hmp->pci_dev->dev,
++					 leXX_to_cpu(hmp->tx_ring[entry].addr),
++					 skb->len, DMA_TO_DEVICE);
+ 			dev_kfree_skb(skb);
+ 			hmp->tx_skbuff[entry] = NULL;
+ 		}
+@@ -1093,8 +1095,9 @@ static void hamachi_tx_timeout(struct net_device *dev, unsigned int txqueue)
+ 			hmp->tx_ring[i].status_n_length &= cpu_to_le32(0x0000ffff);
+ 		skb = hmp->tx_skbuff[i];
+ 		if (skb){
+-			pci_unmap_single(hmp->pci_dev, leXX_to_cpu(hmp->tx_ring[i].addr),
+-				skb->len, PCI_DMA_TODEVICE);
++			dma_unmap_single(&hmp->pci_dev->dev,
++					 leXX_to_cpu(hmp->tx_ring[i].addr),
++					 skb->len, DMA_TO_DEVICE);
+ 			dev_kfree_skb(skb);
+ 			hmp->tx_skbuff[i] = NULL;
+ 		}
+@@ -1115,9 +1118,9 @@ static void hamachi_tx_timeout(struct net_device *dev, unsigned int txqueue)
+ 		struct sk_buff *skb = hmp->rx_skbuff[i];
+ 
+ 		if (skb){
+-			pci_unmap_single(hmp->pci_dev,
+-				leXX_to_cpu(hmp->rx_ring[i].addr),
+-				hmp->rx_buf_sz, PCI_DMA_FROMDEVICE);
++			dma_unmap_single(&hmp->pci_dev->dev,
++					 leXX_to_cpu(hmp->rx_ring[i].addr),
++					 hmp->rx_buf_sz, DMA_FROM_DEVICE);
+ 			dev_kfree_skb(skb);
+ 			hmp->rx_skbuff[i] = NULL;
+ 		}
+@@ -1131,8 +1134,10 @@ static void hamachi_tx_timeout(struct net_device *dev, unsigned int txqueue)
+ 		if (skb == NULL)
+ 			break;
+ 
+-                hmp->rx_ring[i].addr = cpu_to_leXX(pci_map_single(hmp->pci_dev,
+-			skb->data, hmp->rx_buf_sz, PCI_DMA_FROMDEVICE));
++		hmp->rx_ring[i].addr = cpu_to_leXX(dma_map_single(&hmp->pci_dev->dev,
++								  skb->data,
++								  hmp->rx_buf_sz,
++								  DMA_FROM_DEVICE));
+ 		hmp->rx_ring[i].status_n_length = cpu_to_le32(DescOwn |
+ 			DescEndPacket | DescIntr | (hmp->rx_buf_sz - 2));
+ 	}
+@@ -1183,8 +1188,10 @@ static void hamachi_init_ring(struct net_device *dev)
+ 		if (skb == NULL)
+ 			break;
+ 		skb_reserve(skb, 2); /* 16 byte align the IP header. */
+-                hmp->rx_ring[i].addr = cpu_to_leXX(pci_map_single(hmp->pci_dev,
+-			skb->data, hmp->rx_buf_sz, PCI_DMA_FROMDEVICE));
++		hmp->rx_ring[i].addr = cpu_to_leXX(dma_map_single(&hmp->pci_dev->dev,
++								  skb->data,
++								  hmp->rx_buf_sz,
++								  DMA_FROM_DEVICE));
+ 		/* -2 because it doesn't REALLY have that first 2 bytes -KDU */
+ 		hmp->rx_ring[i].status_n_length = cpu_to_le32(DescOwn |
+ 			DescEndPacket | DescIntr | (hmp->rx_buf_sz -2));
+@@ -1233,8 +1240,10 @@ static netdev_tx_t hamachi_start_xmit(struct sk_buff *skb,
+ 
+ 	hmp->tx_skbuff[entry] = skb;
+ 
+-        hmp->tx_ring[entry].addr = cpu_to_leXX(pci_map_single(hmp->pci_dev,
+-		skb->data, skb->len, PCI_DMA_TODEVICE));
++	hmp->tx_ring[entry].addr = cpu_to_leXX(dma_map_single(&hmp->pci_dev->dev,
++							      skb->data,
++							      skb->len,
++							      DMA_TO_DEVICE));
+ 
+ 	/* Hmmmm, could probably put a DescIntr on these, but the way
+ 		the driver is currently coded makes Tx interrupts unnecessary
+@@ -1333,10 +1342,10 @@ static irqreturn_t hamachi_interrupt(int irq, void *dev_instance)
+ 					skb = hmp->tx_skbuff[entry];
+ 					/* Free the original skb. */
+ 					if (skb){
+-						pci_unmap_single(hmp->pci_dev,
+-							leXX_to_cpu(hmp->tx_ring[entry].addr),
+-							skb->len,
+-							PCI_DMA_TODEVICE);
++						dma_unmap_single(&hmp->pci_dev->dev,
++								 leXX_to_cpu(hmp->tx_ring[entry].addr),
++								 skb->len,
++								 DMA_TO_DEVICE);
+ 						dev_consume_skb_irq(skb);
+ 						hmp->tx_skbuff[entry] = NULL;
+ 					}
+@@ -1413,10 +1422,9 @@ static int hamachi_rx(struct net_device *dev)
+ 
+ 		if (desc_status & DescOwn)
+ 			break;
+-		pci_dma_sync_single_for_cpu(hmp->pci_dev,
+-					    leXX_to_cpu(desc->addr),
+-					    hmp->rx_buf_sz,
+-					    PCI_DMA_FROMDEVICE);
++		dma_sync_single_for_cpu(&hmp->pci_dev->dev,
++					leXX_to_cpu(desc->addr),
++					hmp->rx_buf_sz, DMA_FROM_DEVICE);
+ 		buf_addr = (u8 *) hmp->rx_skbuff[entry]->data;
+ 		frame_status = get_unaligned_le32(&(buf_addr[data_size - 12]));
+ 		if (hamachi_debug > 4)
+@@ -1483,10 +1491,10 @@ static int hamachi_rx(struct net_device *dev)
+ 				  "not good with RX_CHECKSUM\n", dev->name);
+ #endif
+ 				skb_reserve(skb, 2);	/* 16 byte align the IP header */
+-				pci_dma_sync_single_for_cpu(hmp->pci_dev,
+-							    leXX_to_cpu(hmp->rx_ring[entry].addr),
+-							    hmp->rx_buf_sz,
+-							    PCI_DMA_FROMDEVICE);
++				dma_sync_single_for_cpu(&hmp->pci_dev->dev,
++							leXX_to_cpu(hmp->rx_ring[entry].addr),
++							hmp->rx_buf_sz,
++							DMA_FROM_DEVICE);
+ 				/* Call copy + cksum if available. */
+ #if 1 || USE_IP_COPYSUM
+ 				skb_copy_to_linear_data(skb,
+@@ -1496,14 +1504,15 @@ static int hamachi_rx(struct net_device *dev)
+ 				skb_put_data(skb, hmp->rx_ring_dma
+ 					     + entry*sizeof(*desc), pkt_len);
+ #endif
+-				pci_dma_sync_single_for_device(hmp->pci_dev,
+-							       leXX_to_cpu(hmp->rx_ring[entry].addr),
+-							       hmp->rx_buf_sz,
+-							       PCI_DMA_FROMDEVICE);
++				dma_sync_single_for_device(&hmp->pci_dev->dev,
++							   leXX_to_cpu(hmp->rx_ring[entry].addr),
++							   hmp->rx_buf_sz,
++							   DMA_FROM_DEVICE);
+ 			} else {
+-				pci_unmap_single(hmp->pci_dev,
++				dma_unmap_single(&hmp->pci_dev->dev,
+ 						 leXX_to_cpu(hmp->rx_ring[entry].addr),
+-						 hmp->rx_buf_sz, PCI_DMA_FROMDEVICE);
++						 hmp->rx_buf_sz,
++						 DMA_FROM_DEVICE);
+ 				skb_put(skb = hmp->rx_skbuff[entry], pkt_len);
+ 				hmp->rx_skbuff[entry] = NULL;
+ 			}
+@@ -1586,8 +1595,10 @@ static int hamachi_rx(struct net_device *dev)
+ 			if (skb == NULL)
+ 				break;		/* Better luck next round. */
+ 			skb_reserve(skb, 2);	/* Align IP on 16 byte boundaries */
+-                	desc->addr = cpu_to_leXX(pci_map_single(hmp->pci_dev,
+-				skb->data, hmp->rx_buf_sz, PCI_DMA_FROMDEVICE));
++			desc->addr = cpu_to_leXX(dma_map_single(&hmp->pci_dev->dev,
++								skb->data,
++								hmp->rx_buf_sz,
++								DMA_FROM_DEVICE));
+ 		}
+ 		desc->status_n_length = cpu_to_le32(hmp->rx_buf_sz);
+ 		if (entry >= RX_RING_SIZE-1)
+@@ -1704,9 +1715,9 @@ static int hamachi_close(struct net_device *dev)
+ 		skb = hmp->rx_skbuff[i];
+ 		hmp->rx_ring[i].status_n_length = 0;
+ 		if (skb) {
+-			pci_unmap_single(hmp->pci_dev,
+-				leXX_to_cpu(hmp->rx_ring[i].addr),
+-				hmp->rx_buf_sz, PCI_DMA_FROMDEVICE);
++			dma_unmap_single(&hmp->pci_dev->dev,
++					 leXX_to_cpu(hmp->rx_ring[i].addr),
++					 hmp->rx_buf_sz, DMA_FROM_DEVICE);
+ 			dev_kfree_skb(skb);
+ 			hmp->rx_skbuff[i] = NULL;
+ 		}
+@@ -1715,9 +1726,9 @@ static int hamachi_close(struct net_device *dev)
+ 	for (i = 0; i < TX_RING_SIZE; i++) {
+ 		skb = hmp->tx_skbuff[i];
+ 		if (skb) {
+-			pci_unmap_single(hmp->pci_dev,
+-				leXX_to_cpu(hmp->tx_ring[i].addr),
+-				skb->len, PCI_DMA_TODEVICE);
++			dma_unmap_single(&hmp->pci_dev->dev,
++					 leXX_to_cpu(hmp->tx_ring[i].addr),
++					 skb->len, DMA_TO_DEVICE);
+ 			dev_kfree_skb(skb);
+ 			hmp->tx_skbuff[i] = NULL;
+ 		}
+@@ -1899,10 +1910,10 @@ static void hamachi_remove_one(struct pci_dev *pdev)
+ 	if (dev) {
+ 		struct hamachi_private *hmp = netdev_priv(dev);
+ 
+-		pci_free_consistent(pdev, RX_TOTAL_SIZE, hmp->rx_ring,
+-			hmp->rx_ring_dma);
+-		pci_free_consistent(pdev, TX_TOTAL_SIZE, hmp->tx_ring,
+-			hmp->tx_ring_dma);
++		dma_free_coherent(&pdev->dev, RX_TOTAL_SIZE, hmp->rx_ring,
++				  hmp->rx_ring_dma);
++		dma_free_coherent(&pdev->dev, TX_TOTAL_SIZE, hmp->tx_ring,
++				  hmp->tx_ring_dma);
+ 		unregister_netdev(dev);
+ 		iounmap(hmp->base);
+ 		free_netdev(dev);
+diff --git a/drivers/net/ethernet/packetengines/yellowfin.c b/drivers/net/ethernet/packetengines/yellowfin.c
+index 520779f05e1a..647a1431b359 100644
+--- a/drivers/net/ethernet/packetengines/yellowfin.c
++++ b/drivers/net/ethernet/packetengines/yellowfin.c
+@@ -434,19 +434,22 @@ static int yellowfin_init_one(struct pci_dev *pdev,
+ 	np->drv_flags = drv_flags;
+ 	np->base = ioaddr;
+ 
+-	ring_space = pci_alloc_consistent(pdev, TX_TOTAL_SIZE, &ring_dma);
++	ring_space = dma_alloc_coherent(&pdev->dev, TX_TOTAL_SIZE, &ring_dma,
++					GFP_KERNEL);
+ 	if (!ring_space)
+ 		goto err_out_cleardev;
+ 	np->tx_ring = ring_space;
+ 	np->tx_ring_dma = ring_dma;
+ 
+-	ring_space = pci_alloc_consistent(pdev, RX_TOTAL_SIZE, &ring_dma);
++	ring_space = dma_alloc_coherent(&pdev->dev, RX_TOTAL_SIZE, &ring_dma,
++					GFP_KERNEL);
+ 	if (!ring_space)
+ 		goto err_out_unmap_tx;
+ 	np->rx_ring = ring_space;
+ 	np->rx_ring_dma = ring_dma;
+ 
+-	ring_space = pci_alloc_consistent(pdev, STATUS_TOTAL_SIZE, &ring_dma);
++	ring_space = dma_alloc_coherent(&pdev->dev, STATUS_TOTAL_SIZE,
++					&ring_dma, GFP_KERNEL);
+ 	if (!ring_space)
+ 		goto err_out_unmap_rx;
+ 	np->tx_status = ring_space;
+@@ -505,12 +508,14 @@ static int yellowfin_init_one(struct pci_dev *pdev,
+ 	return 0;
+ 
+ err_out_unmap_status:
+-        pci_free_consistent(pdev, STATUS_TOTAL_SIZE, np->tx_status,
+-		np->tx_status_dma);
++	dma_free_coherent(&pdev->dev, STATUS_TOTAL_SIZE, np->tx_status,
++			  np->tx_status_dma);
+ err_out_unmap_rx:
+-        pci_free_consistent(pdev, RX_TOTAL_SIZE, np->rx_ring, np->rx_ring_dma);
++	dma_free_coherent(&pdev->dev, RX_TOTAL_SIZE, np->rx_ring,
++			  np->rx_ring_dma);
+ err_out_unmap_tx:
+-        pci_free_consistent(pdev, TX_TOTAL_SIZE, np->tx_ring, np->tx_ring_dma);
++	dma_free_coherent(&pdev->dev, TX_TOTAL_SIZE, np->tx_ring,
++			  np->tx_ring_dma);
+ err_out_cleardev:
+ 	pci_iounmap(pdev, ioaddr);
+ err_out_free_res:
+@@ -740,8 +745,10 @@ static int yellowfin_init_ring(struct net_device *dev)
+ 		if (skb == NULL)
+ 			break;
+ 		skb_reserve(skb, 2);	/* 16 byte align the IP header. */
+-		yp->rx_ring[i].addr = cpu_to_le32(pci_map_single(yp->pci_dev,
+-			skb->data, yp->rx_buf_sz, PCI_DMA_FROMDEVICE));
++		yp->rx_ring[i].addr = cpu_to_le32(dma_map_single(&yp->pci_dev->dev,
++								 skb->data,
++								 yp->rx_buf_sz,
++								 DMA_FROM_DEVICE));
+ 	}
+ 	if (i != RX_RING_SIZE) {
+ 		for (j = 0; j < i; j++)
+@@ -831,8 +838,9 @@ static netdev_tx_t yellowfin_start_xmit(struct sk_buff *skb,
+ 	yp->tx_skbuff[entry] = skb;
+ 
+ #ifdef NO_TXSTATS
+-	yp->tx_ring[entry].addr = cpu_to_le32(pci_map_single(yp->pci_dev,
+-		skb->data, len, PCI_DMA_TODEVICE));
++	yp->tx_ring[entry].addr = cpu_to_le32(dma_map_single(&yp->pci_dev->dev,
++							     skb->data,
++							     len, DMA_TO_DEVICE));
+ 	yp->tx_ring[entry].result_status = 0;
+ 	if (entry >= TX_RING_SIZE-1) {
+ 		/* New stop command. */
+@@ -847,8 +855,9 @@ static netdev_tx_t yellowfin_start_xmit(struct sk_buff *skb,
+ 	yp->cur_tx++;
+ #else
+ 	yp->tx_ring[entry<<1].request_cnt = len;
+-	yp->tx_ring[entry<<1].addr = cpu_to_le32(pci_map_single(yp->pci_dev,
+-		skb->data, len, PCI_DMA_TODEVICE));
++	yp->tx_ring[entry<<1].addr = cpu_to_le32(dma_map_single(&yp->pci_dev->dev,
++								skb->data,
++								len, DMA_TO_DEVICE));
+ 	/* The input_last (status-write) command is constant, but we must
+ 	   rewrite the subsequent 'stop' command. */
+ 
+@@ -923,8 +932,9 @@ static irqreturn_t yellowfin_interrupt(int irq, void *dev_instance)
+ 			dev->stats.tx_packets++;
+ 			dev->stats.tx_bytes += skb->len;
+ 			/* Free the original skb. */
+-			pci_unmap_single(yp->pci_dev, le32_to_cpu(yp->tx_ring[entry].addr),
+-				skb->len, PCI_DMA_TODEVICE);
++			dma_unmap_single(&yp->pci_dev->dev,
++					 le32_to_cpu(yp->tx_ring[entry].addr),
++					 skb->len, DMA_TO_DEVICE);
+ 			dev_consume_skb_irq(skb);
+ 			yp->tx_skbuff[entry] = NULL;
+ 		}
+@@ -980,9 +990,9 @@ static irqreturn_t yellowfin_interrupt(int irq, void *dev_instance)
+ 					dev->stats.tx_packets++;
+ 				}
+ 				/* Free the original skb. */
+-				pci_unmap_single(yp->pci_dev,
+-					yp->tx_ring[entry<<1].addr, skb->len,
+-					PCI_DMA_TODEVICE);
++				dma_unmap_single(&yp->pci_dev->dev,
++						 yp->tx_ring[entry << 1].addr,
++						 skb->len, DMA_TO_DEVICE);
+ 				dev_consume_skb_irq(skb);
+ 				yp->tx_skbuff[entry] = 0;
+ 				/* Mark status as empty. */
+@@ -1055,8 +1065,9 @@ static int yellowfin_rx(struct net_device *dev)
+ 
+ 		if(!desc->result_status)
+ 			break;
+-		pci_dma_sync_single_for_cpu(yp->pci_dev, le32_to_cpu(desc->addr),
+-			yp->rx_buf_sz, PCI_DMA_FROMDEVICE);
++		dma_sync_single_for_cpu(&yp->pci_dev->dev,
++					le32_to_cpu(desc->addr),
++					yp->rx_buf_sz, DMA_FROM_DEVICE);
+ 		desc_status = le32_to_cpu(desc->result_status) >> 16;
+ 		buf_addr = rx_skb->data;
+ 		data_size = (le32_to_cpu(desc->dbdma_cmd) -
+@@ -1121,10 +1132,10 @@ static int yellowfin_rx(struct net_device *dev)
+ 			   without copying to a properly sized skbuff. */
+ 			if (pkt_len > rx_copybreak) {
+ 				skb_put(skb = rx_skb, pkt_len);
+-				pci_unmap_single(yp->pci_dev,
+-					le32_to_cpu(yp->rx_ring[entry].addr),
+-					yp->rx_buf_sz,
+-					PCI_DMA_FROMDEVICE);
++				dma_unmap_single(&yp->pci_dev->dev,
++						 le32_to_cpu(yp->rx_ring[entry].addr),
++						 yp->rx_buf_sz,
++						 DMA_FROM_DEVICE);
+ 				yp->rx_skbuff[entry] = NULL;
+ 			} else {
+ 				skb = netdev_alloc_skb(dev, pkt_len + 2);
+@@ -1133,10 +1144,10 @@ static int yellowfin_rx(struct net_device *dev)
+ 				skb_reserve(skb, 2);	/* 16 byte align the IP header */
+ 				skb_copy_to_linear_data(skb, rx_skb->data, pkt_len);
+ 				skb_put(skb, pkt_len);
+-				pci_dma_sync_single_for_device(yp->pci_dev,
+-								le32_to_cpu(desc->addr),
+-								yp->rx_buf_sz,
+-								PCI_DMA_FROMDEVICE);
++				dma_sync_single_for_device(&yp->pci_dev->dev,
++							   le32_to_cpu(desc->addr),
++							   yp->rx_buf_sz,
++							   DMA_FROM_DEVICE);
+ 			}
+ 			skb->protocol = eth_type_trans(skb, dev);
+ 			netif_rx(skb);
+@@ -1155,8 +1166,10 @@ static int yellowfin_rx(struct net_device *dev)
+ 				break;				/* Better luck next round. */
+ 			yp->rx_skbuff[entry] = skb;
+ 			skb_reserve(skb, 2);	/* Align IP on 16 byte boundaries */
+-			yp->rx_ring[entry].addr = cpu_to_le32(pci_map_single(yp->pci_dev,
+-				skb->data, yp->rx_buf_sz, PCI_DMA_FROMDEVICE));
++			yp->rx_ring[entry].addr = cpu_to_le32(dma_map_single(&yp->pci_dev->dev,
++									     skb->data,
++									     yp->rx_buf_sz,
++									     DMA_FROM_DEVICE));
+ 		}
+ 		yp->rx_ring[entry].dbdma_cmd = cpu_to_le32(CMD_STOP);
+ 		yp->rx_ring[entry].result_status = 0;	/* Clear complete bit. */
+@@ -1379,10 +1392,12 @@ static void yellowfin_remove_one(struct pci_dev *pdev)
+ 	BUG_ON(!dev);
+ 	np = netdev_priv(dev);
+ 
+-        pci_free_consistent(pdev, STATUS_TOTAL_SIZE, np->tx_status,
+-		np->tx_status_dma);
+-	pci_free_consistent(pdev, RX_TOTAL_SIZE, np->rx_ring, np->rx_ring_dma);
+-	pci_free_consistent(pdev, TX_TOTAL_SIZE, np->tx_ring, np->tx_ring_dma);
++	dma_free_coherent(&pdev->dev, STATUS_TOTAL_SIZE, np->tx_status,
++			  np->tx_status_dma);
++	dma_free_coherent(&pdev->dev, RX_TOTAL_SIZE, np->rx_ring,
++			  np->rx_ring_dma);
++	dma_free_coherent(&pdev->dev, TX_TOTAL_SIZE, np->tx_ring,
++			  np->tx_ring_dma);
+ 	unregister_netdev (dev);
+ 
+ 	pci_iounmap(pdev, np->base);
+-- 
+2.25.1
+
