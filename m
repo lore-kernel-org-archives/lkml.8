@@ -2,182 +2,97 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020F2C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CC1C4345D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D23D92070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqgBjnyp"
+	by mail.kernel.org (Postfix) with ESMTP id 0CBF722CBB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595263634;
+	bh=Ii21Y4dB2dtPOuktMfoSercnM/W9406kERuSR4p265M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FDeufpIjfOhnjt7Nb2hDNqlsjYIzaAHmN2qZ3POHnK7DKjFNAZFrTl67VPnO+4fOF
+	 sbesx/c4XkZXCR07XxkiJlSR3Q6QwhC2y0bhxoLW8WPAYShsvrSlgBG6UJqDpBn2gT
+	 NJYfHfEs4IJ8+nMc2tVnYTgM2qOcc4kX4KoRJUKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389118AbgGTQrF (ORCPT
+        id S1729627AbgGTPj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:47:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730047AbgGTQq6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:46:58 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E18C0619D2;
-        Mon, 20 Jul 2020 09:46:58 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o2so190224wmh.2;
-        Mon, 20 Jul 2020 09:46:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9TUkabklxIXk2rG01tEVzaKI9h1RHrZIgtt3w/3l2iM=;
-        b=cqgBjnypFa1cbeUeu4WKA3uvV4175XXicaesi3cB7HqFuZkvUS3EnOHeMfJwNpNlcu
-         thvdafoSdEpu3CyPa0BvtB18a649D+XC6ajS63SeSnJp6XDu18WDcEJTK8klZNzdximZ
-         VuENIM+1ZvbGer8HlSEIJ5nBBP/QCWiT36HTgRFZfhMl74u3ZylqJREsFY0Lwc7KPZfZ
-         CVu19F0/MAN2L88oyFeatinyVCcE8rFRVB0KHI7TQT2a/Fv/pRVO9FMOnNYPgoKZVlO4
-         hlQqnmp+3KYZ9wrW6RC9f04lVmriNZKKST63JfVFty4Y9voY7HrmjAKp9hJlI1COu6AR
-         TYWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9TUkabklxIXk2rG01tEVzaKI9h1RHrZIgtt3w/3l2iM=;
-        b=mt66boa/ILERyE81gMU+dgOyJczfAxN2dRToEms2isikkt+Xn2W9qrRxu1gCh6AJQd
-         BhFCxp4UeoW+LWcyW5gkyj6DiOOYTnJytApYVsVF9gLMpa4OxLPvRWz1rWH7SIOgJK0/
-         gFV+NlnsFV+7uZ2jhd4XGEnDeTLpFzvtPQpfCc6H7vFeVVoeCvBaCfGDIPR37uK3aO44
-         8EW/h7C6YPu0n+BcETWiNEd9Ba5EEg6TSf7zXcWpGKnswD5zo3xo0Y5nAVhlVkPwgtIc
-         2rxhoRrRqHKm23xGTwv+ashf5mBGr1ZRi/Fnncpg5QnMplnkKzB4ObNCjOOAN4Tf8PKh
-         wCMw==
-X-Gm-Message-State: AOAM531dngUaN1OfmoLCkbp8t5koWX0m9sF7/5/WQx75M9CRkNBmcFbj
-        NBJx7ytNfpR16KrYM3nkbM39RKwi1tQUrdYvXyg=
-X-Google-Smtp-Source: ABdhPJwHnWafr2ui/E9BQNR1LWn8VA0FKZgs+fhoDxBR6hA5H0uc44yL3f5SpS8O04T80tEL381rAROIPtdr1Fbg7hY=
-X-Received: by 2002:a1c:2485:: with SMTP id k127mr220540wmk.138.1595263616571;
- Mon, 20 Jul 2020 09:46:56 -0700 (PDT)
+        Mon, 20 Jul 2020 11:39:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728518AbgGTPjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:39:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 777AF22B4E;
+        Mon, 20 Jul 2020 15:39:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595259594;
+        bh=Ii21Y4dB2dtPOuktMfoSercnM/W9406kERuSR4p265M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KImI5IiPFeUaFpc0x84DI59NrEMTCFylIFDMSFO+c2GRVPlmGlT5Uti2dZZ9/B/l/
+         ELnOf5nDjog2Ti2J8odB/OK1N7AAG+BscJvJG5qUA1uGQBmoA0vL/c8WMR4TaMM9X3
+         HK7QJ8E/9ri+6iV/H5azOyDWQD7ZEjkGdLkKBAsk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yariv <oigevald+kernel@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.4 37/58] HID: magicmouse: do not set up autorepeat
+Date:   Mon, 20 Jul 2020 17:36:53 +0200
+Message-Id: <20200720152749.056128636@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
+References: <20200720152747.127988571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
- <1593974870-18919-5-git-send-email-joshi.k@samsung.com> <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
- <20200709085501.GA64935@infradead.org> <adc14700-8e95-10b2-d914-afa5029ae80c@kernel.dk>
- <20200709140053.GA7528@infradead.org> <2270907f-670c-5182-f4ec-9756dc645376@kernel.dk>
- <CA+1E3r+H7WEyfTufNz3xBQQynOVV-uD3myYynkfp7iU+D=Svuw@mail.gmail.com>
- <f5e3e931-ef1b-2eb6-9a03-44dd5589c8d3@kernel.dk> <CA+1E3rLna6VVuwMSHVVEFmrgsTyJN=U4CcZtxSGWYr_UYV7AmQ@mail.gmail.com>
- <20200710131054.GB7491@infradead.org> <9e870249-01db-c68d-ea65-28edc3c1f071@kernel.dk>
-In-Reply-To: <9e870249-01db-c68d-ea65-28edc3c1f071@kernel.dk>
-From:   Kanchan Joshi <joshiiitr@gmail.com>
-Date:   Mon, 20 Jul 2020 22:16:28 +0530
-Message-ID: <CA+1E3rK9LCmB4Lt8hTLrCx7bXaF6sETWgm=M6=D6grOnGSgiRQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, Damien.LeMoal@wdc.com, asml.silence@gmail.com,
-        linux-fsdevel@vger.kernel.org, "Matias Bj??rling" <mb@lightnvm.io>,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 7:39 PM Jens Axboe <axboe@kernel.dk> wrote:
->
-> On 7/10/20 7:10 AM, Christoph Hellwig wrote:
-> > On Fri, Jul 10, 2020 at 12:35:43AM +0530, Kanchan Joshi wrote:
-> >> Append required special treatment (conversion for sector to bytes) for io_uring.
-> >> And we were planning a user-space wrapper to abstract that.
-> >>
-> >> But good part (as it seems now) was: append result went along with cflags at
-> >> virtually no additional cost. And uring code changes became super clean/minimal
-> >> with further revisions.
-> >> While indirect-offset requires doing allocation/mgmt in application,
-> >> io-uring submission
-> >> and in completion path (which seems trickier), and those CQE flags
-> >> still get written
-> >> user-space and serve no purpose for append-write.
-> >
-> > I have to say that storing the results in the CQE generally make
-> > so much more sense.  I wonder if we need a per-fd "large CGE" flag
-> > that adds two extra u64s to the CQE, and some ops just require this
-> > version.
->
-> I have been pondering the same thing, we could make certain ops consume
-> two CQEs if it makes sense. It's a bit ugly on the app side with two
-> different CQEs for a request, though. We can't just treat it as a large
-> CQE, as they might not be sequential if we happen to wrap. But maybe
-> it's not too bad.
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Did some work on the two-cqe scheme for zone-append.
-First CQE is the same (as before), while second CQE does not keep
-res/flags and instead has 64bit result to report append-location.
-It would look like this -
+commit 6363d2065cd399cf9d6dc9d08c437f8658831100 upstream.
 
-struct io_uring_cqe {
-        __u64   user_data;      /* sqe->data submission passed back */
--       __s32   res;            /* result code for this event */
--       __u32   flags;
-+       union {
-+               struct {
-+                       __s32   res;            /* result code for this event */
-+                       __u32   flags;
-+               };
-+               __u64   append_res;   /*only used for append, in
-secondary cqe */
-+       };
+Neither the trackpad, nor the mouse want input core to generate autorepeat
+events for their buttons, so let's reset the bit (as hid-input sets it for
+these devices based on the usage vendor code).
 
-And kernel will produce two CQEs for append completion-
+Cc: stable@vger.kernel.org
+Reported-by: Yariv <oigevald+kernel@gmail.com>
+Tested-by: Yariv <oigevald+kernel@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-static void __io_cqring_fill_event(struct io_kiocb *req, long res, long cflags)
-{
--       struct io_uring_cqe *cqe;
-+       struct io_uring_cqe *cqe, *cqe2 = NULL;
+---
+ drivers/hid/hid-magicmouse.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
--       cqe = io_get_cqring(ctx);
-+       if (unlikely(req->flags & REQ_F_ZONE_APPEND))
-+ /* obtain two CQEs for append. NULL if two CQEs are not available */
-+               cqe = io_get_two_cqring(ctx, &cqe2);
-+       else
-+               cqe = io_get_cqring(ctx);
+--- a/drivers/hid/hid-magicmouse.c
++++ b/drivers/hid/hid-magicmouse.c
+@@ -451,6 +451,12 @@ static int magicmouse_setup_input(struct
+ 		__set_bit(MSC_RAW, input->mscbit);
+ 	}
+ 
++	/*
++	 * hid-input may mark device as using autorepeat, but neither
++	 * the trackpad, nor the mouse actually want it.
++	 */
++	__clear_bit(EV_REP, input->evbit);
 +
-        if (likely(cqe)) {
-                WRITE_ONCE(cqe->user_data, req->user_data);
-                WRITE_ONCE(cqe->res, res);
-                WRITE_ONCE(cqe->flags, cflags);
-+               /* update secondary cqe for zone-append */
-+               if (req->flags & REQ_F_ZONE_APPEND) {
-+                       WRITE_ONCE(cqe2->append_res,
-+                               (u64)req->append_offset << SECTOR_SHIFT);
-+                       WRITE_ONCE(cqe2->user_data, req->user_data);
-+               }
-  mutex_unlock(&ctx->uring_lock);
+ 	return 0;
+ }
+ 
 
 
-This seems to go fine in Kernel.
-But the application will have few differences such as:
-
-- When it submits N appends, and decides to wait for all completions
-it needs to specify min_complete as 2*N (or at least 2N-1).
-Two appends will produce 4 completion events, and if application
-decides to wait for both it must specify 4 (or 3).
-
-io_uring_enter(unsigned int fd, unsigned int to_submit,
-                   unsigned int min_complete, unsigned int flags,
-                   sigset_t *sig);
-
-- Completion-processing sequence for mixed-workload (few reads + few
-appends, on the same ring).
-Currently there is a one-to-one relationship. Application looks at N
-CQE entries, and treats each as distinct IO completion - a for loop
-does the work.
-With two-cqe scheme, extracting, from a bunch of completion, the ones
-for read (one cqe) and append (two cqe): flow gets somewhat
-non-linear.
-
-Perhaps this is not too bad, but felt that it must be put here upfront.
-
--- 
-Kanchan Joshi
