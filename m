@@ -2,58 +2,77 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06838C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC82722C9C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6578222CB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgGTOJL (ORCPT
+        id S1728117AbgGTOKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:09:11 -0400
-Received: from verein.lst.de ([213.95.11.211]:47155 "EHLO verein.lst.de"
+        Mon, 20 Jul 2020 10:10:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:48976 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgGTOJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:09:11 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 94C3F68BFE; Mon, 20 Jul 2020 16:09:08 +0200 (CEST)
-Date:   Mon, 20 Jul 2020 16:09:08 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH v15 5/9] nvme-core: Introduce nvme_ctrl_get_by_path()
-Message-ID: <20200720140908.GE4627@lst.de>
-References: <20200716203319.16022-1-logang@deltatee.com> <20200716203319.16022-6-logang@deltatee.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716203319.16022-6-logang@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1726046AbgGTOKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 10:10:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27B4CD6E;
+        Mon, 20 Jul 2020 07:10:36 -0700 (PDT)
+Received: from net-arm-thunderx2-02.shanghai.arm.com (net-arm-thunderx2-02.shanghai.arm.com [10.169.210.119])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 00C553F718;
+        Mon, 20 Jul 2020 07:10:32 -0700 (PDT)
+From:   Jianlin Lv <Jianlin.Lv@arm.com>
+To:     bpf@vger.kernel.org
+Cc:     davem@davemloft.net, kuba@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, yhs@fb.com, Song.Zhu@arm.com,
+        Jianlin.Lv@arm.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH bpf-next] bpf: Generate cookie for new non-initial net NS
+Date:   Mon, 20 Jul 2020 22:09:19 +0800
+Message-Id: <20200720140919.22342-1-Jianlin.Lv@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 02:33:15PM -0600, Logan Gunthorpe wrote:
-> nvme_ctrl_get_by_path() is analagous to blkdev_get_by_path() except it
-> gets a struct nvme_ctrl from the path to its char dev (/dev/nvme0).
-> It makes use of filp_open() to open the file and uses the private
-> data to obtain a pointer to the struct nvme_ctrl. If the fops of the
-> file do not match, -EINVAL is returned.
-> 
-> The purpose of this function is to support NVMe-OF target passthru.
+For non-initial network NS, the net cookie is generated when
+bpf_get_netns_cookie_sock is called for the first time, but it is more
+reasonable to complete the cookie generation work when creating a new
+network NS, just like init_net.
+net_gen_cookie() be moved into setup_net() that it can serve the initial
+and non-initial network namespace.
 
-This looks generally good.  However since the early days of this
-patchset we've grown symbol namespaces, and the EXPORT_SYMBOL_NS_GPL
-macro, which are what we really should use here and for the other
-exports.
+Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
+---
+ net/core/net_namespace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+index dcd61aca343e..5937bd0df56d 100644
+--- a/net/core/net_namespace.c
++++ b/net/core/net_namespace.c
+@@ -336,6 +336,7 @@ static __net_init int setup_net(struct net *net, struct user_namespace *user_ns)
+ 	idr_init(&net->netns_ids);
+ 	spin_lock_init(&net->nsid_lock);
+ 	mutex_init(&net->ipv4.ra_mutex);
++	net_gen_cookie(net);
+ 
+ 	list_for_each_entry(ops, &pernet_list, list) {
+ 		error = ops_init(ops, net);
+@@ -1101,7 +1102,6 @@ static int __init net_ns_init(void)
+ 		panic("Could not allocate generic netns");
+ 
+ 	rcu_assign_pointer(init_net.gen, ng);
+-	net_gen_cookie(&init_net);
+ 
+ 	down_write(&pernet_ops_rwsem);
+ 	if (setup_net(&init_net, &init_user_ns))
+-- 
+2.17.1
+
