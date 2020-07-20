@@ -2,201 +2,144 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URI_WP_DIRINDEX,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F207C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F05C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45A9F2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449AE20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:25:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X9UnxWVH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t3cWRbwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgGTMW6 (ORCPT
+        id S1728728AbgGTMZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:22:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57521 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728651AbgGTMW5 (ORCPT
+        Mon, 20 Jul 2020 08:25:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728460AbgGTMZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 08:22:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595247776;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PFM1Qo8fTP4agFAqoUXIx/sYoR1DNoACJDTPmZRrdKQ=;
-        b=X9UnxWVHL5izrQ1RjvfYVnafId/SXmYNzyprQPtI5R6ZxsSay9d2uOQmgdZf90HbRBzyEj
-        +6Owrq30ujNmJnHT3pZnrEsyU5jiltmNCxocMYqahQJ/O/RwFg/867nROTP9sDi41Mcbl6
-        cJozVcMOBsJaeYmzcpVzhR65koJCfwE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-514--fmzgAVpM3WTrqd1e3leqw-1; Mon, 20 Jul 2020 08:22:30 -0400
-X-MC-Unique: -fmzgAVpM3WTrqd1e3leqw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 28EFC800597;
-        Mon, 20 Jul 2020 12:22:28 +0000 (UTC)
-Received: from [10.36.115.54] (ovpn-115-54.ams2.redhat.com [10.36.115.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B80272B6E2;
-        Mon, 20 Jul 2020 12:22:18 +0000 (UTC)
-Subject: Re: [PATCH v5 12/15] vfio/type1: Add vSVA support for IOMMU-backed
- mdevs
-To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
-        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
-        stefanha@gmail.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
- <1594552870-55687-13-git-send-email-yi.l.liu@intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <5921bffc-9daa-99be-9a12-6d94ce1950d2@redhat.com>
-Date:   Mon, 20 Jul 2020 14:22:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 20 Jul 2020 08:25:23 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8723FC061794;
+        Mon, 20 Jul 2020 05:25:23 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z2so17680898wrp.2;
+        Mon, 20 Jul 2020 05:25:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=ELSjM6rlMt2XdyL11rGbFkrQrMLysUTdi5Cru78vLr4=;
+        b=t3cWRbwP0CDJpWVls5HKPGw+65RlzeuddYZvYTsdtOuPBT089BluvpfF76NEBnmwJ5
+         d1gDaUAsjN/f1OcorOwBEy7McQXlzgQl/6hvemrxWg2lmEA8jJvmbxTsGRydI+mPe2oY
+         Yh88X0dkpjrtZhimdmN+DVAcB0mkDuRohcn7jm3nQ5+jKw61TFMNUFSZ3h9LfX7Osc3V
+         vvVewww/82r6ERvGdP5o/l6pK99ZmPMocgPDWNJaPbVsHoTRzYrENFQsVkpC3Jz2BB8p
+         zBX5XlIdoZIRDji34XK1cRmJKZZmLIRCoDco87iOIbAOrGDVo26yP23Pud3LkQ5SJJoA
+         js3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=ELSjM6rlMt2XdyL11rGbFkrQrMLysUTdi5Cru78vLr4=;
+        b=XHx/8C+b1X6IlvjY0DYGM56j1E4g/0/pdj3DBrlX27SxCPRA8dN5RvZ8H2DnopfrF8
+         UBZmenWy8fK1zDaOqaYF8rvRuYWOP3Vj2rXNCikbPEJoXzHB2idoA51B6KmAK3EUa1tG
+         JYeuBAKLLAZ2PFbyW9tV/8tZwbTY2DrHtPAjyL3pqTnV3F0QtP9TIOLHQn9152c2zUhN
+         nO/VAY6Asv7HKhisuS2zj6zoqEvDhgXKE/1JH+W06Rdhp3iUe5HoZJiFWObLuorz8Htn
+         4tFoL/UTj/ANJRoSav4sg4dTZv3KnCrS8bI0LfLdKrYrD3LJ+YMuKtah1HcuWMhpjv4e
+         ovTA==
+X-Gm-Message-State: AOAM5308OQHpuo9lypqKMvRGhKH4c5oXF2nFbsEf+zZoXEpH18hhok7w
+        bOivKopvDFYxstjsvYT3s2A=
+X-Google-Smtp-Source: ABdhPJymyDug8FuVmigPY+dchNAS0DbDRtwqJ3R0ox3vu55uMZvHGBFGlKF2KLgDWpgAUTwT1hjrnA==
+X-Received: by 2002:a5d:62d1:: with SMTP id o17mr21333896wrv.162.1595247922208;
+        Mon, 20 Jul 2020 05:25:22 -0700 (PDT)
+Received: from AnsuelXPS (host-87-7-31-173.retail.telecomitalia.it. [87.7.31.173])
+        by smtp.gmail.com with ESMTPSA id 5sm30567674wmk.9.2020.07.20.05.25.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jul 2020 05:25:21 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Vinod Koul'" <vkoul@kernel.org>
+Cc:     "'Andy Gross'" <agross@codeaurora.org>,
+        "'Jonathan McDowell'" <noodles@earth.li>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Kishon Vijay Abraham I'" <kishon@ti.com>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200717131635.11076-1-ansuelsmth@gmail.com> <20200720062545.GC12965@vkoul-mobl>
+In-Reply-To: <20200720062545.GC12965@vkoul-mobl>
+Subject: R: [PATCH v10 1/2] phy: qualcomm: add qcom ipq806x dwc usb phy driver
+Date:   Mon, 20 Jul 2020 14:25:18 +0200
+Message-ID: <010801d65e90$d57d2b60$80778220$@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1594552870-55687-13-git-send-email-yi.l.liu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain;
+        charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQKLq5LK6XpGPjFtHIkX7iDhCC2HpAHU9eHTp5cie8A=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yi,
 
-On 7/12/20 1:21 PM, Liu Yi L wrote:
-> Recent years, mediated device pass-through framework (e.g. vfio-mdev)
-> is used to achieve flexible device sharing across domains (e.g. VMs).
-> Also there are hardware assisted mediated pass-through solutions from
-> platform vendors. e.g. Intel VT-d scalable mode which supports Intel
-> Scalable I/O Virtualization technology. Such mdevs are called IOMMU-
-> backed mdevs as there are IOMMU enforced DMA isolation for such mdevs.
-there is IOMMU enforced DMA isolation
-> In kernel, IOMMU-backed mdevs are exposed to IOMMU layer by aux-domain
-> concept, which means mdevs are protected by an iommu domain which is
-> auxiliary to the domain that the kernel driver primarily uses for DMA
-> API. Details can be found in the KVM presentation as below:
-> 
-> https://events19.linuxfoundation.org/wp-content/uploads/2017/12/\
-> Hardware-Assisted-Mediated-Pass-Through-with-VFIO-Kevin-Tian-Intel.pdf
-> 
-> This patch extends NESTING_IOMMU ops to IOMMU-backed mdev devices. The
-> main requirement is to use the auxiliary domain associated with mdev.
 
-So as a result vSVM becomes functional for scalable mode mediated
-devices, right?
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> CC: Jun Tian <jun.j.tian@intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> ---
-> v1 -> v2:
-> *) check the iommu_device to ensure the handling mdev is IOMMU-backed
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 39 +++++++++++++++++++++++++++++++++++----
->  1 file changed, 35 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 960cc59..f1f1ae2 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -2373,20 +2373,41 @@ static int vfio_iommu_resv_refresh(struct vfio_iommu *iommu,
->  	return ret;
->  }
->  
-> +static struct device *vfio_get_iommu_device(struct vfio_group *group,
-> +					    struct device *dev)
-> +{
-> +	if (group->mdev_group)
-> +		return vfio_mdev_get_iommu_device(dev);
-> +	else
-> +		return dev;
-> +}
-> +
->  static int vfio_dev_bind_gpasid_fn(struct device *dev, void *data)
->  {
->  	struct domain_capsule *dc = (struct domain_capsule *)data;
->  	unsigned long arg = *(unsigned long *)dc->data;
-> +	struct device *iommu_device;
-> +
-> +	iommu_device = vfio_get_iommu_device(dc->group, dev);
-> +	if (!iommu_device)
-> +		return -EINVAL;
->  
-> -	return iommu_sva_bind_gpasid(dc->domain, dev, (void __user *)arg);
-> +	return iommu_sva_bind_gpasid(dc->domain, iommu_device,
-> +				     (void __user *)arg);
->  }
->  
->  static int vfio_dev_unbind_gpasid_fn(struct device *dev, void *data)
->  {
->  	struct domain_capsule *dc = (struct domain_capsule *)data;
->  	unsigned long arg = *(unsigned long *)dc->data;
-> +	struct device *iommu_device;
->  
-> -	iommu_sva_unbind_gpasid(dc->domain, dev, (void __user *)arg);
-> +	iommu_device = vfio_get_iommu_device(dc->group, dev);
-> +	if (!iommu_device)
-> +		return -EINVAL;
-> +
-> +	iommu_sva_unbind_gpasid(dc->domain, iommu_device,
-> +				(void __user *)arg);
->  	return 0;
->  }
->  
-> @@ -2395,8 +2416,13 @@ static int __vfio_dev_unbind_gpasid_fn(struct device *dev, void *data)
->  	struct domain_capsule *dc = (struct domain_capsule *)data;
->  	struct iommu_gpasid_bind_data *unbind_data =
->  				(struct iommu_gpasid_bind_data *)dc->data;
-> +	struct device *iommu_device;
-> +
-> +	iommu_device = vfio_get_iommu_device(dc->group, dev);
-> +	if (!iommu_device)
-> +		return -EINVAL;
->  
-> -	__iommu_sva_unbind_gpasid(dc->domain, dev, unbind_data);
-> +	__iommu_sva_unbind_gpasid(dc->domain, iommu_device, unbind_data);
->  	return 0;
->  }
->  
-> @@ -3077,8 +3103,13 @@ static int vfio_dev_cache_invalidate_fn(struct device *dev, void *data)
->  {
->  	struct domain_capsule *dc = (struct domain_capsule *)data;
->  	unsigned long arg = *(unsigned long *)dc->data;
-> +	struct device *iommu_device;
-> +
-> +	iommu_device = vfio_get_iommu_device(dc->group, dev);
-> +	if (!iommu_device)
-> +		return -EINVAL;
->  
-> -	iommu_cache_invalidate(dc->domain, dev, (void __user *)arg);
-> +	iommu_cache_invalidate(dc->domain, iommu_device, (void __user *)arg);
->  	return 0;
->  }
->  
-> 
-Besides,
+> -----Messaggio originale-----
+> Da: Vinod Koul <vkoul@kernel.org>
+> Inviato: luned=EC 20 luglio 2020 08:26
+> A: Ansuel Smith <ansuelsmth@gmail.com>
+> Cc: Andy Gross <agross@codeaurora.org>; Jonathan McDowell
+> <noodles@earth.li>; Andy Gross <agross@kernel.org>; Bjorn Andersson
+> <bjorn.andersson@linaro.org>; Kishon Vijay Abraham I <kishon@ti.com>;
+> Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; linux-arm-msm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Oggetto: Re: [PATCH v10 1/2] phy: qualcomm: add qcom ipq806x dwc usb
+> phy driver
+>=20
+> On 17-07-20, 15:16, Ansuel Smith wrote:
+> > This has lost in the original push for the dwc3 qcom driver.
+> > This is needed for ipq806x SoC as without this the usb ports
+> > doesn't work at all.
+>=20
+> Applied both, thanks
+>=20
+> My script found below errors with W=3D1, can you please send fixes for
+> these
+>=20
 
-Looks grood to me
+Since you applied them should I send a new patch or a v11 of=20
+this patchset?
 
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-
-Eric
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:140: warning: Function
+> parameter or member 'phy_dwc3' not described in
+> 'usb_phy_write_readback'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:140: warning: Function
+> parameter or member 'offset' not described in 'usb_phy_write_readback'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:140: warning: Function
+> parameter or member 'mask' not described in 'usb_phy_write_readback'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:140: warning: Function
+> parameter or member 'val' not described in 'usb_phy_write_readback'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:182: warning: Function
+> parameter or member 'phy_dwc3' not described in 'usb_ss_write_phycreg'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:182: warning: Function
+> parameter or member 'addr' not described in 'usb_ss_write_phycreg'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:182: warning: Function
+> parameter or member 'val' not described in 'usb_ss_write_phycreg'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:219: warning: Function
+> parameter or member 'phy_dwc3' not described in 'usb_ss_read_phycreg'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:219: warning: Function
+> parameter or member 'addr' not described in 'usb_ss_read_phycreg'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:219: warning: Function
+> parameter or member 'val' not described in 'usb_ss_read_phycreg'
+>=20
+> --
+> ~Vinod
 
