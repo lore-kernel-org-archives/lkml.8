@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1CFC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FEEC433F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42C6E20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48A720773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261039;
-	bh=5rXQzEYU2+gqpuTghtoF8F6v6J2dFvnYt0oGnr0YInE=;
+	s=default; t=1595261041;
+	bh=eW2KrhQqTzX7xP0QopsTINkoMeHdMEn+TwYcjkFAGrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iJjmiWvRoTIT0o5XlMysqzybj/zCo9s+FXxP5bnIjDqatMVnN8dGGO/BcdiPqSwL6
-	 yQ1A89mtmKvwl4U0i85i5P/4W4c9p6raJDwByyvebrnjGj9lcbINVuKjhdLk7sdNGD
-	 iw7gs4McRnQER9zspEnAD2dNlVZkoiWvFKZ6XJIA=
+	b=m7BqlNdqIr1U8pPEpx2mGnWq4+pxJf11Yw25q9bm1pRXka9b8o0vxCboOvGGMmmGl
+	 og+KzFyHKklCdKnULvAhsQk2zEzZMgxRi27cDVN9FFfYSVY2kQWNcYPj0HeNU+hfmO
+	 Mslgtg4LY8MCsvZqyo6J+yO6lVVU7WfdM58HiBrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732497AbgGTQD6 (ORCPT
+        id S1732101AbgGTQEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:03:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38418 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:04:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732786AbgGTQDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:03:52 -0400
+        id S1732793AbgGTQDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:03:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB56620672;
-        Mon, 20 Jul 2020 16:03:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B18BA20672;
+        Mon, 20 Jul 2020 16:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261032;
-        bh=5rXQzEYU2+gqpuTghtoF8F6v6J2dFvnYt0oGnr0YInE=;
+        s=default; t=1595261035;
+        bh=eW2KrhQqTzX7xP0QopsTINkoMeHdMEn+TwYcjkFAGrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gsiGW5OEqnrL66X35PB2f0QZFagHhHN+1OG6TbSq+y/ecvUZzjxdV/4HMHy7jGUUf
-         hVBxZb3a2g58eDcAaL9qrmHRusxMApSlTw+PERiFNpJvXqJeo3jrVal3DFIP2wGy0X
-         8+kQUQHQrSxVeIXDWgFGuACw3IYJw6brN91mHiUQ=
+        b=Fp/MgEK1EjPGRTZ0IJEoJE4yMGne5ox8fcRcKHnvovT1e29NTdLGSgUGRHni46oqV
+         H/3NYhU7PmUB/Af4MtwMlD/V6Uv/DWWKm4pHzJWqUAm/O7rvEIxnmfjqd3U523OF7Q
+         vQXJJuUZ7FyAYQBxopEoc88Zf6bPjps4N1aXgCHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.4 184/215] timer: Fix wheel index calculation on last level
-Date:   Mon, 20 Jul 2020 17:37:46 +0200
-Message-Id: <20200720152828.928409994@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Schwab <schwab@suse.de>,
+        Anup Patel <anup@brainfault.org>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Subject: [PATCH 5.4 185/215] riscv: use 16KB kernel stack on 64-bit
+Date:   Mon, 20 Jul 2020 17:37:47 +0200
+Message-Id: <20200720152828.976786584@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,44 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Weisbecker <frederic@kernel.org>
+From: Andreas Schwab <schwab@suse.de>
 
-commit e2a71bdea81690b6ef11f4368261ec6f5b6891aa upstream.
+commit 0cac21b02ba5f3095fd2dcc77c26a25a0b2432ed upstream.
 
-When an expiration delta falls into the last level of the wheel, that delta
-has be compared against the maximum possible delay and reduced to fit in if
-necessary.
+With the current 8KB stack size there are frequent overflows in a 64-bit
+configuration.  We may split IRQ stacks off in the future, but this fixes a
+number of issues right now.
 
-However instead of comparing the delta against the maximum, the code
-compares the actual expiry against the maximum. Then instead of fixing the
-delta to fit in, it sets the maximum delta as the expiry value.
-
-This can result in various undesired outcomes, the worst possible one
-being a timer expiring 15 days ahead to fire immediately.
-
-Fixes: 500462a9de65 ("timers: Switch to a non-cascading wheel")
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andreas Schwab <schwab@suse.de>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+[Palmer: mention irqstack in the commit text]
+Fixes: 7db91e57a0ac ("RISC-V: Task implementation")
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200717140551.29076-2-frederic@kernel.org
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/time/timer.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/riscv/include/asm/thread_info.h |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -522,8 +522,8 @@ static int calc_wheel_index(unsigned lon
- 		 * Force expire obscene large timeouts to expire at the
- 		 * capacity limit of the wheel.
- 		 */
--		if (expires >= WHEEL_TIMEOUT_CUTOFF)
--			expires = WHEEL_TIMEOUT_MAX;
-+		if (delta >= WHEEL_TIMEOUT_CUTOFF)
-+			expires = clk + WHEEL_TIMEOUT_MAX;
+--- a/arch/riscv/include/asm/thread_info.h
++++ b/arch/riscv/include/asm/thread_info.h
+@@ -12,7 +12,11 @@
+ #include <linux/const.h>
  
- 		idx = calc_index(expires, LVL_DEPTH - 1);
- 	}
+ /* thread information allocation */
++#ifdef CONFIG_64BIT
++#define THREAD_SIZE_ORDER	(2)
++#else
+ #define THREAD_SIZE_ORDER	(1)
++#endif
+ #define THREAD_SIZE		(PAGE_SIZE << THREAD_SIZE_ORDER)
+ 
+ #ifndef __ASSEMBLY__
 
 
