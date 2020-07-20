@@ -2,87 +2,109 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C222AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E867C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1E602176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A60821775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jm0wsL/N";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PhOAz/NP"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="GpfalX26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgGTJXQ (ORCPT
+        id S1728202AbgGTJXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:23:16 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56320 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728017AbgGTJXQ (ORCPT
+        Mon, 20 Jul 2020 05:23:48 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:42004 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727961AbgGTJXr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:23:16 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595236993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=g9BNAc85U7zjpSEDSfX62xvbyUEcp+gIOP471mP4nTA=;
-        b=jm0wsL/NI+UtXEk9215WIQhOEpwW4iQZptuYBnRfUdN9VoE0HgdaQQciiNlYcYG6WkvR/F
-        NxMF7kCpLhkU2Nw8tqyG7jHj0dltSxf57M9+WzCOHOCwEZufuEbt7v1j7neTIMsLjirP0R
-        df1nWCPIY+LYytI1h5+2XP0nn0Y+6nRwtOHk7rPMFJZwhMyADGZ+M+IlyroTyryi7SzRZ/
-        7YnJcBpxisaMFjqLA4/N9AkE0H0OQcrh6K/zLhHox/5JHAY57WDLbKF9Z/JJ43+GhKk53b
-        VLIB++aFNksw2F9hRxu7IfjiCh8uzvulz2EZX+fB2YG06C1KpDZC0iHYsC3t7g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595236993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=g9BNAc85U7zjpSEDSfX62xvbyUEcp+gIOP471mP4nTA=;
-        b=PhOAz/NPRfnvR/VW+21DZgtdobYVbCKiQuopwntd9GWEaikRV4Y6q7S5ncz/S60pmTn2dD
-        vvQMaYZ5uDN+f1Bg==
-To:     Andy Lutomirski <luto@kernel.org>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kernel@collabora.com,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Paul Gofman <gofmanp@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        "open list\:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v4 1/2] kernel: Implement selective syscall userspace redirection
-In-Reply-To: <CALCETrWdCN5KsRUkrb8VoYGRBhy71P-MAHGWhuJ5y4Z3vByyvg@mail.gmail.com>
-References: <20200716193141.4068476-1-krisman@collabora.com> <20200716193141.4068476-2-krisman@collabora.com> <CALCETrWdCN5KsRUkrb8VoYGRBhy71P-MAHGWhuJ5y4Z3vByyvg@mail.gmail.com>
-Date:   Mon, 20 Jul 2020 11:23:13 +0200
-Message-ID: <874kq2o7zy.fsf@nanos.tec.linutronix.de>
+        Mon, 20 Jul 2020 05:23:47 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06K963Fj001059;
+        Mon, 20 Jul 2020 02:23:37 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=9Pdq+syVPGsE7NiIyror1875Q3xdqrQ6j+hVF3yHZjg=;
+ b=GpfalX26qtABHMyMnlaBzTPipHdhsk1hzqJXVsyAoggEenmtwV2vXAH1lQza9vbkg5K4
+ cTVgEuoovRPHhc0cDG/R+yuClPKQogoGUjK1xd0dxzeakTK44GYxn+CHA+cOwEUmK1gQ
+ 4xGQfJoTym1DJAQmZKTzZggp1Mago54Xn9hU46zgKqSkFW89OQzP8oLocbayARihnPRe
+ o6ZyFtG2i0mPii2CrzH8+v5Wji+WXtF+YLmVUxH33vSbHdmGZcSr1oQJ7hqj3vVqvToQ
+ Oin3Y0pnW42+hE3AhkQI1GlASHz+SK948L8IhZPl3j+CY4g822NrBKjD0E0p0Oar8dVU BA== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkda03-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 02:23:37 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 20 Jul
+ 2020 02:23:34 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 20 Jul 2020 02:23:34 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id 37CDE3F703F;
+        Mon, 20 Jul 2020 02:23:29 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Alexander Lobakin <alobakin@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "Ariel Elior" <aelior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        <GR-everest-linux-l2@marvell.com>,
+        <QLogic-Storage-Upstream@marvell.com>, <netdev@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 net-next 01/14] qed: convert link mode from u32 to bitmap
+Date:   Mon, 20 Jul 2020 12:23:06 +0300
+Message-ID: <20200720092306.355-1-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200719212100.GM1383417@lunn.ch>
+References: <20200719212100.GM1383417@lunn.ch>
+ <20200719201453.3648-1-alobakin@marvell.com>
+ <20200719201453.3648-2-alobakin@marvell.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_05:2020-07-17,2020-07-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
-> On Thu, Jul 16, 2020 at 12:31 PM Gabriel Krisman Bertazi
-> <krisman@collabora.com> wrote:
-> The amount of syscall entry wiring that arches need to do is IMO
-> already a bit out of hand.  Should we instead rename TIF_SECCOMP to
-> TIF_SYSCALL_INTERCEPTION and have one generic callback that handles
-> seccomp and this new thing?
+Date: Sun, 19 Jul 2020 23:21:00 +0200
+From: Andrew Lunn <andrew@lunn.ch>
 
-The right way to go is to consolidate all the stupidly different
-entry/exit work handling implementations and have exactly one in generic
-code, i.e. what I posted a few days ago.
+> On Sun, Jul 19, 2020 at 11:14:40PM +0300, Alexander Lobakin wrote:
+>> Currently qed driver already ran out of 32 bits to store link modes,
+>> and this doesn't allow to add and support more speeds.
+>> Convert link mode to bitmap that will always have enough space for
+>> any number of speeds and modes.
+>
+> Hi Alexander
 
-Then we can make new features only available in the generic version by
-hiding the new functionality in the core code and not exposing the
-functions to architecture implementations.
+Hi Andrew!
 
-Making it easy for architectures to keep their own variant forever just
-proliferates the mess we have right now.
+> Why not just throw away all these QED_LM_ defines and use the kernel
+> link modes? The fact you are changing the u32 to a bitmap suggests the
+> hardware does not use them.
+
+I've just double-checked, and you're right, management firmware operates
+with NVM_* definitions, while QED_LM_* are used only in QED and QEDE to
+fill Ethtool link settings.
+I didn't notice this while working on the series, but it would be really
+a lot better to just use generic definitions.
+So I'll send v3 soon.
+
+>      Andrew
 
 Thanks,
-
-        tglx
+Al
