@@ -2,196 +2,124 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E2CC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF4E7206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:32:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0V3xPZ56";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ayC+KzQj"
+	by mail.kernel.org (Postfix) with ESMTP id 7484B206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262773;
+	bh=LTqNibK+BW1c7o2wpvAMht2Fx3VB/1Pr/ZmL1pOj/gE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WrqCjADVILAI0y/ld6Vd47ixV0XIVQsHUTakrEgWJX+9dAwC0VI7/FHFtHE9KIsd+
+	 HRd7ihDH/4WqS1Mn5IOeDBJ3DN6KW3PEN1Dwme/rDL14YGa2PCOSFKa5pD5ONNb4zw
+	 bumE0Zh9lNnDlmXdxA7whWYoFSpe8CmsX+3bKIiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388912AbgGTQcv (ORCPT
+        id S2388545AbgGTQcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:32:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731307AbgGTP4a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:56:30 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91D85C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 08:56:30 -0700 (PDT)
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595260589;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=e0jTHQoxks+qBbNy0dT5aGqcUc2Cr1SJenmjgFYt3N0=;
-        b=0V3xPZ56wRb+H5VAtw5/esSrIemWiTtPVerHzmVIRkbqNZekvK39uzuKMK83c4f+cuKGym
-        Buhxl2KFhnVrbgoG9zh/lpE8dRAScv2FGBq4e1HDPyowYLZ4KG+/JJq7Al2IdengKkKtfJ
-        ifK0DkB1e7kztu8OPKu91/qqOgnPh3ugvfde8UzT6bc+ULLp+DhSDXNOcDfRo4ZV0/QbtR
-        NFaVLXoafOBFrDsNVlSQtjTM/MIkUPhFIhsZOlPQyxpE7D3+JiwM1C0RgbITCXOo9xfqOU
-        7Py9RCOyskuCchl1oQwF3SydvCqVKSUMOIQU03AZla+mIMGbGpZqH387MfD8BA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595260589;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=e0jTHQoxks+qBbNy0dT5aGqcUc2Cr1SJenmjgFYt3N0=;
-        b=ayC+KzQjmD0ubcD81RJySYrEE79d3RhlKoUEEt5NmmIvAde1zjFsoKlntqjey7faOWL5Mc
-        43/TMAfJZJIIL/AA==
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v4 12/24] dma-buf: Use sequence counter with associated wound/wait mutex
-Date:   Mon, 20 Jul 2020 17:55:18 +0200
-Message-Id: <20200720155530.1173732-13-a.darwish@linutronix.de>
-In-Reply-To: <20200720155530.1173732-1-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200720155530.1173732-1-a.darwish@linutronix.de>
+        Mon, 20 Jul 2020 12:32:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731540AbgGTP4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:56:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BB022176B;
+        Mon, 20 Jul 2020 15:56:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260591;
+        bh=LTqNibK+BW1c7o2wpvAMht2Fx3VB/1Pr/ZmL1pOj/gE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CDodmVcBlmdlASMqq41OmbqG+GSntmtfpG49hAmOfcTcc2wZ3CoZvtcCGtjxNrMlA
+         I7EMeLsqZP/5wquP3opyi8vetFR0vpCfAtUB0dJ0oRX9qZcvMzR0uOGn+SxLsxo4Ug
+         3j0WsNyVpeLQoYyX93SDy+AWg1EvP9u1fJmx3w1o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 023/215] tcp: md5: allow changing MD5 keys in all socket states
+Date:   Mon, 20 Jul 2020 17:35:05 +0200
+Message-Id: <20200720152821.284593823@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A sequence counter write side critical section must be protected by some
-form of locking to serialize writers. If the serialization primitive is
-not disabling preemption implicitly, preemption has to be explicitly
-disabled before entering the sequence counter write side critical
-section.
+From: Eric Dumazet <edumazet@google.com>
 
-The dma-buf reservation subsystem uses plain sequence counters to manage
-updates to reservations. Writer serialization is accomplished through a
-wound/wait mutex.
+[ Upstream commit 1ca0fafd73c5268e8fc4b997094b8bb2bfe8deea ]
 
-Acquiring a wound/wait mutex does not disable preemption, so this needs
-to be done manually before and after the write side critical section.
+This essentially reverts commit 721230326891 ("tcp: md5: reject TCP_MD5SIG
+or TCP_MD5SIG_EXT on established sockets")
 
-Use the newly-added seqcount_ww_mutex_t instead:
+Mathieu reported that many vendors BGP implementations can
+actually switch TCP MD5 on established flows.
 
-  - It associates the ww_mutex with the sequence count, which enables
-    lockdep to validate that the write side critical section is properly
-    serialized.
+Quoting Mathieu :
+   Here is a list of a few network vendors along with their behavior
+   with respect to TCP MD5:
 
-  - It removes the need to explicitly add preempt_disable/enable()
-    around the write side critical section because the write_begin/end()
-    functions for this new data type automatically do this.
+   - Cisco: Allows for password to be changed, but within the hold-down
+     timer (~180 seconds).
+   - Juniper: When password is initially set on active connection it will
+     reset, but after that any subsequent password changes no network
+     resets.
+   - Nokia: No notes on if they flap the tcp connection or not.
+   - Ericsson/RedBack: Allows for 2 password (old/new) to co-exist until
+     both sides are ok with new passwords.
+   - Meta-Switch: Expects the password to be set before a connection is
+     attempted, but no further info on whether they reset the TCP
+     connection on a change.
+   - Avaya: Disable the neighbor, then set password, then re-enable.
+   - Zebos: Would normally allow the change when socket connected.
 
-If lockdep is disabled this ww_mutex lock association is compiled out
-and has neither storage size nor runtime overhead.
+We can revert my prior change because commit 9424e2e7ad93 ("tcp: md5: fix potential
+overestimation of TCP option space") removed the leak of 4 kernel bytes to
+the wire that was the main reason for my patch.
 
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+While doing my investigations, I found a bug when a MD5 key is changed, leading
+to these commits that stable teams want to consider before backporting this revert :
+
+ Commit 6a2febec338d ("tcp: md5: add missing memory barriers in tcp_md5_do_add()/tcp_md5_hash_key()")
+ Commit e6ced831ef11 ("tcp: md5: refine tcp_md5_do_add()/tcp_md5_hash_key() barriers")
+
+Fixes: 721230326891 "tcp: md5: reject TCP_MD5SIG or TCP_MD5SIG_EXT on established sockets"
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/dma-buf/dma-resv.c                       | 8 +-------
- drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 2 --
- include/linux/dma-resv.h                         | 2 +-
- 3 files changed, 2 insertions(+), 10 deletions(-)
+ net/ipv4/tcp.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
-index 15efa0c2dacb..a7631352a486 100644
---- a/drivers/dma-buf/dma-resv.c
-+++ b/drivers/dma-buf/dma-resv.c
-@@ -129,7 +129,7 @@ subsys_initcall(dma_resv_lockdep);
- void dma_resv_init(struct dma_resv *obj)
- {
- 	ww_mutex_init(&obj->lock, &reservation_ww_class);
--	seqcount_init(&obj->seq);
-+	seqcount_ww_mutex_init(&obj->seq, &obj->lock);
- 
- 	RCU_INIT_POINTER(obj->fence, NULL);
- 	RCU_INIT_POINTER(obj->fence_excl, NULL);
-@@ -260,7 +260,6 @@ void dma_resv_add_shared_fence(struct dma_resv *obj, struct dma_fence *fence)
- 	fobj = dma_resv_get_list(obj);
- 	count = fobj->shared_count;
- 
--	preempt_disable();
- 	write_seqcount_begin(&obj->seq);
- 
- 	for (i = 0; i < count; ++i) {
-@@ -282,7 +281,6 @@ void dma_resv_add_shared_fence(struct dma_resv *obj, struct dma_fence *fence)
- 	smp_store_mb(fobj->shared_count, count);
- 
- 	write_seqcount_end(&obj->seq);
--	preempt_enable();
- 	dma_fence_put(old);
- }
- EXPORT_SYMBOL(dma_resv_add_shared_fence);
-@@ -309,14 +307,12 @@ void dma_resv_add_excl_fence(struct dma_resv *obj, struct dma_fence *fence)
- 	if (fence)
- 		dma_fence_get(fence);
- 
--	preempt_disable();
- 	write_seqcount_begin(&obj->seq);
- 	/* write_seqcount_begin provides the necessary memory barrier */
- 	RCU_INIT_POINTER(obj->fence_excl, fence);
- 	if (old)
- 		old->shared_count = 0;
- 	write_seqcount_end(&obj->seq);
--	preempt_enable();
- 
- 	/* inplace update, no shared fences */
- 	while (i--)
-@@ -394,13 +390,11 @@ int dma_resv_copy_fences(struct dma_resv *dst, struct dma_resv *src)
- 	src_list = dma_resv_get_list(dst);
- 	old = dma_resv_get_excl(dst);
- 
--	preempt_disable();
- 	write_seqcount_begin(&dst->seq);
- 	/* write_seqcount_begin provides the necessary memory barrier */
- 	RCU_INIT_POINTER(dst->fence_excl, new);
- 	RCU_INIT_POINTER(dst->fence, dst_list);
- 	write_seqcount_end(&dst->seq);
--	preempt_enable();
- 
- 	dma_resv_list_free(src_list);
- 	dma_fence_put(old);
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-index b91b5171270f..ff4b583cb96a 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-@@ -258,11 +258,9 @@ static int amdgpu_amdkfd_remove_eviction_fence(struct amdgpu_bo *bo,
- 	new->shared_count = k;
- 
- 	/* Install the new fence list, seqcount provides the barriers */
--	preempt_disable();
- 	write_seqcount_begin(&resv->seq);
- 	RCU_INIT_POINTER(resv->fence, new);
- 	write_seqcount_end(&resv->seq);
--	preempt_enable();
- 
- 	/* Drop the references to the removed fences or move them to ef_list */
- 	for (i = j, k = 0; i < old->shared_count; ++i) {
-diff --git a/include/linux/dma-resv.h b/include/linux/dma-resv.h
-index a6538ae7d93f..d44a77e8a7e3 100644
---- a/include/linux/dma-resv.h
-+++ b/include/linux/dma-resv.h
-@@ -69,7 +69,7 @@ struct dma_resv_list {
-  */
- struct dma_resv {
- 	struct ww_mutex lock;
--	seqcount_t seq;
-+	seqcount_ww_mutex_t seq;
- 
- 	struct dma_fence __rcu *fence_excl;
- 	struct dma_resv_list __rcu *fence;
--- 
-2.20.1
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3088,10 +3088,7 @@ static int do_tcp_setsockopt(struct sock
+ #ifdef CONFIG_TCP_MD5SIG
+ 	case TCP_MD5SIG:
+ 	case TCP_MD5SIG_EXT:
+-		if ((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN))
+-			err = tp->af_specific->md5_parse(sk, optname, optval, optlen);
+-		else
+-			err = -EINVAL;
++		err = tp->af_specific->md5_parse(sk, optname, optval, optlen);
+ 		break;
+ #endif
+ 	case TCP_USER_TIMEOUT:
+
 
