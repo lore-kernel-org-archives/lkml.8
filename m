@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05F5C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AE6C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C301E206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2676122482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260452;
-	bh=1vh0gccBO5E8zyO6PG9oR09WipYYJAhhq0ytHAR8VZY=;
+	s=default; t=1595260456;
+	bh=+zyIxA2wZ+3ko/VQnfkCiZs6xfl7S6167m35bkStRss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xc24vALiAQwMd1bjYUpkSu6xIxxajvy6Lbaxm8SUnALGEGebYAMJ9UyMHykAlkZrJ
-	 wyZa7WQFsqmdB4IaAuot6ly5xMZojht2U//Bn8MsQss24Rn/2tS9lmwxbvNOepyuBD
-	 eMpdF76t2mmrUUl7A534wU3Rc6sH3E5X8CKmLGEg=
+	b=qlPH5htVwTAGuHXogzZwi2fAgD6+wbYxwHIBbf3APLitTokCr9nD9avkOT841v3QC
+	 5SX42fSJufHcQdtalUgpquNhT8zazZOnDXTRb3TJNxYlBn73Aekum9LPYR65vUPsyc
+	 io0RFKhQLDlsheAbbmFFoOUzRddKKZq2XYlqAyME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731537AbgGTPyL (ORCPT
+        id S1731544AbgGTPyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52746 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731329AbgGTPyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:54:07 -0400
+        id S1730181AbgGTPyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:54:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F4042065E;
-        Mon, 20 Jul 2020 15:54:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1883C2064B;
+        Mon, 20 Jul 2020 15:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260446;
-        bh=1vh0gccBO5E8zyO6PG9oR09WipYYJAhhq0ytHAR8VZY=;
+        s=default; t=1595260449;
+        bh=+zyIxA2wZ+3ko/VQnfkCiZs6xfl7S6167m35bkStRss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c34MVwwAOvE/SmwXNZ/Q/PUY1N8GeU7hqrhEMdBwzbZ6P6s/bTt3Ma6jW8HcxzTab
-         CPqMhU33PvGGaDN7x9qvRd2SBZ3VgDeNsIXqhxjNQEWyjqq2izLS98S2kkNUwdQJVX
-         0gKYEXfrhN+dsVeDxTOXEI0n7pyh7FtB5mYusRWY=
+        b=MgZiCVFqZoliUU/EvQKxmnCyHdx5GgoxJG2mydk3TL+grKjTDxMC73CLRjwMjj3H8
+         /ffscylQZGUUHoCIa/coA3jf/AtbwrN85AuJ9lQTylA2hLMgm/DFdZwnDbGqfo+FaU
+         qzBsP/t23vRaZsqF7FNeX/4RGKoFgFm/tObRONb0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 098/133] USB: serial: option: add Quectel EG95 LTE modem
-Date:   Mon, 20 Jul 2020 17:37:25 +0200
-Message-Id: <20200720152808.462536292@linuxfoundation.org>
+        stable@vger.kernel.org, Wade Mealing <wmealing@redhat.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH 4.19 107/133] Revert "zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()"
+Date:   Mon, 20 Jul 2020 17:37:34 +0200
+Message-Id: <20200720152808.906854489@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -59,51 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: AceLan Kao <acelan.kao@canonical.com>
+From: Wade Mealing <wmealing@redhat.com>
 
-commit da6902e5b6dbca9081e3d377f9802d4fd0c5ea59 upstream.
+commit 853eab68afc80f59f36bbdeb715e5c88c501e680 upstream.
 
-Add support for Quectel Wireless Solutions Co., Ltd. EG95 LTE modem
+Turns out that the permissions for 0400 really are what we want here,
+otherwise any user can read from this file.
 
-T:  Bus=01 Lev=01 Prnt=01 Port=02 Cnt=02 Dev#=  5 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=2c7c ProdID=0195 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+[fixed formatting, added changelog, and made attribute static - gregkh]
 
-Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Reported-by: Wade Mealing <wmealing@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Fixes: f40609d1591f ("zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()")
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1847832
+Reviewed-by: Steffen Maier <maier@linux.ibm.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
+Link: https://lore.kernel.org/r/20200617114946.GA2131650@kroah.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/block/zram/zram_drv.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -245,6 +245,7 @@ static void option_instat_callback(struc
- /* These Quectel products use Quectel's vendor ID */
- #define QUECTEL_PRODUCT_EC21			0x0121
- #define QUECTEL_PRODUCT_EC25			0x0125
-+#define QUECTEL_PRODUCT_EG95			0x0195
- #define QUECTEL_PRODUCT_BG96			0x0296
- #define QUECTEL_PRODUCT_EP06			0x0306
- #define QUECTEL_PRODUCT_EM12			0x0512
-@@ -1097,6 +1098,8 @@ static const struct usb_device_id option
- 	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EC25),
- 	  .driver_info = RSVD(4) },
-+	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EG95),
-+	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_BG96),
- 	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EP06, 0xff, 0xff, 0xff),
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -1802,7 +1802,8 @@ static ssize_t hot_add_show(struct class
+ 		return ret;
+ 	return scnprintf(buf, PAGE_SIZE, "%d\n", ret);
+ }
+-static CLASS_ATTR_RO(hot_add);
++static struct class_attribute class_attr_hot_add =
++	__ATTR(hot_add, 0400, hot_add_show, NULL);
+ 
+ static ssize_t hot_remove_store(struct class *class,
+ 			struct class_attribute *attr,
 
 
