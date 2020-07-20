@@ -2,101 +2,120 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0980CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFA142065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A6422CB2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I8NrnAiD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JmW05mx6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DL9mwDA7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgGTGuH (ORCPT
+        id S1726821AbgGTG4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 02:50:07 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55554 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgGTGuG (ORCPT
+        Mon, 20 Jul 2020 02:56:41 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26653 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725815AbgGTG4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:50:06 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595227804;
+        Mon, 20 Jul 2020 02:56:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595228199;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=t/qYtaXCKWFcQ++IUuI+8VoH3i4cW6b42fWT4jOgYmA=;
-        b=I8NrnAiDCGeIzMpOK6d/529QMrR7yLW1IOA3Bpek9vOOlA2k5NqKlqZcIMaf1j/rYd9B7i
-        /DxmDZ2C+Nbdvj9u/8Qq3lQkvHe7gnEEHyii2lHAY76prCZMPmkADNulos5ebbC43Ao3am
-        rHmpG/LtLwFFz6wZNAje4k4SNHTbAse2Bj6ythgYRHMm7QQOFZBPAkCkMmHxEf8EY8WIAI
-        22SrH2ZbgY/tfUZBgBPJL3Z5uWN3pIJERqp9XBjuGrTnUURQpM/OrFaI5f9eYE449INOef
-        KsVHSDgfX0QAsNfyXOx5l6L5To5hWalfvr/+390Tjjf8wf1NakStsO0UXQNyPQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595227804;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=t/qYtaXCKWFcQ++IUuI+8VoH3i4cW6b42fWT4jOgYmA=;
-        b=JmW05mx6NDlANlEtUmk8WumFr8XSkHzEyeysCjvJt7mjlaCLUU8+tb2WwbeVWfpUHTjnBy
-        IV0x3wGCbxgNtKBA==
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [patch V3 01/13] entry: Provide generic syscall entry functionality
-In-Reply-To: <A790AF9D-3BF7-4FEE-9E29-7C13FA3FE0C3@amacapital.net>
-References: <87v9ijollo.fsf@nanos.tec.linutronix.de> <A790AF9D-3BF7-4FEE-9E29-7C13FA3FE0C3@amacapital.net>
-Date:   Mon, 20 Jul 2020 08:50:02 +0200
-Message-ID: <87a6zuof39.fsf@nanos.tec.linutronix.de>
+        bh=FGxfsH7JoYjo8uZ25QL7MHJ8zI5IrhXb8UDFK05X1AM=;
+        b=DL9mwDA76NTgnEh89lqiAWYEp6CIqOUCokwKSwVYUszNaAg+scjhnHrtB0QdlAPkPDLLYn
+        hnZTNy0rVBCTHvmkhdSG3gw6K2qVc5l9mpZRAs2wdOnL61zcCXsvUJHiWD6mxnqBg/Wu0k
+        bX19ujrystojha/1AGyxbSeW6lysjag=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-355-uz-DO6llPKelP1Kl2nFCvw-1; Mon, 20 Jul 2020 02:56:37 -0400
+X-MC-Unique: uz-DO6llPKelP1Kl2nFCvw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D44D19057A8;
+        Mon, 20 Jul 2020 06:56:36 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.147])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 1007A1001B07;
+        Mon, 20 Jul 2020 06:56:34 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 20 Jul 2020 08:56:35 +0200 (CEST)
+Date:   Mon, 20 Jul 2020 08:56:33 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Jiri Slaby <jirislaby@kernel.org>
+Cc:     christian@brauner.io, "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
+Message-ID: <20200720065633.GB6612@redhat.com>
+References: <6b253b55-586d-0bc4-9f58-c45c631abc60@kernel.org>
+ <5a8c4c38-7aeb-981a-8d3b-a7a5c8ca5564@kernel.org>
+ <20200717122651.GA6067@redhat.com>
+ <20200717124017.GB6067@redhat.com>
+ <2c8ef23c-43b4-39d4-8e84-92769c948da9@kernel.org>
+ <20200718171406.GB16791@redhat.com>
+ <0deb1081-299b-1475-f368-7ca65b535a9c@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0deb1081-299b-1475-f368-7ca65b535a9c@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@amacapital.net> writes:
->> On Jul 19, 2020, at 3:17 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
->>=20
->> =EF=BB=BFAndy Lutomirski <luto@kernel.org> writes:
->>>> On Sat, Jul 18, 2020 at 7:16 AM Thomas Gleixner <tglx@linutronix.de> w=
-rote:
->>>> Andy Lutomirski <luto@kernel.org> writes:
->>>>> FWIW, TIF_USER_RETURN_NOTIFY is a bit of an odd duck: it's an
->>>>> entry/exit word *and* a context switch word.  The latter is because
->>>>> it's logically a per-cpu flag, not a per-task flag, and the context
->>>>> switch code moves it around so it's always set on the running task.
->>>>=20
->>>> Gah, I missed the context switch thing of that. That stuff is hideous.
->>>=20
->>> It's also delightful because anything that screws up that dance (such
->>> as failure to do the exit-to-usermode path exactly right) likely
->>> results in an insta-root-hole.  If we fail to run user return
->>> notifiers, we can run user code with incorrect syscall MSRs, etc.
->>=20
->> Looking at it deeper, having that thing in the loop is a pointless
->> exercise. This really wants to be done _after_ the loop.
->>=20
-> As long as we=E2=80=99re confident that nothing after the loop can set th=
-e flag again.
+On 07/20, Jiri Slaby wrote:
+>
+> On 18. 07. 20, 19:14, Oleg Nesterov wrote:
+> >
+> > This is already wrong. But
+> >
+> > 	Where does this __might_sleep() come from ??? I ses no blocking calls
+> > 	in ptrace_stop(). Not to mention it is called with ->siglock held and
+> > 	right after this lock is dropped we take tasklist_lock.
+>
+> Decoded stacktrace:
+>
+> > ptrace_stop (include/linux/freezer.h:57 include/linux/freezer.h:67 include/linux/freezer.h:128 include/linux/freezer.h:173 kernel/signal.c:2217)
+> > ptrace_do_notify (kernel/signal.c:2272)
+> > ptrace_notify (arch/x86/include/asm/paravirt.h:656 arch/x86/include/asm/qspinlock.h:55 include/linux/spinlock.h:211 include/linux/spinlock_api_smp.h:167 include/linux/spinlock.h:403 kernel/signal.c:2282)
+> > syscall_trace_enter (include/linux/tracehook.h:73 include/linux/tracehook.h:104 arch/x86/entry/common.c:159)
+> > do_syscall_64 (arch/x86/entry/common.c:380)
+> > entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:124)
+>
+> It is try_to_freeze_unsafe in try_to_freeze in freezable_schedule in
+> ptrace_stop.
 
-Yes, because that's the direct way off to user space.
+Aha, thanks a lot!
 
-Thanks,
+try_to_freeze_unsafe() is called after schedule() which must return with
+->state = RUNNING, so this matches another WARN_ON(current->state) added
+by debugging patch after freezable_schedule().
 
-        tglx
+Somehow I decided __might_sleep() was called before read_unlock/schedule.
+
+> >
+> >       How this connects to the debugging patch I sent? Did you see this warning
+> >       without that patch?
+>
+> I suppose this made it appear:
+> +CONFIG_PREEMPT_COUNT=y
+> -# CONFIG_DEBUG_ATOMIC_SLEEP is not set
+> +CONFIG_DEBUG_ATOMIC_SLEEP=y
+
+I see,
+
+> Please see my other e-mail, all this is with dbfb089d360b applied. Maybe
+> it makes more sense now?
+
+Yes. Thanks Jiri!
+
+Oleg.
+
