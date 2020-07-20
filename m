@@ -2,83 +2,118 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2AEC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96E3F22482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:09:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595264997;
-	bh=OthK/AQBHEtdjBBAz0n/15WPSHBWT0arVmiBxqHTdbo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AJmQcM0PzPtsJQ/4W88+0kBId83wfUjSx5iEBtrWM6mjdEbyh9MnfqLx1Cfk4uBGY
-	 G01RLZrG7Z1GHylZnMmoi+VY8m0S4jRiSDFQ5ti55bBLkfTRg4sRbXCOC8wFVoAumk
-	 8c+sL4H64crZzAjG3ntYtU2qW/pEEboEa6APBCts=
+	by mail.kernel.org (Postfix) with ESMTP id F39842176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:11:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Fh8Vy1+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731749AbgGTRJ4 (ORCPT
+        id S1731960AbgGTRLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:09:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729084AbgGTRJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:09:53 -0400
-Received: from gmail.com (unknown [104.132.1.76])
+        Mon, 20 Jul 2020 13:11:42 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:52417 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729774AbgGTRLm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 13:11:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595265101; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=73j4gslEkdDhJgDflelmYGo9052nEeU1c8WAVbCoH1Q=;
+ b=Fh8Vy1+6fIpxmgQKk3ols2Iq9gwNelPNtCQqV1qC+nDZm6bhDGfWRGQ6t3fPaGwOzyvsmmjO
+ DU28uLCTP5oQlzrRkqzhdsGaTwinaMKzCtVcbq3+oGfnDMfgTUnX8n+Qg44mf0AbtzNw6gGn
+ XWbc0TThB5k8e3mS4lmC4Omtpbs=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5f15d00b0cb8533c3b749f9c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 17:10:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 89558C433CB; Mon, 20 Jul 2020 17:10:35 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5796207DF;
-        Mon, 20 Jul 2020 17:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595264993;
-        bh=OthK/AQBHEtdjBBAz0n/15WPSHBWT0arVmiBxqHTdbo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Rwg++Qqd28JZ8teR6Wn7NDm2yRrPKRUXPCfuzh8ZpZPAWd0YfMmSXjxHQP4nWQF0o
-         FrYFN3RpBW5U2NGYXWhrdk4coaezy1WR6SdlptXgG5oxgriJtgAPEw45ju74Rm4iSZ
-         eBhgXcl8BUAPAe6EtMV4CKHIMUm9uD+CIwQNfKks=
-Date:   Mon, 20 Jul 2020 10:09:51 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     Daniel Rosenberg <drosen@google.com>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com
-Subject: Re: [PATCH v12 0/4] Prepare for upcoming Casefolding/Encryption
- patches
-Message-ID: <20200720170951.GE1292162@gmail.com>
-References: <20200708091237.3922153-1-drosen@google.com>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1A178C433C9;
+        Mon, 20 Jul 2020 17:10:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1A178C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708091237.3922153-1-drosen@google.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] net: ath10k: fix OOB: __ath10k_htt_rx_ring_fill_n
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200623221105.3486-1-bruceshenzk@gmail.com>
+References: <20200623221105.3486-1-bruceshenzk@gmail.com>
+To:     Zekun Shen <bruceshenzk@gmail.com>
+Cc:     unlisted-recipients:; (no To-header on input) security@kernel.org,
+        Zekun Shen <bruceshenzk@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
+        Cc:     unlisted-recipients:; (no To-header on input)security@kernel.org
+                                                                     ^-missing end of address
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200720171035.89558C433CB@smtp.codeaurora.org>
+Date:   Mon, 20 Jul 2020 17:10:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 02:12:33AM -0700, Daniel Rosenberg wrote:
-> This lays the ground work for enabling casefolding and encryption at the
-> same time for ext4 and f2fs. A future set of patches will enable that
-> functionality.
-> 
-> These unify the highly similar dentry_operations that ext4 and f2fs both
-> use for casefolding. In addition, they improve d_hash by not requiring a
-> new string allocation.
-> 
-> Daniel Rosenberg (4):
->   unicode: Add utf8_casefold_hash
->   fs: Add standard casefolding support
->   f2fs: Use generic casefolding support
->   ext4: Use generic casefolding support
-> 
+Zekun Shen <bruceshenzk@gmail.com> wrote:
 
-Ted, are you interested in taking this through the ext4 tree for 5.9?
+> The idx in __ath10k_htt_rx_ring_fill_n function lives in
+> consistent dma region writable by the device. Malfunctional
+> or malicious device could manipulate such idx to have a OOB
+> write. Either by
+>     htt->rx_ring.netbufs_ring[idx] = skb;
+> or by
+>     ath10k_htt_set_paddrs_ring(htt, paddr, idx);
+> 
+> The idx can also be negative as it's signed, giving a large
+> memory space to write to.
+> 
+> It's possibly exploitable by corruptting a legit pointer with
+> a skb pointer. And then fill skb with payload as rougue object.
+> 
+> Part of the log here. Sometimes it appears as UAF when writing
+> to a freed memory by chance.
+> 
+>  [   15.594376] BUG: unable to handle page fault for address: ffff887f5c1804f0
+>  [   15.595483] #PF: supervisor write access in kernel mode
+>  [   15.596250] #PF: error_code(0x0002) - not-present page
+>  [   15.597013] PGD 0 P4D 0
+>  [   15.597395] Oops: 0002 [#1] SMP KASAN PTI
+>  [   15.597967] CPU: 0 PID: 82 Comm: kworker/u2:2 Not tainted 5.6.0 #69
+>  [   15.598843] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+>  BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+>  [   15.600438] Workqueue: ath10k_wq ath10k_core_register_work [ath10k_core]
+>  [   15.601389] RIP: 0010:__ath10k_htt_rx_ring_fill_n
+>  (linux/drivers/net/wireless/ath/ath10k/htt_rx.c:173) ath10k_core
+> 
+> Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-- Eric
+Patch applied to ath-next branch of ath.git, thanks.
+
+bad60b8d1a71 ath10k: check idx validity in __ath10k_htt_rx_ring_fill_n()
+
+-- 
+https://patchwork.kernel.org/patch/11621899/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
