@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8D9C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EE7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC5A3206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF3722CBB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261336;
-	bh=Wr7qYmdTZ100v2gwr/1meCgGte+9UqHUVQy48E2aKF0=;
+	s=default; t=1595261343;
+	bh=cV5vFB3/El2GAgoC0rrFO8na4il1gFH8qOCX0BK2jQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jw1mDbMs3c7qZrdtH25jIJRxeCBRhntELCP2SnVtrTtgs77ir3C1rfGqKSqwCQ7d9
-	 rc/46Pu+4QVg8yGfGT/KLfDDx1QTzmQVX1T9IkGPK6+TTZyUSGWr/m0wL9pvGV2Qba
-	 HU+KpfeJdOERzd4pgYbohhvXMxtbHEC370sA+vek=
+	b=qA4BWSllxPLZSOzk5fubDvEW/y9frvCqcdiwMoJj7wwq068BZWUf86s7U+IBrLmqw
+	 RzQpBxjHs8mKxIW63uwdYpW0Mf5iFT9SkVOqHX3hKsQHyVuZAd50BBUocf4q7Rd+fU
+	 vgRJqXKWYw46EsKKEwLzG5L9+ilFP+cAbTYF/ryQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387452AbgGTQIv (ORCPT
+        id S2387475AbgGTQJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:08:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46436 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:09:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387442AbgGTQIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:08:49 -0400
+        id S2387461AbgGTQI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:08:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D3C62065E;
-        Mon, 20 Jul 2020 16:08:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7959206E9;
+        Mon, 20 Jul 2020 16:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261328;
-        bh=Wr7qYmdTZ100v2gwr/1meCgGte+9UqHUVQy48E2aKF0=;
+        s=default; t=1595261337;
+        bh=cV5vFB3/El2GAgoC0rrFO8na4il1gFH8qOCX0BK2jQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IUPz2iSYDBEBJuIdp7EDP08w0J0tWGq5K+25S7dCzGlAXbSCbK9VPIUwNNEQAJ97o
-         xSPDC6JmD1Xj6vbRFnH6VHUTsoSd+9nw1aGM/DfcS8PIHkuyEQ0yl6lq0y0xYvmtv6
-         CTYiMXP3pa/Iohxe6D55grts2TEmx3XaAlxdzA0U=
+        b=eTT0U1gpWfieJgI9FVWk2DsJecbjKTtlC/qQuJJnQJuMRN7jqOQPKQ7cLFSb+R/Md
+         KNfkbB4dwXqTwQiZejD4jVA2ywQTPIu+yzlidyjZbwBZhqcsJ7BVmNl3q/PPQcizSM
+         ASfTLuKauH42ZcMpZzFh0JgYnt1C8bmEkYO9tO1k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Dave P Martin <dave.martin@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 046/244] arm64/alternatives: use subsections for replacement sequences
-Date:   Mon, 20 Jul 2020 17:35:17 +0200
-Message-Id: <20200720152828.049275094@linuxfoundation.org>
+        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 039/244] blk-mq-debugfs: update blk_queue_flag_name[] accordingly for new flags
+Date:   Mon, 20 Jul 2020 17:35:10 +0200
+Message-Id: <20200720152827.715756531@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -63,134 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit f7b93d42945cc71e1346dd5ae07c59061d56745e ]
+[ Upstream commit bfe373f608cf81b7626dfeb904001b0e867c5110 ]
 
-When building very large kernels, the logic that emits replacement
-sequences for alternatives fails when relative branches are present
-in the code that is emitted into the .altinstr_replacement section
-and patched in at the original site and fixed up. The reason is that
-the linker will insert veneers if relative branches go out of range,
-and due to the relative distance of the .altinstr_replacement from
-the .text section where its branch targets usually live, veneers
-may be emitted at the end of the .altinstr_replacement section, with
-the relative branches in the sequence pointed at the veneers instead
-of the actual target.
+Else there may be magic numbers in /sys/kernel/debug/block/*/state.
 
-The alternatives patching logic will attempt to fix up the branch to
-point to its original target, which will be the veneer in this case,
-but given that the patch site is likely to be far away as well, it
-will be out of range and so patching will fail. There are other cases
-where these veneers are problematic, e.g., when the target of the
-branch is in .text while the patch site is in .init.text, in which
-case putting the replacement sequence inside .text may not help either.
-
-So let's use subsections to emit the replacement code as closely as
-possible to the patch site, to ensure that veneers are only likely to
-be emitted if they are required at the patch site as well, in which
-case they will be in range for the replacement sequence both before
-and after it is transported to the patch site.
-
-This will prevent alternative sequences in non-init code from being
-released from memory after boot, but this is tolerable given that the
-entire section is only 512 KB on an allyesconfig build (which weighs in
-at 500+ MB for the entire Image). Also, note that modules today carry
-the replacement sequences in non-init sections as well, and any of
-those that target init code will be emitted into init sections after
-this change.
-
-This fixes an early crash when booting an allyesconfig kernel on a
-system where any of the alternatives sequences containing relative
-branches are activated at boot (e.g., ARM64_HAS_PAN on TX2)
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: Andre Przywara <andre.przywara@arm.com>
-Cc: Dave P Martin <dave.martin@arm.com>
-Link: https://lore.kernel.org/r/20200630081921.13443-1-ardb@kernel.org
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/alternative.h | 16 ++++++++--------
- arch/arm64/kernel/vmlinux.lds.S      |  3 ---
- 2 files changed, 8 insertions(+), 11 deletions(-)
+ block/blk-mq-debugfs.c | 3 +++
+ include/linux/blkdev.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
-index 5e5dc05d63a06..12f0eb56a1cc3 100644
---- a/arch/arm64/include/asm/alternative.h
-+++ b/arch/arm64/include/asm/alternative.h
-@@ -73,11 +73,11 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
- 	".pushsection .altinstructions,\"a\"\n"				\
- 	ALTINSTR_ENTRY(feature)						\
- 	".popsection\n"							\
--	".pushsection .altinstr_replacement, \"a\"\n"			\
-+	".subsection 1\n"						\
- 	"663:\n\t"							\
- 	newinstr "\n"							\
- 	"664:\n\t"							\
--	".popsection\n\t"						\
-+	".previous\n\t"							\
- 	".org	. - (664b-663b) + (662b-661b)\n\t"			\
- 	".org	. - (662b-661b) + (664b-663b)\n"			\
- 	".endif\n"
-@@ -117,9 +117,9 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
- 662:	.pushsection .altinstructions, "a"
- 	altinstruction_entry 661b, 663f, \cap, 662b-661b, 664f-663f
- 	.popsection
--	.pushsection .altinstr_replacement, "ax"
-+	.subsection 1
- 663:	\insn2
--664:	.popsection
-+664:	.previous
- 	.org	. - (664b-663b) + (662b-661b)
- 	.org	. - (662b-661b) + (664b-663b)
- 	.endif
-@@ -160,7 +160,7 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
- 	.pushsection .altinstructions, "a"
- 	altinstruction_entry 663f, 661f, \cap, 664f-663f, 662f-661f
- 	.popsection
--	.pushsection .altinstr_replacement, "ax"
-+	.subsection 1
- 	.align 2	/* So GAS knows label 661 is suitably aligned */
- 661:
- .endm
-@@ -179,9 +179,9 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
- .macro alternative_else
- 662:
- 	.if .Lasm_alt_mode==0
--	.pushsection .altinstr_replacement, "ax"
-+	.subsection 1
- 	.else
--	.popsection
-+	.previous
- 	.endif
- 663:
- .endm
-@@ -192,7 +192,7 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
- .macro alternative_endif
- 664:
- 	.if .Lasm_alt_mode==0
--	.popsection
-+	.previous
- 	.endif
- 	.org	. - (664b-663b) + (662b-661b)
- 	.org	. - (662b-661b) + (664b-663b)
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index 94402aaf5f5c7..9869412ac156d 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -172,9 +172,6 @@ SECTIONS
- 		*(.altinstructions)
- 		__alt_instructions_end = .;
- 	}
--	.altinstr_replacement : {
--		*(.altinstr_replacement)
--	}
+diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+index b3f2ba483992d..121f4c1e0697b 100644
+--- a/block/blk-mq-debugfs.c
++++ b/block/blk-mq-debugfs.c
+@@ -125,6 +125,9 @@ static const char *const blk_queue_flag_name[] = {
+ 	QUEUE_FLAG_NAME(REGISTERED),
+ 	QUEUE_FLAG_NAME(SCSI_PASSTHROUGH),
+ 	QUEUE_FLAG_NAME(QUIESCED),
++	QUEUE_FLAG_NAME(PCI_P2PDMA),
++	QUEUE_FLAG_NAME(ZONE_RESETALL),
++	QUEUE_FLAG_NAME(RQ_ALLOC_TIME),
+ };
+ #undef QUEUE_FLAG_NAME
  
- 	. = ALIGN(PAGE_SIZE);
- 	__inittext_end = .;
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 32868fbedc9e9..02809e4dd661e 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -585,6 +585,7 @@ struct request_queue {
+ 	u64			write_hints[BLK_MAX_WRITE_HINTS];
+ };
+ 
++/* Keep blk_queue_flag_name[] in sync with the definitions below */
+ #define QUEUE_FLAG_STOPPED	0	/* queue is stopped */
+ #define QUEUE_FLAG_DYING	1	/* queue being torn down */
+ #define QUEUE_FLAG_NOMERGES     3	/* disable merge attempts */
 -- 
 2.25.1
 
