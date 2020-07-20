@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C95C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD035C43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 879B82070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E14A2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263394;
-	bh=Ii21Y4dB2dtPOuktMfoSercnM/W9406kERuSR4p265M=;
+	s=default; t=1595263398;
+	bh=9YWaCtlFaS/RkIpFOKgFAogxLs9r0cAjS2ySI6Xkhuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kW1wBg83iNQ0qpMtNKWl1mVAz/9LbhEMhLwdXFKMa96Y0g6Jh5TfhCsffVGEdFzp3
-	 G6LDT4h7Jjw67g4dYd9jJ2wRaPmN3CnaIL1XEUak3cvm7ug534YBKPO71rp97A0A7n
-	 CGPz400YE5VcHBP9GfaaNHpPftyx95Bl1DVpntpM=
+	b=h5+ceftZmWYObdxonmuuroeLe+zicJ9zEKwHbHAYTh0ju6Lf48em3tsE4QWNobDaw
+	 BOf1V+4iYGNnxc7iS9h3nh77c7lqy76PKV5lgZ2i52B0hLuxWBzgkS02kMmvdw3x8V
+	 vqECM2pi69EL7dfkSXGstNu/XExrypSeSwF240Ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbgGTPmU (ORCPT
+        id S1730039AbgGTPmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:42:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35062 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:42:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730042AbgGTPmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:42:17 -0400
+        id S1730029AbgGTPmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:42:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EBBA2176B;
-        Mon, 20 Jul 2020 15:42:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 678CA20773;
+        Mon, 20 Jul 2020 15:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259736;
-        bh=Ii21Y4dB2dtPOuktMfoSercnM/W9406kERuSR4p265M=;
+        s=default; t=1595259734;
+        bh=9YWaCtlFaS/RkIpFOKgFAogxLs9r0cAjS2ySI6Xkhuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o/TqHLLLbdeasWBOwtL5LOFu1m+3+tlivVvuw6nf9vBIuXtr/ohZJy0Qu7Q6KYDBe
-         uh8TeFQcCJwVtxPJluFMvpJ6zY3znq+M7J8q0VnV9Mgox60vKu/yRBOEfd62uOG8ZF
-         QapkVYeRFzeKsC6UHSYx5unEU2TOQcbxYJPGIMiw=
+        b=BgG5Gi4a1/oholFu9zn0REtV0Ua/t7zuXzL/M47tmfrTas0BYifMXXaURVQ/NvD9N
+         afF49LpfDvERnAwBE0124GFGmKcSFQPmObpNhsH189fwi6LGt7Avbc/+dNQMdahfiA
+         +mbyg0/mSHc8gERFQOlSxutLu5F0x87rRpbgoeRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yariv <oigevald+kernel@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.9 60/86] HID: magicmouse: do not set up autorepeat
-Date:   Mon, 20 Jul 2020 17:36:56 +0200
-Message-Id: <20200720152756.196264399@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Marco Elver <elver@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 33/86] tcp: md5: refine tcp_md5_do_add()/tcp_md5_hash_key() barriers
+Date:   Mon, 20 Jul 2020 17:36:29 +0200
+Message-Id: <20200720152754.820313288@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -60,39 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 6363d2065cd399cf9d6dc9d08c437f8658831100 upstream.
+[ Upstream commit e6ced831ef11a2a06e8d00aad9d4fc05b610bf38 ]
 
-Neither the trackpad, nor the mouse want input core to generate autorepeat
-events for their buttons, so let's reset the bit (as hid-input sets it for
-these devices based on the usage vendor code).
+My prior fix went a bit too far, according to Herbert and Mathieu.
 
-Cc: stable@vger.kernel.org
-Reported-by: Yariv <oigevald+kernel@gmail.com>
-Tested-by: Yariv <oigevald+kernel@gmail.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Since we accept that concurrent TCP MD5 lookups might see inconsistent
+keys, we can use READ_ONCE()/WRITE_ONCE() instead of smp_rmb()/smp_wmb()
+
+Clearing all key->key[] is needed to avoid possible KMSAN reports,
+if key->keylen is increased. Since tcp_md5_do_add() is not fast path,
+using __GFP_ZERO to clear all struct tcp_md5sig_key is simpler.
+
+data_race() was added in linux-5.8 and will prevent KCSAN reports,
+this can safely be removed in stable backports, if data_race() is
+not yet backported.
+
+v2: use data_race() both in tcp_md5_hash_key() and tcp_md5_do_add()
+
+Fixes: 6a2febec338d ("tcp: md5: add missing memory barriers in tcp_md5_do_add()/tcp_md5_hash_key()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Marco Elver <elver@google.com>
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/hid/hid-magicmouse.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ net/ipv4/tcp.c      |    6 +++---
+ net/ipv4/tcp_ipv4.c |   14 ++++++++++----
+ 2 files changed, 13 insertions(+), 7 deletions(-)
 
---- a/drivers/hid/hid-magicmouse.c
-+++ b/drivers/hid/hid-magicmouse.c
-@@ -451,6 +451,12 @@ static int magicmouse_setup_input(struct
- 		__set_bit(MSC_RAW, input->mscbit);
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3207,13 +3207,13 @@ EXPORT_SYMBOL(tcp_md5_hash_skb_data);
+ 
+ int tcp_md5_hash_key(struct tcp_md5sig_pool *hp, const struct tcp_md5sig_key *key)
+ {
+-	u8 keylen = key->keylen;
++	u8 keylen = READ_ONCE(key->keylen); /* paired with WRITE_ONCE() in tcp_md5_do_add */
+ 	struct scatterlist sg;
+ 
+-	smp_rmb(); /* paired with smp_wmb() in tcp_md5_do_add() */
+-
+ 	sg_init_one(&sg, key->key, keylen);
+ 	ahash_request_set_crypt(hp->md5_req, &sg, NULL, keylen);
++
++	/* tcp_md5_do_add() might change key->key under us */
+ 	return crypto_ahash_update(hp->md5_req);
+ }
+ EXPORT_SYMBOL(tcp_md5_hash_key);
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -936,12 +936,18 @@ int tcp_md5_do_add(struct sock *sk, cons
+ 
+ 	key = tcp_md5_do_lookup(sk, addr, family);
+ 	if (key) {
+-		/* Pre-existing entry - just update that one. */
++		/* Pre-existing entry - just update that one.
++		 * Note that the key might be used concurrently.
++		 */
+ 		memcpy(key->key, newkey, newkeylen);
+ 
+-		smp_wmb(); /* pairs with smp_rmb() in tcp_md5_hash_key() */
++		/* Pairs with READ_ONCE() in tcp_md5_hash_key().
++		 * Also note that a reader could catch new key->keylen value
++		 * but old key->key[], this is the reason we use __GFP_ZERO
++		 * at sock_kmalloc() time below these lines.
++		 */
++		WRITE_ONCE(key->keylen, newkeylen);
+ 
+-		key->keylen = newkeylen;
+ 		return 0;
  	}
  
-+	/*
-+	 * hid-input may mark device as using autorepeat, but neither
-+	 * the trackpad, nor the mouse actually want it.
-+	 */
-+	__clear_bit(EV_REP, input->evbit);
-+
- 	return 0;
- }
+@@ -957,7 +963,7 @@ int tcp_md5_do_add(struct sock *sk, cons
+ 		rcu_assign_pointer(tp->md5sig_info, md5sig);
+ 	}
  
+-	key = sock_kmalloc(sk, sizeof(*key), gfp);
++	key = sock_kmalloc(sk, sizeof(*key), gfp | __GFP_ZERO);
+ 	if (!key)
+ 		return -ENOMEM;
+ 	if (!tcp_alloc_md5sig_pool()) {
 
 
