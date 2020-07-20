@@ -2,111 +2,201 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E41C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123FDC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26920208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF78A208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:42:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vUBM16Je"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DYHrncoy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgGTJl6 (ORCPT
+        id S1728316AbgGTJmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:41:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728239AbgGTJl5 (ORCPT
+        Mon, 20 Jul 2020 05:42:07 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40809 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728043AbgGTJmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:41:57 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 314EFC0619D4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:41:57 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id q7so19549798ljm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:41:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=twhRHN8GmGnSaOWdhFH407w2bJQWN/XspQavxD2E7NU=;
-        b=vUBM16JedblSszCmKcUOtNNCpBXv3CIhGha5f39iVCq+GLQjc1+5sjVAf3MGajt6eb
-         js3i3eEdyXIM2MQPvSQWiAbe6gPeB4YjU2Sab0OH0PF9+7BZ1Hfg3dMIm6fiTGmnLQGE
-         WN52jmOtjrzVTwhA5TpOoRi5fzEqLaC3gBn8SKr5iixPXGEf8j0ueAKU4MbazsVA6aRf
-         FyvYHaaSBU57IPmfcX0ILw4NWbPu9l8TUYzGeGQoqnmJtc7HHBIKatEXj/thpaDFX2WV
-         Aokyu21j7CqO9w7d6xuJ7PUwJIG1UxxaIPnap6CCEB8zRyeuqnRZ3bACsucfj0UgkFkX
-         fSxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=twhRHN8GmGnSaOWdhFH407w2bJQWN/XspQavxD2E7NU=;
-        b=CDhZFohC2jRpCkqgI2qGLvRyvDXUIrG05cKRVn1JBF6s3zRGg+CfxgQsEnaFu6Khk8
-         uDi9NLun8o9VGQMbCzxz8QJdC8sRS8vVn8ShStnT/EEyRD2HukJvZEWTMFS59LkH11RI
-         7rPUR5b47WPM+XatsED6lfGrDt1D64cchCzaJrU5tnVv7EPOGujpCeqcVs3smV1T3zBi
-         U6IfnQgZYgZ3Ta69+IDbQXm9hN0bKIs+o2qksPgfvWXFQCuZHmNF+XbYOLnDad2yL/Nx
-         RmtGp4EejTaCnmBbsqVCK8NmdWu+WyeORZVyErfw94UbF0Wd3xumooLPUgqvIOEHCZJU
-         hhhw==
-X-Gm-Message-State: AOAM5322ljKt/tufuGypLIST1miYxfs/sf/pAywItw+uCUvfB7f8DpkO
-        Rwk97ACI/3U+2Fz14o6lrh3I4UsqKCc2hfx94U6NmA==
-X-Google-Smtp-Source: ABdhPJzp2xsR54WZ1Ot/7m0WsiusF7Y4zChVz+CNR+5Bym/Dcaq3ISLURbaFVL1WyVZW8pynmK9Y5DvEDxM1d6oFID4=
-X-Received: by 2002:a2e:9b8c:: with SMTP id z12mr10226971lji.35.1595238115661;
- Mon, 20 Jul 2020 02:41:55 -0700 (PDT)
+        Mon, 20 Jul 2020 05:42:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595238125;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WDW4X00PY40xLtN9P1zgfvv+w8tBCqWK1/ojx/SjtYA=;
+        b=DYHrncoy7RHGma2VWpd06fmw2G9cuhPASxCSk/O139sGso7mI3BKFKjy8qEjKcdzbKyZfe
+        8ZD80EJ2EAzmlRHZXDt4xb7kzJsJ0GVFAHg+Fg8ZM5F9mnhlBuSiujByEZDm+KujbVg5G0
+        nR4HMpxTbcAOCNG3WJ6W7onqzjizF3s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-0kBE9218NKmVA08xfcG3Xw-1; Mon, 20 Jul 2020 05:42:02 -0400
+X-MC-Unique: 0kBE9218NKmVA08xfcG3Xw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 58C86100960F;
+        Mon, 20 Jul 2020 09:42:00 +0000 (UTC)
+Received: from [10.36.115.54] (ovpn-115-54.ams2.redhat.com [10.36.115.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F1A51619C4;
+        Mon, 20 Jul 2020 09:41:48 +0000 (UTC)
+Subject: Re: [PATCH v5 11/15] vfio/type1: Allow invalidating first-level/stage
+ IOMMU cache
+To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
+        stefanha@gmail.com, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
+ <1594552870-55687-12-git-send-email-yi.l.liu@intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <3b44dc59-cd78-2b72-965e-2f169cacdade@redhat.com>
+Date:   Mon, 20 Jul 2020 11:41:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200716022817.30439-1-ansuelsmth@gmail.com> <20200716022817.30439-2-ansuelsmth@gmail.com>
-In-Reply-To: <20200716022817.30439-2-ansuelsmth@gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Mon, 20 Jul 2020 15:11:44 +0530
-Message-ID: <CAP245DUqvTYENmaxG3rjUn1XrzrmvdFmKG_vaef2BxKL6jY+Rg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] ipq806x: gcc: add support for child probe
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1594552870-55687-12-git-send-email-yi.l.liu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:58 AM Ansuel Smith <ansuelsmth@gmail.com> wrote:
->
-> Add support for child probing needed for tsens driver that share the
-> seme regs of gcc for this platform.
+Yi,
 
-Typo: same
-
-
->
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+On 7/12/20 1:21 PM, Liu Yi L wrote:
+> This patch provides an interface allowing the userspace to invalidate
+> IOMMU cache for first-level page table. It is required when the first
+> level IOMMU page table is not managed by the host kernel in the nested
+> translation setup.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > ---
->  drivers/clk/qcom/gcc-ipq806x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-ipq806x.c
-> index a8456e09c44d..d6b7adb4be38 100644
-> --- a/drivers/clk/qcom/gcc-ipq806x.c
-> +++ b/drivers/clk/qcom/gcc-ipq806x.c
-> @@ -3089,7 +3089,7 @@ static int gcc_ipq806x_probe(struct platform_device *pdev)
->         regmap_write(regmap, 0x3cf8, 8);
->         regmap_write(regmap, 0x3d18, 8);
->
-> -       return 0;
-> +       return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> v1 -> v2:
+> *) rename from "vfio/type1: Flush stage-1 IOMMU cache for nesting type"
+> *) rename vfio_cache_inv_fn() to vfio_dev_cache_invalidate_fn()
+> *) vfio_dev_cache_inv_fn() always successful
+> *) remove VFIO_IOMMU_CACHE_INVALIDATE, and reuse VFIO_IOMMU_NESTING_OP
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 50 +++++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/vfio.h       |  3 +++
+>  2 files changed, 53 insertions(+)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index f0f21ff..960cc59 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -3073,6 +3073,53 @@ static long vfio_iommu_handle_pgtbl_op(struct vfio_iommu *iommu,
+>  	return ret;
 >  }
->
->  static struct platform_driver gcc_ipq806x_driver = {
-> --
-> 2.27.0
->
+>  
+> +static int vfio_dev_cache_invalidate_fn(struct device *dev, void *data)
+> +{
+> +	struct domain_capsule *dc = (struct domain_capsule *)data;
+> +	unsigned long arg = *(unsigned long *)dc->data;
+> +
+> +	iommu_cache_invalidate(dc->domain, dev, (void __user *)arg);
+> +	return 0;
+> +}
+> +
+> +static long vfio_iommu_invalidate_cache(struct vfio_iommu *iommu,
+> +					unsigned long arg)
+> +{
+> +	struct domain_capsule dc = { .data = &arg };
+> +	struct vfio_group *group;
+> +	struct vfio_domain *domain;
+> +	int ret = 0;
+> +	struct iommu_nesting_info *info;
+> +
+> +	mutex_lock(&iommu->lock);
+> +	/*
+> +	 * Cache invalidation is required for any nesting IOMMU,
+> +	 * so no need to check system-wide PASID support.
+> +	 */
+> +	info = iommu->nesting_info;
+> +	if (!info || !(info->features & IOMMU_NESTING_FEAT_CACHE_INVLD)) {
+> +		ret = -EOPNOTSUPP;
+> +		goto out_unlock;
+> +	}
+> +
+> +	group = vfio_find_nesting_group(iommu);
+so I see you reuse it here. But still wondering if you cant't directly
+set dc.domain and dc.group group below using list_firt_entry?
+> +	if (!group) {
+> +		ret = -EINVAL;
+> +		goto out_unlock;
+> +	}
+> +
+> +	domain = list_first_entry(&iommu->domain_list,
+> +				  struct vfio_domain, next);
+> +	dc.group = group;
+> +	dc.domain = domain->domain;
+> +	iommu_group_for_each_dev(group->iommu_group, &dc,
+> +				 vfio_dev_cache_invalidate_fn);
+> +
+> +out_unlock:
+> +	mutex_unlock(&iommu->lock);
+> +	return ret;
+> +}
+> +
+>  static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
+>  					unsigned long arg)
+>  {
+> @@ -3095,6 +3142,9 @@ static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
+>  	case VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL:
+>  		ret = vfio_iommu_handle_pgtbl_op(iommu, false, arg + minsz);
+>  		break;
+> +	case VFIO_IOMMU_NESTING_OP_CACHE_INVLD:
+> +		ret = vfio_iommu_invalidate_cache(iommu, arg + minsz);
+> +		break;
+>  	default:
+>  		ret = -EINVAL;
+>  	}
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index a8ad786..845a5800 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -1225,6 +1225,8 @@ struct vfio_iommu_type1_pasid_request {
+>   * +-----------------+-----------------------------------------------+
+>   * | UNBIND_PGTBL    |      struct iommu_gpasid_bind_data            |
+>   * +-----------------+-----------------------------------------------+
+> + * | CACHE_INVLD     |      struct iommu_cache_invalidate_info       |
+> + * +-----------------+-----------------------------------------------+
+>   *
+>   * returns: 0 on success, -errno on failure.
+>   */
+> @@ -1237,6 +1239,7 @@ struct vfio_iommu_type1_nesting_op {
+>  
+>  #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL	(0)
+>  #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL	(1)
+> +#define VFIO_IOMMU_NESTING_OP_CACHE_INVLD	(2)
+>  
+>  #define VFIO_IOMMU_NESTING_OP		_IO(VFIO_TYPE, VFIO_BASE + 19)
+>  
+> 
+Otherwise looks good to me
+
+Thanks
+
+Eric
+
