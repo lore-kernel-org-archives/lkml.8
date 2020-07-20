@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60701C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3B0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3055722BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04F6B20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XD68lI7x"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gs4QCxzA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbgGTUuL (ORCPT
+        id S1729486AbgGTUuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 16:50:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58604 "EHLO
+        Mon, 20 Jul 2020 16:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729396AbgGTUuJ (ORCPT
+        with ESMTP id S1728911AbgGTUuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 16:50:09 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD155C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:50:08 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id x184so23056245ybx.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:50:08 -0700 (PDT)
+        Mon, 20 Jul 2020 16:50:14 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D43C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:50:14 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id dl10so1946115qvb.20
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:50:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=H8n8NlDA+XqQVjoji1oNapNAeXpu2S6QN9jGft1e7uI=;
-        b=XD68lI7xPehueYlpXdeIT/uxNOTq2MH/uRdzjfw9Hy+Tvg/s9HmgWhlkM8gnq7TZVv
-         mld+n/DBsUV64mBICeT5+lfaAqeGIqENtKwdF8zGmWcID2dbpWQ6bbjFjT0iD/b+VcLD
-         UWZ5mRBMSG0EBlBkXt1KXJEcVuFSX4SP+kFu6Zjkp+evi24LjtqH0xjpgwqO19Pbyas7
-         1Pv2+88TRv+5WUlNL+9K9gRyToYHqs/BtBJCWV5QYLBs5toDAmmz4Jk09QhiD9AnuqbG
-         R7TQE5U83mUl7bDnJXQd/zPbEZMAf80Ew+wnezMIq5Y9yjk2N6158nJmn0XyIdAdQYyF
-         jAVg==
+        bh=N5jd+pSQ0JxE9XvTtwZnQjvUf1dPBeQ5IDjxob8l6P0=;
+        b=Gs4QCxzAMdw5XWTuxVJdzIGkIbn4dOs7Gz4o7ij6qiPF8ER3jysihQyoF1b/vFzRts
+         ffGrHYjBkDaNmgb5P8bJRBzqvoSFsBDm/F3vmQjm7aoBDy6UfdjdzrEVRQYCecrzwcJm
+         0lG/zuG02JAnlHqVUKQC2AaCWF8NglY9Bha9cIP4IbFktuEFtgBtf3slFupsiNR8sZ38
+         GE4O6ffwyB/FfBZOVz/ysNXecEECcj+A3Tkio2kiJ5SKRbtDimRd517xVt1EUfdBEPsc
+         HtOOh7XBBNmxRV1S6x9Xb4IetySmOfo2GTRGk8R+3ohYlqwrcOq9Z0ILMPFuHw4MhKcg
+         PNUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=H8n8NlDA+XqQVjoji1oNapNAeXpu2S6QN9jGft1e7uI=;
-        b=sLcF1Pd6GInQfUo1826ijlkrt4axafCXlR0FynQhVG28uMm/ZLPhHqhbglR3wb2Yt+
-         qyIdMSAC4uawnXPsLCfCBdHs7tr5J877CqQMrrbtH/Nkvd+wnhFgMflwIFd6TSZdtt6g
-         pbjXhX9JX2dr2vl5e2/VxiZ6zIWPIsRto7bVRIErQkhSCcoQpyg4TaebO7T251jT662o
-         CUvWyQaU1Il9xprxYPmnMxPQlSvTJX72B5t0m0pz99hujjW3gdrzUT4zXjbjU0eBAVAb
-         tKVpI7mQc5osNYJAtHjzIxoVg58WY2smxOcrCH8njCnm8M1VjJxEbcgqu4ecwdOG7H4Y
-         oNTw==
-X-Gm-Message-State: AOAM530i26TaxzVNDW2WaPJgPIbtaQXZ4nNQeNP41Zk6TppsXWA4WcKq
-        fMLYnXabWwR1nlOA3uhHQR4CGtHEnUXEyI+jmQY=
-X-Google-Smtp-Source: ABdhPJxmKsFYcqc/X/zp2ZJ/73eylx0YhW+4dbL2/LhkksUAgSeLnGyI6oodyuxDv9H4+0QvZRsQPZpU6z9u72TZkLU=
-X-Received: by 2002:a25:641:: with SMTP id 62mr36056360ybg.484.1595278208076;
- Mon, 20 Jul 2020 13:50:08 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 13:49:18 -0700
+        bh=N5jd+pSQ0JxE9XvTtwZnQjvUf1dPBeQ5IDjxob8l6P0=;
+        b=psQFn9oOCZ4rfxKSvrSWc4UlGSnHWDNEehlHvXV8Pfg4CQfnuJpQmjDvnzs2EoeGxE
+         VXiQYIGb94TbWQd7szLsFbDcPGqteTIsJNYBFtz+VGu4oCD9C9qaQjzI8Oc+obMqTEW2
+         RvykjDPCf48JR1i5/FWaHrgym2fEpoYa+TGcrXcOy5yf/0Zf6ZpQJ76VbaOvAXIpz2+l
+         6qC09MrF6ym40maDaEvuzAdWHw2ahO5fAI5rldkX/uQGwwo2GSVXfPnt+eKCirblGy7S
+         r4MSGwLBB+iXzlCurBY25fo12gLgmnb5dfhKtLDzo19cy3wmEmHhKsDDo+feNK5iDeqb
+         MzKw==
+X-Gm-Message-State: AOAM533n3Lzg3PiqgAV60AptyTHEXDaPO5Gh67oqJ8Cm3dh7U9IH9dh3
+        KbLZ6N1s9oVSvfaJKxCY3NuWCVaUsgBAolKdJ2A=
+X-Google-Smtp-Source: ABdhPJyTOuZy7eEPyqwdPdBUxV48dSXqlH0y50EAcB6MaSgdYtc1AOTV85M4t4oH/aql0Zfp/dp7gG2hG8XBLr/+ZUY=
+X-Received: by 2002:ad4:4903:: with SMTP id bh3mr23645134qvb.17.1595278213791;
+ Mon, 20 Jul 2020 13:50:13 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 13:49:19 -0700
 In-Reply-To: <20200720204925.3654302-1-ndesaulniers@google.com>
-Message-Id: <20200720204925.3654302-5-ndesaulniers@google.com>
+Message-Id: <20200720204925.3654302-6-ndesaulniers@google.com>
 Mime-Version: 1.0
 References: <20200720204925.3654302-1-ndesaulniers@google.com>
 X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
-Subject: [PATCH v3 04/11] x86/percpu: Clean up percpu_add_op()
+Subject: [PATCH v3 05/11] x86/percpu: Remove "e" constraint from XADD
 From:   Nick Desaulniers <ndesaulniers@google.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
@@ -84,11 +84,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Brian Gerst <brgerst@gmail.com>
 
-The core percpu macros already have a switch on the data size, so the switch
-in the x86 code is redundant and produces more dead code.
-
-Also use appropriate types for the width of the instructions.  This avoids
-errors when compiling with Clang.
+The "e" constraint represents a constant, but the XADD instruction doesn't
+accept immediate operands.
 
 Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
@@ -97,166 +94,22 @@ Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Brian Gerst <brgerst@gmail.com>
 Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- arch/x86/include/asm/percpu.h | 99 ++++++++---------------------------
- 1 file changed, 22 insertions(+), 77 deletions(-)
+ arch/x86/include/asm/percpu.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index a40d2e055f58..2a24f3c795eb 100644
+index 2a24f3c795eb..9bb5440d98d3 100644
 --- a/arch/x86/include/asm/percpu.h
 +++ b/arch/x86/include/asm/percpu.h
-@@ -130,64 +130,32 @@ do {									\
- 	    : [val] __pcpu_reg_imm_##size(pto_val__));			\
- } while (0)
- 
-+#define percpu_unary_op(size, qual, op, _var)				\
-+({									\
-+	asm qual (__pcpu_op1_##size(op, __percpu_arg([var]))		\
-+	    : [var] "+m" (_var));					\
-+})
-+
- /*
-  * Generate a percpu add to memory instruction and optimize code
-  * if one is added or subtracted.
-  */
--#define percpu_add_op(qual, var, val)					\
-+#define percpu_add_op(size, qual, var, val)				\
- do {									\
--	typedef typeof(var) pao_T__;					\
- 	const int pao_ID__ = (__builtin_constant_p(val) &&		\
- 			      ((val) == 1 || (val) == -1)) ?		\
- 				(int)(val) : 0;				\
- 	if (0) {							\
--		pao_T__ pao_tmp__;					\
-+		typeof(var) pao_tmp__;					\
- 		pao_tmp__ = (val);					\
- 		(void)pao_tmp__;					\
- 	}								\
--	switch (sizeof(var)) {						\
--	case 1:								\
--		if (pao_ID__ == 1)					\
--			asm qual ("incb "__percpu_arg(0) : "+m" (var));	\
--		else if (pao_ID__ == -1)				\
--			asm qual ("decb "__percpu_arg(0) : "+m" (var));	\
--		else							\
--			asm qual ("addb %1, "__percpu_arg(0)		\
--			    : "+m" (var)				\
--			    : "qi" ((pao_T__)(val)));			\
--		break;							\
--	case 2:								\
--		if (pao_ID__ == 1)					\
--			asm qual ("incw "__percpu_arg(0) : "+m" (var));	\
--		else if (pao_ID__ == -1)				\
--			asm qual ("decw "__percpu_arg(0) : "+m" (var));	\
--		else							\
--			asm qual ("addw %1, "__percpu_arg(0)		\
--			    : "+m" (var)				\
--			    : "ri" ((pao_T__)(val)));			\
--		break;							\
--	case 4:								\
--		if (pao_ID__ == 1)					\
--			asm qual ("incl "__percpu_arg(0) : "+m" (var));	\
--		else if (pao_ID__ == -1)				\
--			asm qual ("decl "__percpu_arg(0) : "+m" (var));	\
--		else							\
--			asm qual ("addl %1, "__percpu_arg(0)		\
--			    : "+m" (var)				\
--			    : "ri" ((pao_T__)(val)));			\
--		break;							\
--	case 8:								\
--		if (pao_ID__ == 1)					\
--			asm qual ("incq "__percpu_arg(0) : "+m" (var));	\
--		else if (pao_ID__ == -1)				\
--			asm qual ("decq "__percpu_arg(0) : "+m" (var));	\
--		else							\
--			asm qual ("addq %1, "__percpu_arg(0)		\
--			    : "+m" (var)				\
--			    : "re" ((pao_T__)(val)));			\
--		break;							\
--	default: __bad_percpu_size();					\
--	}								\
-+	if (pao_ID__ == 1)						\
-+		percpu_unary_op(size, qual, "inc", var);		\
-+	else if (pao_ID__ == -1)					\
-+		percpu_unary_op(size, qual, "dec", var);		\
-+	else								\
-+		percpu_to_op(size, qual, "add", var, val);		\
- } while (0)
- 
- #define percpu_from_op(size, qual, op, _var)				\
-@@ -228,29 +196,6 @@ do {									\
- 	pfo_ret__;					\
- })
- 
--#define percpu_unary_op(qual, op, var)			\
--({							\
--	switch (sizeof(var)) {				\
--	case 1:						\
--		asm qual (op "b "__percpu_arg(0)	\
--		    : "+m" (var));			\
--		break;					\
--	case 2:						\
--		asm qual (op "w "__percpu_arg(0)	\
--		    : "+m" (var));			\
--		break;					\
--	case 4:						\
--		asm qual (op "l "__percpu_arg(0)	\
--		    : "+m" (var));			\
--		break;					\
--	case 8:						\
--		asm qual (op "q "__percpu_arg(0)	\
--		    : "+m" (var));			\
--		break;					\
--	default: __bad_percpu_size();			\
--	}						\
--})
--
- /*
-  * Add return operation
-  */
-@@ -388,9 +333,9 @@ do {									\
- #define raw_cpu_write_1(pcp, val)	percpu_to_op(1, , "mov", (pcp), val)
- #define raw_cpu_write_2(pcp, val)	percpu_to_op(2, , "mov", (pcp), val)
- #define raw_cpu_write_4(pcp, val)	percpu_to_op(4, , "mov", (pcp), val)
--#define raw_cpu_add_1(pcp, val)		percpu_add_op(, (pcp), val)
--#define raw_cpu_add_2(pcp, val)		percpu_add_op(, (pcp), val)
--#define raw_cpu_add_4(pcp, val)		percpu_add_op(, (pcp), val)
-+#define raw_cpu_add_1(pcp, val)		percpu_add_op(1, , (pcp), val)
-+#define raw_cpu_add_2(pcp, val)		percpu_add_op(2, , (pcp), val)
-+#define raw_cpu_add_4(pcp, val)		percpu_add_op(4, , (pcp), val)
- #define raw_cpu_and_1(pcp, val)		percpu_to_op(1, , "and", (pcp), val)
- #define raw_cpu_and_2(pcp, val)		percpu_to_op(2, , "and", (pcp), val)
- #define raw_cpu_and_4(pcp, val)		percpu_to_op(4, , "and", (pcp), val)
-@@ -419,9 +364,9 @@ do {									\
- #define this_cpu_write_1(pcp, val)	percpu_to_op(1, volatile, "mov", (pcp), val)
- #define this_cpu_write_2(pcp, val)	percpu_to_op(2, volatile, "mov", (pcp), val)
- #define this_cpu_write_4(pcp, val)	percpu_to_op(4, volatile, "mov", (pcp), val)
--#define this_cpu_add_1(pcp, val)	percpu_add_op(volatile, (pcp), val)
--#define this_cpu_add_2(pcp, val)	percpu_add_op(volatile, (pcp), val)
--#define this_cpu_add_4(pcp, val)	percpu_add_op(volatile, (pcp), val)
-+#define this_cpu_add_1(pcp, val)	percpu_add_op(1, volatile, (pcp), val)
-+#define this_cpu_add_2(pcp, val)	percpu_add_op(2, volatile, (pcp), val)
-+#define this_cpu_add_4(pcp, val)	percpu_add_op(4, volatile, (pcp), val)
- #define this_cpu_and_1(pcp, val)	percpu_to_op(1, volatile, "and", (pcp), val)
- #define this_cpu_and_2(pcp, val)	percpu_to_op(2, volatile, "and", (pcp), val)
- #define this_cpu_and_4(pcp, val)	percpu_to_op(4, volatile, "and", (pcp), val)
-@@ -470,7 +415,7 @@ do {									\
- #ifdef CONFIG_X86_64
- #define raw_cpu_read_8(pcp)			percpu_from_op(8, , "mov", pcp)
- #define raw_cpu_write_8(pcp, val)		percpu_to_op(8, , "mov", (pcp), val)
--#define raw_cpu_add_8(pcp, val)			percpu_add_op(, (pcp), val)
-+#define raw_cpu_add_8(pcp, val)			percpu_add_op(8, , (pcp), val)
- #define raw_cpu_and_8(pcp, val)			percpu_to_op(8, , "and", (pcp), val)
- #define raw_cpu_or_8(pcp, val)			percpu_to_op(8, , "or", (pcp), val)
- #define raw_cpu_add_return_8(pcp, val)		percpu_add_return_op(, pcp, val)
-@@ -479,7 +424,7 @@ do {									\
- 
- #define this_cpu_read_8(pcp)			percpu_from_op(8, volatile, "mov", pcp)
- #define this_cpu_write_8(pcp, val)		percpu_to_op(8, volatile, "mov", (pcp), val)
--#define this_cpu_add_8(pcp, val)		percpu_add_op(volatile, (pcp), val)
-+#define this_cpu_add_8(pcp, val)		percpu_add_op(8, volatile, (pcp), val)
- #define this_cpu_and_8(pcp, val)		percpu_to_op(8, volatile, "and", (pcp), val)
- #define this_cpu_or_8(pcp, val)			percpu_to_op(8, volatile, "or", (pcp), val)
- #define this_cpu_add_return_8(pcp, val)		percpu_add_return_op(volatile, pcp, val)
+@@ -220,7 +220,7 @@ do {									\
+ 		break;							\
+ 	case 8:								\
+ 		asm qual ("xaddq %0, "__percpu_arg(1)			\
+-			    : "+re" (paro_ret__), "+m" (var)		\
++			    : "+r" (paro_ret__), "+m" (var)		\
+ 			    : : "memory");				\
+ 		break;							\
+ 	default: __bad_percpu_size();					\
 -- 
 2.28.0.rc0.105.gf9edc3c819-goog
 
