@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B48C8C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 056BDC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 857AE2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D04CE20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261792;
-	bh=VjMVfVMbfkUwYPRfFvQ/y8lTlLvLih9l3qIfd7dySXU=;
+	s=default; t=1595261797;
+	bh=ebxHgfFKVyhOruLi0OxNK2vq06D8LezsBVbx0iunYLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L0w6eb+I6RNkd8BL0pU+8q1rjxCm9xueV5Ky8kyQwL3k0lqrxTk2+BG54QXJlN++a
-	 lKFQnPihjDmmOQO/MLtOpxTkhqWVLs7USKil/QOg1Wk1XCR7BED35eDF9AcXcN7a1/
-	 vq5bH4c7EnPZTWFn/WTIns/oqtErRoDktpcpdyNs=
+	b=xFUbvxwYt8xb+Lscg8lsUdENAYG+oOt41jjfKDbQC8lAzG/RzzylR2ylGEIhGv5k5
+	 hcLp+5o87hUstWuTGw00bW2RRzCsuCmB++bvy+v980Cnli5Seb22BgJlpHcZApniTZ
+	 oO+yvTN6BV/ODMLS/mmZSync3xDb0cpyVkINR66w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388557AbgGTQQb (ORCPT
+        id S2388149AbgGTQQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:16:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57750 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:16:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388535AbgGTQQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:16:29 -0400
+        id S2388565AbgGTQQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:16:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 793CB2064B;
-        Mon, 20 Jul 2020 16:16:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBABB2064B;
+        Mon, 20 Jul 2020 16:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261789;
-        bh=VjMVfVMbfkUwYPRfFvQ/y8lTlLvLih9l3qIfd7dySXU=;
+        s=default; t=1595261794;
+        bh=ebxHgfFKVyhOruLi0OxNK2vq06D8LezsBVbx0iunYLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HiYrvzlIQjDCrM+2CqKTJIzWkQjsdXULw9bB3FCDhXGQr5Q7QzeRPi+DeR01cLe81
-         Ss08TvYNTsEm3CTj77d32A0ztnQcTPIjMeBnESsHh6z5gfKkaS03n78Z5HuwtrAcYg
-         uo28yU9a5Yt1YnHuxzVflxJzKhdvenI2iq2N5mNI=
+        b=dz2L13jR7136L8Oet2tCGyd9gcYRETat6ZtfJABYoFNS1V5xAcjBplo9uuETrKY+D
+         H9WiDBnHn92UKUwLkuFbWsk9aRXBTbYtrQeH2HVgQFJV1oSA8Ql7GKCkjofuYSMKDy
+         5IHRi07sZj6dBS34o5ilEGKGZdz7AESFmxYgrJRk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.7 212/244] ARM: dts: imx6qdl-gw551x: fix audio SSI
-Date:   Mon, 20 Jul 2020 17:38:03 +0200
-Message-Id: <20200720152835.940079177@linuxfoundation.org>
+        stable@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCH 5.7 214/244] arm64: dts: stratix10: add status to qspi dts node
+Date:   Mon, 20 Jul 2020 17:38:05 +0200
+Message-Id: <20200720152836.026379867@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,33 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Harvey <tharvey@gateworks.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
 
-commit 4237c625304b212a3f30adf787901082082511ec upstream.
+commit 263a0269a59c0b4145829462a107fe7f7327105f upstream.
 
-The audio codec on the GW551x routes to ssi1.  It fixes audio capture on
-the device.
+Add status = "okay" to QSPI node.
 
-Cc: stable@vger.kernel.org
-Fixes: 3117e851cef1 ("ARM: dts: imx: Add TDA19971 HDMI Receiver to GW551x")
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 0cb140d07fc75 ("arm64: dts: stratix10: Add QSPI support for Stratix10")
+Cc: linux-stable <stable@vger.kernel.org> # >= v5.6
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx6qdl-gw551x.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts      |    1 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10_socdk_nand.dts |    1 +
+ 2 files changed, 2 insertions(+)
 
---- a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-@@ -110,7 +110,7 @@
- 		simple-audio-card,frame-master = <&sound_codec>;
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+@@ -155,6 +155,7 @@
+ };
  
- 		sound_cpu: simple-audio-card,cpu {
--			sound-dai = <&ssi2>;
-+			sound-dai = <&ssi1>;
- 		};
+ &qspi {
++	status = "okay";
+ 	flash@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk_nand.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk_nand.dts
+@@ -188,6 +188,7 @@
+ };
  
- 		sound_codec: simple-audio-card,codec {
+ &qspi {
++	status = "okay";
+ 	flash@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 
 
