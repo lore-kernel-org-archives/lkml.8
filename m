@@ -2,193 +2,92 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D034C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E9DC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B09620B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:58:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="nHA6WeLT";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="nHA6WeLT"
+	by mail.kernel.org (Postfix) with ESMTP id 7E0D720B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgGTB63 (ORCPT
+        id S1727107AbgGTB6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 21:58:29 -0400
-Received: from mail-eopbgr150074.outbound.protection.outlook.com ([40.107.15.74]:44209
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        Sun, 19 Jul 2020 21:58:49 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43938 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726225AbgGTB63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 21:58:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V9BFC4xJuAlX4Waxqb7o7wc46kurHXUjxeTr7UmEChc=;
- b=nHA6WeLTPvRpw5wlTz1GnC3Ha/TBbjTwOH2DH4BS3lvxRw3bulvuyRFovo8zOd/DsmGKiKM9+GVd8cE4Tqi3UfwaWc3ntHKeq4ax5B+Auyb2UbJDY0xG9KPubLotySohKy+ubRI7X+CSUz85k7zMmurNdXo+JsPzqd50CphGvjc=
-Received: from MR2P264CA0112.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:33::28)
- by HE1PR0802MB2410.eurprd08.prod.outlook.com (2603:10a6:3:dd::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Mon, 20 Jul
- 2020 01:58:24 +0000
-Received: from VE1EUR03FT010.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:500:33:cafe::78) by MR2P264CA0112.outlook.office365.com
- (2603:10a6:500:33::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend
- Transport; Mon, 20 Jul 2020 01:58:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT010.mail.protection.outlook.com (10.152.18.113) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3195.18 via Frontend Transport; Mon, 20 Jul 2020 01:58:23 +0000
-Received: ("Tessian outbound 73b502bf693a:v62"); Mon, 20 Jul 2020 01:58:23 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from 05b5a9fcac0b.1
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 7ACBDA53-51AC-4CDF-8185-F88725E0F3E6.1;
-        Mon, 20 Jul 2020 01:58:18 +0000
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 05b5a9fcac0b.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 20 Jul 2020 01:58:18 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kIl3TqdvVi1WMqyNjjOBf3EgurIKPR4x+GYDO9V9k7Y6UbDqNSywe/oJvPMu/8BxxWofRANe7gnoTpuz4M0/5DUGoDcJdcyAzkeE8BUpNkr423MXVk1Z3pKF5R2btkCupXb0IwRUQ2gDPxtOWrB9k2BC2MIrV5mUstP2COsEbRKpSt32HVe14fqE+MfQC9MZ6WPVIy3Dmv7x70j4mghJ40EbknoDZsfpEHRz+CdCgU4279esvM9j/rRgCr/9HuyfGEuX9G8tSJvChZUFAmDVSbadqZktu0ERxP03mFAMGoXWjX3qT2wIpgEthz/eOA4e4MovM6ODquH/5cBVoup5dA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V9BFC4xJuAlX4Waxqb7o7wc46kurHXUjxeTr7UmEChc=;
- b=kK63gwRNVTkUMfd4sjbRiZE7lgDwzRgUiO5/M20z7s+HYTmIpUOh2tk1wzp63i+1yD7+OnwnGdby5p2fxczK1I896qgAJMrHB5T1lrg+4L4FhpabgB4p6+sAqakkB+7pUXDEH/Y5pqcE9CNSGbI5wuvQPHd6fIcraqzdUBCO/BvEsp7haPBOCpOlN9PsMkx8cprR+43XY8Ha0ZAZ2V7pK5Klz3jhIjXzNj0kgJa9jr0JOWeP1/cZ5mcIzFcDdL9WxZ5ozDTlCQlCS5yceTyFeora2AX1Iv/kbzKUSsNGJH2t2pWyuqRqGhmz/0SkYEhaBv3XlekevPutYxBIVHk/ZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V9BFC4xJuAlX4Waxqb7o7wc46kurHXUjxeTr7UmEChc=;
- b=nHA6WeLTPvRpw5wlTz1GnC3Ha/TBbjTwOH2DH4BS3lvxRw3bulvuyRFovo8zOd/DsmGKiKM9+GVd8cE4Tqi3UfwaWc3ntHKeq4ax5B+Auyb2UbJDY0xG9KPubLotySohKy+ubRI7X+CSUz85k7zMmurNdXo+JsPzqd50CphGvjc=
-Received: from HE1PR0802MB2555.eurprd08.prod.outlook.com (2603:10a6:3:e0::7)
- by HE1PR0802MB2444.eurprd08.prod.outlook.com (2603:10a6:3:df::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Mon, 20 Jul
- 2020 01:58:16 +0000
-Received: from HE1PR0802MB2555.eurprd08.prod.outlook.com
- ([fe80::9:c111:edc1:d65a]) by HE1PR0802MB2555.eurprd08.prod.outlook.com
- ([fe80::9:c111:edc1:d65a%6]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
- 01:58:16 +0000
-From:   Jianyong Wu <Jianyong.Wu@arm.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-CC:     "ericvh@gmail.com" <ericvh@gmail.com>, "hch@lst.de" <hch@lst.de>,
-        "dhowells@redhat.com" <dhowells@redhat.com>,
-        "lucho@ionkov.net" <lucho@ionkov.net>,
-        "asmadeus@codewreck.org" <asmadeus@codewreck.org>,
-        "v9fs-developer@lists.sourceforge.net" 
-        <v9fs-developer@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        Wei Chen <Wei.Chen@arm.com>
-Subject: RE: [RFC PATCH 0/2] vfs:9p: fix open-unlink-fstat bug
-Thread-Topic: [RFC PATCH 0/2] vfs:9p: fix open-unlink-fstat bug
-Thread-Index: AQHWXjefI/dFRQ8uiE2cxP7P59J4UakPtFYAgAABSbA=
-Date:   Mon, 20 Jul 2020 01:58:15 +0000
-Message-ID: <HE1PR0802MB2555B33805E71BB78BBDACB3F47B0@HE1PR0802MB2555.eurprd08.prod.outlook.com>
-References: <20200720014622.37364-1-jianyong.wu@arm.com>
- <20200720015212.GN2786714@ZenIV.linux.org.uk>
-In-Reply-To: <20200720015212.GN2786714@ZenIV.linux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ts-tracking-id: 3ecd2357-a1a4-4fca-acdd-4c802624a37e.0
-x-checkrecipientchecked: true
-Authentication-Results-Original: zeniv.linux.org.uk; dkim=none (message not
- signed) header.d=none;zeniv.linux.org.uk; dmarc=none action=none
- header.from=arm.com;
-x-originating-ip: [203.126.0.112]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 1af07866-29aa-4111-2ba5-08d82c5062b7
-x-ms-traffictypediagnostic: HE1PR0802MB2444:|HE1PR0802MB2410:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <HE1PR0802MB2410878697F075D88E687D2DF47B0@HE1PR0802MB2410.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:8882;OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: /nGjWYa36Yty4WRE4ChlMLMChJASNrs/Pa0MSISt8sxJAtNE4QWT3sf2m3C4uPsZGoK0BgXwBRkArEfGAKZcnoLghBd3PAkIyqTygmxIkKEg0r8KFwMJHLII8GECR8MCuclWfqLofWjENq9alN2zO+56xT3ZObEvM/t9EGHvE5VianyZfQmgcpvf8mcfzGvDQtMYv8fclQ/FhBPSuFEdnRuXjNGqVyvidPEyu449tkkOp2TXhgjshGGZneaPs+d4V2+q/1OqIOuPxessfLDANWz7NzcdJSEdu3xQbFUWtQdCnRR7NtqSA9+yfJxhy5jUpoQkonLN7p+j0rlqIXmQvA==
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0802MB2555.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(366004)(396003)(376002)(39850400004)(86362001)(2906002)(5660300002)(316002)(76116006)(66446008)(66556008)(66476007)(64756008)(52536014)(33656002)(26005)(54906003)(478600001)(6916009)(186003)(8676002)(53546011)(6506007)(8936002)(7696005)(66946007)(71200400001)(83380400001)(9686003)(4326008)(55016002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: jVdMuD9Xdo+vfpZwl1Ti2BLUcjEBZnu/qAmrfxubjpN+y+Gs+4f8sQLQNnXw11jwC2TolPGz8PPL3o6O/CFYQJsArnfboFhTVlhm+2fzl5E4jyNhw/pwdy80vdSbiuXJIqmlbNxEzdDaNuWkxcUDwXUDM7eHSQZrKWimb7J8S8kAFgi7lU68agbmM9xZaxRFjV9fY2pIT0cv/RXlq9UhA3LHZzsBxDldgJB3iISgEPdjN3lHNZPngHrgQ43YglskvMi+gOx22hwUXnOa5UrC4BkoavZoZM3OA3f8OCe3PapMHtERBoapjziybrf1N6u/5V0I3dqpi6/8Yq8T/KHUllMl+6bLS8NHmZ+sswS6Ti9MwFrrysMhIKYsEiZRGyDmu/QRrVMoRBlhOZ7C/0hzWu7oQKPQscpM1nHVR79EtLc03eo5LkjYsly3E2UCGp8uzP2ymQVhYzXIoAHwCTd1PrLktANkJL8xdf5RHIM8SaY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726225AbgGTB6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 21:58:49 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E4B2874390DD2BBF0128;
+        Mon, 20 Jul 2020 09:58:46 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.238) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
+ 09:58:40 +0800
+Subject: [PATCH v2] net: neterion: vxge: reduce stack usage in
+ VXGE_COMPLETE_VPATH_TX
+To:     Stephen Hemminger <stephen@networkplumber.org>
+CC:     <davem@davemloft.net>, <kuba@kernel.org>,
+        <linux-next@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <jdmason@kudzu.us>,
+        <christophe.jaillet@wanadoo.fr>, <john.wanghui@huawei.com>
+References: <20200716173247.78912-1-cuibixuan@huawei.com>
+ <20200719100522.220a6f5a@hermes.lan>
+From:   Bixuan Cui <cuibixuan@huawei.com>
+Message-ID: <866b4a34-cd4e-0120-904f-13669257a765@huawei.com>
+Date:   Mon, 20 Jul 2020 09:58:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0802MB2444
-Original-Authentication-Results: zeniv.linux.org.uk; dkim=none (message not signed)
- header.d=none;zeniv.linux.org.uk; dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT010.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(396003)(136003)(346002)(376002)(46966005)(7696005)(186003)(86362001)(6862004)(55016002)(4326008)(26005)(33656002)(52536014)(478600001)(8676002)(70586007)(70206006)(9686003)(5660300002)(316002)(54906003)(8936002)(47076004)(2906002)(83380400001)(82740400003)(6506007)(53546011)(81166007)(82310400002)(356005)(336012)(36906005);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: f906d934-436f-424c-a748-08d82c505e3f
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5N16Kb5K90eTcEn22C58VTAv7h2cU3QZ0mYF1ne6blVuSBrFj1xGWYkYzMr1aPmRysvLf+vTjOjoxuNBNKfqL8h2sDHFAZ4a+5/l7ri+Q/NRhWNIo/r5bxLReQwsRlf+nnwobsOez4LavJRDRVIokrWRkQTc5n4LJYQ6rwhGbmQnnstSqYi1nG7QbG+CwjgdYPlgxR23HDN4p8p7gH1VwWQiPdGtC37i1GHOXuKLTLqiWl47F6ezUvMr2LX837R/dHarTNxACpQ4DMjGPVAvFFyPikdiOvVW4sLEvpjMYu32SEbycR3TuzhbVA59BBgI3wX+cjK1JrbDtmDugQFH+c5g03B4hJ0ZqRhW5085xbLUCA4kj0MH26Nakx9HKscG2Xdg8RLmlsi17AzQCTYWsg==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 01:58:23.6952
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1af07866-29aa-4111-2ba5-08d82c5062b7
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: VE1EUR03FT010.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0802MB2410
+In-Reply-To: <20200719100522.220a6f5a@hermes.lan>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix the warning: [-Werror=-Wframe-larger-than=]
+
+drivers/net/ethernet/neterion/vxge/vxge-main.c:
+In function'VXGE_COMPLETE_VPATH_TX.isra.37':
+drivers/net/ethernet/neterion/vxge/vxge-main.c:119:1:
+warning: the frame size of 1056 bytes is larger than 1024 bytes
+
+Dropping the NR_SKB_COMPLETED to 16 is appropriate that won't
+have much impact on performance and functionality.
+
+Signed-off-by: Bixuan Cui <cuibixuan@huawei.com>
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+---
+v2: Dropping the NR_SKB_COMPLETED to 16.
+
+ drivers/net/ethernet/neterion/vxge/vxge-main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/neterion/vxge/vxge-main.c b/drivers/net/ethernet/neterion/vxge/vxge-main.c
+index b0faa737b817..f905d0fe7d54 100644
+--- a/drivers/net/ethernet/neterion/vxge/vxge-main.c
++++ b/drivers/net/ethernet/neterion/vxge/vxge-main.c
+@@ -98,7 +98,7 @@ static inline void VXGE_COMPLETE_VPATH_TX(struct vxge_fifo *fifo)
+ {
+ 	struct sk_buff **skb_ptr = NULL;
+ 	struct sk_buff **temp;
+-#define NR_SKB_COMPLETED 128
++#define NR_SKB_COMPLETED 16
+ 	struct sk_buff *completed[NR_SKB_COMPLETED];
+ 	int more;
+
+--
+2.17.1
 
 
-> -----Original Message-----
-> From: Al Viro <viro@ftp.linux.org.uk> On Behalf Of Al Viro
-> Sent: Monday, July 20, 2020 9:52 AM
-> To: Jianyong Wu <Jianyong.Wu@arm.com>
-> Cc: ericvh@gmail.com; hch@lst.de; dhowells@redhat.com;
-> lucho@ionkov.net; asmadeus@codewreck.org; v9fs-
-> developer@lists.sourceforge.net; linux-kernel@vger.kernel.org; Kaly Xin
-> <Kaly.Xin@arm.com>; Justin He <Justin.He@arm.com>; Wei Chen
-> <Wei.Chen@arm.com>
-> Subject: Re: [RFC PATCH 0/2] vfs:9p: fix open-unlink-fstat bug
->
-> On Mon, Jul 20, 2020 at 09:46:20AM +0800, Jianyong Wu wrote:
-> > how to reproduce:
-> > in 9p guest:
-> >
-> > struct stat *statbuf;
-> > int fd;
-> >
-> > fd =3D open("tmp", O_RDWR);
-> > unlink("tmp");
-> > fstat(fd, statbuf);
-> >
-> > fstat will fail as "tmp" in 9p server side has been removed. 9p server
-> > can't retrieve the file context as the guest has not passed it down.
-> > so we should pass the file info down in 9p guest in getattr op.
-> > it need add a new file member in "struct kstat" as "struct istat" does.
->
-> Er... what struct istat?
-Oh, sorry, I make mistake here. it's "struct iattr" Not "istat".
+.
 
-Thanks
-Jianyong
-IMPORTANT NOTICE: The contents of this email and any attachments are confid=
-ential and may also be privileged. If you are not the intended recipient, p=
-lease notify the sender immediately and do not disclose the contents to any=
- other person, use it for any purpose, or store or copy the information in =
-any medium. Thank you.
+
+
