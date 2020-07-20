@@ -2,117 +2,69 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD01C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBF0C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9C620684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:35:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T17Vkc70"
+	by mail.kernel.org (Postfix) with ESMTP id 9C6B222CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgGTDf1 (ORCPT
+        id S1726623AbgGTDfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 23:35:27 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26200 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726109AbgGTDf0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 23:35:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595216125;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D7FqMYqDvd7eDbuQSOuxX0aLldcdVgd76BMYePyueXY=;
-        b=T17Vkc70mXKk4ZP0enbSDKVxJkZER+jSyDARcSRr4Ic2gtNEarl1m4nduWemeaFc9xAEy9
-        NaRcxA3KRy/S8iZJ6Gk4p4F86ozXF1nvq/p59Jdst3HT8A29/lKpu6MfPjeFQVrRr9b30g
-        79k1r/sY/S6zdqUvk+WrEemSNv63yG8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-358-sByBR4xhPNSvCj3WC_n2Ig-1; Sun, 19 Jul 2020 23:35:23 -0400
-X-MC-Unique: sByBR4xhPNSvCj3WC_n2Ig-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9CE89E91A;
-        Mon, 20 Jul 2020 03:35:21 +0000 (UTC)
-Received: from [10.10.114.255] (ovpn-114-255.rdu2.redhat.com [10.10.114.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F3FF7849A;
-        Mon, 20 Jul 2020 03:35:21 +0000 (UTC)
-Subject: Re: [PATCH] Revert "kbuild: use -flive-patching when CONFIG_LIVEPATCH
- is enabled"
-To:     Josh Poimboeuf <jpoimboe@redhat.com>, live-patching@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-References: <696262e997359666afa053fe7d1a9fb2bb373964.1595010490.git.jpoimboe@redhat.com>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <fc7d4932-a043-1adc-fd9b-96211c508f64@redhat.com>
-Date:   Sun, 19 Jul 2020 23:35:20 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 19 Jul 2020 23:35:11 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60976 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726109AbgGTDfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 23:35:11 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 30396483EE3751D14E82;
+        Mon, 20 Jul 2020 11:35:07 +0800 (CST)
+Received: from huawei.com (10.175.100.227) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
+ 11:35:05 +0800
+From:   Tang Yizhou <tangyizhou@huawei.com>
+To:     <linux-mm@kvack.org>
+CC:     <linux-next@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <akpm@linux-foundation.org>
+Subject: [PATCH -next] mm/gup.c: Fix the comment of return value for populate_vma_page_range()
+Date:   Mon, 20 Jul 2020 11:43:03 +0800
+Message-ID: <20200720034303.29920-1-tangyizhou@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <696262e997359666afa053fe7d1a9fb2bb373964.1595010490.git.jpoimboe@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain
+X-Originating-IP: [10.175.100.227]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/20 2:29 PM, Josh Poimboeuf wrote:
-> Use of the new -flive-patching flag was introduced with the following
-> commit:
-> 
->    43bd3a95c98e ("kbuild: use -flive-patching when CONFIG_LIVEPATCH is enabled")
-> 
-> This flag has several drawbacks:
-> 
-> [ ... snip ... ]
-> 
-> - While there *is* a distro which relies on this flag for their distro
->    livepatch module builds, there's not a publicly documented way to
->    create safe livepatch modules with it.  Its use seems to be based on
->    tribal knowledge.  It serves no benefit to those who don't know how to
->    use it.
-> 
->    (In fact, I believe the current livepatch documentation and samples
->    are misleading and dangerous, and should be corrected.  Or at least
->    amended with a disclaimer.  But I don't feel qualified to make such
->    changes.)
+The return value of populate_vma_page_range() is consistent with
+__get_user_pages(), and so is the function comment of return value.
 
-FWIW, I'm not exactly qualified to document source-based creation 
-either, however I have written a few of the samples and obviously the 
-kselftest modules.
+Signed-off-by: Tang Yizhou <tangyizhou@huawei.com>
+---
+ mm/gup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The samples should certainly include a disclaimer (ie, they are only for 
-API demonstration purposes!) and eventually it would be great if the 
-kselftest modules could guarantee their safety as well.  I don't know 
-quite yet how we can automate that, but perhaps some kind of post-build 
-sanity check could verify that they are in fact patching what they 
-intend to patch.
-
-As for a more general, long-form warning about optimizations, I grabbed 
-Miroslav's LPC slides from a few years back and poked around at some 
-IPA-optimized disassembly... Here are my notes that attempt to capture 
-some common cases:
-
-http://file.bos.redhat.com/~jolawren/klp-compiler-notes/livepatch/compiler-considerations.html
-
-It's not complete and I lost steam about 80% of the way through today. 
-:)  But if it looks useful enough to add to Documentation/livepatch, we 
-can work on it on-list and try to steer folks into using the automated 
-kpatch-build, objtool (eventually) or a source-based safety checklist. 
-The source-based steps have been posted on-list a few times, but I think 
-it only needs to be formalized in a doc.
-
--- Joe
+diff --git a/mm/gup.c b/mm/gup.c
+index 2cc5eba44362..a55f1ec712e9 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1386,7 +1386,8 @@ static __always_inline long __get_user_pages_locked(struct mm_struct *mm,
+  *
+  * This takes care of mlocking the pages too if VM_LOCKED is set.
+  *
+- * return 0 on success, negative error code on error.
++ * Return either number of pages pinned in the vma, or a negative error
++ * code on error.
+  *
+  * vma->vm_mm->mmap_lock must be held.
+  *
+-- 
+2.17.1
 
