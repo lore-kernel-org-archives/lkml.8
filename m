@@ -2,53 +2,51 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CA1C433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6099DC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73076206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418E7207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262307;
-	bh=MjQVEo8ePfmHAxMzEUEPB8j9rECsoTukm0HF3RCe50g=;
+	s=default; t=1595262310;
+	bh=jMZAkAiRPeB/WryBfB1XZTDKBjG80bl3r5X+Z+hlUPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x32ACcjIay15Yz4Ao2RwZxLdhnDQk8NxpoNbdNVzuG3Dlmb4/BV+I/akwrJAZfshK
-	 ZyFr4gjKVnb/1To6mzZIIFu0628uo24zTn7GiyKNIsHPhl/AX/EZbF/D1n4e7VZMIw
-	 aw+/dwZmnGiBWvJlOBPYaUT/mkQV0tLFdQzhLDAs=
+	b=aJFPpxC8RIKrufDva5kRmIsL7NlKEMrTWtkARC7xPP6Sj26URJl+sV+CQ+va6kSHz
+	 1uw6uh4paqu5zfxePQbXcHQEiwzPmi4au5YqUpzwo+672b7HgaixIk11BLheNM8EfZ
+	 5PMOgTixY8OGY1g1sk8liLR2XQEKepWJBPI/hNgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732578AbgGTQBx (ORCPT
+        id S1732743AbgGTQZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:01:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35044 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:25:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731433AbgGTQBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:01:34 -0400
+        id S1732580AbgGTQBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:01:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFE2620672;
-        Mon, 20 Jul 2020 16:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12B4F20672;
+        Mon, 20 Jul 2020 16:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260894;
-        bh=MjQVEo8ePfmHAxMzEUEPB8j9rECsoTukm0HF3RCe50g=;
+        s=default; t=1595260913;
+        bh=jMZAkAiRPeB/WryBfB1XZTDKBjG80bl3r5X+Z+hlUPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wz5W7fq2gs/jK2vV41lfgPCmSdruu+SIBu5Xx+Ydgo9ZrgewfWtQvzLvW5oIq9jyE
-         7d7f4qMbcearp+CIAZSs7L/PRD6t9gOoCmB4VuxpSuEiCtGiQYyqAdnf7yD8+5iS4v
-         w6AEN5BLOvzcQqSSINCXHhTvr8R9zzhs0dAAHrSs=
+        b=JMLxIox4RwUF3/5VCOR2C0vLQK1vAXvsEoO4jPaJ3hoKrA8XoWjXhX/KDjyQHQoaY
+         Yrru4OI66Wdky51SaBdA8SiZvldxgNZGYP/KZ6w6XGSHHHWWmxBFMZtG88Jr5R5gpG
+         DuhfjReKoJ4gG84LUMnrzGcyDQdDCZRlbetKYbYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tsuchiya Yuto <kitakar@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 103/215] dmaengine: dw: Initialize channel before each transfer
-Date:   Mon, 20 Jul 2020 17:36:25 +0200
-Message-Id: <20200720152825.107548982@linuxfoundation.org>
+        stable@vger.kernel.org, Saravana Kannan <saravanak@google.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 5.4 142/215] slimbus: core: Fix mismatch in of_node_get/put
+Date:   Mon, 20 Jul 2020 17:37:04 +0200
+Message-Id: <20200720152826.945432247@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -61,79 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Saravana Kannan <saravanak@google.com>
 
-[ Upstream commit 99ba8b9b0d9780e9937eb1d488d120e9e5c2533d ]
+commit 01360857486c0e4435dea3aa2f78b47213b7cf6a upstream.
 
-In some cases DMA can be used only with a consumer which does runtime power
-management and on the platforms, that have DMA auto power gating logic
-(see comments in the drivers/acpi/acpi_lpss.c), may result in DMA losing
-its context. Simple mitigation of this issue is to initialize channel
-each time the consumer initiates a transfer.
+Adding missing corresponding of_node_put
 
-Fixes: cfdf5b6cc598 ("dw_dmac: add support for Lynxpoint DMA controllers")
-Reported-by: Tsuchiya Yuto <kitakar@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206403
-Link: https://lore.kernel.org/r/20200705115620.51929-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 7588a511bdb4 ("slimbus: core: add support to device tree helper")
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+[Srini: added fixes tag, removed NULL check and updated log]
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20200511151334.362-3-srinivas.kandagatla@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/dma/dw/core.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ drivers/slimbus/core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 21cb2a58dbd29..a1b56f52db2f2 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -118,16 +118,11 @@ static void dwc_initialize(struct dw_dma_chan *dwc)
+--- a/drivers/slimbus/core.c
++++ b/drivers/slimbus/core.c
+@@ -283,6 +283,7 @@ EXPORT_SYMBOL_GPL(slim_register_controll
+ /* slim_remove_device: Remove the effect of slim_add_device() */
+ static void slim_remove_device(struct slim_device *sbdev)
  {
- 	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
- 
--	if (test_bit(DW_DMA_IS_INITIALIZED, &dwc->flags))
--		return;
--
- 	dw->initialize_chan(dwc);
- 
- 	/* Enable interrupts */
- 	channel_set_bit(dw, MASK.XFER, dwc->mask);
- 	channel_set_bit(dw, MASK.ERROR, dwc->mask);
--
--	set_bit(DW_DMA_IS_INITIALIZED, &dwc->flags);
++	of_node_put(sbdev->dev.of_node);
+ 	device_unregister(&sbdev->dev);
  }
  
- /*----------------------------------------------------------------------*/
-@@ -954,8 +949,6 @@ static void dwc_issue_pending(struct dma_chan *chan)
- 
- void do_dw_dma_off(struct dw_dma *dw)
- {
--	unsigned int i;
--
- 	dma_writel(dw, CFG, 0);
- 
- 	channel_clear_bit(dw, MASK.XFER, dw->all_chan_mask);
-@@ -966,9 +959,6 @@ void do_dw_dma_off(struct dw_dma *dw)
- 
- 	while (dma_readl(dw, CFG) & DW_CFG_DMA_EN)
- 		cpu_relax();
--
--	for (i = 0; i < dw->dma.chancnt; i++)
--		clear_bit(DW_DMA_IS_INITIALIZED, &dw->chan[i].flags);
- }
- 
- void do_dw_dma_on(struct dw_dma *dw)
-@@ -1032,8 +1022,6 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
- 	/* Clear custom channel configuration */
- 	memset(&dwc->dws, 0, sizeof(struct dw_dma_slave));
- 
--	clear_bit(DW_DMA_IS_INITIALIZED, &dwc->flags);
--
- 	/* Disable interrupts */
- 	channel_clear_bit(dw, MASK.XFER, dwc->mask);
- 	channel_clear_bit(dw, MASK.BLOCK, dwc->mask);
--- 
-2.25.1
-
 
 
