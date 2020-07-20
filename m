@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9C8C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F62C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6B520672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F21F22CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261302;
-	bh=crdC/FcSNnFfmvavFML0b9RIg1+uRvGXlo87yIAceSc=;
+	s=default; t=1595261306;
+	bh=GQhPlrQ77tWGBEB32yk6tlmCCA8mk0j/8QgPNRM3Avo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z0TllMmf4j5iD6nYjr9IBvJ8K5y33L/6GqYOTh8CK7dPB4UwXC664cByWT+pVfG/R
-	 rjmmKKh2CKfU1as2xATor2WmapfkOlIqwWmKjqixkfOIZPa59XUtivELdCi6TALdxj
-	 SXDl6PCVmnsTL7TGqeqV53+Q3OTQ7VlXkBbDqyV0=
+	b=0WiN99d6ql9iNj/PvbSH8uV30G/5mciCzqYtPduOZf8xH9JDG2RQKszhHvx8qhupY
+	 7TtuM85WE/V26oVxwsdJA0x8j8BvGRXCtNaUkGwof0xeltznLD+xgXzyEak1NB7d57
+	 aKYD4HW4uBHibA40I2rHHDMKV8Kf9UrriIcwlumA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733278AbgGTQIV (ORCPT
+        id S1733294AbgGTQIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:08:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45526 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:08:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733254AbgGTQIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:08:13 -0400
+        id S1733274AbgGTQIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:08:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 005492064B;
-        Mon, 20 Jul 2020 16:08:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18CC9206E9;
+        Mon, 20 Jul 2020 16:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261292;
-        bh=crdC/FcSNnFfmvavFML0b9RIg1+uRvGXlo87yIAceSc=;
+        s=default; t=1595261298;
+        bh=GQhPlrQ77tWGBEB32yk6tlmCCA8mk0j/8QgPNRM3Avo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o/rp/gOpnxs6DgEh/29VcJpzcMqlTTUjo533q4koRfsWdJOGW5zuK92V6kAqnFSRA
-         lDQuv6OtVUmzQRs0raRx6qfsS+ueXHBi8EbiE/urJerQ4qp3JaebwBhi5kNdQhYf/F
-         i+tV+BJZZWeQhfzOjsknGlkOCflXDYkn6q9XFGok=
+        b=MvyZY5HIq842Hye5uhJ6nj1bHLeqtMPmbfk5zGFyDm7xcvtJ6uqMEvTLgQU02Xwcg
+         V2/5hpooGtauCPIFMIp8SRAFztGOE0RGzlK1j3BxidBAxfWclxKqZp4lQvrZMTgEkh
+         //AqJ55/PnFVR8v+L7F9K38PkarL/RK3Ma9AUjAE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Ranostay <matt.ranostay@konsulko.com>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.7 063/244] iio: core: add missing IIO_MOD_H2/ETHANOL string identifiers
-Date:   Mon, 20 Jul 2020 17:35:34 +0200
-Message-Id: <20200720152828.852572415@linuxfoundation.org>
+Subject: [PATCH 5.7 065/244] iio: pressure: zpa2326: handle pm_runtime_get_sync failure
+Date:   Mon, 20 Jul 2020 17:35:36 +0200
+Message-Id: <20200720152828.949208919@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,33 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Ranostay <matt.ranostay@konsulko.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 25f02d3242ab4d16d0cee2dec0d89cedb3747fa9 upstream.
+commit d88de040e1df38414fc1e4380be9d0e997ab4d58 upstream.
 
-Add missing strings to iio_modifier_names[] for proper modification
-of channels.
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-Fixes: b170f7d48443d (iio: Add modifiers for ethanol and H2 gases)
-Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Fixes: 03b262f2bbf4 ("iio:pressure: initial zpa2326 barometer support")
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/industrialio-core.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iio/pressure/zpa2326.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -130,6 +130,8 @@ static const char * const iio_modifier_n
- 	[IIO_MOD_PM2P5] = "pm2p5",
- 	[IIO_MOD_PM4] = "pm4",
- 	[IIO_MOD_PM10] = "pm10",
-+	[IIO_MOD_ETHANOL] = "ethanol",
-+	[IIO_MOD_H2] = "h2",
- };
+--- a/drivers/iio/pressure/zpa2326.c
++++ b/drivers/iio/pressure/zpa2326.c
+@@ -664,8 +664,10 @@ static int zpa2326_resume(const struct i
+ 	int err;
  
- /* relies on pairs of these shared then separate */
+ 	err = pm_runtime_get_sync(indio_dev->dev.parent);
+-	if (err < 0)
++	if (err < 0) {
++		pm_runtime_put(indio_dev->dev.parent);
+ 		return err;
++	}
+ 
+ 	if (err > 0) {
+ 		/*
 
 
