@@ -2,116 +2,160 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F16C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D231C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 940712176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595230895;
-	bh=Hgih/CgCT3e24D4BXc0rTqOhOL/EL2WpV/Z7aQ7NpNo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gznpWWNw/T0MOyAZzZObGIWnHAtu7tWim7xKAsBe6pYJbJPeWu6hIGiZ8oC5vRv5h
-	 e/rzByY9SEkon/h9E5+qZ4saSfMLM5kCZavBo/t9KZrjnAKCz8QRlc3ZgTRTkugj4r
-	 ICGqpYdFsDopkOG+mZoz4KLOMj+tM8r/P2qDKtOA=
+	by mail.kernel.org (Postfix) with ESMTP id DED6E2176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:43:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IVK09e1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgGTHle (ORCPT
+        id S1726808AbgGTHnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:41:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbgGTHld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 03:41:33 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10B1420773;
-        Mon, 20 Jul 2020 07:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595230893;
-        bh=Hgih/CgCT3e24D4BXc0rTqOhOL/EL2WpV/Z7aQ7NpNo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1SGbqMfuj4fGfXr9apHUlnb6KelALGVLfq+i0kNUCueubOnkAeh0WT1DPFKrXDflP
-         Mopdfryi8t0PQtWKHqkeR/G2apyhM4CSsJVkWarlrgchv0ONjCKYXoYSPS2SLN1lfg
-         uPT0DBQt3SQeaMestOwG2l/3cM+X+ZIhda3LwLT4=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jxQQV-00DEk7-3j; Mon, 20 Jul 2020 08:41:31 +0100
+        Mon, 20 Jul 2020 03:43:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgGTHnS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 03:43:18 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8902EC0619D7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 00:43:17 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g10so11308322wmc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 00:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=m6yytUMdKpAiiKF/+CcuV8LMm9NpXNcKGc9Sb6F7cqo=;
+        b=IVK09e1ld+9cwoXx1bqDODaFImU/E8BERDq0mWlu1Dh3gZ8IilQ3NLb5AgUJs2EZ6A
+         DOpTQs9i1N8ia2cP2g7Hb9P6XoaJ7E0SsvqJvP109FQdN1+ZnJhAs2U+kTjtokXyi7kX
+         KZWHKc+5M16aNSA+dKO3bVZQ3Ch6eBOqPwHOhmW6ZcCXCA9lkNv0mus2J2Dg295523dN
+         wlMsuRQmfpFIbc8P/E473L2Usu9r1pSH6N0HzqC+VSRl0++AZtaLlfi6afz/RKsfOi1+
+         pBDqXeB4fWSWXBmqduD5AQBaV8vSZx9hm2B0U5J2k7sG/cAbFhzBStssMGIksHjKYPH5
+         ApOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=m6yytUMdKpAiiKF/+CcuV8LMm9NpXNcKGc9Sb6F7cqo=;
+        b=tZVEJhtIM4I06zW82AkbMBduD/DGbYy58b+1ZvaWRJ8V4ha0dmTGR/cXYX0QJWNQmr
+         yuqzA7ST+AYS0fKNGACCk9MOK+u9iGRt9LzoQ4CAu0KL5nzb06fv8ZtSi0qfASHBbJT7
+         MLRwUPMnjkBjUat7r/jNjP0hr28Lm26vpp1rQI/5D3o0hBlSBCvVEsYleI6LYFyoiGsC
+         vJXKX7VHwgLkvYoq2hg/6UlxmYfRZszGy6H16X3y8OHynwox0wWXlFt6Cpcfq231ecYh
+         Vx3Zqp72qdeJB9KLfIbjRkkd+B/LjK97zQdM/I+BqlxPrw/iFwVilcmFI870UJwco7Lw
+         ddSw==
+X-Gm-Message-State: AOAM533/qImwgSLJPqOifL11Mb6Y5lLf2OsiJsvjLRXbwSayV6SVrLrO
+        VExSTRbYgG91eudN7QXUoEvBAURqBeI=
+X-Google-Smtp-Source: ABdhPJzdJSdBbBWM2quCXUnipLg3+n/33qPK8Rxd7dlcJHIfTbXk90f6awCJz9w28J/D1s9VK8ooPw==
+X-Received: by 2002:a1c:408b:: with SMTP id n133mr20209577wma.88.1595230995865;
+        Mon, 20 Jul 2020 00:43:15 -0700 (PDT)
+Received: from dell ([2.27.167.94])
+        by smtp.gmail.com with ESMTPSA id o7sm17531643wrv.50.2020.07.20.00.43.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 00:43:15 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 08:43:12 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 02/13] mfd: add simple regmap based I2C driver
+Message-ID: <20200720074312.GL3165313@dell>
+References: <20200706175353.16404-1-michael@walle.cc>
+ <20200706175353.16404-3-michael@walle.cc>
+ <20200717090656.GF3165313@dell>
+ <52d85ea1ddc488762df547168e2001e9@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 20 Jul 2020 08:41:30 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, wanghaibin.wang@huawei.com
-Subject: Re: [PATCH] irqchip/gic-v4.1: Ensure accessing the correct RD when
- writing INVALLR
-In-Reply-To: <4d79c6f0-cb38-70fc-93e7-0172417ecbfd@huawei.com>
-References: <20200709134959.1039-1-yuzenghui@huawei.com>
- <87h7u6xuur.wl-maz@kernel.org>
- <4d79c6f0-cb38-70fc-93e7-0172417ecbfd@huawei.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <18d2a3da66cd94d98dac178281f77e22@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, wanghaibin.wang@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <52d85ea1ddc488762df547168e2001e9@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+On Mon, 20 Jul 2020, Michael Walle wrote:
 
-On 2020-07-20 03:27, Zenghui Yu wrote:
-> Hi Marc,
+> Am 2020-07-17 11:06, schrieb Lee Jones:
+> > On Mon, 06 Jul 2020, Michael Walle wrote:
+> > 
+> > > There are I2C devices which contain several different functions but
+> > > doesn't require any special access functions. For these kind of
+> > > drivers
+> > > an I2C regmap should be enough.
+> > > 
+> > > Create an I2C driver which creates an I2C regmap and enumerates its
+> > > children. If a device wants to use this as its MFD core driver, it has
+> > > to add an individual compatible string. It may provide its own regmap
+> > > configuration.
+> > > 
+> > > Subdevices can use dev_get_regmap() on the parent to get their regmap
+> > > instance.
+> > > 
+> > > Signed-off-by: Michael Walle <michael@walle.cc>
+> > > ---
+> > > Changes since v4:
+> > >  - new patch. Lee, please bear with me. I didn't want to delay the
+> > >    new version (where a lot of remarks on the other patches were
+> > >    addressed) even more, just because we haven't figured out how
+> > >    to deal with the MFD part. So for now, I've included this one.
+> > > 
+> > >  drivers/mfd/Kconfig          |  9 +++++++
+> > >  drivers/mfd/Makefile         |  1 +
+> > >  drivers/mfd/simple-mfd-i2c.c | 50
+> > > ++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 60 insertions(+)
+> > >  create mode 100644 drivers/mfd/simple-mfd-i2c.c
+> > > 
+> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > index 33df0837ab41..f1536a710aca 100644
+> > > --- a/drivers/mfd/Kconfig
+> > > +++ b/drivers/mfd/Kconfig
+> > > @@ -1162,6 +1162,15 @@ config MFD_SI476X_CORE
+> > >  	  To compile this driver as a module, choose M here: the
+> > >  	  module will be called si476x-core.
+> > > 
+> > > +config MFD_SIMPLE_MFD_I2C
+> > > +	tristate "Simple regmap based I2C devices"
+> > 
+> > Doesn't look like tristate to me.
+> > 
+> > Haven't you made this builtin only?
 > 
-> On 2020/7/17 19:07, Marc Zyngier wrote:
->> On Thu, 09 Jul 2020 14:49:59 +0100,
->> Zenghui Yu <yuzenghui@huawei.com> wrote:
->>> 
->>> The GICv4.1 spec tells us that it's CONSTRAINED UNPREDICTABLE to 
->>> issue a
->>> register-based invalidation operation for a vPEID not mapped to that 
->>> RD,
->>> or another RD within the same CommonLPIAff group.
->>> 
->>> To follow this rule, commit f3a059219bc7 ("irqchip/gic-v4.1: Ensure 
->>> mutual
->>> exclusion between vPE affinity change and RD access") tried to 
->>> address the
->>> race between the RD accesses and the vPE affinity change, but somehow
->>> forgot to take GICR_INVALLR into account. Let's take the vpe_lock 
->>> before
->>> evaluating vpe->col_idx to fix it.
->>> 
->>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->> 
->> Shouldn't this deserve a Fixes: tag?
-> 
-> Yes, I think a
-> 
-> Fixes: f3a059219bc7 ("irqchip/gic-v4.1: Ensure mutual exclusion
-> between vPE affinity change and RD access")
-> 
-> should be enough. Should I resend a version with the tag added?
+> Mh yeah, I forgot to change it to module in the driver. I don't
+> know whats better though, have it tristate or just offer a boolean
+> option because it should be small anyway. What do you think?
+> My interrupt driver will force it to boolean anyway.
 
-Yes, please, together with a Cc: stable@vger.kernel.org, as the
-original patch is in 5.7 and I intend to take it via the 5.9
-branch.
+Better to give consumers the choice I think.
 
-Thanks,
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
