@@ -2,119 +2,186 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23444C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F21AC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F345B2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF812080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:55:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CnrhO/P3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgGTJyT (ORCPT
+        id S1728373AbgGTJzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:54:19 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42742 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728308AbgGTJyT (ORCPT
+        Mon, 20 Jul 2020 05:55:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728358AbgGTJzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:54:19 -0400
-Received: by mail-lf1-f67.google.com with SMTP id h8so1145194lfp.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:54:17 -0700 (PDT)
+        Mon, 20 Jul 2020 05:55:37 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 541E2C0619D6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:55:36 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id x9so19543267ljc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:55:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=czrhyEhEcs9KJspCOYLvyQfPnpci+2QYLOQ/WNW3lw4=;
+        b=CnrhO/P3aw1bN3pJS1WTslSh7lPanYvbf976SXyyViWivKY8mGeZOxGF6spscG4a1b
+         AzC35iSDUUSEX5QqQXDG0Dn9kVHODA7YLORPopS104iIUwrhm4qUSIeXG34qK/gSv1j1
+         6nDDcVHVm4Qevmn2gjv1NgsCxUBrPucPvzmBT+ANXqJJg8uR2YqBLZcOe31YPS+VIc52
+         g7bQNukOcKW6Y0Y3rbkmut/mg4YqJ80wmNtrVwNIL7xnw54V/5Xs/047iMhY9xpL/IN4
+         lgKMaFfPIwGh+Xvmo+bSS0jYrci3XSXT2JLA0dGTW24OD7cj94VHQeMoK0Ecq6E+cJSN
+         HVsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8TgvaC7/oHKGtUBrzwRuyP7O62U/sEWXhQcMJb1TPmA=;
-        b=W+mwoqrM8I+Caxi7ssXWVk9Q+Y3kdjBi0OoyWiCu+P5qjGUvLGhT9UA1bJfoNTg6sk
-         3vL2fMy7q+WGUTKLHX9vx9CKLVskf8gQBX/dbAme8W0BoB5nymkjzAceVTRuvpogS/B5
-         xXlTsUT0Dkh+Ns8wdEdb4L7a16KC34/zv5CNHvQUaDqsylX88x/q50KXNkn/kc3ByexF
-         ChoUsm1vYPKLbTnQygFQq5coRY4d3ZYW5IQb8MQIs9aDsM6afw8rAkZQHvusNR+n8T1C
-         fjBsC0830QbvtGa59x5my0kYpY9/HWi43LytnpIwEPs8j9Pn1u6siJBCsZgwsKEDp7vp
-         yaiQ==
-X-Gm-Message-State: AOAM532SBLQfx2XRHe7aHDZCIipZzodfAzGYbMSC/qmT5CMJnW1uW9Mx
-        OGaGP2VOExXFOkrihNKlQffI1X8jbjM=
-X-Google-Smtp-Source: ABdhPJx9ANsNyliwsM+8WVE2ASKm2wRH+OAu3ZKJ64cwbW8C4P1Ur+UBwdmjPSAZ8JbUjAhgLq7IXQ==
-X-Received: by 2002:ac2:5984:: with SMTP id w4mr10543815lfn.28.1595238856442;
-        Mon, 20 Jul 2020 02:54:16 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id r25sm3709761ljg.9.2020.07.20.02.54.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 02:54:16 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id r19so19463217ljn.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:54:16 -0700 (PDT)
-X-Received: by 2002:a2e:3a14:: with SMTP id h20mr9503033lja.331.1595238855983;
- Mon, 20 Jul 2020 02:54:15 -0700 (PDT)
+        bh=czrhyEhEcs9KJspCOYLvyQfPnpci+2QYLOQ/WNW3lw4=;
+        b=gnhvg/0EuZxGiOxxXSyYuyjGF38/utTQXkq7atkcv6mdkAulDDP2sI+g/HZF5xy4Rv
+         0YQerXsB6yfspQj5GH9EM29sKJo6wFTFqy8ap92V9dSQL1PIzk7xRL4rGtjzsuHHv2VV
+         UGIwmAbAPsgpxxsXeJjFr8Ctyn0E69+ifPQ8YzQyrjWYQO4KSW0ggIUJ9P51FYUuuUGf
+         h2qSIee7BCUniL1j8uT/7HFdrOEjccbdKM5I1P3Ccu3tmJRkS1Qh1670S23YxW7il/Oz
+         FNBq7VuWZ2uCnC92ivzv+5I+GjgjAgP8YGIJvQ/Nf3A9/6SdET+9kyCYorAUK0H7jIde
+         oQfA==
+X-Gm-Message-State: AOAM531WOfV7aw8TyUURVDvTmVqeo/xH/GzZp7xZat485Y6FJnv7R4Vg
+        gyPrbnLnJmCDdhVJAm7nUSqkWc+oAS9HGQErJLLXyQ==
+X-Google-Smtp-Source: ABdhPJx7dPlocqfGM7sZ2KHKcW665NVMq4cJYWrzSHYvVDC6FGbeJQjTYpRHJaYHlI1CZ3+Gs0JPtBwFu51lvd8XbNk=
+X-Received: by 2002:a2e:8855:: with SMTP id z21mr10483601ljj.325.1595238934491;
+ Mon, 20 Jul 2020 02:55:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200720094449.32282-1-wens@kernel.org>
-In-Reply-To: <20200720094449.32282-1-wens@kernel.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 20 Jul 2020 17:54:04 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65RDqrHxGPOkrNvjd2v8=bLmBaK61rvQ-dN1bbvSs1MQg@mail.gmail.com>
-Message-ID: <CAGb2v65RDqrHxGPOkrNvjd2v8=bLmBaK61rvQ-dN1bbvSs1MQg@mail.gmail.com>
-Subject: Re: [PATCH] reuglator: gpio: Honor regulator-boot-on property
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>
+References: <20200716022817.30439-1-ansuelsmth@gmail.com> <20200716022817.30439-5-ansuelsmth@gmail.com>
+In-Reply-To: <20200716022817.30439-5-ansuelsmth@gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 20 Jul 2020 15:25:23 +0530
+Message-ID: <CAP245DVSwmk121SkZXqeXF2YUhDUw+KAb=F2EF8d63prKg+hVQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/7] dt-bindings: thermal: tsens: document ipq8064 bindings
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Please ignore this one. I'll send v2 shortly.
-
-On Mon, Jul 20, 2020 at 5:44 PM Chen-Yu Tsai <wens@kernel.org> wrote:
+On Thu, Jul 16, 2020 at 7:58 AM Ansuel Smith <ansuelsmth@gmail.com> wrote:
 >
-> From: Chen-Yu Tsai <wens@csie.org>
+> Document the use of bindings used for ipq8064 SoCs tsens.
+> ipq8064 use the same gcc regs and is set as a child of the qcom gcc.
 >
-> When requesting the enable GPIO, the driver tries to do so with the
-> correct output level matching the current state. This is done by
-> checking the boot_on constraint, which is derived from the
-> regulator-boot-on property in the device tree. This is especially
-> important if the regulator is a critical one, such as a supply for
-> the boot CPU.
->
-> Honor the regulator-boot-on property by checking the boot_on
-> constraint setting. This is the same as what is done in the fixed
-> regulator driver.
->
-> Also drop support for the undocumented enable-at-boot property. This
-> property was not documented in the original commit introducing DT
-> support, nor is it now, and there are no in-tree device trees that use
-> this property.
-
-I'll rework the commit log so it makes more sense. (and fix the typo ...)
-
-ChenYu
-
-> Fixes: 006694d099e8 ("regulator: gpio-regulator: Allow use of GPIO controlled regulators though DT")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 > ---
->  drivers/regulator/gpio-regulator.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/thermal/qcom-tsens.yaml          | 50 ++++++++++++++++---
+>  1 file changed, 43 insertions(+), 7 deletions(-)
 >
-> diff --git a/drivers/regulator/gpio-regulator.c b/drivers/regulator/gpio-regulator.c
-> index 110ee6fe76c4..5646b7a26288 100644
-> --- a/drivers/regulator/gpio-regulator.c
-> +++ b/drivers/regulator/gpio-regulator.c
-> @@ -148,7 +148,7 @@ of_get_gpio_regulator_config(struct device *dev, struct device_node *np,
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> index d7be931b42d2..9d480e3943a2 100644
+> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> @@ -19,6 +19,11 @@ description: |
+>  properties:
+>    compatible:
+>      oneOf:
+> +      - description: msm9860 TSENS based
+
+Another variant of the number here: I've seen 8960, 8064 (correct) and
+8060, 9860 (wrong) so far.
+
+Just use 8960 throughout this series and then add a new patch at the
+end of the series for a compatible for ipq8064.
+
+> +        items:
+> +          - enum:
+> +            - qcom,ipq8064-tsens
+> +
+>        - description: v0.1 of TSENS
+>          items:
+>            - enum:
+> @@ -85,12 +90,18 @@ properties:
+>        Number of cells required to uniquely identify the thermal sensors. Since
+>        we have multiple sensors this is set to 1
 >
->         config->supply_name = config->init_data->constraints.name;
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - "#thermal-sensor-cells"
+> +
+>  allOf:
+>    - if:
+>        properties:
+>          compatible:
+>            contains:
+>              enum:
+> +              - qcom,ipq8064-tsens
+>                - qcom,msm8916-tsens
+>                - qcom,msm8974-tsens
+>                - qcom,msm8976-tsens
+> @@ -111,17 +122,42 @@ allOf:
+>          interrupt-names:
+>            minItems: 2
 >
-> -       if (of_property_read_bool(np, "enable-at-boot"))
-> +       if (config->init_data->constraints.boot_on)
->                 config->enabled_at_boot = true;
+> -required:
+> -  - compatible
+> -  - reg
+> -  - "#qcom,sensors"
+> -  - interrupts
+> -  - interrupt-names
+> -  - "#thermal-sensor-cells"
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,tsens-v0_1
+> +              - qcom,tsens-v1
+> +              - qcom,tsens-v2
+> +
+> +    then:
+> +      required:
+> +        - reg
+> +        - interrupt-names
+> +        - "#qcom,sensors"
 >
->         of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
+>  additionalProperties: false
+>
+>  examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    // Example msm9860 based SoC (ipq8064):
+> +    gcc: clock-controller {
+> +
+> +           /* ... */
+> +
+> +           tsens: thermal-sensor {
+> +                compatible = "qcom,ipq8064-tsens";
+> +
+> +                 nvmem-cells = <&tsens_calib>, <&tsens_calsel>;
+> +                 nvmem-cell-names = "calib", "calib_sel";
+> +                 interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +                 #thermal-sensor-cells = <1>;
+> +          };
+> +    };
+> +
+>    - |
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+>      // Example 1 (legacy: for pre v1 IP):
 > --
 > 2.27.0
 >
