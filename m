@@ -2,116 +2,194 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78148C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4463DC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 536612065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:28:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595255328;
-	bh=smK7dp0OUcXlrscA0vphn6FcooWL38Y1CHjVRIWeO58=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WTOpbSJqV/StMQvpEzNRPLMn4Da++f9kO2FOadfPCOf7H+uC+TSRwJ7lq1JjwpFD/
-	 jFnS5rcfBM/VGUvZtbU4ogERzDi0ROFBUvPQjfs1C4h1YY5SWRjsXjvqLUnU70DQ/d
-	 ozOr1jREwsEWxzAwhz0TDQt08YJGCBuMiMPQRAbQ=
+	by mail.kernel.org (Postfix) with ESMTP id 21AF22065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:28:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cm5XgV/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbgGTO2q (ORCPT
+        id S1728819AbgGTO2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:28:46 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36372 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgGTO2q (ORCPT
+        Mon, 20 Jul 2020 10:28:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728802AbgGTO2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:28:46 -0400
-Received: by mail-ed1-f65.google.com with SMTP id dg28so12922443edb.3;
-        Mon, 20 Jul 2020 07:28:44 -0700 (PDT)
+        Mon, 20 Jul 2020 10:28:47 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 947EBC061794;
+        Mon, 20 Jul 2020 07:28:47 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z3so9119274pfn.12;
+        Mon, 20 Jul 2020 07:28:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3FlUkctU/9Z8JymGDkG+Bf/RRrvEHqZ+B4t/lCBxEH4=;
+        b=cm5XgV/yWFRRE9EHS24/EqW66GsPEs3000VF0aMvp2QSusnxfH2P/N4LTQUujMF1lm
+         tt8o/sRaKVJvTG/iFb3yhYuU0kldoxnm4qPQ0LRe0leRrGZAApAziZVNeLfDewWpDy5f
+         xhRvGSkzenzm6zNKBtqPMohpWbINR40PZKwL2najXJv/1nQM+Sl0hgRo8EWIe3Mtltx9
+         iHq6HNwDU49y7+AqKuKnMSr5YTVl+ZuN2ejZlRSIKMXM2yKbqc2NgkbOtVoHQXYK/Ow7
+         4Y2F4pG1Nl/Xd1o88dc795XHR5KzUsCG6GnSJOmSkuyLDufEefqpkWcGpk64gX1p74mH
+         4n5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H+HOdv0Iwx4SJS7pU46h8figf2eeiPI7mJjo5qsQTjM=;
-        b=sbPL4mearqwAawnhsKGzWlh3TWCA4qrr9Oz68ScddUIwaDzykVyl+pVNSTqwi8A5v9
-         amSR23+u4fdMw1s+T0ua9YpH3GF92Gh1lo06rFGroEVZ3UT3Q2j0h3fkXDEcUNeJHycV
-         Y6diKm5oGdG/T5AqoI+0DzKKi0ruRAltVFUsPpk4o5iVJvBQGhakGiAO8ZIpMSEssfVT
-         O5Drfu626WXrwUaKZQaoSou6hQ2nLUQPtVFhxxdOgmCdLp3JYoDLlfjr/sr/Ybj0Ycnv
-         J2m1t6k3hoqCVJL1xt1wppvtmI2wEDrz0PEtfXBEddkDLW0DG+Ueo58KvT9OfnbDH1AS
-         c2nw==
-X-Gm-Message-State: AOAM530y2/UhYq+V8mbHP07FdL15qipFiObOfMO1JmfafQNkmvxu5xzd
-        RXU600aeOlM5UcKlVdy076j/x07pBmIyFQ==
-X-Google-Smtp-Source: ABdhPJylz0Nk0hfgFk95k/OhFgpGdomfuGo3Jtt1Ad9YhcjjZAV5M/GdROa+dvfgBlDEmhpsXsUymg==
-X-Received: by 2002:aa7:cd52:: with SMTP id v18mr20782665edw.196.1595255323711;
-        Mon, 20 Jul 2020 07:28:43 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.200])
-        by smtp.googlemail.com with ESMTPSA id be2sm15448599edb.92.2020.07.20.07.28.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 Jul 2020 07:28:42 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 16:28:40 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     tomasz.figa@gmail.com, s.nawrocki@samsung.com,
-        linus.walleij@linaro.org, kgene@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: samsung: Replace HTTP links with HTTPS ones
-Message-ID: <20200720142840.GA1163@kozik-lap>
-References: <20200718104717.7493-1-grandmaster@al2klimov.de>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3FlUkctU/9Z8JymGDkG+Bf/RRrvEHqZ+B4t/lCBxEH4=;
+        b=RgwQFkgEDla5Cj68CYGV/Gxdle6SV5ICy2lDqlzSQmdahVS5N5iwK0PydUHvtIW0O/
+         lJMmmUjYxMRo5N9ILM3+7PJD2xPdndcGxXo2sP7EcaWwxyCKuKRtMPQWxyhwScQ/C+nG
+         DvzQzCO2Hl+epcF+gPqhrJR3ywk7Tggr5E+iqTaOuy0EAW/AYwX7xCNwwkQkdkIL92Mf
+         bVkmIwUPven1oaDQvMJJYCvTqT+3grgHXrmtHgK9HwDfzP+WOW0re0tt4R7q5V95oP95
+         UgLLgVjWfu4thliTrIRlHqwxV+Q+As7spc6mbYPWBDUfdz8tR76Clm0wuMVOFqznLo5M
+         0uqQ==
+X-Gm-Message-State: AOAM5309X04ZN7buHIDQsAuEv6G2IL/SabpMYjtdpotXNmvGtZuZanJF
+        CaZeFfuHbJ8RdbUChOr3QSE=
+X-Google-Smtp-Source: ABdhPJxkd48eXlvOgVHcFNHC7hs+LWba48WNoCpqQ0EXWeCyVxMv2V7/q3ybFxEBtrVMabJk1BAYAA==
+X-Received: by 2002:a63:c049:: with SMTP id z9mr14766666pgi.353.1595255327105;
+        Mon, 20 Jul 2020 07:28:47 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.67])
+        by smtp.gmail.com with ESMTPSA id i67sm17581282pfg.13.2020.07.20.07.28.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 07:28:46 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Bruce Chang <brucechang@via.com.tw>,
+        Harald Welte <HaraldWelte@viatech.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1] mmc: via-sdmmc: use generic power management
+Date:   Mon, 20 Jul 2020 19:56:04 +0530
+Message-Id: <20200720142603.577323-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200718104717.7493-1-grandmaster@al2klimov.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 12:47:17PM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-> 
->  If there are any URLs to be removed completely
->  or at least not (just) HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
-> 
->  drivers/pinctrl/samsung/pinctrl-exynos-arm.c   | 2 +-
->  drivers/pinctrl/samsung/pinctrl-exynos-arm64.c | 2 +-
->  drivers/pinctrl/samsung/pinctrl-exynos.c       | 2 +-
->  drivers/pinctrl/samsung/pinctrl-exynos.h       | 2 +-
->  drivers/pinctrl/samsung/pinctrl-samsung.c      | 2 +-
->  drivers/pinctrl/samsung/pinctrl-samsung.h      | 2 +-
+Drivers using legacy PM have to manage PCI states and device's PM states
+themselves. They also need to take care of configuration registers.
 
-Thanks, applied.
+With improved and powerful support of generic PM, PCI Core takes care of
+above mentioned, device-independent, jobs.
 
-Best regards,
-Krzysztof
+This driver makes use of PCI helper functions like
+pci_save/restore_state(), pci_enable/disable_device(),
+pci_enable_wake() and pci_set_power_state() and to do required operations.
+In generic mode, they are no longer needed.
+
+Change function parameter in both .suspend() and .resume() to
+"struct device*" type. Use dev_get_drvdata() to get drv data.
+
+Compile-tested only.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/mmc/host/via-sdmmc.c | 33 ++++++++-------------------------
+ 1 file changed, 8 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/mmc/host/via-sdmmc.c b/drivers/mmc/host/via-sdmmc.c
+index ef95bce50889..49dab9f42b6d 100644
+--- a/drivers/mmc/host/via-sdmmc.c
++++ b/drivers/mmc/host/via-sdmmc.c
+@@ -1220,9 +1220,7 @@ static void via_sd_remove(struct pci_dev *pcidev)
+ 		pci_name(pcidev), (int)pcidev->vendor, (int)pcidev->device);
+ }
+ 
+-#ifdef CONFIG_PM
+-
+-static void via_init_sdc_pm(struct via_crdr_mmc_host *host)
++static void __maybe_unused via_init_sdc_pm(struct via_crdr_mmc_host *host)
+ {
+ 	struct sdhcreg *pm_sdhcreg;
+ 	void __iomem *addrbase;
+@@ -1256,30 +1254,27 @@ static void via_init_sdc_pm(struct via_crdr_mmc_host *host)
+ 	via_print_sdchc(host);
+ }
+ 
+-static int via_sd_suspend(struct pci_dev *pcidev, pm_message_t state)
++static int __maybe_unused via_sd_suspend(struct device *dev)
+ {
+ 	struct via_crdr_mmc_host *host;
+ 
+-	host = pci_get_drvdata(pcidev);
++	host = dev_get_drvdata(dev);
+ 
+ 	via_save_pcictrlreg(host);
+ 	via_save_sdcreg(host);
+ 
+-	pci_save_state(pcidev);
+-	pci_enable_wake(pcidev, pci_choose_state(pcidev, state), 0);
+-	pci_disable_device(pcidev);
+-	pci_set_power_state(pcidev, pci_choose_state(pcidev, state));
++	device_wakeup_enable(dev);
+ 
+ 	return 0;
+ }
+ 
+-static int via_sd_resume(struct pci_dev *pcidev)
++static int __maybe_unused via_sd_resume(struct device *dev)
+ {
+ 	struct via_crdr_mmc_host *sdhost;
+ 	int ret = 0;
+ 	u8 gatt;
+ 
+-	sdhost = pci_get_drvdata(pcidev);
++	sdhost = dev_get_drvdata(dev);
+ 
+ 	gatt = VIA_CRDR_PCICLKGATT_PAD_PWRON;
+ 	if (sdhost->power == MMC_VDD_165_195)
+@@ -1294,32 +1289,20 @@ static int via_sd_resume(struct pci_dev *pcidev)
+ 
+ 	msleep(100);
+ 
+-	pci_set_power_state(pcidev, PCI_D0);
+-	pci_restore_state(pcidev);
+-	ret = pci_enable_device(pcidev);
+-	if (ret)
+-		return ret;
+-
+ 	via_restore_pcictrlreg(sdhost);
+ 	via_init_sdc_pm(sdhost);
+ 
+ 	return ret;
+ }
+ 
+-#else /* CONFIG_PM */
+-
+-#define via_sd_suspend NULL
+-#define via_sd_resume NULL
+-
+-#endif /* CONFIG_PM */
++static SIMPLE_DEV_PM_OPS(via_sd_pm_ops, via_sd_suspend, via_sd_resume);
+ 
+ static struct pci_driver via_sd_driver = {
+ 	.name = DRV_NAME,
+ 	.id_table = via_ids,
+ 	.probe = via_sd_probe,
+ 	.remove = via_sd_remove,
+-	.suspend = via_sd_suspend,
+-	.resume = via_sd_resume,
++	.driver.pm = &via_sd_pm_ops,
+ };
+ 
+ module_pci_driver(via_sd_driver);
+-- 
+2.27.0
 
