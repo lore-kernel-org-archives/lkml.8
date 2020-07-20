@@ -2,169 +2,176 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B868C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E92122CB2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:53:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nrN7FoGz"
+	by mail.kernel.org (Postfix) with ESMTP id D0584207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgGTGxi (ORCPT
+        id S1726943AbgGTHCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 02:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgGTGxh (ORCPT
+        Mon, 20 Jul 2020 03:02:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44936 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725815AbgGTHCJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:53:37 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F40FC0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 23:53:37 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id k18so12164502qtm.10
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 23:53:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qs1cbe46cVElxY/Q1LwL0+3SEDSLDhjdnDiZLYzmQpA=;
-        b=nrN7FoGzPXdOvPS9oQHCkzTRZBHfDINd8EiU7EJWQAFx5dMLj9u7Jn+l4kYZAXu4L6
-         St7Eqt99nOCXDyBDLkimje1F8ZSm8HOAYuMVYErEbqmplEgZ9xnbXasKoalX9aT2gj9F
-         8HmdL3JokxG6oVre95PYVkqcX2IDJKBQGgkCZorlrTlGsw8nqbTUvJTeJrLPgsXWNWYU
-         1AJvJZc7YL0ogUpZkUZTV0/5XTG1L2aecZIVATHWLm/eq3diJehH3K2/YlfpVjJFd3gG
-         tZss3RqjweUp5sTzc/NQgqmigoghvmkcl3d5bTHsjci+fl+Hpzm2s/j6PXs2bDP3MQyw
-         aC+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qs1cbe46cVElxY/Q1LwL0+3SEDSLDhjdnDiZLYzmQpA=;
-        b=OQqFQEHt1K+BI2hu9d+wDjDwYjZbf+bZTZZmSTyxtnRuKd5aCxvh80S00ussp7G6kJ
-         zQyLzOTQb5rl5DmdnhIQIx+NYlhCb0kTV/Yaz6j+oJRbnm5B8o6XYfXQyaOH/ved4q0S
-         +5dpyNdYLuK68xJKOAPi5zNVa7DysNcAuMUIbrP8LkwHN2Y1VltfQdEE1qu8Nf57F7Ub
-         di95csbnUaqZB7cmfvWnrZJmSks4pgov/ovn3m/dOYfUAN8Ztlvm6xE0CYSEHbOX6GUc
-         4NruI1XnfSSSWGaKAb72cPbCn6ALGQFZfSIq0T5iP1XN0/CjF3AoV9v+0/TlqUjpjJDf
-         ying==
-X-Gm-Message-State: AOAM5336Yh2a1FudMvxDgUt3vZo+JSII6b41ZY8APt4eIgyU7HALx+B8
-        790FS6H3qO97MegD1RAywpysXuxWBr3gW/PeZzc=
-X-Google-Smtp-Source: ABdhPJxGi5zxL6JpDFNy9iMtWweFL0iBl8jt/EO1VPcigijc5OZQPs3jZrBbRSx8iMGl+Jkxr2awoUISlyE59SAEl5k=
-X-Received: by 2002:ac8:7b23:: with SMTP id l3mr22698974qtu.65.1595228016399;
- Sun, 19 Jul 2020 23:53:36 -0700 (PDT)
+        Mon, 20 Jul 2020 03:02:09 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06K6Y69k122985;
+        Mon, 20 Jul 2020 03:01:59 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5pe9ct5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 03:01:59 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06K6xiwc029601;
+        Mon, 20 Jul 2020 03:01:58 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5pe9cs4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 03:01:58 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06K70ME3025590;
+        Mon, 20 Jul 2020 07:01:56 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 32brq82adf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 07:01:56 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06K70UAo52822290
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 07:00:30 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 82287AE256;
+        Mon, 20 Jul 2020 07:01:53 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9615DAE248;
+        Mon, 20 Jul 2020 07:01:49 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.114.242])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jul 2020 07:01:49 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, pc@us.ibm.com,
+        jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com,
+        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
+        anju@linux.vnet.ibm.com, kan.liang@linux.intel.com,
+        nasastry@in.ibm.com, kjain@linux.ibm.com
+Subject: [PATCH v4 0/5] powerpc/perf: Add json file support for hv_24x7 core level events
+Date:   Mon, 20 Jul 2020 12:31:22 +0530
+Message-Id: <20200720070127.109234-1-kjain@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <1592371583-30672-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1592371583-30672-3-git-send-email-iamjoonsoo.kim@lge.com> <20200717135849.GA265107@cmpxchg.org>
-In-Reply-To: <20200717135849.GA265107@cmpxchg.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Mon, 20 Jul 2020 15:53:25 +0900
-Message-ID: <CAAmzW4OeCdcAnj2yUJWw_XuC8eVBF-wWjA+7vJ3J1Oju68kfJA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/6] mm/vmscan: protect the workingset on anonymous LRU
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_01:2020-07-17,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 suspectscore=1 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 7=EC=9B=94 17=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 10:59, =
-Johannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On Wed, Jun 17, 2020 at 02:26:19PM +0900, js1304@gmail.com wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> >
-> > In current implementation, newly created or swap-in anonymous page
-> > is started on active list. Growing active list results in rebalancing
-> > active/inactive list so old pages on active list are demoted to inactiv=
-e
-> > list. Hence, the page on active list isn't protected at all.
-> >
-> > Following is an example of this situation.
-> >
-> > Assume that 50 hot pages on active list. Numbers denote the number of
-> > pages on active/inactive list (active | inactive).
-> >
-> > 1. 50 hot pages on active list
-> > 50(h) | 0
-> >
-> > 2. workload: 50 newly created (used-once) pages
-> > 50(uo) | 50(h)
-> >
-> > 3. workload: another 50 newly created (used-once) pages
-> > 50(uo) | 50(uo), swap-out 50(h)
-> >
-> > This patch tries to fix this issue.
-> > Like as file LRU, newly created or swap-in anonymous pages will be
-> > inserted to the inactive list. They are promoted to active list if
-> > enough reference happens. This simple modification changes the above
-> > example as following.
-> >
-> > 1. 50 hot pages on active list
-> > 50(h) | 0
-> >
-> > 2. workload: 50 newly created (used-once) pages
-> > 50(h) | 50(uo)
-> >
-> > 3. workload: another 50 newly created (used-once) pages
-> > 50(h) | 50(uo), swap-out 50(uo)
-> >
-> > As you can see, hot pages on active list would be protected.
-> >
-> > Note that, this implementation has a drawback that the page cannot
-> > be promoted and will be swapped-out if re-access interval is greater th=
-an
-> > the size of inactive list but less than the size of total(active+inacti=
-ve).
-> > To solve this potential issue, following patch will apply workingset
-> > detection that is applied to file LRU some day before.
-> >
-> > v6: Before this patch, all anon pages (inactive + active) are considere=
-d
-> > as workingset. However, with this patch, only active pages are consider=
-ed
-> > as workingset. So, file refault formula which uses the number of all
-> > anon pages is changed to use only the number of active anon pages.
->
-> I can see that also from the code, but it doesn't explain why.
->
-> And I'm not sure this is correct. I can see two problems with it.
->
-> After your patch series, there is still one difference between anon
-> and file: cache trim mode. If the "use-once" anon dominate most of
-> memory and you have a small set of heavily thrashing files, it would
-> not get recognized. File refaults *have* to compare their distance to
-> the *entire* anon set, or we could get trapped in cache trimming mode
-> even as file pages with access frequencies <=3D RAM are thrashing.
->
-> On the anon side, there is no cache trimming mode. But even if we're
-> not in cache trimming mode and active file is already being reclaimed,
-> we have to recognize thrashing on the anon side when reuse frequencies
-> are within available RAM. Otherwise we treat an inactive file that is
-> not being reused as having the same value as an anon page that is
-> being reused. And then we may reclaim file and anon at the same rate
-> even as anon is thrashing and file is not. That's not right.
->
-> We need to activate everything with a reuse frequency <=3D RAM. Reuse
-> frequency is refault distance plus size of the inactive list the page
-> was on. This means anon distances should be compared to active anon +
-> inactive file + active file, and file distances should be compared to
-> active file + inactive_anon + active anon.
+Patchset enhance current runtime parameter support. It introduces new
+fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
+used to specify perpkg events. 
 
-You're right. Maybe, I'm confused about something at that time. I will chan=
-ge
-it as you suggested.
+The "PerCore" and "PerChip" specifies whether its core or chip events.
+Based on which we can decide which runtime parameter user want to
+access. Now character  '?' can refers different parameter based on user
+requirement.
 
-Thanks.
+Initially, every time we want to add new terms like chip, core, thread
+etc, we need to create corrsponding fields in pmu_events and event
+struct.
+This patchset adds an enum called 'aggr_mode_class' which store all these
+aggregation like perpkg/percore. It also adds new field 'AggregationMode'
+to capture these terms.
+Now, if user wants to add any new term, they just need to add it in
+the enum defined. I try to test it with  my current setup.
+
+I also need to replace PerPkg field to AggregationMode in all the
+x86 uncore json files. It will great if Andi and team can test it
+and let me know if they have any concerns.
+
+Changelog:
+v3 -> v4:
+- Include pmu-events.h header file in jevents.c and remove
+  redecalaration of enum aggr_mode_class as Suggested by Jiri.
+- Add Acked-by tag.
+
+v2 -> v3:
+- Did some nits changes suggested by Jiri include correction of
+  indentation, and making PerCore/PerChip values forward after
+  PerPkg as 1 in the enum.
+- Rebase the patchset on Arnaldo's tmp.perf/core branch.
+- Change RFC tag
+
+v1 -> v2:
+- Rather then adding new field as PerCore/PerChip, created a new enum
+  to get these fields. And new field as "AggregationMode" which can
+  be used to capture these fields from json file.
+  - Suggested By Ian Rogers
+
+
+Kajol Jain (5):
+  perf/pmu-events/jevents: Add enum to store aggregation like PerPkg
+  pmu-events/x86/uncore: Replace PerPkg field to AggregationMode in x86
+    json files
+  perf jevents: Add support for parsing perchip/percore events
+  perf/tools: Pass pmu_event structure as a parameter for
+    arch_get_runtimeparam
+  perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
+
+ tools/perf/arch/powerpc/util/header.c         |   7 +-
+ .../arch/powerpc/power9/nest_metrics.json     |  27 +-
+ .../arch/x86/broadwellde/uncore-cache.json    |  62 ++--
+ .../arch/x86/broadwellde/uncore-memory.json   |  18 +-
+ .../arch/x86/broadwellde/uncore-power.json    |  18 +-
+ .../arch/x86/broadwellx/uncore-cache.json     |  62 ++--
+ .../x86/broadwellx/uncore-interconnect.json   |   6 +-
+ .../arch/x86/broadwellx/uncore-memory.json    |  18 +-
+ .../arch/x86/broadwellx/uncore-power.json     |  18 +-
+ .../arch/x86/cascadelakex/uncore-memory.json  |  64 ++--
+ .../arch/x86/cascadelakex/uncore-other.json   | 332 +++++++++---------
+ .../arch/x86/haswellx/uncore-cache.json       |  62 ++--
+ .../x86/haswellx/uncore-interconnect.json     |   6 +-
+ .../arch/x86/haswellx/uncore-memory.json      |  18 +-
+ .../arch/x86/haswellx/uncore-power.json       |  18 +-
+ .../arch/x86/ivytown/uncore-cache.json        |  62 ++--
+ .../arch/x86/ivytown/uncore-interconnect.json |  10 +-
+ .../arch/x86/ivytown/uncore-memory.json       |  16 +-
+ .../arch/x86/ivytown/uncore-power.json        |  52 +--
+ .../arch/x86/jaketown/uncore-cache.json       |  40 +--
+ .../x86/jaketown/uncore-interconnect.json     |  10 +-
+ .../arch/x86/jaketown/uncore-memory.json      |  18 +-
+ .../arch/x86/jaketown/uncore-power.json       |  52 +--
+ .../x86/knightslanding/uncore-memory.json     |   8 +-
+ .../arch/x86/skylakex/uncore-memory.json      |  36 +-
+ .../arch/x86/skylakex/uncore-other.json       | 220 ++++++------
+ .../arch/x86/tremontx/uncore-memory.json      |  14 +-
+ .../arch/x86/tremontx/uncore-other.json       |  70 ++--
+ .../arch/x86/tremontx/uncore-power.json       |   2 +-
+ tools/perf/pmu-events/jevents.c               |  40 ++-
+ tools/perf/pmu-events/jevents.h               |   2 +-
+ tools/perf/pmu-events/pmu-events.h            |   8 +-
+ tools/perf/tests/pmu-events.c                 |   8 +-
+ tools/perf/util/metricgroup.c                 |   5 +-
+ tools/perf/util/metricgroup.h                 |   3 +-
+ tools/perf/util/pmu.c                         |   6 +-
+ 36 files changed, 724 insertions(+), 694 deletions(-)
+
+-- 
+2.26.2
+
