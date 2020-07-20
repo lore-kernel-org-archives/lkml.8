@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CB2C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985CDC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78D2E22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 753DC2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261109;
-	bh=skdvEiz7c1Tv5JbxH89mctTRqiNTBfFs1t1/vJk7+Ds=;
+	s=default; t=1595261113;
+	bh=j2H3mILcNIXq0cwxB0SDAvXIxNI/pTujaWGBOk2jz5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CQcUjamhtPa0hlpnYtwWyjOW8TfJVqAs5G5iH8Eqt7Z7ePxAWlUbjVyyYr8+cJeN+
-	 nboEJAsUswShO3tNvoVkcZZ7Sba3Ba6eyZr5vFbmxWD01gYkIU36gL/eaw8/lIcHRU
-	 70dgqLVe0czBXjWggtuOiPVmsBp7X1iAi7944q0k=
+	b=kA10nT0v4ckxz8bA4BIxIiElPDzqok+QaIt0d22hI6ShH6pVpX6WSmqe9w+dEoGAF
+	 qo1inFwDmgIk/rmN37vq0D1uS7kI6uRJ6rEKHmzHsUdAo28UCTCPx9ivatpijEyVZL
+	 o8QZM+iBf6Rjn/jE9+ISSsjQrEzzsYop8IA1eZaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732944AbgGTQFI (ORCPT
+        id S1732948AbgGTQFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40306 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:05:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732921AbgGTQFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:05:04 -0400
+        id S1732650AbgGTQFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:05:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1DB62064B;
-        Mon, 20 Jul 2020 16:05:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E5D72176B;
+        Mon, 20 Jul 2020 16:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261104;
-        bh=skdvEiz7c1Tv5JbxH89mctTRqiNTBfFs1t1/vJk7+Ds=;
+        s=default; t=1595261109;
+        bh=j2H3mILcNIXq0cwxB0SDAvXIxNI/pTujaWGBOk2jz5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ejaCOhViYwvtqHKD/cK1iBH+t+VVyC+aAzyhmym0OSDeQnXCvdG0RfHqbxbpnJ5mm
-         i8rM/abN2Rms/VryZqG/gegWYBf+RriCcGpMVtVqxp6fVigW2VOZP44DCNsUKl5pIw
-         zRsH6rAg+3xvyVt2SwDzpBjeTOPfS9E/70JsuBaE=
+        b=K3QF2Ha1BebUFoXfzl8f6mPTHAWCsfXUbJtpEor+G+mudhxSqi3vLLW7CzAzYIFbE
+         odsY3FAUy+2+tfbMCpDTKfnfOznhBq+7bsf6O0yMdgRJnQ+sQLGmx99OYfTTa9g4ol
+         R07ztYhEMFNxBeAXTkyxZdDIwY7AtZJ+0v6r4WYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lingling Xu <ling_ling.xu@unisoc.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 211/215] spi: sprd: switch the sequence of setting WDG_LOAD_LOW and _HIGH
-Date:   Mon, 20 Jul 2020 17:38:13 +0200
-Message-Id: <20200720152830.185982858@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 5.4 213/215] iommu/vt-d: Make Intel SVM code 64-bit only
+Date:   Mon, 20 Jul 2020 17:38:15 +0200
+Message-Id: <20200720152830.278952493@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -60,36 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lingling Xu <ling_ling.xu@unisoc.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-commit 8bdd79dae1ff5397351b95e249abcae126572617 upstream.
+commit 9486727f5981a5ec5c0b699fb1777451bd6786e4 upstream.
 
-The watchdog counter consists of WDG_LOAD_LOW and WDG_LOAD_HIGH,
-which would be loaded to watchdog counter once writing WDG_LOAD_LOW.
+Current Intel SVM is designed by setting the pgd_t of the processor page
+table to FLPTR field of the PASID entry. The first level translation only
+supports 4 and 5 level paging structures, hence it's infeasible for the
+IOMMU to share a processor's page table when it's running in 32-bit mode.
+Let's disable 32bit support for now and claim support only when all the
+missing pieces are ready in the future.
 
-Fixes: ac1775012058 ("spi: sprd: Add the support of restarting the system")
-Signed-off-by: Lingling Xu <ling_ling.xu@unisoc.com>
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Link: https://lore.kernel.org/r/20200602082415.5848-1-zhang.lyra@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 1c4f88b7f1f92 ("iommu/vt-d: Shared virtual address in scalable mode")
+Suggested-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Link: https://lore.kernel.org/r/20200622231345.29722-2-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-sprd-adi.c |    2 +-
+ drivers/iommu/Kconfig |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/spi/spi-sprd-adi.c
-+++ b/drivers/spi/spi-sprd-adi.c
-@@ -384,9 +384,9 @@ static int sprd_adi_restart_handler(stru
- 	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOCK, WDG_UNLOCK_KEY);
+--- a/drivers/iommu/Kconfig
++++ b/drivers/iommu/Kconfig
+@@ -205,7 +205,7 @@ config INTEL_IOMMU_DEBUGFS
  
- 	/* Load the watchdog timeout value, 50ms is always enough. */
-+	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOAD_HIGH, 0);
- 	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOAD_LOW,
- 		       WDG_LOAD_VAL & WDG_LOAD_MASK);
--	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOAD_HIGH, 0);
- 
- 	/* Start the watchdog to reset system */
- 	sprd_adi_read(sadi, sadi->slave_pbase + REG_WDG_CTRL, &val);
+ config INTEL_IOMMU_SVM
+ 	bool "Support for Shared Virtual Memory with Intel IOMMU"
+-	depends on INTEL_IOMMU && X86
++	depends on INTEL_IOMMU && X86_64
+ 	select PCI_PASID
+ 	select MMU_NOTIFIER
+ 	help
 
 
