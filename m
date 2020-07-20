@@ -2,112 +2,88 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93423C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D692C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68D0E206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D42AA206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ViLLZSgT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zaXxxhUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbgGTPqA (ORCPT
+        id S2389071AbgGTQlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:46:00 -0400
-Received: from crapouillou.net ([89.234.176.41]:53584 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730587AbgGTPp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:45:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1595259953; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=MYfSK0uCqzVeDm3Bgtm0aTqhsB8rtuNFCVEW421QRKw=;
-        b=ViLLZSgTdkS7MmHwzrvODyCaxPA9gXgb9Yz0MAjOzBpVUXU4ZKq6EVhy8BNdiZi4i6xLLv
-        4B+faPF+EAaMOHMiUqIOrceGjTMtUW/VDLNE0dwb2Dd/69Pyy+0B7rJEck3sd1AGdcYzgu
-        FkfhtUUlHZ3wQ/VkHhHA22M0j+8S1Jw=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     od@zcrc.me, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2] dt-bindings: ingenic,pinctrl: Support pinmux/pinconf nodes
-Date:   Mon, 20 Jul 2020 17:45:48 +0200
-Message-Id: <20200720154548.12453-1-paul@crapouillou.net>
+        Mon, 20 Jul 2020 12:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731196AbgGTQlR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:41:17 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBFE2C061794;
+        Mon, 20 Jul 2020 09:41:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=vIy+LTW5jYYBV4hfqVnhhtl8us5VhtAtJu0nO6I1cmE=; b=zaXxxhUwzfepAs+QKhex2X36fE
+        DuGzdqN4ZfvkT7AKp2dhrmQcXq3vupumdc9035lGjEKd5Go59nUEwulRTxU8Trpb/Ex3nsuM2YqRV
+        D4I5n7Dn2fB5WtStJHI3ygoGBDaJ4OkixvGAC49N6P/2HqrpJnIQiqfzUBDxTauDaNA7JR7QsRkFs
+        ntz+Lasmq+m+5tdKvnM5Ill/Tzzu4mroMqdF0sqp9EWd27QCQqkaGa4bsWrwJXLk+g0vAFME87GWW
+        KkVHf6BzkLee7//0dkWecbqpW92OMBV1MC39ZmdYB0dCq/nq/hk3r5VxQMe3y/9ag4u5zbyyZcLwH
+        ke/1Zf/g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxYqn-0005vn-4l; Mon, 20 Jul 2020 16:41:13 +0000
+Subject: Re: linux-next: Tree for Jul 20 (scsi/ufs/exynos)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        Santosh Yaraganavi <santosh.sy@samsung.com>,
+        Vinayak Holikatti <h.vinayak@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Seungwon Jeon <essuuj@gmail.com>
+References: <20200720194225.17de9962@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e6112633-61c9-fa80-8479-fe90bb360868@infradead.org>
+Date:   Mon, 20 Jul 2020 09:41:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200720194225.17de9962@canb.auug.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add YAML to describe the pinmux/pinconf sub-nodes of the pinctrl IP on
-Ingenic SoCs.
+On 7/20/20 2:42 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20200717:
+> 
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+on x86_64:
 
-Notes:
-    v2: Rebased on top of pinctrl/devel
+WARNING: unmet direct dependencies detected for PHY_SAMSUNG_UFS
+  Depends on [n]: OF [=n] && (ARCH_EXYNOS || COMPILE_TEST [=y])
+  Selected by [y]:
+  - SCSI_UFS_EXYNOS [=y] && SCSI_LOWLEVEL [=y] && SCSI [=y] && SCSI_UFSHCD_PLATFORM [=y] && (ARCH_EXYNOS || COMPILE_TEST [=y])
 
- .../bindings/pinctrl/ingenic,pinctrl.yaml     | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-index 5be2b1e95b36..18163fb69ce7 100644
---- a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-@@ -110,6 +110,46 @@ required:
-   - "#address-cells"
-   - "#size-cells"
- 
-+additionalProperties:
-+  anyOf:
-+    - type: object
-+      allOf:
-+        - $ref: pincfg-node.yaml#
-+        - $ref: pinmux-node.yaml#
-+
-+      properties:
-+        phandle: true
-+        function: true
-+        groups: true
-+        pins: true
-+        bias-disable: true
-+        bias-pull-up: true
-+        bias-pull-down: true
-+        output-low: true
-+        output-high: true
-+      additionalProperties: false
-+
-+    - type: object
-+      properties:
-+        phandle: true
-+      additionalProperties:
-+        type: object
-+        allOf:
-+          - $ref: pincfg-node.yaml#
-+          - $ref: pinmux-node.yaml#
-+
-+        properties:
-+          phandle: true
-+          function: true
-+          groups: true
-+          pins: true
-+          bias-disable: true
-+          bias-pull-up: true
-+          bias-pull-down: true
-+          output-low: true
-+          output-high: true
-+        additionalProperties: false
-+
- examples:
-   - |
-     pin-controller@10010000 {
+There are no build errors since <linux/of.h> provides stubs for
+functions when CONFIG_OF is not enabled.
+
+But new warnings are not OK.
+
+thanks.
 -- 
-2.27.0
-
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
