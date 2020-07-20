@@ -2,139 +2,232 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F85C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7211AC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F24B2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259699;
-	bh=6TvSZAHBNwIOER1p9mZeazrQSDICKsX8iOf9RBznyvI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VFYdXnDtRp7aFaHOSdBi2xvSQvL/gnpRkGejjYSJJZcY93G7op1SZAMXL+bGaF3D8
-	 LqBukT8mgPG124sLQRyJOnajGvnNDpVrHr4L4Y33dPOWHTEAYNCU1oI2FuSbXOMQ7q
-	 vlPU8A+uZc7BXnkL7KQk5AmKo9C0JRSgIrjbhAe4=
+	by mail.kernel.org (Postfix) with ESMTP id 4D9C722CB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SCZnW8q5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729201AbgGTPlh (ORCPT
+        id S1729198AbgGTPlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Jul 2020 11:41:42 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:31925 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729919AbgGTPlh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 11:41:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729910AbgGTPlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:41:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595259696; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=OYuqqUef1KwW3DsQkJI3pkFV+mJaMhN+unXY5vFLCwc=; b=SCZnW8q5AbVJLHO+fHS7FNZ/skR274L28sLnGKJmslOccglYp87qj6WrntK2XyuAJClln/Kp
+ V8RaNXldrrqJ5xo6uCY/vh8Dl2+mCmx6r27poGZaEqfWCJ1PIEGv5fuVwLz8buiF63n5CW70
+ urej+VezHdfMkOrW9XkcMXfe+EE=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
+ 5f15bb2f5b75bcda606a1994 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 15:41:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D346EC43456; Mon, 20 Jul 2020 15:41:31 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E4362064B;
-        Mon, 20 Jul 2020 15:41:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259692;
-        bh=6TvSZAHBNwIOER1p9mZeazrQSDICKsX8iOf9RBznyvI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pg7tdM2HIwnQuaBhFJnmOovFaSHeZaralRH/jbpShcDyEJr1N4x/OgRr6iI+WczIo
-         OUJx7pKhxDgL5YAIk0JJXm9ONKFYecf/qCoveACL09YBwy1G9phcRxPl7lkTbjRZ4t
-         FP6iwzVOlHw2gWXp4tn86GmZNYUxn+xf2udl4cG0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Andrew F. Davis" <afd@ti.com>, Stable@vger.kernel.org
-Subject: [PATCH 4.9 46/86] iio:health:afe4403 Fix timestamp alignment and prevent data leak.
-Date:   Mon, 20 Jul 2020 17:36:42 +0200
-Message-Id: <20200720152755.478243355@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
-References: <20200720152753.138974850@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 355A9C43455;
+        Mon, 20 Jul 2020 15:41:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 355A9C43455
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
+        iommu@lists.linux-foundation.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v10 11/13] drm/msm: Add support for private address space instances
+Date:   Mon, 20 Jul 2020 09:40:45 -0600
+Message-Id: <20200720154047.3611092-12-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200720154047.3611092-1-jcrouse@codeaurora.org>
+References: <20200720154047.3611092-1-jcrouse@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Add support for allocating private address space instances. Targets that
+support per-context pagetables should implement their own function to
+allocate private address spaces.
 
-commit 3f9c6d38797e9903937b007a341dad0c251765d6 upstream.
+The default will return a pointer to the global address space.
 
-One of a class of bugs pointed out by Lars in a recent review.
-iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
-to the size of the timestamp (8 bytes).  This is not guaranteed in
-this driver which uses a 32 byte array of smaller elements on the stack.
-As Lars also noted this anti pattern can involve a leak of data to
-userspace and that indeed can happen here.  We close both issues by
-moving to a suitable structure in the iio_priv() data with alignment
-explicitly requested.  This data is allocated with kzalloc so no
-data can leak appart from previous readings.
-
-Fixes: eec96d1e2d31 ("iio: health: Add driver for the TI AFE4403 heart monitor")
-Reported-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Andrew F. Davis <afd@ti.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
- drivers/iio/health/afe4403.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/drivers/iio/health/afe4403.c
-+++ b/drivers/iio/health/afe4403.c
-@@ -71,6 +71,7 @@ static const struct reg_field afe4403_re
-  * @regulator: Pointer to the regulator for the IC
-  * @trig: IIO trigger for this device
-  * @irq: ADC_RDY line interrupt number
-+ * @buffer: Used to construct data layout to push into IIO buffer.
-  */
- struct afe4403_data {
- 	struct device *dev;
-@@ -80,6 +81,8 @@ struct afe4403_data {
- 	struct regulator *regulator;
- 	struct iio_trigger *trig;
- 	int irq;
-+	/* Ensure suitable alignment for timestamp */
-+	s32 buffer[8] __aligned(8);
+ drivers/gpu/drm/msm/msm_drv.c     | 13 +++++++------
+ drivers/gpu/drm/msm/msm_drv.h     |  5 +++++
+ drivers/gpu/drm/msm/msm_gem_vma.c |  9 +++++++++
+ drivers/gpu/drm/msm/msm_gpu.c     | 17 +++++++++++++++++
+ drivers/gpu/drm/msm/msm_gpu.h     |  5 +++++
+ 5 files changed, 43 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 556198d4ba5f..c0328abea52d 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -603,7 +603,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
+ 	kref_init(&ctx->ref);
+ 	msm_submitqueue_init(dev, ctx);
+ 
+-	ctx->aspace = priv->gpu ? priv->gpu->aspace : NULL;
++	ctx->aspace = msm_gpu_create_private_address_space(priv->gpu);
+ 	file->driver_priv = ctx;
+ 
+ 	return 0;
+@@ -786,18 +786,19 @@ static int msm_ioctl_gem_cpu_fini(struct drm_device *dev, void *data,
+ }
+ 
+ static int msm_ioctl_gem_info_iova(struct drm_device *dev,
+-		struct drm_gem_object *obj, uint64_t *iova)
++		struct drm_file *file, struct drm_gem_object *obj,
++		uint64_t *iova)
+ {
+-	struct msm_drm_private *priv = dev->dev_private;
++	struct msm_file_private *ctx = file->driver_priv;
+ 
+-	if (!priv->gpu)
++	if (!ctx->aspace)
+ 		return -EINVAL;
+ 
+ 	/*
+ 	 * Don't pin the memory here - just get an address so that userspace can
+ 	 * be productive
+ 	 */
+-	return msm_gem_get_iova(obj, priv->gpu->aspace, iova);
++	return msm_gem_get_iova(obj, ctx->aspace, iova);
+ }
+ 
+ static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
+@@ -836,7 +837,7 @@ static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
+ 		args->value = msm_gem_mmap_offset(obj);
+ 		break;
+ 	case MSM_INFO_GET_IOVA:
+-		ret = msm_ioctl_gem_info_iova(dev, obj, &args->value);
++		ret = msm_ioctl_gem_info_iova(dev, file, obj, &args->value);
+ 		break;
+ 	case MSM_INFO_SET_NAME:
+ 		/* length check should leave room for terminating null: */
+diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+index ab5f77261816..df400f9ec38c 100644
+--- a/drivers/gpu/drm/msm/msm_drv.h
++++ b/drivers/gpu/drm/msm/msm_drv.h
+@@ -250,6 +250,10 @@ int msm_gem_map_vma(struct msm_gem_address_space *aspace,
+ void msm_gem_close_vma(struct msm_gem_address_space *aspace,
+ 		struct msm_gem_vma *vma);
+ 
++
++struct msm_gem_address_space *
++msm_gem_address_space_get(struct msm_gem_address_space *aspace);
++
+ void msm_gem_address_space_put(struct msm_gem_address_space *aspace);
+ 
+ struct msm_gem_address_space *
+@@ -435,6 +439,7 @@ static inline void msm_file_private_destroy(struct kref *kref)
+ 	struct msm_file_private *ctx = container_of(kref,
+ 		struct msm_file_private, ref);
+ 
++	msm_gem_address_space_put(ctx->aspace);
+ 	kfree(ctx);
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+index 5f6a11211b64..29cc1305cf37 100644
+--- a/drivers/gpu/drm/msm/msm_gem_vma.c
++++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+@@ -27,6 +27,15 @@ void msm_gem_address_space_put(struct msm_gem_address_space *aspace)
+ 		kref_put(&aspace->kref, msm_gem_address_space_destroy);
+ }
+ 
++struct msm_gem_address_space *
++msm_gem_address_space_get(struct msm_gem_address_space *aspace)
++{
++	if (!IS_ERR_OR_NULL(aspace))
++		kref_get(&aspace->kref);
++
++	return aspace;
++}
++
+ /* Actually unmap memory for the vma */
+ void msm_gem_purge_vma(struct msm_gem_address_space *aspace,
+ 		struct msm_gem_vma *vma)
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index a1f3da6550e5..aabbd7908ee5 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -823,6 +823,23 @@ static int get_clocks(struct platform_device *pdev, struct msm_gpu *gpu)
+ 	return 0;
+ }
+ 
++/* Return a new address space for a msm_drm_private instance */
++struct msm_gem_address_space *
++msm_gpu_create_private_address_space(struct msm_gpu *gpu)
++{
++	if (!gpu)
++		return NULL;
++
++	/*
++	 * If the target doesn't support private address spaces then return
++	 * the global one
++	 */
++	if (!gpu->funcs->create_private_address_space)
++		return msm_gem_address_space_get(gpu->aspace);
++
++	return gpu->funcs->create_private_address_space(gpu);
++}
++
+ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
+ 		const char *name, struct msm_gpu_config *config)
+diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+index d496d488222c..d298657b4730 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.h
++++ b/drivers/gpu/drm/msm/msm_gpu.h
+@@ -64,6 +64,8 @@ struct msm_gpu_funcs {
+ 	void (*gpu_set_freq)(struct msm_gpu *gpu, struct dev_pm_opp *opp);
+ 	struct msm_gem_address_space *(*create_address_space)
+ 		(struct msm_gpu *gpu, struct platform_device *pdev);
++	struct msm_gem_address_space *(*create_private_address_space)
++		(struct msm_gpu *gpu);
  };
  
- enum afe4403_chan_id {
-@@ -318,7 +321,6 @@ static irqreturn_t afe4403_trigger_handl
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct afe4403_data *afe = iio_priv(indio_dev);
- 	int ret, bit, i = 0;
--	s32 buffer[8];
- 	u8 tx[4] = {AFE440X_CONTROL0, 0x0, 0x0, AFE440X_CONTROL0_READ};
- 	u8 rx[3];
+ struct msm_gpu {
+@@ -286,6 +288,9 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
+ 		const char *name, struct msm_gpu_config *config);
  
-@@ -335,9 +337,9 @@ static irqreturn_t afe4403_trigger_handl
- 		if (ret)
- 			goto err;
++struct msm_gem_address_space *
++msm_gpu_create_private_address_space(struct msm_gpu *gpu);
++
+ void msm_gpu_cleanup(struct msm_gpu *gpu);
  
--		buffer[i++] = (rx[0] << 16) |
--				(rx[1] << 8) |
--				(rx[2]);
-+		afe->buffer[i++] = (rx[0] << 16) |
-+				   (rx[1] << 8) |
-+				   (rx[2]);
- 	}
- 
- 	/* Disable reading from the device */
-@@ -346,7 +348,8 @@ static irqreturn_t afe4403_trigger_handl
- 	if (ret)
- 		goto err;
- 
--	iio_push_to_buffers_with_timestamp(indio_dev, buffer, pf->timestamp);
-+	iio_push_to_buffers_with_timestamp(indio_dev, afe->buffer,
-+					   pf->timestamp);
- err:
- 	iio_trigger_notify_done(indio_dev->trig);
- 
-
+ struct msm_gpu *adreno_load_gpu(struct drm_device *dev);
+-- 
+2.25.1
 
