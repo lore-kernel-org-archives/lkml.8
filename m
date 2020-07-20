@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6BFC43446
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D29C433FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6DB620717
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 943CB20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281219;
-	bh=1DC36zulnrTR4UQVCUR7JDdTyotCWqbHbyfSEQjISsM=;
+	s=default; t=1595281210;
+	bh=eD4zAKWlWfvLrHL1FEoXL3TH2eqc9KqDLJjKPzym2uQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dkuR9QKNf/iKl1FRs7qb7fjLC8M1lsDvMtn2+o69pU3Bp1zdVrhIQlqfAg69MvXOt
-	 SBWJB4+gsvWMeXJfWjIRGOb6F8bYOOSE2dAX3QWDfB/z1r+A0F+oxDP4lQuMWEFogG
-	 qqOnFGbZD5BfKJDw3291vouzAE8oM8Y6GqwPmeqs=
+	b=Z+wzr2Ou7daFyl/dxiOM4x15etC+Ig6PrTgU8jD17f4INNlUCV05z45t0icoPLJ5X
+	 1vrNhnWx90bXH4CeRrH+6dQ7dx6HRuTCDpNZtH0H+pu/tIwPlqF+LSqZ1qkBavrzGf
+	 2zcGfNblyC4FCqwyRyT5NJJmxX5zSUALZdByyeqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbgGTVkS (ORCPT
+        id S1727820AbgGTVkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:40:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59650 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726982AbgGTVjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:42 -0400
+        id S1728483AbgGTVjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D6B522CAF;
-        Mon, 20 Jul 2020 21:39:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AED9922CF7;
+        Mon, 20 Jul 2020 21:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281182;
-        bh=1DC36zulnrTR4UQVCUR7JDdTyotCWqbHbyfSEQjISsM=;
+        s=default; t=1595281171;
+        bh=eD4zAKWlWfvLrHL1FEoXL3TH2eqc9KqDLJjKPzym2uQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FyiL24pVHO9n0/PEHifUZIeK2pZo3hqUXPegL9J/yuP0m6WaXv1oeUwiY1wsbpRnW
-         0epA1JBYWTk3c4o4wt2PGePJ8eMRi4zSvTj5zK93YyVzTPXeZ76+xFMlcjF72KYO7c
-         A//91WKvTfgsfeeNm/+pSO7D6GRRGCeBEKynBgD4=
+        b=TItpyXPII3ZKip6OZIsdVkAR5KBAKOMB+qs7CphCESLZNAOSQV+eiSeBM8ieSIS+W
+         bPuJzFYByn7KOmbRATHlE3Pfv9HCJav8GGaiA1M4jdNdQkzlczf3g69BkdhyGbXqKf
+         WRlujLNmDxbn8C6Rg/GToTeBagU3j7STMhX3Cju8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 8/9] x86: math-emu: Fix up 'cmp' insn for clang ias
-Date:   Mon, 20 Jul 2020 17:39:31 -0400
-Message-Id: <20200720213932.408089-8-sashal@kernel.org>
+Cc:     Olga Kornievskaia <kolga@netapp.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 13/13] SUNRPC reverting d03727b248d0 ("NFSv4 fix CLOSE not waiting for direct IO compeletion")
+Date:   Mon, 20 Jul 2020 17:39:14 -0400
+Message-Id: <20200720213914.407919-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213932.408089-1-sashal@kernel.org>
-References: <20200720213932.408089-1-sashal@kernel.org>
+In-Reply-To: <20200720213914.407919-1-sashal@kernel.org>
+References: <20200720213914.407919-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,41 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-[ Upstream commit 81e96851ea32deb2c921c870eecabf335f598aeb ]
+[ Upstream commit 65caafd0d2145d1dd02072c4ced540624daeab40 ]
 
-The clang integrated assembler requires the 'cmp' instruction to
-have a length prefix here:
+Reverting commit d03727b248d0 "NFSv4 fix CLOSE not waiting for
+direct IO compeletion". This patch made it so that fput() by calling
+inode_dio_done() in nfs_file_release() would wait uninterruptably
+for any outstanding directIO to the file (but that wait on IO should
+be killable).
 
-arch/x86/math-emu/wm_sqrt.S:212:2: error: ambiguous instructions require an explicit suffix (could be 'cmpb', 'cmpw', or 'cmpl')
- cmp $0xffffffff,-24(%ebp)
- ^
+The problem the patch was also trying to address was REMOVE returning
+ERR_ACCESS because the file is still opened, is supposed to be resolved
+by server returning ERR_FILE_OPEN and not ERR_ACCESS.
 
-Make this a 32-bit comparison, which it was clearly meant to be.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lkml.kernel.org/r/20200527135352.1198078-1-arnd@arndb.de
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/math-emu/wm_sqrt.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/direct.c | 13 ++++---------
+ fs/nfs/file.c   |  1 -
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/math-emu/wm_sqrt.S b/arch/x86/math-emu/wm_sqrt.S
-index d258f59564e11..3b40c98bbbd40 100644
---- a/arch/x86/math-emu/wm_sqrt.S
-+++ b/arch/x86/math-emu/wm_sqrt.S
-@@ -208,7 +208,7 @@ sqrt_stage_2_finish:
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 3cef33b0f7e08..e6ea4511c41ce 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -396,6 +396,8 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+ {
+ 	struct inode *inode = dreq->inode;
  
- #ifdef PARANOID
- /* It should be possible to get here only if the arg is ffff....ffff */
--	cmp	$0xffffffff,FPU_fsqrt_arg_1
-+	cmpl	$0xffffffff,FPU_fsqrt_arg_1
- 	jnz	sqrt_stage_2_error
- #endif /* PARANOID */
++	inode_dio_end(inode);
++
+ 	if (dreq->iocb) {
+ 		long res = (long) dreq->error;
+ 		if (dreq->count != 0) {
+@@ -407,10 +409,7 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
  
+ 	complete(&dreq->completion);
+ 
+-	igrab(inode);
+ 	nfs_direct_req_release(dreq);
+-	inode_dio_end(inode);
+-	iput(inode);
+ }
+ 
+ static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
+@@ -540,10 +539,8 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		igrab(inode);
+-		nfs_direct_req_release(dreq);
+ 		inode_dio_end(inode);
+-		iput(inode);
++		nfs_direct_req_release(dreq);
+ 		return result < 0 ? result : -EIO;
+ 	}
+ 
+@@ -960,10 +957,8 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		igrab(inode);
+-		nfs_direct_req_release(dreq);
+ 		inode_dio_end(inode);
+-		iput(inode);
++		nfs_direct_req_release(dreq);
+ 		return result < 0 ? result : -EIO;
+ 	}
+ 
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 7da2cea1e7a06..81cca49a83750 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -82,7 +82,6 @@ nfs_file_release(struct inode *inode, struct file *filp)
+ 	dprintk("NFS: release(%pD2)\n", filp);
+ 
+ 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
+-	inode_dio_wait(inode);
+ 	nfs_file_clear_open_context(filp);
+ 	return 0;
+ }
 -- 
 2.25.1
 
