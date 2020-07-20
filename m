@@ -2,53 +2,50 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2E5C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F792C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD0A206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3172B2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261533;
-	bh=WWdC/8JRDZCpZNHg7v589mBckIuYNk/cwpy8NeYCGjI=;
+	s=default; t=1595261535;
+	bh=a5p/PGrgE3LfAzXMjOdE76SDBJjokvE6/Vgf84gvCjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Br02DHvwR4gxm28lYeKYxCHc9HJk/Okw7zeR67JRP8YOa5WUm97mj4cUlCHJL9LoG
-	 +ycqbL1sHGFb+3Aaw+BgCVkrfJARJroPjPBfz+JsuBwmpdkIVuwprfqhoSpO23VhFt
-	 1nJOTg+aAEnHfvz65B437u0+cueoI6LUjats9jN4=
+	b=VmkQ+nqle3s9gEP3/clTfx+1O2ErOfhV0gld333BOepnhsRddkQWuPJIFUAu+cbYS
+	 t0w88oXQanWOnjEzyA7a6cLTl5ui8H4msHNzeGa1dU+7l0bP4+kkYAkcDcG6lit9nQ
+	 FTY6Hie96EOCpvQuApyshHtEqlMRRYPRJtURLJ5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733137AbgGTQMM (ORCPT
+        id S2387926AbgGTQMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:12:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51362 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:12:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387889AbgGTQMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:12:00 -0400
+        id S2387499AbgGTQMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:12:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37EBF2064B;
-        Mon, 20 Jul 2020 16:11:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9CC82065E;
+        Mon, 20 Jul 2020 16:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261519;
-        bh=WWdC/8JRDZCpZNHg7v589mBckIuYNk/cwpy8NeYCGjI=;
+        s=default; t=1595261525;
+        bh=a5p/PGrgE3LfAzXMjOdE76SDBJjokvE6/Vgf84gvCjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a8o0bm9ZNd27kh6OW8NzVNlBKBAHjjqBLObavN/4DXTTNn+kYtDD/w/LX8In1mkMo
-         RlId9siPFlJ61LQnrm3TZOp2qzxiFVzRHQk1l3QUGNO+UMxFhA/aJ4KFI1/0OepR+Q
-         +yWAAZBFjASQXKD3fnkcPmk76a+NYqBBD+WhPTXA=
+        b=o23GEvEdedyfY48MnI/rmOEa8F+GtNELW783EXjHRzRcBytMskmrfruvLoPf3eTjw
+         gNXBt+AjaKWd1eObIH3NxlE3b0W0DwtuwzAVLOuEDwlSpcjSK77yU/tZDgtRrRaAiJ
+         AlXTIfmuAzUuwNAYMlVRBN3fKvKImNO79vtWrTNs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 114/244] keys: asymmetric: fix error return code in software_key_query()
-Date:   Mon, 20 Jul 2020 17:36:25 +0200
-Message-Id: <20200720152831.265834535@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.7 140/244] mtd: rawnand: oxnas: Keep track of registered devices
+Date:   Mon, 20 Jul 2020 17:36:51 +0200
+Message-Id: <20200720152832.508993328@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -61,36 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 6cbba1f9114a8134cff9138c79add15012fd52b9 ]
+commit 383fc3f613e7eac9f2e3c13b6f9fb8c1f39cb9d5 upstream.
 
-Fix to return negative error code -ENOMEM from kmalloc() error handling
-case instead of 0, as done elsewhere in this function.
+All initialized and registered devices should be listed somewhere so
+that we can unregister/free them in the _remove() path.
 
-Fixes: f1774cb8956a ("X.509: parse public key parameters from x509 for akcipher")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch is not a fix per-se but is needed to apply three other
+fixes coming right after, explaining the Fixes/Cc: stable tags.
+
+Fixes: 668592492409 ("mtd: nand: Add OX820 NAND Support")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-36-miquel.raynal@bootlin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- crypto/asymmetric_keys/public_key.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mtd/nand/raw/oxnas_nand.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys/public_key.c
-index d7f43d4ea925a..e5fae4e838c06 100644
---- a/crypto/asymmetric_keys/public_key.c
-+++ b/crypto/asymmetric_keys/public_key.c
-@@ -119,6 +119,7 @@ static int software_key_query(const struct kernel_pkey_params *params,
- 	if (IS_ERR(tfm))
- 		return PTR_ERR(tfm);
+--- a/drivers/mtd/nand/raw/oxnas_nand.c
++++ b/drivers/mtd/nand/raw/oxnas_nand.c
+@@ -32,6 +32,7 @@ struct oxnas_nand_ctrl {
+ 	void __iomem *io_base;
+ 	struct clk *clk;
+ 	struct nand_chip *chips[OXNAS_NAND_MAX_CHIPS];
++	unsigned int nchips;
+ };
  
-+	ret = -ENOMEM;
- 	key = kmalloc(pkey->keylen + sizeof(u32) * 2 + pkey->paramlen,
- 		      GFP_KERNEL);
- 	if (!key)
--- 
-2.25.1
-
+ static uint8_t oxnas_nand_read_byte(struct nand_chip *chip)
+@@ -79,7 +80,6 @@ static int oxnas_nand_probe(struct platf
+ 	struct nand_chip *chip;
+ 	struct mtd_info *mtd;
+ 	struct resource *res;
+-	int nchips = 0;
+ 	int count = 0;
+ 	int err = 0;
+ 
+@@ -143,12 +143,12 @@ static int oxnas_nand_probe(struct platf
+ 		if (err)
+ 			goto err_cleanup_nand;
+ 
+-		oxnas->chips[nchips] = chip;
+-		++nchips;
++		oxnas->chips[oxnas->nchips] = chip;
++		++oxnas->nchips;
+ 	}
+ 
+ 	/* Exit if no chips found */
+-	if (!nchips) {
++	if (!oxnas->nchips) {
+ 		err = -ENODEV;
+ 		goto err_clk_unprepare;
+ 	}
 
 
