@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC91BC433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5C1C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7C7822CB2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0FB22CB2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259464;
-	bh=E08lDlh6V93dEvsOrYKLRfVWmdjojdaKLl2b2tVs94U=;
+	s=default; t=1595259468;
+	bh=WD4szfGsYOlw8JUiQhg/Iv/Jl4Tx01ZNDNwxWsdJSjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fWRycgp1rCnY+aMl+a7AJ+pkYH7gg9kdG4kg9Fej0nRU7ekgaOHYmFWj6Jv2N/rNG
-	 sMINurVk4FOLhTZEkeKKlBE2So5/iQd7n58cU9xZ2+hpqxXM3kwsQAgUZIe5p7+bsI
-	 9gHps9Mc8O0GKuodit86b5wuDRjEaYCAnh7O588M=
+	b=xxXo5QZ7pIh1Ye2bL8ULQpTehqq16xluTTRXM4lULQVoHby3jViV0PB6wfuxeQ4fy
+	 mfjeKM1SVEHYiaBHk3Nxux6i9IUYB2/xK56gUr4GYtO6a0gy/8lEP83MFs3Q93If7r
+	 E1h1avESAeOjRsHmIrRXeQjBuInOrSfrVjHk/960=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgGTPhn (ORCPT
+        id S1728940AbgGTPhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:37:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55802 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:37:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgGTPhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:37:36 -0400
+        id S1726046AbgGTPho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:37:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6318F22CB2;
-        Mon, 20 Jul 2020 15:37:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51A3622CB3;
+        Mon, 20 Jul 2020 15:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259456;
-        bh=E08lDlh6V93dEvsOrYKLRfVWmdjojdaKLl2b2tVs94U=;
+        s=default; t=1595259463;
+        bh=WD4szfGsYOlw8JUiQhg/Iv/Jl4Tx01ZNDNwxWsdJSjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=peSmDfjOsZ+hdzVi4xWMP1mmeVFHng8zjG3DB3r9WzuNW1FPkF2Q+vJDpiG1Z4z9Z
-         wVrrqDqSCeUdEo3E6dvBbYlPdjyRnKqUoaru4zc7S8TqsrAX1Reix94vBxsMsOTiCo
-         kTYZYCEJWsXoWXctZwpDu7qMcfBDn2UWpmC5dDHY=
+        b=SgygmHsAtkZbGNHNzxmwZK2RqpqN8CvF3gED7i8LG+/R4Zb5h3HX3Hzj6Km6uJgOM
+         mZRnOZb0+Llk5YqxLA7yIxc9fQ8QmExmFj4gjbuscF7g/HbyPPr2YzRJRXDNgeZ4Ok
+         IA+YD2i/o4VTEf6Tk90H8ltmaCd2FGdC7MLs0KHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Qiujun Huang <hqjagain@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.4 14/58] Revert "ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb"
-Date:   Mon, 20 Jul 2020 17:36:30 +0200
-Message-Id: <20200720152747.854506724@linuxfoundation.org>
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.4 17/58] ARC: entry: fix potential EFA clobber when TIF_SYSCALL_TRACE
+Date:   Mon, 20 Jul 2020 17:36:33 +0200
+Message-Id: <20200720152747.997581868@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
 References: <20200720152747.127988571@linuxfoundation.org>
@@ -60,184 +58,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Vineet Gupta <vgupta@synopsys.com>
 
-This reverts commit 90ecba9f1041f436ed2b35ba7a970c7cc5d0df23 which is
-commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
+commit 00fdec98d9881bf5173af09aebd353ab3b9ac729 upstream.
 
-It is being reverted upstream, just hasn't made it there yet and is
-causing lots of problems.
+Trap handler for syscall tracing reads EFA (Exception Fault Address),
+in case strace wants PC of trap instruction (EFA is not part of pt_regs
+as of current code).
 
-Reported-by: Hans de Goede <hdegoede@redhat.com>
-Cc: Qiujun Huang <hqjagain@gmail.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
+However this EFA read is racy as it happens after dropping to pure
+kernel mode (re-enabling interrupts). A taken interrupt could
+context-switch, trigger a different task's trap, clobbering EFA for this
+execution context.
+
+Fix this by reading EFA early, before re-enabling interrupts. A slight
+side benefit is de-duplication of FAKE_RET_FROM_EXCPN in trap handler.
+The trap handler is common to both ARCompact and ARCv2 builds too.
+
+This just came out of code rework/review and no real problem was reported
+but is clearly a potential problem specially for strace.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/wireless/ath/ath9k/hif_usb.c |   48 +++++++------------------------
- drivers/net/wireless/ath/ath9k/hif_usb.h |    5 ---
- 2 files changed, 11 insertions(+), 42 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -639,9 +639,9 @@ err:
+---
+ arch/arc/kernel/entry.S |   16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
+
+--- a/arch/arc/kernel/entry.S
++++ b/arch/arc/kernel/entry.S
+@@ -168,7 +168,6 @@ END(EV_Extension)
+ tracesys:
+ 	; save EFA in case tracer wants the PC of traced task
+ 	; using ERET won't work since next-PC has already committed
+-	lr  r12, [efa]
+ 	GET_CURR_TASK_FIELD_PTR   TASK_THREAD, r11
+ 	st  r12, [r11, THREAD_FAULT_ADDR]	; thread.fault_address
  
- static void ath9k_hif_usb_rx_cb(struct urb *urb)
- {
--	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
--	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
--	struct sk_buff *skb = rx_buf->skb;
-+	struct sk_buff *skb = (struct sk_buff *) urb->context;
-+	struct hif_device_usb *hif_dev =
-+		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
- 	int ret;
- 
- 	if (!skb)
-@@ -681,15 +681,14 @@ resubmit:
- 	return;
- free:
- 	kfree_skb(skb);
--	kfree(rx_buf);
- }
- 
- static void ath9k_hif_usb_reg_in_cb(struct urb *urb)
- {
--	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
--	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
--	struct sk_buff *skb = rx_buf->skb;
-+	struct sk_buff *skb = (struct sk_buff *) urb->context;
- 	struct sk_buff *nskb;
-+	struct hif_device_usb *hif_dev =
-+		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
- 	int ret;
- 
- 	if (!skb)
-@@ -747,7 +746,6 @@ resubmit:
- 	return;
- free:
- 	kfree_skb(skb);
--	kfree(rx_buf);
- 	urb->context = NULL;
- }
- 
-@@ -793,7 +791,7 @@ static int ath9k_hif_usb_alloc_tx_urbs(s
- 	init_usb_anchor(&hif_dev->mgmt_submitted);
- 
- 	for (i = 0; i < MAX_TX_URB_NUM; i++) {
--		tx_buf = kzalloc(sizeof(*tx_buf), GFP_KERNEL);
-+		tx_buf = kzalloc(sizeof(struct tx_buf), GFP_KERNEL);
- 		if (!tx_buf)
- 			goto err;
- 
-@@ -830,9 +828,8 @@ static void ath9k_hif_usb_dealloc_rx_urb
- 
- static int ath9k_hif_usb_alloc_rx_urbs(struct hif_device_usb *hif_dev)
- {
--	struct rx_buf *rx_buf = NULL;
--	struct sk_buff *skb = NULL;
- 	struct urb *urb = NULL;
-+	struct sk_buff *skb = NULL;
- 	int i, ret;
- 
- 	init_usb_anchor(&hif_dev->rx_submitted);
-@@ -840,12 +837,6 @@ static int ath9k_hif_usb_alloc_rx_urbs(s
- 
- 	for (i = 0; i < MAX_RX_URB_NUM; i++) {
- 
--		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
--		if (!rx_buf) {
--			ret = -ENOMEM;
--			goto err_rxb;
--		}
+@@ -211,15 +210,9 @@ tracesys_exit:
+ ; Breakpoint TRAP
+ ; ---------------------------------------------
+ trap_with_param:
 -
- 		/* Allocate URB */
- 		urb = usb_alloc_urb(0, GFP_KERNEL);
- 		if (urb == NULL) {
-@@ -860,14 +851,11 @@ static int ath9k_hif_usb_alloc_rx_urbs(s
- 			goto err_skb;
- 		}
+-	; stop_pc info by gdb needs this info
+-	lr  r0, [efa]
++	mov r0, r12	; EFA in case ptracer/gdb wants stop_pc
+ 	mov r1, sp
  
--		rx_buf->hif_dev = hif_dev;
--		rx_buf->skb = skb;
+-	; Now that we have read EFA, it is safe to do "fake" rtie
+-	;   and get out of CPU exception mode
+-	FAKE_RET_FROM_EXCPN
 -
- 		usb_fill_bulk_urb(urb, hif_dev->udev,
- 				  usb_rcvbulkpipe(hif_dev->udev,
- 						  USB_WLAN_RX_PIPE),
- 				  skb->data, MAX_RX_BUF_SIZE,
--				  ath9k_hif_usb_rx_cb, rx_buf);
-+				  ath9k_hif_usb_rx_cb, skb);
+ 	; Save callee regs in case gdb wants to have a look
+ 	; SP will grow up by size of CALLEE Reg-File
+ 	; NOTE: clobbers r12
+@@ -246,6 +239,10 @@ ENTRY(EV_Trap)
  
- 		/* Anchor URB */
- 		usb_anchor_urb(urb, &hif_dev->rx_submitted);
-@@ -893,8 +881,6 @@ err_submit:
- err_skb:
- 	usb_free_urb(urb);
- err_urb:
--	kfree(rx_buf);
--err_rxb:
- 	ath9k_hif_usb_dealloc_rx_urbs(hif_dev);
- 	return ret;
- }
-@@ -906,21 +892,14 @@ static void ath9k_hif_usb_dealloc_reg_in
+ 	EXCEPTION_PROLOGUE
  
- static int ath9k_hif_usb_alloc_reg_in_urbs(struct hif_device_usb *hif_dev)
- {
--	struct rx_buf *rx_buf = NULL;
--	struct sk_buff *skb = NULL;
- 	struct urb *urb = NULL;
-+	struct sk_buff *skb = NULL;
- 	int i, ret;
++	lr  r12, [efa]
++
++	FAKE_RET_FROM_EXCPN
++
+ 	;============ TRAP 1   :breakpoints
+ 	; Check ECR for trap with arg (PROLOGUE ensures r9 has ECR)
+ 	bmsk.f 0, r9, 7
+@@ -253,9 +250,6 @@ ENTRY(EV_Trap)
  
- 	init_usb_anchor(&hif_dev->reg_in_submitted);
+ 	;============ TRAP  (no param): syscall top level
  
- 	for (i = 0; i < MAX_REG_IN_URB_NUM; i++) {
- 
--		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
--		if (!rx_buf) {
--			ret = -ENOMEM;
--			goto err_rxb;
--		}
+-	; First return from Exception to pure K mode (Exception/IRQs renabled)
+-	FAKE_RET_FROM_EXCPN
 -
- 		/* Allocate URB */
- 		urb = usb_alloc_urb(0, GFP_KERNEL);
- 		if (urb == NULL) {
-@@ -935,14 +914,11 @@ static int ath9k_hif_usb_alloc_reg_in_ur
- 			goto err_skb;
- 		}
- 
--		rx_buf->hif_dev = hif_dev;
--		rx_buf->skb = skb;
--
- 		usb_fill_int_urb(urb, hif_dev->udev,
- 				  usb_rcvintpipe(hif_dev->udev,
- 						  USB_REG_IN_PIPE),
- 				  skb->data, MAX_REG_IN_BUF_SIZE,
--				  ath9k_hif_usb_reg_in_cb, rx_buf, 1);
-+				  ath9k_hif_usb_reg_in_cb, skb, 1);
- 
- 		/* Anchor URB */
- 		usb_anchor_urb(urb, &hif_dev->reg_in_submitted);
-@@ -968,8 +944,6 @@ err_submit:
- err_skb:
- 	usb_free_urb(urb);
- err_urb:
--	kfree(rx_buf);
--err_rxb:
- 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
- 	return ret;
- }
---- a/drivers/net/wireless/ath/ath9k/hif_usb.h
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
-@@ -84,11 +84,6 @@ struct tx_buf {
- 	struct list_head list;
- };
- 
--struct rx_buf {
--	struct sk_buff *skb;
--	struct hif_device_usb *hif_dev;
--};
--
- #define HIF_USB_TX_STOP  BIT(0)
- #define HIF_USB_TX_FLUSH BIT(1)
- 
+ 	; If syscall tracing ongoing, invoke pre-post-hooks
+ 	GET_CURR_THR_INFO_FLAGS   r10
+ 	btst r10, TIF_SYSCALL_TRACE
 
 
