@@ -2,176 +2,86 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1FDC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBF4C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0190622C9D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1982068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:53:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RrNm2gxi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DfbfY0OC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgGTKtb (ORCPT
+        id S1728452AbgGTKxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 06:49:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50472 "EHLO
+        Mon, 20 Jul 2020 06:53:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728232AbgGTKta (ORCPT
+        with ESMTP id S1728348AbgGTKxI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 06:49:30 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65640C061794;
-        Mon, 20 Jul 2020 03:49:30 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id p25so8237431vsg.4;
-        Mon, 20 Jul 2020 03:49:30 -0700 (PDT)
+        Mon, 20 Jul 2020 06:53:08 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE20CC061794;
+        Mon, 20 Jul 2020 03:53:08 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id p3so10137845pgh.3;
+        Mon, 20 Jul 2020 03:53:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wY0dHi09vd294neiN4XqhltRnFObgHpOmPvIePnDyJM=;
-        b=RrNm2gxit1WQD7b8BvDuwQffEaYmpn/vOp/taHp46yvimJgrOfz3utD5aYhN8uC4rS
-         vauBkp0fwEf6gu5qAafT/vKfwzhmyO5A1y/1jsKTGP5YRpnuHom+2N78zHpetio6xwID
-         Go2lex9NktC9gL78KhMmvM7rzdStaXMnL18Q6xiAI8nwkAwlFHGvFg1a7KUoHNE9gOCp
-         7r8HWjaFftONV/lclo4aGwmp5jd6k7dYeBzRTsXzVjd7Lc4DkG03Cr2Pg35v7ibf9E4q
-         Uc84PeelRGufa/hIMHsQ1Mp6Dn3Zw+piIbCU+aUBqgYBkmHbzqh7bUTebMNhBI0VtTds
-         XPAw==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=0qEaLy0Hyr3SwuDgUAydri7YBfNLnnwpux/l1PMZrXs=;
+        b=DfbfY0OClpMHAFSaP+f9tqbmvr533JaX4bNcruO+IiubyumIIzF+ZR7evBBXjmuleh
+         R0y0HxshhdySi25YF8SHlPQj7zmSWAFkOKx8mRVYCtJyJKV0U8uGKQMDI+mM6CX2w5+4
+         anzvsNc8DC07lf+jLdDPHBl0IgiIuP7vuYGDkfIRY3kSaTCyPxv/1knuqiQlFm7rzisM
+         1mOuwxynMQKshI3u02qIbMOgyrLi2cQInAdG/nxy8kNET2ktdBZ0CRpK7HTLrisYD/Kt
+         Cmfl8sl+grmeBz3BLzBBu7xYzx1v0wgkdSQdeIZTua85gRztILnYxuw+ULo1+dIy+7Wk
+         E6jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wY0dHi09vd294neiN4XqhltRnFObgHpOmPvIePnDyJM=;
-        b=jSdHEOUf/bpTKrabIVaOE2LbbW0jcnkpjZOmbe7Z0Ql2nAsQn73R+UHXI0uG9a0pD1
-         SO+X8nXcYN0wJMjuXX6kwzH627E72cAkLD3ptSA9VJbf/8I8lMNXBZoskk3i/+oxrZxn
-         bBUzTUMTE0NSQHheYd4AeH+79469m3r5fYOTsVWUfv/3V6fh3DsUDmbQT/v5hMwr+ZZy
-         HuZVakTP0Uou3irtehyAGS/oGnzATcBPEFjTGaxmyLY1WUztQNPGTYMWqch8bD7Y4Yrh
-         kznvi8CuloqmlmkHnqNSTUCuAeX7pbHDw2aF2mFl29sQECyRq3LylXzhAzaSKxqKOzK/
-         UVeA==
-X-Gm-Message-State: AOAM532djGNSHRTBWhiuSoYUVtX5O7gtKX8ryR+kDWh6dUGcKh3cYkU8
-        04wBZtCVkwZUQhFvCW9i+o2Xh3Gc9Oj4vbHGRQi3F2kd
-X-Google-Smtp-Source: ABdhPJzy6/qnz/BhMCoMM7wOU6HD05HnbnXTb2JWl5+U3NV9DvoVnpkNcjUAX5xaOI2d8kWV7iuWh2hlJ2KL3XCSKCI=
-X-Received: by 2002:a67:ef1e:: with SMTP id j30mr14619614vsr.127.1595242169547;
- Mon, 20 Jul 2020 03:49:29 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=0qEaLy0Hyr3SwuDgUAydri7YBfNLnnwpux/l1PMZrXs=;
+        b=DHuSQonZ8vMoj6k7LqrTrgw9/zMjj6LM9ZbAYfFpzykwUe1wCi3CUsbuTAEvarhPGX
+         Nsvb8oDdfGagFCFqbUSvQimbuCWnhKNGheElM8T2V600Xdge+I61Onkb21vraShxffL/
+         6Bx5tx7tLv4hwL9lfybRGTgeSxvadmU/XuIoDSPP0pzG8sNxjTac3DHtxeQpPoZbKBNG
+         wRKXnF1S6WPk5YrDJtS1KKcCY/xyrlLBQK8ZaV/c8a7VAAo0nwWqTFWOikfhHIh4kGcs
+         jiQmbpL1glc0NviokDdY2UdVKnzRo1PG0G6lSEvuR1UxzHCBVFP3urqAd/FcgwB1Inrb
+         W7DQ==
+X-Gm-Message-State: AOAM532ijqrwstqvMeGYfEeW/1WcsLEXXXtcuDLuNOYbZiYTZU5pRNYm
+        HhG05RMoH/tZravFWyQkl8ncIgzkSLtCxZ4md19xdXyteas=
+X-Google-Smtp-Source: ABdhPJxSxfvZHSnPCHB3+sKTFypPPlKhNZB18FrBL+Aj0NR3DL6NzsvwlGecY4X4aL9KHFMgvGGlaG7WNOlk0joiKCQ=
+X-Received: by 2002:a65:6714:: with SMTP id u20mr18262640pgf.121.1595242387927;
+ Mon, 20 Jul 2020 03:53:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200622120229.89610-1-vaibhavgupta40@gmail.com>
-In-Reply-To: <20200622120229.89610-1-vaibhavgupta40@gmail.com>
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Date:   Mon, 20 Jul 2020 16:17:39 +0530
-Message-ID: <CAP+cEOMZsLhneqnvDwmWZ6ps8boANX_wvZXVaptDonOEoULqXA@mail.gmail.com>
-Subject: Re: [PATCH v1] [media] saa7134: use generic power management
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     linux-media@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
+From:   Feng Li <lifeng1519@gmail.com>
+Date:   Mon, 20 Jul 2020 18:52:37 +0800
+Message-ID: <CAEK8JBC+0deq-aYeq=xNsypRUkR1gZVpiHjuNjh6MugYSe42XA@mail.gmail.com>
+Subject: [Question] About IO timeout and hang
+To:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        linux-block <linux-block@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 5:36 PM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
->
-> With the support of generic PM callbacks, drivers no longer need to use
-> legacy .suspend() and .resume() in which they had to maintain PCI states
-> changes and device's power state themselves. The required operations are
-> done by PCI core.
->
-> Compile-tested only.
->
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> ---
->  drivers/media/pci/saa7134/saa7134-core.c | 25 ++++++++----------------
->  1 file changed, 8 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/media/pci/saa7134/saa7134-core.c b/drivers/media/pci/saa7134/saa7134-core.c
-> index e4623ed2f831..eb01109d4f98 100644
-> --- a/drivers/media/pci/saa7134/saa7134-core.c
-> +++ b/drivers/media/pci/saa7134/saa7134-core.c
-> @@ -1370,10 +1370,8 @@ static void saa7134_finidev(struct pci_dev *pci_dev)
->         kfree(dev);
->  }
->
-> -#ifdef CONFIG_PM
-> -
->  /* resends a current buffer in queue after resume */
-> -static int saa7134_buffer_requeue(struct saa7134_dev *dev,
-> +static int __maybe_unused saa7134_buffer_requeue(struct saa7134_dev *dev,
->                                   struct saa7134_dmaqueue *q)
->  {
->         struct saa7134_buf *buf, *next;
-> @@ -1397,8 +1395,9 @@ static int saa7134_buffer_requeue(struct saa7134_dev *dev,
->         return 0;
->  }
->
-> -static int saa7134_suspend(struct pci_dev *pci_dev , pm_message_t state)
-> +static int __maybe_unused saa7134_suspend(struct device *dev_d)
->  {
-> +       struct pci_dev *pci_dev = to_pci_dev(dev_d);
->         struct v4l2_device *v4l2_dev = pci_get_drvdata(pci_dev);
->         struct saa7134_dev *dev = container_of(v4l2_dev, struct saa7134_dev, v4l2_dev);
->
-> @@ -1428,21 +1427,15 @@ static int saa7134_suspend(struct pci_dev *pci_dev , pm_message_t state)
->         if (dev->remote && dev->remote->dev->users)
->                 saa7134_ir_close(dev->remote->dev);
->
-> -       pci_save_state(pci_dev);
-> -       pci_set_power_state(pci_dev, pci_choose_state(pci_dev, state));
-> -
->         return 0;
->  }
->
-> -static int saa7134_resume(struct pci_dev *pci_dev)
-> +static int __maybe_unused saa7134_resume(struct device *dev_d)
->  {
-> -       struct v4l2_device *v4l2_dev = pci_get_drvdata(pci_dev);
-> +       struct v4l2_device *v4l2_dev = dev_get_drvdata(dev_d);
->         struct saa7134_dev *dev = container_of(v4l2_dev, struct saa7134_dev, v4l2_dev);
->         unsigned long flags;
->
-> -       pci_set_power_state(pci_dev, PCI_D0);
-> -       pci_restore_state(pci_dev);
-> -
->         /* Do things that are done in saa7134_initdev ,
->                 except of initializing memory structures.*/
->
-> @@ -1490,7 +1483,6 @@ static int saa7134_resume(struct pci_dev *pci_dev)
->
->         return 0;
->  }
-> -#endif
->
->  /* ----------------------------------------------------------- */
->
-> @@ -1522,15 +1514,14 @@ EXPORT_SYMBOL(saa7134_ts_unregister);
->
->  /* ----------------------------------------------------------- */
->
-> +static SIMPLE_DEV_PM_OPS(saa7134_pm_ops, saa7134_suspend, saa7134_resume);
-> +
->  static struct pci_driver saa7134_pci_driver = {
->         .name     = "saa7134",
->         .id_table = saa7134_pci_tbl,
->         .probe    = saa7134_initdev,
->         .remove   = saa7134_finidev,
-> -#ifdef CONFIG_PM
-> -       .suspend  = saa7134_suspend,
-> -       .resume   = saa7134_resume
-> -#endif
-> +       .driver.pm = &saa7134_pm_ops,
->  };
->
->  static int __init saa7134_init(void)
-> --
-> 2.27.0
->
+Hi Experts,
+
+Consider accessing a "bad" disk, if the user process submits a
+'read/write' request to the kernel through libaio,
+and the kernel doesn't return the IO, because the underlay disk is
+bad, and IO is stuck for a long time.
+
+When the IO is a 'read', the user-space process has its own timeout
+policy, and find this IO has timeout-ed, then is it safe
+to free the io buffer before IO error return?
+If the user-space doesn't free the buffer and use this buffer as
+another read request, for example, read from another health disk,
+and if at this time the bad disk response the IO,
+will the buffer be corrupted by the before 'read' request?
+
+Could anyone help me clarify this concern?
+
+Thanks in advance.
