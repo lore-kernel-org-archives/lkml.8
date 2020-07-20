@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9672C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2434C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C843206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE5B206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261644;
-	bh=w/m3pAhGy9x6FcDstO1uELlCaPwaoR19eOYw8AEp/QY=;
+	s=default; t=1595261647;
+	bh=nVE878neXNLc8NO978AlruqasantbqYt4rNkgcCSQrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nn+0N80BhFtJ6yobq/X/PvwLiaZUPRGlL5giEjTBA1wglVU1uBKcUbY93DWgv5sGp
-	 TfD/0BCzKrZG7WM437QNkd9MkQobVwFSmRi9OfEMdHLqaa/6kv9ojxqyG7fFMmmlfz
-	 vovtP699qz6fBuanMUXx6gFlqQXq4tarr34LBU2U=
+	b=bvwF5pXcbDdvpUcqw5qsPwD5rhdfsMuCn+wrxw99p07490A75GqPtuLHNYDt1TIcn
+	 bq0M21nwPXm3KcrfeFnQdn/hP+O73cSnMJnhCnZTCzCKaR75IW0je3leTJl/5OMvUZ
+	 HrzKhxUgGqgFcmCQZmTmmrFrdPTLjjeOAYo1un8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387835AbgGTQOC (ORCPT
+        id S2388213AbgGTQOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:14:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54096 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:14:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388183AbgGTQNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:13:54 -0400
+        id S2388202AbgGTQOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:14:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ED2420734;
-        Mon, 20 Jul 2020 16:13:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B3792065E;
+        Mon, 20 Jul 2020 16:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261633;
-        bh=w/m3pAhGy9x6FcDstO1uELlCaPwaoR19eOYw8AEp/QY=;
+        s=default; t=1595261641;
+        bh=nVE878neXNLc8NO978AlruqasantbqYt4rNkgcCSQrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bZVZGkTQAesCG3GvDMchHkyL2SsG98RWLV1GD65doNMTrJTYE6V0mRtOZ9SdIBFqF
-         bk+i7F8Aeskd3+avzIoyz2y15x7bfFkK/mvBKc5Ztd7LKjsVAfT7ZJe+jasu5kkwXG
-         all8aFZoSY2V842DXUFnWD0p+6y7gPB0h1Dnsvt8=
+        b=ou7KWWJDYzTIkbpju5UeLc16H9wgkBaetQ+1DI/WlmerdKMxLX9bi+f4OywkLJumx
+         YcxFgysh2xkQefE2O9ST845LmHgAe7D20i58YxGBn0nSUWCxpNVCrhMdNhqluXD9ba
+         La/Hvmx91t9qzuXxBbHKAJtQUMPM5nTfjNDuQcdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harry Cutts <hcutts@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.7 187/244] Revert "Input: elants_i2c - report resolution information for touch major"
-Date:   Mon, 20 Jul 2020 17:37:38 +0200
-Message-Id: <20200720152834.737082423@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Leach <mike.leach@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 5.7 190/244] coresight: etmv4: Fix CPU power management setup in probe() function
+Date:   Mon, 20 Jul 2020 17:37:41 +0200
+Message-Id: <20200720152834.877483230@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,33 +59,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Mike Leach <mike.leach@linaro.org>
 
-commit 93b9de223c0135db495c25334e66cb669bef13e2 upstream.
+commit 9b6a3f3633a5cc928b78627764793b60cb62e0f6 upstream.
 
-This reverts commit 061706716384f1633d3d5090b22a99f33f1fcf2f - it turns
-out that the resolution of 1 unit per mm was not correct for a number of
-touch screens, causing touch sizes to be reported as way too large.
-See https://crbug.com/1085648
+The current probe() function calls a pair of cpuhp_xxx API functions to
+setup CPU hotplug handling. The hotplug lock is held for the duration of
+the two calls and other CPU related code using cpus_read_lock() /
+cpus_read_unlock() calls.
 
-Reported-by: Harry Cutts <hcutts@chromium.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+The problem is that on error states, goto: statements bypass the
+cpus_read_unlock() call. This code has increased in complexity as the
+driver has developed.
+
+This patch introduces a pair of helper functions etm4_pm_setup_cpuslocked()
+and etm4_pm_clear() which correct the issues above and group the PM code a
+little better.
+
+The two functions etm4_cpu_pm_register() and etm4_cpu_pm_unregister() are
+dropped as these call cpu_pm_register_notifier() / ..unregister_notifier()
+dependent on CONFIG_CPU_PM - but this define is used to nop these functions
+out in the pm headers - so the wrapper functions are superfluous.
+
+Fixes: f188b5e76aae ("coresight: etm4x: Save/restore state across CPU low power states")
+Fixes: e9f5d63f84fe ("hwtracing/coresight-etm4x: Use cpuhp_setup_state_nocalls_cpuslocked()")
+Fixes: 58eb457be028 ("hwtracing/coresight-etm4x: Convert to hotplug state machine")
+Signed-off-by: Mike Leach <mike.leach@linaro.org>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20200701160852.2782823-3-mathieu.poirier@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/touchscreen/elants_i2c.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/hwtracing/coresight/coresight-etm4x.c |   82 ++++++++++++++++----------
+ 1 file changed, 53 insertions(+), 29 deletions(-)
 
---- a/drivers/input/touchscreen/elants_i2c.c
-+++ b/drivers/input/touchscreen/elants_i2c.c
-@@ -1318,7 +1318,6 @@ static int elants_i2c_probe(struct i2c_c
- 			     0, MT_TOOL_PALM, 0, 0);
- 	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
- 	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
--	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -1399,18 +1399,57 @@ static struct notifier_block etm4_cpu_pm
+ 	.notifier_call = etm4_cpu_pm_notify,
+ };
  
- 	error = input_register_device(ts->input);
- 	if (error) {
+-static int etm4_cpu_pm_register(void)
++/* Setup PM. Called with cpus locked. Deals with error conditions and counts */
++static int etm4_pm_setup_cpuslocked(void)
+ {
+-	if (IS_ENABLED(CONFIG_CPU_PM))
+-		return cpu_pm_register_notifier(&etm4_cpu_pm_nb);
++	int ret;
+ 
+-	return 0;
++	if (etm4_count++)
++		return 0;
++
++	ret = cpu_pm_register_notifier(&etm4_cpu_pm_nb);
++	if (ret)
++		goto reduce_count;
++
++	ret = cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ARM_CORESIGHT_STARTING,
++						   "arm/coresight4:starting",
++						   etm4_starting_cpu, etm4_dying_cpu);
++
++	if (ret)
++		goto unregister_notifier;
++
++	ret = cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ONLINE_DYN,
++						   "arm/coresight4:online",
++						   etm4_online_cpu, NULL);
++
++	/* HP dyn state ID returned in ret on success */
++	if (ret > 0) {
++		hp_online = ret;
++		return 0;
++	}
++
++	/* failed dyn state - remove others */
++	cpuhp_remove_state_nocalls_cpuslocked(CPUHP_AP_ARM_CORESIGHT_STARTING);
++
++unregister_notifier:
++	cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
++
++reduce_count:
++	--etm4_count;
++	return ret;
+ }
+ 
+-static void etm4_cpu_pm_unregister(void)
++static void etm4_pm_clear(void)
+ {
+-	if (IS_ENABLED(CONFIG_CPU_PM))
+-		cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
++	if (--etm4_count != 0)
++		return;
++
++	cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
++	cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING);
++	if (hp_online) {
++		cpuhp_remove_state_nocalls(hp_online);
++		hp_online = 0;
++	}
+ }
+ 
+ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
+@@ -1464,24 +1503,15 @@ static int etm4_probe(struct amba_device
+ 				etm4_init_arch_data,  drvdata, 1))
+ 		dev_err(dev, "ETM arch init failed\n");
+ 
+-	if (!etm4_count++) {
+-		cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ARM_CORESIGHT_STARTING,
+-						     "arm/coresight4:starting",
+-						     etm4_starting_cpu, etm4_dying_cpu);
+-		ret = cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ONLINE_DYN,
+-							   "arm/coresight4:online",
+-							   etm4_online_cpu, NULL);
+-		if (ret < 0)
+-			goto err_arch_supported;
+-		hp_online = ret;
++	ret = etm4_pm_setup_cpuslocked();
++	cpus_read_unlock();
+ 
+-		ret = etm4_cpu_pm_register();
+-		if (ret)
+-			goto err_arch_supported;
++	/* etm4_pm_setup_cpuslocked() does its own cleanup - exit on error */
++	if (ret) {
++		etmdrvdata[drvdata->cpu] = NULL;
++		return ret;
+ 	}
+ 
+-	cpus_read_unlock();
+-
+ 	if (etm4_arch_supported(drvdata->arch) == false) {
+ 		ret = -EINVAL;
+ 		goto err_arch_supported;
+@@ -1528,13 +1558,7 @@ static int etm4_probe(struct amba_device
+ 
+ err_arch_supported:
+ 	etmdrvdata[drvdata->cpu] = NULL;
+-	if (--etm4_count == 0) {
+-		etm4_cpu_pm_unregister();
+-
+-		cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING);
+-		if (hp_online)
+-			cpuhp_remove_state_nocalls(hp_online);
+-	}
++	etm4_pm_clear();
+ 	return ret;
+ }
+ 
 
 
