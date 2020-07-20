@@ -2,51 +2,53 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A082C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E09EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77AC0206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502BF2065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260294;
-	bh=WrkDv3uHZUE5yf9EmcsK+90sNgyKK/CKBuV6vr/40dw=;
+	s=default; t=1595260299;
+	bh=dtljTeKVSfatOxCZOCNo1VmNsXnDxfFan/3oV9vWIzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ux6JSMBtw5icbSo/2BEglMphtXpVrB0ZkWSQeazgAOFJFfURWiabmA5e5hTc26TfM
-	 XVpZZcw7cRH63ZLfd+39nLf4gn+T6FYhP0aRasVP40xYXMsY9A4X4egZ0Hgtw7vifQ
-	 T4YLdMwiIORvv+AJ0JAbgTMNh+DrOFQ682POhVn0=
+	b=K5o50G2pVP/i8g0ge7Idl8CrYwIJS35iYy+DfDHSm6JbizPrikg8poTDSwRz8tT28
+	 m4tdoU0Wx1tOYY0GNQLqUg0u4hRr/4a3s0lW224Ok+Xrvt0/vMV8EYidM4q72H+EVO
+	 dgRFzv8oCX2ZNtonipkWVAnb4g1ieIARpWhqvt0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731249AbgGTPvc (ORCPT
+        id S1731263AbgGTPvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48446 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:51:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731234AbgGTPv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:51:29 -0400
+        id S1731252AbgGTPve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:51:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 384B42065E;
-        Mon, 20 Jul 2020 15:51:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D19B32064B;
+        Mon, 20 Jul 2020 15:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260288;
-        bh=WrkDv3uHZUE5yf9EmcsK+90sNgyKK/CKBuV6vr/40dw=;
+        s=default; t=1595260294;
+        bh=dtljTeKVSfatOxCZOCNo1VmNsXnDxfFan/3oV9vWIzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UipbzOmFiH5XM8xsdyZ0MCu+jA0WzJUA5ToeAEWH6h1AfKL29GPSakm9bU2F0rfog
-         cPP3QhNXcgyG9vYh987EDwQaQopyugTP0OTeLhEmD1KaOznu/pBs6HUoZrOCat0mqB
-         bS70VJ+fd8iH+cuIpGAryvAGGAPty8iJa/eob4eQ=
+        b=UtXkYtYQPMJxvTznGsaXT9emECJ3ynJpAcWH82lEx2qjXag6RQhLsqiPNGFH6OHBz
+         j8JSHol66VHtCkeJy6Fz+M5FZ2mNuK2QEZ9nXvYuwaz7LNkmQ0r5LSBWjDSGv/9xCL
+         87/7FUSfoOjeoM1p0ANRuGxvJmOAOHdqtQkoM0fU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wulff <crwulff@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 049/133] ALSA: usb-audio: Create a registration quirk for Kingston HyperX Amp (0951:16d8)
-Date:   Mon, 20 Jul 2020 17:36:36 +0200
-Message-Id: <20200720152806.077798724@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 033/133] iio: pressure: zpa2326: handle pm_runtime_get_sync failure
+Date:   Mon, 20 Jul 2020 17:36:20 +0200
+Message-Id: <20200720152805.323505221@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -59,86 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wulff <crwulff@gmail.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 55f7326170d9e83e2d828591938e1101982a679c ]
+commit d88de040e1df38414fc1e4380be9d0e997ab4d58 upstream.
 
-Create a quirk that allows special processing and/or
-skipping the call to snd_card_register.
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-For HyperX AMP, which uses two interfaces, but only has
-a capture stream in the second, this allows the capture
-stream to merge with the first PCM.
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Fixes: 03b262f2bbf4 ("iio:pressure: initial zpa2326 barometer support")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Chris Wulff <crwulff@gmail.com>
-Link: https://lore.kernel.org/r/20200314165449.4086-3-crwulff@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/card.c   | 12 ++++++++----
- sound/usb/quirks.c | 14 ++++++++++++++
- sound/usb/quirks.h |  3 +++
- 3 files changed, 25 insertions(+), 4 deletions(-)
+ drivers/iio/pressure/zpa2326.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/usb/card.c b/sound/usb/card.c
-index 2644a5ae2b757..6615734d29911 100644
---- a/sound/usb/card.c
-+++ b/sound/usb/card.c
-@@ -668,10 +668,14 @@ static int usb_audio_probe(struct usb_interface *intf,
- 			goto __error;
- 	}
+--- a/drivers/iio/pressure/zpa2326.c
++++ b/drivers/iio/pressure/zpa2326.c
+@@ -672,8 +672,10 @@ static int zpa2326_resume(const struct i
+ 	int err;
  
--	/* we are allowed to call snd_card_register() many times */
--	err = snd_card_register(chip->card);
+ 	err = pm_runtime_get_sync(indio_dev->dev.parent);
 -	if (err < 0)
--		goto __error;
-+	/* we are allowed to call snd_card_register() many times, but first
-+	 * check to see if a device needs to skip it or do anything special
-+	 */
-+	if (snd_usb_registration_quirk(chip, ifnum) == 0) {
-+		err = snd_card_register(chip->card);
-+		if (err < 0)
-+			goto __error;
++	if (err < 0) {
++		pm_runtime_put(indio_dev->dev.parent);
+ 		return err;
 +	}
  
- 	usb_chip[chip->index] = chip;
- 	chip->num_interfaces++;
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 8b5bc809efd3f..a95fbdbfbd05f 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1508,3 +1508,17 @@ void snd_usb_audioformat_attributes_quirk(struct snd_usb_audio *chip,
- 		break;
- 	}
- }
-+
-+int snd_usb_registration_quirk(struct snd_usb_audio *chip,
-+			       int iface)
-+{
-+	switch (chip->usb_id) {
-+	case USB_ID(0x0951, 0x16d8): /* Kingston HyperX AMP */
-+		/* Register only when we reach interface 2 so that streams can
-+		 * merge correctly into PCMs from interface 0
-+		 */
-+		return (iface != 2);
-+	}
-+	/* Register as normal */
-+	return 0;
-+}
-diff --git a/sound/usb/quirks.h b/sound/usb/quirks.h
-index a80e0ddd07364..dc02c9d80e991 100644
---- a/sound/usb/quirks.h
-+++ b/sound/usb/quirks.h
-@@ -46,4 +46,7 @@ void snd_usb_audioformat_attributes_quirk(struct snd_usb_audio *chip,
- 					  struct audioformat *fp,
- 					  int stream);
- 
-+int snd_usb_registration_quirk(struct snd_usb_audio *chip,
-+			       int iface);
-+
- #endif /* __USBAUDIO_QUIRKS_H */
--- 
-2.25.1
-
+ 	if (err > 0) {
+ 		/*
 
 
