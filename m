@@ -2,88 +2,117 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED42C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07BD4207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A1B20729
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgGTHZD (ORCPT
+        id S1727047AbgGTHaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:25:03 -0400
-Received: from smtpbgsg2.qq.com ([54.254.200.128]:54148 "EHLO smtpbgsg2.qq.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgGTHZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 03:25:03 -0400
-X-QQ-mid: bizesmtp26t1595229856t2mpv0ul
-Received: from xr-hulk-k8s-node1933.gh.sankuai (unknown [101.236.11.2])
-        by esmtp10.qq.com (ESMTP) with 
-        id ; Mon, 20 Jul 2020 15:24:12 +0800 (CST)
-X-QQ-SSF: 01100000002000E0ZJ10B00A0000000
-X-QQ-FEAT: Me8y4DzRu2RX/O/JFOYvPdOlGujgeCqHlvABdNdCmzjsjIe5hfbTo09jNbvZM
-        GH/j9Qq5iPHLdCA2f0U6RAwaJlYRst8mQDcIVR+TPTNi4Tb1OwxK8UmDiIioEcricqVZt1r
-        qe87ERixS7WkaSKBJsdn5lI9TQrcrvdpHKSUPzOTbh1jEUDHfSAPHNX9R82rz8Wsjlz95bK
-        7E2zuey5YwiWedfsQ1kjtTMb0L0o0i+SoAeO/r+zpeaS6fSQXjY5Ia30JY1yRyOF9AMd/pY
-        vDF6t313o0Gtwq3S2dNH0S1RoWifE1k4oF8iA3y2hrsSPm8AFnNdgBiob3j8Uem1Dq/r1uP
-        ZE92aptGhSSsqxTSN1BLuhi2Wrfog==
-X-QQ-GoodBg: 0
-From:   Wang Long <w@laoqinren.net>
-To:     corbet@lwn.net
-Cc:     w@laoqinren.net, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation: driver-api: update kernel connector
-Date:   Mon, 20 Jul 2020 15:24:12 +0800
-Message-Id: <1595229852-114071-1-git-send-email-w@laoqinren.net>
-X-Mailer: git-send-email 1.8.3.1
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:laoqinren.net:qybgforeign:qybgforeign7
-X-QQ-Bgrelay: 1
+        Mon, 20 Jul 2020 03:30:46 -0400
+Received: from proxima.lasnet.de ([78.47.171.185]:45164 "EHLO
+        proxima.lasnet.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgGTHap (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 03:30:45 -0400
+Received: from localhost.localdomain (p200300e9d7371614ec13d59c95910a08.dip0.t-ipconnect.de [IPv6:2003:e9:d737:1614:ec13:d59c:9591:a08])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: stefan@datenfreihafen.org)
+        by proxima.lasnet.de (Postfix) with ESMTPSA id 3004EC237B;
+        Mon, 20 Jul 2020 09:30:43 +0200 (CEST)
+Subject: Re: [PATCH for v5.9] net: ieee802154: adf7242: Replace HTTP links
+ with HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        michael.hennerich@analog.com, alex.aring@gmail.com,
+        davem@davemloft.net, kuba@kernel.org, linux-wpan@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200719113142.58304-1-grandmaster@al2klimov.de>
+From:   Stefan Schmidt <stefan@datenfreihafen.org>
+Message-ID: <03503036-0f13-7bde-5d11-6d7f61fad37e@datenfreihafen.org>
+Date:   Mon, 20 Jul 2020 09:30:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200719113142.58304-1-grandmaster@al2klimov.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch changes:
-1) Fix typo in kernel connector documentation.
-	s/cn_netlink_send_multi/cn_netlink_send_mult/
-2) update definition of struct cn_msg
+Hello.
 
-Signed-off-by: Wang Long <w@laoqinren.net>
----
- Documentation/driver-api/connector.rst | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+On 19.07.20 13:31, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>    If not .svg:
+>      For each line:
+>        If doesn't contain `\bxmlns\b`:
+>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>              If both the HTTP and HTTPS versions
+>              return 200 OK and serve the same content:
+>                Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>   Continuing my work started at 93431e0607e5.
+>   See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>   (Actually letting a shell for loop submit all this stuff for me.)
+> 
+>   If there are any URLs to be removed completely
+>   or at least not (just) HTTPSified:
+>   Just clearly say so and I'll *undo my change*.
+>   See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>   If there are any valid, but yet not changed URLs:
+>   See: https://lkml.org/lkml/2020/6/26/837
+> 
+>   If you apply the patch, please let me know.
+> 
+>   Sorry again to all maintainers who complained about subject lines.
+>   Now I realized that you want an actually perfect prefixes,
+>   not just subsystem ones.
+>   I tried my best...
+>   And yes, *I could* (at least half-)automate it.
+>   Impossible is nothing! :)
+> 
+> 
+>   drivers/net/ieee802154/adf7242.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ieee802154/adf7242.c b/drivers/net/ieee802154/adf7242.c
+> index 5a37514e4234..60a016a6806a 100644
+> --- a/drivers/net/ieee802154/adf7242.c
+> +++ b/drivers/net/ieee802154/adf7242.c
+> @@ -4,7 +4,7 @@
+>    *
+>    * Copyright 2009-2017 Analog Devices Inc.
+>    *
+> - * http://www.analog.com/ADF7242
+> + * https://www.analog.com/ADF7242
+>    */
+>   
+>   #include <linux/kernel.h>
+> 
 
-diff --git a/Documentation/driver-api/connector.rst b/Documentation/driver-api/connector.rst
-index c100c74..23d06819 100644
---- a/Documentation/driver-api/connector.rst
-+++ b/Documentation/driver-api/connector.rst
-@@ -26,7 +26,7 @@ netlink based networking for inter-process communication in a significantly
- easier way::
- 
-   int cn_add_callback(struct cb_id *id, char *name, void (*callback) (struct cn_msg *, struct netlink_skb_parms *));
--  void cn_netlink_send_multi(struct cn_msg *msg, u16 len, u32 portid, u32 __group, int gfp_mask);
-+  void cn_netlink_send_mult(struct cn_msg *msg, u16 len, u32 portid, u32 __group, int gfp_mask);
-   void cn_netlink_send(struct cn_msg *msg, u32 portid, u32 __group, int gfp_mask);
- 
-   struct cb_id
-@@ -48,7 +48,8 @@ be dereferenced to `struct cn_msg *`::
- 	__u32			seq;
- 	__u32			ack;
- 
--	__u32			len;	/* Length of the following data */
-+	__u16			len;	/* Length of the following data */
-+	__u16			flags;
- 	__u8			data[0];
-   };
- 
--- 
-1.8.3.1
 
+This patch has been applied to the wpan tree and will be
+part of the next pull request to net. Thanks!
 
-
-
+regards
+Stefan Schmidt
