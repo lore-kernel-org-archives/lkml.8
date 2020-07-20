@@ -2,96 +2,99 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67B4C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 733FDC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C10E20734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:36:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262989;
-	bh=dm9YX6CHswFwH4O4S2337GjX18uA5AbJOShfLVuRe+0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AKWTdu/L03/csZi955Cv3obuo8M3JJQtizfjKEOHGyGSO1nQNrWuKoiOtip+bCdAI
-	 /7bhajfw3o2+bhhC5g4/F3WtVwntLy58ItfEHUCInaCg+lH7OyMyyf9gFc3ESey+Ww
-	 4HT1L8AM+BgHGZYxeBUkSZT9YJYeDAM16F1PajHw=
+	by mail.kernel.org (Postfix) with ESMTP id 50E3820734
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:36:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="IJM4F9kE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731409AbgGTPwt (ORCPT
+        id S2388890AbgGTQgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:52:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731402AbgGTPwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:52:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C98F2064B;
-        Mon, 20 Jul 2020 15:52:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260366;
-        bh=dm9YX6CHswFwH4O4S2337GjX18uA5AbJOShfLVuRe+0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IW1k/Vm/kle9IrPfbqYJ3oJbv2ceVeD9LnuMuJjGwxT1yiE6tNc5OKshufZ4xPAHu
-         vhpMPwRPlD+3Ge3AVpbuV/2R5Y74QIOu+oAQH8yuzM7R8YVL/bcnXXqYXgMT4hw8ty
-         igUX0U+RjhL4MF5gNp7u/KOyPacMmMfWRU2tbMBY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.19 077/133] mtd: rawnand: brcmnand: fix CS0 layout
-Date:   Mon, 20 Jul 2020 17:37:04 +0200
-Message-Id: <20200720152807.419834763@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
-References: <20200720152803.732195882@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 12:36:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388787AbgGTQgn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:36:43 -0400
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D4EC0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:36:43 -0700 (PDT)
+Received: by mail-il1-x130.google.com with SMTP id t4so13870304iln.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:36:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gBnhc9kYq0E6+vqUJS1jDU/1F1sS+K3Lh6YLjAXrPIA=;
+        b=IJM4F9kEuWWZ9HWNrJw+/v44b3wlVooucvBHu8ZYu8BUTGD5nEtsKNyzUXoTwNSTEY
+         +bYLs/oEfkJ7TI+wg3wqDbe/+j2D8FZZ+9w2kK7V4HwSe+AzjwElQJfRiaflWvmPXZgr
+         bXgpTKOrNGv2fnoAHU35bus/WtnzUUcC7j8iH6Sp3HbSK+FymkGn0BgI/YffgYLJR0ox
+         sBgfdmHN6KCjmzreGDBnzbbO3cvKE4LDgna3CAHCOSG27AtgoCLXhS4OGzLlFFlF/CaO
+         SvOcMUX2AWEnvyi4W69b4nj3DC+Yr5/MXaC6sOpNKcUKRHLr/ofvZzc87WX/VE814Tgs
+         C6qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gBnhc9kYq0E6+vqUJS1jDU/1F1sS+K3Lh6YLjAXrPIA=;
+        b=Z4cy62n6y0tmRhaPosCpRu0AVhj56AYLFdagXm3KBvJsUH9MjyF9c29UzFrAVaQqfe
+         JDpdGwmsO1KiZupb24Qus1BfgPwb6/xzwmLdHYi0oekpDT8SZmvM8keD3Q66kLenUJRu
+         v/HF+BSMFklNCiXygCwOLoN7bOb6oAhVgsmSSne/w4LqctzZQJMsIGIO4W1SkBiwX4bm
+         1wqHWffqU1ddOEEUZxTxqWAICFbf/+SJHQueqhS3qbrESnQn0R2iL/OILtGHfxAJh/vL
+         xHTsmHMIOx0jYnW0c+pPic0f8Uet9+lgeY4nogBeSRviPj0u7JqkBgPf4xLbR+ushrnA
+         iFKg==
+X-Gm-Message-State: AOAM532ER2iIy5VSHIlTarKCKo3mauGR7ih8vqMvc7SefpEhaK+VeUtT
+        j/iAB+UkPm8Ncc+k2R3DK9osQwleXBnLhg==
+X-Google-Smtp-Source: ABdhPJxukhVb2zn3N2KCfVMsxmqpS2RZySUveN6hPJ2GEvDdyWHhLuaqHOHq9wpkvxNqmBkiJFxtrA==
+X-Received: by 2002:a92:7306:: with SMTP id o6mr23184732ilc.90.1595263002078;
+        Mon, 20 Jul 2020 09:36:42 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id w15sm9315257ila.65.2020.07.20.09.36.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2020 09:36:41 -0700 (PDT)
+Subject: Re: io_uring vs in_compat_syscall()
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+References: <20200720061046.GA10678@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ceb21006-26d0-b216-84a9-5da0b89b5fbf@kernel.dk>
+Date:   Mon, 20 Jul 2020 10:36:40 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200720061046.GA10678@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Álvaro Fernández Rojas <noltari@gmail.com>
+On 7/20/20 12:10 AM, Christoph Hellwig wrote:
+> Hi Jens,
+> 
+> I just found a (so far theoretical) issue with the io_uring submission
+> offloading to workqueues or threads.  We have lots of places using
+> in_compat_syscall() to check if a syscall needs compat treatmenet.
+> While the biggest users is iocttl(), we also have a fair amount of
+> places using in_compat_task() in read and write methods, and these
+> will not do the wrong thing when used with io_uring under certain
+> conditions.  I'm not sure how to best fix this, except for making sure
+> in_compat_syscall() returns true one way or another for these cases.
 
-commit 3d3fb3c5be9ce07fa85d8f67fb3922e4613b955b upstream.
+We can probably propagate this information in the io_kiocb via a flag,
+and have the io-wq worker set TS_COMPAT if that's the case.
 
-Only v3.3-v5.0 have a different CS0 layout.
-Controllers before v3.3 use the same layout for every CS.
-
-Fixes: 27c5b17cd1b1 ("mtd: nand: add NAND driver "library" for Broadcom STB NAND controller")
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200522121524.4161539-3-noltari@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/mtd/nand/raw/brcmnand/brcmnand.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -491,8 +491,9 @@ static int brcmnand_revision_init(struct
- 	} else {
- 		ctrl->cs_offsets = brcmnand_cs_offsets;
- 
--		/* v5.0 and earlier has a different CS0 offset layout */
--		if (ctrl->nand_version <= 0x0500)
-+		/* v3.3-5.0 have a different CS0 offset layout */
-+		if (ctrl->nand_version >= 0x0303 &&
-+		    ctrl->nand_version <= 0x0500)
- 			ctrl->cs0_offsets = brcmnand_cs_offsets_cs0;
- 	}
- 
-
+-- 
+Jens Axboe
 
