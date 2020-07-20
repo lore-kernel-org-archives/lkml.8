@@ -2,136 +2,139 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00B5C4345C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 341A5C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9863322CB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259706;
-	bh=TZEmcIX1EXVKYAg8WBJzDdxkWzjI9vRzdtHwccI3E2s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VzHv6fTlvZs6qTBFFfmr200LIWv5VXv5LEl3ko5YHbvxNo7qQ1UY8HUA+p+uyMLhy
-	 fW8FQwQ04cYEbUOPNMQlCrNFzc4kciMgkTuOCzxZ8f8L89LP0CPr0zwrJphiOWiwhS
-	 8d9SlycsVNPfkFVq64ibh0ASL6Cb/HD0U5j+mv/c=
+	by mail.kernel.org (Postfix) with ESMTP id 134D222CE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nPw4E0IR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbgGTPlp (ORCPT
+        id S1729967AbgGTPlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:41:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33752 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:41:50 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:32246 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729910AbgGTPli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:41:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729926AbgGTPlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:41:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595259702; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=wYFdk4sZjkkv1anpMyFTRw+xKujsLrZ6WLap5ZC3G3k=; b=nPw4E0IRHmL1XaGoS5ZMx3dSPicwPp+Rvd5T9Xz6nadU73HqPCqKBix+cwXIodSn13e/Oopn
+ vP0NLu+YxXDI13z+7M8x9QgmQzVnWOgAeftSX3uIvvOmlLZfMdnghXng5Y6RY6Ll5ZSR+LNw
+ xckoDRKyd/8dgLW0xmaS9xHV+yc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f15bb287c8ca473a8fcc237 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 15:41:28
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4B7C7C4344C; Mon, 20 Jul 2020 15:41:26 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F6DF2176B;
-        Mon, 20 Jul 2020 15:41:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259698;
-        bh=TZEmcIX1EXVKYAg8WBJzDdxkWzjI9vRzdtHwccI3E2s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dqut6ecz0kthvWKbr8j7XQLkX8+LZFjNW8isyaskd1/r8tUGfUFnY5Dqxd+keHS6A
-         pcaZ6c+2bIl55ZlK+SZhpxT8LmoUmh+YQ17vr9CakkmUNX9H9ZXHUbe0dfgn2ej0Fo
-         EUFQYo1bYq7UFE9FGgQNnKR5vXRgFbqyhrEV8ANY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 48/86] net: dsa: bcm_sf2: Fix node reference count
-Date:   Mon, 20 Jul 2020 17:36:44 +0200
-Message-Id: <20200720152755.578273279@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
-References: <20200720152753.138974850@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 96C17C433B2;
+        Mon, 20 Jul 2020 15:41:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 96C17C433B2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
+        iommu@lists.linux-foundation.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, Eric Anholt <eric@anholt.net>,
+        John Stultz <john.stultz@linaro.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v10 09/13] drm/msm: Set the global virtual address range from the IOMMU domain
+Date:   Mon, 20 Jul 2020 09:40:43 -0600
+Message-Id: <20200720154047.3611092-10-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200720154047.3611092-1-jcrouse@codeaurora.org>
+References: <20200720154047.3611092-1-jcrouse@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+Use the aperture settings from the IOMMU domain to set up the virtual
+address range for the GPU. This allows us to transparently deal with
+IOMMU side features (like split pagetables).
 
-[ Upstream commit 8dbe4c5d5e40fe140221024f7b16bec9f310bf70 ]
-
-of_find_node_by_name() will do an of_node_put() on the "from" argument.
-With CONFIG_OF_DYNAMIC enabled which checks for device_node reference
-counts, we would be getting a warning like this:
-
-[    6.347230] refcount_t: increment on 0; use-after-free.
-[    6.352498] WARNING: CPU: 3 PID: 77 at lib/refcount.c:156
-refcount_inc_checked+0x38/0x44
-[    6.360601] Modules linked in:
-[    6.363661] CPU: 3 PID: 77 Comm: kworker/3:1 Tainted: G        W
-5.4.46-gb78b3e9956e6 #13
-[    6.372546] Hardware name: BCM97278SV (DT)
-[    6.376649] Workqueue: events deferred_probe_work_func
-[    6.381796] pstate: 60000005 (nZCv daif -PAN -UAO)
-[    6.386595] pc : refcount_inc_checked+0x38/0x44
-[    6.391133] lr : refcount_inc_checked+0x38/0x44
-...
-[    6.478791] Call trace:
-[    6.481243]  refcount_inc_checked+0x38/0x44
-[    6.485433]  kobject_get+0x3c/0x4c
-[    6.488840]  of_node_get+0x24/0x34
-[    6.492247]  of_irq_find_parent+0x3c/0xe0
-[    6.496263]  of_irq_parse_one+0xe4/0x1d0
-[    6.500191]  irq_of_parse_and_map+0x44/0x84
-[    6.504381]  bcm_sf2_sw_probe+0x22c/0x844
-[    6.508397]  platform_drv_probe+0x58/0xa8
-[    6.512413]  really_probe+0x238/0x3fc
-[    6.516081]  driver_probe_device+0x11c/0x12c
-[    6.520358]  __device_attach_driver+0xa8/0x100
-[    6.524808]  bus_for_each_drv+0xb4/0xd0
-[    6.528650]  __device_attach+0xd0/0x164
-[    6.532493]  device_initial_probe+0x24/0x30
-[    6.536682]  bus_probe_device+0x38/0x98
-[    6.540524]  deferred_probe_work_func+0xa8/0xd4
-[    6.545061]  process_one_work+0x178/0x288
-[    6.549078]  process_scheduled_works+0x44/0x48
-[    6.553529]  worker_thread+0x218/0x270
-[    6.557285]  kthread+0xdc/0xe4
-[    6.560344]  ret_from_fork+0x10/0x18
-[    6.563925] ---[ end trace 68f65caf69bb152a ]---
-
-Fix this by adding a of_node_get() to increment the reference count
-prior to the call.
-
-Fixes: afa3b592953b ("net: dsa: bcm_sf2: Ensure correct sub-node is parsed")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
- drivers/net/dsa/bcm_sf2.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 796571fccba70..84def5819d2ec 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -1039,6 +1039,8 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
- 	spin_lock_init(&priv->indir_lock);
- 	mutex_init(&priv->stats_mutex);
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 13 +++++++++++--
+ drivers/gpu/drm/msm/msm_iommu.c         |  7 +++++++
+ 2 files changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index b38a8126541a..f9e3badf2fca 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -192,9 +192,18 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
+ 	struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
+ 	struct msm_mmu *mmu = msm_iommu_new(&pdev->dev, iommu);
+ 	struct msm_gem_address_space *aspace;
++	u64 start, size;
  
-+	/* Balance of_node_put() done by of_find_node_by_name() */
-+	of_node_get(dn);
- 	ports = of_find_node_by_name(dn, "ports");
- 	if (ports) {
- 		bcm_sf2_identify_ports(priv, ports);
+-	aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
+-		0xffffffff - SZ_16M);
++	/*
++	 * Use the aperture start or SZ_16M, whichever is greater. This will
++	 * ensure that we align with the allocated pagetable range while still
++	 * allowing room in the lower 32 bits for GMEM and whatnot
++	 */
++	start = max_t(u64, SZ_16M, iommu->geometry.aperture_start);
++	size = iommu->geometry.aperture_end - start + 1;
++
++	aspace = msm_gem_address_space_create(mmu, "gpu",
++		start & GENMASK(48, 0), size);
+ 
+ 	if (IS_ERR(aspace) && !IS_ERR(mmu))
+ 		mmu->funcs->destroy(mmu);
+diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+index 3a381a9674c9..1b6635504069 100644
+--- a/drivers/gpu/drm/msm/msm_iommu.c
++++ b/drivers/gpu/drm/msm/msm_iommu.c
+@@ -36,6 +36,10 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
+ 	struct msm_iommu *iommu = to_msm_iommu(mmu);
+ 	size_t ret;
+ 
++	/* The arm-smmu driver expects the addresses to be sign extended */
++	if (iova & BIT_ULL(48))
++		iova |= GENMASK_ULL(63, 49);
++
+ 	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
+ 	WARN_ON(!ret);
+ 
+@@ -46,6 +50,9 @@ static int msm_iommu_unmap(struct msm_mmu *mmu, uint64_t iova, size_t len)
+ {
+ 	struct msm_iommu *iommu = to_msm_iommu(mmu);
+ 
++	if (iova & BIT_ULL(48))
++		iova |= GENMASK_ULL(63, 49);
++
+ 	iommu_unmap(iommu->domain, iova, len);
+ 
+ 	return 0;
 -- 
 2.25.1
-
-
 
