@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDEFC433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D87C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D467206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 348A720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261714;
-	bh=NF4StOBLCDG8mQH8cb6ujZI8jdwfCXCdaLFQ1SSqCko=;
+	s=default; t=1595261717;
+	bh=8n6WyCnf4uOT8u/UC9lAYwFf3DIBEdlqg7odhu7VMNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HIWZeBs/lkxIHIzrPA3288YB4VgaivRfK0RZP/nMVf7m7uggnlA5IajtMCxvbHFzz
-	 OCpPRNcBkh9V2aCFOIC/HDBX4NYlOn3KhnuXrT+GEMXHzfYn1IAaLnrFTgctpxdw9A
-	 fxLeVEcpKCiW4pAa3Uf4WcArJ5XdzgqrIYdrtF8w=
+	b=a8HZ8m9O8cxudWUbzl1vEUluz1QiUjGyp9JfWqbN9dB7CLKFuHA+oT2hI1NFiFK5H
+	 a6DVF078WK50YNBUquLuuvGYnzPJ0pAdNag/r7T1d/PjEOXSFri5R3eV1W/jnNA7jG
+	 UibwLEju8rhp7TIzPNI+LBkigAvShawapAN6zfyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387826AbgGTQPL (ORCPT
+        id S2387990AbgGTQPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55840 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:15:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387493AbgGTQPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:15:06 -0400
+        id S2388353AbgGTQPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:15:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A33F2064B;
-        Mon, 20 Jul 2020 16:15:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4C8420684;
+        Mon, 20 Jul 2020 16:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261705;
-        bh=NF4StOBLCDG8mQH8cb6ujZI8jdwfCXCdaLFQ1SSqCko=;
+        s=default; t=1595261708;
+        bh=8n6WyCnf4uOT8u/UC9lAYwFf3DIBEdlqg7odhu7VMNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cmM42zT2XQSsitgLnFrTQvVIdXn/Sqa7f6iwrNwcYvXaJeOjSb7xD5zsNrne9UEbB
-         pyj6/oDQTjMdgLZ4zRnqX36scA6WM0TCopzwqglTPI3SgODkXraD29lN2gNyRzk9GL
-         cvCWIZxr8ukLmyL7UMpzdKd0/kPqhYViJRc74nhM=
+        b=wXOU3XAXim3f1DYeXZLiJihWx77i9L7/SYKdiJk7LfbdjM7+fFfqBiNR65zSPLww3
+         F6Xg7qsaw09hzHbcIwj+8I4EvDgHYsxGHmKhDbBshpdircPgcGP2vn8Ts7DqeKSXU0
+         BDJFGtfLNzy/RICAyY7WbcrS6IdrM9xPtrNa8lC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH 5.7 172/244] tty: serial: cpm_uart: Fix behaviour for non existing GPIOs
-Date:   Mon, 20 Jul 2020 17:37:23 +0200
-Message-Id: <20200720152834.016744811@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.7 206/244] dmaengine: fsl-edma: Fix NULL pointer exception in fsl_edma_tx_handler
+Date:   Mon, 20 Jul 2020 17:37:57 +0200
+Message-Id: <20200720152835.649076541@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,63 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit 311eab8d5900ea9088513d4c6b4570058958edb5 upstream.
+commit f5e5677c420346b4e9788051c2e4d750996c428c upstream.
 
-devm_gpiod_get_index() doesn't return NULL but -ENOENT when the
-requested GPIO doesn't exist,  leading to the following messages:
+NULL pointer exception happens occasionally on serial output initiated
+by login timeout.  This was reproduced only if kernel was built with
+significant debugging options and EDMA driver is used with serial
+console.
 
-[    2.742468] gpiod_direction_input: invalid GPIO (errorpointer)
-[    2.748147] can't set direction for gpio #2: -2
-[    2.753081] gpiod_direction_input: invalid GPIO (errorpointer)
-[    2.758724] can't set direction for gpio #3: -2
-[    2.763666] gpiod_direction_output: invalid GPIO (errorpointer)
-[    2.769394] can't set direction for gpio #4: -2
-[    2.774341] gpiod_direction_input: invalid GPIO (errorpointer)
-[    2.779981] can't set direction for gpio #5: -2
-[    2.784545] ff000a20.serial: ttyCPM1 at MMIO 0xfff00a20 (irq = 39, base_baud = 8250000) is a CPM UART
+    col-vf50 login: root
+    Password:
+    Login timed out after 60 seconds.
+    Unable to handle kernel NULL pointer dereference at virtual address 00000044
+    Internal error: Oops: 5 [#1] ARM
+    CPU: 0 PID: 157 Comm: login Not tainted 5.7.0-next-20200610-dirty #4
+    Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+      (fsl_edma_tx_handler) from [<8016eb10>] (__handle_irq_event_percpu+0x64/0x304)
+      (__handle_irq_event_percpu) from [<8016eddc>] (handle_irq_event_percpu+0x2c/0x7c)
+      (handle_irq_event_percpu) from [<8016ee64>] (handle_irq_event+0x38/0x5c)
+      (handle_irq_event) from [<801729e4>] (handle_fasteoi_irq+0xa4/0x160)
+      (handle_fasteoi_irq) from [<8016ddcc>] (generic_handle_irq+0x34/0x44)
+      (generic_handle_irq) from [<8016e40c>] (__handle_domain_irq+0x54/0xa8)
+      (__handle_domain_irq) from [<80508bc8>] (gic_handle_irq+0x4c/0x80)
+      (gic_handle_irq) from [<80100af0>] (__irq_svc+0x70/0x98)
+    Exception stack(0x8459fe80 to 0x8459fec8)
+    fe80: 72286b00 e3359f64 00000001 0000412d a0070013 85c98840 85c98840 a0070013
+    fea0: 8054e0d4 00000000 00000002 00000000 00000002 8459fed0 8081fbe8 8081fbec
+    fec0: 60070013 ffffffff
+      (__irq_svc) from [<8081fbec>] (_raw_spin_unlock_irqrestore+0x30/0x58)
+      (_raw_spin_unlock_irqrestore) from [<8056cb48>] (uart_flush_buffer+0x88/0xf8)
+      (uart_flush_buffer) from [<80554e60>] (tty_ldisc_hangup+0x38/0x1ac)
+      (tty_ldisc_hangup) from [<8054c7f4>] (__tty_hangup+0x158/0x2bc)
+      (__tty_hangup) from [<80557b90>] (disassociate_ctty.part.1+0x30/0x23c)
+      (disassociate_ctty.part.1) from [<8011fc18>] (do_exit+0x580/0xba0)
+      (do_exit) from [<801214f8>] (do_group_exit+0x3c/0xb4)
+      (do_group_exit) from [<80121580>] (__wake_up_parent+0x0/0x14)
 
-Use devm_gpiod_get_index_optional() instead.
+Issue looks like race condition between interrupt handler fsl_edma_tx_handler()
+(called as result of fsl_edma_xfer_desc()) and terminating the transfer with
+fsl_edma_terminate_all().
 
-At the same time, handle the error case and properly exit
-with an error.
+The fsl_edma_tx_handler() handles interrupt for a transfer with already freed
+edesc and idle==true.
 
-Fixes: 97cbaf2c829b ("tty: serial: cpm_uart: Convert to use GPIO descriptors")
-Cc: stable@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/694a25fdce548c5ee8b060ef6a4b02746b8f25c0.1591986307.git.christophe.leroy@csgroup.eu
+Fixes: d6be34fbd39b ("dma: Add Freescale eDMA engine driver support")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1591877861-28156-2-git-send-email-krzk@kernel.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/tty/serial/cpm_uart/cpm_uart_core.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-+++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-@@ -1215,7 +1215,12 @@ static int cpm_uart_init_port(struct dev
+---
+ drivers/dma/fsl-edma.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/drivers/dma/fsl-edma.c
++++ b/drivers/dma/fsl-edma.c
+@@ -45,6 +45,13 @@ static irqreturn_t fsl_edma_tx_handler(i
+ 			fsl_chan = &fsl_edma->chans[ch];
  
- 		pinfo->gpios[i] = NULL;
- 
--		gpiod = devm_gpiod_get_index(dev, NULL, i, GPIOD_ASIS);
-+		gpiod = devm_gpiod_get_index_optional(dev, NULL, i, GPIOD_ASIS);
+ 			spin_lock(&fsl_chan->vchan.lock);
 +
-+		if (IS_ERR(gpiod)) {
-+			ret = PTR_ERR(gpiod);
-+			goto out_irq;
-+		}
- 
- 		if (gpiod) {
- 			if (i == GPIO_RTS || i == GPIO_DTR)
-@@ -1237,6 +1242,8 @@ static int cpm_uart_init_port(struct dev
- 
- 	return cpm_uart_request_port(&pinfo->port);
- 
-+out_irq:
-+	irq_dispose_mapping(pinfo->port.irq);
- out_pram:
- 	cpm_uart_unmap_pram(pinfo, pram);
- out_mem:
++			if (!fsl_chan->edesc) {
++				/* terminate_all called before */
++				spin_unlock(&fsl_chan->vchan.lock);
++				continue;
++			}
++
+ 			if (!fsl_chan->edesc->iscyclic) {
+ 				list_del(&fsl_chan->edesc->vdesc.node);
+ 				vchan_cookie_complete(&fsl_chan->edesc->vdesc);
 
 
