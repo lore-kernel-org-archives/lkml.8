@@ -2,148 +2,135 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E12A4C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F67C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C30482073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF1A62073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262837;
-	bh=WMJ2pJnh6QMcfvG69Ieu9+wX+tck5MGFWnZuMkvAUiU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ok1zzSmHNa2k75BT1zXUDkkMIwQFwkt+KQ7QD1gHpgxfAhu72XI5C5fg64SnvphOE
-	 4n7oY2gsh5wWNP/mZOcq4T9cTjBVX14fR2MJ5wF2+uHJwCanTNQyJsTEY46eUc+mzL
-	 ffMmEumt/2ZE0M8fFuDjY5FPYSOKnQ6PNW053934=
+	s=default; t=1595262848;
+	bh=KJc236Beqe715ZNP7qUMd5cLfYkrychBQiDwOL6cJeo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gp1p0u7/6h7THQxBT1FmmS6L3HuAKD84hJ2mGfeB9ol/JnCAu16ysn+p7CVgSyZer
+	 5ufA6litKo6i4lsf2Hxk8poyj6oDfk2BxWhkpRuma7QwMWvXYONC6U1IyRwjFaqTNj
+	 VoNcm05r82IAsXkFBF7y5vcUm79/Lqeysw4fGiko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732800AbgGTQd4 (ORCPT
+        id S1731980AbgGTQeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:33:56 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:39659 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388962AbgGTQdy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:33:54 -0400
-Received: by mail-il1-f193.google.com with SMTP id k6so13834845ili.6;
-        Mon, 20 Jul 2020 09:33:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=I0wQ3YO8Vss6xaeuCLdInIi0SX7uQKxUoc58bndvXRg=;
-        b=cZgYGUFjAVKN8ZX8fTOTsFvezbIe6LfiDdYMQyQv5r2NRjkk1D2GAbUmiH/HsYPY6R
-         mBGY4yHL7mH7K/8eK6mEh73N5PcJ00gQ0VlH9QbkUiBdrIr4UxYEWBjU9l5Lg9ybni2H
-         JlKQLL2p943NJXnTUV6/DwRCcnFGZ67pNwdOnJqp+pCFgLgaQCiFLcdyvvyPpF9D8I+J
-         MnlKJELDrU0tSffteh3cntx3U0C5rdMtYmDBL+60zLMRNPtb0Pj032KRaAU8Rh84MUDY
-         cGiD6Pb0rcM5Jz3bzBiRF+c56kzdp7MZ4FExFeP+Ywpi+TTPiE5vkE1ZNWCFKy6YVKu0
-         Hbhg==
-X-Gm-Message-State: AOAM530SCty2zVl2/b01BolON7YwYkKYWblEOExKvF6ifssQ0ntoPLjY
-        xYs/X+wwTA3z6uecpzvwIC2aiFE4MQ==
-X-Google-Smtp-Source: ABdhPJyWvpuSNg/zWars+w88sZJsxEErbQ5PDf/rFSRBSl5xMfKye5hioNqx7KI9vXMByvsU0WXuzA==
-X-Received: by 2002:a92:5ecf:: with SMTP id f76mr22893176ilg.281.1595262833149;
-        Mon, 20 Jul 2020 09:33:53 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i6sm8997543ilj.61.2020.07.20.09.33.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 09:33:52 -0700 (PDT)
-Received: (nullmailer pid 2627088 invoked by uid 1000);
-        Mon, 20 Jul 2020 16:33:49 -0000
-Date:   Mon, 20 Jul 2020 10:33:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     yanfei.li@ingenic.com, devicetree@vger.kernel.org,
-        dongsheng.qiu@ingenic.com, zhenwenjin@gmail.com,
-        aric.pzqi@ingenic.com, paul@crapouillou.net,
-        rick.tyliu@ingenic.com, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, sernia.zhou@foxmail.com
-Subject: Re: [PATCH v9 1/2] dt-bindings: timer: Add Ingenic X1000 OST
- bindings.
-Message-ID: <20200720163349.GA2626388@bogus>
-References: <20200720151106.112807-1-zhouyanjie@wanyeetech.com>
- <20200720151106.112807-2-zhouyanjie@wanyeetech.com>
+        Mon, 20 Jul 2020 12:34:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730420AbgGTPzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:55:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C7162065E;
+        Mon, 20 Jul 2020 15:55:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260535;
+        bh=KJc236Beqe715ZNP7qUMd5cLfYkrychBQiDwOL6cJeo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mixajibxxjUzS6mN8LDrANCmuwYV1M9ypey+GaTK+6LIbgYkg6kXq/s3lw+t6epNL
+         c1Fywwou2zva9yxWxZT7JfVx+CP3eqm3FQoM/hefNMlJnSMwK29JU+XVAuUOXQa6Vk
+         rheXzsD3LRFp6WsZuOAS9yiGGjP7VtOl/elRT54Y=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=B6rgen=20Storvist?= <jorgen.storvist@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 097/133] USB: serial: option: add GosunCn GM500 series
+Date:   Mon, 20 Jul 2020 17:37:24 +0200
+Message-Id: <20200720152808.419655897@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
+References: <20200720152803.732195882@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200720151106.112807-2-zhouyanjie@wanyeetech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 23:11:05 +0800, 周琰杰 (Zhou Yanjie) wrote:
-> Add the OST bindings for the X10000 SoC from Ingenic.
-> 
-> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> 
-> Notes:
->     v1->v2:
->     No change.
-> 
->     v2->v3:
->     Fix wrong parameters in "clocks".
-> 
->     v3->v4:
->     1.Rename "ingenic,ost.yaml" to "ingenic,sysost.yaml".
->     2.Rename "ingenic,ost.h" to "ingenic,sysost.h".
->     3.Modify the description in "ingenic,sysost.yaml".
-> 
->     v4->v5:
->     No change.
-> 
->     v5->v6:
->     1.Drop "oneOf" and the blank line.
->     2.Add "additionalProperties: false".
-> 
->     v6->v7:
->     No change.
-> 
->     v7->v8:
->     No change.
-> 
->     v8->v9:
->     Fix warning while applying.
->     Reported-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> 
->  .../devicetree/bindings/timer/ingenic,sysost.yaml  | 63 ++++++++++++++++++++++
->  include/dt-bindings/clock/ingenic,sysost.h         | 12 +++++
->  2 files changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
->  create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
-> 
+From: Jörgen Storvist <jorgen.storvist@gmail.com>
 
+commit 08d4ef5cc9203a113702f24725f6cf4db476c958 upstream.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Add USB IDs for GosunCn GM500 series cellular modules.
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml: properties: '#address-cells' is a dependency of '#size-cells'
-Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/timer/ingenic,sysost.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/timer/ingenic,sysost.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml: ignoring, error in schema: properties
-warning: no schema found in file: ./Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml: ignoring, error in schema: properties
-warning: no schema found in file: ./Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+RNDIS config:
+usb-devices
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 12 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=305a ProdID=1404 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 1 Cls=e0(wlcon) Sub=01 Prot=03 Driver=rndis_host
+I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
+I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
 
+MBIM config:
+usb-devices
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 11 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=305a ProdID=1405 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
+I:  If#=0x4 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
 
-See https://patchwork.ozlabs.org/patch/1332465
+ECM config:
+usb-devices
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 13 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=305a ProdID=1406 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 1 Cls=02(commc) Sub=06 Prot=00 Driver=cdc_ether
+I:  If#=0x4 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=cdc_ether
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+---
+ drivers/usb/serial/option.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-Please check and re-submit.
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -2028,6 +2028,9 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(4) | RSVD(5) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0105, 0xff),			/* Fibocom NL678 series */
+ 	  .driver_info = RSVD(6) },
++	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1404, 0xff) },			/* GosunCn GM500 RNDIS */
++	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1405, 0xff) },			/* GosunCn GM500 MBIM */
++	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1406, 0xff) },			/* GosunCn GM500 ECM/NCM */
+ 	{ } /* Terminating entry */
+ };
+ MODULE_DEVICE_TABLE(usb, option_ids);
+
 
