@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 662A7C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E35C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38400206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA45206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263364;
-	bh=DDE4MV+UVz+utgNs90ZX1nxcGpr1BUDKlUVFvene7KU=;
+	s=default; t=1595263374;
+	bh=v5pzLyl2SJd1PntkNmxFPTeULXZvmlFGi3ShJso8gxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EBrniXfBVCOaO2N0LcAL0L/RyVZLSFG98w0LrpeeObGTc0qUUgQWET1e35wBk4FPg
-	 impHJfAMuO6jaAblHSusZJL1MA9h2eVGoMaaqs3BkSSzF5/9c0K4fbQ0SkqeixmCkD
-	 Kai+op5Q9O9EIkmv39xg51C/KRnVoMcO0SHZaf0s=
+	b=sV8wFvruiTc+W6+5ekNpo38ZvKXPsfe0vtrKUi9l0asCcBmEnyKeL5IkEAg/8DyKj
+	 X5FL/NYQwv0LdIUZs+xSIvlhIjAPiB9SFn+WRXYhZoUOgi7YuSUIbrP4nzCIa4rQ8W
+	 oW4KM6ybS7RwwlQ7RQXZVk98UrVoL+8YFQX5oqPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731437AbgGTQmm (ORCPT
+        id S1730155AbgGTPm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:42:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36740 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:42:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730249AbgGTPnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:43:24 -0400
+        id S1730143AbgGTPmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:42:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4CB520773;
-        Mon, 20 Jul 2020 15:43:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 573EB2064B;
+        Mon, 20 Jul 2020 15:42:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259803;
-        bh=DDE4MV+UVz+utgNs90ZX1nxcGpr1BUDKlUVFvene7KU=;
+        s=default; t=1595259773;
+        bh=v5pzLyl2SJd1PntkNmxFPTeULXZvmlFGi3ShJso8gxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R3XYt2YAxeQulLDmDRiHt4TOQXZIm/x+B4cAvjwelixtlTFY3aMr3FiuNt35vVkKg
-         Jyg8wdCiZ8qBR8d3AvWx2skz9y4RUrl8ONzeEqz3J02EX7cdMcXDgINJwq9shBSmly
-         G2prmAVXW3UtHe8bI5+fyhukaDwH9g/h/5gvv+NU=
+        b=LQSvCNyB13Zq4fLSiZ0KQgdHTnq/iiqEJ1wFnPLCAyLm38cGyAh3QlpkwVA81BuKV
+         yOiLmDB2StDU1uWOXu1UIuyx4PASgaO5vnas2+jewNcsFe3FnpX6rU/qnd2E9937XU
+         Hz0OGUbgwnUgTSu4QB+2U6UYumaM576zN0lFl6cA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 4.9 85/86] irqchip/gic: Atomically update affinity
-Date:   Mon, 20 Jul 2020 17:37:21 +0200
-Message-Id: <20200720152757.554539964@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Whitcroft <apw@canonical.com>,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 4.9 75/86] mei: bus: dont clean driver pointer
+Date:   Mon, 20 Jul 2020 17:37:11 +0200
+Message-Id: <20200720152756.978576850@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -58,61 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 005c34ae4b44f085120d7f371121ec7ded677761 upstream.
+commit e852c2c251ed9c23ae6e3efebc5ec49adb504207 upstream.
 
-The GIC driver uses a RMW sequence to update the affinity, and
-relies on the gic_lock_irqsave/gic_unlock_irqrestore sequences
-to update it atomically.
+It's not needed to set driver to NULL in mei_cl_device_remove()
+which is bus_type remove() handler as this is done anyway
+in __device_release_driver().
 
-But these sequences only expand into anything meaningful if
-the BL_SWITCHER option is selected, which almost never happens.
+Actually this is causing an endless loop in driver_detach()
+on ubuntu patched kernel, while removing (rmmod) the mei_hdcp module.
+The reason list_empty(&drv->p->klist_devices.k_list) is always not-empty.
+as the check is always true in  __device_release_driver()
+	if (dev->driver != drv)
+		return;
 
-It also turns out that using a RMW and locks is just as silly,
-as the GIC distributor supports byte accesses for the GICD_TARGETRn
-registers, which when used make the update atomic by definition.
+The non upstream patch is causing this behavior, titled:
+'vfio -- release device lock before userspace requests'
 
-Drop the terminally broken code and replace it by a byte write.
+Nevertheless the fix is correct also for the upstream.
 
-Fixes: 04c8b0f82c7d ("irqchip/gic: Make locking a BL_SWITCHER only feature")
-Cc: stable@vger.kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://patchwork.ozlabs.org/project/ubuntu-kernel/patch/20180912085046.3401-2-apw@canonical.com/
+Cc: <stable@vger.kernel.org>
+Cc: Andy Whitcroft <apw@canonical.com>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20200628225359.2185929-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/irqchip/irq-gic.c |   13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ drivers/misc/mei/bus.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -324,10 +324,8 @@ static int gic_irq_set_vcpu_affinity(str
- static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 			    bool force)
- {
--	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + (gic_irq(d) & ~3);
--	unsigned int cpu, shift = (gic_irq(d) % 4) * 8;
--	u32 val, mask, bit;
--	unsigned long flags;
-+	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + gic_irq(d);
-+	unsigned int cpu;
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -639,9 +639,8 @@ static int mei_cl_device_remove(struct d
+ 		ret = cldrv->remove(cldev);
  
- 	if (!force)
- 		cpu = cpumask_any_and(mask_val, cpu_online_mask);
-@@ -337,12 +335,7 @@ static int gic_set_affinity(struct irq_d
- 	if (cpu >= NR_GIC_CPU_IF || cpu >= nr_cpu_ids)
- 		return -EINVAL;
+ 	module_put(THIS_MODULE);
+-	dev->driver = NULL;
+-	return ret;
  
--	gic_lock_irqsave(flags);
--	mask = 0xff << shift;
--	bit = gic_cpu_map[cpu] << shift;
--	val = readl_relaxed(reg) & ~mask;
--	writel_relaxed(val | bit, reg);
--	gic_unlock_irqrestore(flags);
-+	writeb_relaxed(gic_cpu_map[cpu], reg);
- 
- 	return IRQ_SET_MASK_OK_DONE;
++	return ret;
  }
+ 
+ static ssize_t name_show(struct device *dev, struct device_attribute *a,
 
 
