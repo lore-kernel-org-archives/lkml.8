@@ -2,170 +2,163 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEEAC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7E1C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75EEC2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4705321775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:06:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="gK6UcSR/"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="hHV30ov/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgGTJG1 (ORCPT
+        id S1728181AbgGTJGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:06:27 -0400
-Received: from mail-eopbgr00071.outbound.protection.outlook.com ([40.107.0.71]:30692
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726699AbgGTJGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:06:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YXU+A88MGUnBsNxUtKNFjKCZciBhPvVqymPna9lhIdFZxYokENMmE0b55x211Hoa7iah5ujscx4kas7nWIBQwivND1AoE1umrAIQqIq0tBNvoHhtqz3ARWP/1Exxd4MPL0u6zEKQZHu/TiXKK+bt9m6JmhZOHUNWsIoAajPS7zxf3LAfuhfCm25gTL9d1HacwFsQqUT8vcTznYaFonavJXCNXG/PStGFr9rybvGBJLjTYizbjfwgJH88ZXDWfT9Xxr2oMs0g1m0+DgnC9COF4gzf4/+N5LkphitA+gc+V3jDZormcyfBcGn4tavXnjFmiXxCh0pCmV+F1CN3Do6NLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9sTL4e494V1QvSQiJoYNmQB3UtUzHuuJKU/0gefoInI=;
- b=F9GLwshOZH3/Dnt4q8QK3kfQ5LFwQ9sveQVZHBh3MADp8RaBpwROPggiPN1cQLpGDU08buYS/h7Jd7IpzHHaZH15ZZ0cJOfw99882UcEcqKC5NlVjfta82D5Sy+q5E4AZFpOCDqLgUySlbKHAZQHA2AGSKaBezyr2hGJOYXRE5cbl8gBCfbjIV2NQXfgLWOR/Ukbd7DIpAQsU6x2QIOdZG9A3JfMFtFrJNoN4HDNGDBgVqGZ2GnEtp6YOo7pRvMzyoA8ljVWhAIG7PiC4FVN26QZda++/XwLEVcTkNR58AgymvNUj8Ssz8Id1ThrZZs0ncdW54FjdKdD95ff1/mihA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9sTL4e494V1QvSQiJoYNmQB3UtUzHuuJKU/0gefoInI=;
- b=gK6UcSR/GSIPtO1TMmtYaAv4XLNkrTIemQ6D3G2o8vbVTrzXc5mqxg4iUp6srxhSqSnR10BgM3TBCbnLVOmx06ydqX96hEgSt0hxNC2rDR9s0VxDyaltQFgn5rC3cU9UEP6Urj3anvgC5cjUZnd6St4rx0S/UHd9pjkjAHSu75k=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
-Received: from AM4PR0401MB2401.eurprd04.prod.outlook.com
- (2603:10a6:200:47::26) by AM0PR0402MB3762.eurprd04.prod.outlook.com
- (2603:10a6:208:3::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Mon, 20 Jul
- 2020 09:06:19 +0000
-Received: from AM4PR0401MB2401.eurprd04.prod.outlook.com
- ([fe80::d0eb:f746:90e:44b3]) by AM4PR0401MB2401.eurprd04.prod.outlook.com
- ([fe80::d0eb:f746:90e:44b3%12]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
- 09:06:19 +0000
-From:   franck.lenormand@oss.nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com
-Cc:     franck.lenormand@oss.nxp.com, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com, aisheng.dong@nxp.com, abel.vesa@nxp.com,
-        Anson.Huang@nxp.com, linux@rempel-privat.de,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        qiangqing.zhang@nxp.com, peng.fan@nxp.com
-Subject: [PATCH 0/7] Add support of SECVIO from SNVS on iMX8q/x
-Date:   Mon, 20 Jul 2020 11:06:10 +0200
-Message-Id: <1595235977-106241-1-git-send-email-franck.lenormand@oss.nxp.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR10CA0075.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:15::28) To AM4PR0401MB2401.eurprd04.prod.outlook.com
- (2603:10a6:200:47::26)
+        Mon, 20 Jul 2020 05:06:22 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:42287 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725815AbgGTJGV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 05:06:21 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id xRkVjXSTlNPeYxRkWjmdDD; Mon, 20 Jul 2020 11:06:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1595235979; bh=2FJzit5n0YE2hjdQJPBoYTGdU63MnCmR4nSVSBKTdvs=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=hHV30ov/BaNpJP4l3l+bgYqd8QGPp+Jhiltcq7BEX49RPGrIdYwXAHbPi1pJqnNqz
+         crGm3BTHdr/F3McCy/vfOocsquzupr9RSRxs5PWwblwUKy69GOIaQ64zldYgO06Ba4
+         SwLWUVoKmXTQU2XVpy8TJoa5iLdGmhd1Glz26tiTW97QXEiAPMRW798nkwHAuJooP5
+         Y6QkHuKFoH64sMQ6Ko2WY4mbExcFracOpYKGAA1NaI1GQNWnZ9dIGoRzcOFIsndTxl
+         6FyvXf4ci7TShOqHQaYClc18ILZ6F0pVfxrjtWKVp+QNEwECOY8lORZk8unq+aK1ym
+         sFHuOTefGsq0g==
+Subject: Re: [PATCH v2 1/4] media: v4l2-ctrls: Add encoder constant quality
+ control
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Maheshwar Ajja <majja@codeaurora.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+References: <20200616201446.15996-1-stanimir.varbanov@linaro.org>
+ <20200616201446.15996-2-stanimir.varbanov@linaro.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <075e4109-00ed-4c47-009a-84915ed6f75a@xs4all.nl>
+Date:   Mon, 20 Jul 2020 11:06:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from SOPDPUATS05.ea.freescale.net (81.1.10.98) by AM0PR10CA0075.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:15::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3195.18 via Frontend Transport; Mon, 20 Jul 2020 09:06:18 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [81.1.10.98]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 36e39c94-15af-4a95-0881-08d82c8c2a51
-X-MS-TrafficTypeDiagnostic: AM0PR0402MB3762:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR0402MB37625F2E7366986C041ED0B4D37B0@AM0PR0402MB3762.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: CkQ3YFTX31Cik71wiZ+OGhcGD7lNXrxviJ714H27z3wuMguwGcbcziNenIxb45yHkPW5pw3nUQjSluQyOpSzSdbJPtEexC98k3KcCQnIEEOwtBiYxnxe9ktSI/k9kt1jmM47/Ca/K/Mhovv28YCziMN1kzojg9qSTJHDTIUY/aQLzbHqMIFwof/GuPkYPk6u0BGYv55RLKPLZ9oT5zOhiRpjzpb8gT/gXd4E3BGsHLrdW/wTnB7VV+oRltb46tIAqKAcCIaS12MXAj0H4P1kKjHuvfn8E+8Y8+YTPa9f0FsLHlakT8u5uoR07EGc9kPKGjfkdsIudWjhcLm7oC8N+Dsor9eN6vy7HpWdvEIZ+L+mTw3diiAx7pikzwNmjqZu
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM4PR0401MB2401.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(136003)(346002)(39860400002)(376002)(6512007)(316002)(66476007)(66946007)(66556008)(2906002)(6666004)(9686003)(8676002)(8936002)(86362001)(83380400001)(5660300002)(26005)(186003)(16526019)(2616005)(6506007)(956004)(6486002)(478600001)(52116002)(4326008)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: LkXQE8mVU8hv4vcQbKFoM4pgdRj3Q3mBCzoznLZ1ih/h1JwqJOQXUXZ0I+40TJQev4WPB7cFitnuBpeeB5rkRp/CVh0xCy/EwmTfOozTe35CYV77ZGsjFrxvS9H/J54w6uKjw11joLz900EGF94IIhHD/JVfIWZ1bR7Fab+odFB3PFobgUSPuH1/KKZ2/uYcaQJW+8gAb/eD52N5i0mMw1oZoB7EUR1dupUXM8bWEBPE8H6lLqLxoCquJpdFtwx3iEJEFYnQ9YCyT34no22XepJorSPvpOuNFmtCA4JD2hJgF/CDWTbJUQlgoPxdUpKdHM8S7gAYI1QQsn7eROJfUufaq5HSe6qQZ7HyIHZRZbDmAyZLgbMtyXHk3mdGnsXQYurx/RHXfAnBKh+t0h8OcTZeFVKeMji3AtxTWMvxUI1ax/gIS/TVNh2ZP9ReKDzWM+35UWGta7Gg6Dk+Kgix02RCNxauDY+jDfGLd+Z+D8Y=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36e39c94-15af-4a95-0881-08d82c8c2a51
-X-MS-Exchange-CrossTenant-AuthSource: AM4PR0401MB2401.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 09:06:19.1261
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2kk/t/VbT7pz4rQZax+ar8ARbcL3S4qsM01vxOlbG/eU9xKNYE8iEGd/8odTyEXEZS2SMAVoMQKlr4iUQHVgbvMwtNVR6cmCssyqKuG7SXc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3762
+In-Reply-To: <20200616201446.15996-2-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfMuEScfQvDFOW+ycP4h2PWMq17WlTRaO/n6Hu9nNK+v1KYxd2WYRhfEAWz33YFpy40PtD+0AhTQ8C4PWrd5IrLi5XAjJJrwgzbM2BQC0uQO9BVfQvft/
+ XeL5hbB1x2PB//eCGGXNVSiaWVspG7VyEQmwBLXmbMIstTkYkjmlc7+jjz6u2L7oRkKtTaeUN3by1tN8QLllWUfgrFZvq+i1AHUfAuTgJLuGdHMZExVbJp3o
+ pH7OPVhk2qAwZPqIC615i+6AyT2JO5GJPAUog7ZKrCIhye8eM70uw98sPz0y1wcLOFshhCr8rRp3knInRIOBV/YQ9cQ1c4HYrtX34pFApnhP/smz5Gk7/rr9
+ /NHUIUP9lupWLq6MJSlZ+tgOwmXC8WrvrEWbyTMKn/PNOTefnyYcG8zGWfMqfYKboY4oCrFdmackg3kiA8ecxeCxuSfUtmtDsULeYu9BCOMK5sgTbpekmAQV
+ vDUG7VZ7AUlYAFvY3tw5512XRYolHmn5AAZibg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Franck LENORMAND <franck.lenormand@nxp.com>
+On 16/06/2020 22:14, Stanimir Varbanov wrote:
+> From: Maheshwar Ajja <majja@codeaurora.org>
+> 
+> When V4L2_CID_MPEG_VIDEO_BITRATE_MODE value is
+> V4L2_MPEG_VIDEO_BITRATE_MODE_CQ, encoder will produce
+> constant quality output indicated by
+> V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY control value.
+> Encoder will choose appropriate quantization parameter
+> and bitrate to produce requested frame quality level.
+> 
+> Signed-off-by: Maheshwar Ajja <majja@codeaurora.org>
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
-This patchset aims to add support for the SECurity VIOlation (SECVIO) of the
-SNVS. A secvio is a signal emitted by the SNVS when a hardware attack
-is detected. On imx8x and imx8q SoC, the SNVS is controlled by the
-SECO and it is possible to interact with it using the SCU using the SC APIs.
+Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-For the driver to communicate with the SNVS via the SCU and the SECO, I had to:
- - Add support for exchange of big message with the SCU (needed for
-imx_scu_irq_get_status)
- - Add API to check linux can control the SECVIO (imx_sc_rm_is_resource_owned)
- - Add APIs for the driver to read the state of the SECVIO registers of the
-SNVS and DGO (imx_sc_seco_secvio_enable and imx_sc_seco_secvio_enable).
+Thanks!
 
-To check the state of the SECVIO IRQ in the SCU, I added the
-imx_scu_irq_get_status API.
+	Hans
 
-The secvio driver is designed to receive the IRQ produced by the
-SNVS in case of hardware attack and notify the status to the
-audit framework which can be used by the user.
-
-The goal of the driver is to be self suficient but can be extended by the
-user to perform custom operations on values read (imx_sc_seco_secvio_enable)
-
-Franck LENORMAND (7):
-  firmware: imx: scu-rm: Add Resource Management APIs
-  firmware: imx: scu: Support reception of messages of any size
-  firmware: imx: scu-seco: Add SEcure Controller APIS
-  firmware: imx: scu-irq: Add API to retrieve status of IRQ
-  dt-bindings: firmware: imx-scu: Add SECVIO resource
-  dt-bindings: arm: imx: Documentation of the SC secvio driver
-  soc: imx8: Add the SC SECVIO driver
-
- .../bindings/arm/freescale/fsl,imx-sc-secvio.yaml  |  34 +
- drivers/firmware/imx/Makefile                      |   2 +-
- drivers/firmware/imx/imx-scu-irq.c                 |  37 +-
- drivers/firmware/imx/imx-scu.c                     |  24 +-
- drivers/firmware/imx/rm.c                          |  44 ++
- drivers/firmware/imx/seco.c                        | 275 +++++++
- drivers/soc/imx/Kconfig                            |  10 +
- drivers/soc/imx/Makefile                           |   1 +
- drivers/soc/imx/secvio/Kconfig                     |  10 +
- drivers/soc/imx/secvio/Makefile                    |   3 +
- drivers/soc/imx/secvio/imx-secvio-audit.c          |  39 +
- drivers/soc/imx/secvio/imx-secvio-debugfs.c        | 379 +++++++++
- drivers/soc/imx/secvio/imx-secvio-sc-int.h         |  83 ++
- drivers/soc/imx/secvio/imx-secvio-sc.c             | 873 +++++++++++++++++++++
- include/dt-bindings/firmware/imx/rsrc.h            |   3 +-
- include/linux/firmware/imx/ipc.h                   |   1 +
- include/linux/firmware/imx/sci.h                   |   6 +
- include/linux/firmware/imx/svc/rm.h                |  69 ++
- include/linux/firmware/imx/svc/seco.h              |  73 ++
- include/soc/imx/imx-secvio-sc.h                    | 177 +++++
- 20 files changed, 2134 insertions(+), 9 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx-sc-secvio.yaml
- create mode 100644 drivers/firmware/imx/rm.c
- create mode 100644 drivers/firmware/imx/seco.c
- create mode 100644 drivers/soc/imx/secvio/Kconfig
- create mode 100644 drivers/soc/imx/secvio/Makefile
- create mode 100644 drivers/soc/imx/secvio/imx-secvio-audit.c
- create mode 100644 drivers/soc/imx/secvio/imx-secvio-debugfs.c
- create mode 100644 drivers/soc/imx/secvio/imx-secvio-sc-int.h
- create mode 100644 drivers/soc/imx/secvio/imx-secvio-sc.c
- create mode 100644 include/linux/firmware/imx/svc/rm.h
- create mode 100644 include/linux/firmware/imx/svc/seco.h
- create mode 100644 include/soc/imx/imx-secvio-sc.h
-
--- 
-2.7.4
+> ---
+>  .../userspace-api/media/v4l/ext-ctrls-codec.rst        | 10 ++++++++++
+>  drivers/media/v4l2-core/v4l2-ctrls.c                   |  2 ++
+>  include/uapi/linux/v4l2-controls.h                     |  2 ++
+>  3 files changed, 14 insertions(+)
+> 
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index d0d506a444b1..b9d3f7ae6486 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -581,6 +581,8 @@ enum v4l2_mpeg_video_bitrate_mode -
+>        - Variable bitrate
+>      * - ``V4L2_MPEG_VIDEO_BITRATE_MODE_CBR``
+>        - Constant bitrate
+> +    * - ``V4L2_MPEG_VIDEO_BITRATE_MODE_CQ``
+> +      - Constant quality
+>  
+>  
+>  
+> @@ -592,6 +594,14 @@ enum v4l2_mpeg_video_bitrate_mode -
+>      the average video bitrate. It is ignored if the video bitrate mode
+>      is set to constant bitrate.
+>  
+> +``V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY (integer)``
+> +    Constant quality level control. This control is applicable when
+> +    ``V4L2_CID_MPEG_VIDEO_BITRATE_MODE`` value is
+> +    ``V4L2_MPEG_VIDEO_BITRATE_MODE_CQ``. Valid range is 1 to 100
+> +    where 1 indicates lowest quality and 100 indicates highest quality.
+> +    Encoder will decide the appropriate quantization parameter and
+> +    bitrate to produce requested frame quality.
+> +
+>  ``V4L2_CID_MPEG_VIDEO_TEMPORAL_DECIMATION (integer)``
+>      For every captured frame, skip this many subsequent frames (default
+>      0).
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 3f3fbcd60cc6..bc00d02e411f 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -200,6 +200,7 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+>  	static const char * const mpeg_video_bitrate_mode[] = {
+>  		"Variable Bitrate",
+>  		"Constant Bitrate",
+> +		"Constant Quality",
+>  		NULL
+>  	};
+>  	static const char * const mpeg_stream_type[] = {
+> @@ -832,6 +833,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_MPEG_VIDEO_GOP_CLOSURE:	return "Video GOP Closure";
+>  	case V4L2_CID_MPEG_VIDEO_PULLDOWN:	return "Video Pulldown";
+>  	case V4L2_CID_MPEG_VIDEO_BITRATE_MODE:	return "Video Bitrate Mode";
+> +	case V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY:	return "Constant Quality";
+>  	case V4L2_CID_MPEG_VIDEO_BITRATE:	return "Video Bitrate";
+>  	case V4L2_CID_MPEG_VIDEO_BITRATE_PEAK:	return "Video Peak Bitrate";
+>  	case V4L2_CID_MPEG_VIDEO_TEMPORAL_DECIMATION: return "Video Temporal Decimation";
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index 62271418c1be..0f7e4388dcce 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -375,6 +375,7 @@ enum v4l2_mpeg_video_aspect {
+>  enum v4l2_mpeg_video_bitrate_mode {
+>  	V4L2_MPEG_VIDEO_BITRATE_MODE_VBR = 0,
+>  	V4L2_MPEG_VIDEO_BITRATE_MODE_CBR = 1,
+> +	V4L2_MPEG_VIDEO_BITRATE_MODE_CQ  = 2,
+>  };
+>  #define V4L2_CID_MPEG_VIDEO_BITRATE		(V4L2_CID_MPEG_BASE+207)
+>  #define V4L2_CID_MPEG_VIDEO_BITRATE_PEAK	(V4L2_CID_MPEG_BASE+208)
+> @@ -742,6 +743,7 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
+>  #define V4L2_CID_MPEG_VIDEO_HEVC_HIER_CODING_L6_BR	(V4L2_CID_MPEG_BASE + 642)
+>  #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
+>  #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
+> +#define V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY		(V4L2_CID_MPEG_BASE + 645)
+>  
+>  /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
+>  #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
+> 
 
