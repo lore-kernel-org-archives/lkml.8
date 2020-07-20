@@ -2,101 +2,161 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F95C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F350C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE1AD22B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:44:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ASX+t96h"
+	by mail.kernel.org (Postfix) with ESMTP id 8766922482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgGTHom (ORCPT
+        id S1726754AbgGTHqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:44:42 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:41356 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgGTHom (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 03:44:42 -0400
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 6B7C71FEC7;
-        Mon, 20 Jul 2020 07:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1595231081; bh=cp+frRMJbDSmQF0aHJsiydb5cvCrlCDWTwGZKrqtUy0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ASX+t96hntqJaytBufC3nJUDijiewiMVBuDyDErO8UE5xAmylMffgM2To0T5GKkTo
-         0uE9D73nBInSL4OYPqNdZ/dJszcqZwWANaEY3JKAclGO08/MSEwhuwflbKCjHp/z3f
-         tkdj2eDUGOl/DcvBe8Qs1aaq02E9CJIBtNIHK1fZrgo1/RUc7twgA6+DhvvnyctMaq
-         8td2uxoQmYYk1q7n4aj+d1s7Znu4JxID8pTFHyBpQrEWTYSG49I5pDHcmJLFx7LEgW
-         EhYEpxTYZdRUFxLNEfOVARYnr0OT1P3k76NFkRFJI8sAFbN57arWt9XqB/9Tbcnuyh
-         6G5eUZqRy9udg==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
-Date:   Mon, 20 Jul 2020 15:42:36 +0800
-Message-Id: <20200720074249.596364-4-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.28.0.rc1
-In-Reply-To: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
-References: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
+        Mon, 20 Jul 2020 03:46:43 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44422 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725815AbgGTHqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 03:46:42 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id F33E3A047A3BA07D7708;
+        Mon, 20 Jul 2020 15:46:35 +0800 (CST)
+Received: from [10.65.58.147] (10.65.58.147) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
+ 15:46:26 +0800
+Subject: Re: [RFC PATCH] hwtracing: Add HiSilicon PCIe Tune and Trace device
+ driver
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20200716213120.GA648781@bjorn-Precision-5520>
+CC:     <linux-kernel@vger.kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <linux-pci@vger.kernel.org>,
+        <linuxarm@huawei.com>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <8ba5a585-bce3-94a6-850d-4bf5a22d6805@hisilicon.com>
+Date:   Mon, 20 Jul 2020 15:46:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200716213120.GA648781@bjorn-Precision-5520>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.58.147]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It can be very big on LS7A PCH systems.
+On 2020/7/17 5:31, Bjorn Helgaas wrote:
+> On Thu, Jul 16, 2020 at 05:06:19PM +0800, Yicong Yang wrote:
+>> On 2020/7/11 7:09, Bjorn Helgaas wrote:
+>>> On Sat, Jun 13, 2020 at 05:32:13PM +0800, Yicong Yang wrote:
+>>>> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex
+>>>> integrated Endpoint(RCiEP) device, providing the capability
+>>>> to dynamically monitor and tune the PCIe traffic parameters(tune),
+>>>> and trace the TLP headers to the memory(trace).
+>>>>
+>>>> Add the driver for the device to enable its functions. The driver
+>>>> will create debugfs directory for each PTT device, and users can
+>>>> operate the device through the files under its directory.
+>>>> +Tune
+>>>> +====
+>>>> +
+>>>> +PTT tune is designed for monitoring and adjusting PCIe link parameters(events).
+>>>> +Currently we support events 4 classes. The scope of the events
+>>>> +covers the PCIe core with which the PTT device belongs to.
+>>> All of these look like things that have the potential to break the
+>>> PCIe protocol and cause errors like timeouts, receiver overflows, etc.
+>>> That's OK for a debug/analysis situation, but it should taint the
+>>> kernel somehow because I don't want to debug problems like that if
+>>> they're caused by users tweaking things.
+>>>
+>>> That might even be a reason *not* to merge the tune side of this.  I
+>>> can see how it might be useful for you internally, but it's not
+>>> obvious to me how it will benefit other users.  Maybe that part should
+>>> be an out-of-tree module?
+>> All the tuning values are not accurate, but abstracted to several
+>> _levels_ of each events. The levels are delicately designed to
+>> guarantee by the hardware that they are always valid and will not
+>> break the PCIe link.  The possible level values exposed to the users
+>> is tested and safe and other values will not be accepted.
+>>
+>> The final tuning events is not settled and we'll not exposed the
+>> events which will may lead to the link broken. Furthermore, maybe we
+>> could default disable the tune events' level adjustment and make
+>> them readonly. The user can enable the full tune function by a
+>> module parameters or in the BIOS, and a warning message will be
+>> displayed.
+>>
+>> The tune part is beneficial for the users and not only for our
+>> internal use.  We intends to provide a way to tune the link
+>> depending on the downstream components and link configuration. For
+>> example, users can tune the data path QoS level to get better
+>> performance according to the link width is x8 or x16, or according
+>> to the endpoints' class is a network card or a nvme disk.  It will
+>> make our controller adapt to different condition with high
+>> performance, so we hope this feature to be merged.
+> OK.  This driver itself is outside my area, so I guess merging it is
+> up to Alexander.
+>
+> Do you have any measurements of performance improvements?  I think it
+> would be good to have real numbers showing that this is useful.
+>
+> You mentioned a warning message, so I assume you'll add some kind of
+> dmesg logging when tuning happens?
+>
+> Is this protected so it's only usable by root or other appropriate
+> privileged user?
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/include/asm/io.h                     | 3 ++-
- arch/mips/include/asm/mach-loongson64/spaces.h | 3 +--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+We haven't got measurement statistic currently as the device is still in
+progress. We can measure the improvements when it's finalized.
 
-diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-index 346fffd9e972..0072489325fa 100644
---- a/arch/mips/include/asm/io.h
-+++ b/arch/mips/include/asm/io.h
-@@ -50,8 +50,9 @@
- # define __relaxed_ioswabq ioswabq
- 
- /* ioswab[bwlq], __mem_ioswab[bwlq] are defined in mangle-port.h */
--
-+#ifndef IO_SPACE_LIMIT
- #define IO_SPACE_LIMIT 0xffff
-+#endif
- 
- /*
-  * On MIPS I/O ports are memory mapped, so we access them using normal
-diff --git a/arch/mips/include/asm/mach-loongson64/spaces.h b/arch/mips/include/asm/mach-loongson64/spaces.h
-index 3de0ac9d8829..b99b43854929 100644
---- a/arch/mips/include/asm/mach-loongson64/spaces.h
-+++ b/arch/mips/include/asm/mach-loongson64/spaces.h
-@@ -11,8 +11,7 @@
- #define PCI_IOSIZE	SZ_16M
- #define MAP_BASE	(PCI_IOBASE + PCI_IOSIZE)
- 
--/* Reserved at the start of PCI_IOBASE for legacy drivers */
--#define MMIO_LOWER_RESERVED	0x10000
-+#define IO_SPACE_LIMIT 0x00ffffff
- 
- #include <asm/mach-generic/spaces.h>
- #endif
--- 
-2.28.0.rc1
+I suppose to add some info/warning messages in dmesg log when tune happens.
+
+The whole PTT functions are accessible only by root.
+
+
+>
+>>>> +		 * The PTT can designate function for trace.
+>>>> +		 * Add the root port's subordinates in the list as we
+>>>> +		 * can specify certain function.
+>>>> +		 */
+>>>> +		child_bus = tpdev->subordinate;
+>>>> +		list_for_each_entry(tpdev, &child_bus->devices, bus_list) {
+>>> *This* looks like a potential problem with hotplug.  How do you deal
+>>> with devices being added/removed after this loop?
+>> Yes. I have considered the add/remove situation but not intend to address it
+>> in this RFC and assume the topology is static after probing.
+>> I will manage the situation in next version.
+> What happens if a device is added or removed after boot?  If the only
+> limitation is that you can't tune or trace a hot-added device, that's
+> fine.  (I mean, it's really *not* fine because it's a poor user
+> experience, but at least it's just a usability issue, not a crash.)
+>
+> But if hot-adding or hot-removing a device can cause an oops or a
+> crash or something, *that* is definitely a problem.
+
+The hot-adding or hot-removing will not cause a crash or an oops. If we
+trace a function which is removed after boot, we'll get no data as there
+is no TLPs on the link. If we trace a function added after boot,
+we can get valid datas.
+
+These situations should be considered by the driver. If user input a
+removed BDF, an -EINVAL should return. If user input a BDF added after
+boot, driver should address it properly(in this RFC, as the BDF is not
+in list so an -EINVAL will return).
+
+The available function/root port list of PTT in this RFC is static, it
+should be dynamic considering the hot-added/hot-removed situations. Or
+with other ways instead of maintaining a list.
+
+Regards,
+Yicong
+
+
+>
+> Bjorn
+> .
+>
 
