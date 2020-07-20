@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD34C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4B0C433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD0A320672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D7D4206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261360;
-	bh=MR7PYcRcX1ev1bmrHvvbkcLvKZOjWSCMRCzeKzi9goI=;
+	s=default; t=1595261362;
+	bh=61N1JrhVoGC69lHR01/ihGSNnZtEraMQ42MzNixm1v8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vbRg7I7Eny1MGRbMniigkts6JpXfmiA86KDgpp0SvIFhKOAgNUdORo5Ei5Xa+9TXa
-	 WN5RRJ3aVwy3TzOiED5SBPfBvHHo/IvnhKcLOxqlJ7HGQMRGVAplo6cLpfTeDQG5Vy
-	 T6GTk8a6izu/LWYfzYe81LRwHoVO92YDk3UXuGGg=
+	b=zXd8ITR0GY1yy7Dvdx+VqEQ46zteVIPAr+y77ka4aiw9I7FOEDx4oxRRFvQD4G6wh
+	 UFMMZNCafKQpE1StzdtK5duzM7aihLT9kBj1h6snE6rrpkIMU44m7UD4WAx1dsNqaR
+	 0BjRhFmfnidaLB3OdmWmNyzvbIJ46XsiLsmtzNic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387502AbgGTQJT (ORCPT
+        id S2387511AbgGTQJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:09:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46980 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:09:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387490AbgGTQJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:09:11 -0400
+        id S2387497AbgGTQJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:09:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27EA7206E9;
-        Mon, 20 Jul 2020 16:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79E6F20672;
+        Mon, 20 Jul 2020 16:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261350;
-        bh=MR7PYcRcX1ev1bmrHvvbkcLvKZOjWSCMRCzeKzi9goI=;
+        s=default; t=1595261354;
+        bh=61N1JrhVoGC69lHR01/ihGSNnZtEraMQ42MzNixm1v8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XzcLSQathvc6IZD8j2uK4Ck4263ID3a3VXvS/OYuck6XCJRdpDtKx89Q8yBvRXn4t
-         s9IDleYGBDo+LFGd0Er3T9hWbNauHhIlTVS0+WvC1/YN+JqwEm6N5GupUKfExxBmMb
-         YTXKwPQBbc+EV63SSUrIDCVX9jUsOj7zESPunj0I=
+        b=SNIMYJivPNImIk777FVooqs2yd6g//TQ0l+bD/tAftaK7tFvQnhs7rXHLjwXsjy0h
+         pctURD3tGD6D+f5lmTERP+h23CgtxbmrNEkL4c4R0a7YF27O0CNpcdiSVZa2yePH1/
+         UPiwXV1Mtm/0aHEQ31VnBkLW1YLWHuISeH9LJB7Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 085/244] phy: rockchip: Fix return value of inno_dsidphy_probe()
-Date:   Mon, 20 Jul 2020 17:35:56 +0200
-Message-Id: <20200720152829.880983999@linuxfoundation.org>
+Subject: [PATCH 5.7 086/244] phy: sun4i-usb: fix dereference of pointer phy0 before it is null checked
+Date:   Mon, 20 Jul 2020 17:35:57 +0200
+Message-Id: <20200720152829.930512678@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,38 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit fdc355a03df537bc8d8909b86d1688fe07c7032b ]
+[ Upstream commit 38b1927e5bf9bcad4a2e33189ef1c5569f9599ba ]
 
-When call function devm_platform_ioremap_resource(), we should use IS_ERR()
-to check the return value and return PTR_ERR() if failed.
+Currently pointer phy0 is being dereferenced via the assignment of
+phy on the call to phy_get_drvdata before phy0 is null checked, this
+can lead to a null pointer dereference. Fix this by performing the
+null check on phy0 before the call to phy_get_drvdata. Also replace
+the phy0 == NULL check with the more usual !phy0 idiom.
 
-Fixes: b7535a3bc0ba ("phy/rockchip: Add support for Innosilicon MIPI/LVDS/TTL PHY")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://lore.kernel.org/r/1590412138-13903-1-git-send-email-yangtiezhu@loongson.cn
+Addresses-Coverity: ("Dereference before null check")
+Fixes: e6f32efb1b12 ("phy: sun4i-usb: Make sure to disable PHY0 passby for peripheral mode")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20200625124428.83564-1-colin.king@canonical.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/phy/allwinner/phy-sun4i-usb.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c b/drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c
-index a7c6c940a3a8c..8af8c6c5cc028 100644
---- a/drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c
-+++ b/drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c
-@@ -607,8 +607,8 @@ static int inno_dsidphy_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, inno);
+diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
+index 8569273822487..e5842e48a5e07 100644
+--- a/drivers/phy/allwinner/phy-sun4i-usb.c
++++ b/drivers/phy/allwinner/phy-sun4i-usb.c
+@@ -545,13 +545,14 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 	struct sun4i_usb_phy_data *data =
+ 		container_of(work, struct sun4i_usb_phy_data, detect.work);
+ 	struct phy *phy0 = data->phys[0].phy;
+-	struct sun4i_usb_phy *phy = phy_get_drvdata(phy0);
++	struct sun4i_usb_phy *phy;
+ 	bool force_session_end, id_notify = false, vbus_notify = false;
+ 	int id_det, vbus_det;
  
- 	inno->phy_base = devm_platform_ioremap_resource(pdev, 0);
--	if (!inno->phy_base)
--		return -ENOMEM;
-+	if (IS_ERR(inno->phy_base))
-+		return PTR_ERR(inno->phy_base);
+-	if (phy0 == NULL)
++	if (!phy0)
+ 		return;
  
- 	inno->ref_clk = devm_clk_get(dev, "ref");
- 	if (IS_ERR(inno->ref_clk)) {
++	phy = phy_get_drvdata(phy0);
+ 	id_det = sun4i_usb_phy0_get_id_det(data);
+ 	vbus_det = sun4i_usb_phy0_get_vbus_det(data);
+ 
 -- 
 2.25.1
 
