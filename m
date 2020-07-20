@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0455EC3E8C5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E63A4C3F2FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2974208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C47206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281339;
-	bh=cG/2WH/UY49/aXW0Api1LLFDIEPIklWAnsPDhfemt+w=;
+	s=default; t=1595281345;
+	bh=xAwsdarEG2CBrklf9ot9VZhvrow2vneesuNuCyiKZP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AdOuadqkTV0gTP/Ps8yACx19crKlvIrpmmc2PjyQhS4Y7TsIciOBNgC+kGPE3bXRy
-	 x/PIrQIe/n3D+fWyuLAMqXLRZy+FhR9sdOHYL6VLuFWr0Wy0Rkxj4V5PXH7dZFod7f
-	 Pf4V7siLGoCgrUM7XgoMUQzUBGVyD5DveCgusgUQ=
+	b=vYuTA0/OFhjK3iCiqe6E+INMeXg75+VP3pMkRP7f9DCr5CmCJow6CiUQT1xjuo2/c
+	 NXbjPaP34ul/0blMPCzYI6M7KA6UcvK5izlAp2UcGqs/KGgrw1p7exJyv1R2slWMwO
+	 9SVTZRYaYqmg+dNeS2H5l4jZbXbgOfvzwV77kPBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbgGTVmP (ORCPT
+        id S1728836AbgGTVmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58216 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:42:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbgGTVjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:05 -0400
+        id S1728313AbgGTVjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53A0C20717;
-        Mon, 20 Jul 2020 21:39:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C20D320717;
+        Mon, 20 Jul 2020 21:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281145;
-        bh=cG/2WH/UY49/aXW0Api1LLFDIEPIklWAnsPDhfemt+w=;
+        s=default; t=1595281141;
+        bh=xAwsdarEG2CBrklf9ot9VZhvrow2vneesuNuCyiKZP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rKq3GwgXoIuQEgjtAKU4BnEtF8QWR+FWHCFXndVzvg0qGcWDsfpMECVRpNw0Vub3m
-         u6QJQPQKdDk521bO5YbQBdfC1xoGs++hFINx61c3d/YCwDNeq42N1C7sNNSPVOx8Q2
-         cPFTVweBFFeVNrJ11V8jexRoUKRQEfqneZvIpOek=
+        b=jAfB7vgJ4toTGZLo9zMtVEa883YHkGjWfd7vNOeKaYMymNBItMRp6z5xntg/IZKIg
+         x1fe22YSJAB1mCAIUFvb71l1h0ALspyKr9DHtvl8jkVnwzqE/Q+CrDctEekRUMjmNC
+         SBCqd6nl97t9irv3LiaWeP/sT9j4eqI78Jfb1/28=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Katsnelson <me@0upti.me>, Lyude Paul <lyude@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 11/19] Input: synaptics - enable InterTouch for ThinkPad X1E 1st gen
-Date:   Mon, 20 Jul 2020 17:38:42 -0400
-Message-Id: <20200720213851.407715-11-sashal@kernel.org>
+Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 08/19] regmap: dev_get_regmap_match(): fix string comparison
+Date:   Mon, 20 Jul 2020 17:38:39 -0400
+Message-Id: <20200720213851.407715-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213851.407715-1-sashal@kernel.org>
 References: <20200720213851.407715-1-sashal@kernel.org>
@@ -59,34 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Katsnelson <me@0upti.me>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-[ Upstream commit dcb00fc799dc03fd320e123e4c81b3278c763ea5 ]
+[ Upstream commit e84861fec32dee8a2e62bbaa52cded6b05a2a456 ]
 
-Tested on my own laptop, touchpad feels slightly more responsive with
-this on, though it might just be placebo.
+This function is used by dev_get_regmap() to retrieve a regmap for the
+specified device. If the device has more than one regmap, the name parameter
+can be used to specify one.
 
-Signed-off-by: Ilya Katsnelson <me@0upti.me>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Link: https://lore.kernel.org/r/20200703143457.132373-1-me@0upti.me
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+The code here uses a pointer comparison to check for equal strings. This
+however will probably always fail, as the regmap->name is allocated via
+kstrdup_const() from the regmap's config->name.
+
+Fix this by using strcmp() instead.
+
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Link: https://lore.kernel.org/r/20200703103315.267996-1-mkl@pengutronix.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/synaptics.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/base/regmap/regmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-index 671e018eb363a..c6d393114502d 100644
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -182,6 +182,7 @@ static const char * const smbus_pnp_ids[] = {
- 	"LEN0093", /* T480 */
- 	"LEN0096", /* X280 */
- 	"LEN0097", /* X280 -> ALPS trackpoint */
-+	"LEN0099", /* X1 Extreme 1st */
- 	"LEN009b", /* T580 */
- 	"LEN200f", /* T450s */
- 	"LEN2044", /* L470  */
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index c7d946b745efe..d26b485ccc7d0 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1343,7 +1343,7 @@ static int dev_get_regmap_match(struct device *dev, void *res, void *data)
+ 
+ 	/* If the user didn't specify a name match any */
+ 	if (data)
+-		return (*r)->name == data;
++		return !strcmp((*r)->name, data);
+ 	else
+ 		return 1;
+ }
 -- 
 2.25.1
 
