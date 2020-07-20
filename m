@@ -2,156 +2,392 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11F0C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AD4C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 747FA2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080EA2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:39:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="McOBU4p2"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="kKVNxe26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgGTHhx (ORCPT
+        id S1726820AbgGTHjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:37:53 -0400
-Received: from mail-eopbgr60132.outbound.protection.outlook.com ([40.107.6.132]:61603
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725815AbgGTHhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 03:37:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IMVrl0haBbZvELOc4cWajlGQBHHMMW52AZ296D0+8qCl3DjBOg1K7JIW48vvEo7icK9CrrwJQZvATef2Ug2KIKRWucv1ufiqAM5+Vw0rvr9kkyONlgd5uxQuMghD56DAbg//+Yh5AZx6Co7SCG+ZmkhVICe8/CdKgd1Cao7BsT7yP9JqTklYLLZF5CJ/cKjmZxjgWvt1N4SIOXosiXa4DUjgUJEnMHqmZpBxF4ujBpjPXbR42IyFDXN3FV2wcTb6gewND35x8yeViABd/IpM3b6rMwOV4e/iRo4khvtvP1Uc00XN/+8DdyGsnIiXvXQVLR7/fBxv1Fdu1HL3mEdulw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0LU13Jc9P/E/+ipreowxqO3opi/1WjNvPqr+Nj3D2sI=;
- b=B8jErASusI0mpHdITecIE5FP9CBd0vI5TWLS+qvVHjmm3kqkqoFBrWTVtT1yLIRDI0uiRERZYb+2AFOOCwtiY7UL4KGyhLixNDTacMfIItj7ZbAu9M4i0bhsLzJ0Jw6SHSVEHlRhove3yBZ7OkDOENF5Qwla8lFUCE0tKuOhMpcQTZY7ayt4iQEEkYazefJuixXUNxPYn8+jFvAoFJ2AfVh3iK9rqCghfDTXGDTuxxbeEZU3Y5a9f8YB9XZCk0CBbc7TskkhYYm0Ewa9MxibG7vEtEluIFLdu2eGG0b6Q3ti4XoLWaepbAxvEzk6yRzNKGi14LY9KrUu4CYraEqcPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0LU13Jc9P/E/+ipreowxqO3opi/1WjNvPqr+Nj3D2sI=;
- b=McOBU4p2YEDO9IWlSCHgyv0Yh1VBMX+NIqVJ6rJR7swg2mdeFtZu7FImMFpFYp2B6q/c+XxL/gLnVbz9dMyMqExmoAYHRtTg3PpEN9expnxBzvRqXwgsFfXCDBl17mzlQi4IBI6SROSy2Z+euR45F8gL8Gt3wV8WHNoeQMnNZyE=
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (2603:10a6:20b:a8::25)
- by AM6PR05MB6376.eurprd05.prod.outlook.com (2603:10a6:20b:ba::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18; Mon, 20 Jul
- 2020 07:37:48 +0000
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::1d81:6a9b:8c26:3b7d]) by AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::1d81:6a9b:8c26:3b7d%4]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
- 07:37:48 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/3] ARM: dts: colibri-imx7: add usb dual-role switch
- capability
-Thread-Topic: [PATCH 3/3] ARM: dts: colibri-imx7: add usb dual-role switch
- capability
-Thread-Index: AQHWVr15sZvxLwnO3E+b+KcqajdLWakFR14AgAAjuQCAAU+xgIAABwcAgAkG2gCAAFsvgA==
-Date:   Mon, 20 Jul 2020 07:37:48 +0000
-Message-ID: <5616f6e189845de7c4acfd9eede540ef6e6e9eb0.camel@toradex.com>
-References: <20200710132423.497230-1-philippe.schenker@toradex.com>
-         <20200710132423.497230-3-philippe.schenker@toradex.com>
-         <73240ab0-5069-40c5-4ade-7fcc2207dfaf@pengutronix.de>
-         <c76c0fd056512a3f8e24bf06e7bb7e1650090609.camel@toradex.com>
-         <7e6f8135-120f-0831-20ad-25648ea646b8@pengutronix.de>
-         <83b230cef109e1a413ab1036c21ad763a1d127eb.camel@toradex.com>
-         <20200720021125.GC11560@dragon>
-In-Reply-To: <20200720021125.GC11560@dragon>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.3 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=toradex.com;
-x-originating-ip: [31.10.206.124]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9aadc937-788c-4905-d970-08d82c7fcce7
-x-ms-traffictypediagnostic: AM6PR05MB6376:
-x-microsoft-antispam-prvs: <AM6PR05MB6376E07DCC41FD2FDBB545F0F47B0@AM6PR05MB6376.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0qyIQcgXWEzqsQwutELF0M5yq2c1/5widbUTTqiXpz0rSFIZBqiFX+fBMntI8wCkE4aG1Sns9dK8OsxbrtcrBh8Iepyf2qhjQ7z1zrt9Rx6P/BeAa1qS6Zy7JzxmTm7wwbqDnb5Sljiobp9Kyn04CRfSzzDnetWzdI2psXF6hnCcombefCT1FXRqE4lvcHKNiWTHXIT8VOD+vKRGneFfXJiVJrZpYidSlVqVAuP7uDYzgK7lRaydWialf3fff4hDVSj66riHOLv9ywnf8eHi/8WfxwdILjDRiQo1yh4RZ24mTj6JFM6ok2wtDFH5TrMkmQLNK5Ep2zuPtXEQ0N+bWA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6120.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39840400004)(346002)(136003)(396003)(366004)(376002)(2906002)(53546011)(6486002)(186003)(6506007)(44832011)(5660300002)(86362001)(8676002)(54906003)(66476007)(64756008)(4326008)(8936002)(7416002)(6916009)(83380400001)(66946007)(76116006)(91956017)(66446008)(66556008)(2616005)(26005)(36756003)(71200400001)(316002)(478600001)(6512007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: +9KpE0nLEWVGP/EfjNAqeiVitepbo+HNiwfnyQeJRU9bJl7O9yl6kNWra/0AXcHDfjOyhNPIzV0uJ3mWVclmZnvM0fSqEC401bBdqiCi7A1Dy6acFIJF6fOqpZ9TbntIT793y0EOF/W3iZA8LwZYP5ZjjBCLDs2Yev5bND24C6Fu+SLjmIUhY7wRH5RrwVIaNQRqVHzFpe/ERRaCX96kqxFluT6lnezx7NFhVp6mekAkP7ZJi2FznZGPrYxphBP+m9Lm3MNYJ7IAOMz5Ak/BmHRU1eRcdpl5wIvDZ3O8wIFmquC8LZjvapdMG0d0UC2vkRq1dwC6b0YzDDfnljofEw8x5Rl4PjcxtUGhJXbMZbW7zoNPZOsvI3o3DBZznQg736gIi2bxXMQkjmM4M30v2k8r4RlGKSdtXO1b+p5rYuXhOhDPr6pPaBjCbtI2oZnT+19+VnVaJ6eB3wy2fCWOgJ3NuMqg/wltapw2JWf+tIY=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D6AA8CAF39DB3A4384387189C9AB531F@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 20 Jul 2020 03:39:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgGTHjK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 03:39:10 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B169C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 00:39:10 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id s10so16702920wrw.12
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 00:39:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kO9jUz2o3jGtoARttiFeqwT1tGRK6nMQZqp/pdgxVlg=;
+        b=kKVNxe26UlW7Gn9lEM1wi7GMii9ySn8UwK+sqdiEHl5jGre495bIEZs3u7u2OJO4pc
+         1vX8INbU1CEKViP2mzBGomqO03mhRoGawiWAgR8LtD48KD3aJ/HAuNmBBZKD1lofiDmq
+         8QgkfAQdeHpddHyYStr3jkFM9WC4byqtjqAK0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=kO9jUz2o3jGtoARttiFeqwT1tGRK6nMQZqp/pdgxVlg=;
+        b=ZZVdyIKMSYRyiNj7AOH5qm09nsXcEVuTfTR3d24rqRjNdEvo3D3n2HNba/38Mxcmye
+         X7QcEXiW9U/F5IHBuCDEwmqbM8nlhSn94brqnMRLAe4myQbX+/iufMSrAiTdvxNAXWYQ
+         E1WhaK3AO0XQt8WRAvAdcemufq4H84ePBREew2eHgQbD6qYV9MG3RYKCWjfnWhJ/R6R2
+         g7YBQwatlInIVKD7lRAvffthW9c+YioZIhAlUP5Tj+uJUTJXx7FG1MsdVaXTgXU961eB
+         1gfbHJMuqggsITQ4sMEfkrnBOt4gXFj5FNLt8Zpra1Lew0/zbSRhCJ0fOJRwFrTwY2mB
+         xbdQ==
+X-Gm-Message-State: AOAM5315XVfJYI56ewQLp0Yga6lRWF9+Z9Km4zwFOmBack/6kWxIu8ae
+        grttBWW0H/9UXg0bmHaC3eTqow==
+X-Google-Smtp-Source: ABdhPJy5uwtAFcY3H9hL5+1GbAUGBABSkTXsfs5jw+VA7PGfZwfVPoI/HKuOX2WdbLLIWUMqtIr3cg==
+X-Received: by 2002:a5d:4984:: with SMTP id r4mr3459576wrq.401.1595230748718;
+        Mon, 20 Jul 2020 00:39:08 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id o7sm17507150wrv.50.2020.07.20.00.39.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 00:39:07 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 09:39:05 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     b.zolnierkie@samsung.com, corbet@lwn.net, sam@ravnborg.org,
+        arnd@arndb.de, sashal@kernel.org, weh@microsoft.com,
+        michal.simek@xilinx.com, paul@crapouillou.net,
+        masahiroy@kernel.org, daniel.vetter@ffwll.ch,
+        rdunlap@infradead.org, jani.nikula@intel.com,
+        viresh.kumar@linaro.org, Julia.Lawall@inria.fr,
+        linus.walleij@linaro.org, yuehaibing@huawei.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH for v5.9] video: fbdev: Replace HTTP links with HTTPS ones
+Message-ID: <20200720073905.GW3278063@phenom.ffwll.local>
+Mail-Followup-To: "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        b.zolnierkie@samsung.com, corbet@lwn.net, sam@ravnborg.org,
+        arnd@arndb.de, sashal@kernel.org, weh@microsoft.com,
+        michal.simek@xilinx.com, paul@crapouillou.net, masahiroy@kernel.org,
+        rdunlap@infradead.org, jani.nikula@intel.com,
+        viresh.kumar@linaro.org, Julia.Lawall@inria.fr,
+        linus.walleij@linaro.org, yuehaibing@huawei.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+References: <20200719203714.61745-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR05MB6120.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9aadc937-788c-4905-d970-08d82c7fcce7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 07:37:48.2700
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uerxZor4BInX8ujnVTrZY1iF0/kYyCIVXXGcaqqN7+6CtJnSj52NMRi4M1AAEwwvUT6JZ1tY+7L+3p+QASXcIRAbrglyW/mZq/5aOanvksE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB6376
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200719203714.61745-1-grandmaster@al2klimov.de>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA3LTIwIGF0IDEwOjExICswODAwLCBTaGF3biBHdW8gd3JvdGU6DQo+IE9u
-IFR1ZSwgSnVsIDE0LCAyMDIwIGF0IDA4OjIwOjM0QU0gKzAwMDAsIFBoaWxpcHBlIFNjaGVua2Vy
-IHdyb3RlOg0KPiA+IE9uIFR1ZSwgMjAyMC0wNy0xNCBhdCAwOTo1NSArMDIwMCwgQWhtYWQgRmF0
-b3VtIHdyb3RlOg0KPiA+ID4gSGVsbG8gUGhpbGlwcGUsDQo+ID4gPiANCj4gPiA+IE9uIDcvMTMv
-MjAgMTo1MyBQTSwgUGhpbGlwcGUgU2NoZW5rZXIgd3JvdGU6DQo+ID4gPiA+IE9uIE1vbiwgMjAy
-MC0wNy0xMyBhdCAxMTo0NiArMDIwMCwgQWhtYWQgRmF0b3VtIHdyb3RlOg0KPiA+ID4gPiA+IEhl
-bGxvIFBoaWxpcHBlLA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gKwlleHRjb25fdXNiY19kZXQ6
-IHVzYmNfZGV0IHsNCj4gPiA+ID4gPiA+ICsJCWNvbXBhdGlibGUgPSAibGludXgsZXh0Y29uLXVz
-Yi1ncGlvIjsNCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBBY2NvcmRpbmcgdG8gNDYwMmYzYmZmMjY2
-ICgidXNiOiBjb21tb246IGFkZCBVU0IgR1BJTyBiYXNlZA0KPiA+ID4gPiA+IGNvbm5lY3Rpb24N
-Cj4gPiA+ID4gPiBkZXRlY3Rpb24gZHJpdmVyIik6DQo+ID4gPiA+ID4gInRoZSBvbGQgd2F5IHVz
-aW5nIGV4dGNvbiB0byBzdXBwb3J0IFVTQiBEdWFsLVJvbGUgc3dpdGNoIGlzDQo+ID4gPiA+ID4g
-bm93DQo+ID4gPiA+ID4gZGVwcmVjYXRlZA0KPiA+ID4gPiA+ICB3aGVuIHVzZSBUeXBlLUIgY29u
-bmVjdG9yLiINCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBIYXZlIHlvdSBjb25zaWRlcmVkIHVzaW5n
-IGEgY29tcGF0aWJsZSA9ICJncGlvLXVzYi1iLQ0KPiA+ID4gPiA+IGNvbm5lY3RvciINCj4gPiA+
-ID4gPiBjaGlsZA0KPiA+ID4gPiA+IG5vZGUgaW5zdGVhZD8NCj4gPiA+ID4gPiANCj4gPiA+ID4g
-PiBDaGVlcnMsDQo+ID4gPiA+ID4gQWhtYWQNCj4gPiA+ID4gDQo+ID4gPiA+IFRoYW5rcyBmb3Ig
-dGhlIEhpbnQgQWhtYWQsDQo+ID4gPiA+IA0KPiA+ID4gPiBJIGFscmVhZHkgdHJpZWQgYW5kIGp1
-c3Qgbm93IHRyaWVkIGFnYWluIGJ1dCBpdCBkb2Vzbid0IHdvcmsgb24NCj4gPiA+ID4gb3VyDQo+
-ID4gPiA+IGhhcmR3YXJlLiBBcmUgeW91IHN1cmUgdGhpcyB3b3JrcyB3aXRoIGNoaXBpZGVhIGRy
-aXZlcj8NCj4gPiA+IA0KPiA+ID4gSSBoYXZlbid0LCBqdXN0IHdhbnRlZCB0byBwb2ludCBpdHMg
-ZXhpc3RlbmNlIG91dCBpbiBjYXNlIHlvdQ0KPiA+ID4gZGlkbid0DQo+ID4gPiBrbm93Lg0KPiA+
-ID4gU2VlbXMgd2UgbmVlZCB0byBjYWxsIG9mX3BsYXRmb3JtX3BvcHVsYXRlIHNvbWV3aGVyZSBp
-biB0aGUNCj4gPiA+IGRyaXZlci4NCj4gPiA+IFVuc3VyZSB3aGF0IG90aGVyIGNoYW5nZXMgYXJl
-IG5lY2Vzc2FyeS4NCj4gPiANCj4gPiBZZXAsIHRoYW5rcyBmb3IgdGhhdCEgSXQgc2VlbXMgbGlr
-ZSB0aGF0IG5lZWQgdG8gYmUgcmVhbGx5IGNhbGxlZCBhcw0KPiA+IEkNCj4gPiBjYW4ndCBnZXQg
-YSBwcm9iZSBvZiB0aGUgbmV3IHVzYiBjb25uZWN0b3IgZHJpdmVyLiBJIHF1aWNrbHkgZ3JlcHBl
-ZA0KPiA+IHRocm91Z2ggY29kZSBhbmQgc2F3IHRoYXQgdGVncmEgVVNCIGRyaXZlciBpcyBjYWxs
-aW5nDQo+ID4gb2ZfcGxhdGZvcm1fcG9wdWxhdGUgYW5kIHRoZXkgYWxzbyB1c2UgdGhhdCBncGlv
-LXVzYi1iLWNvbm5lY3Rvci4NCj4gPiANCj4gPiA+ID4gU2hvdWxkIHRoaXMgbmV3IHVzYi1jb25u
-ZWN0b3Igc3R1ZmYgd29yayBpbiBnZW5lcmFsIHdpdGggZXZlcnkNCj4gPiA+ID4gb2xkDQo+ID4g
-PiA+IGRyaXZlcj8NCj4gPiA+IA0KPiA+ID4gSWYgdGhlIGRyaXZlciBzdXBwb3J0IGlzbid0IHRo
-ZXJlIHlldCwgSSB0aGluayB1c2Ugb2YgZXh0Y29uIGlzDQo+ID4gPiBmaW5lDQo+ID4gPiBhcyBp
-cy4NCj4gDQo+IFNob3VsZG4ndCB3ZSBpbXByb3ZlIGNoaXBpZGVhIGRyaXZlciB0byBnZXQgaXQg
-d29yayB3aXRoIGdwaW8tdXNiLWItDQo+IGNvbm5lY3Rvcj8NCg0KSSBrbm93IHRoaXMgd291bGQg
-YmUgbmljZSBidXQgSSBkb24ndCBrbm93IHRoYXQgY29kZSB3ZWxsIGVub3VnaCB0byBiZQ0KYWJs
-ZSB0byBtYWtlIHRoaXMgY2hhbmdlcyBpbiBhIHRpbWVseSBtYW5uZXIuIEFuZCBJIHJhdGhlciBs
-aWtlIHRvIGhhdmUNCnN1cHBvcnQgZm9yIFVTQiBkdWFsLXJvbGUgc3VwcG9ydCAidGhlIG9sZCB3
-YXkiIG5vdyB0aGFuIG5ldmVyICh3ZQ0KYWN0dWFsbHkgdHJpZWQgdGhpcyBmb3IgYWxvbmcgdGlt
-ZSBvbiBvdXIgQ29saWJyaSBib2FyZHMpLg0KDQpJIGRpc2NvdmVyZWQgYSBidWcgaW4gdGhhdCBk
-cml2ZXIgdG9nZXRoZXIgd2l0aCBQZXRlciBDaGVuLCB3aGljaCBnb3QNCm5vdyBzb2x2ZWQgYnkg
-aGltIGFuZCBJIHdvdWxkIGxpa2UgdG8gdXNlIHRoZSBob3N0L2RldmljZSBzd2l0Y2hpbmcgb24N
-CmNvbGlicmktaW14Ni83IGJvYXJkcyBub3cuDQo+IA0KPiBTaGF3bg0K
+On Sun, Jul 19, 2020 at 10:37:14PM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+
+Merged this and the drm patch from yours, thanks.
+
+I tried also applying the drm/bridge one for dt files, but that doesn't
+apply cleanly to drm-misc-next so no idea.
+-Daniel
+
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+> 
+>  If there are any URLs to be removed completely
+>  or at least not (just) HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+>  Sorry again to all maintainers who complained about subject lines.
+>  Now I realized that you want an actually perfect prefixes,
+>  not just subsystem ones.
+>  I tried my best...
+>  And yes, *I could* (at least half-)automate it.
+>  Impossible is nothing! :)
+> 
+> 
+>  Documentation/fb/ep93xx-fb.rst                    | 2 +-
+>  drivers/video/fbdev/Kconfig                       | 8 ++++----
+>  drivers/video/fbdev/core/fbmon.c                  | 4 ++--
+>  drivers/video/fbdev/ep93xx-fb.c                   | 2 +-
+>  drivers/video/fbdev/grvga.c                       | 2 +-
+>  drivers/video/fbdev/macfb.c                       | 2 +-
+>  drivers/video/fbdev/metronomefb.c                 | 2 +-
+>  drivers/video/fbdev/omap2/omapfb/dss/Kconfig      | 4 ++--
+>  drivers/video/fbdev/omap2/omapfb/dss/hdmi.h       | 2 +-
+>  drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c      | 2 +-
+>  drivers/video/fbdev/omap2/omapfb/dss/hdmi4_core.c | 2 +-
+>  drivers/video/fbdev/omap2/omapfb/dss/hdmi4_core.h | 2 +-
+>  drivers/video/fbdev/omap2/omapfb/dss/hdmi5_core.h | 2 +-
+>  drivers/video/fbdev/sa1100fb.c                    | 2 +-
+>  14 files changed, 19 insertions(+), 19 deletions(-)
+> 
+> diff --git a/Documentation/fb/ep93xx-fb.rst b/Documentation/fb/ep93xx-fb.rst
+> index 6f7767926d1a..1dd67f4688c7 100644
+> --- a/Documentation/fb/ep93xx-fb.rst
+> +++ b/Documentation/fb/ep93xx-fb.rst
+> @@ -127,7 +127,7 @@ At least on the EP9315 there is a silicon bug which causes bit 27 of
+>  the VIDSCRNPAGE (framebuffer physical offset) to be tied low. There is
+>  an unofficial errata for this bug at::
+>  
+> -	http://marc.info/?l=linux-arm-kernel&m=110061245502000&w=2
+> +	https://marc.info/?l=linux-arm-kernel&m=110061245502000&w=2
+>  
+>  By default the EP93xx framebuffer driver checks if the allocated physical
+>  address has bit 27 set. If it does, then the memory is freed and an
+> diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+> index 0f559aeaf469..f12e390941b8 100644
+> --- a/drivers/video/fbdev/Kconfig
+> +++ b/drivers/video/fbdev/Kconfig
+> @@ -844,7 +844,7 @@ config FB_OPENCORES
+>  	  systems (e.g. Altera socfpga or Xilinx Zynq) on FPGAs.
+>  
+>  	  The source code and specification for the core is available at
+> -	  <http://opencores.org/project,vga_lcd>
+> +	  <https://opencores.org/project,vga_lcd>
+>  
+>  config FB_S1D13XXX
+>  	tristate "Epson S1D13XXX framebuffer support"
+> @@ -855,7 +855,7 @@ config FB_S1D13XXX
+>  	help
+>  	  Support for S1D13XXX framebuffer device family (currently only
+>  	  working with S1D13806). Product specs at
+> -	  <http://vdc.epson.com/>
+> +	  <https://vdc.epson.com/>
+>  
+>  config FB_ATMEL
+>  	tristate "AT91 LCD Controller support"
+> @@ -1213,7 +1213,7 @@ config FB_RADEON
+>  	  don't need to choose this to run the Radeon in plain VGA mode.
+>  
+>  	  There is a product page at
+> -	  http://products.amd.com/en-us/GraphicCardResult.aspx
+> +	  https://products.amd.com/en-us/GraphicCardResult.aspx
+>  
+>  config FB_RADEON_I2C
+>  	bool "DDC/I2C for ATI Radeon support"
+> @@ -1381,7 +1381,7 @@ config FB_SIS
+>  	help
+>  	  This is the frame buffer device driver for the SiS 300, 315, 330
+>  	  and 340 series as well as XGI V3XT, V5, V8, Z7 graphics chipsets.
+> -	  Specs available at <http://www.sis.com> and <http://www.xgitech.com>.
+> +	  Specs available at <https://www.sis.com> and <http://www.xgitech.com>.
+>  
+>  	  To compile this driver as a module, choose M here; the module
+>  	  will be called sisfb.
+> diff --git a/drivers/video/fbdev/core/fbmon.c b/drivers/video/fbdev/core/fbmon.c
+> index d62a1e43864e..1bf82dbc9e3c 100644
+> --- a/drivers/video/fbdev/core/fbmon.c
+> +++ b/drivers/video/fbdev/core/fbmon.c
+> @@ -19,7 +19,7 @@
+>   * Generalized Timing Formula is derived from:
+>   *
+>   *      GTF Spreadsheet by Andy Morrish (1/5/97)
+> - *      available at http://www.vesa.org
+> + *      available at https://www.vesa.org
+>   *
+>   * This file is subject to the terms and conditions of the GNU General Public
+>   * License.  See the file COPYING in the main directory of this archive
+> @@ -1201,7 +1201,7 @@ static void fb_timings_dclk(struct __fb_timings *timings)
+>   * ignored and @var will be filled with the calculated timings.
+>   *
+>   * All calculations are based on the VESA GTF Spreadsheet
+> - * available at VESA's public ftp (http://www.vesa.org).
+> + * available at VESA's public ftp (https://www.vesa.org).
+>   *
+>   * NOTES:
+>   * The timings generated by the GTF will be different from VESA
+> diff --git a/drivers/video/fbdev/ep93xx-fb.c b/drivers/video/fbdev/ep93xx-fb.c
+> index cda2ef337423..ba33b4dce0df 100644
+> --- a/drivers/video/fbdev/ep93xx-fb.c
+> +++ b/drivers/video/fbdev/ep93xx-fb.c
+> @@ -430,7 +430,7 @@ static int ep93xxfb_alloc_videomem(struct fb_info *info)
+>  	/*
+>  	 * There is a bug in the ep93xx framebuffer which causes problems
+>  	 * if bit 27 of the physical address is set.
+> -	 * See: http://marc.info/?l=linux-arm-kernel&m=110061245502000&w=2
+> +	 * See: https://marc.info/?l=linux-arm-kernel&m=110061245502000&w=2
+>  	 * There does not seem to be any official errata for this, but I
+>  	 * have confirmed the problem exists on my hardware (ep9315) at
+>  	 * least.
+> diff --git a/drivers/video/fbdev/grvga.c b/drivers/video/fbdev/grvga.c
+> index 07dda03e0957..24818b276241 100644
+> --- a/drivers/video/fbdev/grvga.c
+> +++ b/drivers/video/fbdev/grvga.c
+> @@ -5,7 +5,7 @@
+>   * 2011 (c) Aeroflex Gaisler AB
+>   *
+>   * Full documentation of the core can be found here:
+> - * http://www.gaisler.com/products/grlib/grip.pdf
+> + * https://www.gaisler.com/products/grlib/grip.pdf
+>   *
+>   * Contributors: Kristoffer Glembo <kristoffer@gaisler.com>
+>   */
+> diff --git a/drivers/video/fbdev/macfb.c b/drivers/video/fbdev/macfb.c
+> index e05a97662ca8..312e35c9aa6c 100644
+> --- a/drivers/video/fbdev/macfb.c
+> +++ b/drivers/video/fbdev/macfb.c
+> @@ -478,7 +478,7 @@ static int macfb_setcolreg(unsigned regno, unsigned red, unsigned green,
+>  			break;
+>  		/*
+>  		 * 24-bit colour almost doesn't exist on 68k Macs --
+> -		 * http://support.apple.com/kb/TA28634 (Old Article: 10992)
+> +		 * https://support.apple.com/kb/TA28634 (Old Article: 10992)
+>  		 */
+>  		case 24:
+>  		case 32:
+> diff --git a/drivers/video/fbdev/metronomefb.c b/drivers/video/fbdev/metronomefb.c
+> index a42e2eceee48..952826557a0c 100644
+> --- a/drivers/video/fbdev/metronomefb.c
+> +++ b/drivers/video/fbdev/metronomefb.c
+> @@ -10,7 +10,7 @@
+>   * Layout is based on skeletonfb.c by James Simmons and Geert Uytterhoeven.
+>   *
+>   * This work was made possible by help and equipment support from E-Ink
+> - * Corporation. http://www.eink.com/
+> + * Corporation. https://www.eink.com/
+>   *
+>   * This driver is written to be used with the Metronome display controller.
+>   * It is intended to be architecture independent. A board specific driver
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/Kconfig b/drivers/video/fbdev/omap2/omapfb/dss/Kconfig
+> index 36b97fee2d57..cc81a19537d2 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/Kconfig
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/Kconfig
+> @@ -60,7 +60,7 @@ config FB_OMAP5_DSS_HDMI
+>  	select FB_OMAP2_DSS_HDMI_COMMON
+>  	help
+>  	  HDMI Interface for OMAP5 and similar cores. This adds the High
+> -	  Definition Multimedia Interface. See http://www.hdmi.org/ for HDMI
+> +	  Definition Multimedia Interface. See https://www.hdmi.org/ for HDMI
+>  	  specification.
+>  
+>  config FB_OMAP2_DSS_SDI
+> @@ -79,7 +79,7 @@ config FB_OMAP2_DSS_DSI
+>  	  DSI is a high speed half-duplex serial interface between the host
+>  	  processor and a peripheral, such as a display or a framebuffer chip.
+>  
+> -	  See http://www.mipi.org/ for DSI specifications.
+> +	  See https://www.mipi.org/ for DSI specifications.
+>  
+>  config FB_OMAP2_DSS_MIN_FCK_PER_PCK
+>  	int "Minimum FCK/PCK ratio (for scaling)"
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi.h b/drivers/video/fbdev/omap2/omapfb/dss/hdmi.h
+> index b9d4480ecfad..9a7253355f6d 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi.h
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi.h
+> @@ -2,7 +2,7 @@
+>  /*
+>   * HDMI driver definition for TI OMAP4 Processor.
+>   *
+> - * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
+>   */
+>  
+>  #ifndef _HDMI_H
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
+> index 7060ae56c062..63262ec06921 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
+> @@ -1,7 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /*
+>   * HDMI interface DSS driver for TI's OMAP4 family of SoCs.
+> - * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
+>   * Authors: Yong Zhi
+>   *	Mythri pk <mythripk@ti.com>
+>   */
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4_core.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4_core.c
+> index 6b79b52d5fad..7ca1803bf161 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4_core.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4_core.c
+> @@ -3,7 +3,7 @@
+>   * ti_hdmi_4xxx_ip.c
+>   *
+>   * HDMI TI81xx, TI38xx, TI OMAP4 etc IP driver Library
+> - * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
+>   * Authors: Yong Zhi
+>   *	Mythri pk <mythripk@ti.com>
+>   */
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4_core.h b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4_core.h
+> index f066d1f69132..b5c35277f06e 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4_core.h
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4_core.h
+> @@ -2,7 +2,7 @@
+>  /*
+>   * HDMI header definition for OMAP4 HDMI core IP
+>   *
+> - * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
+>   */
+>  
+>  #ifndef _HDMI4_CORE_H_
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5_core.h b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5_core.h
+> index f10b8a283011..192c9b6e2f7b 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5_core.h
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5_core.h
+> @@ -2,7 +2,7 @@
+>  /*
+>   * HDMI driver definition for TI OMAP5 processors.
+>   *
+> - * Copyright (C) 2011-2012 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2011-2012 Texas Instruments Incorporated - https://www.ti.com/
+>   */
+>  
+>  #ifndef _HDMI5_CORE_H_
+> diff --git a/drivers/video/fbdev/sa1100fb.c b/drivers/video/fbdev/sa1100fb.c
+> index 3e6e13f7a831..bda6cc313c8b 100644
+> --- a/drivers/video/fbdev/sa1100fb.c
+> +++ b/drivers/video/fbdev/sa1100fb.c
+> @@ -18,7 +18,7 @@
+>   * Clean patches should be sent to the ARM Linux Patch System.  Please see the
+>   * following web page for more information:
+>   *
+> - *	http://www.arm.linux.org.uk/developer/patches/info.shtml
+> + *	https://www.arm.linux.org.uk/developer/patches/info.shtml
+>   *
+>   * Thank you.
+>   *
+> -- 
+> 2.27.0
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
