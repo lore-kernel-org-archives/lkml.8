@@ -2,52 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BADC0C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94BE020672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F41D12064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261445;
-	bh=VOn3E9Nh/f4SbKSg56eUn11qUNZWroK602TZX/M6gNM=;
+	s=default; t=1595261449;
+	bh=KRSfA+jnKhFwQqzGs3zFZ+9Ar3w5EbuRb+RO9Dsmcpc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ockXLof6Na+U0rI2bGluuuFndg34BMZ3lE7yul5420rOf+4rsKK7LsUtg29T6b6u3
-	 8fk4vYnLtpvxZ52eoYHHwutmzlVbRkeX0Ehz9Iq+7FankId9AnGMB3zxQtIsQnnF93
-	 xwca1pZaoonbDzlV1rxD6u1AVM+yo9ERvhJUYdCU=
+	b=X19eCWojpxT0B5wq/6u0b4bT7eePMOBB0QTIou/OzhtcxjI8Go7lydR74uLxh8CBt
+	 56cSB+6fjLaKE96/64WDkY1csoMY4Jhy3NZJiPsXRpSTSj+XL4Bit5uzzkxR/opGx6
+	 Cm3/WRuQbq3AuRvrXdhgoDABFdruGouiCDYGmx9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387699AbgGTQKo (ORCPT
+        id S2387702AbgGTQKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:10:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49264 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:10:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387685AbgGTQKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:10:38 -0400
+        id S1732796AbgGTQKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:10:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CC0520684;
-        Mon, 20 Jul 2020 16:10:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7649220684;
+        Mon, 20 Jul 2020 16:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261436;
-        bh=VOn3E9Nh/f4SbKSg56eUn11qUNZWroK602TZX/M6gNM=;
+        s=default; t=1595261445;
+        bh=KRSfA+jnKhFwQqzGs3zFZ+9Ar3w5EbuRb+RO9Dsmcpc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uxsRZQBjcQ3lFG+8KwPicXK+p3bTgPHivpj6wD+Yb1mr6ATcNDBdQ3jKzjv275ccD
-         Kd2sfAkq6lAxeLqlE2ybDa3CQ6J3f+c44PT79jBXiLQ7KbOGUftYtxjYQPBBIIraZQ
-         V7St0HxMADhsH10TPNnYw2YwkUj4xi7rUUwCmyeo=
+        b=KEHlGyYFVtR6sQia6c4NvFLnAnBVO4hyqlgBfF3AdCT6LJiWMZOk5Po0WbIox2LJy
+         yMW5nVsiEgWMpVHPPjOwr4t/KivOItSEOxUCtOsgmF4cjFQiyFqhbXwIpXOQOFH3gD
+         0hk3dtFFYIPZ6D5UgUmFGfk7QUQIptR/7e6AXx0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 116/244] regmap: debugfs: Dont sleep while atomic for fast_io regmaps
-Date:   Mon, 20 Jul 2020 17:36:27 +0200
-Message-Id: <20200720152831.361784233@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 5.7 119/244] soc: qcom: socinfo: add missing soc_id sysfs entry
+Date:   Mon, 20 Jul 2020 17:36:30 +0200
+Message-Id: <20200720152831.496783573@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,137 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 299632e54b2e692d2830af84be51172480dc1e26 ]
+commit 27a344139c186889d742764d3c2a62b395949cef upstream.
 
-If a regmap has "fast_io" set then its lock function uses a spinlock.
-That doesn't work so well with the functions:
-* regmap_cache_only_write_file()
-* regmap_cache_bypass_write_file()
+Looks like SoC ID is not exported to sysfs for some reason.
+This patch adds it!
 
-Both of the above functions have the pattern:
-1. Lock the regmap.
-2. Call:
-   debugfs_write_file_bool()
-     copy_from_user()
-       __might_fault()
-         __might_sleep()
+This is mostly used by userspace libraries like Snapdragon
+Neural Processing Engine (SNPE) SDK for checking supported SoC info.
 
-Let's reorder things a bit so that we do all of our sleepable
-functions before we grab the lock.
+Fixes: efb448d0a3fc ("soc: qcom: Add socinfo driver")
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20200319121418.5180-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: d3dc5430d68f ("regmap: debugfs: Allow writes to cache state settings")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200715164611.1.I35b3533e8a80efde0cec1cc70f71e1e74b2fa0da@changeid
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap-debugfs.c | 52 ++++++++++++++++------------
- 1 file changed, 29 insertions(+), 23 deletions(-)
+ drivers/soc/qcom/socinfo.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
-index e72843fe41dfe..e16afa27700db 100644
---- a/drivers/base/regmap/regmap-debugfs.c
-+++ b/drivers/base/regmap/regmap-debugfs.c
-@@ -457,29 +457,31 @@ static ssize_t regmap_cache_only_write_file(struct file *file,
- {
- 	struct regmap *map = container_of(file->private_data,
- 					  struct regmap, cache_only);
--	ssize_t result;
--	bool was_enabled, require_sync = false;
-+	bool new_val, require_sync = false;
- 	int err;
- 
--	map->lock(map->lock_arg);
-+	err = kstrtobool_from_user(user_buf, count, &new_val);
-+	/* Ignore malforned data like debugfs_write_file_bool() */
-+	if (err)
-+		return count;
- 
--	was_enabled = map->cache_only;
-+	err = debugfs_file_get(file->f_path.dentry);
-+	if (err)
-+		return err;
- 
--	result = debugfs_write_file_bool(file, user_buf, count, ppos);
--	if (result < 0) {
--		map->unlock(map->lock_arg);
--		return result;
--	}
-+	map->lock(map->lock_arg);
- 
--	if (map->cache_only && !was_enabled) {
-+	if (new_val && !map->cache_only) {
- 		dev_warn(map->dev, "debugfs cache_only=Y forced\n");
- 		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
--	} else if (!map->cache_only && was_enabled) {
-+	} else if (!new_val && map->cache_only) {
- 		dev_warn(map->dev, "debugfs cache_only=N forced: syncing cache\n");
- 		require_sync = true;
- 	}
-+	map->cache_only = new_val;
- 
- 	map->unlock(map->lock_arg);
-+	debugfs_file_put(file->f_path.dentry);
- 
- 	if (require_sync) {
- 		err = regcache_sync(map);
-@@ -487,7 +489,7 @@ static ssize_t regmap_cache_only_write_file(struct file *file,
- 			dev_err(map->dev, "Failed to sync cache %d\n", err);
- 	}
- 
--	return result;
-+	return count;
- }
- 
- static const struct file_operations regmap_cache_only_fops = {
-@@ -502,28 +504,32 @@ static ssize_t regmap_cache_bypass_write_file(struct file *file,
- {
- 	struct regmap *map = container_of(file->private_data,
- 					  struct regmap, cache_bypass);
--	ssize_t result;
--	bool was_enabled;
-+	bool new_val;
-+	int err;
- 
--	map->lock(map->lock_arg);
-+	err = kstrtobool_from_user(user_buf, count, &new_val);
-+	/* Ignore malforned data like debugfs_write_file_bool() */
-+	if (err)
-+		return count;
- 
--	was_enabled = map->cache_bypass;
-+	err = debugfs_file_get(file->f_path.dentry);
-+	if (err)
-+		return err;
- 
--	result = debugfs_write_file_bool(file, user_buf, count, ppos);
--	if (result < 0)
--		goto out;
-+	map->lock(map->lock_arg);
- 
--	if (map->cache_bypass && !was_enabled) {
-+	if (new_val && !map->cache_bypass) {
- 		dev_warn(map->dev, "debugfs cache_bypass=Y forced\n");
- 		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
--	} else if (!map->cache_bypass && was_enabled) {
-+	} else if (!new_val && map->cache_bypass) {
- 		dev_warn(map->dev, "debugfs cache_bypass=N forced\n");
- 	}
-+	map->cache_bypass = new_val;
- 
--out:
- 	map->unlock(map->lock_arg);
-+	debugfs_file_put(file->f_path.dentry);
- 
--	return result;
-+	return count;
- }
- 
- static const struct file_operations regmap_cache_bypass_fops = {
--- 
-2.25.1
-
+--- a/drivers/soc/qcom/socinfo.c
++++ b/drivers/soc/qcom/socinfo.c
+@@ -430,6 +430,8 @@ static int qcom_socinfo_probe(struct pla
+ 	qs->attr.family = "Snapdragon";
+ 	qs->attr.machine = socinfo_machine(&pdev->dev,
+ 					   le32_to_cpu(info->id));
++	qs->attr.soc_id = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%u",
++					 le32_to_cpu(info->id));
+ 	qs->attr.revision = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%u.%u",
+ 					   SOCINFO_MAJOR(le32_to_cpu(info->ver)),
+ 					   SOCINFO_MINOR(le32_to_cpu(info->ver)));
 
 
