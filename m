@@ -2,142 +2,98 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C71C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1904DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D815420B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E17CE22C9C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:16:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D0FdBC7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbgGTOQK (ORCPT
+        id S1728407AbgGTOQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:16:10 -0400
-Received: from verein.lst.de ([213.95.11.211]:47199 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbgGTOQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:16:10 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8A90468BFE; Mon, 20 Jul 2020 16:16:06 +0200 (CEST)
-Date:   Mon, 20 Jul 2020 16:16:06 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH v15 7/9] nvmet-passthru: Add passthru code to process
- commands
-Message-ID: <20200720141606.GF4627@lst.de>
-References: <20200716203319.16022-1-logang@deltatee.com> <20200716203319.16022-8-logang@deltatee.com>
+        Mon, 20 Jul 2020 10:16:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbgGTOQm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 10:16:42 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14972C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 07:16:42 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id z24so20395487ljn.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 07:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CfVCU5mHCDeITY1rM//7ZpN//MVZr1rSQIhyKmVtOzg=;
+        b=D0FdBC7SOJT1hoV2IiUH6Eaq72kKwsLCWcjJhyuRbRsxO7Rst9US5bLsUu/uswLx+r
+         BA1JKJ1DqJJKTxfUSkxYMzWt9tGuNubOZLSnCwjmfEF4p5x5NMDCBGPR99F6nqtqMqTX
+         0pHVdSY91l8NVK16xRWRY4o0e6C5N8l10mAfQENoAyqsEIy3VgCGQWKE9iqfk5g7xOEb
+         GqXf2mNYaeQDmxtXnxtxkRzJ0POTkULXYoC7/WMpjOfeWOy1J11ZCm9SgY/Jn6hnZtRu
+         hkb3o2K9e4NAg1UMqo4+dj3I8NIpxw5ZPF5/u/yM7oW/U42AJe1vE4pE+hE4Pm5Hk7GO
+         82WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CfVCU5mHCDeITY1rM//7ZpN//MVZr1rSQIhyKmVtOzg=;
+        b=jbOdGDNQcA7v122DQk0DaNsZOnPiApUrc42QxiY1ujqP5K4aJ66osVsNJsSNgmMAQU
+         ia/RUkJdpIluXxFBsN8qZeR6Ob6yB3cwrNopkt8xvSLVrvLtE9MsggudP9EMLJr4NN5q
+         6p9eOOEx7yxb2We3QGnEnRvP4+FxN3Ab1kuuDjaM4d30vSqF7tFc/aHAr3SsnXZBiEjN
+         ry99eD1eijxu/k3k3bUUzeX1F52WSR060Hgi4I7QRZgd40kITC8GVIuSX0Gwu/Er/wW2
+         HheliSYOlU9FDeu7EHfzOSa+1QHL94PJeNjxq9A6HlsZDFLYaRIYkfQjjn3xvc2QP87s
+         pXcg==
+X-Gm-Message-State: AOAM533pPETFl3KnKPhXwZj07A+itJv+InT3z+Gb25oEYvn6ds2QO8ae
+        irI/AO0YXk0nidrHgqzAtz9OXS3o4U/7uS508gbR/JB/hYc=
+X-Google-Smtp-Source: ABdhPJxCdtE5WzgJ33QEckSvFwyWtiAS2vzwpoohX8wqofbxOOkD2khe7ZOVTsb84s/0pYwurWaEsvPkRPvE3gGmlv4=
+X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr11280888ljc.286.1595254600586;
+ Mon, 20 Jul 2020 07:16:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716203319.16022-8-logang@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20200718120807.19714-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200718120807.19714-1-grandmaster@al2klimov.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 20 Jul 2020 16:16:29 +0200
+Message-ID: <CACRpkdYXS09FNE3k9e2rc36zcPrpJTBiptVTe35R+_efNZ0VNw@mail.gmail.com>
+Subject: Re: [PATCH] pinctl: ti: iodelay: Replace HTTP links with HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Colin King <colin.king@canonical.com>,
+        ext Tony Lindgren <tony@atomide.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 02:33:17PM -0600, Logan Gunthorpe wrote:
-> Add passthru command handling capability for the NVMeOF target and
-> export passthru APIs which are used to integrate passthru
-> code with nvmet-core.
-> 
-> The new file passthru.c handles passthru cmd parsing and execution.
-> In the passthru mode, we create a block layer request from the nvmet
-> request and map the data on to the block layer request.
-> 
-> Admin commands and features are on a white list as there are a number
-> of each that don't make too much sense with passthrough. We use a
-> white list so that new commands can be considered before being blindly
-> passed through. In both cases, vendor specific commands are always
-> allowed.
-> 
-> We also blacklist reservation IO commands as the underlying device
-> cannot differentiate between multiple hosts behind a fabric.
+On Sat, Jul 18, 2020 at 2:08 PM Alexander A. Klimov
+<grandmaster@al2klimov.de> wrote:
 
-I'm still not so happy about having to look up the namespace and still
-wonder if we should generalize the connect_q to a passthrough_q.  But
-I guess we can do that later and then reduce some of the exports here..
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-A few more comments below:
+Patch applied as uncontroversial.
 
-> +		struct {
-> +			struct request		*rq;
-> +			struct work_struct      work;
-> +			u16 (*end_req)(struct nvmet_req *req);
-> +		} p;
-
-Do we really need the callback for the two identify fixups, or
-should we just hardcode them to avoid indirection function calls?
-
-> +++ b/drivers/nvme/target/passthru.c
-> @@ -0,0 +1,457 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * NVMe Over Fabrics Target Passthrough command implementation.
-> + *
-> + * Copyright (c) 2017-2018 Western Digital Corporation or its
-> + * affiliates.
-> + */
-
-I think you forgot to add your own copyrights here.
-
-> +static int nvmet_passthru_map_sg(struct nvmet_req *req, struct request *rq)
-> +{
-> +	int sg_cnt = req->sg_cnt;
-> +	struct scatterlist *sg;
-> +	int op_flags = 0;
-> +	struct bio *bio;
-> +	int i, ret;
-> +
-> +	if (req->cmd->common.opcode == nvme_cmd_flush)
-> +		op_flags = REQ_FUA;
-> +	else if (nvme_is_write(req->cmd))
-> +		op_flags = REQ_SYNC | REQ_IDLE;
-> +
-> +
-
-Double empty line here..
-
-> +	bio = bio_alloc(GFP_KERNEL, min(sg_cnt, BIO_MAX_PAGES));
-> +	bio->bi_end_io = bio_put;
-> +
-> +	for_each_sg(req->sg, sg, req->sg_cnt, i) {
-> +		if (bio_add_page(bio, sg_page(sg), sg->length,
-> +				 sg->offset) != sg->length) {
-
-bio_add_pages is only for non-passthrough requests, this needs to use
-bio_add_pc_page.
-
-> +	if (blk_rq_nr_phys_segments(rq) > queue_max_segments(rq->q)) {
-> +		status = NVME_SC_INVALID_FIELD;
-> +		goto fail_out;
-> +	}
-> +
-> +	if ((blk_rq_payload_bytes(rq) >> 9) > queue_max_hw_sectors(rq->q)) {
-> +		status = NVME_SC_INVALID_FIELD;
-> +		goto fail_out;
-> +	}
-
-Which should also take care of these checks.
-
-> +static void nvmet_passthru_set_host_behaviour(struct nvmet_req *req)
-> +{
-> +	struct nvme_ctrl *ctrl = nvmet_req_passthru_ctrl(req);
-> +	struct nvme_feat_host_behavior *host;
-> +	u16 status;
-> +	int ret;
-> +
-> +	host = kzalloc(sizeof(*host) * 2, GFP_KERNEL);
-> +	ret = nvme_get_features(ctrl, NVME_FEAT_HOST_BEHAVIOR, 0,
-> +				host, sizeof(*host), NULL);
-
-Mising kzalloc return check.
+Yours,
+Linus Walleij
