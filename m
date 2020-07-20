@@ -2,123 +2,176 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37796C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1FDC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D00222CBE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0190622C9D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:49:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p1HO6687"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RrNm2gxi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgGTKrw (ORCPT
+        id S1728431AbgGTKtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 06:47:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50220 "EHLO
+        Mon, 20 Jul 2020 06:49:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728273AbgGTKrw (ORCPT
+        with ESMTP id S1728232AbgGTKta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 06:47:52 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E56C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:47:51 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id o11so17340622wrv.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:47:51 -0700 (PDT)
+        Mon, 20 Jul 2020 06:49:30 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65640C061794;
+        Mon, 20 Jul 2020 03:49:30 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id p25so8237431vsg.4;
+        Mon, 20 Jul 2020 03:49:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uHRAgQoOuo2NrrewNnTyTofto5ZGKZsKC7PlWtRZlsk=;
-        b=p1HO6687swYNaesbAFlQr5ER5YLa6Dp61vm/cYxzq5BiwlhW8miLzY1N+ywd4GFtgC
-         3XA6WY/XPvOSHgg9TqIxLI5KhvMGnfnTW2NViUu4dlbKJAbl6gnUljRbZeH5RlZkqSzv
-         NYIu0hbyjqx5xjOSNxzJHccYaD45O+xLXGTO7OW63sCBqy0HgOh6kbAPFRhNAX4Xaclw
-         B52VdQ9mQMWK+HpRptC3d8yoWgLXAMokvcb4zYATNkCHu1X4pdTmk83uqT1FMAPL6v3A
-         YqJLtmBJHgx/w5f84ImJux4v1xigy/1ATHGXIcHJWFAv33oMPWxdzgpU6MMgZgGZKwO/
-         lHQA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wY0dHi09vd294neiN4XqhltRnFObgHpOmPvIePnDyJM=;
+        b=RrNm2gxit1WQD7b8BvDuwQffEaYmpn/vOp/taHp46yvimJgrOfz3utD5aYhN8uC4rS
+         vauBkp0fwEf6gu5qAafT/vKfwzhmyO5A1y/1jsKTGP5YRpnuHom+2N78zHpetio6xwID
+         Go2lex9NktC9gL78KhMmvM7rzdStaXMnL18Q6xiAI8nwkAwlFHGvFg1a7KUoHNE9gOCp
+         7r8HWjaFftONV/lclo4aGwmp5jd6k7dYeBzRTsXzVjd7Lc4DkG03Cr2Pg35v7ibf9E4q
+         Uc84PeelRGufa/hIMHsQ1Mp6Dn3Zw+piIbCU+aUBqgYBkmHbzqh7bUTebMNhBI0VtTds
+         XPAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uHRAgQoOuo2NrrewNnTyTofto5ZGKZsKC7PlWtRZlsk=;
-        b=h6pdSx8FyJ7W4btLw2qtjNU03Em5rG6BY89BTWj+4YAcz3ev10zABirfEEIQqNQosj
-         BV2j4qXzvSaFRYVRUQKXHT1Gw5ZSGA4YZomlMvajb24hClPbQa2V5x4tjG8BBPj+noM1
-         Zelh1ikiqV4pvcPPmZxbdO8/aHxpDx3Ohd99rE00pXAuBgLgL7aevXlWd8vB5/mHXbNc
-         6uh1qAapH0V8deT6HtvV7IkJGyD1UXrHNLsoNoC+npJL4YRmeVYGfYE0sEkXIdfeWNJS
-         V4pw6RgUA92Td+3KwaPyahRXt+PGPpYhv4orDXLIQFUP7UmJw1If+ufw2mhz6P2Fck4S
-         WF9w==
-X-Gm-Message-State: AOAM5318/4aHeCJI51Cl+K79bUWv1wesUyXsNPgWWHKH0krP0lGvqY0d
-        oXsssIq15mJzKKQ2694fpTI2hODxV2Y=
-X-Google-Smtp-Source: ABdhPJxum0c+tr6bp3uzQyfxF85Ev6PhOKDV+5JO1aAMnghVrUIm2LoCd/ZltwPRMaLd01KeHiWl7w==
-X-Received: by 2002:adf:e7c9:: with SMTP id e9mr13083233wrn.307.1595242070556;
-        Mon, 20 Jul 2020 03:47:50 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:3590:b402:869a:11fc? ([2a01:e34:ed2f:f020:3590:b402:869a:11fc])
-        by smtp.googlemail.com with ESMTPSA id 51sm33651621wrc.44.2020.07.20.03.47.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 03:47:49 -0700 (PDT)
-Subject: Re: [PATCH V2 1/2] clocksource: Add support for i.MX TPM driver with
- ARM64
-To:     Anson Huang <Anson.Huang@nxp.com>, catalin.marinas@arm.com,
-        will@kernel.org, tglx@linutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com, linux-soc@vger.kernel.org
-References: <1594178168-13007-1-git-send-email-Anson.Huang@nxp.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <6c80edf0-52ce-7b64-0631-cc52e937f54c@linaro.org>
-Date:   Mon, 20 Jul 2020 12:47:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wY0dHi09vd294neiN4XqhltRnFObgHpOmPvIePnDyJM=;
+        b=jSdHEOUf/bpTKrabIVaOE2LbbW0jcnkpjZOmbe7Z0Ql2nAsQn73R+UHXI0uG9a0pD1
+         SO+X8nXcYN0wJMjuXX6kwzH627E72cAkLD3ptSA9VJbf/8I8lMNXBZoskk3i/+oxrZxn
+         bBUzTUMTE0NSQHheYd4AeH+79469m3r5fYOTsVWUfv/3V6fh3DsUDmbQT/v5hMwr+ZZy
+         HuZVakTP0Uou3irtehyAGS/oGnzATcBPEFjTGaxmyLY1WUztQNPGTYMWqch8bD7Y4Yrh
+         kznvi8CuloqmlmkHnqNSTUCuAeX7pbHDw2aF2mFl29sQECyRq3LylXzhAzaSKxqKOzK/
+         UVeA==
+X-Gm-Message-State: AOAM532djGNSHRTBWhiuSoYUVtX5O7gtKX8ryR+kDWh6dUGcKh3cYkU8
+        04wBZtCVkwZUQhFvCW9i+o2Xh3Gc9Oj4vbHGRQi3F2kd
+X-Google-Smtp-Source: ABdhPJzy6/qnz/BhMCoMM7wOU6HD05HnbnXTb2JWl5+U3NV9DvoVnpkNcjUAX5xaOI2d8kWV7iuWh2hlJ2KL3XCSKCI=
+X-Received: by 2002:a67:ef1e:: with SMTP id j30mr14619614vsr.127.1595242169547;
+ Mon, 20 Jul 2020 03:49:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1594178168-13007-1-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200622120229.89610-1-vaibhavgupta40@gmail.com>
+In-Reply-To: <20200622120229.89610-1-vaibhavgupta40@gmail.com>
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Date:   Mon, 20 Jul 2020 16:17:39 +0530
+Message-ID: <CAP+cEOMZsLhneqnvDwmWZ6ps8boANX_wvZXVaptDonOEoULqXA@mail.gmail.com>
+Subject: Re: [PATCH v1] [media] saa7134: use generic power management
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     linux-media@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/2020 05:16, Anson Huang wrote:
-> Allows building and compile-testing the i.MX TPM driver for ARM64.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Mon, Jun 22, 2020 at 5:36 PM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
+>
+> With the support of generic PM callbacks, drivers no longer need to use
+> legacy .suspend() and .resume() in which they had to maintain PCI states
+> changes and device's power state themselves. The required operations are
+> done by PCI core.
+>
+> Compile-tested only.
+>
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 > ---
-> Changes since V1:
-> 	- select TIMER_OF for CLKSRC_IMX_TPM.
-> ---
->  drivers/clocksource/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index be49123..401eac7 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -620,8 +620,9 @@ config CLKSRC_IMX_GPT
->  
->  config CLKSRC_IMX_TPM
->  	bool "Clocksource using i.MX TPM" if COMPILE_TEST
-> -	depends on ARM && CLKDEV_LOOKUP
-> +	depends on (ARM || ARM64) && CLKDEV_LOOKUP
->  	select CLKSRC_MMIO
-> +	select TIMER_OF
->  	help
->  	  Enable this option to use IMX Timer/PWM Module (TPM) timer as
->  	  clocksource.
-
-Applied, but I will let 2/2 applied by the corresponding maintainer.
-
-Thanks
-  -- Daniel
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+>  drivers/media/pci/saa7134/saa7134-core.c | 25 ++++++++----------------
+>  1 file changed, 8 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/media/pci/saa7134/saa7134-core.c b/drivers/media/pci/saa7134/saa7134-core.c
+> index e4623ed2f831..eb01109d4f98 100644
+> --- a/drivers/media/pci/saa7134/saa7134-core.c
+> +++ b/drivers/media/pci/saa7134/saa7134-core.c
+> @@ -1370,10 +1370,8 @@ static void saa7134_finidev(struct pci_dev *pci_dev)
+>         kfree(dev);
+>  }
+>
+> -#ifdef CONFIG_PM
+> -
+>  /* resends a current buffer in queue after resume */
+> -static int saa7134_buffer_requeue(struct saa7134_dev *dev,
+> +static int __maybe_unused saa7134_buffer_requeue(struct saa7134_dev *dev,
+>                                   struct saa7134_dmaqueue *q)
+>  {
+>         struct saa7134_buf *buf, *next;
+> @@ -1397,8 +1395,9 @@ static int saa7134_buffer_requeue(struct saa7134_dev *dev,
+>         return 0;
+>  }
+>
+> -static int saa7134_suspend(struct pci_dev *pci_dev , pm_message_t state)
+> +static int __maybe_unused saa7134_suspend(struct device *dev_d)
+>  {
+> +       struct pci_dev *pci_dev = to_pci_dev(dev_d);
+>         struct v4l2_device *v4l2_dev = pci_get_drvdata(pci_dev);
+>         struct saa7134_dev *dev = container_of(v4l2_dev, struct saa7134_dev, v4l2_dev);
+>
+> @@ -1428,21 +1427,15 @@ static int saa7134_suspend(struct pci_dev *pci_dev , pm_message_t state)
+>         if (dev->remote && dev->remote->dev->users)
+>                 saa7134_ir_close(dev->remote->dev);
+>
+> -       pci_save_state(pci_dev);
+> -       pci_set_power_state(pci_dev, pci_choose_state(pci_dev, state));
+> -
+>         return 0;
+>  }
+>
+> -static int saa7134_resume(struct pci_dev *pci_dev)
+> +static int __maybe_unused saa7134_resume(struct device *dev_d)
+>  {
+> -       struct v4l2_device *v4l2_dev = pci_get_drvdata(pci_dev);
+> +       struct v4l2_device *v4l2_dev = dev_get_drvdata(dev_d);
+>         struct saa7134_dev *dev = container_of(v4l2_dev, struct saa7134_dev, v4l2_dev);
+>         unsigned long flags;
+>
+> -       pci_set_power_state(pci_dev, PCI_D0);
+> -       pci_restore_state(pci_dev);
+> -
+>         /* Do things that are done in saa7134_initdev ,
+>                 except of initializing memory structures.*/
+>
+> @@ -1490,7 +1483,6 @@ static int saa7134_resume(struct pci_dev *pci_dev)
+>
+>         return 0;
+>  }
+> -#endif
+>
+>  /* ----------------------------------------------------------- */
+>
+> @@ -1522,15 +1514,14 @@ EXPORT_SYMBOL(saa7134_ts_unregister);
+>
+>  /* ----------------------------------------------------------- */
+>
+> +static SIMPLE_DEV_PM_OPS(saa7134_pm_ops, saa7134_suspend, saa7134_resume);
+> +
+>  static struct pci_driver saa7134_pci_driver = {
+>         .name     = "saa7134",
+>         .id_table = saa7134_pci_tbl,
+>         .probe    = saa7134_initdev,
+>         .remove   = saa7134_finidev,
+> -#ifdef CONFIG_PM
+> -       .suspend  = saa7134_suspend,
+> -       .resume   = saa7134_resume
+> -#endif
+> +       .driver.pm = &saa7134_pm_ops,
+>  };
+>
+>  static int __init saa7134_init(void)
+> --
+> 2.27.0
+>
