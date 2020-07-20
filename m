@@ -2,114 +2,188 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1A4C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0B1C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B647D206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8BF3206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T1qIkJk8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qo6EmHJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732180AbgGTP7U (ORCPT
+        id S2387772AbgGTQ3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:59:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41982 "EHLO
+        Mon, 20 Jul 2020 12:29:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732143AbgGTP7M (ORCPT
+        with ESMTP id S1732192AbgGTP7T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:12 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AACB8C0619D4;
-        Mon, 20 Jul 2020 08:59:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=szWl1h+pYK/HnKbBrREDHsB1qY6TetWZvhxkv/iA/l8=; b=T1qIkJk8b4fFG1jYmgBx4a22Zk
-        HPGI/2zp7Zut3Dh5mcnkf26AHZ1TK6HcymCwf4Lyg6oypwNydNi7wId9yMYJNEu/q8YMO6jvRCMN1
-        lPtsZUK5ZmxMMIIYdWBHtCGVve8vSdS4UtaNpEnONhkJwCUwduLgElTb+H/sEBiLvvSTQInW/ugYY
-        NfMG2G/lS+KaMS+wiAmxTKrtM/dJit+hVYQm1dAy6DYcyUiFcYFTmQcWMMjzjOYsYdIm9qqtqctdn
-        Jya+RVgkxZo1PXg6vBIzNgM66TVmB/xGB/2maN6W9CoyToz003Rpl1KHHT6CDlATZc0rQtT2xYK8N
-        0Oo9YBrg==;
-Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxYC5-0007n9-1U; Mon, 20 Jul 2020 15:59:09 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 04/24] fs: move the putname from filename_create to the callers
-Date:   Mon, 20 Jul 2020 17:58:42 +0200
-Message-Id: <20200720155902.181712-5-hch@lst.de>
+        Mon, 20 Jul 2020 11:59:19 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 804EEC061794;
+        Mon, 20 Jul 2020 08:59:19 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id f16so27412pjt.0;
+        Mon, 20 Jul 2020 08:59:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kWWiPDDkLSZWJniasWbkxAHeh1UEHqV+0VQVWXHKxgs=;
+        b=Qo6EmHJ6FLUfuIlTjBgcG21BsVpmr0VH7Yb9ut6xUm5kKcC7tNm1SRbu1hUp2is0oE
+         K59szg3P18X3twG5h+fit41FGJiiWGW3Rde8SzsMeKAMAKtvniR4JSaUWZJLEcXHoyny
+         qh4ictM9zpYPRp038Wc2f3nxc1L+bCMf7h4p3Ze2esZ0W3Uok+6FtRf4S/y4Tgb6Lp4Z
+         62mmy+MRGeU4GC86mlAlzST/Mce2MWY2PYfR/52gqXpgs0vn+Uc4DzgydPuSYJ5OoxIk
+         mzDIe/EQ9IWaoQXXeJQolHf5vta+KCvwGVtUKjfcOneFuvsWKlci35yLWAC5P0D2wN5u
+         pXZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kWWiPDDkLSZWJniasWbkxAHeh1UEHqV+0VQVWXHKxgs=;
+        b=DSZAc0k0HZz6IOnwtsJb9Zdiadpa3g8pC3QSyJD4HS1CFgLhcBr5AMtYSVB5IpwOMW
+         Knk4UcbpIq/zIio/5fbUgIaXFuQwD94MBQ38bORmXr+DJJa0y0dr/l/U70OaF0KXEels
+         eF4v4+Um0pBVY3kTN2tax7i4ra32SvKT9OysL88CqXFdsRtgPckVthp2gUNfRa1K/Jy/
+         thjMFBZ/JfoAsPEF0vRzy9/8xZqe+ARt3Gh6u1AC4wHSSJPm2yZrnAniChmio2XmM1Eh
+         Sz/e7FyXARxQ7zvQv3aZ+AdTWTRAqsBdRYPr2f20/T34dfJndI+MnwoMH2l06MPuKBKA
+         ZlNw==
+X-Gm-Message-State: AOAM531JdKRRQjMMsQRhxQEy0NelMYnpUpI+5Rn1azhxBAOc8PjW4K4K
+        USyAv5A/0yEV/ZztKQiMkbCVkRFkoyvuoQ==
+X-Google-Smtp-Source: ABdhPJz3fHLBx5cpEHrrDHL4MX3LASDS4caNtL6Cv+gi9ULwVLHjXytlSxHbCIeKpNkAi0+toz0k+A==
+X-Received: by 2002:a17:90b:234f:: with SMTP id ms15mr55698pjb.7.1595260758978;
+        Mon, 20 Jul 2020 08:59:18 -0700 (PDT)
+Received: from varodek.localdomain ([110.225.71.189])
+        by smtp.gmail.com with ESMTPSA id s6sm17368157pfd.20.2020.07.20.08.59.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 08:59:18 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1] spi: spi-topcliff-pch: use generic power management
+Date:   Mon, 20 Jul 2020 21:27:15 +0530
+Message-Id: <20200720155714.714114-1-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720155902.181712-1-hch@lst.de>
-References: <20200720155902.181712-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows reusing the struct filename for retries, and will also allow
-pushing the getname up the stack for a few places to allower for better
-handling of kernel space filenames.
+Drivers using legacy PM have to manage PCI states and device's PM states
+themselves. They also need to take care of configuration registers.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+With improved and powerful support of generic PM, PCI Core takes care of
+above mentioned, device-independent, jobs.
+
+This driver makes use of PCI helper functions like
+pci_save/restore_state(), pci_enable/disable_device(), pci_enable_wake()
+and pci_set_power_state() to do required operations. In generic mode, they
+are no longer needed.
+
+Change function parameter in both .suspend() and .resume() to
+"struct device*" type. Use dev_get_drvdata() to get drv data.
+
+Compile-tested only.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- fs/namei.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/spi/spi-topcliff-pch.c | 51 +++++++++-------------------------
+ 1 file changed, 13 insertions(+), 38 deletions(-)
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 72d4219c93acb7..6ebe400c9736d2 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3478,7 +3478,6 @@ static struct dentry *filename_create(int dfd, struct filename *name,
- 		error = err2;
- 		goto fail;
- 	}
--	putname(name);
- 	return dentry;
- fail:
- 	dput(dentry);
-@@ -3496,8 +3495,12 @@ static struct dentry *filename_create(int dfd, struct filename *name,
- struct dentry *kern_path_create(int dfd, const char *pathname,
- 				struct path *path, unsigned int lookup_flags)
- {
--	return filename_create(dfd, getname_kernel(pathname),
--				path, lookup_flags);
-+	struct filename *name = getname_kernel(pathname);
-+	struct dentry *dentry = filename_create(dfd, name, path, lookup_flags);
-+
-+	if (!IS_ERR(dentry))
-+		putname(name);
-+	return dentry;
+diff --git a/drivers/spi/spi-topcliff-pch.c b/drivers/spi/spi-topcliff-pch.c
+index d7ea6af74743..281a90f1b5d8 100644
+--- a/drivers/spi/spi-topcliff-pch.c
++++ b/drivers/spi/spi-topcliff-pch.c
+@@ -1631,64 +1631,39 @@ static void pch_spi_remove(struct pci_dev *pdev)
+ 	kfree(pd_dev_save);
  }
- EXPORT_SYMBOL(kern_path_create);
  
-@@ -3513,7 +3516,12 @@ EXPORT_SYMBOL(done_path_create);
- inline struct dentry *user_path_create(int dfd, const char __user *pathname,
- 				struct path *path, unsigned int lookup_flags)
+-#ifdef CONFIG_PM
+-static int pch_spi_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused pch_spi_suspend(struct device *dev)
  {
--	return filename_create(dfd, getname(pathname), path, lookup_flags);
-+	struct filename *name = getname(pathname);
-+	struct dentry *dentry = filename_create(dfd, name, path, lookup_flags);
-+
-+	if (!IS_ERR(dentry))
-+		putname(name);
-+	return dentry;
- }
- EXPORT_SYMBOL(user_path_create);
+-	int retval;
+-	struct pch_pd_dev_save *pd_dev_save = pci_get_drvdata(pdev);
++	struct pch_pd_dev_save *pd_dev_save = dev_get_drvdata(dev);
  
+-	dev_dbg(&pdev->dev, "%s ENTRY\n", __func__);
++	dev_dbg(dev, "%s ENTRY\n", __func__);
+ 
+ 	pd_dev_save->board_dat->suspend_sts = true;
+ 
+-	/* save config space */
+-	retval = pci_save_state(pdev);
+-	if (retval == 0) {
+-		pci_enable_wake(pdev, PCI_D3hot, 0);
+-		pci_disable_device(pdev);
+-		pci_set_power_state(pdev, PCI_D3hot);
+-	} else {
+-		dev_err(&pdev->dev, "%s pci_save_state failed\n", __func__);
+-	}
+-
+-	return retval;
++	return 0;
+ }
+ 
+-static int pch_spi_resume(struct pci_dev *pdev)
++static int __maybe_unused pch_spi_resume(struct device *dev)
+ {
+-	int retval;
+-	struct pch_pd_dev_save *pd_dev_save = pci_get_drvdata(pdev);
+-	dev_dbg(&pdev->dev, "%s ENTRY\n", __func__);
++	struct pch_pd_dev_save *pd_dev_save = dev_get_drvdata(dev);
+ 
+-	pci_set_power_state(pdev, PCI_D0);
+-	pci_restore_state(pdev);
++	dev_dbg(dev, "%s ENTRY\n", __func__);
+ 
+-	retval = pci_enable_device(pdev);
+-	if (retval < 0) {
+-		dev_err(&pdev->dev,
+-			"%s pci_enable_device failed\n", __func__);
+-	} else {
+-		pci_enable_wake(pdev, PCI_D3hot, 0);
++	device_wakeup_disable(dev);
+ 
+-		/* set suspend status to false */
+-		pd_dev_save->board_dat->suspend_sts = false;
+-	}
++	/* set suspend status to false */
++	pd_dev_save->board_dat->suspend_sts = false;
+ 
+-	return retval;
++	return 0;
+ }
+-#else
+-#define pch_spi_suspend NULL
+-#define pch_spi_resume NULL
+ 
+-#endif
++static SIMPLE_DEV_PM_OPS(pch_spi_pm_ops, pch_spi_suspend, pch_spi_resume);
+ 
+ static struct pci_driver pch_spi_pcidev_driver = {
+ 	.name = "pch_spi",
+ 	.id_table = pch_spi_pcidev_id,
+ 	.probe = pch_spi_probe,
+ 	.remove = pch_spi_remove,
+-	.suspend = pch_spi_suspend,
+-	.resume = pch_spi_resume,
++	.driver.pm = &pch_spi_pm_ops,
+ };
+ 
+ static int __init pch_spi_init(void)
 -- 
 2.27.0
 
