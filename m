@@ -2,105 +2,72 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7C0C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0413DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA0B122B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:52:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595256745;
-	bh=SpXNWrBpVXQ5gHdMZ+4qy3tnhjixmc74GNUErui8ZaY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uWjdtA8Aps+RqkG9m9mBn+/MBq+KhhZWrGwxWDN08klZ+AcwwerK74R6ZvXAhtUlB
-	 m7ue0jLvMB5eSVb9K/oWP1iJ6Mvh8JTviP16aZeA4UVATWUlhm1K9TzTE4ipLLqbSL
-	 4rxuuFd/galLiaZgMOW21qzqbrSK3/fhbug1K9kQ=
+	by mail.kernel.org (Postfix) with ESMTP id DD3F322B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbgGTOwY (ORCPT
+        id S1728197AbgGTOx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:52:24 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40313 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgGTOwX (ORCPT
+        Mon, 20 Jul 2020 10:53:28 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:34338 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgGTOx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:52:23 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f139so25476128wmf.5;
-        Mon, 20 Jul 2020 07:52:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2V8ErK/fpx1GjjJkd7zr33gxU0FS1gxM3mR4Aw7EoUo=;
-        b=kXcauw4KWo52NLMGVnOA6rGdU7uF0CPKTxV/9N4B5J2kYLnVS74ASrrkqQ2q0/8/vC
-         BBdVbZFfsbzKqLOYA9+u0v1q56P/4WZvSg6mHY8sqCctN0jDAPGfMT27U+8Pwrruufn2
-         MG1BdGxygDhR8O5PvrmMGh5yaDtNrWys9S8OSxjgchwxswem3mJMhBM0WNg7Le0K317n
-         SBsG4H4+/0dOBIiMQwStQxTtLRN8aQbgG11EpyWhE5hRoILxmIY4bXPej3KEBvDaIhu9
-         mDhErdpXzNyAHvm4eazhQVMC5lrs3TSrcPqnhj9ey7kv97ivvT3FIqXxKiOYLwk/wy4H
-         er1w==
-X-Gm-Message-State: AOAM532JdA18aOwXpRG5w0+20jq5epioKu827I3eTonpvT4DXlszSSBP
-        5ozWqV8HTGpOlve7vCwYsfs=
-X-Google-Smtp-Source: ABdhPJwRT/a/cgcWM1P23aYPfb2HdGx66D1g8ZjbrhYnGQTfAXhRD4/WPbzkCbY4g9aop+qAOC4HsQ==
-X-Received: by 2002:a1c:4343:: with SMTP id q64mr21957889wma.20.1595256741833;
-        Mon, 20 Jul 2020 07:52:21 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.200])
-        by smtp.googlemail.com with ESMTPSA id 33sm36808145wri.16.2020.07.20.07.52.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 Jul 2020 07:52:21 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 16:52:19 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Thomas Abraham <thomas.ab@samsung.com>,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 06/25] pinctrl: samsung: pinctrl-samsung: Demote obvious
- misuse of kerneldoc to standard comment blocks
-Message-ID: <20200720145219.GA23990@kozik-lap>
-References: <20200713144930.1034632-1-lee.jones@linaro.org>
- <20200713144930.1034632-7-lee.jones@linaro.org>
- <20200720142714.GA6747@kozik-lap>
- <20200720144955.GD3368211@dell>
+        Mon, 20 Jul 2020 10:53:28 -0400
+Date:   Mon, 20 Jul 2020 10:53:26 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: ioremap and dma cleanups and fixes for superh (2nd resend)
+Message-ID: <20200720145325.GK14669@brightrain.aerifal.cx>
+References: <20200714121856.955680-1-hch@lst.de>
+ <b0745e43-0ff1-58f7-70d5-60b9c8b8d81b@physik.fu-berlin.de>
+ <20200714155914.GA24404@brightrain.aerifal.cx>
+ <8cbf2963-d0e4-0ca8-4ffe-c2057694447f@physik.fu-berlin.de>
+ <011f29e6-ad71-366e-dbff-bc8471f3da60@physik.fu-berlin.de>
+ <20200720133800.GA3084@lst.de>
+ <661f7d56-bffc-f688-54e3-291cd5e7e18d@physik.fu-berlin.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200720144955.GD3368211@dell>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <661f7d56-bffc-f688-54e3-291cd5e7e18d@physik.fu-berlin.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 03:49:55PM +0100, Lee Jones wrote:
-> On Mon, 20 Jul 2020, Krzysztof Kozlowski wrote:
+On Mon, Jul 20, 2020 at 03:42:38PM +0200, John Paul Adrian Glaubitz wrote:
+> Hi Christoph!
 > 
-> > On Mon, Jul 13, 2020 at 03:49:11PM +0100, Lee Jones wrote:
-> > > No attempt has been made to document either of the demoted functions here.
-> > > 
-> > > Fixes the following W=1 kernel build warning(s):
-> > > 
-> > >  drivers/pinctrl/samsung/pinctrl-samsung.c:1149: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_suspend'
-> > >  drivers/pinctrl/samsung/pinctrl-samsung.c:1199: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_resume'
-> > > 
-> > > Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> > > Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> > > Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > > Cc: Thomas Abraham <thomas.ab@samsung.com>
-> > > Cc: linux-samsung-soc@vger.kernel.org
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> > >  drivers/pinctrl/samsung/pinctrl-samsung.c | 4 ++--
+> On 7/20/20 3:38 PM, Christoph Hellwig wrote:
+> > On Wed, Jul 15, 2020 at 01:12:33AM +0200, John Paul Adrian Glaubitz wrote:
+> >> Hello!
+> >>
+> >> I have applied Christoph's full series on top of Linus' tree and I can confirm that
+> >> the kernel boots fine on my SH-7785LCR board.
+> >>
+> >> Thus, for the whole series of patches:
+> >>
+> >> Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 > > 
-> > Thanks, applied.
+> > Any chance we get the patches queue up while you're all sorting out
+> > totally independent issues?
 > 
-> Same as the others.  Already in -next.
+> I would love to buy only Rich can do that. I'm fine with your patches
+> and would much appreciate if Rich could queue them up.
+> 
+> I'm also still waiting for my patch to be queued as well.
 
-Thanks for letting me know. I dropped all of them.
+I saw it looked like this is solved and I'm going to look at it later
+today. Thanks!
 
-Best regards,
-Krzysztof
-
+Rich
