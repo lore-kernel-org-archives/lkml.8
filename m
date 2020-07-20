@@ -2,178 +2,107 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24813C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2A2C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A11D2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46C122CBB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:53:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595260389;
+	bh=w3L0ltA9Lm03hwxJdwEednYK1OeTpgermLdcgX8ulc8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rq81M5TSjwRNDkDqARrBXjjOCTfB4+povlbX1ZCU2kLKXX0bik/B3D621YddsTM4E
+	 88k7k1AunHQgqtVR8milo/5rGAXdSeezeo3oUkICXwvYSWPMDj1FpHuThi78/x436Q
+	 lP5IfQCBn/rlTId6lc/dCHt4HqatJ5HeP2/lz8YQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbgGTPw4 (ORCPT
+        id S1731137AbgGTPxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:52:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25962 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731115AbgGTPwt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:52:49 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KFZClQ100188;
-        Mon, 20 Jul 2020 11:51:58 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5h7sk2a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 11:51:57 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KFaXMR110773;
-        Mon, 20 Jul 2020 11:51:57 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5h7sk1c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 11:51:57 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KFYvFQ012130;
-        Mon, 20 Jul 2020 15:51:55 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma02wdc.us.ibm.com with ESMTP id 32brq8tb75-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 15:51:55 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KFps6657934112
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 15:51:54 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5A87178060;
-        Mon, 20 Jul 2020 15:51:54 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED0747805E;
-        Mon, 20 Jul 2020 15:51:46 +0000 (GMT)
-Received: from [153.66.254.194] (unknown [9.85.132.116])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Jul 2020 15:51:46 +0000 (GMT)
-Message-ID: <1595260305.4554.9.camel@linux.ibm.com>
-Subject: Re: [PATCH 3/6] mm: introduce secretmemfd system call to create
- "secret" memory areas
-From:   James Bottomley <jejb@linux.ibm.com>
-Reply-To: jejb@linux.ibm.com
-To:     Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linaro-mm-sig@lists.linaro.org,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Mon, 20 Jul 2020 08:51:45 -0700
-In-Reply-To: <CAK8P3a0NyvRMqH7X0YNO5E6DGtvZXD5ZcD6Y6n7AkocufkMnHA@mail.gmail.com>
-References: <20200720092435.17469-1-rppt@kernel.org>
-         <20200720092435.17469-4-rppt@kernel.org>
-         <CAK8P3a0NyvRMqH7X0YNO5E6DGtvZXD5ZcD6Y6n7AkocufkMnHA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- mlxlogscore=999 spamscore=0 adultscore=0 clxscore=1011 mlxscore=0
- priorityscore=1501 bulkscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007200106
+        Mon, 20 Jul 2020 11:53:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729995AbgGTPxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:53:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F36CD206E9;
+        Mon, 20 Jul 2020 15:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260385;
+        bh=w3L0ltA9Lm03hwxJdwEednYK1OeTpgermLdcgX8ulc8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vRw+Q0IgnoipkTUjkLIHrFf8FRtGC4dFOYCyw0Vzn67X9o4Xg3m+2m2lKrCW5qf9X
+         ltgD02OoWXkEkLC29OW9d/6Annhtrv/7i/pcC0RK6edd0G/4m4zlC7MxSqls6dplg6
+         G+G4afMFAj21dtiMO5cyh5Ga9ks+GfLcbCcQxkvQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sebastian Parschauer <s.parschauer@gmx.de>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.19 083/133] HID: quirks: Always poll Obins Anne Pro 2 keyboard
+Date:   Mon, 20 Jul 2020 17:37:10 +0200
+Message-Id: <20200720152807.722207307@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
+References: <20200720152803.732195882@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-07-20 at 13:30 +0200, Arnd Bergmann wrote:
-> On Mon, Jul 20, 2020 at 11:25 AM Mike Rapoport <rppt@kernel.org>
-> wrote:
-> > 
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > Introduce "secretmemfd" system call with the ability to create
-> > memory areas visible only in the context of the owning process and
-> > not mapped not only to other processes but in the kernel page
-> > tables as well.
-> > 
-> > The user will create a file descriptor using the secretmemfd system
-> > call where flags supplied as a parameter to this system call will
-> > define the desired protection mode for the memory associated with
-> > that file descriptor. Currently there are two protection modes:
-> > 
-> > * exclusive - the memory area is unmapped from the kernel direct
-> > map and it
-> >               is present only in the page tables of the owning mm.
-> > * uncached  - the memory area is present only in the page tables of
-> > the
-> >               owning mm and it is mapped there as uncached.
-> > 
-> > For instance, the following example will create an uncached mapping
-> > (error handling is omitted):
-> > 
-> >         fd = secretmemfd(SECRETMEM_UNCACHED);
-> >         ftruncate(fd, MAP_SIZE);
-> >         ptr = mmap(NULL, MAP_SIZE, PROT_READ | PROT_WRITE,
-> > MAP_SHARED,
-> >                    fd, 0);
-> > 
-> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> I wonder if this should be more closely related to dmabuf file
-> descriptors, which are already used for a similar purpose: sharing
-> access to secret memory areas that are not visible to the OS but can
-> be shared with hardware through device drivers that can import a
-> dmabuf file descriptor.
+From: Sebastian Parschauer <s.parschauer@gmx.de>
 
-I'll assume you mean the dmabuf userspace API?  Because the kernel API
-is completely device exchange specific and wholly inappropriate for
-this use case.
+commit ca28aff0e1dc7dce9e12a7fd9276b7118ce5e73a upstream.
 
-The user space API of dmabuf uses a pseudo-filesystem.  So you mount
-the dmabuf file type (and by "you" I mean root because an ordinary user
-doesn't have sufficient privilege).  This is basically because every
-dmabuf is usable by any user who has permissions.  This really isn't
-the initial interface we want for secret memory because secret regions
-are supposed to be per process and not shared (at least we don't want
-other tenants to see who's using what).
+The Obins Anne Pro 2 keyboard (04d9:a293) disconnects after a few
+minutes of inactivity when using it wired and typing does not result
+in any input events any more. This is a common firmware flaw. So add
+the ALWAYS_POLL quirk for this device.
 
-Once you have the fd, you can seek to find the size, mmap, poll and
-ioctl it.  The ioctls are all to do with memory synchronization (as
-you'd expect from a device backed region) and the mmap is handled by
-the dma_buf_ops, which is device specific.  Sizing is missing because
-that's reported by the device not settable by the user.
+GitHub user Dietrich Moerman (dietrichm) tested the quirk and
+requested my help in my project
+https://github.com/sriemer/fix-linux-mouse issue 22 to provide
+this patch.
 
-What we want is the ability to get an fd, set the properties and the
-size and mmap it.  This is pretty much a 100% overlap with the memfd
-API and not much overlap with the dmabuf one, which is why I don't
-think the interface is very well suited.
+Link: https://www.reddit.com/r/AnnePro/comments/gruzcb/anne_pro_2_linux_cant_type_after_inactivity/
+Signed-off-by: Sebastian Parschauer <s.parschauer@gmx.de>
+Cc: stable@vger.kernel.org # v4.16+
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-James
+---
+ drivers/hid/hid-ids.h    |    1 +
+ drivers/hid/hid-quirks.c |    1 +
+ 2 files changed, 2 insertions(+)
+
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -609,6 +609,7 @@
+ #define USB_DEVICE_ID_HOLTEK_ALT_MOUSE_A081	0xa081
+ #define USB_DEVICE_ID_HOLTEK_ALT_MOUSE_A0C2	0xa0c2
+ #define USB_DEVICE_ID_HOLTEK_ALT_KEYBOARD_A096	0xa096
++#define USB_DEVICE_ID_HOLTEK_ALT_KEYBOARD_A293	0xa293
+ 
+ #define USB_VENDOR_ID_IMATION		0x0718
+ #define USB_DEVICE_ID_DISC_STAKKA	0xd000
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -90,6 +90,7 @@ static const struct hid_device_id hid_qu
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HAPP, USB_DEVICE_ID_UGCI_FIGHTING), HID_QUIRK_BADPAD | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HAPP, USB_DEVICE_ID_UGCI_FLYING), HID_QUIRK_BADPAD | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HOLTEK_ALT, USB_DEVICE_ID_HOLTEK_ALT_KEYBOARD_A096), HID_QUIRK_NO_INIT_REPORTS },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_HOLTEK_ALT, USB_DEVICE_ID_HOLTEK_ALT_KEYBOARD_A293), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0A4A), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0B4A), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
+
 
