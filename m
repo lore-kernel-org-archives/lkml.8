@@ -2,240 +2,248 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF955C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2320AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD9DD22B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A5722B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:29:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595244593;
+	bh=yFWdQeS2UjVpRt8SIG9rT+mebfOyARTCZy0XtkoKNxY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fvE9MC9LyaI4qtPA1WADmp3IHYzufifzFXEwon3DjJ/3oduwzuUprBgs5A+WU24xi
+	 ESz7jLOl2VaMh+r7YCiHol0pXLwTg6w6hBRxbca+F8y9u3haYFzj14ZmS0S3bhkOeW
+	 dfnTAGBXRWcF7pM1lh8rcBPPX43w376PRlZnk9fA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgGTL2O (ORCPT
+        id S1728576AbgGTL3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 07:28:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:37466 "EHLO foss.arm.com"
+        Mon, 20 Jul 2020 07:29:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728058AbgGTL2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 07:28:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 236C0106F;
-        Mon, 20 Jul 2020 04:28:13 -0700 (PDT)
-Received: from [10.57.35.46] (unknown [10.57.35.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9ABAB3F66E;
-        Mon, 20 Jul 2020 04:28:09 -0700 (PDT)
-Subject: Re: arm64: Internal error: Oops: qcom_iommu_tlb_inv_context
- free_io_pgtable_ops on db410c
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     lkft-triage@lists.linaro.org, Eric Anholt <eric@anholt.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        freedreno@lists.freedesktop.org, Joerg Roedel <jroedel@suse.de>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-References: <CA+G9fYuzqA0N6O-52uH9aHjsfF6HfhuxMby1Y6Yz7jGMAHW0zw@mail.gmail.com>
- <CAK8P3a1SHQKNNCVj9Gp25BLuXUC2nf7FuVrqfpPYQkvMbhjzFg@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <ad7ba016-c3eb-a833-e4d3-4cdcb53ca786@arm.com>
-Date:   Mon, 20 Jul 2020 12:28:07 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728058AbgGTL3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 07:29:51 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2978722B4D;
+        Mon, 20 Jul 2020 11:29:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595244590;
+        bh=yFWdQeS2UjVpRt8SIG9rT+mebfOyARTCZy0XtkoKNxY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pyLG10R8Wan7J8ce/CoGhMZRJgN1bhDR021+IlsrHuXZbkomCk3QbobDcUi8fBAeI
+         3ZhL2FXQBNyQv6N/YViAgcHmwp4hA0U6Jp7DoV128m5JMQYRtf8iJYkHcxHvfch/T3
+         eNEJpwGlgK3nMvOfIgM6CFEIU59chBc9K7Y0TvCk=
+Date:   Mon, 20 Jul 2020 12:29:47 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: adc: ad7124: move chip ID & name on the chip_info
+ table
+Message-ID: <20200720122947.7c3cfc6e@archlinux>
+In-Reply-To: <20200714051111.17892-1-alexandru.ardelean@analog.com>
+References: <20200714051111.17892-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1SHQKNNCVj9Gp25BLuXUC2nf7FuVrqfpPYQkvMbhjzFg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-20 08:17, Arnd Bergmann wrote:
-> On Mon, Jul 20, 2020 at 8:36 AM Naresh Kamboju
-> <naresh.kamboju@linaro.org> wrote:
->>
->> This kernel oops while boot linux mainline kernel on arm64  db410c device.
->>
->> metadata:
->>    git branch: master
->>    git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->>    git commit: f8456690ba8eb18ea4714e68554e242a04f65cff
->>    git describe: v5.8-rc5-48-gf8456690ba8e
->>    make_kernelversion: 5.8.0-rc5
->>    kernel-config:
->> https://builds.tuxbuild.com/2aLnwV7BLStU0t1R1QPwHQ/kernel.config
-> 
-> Thanks for the report. Adding freedreno folks to Cc, as this may have something
-> to do with that driver.
-> 
->>
->> [    5.444121] Unable to handle kernel NULL pointer dereference at
->> virtual address 0000000000000018
->> [    5.456615]   ESR = 0x96000004
->> [    5.464471]   SET = 0, FnV = 0
->> [    5.464487]   EA = 0, S1PTW = 0
->> [    5.466521] Data abort info:
->> [    5.469971]   ISV = 0, ISS = 0x00000004
->> [    5.472768]   CM = 0, WnR = 0
->> [    5.476172] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000bacba000
->> [    5.479349] [0000000000000018] pgd=0000000000000000, p4d=0000000000000000
->> [    5.485820] Internal error: Oops: 96000004 [#1] PREEMPT SMP
->> [    5.492448] Modules linked in: crct10dif_ce adv7511(+)
->> qcom_spmi_temp_alarm cec msm(+) mdt_loader qcom_camss videobuf2_dma_sg
->> drm_kms_helper v4l2_fwnode videobuf2_memops videobuf2_v4l2 qcom_rng
->> videobuf2_common i2c_qcom_cci display_connector socinfo drm qrtr ns
->> rmtfs_mem fuse
->> [    5.500256] CPU: 0 PID: 286 Comm: systemd-udevd Not tainted 5.8.0-rc5 #1
->> [    5.522484] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
->> [    5.529170] pstate: 20000005 (nzCv daif -PAN -UAO BTYPE=--)
->> [    5.535856] pc : qcom_iommu_tlb_inv_context+0x18/0xa8
->> [    5.541148] lr : free_io_pgtable_ops+0x28/0x58
->> [    5.546350] sp : ffff80001219b5f0
->> [    5.550689] x29: ffff80001219b5f0 x28: 0000000000000013
->> [    5.554078] x27: 0000000000000100 x26: ffff000036add3b8
->> [    5.559459] x25: ffff80000915e910 x24: ffff00003a5458c0
->> [    5.564753] x23: 0000000000000003 x22: ffff000036a37058
->> [    5.570049] x21: ffff000036a3a100 x20: ffff000036a3a480
->> [    5.575344] x19: ffff000036a37158 x18: 0000000000000000
->> [    5.580639] x17: 0000000000000000 x16: 0000000000000000
->> [    5.585935] x15: 0000000000000004 x14: 0000000000000368
->> [    5.591229] x13: 0000000000000000 x12: ffff000039c61798
->> [    5.596525] x11: ffff000039c616d0 x10: 0000000040000000
->> [    5.601820] x9 : 0000000000000000 x8 : ffff000039c616f8
->> [    5.607114] x7 : 0000000000000000 x6 : ffff000009f699a0
->> [    5.612410] x5 : ffff80001219b520 x4 : ffff000036a3a000
->> [    5.617705] x3 : ffff000009f69904 x2 : 0000000000000000
->> [    5.623001] x1 : ffff8000107e27e8 x0 : ffff00003a545810
->> [    5.628297] Call trace:
->> [    5.633592]  qcom_iommu_tlb_inv_context+0x18/0xa8
-> 
-> This means that dev_iommu_fwspec_get() has returned NULL
-> in qcom_iommu_tlb_inv_context(), either because dev->iommu
-> is NULL, or because dev->iommu->fwspec is NULL.
-> 
-> qcom_iommu_tlb_inv_context() does not check for a NULL
-> pointer before using the returned object.
-> 
-> The bug is either in the lack of error handling, or the fact
-> that it's possible to get into this function for a device
-> that has not been fully set up.
+On Tue, 14 Jul 2020 08:11:11 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Not quite - the device *was* properly set up, but has already been 
-properly torn down again in the removal path by iommu_release_device(). 
-The problem is that qcom-iommu kept the device pointer as its TLB cookie 
-for the domain, but the domain has a longer lifespan than the validity 
-of that device - that's a fundamental design flaw in the driver.
+> This change does the following:
+> * removes the SPI device table in favor of the OF device table
+> * adds 'name' && 'chip_id' fields to chip_info
+> * implements chip ID & silicon revision checking; the device ID for
+>   AD7124-4 is 0x0, so just checking that value can be useless;
+>   but at least the silicon revision isn't 0, so a non-zero value can be
+>   used to check that "a" device is on the SPI bus; it's probably the best
+>   way to narrow it down to one of the 2 AD7124 chip IDs
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Nice patch.
 
-Robin.
+Applied to the togreg branch of iio.git and pushed out as testing for
+the auto builders to play with it.
 
->> [    5.635764]  free_io_pgtable_ops+0x28/0x58
->> [    5.640624]  qcom_iommu_domain_free+0x38/0x60
->> [    5.644617]  iommu_group_release+0x4c/0x70
->> [    5.649045]  kobject_put+0x6c/0x120
->> [    5.653035]  kobject_del+0x64/0x90
->> [    5.656421]  kobject_put+0xfc/0x120
->> [    5.659893]  iommu_group_remove_device+0xdc/0xf0
->> [    5.663281]  iommu_release_device+0x44/0x70
->> [    5.668142]  iommu_bus_notifier+0xbc/0xd0
->> [    5.672048]  notifier_call_chain+0x54/0x98
->> [    5.676214]  blocking_notifier_call_chain+0x48/0x70
->> [    5.680209]  device_del+0x26c/0x3a0
->> [    5.684981]  platform_device_del.part.0+0x1c/0x88
->> [    5.688453]  platform_device_unregister+0x24/0x40
->> [    5.693316]  of_platform_device_destroy+0xe4/0xf8
->> [    5.698002]  device_for_each_child+0x5c/0xa8
->> [    5.702689]  of_platform_depopulate+0x3c/0x80
->> [    5.707144]  msm_pdev_probe+0x1c4/0x308 [msm]
+At somepoint we could think about moving this driver over to generic
+fw interfaces, but that is a bigger job and no particular reason to
+do that now (if it's even possible!)
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/ad7124.c | 73 ++++++++++++++++++++++++++++++++--------
+>  1 file changed, 59 insertions(+), 14 deletions(-)
 > 
-> It was triggered by a failure in msm_pdev_probe(), which was
-> calls of_platform_depopulate() in its error handling code.
-> This is a combination of two problems:
-> 
-> a) Whatever caused msm_pdev_probe() to fail means that
-> the gpu won't be usable, though it should not have caused the
-> kernel to crash.
-> 
-> b) the error handling itself causing additional problems due
-> to failed unwinding.
-> 
->> [    5.711286]  platform_drv_probe+0x54/0xa8
->> [    5.715624]  really_probe+0xd8/0x320
->> [    5.719617]  driver_probe_device+0x58/0xb8
->> [    5.723263]  device_driver_attach+0x74/0x80
->> [    5.727168]  __driver_attach+0x58/0xe0
->> [    5.731248]  bus_for_each_dev+0x70/0xc0
->> [    5.735067]  driver_attach+0x24/0x30
->> [    5.738801]  bus_add_driver+0x14c/0x1f0
->> [    5.742619]  driver_register+0x64/0x120
->> [    5.746178]  __platform_driver_register+0x48/0x58
->> [    5.750099]  msm_drm_register+0x58/0x70 [msm]
->> [    5.754861]  do_one_initcall+0x54/0x1a0
->> [    5.759200]  do_init_module+0x54/0x200
->> [    5.762846]  load_module+0x1d1c/0x2300
->> [    5.766664]  __do_sys_finit_module+0xd8/0xf0
->> [    5.770398]  __arm64_sys_finit_module+0x20/0x30
->> [    5.774826]  el0_svc_common.constprop.0+0x6c/0x168
->> [    5.779078]  do_el0_svc+0x24/0x90
->> [    5.783939]  el0_sync_handler+0x90/0x198
->> [    5.787323]  el0_sync+0x158/0x180
->> [    5.791323] Code: 910003fd f9417404 b4000484 f9401482 (b9401846)
->> [    5.794532] ---[ end trace 3d6a53241629e560 ]---
->>
->> full crash log details.
->> https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.8-rc5-48-gf8456690ba8e/testrun/2945157/suite/linux-log-parser/test/check-kernel-oops-1573988/log
-> 
-> There are a couple of messages directly preceding the bug output that are
-> probably relevant here:
-> 
-> [    5.259499] debugfs: Directory '1b0ac00.camss-vdda' with parent
-> 'smd:rpm:rpm-requests:pm8916-regulators-l2' already present!
->           Starting Resize root filesystem to fit available disk space...
->           Starting Start the WCN core...
-> [[0;32m  OK  [0m] Started Network Service.
-> [[0;32m  OK  [0m] Started QRTR service.
-> [    5.352993] adreno 1c00000.gpu: Adding to iommu group 1
-> [    5.357489] msm_mdp 1a01000.mdp: Adding to iommu group 2
-> [    5.357757] msm_mdp 1a01000.mdp: No interconnect support may cause
-> display underflows!
-> [    5.366215] adv7511 3-0039: supply dvdd not found, using dummy regulator
-> [    5.378036] msm 1a00000.mdss: supply vdd not found, using dummy regulator
-> [    5.378715] msm_mdp 1a01000.mdp: [drm:mdp5_bind [msm]] MDP5 version v1.6
-> [    5.380549] adv7511 3-0039: supply pvdd not found, using dummy regulator
-> [    5.384606] msm 1a00000.mdss: bound 1a01000.mdp (ops mdp5_ops [msm])
-> [    5.394368] adv7511 3-0039: supply a2vdd not found, using dummy regulator
-> [    5.397633] msm_dsi 1a98000.dsi: supply gdsc not found, using dummy regulator
-> [    5.411897] msm_dsi 1a98000.dsi: supply gdsc not found, using dummy regulator
-> [    5.420207] msm_dsi_manager_register: failed to register mipi dsi
-> host for DSI 0
-> [    5.425717] platform 1a01000.mdp: Removing from iommu group 2
-> [[0;1;31mFAILED[0m] Failed to start Entropy Daemon based on the HAVEGE
-> algorithm.[    5.444121] Unable to handle kernel NULL pointer
-> dereference at virtual address 0000000000000018
-> 
-> See 'systemctl status haveged.service' for detai[    5.456615]   ESR =
-> 0x96000004
-> ls.
-> [    5.464471]   SET = 0, FnV = 0
-> [    5.464487]   EA = 0, S1PTW = 0
-> 
->          Arnd
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-> 
+> diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+> index bb53ab265b64..8dce06e9e69c 100644
+> --- a/drivers/iio/adc/ad7124.c
+> +++ b/drivers/iio/adc/ad7124.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of_device.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/spi/spi.h>
+>  
+> @@ -47,6 +48,15 @@
+>  #define AD7124_ADC_CTRL_MODE_MSK	GENMASK(5, 2)
+>  #define AD7124_ADC_CTRL_MODE(x)	FIELD_PREP(AD7124_ADC_CTRL_MODE_MSK, x)
+>  
+> +/* AD7124 ID */
+> +#define AD7124_DEVICE_ID_MSK		GENMASK(7, 4)
+> +#define AD7124_DEVICE_ID_GET(x)		FIELD_GET(AD7124_DEVICE_ID_MSK, x)
+> +#define AD7124_SILICON_REV_MSK		GENMASK(3, 0)
+> +#define AD7124_SILICON_REV_GET(x)	FIELD_GET(AD7124_SILICON_REV_MSK, x)
+> +
+> +#define CHIPID_AD7124_4			0x0
+> +#define CHIPID_AD7124_8			0x1
+> +
+>  /* AD7124_CHANNEL_X */
+>  #define AD7124_CHANNEL_EN_MSK		BIT(15)
+>  #define AD7124_CHANNEL_EN(x)		FIELD_PREP(AD7124_CHANNEL_EN_MSK, x)
+> @@ -120,6 +130,8 @@ static const char * const ad7124_ref_names[] = {
+>  };
+>  
+>  struct ad7124_chip_info {
+> +	const char *name;
+> +	unsigned int chip_id;
+>  	unsigned int num_inputs;
+>  };
+>  
+> @@ -165,9 +177,13 @@ static const struct iio_chan_spec ad7124_channel_template = {
+>  
+>  static struct ad7124_chip_info ad7124_chip_info_tbl[] = {
+>  	[ID_AD7124_4] = {
+> +		.name = "ad7127-4",
+> +		.chip_id = CHIPID_AD7124_4,
+>  		.num_inputs = 8,
+>  	},
+>  	[ID_AD7124_8] = {
+> +		.name = "ad7127-8",
+> +		.chip_id = CHIPID_AD7124_8,
+>  		.num_inputs = 16,
+>  	},
+>  };
+> @@ -503,6 +519,34 @@ static int ad7124_soft_reset(struct ad7124_state *st)
+>  	return -EIO;
+>  }
+>  
+> +static int ad7124_check_chip_id(struct ad7124_state *st)
+> +{
+> +	unsigned int readval, chip_id, silicon_rev;
+> +	int ret;
+> +
+> +	ret = ad_sd_read_reg(&st->sd, AD7124_ID, 1, &readval);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	chip_id = AD7124_DEVICE_ID_GET(readval);
+> +	silicon_rev = AD7124_SILICON_REV_GET(readval);
+> +
+> +	if (chip_id != st->chip_info->chip_id) {
+> +		dev_err(&st->sd.spi->dev,
+> +			"Chip ID mismatch: expected %u, got %u\n",
+> +			st->chip_info->chip_id, chip_id);
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (silicon_rev == 0) {
+> +		dev_err(&st->sd.spi->dev,
+> +			"Silicon revision empty. Chip may not be present\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int ad7124_init_channel_vref(struct ad7124_state *st,
+>  				    unsigned int channel_number)
+>  {
+> @@ -665,25 +709,28 @@ static int ad7124_setup(struct ad7124_state *st)
+>  
+>  static int ad7124_probe(struct spi_device *spi)
+>  {
+> -	const struct spi_device_id *id;
+> +	const struct ad7124_chip_info *info;
+>  	struct ad7124_state *st;
+>  	struct iio_dev *indio_dev;
+>  	int i, ret;
+>  
+> +	info = of_device_get_match_data(&spi->dev);
+> +	if (!info)
+> +		return -ENODEV;
+> +
+>  	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+>  
+>  	st = iio_priv(indio_dev);
+>  
+> -	id = spi_get_device_id(spi);
+> -	st->chip_info = &ad7124_chip_info_tbl[id->driver_data];
+> +	st->chip_info = info;
+>  
+>  	ad_sd_init(&st->sd, indio_dev, spi, &ad7124_sigma_delta_info);
+>  
+>  	spi_set_drvdata(spi, indio_dev);
+>  
+> -	indio_dev->name = spi_get_device_id(spi)->name;
+> +	indio_dev->name = st->chip_info->name;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  	indio_dev->info = &ad7124_info;
+>  
+> @@ -721,6 +768,10 @@ static int ad7124_probe(struct spi_device *spi)
+>  	if (ret < 0)
+>  		goto error_clk_disable_unprepare;
+>  
+> +	ret = ad7124_check_chip_id(st);
+> +	if (ret)
+> +		goto error_clk_disable_unprepare;
+> +
+>  	ret = ad7124_setup(st);
+>  	if (ret < 0)
+>  		goto error_clk_disable_unprepare;
+> @@ -768,16 +819,11 @@ static int ad7124_remove(struct spi_device *spi)
+>  	return 0;
+>  }
+>  
+> -static const struct spi_device_id ad7124_id_table[] = {
+> -	{ "ad7124-4", ID_AD7124_4 },
+> -	{ "ad7124-8", ID_AD7124_8 },
+> -	{}
+> -};
+> -MODULE_DEVICE_TABLE(spi, ad7124_id_table);
+> -
+>  static const struct of_device_id ad7124_of_match[] = {
+> -	{ .compatible = "adi,ad7124-4" },
+> -	{ .compatible = "adi,ad7124-8" },
+> +	{ .compatible = "adi,ad7124-4",
+> +		.data = &ad7124_chip_info_tbl[ID_AD7124_4], },
+> +	{ .compatible = "adi,ad7124-8",
+> +		.data = &ad7124_chip_info_tbl[ID_AD7124_8], },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, ad7124_of_match);
+> @@ -789,7 +835,6 @@ static struct spi_driver ad71124_driver = {
+>  	},
+>  	.probe = ad7124_probe,
+>  	.remove	= ad7124_remove,
+> -	.id_table = ad7124_id_table,
+>  };
+>  module_spi_driver(ad71124_driver);
+>  
+
