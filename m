@@ -2,90 +2,119 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67F1C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E40C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83D59206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:44:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Mt+5ZjgX"
+	by mail.kernel.org (Postfix) with ESMTP id C38DB206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:44:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595263443;
+	bh=H65Z4LoXTK7spilxX0Aich7GtXg8kljEivi0SLB3HZY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=V4diBFPLNXRkEVpvunGFSaS1mGMj7vovx32024LAJO0H+qTgtC7li5DnmODumGoBo
+	 ERlqazTRyj0aqST3iXzn08kCkqC1OAjkrM+MysmM2BlHxkZ+sN6LAeBhc+LrwY7ISW
+	 YU2rAfDqCHVjsKeVygxVMWsFiRfCYuM2SoX+2tqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388914AbgGTQoH (ORCPT
+        id S1730772AbgGTQoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:44:07 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:58650 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730871AbgGTQoC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 12:44:02 -0400
-Received: from [10.137.106.139] (unknown [131.107.174.11])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 67F2E20B4909;
-        Mon, 20 Jul 2020 09:44:01 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 67F2E20B4909
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1595263441;
-        bh=nVS7jCr7TtH0s+xECHlFLv3RxB/Jg83Xyq+HejB+z+Y=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Mt+5ZjgXoD9wsbbmtci8gB4Spuw5ucQOlhg9/T2qOK/crXVa/KtdfGLxdaGaP7gkv
-         L2MayJCd55GAsv3Ar/xQZ1dkZaw3EeoNvbBBEDHlJZ5IwEfc6dOEy+oFYBVDI4vTaz
-         zbOxCEK2VWZ3x2BUxWszSo1csdFfG+xB5+f70u+A=
-Subject: Re: [RFC PATCH v4 02/12] security: add ipe lsm evaluation loop and
- audit system
-To:     Randy Dunlap <rdunlap@infradead.org>, agk@redhat.com,
-        axboe@kernel.dk, snitzer@redhat.com, jmorris@namei.org,
-        serge@hallyn.com, zohar@linux.ibm.com, viro@zeniv.linux.org.uk,
-        paul@paul-moore.com, eparis@redhat.com, jannh@google.com,
-        dm-devel@redhat.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-audit@redhat.com
-Cc:     tyhicks@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, sashal@kernel.org,
-        jaskarankhurana@linux.microsoft.com, mdsakib@microsoft.com,
-        nramas@linux.microsoft.com, pasha.tatshin@soleen.com
-References: <20200717230941.1190744-1-deven.desai@linux.microsoft.com>
- <20200717230941.1190744-3-deven.desai@linux.microsoft.com>
- <4b0c9925-d163-46a2-bbcb-74deb7446540@infradead.org>
-From:   Deven Bowers <deven.desai@linux.microsoft.com>
-Message-ID: <f7cda924-a14d-35bf-7c00-f12e2be9844c@linux.microsoft.com>
-Date:   Mon, 20 Jul 2020 09:44:01 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Received: from mail.kernel.org ([198.145.29.99]:34100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729910AbgGTPlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:41:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 989FE2064B;
+        Mon, 20 Jul 2020 15:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595259706;
+        bh=H65Z4LoXTK7spilxX0Aich7GtXg8kljEivi0SLB3HZY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NZzWBar+oUXB/WU0JkN1TMrem/22HnBuOOPA4dSJ9wLVsOEW3aLQzyOPUhROs3IBS
+         3ysVezZHsUrSi4ZtJdrJmlp9f2Mpw33RiUSHD0+Wi56+U0o6FZBIjeil+UdBPpabpP
+         hKD+Id1FbdPhBNduEdYo+IbrvxLvBcLsrNLzz25g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 50/86] Revert "usb/xhci-plat: Set PM runtime as active on resume"
+Date:   Mon, 20 Jul 2020 17:36:46 +0200
+Message-Id: <20200720152755.681432535@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
+References: <20200720152753.138974850@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <4b0c9925-d163-46a2-bbcb-74deb7446540@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This reverts commit 9e148a5e5e0929a4cb3000de9c843a07508ce575.
+
+Eugeniu Rosca writes:
+
+On Thu, Jul 09, 2020 at 09:00:23AM +0200, Eugeniu Rosca wrote:
+>After integrating v4.14.186 commit 5410d158ca2a50 ("usb/ehci-platform:
+>Set PM runtime as active on resume") into downstream v4.14.x, we started
+>to consistently experience below panic [1] on every second s2ram of
+>R-Car H3 Salvator-X Renesas reference board.
+>
+>After some investigations, we concluded the following:
+> - the issue does not exist in vanilla v5.8-rc4+
+> - [bisecting shows that] the panic on v4.14.186 is caused by the lack
+>   of v5.6-rc1 commit 987351e1ea7772 ("phy: core: Add consumer device
+>   link support"). Getting evidence for that is easy. Reverting
+>   987351e1ea7772 in vanilla leads to a similar backtrace [2].
+>
+>Questions:
+> - Backporting 987351e1ea7772 ("phy: core: Add consumer device
+>   link support") to v4.14.187 looks challenging enough, so probably not
+>   worth it. Anybody to contradict this?
+> - Assuming no plans to backport the missing mainline commit to v4.14.x,
+>   should the following three v4.14.186 commits be reverted on v4.14.x?
+>   * baef809ea497a4 ("usb/ohci-platform: Fix a warning when hibernating")
+>   * 9f33eff4958885 ("usb/xhci-plat: Set PM runtime as active on resume")
+>   * 5410d158ca2a50 ("usb/ehci-platform: Set PM runtime as active on resume")
+
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/host/xhci-plat.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 169d7b2feb1f7..781283a5138ea 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -313,17 +313,8 @@ static int xhci_plat_resume(struct device *dev)
+ {
+ 	struct usb_hcd	*hcd = dev_get_drvdata(dev);
+ 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+-	int ret;
+-
+-	ret = xhci_resume(xhci, 0);
+-	if (ret)
+-		return ret;
+-
+-	pm_runtime_disable(dev);
+-	pm_runtime_set_active(dev);
+-	pm_runtime_enable(dev);
+ 
+-	return 0;
++	return xhci_resume(xhci, 0);
+ }
+ 
+ static const struct dev_pm_ops xhci_plat_pm_ops = {
+-- 
+2.25.1
 
 
-On 7/17/2020 4:16 PM, Randy Dunlap wrote:
-> On 7/17/20 4:09 PM, Deven Bowers wrote:
->> +config SECURITY_IPE_PERMISSIVE_SWITCH
->> +	bool "Enable the ability to switch IPE to permissive mode"
->> +	default y
->> +	help
->> +	  This option enables two ways of switching IPE to permissive mode,
->> +	  a sysctl (if enabled), `ipe.enforce`, or a kernel command line
->> +	  parameter, `ipe.enforce`. If either of these are set to 0, files
-> 
-> 	                                               is set
 
-Thanks, I'll change it in the next iteration.
-
-> 
->> +	  will be subject to IPE's policy, audit messages will be logged, but
->> +	  the policy will not be enforced.
->> +
->> +	  If unsure, answer Y.
-> 
-> 
