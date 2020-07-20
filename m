@@ -2,169 +2,216 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8ECC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C95C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEB822080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958042080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:10:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t9BEh8YS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f7HmX8uJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731119AbgGTUGY (ORCPT
+        id S1730459AbgGTUK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 16:06:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51818 "EHLO
+        Mon, 20 Jul 2020 16:10:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728733AbgGTUGX (ORCPT
+        with ESMTP id S1729357AbgGTUK1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 16:06:23 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B9EFC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:06:23 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id i80so10393646lfi.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:06:23 -0700 (PDT)
+        Mon, 20 Jul 2020 16:10:27 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D005EC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:10:27 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id mn17so410998pjb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:10:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qerqyyq8aW+ueEjW6P8mihDDO48Lc3v+ScNleEm3ji4=;
-        b=t9BEh8YSPu5diXvOkcmKxR0VJuqqyGv+mQ7SnSl5oeUcrp+RQjkYAswNhtB/aQQZA1
-         hRdFyUydJKBlNpdT3UAS+S/7UZ43aH9Ftzn5i4/LtCUMrYr4go6Vr6Tl1lgzDBk09dwC
-         E1Dvs1MpwmBEoWHL4l8LRdQieOrh7cOXjM+pQxXa761n9sb46nWfJcCz/5/76UbOJS7Y
-         5RBJUmMjkXdqwusCM4Q1YDzwAG/FIbDATISlQDK1PPLUAYVHZRx7jqZED+9ACOClLE7V
-         WcHZXw0S/JQzic6X1VtEFa7O52HfwbDi/pYb5v/AHAC3d1zlHKXPpU207ygO4b2RDcfK
-         2igA==
+        h=from:to:cc:subject:date:message-id;
+        bh=Qt6jGzvm3GC6CjwiV6wln+Xb/8pwnGX0O0vF6jd8ZYE=;
+        b=f7HmX8uJEiLg6GPaHOjJQaUIRNQ2abmjKS9jJE1HkNfeKfm37XujIMuScSCInwA7Ro
+         CJUNZBjCoez4wYxKk2xuIYefO41y3yF/OYbBo59YkAI4DXiZQlmqMYPCuYvIR4mWBxGo
+         1MPylNVJZvcDWKNeojzbWvlhmphlBGtjkBiETy5gZPfz8olOlMUVls6mFvvofA/s8sEP
+         wmcKfdT6IdUHaTi4EP440bBQb4F1/QXZdAI0G48cHwXFtW2oJUCdjZMtZhjjVfyzcF9s
+         eB1U5TOpGb+RBOKjpWsM+vRclDohkdF46Nmo5EjjL4wDLQ9zCznBtQGNCXx7WjFVqkqd
+         3yZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qerqyyq8aW+ueEjW6P8mihDDO48Lc3v+ScNleEm3ji4=;
-        b=qreXIlHWNx5id1yVhLSt/doc4cUT+RtPPQ9pJq9cYNGMLFHCV9yGf+C3yp95xcrVU4
-         B/Kv8K4dIpJToqv98fbBBuU47MJo1ccwd99Ry29LA3n+Y/SHRg+ZiL1qpHgNzihhz2U8
-         6KVkV8Hf+G50dXgPhBoE9ZydT5SXQNN9sOcXoVW3BDcjMYl+OvnCD/tjt+pukvMYSeQy
-         /thKe+29JwYEpCL+3oCm5UhaErtpyJti8WhDk9b4d7VHrOPQMudS99jJsdOte+02BGSn
-         3/bRR0C19y6wy4jzNJGWjofQY9GAO1JblulT3ylKNogLq4Bm3CoKOegKOgXcRnSEpzmj
-         /4lA==
-X-Gm-Message-State: AOAM531w+gI339jGnDuL7DqqXCu5/4KA5zIwoVlnYRv9zpTNAuqi7+S2
-        OhMsIIF4EaRVaY7izSKXGy5ZKldVU2w=
-X-Google-Smtp-Source: ABdhPJwLeeZAUBi1AF40kIvutcHf76WNKzXWshlAO4FgY9s1S6GP7ju8m/jClSO5ICJbBO7AHH0kPw==
-X-Received: by 2002:a19:c1d6:: with SMTP id r205mr3821151lff.141.1595275581839;
-        Mon, 20 Jul 2020 13:06:21 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id a8sm3412002ljk.138.2020.07.20.13.06.19
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Qt6jGzvm3GC6CjwiV6wln+Xb/8pwnGX0O0vF6jd8ZYE=;
+        b=CjPPInXphczapm9yjYexJdU8Vm+jA0cY528OT2CdsUOyxsgcyArKKrRQJsvWcM2PDJ
+         FVx2Tk+motmjRSqegrssDWfI/aK2VqcoPkBa92Jsb2vGC6wrwcDb+wTKtfbXyhibnOSF
+         wzk41ng21+Qq4yXvA9DjJfyMthMy9T52umx8D8OYdCBjZ9DOlzzuzXRFevW4v+SaTFjF
+         NMl8Pi55WDe41kAkOSZaNY6/te5M/ObeEMJXbjHvaBMFNiZvNCB6yQwtQ2YKVYvFw/BQ
+         /aPKiBHfni1OlSkoXFZGYrWBwSGxxo37GVaJsPSnx1rMqpRQIgpiO8MuWA74AoLmtmbQ
+         4asQ==
+X-Gm-Message-State: AOAM531b+3b8Z3qJrZah8xox82VB2jvCMPBq/xbXdg/jPdCkecFO6iS+
+        3LBZwYSifMASO6TXwTZemtW07GF52rghR5AG
+X-Google-Smtp-Source: ABdhPJyw0TRbyVLKTq1Ia1pocvwrGkYe1MTP5ts2b3uJlaceVIXKGr0KiTl+ODtRo3QxFnOUsLl2Kg==
+X-Received: by 2002:a17:90a:c207:: with SMTP id e7mr1079695pjt.49.1595275827051;
+        Mon, 20 Jul 2020 13:10:27 -0700 (PDT)
+Received: from frank-MS-7C02.skbroadband ([211.110.90.114])
+        by smtp.gmail.com with ESMTPSA id j26sm17208028pfe.200.2020.07.20.13.10.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 13:06:20 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Mon, 20 Jul 2020 22:06:18 +0200
-To:     akpm@linux-foundation.org
-Cc:     akpm@linux-foundation.org, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org,
-        mingo@redhat.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Subject: Re: kernel BUG at mm/vmalloc.c:LINE! (2)
-Message-ID: <20200720200618.GA9501@pc636>
-References: <000000000000588c2c05aa156b2b@google.com>
- <0000000000003cdc6c05aae24652@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000003cdc6c05aae24652@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 20 Jul 2020 13:10:26 -0700 (PDT)
+From:   Frank Yang <puilp0502@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Frank Yang <puilp0502@gmail.com>
+Subject: [PATCH] HID: Support Varmilo Keyboards' media hotkeys
+Date:   Tue, 21 Jul 2020 05:09:16 +0900
+Message-Id: <20200720200916.31082-1-puilp0502@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 09:48:21AM -0700, syzbot wrote:
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    ab8be66e Add linux-next specific files for 20200720
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=161a0cc8900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c4bf77d63d0cf88c
-> dashboard link: https://syzkaller.appspot.com/bug?extid=5f326d255ca648131f87
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=151192bb100000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12d7a873100000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+5f326d255ca648131f87@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> kernel BUG at mm/vmalloc.c:3089!
-> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.8.0-rc6-next-20200720-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Workqueue: events pcpu_balance_workfn
-> RIP: 0010:free_vm_area mm/vmalloc.c:3089 [inline]
-> RIP: 0010:free_vm_area mm/vmalloc.c:3085 [inline]
-> RIP: 0010:pcpu_free_vm_areas+0x96/0xc0 mm/vmalloc.c:3432
-> Code: 75 48 48 8b 2b 48 8d 7d 08 48 89 f8 48 c1 e8 03 42 80 3c 30 00 75 2c 48 8b 7d 08 e8 c4 c8 ff ff 48 39 c5 74 a5 e8 ea c3 c9 ff <0f> 0b e8 e3 c3 c9 ff 4c 89 ff 5b 5d 41 5c 41 5d 41 5e 41 5f e9 71
-> RSP: 0018:ffffc90000d2fba8 EFLAGS: 00010293
-> RAX: 0000000000000000 RBX: ffff8880a801be00 RCX: 0000000000000000
-> RDX: ffff8880a95fa300 RSI: ffffffff81aa7c76 RDI: 0000000000000001
-> RBP: ffff8880a2b38180 R08: 0000000000000000 R09: ffffffff89cfecc3
-> R10: fffffbfff139fd98 R11: 0000000000000000 R12: 0000000000000000
-> R13: 0000000000000001 R14: dffffc0000000000 R15: ffff8880a801be00
-> FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000004c8e48 CR3: 00000000a4c08000 CR4: 00000000001506f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  pcpu_destroy_chunk mm/percpu-vm.c:366 [inline]
->  __pcpu_balance_workfn mm/percpu.c:1982 [inline]
->  pcpu_balance_workfn+0x8b3/0x1310 mm/percpu.c:2069
->  process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
->  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
->  kthread+0x3b5/0x4a0 kernel/kthread.c:292
->  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-> Modules linked in:
-> ---[ end trace 6a2e56ec52e1f480 ]---
-> RIP: 0010:free_vm_area mm/vmalloc.c:3089 [inline]
-> RIP: 0010:free_vm_area mm/vmalloc.c:3085 [inline]
-> RIP: 0010:pcpu_free_vm_areas+0x96/0xc0 mm/vmalloc.c:3432
-> Code: 75 48 48 8b 2b 48 8d 7d 08 48 89 f8 48 c1 e8 03 42 80 3c 30 00 75 2c 48 8b 7d 08 e8 c4 c8 ff ff 48 39 c5 74 a5 e8 ea c3 c9 ff <0f> 0b e8 e3 c3 c9 ff 4c 89 ff 5b 5d 41 5c 41 5d 41 5e 41 5f e9 71
-> RSP: 0018:ffffc90000d2fba8 EFLAGS: 00010293
-> RAX: 0000000000000000 RBX: ffff8880a801be00 RCX: 0000000000000000
-> RDX: ffff8880a95fa300 RSI: ffffffff81aa7c76 RDI: 0000000000000001
-> RBP: ffff8880a2b38180 R08: 0000000000000000 R09: ffffffff89cfecc3
-> R10: fffffbfff139fd98 R11: 0000000000000000 R12: 0000000000000000
-> R13: 0000000000000001 R14: dffffc0000000000 R15: ffff8880a801be00
-> FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000004c8e48 CR3: 00000000a4c08000 CR4: 00000000001506f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> 
-That is because of below revert:
+The Varmilo VA104M Keyboard (04b4:07b1, reported as Varmilo Z104M)
+exposes media control hotkeys as a USB HID consumer control device,
+but these keys do not work in the current (5.8-rc1) kernel due to
+the incorrect HID report descriptor. Fix the problem by modifying
+the internal HID report descriptor.
 
-<snip>
-commit bdbfb1d52d5e576c1d275fd8ab59b677011229e8
-Author: Ingo Molnar <mingo@kernel.org>
-Date:   Sun Jun 7 21:12:51 2020 +0200
+More specifically, the keyboard report descriptor specifies the
+logical boundary as 572~10754 (0x023c ~ 0x2a02) while the usage
+boundary is specified as 0~10754 (0x00 ~ 0x2a02). This results in an
+incorrect interpretation of input reports, causing inputs to be ignored.
+By setting the Logical Minimum to zero, we align the logical boundary
+with the Usage ID boundary.
 
-    Revert "mm/vmalloc: modify struct vmap_area to reduce its size"
-    
-    This reverts commit 688fcbfc06e4fdfbb7e1d5a942a1460fe6379d2d.
-    
-    Signed-off-by: Ingo Molnar <mingo@kernel.org>
-    
-    Conflicts:
-            mm/vmalloc.c
-<snip>
+Some notes:
 
-I can check further, but it can be it was not correctly reverted,
-because everything should work just fine even with the revert,
-though i i do not understand a reason of reverting.
+* There seem to be multiple variants of the VA104M keyboard. This
+  patch specifically targets 04b4:07b1 variant.
 
---
-Vlad Rezki
+* The device works out-of-the-box on Windows platform with the generic
+  consumer control device driver (hidserv.inf). This suggests that
+  Windows either ignores the Logical Minimum/Logical Maximum or
+  interprets the Usage ID assignment differently from the linux
+  implementation; Maybe there are other devices out there that only
+  works on Windows due to this problem?
+
+Signed-off-by: Frank Yang <puilp0502@gmail.com>
+---
+ drivers/hid/Kconfig       |  6 ++++
+ drivers/hid/Makefile      |  1 +
+ drivers/hid/hid-ids.h     |  2 ++
+ drivers/hid/hid-varmilo.c | 58 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 67 insertions(+)
+ create mode 100644 drivers/hid/hid-varmilo.c
+
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 443c5cbbde04..c9f0c9b79158 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -441,6 +441,12 @@ config HID_WALTOP
+ 	---help---
+ 	Support for Waltop tablets.
+ 
++config HID_VARMILO
++	tristate "Varmilo Keyboards"
++	depends on HID
++	help
++	  Support for Varmilo keyboards.
++
+ config HID_VIEWSONIC
+ 	tristate "ViewSonic/Signotec"
+ 	depends on HID
+diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
+index d8ea4b8c95af..e90a98090452 100644
+--- a/drivers/hid/Makefile
++++ b/drivers/hid/Makefile
+@@ -124,6 +124,7 @@ obj-$(CONFIG_HID_LED)		+= hid-led.o
+ obj-$(CONFIG_HID_XINMO)		+= hid-xinmo.o
+ obj-$(CONFIG_HID_ZEROPLUS)	+= hid-zpff.o
+ obj-$(CONFIG_HID_ZYDACRON)	+= hid-zydacron.o
++obj-$(CONFIG_HID_VARMILO)	+= hid-varmilo.o
+ obj-$(CONFIG_HID_VIEWSONIC)	+= hid-viewsonic.o
+ 
+ wacom-objs			:= wacom_wac.o wacom_sys.o
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 874fc3791f3b..955be22fc69d 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1189,6 +1189,8 @@
+ #define USB_DEVICE_ID_UNITEC_USB_TOUCH_0709	0x0709
+ #define USB_DEVICE_ID_UNITEC_USB_TOUCH_0A19	0x0a19
+ 
++#define USB_DEVICE_ID_VARMILO_VA104M_07B1   0X07b1
++
+ #define USB_VENDOR_ID_VELLEMAN		0x10cf
+ #define USB_DEVICE_ID_VELLEMAN_K8055_FIRST	0x5500
+ #define USB_DEVICE_ID_VELLEMAN_K8055_LAST	0x5503
+diff --git a/drivers/hid/hid-varmilo.c b/drivers/hid/hid-varmilo.c
+new file mode 100644
+index 000000000000..10e50f2dca61
+--- /dev/null
++++ b/drivers/hid/hid-varmilo.c
+@@ -0,0 +1,58 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ *  HID report fixup for varmilo keyboards
++ *
++ *  Copyright (c) 2020 Frank Yang <puilp0502@gmail.com>
++ *
++ */
++
++#include <linux/hid.h>
++#include <linux/module.h>
++
++#include "hid-ids.h"
++
++/*
++ * Varmilo VA104M with device ID of 07B1 incorrectly reports Logical Minimum as
++ * 572 (0x02 0x3c). We fix this by setting Logical Minimum to zero.
++ */
++static __u8 *varmilo_07b1_report_fixup(struct hid_device *hdev, __u8 *rdesc,
++				       unsigned int *rsize)
++{
++	if (*rsize == 25 &&
++	    rdesc[0] == 0x05 && rdesc[1] == 0x0c &&
++	    rdesc[2] == 0x09 && rdesc[3] == 0x01 &&
++	    rdesc[6] == 0x19 && rdesc[7] == 0x00 &&
++	    rdesc[11] == 0x16 && rdesc[12] == 0x3c && rdesc[13] == 0x02) {
++		hid_info(hdev,
++			 "fixing up varmilo VA104M consumer control report descriptor\n");
++		rdesc[12] = 0x00;
++		rdesc[13] = 0x00;
++	}
++	return rdesc;
++}
++
++static __u8 *varmilo_report_fixup(struct hid_device *hdev, __u8 *rdesc,
++				  unsigned int *rsize)
++{
++	if (hdev->product == USB_DEVICE_ID_VARMILO_VA104M_07B1 &&
++	    hdev->vendor == USB_VENDOR_ID_CYPRESS)
++		rdesc = varmilo_07b1_report_fixup(hdev, rdesc, rsize);
++	return rdesc;
++}
++
++static const struct hid_device_id varmilo_devices[] = {
++	{ HID_USB_DEVICE(USB_VENDOR_ID_CYPRESS, USB_DEVICE_ID_VARMILO_VA104M_07B1) },
++	{}
++};
++
++MODULE_DEVICE_TABLE(hid, varmilo_devices);
++
++static struct hid_driver varmilo_driver = {
++	.name = "varmilo",
++	.id_table = varmilo_devices,
++	.report_fixup = varmilo_report_fixup,
++};
++
++module_hid_driver(varmilo_driver);
++
++MODULE_LICENSE("GPL");
+-- 
+2.17.1
+
