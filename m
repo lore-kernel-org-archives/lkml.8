@@ -2,436 +2,153 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70593C433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BB1C43462
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 452E122B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595237139;
-	bh=Z/sZw0k7cZFxzkUbMe55tJwLGvtJJOQ7SGuhFi0U+rs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oz38I0j1Vnc5n4XsbqI9Mb934xnJU+C6PjO9mwTSeQwTUsWDjN2W78SIg2KxFtIhn
-	 +fVnkZdQMVUqTlPwV7D83Jb10NHkxxl571Ny2HOY71G8kY+iDyNCIr/MCsbEynC/+F
-	 3jzSL0BvaPHU0OprrIzJUKE9rcaL1Tvcuqhn25/Q=
+	by mail.kernel.org (Postfix) with ESMTP id 15C2820684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:26:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAXXdHCp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgGTJZi (ORCPT
+        id S1728350AbgGTJ0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:25:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbgGTJZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:25:37 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD77F2176B;
-        Mon, 20 Jul 2020 09:25:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595237135;
-        bh=Z/sZw0k7cZFxzkUbMe55tJwLGvtJJOQ7SGuhFi0U+rs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZgkGf1Wc9H6JzuDl5pY0/KECfPO1tcrBYmpW1+56T7pB9O569N0dkSVB4WpXrecrb
-         rYgQdhhtzTz2r/eTJjgKf7BRLAF+HCBEp8TNnXAMNQg4MfPgGW6ao+YXzAYnVioNV/
-         uVXs5bIdL4Q+6NN3XCNbWe++ZmkNYi1XRvldfJgQ=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-riscv@lists.infradead.org,
-        x86@kernel.org
-Subject: [PATCH 3/6] mm: introduce secretmemfd system call to create "secret" memory areas
-Date:   Mon, 20 Jul 2020 12:24:32 +0300
-Message-Id: <20200720092435.17469-4-rppt@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200720092435.17469-1-rppt@kernel.org>
-References: <20200720092435.17469-1-rppt@kernel.org>
+        Mon, 20 Jul 2020 05:26:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728321AbgGTJ0B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 05:26:01 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67FEFC061794;
+        Mon, 20 Jul 2020 02:26:01 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id d16so12230659edz.12;
+        Mon, 20 Jul 2020 02:26:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CiLttDBw7yOBmSO3iZK+sga3eBgEOoGVcIYrCjxc/YE=;
+        b=NAXXdHCpbKeZWffm7h6Q9EzaAYdJ4rr5s5qJ7Awj8r7YID3I6nc22/CBjjVnoYiUmy
+         EQh9VQWbtomDr/ogMBDFJEA8R+gkxI4f1gPLEY8drpPXQgODbtb1rN4qdN2pudpV/3Kj
+         mosD0Y/tMqtCKUJKpCkTMUIA3n6ggLv8Snd9lr2RbRiN4qJOl+Kq8WlDsTOHRSOkF+sB
+         cbYIJZENLpdPnrv3Zs9b7jCmuoW55YCuTWLju4TY1HMTEMuyy5ehrz1a2Pbv+bcpMGjx
+         esoVktDBwEhZh8FCJlOhKxXmMRGu+NMHXyy9LtqQb4trgdWcHyVyPhlPA2c3fkyEx2tw
+         2V1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CiLttDBw7yOBmSO3iZK+sga3eBgEOoGVcIYrCjxc/YE=;
+        b=eZbgxXkp8Tu8uU/zSRJTpCRw/unI18p8gy+S+UR6ss1x9/JzzatX4YkhbD+boz1BxA
+         b/av50g1jR8W1WYTLOQHuSi61Cg3kBgFmzvWFmtLffzuNy+0UpVFUyFPuKKdlj3S+M8U
+         S989VRPMgFU2WHjlVurd4Udum0+H4/Kj7ei+k/OJ+/NMuYdtlw+aO91bvCJyrfLVGZJl
+         bywDZy4esV1ssKs1/XwhuN5ndsOylVZ8mqVQz794CZ5HV1i4It640OyxCHCbYpE5voFt
+         oNSPluwkapY+VDfOFAXvMaB56ye+xRzFgC6zWsc8rjKj4B5piJ/f9fkaSHkc8May4zAP
+         W6WQ==
+X-Gm-Message-State: AOAM531yMFiEXrGxCSfrIF2PZqcR45fGCrDFZmquSxZxmXukhfpr8+hT
+        ESIRG38fBaceGEiSHpe/B+s=
+X-Google-Smtp-Source: ABdhPJzXt9R4tT48JqmdVSedCQBJigP8+gs00JQAmUN1UUFQasyJneEZ1Jy2WKkykbwmoPDITj+jrw==
+X-Received: by 2002:aa7:d848:: with SMTP id f8mr20354162eds.329.1595237159980;
+        Mon, 20 Jul 2020 02:25:59 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id z22sm15246250edx.72.2020.07.20.02.25.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 02:25:58 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 11:25:56 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rajesh Gumasta <rgumasta@nvidia.com>
+Cc:     ldewangan@nvidia.com, jonathanh@nvidia.com, vkoul@kernel.org,
+        dan.j.williams@intel.com, p.zabel@pengutronix.de,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kyarlagadda@nvidia.com
+Subject: Re: [Patch v1 0/4] Add Nvidia Tegra GPC-DMA driver
+Message-ID: <20200720092556.GA2141917@ulmo>
+References: <1595226856-19241-1-git-send-email-rgumasta@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Disposition: inline
+In-Reply-To: <1595226856-19241-1-git-send-email-rgumasta@nvidia.com>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
 
-Introduce "secretmemfd" system call with the ability to create memory areas
-visible only in the context of the owning process and not mapped not only
-to other processes but in the kernel page tables as well.
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The user will create a file descriptor using the secretmemfd system call
-where flags supplied as a parameter to this system call will define the
-desired protection mode for the memory associated with that file
-descriptor. Currently there are two protection modes:
+On Mon, Jul 20, 2020 at 12:04:12PM +0530, Rajesh Gumasta wrote:
+> Add support for Nvida Tegra general purpose DMA driver for
+> Tegra186 and Tegra194 platform.
+>=20
+> Patch 1: Add dt-binding document for Tegra GPCDMA driver
+> Patch 2: Add Tegra GPCDMA driver
+> Patch 3: Enable Tegra GPCDMA as module
+> Patch 4: Add GPCDMA DT node for Tegra186 and Tegra194
+>=20
+> Rajesh Gumasta (4):
+>   dt-bindings: dma: Add DT binding document
+>   dma: tegra: Adding Tegra GPC DMA controller driver
+>   arm64: configs: enable tegra gpc dma
+>   arm64: tegra: Add GPCDMA node in dt
+>=20
+>  .../bindings/dma/nvidia,tegra-gpc-dma.yaml         |   99 ++
+>  arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi     |    4 +
+>  arch/arm64/boot/dts/nvidia/tegra186.dtsi           |   46 +
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi           |   44 +
+>  arch/arm64/configs/defconfig                       |    1 +
+>  drivers/dma/Kconfig                                |   12 +
+>  drivers/dma/Makefile                               |    1 +
+>  drivers/dma/tegra-gpc-dma.c                        | 1512 ++++++++++++++=
+++++++
+>  8 files changed, 1719 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra-gp=
+c-dma.yaml
+>  create mode 100644 drivers/dma/tegra-gpc-dma.c
 
-* exclusive - the memory area is unmapped from the kernel direct map and it
-              is present only in the page tables of the owning mm.
-* uncached  - the memory area is present only in the page tables of the
-              owning mm and it is mapped there as uncached.
+Hi Rajesh,
 
-For instance, the following example will create an uncached mapping (error
-handling is omitted):
+can you provide instructions on how to test that this driver does what
+it's supposed to? I could probably figure out how to run this with the
+kernel's built-in dmatest module, but if you could provide a set of
+parameters that you've used or other instructions on how to validate
+this it would greatly help.
 
-	fd = secretmemfd(SECRETMEM_UNCACHED);
-	ftruncate(fd, MAP_SIZE);
-	ptr = mmap(NULL, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED,
-		   fd, 0);
+Thanks,
+Thierry
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- include/uapi/linux/magic.h     |   1 +
- include/uapi/linux/secretmem.h |   9 ++
- mm/Kconfig                     |   4 +
- mm/Makefile                    |   1 +
- mm/secretmem.c                 | 263 +++++++++++++++++++++++++++++++++
- 5 files changed, 278 insertions(+)
- create mode 100644 include/uapi/linux/secretmem.h
- create mode 100644 mm/secretmem.c
+>=20
+> --=20
+> 2.7.4
+>=20
 
-diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
-index f3956fc11de6..35687dcb1a42 100644
---- a/include/uapi/linux/magic.h
-+++ b/include/uapi/linux/magic.h
-@@ -97,5 +97,6 @@
- #define DEVMEM_MAGIC		0x454d444d	/* "DMEM" */
- #define Z3FOLD_MAGIC		0x33
- #define PPC_CMM_MAGIC		0xc7571590
-+#define SECRETMEM_MAGIC		0x5345434d	/* "SECM" */
- 
- #endif /* __LINUX_MAGIC_H__ */
-diff --git a/include/uapi/linux/secretmem.h b/include/uapi/linux/secretmem.h
-new file mode 100644
-index 000000000000..cef7a59f7492
---- /dev/null
-+++ b/include/uapi/linux/secretmem.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _UAPI_LINUX_SECRERTMEM_H
-+#define _UAPI_LINUX_SECRERTMEM_H
-+
-+/* secretmem operation modes */
-+#define SECRETMEM_EXCLUSIVE	0x1
-+#define SECRETMEM_UNCACHED	0x2
-+
-+#endif /* _UAPI_LINUX_SECRERTMEM_H */
-diff --git a/mm/Kconfig b/mm/Kconfig
-index f2104cc0d35c..c5aa948214f9 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -872,4 +872,8 @@ config ARCH_HAS_HUGEPD
- config MAPPING_DIRTY_HELPERS
-         bool
- 
-+config SECRETMEM
-+        def_bool ARCH_HAS_SET_DIRECT_MAP
-+	select GENERIC_ALLOCATOR
-+
- endmenu
-diff --git a/mm/Makefile b/mm/Makefile
-index 6e9d46b2efc9..c2aa7a393b73 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -121,3 +121,4 @@ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
- obj-$(CONFIG_MAPPING_DIRTY_HELPERS) += mapping_dirty_helpers.o
- obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
- obj-$(CONFIG_PAGE_REPORTING) += page_reporting.o
-+obj-$(CONFIG_SECRETMEM) += secretmem.o
-diff --git a/mm/secretmem.c b/mm/secretmem.c
-new file mode 100644
-index 000000000000..2f65219baf80
---- /dev/null
-+++ b/mm/secretmem.c
-@@ -0,0 +1,263 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/mm.h>
-+#include <linux/fs.h>
-+#include <linux/mount.h>
-+#include <linux/memfd.h>
-+#include <linux/bitops.h>
-+#include <linux/printk.h>
-+#include <linux/pagemap.h>
-+#include <linux/syscalls.h>
-+#include <linux/pseudo_fs.h>
-+#include <linux/set_memory.h>
-+#include <linux/sched/signal.h>
-+
-+#include <uapi/linux/secretmem.h>
-+#include <uapi/linux/magic.h>
-+
-+#include <asm/tlbflush.h>
-+
-+#include "internal.h"
-+
-+#undef pr_fmt
-+#define pr_fmt(fmt) "secretmem: " fmt
-+
-+#define SECRETMEM_MODE_MASK	(SECRETMEM_EXCLUSIVE | SECRETMEM_UNCACHED)
-+#define SECRETMEM_FLAGS_MASK	SECRETMEM_MODE_MASK
-+
-+struct secretmem_ctx {
-+	unsigned int mode;
-+};
-+
-+static struct page *secretmem_alloc_page(gfp_t gfp)
-+{
-+	/*
-+	 * FIXME: use a cache of large pages to reduce the direct map
-+	 * fragmentation
-+	 */
-+	return alloc_page(gfp);
-+}
-+
-+static vm_fault_t secretmem_fault(struct vm_fault *vmf)
-+{
-+	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
-+	struct inode *inode = file_inode(vmf->vma->vm_file);
-+	pgoff_t offset = vmf->pgoff;
-+	unsigned long addr;
-+	struct page *page;
-+	int ret = 0;
-+
-+	if (((loff_t)vmf->pgoff << PAGE_SHIFT) >= i_size_read(inode))
-+		return vmf_error(-EINVAL);
-+
-+	page = find_get_entry(mapping, offset);
-+	if (!page) {
-+		page = secretmem_alloc_page(vmf->gfp_mask);
-+		if (!page)
-+			return vmf_error(-ENOMEM);
-+
-+		ret = add_to_page_cache(page, mapping, offset, vmf->gfp_mask);
-+		if (unlikely(ret))
-+			goto err_put_page;
-+
-+		ret = set_direct_map_invalid_noflush(page);
-+		if (ret)
-+			goto err_del_page_cache;
-+
-+		addr = (unsigned long)page_address(page);
-+		flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
-+
-+		__SetPageUptodate(page);
-+
-+		ret = VM_FAULT_LOCKED;
-+	}
-+
-+	vmf->page = page;
-+	return ret;
-+
-+err_del_page_cache:
-+	delete_from_page_cache(page);
-+err_put_page:
-+	put_page(page);
-+	return vmf_error(ret);
-+}
-+
-+static const struct vm_operations_struct secretmem_vm_ops = {
-+	.fault = secretmem_fault,
-+};
-+
-+static int secretmem_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	struct secretmem_ctx *ctx = file->private_data;
-+	unsigned long mode = ctx->mode;
-+	unsigned long len = vma->vm_end - vma->vm_start;
-+
-+	if (!mode)
-+		return -EINVAL;
-+
-+	if (mlock_future_check(vma->vm_mm, vma->vm_flags | VM_LOCKED, len))
-+		return -EAGAIN;
-+
-+	switch (mode) {
-+	case SECRETMEM_UNCACHED:
-+		vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-+		fallthrough;
-+	case SECRETMEM_EXCLUSIVE:
-+		vma->vm_ops = &secretmem_vm_ops;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	vma->vm_flags |= VM_LOCKED;
-+
-+	return 0;
-+}
-+
-+const struct file_operations secretmem_fops = {
-+	.mmap		= secretmem_mmap,
-+};
-+
-+static bool secretmem_isolate_page(struct page *page, isolate_mode_t mode)
-+{
-+	return false;
-+}
-+
-+static int secretmem_migratepage(struct address_space *mapping,
-+				 struct page *newpage, struct page *page,
-+				 enum migrate_mode mode)
-+{
-+	return -EBUSY;
-+}
-+
-+static void secretmem_freepage(struct page *page)
-+{
-+	set_direct_map_default_noflush(page);
-+}
-+
-+static const struct address_space_operations secretmem_aops = {
-+	.freepage	= secretmem_freepage,
-+	.migratepage	= secretmem_migratepage,
-+	.isolate_page	= secretmem_isolate_page,
-+};
-+
-+static struct vfsmount *secretmem_mnt;
-+
-+static struct file *secretmem_file_create(unsigned long flags)
-+{
-+	struct file *file = ERR_PTR(-ENOMEM);
-+	struct secretmem_ctx *ctx;
-+	struct inode *inode;
-+
-+	inode = alloc_anon_inode(secretmem_mnt->mnt_sb);
-+	if (IS_ERR(inode))
-+		return ERR_CAST(inode);
-+
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		goto err_free_inode;
-+
-+	file = alloc_file_pseudo(inode, secretmem_mnt, "secretmem",
-+				 O_RDWR, &secretmem_fops);
-+	if (IS_ERR(file))
-+		goto err_free_ctx;
-+
-+	mapping_set_unevictable(inode->i_mapping);
-+
-+	inode->i_mapping->private_data = ctx;
-+	inode->i_mapping->a_ops = &secretmem_aops;
-+
-+	/* pretend we are a normal file with zero size */
-+	inode->i_mode |= S_IFREG;
-+	inode->i_size = 0;
-+
-+	file->private_data = ctx;
-+
-+	ctx->mode = flags & SECRETMEM_MODE_MASK;
-+
-+	return file;
-+
-+err_free_ctx:
-+	kfree(ctx);
-+err_free_inode:
-+	iput(inode);
-+	return file;
-+}
-+
-+SYSCALL_DEFINE1(secretmemfd, unsigned long, flags)
-+{
-+	struct file *file;
-+	unsigned int mode;
-+	int fd, err;
-+
-+	/* make sure local flags do not confict with global fcntl.h */
-+	BUILD_BUG_ON(SECRETMEM_FLAGS_MASK & O_CLOEXEC);
-+
-+	if (flags & ~(SECRETMEM_FLAGS_MASK | O_CLOEXEC))
-+		return -EINVAL;
-+
-+	/* modes are mutually exclusive, only one mode bit should be set */
-+	mode = flags & SECRETMEM_FLAGS_MASK;
-+	if (ffs(mode) != fls(mode))
-+		return -EINVAL;
-+
-+	fd = get_unused_fd_flags(flags & O_CLOEXEC);
-+	if (fd < 0)
-+		return fd;
-+
-+	file = secretmem_file_create(flags);
-+	if (IS_ERR(file)) {
-+		err = PTR_ERR(file);
-+		goto err_put_fd;
-+	}
-+
-+	file->f_flags |= O_LARGEFILE;
-+
-+	fd_install(fd, file);
-+	return fd;
-+
-+err_put_fd:
-+	put_unused_fd(fd);
-+	return err;
-+}
-+
-+static void secretmem_evict_inode(struct inode *inode)
-+{
-+	struct secretmem_ctx *ctx = inode->i_private;
-+
-+	truncate_inode_pages_final(&inode->i_data);
-+	clear_inode(inode);
-+	kfree(ctx);
-+}
-+
-+static const struct super_operations secretmem_super_ops = {
-+	.evict_inode = secretmem_evict_inode,
-+};
-+
-+static int secretmem_init_fs_context(struct fs_context *fc)
-+{
-+	struct pseudo_fs_context *ctx = init_pseudo(fc, SECRETMEM_MAGIC);
-+
-+	if (!ctx)
-+		return -ENOMEM;
-+	ctx->ops = &secretmem_super_ops;
-+
-+	return 0;
-+}
-+
-+static struct file_system_type secretmem_fs = {
-+	.name		= "secretmem",
-+	.init_fs_context = secretmem_init_fs_context,
-+	.kill_sb	= kill_anon_super,
-+};
-+
-+static int secretmem_init(void)
-+{
-+	int ret = 0;
-+
-+	secretmem_mnt = kern_mount(&secretmem_fs);
-+	if (IS_ERR(secretmem_mnt))
-+		ret = PTR_ERR(secretmem_mnt);
-+
-+	return ret;
-+}
-+fs_initcall(secretmem_init);
--- 
-2.26.2
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8VYxcACgkQ3SOs138+
+s6HStBAAl7MTbsKWtMWdKW2SWSsxw6tyr1UuYJ1uhnbPdtFnBsmk41jHmQ28PUCC
+qaA5Vqrge9tK4CMvblYQWyZ0hCfa/19A0fq4S9naRX0JlyQuNgZlnBfTWdBdVof+
+kVTiTgJFmZ750fGEXR37aA3un0nXPrpai/Xn6ILBXxx0pyb6H1b5NaKbRAVys5lR
+9BwP72HAgbs9yAQmc3oo1Id0Uh2FJdUoLk2ZldVIbWcTLBzefGZxNQOaZyMQuE3d
+7yyzgQA6278biQhQjwKYfp6zdmEXl61BJKl8Jf5L99vgCLPvIw2+cLtlhGLX6svm
+kgICSknw1s+M7/f5Nh+6LqhgOVv/rMrMcSMwMGrLtaSIBLOHwGnmH/7/JFjGBEL6
+jZ91eo2XVZbRkNv73fp1xkbI6BKfgaFdZcLcjZPYIss3ZBfXCUiyAHPlE2B819cB
+fnDg1n71Vo99WKdt4OA79bE8TEIsAhnl3Kgl2KHzZaETmbKMblbZms7BguvcQbp9
+r3XNu0ZjNdRtMNm63wuHpKq8KsWgVGp5AMJnmygSQya6RmxtBbmVc5STVoDawQGu
+ffYfHXg8oBULPkqfSnIU4kUgi222MJ9SgtW9Rz5gGdtzafBWuzZyl+ivl/Y+/cYa
+QDLODVGYrtGhhmhIYeAfswQ0gx7U7yUrn8OZMqzIb3fkYCELC14=
+=sOy/
+-----END PGP SIGNATURE-----
+
+--xHFwDpU9dbj6ez1V--
