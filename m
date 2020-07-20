@@ -2,52 +2,54 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C0AC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AD7C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2D93206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79B7206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262091;
-	bh=uS/VHDOeTqAKB0h1mFUTacmcMs+EdrhTXDggYJ5xUOU=;
+	s=default; t=1595262097;
+	bh=4HQ1Wp6eEHqKDLEe+sWSp1dpWtQpdaoDraJF8faeaCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z1bcPJdOKK1avorYXWXxNEV6oh6jzM46bYiE8wKDDMvNkkwOWvaM1Df6LWARsqSJW
-	 w/wrflJd1tl1HgLVYWOFQjSH3YOtHt9E28eXtTXKa1hzUTO4vsp32JpUEm5O9n8Tg6
-	 DuJAVQO9Pxb9SVYmjqMq7lE9OHTVhcD06Dk9t4gY=
+	b=Rrcy/uT/gD22rVTGqUAPdg0Dc+9sqeb3NU48c4Ifn8BNd4Pe1utgWSBg+pRDtlCPf
+	 ZotqdGKxfqP3vISdEJJBq6sLLAgSXXKVCRQXp0khJ1a5LIDElayHvua3WYh2vvzb1E
+	 yAK0R3gzyn90SbMBRwh7rVQqMEvJpNF4kgN+/Zjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733286AbgGTQIX (ORCPT
+        id S1732445AbgGTQIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:08:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45576 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:08:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733265AbgGTQIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:08:15 -0400
+        id S1733226AbgGTQH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:07:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E22E222CBB;
-        Mon, 20 Jul 2020 16:08:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 442CF22CB1;
+        Mon, 20 Jul 2020 16:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261295;
-        bh=uS/VHDOeTqAKB0h1mFUTacmcMs+EdrhTXDggYJ5xUOU=;
+        s=default; t=1595261278;
+        bh=4HQ1Wp6eEHqKDLEe+sWSp1dpWtQpdaoDraJF8faeaCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ir0G2ObazGZFMUg7ZJudkWQpPe9KkJv2bQN/gQPy8xgnECco2ivLcMxS4K50h99Dz
-         LwkolcIj4qm4enFNh/MZqBPbbPec7ZXdqC+Msg+oOXeB/S6/qWinY9kVkJABwcy3rI
-         FIlyz/qckIhY5yZZgWqUSQPDM9xYGCFgzTV3XIIU=
+        b=HbnVuzjWKKCeajnsJLt1DJxzkP00mCXHDiQVuC8zvXGs/c1f5LjCEcn3sCoJRNn7p
+         79t9bOcmMGOIqms5YYGOrX4MKQVYj0O8fGo6PuuCDGk/SIDTe+4unpYeuJvTtrQ+1h
+         NjO5ApDHCHVh5oMf7ZTZC6Bz0vyrT7gdyjcKkYBY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.7 064/244] iio: mma8452: Add missed iio_device_unregister() call in mma8452_probe()
-Date:   Mon, 20 Jul 2020 17:35:35 +0200
-Message-Id: <20200720152828.901124048@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Angelo Dureghello <angelo.dureghello@timesys.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 041/244] m68k: mm: fix node memblock init
+Date:   Mon, 20 Jul 2020 17:35:12 +0200
+Message-Id: <20200720152827.807027107@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,41 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Angelo Dureghello <angelo.dureghello@timesys.com>
 
-commit d7369ae1f4d7cffa7574d15e1f787dcca184c49d upstream.
+[ Upstream commit c43e55796dd4d13f4855971a4d7970ce2cd94db4 ]
 
-The function iio_device_register() was called in mma8452_probe().
-But the function iio_device_unregister() was not called after
-a call of the function mma8452_set_freefall_mode() failed.
-Thus add the missed function call for one error case.
+After pulling 5.7.0 (linux-next merge), mcf5441x mmu boot was
+hanging silently.
 
-Fixes: 1a965d405fc6 ("drivers:iio:accel:mma8452: added cleanup provision in case of failure.")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+memblock_add() seems not appropriate, since using MAX_NUMNODES
+as node id, while memblock_add_node() sets up memory for node id 0.
 
+Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/accel/mma8452.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/m68k/mm/mcfmmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -1685,10 +1685,13 @@ static int mma8452_probe(struct i2c_clie
+diff --git a/arch/m68k/mm/mcfmmu.c b/arch/m68k/mm/mcfmmu.c
+index 0ea375607767c..2c57f46facc0e 100644
+--- a/arch/m68k/mm/mcfmmu.c
++++ b/arch/m68k/mm/mcfmmu.c
+@@ -178,7 +178,7 @@ void __init cf_bootmem_alloc(void)
+ 	m68k_memory[0].addr = _rambase;
+ 	m68k_memory[0].size = _ramend - _rambase;
  
- 	ret = mma8452_set_freefall_mode(data, false);
- 	if (ret < 0)
--		goto buffer_cleanup;
-+		goto unregister_device;
+-	memblock_add(m68k_memory[0].addr, m68k_memory[0].size);
++	memblock_add_node(m68k_memory[0].addr, m68k_memory[0].size, 0);
  
- 	return 0;
- 
-+unregister_device:
-+	iio_device_unregister(indio_dev);
-+
- buffer_cleanup:
- 	iio_triggered_buffer_cleanup(indio_dev);
- 
+ 	/* compute total pages in system */
+ 	num_pages = PFN_DOWN(_ramend - _rambase);
+-- 
+2.25.1
+
 
 
