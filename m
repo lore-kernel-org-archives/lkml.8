@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F792C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA75AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3172B2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5848206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261535;
-	bh=a5p/PGrgE3LfAzXMjOdE76SDBJjokvE6/Vgf84gvCjs=;
+	s=default; t=1595261539;
+	bh=tRcWTGEvoCkG7qVu7iz7j3Heu/lnCqZe1Tuh5KAvBcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VmkQ+nqle3s9gEP3/clTfx+1O2ErOfhV0gld333BOepnhsRddkQWuPJIFUAu+cbYS
-	 t0w88oXQanWOnjEzyA7a6cLTl5ui8H4msHNzeGa1dU+7l0bP4+kkYAkcDcG6lit9nQ
-	 FTY6Hie96EOCpvQuApyshHtEqlMRRYPRJtURLJ5g=
+	b=cJTNc4h7G3OnXsd3ssuwCfmzgl6BBvtDWqk8h27hTIcx9OJ/HwXhS//Crlb83uerj
+	 arTHbM/MQgbLbeZaeBGZKnWl+rOGrE6hJHcerTCMEU8fFT7+4/JZkDhvBtMvgg7jOy
+	 x95hCC1ftBriJX+qPkybCmcJLyPbrqOZKCac2B7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387926AbgGTQMO (ORCPT
+        id S2387934AbgGTQMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51534 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:12:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387499AbgGTQMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:12:06 -0400
+        id S2387924AbgGTQMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:12:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9CC82065E;
-        Mon, 20 Jul 2020 16:12:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C6E220684;
+        Mon, 20 Jul 2020 16:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261525;
-        bh=a5p/PGrgE3LfAzXMjOdE76SDBJjokvE6/Vgf84gvCjs=;
+        s=default; t=1595261533;
+        bh=tRcWTGEvoCkG7qVu7iz7j3Heu/lnCqZe1Tuh5KAvBcU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o23GEvEdedyfY48MnI/rmOEa8F+GtNELW783EXjHRzRcBytMskmrfruvLoPf3eTjw
-         gNXBt+AjaKWd1eObIH3NxlE3b0W0DwtuwzAVLOuEDwlSpcjSK77yU/tZDgtRrRaAiJ
-         AlXTIfmuAzUuwNAYMlVRBN3fKvKImNO79vtWrTNs=
+        b=dAAy/jRdGoIYV+43sct9UBQX9BSvahAeKMEvFBbZN9QwDSwuzkX9asNjpXi4JiF4x
+         TMAujO6NbbCHqAL7Z2ZcJRzVMnqNPCskwvb87SpskGbP23rByHgU7wh9uNsipKfFpz
+         7JH0oJeOkM8ZsdtibyYgWm+byivMgRb8vyPBxlV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.7 140/244] mtd: rawnand: oxnas: Keep track of registered devices
-Date:   Mon, 20 Jul 2020 17:36:51 +0200
-Message-Id: <20200720152832.508993328@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c190f6858a04ea7fbc52@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 151/244] ALSA: line6: Perform sanity check for each URB creation
+Date:   Mon, 20 Jul 2020 17:37:02 +0200
+Message-Id: <20200720152833.034137499@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -58,58 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 383fc3f613e7eac9f2e3c13b6f9fb8c1f39cb9d5 upstream.
+commit 6e8a914ad619042c5f25a4feb663357c4170fd8d upstream.
 
-All initialized and registered devices should be listed somewhere so
-that we can unregister/free them in the _remove() path.
+LINE6 drivers create stream URBs with a fixed pipe without checking
+its validity, and this may lead to a kernel WARNING at the submission
+when a malformed USB descriptor is passed.
 
-This patch is not a fix per-se but is needed to apply three other
-fixes coming right after, explaining the Fixes/Cc: stable tags.
+For avoiding the kernel warning, perform the similar sanity checks for
+each pipe type at creating a URB.
 
-Fixes: 668592492409 ("mtd: nand: Add OX820 NAND Support")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-36-miquel.raynal@bootlin.com
+Reported-by: syzbot+c190f6858a04ea7fbc52@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/s5hv9iv4hq8.wl-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/raw/oxnas_nand.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/usb/line6/capture.c  |    2 ++
+ sound/usb/line6/playback.c |    2 ++
+ 2 files changed, 4 insertions(+)
 
---- a/drivers/mtd/nand/raw/oxnas_nand.c
-+++ b/drivers/mtd/nand/raw/oxnas_nand.c
-@@ -32,6 +32,7 @@ struct oxnas_nand_ctrl {
- 	void __iomem *io_base;
- 	struct clk *clk;
- 	struct nand_chip *chips[OXNAS_NAND_MAX_CHIPS];
-+	unsigned int nchips;
- };
- 
- static uint8_t oxnas_nand_read_byte(struct nand_chip *chip)
-@@ -79,7 +80,6 @@ static int oxnas_nand_probe(struct platf
- 	struct nand_chip *chip;
- 	struct mtd_info *mtd;
- 	struct resource *res;
--	int nchips = 0;
- 	int count = 0;
- 	int err = 0;
- 
-@@ -143,12 +143,12 @@ static int oxnas_nand_probe(struct platf
- 		if (err)
- 			goto err_cleanup_nand;
- 
--		oxnas->chips[nchips] = chip;
--		++nchips;
-+		oxnas->chips[oxnas->nchips] = chip;
-+		++oxnas->nchips;
+--- a/sound/usb/line6/capture.c
++++ b/sound/usb/line6/capture.c
+@@ -286,6 +286,8 @@ int line6_create_audio_in_urbs(struct sn
+ 		urb->interval = LINE6_ISO_INTERVAL;
+ 		urb->error_count = 0;
+ 		urb->complete = audio_in_callback;
++		if (usb_urb_ep_type_check(urb))
++			return -EINVAL;
  	}
  
- 	/* Exit if no chips found */
--	if (!nchips) {
-+	if (!oxnas->nchips) {
- 		err = -ENODEV;
- 		goto err_clk_unprepare;
+ 	return 0;
+--- a/sound/usb/line6/playback.c
++++ b/sound/usb/line6/playback.c
+@@ -431,6 +431,8 @@ int line6_create_audio_out_urbs(struct s
+ 		urb->interval = LINE6_ISO_INTERVAL;
+ 		urb->error_count = 0;
+ 		urb->complete = audio_out_callback;
++		if (usb_urb_ep_type_check(urb))
++			return -EINVAL;
  	}
+ 
+ 	return 0;
 
 
