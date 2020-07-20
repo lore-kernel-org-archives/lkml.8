@@ -2,53 +2,53 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724F2C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1117FC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 491F42064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D902322BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259962;
-	bh=cDZfbVeQCbWg8t4liJLYNYCFSij5mPSm7CppAJgBRjc=;
+	s=default; t=1595259964;
+	bh=ynuj/dcNFpRus3Ks6xpCAjiLrkMB+LA/bPSLHT91n+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ox0EYUItMDon8Z8mqwjNoNvTxPADIG1/Yg85uA8kyA0+kG4PTVh3mtPF/zrLg70Sx
-	 j1DWihxEMG6KiJAJhxA0ojBzW6jis5MQAOeF7Px6o4/v7bJs5QyCtl1vfjbY/57Mmv
-	 TSf7m2WW82lrSsN5p5MhVF+s5Jpxo70k0ML8ArzU=
+	b=X51a1WvI8ogF10s59XDx+JrWF6xczheVC/EOB5d67eOB++zXnDDp/q9gsZRbhH0YY
+	 cD9xzdxkDFxrPLE4Bw5rxEXMwsgOuasBcd2GVj5DcNQZoGVyry7Zel9dqRt1V5fsTQ
+	 Irpfux1vmn9YflwZl2qx+xd5dIpYhKTO+lnP/IUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbgGTPqB (ORCPT
+        id S1730617AbgGTPqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:46:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40458 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:46:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730590AbgGTPp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:45:56 -0400
+        id S1730609AbgGTPqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:46:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F44822BF3;
-        Mon, 20 Jul 2020 15:45:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7412206E9;
+        Mon, 20 Jul 2020 15:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259955;
-        bh=cDZfbVeQCbWg8t4liJLYNYCFSij5mPSm7CppAJgBRjc=;
+        s=default; t=1595259961;
+        bh=ynuj/dcNFpRus3Ks6xpCAjiLrkMB+LA/bPSLHT91n+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GdzeHujbtMrUNYZwP78wi/Pjjzz+D6FMopg/KcjkAPoglCBgxerqS2Zse1Txk8AlK
-         7JQ3IO9nc56ddXwWZPco+CFauM1R1XrjEhmKNXTsLjYjSYPrNadj0ieshxzFal0MLs
-         gzcFHWxaFX11PqfvS4X3ipG5nQsPdGhgsqAKfF3E=
+        b=MLNIh8C3fQidYnz2GQmbT4tAS6FMiQUUoNDxjDffSb+jA0WnPEPhBiOflQn3pNGcD
+         MLeDRfEJ7hU3AtqCKsWIlMlURgilArYTWDYdoJAgz3LgaVYhbohZqlH6UPkFR4VCF1
+         aw6AqOCZeJQvq5e5fP27zE7Or8n6f6mYflJbQf0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Florian Westphal <fw@strlen.de>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 052/125] tcp: md5: do not send silly options in SYNCOOKIES
-Date:   Mon, 20 Jul 2020 17:36:31 +0200
-Message-Id: <20200720152805.537332055@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 025/125] mlxsw: spectrum_router: Remove inappropriate usage of WARN_ON()
+Date:   Mon, 20 Jul 2020 17:36:04 +0200
+Message-Id: <20200720152804.210773579@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -61,84 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit e114e1e8ac9d31f25b9dd873bab5d80c1fc482ca ]
+[ Upstream commit d9d5420273997664a1c09151ca86ac993f2f89c1 ]
 
-Whenever cookie_init_timestamp() has been used to encode
-ECN,SACK,WSCALE options, we can not remove the TS option in the SYNACK.
+We should not trigger a warning when a memory allocation fails. Remove
+the WARN_ON().
 
-Otherwise, tcp_synack_options() will still advertize options like WSCALE
-that we can not deduce later when receiving the packet from the client
-to complete 3WHS.
+The warning is constantly triggered by syzkaller when it is injecting
+faults:
 
-Note that modern linux TCP stacks wont use MD5+TS+SACK in a SYN packet,
-but we can not know for sure that all TCP stacks have the same logic.
+[ 2230.758664] FAULT_INJECTION: forcing a failure.
+[ 2230.758664] name failslab, interval 1, probability 0, space 0, times 0
+[ 2230.762329] CPU: 3 PID: 1407 Comm: syz-executor.0 Not tainted 5.8.0-rc2+ #28
+...
+[ 2230.898175] WARNING: CPU: 3 PID: 1407 at drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c:6265 mlxsw_sp_router_fib_event+0xfad/0x13e0
+[ 2230.898179] Kernel panic - not syncing: panic_on_warn set ...
+[ 2230.898183] CPU: 3 PID: 1407 Comm: syz-executor.0 Not tainted 5.8.0-rc2+ #28
+[ 2230.898190] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
 
-Before the fix a tcpdump would exhibit this wrong exchange :
-
-10:12:15.464591 IP C > S: Flags [S], seq 4202415601, win 65535, options [nop,nop,md5 valid,mss 1400,sackOK,TS val 456965269 ecr 0,nop,wscale 8], length 0
-10:12:15.464602 IP S > C: Flags [S.], seq 253516766, ack 4202415602, win 65535, options [nop,nop,md5 valid,mss 1400,nop,nop,sackOK,nop,wscale 8], length 0
-10:12:15.464611 IP C > S: Flags [.], ack 1, win 256, options [nop,nop,md5 valid], length 0
-10:12:15.464678 IP C > S: Flags [P.], seq 1:13, ack 1, win 256, options [nop,nop,md5 valid], length 12
-10:12:15.464685 IP S > C: Flags [.], ack 13, win 65535, options [nop,nop,md5 valid], length 0
-
-After this patch the exchange looks saner :
-
-11:59:59.882990 IP C > S: Flags [S], seq 517075944, win 65535, options [nop,nop,md5 valid,mss 1400,sackOK,TS val 1751508483 ecr 0,nop,wscale 8], length 0
-11:59:59.883002 IP S > C: Flags [S.], seq 1902939253, ack 517075945, win 65535, options [nop,nop,md5 valid,mss 1400,sackOK,TS val 1751508479 ecr 1751508483,nop,wscale 8], length 0
-11:59:59.883012 IP C > S: Flags [.], ack 1, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508483 ecr 1751508479], length 0
-11:59:59.883114 IP C > S: Flags [P.], seq 1:13, ack 1, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508483 ecr 1751508479], length 12
-11:59:59.883122 IP S > C: Flags [.], ack 13, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508483 ecr 1751508483], length 0
-11:59:59.883152 IP S > C: Flags [P.], seq 1:13, ack 13, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508484 ecr 1751508483], length 12
-11:59:59.883170 IP C > S: Flags [.], ack 13, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508484 ecr 1751508484], length 0
-
-Of course, no SACK block will ever be added later, but nothing should break.
-Technically, we could remove the 4 nops included in MD5+TS options,
-but again some stacks could break seeing not conventional alignment.
-
-Fixes: 4957faade11b ("TCPCT part 1g: Responder Cookie => Initiator")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Florian Westphal <fw@strlen.de>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Fixes: 3057224e014c ("mlxsw: spectrum_router: Implement FIB offload in deferred work")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_output.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -616,7 +616,8 @@ static unsigned int tcp_synack_options(s
- 				       unsigned int mss, struct sk_buff *skb,
- 				       struct tcp_out_options *opts,
- 				       const struct tcp_md5sig_key *md5,
--				       struct tcp_fastopen_cookie *foc)
-+				       struct tcp_fastopen_cookie *foc,
-+				       enum tcp_synack_type synack_type)
- {
- 	struct inet_request_sock *ireq = inet_rsk(req);
- 	unsigned int remaining = MAX_TCP_OPTION_SPACE;
-@@ -631,7 +632,8 @@ static unsigned int tcp_synack_options(s
- 		 * rather than TS in order to fit in better with old,
- 		 * buggy kernels, but that was deemed to be unnecessary.
- 		 */
--		ireq->tstamp_ok &= !ireq->sack_ok;
-+		if (synack_type != TCP_SYNACK_COOKIE)
-+			ireq->tstamp_ok &= !ireq->sack_ok;
- 	}
- #endif
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+index 05a2006a20b9b..d9cd86c675569 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+@@ -4932,7 +4932,7 @@ static int mlxsw_sp_router_fib_event(struct notifier_block *nb,
+ 		return NOTIFY_DONE;
  
-@@ -3252,8 +3254,8 @@ struct sk_buff *tcp_make_synack(const st
- 	md5 = tcp_rsk(req)->af_specific->req_md5_lookup(sk, req_to_sk(req));
- #endif
- 	skb_set_hash(skb, tcp_rsk(req)->txhash, PKT_HASH_TYPE_L4);
--	tcp_header_size = tcp_synack_options(req, mss, skb, &opts, md5, foc) +
--			  sizeof(*th);
-+	tcp_header_size = tcp_synack_options(req, mss, skb, &opts, md5,
-+					     foc, synack_type) + sizeof(*th);
+ 	fib_work = kzalloc(sizeof(*fib_work), GFP_ATOMIC);
+-	if (WARN_ON(!fib_work))
++	if (!fib_work)
+ 		return NOTIFY_BAD;
  
- 	skb_push(skb, tcp_header_size);
- 	skb_reset_transport_header(skb);
+ 	router = container_of(nb, struct mlxsw_sp_router, fib_nb);
+-- 
+2.25.1
+
 
 
