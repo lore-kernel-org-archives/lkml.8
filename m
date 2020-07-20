@@ -2,51 +2,53 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D85C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7C8C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0984F22CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BC322CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261404;
-	bh=xl9nwhS+TDJzVbY2Eaky79FtTQ1uMPn+x8ZkN+mNhXQ=;
+	s=default; t=1595261409;
+	bh=+Yu0yXXoWm65CQbTb8rEu8e9JDG41uLdmHPn23u0NFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XOr6lODU62P6MVP4swUqdv4Cg+s8kiXZ+3BA2/N49gbgpaj0LbmGunHXOGaJzz4Xy
-	 SEP2PhryEiWSL+FAC87mmpOA0ZLcY1j0GhW/fBEsY2E9kWjXHLzUr8/gMCjCTzVNwv
-	 YMUupaS8wABLwT95lInOzzlUaQh9gNCs5NjDQJv4=
+	b=1jCzh4MR4EC9U0m8WjRobcC8Qho/GngPxmGpdJ/eIvL2CvUTn1t/RRla5Ph1DxESv
+	 ePqJtneCkLfHbCNh6PJRKBjJnQaXzZkZidtu7brhUMHtfVnGBMYJmnA3b12ZpWpMCF
+	 1fHM5KVsBdT2SCwpOqzbh+mSHis+V17+/184hgQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732779AbgGTQKC (ORCPT
+        id S2387625AbgGTQKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:10:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48240 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:10:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387607AbgGTQKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:10:01 -0400
+        id S2387607AbgGTQKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:10:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 162AD2064B;
-        Mon, 20 Jul 2020 16:09:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27D382064B;
+        Mon, 20 Jul 2020 16:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261400;
-        bh=xl9nwhS+TDJzVbY2Eaky79FtTQ1uMPn+x8ZkN+mNhXQ=;
+        s=default; t=1595261403;
+        bh=+Yu0yXXoWm65CQbTb8rEu8e9JDG41uLdmHPn23u0NFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sJRi4CvBtonEK/49ce5E3EPfLP31W0vfV3n2klJamgVgrcIwUDNfRWeLlGydbpQ7n
-         uxV7I+KIVRj4dfmfgMsH0n/KQEZX1yKFW7z/HO3eXONKjKKGIQCx408D3yj0trBJOU
-         Fi5x3U0jn3LNSbaanANgN5uaYYEt2lENfqN24qLM=
+        b=mfKcPSTSyKrEUKFgxc6IAmQlYiiGAZVRjtOtG5QGyICK1nxOBlqLiO4QMuF4t5r+2
+         JEK3uEI3MqCE6X+DnT2e+hUOB3gzWvnbOUaoTOnh0rcH4x2xZrsOcpolO2toOU7uf1
+         8PqrB+Kz0SJnMrG5d6T4J/yhaXmOq9/KCPQ2YrC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.7 075/244] io_uring: fix recvmsg memory leak with buffer selection
-Date:   Mon, 20 Jul 2020 17:35:46 +0200
-Message-Id: <20200720152829.407965865@linuxfoundation.org>
+        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>, Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 102/244] clk: AST2600: Add mux for EMMC clock
+Date:   Mon, 20 Jul 2020 17:36:13 +0200
+Message-Id: <20200720152830.684860477@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,41 +61,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Eddie James <eajames@linux.ibm.com>
 
-commit 681fda8d27a66f7e65ff7f2d200d7635e64a8d05 upstream.
+[ Upstream commit c2407ab3bd55064d459bc822efd1c134e852798c ]
 
-io_recvmsg() doesn't free memory allocated for struct io_buffer. This can
-causes a leak when used with automatic buffer selection.
+The EMMC clock can be derived from either the HPLL or the MPLL. Register
+a clock mux so that the rate is calculated correctly based upon the
+parent.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Link: https://lore.kernel.org/r/20200709195706.12741-2-eajames@linux.ibm.com
+Acked-by: Joel Stanley <joel@jms.id.au>
+Fixes: d3d04f6c330a ("clk: Add support for AST2600 SoC")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/clk/clk-ast2600.c | 49 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 41 insertions(+), 8 deletions(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -3884,10 +3884,16 @@ static int io_recvmsg(struct io_kiocb *r
+diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
+index 99afc949925f0..177368cac6dd6 100644
+--- a/drivers/clk/clk-ast2600.c
++++ b/drivers/clk/clk-ast2600.c
+@@ -131,6 +131,18 @@ static const struct clk_div_table ast2600_eclk_div_table[] = {
+ 	{ 0 }
+ };
  
- 		ret = __sys_recvmsg_sock(sock, &kmsg->msg, req->sr_msg.msg,
- 						kmsg->uaddr, flags);
--		if (force_nonblock && ret == -EAGAIN)
--			return io_setup_async_msg(req, kmsg);
-+		if (force_nonblock && ret == -EAGAIN) {
-+			ret = io_setup_async_msg(req, kmsg);
-+			if (ret != -EAGAIN)
-+				kfree(kbuf);
-+			return ret;
-+		}
- 		if (ret == -ERESTARTSYS)
- 			ret = -EINTR;
-+		if (kbuf)
-+			kfree(kbuf);
- 	}
++static const struct clk_div_table ast2600_emmc_extclk_div_table[] = {
++	{ 0x0, 2 },
++	{ 0x1, 4 },
++	{ 0x2, 6 },
++	{ 0x3, 8 },
++	{ 0x4, 10 },
++	{ 0x5, 12 },
++	{ 0x6, 14 },
++	{ 0x7, 16 },
++	{ 0 }
++};
++
+ static const struct clk_div_table ast2600_mac_div_table[] = {
+ 	{ 0x0, 4 },
+ 	{ 0x1, 4 },
+@@ -390,6 +402,11 @@ static struct clk_hw *aspeed_g6_clk_hw_register_gate(struct device *dev,
+ 	return hw;
+ }
  
- 	if (kmsg && kmsg->iov != kmsg->fast_iov)
++static const char *const emmc_extclk_parent_names[] = {
++	"emmc_extclk_hpll_in",
++	"mpll",
++};
++
+ static const char * const vclk_parent_names[] = {
+ 	"dpll",
+ 	"d1pll",
+@@ -459,16 +476,32 @@ static int aspeed_g6_clk_probe(struct platform_device *pdev)
+ 		return PTR_ERR(hw);
+ 	aspeed_g6_clk_data->hws[ASPEED_CLK_UARTX] = hw;
+ 
+-	/* EMMC ext clock divider */
+-	hw = clk_hw_register_gate(dev, "emmc_extclk_gate", "hpll", 0,
+-			scu_g6_base + ASPEED_G6_CLK_SELECTION1, 15, 0,
+-			&aspeed_g6_clk_lock);
++	/* EMMC ext clock */
++	hw = clk_hw_register_fixed_factor(dev, "emmc_extclk_hpll_in", "hpll",
++					  0, 1, 2);
+ 	if (IS_ERR(hw))
+ 		return PTR_ERR(hw);
+-	hw = clk_hw_register_divider_table(dev, "emmc_extclk", "emmc_extclk_gate", 0,
+-			scu_g6_base + ASPEED_G6_CLK_SELECTION1, 12, 3, 0,
+-			ast2600_div_table,
+-			&aspeed_g6_clk_lock);
++
++	hw = clk_hw_register_mux(dev, "emmc_extclk_mux",
++				 emmc_extclk_parent_names,
++				 ARRAY_SIZE(emmc_extclk_parent_names), 0,
++				 scu_g6_base + ASPEED_G6_CLK_SELECTION1, 11, 1,
++				 0, &aspeed_g6_clk_lock);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	hw = clk_hw_register_gate(dev, "emmc_extclk_gate", "emmc_extclk_mux",
++				  0, scu_g6_base + ASPEED_G6_CLK_SELECTION1,
++				  15, 0, &aspeed_g6_clk_lock);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	hw = clk_hw_register_divider_table(dev, "emmc_extclk",
++					   "emmc_extclk_gate", 0,
++					   scu_g6_base +
++						ASPEED_G6_CLK_SELECTION1, 12,
++					   3, 0, ast2600_emmc_extclk_div_table,
++					   &aspeed_g6_clk_lock);
+ 	if (IS_ERR(hw))
+ 		return PTR_ERR(hw);
+ 	aspeed_g6_clk_data->hws[ASPEED_CLK_EMMC] = hw;
+-- 
+2.25.1
+
 
 
