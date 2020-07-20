@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48408C433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 216C722BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046AE2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262385;
-	bh=kH6fbPt0NnSdE1E+BpMMREw55a9Ko6ABoyRvPQ3X+k0=;
+	s=default; t=1595262390;
+	bh=B8XFlK00JezQrQoYIPMKahNDyTSykSrd0/k/HwAEdp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f8WJ3zUIcyYAysGTyM7cCkq7Wopm+UPyRHdAfD78/abu4gzJc1yEb3AfCpBRMDT00
-	 10YNVisYPNz9+mHRwOM36P29N5twNpsxokRwEJmO084EJc5IHgCLlSJRf4Z8KiC28M
-	 aoRYrW+CFNM3WxCBDTbNuOj0Lk7wWQlIOLgz6M0U=
+	b=azuwBHHxqJLFhyHPdAs8pxz0WNMWwsuOq69IImn3Fz19wOnn0XumYxVvdXEuv42l4
+	 0Vo+6kjSDjp3B9EaGj/69qkqtXOEpQgOEGssl4HuaXrWcEku7BjLsBtojwBEfnEawA
+	 vbAREIWPI1Siz5fjI2mjdcaTcB8C2dlMP/p5gsJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbgGTQ0X (ORCPT
+        id S1731995AbgGTQAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:26:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33428 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:00:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732396AbgGTQAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:00:25 -0400
+        id S1732311AbgGTP7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 151B622BEF;
-        Mon, 20 Jul 2020 16:00:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03C2E20773;
+        Mon, 20 Jul 2020 15:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260824;
-        bh=kH6fbPt0NnSdE1E+BpMMREw55a9Ko6ABoyRvPQ3X+k0=;
+        s=default; t=1595260791;
+        bh=B8XFlK00JezQrQoYIPMKahNDyTSykSrd0/k/HwAEdp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=knh8Mxy0zzoEQ027urpS4+bE99V0vUMX33GOEMtLAvOkHSNBNc6MZy8AhUgfNzkXI
-         cZ5F8nSS42cIyIiueSBkHchk94DM5Zzu0kepsGRpYttTzHqx+Zy5pPhJgwoS5bQElg
-         G56SleIlNR7BiFzYm5joq45vR8gKgViyxFNVk2wk=
+        b=ih1rmjOwd6gFH5V+E8gn7rpKv47iWI6zD/+HHcaScJN9wyyi7ziF1T+9Nk1tK20PJ
+         XS8Ft8KfqLS7/3PO1pg4Lrq/OCEg0aU9TV7AxBIodcgTbEFqOV8bRqex6QlsScrbUt
+         VL7MmYoPnlwWlMlfcu9x/P3okS6684CNCEhYwuJM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 110/215] NFS: Fix interrupted slots by sending a solo SEQUENCE operation
-Date:   Mon, 20 Jul 2020 17:36:32 +0200
-Message-Id: <20200720152825.431046958@linuxfoundation.org>
+Subject: [PATCH 5.4 067/215] ARM: OMAP2+: Add workaround for DRA7 DSP MStandby errata i879
+Date:   Mon, 20 Jul 2020 17:35:49 +0200
+Message-Id: <20200720152823.399239857@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,82 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+From: Suman Anna <s-anna@ti.com>
 
-[ Upstream commit 913fadc5b105c3619d9e8d0fe8899ff1593cc737 ]
+[ Upstream commit 2f14101a1d760db72393910d481fbf7768c44530 ]
 
-We used to do this before 3453d5708b33, but this was changed to better
-handle the NFS4ERR_SEQ_MISORDERED error code. This commit fixed the slot
-re-use case when the server doesn't receive the interrupted operation,
-but if the server does receive the operation then it could still end up
-replying to the client with mis-matched operations from the reply cache.
+Errata Title:
+i879: DSP MStandby requires CD_EMU in SW_WKUP
 
-We can fix this by sending a SEQUENCE to the server while recovering from
-a SEQ_MISORDERED error when we detect that we are in an interrupted slot
-situation.
+Description:
+The DSP requires the internal emulation clock to be actively toggling
+in order to successfully enter a low power mode via execution of the
+IDLE instruction and PRCM MStandby/Idle handshake. This assumes that
+other prerequisites and software sequence are followed.
 
-Fixes: 3453d5708b33 (NFSv4.1: Avoid false retries when RPC calls are interrupted)
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Workaround:
+The emulation clock to the DSP is free-running anytime CCS is connected
+via JTAG debugger to the DSP subsystem or when the CD_EMU clock domain
+is set in SW_WKUP mode. The CD_EMU domain can be set in SW_WKUP mode
+via the CM_EMU_CLKSTCTRL [1:0]CLKTRCTRL field.
+
+Implementation:
+This patch implements this workaround by denying the HW_AUTO mode
+for the EMU clockdomain during the power-up of any DSP processor
+and re-enabling the HW_AUTO mode during the shutdown of the last
+DSP processor (actually done during the enabling and disabling of
+the respective DSP MDMA MMUs). Reference counting has to be used to
+manage the independent sequencing between the multiple DSP processors.
+
+This switching is done at runtime rather than a static clockdomain
+flags value to meet the target power domain state for the EMU power
+domain during suspend.
+
+Note that the DSP MStandby behavior is not consistent across all
+boards prior to this fix. Please see commit 45f871eec6c0 ("ARM:
+OMAP2+: Extend DRA7 IPU1 MMU pdata quirks to DSP MDMA MMUs") for
+details.
+
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ arch/arm/mach-omap2/omap-iommu.c | 43 +++++++++++++++++++++++++++++---
+ 1 file changed, 40 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 33c17c69aeaa3..1a1bd2fe6e98d 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -774,6 +774,14 @@ static void nfs4_slot_sequence_acked(struct nfs4_slot *slot,
- 	slot->seq_nr_last_acked = seqnr;
- }
+diff --git a/arch/arm/mach-omap2/omap-iommu.c b/arch/arm/mach-omap2/omap-iommu.c
+index f1a6ece8108e4..78247e6f4a720 100644
+--- a/arch/arm/mach-omap2/omap-iommu.c
++++ b/arch/arm/mach-omap2/omap-iommu.c
+@@ -11,14 +11,43 @@
  
-+static void nfs4_probe_sequence(struct nfs_client *client, const struct cred *cred,
-+				struct nfs4_slot *slot)
+ #include "omap_hwmod.h"
+ #include "omap_device.h"
++#include "clockdomain.h"
+ #include "powerdomain.h"
+ 
++static void omap_iommu_dra7_emu_swsup_config(struct platform_device *pdev,
++					     bool enable)
 +{
-+	struct rpc_task *task = _nfs41_proc_sequence(client, cred, slot, true);
-+	if (!IS_ERR(task))
-+		rpc_put_task_async(task);
++	static struct clockdomain *emu_clkdm;
++	static DEFINE_SPINLOCK(emu_lock);
++	static atomic_t count;
++	struct device_node *np = pdev->dev.of_node;
++
++	if (!of_device_is_compatible(np, "ti,dra7-dsp-iommu"))
++		return;
++
++	if (!emu_clkdm) {
++		emu_clkdm = clkdm_lookup("emu_clkdm");
++		if (WARN_ON_ONCE(!emu_clkdm))
++			return;
++	}
++
++	spin_lock(&emu_lock);
++
++	if (enable && (atomic_inc_return(&count) == 1))
++		clkdm_deny_idle(emu_clkdm);
++	else if (!enable && (atomic_dec_return(&count) == 0))
++		clkdm_allow_idle(emu_clkdm);
++
++	spin_unlock(&emu_lock);
 +}
 +
- static int nfs41_sequence_process(struct rpc_task *task,
- 		struct nfs4_sequence_res *res)
+ int omap_iommu_set_pwrdm_constraint(struct platform_device *pdev, bool request,
+ 				    u8 *pwrst)
  {
-@@ -790,6 +798,7 @@ static int nfs41_sequence_process(struct rpc_task *task,
- 		goto out;
+ 	struct powerdomain *pwrdm;
+ 	struct omap_device *od;
+ 	u8 next_pwrst;
++	int ret = 0;
  
- 	session = slot->table->session;
-+	clp = session->clp;
+ 	od = to_omap_device(pdev);
+ 	if (!od)
+@@ -31,13 +60,21 @@ int omap_iommu_set_pwrdm_constraint(struct platform_device *pdev, bool request,
+ 	if (!pwrdm)
+ 		return -EINVAL;
  
- 	trace_nfs4_sequence_done(session, res);
+-	if (request)
++	if (request) {
+ 		*pwrst = pwrdm_read_next_pwrst(pwrdm);
++		omap_iommu_dra7_emu_swsup_config(pdev, true);
++	}
  
-@@ -804,7 +813,6 @@ static int nfs41_sequence_process(struct rpc_task *task,
- 		nfs4_slot_sequence_acked(slot, slot->seq_nr);
- 		/* Update the slot's sequence and clientid lease timer */
- 		slot->seq_done = 1;
--		clp = session->clp;
- 		do_renew_lease(clp, res->sr_timestamp);
- 		/* Check sequence flags */
- 		nfs41_handle_sequence_flag_errors(clp, res->sr_status_flags,
-@@ -852,10 +860,18 @@ static int nfs41_sequence_process(struct rpc_task *task,
- 		/*
- 		 * Were one or more calls using this slot interrupted?
- 		 * If the server never received the request, then our
--		 * transmitted slot sequence number may be too high.
-+		 * transmitted slot sequence number may be too high. However,
-+		 * if the server did receive the request then it might
-+		 * accidentally give us a reply with a mismatched operation.
-+		 * We can sort this out by sending a lone sequence operation
-+		 * to the server on the same slot.
- 		 */
- 		if ((s32)(slot->seq_nr - slot->seq_nr_last_acked) > 1) {
- 			slot->seq_nr--;
-+			if (task->tk_msg.rpc_proc != &nfs4_procedures[NFSPROC4_CLNT_SEQUENCE]) {
-+				nfs4_probe_sequence(clp, task->tk_msg.rpc_cred, slot);
-+				res->sr_slot = NULL;
-+			}
- 			goto retry_nowait;
- 		}
- 		/*
+ 	if (*pwrst > PWRDM_POWER_RET)
+-		return 0;
++		goto out;
+ 
+ 	next_pwrst = request ? PWRDM_POWER_ON : *pwrst;
+ 
+-	return pwrdm_set_next_pwrst(pwrdm, next_pwrst);
++	ret = pwrdm_set_next_pwrst(pwrdm, next_pwrst);
++
++out:
++	if (!request)
++		omap_iommu_dra7_emu_swsup_config(pdev, false);
++
++	return ret;
+ }
 -- 
 2.25.1
 
