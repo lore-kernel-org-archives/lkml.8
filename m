@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B71C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1115DC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3BA220684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D936820672
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261019;
-	bh=Tb3r2dEETnBP7FH0mcyRw1NaflXuvhI6D2TurD18Qs8=;
+	s=default; t=1595261021;
+	bh=roEMoMNz0vgPEnIen9IPPcMgNc5MvflC4Ou3IoPYch4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XjW9U9605pdahvngtZG1lLmEBfx1QKUwgH0z+rqneWXeUXfIau7BytuAE/+YDOlJS
-	 ynP4ACG9JHK4W5ntm+znudj3TUXdgulMvZvhcyWq5h+EXs/JrGuvL7bWpNxol71Fkd
-	 5qQehEB4UHnWX2HuTIFTLsrXufaKA3iJKm/wsx6w=
+	b=pCQZEY2yqFmt8u8M+aF0dWCKS1NvdyJ+9LAfDAyOVK1xb+4aGPvUUHYIf/cukWr3p
+	 I+7lDmT6S9inKOp1Z0mfUMh49q6NsS9vCVcDT+4nS/z5piefDt3ODKtp90m1puMIqx
+	 a+PzNrYviN6S4DFSqK4JFh9U8s/1l6XKcFUo0I0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732757AbgGTQDi (ORCPT
+        id S1732765AbgGTQDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:03:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37898 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:03:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732425AbgGTQDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:03:33 -0400
+        id S1732454AbgGTQDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:03:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 494B120672;
-        Mon, 20 Jul 2020 16:03:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B2DC2176B;
+        Mon, 20 Jul 2020 16:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261012;
-        bh=Tb3r2dEETnBP7FH0mcyRw1NaflXuvhI6D2TurD18Qs8=;
+        s=default; t=1595261015;
+        bh=roEMoMNz0vgPEnIen9IPPcMgNc5MvflC4Ou3IoPYch4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fcSCGK5B0HLiR8QCoj6S8m58r6/zyHSh2WjVPWj4utlOXhz1XIJjhQRYrJIyTldiR
-         U7aJyTZ9Mzdv+EhtF/OxH4Hc0OkvE0mXNOc2Zkp64tI23KcNX2SXDskyf2T27CZ0Wg
-         tCK3fj+SrtamBZSB4dMpdNGv+40cWjzPWxQLCyQ8=
+        b=S7Qi+DOwunM0vT7AUPFjsmOeUHEjCEDfz4ELfBABb3eKXcwwupTRLpGl0ux8uQEML
+         qKgGdB/TdB0K1/mSudorDAgSkzbKIFISApRmLab20w7zk3pi0NWyk1+rgx7oWpaPYi
+         Pw5o6V/CAyJSk5Ill1MKw1NffaJS4dL2NpTUg0hk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Pedersen <limero1337@gmail.com>,
+        stable@vger.kernel.org, Dave Wang <dave.wang@emc.com.tw>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.4 178/215] Input: i8042 - add Lenovo XiaoXin Air 12 to i8042 nomux list
-Date:   Mon, 20 Jul 2020 17:37:40 +0200
-Message-Id: <20200720152828.639565692@linuxfoundation.org>
+Subject: [PATCH 5.4 179/215] Input: elan_i2c - add more hardware ID for Lenovo laptops
+Date:   Mon, 20 Jul 2020 17:37:41 +0200
+Message-Id: <20200720152828.690157175@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,39 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Pedersen <limero1337@gmail.com>
+From: Dave Wang <dave.wang@emc.com.tw>
 
-commit 17d51429da722cd8fc77a365a112f008abf4f8b3 upstream.
+commit a50ca29523b18baea548bdf5df9b4b923c2bb4f6 upstream.
 
-This fixes two finger trackpad scroll on the Lenovo XiaoXin Air 12.
-Without nomux, the trackpad behaves as if only one finger is present and
-moves the cursor when trying to scroll.
+This adds more hardware IDs for Elan touchpads found in various Lenovo
+laptops.
 
-Signed-off-by: David Pedersen <limero1337@gmail.com>
+Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
+Link: https://lore.kernel.org/r/000201d5a8bd$9fead3f0$dfc07bd0$@emc.com.tw
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200625133754.291325-1-limero1337@gmail.com
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/serio/i8042-x86ia64io.h |    7 +++++++
+ include/linux/input/elan-i2c-ids.h |    7 +++++++
  1 file changed, 7 insertions(+)
 
---- a/drivers/input/serio/i8042-x86ia64io.h
-+++ b/drivers/input/serio/i8042-x86ia64io.h
-@@ -426,6 +426,13 @@ static const struct dmi_system_id __init
- 		},
- 	},
- 	{
-+		/* Lenovo XiaoXin Air 12 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "80UN"),
-+		},
-+	},
-+	{
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 1360"),
+--- a/include/linux/input/elan-i2c-ids.h
++++ b/include/linux/input/elan-i2c-ids.h
+@@ -67,8 +67,15 @@ static const struct acpi_device_id elan_
+ 	{ "ELAN062B", 0 },
+ 	{ "ELAN062C", 0 },
+ 	{ "ELAN062D", 0 },
++	{ "ELAN062E", 0 }, /* Lenovo V340 Whiskey Lake U */
++	{ "ELAN062F", 0 }, /* Lenovo V340 Comet Lake U */
+ 	{ "ELAN0631", 0 },
+ 	{ "ELAN0632", 0 },
++	{ "ELAN0633", 0 }, /* Lenovo S145 */
++	{ "ELAN0634", 0 }, /* Lenovo V340 Ice lake */
++	{ "ELAN0635", 0 }, /* Lenovo V1415-IIL */
++	{ "ELAN0636", 0 }, /* Lenovo V1415-Dali */
++	{ "ELAN0637", 0 }, /* Lenovo V1415-IGLR */
+ 	{ "ELAN1000", 0 },
+ 	{ }
+ };
 
 
