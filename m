@@ -2,87 +2,61 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E87D7C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C189F2250E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD7892250E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgGTBqi (ORCPT
+        id S1726916AbgGTBsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 21:46:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:40810 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbgGTBqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 21:46:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAE8F12FC;
-        Sun, 19 Jul 2020 18:46:37 -0700 (PDT)
-Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.212.212])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 79D6C3F66E;
-        Sun, 19 Jul 2020 18:46:34 -0700 (PDT)
-From:   Jianyong Wu <jianyong.wu@arm.com>
-To:     ericvh@gmail.com, hch@lst.de, dhowells@redhat.com,
-        lucho@ionkov.net, asmadeus@codewreck.org
-Cc:     v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Kaly.Xin@arm.com, justin.he@arm.com, jianyong.wu@arm.com,
-        wei.chen@arm.com
-Subject: [RFC PATCH 1/2] vfs: pass file down when getattr to avoid losing info.
-Date:   Mon, 20 Jul 2020 09:46:21 +0800
-Message-Id: <20200720014622.37364-2-jianyong.wu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200720014622.37364-1-jianyong.wu@arm.com>
-References: <20200720014622.37364-1-jianyong.wu@arm.com>
+        Sun, 19 Jul 2020 21:48:25 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44898 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726225AbgGTBsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 21:48:25 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 93000E02998C18DC669A;
+        Mon, 20 Jul 2020 09:48:22 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.81) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
+ 09:48:18 +0800
+Subject: Re: [PATCH -next] net: ena: use NULL instead of zero
+To:     Joe Perches <joe@perches.com>, <netanel@amazon.com>,
+        <akiyano@amazon.com>, <gtzalik@amazon.com>, <saeedb@amazon.com>,
+        <zorik@amazon.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <sameehj@amazon.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200718115633.37464-1-wanghai38@huawei.com>
+ <3093bc36c2ad86170e2e90a3451e5962d0815122.camel@perches.com>
+From:   "wanghai (M)" <wanghai38@huawei.com>
+Message-ID: <fd191d1c-a9ae-eac8-9446-1d90695178f0@huawei.com>
+Date:   Mon, 20 Jul 2020 09:48:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <3093bc36c2ad86170e2e90a3451e5962d0815122.camel@perches.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.81]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, getting attribute for a file represented by fd is always
-by inode or path which may lead to bug for a certain network file system.
-Adding file struct into struct kstat and assigning file for it in
-vfs_statx_fd can avoid this issue. This change refers to struct istat.
 
-Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
----
- fs/stat.c            | 1 +
- include/linux/stat.h | 6 ++++++
- 2 files changed, 7 insertions(+)
-
-diff --git a/fs/stat.c b/fs/stat.c
-index 44f8ad346db4..0dee5487f6d6 100644
---- a/fs/stat.c
-+++ b/fs/stat.c
-@@ -147,6 +147,7 @@ int vfs_statx_fd(unsigned int fd, struct kstat *stat,
- 		return -EINVAL;
- 
- 	f = fdget_raw(fd);
-+	stat->filp = f.file;
- 	if (f.file) {
- 		error = vfs_getattr(&f.file->f_path, stat,
- 				    request_mask, query_flags);
-diff --git a/include/linux/stat.h b/include/linux/stat.h
-index 56614af83d4a..4755c528d49a 100644
---- a/include/linux/stat.h
-+++ b/include/linux/stat.h
-@@ -48,6 +48,12 @@ struct kstat {
- 	struct timespec64 btime;			/* File creation time */
- 	u64		blocks;
- 	u64		mnt_id;
-+
-+	/*
-+	 * Not an attribute, but an auxiliary info for filesystems wanting to
-+	 * implement an fstat() like method.
-+	 */
-+	struct file	*filp;
- };
- 
- #endif
--- 
-2.17.1
+ÔÚ 2020/7/18 23:06, Joe Perches Ð´µÀ:
+> On Sat, 2020-07-18 at 19:56 +0800, Wang Hai wrote:
+>> Fix sparse build warning:
+>>
+>> drivers/net/ethernet/amazon/ena/ena_netdev.c:2193:34: warning:
+>>   Using plain integer as NULL pointer
+> Better to remove the initialization altogether and
+> move the declaration into the loop.
+Thanks for your advice. I'll send a v2 patch.
 
