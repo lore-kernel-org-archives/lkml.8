@@ -2,113 +2,127 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77868C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D82C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5448F20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BFD1207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:29:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hyhbuh3k"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kJli9AY8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbgGTEVM (ORCPT
+        id S1726120AbgGTE3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 00:21:12 -0400
-Received: from ozlabs.org ([203.11.71.1]:46901 "EHLO ozlabs.org"
+        Mon, 20 Jul 2020 00:29:37 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:50193 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgGTEVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 00:21:11 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725845AbgGTE3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 00:29:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595219376; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Dpw1HGE3ZCaDA+GhNOQnpyNXQW1TL4kVVJ9x2AeOGN4=; b=kJli9AY8WF5NMcW887PjIAxrBkLK35o9FE4F7NmpLLmgVwxfN/r342pmaRjEGzPN+QVByeEV
+ P9xMBy5iOzw8qL/7NhpO9ht9UM7JQw+uSmziD0mCllAyegdzVRcUAQpM8o9oisEK23SKFaUB
+ BnQ9a7453YNNXbnTO7EYqXl2IFs=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5f151d958423214e131269cd (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 04:29:09
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D6B40C433CB; Mon, 20 Jul 2020 04:29:08 +0000 (UTC)
+Received: from [192.168.1.12] (unknown [61.3.19.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B97nv0n89z9sRN;
-        Mon, 20 Jul 2020 14:21:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595218869;
-        bh=BmUytb5hrWXf0QaZ6oP8WcobROwkL4zX4ig1IdgR4IU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hyhbuh3kwM6l2xXy8OOVC3s9NafDGl3UG3gAUrLsoLCksVZNm2tW9IPwcQZinM30f
-         WV4NuIRtlVVjSgE1v0Srv8VkfmQjXNL6I0XyccYllFFJ9lJu3TimY7xDiJ2wup3Lwj
-         4kXLYH0RCxoNAzYWKWZWAC1MF2SxGa8x7c2P5L7YgOwvaXjcKwKal+8YlWVNbRp74b
-         54cBLJ6/VUO7Fbnjxzwfohcd0CZWM6CWT9OefmGz3Y69hr83XUCyIdRSdh7H0+IXud
-         FO0FS/v1jIhTm382I3mhEXjthNSOaxAGgVA9tcn6Habi/oFsyKEQvhZy2fbTNgm+zw
-         U9I3zm5E/Uw+Q==
-Date:   Mon, 20 Jul 2020 14:21:06 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Johnson CH Chen (=?UTF-8?B?6Zmz5pit5Yuz?=)" 
-        <JohnsonCH.Chen@moxa.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Scott Wood <scottwood@freescale.com>
-Subject: Re: linux-next: Tree for Jul 17 (drivers/rtc/rtc-ds1374.o)
-Message-ID: <20200720142106.77467bc6@canb.auug.org.au>
-In-Reply-To: <HK2PR01MB32812019FB4521DC22313B10FA7B0@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
-References: <20200717214036.67fa5379@canb.auug.org.au>
-        <d36fac01-2a7b-c3f1-84ef-3a1560d18790@infradead.org>
-        <20200718113853.6bd63897@canb.auug.org.au>
-        <HK2PR01MB32812019FB4521DC22313B10FA7B0@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BDC83C433C6;
+        Mon, 20 Jul 2020 04:29:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BDC83C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: media: venus: Add an optional power
+ domain for perf voting
+To:     Rob Herring <robh@kernel.org>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+References: <1594878139-3402-1-git-send-email-rnayak@codeaurora.org>
+ <1594878139-3402-2-git-send-email-rnayak@codeaurora.org>
+ <20200716195913.GA2744252@bogus>
+ <cd368ea7-6ddc-004c-164d-dbbad8516853@codeaurora.org>
+ <CAL_Jsq+RXcgTVwd_JC8YLYb1Ni29zFD9AxcNsmcpyrdefWq3Kw@mail.gmail.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <59502915-743e-6756-34e2-f409e61fc03b@codeaurora.org>
+Date:   Mon, 20 Jul 2020 09:59:05 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+I7b2vLsrvd0Sn8b=GcKGyM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <CAL_Jsq+RXcgTVwd_JC8YLYb1Ni29zFD9AxcNsmcpyrdefWq3Kw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+I7b2vLsrvd0Sn8b=GcKGyM
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi Johnson,
+On 7/18/2020 12:26 AM, Rob Herring wrote:
+> On Thu, Jul 16, 2020 at 11:52 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>>
+>>
+>> On 7/17/2020 1:29 AM, Rob Herring wrote:
+>>> On Thu, Jul 16, 2020 at 11:12:16AM +0530, Rajendra Nayak wrote:
+>>>> Add an optional power domain which when specified can be used for
+>>>> setting the performance state of Venus.
+>>>
+>>> The h/w suddenly grew a new power island/domain? Seems like an abuse of
+>>> power-domains...
+>>
+>> The power-domain always existed, we have just managed to survive without
+>> having venus support DVFS and have the domain always be at a high performance
+>> level (set statically by boot code)
+>> Now, if we care to do DVFS and support better PM on the SoC, its important
+>> for the devices to manage this additional power domain (and dynamically
+>> scale it)
+>>
+>> That said, if the name 'opp-pd' makes it look like a software construct,
+>> like Bjorn mentioned, I am fine to give it a real name like 'cx-pd'
+>> Does that sound good?
+> 
+> He suggested 'cx' as '-pd' would be redundant. I have no idea what
+> 'cx' means, but fine.
+> 
+>> PS: Like I mentioned earlier [1], cx is a shared power island,
+>> not a power island specific to this block, and definitely not a software
+>> pm-domain construct.
+> 
+> Put this context/detail into your patches. Assume I don't remember
+> what happened last week.
 
-On Mon, 20 Jul 2020 03:46:15 +0000 Johnson CH Chen (=E9=99=B3=E6=98=AD=E5=
-=8B=B3) <JohnsonCH.Chen@moxa.com> wrote:
->
-> > On Fri, 17 Jul 2020 09:49:05 -0700 Randy Dunlap <rdunlap@infradead.org>
-> > wrote: =20
-> > > on x86_64:
-> > > # CONFIG_WATCHDOG is not set
-> > > =20
->=20
-> Thanks for your information.
->=20
-> It seems RTC_DRV_DS1374_WDT should be depended on RTC_DRV_DS1374 && WATCH=
-DOG_CORE. Otherwise error will happen if RTC_DRV_DS1374_WDT is enabled but =
-WATCHDOG_CORE not. I'll put this into v5 if there are no other suggestions.
->=20
-> Should I add " Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>" into=
- v5? So many thanks!
+Thanks Rob, will do when I re-post shortly.
 
-Probably "Reported-by: Randy Dunlap <rdunlap@infradead.org>" is more approp=
-riate.
+> 
+> Unfortunately, gmail seems to have no way to filter on unread mails in
+> reply to my replies and doesn't move the thread up in 'Sent' filter,
+> so older threads get lost.
+> 
+> Rob
+> 
+>> [1] https://lore.kernel.org/patchwork/patch/1241077/
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+I7b2vLsrvd0Sn8b=GcKGyM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8VG7IACgkQAVBC80lX
-0Gwlowf8D7f0UTM40chSal9cLaKa5otE1B22GRMDOpr5NFpcEeWN1rIg/54z6ioT
-tOv9YOjdiysh3S2qJFQAhj+lQ425JKlRWoJD5u4fRrqMCS6C+LTQlia278qF9YuL
-SHzfJAGYoYl+DKNvcPQ3wxTb0OqyN7bxkW8hSpg9Dy1jzJixx5c4ndk+B2mbuO9e
-ZHEgvFdSLQlhEGh20svZSIZFnXOCUD2rKmnSsByfsQ8NBiUQltCr/fkDTYovo37l
-7URmhjqb2v5r/ROkTiK/2VUJL/14VM8bvpw+oivpGn8vntbdsLoLUNVXlekF+A7z
-QiNJQ5zDKQY2W43cnXRMhVn4vp8Row==
-=z1xY
------END PGP SIGNATURE-----
-
---Sig_/+I7b2vLsrvd0Sn8b=GcKGyM--
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
