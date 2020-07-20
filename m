@@ -2,196 +2,210 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FC6C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A76DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5339206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262168;
-	bh=gIRhl9opOJU5+qKIqIvykBBfc5EZJL8zkNp35h42d90=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vDAzdV6fmqCCMRE6e0Guuxrs1OAv7/KdXTwe4YTchA/RaBOGkucmkifE/2gFDIJ9F
-	 b861AqvBpS6cpPV4X/YmxMckW8u4UcvDnYNRV52r/V1sMKGxQYiTCFD5/BNQYw86Zh
-	 nYwOP2Ov7f6/98s4WZoC2fO7DeCDhLps/JcWSTGw=
+	by mail.kernel.org (Postfix) with ESMTP id 84A882070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A17M+Gb9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388696AbgGTQWr (ORCPT
+        id S2388603AbgGTQW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:22:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732742AbgGTQGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:06:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE52A22CB1;
-        Mon, 20 Jul 2020 16:06:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261168;
-        bh=gIRhl9opOJU5+qKIqIvykBBfc5EZJL8zkNp35h42d90=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WSOML9KP51unxyCzF8JTxlvdTJz5JuagWxT0LCh+14kMloT/7q6UfhBS/mkliBITq
-         tE1MVtdw+ryjz/CsMN2o79o1B05NF3sGv1C8C2cPzpGebjI9jfmQrqjTLD34nHNTnu
-         PWf5H9/0QN1GDY1+lIylaBtg6p15xuFAvC/z/UBA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Toshiaki Makita <toshiaki.makita1@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 018/244] vlan: consolidate VLAN parsing code and limit max parsing depth
-Date:   Mon, 20 Jul 2020 17:34:49 +0200
-Message-Id: <20200720152826.744203618@linuxfoundation.org>
+        Mon, 20 Jul 2020 12:22:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388434AbgGTQWq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:22:46 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F495C061794;
+        Mon, 20 Jul 2020 09:22:46 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id k27so10517552pgm.2;
+        Mon, 20 Jul 2020 09:22:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nnDDY7IX3v4medtpXGPdXY1iT0mYb0tLN6RrGWdwErQ=;
+        b=A17M+Gb9yAQCkiEsHp1GN5Hgm6to1S70lc+I5sny7onNXnTMXpIGw0rxYa3HyRAFTF
+         EHzuXZiN0PrVqSXi/QmZ03PpuxD3wqo0Ej0MHbfYpufERXznei6xPYaU2pnpr1hEw/P3
+         YXdYohfyeDlnFXpgWw0Gj/3uIueARBVT7JkmuVXfoU+CAYtgBaBBntTcYkNOJtuLAhBS
+         3CeUProdPmHFMcuj8pjLxjbKYjndPF4TKbcwUepCmwBSSHdw/1VqtNpJTqu1n7W73/j/
+         Ohc2uW7Wkl9CfjwBq4+3cw5TTMOAX/vmAuNeTiC4xAHSGmffrUWcOew6eoDXU29nlS7i
+         SgvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nnDDY7IX3v4medtpXGPdXY1iT0mYb0tLN6RrGWdwErQ=;
+        b=kvYiCGY2FEhzCGwU3+PB54ZD2/OR3+xcfk8l9R1MIj0JLLUpp0lh5OM4K2gvjBxZR8
+         ippgZV6QncMMxAlnfWOMRK+QmVs12rFVjOk4kwG7DRFgsLd5owHvZJKoo1Jmz6Qj2scL
+         WFZrjU62OeNYNQJgEsXxL4m4wmbnqonwNnr1wCUAU8YOA44ct+3JdDS964RA+R/khv4v
+         f0PTc++7X4VBlacndXQ8x5e1PnK/Nnb0lYZ4x9Dcxpu2yHHj1q2hrvHKo/IuCeROWXSj
+         yIGHAb4XaJjkTlWoXIFONt5MGvL8WsUOyPS34V+bYSaLI6pYWYmEjNfHol2dP3CtFNET
+         b0lA==
+X-Gm-Message-State: AOAM530vqxAs7BkCtv/ZaPy2NII6vaU1SDcIgVD1sO3GgOJ5rKaxL7VL
+        ToJMSLVTOiknN2GJNOgJ+is=
+X-Google-Smtp-Source: ABdhPJyV19tnS/w6rmKS67FPtr8WvyuBYwXnr0WSfBWxPzcPsoHAVVNX2vFNeLQe7tQxnvt+Ak0Alg==
+X-Received: by 2002:a62:7e51:: with SMTP id z78mr20531383pfc.3.1595262165631;
+        Mon, 20 Jul 2020 09:22:45 -0700 (PDT)
+Received: from varodek.localdomain ([110.225.71.189])
+        by smtp.gmail.com with ESMTPSA id z25sm17314468pfg.140.2020.07.20.09.22.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 09:22:44 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Chris Lee <christopher.lee@cspi.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>, netdev@vger.kernel.org
+Subject: [PATCH v1] ethernet: myri10ge: use generic power management
+Date:   Mon, 20 Jul 2020 21:49:31 +0530
+Message-Id: <20200720161930.777974-1-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
-References: <20200720152825.863040590@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Toke Høiland-Jørgensen" <toke@redhat.com>
+Drivers using legacy PM have to manage PCI states and device's PM states
+themselves. They also need to take care of configuration registers.
 
-[ Upstream commit 469aceddfa3ed16e17ee30533fae45e90f62efd8 ]
+With improved and powerful support of generic PM, PCI Core takes care of
+above mentioned, device-independent, jobs.
 
-Toshiaki pointed out that we now have two very similar functions to extract
-the L3 protocol number in the presence of VLAN tags. And Daniel pointed out
-that the unbounded parsing loop makes it possible for maliciously crafted
-packets to loop through potentially hundreds of tags.
+This driver makes use of PCI helper functions like
+pci_save/restore_state(), pci_enable/disable_device(),
+pci_set_power_state() and pci_set_master() to do required operations. In
+generic mode, they are no longer needed.
 
-Fix both of these issues by consolidating the two parsing functions and
-limiting the VLAN tag parsing to a max depth of 8 tags. As part of this,
-switch over __vlan_get_protocol() to use skb_header_pointer() instead of
-pskb_may_pull(), to avoid the possible side effects of the latter and keep
-the skb pointer 'const' through all the parsing functions.
+Change function parameter in both .suspend() and .resume() to
+"struct device*" type. Use to_pci_dev() and dev_get_drvdata() to get
+"struct pci_dev*" variable and drv data.
 
-v2:
-- Use limit of 8 tags instead of 32 (matching XMIT_RECURSION_LIMIT)
+Compile-tested only.
 
-Reported-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
-Reported-by: Daniel Borkmann <daniel@iogearbox.net>
-Fixes: d7bf2ebebc2b ("sched: consistently handle layer3 header accesses in the presence of VLANs")
-Signed-off-by: Toke HÃ¸iland-JÃ¸rgensen <toke@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- include/linux/if_vlan.h |   57 ++++++++++++++++++------------------------------
- 1 file changed, 22 insertions(+), 35 deletions(-)
+ .../net/ethernet/myricom/myri10ge/myri10ge.c  | 37 ++++---------------
+ 1 file changed, 8 insertions(+), 29 deletions(-)
 
---- a/include/linux/if_vlan.h
-+++ b/include/linux/if_vlan.h
-@@ -25,6 +25,8 @@
- #define VLAN_ETH_DATA_LEN	1500	/* Max. octets in payload	 */
- #define VLAN_ETH_FRAME_LEN	1518	/* Max. octets in frame sans FCS */
- 
-+#define VLAN_MAX_DEPTH	8		/* Max. number of nested VLAN tags parsed */
-+
- /*
-  * 	struct vlan_hdr - vlan header
-  * 	@h_vlan_TCI: priority and VLAN ID
-@@ -308,34 +310,6 @@ static inline bool eth_type_vlan(__be16
+diff --git a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
+index e1e1f4e3639e..4a5beafa0493 100644
+--- a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
++++ b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
+@@ -3257,13 +3257,12 @@ static void myri10ge_mask_surprise_down(struct pci_dev *pdev)
  	}
  }
  
--/* A getter for the SKB protocol field which will handle VLAN tags consistently
-- * whether VLAN acceleration is enabled or not.
-- */
--static inline __be16 skb_protocol(const struct sk_buff *skb, bool skip_vlan)
--{
--	unsigned int offset = skb_mac_offset(skb) + sizeof(struct ethhdr);
--	__be16 proto = skb->protocol;
--
--	if (!skip_vlan)
--		/* VLAN acceleration strips the VLAN header from the skb and
--		 * moves it to skb->vlan_proto
--		 */
--		return skb_vlan_tag_present(skb) ? skb->vlan_proto : proto;
--
--	while (eth_type_vlan(proto)) {
--		struct vlan_hdr vhdr, *vh;
--
--		vh = skb_header_pointer(skb, offset, sizeof(vhdr), &vhdr);
--		if (!vh)
--			break;
--
--		proto = vh->h_vlan_encapsulated_proto;
--		offset += sizeof(vhdr);
--	}
--
--	return proto;
--}
--
- static inline bool vlan_hw_offload_capable(netdev_features_t features,
- 					   __be16 proto)
+-#ifdef CONFIG_PM
+-static int myri10ge_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused myri10ge_suspend(struct device *dev)
  {
-@@ -605,10 +579,10 @@ static inline int vlan_get_tag(const str
-  * Returns the EtherType of the packet, regardless of whether it is
-  * vlan encapsulated (normal or hardware accelerated) or not.
-  */
--static inline __be16 __vlan_get_protocol(struct sk_buff *skb, __be16 type,
-+static inline __be16 __vlan_get_protocol(const struct sk_buff *skb, __be16 type,
- 					 int *depth)
- {
--	unsigned int vlan_depth = skb->mac_len;
-+	unsigned int vlan_depth = skb->mac_len, parse_depth = VLAN_MAX_DEPTH;
+ 	struct myri10ge_priv *mgp;
+ 	struct net_device *netdev;
  
- 	/* if type is 802.1Q/AD then the header should already be
- 	 * present at mac_len - VLAN_HLEN (if mac_len > 0), or at
-@@ -623,13 +597,12 @@ static inline __be16 __vlan_get_protocol
- 			vlan_depth = ETH_HLEN;
- 		}
- 		do {
--			struct vlan_hdr *vh;
-+			struct vlan_hdr vhdr, *vh;
+-	mgp = pci_get_drvdata(pdev);
++	mgp = dev_get_drvdata(dev);
+ 	if (mgp == NULL)
+ 		return -EINVAL;
+ 	netdev = mgp->dev;
+@@ -3276,14 +3275,13 @@ static int myri10ge_suspend(struct pci_dev *pdev, pm_message_t state)
+ 		rtnl_unlock();
+ 	}
+ 	myri10ge_dummy_rdma(mgp, 0);
+-	pci_save_state(pdev);
+-	pci_disable_device(pdev);
  
--			if (unlikely(!pskb_may_pull(skb,
--						    vlan_depth + VLAN_HLEN)))
-+			vh = skb_header_pointer(skb, vlan_depth, sizeof(vhdr), &vhdr);
-+			if (unlikely(!vh || !--parse_depth))
- 				return 0;
- 
--			vh = (struct vlan_hdr *)(skb->data + vlan_depth);
- 			type = vh->h_vlan_encapsulated_proto;
- 			vlan_depth += VLAN_HLEN;
- 		} while (eth_type_vlan(type));
-@@ -648,11 +621,25 @@ static inline __be16 __vlan_get_protocol
-  * Returns the EtherType of the packet, regardless of whether it is
-  * vlan encapsulated (normal or hardware accelerated) or not.
-  */
--static inline __be16 vlan_get_protocol(struct sk_buff *skb)
-+static inline __be16 vlan_get_protocol(const struct sk_buff *skb)
- {
- 	return __vlan_get_protocol(skb, skb->protocol, NULL);
+-	return pci_set_power_state(pdev, pci_choose_state(pdev, state));
++	return 0;
  }
  
-+/* A getter for the SKB protocol field which will handle VLAN tags consistently
-+ * whether VLAN acceleration is enabled or not.
-+ */
-+static inline __be16 skb_protocol(const struct sk_buff *skb, bool skip_vlan)
-+{
-+	if (!skip_vlan)
-+		/* VLAN acceleration strips the VLAN header from the skb and
-+		 * moves it to skb->vlan_proto
-+		 */
-+		return skb_vlan_tag_present(skb) ? skb->vlan_proto : skb->protocol;
-+
-+	return vlan_get_protocol(skb);
-+}
-+
- static inline void vlan_set_encap_proto(struct sk_buff *skb,
- 					struct vlan_hdr *vhdr)
+-static int myri10ge_resume(struct pci_dev *pdev)
++static int __maybe_unused myri10ge_resume(struct device *dev)
  {
-
++	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct myri10ge_priv *mgp;
+ 	struct net_device *netdev;
+ 	int status;
+@@ -3293,7 +3291,6 @@ static int myri10ge_resume(struct pci_dev *pdev)
+ 	if (mgp == NULL)
+ 		return -EINVAL;
+ 	netdev = mgp->dev;
+-	pci_set_power_state(pdev, PCI_D0);	/* zeros conf space as a side effect */
+ 	msleep(5);		/* give card time to respond */
+ 	pci_read_config_word(mgp->pdev, PCI_VENDOR_ID, &vendor);
+ 	if (vendor == 0xffff) {
+@@ -3301,23 +3298,9 @@ static int myri10ge_resume(struct pci_dev *pdev)
+ 		return -EIO;
+ 	}
+ 
+-	pci_restore_state(pdev);
+-
+-	status = pci_enable_device(pdev);
+-	if (status) {
+-		dev_err(&pdev->dev, "failed to enable device\n");
+-		return status;
+-	}
+-
+-	pci_set_master(pdev);
+-
+ 	myri10ge_reset(mgp);
+ 	myri10ge_dummy_rdma(mgp, 1);
+ 
+-	/* Save configuration space to be restored if the
+-	 * nic resets due to a parity error */
+-	pci_save_state(pdev);
+-
+ 	if (netif_running(netdev)) {
+ 		rtnl_lock();
+ 		status = myri10ge_open(netdev);
+@@ -3331,11 +3314,8 @@ static int myri10ge_resume(struct pci_dev *pdev)
+ 	return 0;
+ 
+ abort_with_enabled:
+-	pci_disable_device(pdev);
+ 	return -EIO;
+-
+ }
+-#endif				/* CONFIG_PM */
+ 
+ static u32 myri10ge_read_reboot(struct myri10ge_priv *mgp)
+ {
+@@ -4017,15 +3997,14 @@ static const struct pci_device_id myri10ge_pci_tbl[] = {
+ 
+ MODULE_DEVICE_TABLE(pci, myri10ge_pci_tbl);
+ 
++static SIMPLE_DEV_PM_OPS(myri10ge_pm_ops, myri10ge_suspend, myri10ge_resume);
++
+ static struct pci_driver myri10ge_driver = {
+ 	.name = "myri10ge",
+ 	.probe = myri10ge_probe,
+ 	.remove = myri10ge_remove,
+ 	.id_table = myri10ge_pci_tbl,
+-#ifdef CONFIG_PM
+-	.suspend = myri10ge_suspend,
+-	.resume = myri10ge_resume,
+-#endif
++	.driver.pm = &myri10ge_pm_ops,
+ };
+ 
+ #ifdef CONFIG_MYRI10GE_DCA
+-- 
+2.27.0
 
