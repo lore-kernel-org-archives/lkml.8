@@ -2,51 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE613C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86792C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8870522CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6E02065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260094;
-	bh=0haVu6E79fN+inhHE7UwUFEAmCPLSs7a/v4teHZpRfk=;
+	s=default; t=1595260097;
+	bh=TCK5w7fTdQLOaabOKLWPQEwyASLL1+l3hXLhXgMfPLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TJHKp8jTiMnB+YhzXp76CcE6V3nzxSlN0brINbYqOyEbI0tlWZUrDPjGHn4SG5zDn
-	 blfWlYHo/ioE0FekVOi8Vs9TSX4JdeOcJHCkX5oKglyZyW4EnKe8hKxS+nosechWdx
-	 FWLky1qVRpbrKvxgCOj7fcTNz6lGtCDZ4NcZDrXE=
+	b=ix3722zCZ/dbbbFtNNIZ/xin1AC8PsFiK6wvER5iTUY2PiNkO2BUMRnqem+X4+OoG
+	 ZRinfohI0rFHTaprrX2v97oMFr82JoywrvBYIq3uJKQYRnxL1TyZNGHQudJRe+gKDF
+	 OBKahZUOotcc7liIFrCibUgaphPjH0ZFqm+4p4GI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgGTPsM (ORCPT
+        id S1730117AbgGTPsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:48:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43672 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729257AbgGTPsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:48:09 -0400
+        id S1730875AbgGTPsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:48:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8611F2065E;
-        Mon, 20 Jul 2020 15:48:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 344702064B;
+        Mon, 20 Jul 2020 15:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260089;
-        bh=0haVu6E79fN+inhHE7UwUFEAmCPLSs7a/v4teHZpRfk=;
+        s=default; t=1595260091;
+        bh=TCK5w7fTdQLOaabOKLWPQEwyASLL1+l3hXLhXgMfPLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZcdixK3h2yQgvHCtzTbrCdb4AnMdCc6GS+TSjqJijk66MWBYht+XP1rdKXaHv1/qt
-         fsBJktJxrGjUI3+uWoK1frCLpghfkldV9fcc/RVMlf7bI3nM0neC/DA01wdeiEFL5N
-         a0xKU5VJ4ZojHp/hrW1v0Z8LoT60AiJRErQlZPWU=
+        b=fCm3ewvHANs5cz//c5UsVqmGsDsoyPTber9l//8IxIwFYVJxeAz124CyBH47K1y+Z
+         0Nl2dHO9p0G7IK2zCQedDVBuF+lWTLrfO7aNNv4idKuiJrXSgLLIyTu4i6QQitVEUX
+         LYh+hhOV0V5RSKeyqpJ3uXuSosblmSXNv7PAw9KM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Igor Moura <imphilippini@gmail.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=B6rgen=20Storvist?= <jorgen.storvist@gmail.com>,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 103/125] USB: serial: ch341: add new Product ID for CH340
-Date:   Mon, 20 Jul 2020 17:37:22 +0200
-Message-Id: <20200720152808.000930906@linuxfoundation.org>
+Subject: [PATCH 4.14 104/125] USB: serial: option: add GosunCn GM500 series
+Date:   Mon, 20 Jul 2020 17:37:23 +0200
+Message-Id: <20200720152808.051214169@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -59,38 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Moura <imphilippini@gmail.com>
+From: Jörgen Storvist <jorgen.storvist@gmail.com>
 
-commit 5d0136f8e79f8287e6a36780601f0ce797cf11c2 upstream.
+commit 08d4ef5cc9203a113702f24725f6cf4db476c958 upstream.
 
-Add PID for CH340 that's found on some ESP8266 dev boards made by
-LilyGO. The specific device that contains such serial converter can be
-seen here: https://github.com/LilyGO/LILYGO-T-OI.
+Add USB IDs for GosunCn GM500 series cellular modules.
 
-Apparently, it's a regular CH340, but I've confirmed with others that
-also bought this board that the PID found on this device (0x7522)
-differs from other devices with the "same" converter (0x7523).
-Simply adding its PID to the driver and rebuilding it made it work
-as expected.
+RNDIS config:
+usb-devices
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 12 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=305a ProdID=1404 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 1 Cls=e0(wlcon) Sub=01 Prot=03 Driver=rndis_host
+I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
+I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
 
-Signed-off-by: Igor Moura <imphilippini@gmail.com>
+MBIM config:
+usb-devices
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 11 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=305a ProdID=1405 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
+I:  If#=0x4 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
+
+ECM config:
+usb-devices
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 13 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=305a ProdID=1406 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 1 Cls=02(commc) Sub=06 Prot=00 Driver=cdc_ether
+I:  If#=0x4 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=cdc_ether
+
+Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ch341.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/serial/option.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/serial/ch341.c
-+++ b/drivers/usb/serial/ch341.c
-@@ -84,6 +84,7 @@
- 
- static const struct usb_device_id id_table[] = {
- 	{ USB_DEVICE(0x4348, 0x5523) },
-+	{ USB_DEVICE(0x1a86, 0x7522) },
- 	{ USB_DEVICE(0x1a86, 0x7523) },
- 	{ USB_DEVICE(0x1a86, 0x5523) },
- 	{ },
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -2030,6 +2030,9 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(4) | RSVD(5) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0105, 0xff),			/* Fibocom NL678 series */
+ 	  .driver_info = RSVD(6) },
++	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1404, 0xff) },			/* GosunCn GM500 RNDIS */
++	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1405, 0xff) },			/* GosunCn GM500 MBIM */
++	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1406, 0xff) },			/* GosunCn GM500 ECM/NCM */
+ 	{ } /* Terminating entry */
+ };
+ MODULE_DEVICE_TABLE(usb, option_ids);
 
 
