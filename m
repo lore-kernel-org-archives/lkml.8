@@ -2,86 +2,106 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8889C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95087C43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6A2520684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W7lnT5Ry"
+	by mail.kernel.org (Postfix) with ESMTP id 6AA1820684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262027;
+	bh=S+GbvqvYd5DQbyfyZrnVh7vsVEAGDL8ps5qUlMo54eQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1iFpsSH3Cd1z3XqthZLqobWCuG3lxK1a8iP3477BZPtxzXfJG9gKGpZZS0Q2mLkrS
+	 SnPEY4lu2tgdd0lQLcEK67LLSbBEduhzMiHD0OAZl56j+T4Ez+n0f2ZZMuCpJhqmLW
+	 GxDgCI/gn7vvlEzWwPjt+WTGjA7gHdBJncW7LpnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388693AbgGTQUh (ORCPT
+        id S2387632AbgGTQKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:20:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388514AbgGTQUd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:20:33 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AD5CC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=uC/tilAEaHjArnaAm1aUzbWB0T6K1yC5bOJBtaxkp14=; b=W7lnT5RyfkfkI3q/mMftN3ZL3l
-        gFNEwDpe9DMFL1phWV6FT62H2N0ShCnxXYBb46Hwmv4fUDuywjvoaC2JQ5nEhFf727nMIY+YGxFyY
-        UkCQwpwpgpsafutV83CLTkk9HX+p7uyLgtbUDq1PYdxIgwIRn3LiY4ICjtIg/ErnOedfdtug9CpFR
-        U3xsuHOXzc7WbxMZ7r/qrOPg9nR+8I7ZYQwncujiEyDxGLwdZt3oxXAWiZkSAgU3p+L+VryhSNS/R
-        JMBnr3aTQiVjqBVggs3HOe2Sj1Q98+ieFvw4a20RuZxcDmFIGbeFIYwIf2A8xwUMDGkN060+dACe2
-        HZSak66w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxYWg-0002Yz-Md; Mon, 20 Jul 2020 16:20:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Mon, 20 Jul 2020 12:10:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387618AbgGTQKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:10:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E03C7307B8F;
-        Mon, 20 Jul 2020 18:20:24 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C8C5F23426BB1; Mon, 20 Jul 2020 18:20:24 +0200 (CEST)
-Date:   Mon, 20 Jul 2020 18:20:24 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-Subject: Re: [PATCH V6 03/14] perf/x86/intel: Introduce the fourth fixed
- counter
-Message-ID: <20200720162024.GT10769@hirez.programming.kicks-ass.net>
-References: <20200717140554.22863-1-kan.liang@linux.intel.com>
- <20200717140554.22863-4-kan.liang@linux.intel.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A33AB20734;
+        Mon, 20 Jul 2020 16:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595261406;
+        bh=S+GbvqvYd5DQbyfyZrnVh7vsVEAGDL8ps5qUlMo54eQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CgzGUYfyPwULE9TA8FWLSbPHV/M/AFv4CBGE4UUmOaxqAwAwblgpMcx27w2CGKLOh
+         wW83J2dzPvmJIuHcobb5d0LyHnp7O+GcFFn14101H1hRRgluO0klQp2jPuFeelMHi6
+         5aWQf+DF0AIcdqFTtj28GVOKH+4XTWaH/0bJb6Ms=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 103/244] xprtrdma: Fix double-free in rpcrdma_ep_create()
+Date:   Mon, 20 Jul 2020 17:36:14 +0200
+Message-Id: <20200720152830.728589241@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
+References: <20200720152825.863040590@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717140554.22863-4-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 07:05:43AM -0700, kan.liang@linux.intel.com wrote:
->  /*
-> + * There is no event-code assigned to the fixed-mode PMCs.
-> + *
-> + * For a fixed-mode PMC, which has an equivalent event on a general-purpose
-> + * PMC, the event-code of the equivalent event is used for the fixed-mode PMC,
-> + * e.g., Instr_Retired.Any and CPU_CLK_Unhalted.Core.
-> + *
-> + * For a fixed-mode PMC, which doesn't have an equivalent event, a
-> + * pseudo-encoding is used, e.g., CPU_CLK_Unhalted.Ref and TOPDOWN.SLOTS.
-> + * The pseudo event-code for a fixed-mode PMC must be 0x00.
-> + * The pseudo umask-code is 0x0X. The X indicates the index of the fixed
-> + * counter.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Isn't it X+1 ? Such that 0x0000 is an invalid event? After all, the
-pseudo event for Fixed2 is 0x0300.
+[ Upstream commit 85bfd71bc34e20d9fadb745131f6314c36d0f75b ]
 
-> + *
-> + * The counts are available in separate MSRs:
->   */
+In the error paths, there's no need to call kfree(ep) after calling
+rpcrdma_ep_put(ep).
+
+Fixes: e28ce90083f0 ("xprtrdma: kmalloc rpcrdma_ep separate from rpcrdma_xprt")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/sunrpc/xprtrdma/verbs.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index db0259c6467ef..4cb91dde849b9 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -404,8 +404,8 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ 
+ 	id = rpcrdma_create_id(r_xprt, ep);
+ 	if (IS_ERR(id)) {
+-		rc = PTR_ERR(id);
+-		goto out_free;
++		kfree(ep);
++		return PTR_ERR(id);
+ 	}
+ 	__module_get(THIS_MODULE);
+ 	device = id->device;
+@@ -504,9 +504,6 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ out_destroy:
+ 	rpcrdma_ep_put(ep);
+ 	rdma_destroy_id(id);
+-out_free:
+-	kfree(ep);
+-	r_xprt->rx_ep = NULL;
+ 	return rc;
+ }
+ 
+-- 
+2.25.1
+
+
+
