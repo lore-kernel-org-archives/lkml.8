@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB883C4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 069F0C388E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A80A8207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC10C208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281307;
-	bh=mzOX92lrI1z/vL+l8kiOBnblu9pbDp1Fzd+SgTVzpEI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dr1KYAcAS24+DVIGdiVLpSCmQAIIUmWtXddM1DZF7JJtE5SKnyM4zJ4AQP+IsRYUq
-	 Is28+xChRBe1h6DEt4qjPtgINe0yCLn/W6/VgEiDRriKAnZHtAHThoMS6LBOvuVMKO
-	 Entq37gVOiVW5AHUt2B6OpucTJTsZ6Y5qcnPCxnA=
+	s=default; t=1595281315;
+	bh=qdAfJnBJ7sjyxic7UNz+QaCPtfFw871DnQVRrHY+yCY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qygg9cQ3tE/4+D0Di4UE+JvKuUCkC/l4outYZE70fUtwhgM5n0i0fFB+9Oj+pFVtQ
+	 tycInTAR7cPwczJXEIQBx+b3DWrUNY12KnOpov3esHImNCWPODFDhKeYE1tRQd5+2J
+	 /E0XpkRomttG2mhmLCmp2i+iAFuEc9tcbJYfhwFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728785AbgGTVlr (ORCPT
+        id S1728307AbgGTVly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58986 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:41:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728451AbgGTVjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:24 -0400
+        id S1728414AbgGTVjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5726422CF8;
-        Mon, 20 Jul 2020 21:39:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF5CA22BF5;
+        Mon, 20 Jul 2020 21:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281164;
-        bh=mzOX92lrI1z/vL+l8kiOBnblu9pbDp1Fzd+SgTVzpEI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y5BqSgMzsqVDCX3WdnFltMbkgmybbvSLLPznY4dpbUg/T927ryN8VleZO0740YvdK
-         A1YPRZAKDWD6BAK2hGd4wA5xix6zpJxbP76W9vygEddhJX0/nNVBuO373vyM9cvcGC
-         z57aKOUYMhwQLEhOhUvijI7CYn4WtpxDKPUVPHgY=
+        s=default; t=1595281156;
+        bh=qdAfJnBJ7sjyxic7UNz+QaCPtfFw871DnQVRrHY+yCY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vB/aB8bKXNyrvGrlusrs/aXu3/NTRicv9UGSNbIbYYub/kiGeQAW32SNm4rLpTEI5
+         v9joZ2oemf0cGls02hIM5tyNSX1R4msSLqQUPF+5s+SB3aizsECDlSb1wIdFMzo3BG
+         W8reViCWbp027ZIdLoO1m3obCuUnebDTZRP0hveo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evgeny Novikov <novikov@ispras.ru>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 07/13] hwmon: (aspeed-pwm-tacho) Avoid possible buffer overflow
-Date:   Mon, 20 Jul 2020 17:39:08 -0400
-Message-Id: <20200720213914.407919-7-sashal@kernel.org>
+Cc:     Federico Ricchiuto <fed.ricchiuto@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 01/13] HID: i2c-hid: add Mediacom FlexBook edge13 to descriptor override
+Date:   Mon, 20 Jul 2020 17:39:02 -0400
+Message-Id: <20200720213914.407919-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213914.407919-1-sashal@kernel.org>
-References: <20200720213914.407919-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,39 +57,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Federico Ricchiuto <fed.ricchiuto@gmail.com>
 
-[ Upstream commit bc4071aafcf4d0535ee423b69167696d6c03207d ]
+[ Upstream commit 43e666acb79f3d355dd89bf20f4d25d3b15da13e ]
 
-aspeed_create_fan() reads a pwm_port value using of_property_read_u32().
-If pwm_port will be more than ARRAY_SIZE(pwm_port_params), there will be
-a buffer overflow in
-aspeed_create_pwm_port()->aspeed_set_pwm_port_enable(). The patch fixes
-the potential buffer overflow.
+The Mediacom FlexBook edge13 uses the SIPODEV SP1064 touchpad, which does not
+supply descriptors, so it has to be added to the override list.
 
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Link: https://lore.kernel.org/r/20200703111518.9644-1-novikov@ispras.ru
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Federico Ricchiuto <fed.ricchiuto@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/aspeed-pwm-tacho.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
-index 69b97d45e3cbb..e4337e9dda444 100644
---- a/drivers/hwmon/aspeed-pwm-tacho.c
-+++ b/drivers/hwmon/aspeed-pwm-tacho.c
-@@ -878,6 +878,8 @@ static int aspeed_create_fan(struct device *dev,
- 	ret = of_property_read_u32(child, "reg", &pwm_port);
- 	if (ret)
- 		return ret;
-+	if (pwm_port >= ARRAY_SIZE(pwm_port_params))
-+		return -EINVAL;
- 	aspeed_create_pwm_port(priv, (u8)pwm_port);
- 
- 	ret = of_property_count_u8_elems(child, "cooling-levels");
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+index 681ac9bc68b3d..f98c1e1b1dbdc 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -373,6 +373,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Mediacom FlexBook edge 13",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "MEDIACOM"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "FlexBook_edge13-M-FBE13"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{
+ 		.ident = "Odys Winbook 13",
+ 		.matches = {
 -- 
 2.25.1
 
