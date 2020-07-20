@@ -2,105 +2,114 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7963C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2387C433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5C07206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UX8lUvTr"
+	by mail.kernel.org (Postfix) with ESMTP id B476B206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595263321;
+	bh=O22/EjZW3s43Xvx5U7ldwDb0VR1/xykQGrG5Q6WrfIU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NOBkQVtKoNImHlfbu+X/lMYCDAyHB9bilqt1hSFGQxpVrgG84S4xRUb697ENt098K
+	 Fxl+KShYlSOgv3bFfnxI0/Q+ne/b/raffmtHtQV4bTPbxFwK7mQB0kMGEtSszDwdqy
+	 LQS2fkZXiu2YPw2oisFZEVQ1+kHVtyF9aKIgmsc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730861AbgGTQmI (ORCPT
+        id S1730404AbgGTPo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:42:08 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:58374 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729276AbgGTQmG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:42:06 -0400
-Received: from [10.137.106.139] (unknown [131.107.174.11])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D40D020B4909;
-        Mon, 20 Jul 2020 09:42:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D40D020B4909
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1595263326;
-        bh=3WXhX2ALsHf2q0CNQWhMDb6+Us/DWEgno/p0XetGReU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UX8lUvTr2G8xrIi4guewPBf2sMpGgCSWG+ypVjSkYree00iVyz+K6+TNPYj5kqBpt
-         OJ1PUugFka19lCF1U2bCAf3ni5ddtj5CGjxeZgGafnEwJSMh8WQa7ExyR5hCc+fazj
-         HdAQOXuV9j5EmSiKfIRiaJdWdiInyuMxRVW+6Yqg=
-Subject: Re: [RFC PATCH v4 05/12] fs: add security blob and hooks for
- block_device
-To:     Casey Schaufler <casey@schaufler-ca.com>, agk@redhat.com,
-        axboe@kernel.dk, snitzer@redhat.com, jmorris@namei.org,
-        serge@hallyn.com, zohar@linux.ibm.com, viro@zeniv.linux.org.uk,
-        paul@paul-moore.com, eparis@redhat.com, jannh@google.com,
-        dm-devel@redhat.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-audit@redhat.com
-Cc:     tyhicks@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, sashal@kernel.org,
-        jaskarankhurana@linux.microsoft.com, mdsakib@microsoft.com,
-        nramas@linux.microsoft.com
-References: <20200717230941.1190744-1-deven.desai@linux.microsoft.com>
- <20200717230941.1190744-6-deven.desai@linux.microsoft.com>
- <1843d707-c62e-fa13-c663-c123ea1205a0@schaufler-ca.com>
-From:   Deven Bowers <deven.desai@linux.microsoft.com>
-Message-ID: <e82dbf6b-e90d-205b-62d1-b7cd8b5df844@linux.microsoft.com>
-Date:   Mon, 20 Jul 2020 09:42:05 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 11:44:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730401AbgGTPoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:44:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C5B720773;
+        Mon, 20 Jul 2020 15:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595259864;
+        bh=O22/EjZW3s43Xvx5U7ldwDb0VR1/xykQGrG5Q6WrfIU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=L4lCxzgMN17K23NiJQ6UxT2sng85W4f2XIHCP+zXdt43GeAdBXJsBYARsNCeDKP9X
+         ZDNbyu1rnEoGfTaQfMN2lg2cqfWcSrVDjyGGowZVL6S+dywvDjtZAM2tFXEDJzKjy+
+         wiWJz+1fqwtKB+NFWrhqfyi1PAj2ZRbusEbRIRLA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 003/125] spi: spi-fsl-dspi: Fix lockup if device is removed during SPI transfer
+Date:   Mon, 20 Jul 2020 17:35:42 +0200
+Message-Id: <20200720152803.098024305@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
+References: <20200720152802.929969555@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <1843d707-c62e-fa13-c663-c123ea1205a0@schaufler-ca.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Krzysztof Kozlowski <krzk@kernel.org>
+
+[ Upstream commit 7684580d45bd3d84ed9b453a4cadf7a9a5605a3f ]
+
+During device removal, the driver should unregister the SPI controller
+and stop the hardware.  Otherwise the dspi_transfer_one_message() could
+wait on completion infinitely.
+
+Additionally, calling spi_unregister_controller() first in device
+removal reverse-matches the probe function, where SPI controller is
+registered at the end.
+
+Fixes: 05209f457069 ("spi: fsl-dspi: add missing clk_disable_unprepare() in dspi_remove()")
+Reported-by: Vladimir Oltean <olteanv@gmail.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200622110543.5035-1-krzk@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/spi/spi-fsl-dspi.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index d5b56b7814fe3..baf5274485004 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -1070,9 +1070,18 @@ static int dspi_remove(struct platform_device *pdev)
+ 	struct fsl_dspi *dspi = spi_master_get_devdata(master);
+ 
+ 	/* Disconnect from the SPI framework */
++	spi_unregister_controller(dspi->master);
++
++	/* Disable RX and TX */
++	regmap_update_bits(dspi->regmap, SPI_MCR,
++			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF,
++			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF);
++
++	/* Stop Running */
++	regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
++
+ 	dspi_release_dma(dspi);
+ 	clk_disable_unprepare(dspi->clk);
+-	spi_unregister_master(dspi->master);
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
 
 
-On 7/17/2020 5:14 PM, Casey Schaufler wrote:
 
-[...snip]
-
->> +EXPORT_SYMBOL(security_bdev_free);
->> +
->> +int security_bdev_setsecurity(struct block_device *bdev,
->> +			      const char *name, const void *value,
->> +			      size_t size)
->> +{
->> +	return call_int_hook(bdev_setsecurity, 0, bdev, name, value, size);
->> +}
-> 
-> What is your expectation regarding multiple security modules using the
-> same @name? What do you expect a security module to do if it does not
-> support a particular @name? You may have a case where SELinux supports
-> a @name that AppArmor (or KSRI) doesn't. -ENOSYS may be you friend here.
-> 
-
-I expect that some security modules may want to use the same @name / use
-the data contained with @name. I cannot speak to the future cases of
-other LSMs, but I expect if they want the raw @value, they'll copy it
-into their security blob, or interpret @value to a field defined by
-their security blob.
-
-Originally, I expected a security module that does not implement a
-particular @name no-op with return 0, not -ENOSYS, but I recognize that
-error codes are valuable, and it's a trivial change - I'll switch the 
-security hook to call the hooks while allowing -ENOSYS or 0 in the next 
-iteration.
-
->> +EXPORT_SYMBOL(security_bdev_setsecurity);
->> +
->>   #ifdef CONFIG_PERF_EVENTS
->>   int security_perf_event_open(struct perf_event_attr *attr, int type)
->>   {
