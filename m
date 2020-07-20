@@ -2,77 +2,165 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4269EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15C8120709
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F5020709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:49:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="J/HE6FTp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730681AbgGTRsO (ORCPT
+        id S1732122AbgGTRtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:48:14 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:37225 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726812AbgGTRsN (ORCPT
+        Mon, 20 Jul 2020 13:49:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbgGTRtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:48:13 -0400
-Received: (qmail 1240647 invoked by uid 1000); 20 Jul 2020 13:48:12 -0400
-Date:   Mon, 20 Jul 2020 13:48:12 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: kworker/0:3+pm hogging CPU
-Message-ID: <20200720174812.GK1228057@rowland.harvard.edu>
-References: <20200720083956.GA4074@dhcp22.suse.cz>
- <20200720135857.GB1228057@rowland.harvard.edu>
- <20200720143213.GJ4074@dhcp22.suse.cz>
- <20200720151255.GE1228057@rowland.harvard.edu>
- <20200720163355.GA4061@dhcp22.suse.cz>
- <20200720173807.GJ1228057@rowland.harvard.edu>
- <20200720174530.GB4061@dhcp22.suse.cz>
+        Mon, 20 Jul 2020 13:49:13 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C23EFC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:49:12 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c80so361278wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:49:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dHGb/SpCGr7LJoGHyEMXrvxy1/3cgQI+BwLHtPx8ztY=;
+        b=J/HE6FTppGwiK3cGRV8XmKQpMaqC49zVxWuYF7d5shgDI/H/123csQWqM48Bmrcsl7
+         p5cIf3WJeukPwjcXWMNBfvh7jsT9vM4+FpSE9zs9wiA0fWpn52OEOZezEnbZmQaAP8c+
+         IHnQVc8OFDw5QOyw7Vpd4Q5cg6ui1FvltX6hY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dHGb/SpCGr7LJoGHyEMXrvxy1/3cgQI+BwLHtPx8ztY=;
+        b=K3pYAOLe0JOtY3Ro+kGZ8wv4jRGS0ADMeWRkuEb+xk7/EuHuXFa05UxHVMvzrY5t/b
+         BpcH3LOY52B7vg+bhM/gZJugidw6asgPdcAaxoxJK4ADw2/ja181+rH3K9Nq5Tb6Y5t1
+         BfzRN+ZDrqgyBSWfmVllyQ7gy/kooNVrGMEw1fomtqYqaOU1aRAnjxEA74LQutzhZJmG
+         uhMghBrNNPcW2sZw96witxSC3Fob3dH/T7RJMNZ+waq6z32OOkfda7KwVEaEpt6lFu6B
+         4LzTHPtqekAQucNIAzGtEqToDifW489QdysD0hwKLuKc0s61ZuXKaKTVv4Y9x+ezHLwA
+         tBQg==
+X-Gm-Message-State: AOAM530zHysLYl1FQr2okj0L4zsXJfVHjDRv9In6s5a3plhMX4X7AG+d
+        P4qKFX6gj0EVJEvVU4tP5PBs6H5tavszk9ko
+X-Google-Smtp-Source: ABdhPJxmGe7qRWDzUpGNJ5e168Fd+vcelswyQ/kv7bMS8mjdZOMqqqGGUiZ7Qgz0uB93WeAl44OTgg==
+X-Received: by 2002:a05:600c:218f:: with SMTP id e15mr377219wme.187.1595267351324;
+        Mon, 20 Jul 2020 10:49:11 -0700 (PDT)
+Received: from [10.136.8.242] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id k14sm33356834wrn.76.2020.07.20.10.49.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2020 10:49:10 -0700 (PDT)
+Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
+To:     Dhananjay Phadke <dphadke@linux.microsoft.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>
+Cc:     Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com
+References: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com>
+Date:   Mon, 20 Jul 2020 10:49:06 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720174530.GB4061@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 07:45:30PM +0200, Michal Hocko wrote:
-> On Mon 20-07-20 13:38:07, Alan Stern wrote:
-> > On Mon, Jul 20, 2020 at 06:33:55PM +0200, Michal Hocko wrote:
-> > > On Mon 20-07-20 11:12:55, Alan Stern wrote:
-> > > [...]
-> > > > 	sudo echo 'module usbcore =p' >/debug/dynamic_debug/control
-> > > > 
-> > > > Then wait long enough for some interesting messages to appear in the 
-> > > > kernel log (it should only take a few seconds if the worker thread is as 
-> > > > busy as you say) and collect the output from the dmesg command.
-> > > > 
-> > > > To turn dynamic debugging back off when you're finished, use the same 
-> > > > command with "=p" changed to "-p".
-> > > 
-> > > [   95.395815] hub 2-0:1.0: state 7 ports 6 chg 0006 evt 0000
-> > > [   95.395824] usb usb2-port1: status 0088, change 0000, 5.0 Gb/s
-> > > [   95.395838] usb usb2-port2: status 0088, change 0000, 5.0 Gb/s
-> > > [   95.396016] hub 2-0:1.0: hub_suspend
-> > > [   95.396023] usb usb2: bus auto-suspend, wakeup 1
-> > > [   95.396029] usb usb2: bus suspend fail, err -16
-> > 
-> > Okay, that's the problem.  You may get more specific information about 
-> > the suspend failure if you turn on dynamic debugging for the xhci-hcd 
-> > module (same command as above but with xhci-hcd instead of usbcore).
+
+
+On 7/18/2020 4:39 PM, Dhananjay Phadke wrote:
+> When i2c client unregisters, synchronize irq before setting
+> iproc_i2c->slave to NULL.
 > 
-> Would that help to pinpoint the problem down?
+> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000318
+> 
+> [  371.020421] pc : bcm_iproc_i2c_isr+0x530/0x11f0
+> [  371.025098] lr : __handle_irq_event_percpu+0x6c/0x170
+> [  371.030309] sp : ffff800010003e40
+> [  371.033727] x29: ffff800010003e40 x28: 0000000000000060
+> [  371.039206] x27: ffff800010ca9de0 x26: ffff800010f895df
+> [  371.044686] x25: ffff800010f18888 x24: ffff0008f7ff3600
+> [  371.050165] x23: 0000000000000003 x22: 0000000001600000
+> [  371.055645] x21: ffff800010f18888 x20: 0000000001600000
+> [  371.061124] x19: ffff0008f726f080 x18: 0000000000000000
+> [  371.066603] x17: 0000000000000000 x16: 0000000000000000
+> [  371.072082] x15: 0000000000000000 x14: 0000000000000000
+> [  371.077561] x13: 0000000000000000 x12: 0000000000000001
+> [  371.083040] x11: 0000000000000000 x10: 0000000000000040
+> [  371.088519] x9 : ffff800010f317c8 x8 : ffff800010f317c0
+> [  371.093999] x7 : ffff0008f805b3b0 x6 : 0000000000000000
+> [  371.099478] x5 : ffff0008f7ff36a4 x4 : ffff8008ee43d000
+> [  371.104957] x3 : 0000000000000000 x2 : ffff8000107d64c0
+> [  371.110436] x1 : 00000000c00000af x0 : 0000000000000000
+> 
+> [  371.115916] Call trace:
+> [  371.118439]  bcm_iproc_i2c_isr+0x530/0x11f0
+> [  371.122754]  __handle_irq_event_percpu+0x6c/0x170
+> [  371.127606]  handle_irq_event_percpu+0x34/0x88
+> [  371.132189]  handle_irq_event+0x40/0x120
+> [  371.136234]  handle_fasteoi_irq+0xcc/0x1a0
+> [  371.140459]  generic_handle_irq+0x24/0x38
+> [  371.144594]  __handle_domain_irq+0x60/0xb8
+> [  371.148820]  gic_handle_irq+0xc0/0x158
+> [  371.152687]  el1_irq+0xb8/0x140
+> [  371.155927]  arch_cpu_idle+0x10/0x18
+> [  371.159615]  do_idle+0x204/0x290
+> [  371.162943]  cpu_startup_entry+0x24/0x60
+> [  371.166990]  rest_init+0xb0/0xbc
+> [  371.170322]  arch_call_rest_init+0xc/0x14
+> [  371.174458]  start_kernel+0x404/0x430
+> 
+> Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
+> Signed-off-by: Dhananjay Phadke <dphadke@linux.microsoft.com>
+> ---
+>  drivers/i2c/busses/i2c-bcm-iproc.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+> index b58224b7b..37d2a79e7 100644
+> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
+> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+> @@ -1074,14 +1074,15 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
+>  	if (!iproc_i2c->slave)
+>  		return -EINVAL;
+>  
+> -	iproc_i2c->slave = NULL;
+> -
+>  	/* disable all slave interrupts */
+>  	tmp = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
+>  	tmp &= ~(IE_S_ALL_INTERRUPT_MASK <<
+>  			IE_S_ALL_INTERRUPT_SHIFT);
+>  	iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, tmp);
+>  
+> +	synchronize_irq(iproc_i2c->irq);
 
-It might.  I can't say for sure without seeing the output.
+If one takes a look at the I2C slave ISR routine, there are places where
+IRQ can be re-enabled in the ISR itself. What happens after we mask all
+slave interrupt and when 'synchronize_irq' is called, which I suppose is
+meant to wait for inflight interrupt to finish where there's a chance
+the interrupt can be re-enable again? How is one supposed to deal with that?
 
-Alan Stern
+Thanks,
+
+Ray
+
+> +	iproc_i2c->slave = NULL;
+> +
+>  	/* Erase the slave address programmed */
+>  	tmp = iproc_i2c_rd_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET);
+>  	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
+> 
