@@ -3,101 +3,181 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A403C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F33DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC2E222482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A79622482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:30:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PhuaUfn3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sDanTDz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730063AbgGTS1S (ORCPT
+        id S1729587AbgGTSaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 14:27:18 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:43702 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgGTS1Q (ORCPT
+        Mon, 20 Jul 2020 14:30:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgGTSaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 14:27:16 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5B9C220B4909;
-        Mon, 20 Jul 2020 11:27:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5B9C220B4909
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1595269636;
-        bh=vZFIrBIdJyC5Xb5S8CJMRXERS/PRPgBtWmfiWFbXNiU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PhuaUfn3PsD00nHkSKO/079qirBPkHdG2rtXca5M72Kg0znz8z9Ivs1zLHeO3VRhN
-         jPmx/HOaTMH+qDcujRuG/dZfTK9fUGB7hkYFrQxQ+uuqEcoVnc379ESsf3GJohUl0M
-         cmWjplFOWLBrsI6Gu1BCwYmGbVsp5Rdk0zaqgARc=
-Subject: Re: [PATCH v3 4/5] LSM: Define SELinux function to measure security
- state
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200717222819.26198-1-nramas@linux.microsoft.com>
- <20200717222819.26198-5-nramas@linux.microsoft.com>
- <CAEjxPJ7xQtZToF4d2w_o8SXFKG9kPZaWTWTFqyC-7GwBWnQa0A@mail.gmail.com>
- <c0fbfcf3-ec36-872a-c389-b3fea214848c@linux.microsoft.com>
- <CAEjxPJ7VH18bEo6+U1GWrx=tHVGr=6XtF5_ygcfQYgdtZ74J+g@mail.gmail.com>
- <bea0cb52-2e13-fb14-b66c-b57287c23c3f@linux.microsoft.com>
- <CAEjxPJ6Rt7u3shLbxoPRHgr-D=CD9d_eXRB07A9qN7RmJwZAwA@mail.gmail.com>
- <CAEjxPJ6-jHha+CeqSdQ2O0bpyQe_9buj2ENZz6FNj6S87XSSfg@mail.gmail.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <dccfc56b-c3ab-327e-19b2-7a70d15afe5b@linux.microsoft.com>
-Date:   Mon, 20 Jul 2020 11:27:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <CAEjxPJ6-jHha+CeqSdQ2O0bpyQe_9buj2ENZz6FNj6S87XSSfg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 20 Jul 2020 14:30:01 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3499C061794;
+        Mon, 20 Jul 2020 11:30:00 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id s10so18761124wrw.12;
+        Mon, 20 Jul 2020 11:30:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=D95gU7RsNuUebcW/DXQQNWzRuFfBAwdF1di0SQ6P2nw=;
+        b=sDanTDz9hQdQObRogJlHwmOHojVMQOpAxSiTkEanBT0XY9l3Gpd0ajVJ39dh28KnZ1
+         5WVKz547vQqodfPVaymCAI1W15ib7JdeC/iXEtH0vt92s9EvfoPPBmKbrBUeKZFa/vam
+         6Mn2576MlwaWKATO4KYwr6c4l+BIS0n+PMG9gmiz0pU4U2IHOHdIhqgximQmuAmo0dI/
+         F9I/YvZ90hvtqeyeCzC04Gg844jbh5ZtqwqVrfoqkQfY5j1r5ltoOdZ61drE6LA8z5V9
+         8kXX1s0QZSseZl4+ErzFEWNoZHGQpV5MWkiCQIA5nQWtrEepgnPUGY5ct9mxdyb45VfB
+         ai+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=D95gU7RsNuUebcW/DXQQNWzRuFfBAwdF1di0SQ6P2nw=;
+        b=MjjYJ7Z1KtQrF7gvYElGvwxTH30tH9CcxJnrWup01LtWjZkjlQMz9gEPYHF9Mh8Z9k
+         YSHv5kYUWpDN+Sagz2GyLz7MaraUSneqp8y0JzwlYudbyPhokN86Jo4JguGwkP0aF+5O
+         N1yLqmIjKISHNE6abCb2VOVhU1i+5MyqlNvfdZSqvT6Ws1hgB5xjby+Z5EFIAGlv4XjF
+         g/f87Q0EHF+exPMYukf1l9AqG0zNJ2A4UAcrc/POYn9563xMdQUZSuBowID6zfToYwEZ
+         LxS3MP7mSSVzM+eUsn5BsTd1yFido8dEZFpKY4Ic+NplK5/f6av6AffN2ofrmL4nKdfe
+         Bfag==
+X-Gm-Message-State: AOAM533AZH5nzd7xcwu8A+acNZF65le/G/9A6pK2ncSNclE8aUrS3X5p
+        JrZ3RvZSE3fAma7Ma4CEo+DhNaIX
+X-Google-Smtp-Source: ABdhPJz4JeI1ahtujTSu2VCDPPbOIBBdqG4fNC2Gz8FXvh7yofmruG+BZqPQ9YB/fWEZCzxa10YD9g==
+X-Received: by 2002:a5d:6603:: with SMTP id n3mr24164764wru.142.1595269799106;
+        Mon, 20 Jul 2020 11:29:59 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id t15sm477825wmj.14.2020.07.20.11.29.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 11:29:58 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, will@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Shanker Donthineni <shankerd@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT
+        (AARCH64 ARCHITECTURE)),
+        kvmarm@lists.cs.columbia.edu (open list:KERNEL VIRTUAL MACHINE FOR
+        ARM64 (KVM/arm64))
+Subject: [PATCH stable 4.14.y] arm64: entry: Place an SB sequence following an ERET instruction
+Date:   Mon, 20 Jul 2020 11:29:36 -0700
+Message-Id: <20200720182937.14099-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/20/20 10:49 AM, Stephen Smalley wrote:
+From: Will Deacon <will.deacon@arm.com>
 
->>>
->>> Looks like the template used is ima-ng which doesn't include the
->>> measured buffer. Please set template to "ima-buf" in the policy.
->>>
->>> For example,
->>> measure func=LSM_STATE template=ima-buf
->>
->> It seems like one shouldn't need to manually specify it if it is the
->> only template that yields a useful result for the LSM_STATE function?
-> 
-> Actually, if we used ima-ng template for selinux-policy-hash, then
-> instead of needing to hash the policy
-> first and passing the hash to IMA, we could just pass the policy as
-> the buffer and IMA would take care of the hashing, right?
+commit 679db70801da9fda91d26caf13bf5b5ccc74e8e8 upstream
 
-That is correct.
+Some CPUs can speculate past an ERET instruction and potentially perform
+speculative accesses to memory before processing the exception return.
+Since the register state is often controlled by a lower privilege level
+at the point of an ERET, this could potentially be used as part of a
+side-channel attack.
 
-The IMA hook I've added to measure LSM structures is a generic one that 
-can be used by any security module (SM). I feel it would be better to 
-not have policy or state or any such SM specific logic in IMA, but leave 
-that to the individual SM to handle.
+This patch emits an SB sequence after each ERET so that speculation is
+held up on exception return.
 
-What do you think?
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+[florian: update arch/arm64/kvm/entry.S::__fpsimd_guest_restore]
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/arm64/kernel/entry.S      | 2 ++
+ arch/arm64/kvm/hyp/entry.S     | 2 ++
+ arch/arm64/kvm/hyp/hyp-entry.S | 4 ++++
+ 3 files changed, 8 insertions(+)
 
-> And we only need to use ima-buf for the selinux-state if we want the
-> measurement list to include the string value that
-> was hashed; if we just want to compare against a known-good, it would
-> suffice to use ima-ng for it as well, right?
-> 
-
-  -lakshmi
+diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+index c1ffa95c0ad2..f70e0893ba51 100644
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -367,6 +367,7 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
+ 	.else
+ 	eret
+ 	.endif
++	sb
+ 	.endm
+ 
+ 	.macro	irq_stack_entry
+@@ -1046,6 +1047,7 @@ alternative_insn isb, nop, ARM64_WORKAROUND_QCOM_FALKOR_E1003
+ 	mrs	x30, far_el1
+ 	.endif
+ 	eret
++	sb
+ 	.endm
+ 
+ 	.align	11
+diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
+index a360ac6e89e9..93704e6894d2 100644
+--- a/arch/arm64/kvm/hyp/entry.S
++++ b/arch/arm64/kvm/hyp/entry.S
+@@ -83,6 +83,7 @@ ENTRY(__guest_enter)
+ 
+ 	// Do not touch any register after this!
+ 	eret
++	sb
+ ENDPROC(__guest_enter)
+ 
+ ENTRY(__guest_exit)
+@@ -195,4 +196,5 @@ alternative_endif
+ 	ldp	x0, x1, [sp], #16
+ 
+ 	eret
++	sb
+ ENDPROC(__fpsimd_guest_restore)
+diff --git a/arch/arm64/kvm/hyp/hyp-entry.S b/arch/arm64/kvm/hyp/hyp-entry.S
+index 3c283fd8c8f5..b4d6a6c6c6ce 100644
+--- a/arch/arm64/kvm/hyp/hyp-entry.S
++++ b/arch/arm64/kvm/hyp/hyp-entry.S
+@@ -96,6 +96,7 @@ el1_sync:				// Guest trapped into EL2
+ 	do_el2_call
+ 
+ 	eret
++	sb
+ 
+ el1_hvc_guest:
+ 	/*
+@@ -146,6 +147,7 @@ wa_epilogue:
+ 	mov	x0, xzr
+ 	add	sp, sp, #16
+ 	eret
++	sb
+ 
+ el1_trap:
+ 	get_vcpu_ptr	x1, x0
+@@ -204,6 +206,7 @@ el2_error:
+ 	b.ne	__hyp_panic
+ 	mov	x0, #(1 << ARM_EXIT_WITH_SERROR_BIT)
+ 	eret
++	sb
+ 
+ ENTRY(__hyp_do_panic)
+ 	mov	lr, #(PSR_F_BIT | PSR_I_BIT | PSR_A_BIT | PSR_D_BIT |\
+@@ -212,6 +215,7 @@ ENTRY(__hyp_do_panic)
+ 	ldr	lr, =panic
+ 	msr	elr_el2, lr
+ 	eret
++	sb
+ ENDPROC(__hyp_do_panic)
+ 
+ ENTRY(__hyp_panic)
+-- 
+2.17.1
 
