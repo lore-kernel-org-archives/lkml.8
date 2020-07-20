@@ -2,173 +2,119 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F93C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2632C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2B7206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263690;
-	bh=nlf0xoHKRhA4cA8SL1DRGKekbuRXwZoHO/n7WMX/hQA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lWQf3RzljO3JqNSr3hIwt4Nt0gdaHnvJeNWstPpdn7PLAa136GW38bvrD9RkRjve4
-	 XZOxDU0fDxdQbE3o12rPMKnx6Mc3wo+IiqL5NaWYs6FPCTDjCF871qXI8asx17K+iY
-	 mOUW/UFISbEZjKPtY761x+KLSSnXLi+BSiyEqlhY=
+	by mail.kernel.org (Postfix) with ESMTP id D5F7720773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389141AbgGTQsJ (ORCPT
+        id S2389160AbgGTQsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:48:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57454 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729273AbgGTPip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:38:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15D1322CAF;
-        Mon, 20 Jul 2020 15:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259525;
-        bh=nlf0xoHKRhA4cA8SL1DRGKekbuRXwZoHO/n7WMX/hQA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bdyTR/0Cfzi6a5+Les8Sgqvr0hFsiZcSBOOEEQiMb0QlSQ2+sUMH7/1hn6ZcDfZ+a
-         g2fuf00Sg/KtWZ3KpdkNvZL+AUwSSmcJgYL37Nmpsh/E47CggYKaiHydkUQcshy9M1
-         LXHM7S0JtNTDd9x2kdoVb0tSbj6gpLNPg3pK4dl8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 09/58] arm64: kgdb: Fix single-step exception handling oops
-Date:   Mon, 20 Jul 2020 17:36:25 +0200
-Message-Id: <20200720152747.610199679@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
-References: <20200720152747.127988571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 12:48:30 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:51462 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728122AbgGTQsW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:48:22 -0400
+Received: by mail-il1-f197.google.com with SMTP id s137so11365753ilc.18
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:48:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=52vgdGaAA8hcUPFlyYtitvwg340NDLC7/fQIeVBuX18=;
+        b=NNZHlX1XU2fpHGAQw9Pky7oAmF5eZm6NQawUPrrx6MWFDwyBCltFZkdaP+3h0wtD1M
+         kUYbS17wvpIZu/4uA3bzElSlrLvy+sIBCCfEIQdEN2HJqJzs6XcHAYUsRtGCQpWuE5zk
+         ckEiox0uKbvERg9NzfuZhHdkHWG1YhrEFYhjrksDeiy+SENEUtqWdV+aglzzm8m/F5eA
+         5bpnPAJ4B0/opCBDQdDx1kdNc11Ckrze8CNdiORBTYU02C9elLCeabnE+wS7bfHVKQI2
+         KfwEHbJOF1lKzR0x7GohjzZuUqGLDRLwsPR/Q4far1RI0yu3RuS0LhgbixuEFRkL4SsY
+         u/JA==
+X-Gm-Message-State: AOAM533npieTSz0B2ys4dnJ79F7/HuQIBj99gS+JXEnEYw9mlQ6zQJaJ
+        q56V0iKptFJrYWj7hARbCXDZeMi0ZOb6PKK72c219SPvZ7LH
+X-Google-Smtp-Source: ABdhPJy58JS4cE77WSSYRgFG6obmjU2yddsYxThq4PWwqhYKRsFd+VPkQu8IsDYbqRgP6hlD9BEImNQdCHOEYPl2L/ThChPnaouR
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:961:: with SMTP id q1mr22201056ilt.94.1595263701276;
+ Mon, 20 Jul 2020 09:48:21 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 09:48:21 -0700
+In-Reply-To: <000000000000588c2c05aa156b2b@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003cdc6c05aae24652@google.com>
+Subject: Re: kernel BUG at mm/vmalloc.c:LINE! (2)
+From:   syzbot <syzbot+5f326d255ca648131f87@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org,
+        mingo@redhat.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+syzbot has found a reproducer for the following issue on:
 
-[ Upstream commit 8523c006264df65aac7d77284cc69aac46a6f842 ]
+HEAD commit:    ab8be66e Add linux-next specific files for 20200720
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=161a0cc8900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c4bf77d63d0cf88c
+dashboard link: https://syzkaller.appspot.com/bug?extid=5f326d255ca648131f87
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=151192bb100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12d7a873100000
 
-After entering kdb due to breakpoint, when we execute 'ss' or 'go' (will
-delay installing breakpoints, do single-step first), it won't work
-correctly, and it will enter kdb due to oops.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5f326d255ca648131f87@syzkaller.appspotmail.com
 
-It's because the reason gotten in kdb_stub() is not as expected, and it
-seems that the ex_vector for single-step should be 0, like what arch
-powerpc/sh/parisc has implemented.
-
-Before the patch:
-Entering kdb (current=0xffff8000119e2dc0, pid 0) on processor 0 due to Keyboard Entry
-[0]kdb> bp printk
-Instruction(i) BP #0 at 0xffff8000101486cc (printk)
-    is enabled   addr at ffff8000101486cc, hardtype=0 installed=0
-
-[0]kdb> g
-
-/ # echo h > /proc/sysrq-trigger
-
-Entering kdb (current=0xffff0000fa878040, pid 266) on processor 3 due to Breakpoint @ 0xffff8000101486cc
-[3]kdb> ss
-
-Entering kdb (current=0xffff0000fa878040, pid 266) on processor 3 Oops: (null)
-due to oops @ 0xffff800010082ab8
-CPU: 3 PID: 266 Comm: sh Not tainted 5.7.0-rc4-13839-gf0e5ad491718 #6
-Hardware name: linux,dummy-virt (DT)
-pstate: 00000085 (nzcv daIf -PAN -UAO)
-pc : el1_irq+0x78/0x180
-lr : __handle_sysrq+0x80/0x190
-sp : ffff800015003bf0
-x29: ffff800015003d20 x28: ffff0000fa878040
-x27: 0000000000000000 x26: ffff80001126b1f0
-x25: ffff800011b6a0d8 x24: 0000000000000000
-x23: 0000000080200005 x22: ffff8000101486cc
-x21: ffff800015003d30 x20: 0000ffffffffffff
-x19: ffff8000119f2000 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000000000000 x14: 0000000000000000
-x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000000 x10: 0000000000000000
-x9 : 0000000000000000 x8 : ffff800015003e50
-x7 : 0000000000000002 x6 : 00000000380b9990
-x5 : ffff8000106e99e8 x4 : ffff0000fadd83c0
-x3 : 0000ffffffffffff x2 : ffff800011b6a0d8
-x1 : ffff800011b6a000 x0 : ffff80001130c9d8
-Call trace:
- el1_irq+0x78/0x180
- printk+0x0/0x84
- write_sysrq_trigger+0xb0/0x118
- proc_reg_write+0xb4/0xe0
- __vfs_write+0x18/0x40
- vfs_write+0xb0/0x1b8
- ksys_write+0x64/0xf0
- __arm64_sys_write+0x14/0x20
- el0_svc_common.constprop.2+0xb0/0x168
- do_el0_svc+0x20/0x98
- el0_sync_handler+0xec/0x1a8
- el0_sync+0x140/0x180
-
-[3]kdb>
-
-After the patch:
-Entering kdb (current=0xffff8000119e2dc0, pid 0) on processor 0 due to Keyboard Entry
-[0]kdb> bp printk
-Instruction(i) BP #0 at 0xffff8000101486cc (printk)
-    is enabled   addr at ffff8000101486cc, hardtype=0 installed=0
-
-[0]kdb> g
-
-/ # echo h > /proc/sysrq-trigger
-
-Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to Breakpoint @ 0xffff8000101486cc
-[0]kdb> g
-
-Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to Breakpoint @ 0xffff8000101486cc
-[0]kdb> ss
-
-Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to SS trap @ 0xffff800010082ab8
-[0]kdb>
-
-Fixes: 44679a4f142b ("arm64: KGDB: Add step debugging support")
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200509214159.19680-2-liwei391@huawei.com
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/kernel/kgdb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index f72743dc070d9..606c21760f23e 100644
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -238,7 +238,7 @@ static int kgdb_step_brk_fn(struct pt_regs *regs, unsigned int esr)
- 	if (user_mode(regs))
- 		return DBG_HOOK_ERROR;
- 
--	kgdb_handle_exception(1, SIGTRAP, 0, regs);
-+	kgdb_handle_exception(0, SIGTRAP, 0, regs);
- 	return DBG_HOOK_HANDLED;
- }
- 
--- 
-2.25.1
-
-
+------------[ cut here ]------------
+kernel BUG at mm/vmalloc.c:3089!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.8.0-rc6-next-20200720-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events pcpu_balance_workfn
+RIP: 0010:free_vm_area mm/vmalloc.c:3089 [inline]
+RIP: 0010:free_vm_area mm/vmalloc.c:3085 [inline]
+RIP: 0010:pcpu_free_vm_areas+0x96/0xc0 mm/vmalloc.c:3432
+Code: 75 48 48 8b 2b 48 8d 7d 08 48 89 f8 48 c1 e8 03 42 80 3c 30 00 75 2c 48 8b 7d 08 e8 c4 c8 ff ff 48 39 c5 74 a5 e8 ea c3 c9 ff <0f> 0b e8 e3 c3 c9 ff 4c 89 ff 5b 5d 41 5c 41 5d 41 5e 41 5f e9 71
+RSP: 0018:ffffc90000d2fba8 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffff8880a801be00 RCX: 0000000000000000
+RDX: ffff8880a95fa300 RSI: ffffffff81aa7c76 RDI: 0000000000000001
+RBP: ffff8880a2b38180 R08: 0000000000000000 R09: ffffffff89cfecc3
+R10: fffffbfff139fd98 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000001 R14: dffffc0000000000 R15: ffff8880a801be00
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004c8e48 CR3: 00000000a4c08000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ pcpu_destroy_chunk mm/percpu-vm.c:366 [inline]
+ __pcpu_balance_workfn mm/percpu.c:1982 [inline]
+ pcpu_balance_workfn+0x8b3/0x1310 mm/percpu.c:2069
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Modules linked in:
+---[ end trace 6a2e56ec52e1f480 ]---
+RIP: 0010:free_vm_area mm/vmalloc.c:3089 [inline]
+RIP: 0010:free_vm_area mm/vmalloc.c:3085 [inline]
+RIP: 0010:pcpu_free_vm_areas+0x96/0xc0 mm/vmalloc.c:3432
+Code: 75 48 48 8b 2b 48 8d 7d 08 48 89 f8 48 c1 e8 03 42 80 3c 30 00 75 2c 48 8b 7d 08 e8 c4 c8 ff ff 48 39 c5 74 a5 e8 ea c3 c9 ff <0f> 0b e8 e3 c3 c9 ff 4c 89 ff 5b 5d 41 5c 41 5d 41 5e 41 5f e9 71
+RSP: 0018:ffffc90000d2fba8 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffff8880a801be00 RCX: 0000000000000000
+RDX: ffff8880a95fa300 RSI: ffffffff81aa7c76 RDI: 0000000000000001
+RBP: ffff8880a2b38180 R08: 0000000000000000 R09: ffffffff89cfecc3
+R10: fffffbfff139fd98 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000001 R14: dffffc0000000000 R15: ffff8880a801be00
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004c8e48 CR3: 00000000a4c08000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
