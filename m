@@ -2,79 +2,172 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AF2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41815C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4DBD22CE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC8822BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595260500;
+	bh=z90SUA8yAMYpJtIMgGjptFNO+JtRmJHjqVfLHzjGxO4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oM/Xgt0zCGXpdaAvT6D1UBAcnA0/JT84a9fZoTNcf0rmccaQ59ae71/X0Cxs/ucK9
+	 ySYIB0DO80xTH6RRUWaNyOFZHHVC6Gcdnyrr2ojAcSOJKgGuSDVJIx6W2CQU1Cpgrw
+	 OCWkDlxGxd98k6j0d73wku+gXAdmMd5VRohPMun0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731428AbgGTPy4 (ORCPT
+        id S1731624AbgGTPy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:54:56 -0400
-Received: from verein.lst.de ([213.95.11.211]:47608 "EHLO verein.lst.de"
+        Mon, 20 Jul 2020 11:54:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731607AbgGTPyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:54:49 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 4782D68AFE; Mon, 20 Jul 2020 17:54:43 +0200 (CEST)
-Date:   Mon, 20 Jul 2020 17:54:41 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Nick Hu <nickhu@andestech.com>, Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] arm: don't call addr_limit_user_check for nommu
-Message-ID: <20200720155441.GA13067@lst.de>
-References: <20200714105505.935079-1-hch@lst.de>
+        id S1731087AbgGTPyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:54:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BD4A22BEF;
+        Mon, 20 Jul 2020 15:54:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260494;
+        bh=z90SUA8yAMYpJtIMgGjptFNO+JtRmJHjqVfLHzjGxO4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pgVUnw6qXsdoJDk3ELiQtnJbCrWJ7tlgC2gahX7xRHgZ6OUy5sWV6tZW3ry7UDZOF
+         17QlfPnrTSYin/2/jMQ6cVf/1f0keKJwA7B4LCMeOecSuMUCmjlIhnIhK9cGtWqun9
+         6MkQn1JR054+eG6Wd/TPbpd/6mX5bSHT597kBD3s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH 4.19 122/133] misc: atmel-ssc: lock with mutex instead of spinlock
+Date:   Mon, 20 Jul 2020 17:37:49 +0200
+Message-Id: <20200720152809.622821046@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
+References: <20200720152803.732195882@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714105505.935079-1-hch@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On arm nommu kernel use the same constant for USER_DS and KERNEL_DS,
-and seqment_eq always returns false.  With the current check in
-addr_limit_user_check that works by accident, but when replacing
-seqment_eq with uaccess_kerne it will fail.  Just remove the not
-needed check entirely.
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reported-by: Guenter Roeck <linux@roeck-us.net>
+commit b037d60a3b1d1227609fd858fa34321f41829911 upstream.
+
+Uninterruptible context is not needed in the driver and causes lockdep
+warning because of mutex taken in of_alias_get_id(). Convert the lock to
+mutex to avoid the issue.
+
+Cc: stable@vger.kernel.org
+Fixes: 099343c64e16 ("ARM: at91: atmel-ssc: add device tree support")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/50f0d7fa107f318296afb49477c3571e4d6978c5.1592998403.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
+ drivers/misc/atmel-ssc.c |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-Andrew: this should preferably go before the other patches in this
-series.
-
- arch/arm/kernel/signal.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/kernel/signal.c b/arch/arm/kernel/signal.c
-index ab2568996ddb0c..c9dc912b83f012 100644
---- a/arch/arm/kernel/signal.c
-+++ b/arch/arm/kernel/signal.c
-@@ -713,7 +713,9 @@ struct page *get_signal_page(void)
- /* Defer to generic check */
- asmlinkage void addr_limit_check_failed(void)
- {
-+#ifdef CONFIG_MMU
- 	addr_limit_user_check();
-+#endif
- }
+--- a/drivers/misc/atmel-ssc.c
++++ b/drivers/misc/atmel-ssc.c
+@@ -13,7 +13,7 @@
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
+-#include <linux/spinlock.h>
++#include <linux/mutex.h>
+ #include <linux/atmel-ssc.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+@@ -23,7 +23,7 @@
+ #include "../../sound/soc/atmel/atmel_ssc_dai.h"
  
- #ifdef CONFIG_DEBUG_RSEQ
--- 
-2.27.0
+ /* Serialize access to ssc_list and user count */
+-static DEFINE_SPINLOCK(user_lock);
++static DEFINE_MUTEX(user_lock);
+ static LIST_HEAD(ssc_list);
+ 
+ struct ssc_device *ssc_request(unsigned int ssc_num)
+@@ -31,7 +31,7 @@ struct ssc_device *ssc_request(unsigned
+ 	int ssc_valid = 0;
+ 	struct ssc_device *ssc;
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	list_for_each_entry(ssc, &ssc_list, list) {
+ 		if (ssc->pdev->dev.of_node) {
+ 			if (of_alias_get_id(ssc->pdev->dev.of_node, "ssc")
+@@ -47,18 +47,18 @@ struct ssc_device *ssc_request(unsigned
+ 	}
+ 
+ 	if (!ssc_valid) {
+-		spin_unlock(&user_lock);
++		mutex_unlock(&user_lock);
+ 		pr_err("ssc: ssc%d platform device is missing\n", ssc_num);
+ 		return ERR_PTR(-ENODEV);
+ 	}
+ 
+ 	if (ssc->user) {
+-		spin_unlock(&user_lock);
++		mutex_unlock(&user_lock);
+ 		dev_dbg(&ssc->pdev->dev, "module busy\n");
+ 		return ERR_PTR(-EBUSY);
+ 	}
+ 	ssc->user++;
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	clk_prepare(ssc->clk);
+ 
+@@ -70,14 +70,14 @@ void ssc_free(struct ssc_device *ssc)
+ {
+ 	bool disable_clk = true;
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	if (ssc->user)
+ 		ssc->user--;
+ 	else {
+ 		disable_clk = false;
+ 		dev_dbg(&ssc->pdev->dev, "device already free\n");
+ 	}
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	if (disable_clk)
+ 		clk_unprepare(ssc->clk);
+@@ -240,9 +240,9 @@ static int ssc_probe(struct platform_dev
+ 		return -ENXIO;
+ 	}
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	list_add_tail(&ssc->list, &ssc_list);
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	platform_set_drvdata(pdev, ssc);
+ 
+@@ -261,9 +261,9 @@ static int ssc_remove(struct platform_de
+ 
+ 	ssc_sound_dai_remove(ssc);
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	list_del(&ssc->list);
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	return 0;
+ }
+
 
