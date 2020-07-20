@@ -2,279 +2,405 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2447C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB7BF20734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707D1207EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:41:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RPSQYiDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725954AbgGTEhf (ORCPT
+        id S1726123AbgGTElS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 00:37:35 -0400
-Received: from mga01.intel.com ([192.55.52.88]:22523 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbgGTEhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 00:37:34 -0400
-IronPort-SDR: o/e9iNgNhuYKLtIT9HBEgRztkyPyabxcbY2iHXd99xYrTzWlWw1Gll3gy92SUejwKxeV7p8+xX
- 1yYa6rkF7R9A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9687"; a="167979650"
-X-IronPort-AV: E=Sophos;i="5.75,373,1589266800"; 
-   d="scan'208";a="167979650"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2020 21:37:03 -0700
-IronPort-SDR: PkfP5Y/fAtlVgxHEkyyBdBGuU+DUKF/0YJQlUQoxG7klYfoiIwbm/nSMUbmeb43S7hcdxntIua
- 5kXYnhymL+/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,373,1589266800"; 
-   d="scan'208";a="283392635"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by orsmga003.jf.intel.com with ESMTP; 19 Jul 2020 21:37:00 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>
-Subject: Re: linux-next: not-present page at swap_vma_readahead()
-References: <62A0ACFC-E023-4269-8121-F96B879A8C51@lca.pw>
-        <81F06AA9-F25B-4342-9CF7-2763AC394A18@lca.pw>
-        <874ktl1p7y.fsf@yhuang-dev.intel.com> <20200616011334.GA815@lca.pw>
-        <CA2E3DE2DD06CA4FA11644750E4E292F454E35A9@SHSMSX104.ccr.corp.intel.com>
-        <20200720021227.GA7354@lca.pw>
-        <CA2E3DE2DD06CA4FA11644750E4E292F454E3B6D@SHSMSX104.ccr.corp.intel.com>
-        <20200720035411.GB7354@lca.pw>
-Date:   Mon, 20 Jul 2020 12:37:00 +0800
-In-Reply-To: <20200720035411.GB7354@lca.pw> (Qian Cai's message of "Sun, 19
-        Jul 2020 23:54:12 -0400")
-Message-ID: <875zaivm37.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 20 Jul 2020 00:41:18 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15044 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725287AbgGTElS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 00:41:18 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f151ff60000>; Sun, 19 Jul 2020 21:39:18 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 19 Jul 2020 21:41:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 19 Jul 2020 21:41:17 -0700
+Received: from [10.2.168.236] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jul
+ 2020 04:41:16 +0000
+Subject: Re: [RFC PATCH v3 00/18] Support for Tegra video capture from
+ external sensor
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <robh+dt@kernel.org>, <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+ <f03bdb89-df7c-e9e8-1512-d57e5d2332bf@xs4all.nl>
+ <d258fb56-14f6-a091-64e9-48294073c696@nvidia.com>
+ <458db01d-3c9c-1aec-0d28-edcbf0265aa4@xs4all.nl>
+ <5694f74a-be8e-7a95-1739-0a5fc9820597@nvidia.com>
+ <9aa8be89-d181-2dca-36ca-ea118bd5b0a7@nvidia.com>
+ <2f9ecba7-3d05-8a68-f2ad-546470780642@nvidia.com>
+Message-ID: <0e5b26b6-031a-c07c-0295-4cce0712779d@nvidia.com>
+Date:   Sun, 19 Jul 2020 21:41:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+In-Reply-To: <2f9ecba7-3d05-8a68-f2ad-546470780642@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595219958; bh=Y2hnBSi/9zICMzuo0hZ0Zmeo249UyL6uH8Lo0H246MA=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=RPSQYiDQt2NvvSzMZmgUB17Srisiy60FwsjfA4ZNf2opnhoEmUfC/7svuW6WIQgzr
+         4kq2FSONFeyfmiArDT4nExaAqF1kZYYgpJHsv0ccRXDKzjPY0tn4jADh/R3nH30FGN
+         7KfoI0DLzagwroL0/786W6Ugc3gm/FdRr3+XUWnXxoyu8MNapxKhXcuqUtIAQQtClt
+         JxDdOtuEkFnZHS/1N2qcQJeez5IcASic50cilhB9Dp9WFl1yzi3LHhPvyvdxWn2/cW
+         Ys9heU6rzIcKuZnxfn6KiSTb7oU7uhwDPtCk+3v2oC9pkBKALcTW2hKAK10fvcrI7K
+         brXB9rEQor07Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian Cai <cai@lca.pw> writes:
 
-> On Mon, Jul 20, 2020 at 03:32:59AM +0000, Huang, Ying wrote:
->> Thanks!  Can you try the dbg patch attached?  That will print more debugging information when abnormal PTE pointer is detected.
+On 7/17/20 10:48 AM, Sowjanya Komatineni wrote:
 >
-> Here with both of your patches applied,
+> On 7/17/20 10:38 AM, Sowjanya Komatineni wrote:
+>>
+>> On 7/17/20 10:23 AM, Sowjanya Komatineni wrote:
+>>>
+>>> On 7/17/20 10:08 AM, Hans Verkuil wrote:
+>>>> On 17/07/2020 18:34, Sowjanya Komatineni wrote:
+>>>>> On 7/17/20 3:54 AM, Hans Verkuil wrote:
+>>>>>> Hi Sowjanya,
+>>>>>>
+>>>>>> On 15/07/2020 06:20, Sowjanya Komatineni wrote:
+>>>>>>> This series adds support for video capture from external camera=20
+>>>>>>> sensor to
+>>>>>>> Tegra video driver.
+>>>>>>>
+>>>>>>> Jetson TX1 has camera expansion connector and supports custom=20
+>>>>>>> camera module
+>>>>>>> designed as per TX1 design specification.
+>>>>>>>
+>>>>>>> This series also enables camera capture support for Jetson Nano=20
+>>>>>>> which has
+>>>>>>> Raspberry PI camera header.
+>>>>>>>
+>>>>>>> This series is tested with IMX219 camera sensor.
+>>>>>>>
+>>>>>>> This series include,
+>>>>>>>
+>>>>>>> VI I2C related fixes
+>>>>>>> - Camera sensor programming happens through VI I2C which is on=20
+>>>>>>> host1x bus.
+>>>>>>> - These patches includes device tree and I2C driver fixes for VI=20
+>>>>>>> I2C.
+>>>>>>>
+>>>>>>> Tegra video driver updates
+>>>>>>> - TPG Vs Non-TPG based on Kconfig
+>>>>>>> - Support for external sensor video capture based on device=20
+>>>>>>> graph from DT.
+>>>>>>> - Support for selection ioctl operations
+>>>>>>> - Tegra MIPI CSI pads calibration
+>>>>>>> - CSI T-CLK and T-HS settle time computation based on clock rates.
+>>>>>>>
+>>>>>>> Host1x driver updates
+>>>>>>> - Adds API to allow creating mipi device for specific device node.
+>>>>>>> - Splits MIPI pads calibrate start and waiting for calibration=20
+>>>>>>> to be done.
+>>>>>>>
+>>>>>>> Device tree updates
+>>>>>>> - Adds camera connector 2V8, 1V8, 1V2 regulator supplies to=20
+>>>>>>> Jetson TX1 DT.
+>>>>>>> - Enabled VI and CSI support in Jetson Nano DT.
+>>>>>> I'm doing a bit of stress testing with:
+>>>>>>
+>>>>>> while true; do v4l2-ctl --stream-mmap --stream-count=3D1; done
+>>>>>>
+>>>>>> and I see that the imx274 has often streaming failures:
+>>>>>>
+>>>>>> [=C2=A0 172.025144] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 179.025192] IMX274 8-001a: imx274_write_mbreg : i2c bulk wri=
+te=20
+>>>>>> failed, 3132 =3D 870 (2 bytes)
+>>>>>> [=C2=A0 179.033575] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 226.525378] IMX274 8-001a: imx274_write_mbreg : i2c bulk wri=
+te=20
+>>>>>> failed, 3130 =3D 878 (2 bytes)
+>>>>>> [=C2=A0 226.533761] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 227.029325] IMX274 8-001a: imx274_write_mbreg : i2c bulk wri=
+te=20
+>>>>>> failed, 30f6 =3D 107 (2 bytes)
+>>>>>> [=C2=A0 227.037758] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 247.025218] IMX274 8-001a: imx274_write_mbreg : i2c bulk wri=
+te=20
+>>>>>> failed, 30f6 =3D 107 (2 bytes)
+>>>>>> [=C2=A0 247.033658] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 293.025517] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 309.024727] IMX274 8-001a: imx274_write_mbreg : i2c bulk wri=
+te=20
+>>>>>> failed, 30e0 =3D 0 (2 bytes)
+>>>>>> [=C2=A0 309.032969] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 309.529506] IMX274 8-001a: imx274_write_mbreg : i2c bulk wri=
+te=20
+>>>>>> failed, 30f8 =3D 11d2 (3 bytes)
+>>>>>> [=C2=A0 309.538103] IMX274 8-001a: imx274_set_frame_length error =3D=
+ -121
+>>>>>> [=C2=A0 309.544102] IMX274 8-001a: imx274_set_frame_interval error =
+=3D -121
+>>>>>> [=C2=A0 309.550243] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 314.025561] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 329.025586] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 340.529567] IMX274 8-001a: imx274_write_mbreg : i2c bulk wri=
+te=20
+>>>>>> failed, 303a =3D f0c (2 bytes)
+>>>>>> [=C2=A0 340.538009] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 347.525627] IMX274 8-001a: imx274_write_mbreg : i2c bulk wri=
+te=20
+>>>>>> failed, 30f6 =3D 107 (2 bytes)
+>>>>>> [=C2=A0 347.534008] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 365.033640] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 437.525788] IMX274 8-001a: imx274_write_mbreg : i2c bulk wri=
+te=20
+>>>>>> failed, 3038 =3D c (2 bytes)
+>>>>>> [=C2=A0 437.533997] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 456.029780] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 472.025862] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 498.025861] IMX274 8-001a: s_stream failed
+>>>>>> [=C2=A0 500.025905] IMX274 8-001a: s_stream failed
+>>>>>>
+>>>>>> where v4l2-ctl returns:
+>>>>>>
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 VIDIOC_STREAMON returned -1 (Remote I/=
+O error)
+>>>>>>
+>>>>>> I don't see this with the imx219.
+>>>>>>
+>>>>>> I also see this occasionally:
+>>>>>>
+>>>>>> [Fri Jul 17 12:51:42 2020] video4linux video1: failed to run=20
+>>>>>> capture start kthread: -4
+>>>>>>
+>>>>>> Something is not stable here.
+>>>>>>
+>>>>>> Regards,
+>>>>>>
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0Hans
+>>>>> Hi Hans,
+>>>>>
+>>>>> Running the same single frame continuous loop for more than 2=20
+>>>>> hours now
+>>>>> and I don't see any failure.
+>>>>>
+>>>>> Above failure shows i2c bulk writes to IMX274 failure due to which
+>>>>> s_stream also failed.
+>>>>>
+>>>>> Not sure if its due to i2c mux in the path to sensor on your module
+>>>>> causing some issue when there is more i2c write traffic as we are=20
+>>>>> doing
+>>>>> single stream in continuous loop. Also IMX219 does not show on=20
+>>>>> your side
+>>>>> so something specific to IMX274 setup probably.
+>>>> I'll take a closer look next week. Good to know that it works fine=20
+>>>> for you.
+>>>>
+>>>>>
+>>>>> Regarding kthread_run failure where kthread_run() returned -EINTR=20
+>>>>> during
+>>>>> capture start thread, I always see this happen at the point of=20
+>>>>> stopping
+>>>>> the continuous single stream while loop by pressing ctrl+c after few
+>>>>> loops of execution.
+>>>> Hmm, if this is normal behavior, then should this message be a=20
+>>>> debug message
+>>>> only? Or perhaps only show the message if the error code !=3D EINTR.
+>>>
+>>> I believe its good to still show this as its reported by kthread_run=20
+>>> -> kthread_create_on_node.
+>>>
+>>> But not sure in real usecase we will ever use while true like this=20
+>>> and we should use script to also break while loop along with=20
+>>> v4l2-ctl termination when ctrl-c terminate request happens.
+>>>
+>> Hi Hans, As this happens only during this type of case, I can update=20
+>> to show message only when error code !=3D EINTR.
+>>
+>> Thanks
+>>
+>> Sowjanya
 >
-> [  183.627876][ T3959] ra_info: 8, 3, 4, 00000000aabe3209
-> [  183.633160][ T3959] i: 0, pte: 00000000aabe3209, faddr: 0
-> [  183.638574][ T3959] ra_info: 8, 3, 4, 00000000aabe3209
-> [  183.643787][ T3959] i: 1, pte: 0000000006e61f24, faddr: 0
-> [  183.649189][ T3959] ra_info: 8, 3, 4, 00000000aabe3209
-> [  183.654371][ T3959] i: 2, pte: 00000000ce16a68e, faddr: 0
-> [  183.851372][ T3839] ra_info: 8, 3, 4, 0000000085efad17
-> [  183.856550][ T3839] i: 0, pte: 0000000085efad17, faddr: 0
-> [  183.862503][ T3839] ==================================================================
-> [  183.870563][ T3839] BUG: KASAN: slab-out-of-bounds in swapin_readahead+0x840/0xd60
-> [  183.878147][ T3839] Read of size 8 at addr ffff008919f1ffe8 by task trinity-c128/3839
-> [  183.886001][ T3839] CPU: 9 PID: 3839 Comm: trinity-c128 Not tainted 5.8.0-rc5-next-20200717+ #2
-> [  183.894710][ T3839] Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
-> [  183.905157][ T3839] Call trace:
-> [  183.908314][ T3839]  dump_backtrace+0x0/0x398
-> [  183.912680][ T3839]  show_stack+0x14/0x20
-> [  183.916704][ T3839]  dump_stack+0x140/0x1c8
-> [  183.920910][ T3839]  print_address_description.constprop.10+0x54/0x550
-> [  183.927454][ T3839]  kasan_report+0x134/0x1b8
-> [  183.931833][ T3839]  __asan_report_load8_noabort+0x2c/0x50
-> [  183.937334][ T3839]  swapin_readahead+0x840/0xd60
-> [  183.942049][ T3839]  do_swap_page+0xb1c/0x1a78
-> [  183.946508][ T3839]  handle_mm_fault+0xfd0/0x2c50
-> [  183.948789][ T3754] ra_info: 8, 3, 4, 00000000d0b6ebd5
-> [  183.951229][ T3839]  do_page_fault+0x230/0x818
-> [  183.956402][ T3754] i: 0, pte: 00000000d0b6ebd5, faddr: 0
-> [  183.960896][ T3839]  do_translation_fault+0x90/0xb0
-> [  183.966330][ T3754] get_swap_device: Bad swap file entry 58025a5a5a5a5a5a
-> [  183.971172][ T3839]  do_mem_abort+0x64/0x180
-> [  183.971192][ T3839]  el0_sync_handler+0x2a0/0x410
-> [  183.971207][ T3839]  el0_sync+0x140/0x180
-> [  183.977984][ T3754] ra_info: 8, 3, 4, 00000000d0b6ebd5
-> [  183.977997][ T3754] i: 1, pte: 00000000530a7b17, faddr: 0
-> [  183.982278][ T3839] Allocated by task 3699:
-> [  183.982296][ T3839]  kasan_save_stack+0x24/0x50
-> [  183.982310][ T3839]  __kasan_kmalloc.isra.10+0xc4/0xe0
-> [  183.987003][ T3754] get_swap_device: Bad swap file entry 58025a5a5a5a5a5a
-> [  183.987019][ T3754] ra_info: 8, 3, 4, 00000000d0b6ebd5
-> [  183.991033][ T3839]  kasan_slab_alloc+0x14/0x20
-> [  183.991048][ T3839]  slab_post_alloc_hook+0x58/0x5d0
-> [  183.991064][ T3839]  kmem_cache_alloc+0x19c/0x448
-> [  183.996185][ T3754] i: 2, pte: 00000000031f0751, faddr: 0
-> [  183.996200][ T3754] get_swap_device: Bad swap file entry 58025a5a5a5a5a5a
-> [  184.001617][ T3839]  create_object+0x58/0x960
-> [  184.001639][ T3839]  kmemleak_alloc+0x2c/0x38
-> [  184.001657][ T3839]  slab_post_alloc_hook+0x78/0x5d0
-> [  184.025674][ T3830] ra_info: 8, 3, 4, 00000000d77f2b57
-> [  184.027442][ T3839]  kmem_cache_alloc+0x19c/0x448
-> [  184.032002][ T3830] i: 0, pte: 0026 (3737) used g  184.047047][ T193][ T3839]  co T3932] i: 0, pt59417][ T3932] i: 1, pte: 00000000e38ee039, faddr: 0
-> [  184.059424][ T3932] ra_info: 8, 3, 4, 000000004ae69ce9
-> [  184.059431][ T3932] i: 2, pte: 0000000035544c25, faddr: 0
-> [  184.062563][ T3830] ra_info: 8, 3, 4, 00000000d77f2b57
-> [  184.067511][ T3839]  _do_fork+0x128/0x11f8
-> [  184.072663][ T3830] i: 2, pte: 000000002f241b20, faddr: 0
-> [  184.077369][ T3839]  __do_sys_clone+0xac/0xd8
-> [  184.110993][ T3997] ra_info: 8, 3, 4, 00000000d40684b7
-> [  184.113421][ T3839]  __arm64_sys_clone+0xa0/0xf8
+>
+> Sorry, Was thinking to not mask debug message for -EINTR in case if it=20
+> happens in any other valid scenarios. If you still want to mask, will=20
+> update in next version.
+>
+As we are running application that uses threads depending on when ctrl-c=20
+gets hit I see sigkill happens during kthread run even with break=20
+causing this.
 
-This appears to run on ARM64.  Can you help to try this on x86?  I'm
-not familiar with ARM.
+Good way I see it working all the time is to use crtl-z and then kill=20
+application as below
 
-Best Regards,
-Huang, Ying
+Command to run
 
-> [  184.116524][ T3832] ra_info: 8, 3, 4, 00000000b572965a
-> [  184.116534][ T3832] i: 0, pte: 00000000b572965a, faddr: 0
-> [  184.116541][ T3832] ra_info: 8, 3, 4, 00000000b572965a
-> [  184.116549][ T3832] i: 1, pte: 000000007c91cc64, faddr: 0
-> [  184.116556][ T3832] ra_info: 8, 3, 4, 00000000b572965a
-> [  184.116563][ T3832] i: 2, pte: 0000000024f944e4, faddr: 0
-> [  184.118541][ T3997] i: 0, pte: 00000000d40684b7, faddr: 0
-> [  184.118552][ T3997] ra_info: 8, 3, 4, 00000000d40684b7
-> [  184.123956][ T3839]  do_el0_svc+0x124/0x228
-> [  184.123970][ T3839]  el0_sync_handler+0x260/0x410
-> [  184.123988][ T3839]  el0_sync+0x140/0x180
-> [  184.129119][ T3997] i: 1, pte: 0000000035d81ad0, faddr: 0
-> [  184.134523][ T3839] The buggy address belongs to the object at ffff008919f1fd28
-> [  184.134523][ T3839]  which belongs to the cache kmemleak_object of size 368
-> [  184.134535][ T3839] The buggy address is located 336 bytes to the right of
-> [  184.134535][ T3839]  368-byte region [ffff008919f1fd28, ffff008919f1fe98)
-> [  184.134542][ T3839] The buggy address belongs to the page:
-> [  184.139678][ T3997] ra_info: 8, 3, 4, 00000000d40684b7
-> [  184.142537][ T3814] ra_info: 8, 3, 4, 000000005be43c1f
-> [  184.142548][ T3814] i: 0, pte: 000000005be43c1f, faddr: 0
-> [  184.142555][ T3814] ra_info: 8, 3, 4, 000000005be43c1f
-> [  184.142563][ T3814] i: 1, pte: 00000000f65153b4, faddr: 0
-> [  184.142570][ T3814] ra_info: 8, 3, 4, 000000005be43c1f
-> [  184.142577][ T3814] i: 2, pte: 0000000057432c18, faddr: 0
-> [  184.145074][ T3839] page:00000000ab369b24 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x8999f1
-> [  184.145085][ T3839] flags: 0x7ffff800000200(slab)
-> [  184.145097][ T3839] raw: 007ffff800000200 ffffffe0222685c8 ffffffe022268848 ffff000000322480
-> [  184.145107][ T3839] raw: 0000000000000000 00000000005b005b 00000001ffffffff 0000000000000000
-> [  184.145117][ T3839] page dumped because: kasan: bad access detected
-> [  184.150249][ T3997] i: 2, pte: 0000000073c2aff0, faddr: 0
-> [  184.154339][ T3839] Memory state around the buggy address:
-> [  184.154347][ T3839]  ffff008919f1fe80: 00 00 00 fc fc fc fc fc fc fc fc fc fc fc fc fc
-> [  184.154353][ T3839]  ffff008919f1ff00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> [  184.154359][ T3839] >ffff008919f1ff80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> [  184.154366][ T3839]                                                           ^
-> [  184.171894][ T3831] ra_info: 8, 3, 4, 00000000cf472abe
-> [  184.173847][ T3839]  ffff008919f20000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> [  184.178980][ T3831] i: 0, pte: 00000000cf472abe, faddr: 0
-> [  184.184366][ T3839]  ffff008919f20080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> [  184.184370][ T3839] ==================================================================
-> [  184.184374][ T3839] Disabling lock debugging due to kernel taint
-> [  184.184407][ T3839] get_swap_device: Bad swap file entry 58025a5a5a5a5a5a
-> [  184.184415][ T3839] ra_info: 8, 3, 4, 0000000085efad17
-> [  184.184420][ T3839] i: 1, pte: 00000000e75f3a33, faddr: 0
-> [  184.184425][ T3839] get_swap_device: Bad swap file entry 58025a5a5a5a5a5a
-> [  184.184445][ T3839] ra_info: 8, 3, 4, 0000000085efad17
-> [  184.189580][ T3831] ra_info: 8, 3, 4, 00000000cf472abe
-> [  184.194979][ T3839] i: 2, pte: 0000000076a382e8, faddr: 0
-> [  184.194985][ T3839] get_swap_device: Bad swap file entry 58025a5a5a5a5a5a
-> [  184.211498][ T3749] ra_info: 8, 3, 4, 000000001c9e06b8
-> [  184.216321][ T3831] i: 1, pte: 00000000d0a5b31e, faddr: 0
-> [  184.220485][ T3749] i: 0, pte: 000000001c9e06b8, faddr: 0
-> [  184.220499][ T3749] ra_info: 8, 3, 4, 000000001c9e06b8
-> [  184.225255][ T3831] ra_info: 8, 3, 4, 00000000cf472abe
-> [  184.229226][ T3749] i: 1, pte: 000000003db42685, faddr: 0
-> [  184.229238][ T3749] ra_info: 8, 3, 4, 000000001c9e06b8
-> [  184.234658][ T3831] i: 2, pte: 000000002ff7eea4, faddr: 0
-> [  184.248902][ T3749] i: 2, pte: 00000000f6f36e76, faddr: 0
-> [  184.278122][ T3946] ra_info: 8, 3, 4, 0000000084aa2721
-> [  184.279536][ T3720] trinity-c9 (3720) used greatest stack depth: 19440 bytes left
-> [  184.283740][ T3946] i: 0, pte: 0000000084aa2721, faddr: 0
-> [  184.283746][ T3946] ra_info: 8, 3, 4, 0000000084aa2721
-> [  184.283751][ T3946] i: 1, pte: 00000000baf34b7a, faddr: 0
-> [  184.283757][ T3946] ra_info: 8, 3, 4, 0000000084aa2721
-> [  184.283762][ T3946] i: 2, pte: 0000000097da2f82, faddr: 0
-> [  184.311719][ T3789] ra_info: 8, 3, 4, 00000000642615f8
-> [  184.346297][ T3846] ra_info: 8, 3, 4, 00000000bfc701b4
-> [  184.348700][ T3789] i: 0, pte: 00000000642615f8, faddr: 0
-> [  184.357498][ T3846] i: 0, pte: 00000000bfc701b4, faddr: 0
-> [  184.362168][ T3789] ra_info: 8, 3, 4, 00000000642615f8
-> [  184.370076][ T3846] ra_info: 8, 3, 4, 00000000bfc701b4
-> [  184.377998][ T3789] i: 1, pte: 000000002e399dd1, faddr: 0
-> [  184.378008][ T3789] ra_info: 8, 3, 4, 00000000642615f8
-> [  184.385317][ T3846] i: 1, pte: 000000002f17c4d4, faddr: 0
-> [  184.385324][ T3846] ra_info: 8, 3, 4, 00000000bfc701b4
-> [  184.390452][ T3789] i: 2, pte: 000000006b9fd0f4, faddr: 0
-> [  184.398368][ T3846] i: 2, pte: 00000000b6695126, faddr: 0
->
->> 
->> > From b6cad43ad3cf63d73e539e3eaadd4ec9d2744dc6 Mon Sep 17 00:00:00 2001
->> > From: Huang Ying <ying.huang@intel.com>
->> > Date: Fri, 10 Jul 2020 17:27:45 +0800
->> > Subject: [PATCH] dbg: Fix a logic hole in swap_ra_info()
->> >
->> > ---
->> >  mm/swap_state.c | 5 ++---
->> >  1 file changed, 2 insertions(+), 3 deletions(-)
->> >
->> > diff --git a/mm/swap_state.c b/mm/swap_state.c
->> > index 05889e8e3c97..8481c15829b2 100644
->> > --- a/mm/swap_state.c
->> > +++ b/mm/swap_state.c
->> > @@ -669,12 +669,11 @@ static void swap_ra_info(struct vm_fault *vmf,
->> >       pte_t *tpte;
->> >  #endif
->> >
->> > +     ra_info->win = 1;
->> >       max_win = 1 << min_t(unsigned int, READ_ONCE(page_cluster),
->> >                            SWAP_RA_ORDER_CEILING);
->> > -     if (max_win == 1) {
->> > -             ra_info->win = 1;
->> > +     if (max_win == 1)
->> >               return;
->> > -     }
->> >
->> >       faddr = vmf->address;
->> >       orig_pte = pte = pte_offset_map(vmf->pmd, faddr);
->> > --
->> > 2.27.0
->> >
->> 
->
->> From 3ca7a9ba58541d8692d3f83cbded2ad17be23359 Mon Sep 17 00:00:00 2001
->> From: Huang Ying <ying.huang@intel.com>
->> Date: Mon, 20 Jul 2020 11:29:38 +0800
->> Subject: [PATCH] dbg: dump upon abnormal pte values
->> 
->> ---
->>  mm/swap_state.c | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->> 
->> diff --git a/mm/swap_state.c b/mm/swap_state.c
->> index 05889e8e3c97..c1973136d035 100644
->> --- a/mm/swap_state.c
->> +++ b/mm/swap_state.c
->> @@ -756,6 +756,17 @@ static struct page *swap_vma_readahead(swp_entry_t fentry, gfp_t gfp_mask,
->>  	blk_start_plug(&plug);
->>  	for (i = 0, pte = ra_info.ptes; i < ra_info.nr_pte;
->>  	     i++, pte++) {
->> +		pte_t *tpte = pte_offset_map(vmf->pmd, vmf->address);
->> +
->> +		if (((unsigned long)pte >> PAGE_SHIFT) !=
->> +		    ((unsigned long)tpte >> PAGE_SHIFT)) {
->> +			pr_info("ra_info: %d, %d, %d, %p\n",
->> +				ra_info.win, ra_info.offset, ra_info.nr_pte,
->> +				ra_info.ptes);
->> +			pr_info("i: %d, pte: %p, faddr: %lx\n", i, pte,
->> +				vmf->address);
->> +		}
->> +		pte_unmap(tpte);
->>  		pentry = *pte;
->>  		if (pte_none(pentry))
->>  			continue;
->> -- 
->> 2.27.0
->> 
+while true; do ./v4l2-ctl --stream-mmap --stream-count=3D1; done
+
+To stop ,
+
+press ctrl-z and then execute kill %%
+
+
+>>
+>>>
+>>>>
+>>>> Regards,
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0Hans
+>>>>
+>>>>> while true; do v4l2-ctl --stream-mmap --stream-count=3D1; done
+>>>>>
+>>>>> when we stop loop with ctrl+c, v4l2-ctl terminates but loop does not
+>>>>> terminate immediately and probably SIGKILLed=C2=A0 is seen prior to=20
+>>>>> complete.
+>>>>>
+>>>>> Using below can help to terminate loop as well when we stop ctrl-c=20
+>>>>> and
+>>>>> with this I don't see any repro of EINTR error from kthread_run=20
+>>>>> when run
+>>>>> in infinite loop.
+>>>>>
+>>>>> while true; do ./v4l2-ctl --stream-mmap --stream-count=3D1 || break;=
+=20
+>>>>> done
+>>>>>
+>>>>>
+>>>>>
+>>>>>>> Delta between patch versions:
+>>>>>>>
+>>>>>>> [v3]:=C2=A0=C2=A0=C2=A0 Includes v2 feedback
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Uses separate helper function for retriev=
+ing remote csi=20
+>>>>>>> subdevice
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 and source subdevice.
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Added check for presence of subdevice ops=
+ set/get_selection
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- dropped vb2_queue_release from driver and=
+ using
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vb2_video_unregister_device instead =
+of=20
+>>>>>>> video_unregister_device.
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- video device register should happen in th=
+e last after all=20
+>>>>>>> video
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device related setup is done in the =
+driver. This is being=20
+>>>>>>> addressed
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 in below RFC patch. Once proper impl=
+ementation of this is=20
+>>>>>>> available
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 will update Tegra video driver to us=
+e split APIs and do=20
+>>>>>>> all setup
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 prior to device register. Added this=
+ as TODO in the driver.
+>>>>>>> https://www.spinics.net/lists/linux-media/msg172761.html
+>>>>>>>
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0Note:
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0Patch-0012 has compilation dependency on
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0https://patchwork.kernel.org/patch/11659521=
+/
+>>>>>>>
+>>>>>>>
+>>>>>>> [v2]:=C2=A0=C2=A0=C2=A0 Includes below changes based on v1 feedback
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- dt-binding document and the driver update=
+ for device graph=20
+>>>>>>> to use
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 separate ports for sink endpoint and=
+ source endpoint for csi.
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Use data-lanes endpoint property for csi.
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Update tegra_mipi_request() to take devic=
+e node pointer=20
+>>>>>>> argument
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rather than adding extra API.
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Remove checking for clk pointer before cl=
+k_disable.
+>>>>>>>
+>>>>>>>
+>>>>>>> Sowjanya Komatineni (18):
+>>>>>>> =C2=A0=C2=A0=C2=A0 dt-bindings: i2c: tegra: Document Tegra210 VI I2=
+C clocks and
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power-domains
+>>>>>>> =C2=A0=C2=A0=C2=A0 arm64: tegra: Add missing clocks and power-domai=
+ns to=20
+>>>>>>> Tegra210 VI I2C
+>>>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Don't mark VI I2C as IRQ safe runtim=
+e PM
+>>>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Remove NULL pointer check before
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_enable/disable/prepare/unprepare
+>>>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Fix the error path in tegra_i2c_runt=
+ime_resume
+>>>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Fix runtime resume to re-init VI I2C
+>>>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra=
+210 vi i2c
+>>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Fix channel format alignment
+>>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Enable TPG based on kernel c=
+onfig
+>>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Update format lookup to offs=
+et based
+>>>>>>> =C2=A0=C2=A0=C2=A0 dt-bindings: tegra: Update VI and CSI bindings w=
+ith port info
+>>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add support for external sen=
+sor capture
+>>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add support for selection io=
+ctl ops
+>>>>>>> =C2=A0=C2=A0=C2=A0 gpu: host1x: mipi: Update tegra_mipi_request() t=
+o be node based
+>>>>>>> =C2=A0=C2=A0=C2=A0 gpu: host1x: mipi: Use readl_relaxed_poll_timeou=
+t in=20
+>>>>>>> tegra_mipi_wait
+>>>>>>> =C2=A0=C2=A0=C2=A0 gpu: host1x: mipi: Split tegra_mipi_calibrate an=
+d=20
+>>>>>>> tegra_mipi_wait
+>>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add CSI MIPI pads calibratio=
+n
+>>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Compute settle times based o=
+n the clock=20
+>>>>>>> rate
+>>>>>>>
+>>>>>>> =C2=A0=C2=A0 .../display/tegra/nvidia,tegra20-host1x.txt | 92 ++-
+>>>>>>> =C2=A0=C2=A0 .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt | 1=
+9 +-
+>>>>>>> =C2=A0=C2=A0 arch/arm64/boot/dts/nvidia/tegra210.dtsi | 6 +
+>>>>>>> =C2=A0=C2=A0 drivers/gpu/drm/tegra/dsi.c | 9 +-
+>>>>>>> =C2=A0=C2=A0 drivers/gpu/host1x/mipi.c | 37 +-
+>>>>>>> =C2=A0=C2=A0 drivers/i2c/busses/i2c-tegra.c | 101 +--
+>>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/Kconfig | 7 +
+>>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/csi.c | 247 ++++++-
+>>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/csi.h | 8 +
+>>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/tegra210.c | 25 +-
+>>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/vi.c | 793=20
+>>>>>>> +++++++++++++++++++--
+>>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/vi.h | 25 +-
+>>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/video.c | 23 +-
+>>>>>>> =C2=A0=C2=A0 include/linux/host1x.h | 4 +-
+>>>>>>> =C2=A0=C2=A0 14 files changed, 1242 insertions(+), 154 deletions(-)
+>>>>>>>
