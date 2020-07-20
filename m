@@ -2,151 +2,201 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58781C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D1CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3135020758
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2119207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:06:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="eblK1ZPi"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="fcnVYmaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbgGTE7t (ORCPT
+        id S1726084AbgGTFGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 00:59:49 -0400
-Received: from mail-dm6nam12on2065.outbound.protection.outlook.com ([40.107.243.65]:32320
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        Mon, 20 Jul 2020 01:06:18 -0400
+Received: from mail-dm6nam10on2072.outbound.protection.outlook.com ([40.107.93.72]:62400
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725805AbgGTE7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 00:59:48 -0400
+        id S1725287AbgGTFGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 01:06:18 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j6yrPM9Hw6W16xlZd62C9Y76LWqsbIfbvkSCfR5noObs5muJTKQ5IW8btH7l0S+2FdWVzlQpaR2xh/bK/zp0JY/qrY96TFYwWsoeob56w+IdErTihqSNgbB2L/gxtEW/DL8+gIbYmQXZFHLG717iyKe17MVjPqFgjO+Ddl2uoz88UOF/Apqv0qc8Jn/nNZ5nXN4X1/PVu5EqEl/tciloLAWaPQVc5ImL5gq4uD0pl3uLxeUzgARCIjlassFEa5rlaEoVybeZaUcaRYyl/4T21RpSv/8ci8LsJyk+dSO+vSgdXHfmpa+d5XxYhYXpuZaqrEV6DcA/tj91AH0m5dE0iQ==
+ b=m8zCLHxR/ouRx9QwyfPA9ArPsN7c7/fVglxeNxYifl5fdSPn3S6gH738w+Bu+miV0xeya6Jvq9z4ytlp3wP65U/U64qwcEzQ7z4x3QPhlvHLIvmVfGXaPBZqX6Xi3OFYjgKsd/TxxzWywhLxuYw69LlhLltJ1aj0z6E1Z8tboLzamIo1R99DfC6s58D/e2hf5rJW5L6nAJZQE8nhKGNdbXJbV8RhX0pS3tQVWJQ9H8x/Nn7d3xOr2+o1thSeels49zHI6mkhCrkRU9o/CWovfQV0bwD4qDkoQ/+9Rl3kgFNIPRzRzdhsfkQXz1Go4RSsugC6bfRh3n8+mXShMVUNTQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o/zEMi3wM+A9ijadGT+ppAIt1jIflzEZTAYlexB8yUo=;
- b=c7f7kaTUJaEFz7NZ7MKPdVZWQ2SRqEdn0KvcgJFCs3rY1CniPmFLJYuPPDcckv5/h0eTtBI6DIrlaAmBiLkDzj6Al1GlO1sCe501ebygpGBgV54888VGHWqjZ9Onk+MrkgP7Uk7aGo69oOWHBukvqTqvlE8gQOhetZfd6XQeMQNJIZQOFxKiYzjsUlg4zLjgGVLJZf0Qp5HTWQ3xZvE5tbiFOBEGRMEjCmgHTZifDxkNveuEcA8CIfMjGvqrKRHAoO+akv0PoN6t8L4cm5mjVSEx3lgU06Yt1snLx1AtOg5XCLwyg4hLPOuZkGI1Ss6K9VFKm5IvmCzodc5RMQkJGw==
+ bh=Wg23GWQxOXVPN9lG8c190hSKuu6xf2gHNLBKYE7EQyU=;
+ b=A4ZtNRbKXOvAguja+OIoRH2KjqjFh7jjTN9/qXhMU+JtWU7TdW88kreIxGaaYUFb37jQXEam+zmM6WeFbQwo6ESQOSY9Ftj6PIqXLcPuCrFGiEhMM+BwA7TsYpA24+jld9i9QbK7SJNjo1R75E2uAyPqRpaLkziuy3wuEc06qpS2W6G9XalEgrRzy3Z5uzgOmqichGELzGVtGTuuSfWds19rd0Zs+qufmoKB8gLCa6wMSaM/N+1Tpc3gxC53ZxX2dQVXLnZl1UqPR2JYx/wwtRiV1yZQ6Okgc6GVbPLJ4upx9BnVD++CSwsYsoHVOw1FOSQzGN91Sl1DxJYGrEip6Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o/zEMi3wM+A9ijadGT+ppAIt1jIflzEZTAYlexB8yUo=;
- b=eblK1ZPidXNxxFwJkwO7vJVc4z7Q5ZV7EQ1pI3K5SUuFCRBn6zQBXR/uIri0m5i1V7pvPAYjJcfeKwTwbdAOmeDeEFBjks2kLbNx47tAgg9Pg4v14XfoBKOyktY2mKcCsea2Cig2zum95xCF4hr5lLsnLXXVGwdenDiZL31hFWs=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+ bh=Wg23GWQxOXVPN9lG8c190hSKuu6xf2gHNLBKYE7EQyU=;
+ b=fcnVYmajhK+2UipUoFl86mI5f/AO9DkZEBeQRbkMcNMR9vyXElqFBZXxsitP3ri78DPOiEWrpmf2hxBsHu452FPDUWEFn58YvyZvG+IZf5c2A9h5UokoyK5/kV4MYsjgjAYqDpJQhGmov+kZfhQSLAzU13tTGnl/mcSLwDF1Pjc=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
 Received: from MWHPR12MB1599.namprd12.prod.outlook.com (2603:10b6:301:10::12)
- by MWHPR12MB1454.namprd12.prod.outlook.com (2603:10b6:301:11::15) with
+ by MWHPR12MB1853.namprd12.prod.outlook.com (2603:10b6:300:113::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Mon, 20 Jul
- 2020 04:59:46 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Mon, 20 Jul
+ 2020 05:06:14 +0000
 Received: from MWHPR12MB1599.namprd12.prod.outlook.com
  ([fe80::25b9:83b0:4b17:2c63]) by MWHPR12MB1599.namprd12.prod.outlook.com
  ([fe80::25b9:83b0:4b17:2c63%12]) with mapi id 15.20.3195.025; Mon, 20 Jul
- 2020 04:59:46 +0000
-Subject: Re: [PATCH 4/5] clk: x86: Support RV architecture
-To:     Stephen Boyd <sboyd@kernel.org>, akshu.agrawal@amd.com
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200713010001.18976-1-akshu.agrawal@amd.com>
- <20200713010001.18976-4-akshu.agrawal@amd.com>
- <159486139638.1987609.10837351469119432355@swboyd.mtv.corp.google.com>
-From:   "Agrawal, Akshu" <aagrawal2@amd.com>
-Message-ID: <c671c1a6-6d4c-f57d-7d60-d62ee84a56ea@amd.com>
-Date:   Mon, 20 Jul 2020 10:29:36 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <159486139638.1987609.10837351469119432355@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: MAXPR0101CA0051.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:e::13) To MWHPR12MB1599.namprd12.prod.outlook.com
+ 2020 05:06:14 +0000
+From:   Akshu Agrawal <akshu.agrawal@amd.com>
+To:     akshu.agrawal@amd.com
+Cc:     sboyd@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org (open list:ACPI),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/4] ACPI: APD: Change name from ST to FCH
+Date:   Mon, 20 Jul 2020 10:34:56 +0530
+Message-Id: <20200720050500.23357-2-akshu.agrawal@amd.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200720050500.23357-1-akshu.agrawal@amd.com>
+References: <20200720050500.23357-1-akshu.agrawal@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MAXPR0101CA0054.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:e::16) To MWHPR12MB1599.namprd12.prod.outlook.com
  (2603:10b6:301:10::12)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.105] (122.171.179.172) by MAXPR0101CA0051.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:e::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17 via Frontend Transport; Mon, 20 Jul 2020 04:59:44 +0000
+Received: from local.mshome.net (122.171.179.172) by MAXPR0101CA0054.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:e::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17 via Frontend Transport; Mon, 20 Jul 2020 05:06:12 +0000
+X-Mailer: git-send-email 2.20.1
 X-Originating-IP: [122.171.179.172]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 74e1e1f4-f06d-4e04-186d-08d82c69b8d2
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1454:
+X-MS-Office365-Filtering-Correlation-Id: 245f3f24-2611-4340-6d56-08d82c6aa04e
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1853:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR12MB14540F3F7702271D482E62A4F87B0@MWHPR12MB1454.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
+X-Microsoft-Antispam-PRVS: <MWHPR12MB1853420C6CBF5FD234A9A985F87B0@MWHPR12MB1853.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wYNs59qX0vsER0KH4dsXtAAplw7uegiX1hFcGNBQHga4pBqs0O4USCuqntNjcTOv3mWMjLTc4Avgu/dX104UzK9GUTN8XnkUGUVSlLHR1ioQaazND2+q7vycmYRZ+SNQZkvgl5/UuKOVV4BHIRJSiooptpC/Y1r/CcpnRfiD5MGRyUAs5PZ7dK25SZwhbWaMdgNbjLHTUnO8dHJ8bu9sJqx0fptd3JSMqApqBEo1BTPSbnd1jtvVceRJ8SPGCokDPIegZS5SlScl3GM0ZQMrVBnrz/Gn8N1a/L5oyZIbpFZpj71tTY192+O05reyvpEd5L9Sj9AZArq299UcR9Rppf/zPdEPsPFGtlTUWs4NjJBDiodA13uTTUefYS3WU2Ei
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR12MB1599.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(396003)(136003)(346002)(376002)(53546011)(83380400001)(2616005)(16576012)(26005)(31696002)(956004)(36756003)(52116002)(478600001)(31686004)(8676002)(6486002)(316002)(8936002)(2906002)(5660300002)(66476007)(6666004)(66556008)(6636002)(16526019)(66946007)(186003)(4326008)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 6xVf5Zu7Y1xTRz7Xn4R1aVaOVMGfFce40PLaEwI8vqHHdazF64b0QfDJ9ASCbAHvME/tkSJbfLpv5rbMOxZbrH8YUBbgvMJzZg60FOw5O03l82RhmSgNnL9vNKKpyCMu55lNw2EZfqjQmPN+NeLztc1t1AygU1fZ5nEFZfn7nd1gdO7YkJFbSbqDACeM8CHij/hAD31Lgtpg/hCUHhvpubCI/D0BOmtSNABDHtB4A5FAHAnjKdMH0PHNhtGLJUGCy9FF+d1iU1QvzznDfORpBhg+hB4KjIjxHh/tns0eoW8PokcPmkz3LOhJmh6RDRmVSETqUv6ylJRoc/Y6XKPKsDK1KxLiGtZiaFJNQxbz/YchMlm94ws84CsgwyMjHUGO4RfkyNU8+hTGsLQcy6pEADYFPBi6May78UVcWP0GobkOm0Q52IxWfdhpl8D18wpxBmRiHDRZKMDENbm7r5PQXHTc9j/HRjPNFbbcEXIUtZ38OJ+Cauq08jyzQVShghFe
+X-Microsoft-Antispam-Message-Info: JUfqBxXqSveHGgab2BTi0eWA1DqqPE6uyBzhIP2i9nBAmC1XUaXjllb03dZitaDUNsdwcg4UpdUEJZPGPXJg0KQVW3Fu5/aS+nO9mxnif46jxm2Y7zK9iL2/xwkrKSxTY821WRv09H0KxvuP8U/9Hdo5sY2CLEYcw2Ij57VjvzGMtJ4NVC3+c5v3aKuPTygRO1LUh4rC1qNI1azcui3d9p33WKF9nSBSQKDhiWpjAlZtLkXha2fxu/3nY6gJqaglWQ8rSjoBz3JqQEuD8/9lpNJE//5nDugAgmhzp703aW79faG+Ttem78FpOfE2oAHrgDO+bJ8m//DDIoxUKrG/pg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR12MB1599.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(346002)(39860400002)(366004)(6486002)(26005)(36756003)(478600001)(2906002)(8936002)(5660300002)(66946007)(66556008)(66476007)(6512007)(6506007)(86362001)(6666004)(37006003)(186003)(83380400001)(52116002)(316002)(1076003)(956004)(2616005)(8676002)(34206002)(4326008)(16526019)(44832011)(54906003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Ae9QNz8SVsLx1l3J3kBW+9ttgFkcFM5+Krh2anJl1+9+Q5WaHLXmcsZyvmpK1maUNZHPjK4DnRVwV8CdSKqLvBVMxx1jNIm6inY9oUj1Eiw8qrROWNg70plX7rF+R45isNJLcxTode6KlfOeF/wz1PKo1ixCWaC7NMML1KK6q85ohNXOPocfl6/Bit5K3LvJWYsqUJ642yRZiSHNawE4BhHRy8vd3QhyxEqGXbYLFjKEF5cWczZR5iRLWqGuggqIaWZbIPG++l6QQULYDjdbCeXw2lhdpI7Y2cwwcLwfRiyETQeXzp9I1NyGKq1lA2X667JcXbJQcIOMqYxwJtdJn26CeNCyB45WqVUrMlsASLZRO2BMNJiKyj+iBmo+XR32/5QPL9e8EqIs3xw5OMPMS7xS6cBqsyxmSGeUYH7zJFm1rUj1vvk3Ja1yvCMWPlXDyWCrvebOzCWB8WrgH+7cpKbTpF/KvvVrHUgkJ5nbj08=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74e1e1f4-f06d-4e04-186d-08d82c69b8d2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 245f3f24-2611-4340-6d56-08d82c6aa04e
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR12MB1599.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 04:59:45.9508
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 05:06:14.3423
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NlOdo26QB77Yc4IYKXfv4+WGvaSL2Rtfa92LPb7QGGHHBKm6deJbRLNrKgjtH/cPQBP5Rhoe8m2PeE1p/dDlsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1454
+X-MS-Exchange-CrossTenant-UserPrincipalName: ItC5zvlr4rY+DddFAHKjmfahdXe9MMRx3uB6FsglLEsBCfz/E0HWE2RxzFhxzeC1gume4DjDtcRe6iUrINroLQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1853
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+AMD SoC general pupose clk is present in new platforms with
+same MMIO mappings. We can reuse the same clk handler support
+for other platforms. Hence, changing name from ST(SoC) to FCH(IP)
 
-On 7/16/2020 6:33 AM, Stephen Boyd wrote:
-> Quoting Akshu Agrawal (2020-07-12 17:59:52)
->> There is minor difference between previous family of SoC and
->> the current one. Which is the there is only 48Mh fixed clk.
->> There is no mux and no option to select another freq as there in previous.
->>
->> Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
->> ---
-> I only see four out of five patches and there isn't a cover letter. I
-> have no idea if I can apply this change or if you're expecting me to ack
-> it. Please help make my life a little easier!
+Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
+---
+ drivers/acpi/acpi_apd.c                            | 14 +++++++-------
+ .../linux/platform_data/{clk-st.h => clk-fch.h}    | 10 +++++-----
+ 2 files changed, 12 insertions(+), 12 deletions(-)
+ rename include/linux/platform_data/{clk-st.h => clk-fch.h} (53%)
 
-Numbering went wrong due to another unrelated patch.
-
-Will send another with cover letter explaining the series.
-
->>   drivers/clk/x86/clk-fch.c | 55 ++++++++++++++++++++++++++++-----------
->>   1 file changed, 40 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/clk/x86/clk-fch.c b/drivers/clk/x86/clk-fch.c
->> index b252f0cf0628..a8aac71a3b65 100644
->> --- a/drivers/clk/x86/clk-fch.c
->> +++ b/drivers/clk/x86/clk-fch.c
->> @@ -61,9 +78,17 @@ static int fch_clk_probe(struct platform_device *pdev)
->>   static int fch_clk_remove(struct platform_device *pdev)
->>   {
->>          int i;
->> +       struct fch_clk_data *fch_data;
->> +
->> +       fch_data = dev_get_platdata(&pdev->dev);
->>   
->> -       for (i = 0; i < ST_MAX_CLKS; i++)
->> -               clk_hw_unregister(hws[i]);
->> +       if (!fch_data->is_rv) {
->> +               for (i = 0; i < ST_MAX_CLKS; i++)
->> +                       clk_hw_unregister(hws[i]);
->> +       } else {
->> +               for (i = 0; i < RV_MAX_CLKS; i++)
->> +                       clk_hw_unregister(hws[i]);
-> Can ST_MAX_CLKS or RV_MAX_CLKS be a local variable and then the loop
-> consolidated.
-
-Yes, making the change in next series.
-
-Thanks,
-
-Akshu
+diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
+index ba2612e9a0eb..2d99e46add1a 100644
+--- a/drivers/acpi/acpi_apd.c
++++ b/drivers/acpi/acpi_apd.c
+@@ -8,7 +8,7 @@
+  */
+ 
+ #include <linux/clk-provider.h>
+-#include <linux/platform_data/clk-st.h>
++#include <linux/platform_data/clk-fch.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_domain.h>
+ #include <linux/clkdev.h>
+@@ -79,11 +79,11 @@ static int misc_check_res(struct acpi_resource *ares, void *data)
+ 	return !acpi_dev_resource_memory(ares, &res);
+ }
+ 
+-static int st_misc_setup(struct apd_private_data *pdata)
++static int fch_misc_setup(struct apd_private_data *pdata)
+ {
+ 	struct acpi_device *adev = pdata->adev;
+ 	struct platform_device *clkdev;
+-	struct st_clk_data *clk_data;
++	struct fch_clk_data *clk_data;
+ 	struct resource_entry *rentry;
+ 	struct list_head resource_list;
+ 	int ret;
+@@ -106,7 +106,7 @@ static int st_misc_setup(struct apd_private_data *pdata)
+ 
+ 	acpi_dev_free_resource_list(&resource_list);
+ 
+-	clkdev = platform_device_register_data(&adev->dev, "clk-st",
++	clkdev = platform_device_register_data(&adev->dev, "clk-fch",
+ 					       PLATFORM_DEVID_NONE, clk_data,
+ 					       sizeof(*clk_data));
+ 	return PTR_ERR_OR_ZERO(clkdev);
+@@ -135,8 +135,8 @@ static const struct apd_device_desc cz_uart_desc = {
+ 	.properties = uart_properties,
+ };
+ 
+-static const struct apd_device_desc st_misc_desc = {
+-	.setup = st_misc_setup,
++static const struct apd_device_desc fch_misc_desc = {
++	.setup = fch_misc_setup,
+ };
+ #endif
+ 
+@@ -239,7 +239,7 @@ static const struct acpi_device_id acpi_apd_device_ids[] = {
+ 	{ "AMD0020", APD_ADDR(cz_uart_desc) },
+ 	{ "AMDI0020", APD_ADDR(cz_uart_desc) },
+ 	{ "AMD0030", },
+-	{ "AMD0040", APD_ADDR(st_misc_desc)},
++	{ "AMD0040", APD_ADDR(fch_misc_desc)},
+ #endif
+ #ifdef CONFIG_ARM64
+ 	{ "APMC0D0F", APD_ADDR(xgene_i2c_desc) },
+diff --git a/include/linux/platform_data/clk-st.h b/include/linux/platform_data/clk-fch.h
+similarity index 53%
+rename from include/linux/platform_data/clk-st.h
+rename to include/linux/platform_data/clk-fch.h
+index 7cdb6a402b35..850ca776156d 100644
+--- a/include/linux/platform_data/clk-st.h
++++ b/include/linux/platform_data/clk-fch.h
+@@ -1,17 +1,17 @@
+ /* SPDX-License-Identifier: MIT */
+ /*
+- * clock framework for AMD Stoney based clock
++ * clock framework for AMD misc clocks
+  *
+  * Copyright 2018 Advanced Micro Devices, Inc.
+  */
+ 
+-#ifndef __CLK_ST_H
+-#define __CLK_ST_H
++#ifndef __CLK_FCH_H
++#define __CLK_FCH_H
+ 
+ #include <linux/compiler.h>
+ 
+-struct st_clk_data {
++struct fch_clk_data {
+ 	void __iomem *base;
+ };
+ 
+-#endif /* __CLK_ST_H */
++#endif /* __CLK_FCH_H */
+-- 
+2.20.1
 
