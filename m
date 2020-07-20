@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62289C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E3CC433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36AB922CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B1B2065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261267;
-	bh=f/4J61vqgp48rGeQBdy/YTkePHykwiTZEwCIWE1gD9Q=;
+	s=default; t=1595261269;
+	bh=YMUZIXmRmQM73WiM2KMMidzDR/TgwbuvwyLlv6FKZMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dijB66Cz21ks5s+xroUIjGgbWMLNEEHdT24sYy+B2L2l6HYVpR8cKy4qbU2NgbMxl
-	 E0OKk6sy7U/q8uqhXCPpJ1BfRZXguzcIU4L3UH+4Ckcost3GrWwXJMX8LKhwqCZh/5
-	 Fu+oYvVhb9ZV5uX0TBnR5lcmwdcFRJey9iN7pa7M=
+	b=G1WPanKl1/HEIwbH6a68DxgCEaaTBBrc6hF+Lh/iw1kueA3VIfVL3Ybr+XyYoZdrN
+	 CWhheK7wqK2zXJ7ABtrp4jiwF9HW2wKNwEPzZkcDuHB4y0h/0cwIBkQH2Bbhdy6frK
+	 jnvA/GSIIa7kcUZB94Uhp8FM5kXyaXa34XF1TLBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733203AbgGTQHp (ORCPT
+        id S1732329AbgGTQHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:07:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44734 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:07:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733192AbgGTQHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:07:39 -0400
+        id S1733200AbgGTQHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:07:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDDE22065E;
-        Mon, 20 Jul 2020 16:07:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55CB42065E;
+        Mon, 20 Jul 2020 16:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261259;
-        bh=f/4J61vqgp48rGeQBdy/YTkePHykwiTZEwCIWE1gD9Q=;
+        s=default; t=1595261264;
+        bh=YMUZIXmRmQM73WiM2KMMidzDR/TgwbuvwyLlv6FKZMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bqOv5MQ9Tmok4eCpiRcTrO4pNBMHAzWmllUTlZeeN3Y9cH2Al3itOQxEobpwXqIfY
-         dvGGUHxGNMaNLEL8tKTLbtYQ6/GaMuN4otdhdWn6jXjonlmINJq9iZlxgUn+srWHaC
-         60WQnKcumV7hwEe6V7841Vz2PzvqinPOU1Fu7Ln4=
+        b=v2+vL0bzUXvNcaQ+N8HUzYxhStq8N56xJJL38j1Ww306MUrZ8HjXKzrR1QhOANhsM
+         q/ZWdLk7yRR04+Ga5CaQmHaYlcX89U3FF1KqoSw2tBd6jt6PQ30Iunuso8czVINmww
+         wlvXJAtezy21oxNjRT1eTRVu3JhBk80q5jCL/wXA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 052/244] gfs2: read-only mounts should grab the sd_freeze_gl glock
-Date:   Mon, 20 Jul 2020 17:35:23 +0200
-Message-Id: <20200720152828.335651943@linuxfoundation.org>
+Subject: [PATCH 5.7 054/244] gfs2: The freeze glock should never be frozen
+Date:   Mon, 20 Jul 2020 17:35:25 +0200
+Message-Id: <20200720152828.430187312@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -61,47 +61,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit b780cc615ba4795a7ef0e93b19424828a5ad456a ]
+[ Upstream commit c860f8ffbea8924de05a281b937128773d30a77c ]
 
-Before this patch, only read-write mounts would grab the freeze
-glock in read-only mode, as part of gfs2_make_fs_rw. So the freeze
-glock was never initialized. That meant requests to freeze, which
-request the glock in EX, were granted without any state transition.
-That meant you could mount a gfs2 file system, which is currently
-frozen on a different cluster node, in read-only mode.
-
-This patch makes read-only mounts lock the freeze glock in SH mode,
-which will block for file systems that are frozen on another node.
+Before this patch, some gfs2 code locked the freeze glock with LM_FLAG_NOEXP
+(Do not freeze) flag, and some did not. We never want to freeze the freeze
+glock, so this patch makes it consistently use LM_FLAG_NOEXP always.
 
 Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/ops_fstype.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ fs/gfs2/ops_fstype.c |  3 ++-
+ fs/gfs2/super.c      | 16 +++++++++-------
+ 2 files changed, 11 insertions(+), 8 deletions(-)
 
 diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index 094f5fe7c0090..a2c0554a18901 100644
+index a2c0554a18901..6d18d2c91add2 100644
 --- a/fs/gfs2/ops_fstype.c
 +++ b/fs/gfs2/ops_fstype.c
-@@ -1136,7 +1136,17 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
- 		goto fail_per_node;
+@@ -1140,7 +1140,8 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
+ 		struct gfs2_holder freeze_gh;
+ 
+ 		error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_SHARED,
+-					   GL_EXACT, &freeze_gh);
++					   LM_FLAG_NOEXP | GL_EXACT,
++					   &freeze_gh);
+ 		if (error) {
+ 			fs_err(sdp, "can't make FS RO: %d\n", error);
+ 			goto fail_per_node;
+diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
+index 3bc76cf382fb9..160bb4598b48b 100644
+--- a/fs/gfs2/super.c
++++ b/fs/gfs2/super.c
+@@ -167,7 +167,8 @@ int gfs2_make_fs_rw(struct gfs2_sbd *sdp)
+ 	if (error)
+ 		return error;
+ 
+-	error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_SHARED, GL_EXACT,
++	error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_SHARED,
++				   LM_FLAG_NOEXP | GL_EXACT,
+ 				   &freeze_gh);
+ 	if (error)
+ 		goto fail_threads;
+@@ -429,7 +430,7 @@ static int gfs2_lock_fs_check_clean(struct gfs2_sbd *sdp)
  	}
  
--	if (!sb_rdonly(sb)) {
-+	if (sb_rdonly(sb)) {
-+		struct gfs2_holder freeze_gh;
-+
-+		error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_SHARED,
-+					   GL_EXACT, &freeze_gh);
-+		if (error) {
-+			fs_err(sdp, "can't make FS RO: %d\n", error);
-+			goto fail_per_node;
-+		}
-+		gfs2_glock_dq_uninit(&freeze_gh);
-+	} else {
- 		error = gfs2_make_fs_rw(sdp);
- 		if (error) {
- 			fs_err(sdp, "can't make FS RW: %d\n", error);
+ 	error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_EXCLUSIVE,
+-				   0, &sdp->sd_freeze_gh);
++				   LM_FLAG_NOEXP, &sdp->sd_freeze_gh);
+ 	if (error)
+ 		goto out;
+ 
+@@ -612,14 +613,15 @@ int gfs2_make_fs_ro(struct gfs2_sbd *sdp)
+ 	    !gfs2_glock_is_locked_by_me(sdp->sd_freeze_gl)) {
+ 		if (!log_write_allowed) {
+ 			error = gfs2_glock_nq_init(sdp->sd_freeze_gl,
+-						   LM_ST_SHARED,
+-						   LM_FLAG_TRY | GL_EXACT,
++						   LM_ST_SHARED, LM_FLAG_TRY |
++						   LM_FLAG_NOEXP | GL_EXACT,
+ 						   &freeze_gh);
+ 			if (error == GLR_TRYFAILED)
+ 				error = 0;
+ 		} else {
+ 			error = gfs2_glock_nq_init(sdp->sd_freeze_gl,
+-						   LM_ST_SHARED, GL_EXACT,
++						   LM_ST_SHARED,
++						   LM_FLAG_NOEXP | GL_EXACT,
+ 						   &freeze_gh);
+ 			if (error && !gfs2_withdrawn(sdp))
+ 				return error;
+@@ -761,8 +763,8 @@ void gfs2_freeze_func(struct work_struct *work)
+ 	struct super_block *sb = sdp->sd_vfs;
+ 
+ 	atomic_inc(&sb->s_active);
+-	error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_SHARED, GL_EXACT,
+-				   &freeze_gh);
++	error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_SHARED,
++				   LM_FLAG_NOEXP | GL_EXACT, &freeze_gh);
+ 	if (error) {
+ 		fs_info(sdp, "GFS2: couldn't get freeze lock : %d\n", error);
+ 		gfs2_assert_withdraw(sdp, 0);
 -- 
 2.25.1
 
