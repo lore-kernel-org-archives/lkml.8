@@ -2,98 +2,181 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E026C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE75C4345B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A9F32070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263663;
-	bh=eIg5zlpARQ0ncoOVYVLpaBxwWN3Nt8ngvgaUr4OFHAc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xUPquoiEE6lKHh2/5no9vKNRC+RzBZ0cKe6LUJg3RXXwnqBCmj4RNdQ60EOg37CKm
-	 wIBNCSFNoWM1FkxfgmsGT3EuS6na391Wa0UPacK0Xm3qVeeN8Zdo0gnzPdH24L0JNJ
-	 W5IOBlRx1pxCZck6MLsMNWOXJIBh/zoJ5i015zF0=
+	by mail.kernel.org (Postfix) with ESMTP id 0D177206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e5k0Y2AP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389124AbgGTQrl (ORCPT
+        id S2389126AbgGTQr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:47:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729444AbgGTPjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:39:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 20 Jul 2020 12:47:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44447 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729310AbgGTPiu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:38:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595259529;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Nj5CVbO042d9zu7TAo3vkfTDVgfDO82EbmPSLZjSnng=;
+        b=e5k0Y2AP5254Z5ySfg+fyfYzV8w4F78pFcdMWI6bLtH2kcGv21QdtQZCnx/3DM3SIETpw6
+        oDtG+LQPEGoMKeXt5PYqXxTAsC+6n/tjjFJTez3uicSkqbQ6I0oIDGbmosOv3UngoJTCfX
+        Q93B0hiKn7jm1TRgbcNTCBf/XCgBeaI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-141-n8nRwOJfNmeINbcE0cT-lQ-1; Mon, 20 Jul 2020 11:38:45 -0400
+X-MC-Unique: n8nRwOJfNmeINbcE0cT-lQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 613CD22CAF;
-        Mon, 20 Jul 2020 15:39:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259558;
-        bh=eIg5zlpARQ0ncoOVYVLpaBxwWN3Nt8ngvgaUr4OFHAc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=raAgnlNkWFtjhsjKJLSAfjAPtZ2AVdd3JvuutBALKmM6DbB0osoroItbX9IrxKB5g
-         rmIjWFpS+ZHP6OGe/ybuXoO9rHWpwe31rgW2c4ha7YxxzLsAmOzkQKaSqu8xivR7uc
-         lMtIVsM93sc9y2z8h+iurPtH7OFni9cjy6K8W2DA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Esben Haabendal <esben@geanix.com>
-Subject: [PATCH 4.4 53/58] uio_pdrv_genirq: fix use without device tree and no interrupt
-Date:   Mon, 20 Jul 2020 17:37:09 +0200
-Message-Id: <20200720152749.917907260@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
-References: <20200720152747.127988571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 99E5F1932480;
+        Mon, 20 Jul 2020 15:38:43 +0000 (UTC)
+Received: from localhost (ovpn-116-11.gru2.redhat.com [10.97.116.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B5F0274F45;
+        Mon, 20 Jul 2020 15:38:42 +0000 (UTC)
+Date:   Mon, 20 Jul 2020 12:38:41 -0300
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Nayna <nayna@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-integrity@vger.kernel.org,
+        erichte@linux.ibm.com, nayna@linux.ibm.com, stable@vger.kernel.org
+Subject: Re: [PATCH v6] ima: move APPRAISE_BOOTPARAM dependency on
+ ARCH_POLICY to runtime
+Message-ID: <20200720153841.GG10323@glitch>
+References: <20200713164830.101165-1-bmeneg@redhat.com>
+ <d337cbba-e996-e898-1e75-9f142d480e5e@linux.vnet.ibm.com>
+ <1595257015.5055.8.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1595257015.5055.8.camel@linux.ibm.com>
+X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zGQnqpIoxlsbsOfg"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Esben Haabendal <esben@geanix.com>
+--zGQnqpIoxlsbsOfg
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-commit bf12fdf0ab728ca8e5933aac46dd972c0dd0421e upstream.
+On Mon, Jul 20, 2020 at 10:56:55AM -0400, Mimi Zohar wrote:
+> On Mon, 2020-07-20 at 10:40 -0400, Nayna wrote:
+> > On 7/13/20 12:48 PM, Bruno Meneguele wrote:
+> > > The IMA_APPRAISE_BOOTPARAM config allows enabling different "ima_appr=
+aise=3D"
+> > > modes - log, fix, enforce - at run time, but not when IMA architectur=
+e
+> > > specific policies are enabled. =A0This prevents properly labeling the
+> > > filesystem on systems where secure boot is supported, but not enabled=
+ on the
+> > > platform. =A0Only when secure boot is actually enabled should these I=
+MA
+> > > appraise modes be disabled.
+> > >
+> > > This patch removes the compile time dependency and makes it a runtime
+> > > decision, based on the secure boot state of that platform.
+> > >
+> > > Test results as follows:
+> > >
+> > > -> x86-64 with secure boot enabled
+> > >
+> > > [    0.015637] Kernel command line: <...> ima_policy=3Dappraise_tcb i=
+ma_appraise=3Dfix
+> > > [    0.015668] ima: Secure boot enabled: ignoring ima_appraise=3Dfix =
+boot parameter option
+> > >
+>=20
+> Is it common to have two colons in the same line? =A0Is the colon being
+> used as a delimiter when parsing the kernel logs? =A0Should the second
+> colon be replaced with a hyphen? =A0(No need to repost. =A0I'll fix it
+> up.)
+> =A0
 
-While e3a3c3a20555 ("UIO: fix uio_pdrv_genirq with device tree but no
-interrupt") added support for using uio_pdrv_genirq for devices without
-interrupt for device tree platforms, the removal of uio_pdrv in
-26dac3c49d56 ("uio: Remove uio_pdrv and use uio_pdrv_genirq instead")
-broke the support for non device tree platforms.
+AFAICS it has been used without any limitations, e.g:
 
-This change fixes this, so that uio_pdrv_genirq can be used without
-interrupt on all platforms.
+PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 13=
+3484873504 ns
+microcode: CPU0: patch_level=3D0x08701013
+Lockdown: modprobe: unsigned module loading is restricted; see man kernel_l=
+ockdown.7
+...
 
-This still leaves the support that uio_pdrv had for custom interrupt
-handler lacking, as uio_pdrv_genirq does not handle it (yet).
+I'd say we're fine using it.
 
-Fixes: 26dac3c49d56 ("uio: Remove uio_pdrv and use uio_pdrv_genirq instead")
-Signed-off-by: Esben Haabendal <esben@geanix.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200701145659.3978-3-esben@geanix.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>=20
+> > > -> powerpc with secure boot disabled
+> > >
+> > > [    0.000000] Kernel command line: <...> ima_policy=3Dappraise_tcb i=
+ma_appraise=3Dfix
+> > > [    0.000000] Secure boot mode disabled
+> > >
+> > > -> Running the system without secure boot and with both options set:
+> > >
+> > > CONFIG_IMA_APPRAISE_BOOTPARAM=3Dy
+> > > CONFIG_IMA_ARCH_POLICY=3Dy
+> > >
+> > > Audit prompts "missing-hash" but still allow execution and, consequen=
+tly,
+> > > filesystem labeling:
+> > >
+> > > type=3DINTEGRITY_DATA msg=3Daudit(07/09/2020 12:30:27.778:1691) : pid=
+=3D4976
+> > > uid=3Droot auid=3Droot ses=3D2
+> > > subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=3Dapp=
+raise_data
+> > > cause=3Dmissing-hash comm=3Dbash name=3D/usr/bin/evmctl dev=3D"dm-0" =
+ino=3D493150
+> > > res=3Dno
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Fixes: d958083a8f64 ("x86/ima: define arch_get_ima_policy() for x86")
+> > > Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
+> >=20
+> >=20
+> > Reviewed-by: Nayna Jain<nayna@linux.ibm.com>
+> > Tested-by: Nayna Jain<nayna@linux.ibm.com>
+>=20
+> Thanks, Nayna.
+>=20
+> Mimi
+>=20
 
----
- drivers/uio/uio_pdrv_genirq.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--=20
+bmeneg=20
+PGP Key: http://bmeneg.com/pubkey.txt
 
---- a/drivers/uio/uio_pdrv_genirq.c
-+++ b/drivers/uio/uio_pdrv_genirq.c
-@@ -148,7 +148,7 @@ static int uio_pdrv_genirq_probe(struct
- 	if (!uioinfo->irq) {
- 		ret = platform_get_irq(pdev, 0);
- 		uioinfo->irq = ret;
--		if (ret == -ENXIO && pdev->dev.of_node)
-+		if (ret == -ENXIO)
- 			uioinfo->irq = UIO_IRQ_NONE;
- 		else if (ret < 0) {
- 			dev_err(&pdev->dev, "failed to get IRQ\n");
+--zGQnqpIoxlsbsOfg
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl8VuoEACgkQYdRkFR+R
+okPE9AgAzeX+81xWo21ombBBIIV7StgWU8qS6SadvIvUksysp8K1+912UFK1SAVA
+IKLtwrRnv0HH4f3syFCsnQNb8m2Z5HRiBwj/kr/1h+xUkujfolpUgLdgQvlscVTD
+HkHUTSA86vjACGW7YvnyumWroHwirVUOovA91k0mk9pfkUq57Wrmr5G5rmacjMeK
+SKEu3NZlQKF6NTr0LUwxQ6y4e9i4skeNCIBFNFVR6re92LNhEAASVNMF6rhU7DCy
+9BQmy9QSvIwyDd0o+b3/FeskWyxYj6g40gtXYjlrl3BBMWk1oGF5KRdboclfL21U
+GioxjG6g710tRaCOZwB+9Wkwk/I49g==
+=1i4d
+-----END PGP SIGNATURE-----
+
+--zGQnqpIoxlsbsOfg--
 
