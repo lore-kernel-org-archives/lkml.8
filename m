@@ -2,128 +2,115 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C61C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA413C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B521A22B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958DE22B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgGTNrF (ORCPT
+        id S1728200AbgGTNrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:47:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgGTNrE (ORCPT
+        Mon, 20 Jul 2020 09:47:40 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:19740 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725792AbgGTNrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 09:47:04 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78F27C061794;
-        Mon, 20 Jul 2020 06:47:04 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: krisman)
-        with ESMTPSA id 6EA9728BC1E
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
-        willy@infradead.org, luto@kernel.org, gofmanp@gmail.com,
-        keescook@chromium.org, linux-kselftest@vger.kernel.org,
-        shuah@kernel.org
-Subject: Re: [PATCH v4 1/2] kernel: Implement selective syscall userspace redirection
-Organization: Collabora
-References: <20200716193141.4068476-1-krisman@collabora.com>
-        <20200716193141.4068476-2-krisman@collabora.com>
-        <87v9iimrbk.fsf@nanos.tec.linutronix.de>
-Date:   Mon, 20 Jul 2020 09:46:59 -0400
-In-Reply-To: <87v9iimrbk.fsf@nanos.tec.linutronix.de> (Thomas Gleixner's
-        message of "Mon, 20 Jul 2020 12:08:47 +0200")
-Message-ID: <87lfjepacs.fsf@collabora.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Mon, 20 Jul 2020 09:47:40 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KDimEt000536;
+        Mon, 20 Jul 2020 09:47:39 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32cv13vhk5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 09:47:39 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 06KDlbtB047591
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 20 Jul 2020 09:47:37 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 20 Jul 2020 06:47:36 -0700
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 20 Jul 2020 06:47:36 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 20 Jul 2020 06:47:35 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06KDlXQo003142;
+        Mon, 20 Jul 2020 09:47:33 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, Stefan Popa <stefan.popa@analog.com>,
+        "Alexandru Ardelean" <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: accel: adxl372: Add OF device ID table
+Date:   Mon, 20 Jul 2020 16:49:31 +0300
+Message-ID: <20200720134931.71537-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ clxscore=1015 adultscore=0 suspectscore=0 mlxlogscore=999 impostorscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 lowpriorityscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Stefan Popa <stefan.popa@analog.com>
 
-Hi Thomas,
+The driver does not have a struct of_device_id table, but supported
+devices are registered via Device Trees. This patch adds OF device ID
+table.
 
-Thanks for the valuable feedback!
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/accel/adxl372_i2c.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Thomas Gleixner <tglx@linutronix.de> writes:
-> Gabriel Krisman Bertazi <krisman@collabora.com> writes:
->> Introduce a mechanism to quickly disable/enable syscall handling for a
->> specific process and redirect to userspace via SIGSYS.  This is useful
->> for processes with parts that require syscall redirection and parts that
->> don't, but who need to perform this boundary crossing really fast,
->> without paying the cost of a system call to reconfigure syscall handling
->> on each boundary transition.  This is particularly important for Windows
->> games running over Wine.
->>
->> The proposed interface looks like this:
->>
->>   prctl(PR_SET_SYSCALL_USER_DISPATCH, <op>, <start_addr>, <end_addr>, [selector])
->>
->> The range [<start_addr>,<end_addr>] is a part of the process memory map
->> that is allowed to by-pass the redirection code and dispatch syscalls
->> directly, such that in fast paths a process doesn't need to disable the
->> trap nor the kernel has to check the selector.  This is essential to
->> return from SIGSYS to a blocked area without triggering another SIGSYS
->> from rt_sigreturn.
->
-> Why isn't rt_sigreturn() exempt from that redirection in the first
-> place?
-
-This was actually a design decision for me.
-
-The main use case I'm considering is emulation of applications written
-for other OSs (games over wine), which means this dispatcher code is
-exposed to applications built against different ABIs, who trigger
-syscalls with bogus parameters (from a linux perspective)
-
-In this emulation scenario, I cannot really trust the syscall number
-means rt_sigreturn, so I try to only base the dispatcher decision on the
-memory region and selector variable.
-
-I think the best we can do is what Andy said: to exempt rt_sigreturn
-when it comes from the vdso, for architectures that do it that way.
-
->
->> ---
->>  arch/Kconfig                          | 20 ++++++
->>  arch/x86/Kconfig                      |  1 +
->>  arch/x86/entry/common.c               |  5 ++
->>  arch/x86/include/asm/thread_info.h    |  4 +-
->>  arch/x86/kernel/signal_compat.c       |  2 +-
->>  fs/exec.c                             |  2 +
->>  include/linux/sched.h                 |  3 +
->>  include/linux/syscall_user_dispatch.h | 50 +++++++++++++++
->>  include/uapi/asm-generic/siginfo.h    |  3 +-
->>  include/uapi/linux/prctl.h            |  5 ++
->>  kernel/Makefile                       |  1 +
->>  kernel/fork.c                         |  1 +
->>  kernel/sys.c                          |  5 ++
->>  kernel/syscall_user_dispatch.c        | 92 +++++++++++++++++++++++++++
->
-> A big combo patch is not how we do that. Please split it up into the
-> core part and a patch enabling it for a particular architexture.
->
-> As I said in my reply to Andy, this wants to go on top of the generic
-> entry/exit work stuff:
->
->   https://lore.kernel.org/r/20200716182208.180916541@linutronix.de
->
-> and then syscall_user_dispatch.c ends up in kernel/entry/ and the
-> dispatching function is not exposed outside of that directory.
->
-> I'm going to post a new version later today. Will cc you.
-
-Thanks. Will do!
-
-
+diff --git a/drivers/iio/accel/adxl372_i2c.c b/drivers/iio/accel/adxl372_i2c.c
+index e1affe480c77..5197d1eb6803 100644
+--- a/drivers/iio/accel/adxl372_i2c.c
++++ b/drivers/iio/accel/adxl372_i2c.c
+@@ -8,6 +8,8 @@
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/regmap.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ 
+ #include "adxl372.h"
+ 
+@@ -46,9 +48,16 @@ static const struct i2c_device_id adxl372_i2c_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, adxl372_i2c_id);
+ 
++static const struct of_device_id adxl372_of_match[] = {
++	{ .compatible = "adi,adxl372" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, adxl372_of_match);
++
+ static struct i2c_driver adxl372_i2c_driver = {
+ 	.driver = {
+ 		.name = "adxl372_i2c",
++		.of_match_table = adxl372_of_match,
+ 	},
+ 	.probe = adxl372_i2c_probe,
+ 	.id_table = adxl372_i2c_id,
 -- 
-Gabriel Krisman Bertazi
+2.17.1
+
