@@ -2,51 +2,54 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4980DC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D57CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1944020657
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 093F220657
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260239;
-	bh=x3TI26fq0rdV96diUqs7jM7Bnoi9nSesyt0CbLUsbv0=;
+	s=default; t=1595260242;
+	bh=hne5j5tHjCQ2INn+cmqTg+Azexnu6yR1FGHNez1nw4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PXWG6dVE6JF2jWfJNYcN02LjzaTfRCMt3tyvqem0zP83h2Q/MH8GlSHAZrBhIVdHX
-	 wd7igBEld+TZlkbmQH2ssKkcBllLYA185ZIAuJRxYZVNN6eXygX/WaAonG2zT0KKGI
-	 v6AfG5KH4fHaFzoAPadHuuLiFktZVUDkv1j1IpI4=
+	b=sURRW70FokrxC8P+36yHs+3GSMwir3mTpJd47o/B4X8B3l4WPOyyiipPtC8n0Tcwl
+	 vAeBwFpEdCMMrcU/RtK6UcFTEQhwMyXI5biKku397OXqLY51w8dp33GyyIiwY/LnhB
+	 UkE0ZD7NyEdRkgo4I4a1in4VINR/fBZw0hzTGZ88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730813AbgGTPuh (ORCPT
+        id S1730823AbgGTPul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:50:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47036 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:50:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731134AbgGTPu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:50:27 -0400
+        id S1730833AbgGTPuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:50:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1725522482;
-        Mon, 20 Jul 2020 15:50:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A2D62064B;
+        Mon, 20 Jul 2020 15:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260227;
-        bh=x3TI26fq0rdV96diUqs7jM7Bnoi9nSesyt0CbLUsbv0=;
+        s=default; t=1595260238;
+        bh=hne5j5tHjCQ2INn+cmqTg+Azexnu6yR1FGHNez1nw4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tcDE2PG9yzc1F/y/rjel8ki8JqlGA09kC8ItUJvYl7oqC0p1A84u8DnlPKm/azeH5
-         xJAeP9QWM/4FqwPvygN51t7yA/9xmF/SamrSsfr6T+LqLeN2nPSZXzDnbNvMdZaAr8
-         1mztRZbvrY76uFuW10fE33iAbB5Nszyple45Zm7E=
+        b=ao1QDREsYa1YeEG2ZZnz0xgd+2r7xxvuOdM3R9nufatu0CVF/bqCj5JsV6GVcW8os
+         rcdIMIMcG0rSv9xyJk4vi7wHpB7dERNcKO9aGIiCvPj/YqwcN2I5nfO9JOrjKrNcF4
+         1oEKZKo5+GLg1r+BqLq0yg8xy2h/qFcbjN3HXOsk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 026/133] gfs2: read-only mounts should grab the sd_freeze_gl glock
-Date:   Mon, 20 Jul 2020 17:36:13 +0200
-Message-Id: <20200720152804.994057015@linuxfoundation.org>
+        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        kernel test robot <lkp@intel.com>,
+        Sean Tranchetti <stranche@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 003/133] genetlink: remove genl_bind
+Date:   Mon, 20 Jul 2020 17:35:50 +0200
+Message-Id: <20200720152803.898676539@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -59,51 +62,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Sean Tranchetti <stranche@codeaurora.org>
 
-[ Upstream commit b780cc615ba4795a7ef0e93b19424828a5ad456a ]
+[ Upstream commit 1e82a62fec613844da9e558f3493540a5b7a7b67 ]
 
-Before this patch, only read-write mounts would grab the freeze
-glock in read-only mode, as part of gfs2_make_fs_rw. So the freeze
-glock was never initialized. That meant requests to freeze, which
-request the glock in EX, were granted without any state transition.
-That meant you could mount a gfs2 file system, which is currently
-frozen on a different cluster node, in read-only mode.
+A potential deadlock can occur during registering or unregistering a
+new generic netlink family between the main nl_table_lock and the
+cb_lock where each thread wants the lock held by the other, as
+demonstrated below.
 
-This patch makes read-only mounts lock the freeze glock in SH mode,
-which will block for file systems that are frozen on another node.
+1) Thread 1 is performing a netlink_bind() operation on a socket. As part
+   of this call, it will call netlink_lock_table(), incrementing the
+   nl_table_users count to 1.
+2) Thread 2 is registering (or unregistering) a genl_family via the
+   genl_(un)register_family() API. The cb_lock semaphore will be taken for
+   writing.
+3) Thread 1 will call genl_bind() as part of the bind operation to handle
+   subscribing to GENL multicast groups at the request of the user. It will
+   attempt to take the cb_lock semaphore for reading, but it will fail and
+   be scheduled away, waiting for Thread 2 to finish the write.
+4) Thread 2 will call netlink_table_grab() during the (un)registration
+   call. However, as Thread 1 has incremented nl_table_users, it will not
+   be able to proceed, and both threads will be stuck waiting for the
+   other.
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+genl_bind() is a noop, unless a genl_family implements the mcast_bind()
+function to handle setting up family-specific multicast operations. Since
+no one in-tree uses this functionality as Cong pointed out, simply removing
+the genl_bind() function will remove the possibility for deadlock, as there
+is no attempt by Thread 1 above to take the cb_lock semaphore.
+
+Fixes: c380d9a7afff ("genetlink: pass multicast bind/unbind to families")
+Suggested-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Johannes Berg <johannes.berg@intel.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/gfs2/ops_fstype.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ include/net/genetlink.h |    8 -------
+ net/netlink/genetlink.c |   49 ------------------------------------------------
+ 2 files changed, 57 deletions(-)
 
-diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index ed77b10bdfb53..9448c8461e576 100644
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@ -1160,7 +1160,17 @@ static int fill_super(struct super_block *sb, struct gfs2_args *args, int silent
- 		goto fail_per_node;
- 	}
+--- a/include/net/genetlink.h
++++ b/include/net/genetlink.h
+@@ -34,12 +34,6 @@ struct genl_info;
+  *	do additional, common, filtering and return an error
+  * @post_doit: called after an operation's doit callback, it may
+  *	undo operations done by pre_doit, for example release locks
+- * @mcast_bind: a socket bound to the given multicast group (which
+- *	is given as the offset into the groups array)
+- * @mcast_unbind: a socket was unbound from the given multicast group.
+- *	Note that unbind() will not be called symmetrically if the
+- *	generic netlink family is removed while there are still open
+- *	sockets.
+  * @attrbuf: buffer to store parsed attributes (private)
+  * @mcgrps: multicast groups used by this family
+  * @n_mcgrps: number of multicast groups
+@@ -62,8 +56,6 @@ struct genl_family {
+ 	void			(*post_doit)(const struct genl_ops *ops,
+ 					     struct sk_buff *skb,
+ 					     struct genl_info *info);
+-	int			(*mcast_bind)(struct net *net, int group);
+-	void			(*mcast_unbind)(struct net *net, int group);
+ 	struct nlattr **	attrbuf;	/* private */
+ 	const struct genl_ops *	ops;
+ 	const struct genl_multicast_group *mcgrps;
+--- a/net/netlink/genetlink.c
++++ b/net/netlink/genetlink.c
+@@ -961,60 +961,11 @@ static struct genl_family genl_ctrl __ro
+ 	.netnsok = true,
+ };
  
--	if (!sb_rdonly(sb)) {
-+	if (sb_rdonly(sb)) {
-+		struct gfs2_holder freeze_gh;
-+
-+		error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_SHARED,
-+					   GL_EXACT, &freeze_gh);
-+		if (error) {
-+			fs_err(sdp, "can't make FS RO: %d\n", error);
-+			goto fail_per_node;
-+		}
-+		gfs2_glock_dq_uninit(&freeze_gh);
-+	} else {
- 		error = gfs2_make_fs_rw(sdp);
- 		if (error) {
- 			fs_err(sdp, "can't make FS RW: %d\n", error);
--- 
-2.25.1
-
+-static int genl_bind(struct net *net, int group)
+-{
+-	struct genl_family *f;
+-	int err = -ENOENT;
+-	unsigned int id;
+-
+-	down_read(&cb_lock);
+-
+-	idr_for_each_entry(&genl_fam_idr, f, id) {
+-		if (group >= f->mcgrp_offset &&
+-		    group < f->mcgrp_offset + f->n_mcgrps) {
+-			int fam_grp = group - f->mcgrp_offset;
+-
+-			if (!f->netnsok && net != &init_net)
+-				err = -ENOENT;
+-			else if (f->mcast_bind)
+-				err = f->mcast_bind(net, fam_grp);
+-			else
+-				err = 0;
+-			break;
+-		}
+-	}
+-	up_read(&cb_lock);
+-
+-	return err;
+-}
+-
+-static void genl_unbind(struct net *net, int group)
+-{
+-	struct genl_family *f;
+-	unsigned int id;
+-
+-	down_read(&cb_lock);
+-
+-	idr_for_each_entry(&genl_fam_idr, f, id) {
+-		if (group >= f->mcgrp_offset &&
+-		    group < f->mcgrp_offset + f->n_mcgrps) {
+-			int fam_grp = group - f->mcgrp_offset;
+-
+-			if (f->mcast_unbind)
+-				f->mcast_unbind(net, fam_grp);
+-			break;
+-		}
+-	}
+-	up_read(&cb_lock);
+-}
+-
+ static int __net_init genl_pernet_init(struct net *net)
+ {
+ 	struct netlink_kernel_cfg cfg = {
+ 		.input		= genl_rcv,
+ 		.flags		= NL_CFG_F_NONROOT_RECV,
+-		.bind		= genl_bind,
+-		.unbind		= genl_unbind,
+ 	};
+ 
+ 	/* we'll bump the group number right afterwards */
 
 
