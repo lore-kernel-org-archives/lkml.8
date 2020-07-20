@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6436BC433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662A7C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38DA122CE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38400206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263359;
-	bh=42JyVhg1+olFp1dfJGVALbpgABZHdFoxPFAbxbHEucg=;
+	s=default; t=1595263364;
+	bh=DDE4MV+UVz+utgNs90ZX1nxcGpr1BUDKlUVFvene7KU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YVYJsIjeaPP9+vnPgI+Gu8x4d0gtRGevzbP26OpacQFuTXSjrFWdbfzBp/W2LfA/0
-	 0OAenYGBog2143Tqe8nbVWh608I1bRT/R6bGMctZhnH9uZ6gNhWEU21Me0ksHVPm7/
-	 zdCFIARJW55rD27rpiRuR1Ho+dofD/X+PkspqMfc=
+	b=EBrniXfBVCOaO2N0LcAL0L/RyVZLSFG98w0LrpeeObGTc0qUUgQWET1e35wBk4FPg
+	 impHJfAMuO6jaAblHSusZJL1MA9h2eVGoMaaqs3BkSSzF5/9c0K4fbQ0SkqeixmCkD
+	 Kai+op5Q9O9EIkmv39xg51C/KRnVoMcO0SHZaf0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbgGTPn3 (ORCPT
+        id S1731437AbgGTQmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:43:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36684 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:42:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730239AbgGTPnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:43:21 -0400
+        id S1730249AbgGTPnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:43:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2000522CAF;
-        Mon, 20 Jul 2020 15:43:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4CB520773;
+        Mon, 20 Jul 2020 15:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259800;
-        bh=42JyVhg1+olFp1dfJGVALbpgABZHdFoxPFAbxbHEucg=;
+        s=default; t=1595259803;
+        bh=DDE4MV+UVz+utgNs90ZX1nxcGpr1BUDKlUVFvene7KU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IGAtHxikdsIQ2u1Ouguf636isG2NLGhkei+iPp47RPiU1vY3QqiwE3G1RS5OH9d4w
-         PywRTKEjOyozXiof53vxqdakRkyDqyk0CC2FOttqfWTzcuWJFTA9LnUtYGiRf1FVQW
-         HoxwkPKK5fOZevIB8btgaAg35iurKKERjKKBbQno=
+        b=R3XYt2YAxeQulLDmDRiHt4TOQXZIm/x+B4cAvjwelixtlTFY3aMr3FiuNt35vVkKg
+         Jyg8wdCiZ8qBR8d3AvWx2skz9y4RUrl8ONzeEqz3J02EX7cdMcXDgINJwq9shBSmly
+         G2prmAVXW3UtHe8bI5+fyhukaDwH9g/h/5gvv+NU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: [PATCH 4.9 84/86] sched/fair: handle case of task_h_load() returning 0
-Date:   Mon, 20 Jul 2020 17:37:20 +0200
-Message-Id: <20200720152757.501990741@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.9 85/86] irqchip/gic: Atomically update affinity
+Date:   Mon, 20 Jul 2020 17:37:21 +0200
+Message-Id: <20200720152757.554539964@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -62,57 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Marc Zyngier <maz@kernel.org>
 
-commit 01cfcde9c26d8555f0e6e9aea9d6049f87683998 upstream.
+commit 005c34ae4b44f085120d7f371121ec7ded677761 upstream.
 
-task_h_load() can return 0 in some situations like running stress-ng
-mmapfork, which forks thousands of threads, in a sched group on a 224 cores
-system. The load balance doesn't handle this correctly because
-env->imbalance never decreases and it will stop pulling tasks only after
-reaching loop_max, which can be equal to the number of running tasks of
-the cfs. Make sure that imbalance will be decreased by at least 1.
+The GIC driver uses a RMW sequence to update the affinity, and
+relies on the gic_lock_irqsave/gic_unlock_irqrestore sequences
+to update it atomically.
 
-misfit task is the other feature that doesn't handle correctly such
-situation although it's probably more difficult to face the problem
-because of the smaller number of CPUs and running tasks on heterogenous
-system.
+But these sequences only expand into anything meaningful if
+the BL_SWITCHER option is selected, which almost never happens.
 
-We can't simply ensure that task_h_load() returns at least one because it
-would imply to handle underflow in other places.
+It also turns out that using a RMW and locks is just as silly,
+as the GIC distributor supports byte accesses for the GICD_TARGETRn
+registers, which when used make the update atomic by definition.
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: <stable@vger.kernel.org> # v4.4+
-Link: https://lkml.kernel.org/r/20200710152426.16981-1-vincent.guittot@linaro.org
+Drop the terminally broken code and replace it by a byte write.
+
+Fixes: 04c8b0f82c7d ("irqchip/gic: Make locking a BL_SWITCHER only feature")
+Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 
 ---
- kernel/sched/fair.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-gic.c |   13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6561,7 +6561,15 @@ static int detach_tasks(struct lb_env *e
- 		if (!can_migrate_task(p, env))
- 			goto next;
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -324,10 +324,8 @@ static int gic_irq_set_vcpu_affinity(str
+ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+ 			    bool force)
+ {
+-	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + (gic_irq(d) & ~3);
+-	unsigned int cpu, shift = (gic_irq(d) % 4) * 8;
+-	u32 val, mask, bit;
+-	unsigned long flags;
++	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + gic_irq(d);
++	unsigned int cpu;
  
--		load = task_h_load(p);
-+		/*
-+		 * Depending of the number of CPUs and tasks and the
-+		 * cgroup hierarchy, task_h_load() can return a null
-+		 * value. Make sure that env->imbalance decreases
-+		 * otherwise detach_tasks() will stop only after
-+		 * detaching up to loop_max tasks.
-+		 */
-+		load = max_t(unsigned long, task_h_load(p), 1);
-+
+ 	if (!force)
+ 		cpu = cpumask_any_and(mask_val, cpu_online_mask);
+@@ -337,12 +335,7 @@ static int gic_set_affinity(struct irq_d
+ 	if (cpu >= NR_GIC_CPU_IF || cpu >= nr_cpu_ids)
+ 		return -EINVAL;
  
- 		if (sched_feat(LB_MIN) && load < 16 && !env->sd->nr_balance_failed)
- 			goto next;
+-	gic_lock_irqsave(flags);
+-	mask = 0xff << shift;
+-	bit = gic_cpu_map[cpu] << shift;
+-	val = readl_relaxed(reg) & ~mask;
+-	writel_relaxed(val | bit, reg);
+-	gic_unlock_irqrestore(flags);
++	writeb_relaxed(gic_cpu_map[cpu], reg);
+ 
+ 	return IRQ_SET_MASK_OK_DONE;
+ }
 
 
