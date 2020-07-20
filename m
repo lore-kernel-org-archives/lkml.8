@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3CEC433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C27CC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09AB122CBB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2991722CBB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261044;
-	bh=UckB6aorP9uBAZnlnr9liyRAEo9To/eHwIwBb1ucEnA=;
+	s=default; t=1595261047;
+	bh=cakMkwUssDNRGezxaxJHShMrS5+T/3cFdGtVNrDzmf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ERIglZ1wNCkyVfvAfNwdznSY+XZ1R2z/OagTeeQiVOUA6Wf+OxQ6NLLhtFrCaqZaf
-	 mxlwO4DzuTYBTzqyorkhxv7QAJOq0fjtZ6wopRWdWiZT7RYRpnrb8Z97xdVhsj+lX5
-	 xpFj1U+VGdmse82SABs9E1uAK1n18SsOCL7vXEmg=
+	b=vntfuscYeb58lMFNnTlgpJqOo30WaDZinWiaPvVGUK1uxlSwLe1H90SAgmPVsFUFv
+	 7FUDDvGfmZkLxLlnQrTkVjwdHzqgG+vF+eJrhtHGIzduVJvXD1Z5QKtWOtn1+ROMC0
+	 +vLuLxySVPttFObE7MpJZ+Y5mI0frsusnEFbiuQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732509AbgGTQEC (ORCPT
+        id S1732808AbgGTQEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:04:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38554 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:04:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732511AbgGTQD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:03:58 -0400
+        id S1732540AbgGTQEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:04:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A4D420684;
-        Mon, 20 Jul 2020 16:03:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CD8120672;
+        Mon, 20 Jul 2020 16:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261038;
-        bh=UckB6aorP9uBAZnlnr9liyRAEo9To/eHwIwBb1ucEnA=;
+        s=default; t=1595261040;
+        bh=cakMkwUssDNRGezxaxJHShMrS5+T/3cFdGtVNrDzmf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oTfmDNSnELRJAlD5I2uKX7tPCoECIlqbusPAhEtI5Yf9I9MZE7xW+nSHJ/hkyf3Ji
-         iiS14ltZn+gwny+ZD1VvmQgSZOdMaVIV3nkM88JrPsE5+BHsjCQGoPRbgao0W9zfGM
-         UgMvT1/FFFDCyagRUk3kQx0MyOIHLy8zcVCBd3wU=
+        b=lNudYKCo/56+aizx/BosqjyEg/qJHrpI/YZ/VVQiaxL2NFPqnSEfKj6uyzUfQBwzT
+         FP6dlKkh5nN/GREW72USH1zZ+s6L/C14d3d13XFsZNCMKT2l7vJDBLE8k4KCbQbXVU
+         3L5E90nNPTJRqnZOilRNdYymqjP27oQ3rBRb6u/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishwas M <vishwas.reddy.vr@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.4 186/215] hwmon: (emc2103) fix unable to change fan pwm1_enable attribute
-Date:   Mon, 20 Jul 2020 17:37:48 +0200
-Message-Id: <20200720152829.026671352@linuxfoundation.org>
+        stable@vger.kernel.org, Sandipan Das <sandipan@linux.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 187/215] powerpc/book3s64/pkeys: Fix pkey_access_permitted() for execute disable pkey
+Date:   Mon, 20 Jul 2020 17:37:49 +0200
+Message-Id: <20200720152829.075044632@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,40 +60,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishwas M <vishwas.reddy.vr@gmail.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit 14b0e83dc4f1e52b94acaeb85a18fd7fdd46d2dc upstream.
+commit 192b6a780598976feb7321ff007754f8511a4129 upstream.
 
-This patch fixes a bug which does not let FAN mode to be changed from
-sysfs(pwm1_enable). i.e pwm1_enable can not be set to 3, it will always
-remain at 0.
+Even if the IAMR value denies execute access, the current code returns
+true from pkey_access_permitted() for an execute permission check, if
+the AMR read pkey bit is cleared.
 
-This is caused because the device driver handles the result of
-"read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg)" incorrectly. The
-driver thinks an error has occurred if the (result != 0). This has been
-fixed by changing the condition to (result < 0).
+This results in repeated page fault loop with a test like below:
 
-Signed-off-by: Vishwas M <vishwas.reddy.vr@gmail.com>
-Link: https://lore.kernel.org/r/20200707142747.118414-1-vishwas.reddy.vr@gmail.com
-Fixes: 9df7305b5a86 ("hwmon: Add driver for SMSC EMC2103 temperature monitor and fan controller")
-Cc: stable@vger.kernel.org
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+  #define _GNU_SOURCE
+  #include <errno.h>
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <signal.h>
+  #include <inttypes.h>
+
+  #include <assert.h>
+  #include <malloc.h>
+  #include <unistd.h>
+  #include <pthread.h>
+  #include <sys/mman.h>
+
+  #ifdef SYS_pkey_mprotect
+  #undef SYS_pkey_mprotect
+  #endif
+
+  #ifdef SYS_pkey_alloc
+  #undef SYS_pkey_alloc
+  #endif
+
+  #ifdef SYS_pkey_free
+  #undef SYS_pkey_free
+  #endif
+
+  #undef PKEY_DISABLE_EXECUTE
+  #define PKEY_DISABLE_EXECUTE	0x4
+
+  #define SYS_pkey_mprotect	386
+  #define SYS_pkey_alloc		384
+  #define SYS_pkey_free		385
+
+  #define PPC_INST_NOP		0x60000000
+  #define PPC_INST_BLR		0x4e800020
+  #define PROT_RWX		(PROT_READ | PROT_WRITE | PROT_EXEC)
+
+  static int sys_pkey_mprotect(void *addr, size_t len, int prot, int pkey)
+  {
+  	return syscall(SYS_pkey_mprotect, addr, len, prot, pkey);
+  }
+
+  static int sys_pkey_alloc(unsigned long flags, unsigned long access_rights)
+  {
+  	return syscall(SYS_pkey_alloc, flags, access_rights);
+  }
+
+  static int sys_pkey_free(int pkey)
+  {
+  	return syscall(SYS_pkey_free, pkey);
+  }
+
+  static void do_execute(void *region)
+  {
+  	/* jump to region */
+  	asm volatile(
+  		"mtctr	%0;"
+  		"bctrl"
+  		: : "r"(region) : "ctr", "lr");
+  }
+
+  static void do_protect(void *region)
+  {
+  	size_t pgsize;
+  	int i, pkey;
+
+  	pgsize = getpagesize();
+
+  	pkey = sys_pkey_alloc(0, PKEY_DISABLE_EXECUTE);
+  	assert (pkey > 0);
+
+  	/* perform mprotect */
+  	assert(!sys_pkey_mprotect(region, pgsize, PROT_RWX, pkey));
+  	do_execute(region);
+
+  	/* free pkey */
+  	assert(!sys_pkey_free(pkey));
+
+  }
+
+  int main(int argc, char **argv)
+  {
+  	size_t pgsize, numinsns;
+  	unsigned int *region;
+  	int i;
+
+  	/* allocate memory region to protect */
+  	pgsize = getpagesize();
+  	region = memalign(pgsize, pgsize);
+  	assert(region != NULL);
+  	assert(!mprotect(region, pgsize, PROT_RWX));
+
+  	/* fill page with NOPs with a BLR at the end */
+  	numinsns = pgsize / sizeof(region[0]);
+  	for (i = 0; i < numinsns - 1; i++)
+  		region[i] = PPC_INST_NOP;
+  	region[i] = PPC_INST_BLR;
+
+  	do_protect(region);
+
+  	return EXIT_SUCCESS;
+  }
+
+The fix is to only check the IAMR for an execute check, the AMR value
+is not relevant.
+
+Fixes: f2407ef3ba22 ("powerpc: helper to validate key-access permissions of a pte")
+Cc: stable@vger.kernel.org # v4.16+
+Reported-by: Sandipan Das <sandipan@linux.ibm.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+[mpe: Add detail to change log, tweak wording & formatting]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200712132047.1038594-1-aneesh.kumar@linux.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/emc2103.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/mm/book3s64/pkeys.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/hwmon/emc2103.c
-+++ b/drivers/hwmon/emc2103.c
-@@ -443,7 +443,7 @@ static ssize_t pwm1_enable_store(struct
- 	}
+--- a/arch/powerpc/mm/book3s64/pkeys.c
++++ b/arch/powerpc/mm/book3s64/pkeys.c
+@@ -367,12 +367,14 @@ static bool pkey_access_permitted(int pk
+ 		return true;
  
- 	result = read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg);
--	if (result) {
-+	if (result < 0) {
- 		count = result;
- 		goto err;
- 	}
+ 	pkey_shift = pkeyshift(pkey);
+-	if (execute && !(read_iamr() & (IAMR_EX_BIT << pkey_shift)))
+-		return true;
++	if (execute)
++		return !(read_iamr() & (IAMR_EX_BIT << pkey_shift));
++
++	amr = read_amr();
++	if (write)
++		return !(amr & (AMR_WR_BIT << pkey_shift));
+ 
+-	amr = read_amr(); /* Delay reading amr until absolutely needed */
+-	return ((!write && !(amr & (AMR_RD_BIT << pkey_shift))) ||
+-		(write &&  !(amr & (AMR_WR_BIT << pkey_shift))));
++	return !(amr & (AMR_RD_BIT << pkey_shift));
+ }
+ 
+ bool arch_pte_access_permitted(u64 pte, bool write, bool execute)
 
 
