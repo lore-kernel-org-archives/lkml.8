@@ -2,293 +2,121 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51F2C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5922CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B7122BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:26:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595237166;
-	bh=xIW2F2IJFqxTzMmaAs6C8+3yiJvBuUFpN7ht+vECA5A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pIWGdbIjUKcUNrHsMHhpp6TSm04OsMReFxqUoprRGDEBIGcV/UkEL+k4nAxyxA8VT
-	 99TmYfxL6pQHAcm3NRn58RglUG10lztCKItZrVBRroUHrLwqo5ki055bABhwdGMxqd
-	 9GMw9YUwtsDr07iluPLAqjpcnfeoUYE0/9gbzu5c=
+	by mail.kernel.org (Postfix) with ESMTP id 3922B20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:27:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sjpOSPXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgGTJ0C (ORCPT
+        id S1728051AbgGTJ1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:26:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40148 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728115AbgGTJ0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:26:01 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6D012176B;
-        Mon, 20 Jul 2020 09:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595237160;
-        bh=xIW2F2IJFqxTzMmaAs6C8+3yiJvBuUFpN7ht+vECA5A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rrNLOpGtsBkLwzoA0ZoHKqviCVJ3KJRCdTwu93rSdZ36ELhztooGsQ2e4T8KUYbwf
-         g95kfDYYhWT0rijSXjiKDluNKSd11vd3VHc2VWrEE5zvJz5wMrVk6WVbraWxItZhwN
-         Z/wN2S6aNtjO+InKcFYziVst7pgrShtls+s5WRPo=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-riscv@lists.infradead.org,
-        x86@kernel.org
-Subject: [PATCH 6/6] mm: secretmem: add ability to reserve memory at boot
-Date:   Mon, 20 Jul 2020 12:24:35 +0300
-Message-Id: <20200720092435.17469-7-rppt@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200720092435.17469-1-rppt@kernel.org>
-References: <20200720092435.17469-1-rppt@kernel.org>
+        Mon, 20 Jul 2020 05:27:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbgGTJ1m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 05:27:42 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BABFC061794;
+        Mon, 20 Jul 2020 02:27:42 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id ga4so17292191ejb.11;
+        Mon, 20 Jul 2020 02:27:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i2oJzehZb8OInu2docosJSP0SU12+CFSPAkmMBNpOsA=;
+        b=sjpOSPXSl4bzZSUip1JJKRH6wjLEc6y6wTdpLgdOUYoOVTw9J/QeSW/DChRIrpNJam
+         VLkvCDhOHBUTpvpX+whQNiXXO3U/5pb/FzFY+yG48cXjw+aWI+UgoVbDnI/vtnAuyelD
+         jPHtRKIAzPj/qYvKggd8FI93EQKQFvKSMa0UTIxo7A38JEPEDsfjQA4MV8pVzw1++aSL
+         zmViUplQkVmBSLyZyd1/ck7Ouz/wqr5peAp18XDAavNSb3GqTBDCiz5qljmYwi76l5eX
+         G8aPD/w//2aXt74/0neYP/6YGvg09NoFGZt0bGt5s8UibQaovAyQOjS6J56ORwrVkwOK
+         4bKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i2oJzehZb8OInu2docosJSP0SU12+CFSPAkmMBNpOsA=;
+        b=bPMT9sh9AKGhxk6OxOynGPF87SHEK9GyxJc5AWxEdgXwvTdYKRaO2IEyirY5AMqwy/
+         alzAMB/N0euvQhOV705rGhECPYZQ8qUtZZ7ZQpRaRffSlLTwhVngYEfl5Zc4yeMSfmBw
+         LAoW6w2uDHFfXTEaE4NdbTmDmvSayMpfmwxvJwseaH32T6VeILFqkduKYhMuODkXxIeP
+         Z7NRWY98sO9v5+DjyYv/2HL3SktJ6l3rMgm0XOZ82Bag3Cml7VS5IYTOXnW93Ic6p6r/
+         SPqfy4/Bih8Ttz9xrzhZl2sEMPTTiFmqzf7NstN1VPJqe3O48HDK1DrPciBkYqCoH5le
+         BCyw==
+X-Gm-Message-State: AOAM5321Yi8o03xFlCguVmtwlg1Yo/askkiLpD+zRCJbECiLpuG5x1g9
+        w0a6MEjWmxbW23VTqX9tapbfFsqaSYZUQ8ue3VU=
+X-Google-Smtp-Source: ABdhPJyQHHakoLdELgPvkwJTPziVgkhT8/+bkeNWSKGuEAZEoPVZam3reeNo7zKlDysNI061zW+zgDRMoXPZab8/IOI=
+X-Received: by 2002:a17:906:6847:: with SMTP id a7mr19449731ejs.306.1595237260974;
+ Mon, 20 Jul 2020 02:27:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1594708863.git.frank@allwinnertech.com> <b8761e036b25f20873534e5f8d10b37b5d2ce72c.1594708864.git.frank@allwinnertech.com>
+ <4771acd6-ecd3-b8e1-8605-75d78720b1d3@linaro.org> <CAEExFWv9_1kec_b+t+nnvT3cziXzmVa8GzJT3pQAZiCf4KA0ig@mail.gmail.com>
+ <836e1b23-1c75-57fe-6e45-f7141272071c@linaro.org>
+In-Reply-To: <836e1b23-1c75-57fe-6e45-f7141272071c@linaro.org>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Mon, 20 Jul 2020 17:27:29 +0800
+Message-ID: <CAEExFWsJBizFArd+9Mh6D=o6rvD7GLPZ-1pNFzTvBiE+uKwVhQ@mail.gmail.com>
+Subject: Re: [PATCH v4 08/16] thermal: sun8i: add TEMP_CALIB_MASK for
+ calibration data in sun50i_h6_ths_calibrate
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Frank Lee <frank@allwinnertech.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
+        liyong@allwinnertech.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+HI,
+On Fri, Jul 17, 2020 at 3:56 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> On 17/07/2020 09:35, Frank Lee wrote:
+> > On Fri, Jul 17, 2020 at 12:26 PM Daniel Lezcano
+> > <daniel.lezcano@linaro.org> wrote:
+> >>
+> >> On 14/07/2020 09:13, Frank Lee wrote:
+> >>> From: Yangtao Li <frank@allwinnertech.com>
+> >>>
+> >>> For sun50i_h6_ths_calibrate(), the data read from nvmem needs a round of
+> >>> calculation. On the other hand, the newer SOC may store other data in
+> >>> the space other than 12bit sensor data. Add mask operation to read data
+> >>> to avoid conversion error.
+> >>>
+> >>> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> >>> Reviewed-by: Yangtao Li <tiny.windzz@gmail.com>
+> >>
+> >> Can you clarify these SoB ?
+> >
+> > Previously I used 'Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>',
+> > maybe this should be removed directly?
+> >
+> >>
+> >> Frank Lee==Yangtao Li==frank@allwinnertech.com==tiny.windzz@gmail.com ?
+> >>
+> >
+> > Yeah.
+>
+> You are not supposed to add reviewed-by yourself. Please remove it.
 
-Taking pages out from the direct map and bringing them back may create
-undesired fragmentation and usage of the smaller pages in the direct
-mapping of the physical memory.
+Should I resend the entire series or just the thermal patch?
+What about those that have been applied.
 
-This can be avoided if a significantly large area of the physical memory
-would be reserved for secretmem purposes at boot time.
-
-Add ability to reserve physical memory for secretmem at boot time using
-"secretmem" kernel parameter and then use that reserved memory as a global
-pool for secret memory needs.
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- mm/secretmem.c | 134 ++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 126 insertions(+), 8 deletions(-)
-
-diff --git a/mm/secretmem.c b/mm/secretmem.c
-index dce56f84968f..322f425dbb22 100644
---- a/mm/secretmem.c
-+++ b/mm/secretmem.c
-@@ -8,6 +8,7 @@
- #include <linux/pagemap.h>
- #include <linux/genalloc.h>
- #include <linux/syscalls.h>
-+#include <linux/memblock.h>
- #include <linux/pseudo_fs.h>
- #include <linux/set_memory.h>
- #include <linux/sched/signal.h>
-@@ -30,6 +31,39 @@ struct secretmem_ctx {
- 	unsigned int mode;
- };
- 
-+struct secretmem_pool {
-+	struct gen_pool *pool;
-+	unsigned long reserved_size;
-+	void *reserved;
-+};
-+
-+static struct secretmem_pool secretmem_pool;
-+
-+static struct page *secretmem_alloc_huge_page(gfp_t gfp)
-+{
-+	struct gen_pool *pool = secretmem_pool.pool;
-+	unsigned long addr = 0;
-+	struct page *page = NULL;
-+
-+	if (pool) {
-+		if (gen_pool_avail(pool) < PMD_SIZE)
-+			return NULL;
-+
-+		addr = gen_pool_alloc(pool, PMD_SIZE);
-+		if (!addr)
-+			return NULL;
-+
-+		page = virt_to_page(addr);
-+	} else {
-+		page = alloc_pages(gfp, PMD_PAGE_ORDER);
-+
-+		if (page)
-+			split_page(page, PMD_PAGE_ORDER);
-+	}
-+
-+	return page;
-+}
-+
- static int secretmem_pool_increase(struct secretmem_ctx *ctx, gfp_t gfp)
- {
- 	unsigned long nr_pages = (1 << PMD_PAGE_ORDER);
-@@ -38,12 +72,11 @@ static int secretmem_pool_increase(struct secretmem_ctx *ctx, gfp_t gfp)
- 	struct page *page;
- 	int err;
- 
--	page = alloc_pages(gfp, PMD_PAGE_ORDER);
-+	page = secretmem_alloc_huge_page(gfp);
- 	if (!page)
- 		return -ENOMEM;
- 
- 	addr = (unsigned long)page_address(page);
--	split_page(page, PMD_PAGE_ORDER);
- 
- 	err = gen_pool_add(pool, addr, PMD_SIZE, NUMA_NO_NODE);
- 	if (err) {
-@@ -266,11 +299,13 @@ SYSCALL_DEFINE1(secretmemfd, unsigned long, flags)
- 	return err;
- }
- 
--static void secretmem_cleanup_chunk(struct gen_pool *pool,
--				    struct gen_pool_chunk *chunk, void *data)
-+static void secretmem_recycle_range(unsigned long start, unsigned long end)
-+{
-+	gen_pool_free(secretmem_pool.pool, start, PMD_SIZE);
-+}
-+
-+static void secretmem_release_range(unsigned long start, unsigned long end)
- {
--	unsigned long start = chunk->start_addr;
--	unsigned long end = chunk->end_addr;
- 	unsigned long nr_pages, addr;
- 
- 	nr_pages = (end - start + 1) / PAGE_SIZE;
-@@ -280,6 +315,18 @@ static void secretmem_cleanup_chunk(struct gen_pool *pool,
- 		put_page(virt_to_page(addr));
- }
- 
-+static void secretmem_cleanup_chunk(struct gen_pool *pool,
-+				    struct gen_pool_chunk *chunk, void *data)
-+{
-+	unsigned long start = chunk->start_addr;
-+	unsigned long end = chunk->end_addr;
-+
-+	if (secretmem_pool.pool)
-+		secretmem_recycle_range(start, end);
-+	else
-+		secretmem_release_range(start, end);
-+}
-+
- static void secretmem_cleanup_pool(struct secretmem_ctx *ctx)
- {
- 	struct gen_pool *pool = ctx->pool;
-@@ -319,14 +366,85 @@ static struct file_system_type secretmem_fs = {
- 	.kill_sb	= kill_anon_super,
- };
- 
-+static int secretmem_reserved_mem_init(void)
-+{
-+	struct gen_pool *pool;
-+	struct page *page;
-+	void *addr;
-+	int err;
-+
-+	if (!secretmem_pool.reserved)
-+		return 0;
-+
-+	pool = gen_pool_create(PMD_SHIFT, NUMA_NO_NODE);
-+	if (!pool)
-+		return -ENOMEM;
-+
-+	err = gen_pool_add(pool, (unsigned long)secretmem_pool.reserved,
-+			   secretmem_pool.reserved_size, NUMA_NO_NODE);
-+	if (err)
-+		goto err_destroy_pool;
-+
-+	for (addr = secretmem_pool.reserved;
-+	     addr < secretmem_pool.reserved + secretmem_pool.reserved_size;
-+	     addr += PAGE_SIZE) {
-+		page = virt_to_page(addr);
-+		__ClearPageReserved(page);
-+		set_page_count(page, 1);
-+	}
-+
-+	secretmem_pool.pool = pool;
-+	page = virt_to_page(secretmem_pool.reserved);
-+	__kernel_map_pages(page, secretmem_pool.reserved_size / PAGE_SIZE, 0);
-+	return 0;
-+
-+err_destroy_pool:
-+	gen_pool_destroy(pool);
-+	return err;
-+}
-+
- static int secretmem_init(void)
- {
--	int ret = 0;
-+	int ret;
-+
-+	ret = secretmem_reserved_mem_init();
-+	if (ret)
-+		return ret;
- 
- 	secretmem_mnt = kern_mount(&secretmem_fs);
--	if (IS_ERR(secretmem_mnt))
-+	if (IS_ERR(secretmem_mnt)) {
-+		gen_pool_destroy(secretmem_pool.pool);
- 		ret = PTR_ERR(secretmem_mnt);
-+	}
- 
- 	return ret;
- }
- fs_initcall(secretmem_init);
-+
-+static int __init secretmem_setup(char *str)
-+{
-+	phys_addr_t align = PMD_SIZE;
-+	unsigned long reserved_size;
-+	void *reserved;
-+
-+	reserved_size = memparse(str, NULL);
-+	if (!reserved_size)
-+		return 0;
-+
-+	if (reserved_size * 2 > PUD_SIZE)
-+		align = PUD_SIZE;
-+
-+	reserved = memblock_alloc(reserved_size, align);
-+	if (!reserved) {
-+		pr_err("failed to reserve %zu bytes\n", secretmem_pool.reserved_size);
-+		return 0;
-+	}
-+
-+	secretmem_pool.reserved_size = reserved_size;
-+	secretmem_pool.reserved = reserved;
-+
-+	pr_info("reserved %zuM\n", reserved_size >> 20);
-+
-+	return 1;
-+}
-+__setup("secretmem=", secretmem_setup);
--- 
-2.26.2
-
+Thx,
+Yangtao
