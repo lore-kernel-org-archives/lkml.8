@@ -2,196 +2,88 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562CDC433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE86C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC4F22B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D1962176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595272689;
+	bh=wT6ZbRqs1FwBWdTqqZNSPBlcmRYq9taL3gCf95gXAB0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U6enX/nTvwwc8VnTFrtQTEfCll2xNEBv6iXktUcV6PqHmhB5mkMBtpX1txAziFEAh
+	 4XslxUPddnkJrMkqesPqIpTQGBsZUo2vY2ScKV316XWQx00eWTX00nXd9sFh/dEtqE
+	 uTaElXns72kU3KpOYAg7tS5tCzxGImAFEsSX4Lwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbgGTTRP (ORCPT
+        id S1730922AbgGTTSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:17:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7852 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726899AbgGTTRO (ORCPT
+        Mon, 20 Jul 2020 15:18:08 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45842 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729093AbgGTTSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:17:14 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KJ3Kws110242;
-        Mon, 20 Jul 2020 15:16:36 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5h7y11u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 15:16:36 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KJ3QeO110872;
-        Mon, 20 Jul 2020 15:16:35 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5h7y11c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 15:16:35 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KJ6AQW029169;
-        Mon, 20 Jul 2020 19:16:34 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03dal.us.ibm.com with ESMTP id 32brq90hx8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 19:16:34 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KJGWTR38207870
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 19:16:32 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41D1D78064;
-        Mon, 20 Jul 2020 19:16:32 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 55DB078066;
-        Mon, 20 Jul 2020 19:16:26 +0000 (GMT)
-Received: from [153.66.254.194] (unknown [9.85.132.116])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Jul 2020 19:16:26 +0000 (GMT)
-Message-ID: <1595272585.4554.28.camel@linux.ibm.com>
-Subject: Re: [PATCH 3/6] mm: introduce secretmemfd system call to create
- "secret" memory areas
-From:   James Bottomley <jejb@linux.ibm.com>
-Reply-To: jejb@linux.ibm.com
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linaro-mm-sig@lists.linaro.org,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Mon, 20 Jul 2020 12:16:25 -0700
-In-Reply-To: <CAK8P3a34kx4aAFY=-SBHX3suCLwxeZY7+YSRzct93YM_OFbSWA@mail.gmail.com>
-References: <20200720092435.17469-1-rppt@kernel.org>
-         <20200720092435.17469-4-rppt@kernel.org>
-         <CAK8P3a0NyvRMqH7X0YNO5E6DGtvZXD5ZcD6Y6n7AkocufkMnHA@mail.gmail.com>
-         <1595260305.4554.9.camel@linux.ibm.com>
-         <CAK8P3a34kx4aAFY=-SBHX3suCLwxeZY7+YSRzct93YM_OFbSWA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- mlxlogscore=999 spamscore=0 adultscore=0 clxscore=1015 mlxscore=0
- priorityscore=1501 bulkscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007200128
+        Mon, 20 Jul 2020 15:18:07 -0400
+Received: by mail-io1-f65.google.com with SMTP id e64so18796720iof.12;
+        Mon, 20 Jul 2020 12:18:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uv9DwJeqFVU3ixKGtQQTS9+FOIa16rZ9Ojp6k1PsA9k=;
+        b=Uv9wkHXLT9izjlBoI1LYkZRU7zGNpt/BeIJLXTS41+I3pRckyhv5sBHFh/KkMjm9oR
+         Ppkkv3Kw8qMHsIShCUTDG9Ar8od7WovwZXwB0BMtNh78Pnt/c4e6aRrXF4HvBrgIvyFj
+         tb3VwMfrIZ6/XUNLBJJdRZyAFnL8uA0OaD0pD+BhayWNhOlye2Wkd299kVeaoBpYv/a3
+         yyeYjXU7JhJdFlBe1zvU8zEFgf+UNkyt9tWQ78CXqMGZ2LdFiYZQU6rJihQo546aUrUg
+         mLIv3/4ysYVPFwj/4P84szuhqvhhikX85glhyqDYG1FNkMYXxun8boGv8CbdCNZTfBJG
+         /Zzw==
+X-Gm-Message-State: AOAM533b38ao5Z0IrMEtAgps1MzpKKMpsOsqFtxkX9gGP04/6Ken433S
+        QKumx/6iFQ66u8FQPxF8JR80TRYiJw==
+X-Google-Smtp-Source: ABdhPJzZ1vqvkCvQlbnANMQkRpMdXUHvSUgwd4hRCkvF0VWDDV/3eh547Y6ph5RTvSFlzRUciVYNdA==
+X-Received: by 2002:a6b:5813:: with SMTP id m19mr24164940iob.29.1595272686659;
+        Mon, 20 Jul 2020 12:18:06 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id x5sm201740iol.36.2020.07.20.12.18.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 12:18:05 -0700 (PDT)
+Received: (nullmailer pid 2847072 invoked by uid 1000);
+        Mon, 20 Jul 2020 19:18:04 -0000
+Date:   Mon, 20 Jul 2020 13:18:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kathiravan T <kathirav@codeaurora.org>
+Cc:     linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        lgirdwood@gmail.com, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, broonie@kernel.org, sricharan@codeaurora.org,
+        sivaprak@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org
+Subject: Re: [PATCH V3 3/4] dt-bindings: soc: qcom: convert the SMD-RPM
+ document to YAML schema
+Message-ID: <20200720191804.GA2846983@bogus>
+References: <1595225543-12127-1-git-send-email-kathirav@codeaurora.org>
+ <1595225543-12127-4-git-send-email-kathirav@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595225543-12127-4-git-send-email-kathirav@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-07-20 at 20:08 +0200, Arnd Bergmann wrote:
-> On Mon, Jul 20, 2020 at 5:52 PM James Bottomley <jejb@linux.ibm.com>
-> wrote:
-> > On Mon, 2020-07-20 at 13:30 +0200, Arnd Bergmann wrote:
-> > 
-> > I'll assume you mean the dmabuf userspace API?  Because the kernel
-> > API is completely device exchange specific and wholly inappropriate
-> > for this use case.
-> > 
-> > The user space API of dmabuf uses a pseudo-filesystem.  So you
-> > mount the dmabuf file type (and by "you" I mean root because an
-> > ordinary user doesn't have sufficient privilege).  This is
-> > basically because every dmabuf is usable by any user who has
-> > permissions.  This really isn't the initial interface we want for
-> > secret memory because secret regions are supposed to be per process
-> > and not shared (at least we don't want other tenants to see who's
-> > using what).
-> > 
-> > Once you have the fd, you can seek to find the size, mmap, poll and
-> > ioctl it.  The ioctls are all to do with memory synchronization (as
-> > you'd expect from a device backed region) and the mmap is handled
-> > by the dma_buf_ops, which is device specific.  Sizing is missing
-> > because that's reported by the device not settable by the user.
+On Mon, 20 Jul 2020 11:42:22 +0530, Kathiravan T wrote:
+> Convert the qcom,smd-rpm.txt document to YAML schema
 > 
-> I was mainly talking about the in-kernel interface that is used for
-> sharing a buffer with hardware. Aside from the limited ioctls,
-> anything in the kernel can decide on how it wants to export a dma_buf
-> by calling dma_buf_export()/dma_buf_fd(), which is roughly what the
-> new syscall does as well. Using dma_buf vs the proposed
-> implementation for this is not a big difference in complexity.
-
-I have thought about it, but haven't got much further:  We can't couple
-to SGX without a huge break in the current simple userspace API (it
-becomes complex because you'd have to enter the enclave each time you
-want to use the memory, or put the whole process in the enclave, which
-is a bit of a nightmare for simplicity), and we could only couple it to
-SEV if the memory encryption engine would respond to PCID as well as
-ASID, which it doesn't.
-
-> The one thing that a dma_buf does is that it allows devices to
-> do DMA on it. This is either something that can turn out to be
-> useful later, or it is not. From the description, it sounded like
-> the sharing might be useful, since we already have known use
-> cases in which "secret" data is exchanged with a trusted execution
-> environment using the dma-buf interface.
-
-The current use case for private keys is that you take an encrypted
-file (which would be the DMA coupled part) and you decrypt the contents
-into the secret memory.  There might possibly be a DMA component later
-where a HSM like device DMAs a key directly into your secret memory to
-avoid exposure, but I wouldn't anticipate any need for anything beyond
-the usual page cache API for that case (effectively this would behave
-like an ordinary page cache page except that only the current process
-would be able to touch the contents).
-
-> If there is no way the data stored in this new secret memory area
-> would relate to secret data in a TEE or some other hardware
-> device, then I agree that dma-buf has no value.
-
-Never say never, but current TEE designs tend to require full
-confidentiality for the entire execution.  What we're probing is
-whether we can improve security by doing an API that requires less than
-full confidentiality for the process.  I think if the API proves useful
-then we will get HW support for it, but it likely won't be in the
-current TEE of today form.
-
-> > What we want is the ability to get an fd, set the properties and
-> > the size and mmap it.  This is pretty much a 100% overlap with the
-> > memfd API and not much overlap with the dmabuf one, which is why I
-> > don't think the interface is very well suited.
+> Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
+> ---
+>  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.txt  | 65 ----------------
+>  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml | 87 ++++++++++++++++++++++
+>  2 files changed, 87 insertions(+), 65 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
 > 
-> Does that mean you are suggesting to use additional flags on
-> memfd_create() instead of a new system call?
 
-Well, that was what the previous patch did.  I'm agnostic on the
-mechanism for obtaining the fd: new syscall as this patch does or
-extension to memfd like the old one did.  All I was saying is that once
-you have the fd, the API you use on it is the same as the memfd API.
-
-James
-
+Reviewed-by: Rob Herring <robh@kernel.org>
