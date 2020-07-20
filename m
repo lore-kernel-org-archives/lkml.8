@@ -6,60 +6,71 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD4AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E883207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A64208B3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgGTBHj (ORCPT
+        id S1726820AbgGTBKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 21:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45306 "EHLO
+        Sun, 19 Jul 2020 21:10:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgGTBHj (ORCPT
+        with ESMTP id S1726312AbgGTBKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 21:07:39 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB9EC0619D2;
-        Sun, 19 Jul 2020 18:07:39 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1196312848241;
-        Sun, 19 Jul 2020 18:07:39 -0700 (PDT)
-Date:   Sun, 19 Jul 2020 18:07:38 -0700 (PDT)
-Message-Id: <20200719.180738.1978402817458356702.davem@davemloft.net>
-To:     o.rempel@pengutronix.de
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux@armlinux.org.uk
-Subject: Re: [PATCH net-next v1] net: phy: at803x: add mdix configuration
- support for AR9331 and AR8035
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200719080530.24370-1-o.rempel@pengutronix.de>
-References: <20200719080530.24370-1-o.rempel@pengutronix.de>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 19 Jul 2020 18:07:39 -0700 (PDT)
+        Sun, 19 Jul 2020 21:10:05 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D855C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 18:10:05 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxKJd-00GEh6-6x; Mon, 20 Jul 2020 01:10:01 +0000
+Date:   Mon, 20 Jul 2020 02:10:01 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Kevin Buettner <kevinb@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] copy_xstate_to_kernel: Fix typo which caused GDB
+ regression
+Message-ID: <20200720011001.GL2786714@ZenIV.linux.org.uk>
+References: <20200718002003.6e0a2aef@f32-m1.lan>
+ <CAPM=9tzJt5W8YpyBpyr0Xk3OwgA8iEOKe_zOtJSM3FThp38K4w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPM=9tzJt5W8YpyBpyr0Xk3OwgA8iEOKe_zOtJSM3FThp38K4w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Date: Sun, 19 Jul 2020 10:05:30 +0200
+On Mon, Jul 20, 2020 at 09:40:14AM +1000, Dave Airlie wrote:
+> Just adding Linus, as Al is oft distracted.
 
-> This patch add MDIX configuration ability for AR9331 and AR8035. Theoretically
-> it should work on other Atheros PHYs, but I was able to test only this
-> two.
-> 
-> Since I have no certified reference HW able to detect or configure MDIX, this
-> functionality was confirmed by oscilloscope.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Already in vfs.git#fixes, actually:
+commit 8d95867c8610c515ffab2913b2cb19b2c7f7f6c1
+Author: Kevin Buettner <kevinb@redhat.com>
+Date:   Sat Jul 18 00:20:03 2020 -0700
 
-Applied, thank you.
+    copy_xstate_to_kernel: Fix typo which caused GDB regression
+    
+    This commit fixes a regression encountered while running the
+    gdb.base/corefile.exp test in GDB's test suite.
+    
+    In my testing, the typo prevented the sw_reserved field of struct
+    fxregs_state from being output to the kernel XSAVES area.  Thus the
+    correct mask corresponding to XCR0 was not present in the core file
+    for GDB to interrogate, resulting in the following behavior:
+    
+    [kev@f32-1 gdb]$ ./gdb -q testsuite/outputs/gdb.base/corefile/corefile testsuite/outputs/gdb.base/corefile/corefile.core
+    Reading symbols from testsuite/outputs/gdb.base/corefile/corefile...
+    [New LWP 232880]
+    
+    warning: Unexpected size of section `.reg-xstate/232880' in core file.
+    
+    With the typo fixed, the test works again as expected.
+    
+    Fixes: 9e46365459331 ("copy_xstate_to_kernel(): don't leave parts of destination uninitialized")
+    Signed-off-by: Kevin Buettner <kevinb@redhat.com>
+    Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
