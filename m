@@ -2,124 +2,80 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E195C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E05C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2F920724
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:49:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CdpDdzgw"
+	by mail.kernel.org (Postfix) with ESMTP id 1CF96208B3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgGTCtI (ORCPT
+        id S1726675AbgGTCyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 22:49:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbgGTCtI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 22:49:08 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9278C0619D2;
-        Sun, 19 Jul 2020 19:49:07 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a9so3798280pjd.3;
-        Sun, 19 Jul 2020 19:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=MHAQuV7wqFXE2gTJXyIGBJkkSS+/2fb6/SqEN+IMJpU=;
-        b=CdpDdzgwHD6KDQNhDlu82DlmyWWjZ/tE6sKRBv4R+f6DNQQk3obKV028wEN8NHQe44
-         ivpvsS3MyhDPBNTyPoxFeJ7XFObRFd8p5lDUvQWmEZLORZNpDUmsYDtCQtQBjWEph5Jh
-         4UbuZHebtzX2AFmWHCKMSDCUU6CrNCv//mNYHHIp2g9SX31oJe5mi7j4eUwDehYc29+H
-         ylq58SwOBe5p0fVnwPLea9PkWcZG7C43Si1MqGYbndJH1usUs612RiFtiYzoCGbhlNlq
-         NNAAB8WinXGMNgzrYPheT/QyRtpMt8ZSuDngMgeue+/ZpaK+oENAp4e9Kc8cNPqxAKW8
-         HoTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=MHAQuV7wqFXE2gTJXyIGBJkkSS+/2fb6/SqEN+IMJpU=;
-        b=jFmBMDJsu7xDxNdkT6oZZ4lJFvv2MyRccAyI6174/3LjpebageeX7YSJXTr3jnoGIG
-         1v+P3CXXVZJW0u2HjA/8SIIUzBar8iOArMEf1soMYvS8hI49Q64c8aAoomwo6p4ufb2E
-         KZnMxLrznSUMWUuW/RT6UiCx+bi1WzuR/lBB7se92gxUS5b+pGGihbde0Xkh3PyJxYU/
-         oI3JKNATK96RFB5KgbvF9owud301hXsuU1aaabfVCldAZc3bnKK14Fkg9q5qaGJAWjqU
-         VSfHgD5qmz2HKeNmH51ejdzi772qHEvcVSlAoIStyg4exBiAijGk59/daNkNB4F+XiXs
-         uEBA==
-X-Gm-Message-State: AOAM531TT++3IdnUnmBVbFEvETFqUBSe11FQuUkB3r6OQmOUz7IEOrFn
-        KG3dpqftTYfNUHwX/bHTEbk=
-X-Google-Smtp-Source: ABdhPJyKOJqndxCg3mIhcaYDZPJSsTmVuKMyFWNLPeExLhzmb2sdnZbuRmCL/dLOi+bJNfrzWai0hA==
-X-Received: by 2002:a17:90a:6448:: with SMTP id y8mr21541193pjm.142.1595213347563;
-        Sun, 19 Jul 2020 19:49:07 -0700 (PDT)
-Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id f131sm13389215pgc.14.2020.07.19.19.49.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 19:49:06 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 12:49:02 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
-To:     linux-mm@kvack.org, Zefan Li <lizefan@huawei.com>
-Cc:     =?iso-8859-1?q?Borislav=0A?= Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
-        =?iso-8859-1?q?Thomas=0A?= Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org
-References: <20200413125303.423864-1-npiggin@gmail.com>
-        <20200413125303.423864-5-npiggin@gmail.com>
-        <0e43e743-7c78-fb86-6c36-f42e6184d32c@huawei.com>
-In-Reply-To: <0e43e743-7c78-fb86-6c36-f42e6184d32c@huawei.com>
+        Sun, 19 Jul 2020 22:54:41 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48956 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726225AbgGTCyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 22:54:41 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 81E9F1D4A2635D05AA35;
+        Mon, 20 Jul 2020 10:54:38 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
+ 10:54:36 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <joe@perches.com>, <gtzalik@amazon.com>, <saeedb@amazon.com>,
+        <zorik@amazon.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <sameehj@amazon.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next v2] net: ena: Fix using plain integer as NULL pointer in ena_init_napi_in_range
+Date:   Mon, 20 Jul 2020 10:53:09 +0800
+Message-ID: <20200720025309.18597-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Message-Id: <1595213278.m30kayfsvu.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Zefan Li's message of July 20, 2020 12:02 pm:
->> +static int vmap_pages_range_noflush(unsigned long start, unsigned long =
-end,
->> +				    pgprot_t prot, struct page **pages,
->> +				    unsigned int page_shift)
->> +{
->> +	if (page_shift =3D=3D PAGE_SIZE) {
->=20
-> Is this a typo of PAGE_SHIFT?
+Fix sparse build warning:
 
-Oh good catch, yeah that'll always be going via the one-at-a-time route=20
-and slow down the small page vmaps. Will fix.
+drivers/net/ethernet/amazon/ena/ena_netdev.c:2193:34: warning:
+ Using plain integer as NULL pointer
 
-Thanks,
-Nick
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Suggested-by: Joe Perches <joe@perches.com>
+Acked-by: Shay Agroskin <shayagr@amazon.com>
+---
+v1->v2:
+ Improve code readability based on Joe Perches's suggestion 
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
->=20
->> +		return vmap_small_pages_range_noflush(start, end, prot, pages);
->> +	} else {
->> +		unsigned long addr =3D start;
->> +		unsigned int i, nr =3D (end - start) >> page_shift;
->> +
->> +		for (i =3D 0; i < nr; i++) {
->> +			int err;
->> +
->> +			err =3D vmap_range_noflush(addr,
->> +					addr + (1UL << page_shift),
->> +					__pa(page_address(pages[i])), prot,
->> +					page_shift);
->> +			if (err)
->> +				return err;
->> +
->> +			addr +=3D 1UL << page_shift;
->> +		}
->> +
->> +		return 0;
->> +	}
->> +}
->> +
->=20
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 91be3ffa1c5c..470d8f38b824 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -2190,11 +2190,10 @@ static void ena_del_napi_in_range(struct ena_adapter *adapter,
+ static void ena_init_napi_in_range(struct ena_adapter *adapter,
+ 				   int first_index, int count)
+ {
+-	struct ena_napi *napi = {0};
+ 	int i;
+ 
+ 	for (i = first_index; i < first_index + count; i++) {
+-		napi = &adapter->ena_napi[i];
++		struct ena_napi *napi = &adapter->ena_napi[i];
+ 
+ 		netif_napi_add(adapter->netdev,
+ 			       &adapter->ena_napi[i].napi,
+-- 
+2.17.1
+
