@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B05AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF320C433FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB6A20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B4A20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261906;
-	bh=Z3WwYEHD7u+9ctkPGM3yimUz4PDsga+PbGgh/DhZiqg=;
+	s=default; t=1595261910;
+	bh=xd6skdapYNQz/u0tOosEzUcuwx7W+CMKUZ16Robupmc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V2rqd7XzJOK3HDYXrjNTNl8c1CXR0mnPEyMSCaSvjAlMmhcJ3zef52jIWx8dun8r9
-	 t8hxwXGASGe/Fokt95Nyu3VgY3pPoo3OFaSM2fbgIhaWcV2HBkatF1tAno3iQMEsx0
-	 7WHwzWyfFSbb4XGPBJv9kJmsHpIrFoBrn0/aacRc=
+	b=QMwJcIdTJji5aFJ/PUDipoPfzp+NnYgkTImz9KHAF7+mlpHX84CVWHczoNGwNtDEz
+	 8HIPX+/+k+sBzohmfz2PFXant12aviW+0SewqeuBmtBIh2/f6a6pgRj5sNBpE6MNH2
+	 52WE1QwJC7DsRgFKQqfcSe5zBO0lMO26ZvH9VsYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388216AbgGTQSZ (ORCPT
+        id S1731285AbgGTQS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:18:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53804 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:18:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731285AbgGTQNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:13:43 -0400
+        id S2388128AbgGTQNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:13:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D94362065E;
-        Mon, 20 Jul 2020 16:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91C6C207DD;
+        Mon, 20 Jul 2020 16:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261622;
-        bh=Z3WwYEHD7u+9ctkPGM3yimUz4PDsga+PbGgh/DhZiqg=;
+        s=default; t=1595261614;
+        bh=xd6skdapYNQz/u0tOosEzUcuwx7W+CMKUZ16Robupmc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SuRpgGVgJ8V8Wp6X78OXoy/DYOGX6WKIhAzmUdZlZcXgbRb1M55XZssn/o6Ef4w+l
-         4Ux9OasQFW5LlG1NFy1aBTdy3P3NmRIL0jhM5opVCEVR9/asCuTtYtSg3TFwDngWe9
-         pNOLJiMC9RNNzwHnt+dttL8ZdrgEJ/JdtrvY/RVs=
+        b=lLfE959FYGXf/Z9F8S5sZe/Fhyg8SyvNoGaVhdPO9LN6MDRWL0F1pi357S11705vB
+         ho2unuxrdgWW++Hs/WobJLH1zQJY+gP9VfEqXtr83o+rtuzAFhnzXCA5mkjLnYh6gl
+         U01ZxQoeKSUVHfxc5GTieVro12EQSDJDdto6Gues=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.7 183/244] fuse: use ->reconfigure() instead of ->remount_fs()
-Date:   Mon, 20 Jul 2020 17:37:34 +0200
-Message-Id: <20200720152834.544659224@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.7 139/244] mtd: rawnand: brcmnand: fix CS0 layout
+Date:   Mon, 20 Jul 2020 17:36:50 +0200
+Message-Id: <20200720152832.460881959@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -58,57 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Álvaro Fernández Rojas <noltari@gmail.com>
 
-commit 0189a2d367f49729622fdafaef5da73161591859 upstream.
+commit 3d3fb3c5be9ce07fa85d8f67fb3922e4613b955b upstream.
 
-s_op->remount_fs() is only called from legacy_reconfigure(), which is not
-used after being converted to the new API.
+Only v3.3-v5.0 have a different CS0 layout.
+Controllers before v3.3 use the same layout for every CS.
 
-Convert to using ->reconfigure().  This restores the previous behavior of
-syncing the filesystem and rejecting MS_MANDLOCK on remount.
-
-Fixes: c30da2e981a7 ("fuse: convert to use the new mount API")
-Cc: <stable@vger.kernel.org> # v5.4
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 27c5b17cd1b1 ("mtd: nand: add NAND driver "library" for Broadcom STB NAND controller")
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20200522121524.4161539-3-noltari@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/inode.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -121,10 +121,12 @@ static void fuse_evict_inode(struct inod
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -606,8 +606,9 @@ static int brcmnand_revision_init(struct
+ 	} else {
+ 		ctrl->cs_offsets = brcmnand_cs_offsets;
+ 
+-		/* v5.0 and earlier has a different CS0 offset layout */
+-		if (ctrl->nand_version <= 0x0500)
++		/* v3.3-5.0 have a different CS0 offset layout */
++		if (ctrl->nand_version >= 0x0303 &&
++		    ctrl->nand_version <= 0x0500)
+ 			ctrl->cs0_offsets = brcmnand_cs_offsets_cs0;
  	}
- }
- 
--static int fuse_remount_fs(struct super_block *sb, int *flags, char *data)
-+static int fuse_reconfigure(struct fs_context *fc)
- {
-+	struct super_block *sb = fc->root->d_sb;
-+
- 	sync_filesystem(sb);
--	if (*flags & SB_MANDLOCK)
-+	if (fc->sb_flags & SB_MANDLOCK)
- 		return -EINVAL;
- 
- 	return 0;
-@@ -817,7 +819,6 @@ static const struct super_operations fus
- 	.evict_inode	= fuse_evict_inode,
- 	.write_inode	= fuse_write_inode,
- 	.drop_inode	= generic_delete_inode,
--	.remount_fs	= fuse_remount_fs,
- 	.put_super	= fuse_put_super,
- 	.umount_begin	= fuse_umount_begin,
- 	.statfs		= fuse_statfs,
-@@ -1291,6 +1292,7 @@ static int fuse_get_tree(struct fs_conte
- static const struct fs_context_operations fuse_context_ops = {
- 	.free		= fuse_free_fc,
- 	.parse_param	= fuse_parse_param,
-+	.reconfigure	= fuse_reconfigure,
- 	.get_tree	= fuse_get_tree,
- };
  
 
 
