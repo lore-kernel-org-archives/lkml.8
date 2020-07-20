@@ -2,77 +2,69 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DE7C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB2FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1B7C22B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595288180;
-	bh=5wUWZTgLDGHLY0b9AD8FrjBZZ27JrDASbzC7CTV8awo=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=SZUL4FRKg2+5oKB9PLCd2o3Ai50iaDxixtzk982OPkN8DMRsfcYUrVFHx5A8cVh5w
-	 EGc0PI1UpqYFxix9PKj+tW4SOFmSnA0NOcERddO/JLtgb0PKQR7l1c8umW2Ln/Ul+O
-	 ZEWqGmH7EY85YIbTMe3vneV3pPivwYk+agYDoTts=
+	by mail.kernel.org (Postfix) with ESMTP id 04013207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgGTXgT (ORCPT
+        id S1728044AbgGTXhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:36:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33742 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726425AbgGTXgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 19:36:18 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45B7A207FC;
-        Mon, 20 Jul 2020 23:36:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595288178;
-        bh=5wUWZTgLDGHLY0b9AD8FrjBZZ27JrDASbzC7CTV8awo=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=BgQvT4o5Xpt82FGLtEwXj3nshT+vjMtfX6VHZMJTEIgEO46oS3TgO1SqLnA8m2XkQ
-         cIlprELy2O+YaNRBHmK4tglrXTbh9YQGNZXIKLuMqTmnPrdK6uJoGramddqH9+9dNr
-         VpoviPyZczNy9iFhCCwJUZmzydaHDIg6J0Z2JNYc=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAP245DUqvTYENmaxG3rjUn1XrzrmvdFmKG_vaef2BxKL6jY+Rg@mail.gmail.com>
-References: <20200716022817.30439-1-ansuelsmth@gmail.com> <20200716022817.30439-2-ansuelsmth@gmail.com> <CAP245DUqvTYENmaxG3rjUn1XrzrmvdFmKG_vaef2BxKL6jY+Rg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] ipq806x: gcc: add support for child probe
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>
-Date:   Mon, 20 Jul 2020 16:36:17 -0700
-Message-ID: <159528817752.3847286.2725374997908705208@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        Mon, 20 Jul 2020 19:37:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbgGTXhA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 19:37:00 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90A87C061794;
+        Mon, 20 Jul 2020 16:37:00 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A004511E8EC0A;
+        Mon, 20 Jul 2020 16:36:59 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 16:36:58 -0700 (PDT)
+Message-Id: <20200720.163658.560155959996455439.davem@davemloft.net>
+To:     stephen@networkplumber.org
+Cc:     willemdebruijn.kernel@gmail.com, srirakr2@cisco.com,
+        akpm@linux-foundation.org, xe-linux-external@cisco.com,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sthemmin@microsoft.com,
+        mbumgard@cisco.com
+Subject: Re: [PATCH v2] AF_PACKET doesnt strip VLAN information
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200720135650.1939665b@hermes.lan>
+References: <CY4PR1101MB21013DCD55B754E29AF4A838907B0@CY4PR1101MB2101.namprd11.prod.outlook.com>
+        <CAF=yD-+gCkPVkXwcH6KiKYGV77TvpZiDo=3YyXeuGFk=TR2dcw@mail.gmail.com>
+        <20200720135650.1939665b@hermes.lan>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 Jul 2020 16:37:00 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2020-07-20 02:41:44)
-> On Thu, Jul 16, 2020 at 7:58 AM Ansuel Smith <ansuelsmth@gmail.com> wrote:
-> >
-> > Add support for child probing needed for tsens driver that share the
-> > seme regs of gcc for this platform.
->=20
-> Typo: same
->=20
+From: Stephen Hemminger <stephen@networkplumber.org>
+Date: Mon, 20 Jul 2020 13:56:50 -0700
 
-Otherwise reviewed-by? Because I can throw this into the clk tree with
-the typo fixed.
+> It matters because the problem is generic, not just to the netvsc driver.
+> For example, BPF programs and netfilter rules will see different packets
+> when send is through AF_PACKET than they would see for sends from the
+> kernel stack.
+> 
+> Presenting uniform data to the lower layers makes sense.
+
+The issue here is that for hyperv, vlan offloading is not a "may" but
+a "must" and I've never understood it to have that meaning.
+
+And I still haven't heard what is going to happen in Q-in-Q situations
+even with the ugly hyperv driver hack that is currently under review.
