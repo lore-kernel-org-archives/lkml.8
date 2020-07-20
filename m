@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C078C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 046AE2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE0642070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262390;
-	bh=B8XFlK00JezQrQoYIPMKahNDyTSykSrd0/k/HwAEdp8=;
+	s=default; t=1595262393;
+	bh=WBOpl+qCM21lOclAgoFINRbipzR2TN0rGGdG9h3cQaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=azuwBHHxqJLFhyHPdAs8pxz0WNMWwsuOq69IImn3Fz19wOnn0XumYxVvdXEuv42l4
-	 0Vo+6kjSDjp3B9EaGj/69qkqtXOEpQgOEGssl4HuaXrWcEku7BjLsBtojwBEfnEawA
-	 vbAREIWPI1Siz5fjI2mjdcaTcB8C2dlMP/p5gsJc=
+	b=WXE6lGRfcB85tdpM9g2vRU3XbCQpiYx7K4+IT2acggpGNji3JM0OUBldOEzLWTL37
+	 oY7iI/Y538vcvfgyExgMvxASbEmTAPkaECN5AzFp2cGYhE8vVdkOpGLQS1QeKbx2Se
+	 Ds+TMESueQ9CU8LYSFLZl4Xsm/XhIAxrD/vf6VvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731995AbgGTQAE (ORCPT
+        id S1732264AbgGTQ0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:00:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60892 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:26:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732311AbgGTP7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:52 -0400
+        id S1731830AbgGTQAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:00:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03C2E20773;
-        Mon, 20 Jul 2020 15:59:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A6F320773;
+        Mon, 20 Jul 2020 16:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260791;
-        bh=B8XFlK00JezQrQoYIPMKahNDyTSykSrd0/k/HwAEdp8=;
+        s=default; t=1595260805;
+        bh=WBOpl+qCM21lOclAgoFINRbipzR2TN0rGGdG9h3cQaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ih1rmjOwd6gFH5V+E8gn7rpKv47iWI6zD/+HHcaScJN9wyyi7ziF1T+9Nk1tK20PJ
-         XS8Ft8KfqLS7/3PO1pg4Lrq/OCEg0aU9TV7AxBIodcgTbEFqOV8bRqex6QlsScrbUt
-         VL7MmYoPnlwWlMlfcu9x/P3okS6684CNCEhYwuJM=
+        b=S2mQzJ22gy7BNuq7+1nsV4hvRdx+vT3PnzZ1WPqI5SmTOHqvMYbGDJ5zRBlh4at6g
+         pdkc3g+LpXOgAAXdX0WxpSXo5l9n4aSLtppdfSwLLdoL683kJ15g7QwfKgWKYsR38m
+         pbYW8QBuD6dxByW2jkeugbQyQAr6xasUYKteQu5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 067/215] ARM: OMAP2+: Add workaround for DRA7 DSP MStandby errata i879
-Date:   Mon, 20 Jul 2020 17:35:49 +0200
-Message-Id: <20200720152823.399239857@linuxfoundation.org>
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 062/215] Revert "usb/ehci-platform: Set PM runtime as active on resume"
+Date:   Mon, 20 Jul 2020 17:35:44 +0200
+Message-Id: <20200720152823.160345861@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -60,122 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+This reverts commit 335d720bb4bd9d2808cae5af6f3c636c87f19596.
 
-[ Upstream commit 2f14101a1d760db72393910d481fbf7768c44530 ]
+Eugeniu Rosca writes:
 
-Errata Title:
-i879: DSP MStandby requires CD_EMU in SW_WKUP
+On Thu, Jul 09, 2020 at 09:00:23AM +0200, Eugeniu Rosca wrote:
+>After integrating v4.14.186 commit 5410d158ca2a50 ("usb/ehci-platform:
+>Set PM runtime as active on resume") into downstream v4.14.x, we started
+>to consistently experience below panic [1] on every second s2ram of
+>R-Car H3 Salvator-X Renesas reference board.
+>
+>After some investigations, we concluded the following:
+> - the issue does not exist in vanilla v5.8-rc4+
+> - [bisecting shows that] the panic on v4.14.186 is caused by the lack
+>   of v5.6-rc1 commit 987351e1ea7772 ("phy: core: Add consumer device
+>   link support"). Getting evidence for that is easy. Reverting
+>   987351e1ea7772 in vanilla leads to a similar backtrace [2].
+>
+>Questions:
+> - Backporting 987351e1ea7772 ("phy: core: Add consumer device
+>   link support") to v4.14.187 looks challenging enough, so probably not
+>   worth it. Anybody to contradict this?
+> - Assuming no plans to backport the missing mainline commit to v4.14.x,
+>   should the following three v4.14.186 commits be reverted on v4.14.x?
+>   * baef809ea497a4 ("usb/ohci-platform: Fix a warning when hibernating")
+>   * 9f33eff4958885 ("usb/xhci-plat: Set PM runtime as active on resume")
+>   * 5410d158ca2a50 ("usb/ehci-platform: Set PM runtime as active on resume")
 
-Description:
-The DSP requires the internal emulation clock to be actively toggling
-in order to successfully enter a low power mode via execution of the
-IDLE instruction and PRCM MStandby/Idle handshake. This assumes that
-other prerequisites and software sequence are followed.
-
-Workaround:
-The emulation clock to the DSP is free-running anytime CCS is connected
-via JTAG debugger to the DSP subsystem or when the CD_EMU clock domain
-is set in SW_WKUP mode. The CD_EMU domain can be set in SW_WKUP mode
-via the CM_EMU_CLKSTCTRL [1:0]CLKTRCTRL field.
-
-Implementation:
-This patch implements this workaround by denying the HW_AUTO mode
-for the EMU clockdomain during the power-up of any DSP processor
-and re-enabling the HW_AUTO mode during the shutdown of the last
-DSP processor (actually done during the enabling and disabling of
-the respective DSP MDMA MMUs). Reference counting has to be used to
-manage the independent sequencing between the multiple DSP processors.
-
-This switching is done at runtime rather than a static clockdomain
-flags value to meet the target power domain state for the EMU power
-domain during suspend.
-
-Note that the DSP MStandby behavior is not consistent across all
-boards prior to this fix. Please see commit 45f871eec6c0 ("ARM:
-OMAP2+: Extend DRA7 IPU1 MMU pdata quirks to DSP MDMA MMUs") for
-details.
-
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/omap-iommu.c | 43 +++++++++++++++++++++++++++++---
- 1 file changed, 40 insertions(+), 3 deletions(-)
+ drivers/usb/host/ehci-platform.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/omap-iommu.c b/arch/arm/mach-omap2/omap-iommu.c
-index f1a6ece8108e4..78247e6f4a720 100644
---- a/arch/arm/mach-omap2/omap-iommu.c
-+++ b/arch/arm/mach-omap2/omap-iommu.c
-@@ -11,14 +11,43 @@
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index e9a49007cce4a..e4fc3f66d43bf 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -455,10 +455,6 @@ static int ehci_platform_resume(struct device *dev)
  
- #include "omap_hwmod.h"
- #include "omap_device.h"
-+#include "clockdomain.h"
- #include "powerdomain.h"
+ 	ehci_resume(hcd, priv->reset_on_resume);
  
-+static void omap_iommu_dra7_emu_swsup_config(struct platform_device *pdev,
-+					     bool enable)
-+{
-+	static struct clockdomain *emu_clkdm;
-+	static DEFINE_SPINLOCK(emu_lock);
-+	static atomic_t count;
-+	struct device_node *np = pdev->dev.of_node;
-+
-+	if (!of_device_is_compatible(np, "ti,dra7-dsp-iommu"))
-+		return;
-+
-+	if (!emu_clkdm) {
-+		emu_clkdm = clkdm_lookup("emu_clkdm");
-+		if (WARN_ON_ONCE(!emu_clkdm))
-+			return;
-+	}
-+
-+	spin_lock(&emu_lock);
-+
-+	if (enable && (atomic_inc_return(&count) == 1))
-+		clkdm_deny_idle(emu_clkdm);
-+	else if (!enable && (atomic_dec_return(&count) == 0))
-+		clkdm_allow_idle(emu_clkdm);
-+
-+	spin_unlock(&emu_lock);
-+}
-+
- int omap_iommu_set_pwrdm_constraint(struct platform_device *pdev, bool request,
- 				    u8 *pwrst)
- {
- 	struct powerdomain *pwrdm;
- 	struct omap_device *od;
- 	u8 next_pwrst;
-+	int ret = 0;
+-	pm_runtime_disable(dev);
+-	pm_runtime_set_active(dev);
+-	pm_runtime_enable(dev);
+-
+ 	if (priv->quirk_poll)
+ 		quirk_poll_init(priv);
  
- 	od = to_omap_device(pdev);
- 	if (!od)
-@@ -31,13 +60,21 @@ int omap_iommu_set_pwrdm_constraint(struct platform_device *pdev, bool request,
- 	if (!pwrdm)
- 		return -EINVAL;
- 
--	if (request)
-+	if (request) {
- 		*pwrst = pwrdm_read_next_pwrst(pwrdm);
-+		omap_iommu_dra7_emu_swsup_config(pdev, true);
-+	}
- 
- 	if (*pwrst > PWRDM_POWER_RET)
--		return 0;
-+		goto out;
- 
- 	next_pwrst = request ? PWRDM_POWER_ON : *pwrst;
- 
--	return pwrdm_set_next_pwrst(pwrdm, next_pwrst);
-+	ret = pwrdm_set_next_pwrst(pwrdm, next_pwrst);
-+
-+out:
-+	if (!request)
-+		omap_iommu_dra7_emu_swsup_config(pdev, false);
-+
-+	return ret;
- }
 -- 
 2.25.1
 
