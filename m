@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFC9C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 661CC2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B3920773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259840;
-	bh=PeKvIN1kjCHm+SwAwXuvBKYp1u9GRzDXbVJh2Y8Q7CU=;
+	s=default; t=1595259844;
+	bh=cGe61lbOqkSpfEAcXd4jQngPZQxa5uwJDyeySxi7nX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F1uMMUMZrK5EDn33bzKRi3VXji8iif7U15ZW2IshxPOm/pX2NVae22rgeJWFelkz1
-	 XrTdh//2Hx3ua7Md2vgZZK3M6ZaTz/1/fCiokQYVnMErLpOwbOZmUQ2yJemW1z4jrR
-	 2bxXBGqH5bSqYopNDB22p6y4tEMy73Ok1Q/cZmyk=
+	b=FbHFg1aPaO4V7ELpT0LwkRrFa3krOB2PGcaJgq4Meqm6ydYFUU2X2UQw4iQC4ffHz
+	 ezDNQlcdzkBNs7ThTRm1Ns145yyROBw8NnvZ3dA5uyMWebQ1ToaNfzvLzCRUXXR1ng
+	 t1jZRlr41SaB1jgU+n7Ja1KYTeMO0m3fXASvb9o4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgGTPn7 (ORCPT
+        id S1730350AbgGTPoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:43:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37418 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:44:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730322AbgGTPnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:43:55 -0400
+        id S1730342AbgGTPn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:43:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 592492064B;
-        Mon, 20 Jul 2020 15:43:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91A902065E;
+        Mon, 20 Jul 2020 15:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259833;
-        bh=PeKvIN1kjCHm+SwAwXuvBKYp1u9GRzDXbVJh2Y8Q7CU=;
+        s=default; t=1595259839;
+        bh=cGe61lbOqkSpfEAcXd4jQngPZQxa5uwJDyeySxi7nX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=crHGpL0NKdTBgYTt3OcuKyGsmS0aagz6IA9OS5DEYuDz5iX10TYcYQdMwUwNWMFN8
-         zS2SD3Em00iH9+Pw0Qiw1leXyYEy0Dz2uunakKg41239FW9yWUGs2EhZjCOwH8TGP7
-         UlsFtaxlSWkhhtyFqG1rLQeCCBAtypwtPUzNhC7Y=
+        b=0kysi8oz72S4TND8kwQqqJi31/TPlHkWhimdPzBn5B2MpdAT16xzhDCaRorZFfiju
+         DKWcygVoZgYtjLnjGMwvmyUpMXkSqmUDwFGQ1BLUHIPi7saaCXkERSpfjsPWr2DLKZ
+         cIOBrFGuhS5Oj+j4RvVzZ+VvsiqA2Odz2euOohLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ciara Loftus <ciara.loftus@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 010/125] ixgbe: protect ring accesses with READ- and WRITE_ONCE
-Date:   Mon, 20 Jul 2020 17:35:49 +0200
-Message-Id: <20200720152803.451830791@linuxfoundation.org>
+Subject: [PATCH 4.14 012/125] cifs: update ctime and mtime during truncate
+Date:   Mon, 20 Jul 2020 17:35:51 +0200
+Message-Id: <20200720152803.556229771@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -61,110 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ciara Loftus <ciara.loftus@intel.com>
+From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 
-[ Upstream commit f140ad9fe2ae16f385f8fe4dc9cf67bb4c51d794 ]
+[ Upstream commit 5618303d8516f8ac5ecfe53ee8e8bc9a40eaf066 ]
 
-READ_ONCE should be used when reading rings prior to accessing the
-statistics pointer. Introduce this as well as the corresponding WRITE_ONCE
-usage when allocating and freeing the rings, to ensure protected access.
+As the man description of the truncate, if the size changed,
+then the st_ctime and st_mtime fields should be updated. But
+in cifs, we doesn't do it.
 
-Signed-off-by: Ciara Loftus <ciara.loftus@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+It lead the xfstests generic/313 failed.
+
+So, add the ATTR_MTIME|ATTR_CTIME flags on attrs when change
+the file size
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c  | 12 ++++++------
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 14 +++++++++++---
- 2 files changed, 17 insertions(+), 9 deletions(-)
+ fs/cifs/inode.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c
-index f1bfae0c41d0c..3cf8b3ea43b08 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c
-@@ -917,7 +917,7 @@ static int ixgbe_alloc_q_vector(struct ixgbe_adapter *adapter,
- 			ring->queue_index = txr_idx;
- 
- 		/* assign ring to adapter */
--		adapter->tx_ring[txr_idx] = ring;
-+		WRITE_ONCE(adapter->tx_ring[txr_idx], ring);
- 
- 		/* update count and index */
- 		txr_count--;
-@@ -944,7 +944,7 @@ static int ixgbe_alloc_q_vector(struct ixgbe_adapter *adapter,
- 		set_ring_xdp(ring);
- 
- 		/* assign ring to adapter */
--		adapter->xdp_ring[xdp_idx] = ring;
-+		WRITE_ONCE(adapter->xdp_ring[xdp_idx], ring);
- 
- 		/* update count and index */
- 		xdp_count--;
-@@ -991,7 +991,7 @@ static int ixgbe_alloc_q_vector(struct ixgbe_adapter *adapter,
- 			ring->queue_index = rxr_idx;
- 
- 		/* assign ring to adapter */
--		adapter->rx_ring[rxr_idx] = ring;
-+		WRITE_ONCE(adapter->rx_ring[rxr_idx], ring);
- 
- 		/* update count and index */
- 		rxr_count--;
-@@ -1020,13 +1020,13 @@ static void ixgbe_free_q_vector(struct ixgbe_adapter *adapter, int v_idx)
- 
- 	ixgbe_for_each_ring(ring, q_vector->tx) {
- 		if (ring_is_xdp(ring))
--			adapter->xdp_ring[ring->queue_index] = NULL;
-+			WRITE_ONCE(adapter->xdp_ring[ring->queue_index], NULL);
- 		else
--			adapter->tx_ring[ring->queue_index] = NULL;
-+			WRITE_ONCE(adapter->tx_ring[ring->queue_index], NULL);
- 	}
- 
- 	ixgbe_for_each_ring(ring, q_vector->rx)
--		adapter->rx_ring[ring->queue_index] = NULL;
-+		WRITE_ONCE(adapter->rx_ring[ring->queue_index], NULL);
- 
- 	adapter->q_vector[v_idx] = NULL;
- 	napi_hash_del(&q_vector->napi);
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 64ee45b6680a0..9c3fa0b555519 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -6842,7 +6842,10 @@ void ixgbe_update_stats(struct ixgbe_adapter *adapter)
- 	}
- 
- 	for (i = 0; i < adapter->num_rx_queues; i++) {
--		struct ixgbe_ring *rx_ring = adapter->rx_ring[i];
-+		struct ixgbe_ring *rx_ring = READ_ONCE(adapter->rx_ring[i]);
+diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+index 528fe225b65a9..d0d295a28b6e4 100644
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -2216,6 +2216,15 @@ set_size_out:
+ 	if (rc == 0) {
+ 		cifsInode->server_eof = attrs->ia_size;
+ 		cifs_setsize(inode, attrs->ia_size);
 +
-+		if (!rx_ring)
-+			continue;
- 		non_eop_descs += rx_ring->rx_stats.non_eop_descs;
- 		alloc_rx_page_failed += rx_ring->rx_stats.alloc_rx_page_failed;
- 		alloc_rx_buff_failed += rx_ring->rx_stats.alloc_rx_buff_failed;
-@@ -6861,15 +6864,20 @@ void ixgbe_update_stats(struct ixgbe_adapter *adapter)
- 	packets = 0;
- 	/* gather some stats to the adapter struct that are per queue */
- 	for (i = 0; i < adapter->num_tx_queues; i++) {
--		struct ixgbe_ring *tx_ring = adapter->tx_ring[i];
-+		struct ixgbe_ring *tx_ring = READ_ONCE(adapter->tx_ring[i]);
++		/*
++		 * The man page of truncate says if the size changed,
++		 * then the st_ctime and st_mtime fields for the file
++		 * are updated.
++		 */
++		attrs->ia_ctime = attrs->ia_mtime = current_time(inode);
++		attrs->ia_valid |= ATTR_CTIME | ATTR_MTIME;
 +
-+		if (!tx_ring)
-+			continue;
- 		restart_queue += tx_ring->tx_stats.restart_queue;
- 		tx_busy += tx_ring->tx_stats.tx_busy;
- 		bytes += tx_ring->stats.bytes;
- 		packets += tx_ring->stats.packets;
+ 		cifs_truncate_page(inode->i_mapping, inode->i_size);
  	}
- 	for (i = 0; i < adapter->num_xdp_queues; i++) {
--		struct ixgbe_ring *xdp_ring = adapter->xdp_ring[i];
-+		struct ixgbe_ring *xdp_ring = READ_ONCE(adapter->xdp_ring[i]);
  
-+		if (!xdp_ring)
-+			continue;
- 		restart_queue += xdp_ring->tx_stats.restart_queue;
- 		tx_busy += xdp_ring->tx_stats.tx_busy;
- 		bytes += xdp_ring->stats.bytes;
 -- 
 2.25.1
 
