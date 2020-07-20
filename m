@@ -7,46 +7,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5A5C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 739F7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF1B2177B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460A52177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:15:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u7ypevrS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bd8OgdDm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgGTAOw (ORCPT
+        id S1727770AbgGTAPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 20:14:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37278 "EHLO
+        Sun, 19 Jul 2020 20:15:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726159AbgGTAOv (ORCPT
+        with ESMTP id S1726159AbgGTAPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 20:14:51 -0400
+        Sun, 19 Jul 2020 20:15:01 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98B6FC0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 17:14:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D61C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 17:15:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
         Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
         Content-Description:In-Reply-To:References;
-        bh=2dh8AOT7UBejhzDs0je1RvMA+wqI08Hnfik6pq9eHmI=; b=u7ypevrSS/liCDXHKATmNWeiYd
-        P8vIMAe8N9zXYf3KZgMtH59AfOOrD9xBynppXXHlTLs5DNRGq+giVXYfnUPWmzP/a6XT+2C9T8Orj
-        n8ktQDW0WhgZnQmdRPXhYnvG7lAzHRrO+RrTzjV7F2mQRAkj1WCus1cElOIztiy7Ox/CcLmIy6Ui9
-        5yxwy0qj1fVsPwL1bumZV8q265g4e0F2ZZVHptq0KXXcXtMJPakus9u/E69KPu+i/XIl8x/coW6cb
-        8M9l6dx3Yy5aeeEFPyVPfz4w7v9H6+qn83J+jMkgaRk8XOcICjtPu9AZqM6e9Fs/lrDwp43EkNXZk
-        5FtIDQzA==;
+        bh=ZzC3bDxExMRw5At5PKSW5xY2DfFG27TV8AUMY/YxGmc=; b=Bd8OgdDmhUqCqAnF8hF3D5mN+e
+        S0iCg41hdh7iIzuvzVEKi+0Ac8dF0Z9LWgVYiLIPH7INesSYkVhQft2dInvQem9gEgiGBEuL3bNCD
+        rWKx0MVNxBEaEXmU1ZuqHJ1RxGZ/P/xnhPgz3zMlfjl/E1WPK7Q1VTOQ8cY3cU6R4alldVTUGW1id
+        fudmHfAPlzv15+kG7txxXbvRxAK4aYYQkNPROS3MAPgh6NKQK1Uj0xz9QESghg0cE8/VwSks2jDpL
+        p6ypAXk2bUpaHSKA+T9tSm/BUkIij7p0Mn8QijRy+RrJuJEIwzrvCjAUzqARdp0THaLRaV9VTebhf
+        ZRcKoDJA==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxJSC-000416-Al; Mon, 20 Jul 2020 00:14:48 +0000
+        id 1jxJSN-000420-1X; Mon, 20 Jul 2020 00:14:59 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH] ubifs: misc.h: delete a duplicated word
-Date:   Sun, 19 Jul 2020 17:14:44 -0700
-Message-Id: <20200720001444.30972-1-rdunlap@infradead.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, Jan Kara <jack@suse.com>
+Subject: [PATCH] udf: osta_udf.h: delete a duplicated word
+Date:   Sun, 19 Jul 2020 17:14:55 -0700
+Message-Id: <20200720001455.31882-1-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -55,23 +53,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the repeated word "as" in a comment.
+Drop the repeated word "struct" in a comment.
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: linux-mtd@lists.infradead.org
+Cc: Jan Kara <jack@suse.com>
 ---
- fs/ubifs/misc.h |    2 +-
+ fs/udf/osta_udf.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200717.orig/fs/ubifs/misc.h
-+++ linux-next-20200717/fs/ubifs/misc.h
-@@ -121,7 +121,7 @@ static inline const char *ubifs_compr_na
-  * ubifs_wbuf_sync - synchronize write-buffer.
-  * @wbuf: write-buffer to synchronize
-  *
-- * This is the same as as 'ubifs_wbuf_sync_nolock()' but it does not assume
-+ * This is the same as 'ubifs_wbuf_sync_nolock()' but it does not assume
-  * that the write-buffer is already locked.
-  */
- static inline int ubifs_wbuf_sync(struct ubifs_wbuf *wbuf)
+--- linux-next-20200717.orig/fs/udf/osta_udf.h
++++ linux-next-20200717/fs/udf/osta_udf.h
+@@ -226,7 +226,7 @@ struct sparingTable {
+ #define ICBTAG_FILE_TYPE_MIRROR		0xFB
+ #define ICBTAG_FILE_TYPE_BITMAP		0xFC
+ 
+-/* struct struct long_ad ICB - ADImpUse (UDF 2.60 2.2.4.3) */
++/* struct long_ad ICB - ADImpUse (UDF 2.60 2.2.4.3) */
+ struct allocDescImpUse {
+ 	__le16		flags;
+ 	uint8_t		impUse[4];
