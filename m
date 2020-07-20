@@ -2,95 +2,65 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA887C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D24AC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A15420684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260863;
-	bh=JNClSQQYpxj38ahF4M0o2Rn4B8uhr5eTzyuyhfw4B98=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dm9QHIiC69d4kdLlu1ejp79Pg7oVSrDBDRvYC/0L1eDASNJc2IO+xukd7invaGFP7
-	 Gppke/Wj2d5KaZ1ohw4QG0rAbHAGF52MP4ZXodo1vLKGKv5ZeuVR2WNYdHZNqpEn89
-	 qVaftmQzxx5AXOpkqIF7n2vwrgwa6zzsjTBiWBlk=
+	by mail.kernel.org (Postfix) with ESMTP id 7327820672
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732470AbgGTQBB (ORCPT
+        id S1732501AbgGTQBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:01:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731999AbgGTQA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:00:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73C6622CF7;
-        Mon, 20 Jul 2020 16:00:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260858;
-        bh=JNClSQQYpxj38ahF4M0o2Rn4B8uhr5eTzyuyhfw4B98=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fV0XoJYhKPldlL7gZUe/O4bM1dAZg8AWUS5K6h3PX9aJ/7nA9UgZOWiwUHs80L2Bq
-         Hjrz+OJ58GAN1aVARZtDKeCYwR5xUMKGAN3vRRZ8MU7qR4UefSohXtqTm/c3G0f13K
-         yUAr9DHR2gNvMc4w2k72Owpp1+8q4kcX1b0t4zwE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.4 121/215] soc: qcom: socinfo: add missing soc_id sysfs entry
-Date:   Mon, 20 Jul 2020 17:36:43 +0200
-Message-Id: <20200720152825.957684716@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
-References: <20200720152820.122442056@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 12:01:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731851AbgGTQBL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:01:11 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EC3BC061794;
+        Mon, 20 Jul 2020 09:01:11 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxYDr-00Ge6L-Kq; Mon, 20 Jul 2020 16:00:59 +0000
+Date:   Mon, 20 Jul 2020 17:00:59 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+75867c44841cb6373570@syzkaller.appspotmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: KASAN: use-after-free Read in userfaultfd_release (2)
+Message-ID: <20200720160059.GO2786714@ZenIV.linux.org.uk>
+References: <0000000000001bbb6705aa49635a@google.com>
+ <20200713084512.10416-1-hdanton@sina.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713084512.10416-1-hdanton@sina.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Mon, Jul 13, 2020 at 04:45:12PM +0800, Hillf Danton wrote:
 
-commit 27a344139c186889d742764d3c2a62b395949cef upstream.
+> Bridge the gap between slab free and the fput in task work wrt
+> file's private data.
 
-Looks like SoC ID is not exported to sysfs for some reason.
-This patch adds it!
+No.  This
 
-This is mostly used by userspace libraries like Snapdragon
-Neural Processing Engine (SNPE) SDK for checking supported SoC info.
+> @@ -2048,6 +2055,7 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
+>  
+>  	fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
+>  	if (fd < 0) {
+> +		file->private_data = NULL;
+>  		fput(file);
+>  		goto out;
+>  	}
+> 
 
-Fixes: efb448d0a3fc ("soc: qcom: Add socinfo driver")
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200319121418.5180-1-srinivas.kandagatla@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/soc/qcom/socinfo.c |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/drivers/soc/qcom/socinfo.c
-+++ b/drivers/soc/qcom/socinfo.c
-@@ -428,6 +428,8 @@ static int qcom_socinfo_probe(struct pla
- 	qs->attr.family = "Snapdragon";
- 	qs->attr.machine = socinfo_machine(&pdev->dev,
- 					   le32_to_cpu(info->id));
-+	qs->attr.soc_id = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%u",
-+					 le32_to_cpu(info->id));
- 	qs->attr.revision = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%u.%u",
- 					   SOCINFO_MAJOR(le32_to_cpu(info->ver)),
- 					   SOCINFO_MINOR(le32_to_cpu(info->ver)));
-
-
+is fundamentally wrong; you really shouldn't take over the cleanups
+if you ever do fput().
