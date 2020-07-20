@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7336BC43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5773C2D0E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46ED4206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C697522C9D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281456;
-	bh=K/QnzBnxSz8nRtmvwhBj2GIp+N4PtdWh0qolEym6wG4=;
+	s=default; t=1595281458;
+	bh=7Hs9pX29s6E2rxLT8tGAS344num1a2AdH/OcHdHCPxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WMJOb/+I3cjcHBMndv46WBPCSr8wk1nGCMp+ngjavvHF01i5sreVNdaQbcy4GT09h
-	 /W0dL4Ou76Z6+SssjnUsJChodheTV9+pi6SaLwZmXih78MOTnA7U117Q8na1/jxStV
-	 2T71Q8BJShFbB9Ma/c4aIH5WePwuyn030Dzrawng=
+	b=tpeBeuswwxxOBFuHhkhxe5LMHoIYxaEifAJ5g0SnH7xbxCBIFh2qAcxf9PeaAh0jc
+	 s6H4ICfWhIFPiovI5R//eC511mH0L/r8cNdUholXnSNgSznQWISkPwDLc2cw+5Re1i
+	 HiyEVnSsIFzzzWlECXpcK9YzyPd/JRgVYSuixr6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbgGTVoO (ORCPT
+        id S1728000AbgGTViJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:44:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56560 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:38:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727906AbgGTViK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:10 -0400
+        id S1727906AbgGTVh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:37:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C92A22CF8;
-        Mon, 20 Jul 2020 21:38:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E14FA22D01;
+        Mon, 20 Jul 2020 21:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281090;
-        bh=K/QnzBnxSz8nRtmvwhBj2GIp+N4PtdWh0qolEym6wG4=;
+        s=default; t=1595281076;
+        bh=7Hs9pX29s6E2rxLT8tGAS344num1a2AdH/OcHdHCPxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zUCoVSwu+8TeAppB80QXIm01ceQvLrLO8zSlemGDovOrCPwR5wVYcEfHtHptUu2E8
-         jyihYNj7pYUXKsLuhT/OEXau6N8rGhJ0hk2E6yqEKZsWs7jxmBtOfVce/jDqMKAcPZ
-         Q1R2PO/jwKt0EhyF5AYE4cWTdwEPJSt2jmk5a4v4=
+        b=iKDszF72rcxeGirZx2VZAJ0Yroe2ZbYVfJjt83Z/b2JhqAL9Rp4WK+Xg9VGIptWAY
+         rnajnpCOT9jaQfNyJjb5tZAP5ADhjIDS989F5WNxNT0t08vbdAd3v6YSAAbegkqiFR
+         DL6iY8W4Lujj8E/6rIUiBQlI6S+Aap08EIaZ1LMU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Caiyuan Xie <caiyuan.xie@cn.alps.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 02/34] HID: alps: support devices with report id 2
-Date:   Mon, 20 Jul 2020 17:37:35 -0400
-Message-Id: <20200720213807.407380-2-sashal@kernel.org>
+Cc:     Qi Liu <liuqi115@huawei.com>,
+        Haifeng Wang <wang.wanghaifeng@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 33/40] drivers/perf: Fix kernel panic when rmmod PMU modules during perf sampling
+Date:   Mon, 20 Jul 2020 17:37:08 -0400
+Message-Id: <20200720213715.406997-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
-References: <20200720213807.407380-1-sashal@kernel.org>
+In-Reply-To: <20200720213715.406997-1-sashal@kernel.org>
+References: <20200720213715.406997-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,39 +61,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Caiyuan Xie <caiyuan.xie@cn.alps.com>
+From: Qi Liu <liuqi115@huawei.com>
 
-[ Upstream commit aa3c439c144f0a465ed1f28f11c772886fb02b35 ]
+[ Upstream commit bdc5c744c7b6457d18a95c26769dad0e7f480a08 ]
 
-Add support for devices which that have reports with id == 2
+When users try to remove PMU modules during perf sampling, kernel panic
+will happen because the pmu->read() is a NULL pointer here.
 
-Signed-off-by: Caiyuan Xie <caiyuan.xie@cn.alps.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+INFO on HiSilicon hip08 platform as follow:
+pc : hisi_uncore_pmu_event_update+0x30/0xa4 [hisi_uncore_pmu]
+lr : hisi_uncore_pmu_read+0x20/0x2c [hisi_uncore_pmu]
+sp : ffff800010103e90
+x29: ffff800010103e90 x28: ffff0027db0c0e40
+x27: ffffa29a76f129d8 x26: ffffa29a77ceb000
+x25: ffffa29a773a5000 x24: ffffa29a77392000
+x23: ffffddffe5943f08 x22: ffff002784285960
+x21: ffff002784285800 x20: ffff0027d2e76c80
+x19: ffff0027842859e0 x18: ffff80003498bcc8
+x17: ffffa29a76afe910 x16: ffffa29a7583f530
+x15: 16151a1512061a1e x14: 0000000000000000
+x13: ffffa29a76f1e238 x12: 0000000000000001
+x11: 0000000000000400 x10: 00000000000009f0
+x9 : ffff8000107b3e70 x8 : ffff0027db0c1890
+x7 : ffffa29a773a7000 x6 : 00000007f5131013
+x5 : 00000007f5131013 x4 : 09f257d417c00000
+x3 : 00000002187bd7ce x2 : ffffa29a38f0f0d8
+x1 : ffffa29a38eae268 x0 : ffff0027d2e76c80
+Call trace:
+hisi_uncore_pmu_event_update+0x30/0xa4 [hisi_uncore_pmu]
+hisi_uncore_pmu_read+0x20/0x2c [hisi_uncore_pmu]
+__perf_event_read+0x1a0/0x1f8
+flush_smp_call_function_queue+0xa0/0x160
+generic_smp_call_function_single_interrupt+0x18/0x20
+handle_IPI+0x31c/0x4dc
+gic_handle_irq+0x2c8/0x310
+el1_irq+0xcc/0x180
+arch_cpu_idle+0x4c/0x20c
+default_idle_call+0x20/0x30
+do_idle+0x1b4/0x270
+cpu_startup_entry+0x28/0x30
+secondary_start_kernel+0x1a4/0x1fc
+
+To solve the above issue, current module should be registered to kernel,
+so that try_module_get() can be invoked when perf sampling starts. This
+adds the reference counting of module and could prevent users from removing
+modules during sampling.
+
+Reported-by: Haifeng Wang <wang.wanghaifeng@huawei.com>
+Signed-off-by: Qi Liu <liuqi115@huawei.com>
+Reviewed-by: John Garry <john.garry@huawei.com>
+Link: https://lore.kernel.org/r/1594891165-8228-1-git-send-email-liuqi115@huawei.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-alps.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/perf/arm_smmuv3_pmu.c                 | 1 +
+ drivers/perf/fsl_imx8_ddr_perf.c              | 1 +
+ drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c | 1 +
+ drivers/perf/hisilicon/hisi_uncore_hha_pmu.c  | 1 +
+ drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c  | 1 +
+ 5 files changed, 5 insertions(+)
 
-diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
-index b2ad319a74b9a..d33f5abc8f64d 100644
---- a/drivers/hid/hid-alps.c
-+++ b/drivers/hid/hid-alps.c
-@@ -25,6 +25,7 @@
+diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
+index 48e28ef93a702..90caba56dfbc1 100644
+--- a/drivers/perf/arm_smmuv3_pmu.c
++++ b/drivers/perf/arm_smmuv3_pmu.c
+@@ -742,6 +742,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, smmu_pmu);
  
- #define U1_MOUSE_REPORT_ID			0x01 /* Mouse data ReportID */
- #define U1_ABSOLUTE_REPORT_ID		0x03 /* Absolute data ReportID */
-+#define U1_ABSOLUTE_REPORT_ID_SECD  0x02 /* FW-PTP Absolute data ReportID */
- #define U1_FEATURE_REPORT_ID		0x05 /* Feature ReportID */
- #define U1_SP_ABSOLUTE_REPORT_ID	0x06 /* Feature ReportID */
- 
-@@ -368,6 +369,7 @@ static int u1_raw_event(struct alps_dev *hdata, u8 *data, int size)
- 	case U1_FEATURE_REPORT_ID:
- 		break;
- 	case U1_ABSOLUTE_REPORT_ID:
-+	case U1_ABSOLUTE_REPORT_ID_SECD:
- 		for (i = 0; i < hdata->max_fingers; i++) {
- 			u8 *contact = &data[i * 5];
- 
+ 	smmu_pmu->pmu = (struct pmu) {
++		.module		= THIS_MODULE,
+ 		.task_ctx_nr    = perf_invalid_context,
+ 		.pmu_enable	= smmu_pmu_enable,
+ 		.pmu_disable	= smmu_pmu_disable,
+diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
+index 90884d14f95fa..2aed2d96f8ae7 100644
+--- a/drivers/perf/fsl_imx8_ddr_perf.c
++++ b/drivers/perf/fsl_imx8_ddr_perf.c
+@@ -512,6 +512,7 @@ static int ddr_perf_init(struct ddr_pmu *pmu, void __iomem *base,
+ {
+ 	*pmu = (struct ddr_pmu) {
+ 		.pmu = (struct pmu) {
++			.module	      = THIS_MODULE,
+ 			.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
+ 			.task_ctx_nr = perf_invalid_context,
+ 			.attr_groups = attr_groups,
+diff --git a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
+index 453f1c6a16ca8..c65da06abb041 100644
+--- a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
++++ b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
+@@ -378,6 +378,7 @@ static int hisi_ddrc_pmu_probe(struct platform_device *pdev)
+ 			      ddrc_pmu->sccl_id, ddrc_pmu->index_id);
+ 	ddrc_pmu->pmu = (struct pmu) {
+ 		.name		= name,
++		.module		= THIS_MODULE,
+ 		.task_ctx_nr	= perf_invalid_context,
+ 		.event_init	= hisi_uncore_pmu_event_init,
+ 		.pmu_enable	= hisi_uncore_pmu_enable,
+diff --git a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
+index e5af9d7e6e145..ee6e6a1c390a0 100644
+--- a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
++++ b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
+@@ -390,6 +390,7 @@ static int hisi_hha_pmu_probe(struct platform_device *pdev)
+ 			      hha_pmu->sccl_id, hha_pmu->index_id);
+ 	hha_pmu->pmu = (struct pmu) {
+ 		.name		= name,
++		.module		= THIS_MODULE,
+ 		.task_ctx_nr	= perf_invalid_context,
+ 		.event_init	= hisi_uncore_pmu_event_init,
+ 		.pmu_enable	= hisi_uncore_pmu_enable,
+diff --git a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
+index 479de4be99eba..c8b98d3a8432a 100644
+--- a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
++++ b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
+@@ -380,6 +380,7 @@ static int hisi_l3c_pmu_probe(struct platform_device *pdev)
+ 			      l3c_pmu->sccl_id, l3c_pmu->index_id);
+ 	l3c_pmu->pmu = (struct pmu) {
+ 		.name		= name,
++		.module		= THIS_MODULE,
+ 		.task_ctx_nr	= perf_invalid_context,
+ 		.event_init	= hisi_uncore_pmu_event_init,
+ 		.pmu_enable	= hisi_uncore_pmu_enable,
 -- 
 2.25.1
 
