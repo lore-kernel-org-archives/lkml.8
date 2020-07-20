@@ -2,108 +2,113 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9D1C433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B79C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0A94206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262413;
-	bh=1hv6+9s9uHgrO4FGazjtcjrsMtVaE6v2htgNsjv4PEU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=oboVnRzWUxWaq81ejGByhzqfN7IdAHPPhhiYgl2Kj3KBsjW6bYf6ueapLIYSkVYfk
-	 DhnH+4Dq0FR7EDfvIstTBWu3CTCUYXU4nsZqA1yzubPuCZaHoo/MU+WNREXZhi7grV
-	 TuTsvbGapEsxaxAct1OFhXzg3x1z7cWA0pCqw4ME=
+	by mail.kernel.org (Postfix) with ESMTP id 14ADF206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZHcPToNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732321AbgGTQ0w (ORCPT
+        id S1730311AbgGTQ07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:26:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732614AbgGTQ0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:26:46 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04B9222CB1;
-        Mon, 20 Jul 2020 16:26:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595262406;
-        bh=1hv6+9s9uHgrO4FGazjtcjrsMtVaE6v2htgNsjv4PEU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=gW02FtPTErbRzEv9138QhaWszPxdiiuy1mSoVmiSimp+ELKwxdsAeBsgb4TeQNfDv
-         n4sdFWI1Db7DVceSzZaqIyY+3OacV1FHJv61Hk0vq3tq6THAfsgVLnNv7X/YCo50r5
-         ve5LSq8NdPk1Acr1TUgdqe8yYgh6rc0N5ArShaIQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E0A563522A8C; Mon, 20 Jul 2020 09:26:45 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 09:26:45 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] refperf: avoid null pointer dereference when buf
- fails to allocate
-Message-ID: <20200720162645.GS9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200716143856.1708123-1-colin.king@canonical.com>
+        Mon, 20 Jul 2020 12:26:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732303AbgGTP7s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:48 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F62C061794;
+        Mon, 20 Jul 2020 08:59:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=oBh0/na3isreBgMz5fpFIl71o0/kBU7V3ZRggI9ypgA=; b=ZHcPToNOeCDpSZ3gmrGXuCjqzC
+        +z+j/CYcdOGAAB14WmzG8rb/HwhEv1D+UC1aoNMMWUDqvz6rmaDc4BMqRvMkM6qsRWKzsYPNCO+zc
+        aHYpdxreBb7AaO25T14haozqdakT4r2XLfpF5J88toMDWOb93q+bHpCzgsGjYPydUDdptm7UFwsEu
+        GyHtBAHky3+SaxT6+W9aasK0KXp7xmQR/VVbgsVUVkJv/Wztu8F76ySK1H2jAmESmnmevIHQyhqpN
+        9BUjGwNJCjNARInq2/tGztUVZs3Mh/0VravApnxYE1OWEssQGu2Amfih0l3ELZn9ohGJ7uTqXk867
+        w0b46wJA==;
+Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxYCd-0007sA-JJ; Mon, 20 Jul 2020 15:59:43 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH 23/24] fs: remove KSTAT_QUERY_FLAGS
+Date:   Mon, 20 Jul 2020 17:59:01 +0200
+Message-Id: <20200720155902.181712-24-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720155902.181712-1-hch@lst.de>
+References: <20200720155902.181712-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716143856.1708123-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 03:38:56PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently in the unlikely event that buf fails to be allocated it
-> is dereferenced a few times.  Use the errexit flag to determine if
-> buf should be written to to avoid the null pointer dereferences.
-> 
-> Addresses-Coverity: ("Dereference after null check")
-> Fixes: f518f154ecef ("refperf: Dynamically allocate experiment-summary output buffer")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+KSTAT_QUERY_FLAGS expands to AT_STATX_SYNC_TYPE, which itself already
+is a mask.  Remove the double name, especially given that the prefix
+is a little confusing vs the normal AT_* flags.
 
-Good catch, applied, thank you!
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/stat.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-							Thanx, Paul
+diff --git a/fs/stat.c b/fs/stat.c
+index 8acc4b14ac24c9..dacecdda2e7967 100644
+--- a/fs/stat.c
++++ b/fs/stat.c
+@@ -56,7 +56,7 @@ EXPORT_SYMBOL(generic_fillattr);
+  * @path: file to get attributes from
+  * @stat: structure to return attributes in
+  * @request_mask: STATX_xxx flags indicating what the caller wants
+- * @query_flags: Query mode (KSTAT_QUERY_FLAGS)
++ * @query_flags: Query mode (AT_STATX_SYNC_TYPE)
+  *
+  * Get attributes without calling security_inode_getattr.
+  *
+@@ -71,7 +71,7 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
+ 
+ 	memset(stat, 0, sizeof(*stat));
+ 	stat->result_mask |= STATX_BASIC_STATS;
+-	query_flags &= KSTAT_QUERY_FLAGS;
++	query_flags &= AT_STATX_SYNC_TYPE;
+ 
+ 	/* allow the fs to override these if it really wants to */
+ 	/* SB_NOATIME means filesystem supplies dummy atime value */
+@@ -97,7 +97,7 @@ EXPORT_SYMBOL(vfs_getattr_nosec);
+  * @path: The file of interest
+  * @stat: Where to return the statistics
+  * @request_mask: STATX_xxx flags indicating what the caller wants
+- * @query_flags: Query mode (KSTAT_QUERY_FLAGS)
++ * @query_flags: Query mode (AT_STATX_SYNC_TYPE)
+  *
+  * Ask the filesystem for a file's attributes.  The caller must indicate in
+  * request_mask and query_flags to indicate what they want.
+@@ -171,7 +171,7 @@ static int vfs_statx(int dfd, const char __user *filename, int flags,
+ 	int error;
+ 
+ 	if (flags & ~(AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT | AT_EMPTY_PATH |
+-		      KSTAT_QUERY_FLAGS))
++		      AT_STATX_SYNC_TYPE))
+ 		return -EINVAL;
+ 
+ 	if (!(flags & AT_SYMLINK_NOFOLLOW))
+-- 
+2.27.0
 
-> ---
->  kernel/rcu/refscale.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/rcu/refscale.c b/kernel/rcu/refscale.c
-> index d9291f883b54..952595c678b3 100644
-> --- a/kernel/rcu/refscale.c
-> +++ b/kernel/rcu/refscale.c
-> @@ -546,9 +546,11 @@ static int main_func(void *arg)
->  	// Print the average of all experiments
->  	SCALEOUT("END OF TEST. Calculating average duration per loop (nanoseconds)...\n");
->  
-> -	buf[0] = 0;
-> -	strcat(buf, "\n");
-> -	strcat(buf, "Runs\tTime(ns)\n");
-> +	if (!errexit) {
-> +		buf[0] = 0;
-> +		strcat(buf, "\n");
-> +		strcat(buf, "Runs\tTime(ns)\n");
-> +	}
->  
->  	for (exp = 0; exp < nruns; exp++) {
->  		u64 avg;
-> -- 
-> 2.27.0
-> 
