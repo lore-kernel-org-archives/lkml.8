@@ -2,53 +2,51 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACFCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ED8C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 017BF2176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CA5620684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260920;
-	bh=CuMFnDdWW6Rj3x2ceG6X3sby4sU4hKuLNenESjiWw88=;
+	s=default; t=1595260925;
+	bh=u8VRUXvVJ4YORVGre7tonPT+taV2d0bTYimkyil+lt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tBSz4IB76GC7xinHmXq9rQyyfBMn2kXun2Hj3+mSChyo84Ftgw2+A6vv+e4eaVoA+
-	 ZO2BwlHSFnzwZ3bjK2dOhYIMTRnal9rOSIWpB6Y1xxn8tWgoBp45hInZGWUnYz7e4V
-	 eoHF8z+PJ3Q5UJIP2QDEgL+Q4tDBiisHgia2S/D8=
+	b=sC6A2+MeZanFNfgSBqNLJqI2wlMcFJRvJyYmV8mqyVMG+SAKmn6mknh4+sW2eYz1B
+	 2SsN/t0vAfu/yh/OVNl7TSS58Rf+RaA7nhOCcTjZ7Hz2UwZlNReg3xs5XxbyPNxc1x
+	 ys1IPG1NzXwURU/DblUk9zVZ+5ecXLmIEdvydhw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732599AbgGTQB7 (ORCPT
+        id S1732077AbgGTQCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:01:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35562 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:02:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732594AbgGTQB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:01:56 -0400
+        id S1732605AbgGTQCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:02:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B405420684;
-        Mon, 20 Jul 2020 16:01:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2874520773;
+        Mon, 20 Jul 2020 16:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260916;
-        bh=CuMFnDdWW6Rj3x2ceG6X3sby4sU4hKuLNenESjiWw88=;
+        s=default; t=1595260921;
+        bh=u8VRUXvVJ4YORVGre7tonPT+taV2d0bTYimkyil+lt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QDAagDLMg4na8fttCAUbdnEAI9YqE2/CVZF4djU6MMyV4JrgDFI5di3wU+KFVDDeS
-         fQDiPH0hj9q+tetaqbMpVUBZ2EEIpcQfH6tPO/7EMvaH5JZ5v9o/kF53TECrazMzAA
-         a7es4uwk36syu3dGhPXN8tC9/Mm6jESRIgarDdX8=
+        b=nm4PFKXJr9F6ZHTpwMezY7BNB9Z1bCoOxMgUKMco0n5+FbU2D/aHihU/Z1DJ9vm3N
+         fIfNP0Z6CHOia/9OOTnRZlfWUuE+Ak1cTDKyzfkBgngKeheISDI4new58WVVjE/lHh
+         +I6fpQgcIzctR7HPpuOt/60iOFPOQDP8pWPgIwHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Harry Cutts <hcutts@chromium.org>,
+        stable@vger.kernel.org, Sebastian Parschauer <s.parschauer@gmx.de>,
         Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.4 143/215] HID: logitech-hidpp: avoid repeated "multiplier = " log messages
-Date:   Mon, 20 Jul 2020 17:37:05 +0200
-Message-Id: <20200720152826.994050088@linuxfoundation.org>
+Subject: [PATCH 5.4 145/215] HID: quirks: Always poll Obins Anne Pro 2 keyboard
+Date:   Mon, 20 Jul 2020 17:37:07 +0200
+Message-Id: <20200720152827.093812693@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -61,39 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+From: Sebastian Parschauer <s.parschauer@gmx.de>
 
-commit e13762abf38ead29071407f32b9dcec38f21dc34 upstream.
+commit ca28aff0e1dc7dce9e12a7fd9276b7118ce5e73a upstream.
 
-These messages appear each time the mouse wakes from sleep, in my case
-(Logitech M705), every minute or so.
-Let's downgrade them to the "debug" level so they don't fill the kernel log
-by default.
+The Obins Anne Pro 2 keyboard (04d9:a293) disconnects after a few
+minutes of inactivity when using it wired and typing does not result
+in any input events any more. This is a common firmware flaw. So add
+the ALWAYS_POLL quirk for this device.
 
-While we are at it, let's make clear that this is a wheel multiplier (and
-not, for example, XY movement multiplier).
+GitHub user Dietrich Moerman (dietrichm) tested the quirk and
+requested my help in my project
+https://github.com/sriemer/fix-linux-mouse issue 22 to provide
+this patch.
 
-Fixes: 4435ff2f09a2 ("HID: logitech: Enable high-resolution scrolling on Logitech mice")
-Cc: stable@vger.kernel.org
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-Reviewed-by: Harry Cutts <hcutts@chromium.org>
+Link: https://www.reddit.com/r/AnnePro/comments/gruzcb/anne_pro_2_linux_cant_type_after_inactivity/
+Signed-off-by: Sebastian Parschauer <s.parschauer@gmx.de>
+Cc: stable@vger.kernel.org # v4.16+
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-logitech-hidpp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-ids.h    |    1 +
+ drivers/hid/hid-quirks.c |    1 +
+ 2 files changed, 2 insertions(+)
 
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -2964,7 +2964,7 @@ static int hi_res_scroll_enable(struct h
- 		multiplier = 1;
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -620,6 +620,7 @@
+ #define USB_DEVICE_ID_HOLTEK_ALT_MOUSE_A081	0xa081
+ #define USB_DEVICE_ID_HOLTEK_ALT_MOUSE_A0C2	0xa0c2
+ #define USB_DEVICE_ID_HOLTEK_ALT_KEYBOARD_A096	0xa096
++#define USB_DEVICE_ID_HOLTEK_ALT_KEYBOARD_A293	0xa293
  
- 	hidpp->vertical_wheel_counter.wheel_multiplier = multiplier;
--	hid_info(hidpp->hid_dev, "multiplier = %d\n", multiplier);
-+	hid_dbg(hidpp->hid_dev, "wheel multiplier = %d\n", multiplier);
- 	return 0;
- }
- 
+ #define USB_VENDOR_ID_IMATION		0x0718
+ #define USB_DEVICE_ID_DISC_STAKKA	0xd000
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -88,6 +88,7 @@ static const struct hid_device_id hid_qu
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HAPP, USB_DEVICE_ID_UGCI_FIGHTING), HID_QUIRK_BADPAD | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HAPP, USB_DEVICE_ID_UGCI_FLYING), HID_QUIRK_BADPAD | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HOLTEK_ALT, USB_DEVICE_ID_HOLTEK_ALT_KEYBOARD_A096), HID_QUIRK_NO_INIT_REPORTS },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_HOLTEK_ALT, USB_DEVICE_ID_HOLTEK_ALT_KEYBOARD_A293), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0A4A), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0B4A), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
 
 
