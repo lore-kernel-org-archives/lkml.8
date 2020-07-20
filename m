@@ -2,51 +2,51 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CABAC433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9A1C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF1A20734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872782065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261603;
-	bh=7P51UCwmsDPHCOOzmOfOEUc5JLZLUOM0bBwlUBhsPU4=;
+	s=default; t=1595261611;
+	bh=GwixDRIoyH/k1UNYUFK1YYn4Esbpdb5Z0b8IK21pRu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YlyzYVJAnLD01NhHI0wCE+cyQQzZmX8mEcS6ubwmaqO9meb6ri8q1WpYBLq3H7MKt
-	 suBcdY+q6PSPdt7xalxsWYuZoS+bBTXeeEpMhXbeqcdQBf9rZDpUQyQGBNJiyt6/4W
-	 E0fSAqk55I+0wMX2oJr08broGNUHFN7fJ5dAjCKc=
+	b=GyZWbgRl5YRq5SouzoD5cVfsgNndTiDLfEhDlsRV5lWZJ4lrO3KtaUgky1I3sdhFB
+	 hxS789HXe1X2YJuuQ3F+7M7XCC926q/s5q99smpHr10Dw+aEqXlQ8iQ4+7R6DeCX0C
+	 uGpuKYhjRzCIIqSFoXSCwQf5u0i4i2aUqQDK3BBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388106AbgGTQNW (ORCPT
+        id S2388117AbgGTQN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:13:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53090 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:13:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388096AbgGTQNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:13:14 -0400
+        id S2387468AbgGTQNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:13:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1527B20684;
-        Mon, 20 Jul 2020 16:13:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C5C72064B;
+        Mon, 20 Jul 2020 16:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261594;
-        bh=7P51UCwmsDPHCOOzmOfOEUc5JLZLUOM0bBwlUBhsPU4=;
+        s=default; t=1595261600;
+        bh=GwixDRIoyH/k1UNYUFK1YYn4Esbpdb5Z0b8IK21pRu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iuRKB7qvR+dN192UlolRUZf/P+iCYCO3UBRFe6+CvJDa1irPVFCD/65l98BDYTSqp
-         1lTmHunuzY/2kezP68G6gvGP6PFhSUS0CwQgE33/CKAx/KHUuljp2GDWZk0o98KABg
-         wOzNMXveOrPeTbrpD5lTB3mQXULkonh/m76EEqVE=
+        b=e8uDKXL5FLsUr3vsFnBbkhba0ELlMJRR62xLnsBgocPE6CFSaUkPFcH6R+ezy8Q3J
+         TknjDOrfO09i56KvUlei9ZBN9CebZufR2Ai6e9Zio4QwjTQKe4KWBK/PtbmjwDCW72
+         oioOLmSUObla+LKyG7+9YqBWbsSYbQZ3OKF1wjcA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 5.7 171/244] Revert "tty: xilinx_uartps: Fix missing id assignment to the console"
-Date:   Mon, 20 Jul 2020 17:37:22 +0200
-Message-Id: <20200720152833.968753698@linuxfoundation.org>
+        stable@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.7 144/244] clk: qcom: gcc: Add missing UFS clocks for SM8150
+Date:   Mon, 20 Jul 2020 17:36:55 +0200
+Message-Id: <20200720152832.700697063@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,36 +59,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+From: Vinod Koul <vkoul@kernel.org>
 
-commit 76ed2e105796710cf5b8a4ba43c81eceed948b70 upstream.
+commit 37c72e4cae37f0dace1abb3711ede7fbc6d0862a upstream.
 
-This reverts commit 2ae11c46d5fdc46cb396e35911c713d271056d35.
+Add the missing ufs card and ufs phy clocks for SM8150. They were missed
+in earlier addition of clock driver.
 
-It turned out to break the ultra96-rev1, e.g., which uses uart1 as
-serial0 (and stdout-path = "serial0:115200n8").
-
-Fixes: 2ae11c46d5fd ("tty: xilinx_uartps: Fix missing id assignment to the console")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-Reviewed-by: Michal Simek <michal.simek@xilinx.com>
-Tested-by: Michal Simek <michal.simek@xilinx.com>
-Link: https://lore.kernel.org/r/f4092727-d8f5-5f91-2c9f-76643aace993@siemens.com
+Fixes: 2a1d7eb854bb ("clk: qcom: gcc: Add global clock controller driver for SM8150")
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lkml.kernel.org/r/20200513065420.32735-2-vkoul@kernel.org
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/xilinx_uartps.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/clk/qcom/gcc-sm8150.c |   84 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
 
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -1459,7 +1459,6 @@ static int cdns_uart_probe(struct platfo
- 		cdns_uart_uart_driver.nr = CDNS_UART_NR_PORTS;
- #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
- 		cdns_uart_uart_driver.cons = &cdns_uart_console;
--		cdns_uart_console.index = id;
- #endif
+--- a/drivers/clk/qcom/gcc-sm8150.c
++++ b/drivers/clk/qcom/gcc-sm8150.c
+@@ -2872,6 +2872,45 @@ static struct clk_branch gcc_ufs_card_ph
+ 	},
+ };
  
- 		rc = uart_register_driver(&cdns_uart_uart_driver);
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_ufs_card_rx_symbol_0_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x7501c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_card_rx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_ufs_card_rx_symbol_1_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x750ac,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_card_rx_symbol_1_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_ufs_card_tx_symbol_0_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x75018,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_card_tx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_ufs_card_unipro_core_clk = {
+ 	.halt_reg = 0x75058,
+ 	.halt_check = BRANCH_HALT,
+@@ -3052,6 +3091,45 @@ static struct clk_branch gcc_ufs_phy_phy
+ 	},
+ };
+ 
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x7701c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_phy_rx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_ufs_phy_rx_symbol_1_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x770ac,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_phy_rx_symbol_1_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_ufs_phy_tx_symbol_0_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x77018,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_phy_tx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_ufs_phy_unipro_core_clk = {
+ 	.halt_reg = 0x77058,
+ 	.halt_check = BRANCH_HALT,
+@@ -3548,6 +3626,9 @@ static struct clk_regmap *gcc_sm8150_clo
+ 	[GCC_UFS_CARD_PHY_AUX_CLK_SRC] = &gcc_ufs_card_phy_aux_clk_src.clkr,
+ 	[GCC_UFS_CARD_PHY_AUX_HW_CTL_CLK] =
+ 		&gcc_ufs_card_phy_aux_hw_ctl_clk.clkr,
++	[GCC_UFS_CARD_RX_SYMBOL_0_CLK] = &gcc_ufs_card_rx_symbol_0_clk.clkr,
++	[GCC_UFS_CARD_RX_SYMBOL_1_CLK] = &gcc_ufs_card_rx_symbol_1_clk.clkr,
++	[GCC_UFS_CARD_TX_SYMBOL_0_CLK] = &gcc_ufs_card_tx_symbol_0_clk.clkr,
+ 	[GCC_UFS_CARD_UNIPRO_CORE_CLK] = &gcc_ufs_card_unipro_core_clk.clkr,
+ 	[GCC_UFS_CARD_UNIPRO_CORE_CLK_SRC] =
+ 		&gcc_ufs_card_unipro_core_clk_src.clkr,
+@@ -3565,6 +3646,9 @@ static struct clk_regmap *gcc_sm8150_clo
+ 	[GCC_UFS_PHY_PHY_AUX_CLK] = &gcc_ufs_phy_phy_aux_clk.clkr,
+ 	[GCC_UFS_PHY_PHY_AUX_CLK_SRC] = &gcc_ufs_phy_phy_aux_clk_src.clkr,
+ 	[GCC_UFS_PHY_PHY_AUX_HW_CTL_CLK] = &gcc_ufs_phy_phy_aux_hw_ctl_clk.clkr,
++	[GCC_UFS_PHY_RX_SYMBOL_0_CLK] = &gcc_ufs_phy_rx_symbol_0_clk.clkr,
++	[GCC_UFS_PHY_RX_SYMBOL_1_CLK] = &gcc_ufs_phy_rx_symbol_1_clk.clkr,
++	[GCC_UFS_PHY_TX_SYMBOL_0_CLK] = &gcc_ufs_phy_tx_symbol_0_clk.clkr,
+ 	[GCC_UFS_PHY_UNIPRO_CORE_CLK] = &gcc_ufs_phy_unipro_core_clk.clkr,
+ 	[GCC_UFS_PHY_UNIPRO_CORE_CLK_SRC] =
+ 		&gcc_ufs_phy_unipro_core_clk_src.clkr,
 
 
