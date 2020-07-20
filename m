@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87557C38158
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869D5C49EBB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5DC206F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FECB206F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281530;
-	bh=Fdxxx/6s/07AQaFKa9HaHxd0Er/Fjo+qamSOf3sgGZI=;
+	s=default; t=1595281534;
+	bh=8UMyjt/AzFGIS1GD45TwNQmUI/lsxAFHKcAG7o84BZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vHOUFpN7bR85pSAG51waSUurbiTs3OG6QwOCKbUcmOnqMKtFLSx0So3px4IB8LF94
-	 QgPmr0AcsCRyxX28o+wjEzUybd3UG5Ei05MM+zI94ZNOgMladUAQ4uwlyXlx2VhCTT
-	 Jg//Y/6myKRRzWY6CjyHZbTLQ4TpYf4NsYb0MIoU=
+	b=aKZO2drwHMEhz9QGnIMY5RVscvzySiiLULbGpqgSvaBOw02xMs1dfXT2Zfc5D87a+
+	 87veGvjeuyGAPk6+Pv4mNye1dds+CRIfC8QfA2rXqIuW4mSYAdOXwuwO6QEkNC+fpQ
+	 Ct6JA4YJMJ/PcPYqa11TJyBCnY28NtgmHZXRrRU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbgGTVp3 (ORCPT
+        id S1728696AbgGTVpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:45:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55478 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:45:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727033AbgGTVhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:37:35 -0400
+        id S1727085AbgGTVhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:37:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7E2122CB3;
-        Mon, 20 Jul 2020 21:37:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFCAE22BEF;
+        Mon, 20 Jul 2020 21:37:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281054;
-        bh=Fdxxx/6s/07AQaFKa9HaHxd0Er/Fjo+qamSOf3sgGZI=;
+        s=default; t=1595281053;
+        bh=8UMyjt/AzFGIS1GD45TwNQmUI/lsxAFHKcAG7o84BZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d2cqq1TWLpgsvpxJOgnCV/pB5ClpfwRvjgnl8YOFYeuwNb0sLK65Uq5ciAJM6+hNt
-         7h4X6MTynSzR5SSwFYw+YG2BQkEu9NR6z8f4pdI+9YfT2SjhWIvzA56CMaf4q4oMBN
-         jczx5VlNnfctnHv41jxkqLr2GR2Ev1G/jQbHvcPI=
+        b=QkIzN5+wAQ2eHVk/bzt4gjzOKLAwfd1NHG9euMJxG2U8G3vsswcISIXbM+Bx0U2Tp
+         KbFmV/QRuG7HTR8gLfQioiZ+hHCfevDKpAIqfwvEICihjVX5sPgyplf/4PKw9f+VEP
+         pco50QV90ICNEoSNUaV8DdYr06ZZMd9qKS9pDwwg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evgeny Novikov <novikov@ispras.ru>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 15/40] hwmon: (aspeed-pwm-tacho) Avoid possible buffer overflow
-Date:   Mon, 20 Jul 2020 17:36:50 -0400
-Message-Id: <20200720213715.406997-15-sashal@kernel.org>
+Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 14/40] regmap: dev_get_regmap_match(): fix string comparison
+Date:   Mon, 20 Jul 2020 17:36:49 -0400
+Message-Id: <20200720213715.406997-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213715.406997-1-sashal@kernel.org>
 References: <20200720213715.406997-1-sashal@kernel.org>
@@ -60,39 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-[ Upstream commit bc4071aafcf4d0535ee423b69167696d6c03207d ]
+[ Upstream commit e84861fec32dee8a2e62bbaa52cded6b05a2a456 ]
 
-aspeed_create_fan() reads a pwm_port value using of_property_read_u32().
-If pwm_port will be more than ARRAY_SIZE(pwm_port_params), there will be
-a buffer overflow in
-aspeed_create_pwm_port()->aspeed_set_pwm_port_enable(). The patch fixes
-the potential buffer overflow.
+This function is used by dev_get_regmap() to retrieve a regmap for the
+specified device. If the device has more than one regmap, the name parameter
+can be used to specify one.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+The code here uses a pointer comparison to check for equal strings. This
+however will probably always fail, as the regmap->name is allocated via
+kstrdup_const() from the regmap's config->name.
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Link: https://lore.kernel.org/r/20200703111518.9644-1-novikov@ispras.ru
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fix this by using strcmp() instead.
+
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Link: https://lore.kernel.org/r/20200703103315.267996-1-mkl@pengutronix.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/aspeed-pwm-tacho.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/base/regmap/regmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
-index 33fb54845bf6d..3d8239fd66ed6 100644
---- a/drivers/hwmon/aspeed-pwm-tacho.c
-+++ b/drivers/hwmon/aspeed-pwm-tacho.c
-@@ -851,6 +851,8 @@ static int aspeed_create_fan(struct device *dev,
- 	ret = of_property_read_u32(child, "reg", &pwm_port);
- 	if (ret)
- 		return ret;
-+	if (pwm_port >= ARRAY_SIZE(pwm_port_params))
-+		return -EINVAL;
- 	aspeed_create_pwm_port(priv, (u8)pwm_port);
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 320d23de02c29..927ebde1607be 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1363,7 +1363,7 @@ static int dev_get_regmap_match(struct device *dev, void *res, void *data)
  
- 	ret = of_property_count_u8_elems(child, "cooling-levels");
+ 	/* If the user didn't specify a name match any */
+ 	if (data)
+-		return (*r)->name == data;
++		return !strcmp((*r)->name, data);
+ 	else
+ 		return 1;
+ }
 -- 
 2.25.1
 
