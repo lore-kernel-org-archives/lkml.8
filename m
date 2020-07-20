@@ -7,76 +7,76 @@ X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5F3C433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68A6A2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A36207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595288275;
-	bh=tQVsLUdy4E7vdhtCRsDlC1I4aZw60VUOHY7OZUnLREw=;
+	s=default; t=1595288383;
+	bh=M+z3I/HyKwFsyYDaQLGnuwjIIt8yQ87IrLUAuP+D43I=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=EFf9clGobsFe8npMqF3PlMfrvbhjDhxxA6CYw80B7KPYt1MBfSWPMRa2SoT1M848A
-	 9eukg2uRb4Ro75NhxgtEq5Esouad/9hhVJiCWrN4hKxhBdfMaPTywtjRdjSyVMr8zs
-	 7AZqcxJ8hYin0DloNUiB9FHp00CVxSvX1KgSUu48=
+	b=Qm5i4lDWJQq86Lwi8yEqF367lBUxksglpMPf4AkLf3EMJTAT8w4WuN1AnjWZ1ykHp
+	 YzhZ7o+eZc8KZe5CBO5yUvFAvjmI2ITLRrx/EG6jCeDH2WhWaNfzg99C7Zy+GZ80WF
+	 kzFKgJeoP2frc3t/oaV3OyiI4ZQE6skt3J3FscWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgGTXhx (ORCPT
+        id S1726764AbgGTXjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:37:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56040 "EHLO
+        Mon, 20 Jul 2020 19:39:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728099AbgGTXhu (ORCPT
+        with ESMTP id S1726021AbgGTXjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 19:37:50 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B263C0619D4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:37:50 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id d4so13686002otk.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:37:50 -0700 (PDT)
+        Mon, 20 Jul 2020 19:39:41 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F0C5C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:39:41 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id 95so13663534otw.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:39:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2VapwMIKwhCwr2bWdb3iYIkjYLx7IHfthHZSlZWyQ6s=;
-        b=ffXHysH0O/EB1jsyRGMtTayoZV1mwFQraJDX+Bwy6R6Dj7qnXYdn/xx4L8PvSYOe1A
-         yk/zRbpPtIwz0myM8hFn153LgiMUGqbW06JoZ6TSglSXobH2WOo77sbBwUNWvUPR64oB
-         BgCcQ4u/ei1vhs4dO7xhYT96PTwqs0iveHkHw=
+        bh=cnekmFwCsUzYYdLK7CNLwz76v2dry0QPkNCxNctK1Vg=;
+        b=e+TTMp1hcB/1o7Sv5gDNchQ5fnopFX0DY6DRi/8+tmfhii609qlzj3rTkVO8isJ3Au
+         Ht/1K0C+Kb3Yilk+a8cPKpP7ScgibAdPCXYj6x7oZwMkfwg5gfUpRD2aU7aGgPeO0d/t
+         smnXUIr+JbqgypyJaO+MFqOIEVVLQq2ykceH4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=2VapwMIKwhCwr2bWdb3iYIkjYLx7IHfthHZSlZWyQ6s=;
-        b=GYhaYV+2mE83lYore0M/kqJB/9lwHzR6M1WNlQnED622PIhKoKFQug6pU1OfOJ+p9V
-         FEFy8FGvhfnoc88rlfYJWD01C2uve7GPeEpsYqcDUXjyLZsMgKXX1IchLGhX8AtSZ5Tz
-         mybrnXMkpCcH5kc+r+qTIb8nkd0Ntx+E7YCl08wfh0ZA0w5Ls+p2Mwl7iCsiq9M5tSpc
-         VY8Bf3QjWHsGjDgNftRb9XfxzKX8SWHi0q7EEqws+yBS6HLm3+b76/7QdYfPiLfG4Miv
-         y09kbcLSWR9Cjd9en1UQYsaPcJL6IbCy6lqITVrKdSCbsOCrrbYdisRgmLuitIDOshvc
-         oq1A==
-X-Gm-Message-State: AOAM532x6Q7flFAfa/dKayd6hMuy0bRvtFbTFZvoOuRp/9tG2aWN5TGf
-        CJWjBIVB9pm6Wo4z7KkThPd4Ow==
-X-Google-Smtp-Source: ABdhPJxOhm2h4JPCyqD2lRwaFXbuKKoJflI+RELIC7kdMXmosNTd9tZw66UaUlnnl6VpcV6UA4jURA==
-X-Received: by 2002:a9d:600b:: with SMTP id h11mr21263893otj.263.1595288269634;
-        Mon, 20 Jul 2020 16:37:49 -0700 (PDT)
+        bh=cnekmFwCsUzYYdLK7CNLwz76v2dry0QPkNCxNctK1Vg=;
+        b=N0qKNM+k2G3ipEj+g69QeG9kIcIVqnemX0+lt0JvTXXo9thw168kEqPv99WxDZaDSD
+         JuV1unvG8k2Lm3l3ooAfuXR50675idCnkM/d+9qqvk7mOVdaweFzDRUa3uwcs7fjCBWV
+         y973p3as8/YPtA+u7fohuQnifhw1F5fpii2PI7CV3tYnYnVKDL3V+SKbs0pkn5Csx+1r
+         2MwUa2d6l3nwDCU89DK1vBuy+HDaXmYk0s6EYgSa9gfqpUsJOYxk8pDc/aO2YpZuIK2l
+         raNfvwYVprUbrgNX/2XYfvcEhH7z8kMHabZeIbR6jlbj9/AXXud2DHPZfE9+sa1PFT+k
+         nXWA==
+X-Gm-Message-State: AOAM531yjRmtrQkBLsf7WElUjayE83vqn6sAN64pSDZo6Nn2RJj1MPBq
+        D87v94H0CtV0zEm+ATPyMvmujw==
+X-Google-Smtp-Source: ABdhPJzewSzuiETEFOa28ZWze6xw40kMSf8WvGljKnnJVivwaQ5UQJuoPyaNmqns0720pTu0rVPCHw==
+X-Received: by 2002:a9d:664a:: with SMTP id q10mr22436862otm.66.1595288380754;
+        Mon, 20 Jul 2020 16:39:40 -0700 (PDT)
 Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id h17sm4717501oor.18.2020.07.20.16.37.48
+        by smtp.gmail.com with ESMTPSA id 80sm268144otj.67.2020.07.20.16.39.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 16:37:48 -0700 (PDT)
-Subject: Re: [PATCH 5.7 000/243] 5.7.10-rc2 review
+        Mon, 20 Jul 2020 16:39:40 -0700 (PDT)
+Subject: Re: [PATCH 5.4 000/215] 5.4.53-rc1 review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
         linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
         ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
         stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20200720191523.845282610@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
 From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <8f328303-f1fa-e4b6-d6bb-a2817c7474f7@linuxfoundation.org>
-Date:   Mon, 20 Jul 2020 17:37:47 -0600
+Message-ID: <28abf795-4eb6-049f-0d32-59078926c983@linuxfoundation.org>
+Date:   Mon, 20 Jul 2020 17:39:39 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200720191523.845282610@linuxfoundation.org>
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,19 +85,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/20/20 1:16 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.7.10 release.
-> There are 243 patches in this series, all will be posted as a response
+On 7/20/20 9:34 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.53 release.
+> There are 215 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
-> Responses should be made by Wed, 22 Jul 2020 19:14:36 +0000.
+> Responses should be made by Wed, 22 Jul 2020 15:27:31 +0000.
 > Anything received after that time might be too late.
 > 
 > The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.10-rc2.gz
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.53-rc1.gz
 > or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
 > and the diffstat can be found below.
 > 
 > thanks,
@@ -109,4 +109,3 @@ Compiled and booted on my test system. No dmesg regressions.
 
 thanks,
 -- Shuah
-
