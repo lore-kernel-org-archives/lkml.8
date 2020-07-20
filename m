@@ -2,156 +2,175 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54BDC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCF0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4621206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:03:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D1kNZ97u"
+	by mail.kernel.org (Postfix) with ESMTP id 71510206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389134AbgGTRDV (ORCPT
+        id S2388827AbgGTRDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:03:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729957AbgGTRDT (ORCPT
+        Mon, 20 Jul 2020 13:03:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45940 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726989AbgGTRDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:03:19 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E37AC0619D4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:03:18 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id y10so18847089eje.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:03:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/D99yVB3Oiz5Mh00scTWz5/c04ErKfScrbcBA6SkIPw=;
-        b=D1kNZ97uQbS+psUY/wpbNhL+V3j7kvil0De+3fNHHIbbmYkbXypwfizcVy0gp1lzE8
-         7PRzu+A/DJqCiXG3TFpg0CU2LqyzqlAcLEyovIpxOpRNKdKE/EdUIu5z2kXMQr928Q39
-         FS4Ga5tFbkn8/CP6o4go59NrA+6hN8L6Jic2QioJZzyLlPcKr0PoP434tfoWNi2AjRQC
-         JgNnc1qxestfxBJdBYM3QGUwlDRa96HrLWyP2xLc1v6hPUO+iB07p7nxvDyVMXF+3oaY
-         jGpI+XBdZQzcP4bCwpYBZrLCv/cGRpWAH+ITrpaSHEORxOjlOgZTjHcyXWHex5YWmq9d
-         8I7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/D99yVB3Oiz5Mh00scTWz5/c04ErKfScrbcBA6SkIPw=;
-        b=YYU2WYOIBRIrQqbZxgOk0QzWW6j8ew0OOUla3eSdfrbTUPGG1WNfEKOFLMt1JZ1mhU
-         BifCJFXjup7y7YFg7bYxqJM2Pzl+Ckb9vaImmkkOAYZhjqfDprPUp1CmNxZqagnz74e+
-         KTK/BGWAntLcPrdsdFGAYpSSVxJKWuyDWi69wYszuSPjcMGqv70ct+HyI11STQXoYVUR
-         cM1T2SfpE+KEb7iIP4mH4wv1yc0sidIbblPIBxeYSiwMOyhA+swcPR/Vea8keKZJXTLQ
-         0UZN+Fi8L7fkRD+qagmjibPqTXixcDNBOGqHM/8jlIhjTghQ3YjS8G0677uUw0ZWidRJ
-         TGjQ==
-X-Gm-Message-State: AOAM532nsVwytftmD2U1UIlhaOiRx6lAvPAq4U5eG2zBdJKuHl7xSFdt
-        Si2crNM3houVx/yiS112AZ3C2og2XXjimEttSDxpHg==
-X-Google-Smtp-Source: ABdhPJzW7jeqn8/HrRf1zvDOSBhWBELyOoysxnoaonrBp2ayMlaTV+GUKzwc1g6K05h7+lORk8nrO2ZkuRfId+MHg7g=
-X-Received: by 2002:a17:907:10d4:: with SMTP id rv20mr22660986ejb.413.1595264596856;
- Mon, 20 Jul 2020 10:03:16 -0700 (PDT)
+        Mon, 20 Jul 2020 13:03:14 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KH1P4J136235;
+        Mon, 20 Jul 2020 13:03:03 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32d5h4uqu9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 13:03:03 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KH1rOx138946;
+        Mon, 20 Jul 2020 13:03:02 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32d5h4uqtv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 13:03:02 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KH0o6q009402;
+        Mon, 20 Jul 2020 17:03:01 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma01dal.us.ibm.com with ESMTP id 32brq87gwg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 17:03:01 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KH2xEv18874680
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 17:02:59 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D619C7805E;
+        Mon, 20 Jul 2020 17:02:59 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 51ABA78064;
+        Mon, 20 Jul 2020 17:02:58 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.160.78.37])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jul 2020 17:02:58 +0000 (GMT)
+Subject: Re: [PATCH v3 07/12] ima: Fail rule parsing when
+ appraise_flag=blacklist is unsupportable
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Nayna Jain <nayna@linux.ibm.com>
+References: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
+ <20200709061911.954326-8-tyhicks@linux.microsoft.com>
+ <76d2b27b-3b59-1852-046a-b1718c62b167@linux.vnet.ibm.com>
+ <20200717181133.GM3673@sequoia>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Message-ID: <bdd8d85e-8ae9-6095-bb58-24653862f682@linux.vnet.ibm.com>
+Date:   Mon, 20 Jul 2020 13:02:57 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200715214312.2266839-1-haoluo@google.com> <20200715214312.2266839-2-haoluo@google.com>
- <CAEf4BzZ5A+uMPFEmgom+0x+jju3JgTLXuuy=QB_dm2Skf--5Dg@mail.gmail.com>
-In-Reply-To: <CAEf4BzZ5A+uMPFEmgom+0x+jju3JgTLXuuy=QB_dm2Skf--5Dg@mail.gmail.com>
-From:   Hao Luo <haoluo@google.com>
-Date:   Mon, 20 Jul 2020 10:03:05 -0700
-Message-ID: <CA+khW7h1HBmV5LdALswF2d2q9cD_EU1CfbBEogdHszbHLnTVAQ@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next 1/2] bpf: BTF support for __ksym externs
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin@isovalent.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200717181133.GM3673@sequoia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 clxscore=1015 mlxscore=0 malwarescore=0 bulkscore=0
+ phishscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007200111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrii,
 
-Thanks for taking a look at this. You comments are clear, I will fix them in v2.
-
-> Also, in the next version, please split kernel part and libbpf part
-> into separate patches.
+On 7/17/20 2:11 PM, Tyler Hicks wrote:
+> On 2020-07-17 13:40:22, Nayna wrote:
+>> On 7/9/20 2:19 AM, Tyler Hicks wrote:
+>>> The "appraise_flag" option is only appropriate for appraise actions
+>>> and its "blacklist" value is only appropriate when
+>>> CONFIG_IMA_APPRAISE_MODSIG is enabled and "appraise_flag=blacklist" is
+>>> only appropriate when "appraise_type=imasig|modsig" is also present.
+>>> Make this clear at policy load so that IMA policy authors don't assume
+>>> that other uses of "appraise_flag=blacklist" are supported.
+>>>
+>>> Fixes: 273df864cf74 ("ima: Check against blacklisted hashes for files with modsig")
+>>> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+>>> Cc: Nayna Jain <nayna@linux.ibm.com>
+>>> ---
+>>>
+>>> * v3
+>>>     - New patch
+>>>
+>>>    security/integrity/ima/ima_policy.c | 13 ++++++++++++-
+>>>    1 file changed, 12 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+>>> index 81da02071d41..9842e2e0bc6d 100644
+>>> --- a/security/integrity/ima/ima_policy.c
+>>> +++ b/security/integrity/ima/ima_policy.c
+>>> @@ -1035,6 +1035,11 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+>>>    		return false;
+>>>    	}
+>>> +	/* Ensure that combinations of flags are compatible with each other */
+>>> +	if (entry->flags & IMA_CHECK_BLACKLIST &&
+>>> +	    !(entry->flags & IMA_MODSIG_ALLOWED))
+>>> +		return false;
+>>> +
+>>>    	return true;
+>>>    }
+>>> @@ -1371,8 +1376,14 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>>>    				result = -EINVAL;
+>>>    			break;
+>>>    		case Opt_appraise_flag:
+>>> +			if (entry->action != APPRAISE) {
+>>> +				result = -EINVAL;
+>>> +				break;
+>>> +			}
+>>> +
+>>>    			ima_log_string(ab, "appraise_flag", args[0].from);
+>>> -			if (strstr(args[0].from, "blacklist"))
+>>> +			if (IS_ENABLED(CONFIG_IMA_APPRAISE_MODSIG) &&
+>>> +			    strstr(args[0].from, "blacklist"))
+>>>    				entry->flags |= IMA_CHECK_BLACKLIST;
+>> If IMA_APPRAISE_MODSIG is disabled, it will allow the following rule to
+>> load, which is not as expected.
+>>
+>> "appraise func=xxx_CHECK appraise_flag=blacklist appraise_type=imasig"
+>>
+>> Missing is the "else" condition to immediately reject the policy rule.
+> Thanks for the review. You're right. This change is needed:
 >
-
-Got it. Will do.
-
-> I don't think that's the right approach. It can't be the best effort.
-> It's actually pretty clear when a user wants a BTF-based variable with
-> ability to do direct memory access vs __ksym address that we have
-> right now: variable type info. In your patch you are only looking up
-> variable by name, but it needs to be more elaborate logic:
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 9842e2e0bc6d..cf3ddb38dfa8 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -1385,6 +1385,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>   			if (IS_ENABLED(CONFIG_IMA_APPRAISE_MODSIG) &&
+>   			    strstr(args[0].from, "blacklist"))
+>   				entry->flags |= IMA_CHECK_BLACKLIST;
+> +			else
+> +				result = -EINVAL;
+>   			break;
+>   		case Opt_permit_directio:
+>   			entry->flags |= IMA_PERMIT_DIRECTIO;
 >
-> 1. if variable type is `extern void` -- do what we do today (no BTF required)
-> 2. if the variable type is anything but `extern void`, then find that
-> variable in BTF. If no BTF or variable is not found -- hard error with
-> detailed enough message about what we expected to find in kernel BTF.
-> 3. If such a variable is found in the kernel, then might be a good
-> idea to additionally check type compatibility (e.g., struct/union
-> should match struct/union, int should match int, typedefs should get
-> resolved to underlying type, etc). I don't think deep comparison of
-> structs is right, though, due to CO-RE, so just high-level
-> compatibility checks to prevent the most obvious mistakes.
->
+Reviewed-by: Nayna Jain<nayna@linux.ibm.com>
 
-Ack.
+Tested-by: Nayna Jain<nayna@linux.ibm.com>
 
-> >
-> > Also note since we need to carry the ksym's address (64bits) as well as
-> > its btf_id (32bits), pseudo_btf_id uses ld_imm64's both imm and off
-> > fields.
->
-> For BTF-enabled ksyms, libbpf doesn't need to provide symbol address,
-> kernel will find it and substitute it, so BTF ID is the only
-> parameter. Thus it can just go into the imm field (and simplify
-> ldimm64 validation logic a bit).
->
+Thanks & Regards,
 
-Ack.
+       - Nayna
 
-> >  /* when bpf_call->src_reg == BPF_PSEUDO_CALL, bpf_call->imm == pc-relative
-> >   * offset to another bpf function
-> > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> > index 3c1efc9d08fd..3c925957b9b6 100644
-> > --- a/kernel/bpf/verifier.c
-> > +++ b/kernel/bpf/verifier.c
-> > @@ -7131,15 +7131,29 @@ static int check_ld_imm(struct bpf_verifier_env *env, struct bpf_insn *insn)
-> >                 verbose(env, "invalid BPF_LD_IMM insn\n");
-> >                 return -EINVAL;
-> >         }
-> > +       err = check_reg_arg(env, insn->dst_reg, DST_OP);
-> > +       if (err)
-> > +               return err;
-> > +
-> > +       /*
-> > +        * BPF_PSEUDO_BTF_ID insn's off fields carry the ksym's btf_id, so its
-> > +        * handling has to come before the reserved field check.
-> > +        */
-> > +       if (insn->src_reg == BPF_PSEUDO_BTF_ID) {
-> > +               u32 id = ((u32)(insn + 1)->off << 16) | (u32)insn->off;
-> > +               const struct btf_type *t = btf_type_by_id(btf_vmlinux, id);
-> > +
->
-> This is the kernel, we should be paranoid and assume the hackers want
-> to do bad things. So check t for NULL. Check that it's actually a
-> BTF_KIND_VAR. Check the name, find ksym addr, etc.
->
-
-Ack.
