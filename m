@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52BEC43446
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC514C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADBF222CBE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED9220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgGTHyN (ORCPT
+        id S1727950AbgGTHyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:54:13 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:41356 "EHLO
+        Mon, 20 Jul 2020 03:54:36 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:41355 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728188AbgGTHxw (ORCPT
+        with ESMTP id S1728189AbgGTHxz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 03:53:52 -0400
+        Mon, 20 Jul 2020 03:53:55 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from eli@mellanox.com)
         with SMTP; 20 Jul 2020 10:53:46 +0300
 Received: from nps-server-21.mtl.labs.mlnx (nps-server-21.mtl.labs.mlnx [10.237.240.120])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06K7rjgh008217;
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06K7rjgf008217;
         Mon, 20 Jul 2020 10:53:46 +0300
 Received: from nps-server-21.mtl.labs.mlnx (localhost [127.0.0.1])
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 06K7EVLG032185;
-        Mon, 20 Jul 2020 10:14:31 +0300
+        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 06K6srNo031188;
+        Mon, 20 Jul 2020 09:54:53 +0300
 Received: (from eli@localhost)
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 06K7EV5m032184;
-        Mon, 20 Jul 2020 10:14:31 +0300
+        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 06K6sr2D031187;
+        Mon, 20 Jul 2020 09:54:53 +0300
 From:   Eli Cohen <eli@mellanox.com>
 To:     mst@redhat.com, jasowang@redhat.com,
         virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
 Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com,
-        Max Gurtovoy <maxg@mellanox.com>
-Subject: [PATCH V2 vhost next 03/10] vdpa: remove hard coded virtq num
-Date:   Mon, 20 Jul 2020 10:14:09 +0300
-Message-Id: <20200720071416.32112-4-eli@mellanox.com>
+        Eli Cohen <eli@mellanox.com>
+Subject: [PATCH V2 vhost next 07/10] vdpa/mlx5: Add hardware descriptive header file
+Date:   Mon, 20 Jul 2020 09:54:40 +0300
+Message-Id: <20200720065443.31112-8-eli@mellanox.com>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200720071416.32112-1-eli@mellanox.com>
-References: <20200720071416.32112-1-eli@mellanox.com>
+In-Reply-To: <20200720065443.31112-1-eli@mellanox.com>
+References: <20200720065443.31112-1-eli@mellanox.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,152 +51,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+Keep all vdpa related hardware definitions in this file.
 
-This will enable vdpa providers to add support for multi queue feature
-and publish it to upper layers (vhost and virtio).
-
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Jason Wang <jasowang@redhat.com>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Eli Cohen <eli@mellanox.com>
 ---
- drivers/vdpa/ifcvf/ifcvf_main.c  | 3 ++-
- drivers/vdpa/vdpa.c              | 3 +++
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 4 ++--
- drivers/vhost/vdpa.c             | 9 +++------
- include/linux/vdpa.h             | 6 ++++--
- 5 files changed, 14 insertions(+), 11 deletions(-)
+ drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h | 168 +++++++++++++++++++++++++
+ 1 file changed, 168 insertions(+)
+ create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h
 
-diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf_main.c
-index f5a60c14b979..e0d43f25fc88 100644
---- a/drivers/vdpa/ifcvf/ifcvf_main.c
-+++ b/drivers/vdpa/ifcvf/ifcvf_main.c
-@@ -420,7 +420,8 @@ static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	}
- 
- 	adapter = vdpa_alloc_device(struct ifcvf_adapter, vdpa,
--				    dev, &ifc_vdpa_ops);
-+				    dev, &ifc_vdpa_ops,
-+				    IFCVF_MAX_QUEUE_PAIRS * 2);
- 	if (adapter == NULL) {
- 		IFCVF_ERR(pdev, "Failed to allocate vDPA structure");
- 		return -ENOMEM;
-diff --git a/drivers/vdpa/vdpa.c b/drivers/vdpa/vdpa.c
-index de211ef3738c..f9c59f023d6d 100644
---- a/drivers/vdpa/vdpa.c
-+++ b/drivers/vdpa/vdpa.c
-@@ -61,6 +61,7 @@ static void vdpa_release_dev(struct device *d)
-  * initialized but before registered.
-  * @parent: the parent device
-  * @config: the bus operations that is supported by this device
-+ * @nvqs: number of virtqueues supported by this device
-  * @size: size of the parent structure that contains private data
-  *
-  * Driver should use vdpa_alloc_device() wrapper macro instead of
-@@ -71,6 +72,7 @@ static void vdpa_release_dev(struct device *d)
-  */
- struct vdpa_device *__vdpa_alloc_device(struct device *parent,
- 					const struct vdpa_config_ops *config,
-+					int nvqs,
- 					size_t size)
- {
- 	struct vdpa_device *vdev;
-@@ -96,6 +98,7 @@ struct vdpa_device *__vdpa_alloc_device(struct device *parent,
- 	vdev->dev.release = vdpa_release_dev;
- 	vdev->index = err;
- 	vdev->config = config;
-+	vdev->nvqs = nvqs;
- 
- 	err = dev_set_name(&vdev->dev, "vdpa%u", vdev->index);
- 	if (err)
-diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-index 82d1068af3ef..a38d8dc12192 100644
---- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-+++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-@@ -60,7 +60,7 @@ static u64 vdpasim_features = (1ULL << VIRTIO_F_ANY_LAYOUT) |
- /* State of each vdpasim device */
- struct vdpasim {
- 	struct vdpa_device vdpa;
--	struct vdpasim_virtqueue vqs[2];
-+	struct vdpasim_virtqueue vqs[VDPASIM_VQ_NUM];
- 	struct work_struct work;
- 	/* spinlock to synchronize virtqueue state */
- 	spinlock_t lock;
-@@ -312,7 +312,7 @@ static struct vdpasim *vdpasim_create(void)
- 	int ret = -ENOMEM;
- 
- 	vdpasim = vdpa_alloc_device(struct vdpasim, vdpa, NULL,
--				    &vdpasim_net_config_ops);
-+				    &vdpasim_net_config_ops, VDPASIM_VQ_NUM);
- 	if (!vdpasim)
- 		goto err_alloc;
- 
-diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-index 65195b30133b..78f9d90c23b1 100644
---- a/drivers/vhost/vdpa.c
-+++ b/drivers/vhost/vdpa.c
-@@ -55,9 +55,6 @@ enum {
- 		(1ULL << VIRTIO_NET_F_SPEED_DUPLEX),
- };
- 
--/* Currently, only network backend w/o multiqueue is supported. */
--#define VHOST_VDPA_VQ_MAX	2
--
- #define VHOST_VDPA_DEV_MAX (1U << MINORBITS)
- 
- struct vhost_vdpa {
-@@ -882,7 +879,7 @@ static int vhost_vdpa_probe(struct vdpa_device *vdpa)
- {
- 	const struct vdpa_config_ops *ops = vdpa->config;
- 	struct vhost_vdpa *v;
--	int minor, nvqs = VHOST_VDPA_VQ_MAX;
-+	int minor;
- 	int r;
- 
- 	/* Currently, we only accept the network devices. */
-@@ -903,14 +900,14 @@ static int vhost_vdpa_probe(struct vdpa_device *vdpa)
- 	atomic_set(&v->opened, 0);
- 	v->minor = minor;
- 	v->vdpa = vdpa;
--	v->nvqs = nvqs;
-+	v->nvqs = vdpa->nvqs;
- 	v->virtio_id = ops->get_device_id(vdpa);
- 
- 	device_initialize(&v->dev);
- 	v->dev.release = vhost_vdpa_release_dev;
- 	v->dev.parent = &vdpa->dev;
- 	v->dev.devt = MKDEV(MAJOR(vhost_vdpa_major), minor);
--	v->vqs = kmalloc_array(nvqs, sizeof(struct vhost_virtqueue),
-+	v->vqs = kmalloc_array(v->nvqs, sizeof(struct vhost_virtqueue),
- 			       GFP_KERNEL);
- 	if (!v->vqs) {
- 		r = -ENOMEM;
-diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
-index 239db794357c..715a159ee1f0 100644
---- a/include/linux/vdpa.h
-+++ b/include/linux/vdpa.h
-@@ -39,6 +39,7 @@ struct vdpa_device {
- 	struct device *dma_dev;
- 	const struct vdpa_config_ops *config;
- 	unsigned int index;
-+	int nvqs;
- };
- 
- /**
-@@ -208,11 +209,12 @@ struct vdpa_config_ops {
- 
- struct vdpa_device *__vdpa_alloc_device(struct device *parent,
- 					const struct vdpa_config_ops *config,
-+					int nvqs,
- 					size_t size);
- 
--#define vdpa_alloc_device(dev_struct, member, parent, config)   \
-+#define vdpa_alloc_device(dev_struct, member, parent, config, nvqs)   \
- 			  container_of(__vdpa_alloc_device( \
--				       parent, config, \
-+				       parent, config, nvqs, \
- 				       sizeof(dev_struct) + \
- 				       BUILD_BUG_ON_ZERO(offsetof( \
- 				       dev_struct, member))), \
+diff --git a/drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h b/drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h
+new file mode 100644
+index 000000000000..f6f57a29b38e
+--- /dev/null
++++ b/drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h
+@@ -0,0 +1,168 @@
++/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
++/* Copyright (c) 2020 Mellanox Technologies Ltd. */
++
++#ifndef __MLX5_VDPA_IFC_H_
++#define __MLX5_VDPA_IFC_H_
++
++#include <linux/mlx5/mlx5_ifc.h>
++
++enum {
++	MLX5_VIRTIO_Q_EVENT_MODE_NO_MSIX_MODE  = 0x0,
++	MLX5_VIRTIO_Q_EVENT_MODE_QP_MODE       = 0x1,
++	MLX5_VIRTIO_Q_EVENT_MODE_MSIX_MODE     = 0x2,
++};
++
++enum {
++	MLX5_VIRTIO_EMULATION_CAP_VIRTIO_QUEUE_TYPE_SPLIT   = 0x1, // do I check this caps?
++	MLX5_VIRTIO_EMULATION_CAP_VIRTIO_QUEUE_TYPE_PACKED  = 0x2,
++};
++
++enum {
++	MLX5_VIRTIO_EMULATION_VIRTIO_QUEUE_TYPE_SPLIT   = 0,
++	MLX5_VIRTIO_EMULATION_VIRTIO_QUEUE_TYPE_PACKED  = 1,
++};
++
++struct mlx5_ifc_virtio_q_bits {
++	u8    virtio_q_type[0x8];
++	u8    reserved_at_8[0x5];
++	u8    event_mode[0x3];
++	u8    queue_index[0x10];
++
++	u8    full_emulation[0x1];
++	u8    virtio_version_1_0[0x1];
++	u8    reserved_at_22[0x2];
++	u8    offload_type[0x4];
++	u8    event_qpn_or_msix[0x18];
++
++	u8    doorbell_stride_index[0x10];
++	u8    queue_size[0x10];
++
++	u8    device_emulation_id[0x20];
++
++	u8    desc_addr[0x40];
++
++	u8    used_addr[0x40];
++
++	u8    available_addr[0x40];
++
++	u8    virtio_q_mkey[0x20];
++
++	u8    max_tunnel_desc[0x10];
++	u8    reserved_at_170[0x8];
++	u8    error_type[0x8];
++
++	u8    umem_1_id[0x20];
++
++	u8    umem_1_size[0x20];
++
++	u8    umem_1_offset[0x40];
++
++	u8    umem_2_id[0x20];
++
++	u8    umem_2_size[0x20];
++
++	u8    umem_2_offset[0x40];
++
++	u8    umem_3_id[0x20];
++
++	u8    umem_3_size[0x20];
++
++	u8    umem_3_offset[0x40];
++
++	u8    counter_set_id[0x20];
++
++	u8    reserved_at_320[0x8];
++	u8    pd[0x18];
++
++	u8    reserved_at_340[0xc0];
++};
++
++struct mlx5_ifc_virtio_net_q_object_bits {
++	u8    modify_field_select[0x40];
++
++	u8    reserved_at_40[0x20];
++
++	u8    vhca_id[0x10];
++	u8    reserved_at_70[0x10];
++
++	u8    queue_feature_bit_mask_12_3[0xa];
++	u8    dirty_bitmap_dump_enable[0x1];
++	u8    vhost_log_page[0x5];
++	u8    reserved_at_90[0xc];
++	u8    state[0x4];
++
++	u8    reserved_at_a0[0x5];
++	u8    queue_feature_bit_mask_2_0[0x3];
++	u8    tisn_or_qpn[0x18];
++
++	u8    dirty_bitmap_mkey[0x20];
++
++	u8    dirty_bitmap_size[0x20];
++
++	u8    dirty_bitmap_addr[0x40];
++
++	u8    hw_available_index[0x10];
++	u8    hw_used_index[0x10];
++
++	u8    reserved_at_160[0xa0];
++
++	struct mlx5_ifc_virtio_q_bits virtio_q_context;
++};
++
++struct mlx5_ifc_create_virtio_net_q_in_bits {
++	struct mlx5_ifc_general_obj_in_cmd_hdr_bits general_obj_in_cmd_hdr;
++
++	struct mlx5_ifc_virtio_net_q_object_bits obj_context;
++};
++
++struct mlx5_ifc_create_virtio_net_q_out_bits {
++	struct mlx5_ifc_general_obj_out_cmd_hdr_bits general_obj_out_cmd_hdr;
++};
++
++struct mlx5_ifc_destroy_virtio_net_q_in_bits {
++	struct mlx5_ifc_general_obj_in_cmd_hdr_bits general_obj_out_cmd_hdr;
++};
++
++struct mlx5_ifc_destroy_virtio_net_q_out_bits {
++	struct mlx5_ifc_general_obj_out_cmd_hdr_bits general_obj_out_cmd_hdr;
++};
++
++struct mlx5_ifc_query_virtio_net_q_in_bits {
++	struct mlx5_ifc_general_obj_in_cmd_hdr_bits general_obj_in_cmd_hdr;
++};
++
++struct mlx5_ifc_query_virtio_net_q_out_bits {
++	struct mlx5_ifc_general_obj_out_cmd_hdr_bits general_obj_out_cmd_hdr;
++
++	struct mlx5_ifc_virtio_net_q_object_bits obj_context;
++};
++
++enum {
++	MLX5_VIRTQ_MODIFY_MASK_STATE                    = (u64)1 << 0,
++	MLX5_VIRTQ_MODIFY_MASK_DIRTY_BITMAP_PARAMS      = (u64)1 << 3,
++	MLX5_VIRTQ_MODIFY_MASK_DIRTY_BITMAP_DUMP_ENABLE = (u64)1 << 4,
++};
++
++enum {
++	MLX5_VIRTIO_NET_Q_OBJECT_STATE_INIT     = 0x0,
++	MLX5_VIRTIO_NET_Q_OBJECT_STATE_RDY      = 0x1,
++	MLX5_VIRTIO_NET_Q_OBJECT_STATE_SUSPEND  = 0x2,
++	MLX5_VIRTIO_NET_Q_OBJECT_STATE_ERR      = 0x3,
++};
++
++enum {
++	MLX5_RQTC_LIST_Q_TYPE_RQ            = 0x0,
++	MLX5_RQTC_LIST_Q_TYPE_VIRTIO_NET_Q  = 0x1,
++};
++
++struct mlx5_ifc_modify_virtio_net_q_in_bits {
++	struct mlx5_ifc_general_obj_in_cmd_hdr_bits general_obj_in_cmd_hdr;
++
++	struct mlx5_ifc_virtio_net_q_object_bits obj_context;
++};
++
++struct mlx5_ifc_modify_virtio_net_q_out_bits {
++	struct mlx5_ifc_general_obj_out_cmd_hdr_bits general_obj_out_cmd_hdr;
++};
++
++#endif /* __MLX5_VDPA_IFC_H_ */
 -- 
 2.26.0
 
