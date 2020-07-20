@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E96C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D0EC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9B9922482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB762065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260329;
-	bh=dMpZKAoREPt/Ph4s1EySu309CYTNsehZNf+8JaSdUCY=;
+	s=default; t=1595260332;
+	bh=6tjy0WJNNWDwPU1CTmUUpnIdSjE0etRp+xsOx3xzA50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xFZo09xZTYDz3RdsoEFsaLpTCNdAPP1nRDucC86wrFrdKRdzYuMvYk6RLUQ/+JLb2
-	 PfB62kyyMbXKz1R+wBYsfEibJSsmXDFjoRM9hwcvl9jgWtTAqh+UHwjoid8Zn7AwBi
-	 Nn58AYpQbiGkoseELlR9o2AJhz7W0c3PgVbBrH5Y=
+	b=KIIAEANMOENY76iWDX4dDNOHrHPVkZ0TqWU73DcuFwdmfW5m6PhelpE3/fVaT7R07
+	 Z/YZQrmIbrk6E4Mj3UoaDUyUrCPhoz+rcVciAhLCgf0Q0nawzzD2QgUSVxChrv0uFP
+	 yCdmgBcohF2MXCHpQEPRYQHBZvUOSebpe2YPXO24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731322AbgGTPwH (ORCPT
+        id S1730096AbgGTPwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:52:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49372 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:52:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730041AbgGTPwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:52:02 -0400
+        id S1731323AbgGTPwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:52:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A12A32064B;
-        Mon, 20 Jul 2020 15:52:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F106C206E9;
+        Mon, 20 Jul 2020 15:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260322;
-        bh=dMpZKAoREPt/Ph4s1EySu309CYTNsehZNf+8JaSdUCY=;
+        s=default; t=1595260327;
+        bh=6tjy0WJNNWDwPU1CTmUUpnIdSjE0etRp+xsOx3xzA50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M0SotcvCudK0dcDVXHivGVJLzjKTWRGuh/CHp9TQGMqy3TDRRlJ6QA5A5MppHTDXn
-         48OK+yYaeOvYo8hDuVzBNcffA+NH+oujrKAGLO7Npr78a2FlbFWopVAJ/NKcma6o5w
-         0jXd+WBwo1MLoOfeLxZUjXXyiFCwvymHKrjbwRPM=
+        b=jZGyOnxbY488na5zpkTzPuds4HgLFl4HSLriyqeIvoy7F9PcTrMfa54KX6nk3L2qG
+         NGNDXgrANhA/0SONRZZk6eXMx/vKKbQtmlpsOWUVqTBSrzZW5SjREUwMot447pbotQ
+         iYuOtT+qt/CzRsJoGTf1ItsTDiWMNr664Nzjvgow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
+        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 060/133] arm64: dts: meson: add missing gxl rng clock
-Date:   Mon, 20 Jul 2020 17:36:47 +0200
-Message-Id: <20200720152806.628720493@linuxfoundation.org>
+Subject: [PATCH 4.19 061/133] spi: spi-sun6i: sun6i_spi_transfer_one(): fix setting of clock rate
+Date:   Mon, 20 Jul 2020 17:36:48 +0200
+Message-Id: <20200720152806.680094488@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -61,39 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-[ Upstream commit 95ca6f06dd4827ff63be5154120c7a8511cd9a41 ]
+[ Upstream commit ed7815db70d17b1741883f2da8e1d80bc2efe517 ]
 
-The peripheral clock of the RNG is missing for gxl while it is present
-for gxbb.
+A SPI transfer defines the _maximum_ speed of the SPI transfer. However the
+driver doesn't take into account that the clock divider is always rounded down
+(due to integer arithmetics). This results in a too high clock rate for the SPI
+transfer.
 
-Fixes: 1b3f6d148692 ("ARM64: dts: meson-gx: add clock CLKID_RNG0 to hwrng node")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://lore.kernel.org/r/20200617125346.1163527-1-jbrunet@baylibre.com
+E.g.: with a mclk_rate of 24 MHz and a SPI transfer speed of 10 MHz, the
+original code calculates a reg of "0", which results in a effective divider of
+"2" and a 12 MHz clock for the SPI transfer.
+
+This patch fixes the issue by using DIV_ROUND_UP() instead of a plain
+integer division.
+
+While there simplify the divider calculation for the CDR1 case, use
+order_base_2() instead of two ilog2() calculations.
+
+Fixes: 3558fe900e8a ("spi: sunxi: Add Allwinner A31 SPI controller driver")
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Link: https://lore.kernel.org/r/20200706143443.9855-2-mkl@pengutronix.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/spi/spi-sun6i.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 8f0bb3c44bd6d..5d7724b3a6123 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -266,6 +266,11 @@ clkc: clock-controller {
- 	};
- };
+diff --git a/drivers/spi/spi-sun6i.c b/drivers/spi/spi-sun6i.c
+index 8533f4edd00af..21a22d42818c8 100644
+--- a/drivers/spi/spi-sun6i.c
++++ b/drivers/spi/spi-sun6i.c
+@@ -202,7 +202,7 @@ static int sun6i_spi_transfer_one(struct spi_master *master,
+ 				  struct spi_transfer *tfr)
+ {
+ 	struct sun6i_spi *sspi = spi_master_get_devdata(master);
+-	unsigned int mclk_rate, div, timeout;
++	unsigned int mclk_rate, div, div_cdr1, div_cdr2, timeout;
+ 	unsigned int start, end, tx_time;
+ 	unsigned int trig_level;
+ 	unsigned int tx_len = 0;
+@@ -291,14 +291,12 @@ static int sun6i_spi_transfer_one(struct spi_master *master,
+ 	 * First try CDR2, and if we can't reach the expected
+ 	 * frequency, fall back to CDR1.
+ 	 */
+-	div = mclk_rate / (2 * tfr->speed_hz);
+-	if (div <= (SUN6I_CLK_CTL_CDR2_MASK + 1)) {
+-		if (div > 0)
+-			div--;
+-
+-		reg = SUN6I_CLK_CTL_CDR2(div) | SUN6I_CLK_CTL_DRS;
++	div_cdr1 = DIV_ROUND_UP(mclk_rate, tfr->speed_hz);
++	div_cdr2 = DIV_ROUND_UP(div_cdr1, 2);
++	if (div_cdr2 <= (SUN6I_CLK_CTL_CDR2_MASK + 1)) {
++		reg = SUN6I_CLK_CTL_CDR2(div_cdr2 - 1) | SUN6I_CLK_CTL_DRS;
+ 	} else {
+-		div = ilog2(mclk_rate) - ilog2(tfr->speed_hz);
++		div = min(SUN6I_CLK_CTL_CDR1_MASK, order_base_2(div_cdr1));
+ 		reg = SUN6I_CLK_CTL_CDR1(div);
+ 	}
  
-+&hwrng {
-+	clocks = <&clkc CLKID_RNG0>;
-+	clock-names = "core";
-+};
-+
- &i2c_A {
- 	clocks = <&clkc CLKID_I2C>;
- };
 -- 
 2.25.1
 
