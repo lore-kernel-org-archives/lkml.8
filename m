@@ -2,168 +2,135 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEE2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DFBC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DBBD206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43C67207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:06:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="wfCs5R6U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KG/VGjb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbgGTREg (ORCPT
+        id S1730101AbgGTRGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:04:36 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:51184 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729322AbgGTREf (ORCPT
+        Mon, 20 Jul 2020 13:06:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728827AbgGTRGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:04:35 -0400
-Received: from vla1-fdfb804fb3f3.qloud-c.yandex.net (vla1-fdfb804fb3f3.qloud-c.yandex.net [IPv6:2a02:6b8:c0d:3199:0:640:fdfb:804f])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id CF8172E1518;
-        Mon, 20 Jul 2020 20:04:32 +0300 (MSK)
-Received: from vla1-81430ab5870b.qloud-c.yandex.net (vla1-81430ab5870b.qloud-c.yandex.net [2a02:6b8:c0d:35a1:0:640:8143:ab5])
-        by vla1-fdfb804fb3f3.qloud-c.yandex.net (mxbackcorp/Yandex) with ESMTP id C1WzD3voiw-4Vs07Qlq;
-        Mon, 20 Jul 2020 20:04:32 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1595264672; bh=9nc5QhNzzf3iw2FswYDHWVtv9fk5oYfLZ674amcL4Ng=;
-        h=In-Reply-To:Message-Id:References:Date:Subject:To:From:Cc;
-        b=wfCs5R6UIKKZvgtfiMFoIwW2B3uUWxWCLG5i/phDFGnhyLObsjeOiuG8QAGh1/Qe2
-         qmvFUP3rhpfxokfyxCGkkN+OI09UatStqU4Tu74nZXYWnExqvVAlJRbMQRjnjc9YRO
-         mzW1X4lltZMG1ewsPrSNo1niGRToXBnNliQeZRy4=
-Authentication-Results: vla1-fdfb804fb3f3.qloud-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from 95.108.174.193-red.dhcp.yndx.net (95.108.174.193-red.dhcp.yndx.net [95.108.174.193])
-        by vla1-81430ab5870b.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id gk6qeYCCCz-4ViKeTXI;
-        Mon, 20 Jul 2020 20:04:31 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-From:   Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
-        paolo.valente@linaro.org,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Subject: [PATCH] block: bfq fix blkio cgroup leakage v2
-Date:   Mon, 20 Jul 2020 17:04:11 +0000
-Message-Id: <20200720170411.21250-1-dmtrmonakhov@yandex-team.ru>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <b4561a09-f00f-568b-9d55-0a2893de4be5@kernel.dk>
-References: <b4561a09-f00f-568b-9d55-0a2893de4be5@kernel.dk>
+        Mon, 20 Jul 2020 13:06:33 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 882AAC061794;
+        Mon, 20 Jul 2020 10:06:33 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id h13so12784196otr.0;
+        Mon, 20 Jul 2020 10:06:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ROcn/4oxIrk78fd7/QkF3w9hSG9pMZjyTBMvHwDSbjo=;
+        b=KG/VGjb0jwqjCy5BWXom+BzCKDylx31g2oc2zPL17A0I6EEhvCfdtX6wMuTfvrjbYk
+         UxISHlnAeUiXE1WIY286PhO+s0s8qm7TX0mwjEG7JPK4e7oL6hl0l/YfFIvTsL7pI5iy
+         g93oiqPEh02NSSiPN4NcbjGf/2dwAwOk2thBqzt44Og+0/iaHm58tlOG0pmnH+xbsZ/Q
+         1rQsdaxgpluAuCxq6hpOQJHC2mp9Qt7ymXaOUTN2guF41zbSZLJ0SRa8W6mtVMH6oN7m
+         siuTrI60Vq0b6wDM2HkrlcZwUMOr2Ps9bzs8Z/mYiANS+9oG0Oup20ax7jkBwuJuekhT
+         aCZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ROcn/4oxIrk78fd7/QkF3w9hSG9pMZjyTBMvHwDSbjo=;
+        b=YHsdgVZ6ETXz0x+kAoT9V3jRQUD+WSgMOHsDnKjh6gmVCrvHsqaWwTZUrCQVPjckIC
+         nFymNqPJLT8HPGxGnE5CUdk4zO23I6lXWeVVUkOIDPj6ftYKoi5J4fC7wA70O4HxOFkg
+         i3xRJpxwHj4zoieOeukmQVZR+5nDqGGbjbhgQ0ccvyDsrvkMcN+Gj5C2aQdz18hMtvLD
+         wcNG5wWJeXCDF/pIqo/+iKw/WAW8QsBLYKpWAIwDGDcxaTaqFqj9UmBIJjtH9sGHOPIH
+         YBgR1JrP9/BHiVUOH9czIKAix1Sj3ZzfAXHMFIpJ3Wjx4hDDaV8r4zHNMm+0tDzwZ4qA
+         q0nA==
+X-Gm-Message-State: AOAM530OspITy3WMhkM4q5YUAOqq2hckHVutv+XDia6EajlG/V0WwjkK
+        ImsCK8NDcVQsdxeX+RRpi+L8V9NYaKcEypBE50c=
+X-Google-Smtp-Source: ABdhPJwIO4T9YmBSwuhQPRydeECRZoEU1y8+Z0BHM67xgQtUU+iwA1lUMrRi0IgfGq+eD8drgLPJFHFqKbf4UGe2//o=
+X-Received: by 2002:a05:6830:1db5:: with SMTP id z21mr21189050oti.162.1595264792757;
+ Mon, 20 Jul 2020 10:06:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200717222819.26198-1-nramas@linux.microsoft.com>
+ <20200717222819.26198-5-nramas@linux.microsoft.com> <CAEjxPJ7xQtZToF4d2w_o8SXFKG9kPZaWTWTFqyC-7GwBWnQa0A@mail.gmail.com>
+ <c0fbfcf3-ec36-872a-c389-b3fea214848c@linux.microsoft.com>
+In-Reply-To: <c0fbfcf3-ec36-872a-c389-b3fea214848c@linux.microsoft.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Mon, 20 Jul 2020 13:06:21 -0400
+Message-ID: <CAEjxPJ7VH18bEo6+U1GWrx=tHVGr=6XtF5_ygcfQYgdtZ74J+g@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] LSM: Define SELinux function to measure security state
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit db37a34c563b ("block, bfq: get a ref to a group when adding it to a service tree")
-introduce leak forbfq_group and blkcg_gq objects because of get/put
-imbalance. See trace balow:
--> blkg_alloc
-   -> bfq_pq_alloc
-     -> bfqg_get (+1)
-->bfq_activate_bfqq
-  ->bfq_activate_requeue_entity
-    -> __bfq_activate_entity
-       ->bfq_get_entity
-         ->bfqg_and_blkg_get (+1)  <==== : Note1
-->bfq_del_bfqq_busy
-  ->bfq_deactivate_entity+0x53/0xc0 [bfq]
-    ->__bfq_deactivate_entity+0x1b8/0x210 [bfq]
-      -> bfq_forget_entity(is_in_service = true)
-	 entity->on_st_or_in_serv = false   <=== :Note2
-	 if (is_in_service)
-	     return;  ==> do not touch reference
--> blkcg_css_offline
- -> blkcg_destroy_blkgs
-  -> blkg_destroy
-   -> bfq_pd_offline
-    -> __bfq_deactivate_entity
-         if (!entity->on_st_or_in_serv) /* true, because (Note2)
-		return false;
- -> bfq_pd_free
-    -> bfqg_put() (-1, byt bfqg->ref == 2) because of (Note2)
-So bfq_group and blkcg_gq  will leak forever, see test-case below.
+On Mon, Jul 20, 2020 at 11:17 AM Lakshmi Ramasubramanian
+<nramas@linux.microsoft.com> wrote:
+> Thanks for trying out the changes. Please let me know the defects you fin=
+d.
+>
+> Just to let you know - I am making the following change (will update in
+> the next patch):
+>
+>   =3D> Save the last policy hash and state string in selinux_state struct=
+.
+>   =3D> Measure policy and hash only if it has changed since the last
+> measurement.
+>   =3D> Also, suffix the IMA event name used with time stamp. For example,
+>
+> 10 e32e...5ac3 ima-buf sha256:86e8...4594
+> selinux-state-1595257807:874963248
+> 656e61626c65643d313b656e666f7263696e673d303b636865636b72657170726f743d313=
+b6e6574706565723d313b6f70656e7065726d3d313b657874736f636b636c6173733d313b61=
+6c776179736e6574776f726b3d303b6367726f75707365636c6162656c3d313b6e6e706e6f7=
+37569647472616e736974696f6e3d313b67656e66737365636c6162656c73796d6c696e6b3d=
+303b
+>
+> 10 f4a7...9408 ima-buf sha256:4941...68fc
+> selinux-policy-hash-1595257807:874963248
+> 8d1d...1834
+>
+> The above will ensure the following sequence will be measured:
+>   #1 State A - Measured
+>   #2 Change from State A to State B - Measured
+>   #3 Change from State B back to State A - Since the measured data is
+> same as in #1, the change will be measured only if the event name is
+> different between #1 and #3
 
-We should drop group reference once it finaly removed from service
-inside __bfq_bfqd_reset_in_service, as we do with queue entities.
+Perhaps the timestamp / sequence number should be part of the hashed
+data instead of the event name?
+I can see the appraiser wanting to know two things:
+1) The current state of the system (e.g. is it enforcing, is the
+currently loaded policy the expected one?).
+2) Has the system ever been in an unexpected state (e.g. was it
+temporarily switched to permissive or had an unexpected policy
+loaded?)
 
-##TESTCASE_BEGIN:
-#!/bin/bash
+I applied the patch series on top of the next-integrity branch, added
+measure func=3DLSM_STATE to ima-policy, and booted that kernel.  I get
+the following entries in ascii_runtime_measurements, but seemingly
+missing the final field:
 
-max_iters=${1:-100}
-#prep cgroup mounts
-mount -t tmpfs cgroup_root /sys/fs/cgroup
-mkdir /sys/fs/cgroup/blkio
-mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
+10 8a09c48af4f8a817f59b495bd82971e096e2e367 ima-ng
+sha256:21c3d7b09b62b4d0b3ed15ba990f816b94808f90b76787bfae755c4b3a44cd24
+selinux-state
+10 e610908931d70990a2855ddb33c16af2d82ce56a ima-ng
+sha256:c8898652afd5527ef4eaf8d85f5fee1d91fcccee34bc97f6e55b96746bedb318
+selinux-policy-hash
 
-# Prepare blkdev
-grep blkio /proc/cgroups
-truncate -s 1M img
-losetup /dev/loop0 img
-echo bfq > /sys/block/loop0/queue/scheduler
-
-grep blkio /proc/cgroups
-for ((i=0;i<max_iters;i++))
-do
-    mkdir -p /sys/fs/cgroup/blkio/a
-    echo 0 > /sys/fs/cgroup/blkio/a/cgroup.procs
-    dd if=/dev/loop0 bs=4k count=1 of=/dev/null iflag=direct 2> /dev/null
-    echo 0 > /sys/fs/cgroup/blkio/cgroup.procs
-    rmdir /sys/fs/cgroup/blkio/a
-    grep blkio /proc/cgroups
-done
-##TESTCASE_END:
-
-Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
----
- block/bfq-wf2q.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
-
-diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-index 8113138..93b236c 100644
---- a/block/bfq-wf2q.c
-+++ b/block/bfq-wf2q.c
-@@ -635,14 +635,10 @@ static void bfq_idle_insert(struct bfq_service_tree *st,
-  * @entity: the entity being removed.
-  * @is_in_service: true if entity is currently the in-service entity.
-  *
-- * Forget everything about @entity. In addition, if entity represents
-- * a queue, and the latter is not in service, then release the service
-- * reference to the queue (the one taken through bfq_get_entity). In
-- * fact, in this case, there is really no more service reference to
-- * the queue, as the latter is also outside any service tree. If,
-- * instead, the queue is in service, then __bfq_bfqd_reset_in_service
-- * will take care of putting the reference when the queue finally
-- * stops being served.
-+ * Forget everything about @entity. If entity is not in service, then release
-+ * the service reference to the entity (the one taken through  bfq_get_entity).
-+ * If the entity is in service, then __bfq_bfqd_reset_in_service will take care
-+ * of putting the reference when the entity finally stops being served.
-  */
- static void bfq_forget_entity(struct bfq_service_tree *st,
- 			      struct bfq_entity *entity,
-@@ -1626,9 +1622,16 @@ bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
- 	 * execute the final step: reset in_service_entity along the
- 	 * path from entity to the root.
- 	 */
--	for_each_entity(entity)
-+	for_each_entity(entity) {
- 		entity->sched_data->in_service_entity = NULL;
--
-+		/*
-+		 * Release bfq_groups reference if it was not released in
-+		 * bfq_forget_entity, which was taken in bfq_get_entity.
-+		 */
-+		if (!bfq_entity_to_bfqq(entity) && !entity->on_st_or_in_serv)
-+			bfqg_and_blkg_put(container_of(entity, struct bfq_group,
-+						       entity));
-+	}
- 	/*
- 	 * in_serv_entity is no longer in service, so, if it is in no
- 	 * service tree either, then release the service reference to
--- 
-2.7.4
-
+Thus, I cannot verify. What am I missing?
