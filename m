@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A61C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B911C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 270BE22482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B94C22CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260473;
-	bh=3nBhr8KvHL41nT9MeEU1tSZse/nQrdOPicJryuGPjBg=;
+	s=default; t=1595260476;
+	bh=hzLAThHvf7gJmaisKABfV8tEcvLhHCQOlRUK9Pj01rs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PtPDQB5ypExfz6cBy60T7P8ltaiJx2O0Cm0nwOo4oll+p3Tmm7IE8ppwdysbydQY9
-	 wAPQKkeBzmdn89z1Nvol+HXdLVEm9OxWN7bZ/ZOtAAoVlHRVKDyvD3rn6EgxASSRYa
-	 rYBMU8HJzRSWwMY9bhiugG7AI3k9YzaEdNeSJqmo=
+	b=a9bi8Tat96MKrED0PO1rLn3WTpFBKb9YQZel8gQ+55XrN6g10Gh2KWdAfbviWjHPy
+	 sSmmkrZXc0gHuqTWVDmjrGo6WAutdYaFUVnC+l6unmFN9qiz164GYB+9XpKty2/+Cr
+	 SXZrYzbS6wvvWgTVW/PB3rKUcu3bfu5MCbien2Xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgGTPyb (ORCPT
+        id S1731581AbgGTPyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:54:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53180 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:54:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731342AbgGTPy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:54:27 -0400
+        id S1730882AbgGTPyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:54:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0FBC206E9;
-        Mon, 20 Jul 2020 15:54:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 356CC206E9;
+        Mon, 20 Jul 2020 15:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260466;
-        bh=3nBhr8KvHL41nT9MeEU1tSZse/nQrdOPicJryuGPjBg=;
+        s=default; t=1595260471;
+        bh=hzLAThHvf7gJmaisKABfV8tEcvLhHCQOlRUK9Pj01rs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=geDDRCIcAcyu++h0aMyarV1xcCDFvKDRZqN6586HMPEXBwuS+snkmLTWZZ01tdM3S
-         r6chJMnn19P92b/02EYBEVa9yNZMyuPiOu1+J9jDdem3GSlI6KXxJv8yY8sIiC2YTT
-         x8G0m/H/bdYOH/0U5w/0ju2yxvFwnSJqlveTl1H4=
+        b=XvR8g8kwh5p/2JZI80ofs9nBkVhG7cR7vmTPmazcd/F5hgEKlb0nPdP9zupOBtWPq
+         hy3VjN9VapGauFtp4sPR1IPkqoP5VVhJbYpqWcLQzkw2vpH5lP/8ErX6z7F2MbRsr4
+         0/98v8Ww2JnbEcu8XqAyC3bjG8D8yMECgy0cfs88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Huacai Chen <chenhc@lemote.com>
-Subject: [PATCH 4.19 113/133] MIPS: Fix build for LTS kernel caused by backporting lpj adjustment
-Date:   Mon, 20 Jul 2020 17:37:40 +0200
-Message-Id: <20200720152809.201439787@linuxfoundation.org>
+        stable@vger.kernel.org, Vishwas M <vishwas.reddy.vr@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.19 115/133] hwmon: (emc2103) fix unable to change fan pwm1_enable attribute
+Date:   Mon, 20 Jul 2020 17:37:42 +0200
+Message-Id: <20200720152809.293848071@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -61,59 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+From: Vishwas M <vishwas.reddy.vr@gmail.com>
 
-Commit ed26aacfb5f71eecb20a ("mips: Add udelay lpj numbers adjustment")
-has backported to 4.4~5.4, but the "struct cpufreq_freqs" (and also the
-cpufreq notifier machanism) of 4.4~4.19 are different from the upstream
-kernel. These differences cause build errors, and this patch can fix the
-build.
+commit 14b0e83dc4f1e52b94acaeb85a18fd7fdd46d2dc upstream.
 
-Cc: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Stable <stable@vger.kernel.org> # 4.4/4.9/4.14/4.19
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
+This patch fixes a bug which does not let FAN mode to be changed from
+sysfs(pwm1_enable). i.e pwm1_enable can not be set to 3, it will always
+remain at 0.
+
+This is caused because the device driver handles the result of
+"read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg)" incorrectly. The
+driver thinks an error has occurred if the (result != 0). This has been
+fixed by changing the condition to (result < 0).
+
+Signed-off-by: Vishwas M <vishwas.reddy.vr@gmail.com>
+Link: https://lore.kernel.org/r/20200707142747.118414-1-vishwas.reddy.vr@gmail.com
+Fixes: 9df7305b5a86 ("hwmon: Add driver for SMSC EMC2103 temperature monitor and fan controller")
+Cc: stable@vger.kernel.org
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/time.c |   13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ drivers/hwmon/emc2103.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/mips/kernel/time.c
-+++ b/arch/mips/kernel/time.c
-@@ -40,10 +40,8 @@ static unsigned long glb_lpj_ref_freq;
- static int cpufreq_callback(struct notifier_block *nb,
- 			    unsigned long val, void *data)
- {
--	struct cpufreq_freqs *freq = data;
--	struct cpumask *cpus = freq->policy->cpus;
--	unsigned long lpj;
- 	int cpu;
-+	struct cpufreq_freqs *freq = data;
- 
- 	/*
- 	 * Skip lpj numbers adjustment if the CPU-freq transition is safe for
-@@ -64,6 +62,7 @@ static int cpufreq_callback(struct notif
- 		}
+--- a/drivers/hwmon/emc2103.c
++++ b/drivers/hwmon/emc2103.c
+@@ -454,7 +454,7 @@ static ssize_t pwm1_enable_store(struct
  	}
  
-+	cpu = freq->cpu;
- 	/*
- 	 * Adjust global lpj variable and per-CPU udelay_val number in
- 	 * accordance with the new CPU frequency.
-@@ -74,12 +73,8 @@ static int cpufreq_callback(struct notif
- 						glb_lpj_ref_freq,
- 						freq->new);
- 
--		for_each_cpu(cpu, cpus) {
--			lpj = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
--					    per_cpu(pcp_lpj_ref_freq, cpu),
--					    freq->new);
--			cpu_data[cpu].udelay_val = (unsigned int)lpj;
--		}
-+		cpu_data[cpu].udelay_val = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
-+					   per_cpu(pcp_lpj_ref_freq, cpu), freq->new);
+ 	result = read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg);
+-	if (result) {
++	if (result < 0) {
+ 		count = result;
+ 		goto err;
  	}
- 
- 	return NOTIFY_OK;
 
 
