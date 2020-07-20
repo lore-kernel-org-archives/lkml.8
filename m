@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7DCC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF41C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6CDD2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF62A206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260043;
-	bh=qcJinvA9UWAln0obTJFKjUkwzI+BlB1bSmeMSMmtkFM=;
+	s=default; t=1595260045;
+	bh=Vk7IagyqnoRmnENC1u/iaiaXIz648HETL5Ky4FZuhwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YA0urg03nyQCZjmQO0xWBGtoZbigMxlbnAnSq6N4e3wQcmvOr2EhFVOvYEZ7jrVFD
-	 9MUqFG+rMOQ9ienBQnvfioIyN1w5KkrVQ6LK8SxGAFxvXXthpUMjGVUh2WxhScsJOS
-	 7Qu1Ng2zXDDH1QL/1O3Ip5dPhd9Mc+TZQEKNkl8g=
+	b=HyCbZVOmoAarSdLlcY981L+bRyrNfZJwBC6CekO4vyy3rH+VYvmIc55TXnngAHTZf
+	 V+qA6uy+NEdMzhKpiPKD/t70+2AfRfoi21IZNAhRsmEOldDLDRfF9CLIWxHjxpMEEv
+	 MWDph2NyCuywuLvnWf3q99MEXsaividMo9jHG658=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbgGTPrW (ORCPT
+        id S1730766AbgGTPrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:47:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42072 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:47:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730737AbgGTPrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:47:05 -0400
+        id S1730386AbgGTPrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:47:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10A212065E;
-        Mon, 20 Jul 2020 15:47:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97655206E9;
+        Mon, 20 Jul 2020 15:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260025;
-        bh=qcJinvA9UWAln0obTJFKjUkwzI+BlB1bSmeMSMmtkFM=;
+        s=default; t=1595260028;
+        bh=Vk7IagyqnoRmnENC1u/iaiaXIz648HETL5Ky4FZuhwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qsXSUMKAtQtBFk2lMIYu6wwXAO7coflnWEJacARXHeEqljI6sqPDC14SwAUPVxG3n
-         PjEBk2NK/Uys/o7/8ET+sOHlr9xgU92mRh2rUxTHQwLGX9zwOe0YS6KWVZpJ0dumiE
-         NeZJR45xHZxV9wJyNl2UwMSoC7LvJNhNAsfOgNzw=
+        b=JrOTbe/bTWtPsCwiqmhBWBtm3r6EvTq31LOF4ClAOUFI6Mx5EH5KbwYxmiLuq+zln
+         ypAZJL1VwKFcIx3T8s0IKHp3iJe1OxkWxAAGat1duffhADxspO9u/qMMwVYxDyXqIx
+         poPFcsASKcACrNifCIzyNeaddLNFX8hgGd09yQ3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 079/125] ACPI: video: Use native backlight on Acer TravelMate 5735Z
-Date:   Mon, 20 Jul 2020 17:36:58 +0200
-Message-Id: <20200720152806.833911321@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Andrew F. Davis" <afd@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 080/125] iio:health:afe4404 Fix timestamp alignment and prevent data leak.
+Date:   Mon, 20 Jul 2020 17:36:59 +0200
+Message-Id: <20200720152806.883617444@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -61,55 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Menzel <pmenzel@molgen.mpg.de>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-[ Upstream commit c41c36e900a337b4132b12ccabc97f5578248b44 ]
+[ Upstream commit f88ecccac4be348bbcc6d056bdbc622a8955c04d ]
 
-Currently, changing the brightness of the internal display of the Acer
-TravelMate 5735Z does not work. Pressing the function keys or changing the
-slider, GNOME Shell 3.36.2 displays the OSD (five steps), but the
-brightness does not change.
+One of a class of bugs pointed out by Lars in a recent review.
+iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
+to the size of the timestamp (8 bytes).  This is not guaranteed in
+this driver which uses a 40 byte array of smaller elements on the stack.
+As Lars also noted this anti pattern can involve a leak of data to
+userspace and that indeed can happen here.  We close both issues by
+moving to a suitable structure in the iio_priv() data with alignment
+explicitly requested.  This data is allocated with kzalloc so no
+data can leak appart from previous readings.
 
-The Acer TravelMate 5735Z shipped with Windows 7 and as such does not
-trigger our "win8 ready" heuristic for preferring the native backlight
-interface.
-
-Still ACPI backlight control doesn't work on this model, where as the
-native (intel_video) backlight interface does work by adding
-`acpi_backlight=native` or `acpi_backlight=none` to Linux’ command line.
-
-So, add a quirk to force using native backlight control on this model.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=207835
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 87aec56e27ef ("iio: health: Add driver for the TI AFE4404 heart monitor")
+Reported-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/video_detect.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/iio/health/afe4404.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index 5f0178967d14c..ab1da5e6e7e3e 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -337,6 +337,16 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
- 		DMI_MATCH(DMI_BOARD_NAME, "JV50"),
- 		},
- 	},
-+	{
-+	 /* https://bugzilla.kernel.org/show_bug.cgi?id=207835 */
-+	 .callback = video_detect_force_native,
-+	 .ident = "Acer TravelMate 5735Z",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate 5735Z"),
-+		DMI_MATCH(DMI_BOARD_NAME, "BA51_MV"),
-+		},
-+	},
+diff --git a/drivers/iio/health/afe4404.c b/drivers/iio/health/afe4404.c
+index 964f5231a831c..5e256b11ac877 100644
+--- a/drivers/iio/health/afe4404.c
++++ b/drivers/iio/health/afe4404.c
+@@ -91,6 +91,7 @@ static const struct reg_field afe4404_reg_fields[] = {
+  * @regulator: Pointer to the regulator for the IC
+  * @trig: IIO trigger for this device
+  * @irq: ADC_RDY line interrupt number
++ * @buffer: Used to construct a scan to push to the iio buffer.
+  */
+ struct afe4404_data {
+ 	struct device *dev;
+@@ -99,6 +100,7 @@ struct afe4404_data {
+ 	struct regulator *regulator;
+ 	struct iio_trigger *trig;
+ 	int irq;
++	s32 buffer[10] __aligned(8);
+ };
  
- 	/*
- 	 * Desktops which falsely report a backlight and which our heuristics
+ enum afe4404_chan_id {
+@@ -337,17 +339,17 @@ static irqreturn_t afe4404_trigger_handler(int irq, void *private)
+ 	struct iio_dev *indio_dev = pf->indio_dev;
+ 	struct afe4404_data *afe = iio_priv(indio_dev);
+ 	int ret, bit, i = 0;
+-	s32 buffer[10];
+ 
+ 	for_each_set_bit(bit, indio_dev->active_scan_mask,
+ 			 indio_dev->masklength) {
+ 		ret = regmap_read(afe->regmap, afe4404_channel_values[bit],
+-				  &buffer[i++]);
++				  &afe->buffer[i++]);
+ 		if (ret)
+ 			goto err;
+ 	}
+ 
+-	iio_push_to_buffers_with_timestamp(indio_dev, buffer, pf->timestamp);
++	iio_push_to_buffers_with_timestamp(indio_dev, afe->buffer,
++					   pf->timestamp);
+ err:
+ 	iio_trigger_notify_done(indio_dev->trig);
+ 
 -- 
 2.25.1
 
