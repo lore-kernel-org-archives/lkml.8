@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAC9C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6A6C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9BE2206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 536F12070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263295;
-	bh=8OtSB7nWPHAUJcX3LrVccg62zsMc6i0VFnEsdZpoOHM=;
+	s=default; t=1595263302;
+	bh=9fbwbGQaSx2kbzppWv2BCSzjmO5ZU4XCI+3rNk0vMtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=joKFDzds7J7uESKSjNMiVBffgYlh/3GfJ2xUDc4yBdJDp92f0vxuAV3B5z9rql41J
-	 7OtJq9OeEZgHonJkSDM2VFm+Q+oWpyNRzlTbJt6FmCFTJBzP71rhKXr1fivTth3pDm
-	 yUjhoSwaR1EoH0GiuHuHlILRHztnp9PlbicIWLMk=
+	b=wirugC3ftwgPboXBPM5HnWgV8xzE5yfMajATxek4sVBMyz4goLo31e2rPlWxcw9ES
+	 9VTYVDLkga9tZkOzZ7aTMgOImfu/fa2EyqaC11SO3WEXwNrwULDzJGVTUiPC47/dey
+	 tyfrJcT7v3st67PMjgGaVEzSBsUD41GE5NYttn/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731121AbgGTQle (ORCPT
+        id S1729915AbgGTPpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:41:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39816 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730523AbgGTPp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:45:28 -0400
+        id S1729624AbgGTPpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:45:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F3D32065E;
-        Mon, 20 Jul 2020 15:45:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ED0A2064B;
+        Mon, 20 Jul 2020 15:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259927;
-        bh=8OtSB7nWPHAUJcX3LrVccg62zsMc6i0VFnEsdZpoOHM=;
+        s=default; t=1595259903;
+        bh=9fbwbGQaSx2kbzppWv2BCSzjmO5ZU4XCI+3rNk0vMtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gZDzv/zAI8gw/Ws3fw6NfgyRt5rtEn9dEWH4rS7x2lc1Ck5HGpZ1LUWrl1NOO+pwo
-         vXeqlb5idCSTwXjMuJHLK/5BB4RYaE54swDWVSqnWleInfBWtiIlCUSWKJpFrLsscQ
-         6QMsWJFJivTijPZcM7Ya7tyZLXRMOe+VPAu8hbSc=
+        b=lFi++LUgGwq4J9rTHB1Qu0J/pQI7PJwTK/SscJVES/t0nbhBMJd1vywIVBVOoUjdZ
+         RP+oXN7cKKKa59caxRkBva0eHLnPR17zqqtjWzLdOQCoJhVAwK4rfzke1cIil1qelC
+         wMfXRpYpV3/MXxRyvQEjfXqksKn+W9OWBmmHYT8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        James Chapman <jchapman@katalix.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 043/125] l2tp: remove skb_dst_set() from l2tp_xmit_skb()
-Date:   Mon, 20 Jul 2020 17:36:22 +0200
-Message-Id: <20200720152805.087450344@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Boris Burkov <boris@bur.io>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 035/125] btrfs: fix fatal extent_buffer readahead vs releasepage race
+Date:   Mon, 20 Jul 2020 17:36:14 +0200
+Message-Id: <20200720152804.677573150@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -61,60 +59,206 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Boris Burkov <boris@bur.io>
 
-[ Upstream commit 27d53323664c549b5bb2dfaaf6f7ad6e0376a64e ]
+commit 6bf9cd2eed9aee6d742bb9296c994a91f5316949 upstream.
 
-In the tx path of l2tp, l2tp_xmit_skb() calls skb_dst_set() to set
-skb's dst. However, it will eventually call inet6_csk_xmit() or
-ip_queue_xmit() where skb's dst will be overwritten by:
+Under somewhat convoluted conditions, it is possible to attempt to
+release an extent_buffer that is under io, which triggers a BUG_ON in
+btrfs_release_extent_buffer_pages.
 
-   skb_dst_set_noref(skb, dst);
+This relies on a few different factors. First, extent_buffer reads done
+as readahead for searching use WAIT_NONE, so they free the local extent
+buffer reference while the io is outstanding. However, they should still
+be protected by TREE_REF. However, if the system is doing signficant
+reclaim, and simultaneously heavily accessing the extent_buffers, it is
+possible for releasepage to race with two concurrent readahead attempts
+in a way that leaves TREE_REF unset when the readahead extent buffer is
+released.
 
-without releasing the old dst in skb. Then it causes dst/dev refcnt leak:
+Essentially, if two tasks race to allocate a new extent_buffer, but the
+winner who attempts the first io is rebuffed by a page being locked
+(likely by the reclaim itself) then the loser will still go ahead with
+issuing the readahead. The loser's call to find_extent_buffer must also
+race with the reclaim task reading the extent_buffer's refcount as 1 in
+a way that allows the reclaim to re-clear the TREE_REF checked by
+find_extent_buffer.
 
-  unregister_netdevice: waiting for eth0 to become free. Usage count = 1
+The following represents an example execution demonstrating the race:
 
-This can be reproduced by simply running:
+            CPU0                                                         CPU1                                           CPU2
+reada_for_search                                            reada_for_search
+  readahead_tree_block                                        readahead_tree_block
+    find_create_tree_block                                      find_create_tree_block
+      alloc_extent_buffer                                         alloc_extent_buffer
+                                                                  find_extent_buffer // not found
+                                                                  allocates eb
+                                                                  lock pages
+                                                                  associate pages to eb
+                                                                  insert eb into radix tree
+                                                                  set TREE_REF, refs == 2
+                                                                  unlock pages
+                                                              read_extent_buffer_pages // WAIT_NONE
+                                                                not uptodate (brand new eb)
+                                                                                                            lock_page
+                                                                if !trylock_page
+                                                                  goto unlock_exit // not an error
+                                                              free_extent_buffer
+                                                                release_extent_buffer
+                                                                  atomic_dec_and_test refs to 1
+        find_extent_buffer // found
+                                                                                                            try_release_extent_buffer
+                                                                                                              take refs_lock
+                                                                                                              reads refs == 1; no io
+          atomic_inc_not_zero refs to 2
+          mark_buffer_accessed
+            check_buffer_tree_ref
+              // not STALE, won't take refs_lock
+              refs == 2; TREE_REF set // no action
+    read_extent_buffer_pages // WAIT_NONE
+                                                                                                              clear TREE_REF
+                                                                                                              release_extent_buffer
+                                                                                                                atomic_dec_and_test refs to 1
+                                                                                                                unlock_page
+      still not uptodate (CPU1 read failed on trylock_page)
+      locks pages
+      set io_pages > 0
+      submit io
+      return
+    free_extent_buffer
+      release_extent_buffer
+        dec refs to 0
+        delete from radix tree
+        btrfs_release_extent_buffer_pages
+          BUG_ON(io_pages > 0)!!!
 
-  # modprobe l2tp_eth && modprobe l2tp_ip
-  # sh ./tools/testing/selftests/net/l2tp.sh
+We observe this at a very low rate in production and were also able to
+reproduce it in a test environment by introducing some spurious delays
+and by introducing probabilistic trylock_page failures.
 
-So before going to inet6_csk_xmit() or ip_queue_xmit(), skb's dst
-should be dropped. This patch is to fix it by removing skb_dst_set()
-from l2tp_xmit_skb() and moving skb_dst_drop() into l2tp_xmit_core().
+To fix it, we apply check_tree_ref at a point where it could not
+possibly be unset by a competing task: after io_pages has been
+incremented. All the codepaths that clear TREE_REF check for io, so they
+would not be able to clear it after this point until the io is done.
 
-Fixes: 3557baabf280 ("[L2TP]: PPP over L2TP driver core")
-Reported-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: James Chapman <jchapman@katalix.com>
-Tested-by: James Chapman <jchapman@katalix.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Stack trace, for reference:
+[1417839.424739] ------------[ cut here ]------------
+[1417839.435328] kernel BUG at fs/btrfs/extent_io.c:4841!
+[1417839.447024] invalid opcode: 0000 [#1] SMP
+[1417839.502972] RIP: 0010:btrfs_release_extent_buffer_pages+0x20/0x1f0
+[1417839.517008] Code: ed e9 ...
+[1417839.558895] RSP: 0018:ffffc90020bcf798 EFLAGS: 00010202
+[1417839.570816] RAX: 0000000000000002 RBX: ffff888102d6def0 RCX: 0000000000000028
+[1417839.586962] RDX: 0000000000000002 RSI: ffff8887f0296482 RDI: ffff888102d6def0
+[1417839.603108] RBP: ffff88885664a000 R08: 0000000000000046 R09: 0000000000000238
+[1417839.619255] R10: 0000000000000028 R11: ffff88885664af68 R12: 0000000000000000
+[1417839.635402] R13: 0000000000000000 R14: ffff88875f573ad0 R15: ffff888797aafd90
+[1417839.651549] FS:  00007f5a844fa700(0000) GS:ffff88885f680000(0000) knlGS:0000000000000000
+[1417839.669810] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[1417839.682887] CR2: 00007f7884541fe0 CR3: 000000049f609002 CR4: 00000000003606e0
+[1417839.699037] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[1417839.715187] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[1417839.731320] Call Trace:
+[1417839.737103]  release_extent_buffer+0x39/0x90
+[1417839.746913]  read_block_for_search.isra.38+0x2a3/0x370
+[1417839.758645]  btrfs_search_slot+0x260/0x9b0
+[1417839.768054]  btrfs_lookup_file_extent+0x4a/0x70
+[1417839.778427]  btrfs_get_extent+0x15f/0x830
+[1417839.787665]  ? submit_extent_page+0xc4/0x1c0
+[1417839.797474]  ? __do_readpage+0x299/0x7a0
+[1417839.806515]  __do_readpage+0x33b/0x7a0
+[1417839.815171]  ? btrfs_releasepage+0x70/0x70
+[1417839.824597]  extent_readpages+0x28f/0x400
+[1417839.833836]  read_pages+0x6a/0x1c0
+[1417839.841729]  ? startup_64+0x2/0x30
+[1417839.849624]  __do_page_cache_readahead+0x13c/0x1a0
+[1417839.860590]  filemap_fault+0x6c7/0x990
+[1417839.869252]  ? xas_load+0x8/0x80
+[1417839.876756]  ? xas_find+0x150/0x190
+[1417839.884839]  ? filemap_map_pages+0x295/0x3b0
+[1417839.894652]  __do_fault+0x32/0x110
+[1417839.902540]  __handle_mm_fault+0xacd/0x1000
+[1417839.912156]  handle_mm_fault+0xaa/0x1c0
+[1417839.921004]  __do_page_fault+0x242/0x4b0
+[1417839.930044]  ? page_fault+0x8/0x30
+[1417839.937933]  page_fault+0x1e/0x30
+[1417839.945631] RIP: 0033:0x33c4bae
+[1417839.952927] Code: Bad RIP value.
+[1417839.960411] RSP: 002b:00007f5a844f7350 EFLAGS: 00010206
+[1417839.972331] RAX: 000000000000006e RBX: 1614b3ff6a50398a RCX: 0000000000000000
+[1417839.988477] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000002
+[1417840.004626] RBP: 00007f5a844f7420 R08: 000000000000006e R09: 00007f5a94aeccb8
+[1417840.020784] R10: 00007f5a844f7350 R11: 0000000000000000 R12: 00007f5a94aecc79
+[1417840.036932] R13: 00007f5a94aecc78 R14: 00007f5a94aecc90 R15: 00007f5a94aecc40
+
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Boris Burkov <boris@bur.io>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/l2tp/l2tp_core.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -1141,6 +1141,7 @@ static int l2tp_xmit_core(struct l2tp_se
+---
+ fs/btrfs/extent_io.c |   40 ++++++++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 16 deletions(-)
+
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4862,25 +4862,28 @@ struct extent_buffer *alloc_dummy_extent
+ static void check_buffer_tree_ref(struct extent_buffer *eb)
+ {
+ 	int refs;
+-	/* the ref bit is tricky.  We have to make sure it is set
+-	 * if we have the buffer dirty.   Otherwise the
+-	 * code to free a buffer can end up dropping a dirty
+-	 * page
++	/*
++	 * The TREE_REF bit is first set when the extent_buffer is added
++	 * to the radix tree. It is also reset, if unset, when a new reference
++	 * is created by find_extent_buffer.
+ 	 *
+-	 * Once the ref bit is set, it won't go away while the
+-	 * buffer is dirty or in writeback, and it also won't
+-	 * go away while we have the reference count on the
+-	 * eb bumped.
++	 * It is only cleared in two cases: freeing the last non-tree
++	 * reference to the extent_buffer when its STALE bit is set or
++	 * calling releasepage when the tree reference is the only reference.
+ 	 *
+-	 * We can't just set the ref bit without bumping the
+-	 * ref on the eb because free_extent_buffer might
+-	 * see the ref bit and try to clear it.  If this happens
+-	 * free_extent_buffer might end up dropping our original
+-	 * ref by mistake and freeing the page before we are able
+-	 * to add one more ref.
++	 * In both cases, care is taken to ensure that the extent_buffer's
++	 * pages are not under io. However, releasepage can be concurrently
++	 * called with creating new references, which is prone to race
++	 * conditions between the calls to check_buffer_tree_ref in those
++	 * codepaths and clearing TREE_REF in try_release_extent_buffer.
+ 	 *
+-	 * So bump the ref count first, then set the bit.  If someone
+-	 * beat us to it, drop the ref we added.
++	 * The actual lifetime of the extent_buffer in the radix tree is
++	 * adequately protected by the refcount, but the TREE_REF bit and
++	 * its corresponding reference are not. To protect against this
++	 * class of races, we call check_buffer_tree_ref from the codepaths
++	 * which trigger io after they set eb->io_pages. Note that once io is
++	 * initiated, TREE_REF can no longer be cleared, so that is the
++	 * moment at which any such race is best fixed.
+ 	 */
+ 	refs = atomic_read(&eb->refs);
+ 	if (refs >= 2 && test_bit(EXTENT_BUFFER_TREE_REF, &eb->bflags))
+@@ -5344,6 +5347,11 @@ int read_extent_buffer_pages(struct exte
+ 	clear_bit(EXTENT_BUFFER_READ_ERR, &eb->bflags);
+ 	eb->read_mirror = 0;
+ 	atomic_set(&eb->io_pages, num_reads);
++	/*
++	 * It is possible for releasepage to clear the TREE_REF bit before we
++	 * set io_pages. See check_buffer_tree_ref for a more detailed comment.
++	 */
++	check_buffer_tree_ref(eb);
+ 	for (i = 0; i < num_pages; i++) {
+ 		page = eb->pages[i];
  
- 	/* Queue the packet to IP for output */
- 	skb->ignore_df = 1;
-+	skb_dst_drop(skb);
- #if IS_ENABLED(CONFIG_IPV6)
- 	if (l2tp_sk_is_v6(tunnel->sock))
- 		error = inet6_csk_xmit(tunnel->sock, skb, NULL);
-@@ -1214,10 +1215,6 @@ int l2tp_xmit_skb(struct l2tp_session *s
- 		goto out_unlock;
- 	}
- 
--	/* Get routing info from the tunnel socket */
--	skb_dst_drop(skb);
--	skb_dst_set(skb, sk_dst_check(sk, 0));
--
- 	inet = inet_sk(sk);
- 	fl = &inet->cork.fl;
- 	switch (tunnel->encap) {
 
 
