@@ -2,52 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C54C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C57C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D22A22BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474F32064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260265;
-	bh=CSSsT8fj/6ZDTkJfsXrCBfZ/xPCX0VtLc6w3N4eoNOM=;
+	s=default; t=1595260270;
+	bh=m4gtIDFXrWLQ8g7latXn3rvipiUVHNA2h9iCYgBpJ7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m9SRnjC5wg9L+FlhRNTb4cQVwA1ainYx/ztZs+LJGCDH78516FIudcnvM2GO7gKdL
-	 vXwgO77u4m/oVj60AOUw75AZ7A6nSIew3M4X4kO9alnHOlyM+RUgXYTw6gunU5r+N5
-	 SOh0hnggQB+iEcIzLEanFlXIMBMfs3hCo4KgTjqs=
+	b=XWvPoI9dmYM2bzuj39d2BvODiLCbSorTG45zCmkUWONv3rNxQ+A+IcW87Q/hxUq/R
+	 1nMVDzcL4UrftUrXppzjweMHwYixKAfzJcY9WCQuqlJSZSMnBSWxokREpg51GI5MzL
+	 tER9jSmTiuv3+/iIa8GHptWSfoigvHyzipU94B7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731187AbgGTPvE (ORCPT
+        id S1731202AbgGTPvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:51:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47688 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:51:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731171AbgGTPu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:50:58 -0400
+        id S1729864AbgGTPvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:51:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DF302064B;
-        Mon, 20 Jul 2020 15:50:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A2052065E;
+        Mon, 20 Jul 2020 15:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260258;
-        bh=CSSsT8fj/6ZDTkJfsXrCBfZ/xPCX0VtLc6w3N4eoNOM=;
+        s=default; t=1595260263;
+        bh=m4gtIDFXrWLQ8g7latXn3rvipiUVHNA2h9iCYgBpJ7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nVftI8mleqzualUHao70mK3CUad+LeP1Hdh6vMeOf/audOcFdrrNLjtY994iH9U1F
-         pBeG234sy0miw8/AH3Je2k0s9LFVFBsDifek1IuzpqhH6wX1Q9zBzAthB2gFOjo1hO
-         HnFQ2vO+7u/5ML/615XK/pPrMSzDKP8y5covGbj8=
+        b=lk7Ql9Ry7zTvzc9BszaWlYGpD54ZEjzX+/GXekJ1y2+W+5gsov8flkfQ5gv1H/TpH
+         wQJ0mxQz+bMMrzGl+cAtM4RcDzRYBi2O2OHigdp+PLLzUowL4a1bN9RjiChsDC6kCJ
+         O/t6fXrAijJWueEBNIFhk+dGV9gWPZN5ULMzOvqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 009/133] net: usb: qmi_wwan: add support for Quectel EG95 LTE modem
-Date:   Mon, 20 Jul 2020 17:35:56 +0200
-Message-Id: <20200720152804.185326608@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 032/133] iio: mma8452: Add missed iio_device_unregister() call in mma8452_probe()
+Date:   Mon, 20 Jul 2020 17:36:19 +0200
+Message-Id: <20200720152805.282492452@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -60,41 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: AceLan Kao <acelan.kao@canonical.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit f815dd5cf48b905eeecf0a2b990e9b7ab048b4f1 ]
+commit d7369ae1f4d7cffa7574d15e1f787dcca184c49d upstream.
 
-Add support for Quectel Wireless Solutions Co., Ltd. EG95 LTE modem
+The function iio_device_register() was called in mma8452_probe().
+But the function iio_device_unregister() was not called after
+a call of the function mma8452_set_freefall_mode() failed.
+Thus add the missed function call for one error case.
 
-T:  Bus=01 Lev=01 Prnt=01 Port=02 Cnt=02 Dev#=  5 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=2c7c ProdID=0195 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-
-Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1a965d405fc6 ("drivers:iio:accel:mma8452: added cleanup provision in case of failure.")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/qmi_wwan.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1305,6 +1305,7 @@ static const struct usb_device_id produc
- 	{QMI_QUIRK_SET_DTR(0x1e0e, 0x9001, 5)},	/* SIMCom 7100E, 7230E, 7600E ++ */
- 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0121, 4)},	/* Quectel EC21 Mini PCIe */
- 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0191, 4)},	/* Quectel EG91 */
-+	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0195, 4)},	/* Quectel EG95 */
- 	{QMI_FIXED_INTF(0x2c7c, 0x0296, 4)},	/* Quectel BG96 */
- 	{QMI_QUIRK_SET_DTR(0x2cb7, 0x0104, 4)},	/* Fibocom NL678 series */
- 	{QMI_FIXED_INTF(0x0489, 0xe0b4, 0)},	/* Foxconn T77W968 LTE */
+---
+ drivers/iio/accel/mma8452.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+--- a/drivers/iio/accel/mma8452.c
++++ b/drivers/iio/accel/mma8452.c
+@@ -1651,10 +1651,13 @@ static int mma8452_probe(struct i2c_clie
+ 
+ 	ret = mma8452_set_freefall_mode(data, false);
+ 	if (ret < 0)
+-		goto buffer_cleanup;
++		goto unregister_device;
+ 
+ 	return 0;
+ 
++unregister_device:
++	iio_device_unregister(indio_dev);
++
+ buffer_cleanup:
+ 	iio_triggered_buffer_cleanup(indio_dev);
+ 
 
 
