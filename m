@@ -2,122 +2,96 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7CF220758
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:39:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q/BeaS6U"
+	by mail.kernel.org (Postfix) with ESMTP id A88E720734
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgGTFjk (ORCPT
+        id S1726618AbgGTFrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 01:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgGTFjk (ORCPT
+        Mon, 20 Jul 2020 01:47:18 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:44673 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725872AbgGTFrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 01:39:40 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE15C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 22:39:39 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id q85so3415408vke.4
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 22:39:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Mra/ak9D1+r3t7wzeEyhfxM6IMDYdP7DqDfcxJZ5WCA=;
-        b=q/BeaS6UMn4+h7XAy10XUDWX0sTf0GOY6JjFrVVsyzaFn5scLjVx6NpXfZpbWZSW3I
-         DhbYEXoJOV3WSsOZbdu44Z8teUBZNSupURzgAHu6Bo33JbJQxzj09w412BJ7xhhR5l4a
-         cTk8QdN13dvQSeGgQjrHLmkCFaPls0hPoxsg7LvhjcuTLQob36unB9kWB6vcKnHm6o2j
-         ibxieKxN6dl1NQopfoaCYTPmumk26LfNwtBAGWBAcQIXo9gTf9GFW1k1hkHsiRS9x649
-         lBi4ja7HhiihDwb/8nSneVhtWisEX6G3seVWAq3J+OupTWiEqh3XrsheQmgVWAugC86L
-         GQwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Mra/ak9D1+r3t7wzeEyhfxM6IMDYdP7DqDfcxJZ5WCA=;
-        b=eFNzRLsnS5+cgi3E7ya/HwbeFAUwwqhxVI9QsgRBObcup40Z774baVagLk/fHqge/o
-         i6VxDvMddzZtD3K1pQ62dhFZKXoqSngv/roRFKfH681+lZ9EgKlgw/gVtQn+qWLdo/8V
-         95/wRaYdasn3VPPlQGrGVb8ttVv8WViB+7iyBZg/SeSQbkGaTzvPkTBrAThY468O4F+m
-         ErnsrhfMoOPg+2XjIc3ZdkjL3XJmpIM4ZZ4U4WLMEJAleZKazpxE9bCIBPZNp3carvGX
-         5MENcnS0A30VjntITsSgE7VYSUqhAQbfKa/HNJEp9Buh7EZK980cIUJ0pNbBxKHrfoPZ
-         Cgiw==
-X-Gm-Message-State: AOAM530izbn0+oqRkbUN4S8cTzdTqndTHPBGxHp5TJCH/ZCiEhTWfFb8
-        g7U/Mk5cEB1G7MR3HzpLlk7e6m6cGuEr2xB87IBLEw==
-X-Google-Smtp-Source: ABdhPJwSL6+wbKxKzMbtERU799L37vOP/8fRp8XD+9XcElsSqaL4bAmBMNeevdVdVjS+F17sPVX7xGuiPuIkJ6k33wg=
-X-Received: by 2002:a1f:f848:: with SMTP id w69mr15006496vkh.86.1595223578965;
- Sun, 19 Jul 2020 22:39:38 -0700 (PDT)
+        Mon, 20 Jul 2020 01:47:18 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U3BbMp-_1595224030;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U3BbMp-_1595224030)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 20 Jul 2020 13:47:10 +0800
+Subject: Re: [PATCH v16 18/22] mm/lru: replace pgdat lru_lock with lruvec lock
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Rong Chen <rong.a.chen@intel.com>
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1594429136-20002-19-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0Ud+Dj-Q8Sxv8eDQhjM3fFHwnU_ZFEVG54debBennUmxAg@mail.gmail.com>
+ <62dfd262-a7ac-d18e-216a-2988c690b256@linux.alibaba.com>
+ <c339f46e-ae04-4e65-2713-a5c8be56051a@linux.alibaba.com>
+ <CAKgT0UestD7cU+3aqg3a9JT4bTXVYQpjGbwoC2-bOBHPY5xn6A@mail.gmail.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <27eb389d-b5f9-fe03-2e57-15c351629efc@linux.alibaba.com>
+Date:   Mon, 20 Jul 2020 13:47:09 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200717164217.18819-1-daniel.lezcano@linaro.org> <20200717164217.18819-2-daniel.lezcano@linaro.org>
-In-Reply-To: <20200717164217.18819-2-daniel.lezcano@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Mon, 20 Jul 2020 11:09:26 +0530
-Message-ID: <CAHLCerNbA+cQJB++xbSaKhANX3n0PhCwgBL8Qeg4ZPDaUOcBBQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] thermal: core: Move initialization after core initcall
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAKgT0UestD7cU+3aqg3a9JT4bTXVYQpjGbwoC2-bOBHPY5xn6A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 10:12 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> The generic netlink is initialized at subsys_initcall, so far after
-> the thermal init routine and the thermal generic netlink family
-> initialization.
->
-> On =C5=9Dome platforms, that leads to a memory corruption.
->
-> The fix was sent to netdev@ to move the genetlink framework
-> initialization at core_initcall.
->
-> Move the thermal core initialization to postcore level which is very
-> close to core level.
->
-> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  drivers/thermal/thermal_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_cor=
-e.c
-> index c2e7d7aaa354..79551bb6cd4c 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -1617,4 +1617,4 @@ static int __init thermal_init(void)
->         mutex_destroy(&poweroff_lock);
->         return result;
->  }
-> -core_initcall(thermal_init);
-> +postcore_initcall(thermal_init);
 
-For posterity, we moved to core_initcall from fs_initcall since we had
-removed netlink support from the thermal framework and we wanted to
-initialise it as quickly as possible after cpufreq to allow early
-mitigation possibility.
 
-Given the addition of the new netlink-based API to thermal framework,
-I think moving to postcore_initcall is an acceptable compromise.
+在 2020/7/19 下午11:14, Alexander Duyck 写道:
+>> Compare to move to tail, how about to move it to head of struct, which is
+>> close to lru list? Did you have some data of the place change?
+> I don't have specific data, just anecdotal evidence from the past that
+> usually you want to keep locks away from read-mostly items since they
+> cause obvious cache thrash. My concern was more with the other fields
+> in the structure such as pgdat since it should be a static value and
+> having it evicted would likely be more expensive than just leaving the
+> cacheline as it is.
+> 
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Thanks for comments, Alex.
 
-> --
-> 2.17.1
->
+So, sounds like moving the lru_lock to head of struct lruvec could be better.
+
+>> -       __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
+>> +       if (delta_munlocked)
+>> +               __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
+>>         if (lruvec)
+>>                 unlock_page_lruvec_irq(lruvec);
+> Why not just wrap the entire thing in a check for "lruvec"? Yes you
+> could theoretically be modding with a value of 0, but it avoids a
+> secondary unnecessary check and branching.
+
+Right, and the delta_munlocked value could be checked inside the accounting
+func
+
+Thanks!
