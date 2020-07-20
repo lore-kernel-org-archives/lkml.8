@@ -2,83 +2,79 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B73DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C382C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED68F21775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:20:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595233254;
-	bh=WQScxDVLUlB94XEZg3B0RJYm62O72Z0/Q5oNhbdJcEY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NOfeAeas99UjoJzhlHhkgq+nMTgsvq1H8dnGM1y6Vxx/oRKTHQHOA9sHSkVrgh/xE
-	 0ELICFqzJoAJJ13YEDpcd2U5BmXv+3Rp9zv/byVDdMoBHAM8i9Apm9FGenPW2qzHfc
-	 Um3KCiJ4dlnwhHHsFr41n3Fot9LPXOJjUaBCKuIM=
+	by mail.kernel.org (Postfix) with ESMTP id E2B2E20709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgGTIUw (ORCPT
+        id S1727864AbgGTIVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:20:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726520AbgGTIUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:20:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C315C20709;
-        Mon, 20 Jul 2020 08:20:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595233249;
-        bh=WQScxDVLUlB94XEZg3B0RJYm62O72Z0/Q5oNhbdJcEY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F7IsKAmwCM1kfdjIhZRdJopD9z0T5M0Gb3v9LZAkIzyEbVyXnYY08MfLMUJXY3Xt6
-         GkPoKQmpCuICywWlNGoR/xE3j31lizH7iTWGx4C0hk12Ag/9ZgxDsN5Z/B7P3h95tO
-         NhOiDNa+0h3Tdb+q7pLnG2JQpBZYtsLsR4EOa0jA=
-Date:   Mon, 20 Jul 2020 10:21:00 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Qiwu Huang <yanziily@gmail.com>
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiangfei1@xiaomi.com,
-        Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: Re: [PATCH v4 0/4] add some power supply properties about
- wireless/wired charging
-Message-ID: <20200720082100.GA720171@kroah.com>
-References: <cover.1595214246.git.huangqiwu@xiaomi.com>
+        Mon, 20 Jul 2020 04:21:00 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7789 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726254AbgGTIVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 04:21:00 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6CE554F8A41BB1BB5468;
+        Mon, 20 Jul 2020 16:20:58 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 20 Jul 2020 16:20:47 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <mark@fasheh.com>, <jlbec@evilplan.org>,
+        <joseph.qi@linux.alibaba.com>
+CC:     <ocfs2-devel@oss.oracle.com>, <linux-kernel@vger.kernel.org>,
+        <wangxiongfeng2@huawei.com>
+Subject: [PATCH] dlmfs: add a newline when printing 'capabilities' by sysfs
+Date:   Mon, 20 Jul 2020 16:24:33 +0800
+Message-ID: <20200720082433.164311-1-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1595214246.git.huangqiwu@xiaomi.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 01:47:13PM +0800, Qiwu Huang wrote:
-> From: Qiwu Huang <huangqiwu@xiaomi.com>
-> 
-> quick_charge_type reports quick charge type based on charging power.
-> tx_adapter shows wireless charging adapter type.
-> signal_strength shows degree of coupling between tx and rx when wireless charging.
-> reverse_chg_mode supply interface to enable/disable wireless reverse charging.
-> 
-> Qiwu Huang (4):
->   power: supply: core: add quick charge type property
->   power: supply: core: add wireless charger adapter type property
->   power: supply: core: add wireless signal strength property
->   power: supply: core: property to control reverse charge
+When I cat module parameter 'capabilities' by sysfs, it displays as
+follows. It's better to add a newline for easy reading.
 
-What changed from the previous versions of this series?  Normally you
-either include that in the 0/X email, or in the individual patches.  I
-don't see that in either place in this series :(
+root@syzkaller:~# cat /sys/module/ocfs2_dlmfs/parameters/capabilities
+bast stackglueroot@syzkaller:~#
 
-See the many examples of how this is done by looking at other patches on
-the mailing lists and in the submitting patches documentation.
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+---
+ fs/ocfs2/dlmfs/dlmfs.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-thanks,
+diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
+index ea868c6f9800..1f9c864ec09b 100644
+--- a/fs/ocfs2/dlmfs/dlmfs.c
++++ b/fs/ocfs2/dlmfs/dlmfs.c
+@@ -82,8 +82,13 @@ static int param_set_dlmfs_capabilities(const char *val,
+ static int param_get_dlmfs_capabilities(char *buffer,
+ 					const struct kernel_param *kp)
+ {
+-	return strlcpy(buffer, DLMFS_CAPABILITIES,
++	int cnt;
++
++	cnt = strlcpy(buffer, DLMFS_CAPABILITIES,
+ 		       strlen(DLMFS_CAPABILITIES) + 1);
++	cnt += sprintf(buffer + cnt, "\n");
++
++	return cnt;
+ }
+ module_param_call(capabilities, param_set_dlmfs_capabilities,
+ 		  param_get_dlmfs_capabilities, NULL, 0444);
+-- 
+2.20.1
 
-greg k-h
