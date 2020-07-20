@@ -2,167 +2,84 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C860C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4695CC433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8DF2176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263076;
-	bh=smDDaCk04kMr6EUzVkdVBl94CFmKvpleITLelmvA8+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jZMsmXP2+nC6t5qV7Bwjv+USKnHgVk6fD+m1RZGXzUTuY+0c1xGp3RAdFshT9nlaD
-	 +qR8Ne7ieehHQeANl35jG9edJU4wWSg8PbJqQ6c8auWz6wk4cmkSGFtsb/2Ds7fYYD
-	 FSGJkQ/04UNCctUWc9X1f2excG3NmotEh4wdF61Y=
+	by mail.kernel.org (Postfix) with ESMTP id 2C3652176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:38:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389017AbgGTQhy (ORCPT
+        id S2389025AbgGTQiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:37:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50816 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730889AbgGTQhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:37:51 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9248320734;
-        Mon, 20 Jul 2020 16:37:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595263070;
-        bh=smDDaCk04kMr6EUzVkdVBl94CFmKvpleITLelmvA8+8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JJC8sbphJDydEPEmQ9bsAOdVV0pki83XX29vWiTOyf6AsmPXVOTyRrnnrci7D6Bhd
-         g+Lq7h/M7GIp2Q3yjvb33D7hXLYV7+QkF/cJUlgxrp5Jsp6dTPG3ALVp7AD8PFZTTR
-         fVVidPSEdf7dnCSggZDPP0jvSNjJIbQpG4SHFy4k=
-Date:   Mon, 20 Jul 2020 09:37:48 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Subject: Re: [PATCH 03/24] net: add a new sockptr_t type
-Message-ID: <20200720163748.GA1292162@gmail.com>
-References: <20200720124737.118617-1-hch@lst.de>
- <20200720124737.118617-4-hch@lst.de>
+        Mon, 20 Jul 2020 12:38:10 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44993 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729269AbgGTQiI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:38:08 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jxYnk-00007X-BL; Mon, 20 Jul 2020 16:38:04 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Michael Tretter <m.tretter@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] media: allegro: fix potential null dereference on header
+Date:   Mon, 20 Jul 2020 17:38:04 +0100
+Message-Id: <20200720163804.340047-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720124737.118617-4-hch@lst.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 02:47:16PM +0200, Christoph Hellwig wrote:
-> Add a uptr_t type that can hold a pointer to either a user or kernel
-> memory region, and simply helpers to copy to and from it.  For
-> architectures like x86 that have non-overlapping user and kernel
-> address space it just is a union and uses a TASK_SIZE check to
-> select the proper copy routine.  For architectures with overlapping
-> address spaces a flag to indicate the address space is used instead.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  include/linux/sockptr.h | 121 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 121 insertions(+)
->  create mode 100644 include/linux/sockptr.h
-> 
-> diff --git a/include/linux/sockptr.h b/include/linux/sockptr.h
-> new file mode 100644
-> index 00000000000000..e41dfa52555dec
-> --- /dev/null
-> +++ b/include/linux/sockptr.h
-> @@ -0,0 +1,121 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2020 Christoph Hellwig.
-> + *
-> + * Support for "universal" pointers that can point to either kernel or userspace
-> + * memory.
-> + */
-> +#ifndef _LINUX_SOCKPTR_H
-> +#define _LINUX_SOCKPTR_H
-> +
-> +#include <linux/slab.h>
-> +#include <linux/uaccess.h>
-> +
-> +#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-> +typedef union {
-> +	void		*kernel;
-> +	void __user	*user;
-> +} sockptr_t;
-> +
-> +static inline bool sockptr_is_kernel(sockptr_t sockptr)
-> +{
-> +	return (unsigned long)sockptr.kernel >= TASK_SIZE;
-> +}
-> +
-> +static inline sockptr_t KERNEL_SOCKPTR(void *p)
-> +{
-> +	return (sockptr_t) { .kernel = p };
-> +}
-> +#else /* CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE */
-> +typedef struct {
-> +	union {
-> +		void		*kernel;
-> +		void __user	*user;
-> +	};
-> +	bool		is_kernel : 1;
-> +} sockptr_t;
-> +
-> +static inline bool sockptr_is_kernel(sockptr_t sockptr)
-> +{
-> +	return sockptr.is_kernel;
-> +}
-> +
-> +static inline sockptr_t KERNEL_SOCKPTR(void *p)
-> +{
-> +	return (sockptr_t) { .kernel = p, .is_kernel = true };
-> +}
-> +#endif /* CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE */
-> +
-> +static inline sockptr_t USER_SOCKPTR(void __user *p)
-> +{
-> +	return (sockptr_t) { .user = p };
-> +}
-> +
-> +static inline bool sockptr_is_null(sockptr_t sockptr)
-> +{
-> +	return !sockptr.user && !sockptr.kernel;
-> +}
-> +
-> +static inline int copy_from_sockptr(void *dst, sockptr_t src, size_t size)
-> +{
-> +	if (!sockptr_is_kernel(src))
-> +		return copy_from_user(dst, src.user, size);
-> +	memcpy(dst, src.kernel, size);
-> +	return 0;
-> +}
+From: Colin Ian King <colin.king@canonical.com>
 
-How does this not introduce a massive security hole when
-CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE?
+The pointer header is an alias to msg and msg is being null checked.
+However, if msg is null then header is also null and this can lead to
+a null pointer dereference on the assignment type = header->type. Fix
+this by only dereferencing header after the null check on msg.
 
-AFAICS, userspace can pass in a pointer >= TASK_SIZE,
-and this code makes it be treated as a kernel pointer.
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 3de16839669f ("media: allegro: add explicit mail encoding and decoding")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/staging/media/allegro-dvt/allegro-mail.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-- Eric
+diff --git a/drivers/staging/media/allegro-dvt/allegro-mail.c b/drivers/staging/media/allegro-dvt/allegro-mail.c
+index 4ac65de12463..4496e2a4da5c 100644
+--- a/drivers/staging/media/allegro-dvt/allegro-mail.c
++++ b/drivers/staging/media/allegro-dvt/allegro-mail.c
+@@ -462,12 +462,14 @@ allegro_dec_encode_frame(struct mcu_msg_encode_frame_response *msg, u32 *src)
+ ssize_t allegro_encode_mail(u32 *dst, void *msg)
+ {
+ 	const struct mcu_msg_header *header = msg;
+-	enum mcu_msg_type type = header->type;
++	enum mcu_msg_type type;
+ 	ssize_t size;
+ 
+ 	if (!msg || !dst)
+ 		return -EINVAL;
+ 
++	type = header->type;
++
+ 	switch (type) {
+ 	case MCU_MSG_TYPE_INIT:
+ 		size = allegro_enc_init(&dst[1], msg);
+-- 
+2.27.0
+
