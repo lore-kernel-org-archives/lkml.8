@@ -2,164 +2,357 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A83C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3803C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3212D208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:00:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595224843;
-	bh=7Tm3y6ys6c5KTjSLhoUxixPeCDvJdL3nYvsmU0uU++g=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=rgD0rw2dMkb3k3InEXNcart3ZmdOo2GgekWOq6IATTnoxB+zKGsgrrtqmF8feJ23m
-	 15gK7e1YCXEvDjtIsnllzmCYjYTVpkzfuTSD0o53ktPlYE9/foVriYvKWZ9F7VdoUP
-	 3vKWAlfJqv6suKRpqqGGlhT4IlgdaMoEjculONQY=
+	by mail.kernel.org (Postfix) with ESMTP id C2D1C2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgGTGAl (ORCPT
+        id S1726381AbgGTGHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 02:00:41 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36469 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgGTGAl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:00:41 -0400
-Received: by mail-ed1-f68.google.com with SMTP id dg28so11885585edb.3
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 23:00:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PuzbMP4Fx1ZupEXT7MERkXxCqLRlatNCHClyE1DuVQ0=;
-        b=UNh4GRbULjD2btj5cOElIsPKN1sWv1ZWOeuXvQfh0KEAOylR8eUOmt6LKsgkcpa3Jq
-         +QdNksxtg6qOFjnJA9qprA3cJbQEd6kSGIFqV/smxMb8PC50beHaFq8ZZYJ7WXofmbhA
-         n3lw6hIHpgcuHD5haOf1qYzIKhgIXOTMD919/aqx8N3Hr5MNupcwCDJhpt7IK/QRHkef
-         w+G1EH7Qa+iSwzBGH9RZ5age2QnxHwbWn1+ITRazNXrtteMiQQWOnKkiWynFa5C10KT1
-         RI+Aed8KucZ7L0X+Ma+qvFXakZtxHoU4mvyfH+BRr6KdmQ1PvV9sveJRIFV7TMqTYwdQ
-         taDA==
-X-Gm-Message-State: AOAM530dL+WrfsE8V3V6l4DwYRPpkC+DRQ2JAi+Nd2rQoOKmBV6HBbRt
-        RXL+vZ+Fd5fPkfQvgifIk8wFqc9u
-X-Google-Smtp-Source: ABdhPJz1ohMA094ZI2rfCq82O/bDdbi8cFKPROXehsexD2ZHup0rMjiA2aYRP38+Sg13YeWHQZqD5A==
-X-Received: by 2002:a50:ed15:: with SMTP id j21mr20722218eds.246.1595224838439;
-        Sun, 19 Jul 2020 23:00:38 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id j16sm13743762ejn.77.2020.07.19.23.00.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Jul 2020 23:00:37 -0700 (PDT)
-Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     christian@brauner.io, "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-References: <6b253b55-586d-0bc4-9f58-c45c631abc60@kernel.org>
- <5a8c4c38-7aeb-981a-8d3b-a7a5c8ca5564@kernel.org>
- <20200717122651.GA6067@redhat.com> <20200717124017.GB6067@redhat.com>
- <2c8ef23c-43b4-39d4-8e84-92769c948da9@kernel.org>
- <20200718171406.GB16791@redhat.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Message-ID: <0deb1081-299b-1475-f368-7ca65b535a9c@kernel.org>
-Date:   Mon, 20 Jul 2020 08:00:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 02:07:00 -0400
+Received: from mga14.intel.com ([192.55.52.115]:7506 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725805AbgGTGHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 02:07:00 -0400
+IronPort-SDR: zAEJIIXIiCmFHi8eJZT+lfgu5nJhMCjmkfedDXZSpP5hLG2J5XdiyenMqyI6zxi0HoiodbKqJV
+ 9LPKintPUSWA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9687"; a="149015360"
+X-IronPort-AV: E=Sophos;i="5.75,373,1589266800"; 
+   d="scan'208";a="149015360"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2020 23:06:59 -0700
+IronPort-SDR: eFtD+xHfrrkktCRUlkKydb4OTCZdu7wdXII3Q1X/lZ63OzStopi+YxOjmtapxfhJsTBY7dZYDA
+ 9GEJEA7L4Dmw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,373,1589266800"; 
+   d="scan'208";a="327430436"
+Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.135]) ([10.239.161.135])
+  by orsmga007.jf.intel.com with ESMTP; 19 Jul 2020 23:06:53 -0700
+Subject: Re: [RFC PATCH 10/16] sched: Trivial forced-newidle balancer(Internet
+ mail)
+To:     =?UTF-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pjt@google.com" <pjt@google.com>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "subhra.mazumdar@oracle.com" <subhra.mazumdar@oracle.com>,
+        "fweisbec@gmail.com" <fweisbec@gmail.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "kerrnel@google.com" <kerrnel@google.com>,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "vineethrp@gmail.com" <vineethrp@gmail.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+References: <cover.1593530334.git.vpillai@digitalocean.com>
+ <980b600006945a45ce1ec34ef206fc04bcf0b5dc.1593530334.git.vpillai@digitalocean.com>
+ <750BB828-1AAE-4DED-A460-CF8ADDE3CFDA@tencent.com>
+From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
+Message-ID: <288368e3-9f6b-21bf-287a-f2446073f6fb@linux.intel.com>
+Date:   Mon, 20 Jul 2020 14:06:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200718171406.GB16791@redhat.com>
-Content-Type: text/plain; charset=iso-8859-2
+In-Reply-To: <750BB828-1AAE-4DED-A460-CF8ADDE3CFDA@tencent.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18. 07. 20, 19:14, Oleg Nesterov wrote:
-> On 07/18, Jiri Slaby wrote:
+On 2020/7/20 12:06, benbjiang(蒋彪) wrote:
+> Hi,
+> 
+>> On Jul 1, 2020, at 5:32 AM, Vineeth Remanan Pillai <vpillai@digitalocean.com> wrote:
 >>
->> On 17. 07. 20, 14:40, Oleg Nesterov wrote:
->>>
->>> please see the updated patch below, lets check ptrace_unfreeze() too.
+>> From: Peter Zijlstra <peterz@infradead.org>
 >>
->> Sure, dmesg attached.
-> 
-> Thanks a lot!
-> 
-> But I am totally confused...
-> 
->> [   94.513944] ------------[ cut here ]------------
->> [   94.513985] do not call blocking ops when !TASK_RUNNING; state=8 set at [<000000002fe279e9>] ptrace_check_attach+0xbf/0x110
-> 
-> OK, so the ptracer has already did the TASK_TRACED -> __TASK_TRACED change in
-> ptrace_freeze_traced(),
-> 
->> [   94.514019] WARNING: CPU: 16 PID: 34171 at kernel/sched/core.c:6881 __might_sleep+0x6c/0x70
->> [   94.514020] Modules linked in: ata_generic(E) pata_acpi(E) crc32_pclmul(E) qemu_fw_cfg(E) ata_piix(E) e1000(E) nls_iso8859_1(E) nls_cp437(E) vfat(E) fat(E) virtio_blk(E) virtio_mmio(E) xfs(E) btrfs(E) blake2b_generic(E) xor(E) raid6_pq(E) libcrc32c(E) crc32c_intel(E) reiserfs(E) squashfs(E) fuse(E) dm_snapshot(E) dm_bufio(E) dm_crypt(E) dm_mod(E) binfmt_misc(E) loop(E) sg(E) virtio_rng(E)
->> [   94.514082] CPU: 16 PID: 34171 Comm: strace Tainted: G            E     5.8.0-rc5-100.g55927f9-default #1 openSUSE Tumbleweed (unreleased)
->> [   94.514084] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c89-rebuilt.suse.com 04/01/2014
->> [   94.514087] RIP: 0010:__might_sleep+0x6c/0x70
->> [   94.514090] Code: 41 5c 41 5d e9 25 ff ff ff 48 8b 90 68 1a 00 00 48 8b 70 10 48 c7 c7 10 45 70 8f c6 05 4f a9 68 01 01 48 89 d1 e8 7a bb fc ff <0f> 0b eb c8 0f 1f 44 00 00 55 48 89 e5 41 57 41 56 41 55 49 89 fd
->> [   94.514092] RSP: 0018:ffff9ffa4ba1be00 EFLAGS: 00010286
->> [   94.514093] RAX: 0000000000000000 RBX: ffff8dc82b503e00 RCX: 0000000000000489
->> [   94.514094] RDX: 0000000000000001 RSI: 0000000000000096 RDI: 0000000000000247
->> [   94.514095] RBP: ffffffff8f6ffa6b R08: 0000000000000004 R09: 0000000000000489
->> [   94.514095] R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000039
->> [   94.514096] R13: 0000000000000000 R14: 0000000000000001 R15: ffff8dc82b5045e4
->> [   94.514098] FS:  00007fa00f1f9240(0000) GS:ffff8dcb0c000000(0000) knlGS:0000000000000000
->> [   94.514099] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   94.514100] CR2: 0000557b53d25877 CR3: 00000004ca490005 CR4: 0000000000360ee0
->> [   94.514103] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> [   94.514104] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> [   94.514105] Call Trace:
->> [   94.514821]  ptrace_stop+0x1a9/0x300
-> 
-> This is already wrong. But
-> 
-> 	Where does this __might_sleep() come from ??? I ses no blocking calls
-> 	in ptrace_stop(). Not to mention it is called with ->siglock held and
-> 	right after this lock is dropped we take tasklist_lock.
+>> When a sibling is forced-idle to match the core-cookie; search for
+>> matching tasks to fill the core.
+>>
+>> rcu_read_unlock() can incur an infrequent deadlock in
+>> sched_core_balance(). Fix this by using the RCU-sched flavor instead.
+>>
+>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>> Acked-by: Paul E. McKenney <paulmck@kernel.org>
+>> ---
+>> include/linux/sched.h |   1 +
+>> kernel/sched/core.c   | 131 +++++++++++++++++++++++++++++++++++++++++-
+>> kernel/sched/idle.c   |   1 +
+>> kernel/sched/sched.h  |   6 ++
+>> 4 files changed, 138 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/linux/sched.h b/include/linux/sched.h
+>> index 3c8dcc5ff039..4f9edf013df3 100644
+>> --- a/include/linux/sched.h
+>> +++ b/include/linux/sched.h
+>> @@ -688,6 +688,7 @@ struct task_struct {
+>> #ifdef CONFIG_SCHED_CORE
+>> 	struct rb_node			core_node;
+>> 	unsigned long			core_cookie;
+>> +	unsigned int			core_occupation;
+>> #endif
+>>
+>> #ifdef CONFIG_CGROUP_SCHED
+>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+>> index 4d6d6a678013..fb9edb09ead7 100644
+>> --- a/kernel/sched/core.c
+>> +++ b/kernel/sched/core.c
+>> @@ -201,6 +201,21 @@ static struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
+>> 	return match;
+>> }
+>>
+>> +static struct task_struct *sched_core_next(struct task_struct *p, unsigned long cookie)
+>> +{
+>> +	struct rb_node *node = &p->core_node;
+>> +
+>> +	node = rb_next(node);
+>> +	if (!node)
+>> +		return NULL;
+>> +
+>> +	p = container_of(node, struct task_struct, core_node);
+>> +	if (p->core_cookie != cookie)
+>> +		return NULL;
+>> +
+>> +	return p;
+>> +}
+>> +
+>> /*
+>>  * The static-key + stop-machine variable are needed such that:
+>>  *
+>> @@ -4233,7 +4248,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>> 	struct task_struct *next, *max = NULL;
+>> 	const struct sched_class *class;
+>> 	const struct cpumask *smt_mask;
+>> -	int i, j, cpu;
+>> +	int i, j, cpu, occ = 0;
+>> 	bool need_sync;
+>>
+>> 	if (!sched_core_enabled(rq))
+>> @@ -4332,6 +4347,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>> 				goto done;
+>> 			}
+>>
+>> +			if (!is_idle_task(p))
+>> +				occ++;
+>> +
+>> 			rq_i->core_pick = p;
+>>
+>> 			/*
+>> @@ -4357,6 +4375,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>>
+>> 						cpu_rq(j)->core_pick = NULL;
+>> 					}
+>> +					occ = 1;
+>> 					goto again;
+>> 				} else {
+>> 					/*
+>> @@ -4393,6 +4412,8 @@ next_class:;
+>> 		if (is_idle_task(rq_i->core_pick) && rq_i->nr_running)
+>> 			rq_i->core_forceidle = true;
+>>
+>> +		rq_i->core_pick->core_occupation = occ;
+>> +
+>> 		if (i == cpu)
+>> 			continue;
+>>
+>> @@ -4408,6 +4429,114 @@ next_class:;
+>> 	return next;
+>> }
+>>
+>> +static bool try_steal_cookie(int this, int that)
+>> +{
+>> +	struct rq *dst = cpu_rq(this), *src = cpu_rq(that);
+>> +	struct task_struct *p;
+>> +	unsigned long cookie;
+>> +	bool success = false;
+>> +
+>> +	local_irq_disable();
+>> +	double_rq_lock(dst, src);
+>> +
+>> +	cookie = dst->core->core_cookie;
+>> +	if (!cookie)
+>> +		goto unlock;
+>> +
+>> +	if (dst->curr != dst->idle)
+>> +		goto unlock;
+>> +
+>> +	p = sched_core_find(src, cookie);
+>> +	if (p == src->idle)
+>> +		goto unlock;
+>> +
+>> +	do {
+>> +		if (p == src->core_pick || p == src->curr)
+>> +			goto next;
+>> +
+>> +		if (!cpumask_test_cpu(this, &p->cpus_mask))
+>> +			goto next;
+>> +
+>> +		if (p->core_occupation > dst->idle->core_occupation)
+>> +			goto next;
+>> +
+>> +		p->on_rq = TASK_ON_RQ_MIGRATING;
+>> +		deactivate_task(src, p, 0);
+>> +		set_task_cpu(p, this);
+>> +		activate_task(dst, p, 0);
+>> +		p->on_rq = TASK_ON_RQ_QUEUED;
+>> +
+>> +		resched_curr(dst);
+>> +
+>> +		success = true;
+>> +		break;
+>> +
+>> +next:
+>> +		p = sched_core_next(p, cookie);
+>> +	} while (p);
+>> +
+>> +unlock:
+>> +	double_rq_unlock(dst, src);
+>> +	local_irq_enable();
+>> +
+>> +	return success;
+>> +}
+>> +
+>> +static bool steal_cookie_task(int cpu, struct sched_domain *sd)
+>> +{
+>> +	int i;
+>> +
+>> +	for_each_cpu_wrap(i, sched_domain_span(sd), cpu) {
+> Since (i == cpu) should be skipped, should we start iteration at cpu+1? like,
+> 	for_each_cpu_wrap(i, sched_domain_span(sd), cpu+1) {
+> 		…
+> 	}
+> In that way, we could avoid hitting following if(i == cpu) always.
 
-Decoded stacktrace:
+IMHO, this won't work, as cpuid is not continuous.
 
-> ptrace_stop (include/linux/freezer.h:57 include/linux/freezer.h:67 include/linux/freezer.h:128 include/linux/freezer.h:173 kernel/signal.c:2217)  
-> ptrace_do_notify (kernel/signal.c:2272)  
-> ptrace_notify (arch/x86/include/asm/paravirt.h:656 arch/x86/include/asm/qspinlock.h:55 include/linux/spinlock.h:211 include/linux/spinlock_api_smp.h:167 include/linux/spinlock.h:403 kernel/signal.c:2282)  
-> syscall_trace_enter (include/linux/tracehook.h:73 include/linux/tracehook.h:104 arch/x86/entry/common.c:159)
-> do_syscall_64 (arch/x86/entry/common.c:380)  
-> entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:124)  
+>> +		if (i == cpu)
+>> +			continue;
+>> +
+>> +		if (need_resched())
+>> +			break;
+> Should we return true here to accelerate the breaking of sched_core_balance? 
+> Otherwise the breaking would be delayed to the next level sd iteration.
+>> +
+>> +		if (try_steal_cookie(cpu, i))
+>> +			return true;
+>> +	}
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +static void sched_core_balance(struct rq *rq)
+>> +{
+>> +	struct sched_domain *sd;
+>> +	int cpu = cpu_of(rq);
+>> +
+>> +	rcu_read_lock_sched();
+>> +	raw_spin_unlock_irq(rq_lockp(rq));
+>> +	for_each_domain(cpu, sd) {
+>> +		if (!(sd->flags & SD_LOAD_BALANCE))
+>> +			break;
+>> +
+>> +		if (need_resched())
+>> +			break;
+> If rescheded here, we missed the chance to do further forced-newidle balance, 
+> and the idle-core could be idle for a long time, because lacking of pulling chance.
+> Could it be possible to add a new forced-newidle balance chance in task_tick_idle?
+> which could make it more efficient.
 
-It is try_to_freeze_unsafe in try_to_freeze in freezable_schedule in
-ptrace_stop.
+This flag indicates there is another thread deserves to run, So I guess the core won't
+be idle for a long time.
 
+Thanks,
+-Aubrey
 > 
-> 	How this connects to the debugging patch I sent? Did you see this warning
-> 	without that patch?
-
-I suppose this made it appear:
-+CONFIG_PREEMPT_COUNT=y
--# CONFIG_DEBUG_ATOMIC_SLEEP is not set
-+CONFIG_DEBUG_ATOMIC_SLEEP=y
-
->> [   94.514888] WARNING: CPU: 16 PID: 34171 at kernel/signal.c:2219 ptrace_stop+0x1d8/0x300
-> ...
->> [   94.514899] RIP: 0010:ptrace_stop+0x1d8/0x300
+>> +		if (steal_cookie_task(cpu, sd))
+>> +			break;
+>> +	}
+>> +	raw_spin_lock_irq(rq_lockp(rq));
+>> +	rcu_read_unlock_sched();
+>> +}
+>> +
+>> +static DEFINE_PER_CPU(struct callback_head, core_balance_head);
+>> +
+>> +void queue_core_balance(struct rq *rq)
+>> +{
+>> +	if (!sched_core_enabled(rq))
+>> +		return;
+>> +
+>> +	if (!rq->core->core_cookie)
+>> +		return;
+>> +
+>> +	if (!rq->nr_running) /* not forced idle */
+>> +		return;
+>> +
+>> +	queue_balance_callback(rq, &per_cpu(core_balance_head, rq->cpu), sched_core_balance);
+>> +}
+>> +
+>> #else /* !CONFIG_SCHED_CORE */
+>>
+>> static struct task_struct *
+>> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+>> index a8d40ffab097..dff6ba220ed7 100644
+>> --- a/kernel/sched/idle.c
+>> +++ b/kernel/sched/idle.c
+>> @@ -395,6 +395,7 @@ static void set_next_task_idle(struct rq *rq, struct task_struct *next, bool fir
+>> {
+>> 	update_idle_core(rq);
+>> 	schedstat_inc(rq->sched_goidle);
+>> +	queue_core_balance(rq);
+>> }
+>>
+>> #ifdef CONFIG_SMP
+>> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+>> index 293aa1ae0308..464559676fd2 100644
+>> --- a/kernel/sched/sched.h
+>> +++ b/kernel/sched/sched.h
+>> @@ -1089,6 +1089,8 @@ static inline raw_spinlock_t *rq_lockp(struct rq *rq)
+>> bool cfs_prio_less(struct task_struct *a, struct task_struct *b);
+>> void sched_core_adjust_sibling_vruntime(int cpu, bool coresched_enabled);
+>>
+>> +extern void queue_core_balance(struct rq *rq);
+>> +
+>> #else /* !CONFIG_SCHED_CORE */
+>>
+>> static inline bool sched_core_enabled(struct rq *rq)
+>> @@ -1101,6 +1103,10 @@ static inline raw_spinlock_t *rq_lockp(struct rq *rq)
+>> 	return &rq->__lock;
+>> }
+>>
+>> +static inline void queue_core_balance(struct rq *rq)
+>> +{
+>> +}
+>> +
+>> #endif /* CONFIG_SCHED_CORE */
+>>
+>> #ifdef CONFIG_SCHED_SMT
+>> -- 
+>> 2.17.1
+>>
+>>
 > 
-> This is WARN_ON(current->state) added to ptrace_stop(), this can explain
-> BUG_ON() in do_notify_parent() you reported.
-> 
-> So, the tracee returns from schedule() with ->state != TASK_RUNNING ???
-> This must not be possible.
-> 
-> OK, perhaps task->state was changed by ptrace_unfreeze_traced()? this can
-> only happen if it races with ttwu(__TASK_TRACED) without ->siglock held,
-> nobody should do this.
-> 
-> Strange.
 
-Please see my other e-mail, all this is with dbfb089d360b applied. Maybe
-it makes more sense now?
-
-thanks,
--- 
-js
