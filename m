@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5F2C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA91C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0D520773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5DB206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262264;
-	bh=VKoFzrKDyz71P6U4CK6UWWX2yQOKa9pLdhf8lUigCG8=;
+	s=default; t=1595262268;
+	bh=rXLB+yVYKsofx1X/1NjAGvs5acGSN+ZQLzZdfonJ3y4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J7ZAcZ40v+80Mu8rPxg2hlc2vIAOTXJIsDW7OhZ6Vc4kHCITZ+zY6lNBhMggZzw9u
-	 gFpF6PBZLOtAKWMwusWnFQHcGU7Vq9AqseGA7pZ+N5g9Zk4A/izR4VUK6VZVvKtg+F
-	 H6LewreUl+kNqEBRZVCnajNvXZiwbXaY8xD3Je54=
+	b=QEzkGeBNazXhEM9dXwIPrOoFqrxdIKSgbWsGpPHDN1d+L41QA+6t+vobRNCzyg++e
+	 7995PoEVbGwrhWquBrQZY3aTcTwPb2w/huYEKH364Be0QQQQ7nfjJiMj0wfO6dACRJ
+	 DG0YheFgYvS9+R6cncBWEa79FSvrEneqwANzk9Y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732739AbgGTQD2 (ORCPT
+        id S2388689AbgGTQY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:03:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37686 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:24:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732732AbgGTQDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:03:22 -0400
+        id S1732025AbgGTQD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:03:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85F682064B;
-        Mon, 20 Jul 2020 16:03:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEA762064B;
+        Mon, 20 Jul 2020 16:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261002;
-        bh=VKoFzrKDyz71P6U4CK6UWWX2yQOKa9pLdhf8lUigCG8=;
+        s=default; t=1595261007;
+        bh=rXLB+yVYKsofx1X/1NjAGvs5acGSN+ZQLzZdfonJ3y4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pZq9DaQQDkLZghCiqRrJvwrIR/KMJBEqpC66YF1Bn0kEuNjj9OkwAuytfu/96qwVA
-         Duae9FaYgZwa8YwmZxUrk7tIGKnoFzc77xmYAr6Fx0MW83QsFVOBZQqYMnMfzP8UZI
-         ElnczjnsdK3yPeTctCKqNHxTd3JJ+wF5uvL3wfzY=
+        b=1SQfIkrYhsCc7+ZgpuP8PJqCIOiH+8YBmd+2xKWQWmeit3zqOdECO80Y/iGuIVJWw
+         hK/q0MYP2G+vhqm286kFrCK81Kx4PjHZ1E4Alah5Ziv1gtp7Lw2hCs11w31pEnaQIK
+         TFm3WkarUzFMh6VnfwOz0h6OzmoG0rrUC9glEJ2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.4 174/215] fuse: use ->reconfigure() instead of ->remount_fs()
-Date:   Mon, 20 Jul 2020 17:37:36 +0200
-Message-Id: <20200720152828.455017325@linuxfoundation.org>
+        stable@vger.kernel.org, Wade Mealing <wmealing@redhat.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH 5.4 176/215] Revert "zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()"
+Date:   Mon, 20 Jul 2020 17:37:38 +0200
+Message-Id: <20200720152828.547557534@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -58,57 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Wade Mealing <wmealing@redhat.com>
 
-commit 0189a2d367f49729622fdafaef5da73161591859 upstream.
+commit 853eab68afc80f59f36bbdeb715e5c88c501e680 upstream.
 
-s_op->remount_fs() is only called from legacy_reconfigure(), which is not
-used after being converted to the new API.
+Turns out that the permissions for 0400 really are what we want here,
+otherwise any user can read from this file.
 
-Convert to using ->reconfigure().  This restores the previous behavior of
-syncing the filesystem and rejecting MS_MANDLOCK on remount.
+[fixed formatting, added changelog, and made attribute static - gregkh]
 
-Fixes: c30da2e981a7 ("fuse: convert to use the new mount API")
-Cc: <stable@vger.kernel.org> # v5.4
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Reported-by: Wade Mealing <wmealing@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Fixes: f40609d1591f ("zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()")
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1847832
+Reviewed-by: Steffen Maier <maier@linux.ibm.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
+Link: https://lore.kernel.org/r/20200617114946.GA2131650@kroah.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/inode.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/block/zram/zram_drv.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -121,10 +121,12 @@ static void fuse_evict_inode(struct inod
- 	}
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -2023,7 +2023,8 @@ static ssize_t hot_add_show(struct class
+ 		return ret;
+ 	return scnprintf(buf, PAGE_SIZE, "%d\n", ret);
  }
+-static CLASS_ATTR_RO(hot_add);
++static struct class_attribute class_attr_hot_add =
++	__ATTR(hot_add, 0400, hot_add_show, NULL);
  
--static int fuse_remount_fs(struct super_block *sb, int *flags, char *data)
-+static int fuse_reconfigure(struct fs_context *fc)
- {
-+	struct super_block *sb = fc->root->d_sb;
-+
- 	sync_filesystem(sb);
--	if (*flags & SB_MANDLOCK)
-+	if (fc->sb_flags & SB_MANDLOCK)
- 		return -EINVAL;
- 
- 	return 0;
-@@ -822,7 +824,6 @@ static const struct super_operations fus
- 	.evict_inode	= fuse_evict_inode,
- 	.write_inode	= fuse_write_inode,
- 	.drop_inode	= generic_delete_inode,
--	.remount_fs	= fuse_remount_fs,
- 	.put_super	= fuse_put_super,
- 	.umount_begin	= fuse_umount_begin,
- 	.statfs		= fuse_statfs,
-@@ -1296,6 +1297,7 @@ static int fuse_get_tree(struct fs_conte
- static const struct fs_context_operations fuse_context_ops = {
- 	.free		= fuse_free_fc,
- 	.parse_param	= fuse_parse_param,
-+	.reconfigure	= fuse_reconfigure,
- 	.get_tree	= fuse_get_tree,
- };
- 
+ static ssize_t hot_remove_store(struct class *class,
+ 			struct class_attribute *attr,
 
 
