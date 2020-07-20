@@ -2,56 +2,54 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCB4C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99759C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 728C72070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 736102070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263340;
-	bh=eip0WKfdDA8lajYhVDvk9hUuNxCkzAYHw/ksBOVYXwc=;
+	s=default; t=1595263354;
+	bh=ZJbHCFIdZH4X4ZBrUiUDxNPeZ/xp15aUJQ4HRBDeBgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v7LLzQ7mltjvqtnGGozMgiYQRTt1/9QWGOueozkQAy79W15SHH3dcJt5yfn7g3erE
-	 Z11A++SqVJI5nEblE3HbilAQYztNZIdwoZNlcE9wdiu5fGL1FUvk9OGU1F4WrXl4Uz
-	 tqun5GfRadgeNgifY7yKZe/pHIDhkL7RvMgeUMJA=
+	b=JtDlxcR6/mdce1Cj+CPAzrPXYSOejn5GA/aghrsIGnOAWut8U5gJWs68lq0PokDW2
+	 rjikOIh1B4S3dkKsIqweioZKUXVjcFcBUcYPJGO2s6petTCInVkAHDzIwsb75l8a6b
+	 7bYzicJnT/UNTSNJ2Tgk9f3hp9zAv/mJC/1g7poQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731650AbgGTQmS (ORCPT
+        id S1731098AbgGTQmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:42:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37480 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:42:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730335AbgGTPn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:43:56 -0400
+        id S1730280AbgGTPnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:43:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0735720773;
-        Mon, 20 Jul 2020 15:43:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C7402065E;
+        Mon, 20 Jul 2020 15:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259836;
-        bh=eip0WKfdDA8lajYhVDvk9hUuNxCkzAYHw/ksBOVYXwc=;
+        s=default; t=1595259817;
+        bh=ZJbHCFIdZH4X4ZBrUiUDxNPeZ/xp15aUJQ4HRBDeBgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TnQPmfutduLA4PqF9KfZn6l1QOIx4L4W/vsVOn8aFdUPbdjJqsv0fPZ6VR0nns8uc
-         yUsnLFFMBHJWLc6fJ0qX1iU193mpmtKIKhUzv46+TvFMn0SuKNf5dhR7fjs33kqbGU
-         SQhus7XpzX1EJMu6rOb6QvMrihToG6hbiBpNV6/4=
+        b=rqKyH4+lb9DMo1QygGXnyGsUF8guEw50Vn2+enOE3+Lp9hF90MX1wv1FlogCJ3zMb
+         PnHPfNrTC5lJ8Rlsqv+LECh4R+c6OpYU21q089AmRmLFMZkXThCilh+YxzSO9TScb0
+         +ffwdrAU59VJDqjzHzXH3UGhLhu4kGRWeV7CrU7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Alexander Egorenkov <egorenar@linux.ibm.com>
-Subject: [PATCH 4.14 011/125] s390/kasan: fix early pgm check handler execution
-Date:   Mon, 20 Jul 2020 17:35:50 +0200
-Message-Id: <20200720152803.501348581@linuxfoundation.org>
+        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 69/86] USB: serial: cypress_m8: enable Simply Automated UPB PIM
+Date:   Mon, 20 Jul 2020 17:37:05 +0200
+Message-Id: <20200720152756.649841128@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
-References: <20200720152802.929969555@linuxfoundation.org>
+In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
+References: <20200720152753.138974850@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,42 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: James Hilliard <james.hilliard1@gmail.com>
 
-[ Upstream commit 998f5bbe3dbdab81c1cfb1aef7c3892f5d24f6c7 ]
+commit 5c45d04c5081c1830d674f4d22d4400ea2083afe upstream.
 
-Currently if early_pgm_check_handler is called it ends up in pgm check
-loop. The problem is that early_pgm_check_handler is instrumented by
-KASAN but executed without DAT flag enabled which leads to addressing
-exception when KASAN checks try to access shadow memory.
+This is a UPB (Universal Powerline Bus) PIM (Powerline Interface Module)
+which allows for controlling multiple UPB compatible devices from Linux
+using the standard serial interface.
 
-Fix that by executing early handlers with DAT flag on under KASAN as
-expected.
+Based on vendor application source code there are two different models
+of USB based PIM devices in addition to a number of RS232 based PIM's.
 
-Reported-and-tested-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The vendor UPB application source contains the following USB ID's:
+
+	#define USB_PCS_VENDOR_ID 0x04b4
+	#define USB_PCS_PIM_PRODUCT_ID 0x5500
+
+	#define USB_SAI_VENDOR_ID 0x17dd
+	#define USB_SAI_PIM_PRODUCT_ID 0x5500
+
+The first set of ID's correspond to the PIM variant sold by Powerline
+Control Systems while the second corresponds to the Simply Automated
+Incorporated PIM. As the product ID for both of these match the default
+cypress HID->COM RS232 product ID it assumed that they both use an
+internal variant of this HID->COM RS232 converter hardware. However
+as the vendor ID for the Simply Automated variant is different we need
+to also add it to the cypress_M8 driver so that it is properly
+detected.
+
+Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
+Link: https://lore.kernel.org/r/20200616220403.1807003-1-james.hilliard1@gmail.com
+Cc: stable@vger.kernel.org
+[ johan: amend VID define entry ]
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/s390/kernel/early.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/serial/cypress_m8.c |    2 ++
+ drivers/usb/serial/cypress_m8.h |    3 +++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/arch/s390/kernel/early.c b/arch/s390/kernel/early.c
-index 4ba5ad44a21a2..73045142febf0 100644
---- a/arch/s390/kernel/early.c
-+++ b/arch/s390/kernel/early.c
-@@ -317,6 +317,8 @@ static noinline __init void setup_lowcore_early(void)
- 	psw_t psw;
+--- a/drivers/usb/serial/cypress_m8.c
++++ b/drivers/usb/serial/cypress_m8.c
+@@ -63,6 +63,7 @@ static const struct usb_device_id id_tab
  
- 	psw.mask = PSW_MASK_BASE | PSW_DEFAULT_KEY | PSW_MASK_EA | PSW_MASK_BA;
-+	if (IS_ENABLED(CONFIG_KASAN))
-+		psw.mask |= PSW_MASK_DAT;
- 	psw.addr = (unsigned long) s390_base_ext_handler;
- 	S390_lowcore.external_new_psw = psw;
- 	psw.addr = (unsigned long) s390_base_pgm_handler;
--- 
-2.25.1
-
+ static const struct usb_device_id id_table_cyphidcomrs232[] = {
+ 	{ USB_DEVICE(VENDOR_ID_CYPRESS, PRODUCT_ID_CYPHIDCOM) },
++	{ USB_DEVICE(VENDOR_ID_SAI, PRODUCT_ID_CYPHIDCOM) },
+ 	{ USB_DEVICE(VENDOR_ID_POWERCOM, PRODUCT_ID_UPS) },
+ 	{ USB_DEVICE(VENDOR_ID_FRWD, PRODUCT_ID_CYPHIDCOM_FRWD) },
+ 	{ }						/* Terminating entry */
+@@ -77,6 +78,7 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(VENDOR_ID_DELORME, PRODUCT_ID_EARTHMATEUSB) },
+ 	{ USB_DEVICE(VENDOR_ID_DELORME, PRODUCT_ID_EARTHMATEUSB_LT20) },
+ 	{ USB_DEVICE(VENDOR_ID_CYPRESS, PRODUCT_ID_CYPHIDCOM) },
++	{ USB_DEVICE(VENDOR_ID_SAI, PRODUCT_ID_CYPHIDCOM) },
+ 	{ USB_DEVICE(VENDOR_ID_POWERCOM, PRODUCT_ID_UPS) },
+ 	{ USB_DEVICE(VENDOR_ID_FRWD, PRODUCT_ID_CYPHIDCOM_FRWD) },
+ 	{ USB_DEVICE(VENDOR_ID_DAZZLE, PRODUCT_ID_CA42) },
+--- a/drivers/usb/serial/cypress_m8.h
++++ b/drivers/usb/serial/cypress_m8.h
+@@ -24,6 +24,9 @@
+ #define VENDOR_ID_CYPRESS		0x04b4
+ #define PRODUCT_ID_CYPHIDCOM		0x5500
+ 
++/* Simply Automated HID->COM UPB PIM (using Cypress PID 0x5500) */
++#define VENDOR_ID_SAI			0x17dd
++
+ /* FRWD Dongle - a GPS sports watch */
+ #define VENDOR_ID_FRWD			0x6737
+ #define PRODUCT_ID_CYPHIDCOM_FRWD	0x0001
 
 
