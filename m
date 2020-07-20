@@ -2,113 +2,209 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09096C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B406BC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3CC222B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:50:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YQRnFSl3"
+	by mail.kernel.org (Postfix) with ESMTP id 9CC2422B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgGTOuA (ORCPT
+        id S1728750AbgGTOwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:50:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbgGTOt7 (ORCPT
+        Mon, 20 Jul 2020 10:52:13 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:44499 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728008AbgGTOwM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:49:59 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7ECC0619D4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 07:49:59 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z2so18193419wrp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 07:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=5sLF/sPtlwCH+sd1O451ya1iBl+DQ2/XqJaaGU21mgI=;
-        b=YQRnFSl35dnimP+3Mm9aYrKDK3uJXYMZ4Ak+ue/Nqc7tr1kInNtXTk0DYha0Yh+Yek
-         h+dKxcCsLDywGd5wg0uWuxPBjtjpM1BZOz/Ehz9MDIQFr9lDfcS1cYs3ohH5b2QTY+Kz
-         lLStffj6cr7AAQ42WG/icBHZeGX/fNgLqV9iJdUpC+fkmL1fnYHrF4QNaRxYz4ImwZgg
-         qx3Z2raaSfO7XLym7u7Xric5roAQH3veO1/eLkhTBDM/oo/YJ62mJ+CUA38aJ6yGCDMQ
-         s6nW3mrRdNNmo7BFw1chkkpZ/yg0/tQgYpjcpfzPopeh8zn+J7PCf3pcwnnOLStuf1mi
-         I23w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=5sLF/sPtlwCH+sd1O451ya1iBl+DQ2/XqJaaGU21mgI=;
-        b=n87JqdBaYvB3okuRYqxKgTOjSngarqPE/FuGMjeeOIYlw39sTVT5Nnb99jajgBgRat
-         B7TA5p2K2rRIEcosQw060HZSwg0ev6Swvu2T0NUbDYSd8SsUAnS0VgcIZZUNui8PJxTJ
-         DdoUCwmw4rb+cuIOdPbfPzjVDFKGj/z2u1/5SSSlxFm3zorjvWTptsaF9XGzy6foYrpv
-         3GAQXVXQqh2J26ha2UgxCBFjx9OVJ1cXj+UVnPnvPDWWCns2IyEfjUnWP8ttV/H7BExF
-         RrmaKZcfVZR+mXG/sGx8QCRMCIQwf4QdR4tlgbbr7ubf8ZEuThGJsOJGKOGciQJwcg0j
-         o6iQ==
-X-Gm-Message-State: AOAM530/7Hp2GFDYAU1NIljn+3KopFZJm/zgCZ8XjQ1YIaDIApf3XqkF
-        8hvMhohpRXEW7KT98YonIx6A3Q==
-X-Google-Smtp-Source: ABdhPJx0eSsScLmjCgILcg+D8bH0FTIV+nC0ejd3OMEzJ1s6c+El1M6A71SDWbhwZcOtRtQs59Thiw==
-X-Received: by 2002:adf:dcc9:: with SMTP id x9mr8738276wrm.153.1595256597966;
-        Mon, 20 Jul 2020 07:49:57 -0700 (PDT)
-Received: from dell ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id b139sm226738wmd.19.2020.07.20.07.49.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 07:49:57 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 15:49:55 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Thomas Abraham <thomas.ab@samsung.com>,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 06/25] pinctrl: samsung: pinctrl-samsung: Demote obvious
- misuse of kerneldoc to standard comment blocks
-Message-ID: <20200720144955.GD3368211@dell>
-References: <20200713144930.1034632-1-lee.jones@linaro.org>
- <20200713144930.1034632-7-lee.jones@linaro.org>
- <20200720142714.GA6747@kozik-lap>
+        Mon, 20 Jul 2020 10:52:12 -0400
+Received: (qmail 1232004 invoked by uid 1000); 20 Jul 2020 10:52:11 -0400
+Date:   Mon, 20 Jul 2020 10:52:11 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
+Message-ID: <20200720145211.GC1228057@rowland.harvard.edu>
+References: <20200717044427.68747-1-ebiggers@kernel.org>
+ <20200718014204.GN5369@dread.disaster.area>
+ <20200718140811.GA1179836@rowland.harvard.edu>
+ <20200720013320.GP5369@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200720142714.GA6747@kozik-lap>
+In-Reply-To: <20200720013320.GP5369@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020, Krzysztof Kozlowski wrote:
-
-> On Mon, Jul 13, 2020 at 03:49:11PM +0100, Lee Jones wrote:
-> > No attempt has been made to document either of the demoted functions here.
+On Mon, Jul 20, 2020 at 11:33:20AM +1000, Dave Chinner wrote:
+> On Sat, Jul 18, 2020 at 10:08:11AM -0400, Alan Stern wrote:
+> > > This is one of the reasons that the LKMM documetnation is so damn
+> > > difficult to read and understand: just understanding the vocabulary
+> > > it uses requires a huge learning curve, and it's not defined
+> > > anywhere. Understanding the syntax of examples requires a huge
+> > > learning curve, because it's not defined anywhere. 
 > > 
-> > Fixes the following W=1 kernel build warning(s):
-> > 
-> >  drivers/pinctrl/samsung/pinctrl-samsung.c:1149: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_suspend'
-> >  drivers/pinctrl/samsung/pinctrl-samsung.c:1199: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_resume'
-> > 
-> > Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> > Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> > Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > Cc: Thomas Abraham <thomas.ab@samsung.com>
-> > Cc: linux-samsung-soc@vger.kernel.org
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/pinctrl/samsung/pinctrl-samsung.c | 4 ++--
+> > Have you seen tools/memory-model/Documentation/explanation.txt?
 > 
-> Thanks, applied.
+> <raises eyebrow>
+> 
+> Well, yes. Several times. I look at it almost daily, but that
+> doesn't mean it's approachable, easy to read or even -that I
+> understand what large parts of it say-. IOWs, that's one of the 
+> problematic documents that I've been saying have a huge learning
+> curve.
 
-Same as the others.  Already in -next.
+Can you be more specific?  For example, exactly where does it start to 
+become unapproachable or difficult to read?
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Don't forget that this document was meant to help mitigate the LKMM's 
+learning curve.  If it isn't successful, I want to improve it.
+
+> So, if I say "the LKMM documentation", I mean -all- of the
+> documentation, not just some tiny subset of it. I've read it all,
+> I've even installed herd7 so I can run the litmus tests to see if
+> that helps me understand the documentation better.
+> 
+> That only increased the WTF factor because the documentation of that
+> stuff is far, far more impenetrable than the LKMM documentation.  If
+> the LKMM learnign curve is near vertical, then the stuff in the
+> herd7 tools is an -overhang-. And I most certainly can't climb
+> that....
+
+I can't argue with that.  Really understanding herd7 does require a 
+pretty extensive background in the field.
+
+> /me idly wonders if you recognise that your comment is, yet again, a
+> classic demonstration of the behaviour the "curse of knowledge"
+> cognitive bias describes.
+
+Not at all.  I think you are confusing several different things.
+
+For one, at a purely literal level my comment could not possibly be 
+taken as a demonstration of "curse of knowledge" behavior, because it 
+was a simple question: Have you seen explanation.txt?  Nothing obscure 
+or outr� about that.
+
+For another, you appear to be confusing the LKMM with the kernel's API, 
+and reference documents with programming guides (or recipes).  I'm sure 
+that you aren't doing this deliberately and are well aware of these 
+distinctions, but that's the impression your email leaves.
+
+> > That
+> > file was specifically written for non-experts to help them overcome the
+> > learning curve.  It tries to define the vocabulary as terms are
+> > introduced and to avoid using obscure syntax.
+> 
+> It tries to teach people about what a memory model is at the same
+> time it tries to define the LKMM. What it doesn't do at all is
+> teach people how to write safe code.
+
+Of course it doesn't.  It was never meant to.  You can see this right in 
+the filename "explanation.txt"; its purpose is to explain the LKMM.  
+Nobody ever claimed it teaches how to write safe code or how to use the 
+kernel's concurrent-programming API.  Those things belong in a separate 
+document, such as recipes.txt.
+
+>  People want to write safe code,
+> not become "memory model experts".
+
+Speak for yourself.  I personally want both, and no doubt there are 
+others who feel the same way.
+
+> Memory models are -your expertise- but they aren't mine. My
+> expertise is filesystems: I don't care about the nitty gritty
+> details of memory models, I just want to be able to write lockless
+> algorithms correctly. Which, I might point out, I've been doing for
+> well over a decade...
+
+That's perfectly fine; I understand completely.  But your criticism is 
+misplaced: It should be applied to recipes.txt, not to explanation.txt.
+
+And remember: It was _you_ who claimed: "just understanding the 
+vocabulary [the LKMM] uses requires a huge learning curve, and it's not 
+defined anywhere".  explanation.txt shows that this statement is at 
+least partly wrong.  Besides, given that you don't care about the nitty 
+gritty details of memory models in any case, why are you complaining 
+that understanding the LKMM is so hard?
+
+My impression is that you really want to complain about the inadequate 
+quality of recipes.txt as a programmers' guide.  Fine, but don't extend 
+that to a blanket condemnation of all the LKMM documentation.
+
+> > If you think it needs improvement and can give some specific
+> > details about where it falls short, I would like to hear them.
+> 
+> Haven't you understood anything I've been saying? That developers
+> don't care about how the theory behind the memory model  or how it
+> works - we just want to be able to write safe code.
+
+Again, speak for yourself.
+
+>  And to do that
+> quickly and efficiently. The "make the documentation more complex"
+> response is the wrong direction. Please *dumb it down* to the most
+> basic, simplest, common concurrency patterns that programmers use
+> and then write APIs to do those things that *hide the memory model
+> for the programmer*.
+> 
+> Adding documentation about all the possible things you could do,
+> all the optimisations you could make, all the intricate, subtle
+> variations you can use, etc is not helpful. It might be interesting
+> to you, but I just want -somethign that works- and not have to
+> understand the LKMM to get stuff done.
+
+In principle, both can be included in the same document.  Say, with the 
+more in-depth discussions relegated to specially marked-off sections 
+that readers are invited to skip if they aren't interested.
+
+> Example: I know how smp_load_acquire() works. I know that I can
+> expect the same behavioural semantics from smp_cond_load_acquire().
+> But I don't care how the implementation of smp_cond_load_acquire()
+> is optimised to minimise ordering barriers as it spins. That sort of
+> optimisation is your job, not mine - I just want a function that
+> will spin safely until a specific value is seen and then return with
+> acquire semantics on the successful load.....
+> 
+> Can you see the difference between "understanding the LKMM
+> documenation" vs "using a well defined API that provides commonly
+> used functionality" to write correct, optimal code that needs to
+> spin waiting for some other context to update a variable?
+
+Certainly I can.  Can't _you_ see the difference between a document that 
+helps people "understand the LKMM" and one that demonstrates "using a 
+well defined API that provides commonly used functionality"?
+
+> That's the problem the LKMM documentation fails to address. It is
+> written to explain the theory behind the LKMM rather than provide
+> developers with pointers to the templates and APIs that implement
+> the lockless co-ordination functionality they want to use....
+
+That's the difference between a reference document and a programmers' 
+guide.  Grousing that one isn't the other is futile.
+
+On the other hand, pointing out specific areas of improvement for a 
+document that was meant to be a programmers' guide can be very helpful. 
+You may not be inclined to spend any time editing recipes.txt, but 
+perhaps you could point out a few of the specific areas most in need of 
+work?
+
+Alan Stern
