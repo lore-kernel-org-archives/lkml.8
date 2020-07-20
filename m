@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99A4C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A210C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF449206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6699820734
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261631;
-	bh=5kQgW893kvwiQkao3qEeDZboLFX8pKd+Euhfgy+Luhk=;
+	s=default; t=1595261636;
+	bh=U9A2yR2k6FkavOn/3+booMWwECu0863W08r20mMUvOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iln0V5Gakdy0/ztxQyWuCIxjpiQokbBk46bszegAgF+se0DD1jgSSvAQATyBM0NoT
-	 lDLEOpMwQIusMTYPT2K2q0lyarlPiLZBurEagTOeZnm24WubmVP63ZLoTew7BUAfcm
-	 KI2knT+qhPRfEna1uSKnJspf8Csn6Ywk+OxLhRdc=
+	b=gFqJFRpS4LLnJGmQuKcORBfvq45xXaTWER1XuAwloUrRzWSmrG7LN93DrjkVmkP2S
+	 1tRY8zpIDkyH/zbwI2T3NQkXbHmQJjGAJysGuBAppThhsQr4+u1nZtnVhaDW7Cl9fl
+	 gVvkJslQuJhMrnNa8kZOUDkV8g4YfGpWI372s/Mg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388171AbgGTQNu (ORCPT
+        id S2388189AbgGTQNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:13:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53916 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:13:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388159AbgGTQNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:13:48 -0400
+        id S2387679AbgGTQNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:13:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D1282065E;
-        Mon, 20 Jul 2020 16:13:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 753FD20734;
+        Mon, 20 Jul 2020 16:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261627;
-        bh=5kQgW893kvwiQkao3qEeDZboLFX8pKd+Euhfgy+Luhk=;
+        s=default; t=1595261631;
+        bh=U9A2yR2k6FkavOn/3+booMWwECu0863W08r20mMUvOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wybknsa2BbXyIefNspVk+xQyH5yvlE3NvG5vBmhOcSFXTAodnWlqfagdEAF+rIL2v
-         38BIk6amw6fHeqRh+qhRQVZEsPg1TR8tTAELV+rFMrLS85T1j0Blzi6FCHoUZxkISh
-         LoKS4iyCk2KDEgmFGhtmMLq7r3OyKO1qJwcJonj4=
+        b=lnaa8zcnt3TsDmcsV681JcsAdTggpgeibQwpOQ/BKIT632/G7M5u8QW9LelqCGvrN
+         HOLq/BwEPkDqDGdSXnDf3OhkSFuXpCFAEdssg8gU0hUi+XL/BF52aBuQOblBTqDy2N
+         fjMm2/y+jwZmS15G4a0UOZPFmAT6YvBtcr1ti4eg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wade Mealing <wmealing@redhat.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Minchan Kim <minchan@kernel.org>
-Subject: [PATCH 5.7 185/244] Revert "zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()"
-Date:   Mon, 20 Jul 2020 17:37:36 +0200
-Message-Id: <20200720152834.640903022@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Whitcroft <apw@canonical.com>,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 5.7 186/244] mei: bus: dont clean driver pointer
+Date:   Mon, 20 Jul 2020 17:37:37 +0200
+Message-Id: <20200720152834.688721482@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,39 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wade Mealing <wmealing@redhat.com>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 853eab68afc80f59f36bbdeb715e5c88c501e680 upstream.
+commit e852c2c251ed9c23ae6e3efebc5ec49adb504207 upstream.
 
-Turns out that the permissions for 0400 really are what we want here,
-otherwise any user can read from this file.
+It's not needed to set driver to NULL in mei_cl_device_remove()
+which is bus_type remove() handler as this is done anyway
+in __device_release_driver().
 
-[fixed formatting, added changelog, and made attribute static - gregkh]
+Actually this is causing an endless loop in driver_detach()
+on ubuntu patched kernel, while removing (rmmod) the mei_hdcp module.
+The reason list_empty(&drv->p->klist_devices.k_list) is always not-empty.
+as the check is always true in  __device_release_driver()
+	if (dev->driver != drv)
+		return;
 
-Reported-by: Wade Mealing <wmealing@redhat.com>
-Cc: stable <stable@vger.kernel.org>
-Fixes: f40609d1591f ("zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()")
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=1847832
-Reviewed-by: Steffen Maier <maier@linux.ibm.com>
-Acked-by: Minchan Kim <minchan@kernel.org>
-Link: https://lore.kernel.org/r/20200617114946.GA2131650@kroah.com
+The non upstream patch is causing this behavior, titled:
+'vfio -- release device lock before userspace requests'
+
+Nevertheless the fix is correct also for the upstream.
+
+Link: https://patchwork.ozlabs.org/project/ubuntu-kernel/patch/20180912085046.3401-2-apw@canonical.com/
+Cc: <stable@vger.kernel.org>
+Cc: Andy Whitcroft <apw@canonical.com>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20200628225359.2185929-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/zram/zram_drv.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/misc/mei/bus.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -2025,7 +2025,8 @@ static ssize_t hot_add_show(struct class
- 		return ret;
- 	return scnprintf(buf, PAGE_SIZE, "%d\n", ret);
- }
--static CLASS_ATTR_RO(hot_add);
-+static struct class_attribute class_attr_hot_add =
-+	__ATTR(hot_add, 0400, hot_add_show, NULL);
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -745,9 +745,8 @@ static int mei_cl_device_remove(struct d
  
- static ssize_t hot_remove_store(struct class *class,
- 			struct class_attribute *attr,
+ 	mei_cl_bus_module_put(cldev);
+ 	module_put(THIS_MODULE);
+-	dev->driver = NULL;
+-	return ret;
+ 
++	return ret;
+ }
+ 
+ static ssize_t name_show(struct device *dev, struct device_attribute *a,
 
 
