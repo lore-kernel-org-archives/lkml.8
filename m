@@ -2,249 +2,514 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58156C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4890C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 271CD20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:33:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="blnM3EuP"
+	by mail.kernel.org (Postfix) with ESMTP id A7CE722B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:36:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbgGTNd2 (ORCPT
+        id S1726730AbgGTNgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:33:28 -0400
-Received: from mga03.intel.com ([134.134.136.65]:6684 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbgGTNd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 09:33:27 -0400
-IronPort-SDR: nLWdMpZCPf9HPMboZ7cNcfbY6+V0xJgQMWLSt9J66hIASw+Ya+WaDcKV7vW7BS1/krL1q0qGlk
- yvenPsZgG6ag==
-X-IronPort-AV: E=McAfee;i="6000,8403,9687"; a="149892241"
-X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="scan'208";a="149892241"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 06:33:24 -0700
-IronPort-SDR: hbKC49QTN1FSOl2K1vGA+c+wMUiKyFO6q+EMu1+UeR71FpKHl+5AsYTB2aP0SZWFNXc7TyiFez
- eAJuYnvyyT1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="scan'208";a="283516710"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by orsmga003.jf.intel.com with ESMTP; 20 Jul 2020 06:33:24 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 20 Jul 2020 06:33:24 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.103)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 20 Jul 2020 06:33:23 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iL+zMWLFX8v3oQWPQMk2VJA/V1pZ2YrJFUBDBjdxubMDQkjcYjOWyrElIc1YbqfZyENyd33/oWJEBgroKO9k8rs5dMQrhW/8UheH/CESWJUe8D7d/rjL/fNyBOWslXjH0FDIEWKsBomO7nSP/HH0RoBcnCckmxnrPUP9c2jCobonAhVqrbmqzxysqLV9TB3oaHfNHPhFmknl532R/Nx+FsgzPsMOr1xveFuAtQktC0a7Fk2xMLw9RRoWicPoV5nm8ET8maIB5DICCpLJJqWDcY/2e+J84EqP0gNKPo87bFB7Idlg3IqoMgOABnzZ+mOhBKBDnahh8KV3YhblbTTfKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2Did4OclTlVLRsl7kyk1lieVKCNHUQM2WmEl2pF2OUQ=;
- b=Ix2PiG1JL8cSsb+gx10yzEipo9E+vAHo225m+9teEw4gKv8cPtd2SYmQVR3uCMvZAqn/4NtmaNUIH1QvT/qwbiWaJRCEZZN2N9au5BzUaZow5UejD4kOI8/CZslwCtzpU2bdUIE8wZxj4MsOHntfj697oaQoSYwqJGMo07tDoiMjZg+mSfac7uYlwj/Um+ZxZscXOGQZKEe1+/+JyWqpIwUuUOXFzJBnoIuArfqiRrprmEGeib9bVFLbvZ8m+u2Rppeg2gw4d5JyTcFAzoDx1EMRWIlI969x/frIW5b88UHYQYbE5TQK5SSP8N54OSRshzYK6IscolyinWd31tF0UQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2Did4OclTlVLRsl7kyk1lieVKCNHUQM2WmEl2pF2OUQ=;
- b=blnM3EuPKgsfaTkUQal6IHeVYpL+/zkilUtvewXJIYPq6/SUS9X0VReNgMPZai9auePKxXVhLw8UjCeNq/VgIdjQNMYjMaXvNCZxQIeaxQPZJCNYL3IxyytpjxYxdt2hnq5bgm7nGRGZNwbdtrdQtsaBxXJuGAziJNq3OhRP1Z8=
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
- DM6PR11MB3148.namprd11.prod.outlook.com (2603:10b6:5:6f::28) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3195.17; Mon, 20 Jul 2020 13:33:21 +0000
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::9002:97a2:d8c0:8364]) by DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::9002:97a2:d8c0:8364%10]) with mapi id 15.20.3195.025; Mon, 20 Jul
- 2020 13:33:21 +0000
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Auger Eric <eric.auger@redhat.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>
-CC:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "stefanha@gmail.com" <stefanha@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v5 15/15] iommu/vt-d: Support reporting nesting capability
- info
-Thread-Topic: [PATCH v5 15/15] iommu/vt-d: Support reporting nesting
- capability info
-Thread-Index: AQHWWD2ozEKwFS8Y2kWlIFOVw8dCH6kMCuCAgAR3s/A=
-Date:   Mon, 20 Jul 2020 13:33:21 +0000
-Message-ID: <DM5PR11MB14355BD93D10F5CB5CE9F056C37B0@DM5PR11MB1435.namprd11.prod.outlook.com>
-References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
- <1594552870-55687-16-git-send-email-yi.l.liu@intel.com>
- <be27f7ee-3fac-d1c5-0cd9-9581f8827de6@redhat.com>
-In-Reply-To: <be27f7ee-3fac-d1c5-0cd9-9581f8827de6@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.102.204.36]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6b45749d-edf2-4280-963a-08d82cb17888
-x-ms-traffictypediagnostic: DM6PR11MB3148:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB314819B977E01EFA2B80F102C37B0@DM6PR11MB3148.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:758;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kynp+ReLhq+xj8sORHe41qSjC24h5Opbn3RNwhwrvy0UH2KxDMKVP8WzXugfOkyf+OXrBj0txfD40Xa0NFfzQeVj/xO3ahqnhWs3Ry6ap16SNkCz4BSnElgEV72ajm3m34PJgN/lCArHhFXTfr8IsO8v6kLYSOkzkYCluTljlHQdcRX+vOncZZhcY/OLHYrrTH4QqfAqQHA2vwQoppTKshJE0MVIcnmTswmtpZqK6rZousTdWIz05A7lh8b1x0mbvVCEFpmsFIr2W1o4uQTL534TzRoUSvCy1eGx8so8RtinB835U47PnvbY6aqbtQHP+xAqEZyjGl/JV/lrX7gB6w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(136003)(376002)(39860400002)(366004)(86362001)(7416002)(9686003)(71200400001)(4326008)(52536014)(316002)(83380400001)(66446008)(2906002)(64756008)(66556008)(66476007)(66946007)(76116006)(26005)(33656002)(55016002)(8676002)(478600001)(7696005)(5660300002)(186003)(54906003)(110136005)(53546011)(6506007)(8936002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 6SFI/QCFWOMEbBYuyOv1PatTjjgHeFqAk5aFpTaS2kAUa41znxuCvkRzMHlqQFtSU/Fd688idY4M3VgwD4I76fsq5bxu6muZA+bBVppR6WErdN/WpwPN9gz6IkytDr0haBDxlwO12JrLOvXwoZOo7zVKeCxnone2Ux8vJkux7NXqlePTIxjO3PzwkPjBH4E7NjMSXF/E50TwFDJFcC0YazxAAHCKtjpUQOM2yiOrYFNPQIIfBZ1SaiZi+bnB8SbNe145TYw8K3WLj2T91VluO8T0mU5sKVsb+9ay0EJTCSBDkfSl/fB8kHFHGaWK6WKr84EC5J8Soji+AF1OzxT6kxZ4djKeysOvuMpL6Dqq4p6ornO0Vjub1qNCHODjkb8Q8244FQQ/prxTjrz3HylOMZVmEWnuiQacNL1U9blCi+jMbTPf0zQbO9kyfLp9D2olbLqu3b2g5RF844lFIBG2C2HJbb2OH3q+6f2Kgaj/0O5D065ZOmnhFkofeRrNtr2a
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 20 Jul 2020 09:36:21 -0400
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:59220 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgGTNgU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 09:36:20 -0400
+Received: from localhost.localdomain ([93.22.38.146])
+        by mwinf5d51 with ME
+        id 5RcC2300C39BigV03RcCZl; Mon, 20 Jul 2020 15:36:15 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 20 Jul 2020 15:36:15 +0200
+X-ME-IP: 93.22.38.146
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     kuba@kernel.org, davem@davemloft.net, romieu@fr.zoreil.com,
+        venza@brownhat.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] sis: switch from 'pci_' to 'dma_' API
+Date:   Mon, 20 Jul 2020 15:36:09 +0200
+Message-Id: <20200720133609.370347-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b45749d-edf2-4280-963a-08d82cb17888
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 13:33:21.5036
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: h+Na1snQEW6fhLBuQWRJ12WBRhhIxk3SYNx8Snr56MrdoQ70DfmylqnS4XNFnTJV8XUnZwXL8cVsOr6WY53ejg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3148
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRXJpYywNCg0KPiBGcm9tOiBBdWdlciBFcmljIDxlcmljLmF1Z2VyQHJlZGhhdC5jb20+DQo+
-IFNlbnQ6IFNhdHVyZGF5LCBKdWx5IDE4LCAyMDIwIDE6MTQgQU0NCj4gDQo+IEhpIFlpLA0KPiAN
-Cj4gTWlzc2luZyBhIHByb3BlciBjb21taXQgbWVzc2FnZS4gWW91IGNhbiBjb21tZW50IG9uIHRo
-ZSBmYWN0IHlvdSBvbmx5DQo+IHN1cHBvcnQgdGhlIGNhc2Ugd2hlcmUgYWxsIHRoZSBwaHlzaWNh
-bCBpb21tcyBoYXZlIHRoZSBzYW1lIENBUC9FQ0FQIE1BU0tTDQoNCmdvdCBpdC4gd2lsbCBhZGQg
-aXQuIGl0IGxvb2tzIGxpa2UgdGhlIHN1YmplY3QgaXMgc3RyYWlnaHRmb3J3YXJkLCBzbyBJIHJl
-bW92ZWQgY29tbWl0DQptZXNzYWdlLg0KDQo+IA0KPiBPbiA3LzEyLzIwIDE6MjEgUE0sIExpdSBZ
-aSBMIHdyb3RlOg0KPiA+IENjOiBLZXZpbiBUaWFuIDxrZXZpbi50aWFuQGludGVsLmNvbT4NCj4g
-PiBDQzogSmFjb2IgUGFuIDxqYWNvYi5qdW4ucGFuQGxpbnV4LmludGVsLmNvbT4NCj4gPiBDYzog
-QWxleCBXaWxsaWFtc29uIDxhbGV4LndpbGxpYW1zb25AcmVkaGF0LmNvbT4NCj4gPiBDYzogRXJp
-YyBBdWdlciA8ZXJpYy5hdWdlckByZWRoYXQuY29tPg0KPiA+IENjOiBKZWFuLVBoaWxpcHBlIEJy
-dWNrZXIgPGplYW4tcGhpbGlwcGVAbGluYXJvLm9yZz4NCj4gPiBDYzogSm9lcmcgUm9lZGVsIDxq
-b3JvQDhieXRlcy5vcmc+DQo+ID4gQ2M6IEx1IEJhb2x1IDxiYW9sdS5sdUBsaW51eC5pbnRlbC5j
-b20+DQo+ID4gU2lnbmVkLW9mZi1ieTogTGl1IFlpIEwgPHlpLmwubGl1QGludGVsLmNvbT4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBKYWNvYiBQYW4gPGphY29iLmp1bi5wYW5AbGludXguaW50ZWwuY29t
-Pg0KPiA+IC0tLQ0KPiA+IHYyIC0+IHYzOg0KPiA+ICopIHJlbW92ZSBjYXAvZWNhcF9tYXNrIGlu
-IGlvbW11X25lc3RpbmdfaW5mby4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9pb21tdS9pbnRlbC9p
-b21tdS5jIHwgODENCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-Ky0tDQo+ID4gIGluY2x1ZGUvbGludXgvaW50ZWwtaW9tbXUuaCB8IDE2ICsrKysrKysrKw0KPiA+
-ICAyIGZpbGVzIGNoYW5nZWQsIDk1IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4N
-Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9pbnRlbC9pb21tdS5jIGIvZHJpdmVycy9p
-b21tdS9pbnRlbC9pb21tdS5jDQo+ID4gaW5kZXggYTk1MDRjYi4uOWY3YWQxYSAxMDA2NDQNCj4g
-PiAtLS0gYS9kcml2ZXJzL2lvbW11L2ludGVsL2lvbW11LmMNCj4gPiArKysgYi9kcml2ZXJzL2lv
-bW11L2ludGVsL2lvbW11LmMNCj4gPiBAQCAtNTY1OSwxMiArNTY1OSwxNiBAQCBzdGF0aWMgaW5s
-aW5lIGJvb2wgaW9tbXVfcGFzaWRfc3VwcG9ydCh2b2lkKQ0KPiA+ICBzdGF0aWMgaW5saW5lIGJv
-b2wgbmVzdGVkX21vZGVfc3VwcG9ydCh2b2lkKQ0KPiA+ICB7DQo+ID4gIAlzdHJ1Y3QgZG1hcl9k
-cmhkX3VuaXQgKmRyaGQ7DQo+ID4gLQlzdHJ1Y3QgaW50ZWxfaW9tbXUgKmlvbW11Ow0KPiA+ICsJ
-c3RydWN0IGludGVsX2lvbW11ICppb21tdSwgKnByZXYgPSBOVUxMOw0KPiA+ICAJYm9vbCByZXQg
-PSB0cnVlOw0KPiA+DQo+ID4gIAlyY3VfcmVhZF9sb2NrKCk7DQo+ID4gIAlmb3JfZWFjaF9hY3Rp
-dmVfaW9tbXUoaW9tbXUsIGRyaGQpIHsNCj4gPiAtCQlpZiAoIXNtX3N1cHBvcnRlZChpb21tdSkg
-fHwgIWVjYXBfbmVzdChpb21tdS0+ZWNhcCkpIHsNCj4gPiArCQlpZiAoIXByZXYpDQo+ID4gKwkJ
-CXByZXYgPSBpb21tdTsNCj4gPiArCQlpZiAoIXNtX3N1cHBvcnRlZChpb21tdSkgfHwgIWVjYXBf
-bmVzdChpb21tdS0+ZWNhcCkgfHwNCj4gPiArCQkgICAgKFZURF9DQVBfTUFTSyAmIChpb21tdS0+
-Y2FwIF4gcHJldi0+Y2FwKSkgfHwNCj4gPiArCQkgICAgKFZURF9FQ0FQX01BU0sgJiAoaW9tbXUt
-PmVjYXAgXiBwcmV2LT5lY2FwKSkpIHsNCj4gPiAgCQkJcmV0ID0gZmFsc2U7DQo+ID4gIAkJCWJy
-ZWFrOz4gIAkJfQ0KPiA+IEBAIC02MDc5LDYgKzYwODMsNzggQEAgaW50ZWxfaW9tbXVfZG9tYWlu
-X3NldF9hdHRyKHN0cnVjdCBpb21tdV9kb21haW4NCj4gKmRvbWFpbiwNCj4gPiAgCXJldHVybiBy
-ZXQ7DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0aWMgaW50IGludGVsX2lvbW11X2dldF9uZXN0aW5n
-X2luZm8oc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluLA0KPiA+ICsJCQkJCXN0cnVjdCBpb21t
-dV9uZXN0aW5nX2luZm8gKmluZm8pDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBkbWFyX2RvbWFpbiAq
-ZG1hcl9kb21haW4gPSB0b19kbWFyX2RvbWFpbihkb21haW4pOw0KPiA+ICsJdTY0IGNhcCA9IFZU
-RF9DQVBfTUFTSywgZWNhcCA9IFZURF9FQ0FQX01BU0s7DQo+ID4gKwlzdHJ1Y3QgZGV2aWNlX2Rv
-bWFpbl9pbmZvICpkb21haW5faW5mbzsNCj4gPiArCXN0cnVjdCBpb21tdV9uZXN0aW5nX2luZm9f
-dnRkIHZ0ZDsNCj4gPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gKwl1bnNpZ25lZCBpbnQg
-c2l6ZTsNCj4gPiArDQo+ID4gKwlpZiAoZG9tYWluLT50eXBlICE9IElPTU1VX0RPTUFJTl9VTk1B
-TkFHRUQgfHwNCj4gPiArCSAgICAhKGRtYXJfZG9tYWluLT5mbGFncyAmIERPTUFJTl9GTEFHX05F
-U1RJTkdfTU9ERSkpDQo+ID4gKwkJcmV0dXJuIC1FTk9ERVY7DQo+ID4gKw0KPiA+ICsJaWYgKCFp
-bmZvKQ0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsNCj4gPiArCXNpemUgPSBzaXplb2Yo
-c3RydWN0IGlvbW11X25lc3RpbmdfaW5mbykgKw0KPiA+ICsJCXNpemVvZihzdHJ1Y3QgaW9tbXVf
-bmVzdGluZ19pbmZvX3Z0ZCk7DQo+ID4gKwkvKg0KPiA+ICsJICogaWYgcHJvdmlkZWQgYnVmZmVy
-IHNpemUgaXMgc21hbGxlciB0aGFuIGV4cGVjdGVkLCBzaG91bGQNCj4gPiArCSAqIHJldHVybiAw
-IGFuZCBhbHNvIHRoZSBleHBlY3RlZCBidWZmZXIgc2l6ZSB0byBjYWxsZXIuDQo+ID4gKwkgKi8N
-Cj4gPiArCWlmIChpbmZvLT5zaXplIDwgc2l6ZSkgew0KPiA+ICsJCWluZm8tPnNpemUgPSBzaXpl
-Ow0KPiA+ICsJCXJldHVybiAwOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCXNwaW5fbG9ja19pcnFz
-YXZlKCZkZXZpY2VfZG9tYWluX2xvY2ssIGZsYWdzKTsNCj4gPiArCS8qDQo+ID4gKwkgKiBhcmJp
-dHJhcnkgc2VsZWN0IHRoZSBmaXJzdCBkb21haW5faW5mbyBhcyBhbGwgbmVzdGluZw0KPiA+ICsJ
-ICogcmVsYXRlZCBjYXBhYmlsaXRpZXMgc2hvdWxkIGJlIGNvbnNpc3RlbnQgYWNyb3NzIGlvbW11
-DQo+ID4gKwkgKiB1bml0cy4NCj4gPiArCSAqLw0KPiA+ICsJZG9tYWluX2luZm8gPSBsaXN0X2Zp
-cnN0X2VudHJ5KCZkbWFyX2RvbWFpbi0+ZGV2aWNlcywNCj4gPiArCQkJCSAgICAgICBzdHJ1Y3Qg
-ZGV2aWNlX2RvbWFpbl9pbmZvLCBsaW5rKTsNCj4gPiArCWNhcCAmPSBkb21haW5faW5mby0+aW9t
-bXUtPmNhcDsNCj4gPiArCWVjYXAgJj0gZG9tYWluX2luZm8tPmlvbW11LT5lY2FwOw0KPiA+ICsJ
-c3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmZGV2aWNlX2RvbWFpbl9sb2NrLCBmbGFncyk7DQo+ID4g
-Kw0KPiA+ICsJaW5mby0+Zm9ybWF0ID0gSU9NTVVfUEFTSURfRk9STUFUX0lOVEVMX1ZURDsNCj4g
-PiArCWluZm8tPmZlYXR1cmVzID0gSU9NTVVfTkVTVElOR19GRUFUX1NZU1dJREVfUEFTSUQgfA0K
-PiA+ICsJCQkgSU9NTVVfTkVTVElOR19GRUFUX0JJTkRfUEdUQkwgfA0KPiA+ICsJCQkgSU9NTVVf
-TkVTVElOR19GRUFUX0NBQ0hFX0lOVkxEOw0KPiA+ICsJaW5mby0+YWRkcl93aWR0aCA9IGRtYXJf
-ZG9tYWluLT5nYXc7DQo+ID4gKwlpbmZvLT5wYXNpZF9iaXRzID0gaWxvZzIoaW50ZWxfcGFzaWRf
-bWF4X2lkKTsNCj4gPiArCWluZm8tPnBhZGRpbmcgPSAwOw0KPiA+ICsJdnRkLmZsYWdzID0gMDsN
-Cj4gPiArCXZ0ZC5wYWRkaW5nID0gMDsNCj4gPiArCXZ0ZC5jYXBfcmVnID0gY2FwOw0KPiA+ICsJ
-dnRkLmVjYXBfcmVnID0gZWNhcDsNCj4gPiArDQo+ID4gKwltZW1jcHkoaW5mby0+ZGF0YSwgJnZ0
-ZCwgc2l6ZW9mKHZ0ZCkpOw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0
-YXRpYyBpbnQgaW50ZWxfaW9tbXVfZG9tYWluX2dldF9hdHRyKHN0cnVjdCBpb21tdV9kb21haW4g
-KmRvbWFpbiwNCj4gPiArCQkJCSAgICAgICBlbnVtIGlvbW11X2F0dHIgYXR0ciwgdm9pZCAqZGF0
-YSkNCj4gPiArew0KPiA+ICsJc3dpdGNoIChhdHRyKSB7DQo+ID4gKwljYXNlIERPTUFJTl9BVFRS
-X05FU1RJTkc6DQo+ID4gKwl7DQo+ID4gKwkJc3RydWN0IGlvbW11X25lc3RpbmdfaW5mbyAqaW5m
-byA9DQo+ID4gKwkJCQkoc3RydWN0IGlvbW11X25lc3RpbmdfaW5mbyAqKWRhdGE7DQo+ID4gKw0K
-PiA+ICsJCXJldHVybiBpbnRlbF9pb21tdV9nZXRfbmVzdGluZ19pbmZvKGRvbWFpbiwgaW5mbyk7
-DQo+ID4gKwl9DQo+ID4gKwlkZWZhdWx0Og0KPiA+ICsJCXJldHVybiAtRU5PREVWOw0KPiAtRU5P
-RU5UPw0KDQphcm1fc21tdV9kb21haW5fZ2V0X2F0dHIoKSBpcyB1c2luZyAtRU5PREVWLCBzbyBJ
-IHVzZWQgdGhlIHNhbWUuIEkgY2FuDQptb2RpZnkgaXQgaWYgLUVOT0VOVCBpcyBiZXR0ZXIuIDot
-KQ0KDQpSZWdhcmRzLA0KWWkgTGl1DQoNCj4gPiArCX0NCj4gPiArfQ0KPiA+ICsNCj4gPiAgLyoN
-Cj4gPiAgICogQ2hlY2sgdGhhdCB0aGUgZGV2aWNlIGRvZXMgbm90IGxpdmUgb24gYW4gZXh0ZXJu
-YWwgZmFjaW5nIFBDSSBwb3J0IHRoYXQgaXMNCj4gPiAgICogbWFya2VkIGFzIHVudHJ1c3RlZC4g
-U3VjaCBkZXZpY2VzIHNob3VsZCBub3QgYmUgYWJsZSB0byBhcHBseSBxdWlya3MgYW5kDQo+ID4g
-QEAgLTYxMDEsNiArNjE3Nyw3IEBAIGNvbnN0IHN0cnVjdCBpb21tdV9vcHMgaW50ZWxfaW9tbXVf
-b3BzID0gew0KPiA+ICAJLmRvbWFpbl9hbGxvYwkJPSBpbnRlbF9pb21tdV9kb21haW5fYWxsb2Ms
-DQo+ID4gIAkuZG9tYWluX2ZyZWUJCT0gaW50ZWxfaW9tbXVfZG9tYWluX2ZyZWUsDQo+ID4gIAku
-ZG9tYWluX3NldF9hdHRyCT0gaW50ZWxfaW9tbXVfZG9tYWluX3NldF9hdHRyLA0KPiA+ICsJLmRv
-bWFpbl9nZXRfYXR0cgk9IGludGVsX2lvbW11X2RvbWFpbl9nZXRfYXR0ciwNCj4gPiAgCS5hdHRh
-Y2hfZGV2CQk9IGludGVsX2lvbW11X2F0dGFjaF9kZXZpY2UsDQo+ID4gIAkuZGV0YWNoX2RldgkJ
-PSBpbnRlbF9pb21tdV9kZXRhY2hfZGV2aWNlLA0KPiA+ICAJLmF1eF9hdHRhY2hfZGV2CQk9IGlu
-dGVsX2lvbW11X2F1eF9hdHRhY2hfZGV2aWNlLA0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xp
-bnV4L2ludGVsLWlvbW11LmggYi9pbmNsdWRlL2xpbnV4L2ludGVsLWlvbW11LmgNCj4gPiBpbmRl
-eCAxOGYyOTJlLi5jNGVkMGQ0IDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvaW50ZWwt
-aW9tbXUuaA0KPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvaW50ZWwtaW9tbXUuaA0KPiA+IEBAIC0x
-OTcsNiArMTk3LDIyIEBADQo+ID4gICNkZWZpbmUgZWNhcF9tYXhfaGFuZGxlX21hc2soZSkgKChl
-ID4+IDIwKSAmIDB4ZikNCj4gPiAgI2RlZmluZSBlY2FwX3NjX3N1cHBvcnQoZSkJKChlID4+IDcp
-ICYgMHgxKSAvKiBTbm9vcGluZyBDb250cm9sICovDQo+ID4NCj4gPiArLyogTmVzdGluZyBTdXBw
-b3J0IENhcGFiaWxpdHkgQWxpZ25tZW50ICovDQo+ID4gKyNkZWZpbmUgVlREX0NBUF9GTDFHUAkJ
-QklUX1VMTCg1NikNCj4gPiArI2RlZmluZSBWVERfQ0FQX0ZMNUxQCQlCSVRfVUxMKDYwKQ0KPiA+
-ICsjZGVmaW5lIFZURF9FQ0FQX1BSUwkJQklUX1VMTCgyOSkNCj4gPiArI2RlZmluZSBWVERfRUNB
-UF9FUlMJCUJJVF9VTEwoMzApDQo+ID4gKyNkZWZpbmUgVlREX0VDQVBfU1JTCQlCSVRfVUxMKDMx
-KQ0KPiA+ICsjZGVmaW5lIFZURF9FQ0FQX0VBRlMJCUJJVF9VTEwoMzQpDQo+ID4gKyNkZWZpbmUg
-VlREX0VDQVBfUEFTSUQJCUJJVF9VTEwoNDApDQo+IA0KPiA+ICsNCj4gPiArLyogT25seSBjYXBh
-YmlsaXRpZXMgbWFya2VkIGluIGJlbG93IE1BU0tzIGFyZSByZXBvcnRlZCAqLw0KPiA+ICsjZGVm
-aW5lIFZURF9DQVBfTUFTSwkJKFZURF9DQVBfRkwxR1AgfCBWVERfQ0FQX0ZMNUxQKQ0KPiA+ICsN
-Cj4gPiArI2RlZmluZSBWVERfRUNBUF9NQVNLCQkoVlREX0VDQVBfUFJTIHwgVlREX0VDQVBfRVJT
-IHwgXA0KPiA+ICsJCQkJIFZURF9FQ0FQX1NSUyB8IFZURF9FQ0FQX0VBRlMgfCBcDQo+ID4gKwkJ
-CQkgVlREX0VDQVBfUEFTSUQpDQo+ID4gKw0KPiA+ICAvKiBWaXJ0dWFsIGNvbW1hbmQgaW50ZXJm
-YWNlIGNhcGFiaWxpdHkgKi8NCj4gPiAgI2RlZmluZSB2Y2NhcF9wYXNpZCh2KQkJKCgodikgJiBE
-TUFfVkNTX1BBUykpIC8qIFBBU0lEIGFsbG9jYXRpb24NCj4gKi8NCj4gPg0KPiA+DQo+IFRoYW5r
-cw0KPiANCj4gRXJpYw0KPiANCg0K
+The wrappers in include/linux/pci-dma-compat.h should go away.
+
+The patch has been generated with the coccinelle script below and has been
+hand modified to replace GFP_ with a correct flag.
+It has been compile tested.
+
+
+When memory is allocated in 'epic_init_one()' (sis190.c), GFP_KERNEL can be
+used because this is a net_device_ops' 'ndo_open' function. This function
+is protected by the rtnl_lock() semaphore. So only a mutex is used and no
+spin_lock is acquired.
+
+When memory is allocated in 'sis900_probe()' (sis900.c), GFP_KERNEL can be
+used because it is a probe function and no spin_lock is acquired.
+
+
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
+
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
+
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
+
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+---
+ drivers/net/ethernet/sis/sis190.c | 52 ++++++++++--------
+ drivers/net/ethernet/sis/sis900.c | 89 +++++++++++++++++--------------
+ 2 files changed, 80 insertions(+), 61 deletions(-)
+
+diff --git a/drivers/net/ethernet/sis/sis190.c b/drivers/net/ethernet/sis/sis190.c
+index 5a4b6e3ab38f..676b193833c0 100644
+--- a/drivers/net/ethernet/sis/sis190.c
++++ b/drivers/net/ethernet/sis/sis190.c
+@@ -494,9 +494,9 @@ static struct sk_buff *sis190_alloc_rx_skb(struct sis190_private *tp,
+ 	skb = netdev_alloc_skb(tp->dev, rx_buf_sz);
+ 	if (unlikely(!skb))
+ 		goto skb_alloc_failed;
+-	mapping = pci_map_single(tp->pci_dev, skb->data, tp->rx_buf_sz,
+-			PCI_DMA_FROMDEVICE);
+-	if (pci_dma_mapping_error(tp->pci_dev, mapping))
++	mapping = dma_map_single(&tp->pci_dev->dev, skb->data, tp->rx_buf_sz,
++				 DMA_FROM_DEVICE);
++	if (dma_mapping_error(&tp->pci_dev->dev, mapping))
+ 		goto out;
+ 	sis190_map_to_asic(desc, mapping, rx_buf_sz);
+ 
+@@ -542,8 +542,8 @@ static bool sis190_try_rx_copy(struct sis190_private *tp,
+ 	if (!skb)
+ 		goto out;
+ 
+-	pci_dma_sync_single_for_cpu(tp->pci_dev, addr, tp->rx_buf_sz,
+-				PCI_DMA_FROMDEVICE);
++	dma_sync_single_for_cpu(&tp->pci_dev->dev, addr, tp->rx_buf_sz,
++				DMA_FROM_DEVICE);
+ 	skb_copy_to_linear_data(skb, sk_buff[0]->data, pkt_size);
+ 	*sk_buff = skb;
+ 	done = true;
+@@ -612,12 +612,14 @@ static int sis190_rx_interrupt(struct net_device *dev,
+ 
+ 
+ 			if (sis190_try_rx_copy(tp, &skb, pkt_size, addr)) {
+-				pci_dma_sync_single_for_device(pdev, addr,
+-					tp->rx_buf_sz, PCI_DMA_FROMDEVICE);
++				dma_sync_single_for_device(&pdev->dev, addr,
++							   tp->rx_buf_sz,
++							   DMA_FROM_DEVICE);
+ 				sis190_give_to_asic(desc, tp->rx_buf_sz);
+ 			} else {
+-				pci_unmap_single(pdev, addr, tp->rx_buf_sz,
+-						 PCI_DMA_FROMDEVICE);
++				dma_unmap_single(&pdev->dev, addr,
++						 tp->rx_buf_sz,
++						 DMA_FROM_DEVICE);
+ 				tp->Rx_skbuff[entry] = NULL;
+ 				sis190_make_unusable_by_asic(desc);
+ 			}
+@@ -654,7 +656,8 @@ static void sis190_unmap_tx_skb(struct pci_dev *pdev, struct sk_buff *skb,
+ 
+ 	len = skb->len < ETH_ZLEN ? ETH_ZLEN : skb->len;
+ 
+-	pci_unmap_single(pdev, le32_to_cpu(desc->addr), len, PCI_DMA_TODEVICE);
++	dma_unmap_single(&pdev->dev, le32_to_cpu(desc->addr), len,
++			 DMA_TO_DEVICE);
+ 
+ 	memset(desc, 0x00, sizeof(*desc));
+ }
+@@ -785,8 +788,8 @@ static void sis190_free_rx_skb(struct sis190_private *tp,
+ {
+ 	struct pci_dev *pdev = tp->pci_dev;
+ 
+-	pci_unmap_single(pdev, le32_to_cpu(desc->addr), tp->rx_buf_sz,
+-			 PCI_DMA_FROMDEVICE);
++	dma_unmap_single(&pdev->dev, le32_to_cpu(desc->addr), tp->rx_buf_sz,
++			 DMA_FROM_DEVICE);
+ 	dev_kfree_skb(*sk_buff);
+ 	*sk_buff = NULL;
+ 	sis190_make_unusable_by_asic(desc);
+@@ -1069,11 +1072,13 @@ static int sis190_open(struct net_device *dev)
+ 	 * Rx and Tx descriptors need 256 bytes alignment.
+ 	 * pci_alloc_consistent() guarantees a stronger alignment.
+ 	 */
+-	tp->TxDescRing = pci_alloc_consistent(pdev, TX_RING_BYTES, &tp->tx_dma);
++	tp->TxDescRing = dma_alloc_coherent(&pdev->dev, TX_RING_BYTES,
++					    &tp->tx_dma, GFP_KERNEL);
+ 	if (!tp->TxDescRing)
+ 		goto out;
+ 
+-	tp->RxDescRing = pci_alloc_consistent(pdev, RX_RING_BYTES, &tp->rx_dma);
++	tp->RxDescRing = dma_alloc_coherent(&pdev->dev, RX_RING_BYTES,
++					    &tp->rx_dma, GFP_KERNEL);
+ 	if (!tp->RxDescRing)
+ 		goto err_free_tx_0;
+ 
+@@ -1095,9 +1100,11 @@ static int sis190_open(struct net_device *dev)
+ 	sis190_delete_timer(dev);
+ 	sis190_rx_clear(tp);
+ err_free_rx_1:
+-	pci_free_consistent(pdev, RX_RING_BYTES, tp->RxDescRing, tp->rx_dma);
++	dma_free_coherent(&pdev->dev, RX_RING_BYTES, tp->RxDescRing,
++			  tp->rx_dma);
+ err_free_tx_0:
+-	pci_free_consistent(pdev, TX_RING_BYTES, tp->TxDescRing, tp->tx_dma);
++	dma_free_coherent(&pdev->dev, TX_RING_BYTES, tp->TxDescRing,
++			  tp->tx_dma);
+ 	goto out;
+ }
+ 
+@@ -1159,8 +1166,10 @@ static int sis190_close(struct net_device *dev)
+ 
+ 	free_irq(pdev->irq, dev);
+ 
+-	pci_free_consistent(pdev, TX_RING_BYTES, tp->TxDescRing, tp->tx_dma);
+-	pci_free_consistent(pdev, RX_RING_BYTES, tp->RxDescRing, tp->rx_dma);
++	dma_free_coherent(&pdev->dev, TX_RING_BYTES, tp->TxDescRing,
++			  tp->tx_dma);
++	dma_free_coherent(&pdev->dev, RX_RING_BYTES, tp->RxDescRing,
++			  tp->rx_dma);
+ 
+ 	tp->TxDescRing = NULL;
+ 	tp->RxDescRing = NULL;
+@@ -1197,8 +1206,9 @@ static netdev_tx_t sis190_start_xmit(struct sk_buff *skb,
+ 		return NETDEV_TX_BUSY;
+ 	}
+ 
+-	mapping = pci_map_single(tp->pci_dev, skb->data, len, PCI_DMA_TODEVICE);
+-	if (pci_dma_mapping_error(tp->pci_dev, mapping)) {
++	mapping = dma_map_single(&tp->pci_dev->dev, skb->data, len,
++				 DMA_TO_DEVICE);
++	if (dma_mapping_error(&tp->pci_dev->dev, mapping)) {
+ 		netif_err(tp, tx_err, dev,
+ 				"PCI mapping failed, dropping packet");
+ 		return NETDEV_TX_BUSY;
+@@ -1498,7 +1508,7 @@ static struct net_device *sis190_init_board(struct pci_dev *pdev)
+ 		goto err_pci_disable_2;
+ 	}
+ 
+-	rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
++	rc = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
+ 	if (rc < 0) {
+ 		if (netif_msg_probe(tp))
+ 			pr_err("%s: DMA configuration failed\n",
+diff --git a/drivers/net/ethernet/sis/sis900.c b/drivers/net/ethernet/sis/sis900.c
+index 81ed7589e33c..82e020add19f 100644
+--- a/drivers/net/ethernet/sis/sis900.c
++++ b/drivers/net/ethernet/sis/sis900.c
+@@ -446,7 +446,7 @@ static int sis900_probe(struct pci_dev *pci_dev,
+ 	ret = pci_enable_device(pci_dev);
+ 	if(ret) return ret;
+ 
+-	i = pci_set_dma_mask(pci_dev, DMA_BIT_MASK(32));
++	i = dma_set_mask(&pci_dev->dev, DMA_BIT_MASK(32));
+ 	if(i){
+ 		printk(KERN_ERR "sis900.c: architecture does not support "
+ 			"32bit PCI busmaster DMA\n");
+@@ -481,7 +481,8 @@ static int sis900_probe(struct pci_dev *pci_dev,
+ 
+ 	pci_set_drvdata(pci_dev, net_dev);
+ 
+-	ring_space = pci_alloc_consistent(pci_dev, TX_TOTAL_SIZE, &ring_dma);
++	ring_space = dma_alloc_coherent(&pci_dev->dev, TX_TOTAL_SIZE,
++					&ring_dma, GFP_KERNEL);
+ 	if (!ring_space) {
+ 		ret = -ENOMEM;
+ 		goto err_out_unmap;
+@@ -489,7 +490,8 @@ static int sis900_probe(struct pci_dev *pci_dev,
+ 	sis_priv->tx_ring = ring_space;
+ 	sis_priv->tx_ring_dma = ring_dma;
+ 
+-	ring_space = pci_alloc_consistent(pci_dev, RX_TOTAL_SIZE, &ring_dma);
++	ring_space = dma_alloc_coherent(&pci_dev->dev, RX_TOTAL_SIZE,
++					&ring_dma, GFP_KERNEL);
+ 	if (!ring_space) {
+ 		ret = -ENOMEM;
+ 		goto err_unmap_tx;
+@@ -572,11 +574,11 @@ static int sis900_probe(struct pci_dev *pci_dev,
+ 	return 0;
+ 
+ err_unmap_rx:
+-	pci_free_consistent(pci_dev, RX_TOTAL_SIZE, sis_priv->rx_ring,
+-		sis_priv->rx_ring_dma);
++	dma_free_coherent(&pci_dev->dev, RX_TOTAL_SIZE, sis_priv->rx_ring,
++			  sis_priv->rx_ring_dma);
+ err_unmap_tx:
+-	pci_free_consistent(pci_dev, TX_TOTAL_SIZE, sis_priv->tx_ring,
+-		sis_priv->tx_ring_dma);
++	dma_free_coherent(&pci_dev->dev, TX_TOTAL_SIZE, sis_priv->tx_ring,
++			  sis_priv->tx_ring_dma);
+ err_out_unmap:
+ 	pci_iounmap(pci_dev, ioaddr);
+ err_out_cleardev:
+@@ -1188,10 +1190,12 @@ sis900_init_rx_ring(struct net_device *net_dev)
+ 		}
+ 		sis_priv->rx_skbuff[i] = skb;
+ 		sis_priv->rx_ring[i].cmdsts = RX_BUF_SIZE;
+-		sis_priv->rx_ring[i].bufptr = pci_map_single(sis_priv->pci_dev,
+-				skb->data, RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
+-		if (unlikely(pci_dma_mapping_error(sis_priv->pci_dev,
+-				sis_priv->rx_ring[i].bufptr))) {
++		sis_priv->rx_ring[i].bufptr = dma_map_single(&sis_priv->pci_dev->dev,
++							     skb->data,
++							     RX_BUF_SIZE,
++							     DMA_FROM_DEVICE);
++		if (unlikely(dma_mapping_error(&sis_priv->pci_dev->dev,
++					       sis_priv->rx_ring[i].bufptr))) {
+ 			dev_kfree_skb(skb);
+ 			sis_priv->rx_skbuff[i] = NULL;
+ 			break;
+@@ -1561,9 +1565,9 @@ static void sis900_tx_timeout(struct net_device *net_dev, unsigned int txqueue)
+ 		struct sk_buff *skb = sis_priv->tx_skbuff[i];
+ 
+ 		if (skb) {
+-			pci_unmap_single(sis_priv->pci_dev,
+-				sis_priv->tx_ring[i].bufptr, skb->len,
+-				PCI_DMA_TODEVICE);
++			dma_unmap_single(&sis_priv->pci_dev->dev,
++					 sis_priv->tx_ring[i].bufptr,
++					 skb->len, DMA_TO_DEVICE);
+ 			dev_kfree_skb_irq(skb);
+ 			sis_priv->tx_skbuff[i] = NULL;
+ 			sis_priv->tx_ring[i].cmdsts = 0;
+@@ -1612,10 +1616,11 @@ sis900_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
+ 	sis_priv->tx_skbuff[entry] = skb;
+ 
+ 	/* set the transmit buffer descriptor and enable Transmit State Machine */
+-	sis_priv->tx_ring[entry].bufptr = pci_map_single(sis_priv->pci_dev,
+-		skb->data, skb->len, PCI_DMA_TODEVICE);
+-	if (unlikely(pci_dma_mapping_error(sis_priv->pci_dev,
+-		sis_priv->tx_ring[entry].bufptr))) {
++	sis_priv->tx_ring[entry].bufptr = dma_map_single(&sis_priv->pci_dev->dev,
++							 skb->data, skb->len,
++							 DMA_TO_DEVICE);
++	if (unlikely(dma_mapping_error(&sis_priv->pci_dev->dev,
++				       sis_priv->tx_ring[entry].bufptr))) {
+ 			dev_kfree_skb_any(skb);
+ 			sis_priv->tx_skbuff[entry] = NULL;
+ 			net_dev->stats.tx_dropped++;
+@@ -1778,9 +1783,9 @@ static int sis900_rx(struct net_device *net_dev)
+ 			struct sk_buff * skb;
+ 			struct sk_buff * rx_skb;
+ 
+-			pci_unmap_single(sis_priv->pci_dev,
+-				sis_priv->rx_ring[entry].bufptr, RX_BUF_SIZE,
+-				PCI_DMA_FROMDEVICE);
++			dma_unmap_single(&sis_priv->pci_dev->dev,
++					 sis_priv->rx_ring[entry].bufptr,
++					 RX_BUF_SIZE, DMA_FROM_DEVICE);
+ 
+ 			/* refill the Rx buffer, what if there is not enough
+ 			 * memory for new socket buffer ?? */
+@@ -1826,10 +1831,11 @@ static int sis900_rx(struct net_device *net_dev)
+ 			sis_priv->rx_skbuff[entry] = skb;
+ 			sis_priv->rx_ring[entry].cmdsts = RX_BUF_SIZE;
+ 			sis_priv->rx_ring[entry].bufptr =
+-				pci_map_single(sis_priv->pci_dev, skb->data,
+-					RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
+-			if (unlikely(pci_dma_mapping_error(sis_priv->pci_dev,
+-				sis_priv->rx_ring[entry].bufptr))) {
++				dma_map_single(&sis_priv->pci_dev->dev,
++					       skb->data, RX_BUF_SIZE,
++					       DMA_FROM_DEVICE);
++			if (unlikely(dma_mapping_error(&sis_priv->pci_dev->dev,
++						       sis_priv->rx_ring[entry].bufptr))) {
+ 				dev_kfree_skb_irq(skb);
+ 				sis_priv->rx_skbuff[entry] = NULL;
+ 				break;
+@@ -1860,10 +1866,11 @@ static int sis900_rx(struct net_device *net_dev)
+ 			sis_priv->rx_skbuff[entry] = skb;
+ 			sis_priv->rx_ring[entry].cmdsts = RX_BUF_SIZE;
+ 			sis_priv->rx_ring[entry].bufptr =
+-				pci_map_single(sis_priv->pci_dev, skb->data,
+-					RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
+-			if (unlikely(pci_dma_mapping_error(sis_priv->pci_dev,
+-					sis_priv->rx_ring[entry].bufptr))) {
++				dma_map_single(&sis_priv->pci_dev->dev,
++					       skb->data, RX_BUF_SIZE,
++					       DMA_FROM_DEVICE);
++			if (unlikely(dma_mapping_error(&sis_priv->pci_dev->dev,
++						       sis_priv->rx_ring[entry].bufptr))) {
+ 				dev_kfree_skb_irq(skb);
+ 				sis_priv->rx_skbuff[entry] = NULL;
+ 				break;
+@@ -1928,9 +1935,9 @@ static void sis900_finish_xmit (struct net_device *net_dev)
+ 		}
+ 		/* Free the original skb. */
+ 		skb = sis_priv->tx_skbuff[entry];
+-		pci_unmap_single(sis_priv->pci_dev,
+-			sis_priv->tx_ring[entry].bufptr, skb->len,
+-			PCI_DMA_TODEVICE);
++		dma_unmap_single(&sis_priv->pci_dev->dev,
++				 sis_priv->tx_ring[entry].bufptr, skb->len,
++				 DMA_TO_DEVICE);
+ 		dev_consume_skb_irq(skb);
+ 		sis_priv->tx_skbuff[entry] = NULL;
+ 		sis_priv->tx_ring[entry].bufptr = 0;
+@@ -1979,8 +1986,9 @@ static int sis900_close(struct net_device *net_dev)
+ 	for (i = 0; i < NUM_RX_DESC; i++) {
+ 		skb = sis_priv->rx_skbuff[i];
+ 		if (skb) {
+-			pci_unmap_single(pdev, sis_priv->rx_ring[i].bufptr,
+-					 RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
++			dma_unmap_single(&pdev->dev,
++					 sis_priv->rx_ring[i].bufptr,
++					 RX_BUF_SIZE, DMA_FROM_DEVICE);
+ 			dev_kfree_skb(skb);
+ 			sis_priv->rx_skbuff[i] = NULL;
+ 		}
+@@ -1988,8 +1996,9 @@ static int sis900_close(struct net_device *net_dev)
+ 	for (i = 0; i < NUM_TX_DESC; i++) {
+ 		skb = sis_priv->tx_skbuff[i];
+ 		if (skb) {
+-			pci_unmap_single(pdev, sis_priv->tx_ring[i].bufptr,
+-					 skb->len, PCI_DMA_TODEVICE);
++			dma_unmap_single(&pdev->dev,
++					 sis_priv->tx_ring[i].bufptr,
++					 skb->len, DMA_TO_DEVICE);
+ 			dev_kfree_skb(skb);
+ 			sis_priv->tx_skbuff[i] = NULL;
+ 		}
+@@ -2484,10 +2493,10 @@ static void sis900_remove(struct pci_dev *pci_dev)
+ 		kfree(phy);
+ 	}
+ 
+-	pci_free_consistent(pci_dev, RX_TOTAL_SIZE, sis_priv->rx_ring,
+-		sis_priv->rx_ring_dma);
+-	pci_free_consistent(pci_dev, TX_TOTAL_SIZE, sis_priv->tx_ring,
+-		sis_priv->tx_ring_dma);
++	dma_free_coherent(&pci_dev->dev, RX_TOTAL_SIZE, sis_priv->rx_ring,
++			  sis_priv->rx_ring_dma);
++	dma_free_coherent(&pci_dev->dev, TX_TOTAL_SIZE, sis_priv->tx_ring,
++			  sis_priv->tx_ring_dma);
+ 	pci_iounmap(pci_dev, sis_priv->ioaddr);
+ 	free_netdev(net_dev);
+ 	pci_release_regions(pci_dev);
+-- 
+2.25.1
+
