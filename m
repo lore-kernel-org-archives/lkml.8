@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B990BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22C6620656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E8120656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261919;
-	bh=2VjVDT0gFe8cQ3yxWyfhdTGBpQoSpI9OFZRQlmlxDNA=;
+	s=default; t=1595261921;
+	bh=DdTdjg0Gk5lifM3rDmsGOBqulmNd1kG27YSq2pSijzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HYNaX4eB3LtH/9cm6hnIAR3CSoatLHKE5e8NNvqPflPp04dxR9EX9ukz0ZJULpiLA
-	 oaglD59rv8gkd3IpW2zQRUrdgWzXQcd+b6XLGuFoX0ufdUuajVcoqIK5OchNLAZrXi
-	 Fzi3f0z/638c6OYldyKwHEmbjplWXCCCizvVWGoc=
+	b=DhIZPKosaMUqyWKyZDNTHET/C9hUQcTWbJ94KSwZ7GZ0WS0vD+yMbvUBhNMAz6JFg
+	 V2RiyuaPlXPGM2cmOOdSdu5lkL659YJelR1yErNnd0dr7ePmCks38ANT+vsG5nXv/Z
+	 iIE0RzxwAh9L7HxC04Oh5kvBbTkoF1Es8vCYHYds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388150AbgGTQSi (ORCPT
+        id S2387778AbgGTQN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:18:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53442 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:13:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732566AbgGTQN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:13:29 -0400
+        id S1732072AbgGTQNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:13:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3479620734;
-        Mon, 20 Jul 2020 16:13:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01D162065E;
+        Mon, 20 Jul 2020 16:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261608;
-        bh=2VjVDT0gFe8cQ3yxWyfhdTGBpQoSpI9OFZRQlmlxDNA=;
+        s=default; t=1595261597;
+        bh=DdTdjg0Gk5lifM3rDmsGOBqulmNd1kG27YSq2pSijzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kW4COPlRrOsQFW8PzzrZfpssVkDuttvsHzJiWEx6AdnaUEBxdor66JkjGOPqUIps
-         Yq8JVaM6kIHyTUvCRh03HrGD+FP5V9KKW7POVSaqNgqgSl1rpSZQccmz5DFBtjrDuZ
-         L9xACPoFRDUGe3fvZiIE/tBy4Ze9I0GoNKyy0Ucw=
+        b=usiK8KhA9zNMh3J9tn0D4/75oiFORego/yDrMRAs3XRpHg35elK7Kr3WWrcfUnRIN
+         oEn87vWlfetjO3RjIBiym4+0XILGT5y7PCmoZPzZFIzeMHl5NSQkLHlyrfeC5ZUubi
+         QxseDz8p5wNKpPqvbqCGp0UYwmmrwd9EZWfzwmOg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Harry Cutts <hcutts@chromium.org>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.7 147/244] HID: logitech-hidpp: avoid repeated "multiplier = " log messages
-Date:   Mon, 20 Jul 2020 17:36:58 +0200
-Message-Id: <20200720152832.843175218@linuxfoundation.org>
+        stable@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.7 143/244] clk: qcom: gcc: Add GPU and NPU clocks for SM8150
+Date:   Mon, 20 Jul 2020 17:36:54 +0200
+Message-Id: <20200720152832.653270549@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -61,39 +59,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+From: Vinod Koul <vkoul@kernel.org>
 
-commit e13762abf38ead29071407f32b9dcec38f21dc34 upstream.
+commit f73a4230d5bbc8fc7e1a2479ac997f786111c7bb upstream.
 
-These messages appear each time the mouse wakes from sleep, in my case
-(Logitech M705), every minute or so.
-Let's downgrade them to the "debug" level so they don't fill the kernel log
-by default.
+Add the GPU and NPU clocks for SM8150. They were missed in earlier
+addition of clock driver.
 
-While we are at it, let's make clear that this is a wheel multiplier (and
-not, for example, XY movement multiplier).
-
-Fixes: 4435ff2f09a2 ("HID: logitech: Enable high-resolution scrolling on Logitech mice")
-Cc: stable@vger.kernel.org
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-Reviewed-by: Harry Cutts <hcutts@chromium.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 2a1d7eb854bb ("clk: qcom: gcc: Add global clock controller driver for SM8150")
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lkml.kernel.org/r/20200513065420.32735-1-vkoul@kernel.org
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-logitech-hidpp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/qcom/gcc-sm8150.c |   64 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -3146,7 +3146,7 @@ static int hi_res_scroll_enable(struct h
- 		multiplier = 1;
+--- a/drivers/clk/qcom/gcc-sm8150.c
++++ b/drivers/clk/qcom/gcc-sm8150.c
+@@ -1616,6 +1616,36 @@ static struct clk_branch gcc_gpu_cfg_ahb
+ 	},
+ };
  
- 	hidpp->vertical_wheel_counter.wheel_multiplier = multiplier;
--	hid_info(hidpp->hid_dev, "multiplier = %d\n", multiplier);
-+	hid_dbg(hidpp->hid_dev, "wheel multiplier = %d\n", multiplier);
- 	return 0;
- }
++static struct clk_branch gcc_gpu_gpll0_clk_src = {
++	.clkr = {
++		.enable_reg = 0x52004,
++		.enable_mask = BIT(15),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_gpu_gpll0_clk_src",
++			.parent_hws = (const struct clk_hw *[]){
++				&gpll0.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_gpu_gpll0_div_clk_src = {
++	.clkr = {
++		.enable_reg = 0x52004,
++		.enable_mask = BIT(16),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_gpu_gpll0_div_clk_src",
++			.parent_hws = (const struct clk_hw *[]){
++				&gcc_gpu_gpll0_clk_src.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_gpu_iref_clk = {
+ 	.halt_reg = 0x8c010,
+ 	.halt_check = BRANCH_HALT,
+@@ -1698,6 +1728,36 @@ static struct clk_branch gcc_npu_cfg_ahb
+ 	},
+ };
  
++static struct clk_branch gcc_npu_gpll0_clk_src = {
++	.clkr = {
++		.enable_reg = 0x52004,
++		.enable_mask = BIT(18),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_npu_gpll0_clk_src",
++			.parent_hws = (const struct clk_hw *[]){
++				&gpll0.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_npu_gpll0_div_clk_src = {
++	.clkr = {
++		.enable_reg = 0x52004,
++		.enable_mask = BIT(19),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_npu_gpll0_div_clk_src",
++			.parent_hws = (const struct clk_hw *[]){
++				&gcc_npu_gpll0_clk_src.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_npu_trig_clk = {
+ 	.halt_reg = 0x4d00c,
+ 	.halt_check = BRANCH_VOTED,
+@@ -3374,12 +3434,16 @@ static struct clk_regmap *gcc_sm8150_clo
+ 	[GCC_GP3_CLK] = &gcc_gp3_clk.clkr,
+ 	[GCC_GP3_CLK_SRC] = &gcc_gp3_clk_src.clkr,
+ 	[GCC_GPU_CFG_AHB_CLK] = &gcc_gpu_cfg_ahb_clk.clkr,
++	[GCC_GPU_GPLL0_CLK_SRC] = &gcc_gpu_gpll0_clk_src.clkr,
++	[GCC_GPU_GPLL0_DIV_CLK_SRC] = &gcc_gpu_gpll0_div_clk_src.clkr,
+ 	[GCC_GPU_IREF_CLK] = &gcc_gpu_iref_clk.clkr,
+ 	[GCC_GPU_MEMNOC_GFX_CLK] = &gcc_gpu_memnoc_gfx_clk.clkr,
+ 	[GCC_GPU_SNOC_DVM_GFX_CLK] = &gcc_gpu_snoc_dvm_gfx_clk.clkr,
+ 	[GCC_NPU_AT_CLK] = &gcc_npu_at_clk.clkr,
+ 	[GCC_NPU_AXI_CLK] = &gcc_npu_axi_clk.clkr,
+ 	[GCC_NPU_CFG_AHB_CLK] = &gcc_npu_cfg_ahb_clk.clkr,
++	[GCC_NPU_GPLL0_CLK_SRC] = &gcc_npu_gpll0_clk_src.clkr,
++	[GCC_NPU_GPLL0_DIV_CLK_SRC] = &gcc_npu_gpll0_div_clk_src.clkr,
+ 	[GCC_NPU_TRIG_CLK] = &gcc_npu_trig_clk.clkr,
+ 	[GCC_PCIE0_PHY_REFGEN_CLK] = &gcc_pcie0_phy_refgen_clk.clkr,
+ 	[GCC_PCIE1_PHY_REFGEN_CLK] = &gcc_pcie1_phy_refgen_clk.clkr,
 
 
