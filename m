@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65130C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DEDC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 413D02065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D74982065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261216;
-	bh=xjqHvRsj41feq6PMcwsFzgXHYe9N9dC9EE5odDGu2pg=;
+	s=default; t=1595261219;
+	bh=Y8otu4S77G3sqwNTmqP5GLTNjnw8NyqohqjPLR/cagY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rhx0lxa9KbF+4RkzOSYw0FhaVqfT1xEFxr/m6zCSZf6JGFxsZDes+khAPapg8WRG8
-	 eDbgEWin05sZXNaJoZYJko2Pm9T35qeraMlpY5/8kaFWw/G2Hj/qLDnrYZTY/kGUlg
-	 YCkAR+k2fgnc8FIx81Jr3Ho47l3cCDQa61vOSXAs=
+	b=HhTuQ4WeQA0/1jr4y7z3PixVYc/C5mxBeRuWnEEOBu032IJ5yikm64fLI7TFyHG1Y
+	 D/LMfTE73boj74L7Nu6+6oncsA7k9WzBVbCHJshdp6Hglrh2IMJQYHJtLg8yPZp1fd
+	 C8YqunR9TjX8MQ1bYVhVc/tkJDlpWolj/mkKwHvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732521AbgGTQGy (ORCPT
+        id S1733107AbgGTQG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43098 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:06:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733069AbgGTQGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:06:39 -0400
+        id S1732811AbgGTQGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:06:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BFC42065E;
-        Mon, 20 Jul 2020 16:06:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DB742064B;
+        Mon, 20 Jul 2020 16:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261198;
-        bh=xjqHvRsj41feq6PMcwsFzgXHYe9N9dC9EE5odDGu2pg=;
+        s=default; t=1595261203;
+        bh=Y8otu4S77G3sqwNTmqP5GLTNjnw8NyqohqjPLR/cagY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UMdhJDuxcFptwgOrBVO74EopLhYKbqzVWHWtMHmMkshFE7X2oAIXwl0KiR6bh8l4t
-         sH/AjQpsbCadDIutRz7ePZpwRWt3rrOc4ljtgw9LUZrFwXHsytGd5TB0e6aeyUGXVl
-         zj+75rBJ9LmxBvUN5MNDKzDH+/SmilDXEnzwJqTk=
+        b=BqwA4hka/U/tnOZJkgQHRXEzxUHCR7e5rrxLWWijLcpR6qqlgBLuUp65taEGmAwTy
+         9S2fepY/7DpA4w9WYCe/471E2h4nBE4QXRZk3+p3BaTCQa20pKouPTPTlGfI0CJdNi
+         syCPev8+1rjD0mk/05AWT/aZllCOkrda9cMfkpuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Michal Kubecek <mkubecek@suse.cz>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 028/244] ethtool: fix genlmsg_put() failure handling in ethnl_default_dumpit()
-Date:   Mon, 20 Jul 2020 17:34:59 +0200
-Message-Id: <20200720152827.204316158@linuxfoundation.org>
+Subject: [PATCH 5.7 030/244] net: rmnet: do not allow to add multiple bridge interfaces
+Date:   Mon, 20 Jul 2020 17:35:01 +0200
+Message-Id: <20200720152827.299716845@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,100 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kubecek <mkubecek@suse.cz>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 365f9ae4ee36037e2a9268fe7296065356840b4c ]
+[ Upstream commit 2fb2799a2abb39d7dbb48abb3baa1133bf5e921a ]
 
-If the genlmsg_put() call in ethnl_default_dumpit() fails, we bail out
-without checking if we already have some messages in current skb like we do
-with ethnl_default_dump_one() failure later. Therefore if existing messages
-almost fill up the buffer so that there is not enough space even for
-netlink and genetlink header, we lose all prepared messages and return and
-error.
+rmnet can have only two bridge interface.
+One of them is a link interface and another one is added by
+the master operation.
+rmnet interface shouldn't allow adding additional
+bridge interfaces by mater operation.
+But, there is no code to deny additional interfaces.
+So, interface leak occurs.
 
-Rather than duplicating the skb->len check, move the genlmsg_put(),
-genlmsg_cancel() and genlmsg_end() calls into ethnl_default_dump_one().
-This is also more logical as all message composition will be in
-ethnl_default_dump_one() and only iteration logic will be left in
-ethnl_default_dumpit().
+Test commands:
+    ip link add dummy0 type dummy
+    ip link add dummy1 type dummy
+    ip link add dummy2 type dummy
+    ip link add rmnet0 link dummy0 type rmnet mux_id 1
+    ip link set dummy1 master rmnet0
+    ip link set dummy2 master rmnet0
+    ip link del rmnet0
 
-Fixes: 728480f12442 ("ethtool: default handlers for GET requests")
-Reported-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+In the above test command, the dummy0 was attached to rmnet as VND mode.
+Then, dummy1 was attached to rmnet0 as BRIDGE mode.
+At this point, dummy0 mode is switched from VND to BRIDGE automatically.
+Then, dummy2 is attached to rmnet as BRIDGE mode.
+At this point, rmnet0 should deny this operation.
+But, rmnet0 doesn't deny this.
+So that below splat occurs when the rmnet0 interface is deleted.
+
+Splat looks like:
+[  186.684787][    C2] WARNING: CPU: 2 PID: 1009 at net/core/dev.c:8992 rollback_registered_many+0x986/0xcf0
+[  186.684788][    C2] Modules linked in: rmnet dummy openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_x
+[  186.684805][    C2] CPU: 2 PID: 1009 Comm: ip Not tainted 5.8.0-rc1+ #621
+[  186.684807][    C2] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  186.684808][    C2] RIP: 0010:rollback_registered_many+0x986/0xcf0
+[  186.684811][    C2] Code: 41 8b 4e cc 45 31 c0 31 d2 4c 89 ee 48 89 df e8 e0 47 ff ff 85 c0 0f 84 cd fc ff ff 5
+[  186.684812][    C2] RSP: 0018:ffff8880cd9472e0 EFLAGS: 00010287
+[  186.684815][    C2] RAX: ffff8880cc56da58 RBX: ffff8880ab21c000 RCX: ffffffff9329d323
+[  186.684816][    C2] RDX: 1ffffffff2be6410 RSI: 0000000000000008 RDI: ffffffff95f32080
+[  186.684818][    C2] RBP: dffffc0000000000 R08: fffffbfff2be6411 R09: fffffbfff2be6411
+[  186.684819][    C2] R10: ffffffff95f32087 R11: 0000000000000001 R12: ffff8880cd947480
+[  186.684820][    C2] R13: ffff8880ab21c0b8 R14: ffff8880cd947400 R15: ffff8880cdf10640
+[  186.684822][    C2] FS:  00007f00843890c0(0000) GS:ffff8880d4e00000(0000) knlGS:0000000000000000
+[  186.684823][    C2] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  186.684825][    C2] CR2: 000055b8ab1077b8 CR3: 00000000ab612006 CR4: 00000000000606e0
+[  186.684826][    C2] Call Trace:
+[  186.684827][    C2]  ? lockdep_hardirqs_on_prepare+0x379/0x540
+[  186.684829][    C2]  ? netif_set_real_num_tx_queues+0x780/0x780
+[  186.684830][    C2]  ? rmnet_unregister_real_device+0x56/0x90 [rmnet]
+[  186.684831][    C2]  ? __kasan_slab_free+0x126/0x150
+[  186.684832][    C2]  ? kfree+0xdc/0x320
+[  186.684834][    C2]  ? rmnet_unregister_real_device+0x56/0x90 [rmnet]
+[  186.684835][    C2]  unregister_netdevice_many.part.135+0x13/0x1b0
+[  186.684836][    C2]  rtnl_delete_link+0xbc/0x100
+[ ... ]
+[  238.440071][ T1009] unregister_netdevice: waiting for rmnet0 to become free. Usage count = 1
+
+Fixes: 037f9cdf72fb ("net: rmnet: use upper/lower device infrastructure")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ethtool/netlink.c |   27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -376,10 +376,17 @@ err_dev:
- }
+--- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
++++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
+@@ -434,6 +434,11 @@ int rmnet_add_bridge(struct net_device *
+ 		return -EINVAL;
+ 	}
  
- static int ethnl_default_dump_one(struct sk_buff *skb, struct net_device *dev,
--				  const struct ethnl_dump_ctx *ctx)
-+				  const struct ethnl_dump_ctx *ctx,
-+				  struct netlink_callback *cb)
- {
-+	void *ehdr;
- 	int ret;
- 
-+	ehdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq,
-+			   &ethtool_genl_family, 0, ctx->ops->reply_cmd);
-+	if (!ehdr)
-+		return -EMSGSIZE;
++	if (port->rmnet_mode != RMNET_EPMODE_VND) {
++		NL_SET_ERR_MSG_MOD(extack, "more than one bridge dev attached");
++		return -EINVAL;
++	}
 +
- 	ethnl_init_reply_data(ctx->reply_data, ctx->ops, dev);
- 	rtnl_lock();
- 	ret = ctx->ops->prepare_data(ctx->req_info, ctx->reply_data, NULL);
-@@ -395,6 +402,10 @@ out:
- 	if (ctx->ops->cleanup_data)
- 		ctx->ops->cleanup_data(ctx->reply_data);
- 	ctx->reply_data->dev = NULL;
-+	if (ret < 0)
-+		genlmsg_cancel(skb, ehdr);
-+	else
-+		genlmsg_end(skb, ehdr);
- 	return ret;
- }
- 
-@@ -411,7 +422,6 @@ static int ethnl_default_dumpit(struct s
- 	int s_idx = ctx->pos_idx;
- 	int h, idx = 0;
- 	int ret = 0;
--	void *ehdr;
- 
- 	rtnl_lock();
- 	for (h = ctx->pos_hash; h < NETDEV_HASHENTRIES; h++, s_idx = 0) {
-@@ -431,26 +441,15 @@ restart_chain:
- 			dev_hold(dev);
- 			rtnl_unlock();
- 
--			ehdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid,
--					   cb->nlh->nlmsg_seq,
--					   &ethtool_genl_family, 0,
--					   ctx->ops->reply_cmd);
--			if (!ehdr) {
--				dev_put(dev);
--				ret = -EMSGSIZE;
--				goto out;
--			}
--			ret = ethnl_default_dump_one(skb, dev, ctx);
-+			ret = ethnl_default_dump_one(skb, dev, ctx, cb);
- 			dev_put(dev);
- 			if (ret < 0) {
--				genlmsg_cancel(skb, ehdr);
- 				if (ret == -EOPNOTSUPP)
- 					goto lock_and_cont;
- 				if (likely(skb->len))
- 					ret = skb->len;
- 				goto out;
- 			}
--			genlmsg_end(skb, ehdr);
- lock_and_cont:
- 			rtnl_lock();
- 			if (net->dev_base_seq != seq) {
+ 	if (rmnet_is_real_dev_registered(slave_dev)) {
+ 		NL_SET_ERR_MSG_MOD(extack,
+ 				   "slave cannot be another rmnet dev");
 
 
