@@ -2,51 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BADC433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4337C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56B9422CE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745EF22482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260213;
-	bh=zxnMGCo4vo8ewn8pZuOaBAjaV3PAbQTR0895YI56aw8=;
+	s=default; t=1595260216;
+	bh=IGi0Xef7jbHhMsYfOprqPDNw4VFPWt/swz7U6H8LxOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VPqKLejBLcF7mpljPFLl7NX2xB+n4MvoU2NVjDrz5C1Np02zHN01pxMn0o2CookSk
-	 HS53gYLUsz0MnuHMVRF8VXwCA1uCWHt1EdG7E38ueop4NvMFB115ljc1eU6oCbO3pk
-	 O2i1sF+s/VJ21YRovlHYB9HieDxdMpRWtJQs72l8=
+	b=q+3iox/Eo7Odprmqehfj2BX3ANKB0/vGGebiypQpfCaQkuIxbLwQCTT4Rk38+Y97J
+	 fhjKLsqI59a/o+spNj5AwTAt1CE4casIa+dGrjy3exE1+bzWE0qBZLHEI0KO22Wl/R
+	 ywEYHfNq4jlz5kWHy+0K48BSEg2dHRBd7uAwH8NE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbgGTPuM (ORCPT
+        id S1731118AbgGTPuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:50:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46506 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:50:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731097AbgGTPuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:50:09 -0400
+        id S1731108AbgGTPuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:50:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FA1E206E9;
-        Mon, 20 Jul 2020 15:50:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAE4322B4D;
+        Mon, 20 Jul 2020 15:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260208;
-        bh=zxnMGCo4vo8ewn8pZuOaBAjaV3PAbQTR0895YI56aw8=;
+        s=default; t=1595260211;
+        bh=IGi0Xef7jbHhMsYfOprqPDNw4VFPWt/swz7U6H8LxOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WFLH5KfAiPtAPrEQILOTSoEaFWFNxnz2phESlgY6l7TQwdQ6WVB+nBl7N8OvJhrgH
-         8Ct8QmQIvi4HtAj+1VeYlMykXGTSn+2GoiSb4OkCJvoug43uWvFQQZvqu9ekUsOZhB
-         PH9GTFvxWOaftNiRlQBXqjRJTuyR8PU+3PjOLH1k=
+        b=V/EYyjE4KRBWZmwCJX1wMKVZgokQtohQ56wppvPPU7aLpTLF6mQtsV0F7+qHdYYLC
+         bGLoyaQ8VQtZe2rs9YAqSbbz3xm8OoBoyuobXVPJ/rZCJMq5W6sjOaoqdMsKa+WCsw
+         tyABxV1GjC+b5J4GvuTbMLzL0YlzK6Ls74Wz8SdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 002/133] net: rmnet: fix lower interface leak
-Date:   Mon, 20 Jul 2020 17:35:49 +0200
-Message-Id: <20200720152803.848477803@linuxfoundation.org>
+        stable@vger.kernel.org, Bernard Zhao <bernard@vivo.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 020/133] drm/msm: fix potential memleak in error branch
+Date:   Mon, 20 Jul 2020 17:36:07 +0200
+Message-Id: <20200720152804.704407352@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -59,126 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Bernard Zhao <bernard@vivo.com>
 
-commit 2a762e9e8cd1cf1242e4269a2244666ed02eecd1 upstream.
+[ Upstream commit 177d3819633cd520e3f95df541a04644aab4c657 ]
 
-There are two types of the lower interface of rmnet that are VND
-and BRIDGE.
-Each lower interface can have only one type either VND or BRIDGE.
-But, there is a case, which uses both lower interface types.
-Due to this unexpected behavior, lower interface leak occurs.
+In function msm_submitqueue_create, the queue is a local
+variable, in return -EINVAL branch, queue didn`t add to ctx`s
+list yet, and also didn`t kfree, this maybe bring in potential
+memleak.
 
-Test commands:
-    ip link add dummy0 type dummy
-    ip link add dummy1 type dummy
-    ip link add rmnet0 link dummy0 type rmnet mux_id 1
-    ip link set dummy1 master rmnet0
-    ip link add rmnet1 link dummy1 type rmnet mux_id 2
-    ip link del rmnet0
-
-The dummy1 was attached as BRIDGE interface of rmnet0.
-Then, it also was attached as VND interface of rmnet1.
-This is unexpected behavior and there is no code for handling this case.
-So that below splat occurs when the rmnet0 interface is deleted.
-
-Splat looks like:
-[   53.254112][    C1] WARNING: CPU: 1 PID: 1192 at net/core/dev.c:8992 rollback_registered_many+0x986/0xcf0
-[   53.254117][    C1] Modules linked in: rmnet dummy openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nfx
-[   53.254182][    C1] CPU: 1 PID: 1192 Comm: ip Not tainted 5.8.0-rc1+ #620
-[   53.254188][    C1] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   53.254192][    C1] RIP: 0010:rollback_registered_many+0x986/0xcf0
-[   53.254200][    C1] Code: 41 8b 4e cc 45 31 c0 31 d2 4c 89 ee 48 89 df e8 e0 47 ff ff 85 c0 0f 84 cd fc ff ff 0f 0b e5
-[   53.254205][    C1] RSP: 0018:ffff888050a5f2e0 EFLAGS: 00010287
-[   53.254214][    C1] RAX: ffff88805756d658 RBX: ffff88804d99c000 RCX: ffffffff8329d323
-[   53.254219][    C1] RDX: 1ffffffff0be6410 RSI: 0000000000000008 RDI: ffffffff85f32080
-[   53.254223][    C1] RBP: dffffc0000000000 R08: fffffbfff0be6411 R09: fffffbfff0be6411
-[   53.254228][    C1] R10: ffffffff85f32087 R11: 0000000000000001 R12: ffff888050a5f480
-[   53.254233][    C1] R13: ffff88804d99c0b8 R14: ffff888050a5f400 R15: ffff8880548ebe40
-[   53.254238][    C1] FS:  00007f6b86b370c0(0000) GS:ffff88806c200000(0000) knlGS:0000000000000000
-[   53.254243][    C1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   53.254248][    C1] CR2: 0000562c62438758 CR3: 000000003f600005 CR4: 00000000000606e0
-[   53.254253][    C1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   53.254257][    C1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   53.254261][    C1] Call Trace:
-[   53.254266][    C1]  ? lockdep_hardirqs_on_prepare+0x379/0x540
-[   53.254270][    C1]  ? netif_set_real_num_tx_queues+0x780/0x780
-[   53.254275][    C1]  ? rmnet_unregister_real_device+0x56/0x90 [rmnet]
-[   53.254279][    C1]  ? __kasan_slab_free+0x126/0x150
-[   53.254283][    C1]  ? kfree+0xdc/0x320
-[   53.254288][    C1]  ? rmnet_unregister_real_device+0x56/0x90 [rmnet]
-[   53.254293][    C1]  unregister_netdevice_many.part.135+0x13/0x1b0
-[   53.254297][    C1]  rtnl_delete_link+0xbc/0x100
-[   53.254301][    C1]  ? rtnl_af_register+0xc0/0xc0
-[   53.254305][    C1]  rtnl_dellink+0x2dc/0x840
-[   53.254309][    C1]  ? find_held_lock+0x39/0x1d0
-[   53.254314][    C1]  ? valid_fdb_dump_strict+0x620/0x620
-[   53.254318][    C1]  ? rtnetlink_rcv_msg+0x457/0x890
-[   53.254322][    C1]  ? lock_contended+0xd20/0xd20
-[   53.254326][    C1]  rtnetlink_rcv_msg+0x4a8/0x890
-[ ... ]
-[   73.813696][ T1192] unregister_netdevice: waiting for rmnet0 to become free. Usage count = 1
-
-Fixes: 037f9cdf72fb ("net: rmnet: use upper/lower device infrastructure")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Bernard Zhao <bernard@vivo.com>
+[trivial commit msg fixup]
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c |   19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/msm/msm_submitqueue.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -56,15 +56,23 @@ static int rmnet_unregister_real_device(
- 	return 0;
- }
+diff --git a/drivers/gpu/drm/msm/msm_submitqueue.c b/drivers/gpu/drm/msm/msm_submitqueue.c
+index 5115f75b5b7f3..325da440264a3 100644
+--- a/drivers/gpu/drm/msm/msm_submitqueue.c
++++ b/drivers/gpu/drm/msm/msm_submitqueue.c
+@@ -78,8 +78,10 @@ int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
+ 	queue->flags = flags;
  
--static int rmnet_register_real_device(struct net_device *real_dev)
-+static int rmnet_register_real_device(struct net_device *real_dev,
-+				      struct netlink_ext_ack *extack)
- {
- 	struct rmnet_port *port;
- 	int rc, entry;
- 
- 	ASSERT_RTNL();
- 
--	if (rmnet_is_real_dev_registered(real_dev))
-+	if (rmnet_is_real_dev_registered(real_dev)) {
-+		port = rmnet_get_port_rtnl(real_dev);
-+		if (port->rmnet_mode != RMNET_EPMODE_VND) {
-+			NL_SET_ERR_MSG_MOD(extack, "bridge device already exists");
-+			return -EINVAL;
+ 	if (priv->gpu) {
+-		if (prio >= priv->gpu->nr_rings)
++		if (prio >= priv->gpu->nr_rings) {
++			kfree(queue);
+ 			return -EINVAL;
 +		}
-+
- 		return 0;
-+	}
  
- 	port = kzalloc(sizeof(*port), GFP_ATOMIC);
- 	if (!port)
-@@ -143,7 +151,7 @@ static int rmnet_newlink(struct net *src
- 
- 	mux_id = nla_get_u16(data[IFLA_RMNET_MUX_ID]);
- 
--	err = rmnet_register_real_device(real_dev);
-+	err = rmnet_register_real_device(real_dev, extack);
- 	if (err)
- 		goto err0;
- 
-@@ -425,13 +433,10 @@ int rmnet_add_bridge(struct net_device *
- 	if (port->nr_rmnet_devs > 1)
- 		return -EINVAL;
- 
--	if (port->rmnet_mode != RMNET_EPMODE_VND)
--		return -EINVAL;
--
- 	if (rmnet_is_real_dev_registered(slave_dev))
- 		return -EBUSY;
- 
--	err = rmnet_register_real_device(slave_dev);
-+	err = rmnet_register_real_device(slave_dev, extack);
- 	if (err)
- 		return -EBUSY;
- 
+ 		queue->prio = prio;
+ 	}
+-- 
+2.25.1
+
 
 
