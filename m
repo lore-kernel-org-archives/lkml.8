@@ -2,169 +2,224 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC30C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60EAF22482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521C62080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:12:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AbCwKuR9"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="L8IvjmH7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731176AbgGTUOs (ORCPT
+        id S1731092AbgGTUMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 16:14:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53112 "EHLO
+        Mon, 20 Jul 2020 16:12:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731153AbgGTUOq (ORCPT
+        with ESMTP id S1728874AbgGTUMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 16:14:46 -0400
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E08D2C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:14:45 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id w8so11083519plq.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:14:45 -0700 (PDT)
+        Mon, 20 Jul 2020 16:12:13 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DBD1C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:12:13 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id h7so1008847qkk.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:12:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=WXyRYBH3lUh7Umxi2hQ4QtCTReXFYZYL0z8hscZP+wo=;
-        b=AbCwKuR9T/1CW5k9yah+qNwtVfR+CZ+owvkLdgnoW02XcdReVJXFhxPJQdMZ6NBU9s
-         6n/Xmm4xRpSFeYJr4hhWiGWItWb3wd0jIwPqWY7/npRaaL3gYa4mK2XwI2UBinbq0Q5j
-         R6MCK0ksI09BwxZvNKp6JYUuQH5TiOC9nAXni7luaCYHXqYqIUhgatF6LgBbQjEx0S+l
-         KIYRE6zTsmnxP1aODkjtTaoWBfsyoSoWVpzjoyXzEZfNVVhtW8vS6ex+d33sQhZuNNfG
-         Bol7OHnyDRq4Ku5WBMfw+kVptxV/rgSFDOLx4ND/GNdcYuseULZwF0h59sswPV8fWcHD
-         icDQ==
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Gufroq3ZLK6QdGAL8wDHAFBHZWpw/Rpc6niq7LgVOX0=;
+        b=L8IvjmH7ZXtn4jpxvkf7GiSjkywR/ofWtLxBvhRIkb0t4Q7ms5GyVD6rCqISV2MHnc
+         a5X12+JllGRmc0hX8naT1BQ4JF/xCeFEibOhpiOgGPILqhXSRebBNQvtOEwxOEO7BwB5
+         +6L1UlEMMVezIKgAl6QBOqFXrkgAjiSLLZvJHVJ5Ft7Lfkvn2GWjcNzina7XxnxmaCtE
+         c5xnU2k5KvYHFWJbPgsM/8HnZ1MyziPguRQ0MvIODVWtbs4KpCNyxn8EeH4GaY/aPla6
+         yKtG7LmN2CjABlocxexAM6nkbwsXiLEbxthIvgkp4flxQIELWPViDdkormWfDqKlDWYQ
+         JcKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=WXyRYBH3lUh7Umxi2hQ4QtCTReXFYZYL0z8hscZP+wo=;
-        b=EjesJkXy7RyxE0e4xJoiMIcRcGzq/+57GVia5/QqjZPTOUhRc5ZfqQ067g5v8d9mxY
-         V9PKEJyhQhgADtSLpcKI6fAn8UQkyK6xXDU/YOv4mbDBe0upusOeJd+TETU8Z4S2tZTP
-         CiMiIBlPAAbUedEYVjT5sGUJm4GSOKx7dHnYWwIKUby58CiCq9U3gXZhc/sYt0pMDpRs
-         vntCcHv4G5OfIcRy2DHvMNcYv++GmlG2FskGkfXfveSxptpYcUmR2C0AFeUAISgsqvob
-         hUWTJDiYKDipf0Fh6Iw/XVrneVnbqCF8B//4aZSQVYQNsNZ16f/UK/cDn/siVmDPKm31
-         M58Q==
-X-Gm-Message-State: AOAM533ChmPwcr5ssM/5iKxGh9M8IM9IojHPXEmkpEvkpkxohkJUCXee
-        3Hf4imD7ooqSNCpRv/l1sFl+DyXgDd7v4X1f
-X-Google-Smtp-Source: ABdhPJzJdB5vVYeTESa4TojPzKbv2IbuTs5hlhZh2o3UdEOdno8ALDzergtCvkt5KWEBkH+J0skw3c4y5QOgwm7Z
-X-Received: by 2002:a17:90a:368c:: with SMTP id t12mr1111761pjb.90.1595276085336;
- Mon, 20 Jul 2020 13:14:45 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 20:14:41 +0000
-Message-Id: <20200720201441.1871285-1-linchuyuan@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
-Subject: [PATCH v2] hwmon: adm1272: Enable temperature sampling for adm1272 adm1278
-From:   Chu Lin <linchuyuan@google.com>
-To:     linux@roeck-us.net, jdelvare@suse.com
-Cc:     =belgaied@google.com, jasonling@google.com, linchuyuan@google.com,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        zhongqil@google.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Gufroq3ZLK6QdGAL8wDHAFBHZWpw/Rpc6niq7LgVOX0=;
+        b=R9g3qdT5Rmxac2MrBLdFjxbXXDSKr/xEzi12iTX17v2o/WnRhBMe1xabjQYGQMg+8Q
+         dWE1PstHUiWrsyRjaxk42QmaFuGNfK0vb3f7Q5RZovR3OIYcjzh6MIv4o2UER03zhPzg
+         DPB4F3HQ5Sa2QwJQhtrmCGXpaKkpUq9TABeJiaYbURaSGSZbjqIrqvoORLerZ8TiOq9P
+         NMMopWzpKcLjJr4jiH7PXtzJC9KqUA7wxUpMg552K7V2VxEhObSgM1i6My+7qA4A7h2B
+         8LwCvl3b/HAA2IQ2HGRtANjtzql+ltKoZ7DQke2DfGMPnp2zP3Bbk3HD6AD6wFEYSBK2
+         fasw==
+X-Gm-Message-State: AOAM530mGRAAXG/YZyte7XKU7eUD4rQAlXXeIvcHypfQirDAHxE06nqa
+        iL53JEaN1xWKADrZCM3JETCYzQ==
+X-Google-Smtp-Source: ABdhPJw7xDTenwANdauxipEFY2jHjN//1NckKbZSSzcmaQUmHVrT3RLOTZhGpgU9gywArScCImZDeQ==
+X-Received: by 2002:a37:9c58:: with SMTP id f85mr456879qke.345.1595275932562;
+        Mon, 20 Jul 2020 13:12:12 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id a20sm20950223qtw.54.2020.07.20.13.12.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 13:12:11 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 16:12:04 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: splice() rcu_sched self-detected stall on CPU
+Message-ID: <20200720201204.GA1280@lca.pw>
+References: <89F418A9-EB20-48CB-9AE0-52C700E6BB74@lca.pw>
+ <20200505185732.GP2869@paulmck-ThinkPad-P72>
+ <8678900D-8D52-4195-A767-9E6923EE0AAF@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8678900D-8D52-4195-A767-9E6923EE0AAF@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Problem:
-	adm1272 and adm1278 supports temperature sampling. The
-current way of enabling it requires the user manually unbind the device
-from the driver, flip the temperature sampling control bit and then bind
-the device back to the driver. It would be nice if we can control this in a
-better way by reading the dt.
+On Tue, May 05, 2020 at 03:00:34PM -0400, Qian Cai wrote:
+> 
+> 
+> > On May 5, 2020, at 2:57 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > 
+> > On Mon, May 04, 2020 at 03:11:09PM -0400, Qian Cai wrote:
+> >> Running a syscall fuzzer inside a container on linux-next floods
+> >> systems with soft lockups. It looks like stuck in this line at
+> >> iov_iter_copy_from_user_atomic(), Thoughts?
+> >> 
+> >> iterate_all_kinds(i, bytes, v,
+> >>                copyin((p += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
+> >>                memcpy_from_page((p += v.bv_len) - v.bv_len, v.bv_page,
+> >>                                 v.bv_offset, v.bv_len),
+> >>                memcpy((p += v.iov_len) - v.iov_len, v.iov_base, v.iov_len)
+> >>        )
+> > 
+> > If the size being copied is large enough, something like this might happen.
+> > 
+> > Is this a CONFIG_PREEMPT=n kernel?  And is the size passed in to
+> 
+> Yes, CONFIG_PREEMPT=n.
+> 
+> > iov_iter_copy_from_user_atomic() quite large, given that this is generated
+> > by a fuzzer?  If so, one thing to try is to add cond_resched() in the
+> > iterate_bvec(), iterate_kvec(), and iterate_iovec() macros.
+> 
+> I’ll try that.
 
-Solution:
-	Introducing device tree binding analog-temperature1-enable. If the
-flag is set, flip the temp1_en control bit on probing.
+Finally, had a chance to try it, but in
+iov_iter_copy_from_user_atomic(), it calls kmap_atomic() first which
+calls preempt_disable(). Thus, in_atomic() == 1. Later, those
+cond_resched() would trigger the "sleeping function called from invalid
+context" warnings.
 
-Testing:
-1). iotools smbus_write16 35 0x10 0xd4 0x0037 // disable the temp1_en
-2). recompile the dt to have  analog-temperature1-enable set
-3). Probe the driver and make sure tempX shows up in hwmon
+Just to refresh the memory, it is quite easy to still reproduce this
+today.
 
-Signed-off-by: Chu Lin <linchuyuan@google.com>
----
- drivers/hwmon/pmbus/adm1275.c | 36 +++++++++++++++++++++--------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
+# git clone https://gitlab.com/cailca/linux-mm
+# cd linux-mm; make
+# ./random -x 0-100 -f
 
-diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-index 19317575d1c6..ae28820b3e31 100644
---- a/drivers/hwmon/pmbus/adm1275.c
-+++ b/drivers/hwmon/pmbus/adm1275.c
-@@ -475,6 +475,7 @@ static int adm1275_probe(struct i2c_client *client,
- 	const struct coefficients *coefficients;
- 	int vindex = -1, voindex = -1, cindex = -1, pindex = -1;
- 	int tindex = -1;
-+	bool temp1_en;
- 	u32 shunt;
- 
- 	if (!i2c_check_functionality(client->adapter,
-@@ -536,6 +537,9 @@ static int adm1275_probe(struct i2c_client *client,
- 	if (shunt == 0)
- 		return -EINVAL;
- 
-+	temp1_en = of_property_read_bool(client->dev.of_node, "analog-temperature1-enable") &&
-+		(mid->driver_data == adm1272 || mid->driver_data == adm1278);
-+
- 	data->id = mid->driver_data;
- 
- 	info = &data->info;
-@@ -614,16 +618,18 @@ static int adm1275_probe(struct i2c_client *client,
- 		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
- 			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
- 
-+		ret = config;
-+		/* Enable temp if it is instructed by dt (it is disabled by default) */
-+		if (temp1_en && !(config & ADM1278_TEMP1_EN))
-+			config |= ADM1278_TEMP1_EN;
- 		/* Enable VOUT if not enabled (it is disabled by default) */
--		if (!(config & ADM1278_VOUT_EN)) {
-+		if (!(config & ADM1278_VOUT_EN))
- 			config |= ADM1278_VOUT_EN;
--			ret = i2c_smbus_write_byte_data(client,
--							ADM1275_PMON_CONFIG,
--							config);
-+		if (ret != config) {
-+			ret = i2c_smbus_write_word_data(client, ADM1275_PMON_CONFIG, config);
- 			if (ret < 0) {
--				dev_err(&client->dev,
--					"Failed to enable VOUT monitoring\n");
--				return -ENODEV;
-+				dev_err(&client->dev, "Failed to enable config control bits");
-+				return ret;
- 			}
- 		}
- 
-@@ -685,16 +691,18 @@ static int adm1275_probe(struct i2c_client *client,
- 		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
- 			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
- 
-+		ret = config;
-+		/* Enable temp if it is instructed by dt (it is disabled by default) */
-+		if (temp1_en && !(config & ADM1278_TEMP1_EN))
-+			config |= ADM1278_TEMP1_EN;
- 		/* Enable VOUT if not enabled (it is disabled by default) */
--		if (!(config & ADM1278_VOUT_EN)) {
-+		if (!(config & ADM1278_VOUT_EN))
- 			config |= ADM1278_VOUT_EN;
--			ret = i2c_smbus_write_byte_data(client,
--							ADM1275_PMON_CONFIG,
--							config);
-+		if (ret != config) {
-+			ret = i2c_smbus_write_word_data(client, ADM1275_PMON_CONFIG, config);
- 			if (ret < 0) {
--				dev_err(&client->dev,
--					"Failed to enable VOUT monitoring\n");
--				return -ENODEV;
-+				dev_err(&client->dev, "Failed to enable config control bits");
-+				return ret;
- 			}
- 		}
- 
--- 
-2.28.0.rc0.105.gf9edc3c819-goog
+[10605.410827][   C34] watchdog: BUG: soft lockup - CPU#34 stuck for 23s! [trinity-c47:134866]
+[10605.419192][   C34] Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio loop processor ip_tables x_tables sd_mod ahci libahci mlx5_core firmware_class libata dm_mirror dm_region_hash dm_log dm_mod efivarfs
+[10605.438424][   C34] irq event stamp: 439794
+[10605.442615][   C34] hardirqs last  enabled at (439793): [<ffffa000101d38c4>] el1_irq+0xc4/0x140
+[10605.451313][   C34] hardirqs last disabled at (439794): [<ffffa000101d387c>] el1_irq+0x7c/0x140
+[10605.460013][   C34] softirqs last  enabled at (439790): [<ffffa000101d1b50>] efi_header_end+0xb50/0x14d4
+[10605.469494][   C34] softirqs last disabled at (439783): [<ffffa000102bd898>] irq_exit+0x440/0x510
+[10605.478368][   C34] CPU: 34 PID: 134866 Comm: trinity-c47 Not tainted 5.8.0-rc5-next-20200717+ #2
+[10605.487236][   C34] Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
+[10605.497669][   C34] pstate: 40400009 (nZcv daif +PAN -UAO BTYPE=--)
+[10605.503938][   C34] pc : iov_iter_copy_from_user_atomic+0x640/0xa68
+[10605.510208][   C34] lr : generic_perform_write+0x24c/0x370
+[10605.515691][   C34] sp : ffff008921b57580
+[10605.519697][   C34] x29: ffff008921b57580 x28: 0000000000000000
+[10605.525712][   C34] x27: dfffa00000000000 x26: ffff00895cbe6500
+[10605.531726][   C34] x25: 0000000000000000 x24: 0000000000000003
+[10605.537740][   C34] x23: ffff008921b57b90 x22: 0000000000000000
+[10605.543754][   C34] x21: 0000000000000000 x20: 0000000000000004
+[10605.549769][   C34] x19: ffff000c5e817d39 x18: 0000000000000000
+[10605.555782][   C34] x17: 0000000000000000 x16: 0000000000000000
+[10605.561796][   C34] x15: 0000000000000000 x14: 1fffe0112436ae4a
+[10605.567809][   C34] x13: ffff8012adcac617 x12: 1fffe012adcac616
+[10605.573823][   C34] x11: 1fffe012adcac616 x10: ffff8012adcac616
+[10605.579838][   C34] x9 : dfffa00000000000 x8 : ffff00956e5630b7
+[10605.585852][   C34] x7 : ffff80112436af75 x6 : ffff8012adcac617
+[10605.591865][   C34] x5 : 0000000000000000 x4 : 0000000000000004
+[10605.597886][   C34] x3 : ffff00895cbe6500 x2 : 1fffe0112b97cca1
+[10605.603926][   C34] x1 : 0000000000000007 x0 : ffff00895cbe650c
+[10605.609941][   C34] Call trace:
+[10605.613083][   C34]  iov_iter_copy_from_user_atomic+0x640/0xa68
+[10605.619003][   C34]  generic_perform_write+0x24c/0x370
+[10605.624140][   C34]  __generic_file_write_iter+0x280/0x428
+[10605.629624][   C34]  generic_file_write_iter+0x2a4/0x8e0
+[10605.634936][   C34]  do_iter_readv_writev+0x348/0x590
+[10605.639986][   C34]  do_iter_write+0x124/0x468
+[10605.644428][   C34]  vfs_iter_write+0x54/0x98
+[10605.648786][   C34]  iter_file_splice_write+0x4a0/0x860
+[10605.654009][   C34]  do_splice_from+0x60/0x120
+[10605.658452][   C34]  do_splice+0x7ac/0x1310
+[10605.662633][   C34]  __arm64_sys_splice+0x118/0x1e0
+[10605.667510][   C34]  do_el0_svc+0x124/0x228
+[10605.671693][   C34]  el0_sync_handler+0x260/0x410
+[10605.676395][   C34]  el0_sync+0x140/0x180
+[10648.198030][   C34] rcu: INFO: rcu_sched self-detected stall on CPU
+[10648.204756][   C34] rcu: 	34-....: (6472 ticks this GP) idle=666/1/0x4000000000000002 softirq=36485/36485 fqs=1901
+[10648.216008][   C34] 	(t=6501 jiffies g=587637 q=293554)
+[10648.221240][   C34] Task dump for CPU 34:
+[10648.225248][   C34] trinity-c47     R  running task    25856 134866 106496 0x00000007
+[10648.233097][   C34] Call trace:
+[10648.236245][   C34]  dump_backtrace+0x0/0x398
+[10648.240603][   C34]  show_stack+0x14/0x20
+[10648.244615][   C34]  sched_show_task+0x498/0x608
+[10648.249232][   C34]  dump_cpu_task+0xcc/0xdc
+[10648.253503][   C34]  rcu_dump_cpu_stacks+0x248/0x294
+[10648.258467][   C34]  rcu_sched_clock_irq+0x12f4/0x1998
+[10648.263606][   C34]  update_process_times+0x2c/0x90
+[10648.268484][   C34]  tick_sched_handle+0x68/0x120
+[10648.273187][   C34]  tick_sched_timer+0x60/0x128
+[10648.277802][   C34]  __hrtimer_run_queues+0x7b4/0x1388
+[10648.282940][   C34]  hrtimer_interrupt+0x284/0x640
+[10648.287732][   C34]  arch_timer_handler_phys+0x48/0x68
+[10648.292871][   C34]  handle_percpu_devid_irq+0x248/0xde0
+[10648.298194][   C34]  generic_handle_irq+0x74/0xa0
+[10648.302907][   C34]  __handle_domain_irq+0xa0/0x160
+[10648.307784][   C34]  gic_handle_irq+0xc0/0x1a0
+[10648.312227][   C34]  el1_irq+0xbc/0x140
+[10648.316064][   C34]  iov_iter_copy_from_user_atomic+0x668/0xa68
+[10648.321984][   C34]  generic_perform_write+0x24c/0x370
+[10648.327121][   C34]  __generic_file_write_iter+0x280/0x428
+[10648.332605][   C34]  generic_file_write_iter+0x2a4/0x8e0
+[10648.337916][   C34]  do_iter_readv_writev+0x348/0x590
+[10648.342966][   C34]  do_iter_write+0x124/0x468
+[10648.347407][   C34]  vfs_iter_write+0x54/0x98
+[10648.351764][   C34]  iter_file_splice_write+0x4a0/0x860
+[10648.356987][   C34]  do_splice_from+0x60/0x120
+[10648.361430][   C34]  do_splice+0x7ac/0x1310
+[10648.365611][   C34]  __arm64_sys_splice+0x118/0x1e0
+[10648.370489][   C34]  do_el0_svc+0x124/0x228
+[10648.374672][   C34]  el0_sync_handler+0x260/0x410
+[10648.379374][   C34]  el0_sync+0x140/0x180
 
+[10718.696867][ T1302] INFO: task trinity-c44:135125 blocked for more than 123 seconds.
+[10718.704644][ T1302]       Tainted: G             L    5.8.0-rc5-next-20200717+ #2
+[10718.712163][ T1302] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[10718.720728][ T1302] trinity-c44     D25760 135125      1 0x00000001
+[10718.727040][ T1302] Call trace:
+[10718.730222][ T1302]  __switch_to+0x1a0/0x258
+[10718.734496][ T1302]  __schedule+0x770/0x18d0
+[10718.738804][ T1302]  schedule+0x1e4/0x3e8
+[10718.742824][ T1302]  rwsem_down_write_slowpath+0x80c/0xe28
+[10718.748359][ T1302]  down_write+0x208/0x230
+[10718.752547][ T1302]  generic_file_write_iter+0xd0/0x8e0
+[10718.757774][ T1302]  do_iter_readv_writev+0x348/0x590
+[10718.762864][ T1302]  do_iter_write+0x124/0x468
+[10718.767311][ T1302]  vfs_writev+0x15c/0x250
+[10718.771543][ T1302]  do_pwritev+0x128/0x160
+[10718.775732][ T1302]  __arm64_sys_pwritev+0x88/0xc8
+[10718.780561][ T1302]  do_el0_svc+0x124/0x228
+[10718.784749][ T1302]  el0_sync_handler+0x260/0x410
+[10718.789491][ T1302]  el0_sync+0x140/0x180
