@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A1FC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE791C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02A2D20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C84482064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261817;
-	bh=pC9xL1hS5ffe1qIr+WNloLwyFJjrrrXfigJ52mTAq5I=;
+	s=default; t=1595261820;
+	bh=7YEzp2TLeeENKUeWqMUIHBobc/q7bF3zjTbqOeIN1Ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QEcR1DLXcuX4+/hkNBkJmewjurLDLxzNUEfS0GD8F2mE9NY9K9bxrsCB/CV90ITQ4
-	 mrqKUj0OtRw+qbtPU1Yeb2fj3deV6X3TLIIbBBTLRd0GZGpUbf3hBQ5ZrM+QS5sYLf
-	 P6PEr07cXiDO/89rymZNbctwCzPCq6As02qvcDGM=
+	b=0qocXFuHmvBWO/Q1hoLW6zLEAlHKlivDfrTC6d9LjeyWaxGO6tnuNEkaCQPmBNp3K
+	 RGD/Tk086lI506rBRu60JWNHnxACXR0Em5Odr7oU+PLB+GaMqJhIyO9C1fyJAzBhvx
+	 PH9/ZGk0xHASXyQFP+SvOjcBTb+LZheUJK1ZiHAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388611AbgGTQQz (ORCPT
+        id S2388184AbgGTQQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:16:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58204 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:16:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388600AbgGTQQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:16:51 -0400
+        id S2387621AbgGTQQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:16:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31D562064B;
-        Mon, 20 Jul 2020 16:16:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBF6920656;
+        Mon, 20 Jul 2020 16:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261810;
-        bh=pC9xL1hS5ffe1qIr+WNloLwyFJjrrrXfigJ52mTAq5I=;
+        s=default; t=1595261816;
+        bh=7YEzp2TLeeENKUeWqMUIHBobc/q7bF3zjTbqOeIN1Ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tt5KhtijvVhVqNlm3p4Uzjwx0KWbCntUrTtoCklvZiHFxTDxRiy8MxQGpdoK7DnxP
-         5cpnvMtv7aUslgP2FSAUhW3HU2Q0KSA/4dk9J3+xc4oyXsT+1gF8zqxCTqC34Wzm18
-         tiVBNti90PQPb/55X7NVjEGKscoDJaple4glInQA=
+        b=K3YfcyQdGj2Axff+yZM2Z7Tl1D8mD6NWy9s1et73O5KrrN6r9H1fw3QblIlVAIDcW
+         CpKVLswScTa31Znerh+zBqkd4gO27KA4Qz4EBYNJn0q+EePaJGq4lqiFP3/MQBG1XA
+         9eY3c1ppTNlvd+j9OzcOIYIyBAKoD8FczN7kdEsQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenz Bauer <lmb@cloudflare.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.7 243/244] bpf: sockmap: Require attach_bpf_fd when detaching a program
-Date:   Mon, 20 Jul 2020 17:38:34 +0200
-Message-Id: <20200720152837.397449940@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 5.7 238/244] iommu/vt-d: Make Intel SVM code 64-bit only
+Date:   Mon, 20 Jul 2020 17:38:29 +0200
+Message-Id: <20200720152837.158735106@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,181 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenz Bauer <lmb@cloudflare.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-commit bb0de3131f4c60a9bf976681e0fe4d1e55c7a821 upstream.
+commit 9486727f5981a5ec5c0b699fb1777451bd6786e4 upstream.
 
-The sockmap code currently ignores the value of attach_bpf_fd when
-detaching a program. This is contrary to the usual behaviour of
-checking that attach_bpf_fd represents the currently attached
-program.
+Current Intel SVM is designed by setting the pgd_t of the processor page
+table to FLPTR field of the PASID entry. The first level translation only
+supports 4 and 5 level paging structures, hence it's infeasible for the
+IOMMU to share a processor's page table when it's running in 32-bit mode.
+Let's disable 32bit support for now and claim support only when all the
+missing pieces are ready in the future.
 
-Ensure that attach_bpf_fd is indeed the currently attached
-program. It turns out that all sockmap selftests already do this,
-which indicates that this is unlikely to cause breakage.
-
-Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200629095630.7933-5-lmb@cloudflare.com
+Fixes: 1c4f88b7f1f92 ("iommu/vt-d: Shared virtual address in scalable mode")
+Suggested-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Link: https://lore.kernel.org/r/20200622231345.29722-2-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/bpf.h   |   13 +++++++++++--
- include/linux/skmsg.h |   13 +++++++++++++
- kernel/bpf/syscall.c  |    2 +-
- net/core/sock_map.c   |   50 +++++++++++++++++++++++++++++++++++++++++++++-----
- 4 files changed, 70 insertions(+), 8 deletions(-)
+ drivers/iommu/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -1444,13 +1444,16 @@ static inline void bpf_map_offload_map_f
- #endif /* CONFIG_NET && CONFIG_BPF_SYSCALL */
+--- a/drivers/iommu/Kconfig
++++ b/drivers/iommu/Kconfig
+@@ -211,7 +211,7 @@ config INTEL_IOMMU_DEBUGFS
  
- #if defined(CONFIG_BPF_STREAM_PARSER)
--int sock_map_prog_update(struct bpf_map *map, struct bpf_prog *prog, u32 which);
-+int sock_map_prog_update(struct bpf_map *map, struct bpf_prog *prog,
-+			 struct bpf_prog *old, u32 which);
- int sock_map_get_from_fd(const union bpf_attr *attr, struct bpf_prog *prog);
-+int sock_map_prog_detach(const union bpf_attr *attr, enum bpf_prog_type ptype);
- void sock_map_unhash(struct sock *sk);
- void sock_map_close(struct sock *sk, long timeout);
- #else
- static inline int sock_map_prog_update(struct bpf_map *map,
--				       struct bpf_prog *prog, u32 which)
-+				       struct bpf_prog *prog,
-+				       struct bpf_prog *old, u32 which)
- {
- 	return -EOPNOTSUPP;
- }
-@@ -1460,6 +1463,12 @@ static inline int sock_map_get_from_fd(c
- {
- 	return -EINVAL;
- }
-+
-+static inline int sock_map_prog_detach(const union bpf_attr *attr,
-+				       enum bpf_prog_type ptype)
-+{
-+	return -EOPNOTSUPP;
-+}
- #endif /* CONFIG_BPF_STREAM_PARSER */
- 
- #if defined(CONFIG_INET) && defined(CONFIG_BPF_SYSCALL)
---- a/include/linux/skmsg.h
-+++ b/include/linux/skmsg.h
-@@ -430,6 +430,19 @@ static inline void psock_set_prog(struct
- 		bpf_prog_put(prog);
- }
- 
-+static inline int psock_replace_prog(struct bpf_prog **pprog,
-+				     struct bpf_prog *prog,
-+				     struct bpf_prog *old)
-+{
-+	if (cmpxchg(pprog, old, prog) != old)
-+		return -ENOENT;
-+
-+	if (old)
-+		bpf_prog_put(old);
-+
-+	return 0;
-+}
-+
- static inline void psock_progs_drop(struct sk_psock_progs *progs)
- {
- 	psock_set_prog(&progs->msg_parser, NULL);
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -2695,7 +2695,7 @@ static int bpf_prog_detach(const union b
- 	switch (ptype) {
- 	case BPF_PROG_TYPE_SK_MSG:
- 	case BPF_PROG_TYPE_SK_SKB:
--		return sock_map_get_from_fd(attr, NULL);
-+		return sock_map_prog_detach(attr, ptype);
- 	case BPF_PROG_TYPE_LIRC_MODE2:
- 		return lirc_prog_detach(attr);
- 	case BPF_PROG_TYPE_FLOW_DISSECTOR:
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -77,7 +77,42 @@ int sock_map_get_from_fd(const union bpf
- 	map = __bpf_map_get(f);
- 	if (IS_ERR(map))
- 		return PTR_ERR(map);
--	ret = sock_map_prog_update(map, prog, attr->attach_type);
-+	ret = sock_map_prog_update(map, prog, NULL, attr->attach_type);
-+	fdput(f);
-+	return ret;
-+}
-+
-+int sock_map_prog_detach(const union bpf_attr *attr, enum bpf_prog_type ptype)
-+{
-+	u32 ufd = attr->target_fd;
-+	struct bpf_prog *prog;
-+	struct bpf_map *map;
-+	struct fd f;
-+	int ret;
-+
-+	if (attr->attach_flags || attr->replace_bpf_fd)
-+		return -EINVAL;
-+
-+	f = fdget(ufd);
-+	map = __bpf_map_get(f);
-+	if (IS_ERR(map))
-+		return PTR_ERR(map);
-+
-+	prog = bpf_prog_get(attr->attach_bpf_fd);
-+	if (IS_ERR(prog)) {
-+		ret = PTR_ERR(prog);
-+		goto put_map;
-+	}
-+
-+	if (prog->type != ptype) {
-+		ret = -EINVAL;
-+		goto put_prog;
-+	}
-+
-+	ret = sock_map_prog_update(map, NULL, prog, attr->attach_type);
-+put_prog:
-+	bpf_prog_put(prog);
-+put_map:
- 	fdput(f);
- 	return ret;
- }
-@@ -1192,27 +1227,32 @@ static struct sk_psock_progs *sock_map_p
- }
- 
- int sock_map_prog_update(struct bpf_map *map, struct bpf_prog *prog,
--			 u32 which)
-+			 struct bpf_prog *old, u32 which)
- {
- 	struct sk_psock_progs *progs = sock_map_progs(map);
-+	struct bpf_prog **pprog;
- 
- 	if (!progs)
- 		return -EOPNOTSUPP;
- 
- 	switch (which) {
- 	case BPF_SK_MSG_VERDICT:
--		psock_set_prog(&progs->msg_parser, prog);
-+		pprog = &progs->msg_parser;
- 		break;
- 	case BPF_SK_SKB_STREAM_PARSER:
--		psock_set_prog(&progs->skb_parser, prog);
-+		pprog = &progs->skb_parser;
- 		break;
- 	case BPF_SK_SKB_STREAM_VERDICT:
--		psock_set_prog(&progs->skb_verdict, prog);
-+		pprog = &progs->skb_verdict;
- 		break;
- 	default:
- 		return -EOPNOTSUPP;
- 	}
- 
-+	if (old)
-+		return psock_replace_prog(pprog, prog, old);
-+
-+	psock_set_prog(pprog, prog);
- 	return 0;
- }
- 
+ config INTEL_IOMMU_SVM
+ 	bool "Support for Shared Virtual Memory with Intel IOMMU"
+-	depends on INTEL_IOMMU && X86
++	depends on INTEL_IOMMU && X86_64
+ 	select PCI_PASID
+ 	select PCI_PRI
+ 	select MMU_NOTIFIER
 
 
