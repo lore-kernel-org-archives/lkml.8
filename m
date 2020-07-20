@@ -2,92 +2,94 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EDFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2A3322B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B325A207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595281039;
+	bh=z2IM2Mu9HSt9sLr6cNZQIScq87Wopxln51FoHO14OGA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=1BI3fUaD7Y4UNJDi6NCzNVOkgmz0pmfZnKASqywwMzP22Pk/cJMMVl/YvuaamtcZA
+	 c1h9zE5TBp2YI1LGXyNSk5pR9wlKtjUgoxI02ofNlMQlWQd+ZLQdPCoyWQHW4CLA7u
+	 eXNViyfE0AM4mfrbkUF/Baxk5EZwLpXUAgCo2npE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgGTVeH (ORCPT
+        id S1726848AbgGTVhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:34:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgGTVeH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:34:07 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 268FFC061794;
-        Mon, 20 Jul 2020 14:34:07 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 15524BC17C;
-        Mon, 20 Jul 2020 21:34:00 +0000 (UTC)
-Subject: Re: [PATCH for v5.9] RDS: Replace HTTP links with HTTPS ones
-To:     Leon Romanovsky <leon@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc:     santosh.shilimkar@oracle.com, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200719155845.59947-1-grandmaster@al2klimov.de>
- <20200720045626.GF127306@unreal> <20200720075848.26bc3dfe@lwn.net>
- <20200720140716.GB1080481@unreal> <20200720083635.3e7880ce@lwn.net>
- <20200720164827.GC1080481@unreal>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <c78d0958-c4ef-9754-c189-ffc507ca1340@al2klimov.de>
-Date:   Mon, 20 Jul 2020 23:34:00 +0200
+        Mon, 20 Jul 2020 17:37:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726428AbgGTVhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:37:18 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC6BE20717;
+        Mon, 20 Jul 2020 21:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595281037;
+        bh=z2IM2Mu9HSt9sLr6cNZQIScq87Wopxln51FoHO14OGA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qKt54JO7RICXcoaXzsmL5bCOMhysKkrdLvFoseZcZGYcBUQ5dzlHNxc6JLRnC33lv
+         c+XtViAT4Arpute8YDCGx2kE9CZiG50aO3lNZ0n12i841ltqvuawJ7aZe7abbn6gBr
+         Kmzr0o+osv5+oxk3ueIQA8UkueTgqkQbh8CAcQ+c=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Federico Ricchiuto <fed.ricchiuto@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 01/40] HID: i2c-hid: add Mediacom FlexBook edge13 to descriptor override
+Date:   Mon, 20 Jul 2020 17:36:36 -0400
+Message-Id: <20200720213715.406997-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200720164827.GC1080481@unreal>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Federico Ricchiuto <fed.ricchiuto@gmail.com>
 
+[ Upstream commit 43e666acb79f3d355dd89bf20f4d25d3b15da13e ]
 
-Am 20.07.20 um 18:48 schrieb Leon Romanovsky:
-> On Mon, Jul 20, 2020 at 08:36:35AM -0600, Jonathan Corbet wrote:
->> On Mon, 20 Jul 2020 17:07:16 +0300
->> Leon Romanovsky <leon@kernel.org> wrote:
->>
->>>> Do *you* want to review that megapatch?  The number of issues that have
-This question is... interesting.
-And no, I would not.
+The Mediacom FlexBook edge13 uses the SIPODEV SP1064 touchpad, which does not
+supply descriptors, so it has to be added to the override list.
 
->>>> come up make it clear that these patches do, indeed, need review...
->>>
->>> Can you point me to the issues?
->>> What can go wrong with such a simple replacement?
->>
->> Some bits of the conversation:
->>
->>    https://lore.kernel.org/lkml/20200626110219.7ae21265@lwn.net/
->>    https://lore.kernel.org/lkml/20200626110706.7b5d4a38@lwn.net/
->>    https://lore.kernel.org/lkml/20200705142506.1f26a7e0@lwn.net/
->>    https://lore.kernel.org/lkml/20200713114321.783f0ae6@lwn.net/
->>    https://lore.kernel.org/lkml/202007081531.085533FC5@keescook/
->>
->> etc.
-> 
-> After reading your links and especially this one.
-> https://lore.kernel.org/lkml/20200713114321.783f0ae6@lwn.net/
-> I don't understand why are we still seeing these patches?
-> 
-> I gave to the author comments too, which were ignored.
-> https://patchwork.kernel.org/patch/11644683/#23466547
-I've added SPDXing (the automated way of course ;) ) to my todo list.
+Signed-off-by: Federico Ricchiuto <fed.ricchiuto@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> 
-> Thanks
-> 
->>
->> jon
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+index ec142bc8c1daf..35f3bfc3e6f59 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -373,6 +373,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Mediacom FlexBook edge 13",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "MEDIACOM"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "FlexBook_edge13-M-FBE13"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{
+ 		.ident = "Odys Winbook 13",
+ 		.matches = {
+-- 
+2.25.1
+
