@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F0EC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5BFC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18D032064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE78D207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261557;
-	bh=kIm8M2uXcQTxSOK4OoPtGwErITq0mltCNsirn6XB47w=;
+	s=default; t=1595261564;
+	bh=HXHRPEM+2O9GHjTozQU7VR71qzBWUhWaAWutmC+upGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X5uWfFQWMPJCA3vPO4EhHuSnwjelOQpN1ddOGA4rQs3ddJavA6r9CuPgTwQFJxDIG
-	 q2XOCaIGaTGVqfo/wXAGt7QxrHSwW8isNrryS2DrBx5aUO2DdUdvsDZehhj4j9YDeh
-	 X9lnZT2OMV79VSbhLyBf9obBDcSRSqeyZvLb2aDQ=
+	b=ecwXrYpoBBV0xhi0FXbIBynEKAZyIgG4hHRiyVXjpbEwS6c6KNIf+zo4ZV+OWIrLi
+	 T+GBiLkjXvY5Rs1ADjWbyddFxCnlRIiFZo3hDD3z0W227ZaM7fVpJe/9ZgmTamYBGY
+	 ucGrg/MWs72Bq7aOmZZiNYU7bVYjLj1fhhjoaaNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387984AbgGTQMg (ORCPT
+        id S2388014AbgGTQMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:12:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52154 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:12:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387657AbgGTQMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:12:33 -0400
+        id S2388001AbgGTQMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:12:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D65E12064B;
-        Mon, 20 Jul 2020 16:12:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49DD820684;
+        Mon, 20 Jul 2020 16:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261553;
-        bh=kIm8M2uXcQTxSOK4OoPtGwErITq0mltCNsirn6XB47w=;
+        s=default; t=1595261558;
+        bh=HXHRPEM+2O9GHjTozQU7VR71qzBWUhWaAWutmC+upGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A0oUU33n7CQS/jZXfgOH4ngAOmkfQtH3C1NClBha5HvMk/j1XKofTc9P3Zg1p0+X8
-         pbt2aWc6HKII4y/HoCnwcGIuktwsKjKXxeqMQbZ+zncOHt5Mit7geWUeeXTztQDECH
-         wQ53EG1vLj9kbedSLPhcimju983GVlbJTDYWvQ48=
+        b=WPodvokDNXmZFfFS+5Gg2boIHOAQeARwLHgVF9IQQoOkE2RHcvU6EBpDLgGBG4R5x
+         Z+Eo9POPnwY7dfiE1CleClXFJAKCHCKjjzzhS9HP6d+voLBmki29CpfrKB86h/owYp
+         OeW87rQNHMO5065sQokGJpexEIBXXnWT3spCl0no=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 158/244] ALSA: hda/realtek - Enable Speaker for ASUS UX563
-Date:   Mon, 20 Jul 2020 17:37:09 +0200
-Message-Id: <20200720152833.360537673@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH 5.7 159/244] thunderbolt: Fix path indices used in USB3 tunnel discovery
+Date:   Mon, 20 Jul 2020 17:37:10 +0200
+Message-Id: <20200720152833.408539876@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,33 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit 158ae2f5e6fead30be1f0c203037f5556871513b upstream.
+commit 8b94a4b92327d061327117e127d7d44a4a43e639 upstream.
 
-ASUS UX563 speaker can't output.
-Add quirk to link suitable model will enable it.
-This model also could enable headset Mic.
+The USB3 discovery used wrong indices when tunnel is discovered. It
+should use TB_USB3_PATH_DOWN for path that flows downstream and
+TB_USB3_PATH_UP when it flows upstream. This should not affect the
+functionality but better to fix it.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/96dee3ab01a04c28a7b44061e88009dd@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: e6f818585713 ("thunderbolt: Add support for USB 3.x tunnels")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: stable@vger.kernel.org # v5.6+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/thunderbolt/tunnel.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7516,6 +7516,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_DUAL_SPK),
- 	SND_PCI_QUIRK(0x1043, 0x18b1, "Asus MJ401TA", ALC256_FIXUP_ASUS_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x18f1, "Asus FX505DT", ALC256_FIXUP_ASUS_HEADSET_MIC),
-+	SND_PCI_QUIRK(0x1043, 0x194e, "ASUS UX563FD", ALC294_FIXUP_ASUS_HPE),
- 	SND_PCI_QUIRK(0x1043, 0x19ce, "ASUS B9450FA", ALC294_FIXUP_ASUS_HPE),
- 	SND_PCI_QUIRK(0x1043, 0x19e1, "ASUS UX581LV", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
+--- a/drivers/thunderbolt/tunnel.c
++++ b/drivers/thunderbolt/tunnel.c
+@@ -913,21 +913,21 @@ struct tb_tunnel *tb_tunnel_discover_usb
+ 	 * case.
+ 	 */
+ 	path = tb_path_discover(down, TB_USB3_HOPID, NULL, -1,
+-				&tunnel->dst_port, "USB3 Up");
++				&tunnel->dst_port, "USB3 Down");
+ 	if (!path) {
+ 		/* Just disable the downstream port */
+ 		tb_usb3_port_enable(down, false);
+ 		goto err_free;
+ 	}
+-	tunnel->paths[TB_USB3_PATH_UP] = path;
+-	tb_usb3_init_path(tunnel->paths[TB_USB3_PATH_UP]);
++	tunnel->paths[TB_USB3_PATH_DOWN] = path;
++	tb_usb3_init_path(tunnel->paths[TB_USB3_PATH_DOWN]);
+ 
+ 	path = tb_path_discover(tunnel->dst_port, -1, down, TB_USB3_HOPID, NULL,
+-				"USB3 Down");
++				"USB3 Up");
+ 	if (!path)
+ 		goto err_deactivate;
+-	tunnel->paths[TB_USB3_PATH_DOWN] = path;
+-	tb_usb3_init_path(tunnel->paths[TB_USB3_PATH_DOWN]);
++	tunnel->paths[TB_USB3_PATH_UP] = path;
++	tb_usb3_init_path(tunnel->paths[TB_USB3_PATH_UP]);
+ 
+ 	/* Validate that the tunnel is complete */
+ 	if (!tb_port_is_usb3_up(tunnel->dst_port)) {
 
 
