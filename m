@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA94C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4791C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D95F22D01
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90CBC206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260302;
-	bh=pLDhxL1vpW9E+oXa6UU8ULeH/Hi5NCphae2pawZ0t4Y=;
+	s=default; t=1595260305;
+	bh=PxcjmdLAieDHzQe830IT3vOxzVri0M4S4qCgYzYFp9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ludv17erpm99cZJsmwrslAJjLtqO3xEg8cjlNyV2R9UWCFxUlEiiyNYkM7KZ1yiXO
-	 NTaRALuthnU0PS5ACv00LIKgTBaFt1JUbtYDE77OhLvVAIW5wgcDWRM1ow4Mwm8s8w
-	 /Vo9++6QilFDMLkwFTiWmLqeOka54/YIAgap4QY8=
+	b=2VrsfNz4bJDk1evSraj93Od/3LAZNzLg63dJ5G+wW2ux7pLI8ket/zHycCgRs/RGt
+	 uM5UiYfZmohYQfhz6hRo6XHZjAul/GAMds+5yZn8wiu3/W25f85wwl0J8rjhOCEDyN
+	 D/xEg0Lo89QPHsTkNnRwXN/s9bntopGxHx/oSgSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730283AbgGTPvl (ORCPT
+        id S1731268AbgGTPvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:51:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48646 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:51:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730521AbgGTPvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:51:37 -0400
+        id S1731264AbgGTPvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:51:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B9DC2065E;
-        Mon, 20 Jul 2020 15:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F34322CE3;
+        Mon, 20 Jul 2020 15:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260297;
-        bh=pLDhxL1vpW9E+oXa6UU8ULeH/Hi5NCphae2pawZ0t4Y=;
+        s=default; t=1595260299;
+        bh=PxcjmdLAieDHzQe830IT3vOxzVri0M4S4qCgYzYFp9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yBvHVxSMw1o4C7IdKjrwP2jEUUc2oHSJuGvht4tQlw7LpIj1r6WATMe6mnrA8l+TR
-         kYhixGmEeUOdK0V7NPIwoD9JGGaUWXS0qdSLkCUsdXeT0FI/11wviLukfFTgCSrJir
-         Q3K3P9W0OahERT6QH4YkZbTYLUoKZ1B1eqCxeLgU=
+        b=OkZIpsyVwP7oiuE5+D0X988sh9yiKuAIB7HNQk4WLT0iyZ37Oy94pFSq7KMFGaNxx
+         AzqP+Rr4SpS0CvKiKdZmkBNZb1pTxok/ki2Ex4+7hYDzQ68wufmQ28bd7cV97ZsTGs
+         139kPGmrZXkEhxPKqJ/MSzuVO50j3ldZcEdVPRPU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haibo Chen <haibo.chen@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 051/133] mmc: sdhci: do not enable card detect interrupt for gpio cd type
-Date:   Mon, 20 Jul 2020 17:36:38 +0200
-Message-Id: <20200720152806.182401657@linuxfoundation.org>
+Subject: [PATCH 4.19 052/133] ALSA: usb-audio: Rewrite registration quirk handling
+Date:   Mon, 20 Jul 2020 17:36:39 +0200
+Message-Id: <20200720152806.227067518@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -62,40 +59,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haibo Chen <haibo.chen@nxp.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit e65bb38824711559844ba932132f417bc5a355e2 ]
+[ Upstream commit d8695bc5b1fe88305396b1f788d3b5f218e28a30 ]
 
-Except SDHCI_QUIRK_BROKEN_CARD_DETECTION and MMC_CAP_NONREMOVABLE,
-we also do not need to handle controller native card detect interrupt
-for gpio cd type.
-If we wrong enabled the card detect interrupt for gpio case, it will
-cause a lot of unexpected card detect interrupts during data transfer
-which should not happen.
+A slight refactoring of the registration quirk code.  Now it uses the
+table lookup for easy additions in future.  Also the return type was
+changed to bool, and got a few more comments.
 
-Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/1582100563-20555-2-git-send-email-haibo.chen@nxp.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/r/20200325103322.2508-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/card.c   |  2 +-
+ sound/usb/quirks.c | 40 ++++++++++++++++++++++++++++++----------
+ sound/usb/quirks.h |  3 +--
+ 3 files changed, 32 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 5a7fd89a8f2b1..499a3d2a8e315 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -133,7 +133,7 @@ static void sdhci_set_card_detection(struct sdhci_host *host, bool enable)
- 	u32 present;
+diff --git a/sound/usb/card.c b/sound/usb/card.c
+index 6615734d29911..ba096cb4a53e4 100644
+--- a/sound/usb/card.c
++++ b/sound/usb/card.c
+@@ -671,7 +671,7 @@ static int usb_audio_probe(struct usb_interface *intf,
+ 	/* we are allowed to call snd_card_register() many times, but first
+ 	 * check to see if a device needs to skip it or do anything special
+ 	 */
+-	if (snd_usb_registration_quirk(chip, ifnum) == 0) {
++	if (!snd_usb_registration_quirk(chip, ifnum)) {
+ 		err = snd_card_register(chip->card);
+ 		if (err < 0)
+ 			goto __error;
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index a95fbdbfbd05f..79c3787ad8fd8 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1509,16 +1509,36 @@ void snd_usb_audioformat_attributes_quirk(struct snd_usb_audio *chip,
+ 	}
+ }
  
- 	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
--	    !mmc_card_is_removable(host->mmc))
-+	    !mmc_card_is_removable(host->mmc) || mmc_can_gpio_cd(host->mmc))
- 		return;
+-int snd_usb_registration_quirk(struct snd_usb_audio *chip,
+-			       int iface)
++/*
++ * registration quirk:
++ * the registration is skipped if a device matches with the given ID,
++ * unless the interface reaches to the defined one.  This is for delaying
++ * the registration until the last known interface, so that the card and
++ * devices appear at the same time.
++ */
++
++struct registration_quirk {
++	unsigned int usb_id;	/* composed via USB_ID() */
++	unsigned int interface;	/* the interface to trigger register */
++};
++
++#define REG_QUIRK_ENTRY(vendor, product, iface) \
++	{ .usb_id = USB_ID(vendor, product), .interface = (iface) }
++
++static const struct registration_quirk registration_quirks[] = {
++	REG_QUIRK_ENTRY(0x0951, 0x16d8, 2),	/* Kingston HyperX AMP */
++	{ 0 }					/* terminator */
++};
++
++/* return true if skipping registration */
++bool snd_usb_registration_quirk(struct snd_usb_audio *chip, int iface)
+ {
+-	switch (chip->usb_id) {
+-	case USB_ID(0x0951, 0x16d8): /* Kingston HyperX AMP */
+-		/* Register only when we reach interface 2 so that streams can
+-		 * merge correctly into PCMs from interface 0
+-		 */
+-		return (iface != 2);
+-	}
++	const struct registration_quirk *q;
++
++	for (q = registration_quirks; q->usb_id; q++)
++		if (chip->usb_id == q->usb_id)
++			return iface != q->interface;
++
+ 	/* Register as normal */
+-	return 0;
++	return false;
+ }
+diff --git a/sound/usb/quirks.h b/sound/usb/quirks.h
+index dc02c9d80e991..1efa6c968532f 100644
+--- a/sound/usb/quirks.h
++++ b/sound/usb/quirks.h
+@@ -46,7 +46,6 @@ void snd_usb_audioformat_attributes_quirk(struct snd_usb_audio *chip,
+ 					  struct audioformat *fp,
+ 					  int stream);
  
- 	if (enable) {
+-int snd_usb_registration_quirk(struct snd_usb_audio *chip,
+-			       int iface);
++bool snd_usb_registration_quirk(struct snd_usb_audio *chip, int iface);
+ 
+ #endif /* __USBAUDIO_QUIRKS_H */
 -- 
 2.25.1
 
