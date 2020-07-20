@@ -2,88 +2,92 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D16BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674FDC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18C3822BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:46:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eXsM1TqX"
+	by mail.kernel.org (Postfix) with ESMTP id 4E1E722C9C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgGTNqr (ORCPT
+        id S1728050AbgGTNqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:46:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgGTNqr (ORCPT
+        Mon, 20 Jul 2020 09:46:53 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:14326 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725792AbgGTNqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 09:46:52 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KDgkiF024488;
+        Mon, 20 Jul 2020 09:46:51 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32bx03y1mk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 09:46:51 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 06KDkofh047422
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 20 Jul 2020 09:46:50 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Mon, 20 Jul
+ 2020 09:46:49 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 20 Jul 2020 09:46:48 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06KDklKW003129;
         Mon, 20 Jul 2020 09:46:47 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02947C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 06:46:46 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h22so20295599lji.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 06:46:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8qtN5L8/xZpkQuUDdQgpDbwS59vLxj0mGpt2DoBoy94=;
-        b=eXsM1TqXMP0+Ycllxnt287iVoc4UP/VmkbTLyen6E3H8sTZIqd9z05gN/mMJfdmKmk
-         BoJo8MyzlEYp7ARXgkpltQj640PDZyIDVmJw8pr5I0qCjR5l4sA3Zs+PRacBBLXeWwSI
-         P/+0oQIeqpm3sV+uW1mN67zbkry7xF0VlZgjis++Euub9b1vv95MLRcvI5OCWJ4QlQCb
-         SuRNmhUdtMlzKM0Nmoz9Hv5kpvsp2YDTORZGw+lWD9umaFAaMgicUR+ONXSdsGOfBxzz
-         1rNvJhmUA1bS+pr1aejUW00ivh6s7iEjEE6htmYQ7BUmzXFlo5mlJrh17Ymq50aOh1Ap
-         0zsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8qtN5L8/xZpkQuUDdQgpDbwS59vLxj0mGpt2DoBoy94=;
-        b=HSHwcBgrkyKkZdW3MvfvMtspzdz9U5KAH1zAmhSoIHpDoSi1JVqbz51tRuQA7RXdtb
-         hpLjNknJ/Q6WFP6AcbrIdKkKc1jgS6VfFJcJVUhBBN7lhn9A0N6XzkP42xr/Erdl8wLf
-         pwHw+jwyUGi7MmZ4wUWj+f/vfyEypuPRZ1yoneOnic0pd5eBoTjskgWDAl/WSc8qFFIv
-         q0ygVYkcNNaYtSShHUCNRl9bX5XFt1cXIH05/TTd0RDsK7+h4WbLdjSOeR1SgexKT35Z
-         uXGuJ88i6ULlVbxDdRtC3sd9VR1HQx4bOBGfQENJ+10rgPJ0W/R9OWgK0ThGAAGKY08e
-         mrmg==
-X-Gm-Message-State: AOAM533tLlt8D2isbgxw6vNl38KDiIKRK7M8boSuHakuqOTzX/tVCR4j
-        rdeGJ4Qit41WEPkQdsl+0GEZkd95qlZd5havDjcd2GbQ1Ss=
-X-Google-Smtp-Source: ABdhPJzRSIGPw4xCiw8wIgSx2BFb3C3mWivZPGkHLMXSE3njtM+f1mImRq6NBxxseL7B9Y8eFbRc4USvjpMyv+bDbIo=
-X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr9943001ljc.104.1595252805400;
- Mon, 20 Jul 2020 06:46:45 -0700 (PDT)
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: adxl372: change indentation for of_table
+Date:   Mon, 20 Jul 2020 16:48:39 +0300
+Message-ID: <20200720134839.71124-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200717014908.13914-1-jay.xu@rock-chips.com> <20200717014908.13914-2-jay.xu@rock-chips.com>
-In-Reply-To: <20200717014908.13914-2-jay.xu@rock-chips.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 20 Jul 2020 15:46:34 +0200
-Message-ID: <CACRpkdYyZ3GHYo0vB-1UpW+EtiTXgeRuOhOuB0XxUNXN11N9-w@mail.gmail.com>
-Subject: Re: [PATCH 01/13] pinctrl: rockchip: add nr_pins to rockchip_pin_ctrl
-To:     Jianqun Xu <jay.xu@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        David Wu <david.wu@rock-chips.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 suspectscore=0 clxscore=1015 spamscore=0
+ phishscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 3:49 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
+The change is mostly stylistic. The table should be indented with tabs
+instead of spaces.
 
-> Add nr_pins to rockchip_pin_ctrl by hand, instead of calculating during
-> driver probe. This patch is prepare work for making rockchip_pin_ctrl to
-> be const type.
->
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/accel/adxl372_spi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I'm letting Heiko review this series, to me it looks all right.
+diff --git a/drivers/iio/accel/adxl372_spi.c b/drivers/iio/accel/adxl372_spi.c
+index 3ef7e3a4804e..7741890674c1 100644
+--- a/drivers/iio/accel/adxl372_spi.c
++++ b/drivers/iio/accel/adxl372_spi.c
+@@ -40,8 +40,8 @@ static const struct spi_device_id adxl372_spi_id[] = {
+ MODULE_DEVICE_TABLE(spi, adxl372_spi_id);
+ 
+ static const struct of_device_id adxl372_of_match[] = {
+-        { .compatible = "adi,adxl372" },
+-        { },
++	{ .compatible = "adi,adxl372" },
++	{ },
+ };
+ MODULE_DEVICE_TABLE(of, adxl372_of_match);
+ 
+-- 
+2.17.1
 
-Yours,
-Linus Walleij
