@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D890C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 227A8C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 019D82073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AAA2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262236;
-	bh=AafClQ3XCULb3Pi+0Rkj4mf/rKWsLAfTk+Fa6ONzUOU=;
+	s=default; t=1595262241;
+	bh=brtp9yHjy3ziQVxTsjjgYfS8uVlOTxN4qyMt/fPozVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jn9wTnuNiFFgViho0vu8llWqUWmlY2nr4BW4Az+8rN0W645qKAxb0lvGnRORC4TQn
-	 Jm6U5wSf65tA6MlpvMgY5MDVDcbkLAS7cLVZkPgdjk3a7h2yUXM2Ajpe5GQW/MOQ14
-	 t272Su800YG81zBCHDWia17mJjyoF+oiB5rai0w4=
+	b=X1L2zsywKVBFuGeNtl+fW9zALTDWEpnL75BSOunKO+Bddh1Jp+evuLTFY+mZ8bIna
+	 78dNgL/hsqcuWce19qMCGGFBtgYGYy0uYOcJximusuB2uNkIRFObIbSitMiXkvdr5h
+	 XjLLoHENswk7KG187UamSASkaCadRle4q3IOkEzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388551AbgGTQXy (ORCPT
+        id S1732845AbgGTQEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:23:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39700 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:04:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732869AbgGTQEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:04:40 -0400
+        id S1732834AbgGTQEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:04:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D36CF2064B;
-        Mon, 20 Jul 2020 16:04:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4292A2064B;
+        Mon, 20 Jul 2020 16:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261079;
-        bh=AafClQ3XCULb3Pi+0Rkj4mf/rKWsLAfTk+Fa6ONzUOU=;
+        s=default; t=1595261062;
+        bh=brtp9yHjy3ziQVxTsjjgYfS8uVlOTxN4qyMt/fPozVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wHSM4RHc+P4bzKu9fLe81YhDSL91gImn6LV6CcV/1w52SBJc1bUF0CdbL/oqAwJD0
-         WqcPW/fhPgEF+7j54ZyzXnuoxkicThWFbMlJZocxMnEAdwFKWtwgim4yR76irkbKO7
-         eScScjf/IIiAVw1eoqWTL+guYyo3hIF6HxKZnCLw=
+        b=DOrIA4Z6uEULndJDGR7KYV+ajywV9gZUXslF3OMucS+5kzXyxVFrvFLX0rE+v7zvB
+         GeuyIlp6u9I9FWCHB77V8em2M8Ih2EvwpfIpzcxV7+U6GFbIQIDFXmDvINATybiY8m
+         OMrTybk/fvKFK9LCw3Cyb/lEqdl9nfHrzemluYSI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.4 171/215] ovl: relax WARN_ON() when decoding lower directory file handle
-Date:   Mon, 20 Jul 2020 17:37:33 +0200
-Message-Id: <20200720152828.308224453@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.4 194/215] dmaengine: mcf-edma: Fix NULL pointer exception in mcf_edma_tx_handler
+Date:   Mon, 20 Jul 2020 17:37:56 +0200
+Message-Id: <20200720152829.412085710@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,65 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit 124c2de2c0aee96271e4ddab190083d8aa7aa71a upstream.
+commit 8995aa3d164ddd9200e6abcf25c449cf5298c858 upstream.
 
-Decoding a lower directory file handle to overlay path with cold
-inode/dentry cache may go as follows:
+On Toradex Colibri VF50 (Vybrid VF5xx) with fsl-edma driver NULL pointer
+exception happens occasionally on serial output initiated by login
+timeout.
 
-1. Decode real lower file handle to lower dir path
-2. Check if lower dir is indexed (was copied up)
-3. If indexed, get the upper dir path from index
-4. Lookup upper dir path in overlay
-5. If overlay path found, verify that overlay lower is the lower dir
-   from step 1
+This was reproduced only if kernel was built with significant debugging
+options and EDMA driver is used with serial console.
 
-On failure to verify step 5 above, user will get an ESTALE error and a
-WARN_ON will be printed.
+Issue looks like a race condition between interrupt handler
+fsl_edma_tx_handler() (called as a result of fsl_edma_xfer_desc()) and
+terminating the transfer with fsl_edma_terminate_all().
 
-A mismatch in step 5 could be a result of lower directory that was renamed
-while overlay was offline, after that lower directory has been copied up
-and indexed.
+The fsl_edma_tx_handler() handles interrupt for a transfer with already
+freed edesc and idle==true.
 
-This is a scripted reproducer based on xfstest overlay/052:
+The mcf-edma driver shares design and lot of code with fsl-edma.  It
+looks like being affected by same problem.  Fix this pattern the same
+way as fix for fsl-edma driver.
 
-  # Create lower subdir
-  create_dirs
-  create_test_files $lower/lowertestdir/subdir
-  mount_dirs
-  # Copy up lower dir and encode lower subdir file handle
-  touch $SCRATCH_MNT/lowertestdir
-  test_file_handles $SCRATCH_MNT/lowertestdir/subdir -p -o $tmp.fhandle
-  # Rename lower dir offline
-  unmount_dirs
-  mv $lower/lowertestdir $lower/lowertestdir.new/
-  mount_dirs
-  # Attempt to decode lower subdir file handle
-  test_file_handles $SCRATCH_MNT -p -i $tmp.fhandle
-
-Since this WARN_ON() can be triggered by user we need to relax it.
-
-Fixes: 4b91c30a5a19 ("ovl: lookup connected ancestor of dir in inode cache")
-Cc: <stable@vger.kernel.org> # v4.16+
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: e7a3ff92eaf1 ("dmaengine: fsl-edma: add ColdFire mcf5441x edma support")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+Link: https://lore.kernel.org/r/1591881665-25592-1-git-send-email-krzk@kernel.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/overlayfs/export.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/mcf-edma.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/fs/overlayfs/export.c
-+++ b/fs/overlayfs/export.c
-@@ -482,7 +482,7 @@ static struct dentry *ovl_lookup_real_in
- 	if (IS_ERR_OR_NULL(this))
- 		return this;
+--- a/drivers/dma/mcf-edma.c
++++ b/drivers/dma/mcf-edma.c
+@@ -35,6 +35,13 @@ static irqreturn_t mcf_edma_tx_handler(i
+ 			mcf_chan = &mcf_edma->chans[ch];
  
--	if (WARN_ON(ovl_dentry_real_at(this, layer->idx) != real)) {
-+	if (ovl_dentry_real_at(this, layer->idx) != real) {
- 		dput(this);
- 		this = ERR_PTR(-EIO);
- 	}
+ 			spin_lock(&mcf_chan->vchan.lock);
++
++			if (!mcf_chan->edesc) {
++				/* terminate_all called before */
++				spin_unlock(&mcf_chan->vchan.lock);
++				continue;
++			}
++
+ 			if (!mcf_chan->edesc->iscyclic) {
+ 				list_del(&mcf_chan->edesc->vdesc.node);
+ 				vchan_cookie_complete(&mcf_chan->edesc->vdesc);
 
 
