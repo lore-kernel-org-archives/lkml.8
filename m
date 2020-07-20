@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645BBC433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00E8C433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 437ED20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756D22064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261829;
-	bh=1P/lOpBfA6OD5FzelCYjXb9v1tWEcxHKO/CA64aHoI8=;
+	s=default; t=1595261836;
+	bh=30CXrEdiYVz1AylAF1x57ZnlAb8SkFQ3PCeoPQOpcKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VbmarZNEX/Yj4HM7FqPT+9qSsQnKqVC3J5V999izm28tTgVQMa91h9NomlxNPPfpS
-	 wj/Exm41bMR6sP+oRqLLfrcNL3Xy62NYQeDWOna5EBbpugQz3qWMazphIPJyVb4ImY
-	 GKQaWXX7+TnUrkJ7kQgT2mxptN/zCorjn2SHzdSE=
+	b=QodLVsp+KhOGrnzkbpe2HNN2N3Vnlwx4aJfC1hN1YEkAARIvUCedzYOadol3Fb1pY
+	 quTxLMlUklJHfKy0yCVuziJU03kSD6g5DqgGb75cJMxRgT5ZLuGSu0c0R2ISXETbiy
+	 ZUkRrsnzIiNWacjZOpS9mlWwkai6eSFKWomLU9Bs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388568AbgGTQQf (ORCPT
+        id S2388234AbgGTQRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:16:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57808 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:17:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388535AbgGTQQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:16:32 -0400
+        id S2388143AbgGTQQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:16:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F98E2064B;
-        Mon, 20 Jul 2020 16:16:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB2D42176B;
+        Mon, 20 Jul 2020 16:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261791;
-        bh=1P/lOpBfA6OD5FzelCYjXb9v1tWEcxHKO/CA64aHoI8=;
+        s=default; t=1595261786;
+        bh=30CXrEdiYVz1AylAF1x57ZnlAb8SkFQ3PCeoPQOpcKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ktk3HLjHi5WciXVLuQAS0MTC+LrPCvey2E0EB0wdQBKBSgvvjNeaWH51zMOXOpbOm
-         hZZ5Ag0zsmCNG7TuLK7ZzLyG38B5AxMmt9Uj6uSepmKaG/ndq18KLYp4JfEZEBrUF0
-         aLmUiRLMW0tU/VzLtVA1Uq+oBgZe8va7tNbpHeDQ=
+        b=BNr274B41mELVgCk4w9Diw3SSkSIP4ZWm+t/SHtgm/XOQCouF0We/etZdlMogXEf9
+         yPLM6w/uDy+dQ0rbHF3q9XpJV1IQmqIVyG4NNVjLyjtJmXxSj2Q0oJdhkqMJtEMhoc
+         1zdVQRk9eJiRjpQ7lXVh1jgk5gNqgINsrE6tRwNE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCH 5.7 213/244] arm64: dts: agilex: add status to qspi dts node
-Date:   Mon, 20 Jul 2020 17:38:04 +0200
-Message-Id: <20200720152835.981202493@linuxfoundation.org>
+        stable@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Alex Hung <alex.hung@canonical.com>
+Subject: [PATCH 5.7 211/244] thermal: int3403_thermal: Downgrade error message
+Date:   Mon, 20 Jul 2020 17:38:02 +0200
+Message-Id: <20200720152835.889846161@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -58,30 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@kernel.org>
+From: Alex Hung <alex.hung@canonical.com>
 
-commit 60176e6be0bb6f629b15aea7dcab5a95ecb158e9 upstream.
+commit f3d7fb38976b1b0a8462ba1c7cbd404ddfaad086 upstream.
 
-Add status = "okay" to QSPI node.
+Downgrade "Unsupported event" message from dev_err to dev_dbg to avoid
+flooding with this message on some platforms.
 
-Fixes: c4c8757b2d895 ("arm64: dts: agilex: add QSPI support for Intel Agilex")
-Cc: linux-stable <stable@vger.kernel.org> # >= v5.5
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+Cc: stable@vger.kernel.org # v5.4+
+Suggested-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
+[ rzhang: fix typo in changelog ]
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Link: https://lore.kernel.org/r/20200615223957.183153-1-alex.hung@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/thermal/intel/int340x_thermal/int3403_thermal.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
-@@ -98,6 +98,7 @@
- };
- 
- &qspi {
-+	status = "okay";
- 	flash@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+--- a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
++++ b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+@@ -74,7 +74,7 @@ static void int3403_notify(acpi_handle h
+ 						   THERMAL_TRIP_CHANGED);
+ 		break;
+ 	default:
+-		dev_err(&priv->pdev->dev, "Unsupported event [0x%x]\n", event);
++		dev_dbg(&priv->pdev->dev, "Unsupported event [0x%x]\n", event);
+ 		break;
+ 	}
+ }
 
 
