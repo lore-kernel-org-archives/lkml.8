@@ -2,52 +2,53 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6907C4345A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426AAC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B245C2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DFE82070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262667;
-	bh=faaFtAwdn5ulgFqYuEGAZuBize4Fl3s5R+QYmSR16Ts=;
+	s=default; t=1595262671;
+	bh=1CVY6Ixyfc3N1iXZi/C5GQOuWmGjDONCEAmLWXAlKvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ukRpqFi1nuFMg/Cc59BALjH16SkUJoaO1V5BsDUmf84RrXJtsCp27DbvI++Zf3ihE
-	 Tsib/cLnroc8rqg9PZ3PMXNNSqXLWLmlV2Mx949fAcSZvDG4xXsHro1UxYBf2D8fNp
-	 ykdLkFOa0pnKFB++O9W/mxDGMczP0ak3/VV513QE=
+	b=EeW0q7UWgBKarTsZq6BWuEdisbes4+9QKxVTvywbeAI5LLDHR0pHvAQ82OCDhFN6H
+	 KPA8j8I8TtEc2Bwb2D7M2S7apFnc9n5bShfzQFZlWF6g6ODtpQF2KtIANLaNIuCeCQ
+	 Z7xBENLnZser5feDysZ0HAu66/63dYv1FEDKVE3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731918AbgGTP5a (ORCPT
+        id S2388807AbgGTQbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:57:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57332 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:31:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731669AbgGTP51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:57:27 -0400
+        id S1729978AbgGTP5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:57:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27E2D20734;
-        Mon, 20 Jul 2020 15:57:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0D8E20773;
+        Mon, 20 Jul 2020 15:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260646;
-        bh=faaFtAwdn5ulgFqYuEGAZuBize4Fl3s5R+QYmSR16Ts=;
+        s=default; t=1595260652;
+        bh=1CVY6Ixyfc3N1iXZi/C5GQOuWmGjDONCEAmLWXAlKvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o2VuWyjIqEzGRvYniSVzMjmd3AwWRUwIcQ9SpbqfcguLtjjnORA1b+vj7HMFkLT+B
-         AdOi+s6qEuh21E56XejQGf2+6L7fm9VB82V8fZlCsnTLzZAGj9SJKNgwGOfJ9N3l0X
-         gNMxEq8y8WAQXRrzW1Y5q1MxUl4srNN2Q49vP8xg=
+        b=Gw88Awx5jr0H174cEFTYblMstGnsV1k6/I93kaaUSBkQ9LRfQC66IaizbYkB6wC9X
+         n+PzflibWfx84koX/UaK9mPqII5FeES1oKdUfwCj6fBFaC8smi/KnYR/+i5xM4uTqm
+         JMaR2XRcpSSLsraUbM9WD0KVDT26nEN5+3dARDmw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 044/215] i2c: eg20t: Load module automatically if ID matches
-Date:   Mon, 20 Jul 2020 17:35:26 +0200
-Message-Id: <20200720152822.289970970@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Stable@vger.kernel.org
+Subject: [PATCH 5.4 046/215] iio:magnetometer:ak8974: Fix alignment and data leak issues
+Date:   Mon, 20 Jul 2020 17:35:28 +0200
+Message-Id: <20200720152822.389114777@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -60,35 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-[ Upstream commit 5f90786b31fb7d1e199a8999d46c4e3aea672e11 ]
+commit 838e00b13bfd4cac8b24df25bfc58e2eb99bcc70 upstream.
 
-The driver can't be loaded automatically because it misses
-module alias to be provided. Add corresponding MODULE_DEVICE_TABLE()
-call to the driver.
+One of a class of bugs pointed out by Lars in a recent review.
+iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
+to the size of the timestamp (8 bytes).  This is not guaranteed in
+this driver which uses an array of smaller elements on the stack.
+As Lars also noted this anti pattern can involve a leak of data to
+userspace and that indeed can happen here.  We close both issues by
+moving to a suitable structure in the iio_priv() data.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This data is allocated with kzalloc so no data can leak appart from
+previous readings.
+
+Fixes: 7c94a8b2ee8cf ("iio: magn: add a driver for AK8974")
+Reported-by: Lars-Peter Clausen <lars@metafoo.de>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/i2c/busses/i2c-eg20t.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/magnetometer/ak8974.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
-index bb810dee8fb5e..73f139690e4e5 100644
---- a/drivers/i2c/busses/i2c-eg20t.c
-+++ b/drivers/i2c/busses/i2c-eg20t.c
-@@ -180,6 +180,7 @@ static const struct pci_device_id pch_pcidev_id[] = {
- 	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_I2C), 1, },
- 	{0,}
+--- a/drivers/iio/magnetometer/ak8974.c
++++ b/drivers/iio/magnetometer/ak8974.c
+@@ -185,6 +185,11 @@ struct ak8974 {
+ 	bool drdy_irq;
+ 	struct completion drdy_complete;
+ 	bool drdy_active_low;
++	/* Ensure timestamp is naturally aligned */
++	struct {
++		__le16 channels[3];
++		s64 ts __aligned(8);
++	} scan;
  };
-+MODULE_DEVICE_TABLE(pci, pch_pcidev_id);
  
- static irqreturn_t pch_i2c_handler(int irq, void *pData);
+ static const char ak8974_reg_avdd[] = "avdd";
+@@ -581,7 +586,6 @@ static void ak8974_fill_buffer(struct ii
+ {
+ 	struct ak8974 *ak8974 = iio_priv(indio_dev);
+ 	int ret;
+-	__le16 hw_values[8]; /* Three axes + 64bit padding */
  
--- 
-2.25.1
-
+ 	pm_runtime_get_sync(&ak8974->i2c->dev);
+ 	mutex_lock(&ak8974->lock);
+@@ -591,13 +595,13 @@ static void ak8974_fill_buffer(struct ii
+ 		dev_err(&ak8974->i2c->dev, "error triggering measure\n");
+ 		goto out_unlock;
+ 	}
+-	ret = ak8974_getresult(ak8974, hw_values);
++	ret = ak8974_getresult(ak8974, ak8974->scan.channels);
+ 	if (ret) {
+ 		dev_err(&ak8974->i2c->dev, "error getting measures\n");
+ 		goto out_unlock;
+ 	}
+ 
+-	iio_push_to_buffers_with_timestamp(indio_dev, hw_values,
++	iio_push_to_buffers_with_timestamp(indio_dev, &ak8974->scan,
+ 					   iio_get_time_ns(indio_dev));
+ 
+  out_unlock:
 
 
