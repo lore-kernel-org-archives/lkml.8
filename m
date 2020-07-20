@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE91C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86479C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3A52065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4872064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260115;
-	bh=uUIeuthN7YjPK+Imy+UK5gSEQoybZoUj3NYqZ0gBz7g=;
+	s=default; t=1595260119;
+	bh=eIg5zlpARQ0ncoOVYVLpaBxwWN3Nt8ngvgaUr4OFHAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=swogRgBeLfjtt0tPzaEI+XuQ+iRtNVHF7jC2SVMeVzplunft8mRtpZ66pNBrUYCsV
-	 JalDCuLxU33ubDUzlBjkqL3PU2uWfxriurMaOiieP4qxvViS+m0CpQlu+deUMC9VJm
-	 I506Ihg0n2X5HWZMZH8jL7/lJa965h6O4W8j3z1A=
+	b=hVUNiGWVFxFtK2xyRAdjKaW3yd46CKKEbYTpB4k4ciakfElTCvgdncUAdYr4f6HkF
+	 jgR9mDRg6XQbDGr3RZcRJvlR4mqH6VccVZn7X9m/XTXs8+cj79QUn9Uhcr9sxIxWuS
+	 O0pHMOILSmjNeKJstZ0fI+N8lm5P9FnicBk2iBiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730903AbgGTPse (ORCPT
+        id S1729091AbgGTPsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:48:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44204 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbgGTPsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:48:32 -0400
+        id S1730490AbgGTPsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:48:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 304042064B;
-        Mon, 20 Jul 2020 15:48:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E67D02064B;
+        Mon, 20 Jul 2020 15:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260111;
-        bh=uUIeuthN7YjPK+Imy+UK5gSEQoybZoUj3NYqZ0gBz7g=;
+        s=default; t=1595260114;
+        bh=eIg5zlpARQ0ncoOVYVLpaBxwWN3Nt8ngvgaUr4OFHAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BYUb80FNP88ta7s/Jsp5rjdVqA44ULRq/uOcKDLYpCOQDBbklFILgon0DqV+4b+fl
-         E11knVCoFxWVh6pg8GWFXBfpMesIOc42ie0HnSge4MxXAP90dbVvyJ4Gqk0FoXkc6S
-         Wg/hJXZVmFALrCloMBLK9hczVqZsppmytU1JBEes=
+        b=uhklUwDIfq3JkxRp/iokbC+Gn9J+rzTWI03p4peT58ovj0G+XfFAgYotV/eYi6tsh
+         Cn3+UE6yeBixo27QVVgmYBJn/KOyBikGV7Pog9JwoN+um0eohHv38XodjrMJVU4eEX
+         j7swkURabs29rwjWvs8ggDlHvXfOUpKQntWIs28I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Pedersen <limero1337@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 110/125] Input: i8042 - add Lenovo XiaoXin Air 12 to i8042 nomux list
-Date:   Mon, 20 Jul 2020 17:37:29 +0200
-Message-Id: <20200720152808.340649390@linuxfoundation.org>
+        stable@vger.kernel.org, Esben Haabendal <esben@geanix.com>
+Subject: [PATCH 4.14 111/125] uio_pdrv_genirq: fix use without device tree and no interrupt
+Date:   Mon, 20 Jul 2020 17:37:30 +0200
+Message-Id: <20200720152808.387691137@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -59,39 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Pedersen <limero1337@gmail.com>
+From: Esben Haabendal <esben@geanix.com>
 
-commit 17d51429da722cd8fc77a365a112f008abf4f8b3 upstream.
+commit bf12fdf0ab728ca8e5933aac46dd972c0dd0421e upstream.
 
-This fixes two finger trackpad scroll on the Lenovo XiaoXin Air 12.
-Without nomux, the trackpad behaves as if only one finger is present and
-moves the cursor when trying to scroll.
+While e3a3c3a20555 ("UIO: fix uio_pdrv_genirq with device tree but no
+interrupt") added support for using uio_pdrv_genirq for devices without
+interrupt for device tree platforms, the removal of uio_pdrv in
+26dac3c49d56 ("uio: Remove uio_pdrv and use uio_pdrv_genirq instead")
+broke the support for non device tree platforms.
 
-Signed-off-by: David Pedersen <limero1337@gmail.com>
+This change fixes this, so that uio_pdrv_genirq can be used without
+interrupt on all platforms.
+
+This still leaves the support that uio_pdrv had for custom interrupt
+handler lacking, as uio_pdrv_genirq does not handle it (yet).
+
+Fixes: 26dac3c49d56 ("uio: Remove uio_pdrv and use uio_pdrv_genirq instead")
+Signed-off-by: Esben Haabendal <esben@geanix.com>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200625133754.291325-1-limero1337@gmail.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://lore.kernel.org/r/20200701145659.3978-3-esben@geanix.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/serio/i8042-x86ia64io.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/uio/uio_pdrv_genirq.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/input/serio/i8042-x86ia64io.h
-+++ b/drivers/input/serio/i8042-x86ia64io.h
-@@ -430,6 +430,13 @@ static const struct dmi_system_id __init
- 		},
- 	},
- 	{
-+		/* Lenovo XiaoXin Air 12 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "80UN"),
-+		},
-+	},
-+	{
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 1360"),
+--- a/drivers/uio/uio_pdrv_genirq.c
++++ b/drivers/uio/uio_pdrv_genirq.c
+@@ -148,7 +148,7 @@ static int uio_pdrv_genirq_probe(struct
+ 	if (!uioinfo->irq) {
+ 		ret = platform_get_irq(pdev, 0);
+ 		uioinfo->irq = ret;
+-		if (ret == -ENXIO && pdev->dev.of_node)
++		if (ret == -ENXIO)
+ 			uioinfo->irq = UIO_IRQ_NONE;
+ 		else if (ret < 0) {
+ 			dev_err(&pdev->dev, "failed to get IRQ\n");
 
 
