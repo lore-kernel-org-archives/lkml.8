@@ -2,51 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95EAC433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FA1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F77F206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFAAA206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262134;
-	bh=yzw0LtptuaaNYe9G/8UNQgeYu5qs1/sEz+ovQuGKVQY=;
+	s=default; t=1595262139;
+	bh=jXwzaznj6HnmZcyrThYwe2ObKGTHQE4RcAMYcZSIg7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ObV8MEVLMZ+N82ClM3JD16B1MTkY+pfKeH1MuMjt+jqLcNTsQiJ51m2noAp75Yy9K
-	 8urjtLv5gsp0gyU6iecH9hR+9Jpjmp2t8YeAGd287adOwusMz4xZD6gJAiLFBEhUDG
-	 ZchDC1EscPJv33V3LXxjUrzesipqsIUzlZT36ilE=
+	b=QeqtCP8JMSSeLXx6dDAVx0X0xd4K9EFfJcwdxuwDQ3gcRCvNWqlR4yYWe1AZ4HxlH
+	 9N7RbsIuWV+0HHRnSoAErsNb2jWJeUDN/y6oND/w5BQW2fa5v6HgSoHK8BimOaFbha
+	 qCrcycC1u1IC2I6iQfTdZxoSiZ7ijckNJ5VTW9xY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387707AbgGTQWN (ORCPT
+        id S2388550AbgGTQWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43894 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:22:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733119AbgGTQHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:07:11 -0400
+        id S1731920AbgGTQHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:07:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04EC122CBB;
-        Mon, 20 Jul 2020 16:07:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0A1D2064B;
+        Mon, 20 Jul 2020 16:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261230;
-        bh=yzw0LtptuaaNYe9G/8UNQgeYu5qs1/sEz+ovQuGKVQY=;
+        s=default; t=1595261225;
+        bh=jXwzaznj6HnmZcyrThYwe2ObKGTHQE4RcAMYcZSIg7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xrdWBYy1cTUEEXxiz+5FTlT5oO9Au04M0lfypYZRFwnjjzAnvZxVNoJ/h3wHlbjuN
-         4eJmPGpTnh5/uqts+YDZtbd7i4ZFxDeuGkXitfvq5YwFOJY4f9FzjguLRf5M+mt+P8
-         Un+h53IliW8mjIlfO1bcQ0bl9njW2MnOUBIbpIl8=
+        b=v/JhooIa32d0PHO4uALZbJ1RoDXjXdRpScJpYmzY2JJfgUP98M065dubQ50+JsEeL
+         cqhvJlNZfNpz+vpcWhZCCdyONUPdX2DfPo4RL0vHlMME9pK/G2ZVpEJ6dLD3pr3NNF
+         fX19sy5Jo7gGKPgS+vuLsOisgIhM+aiYGMG2etZ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Carl Huang <cjhuang@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 010/244] net: qrtr: free flow in __qrtr_node_release
-Date:   Mon, 20 Jul 2020 17:34:41 +0200
-Message-Id: <20200720152826.358902706@linuxfoundation.org>
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 037/244] thermal/drivers: imx: Fix missing of_node_put() at probe time
+Date:   Mon, 20 Jul 2020 17:35:08 +0200
+Message-Id: <20200720152827.623724274@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,57 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Carl Huang <cjhuang@codeaurora.org>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 28541f3d324f6de1e545e2875283b6cef95c5d36 ]
+[ Upstream commit b45fd13be340e4ed0a2a9673ba299eb2a71ba829 ]
 
-The flow is allocated in qrtr_tx_wait, but not freed when qrtr node
-is released. (*slot) becomes NULL after radix_tree_iter_delete is
-called in __qrtr_node_release. The fix is to save (*slot) to a
-vairable and then free it.
+After finishing using cpu node got from of_get_cpu_node(), of_node_put()
+needs to be called.
 
-This memory leak is catched when kmemleak is enabled in kernel,
-the report looks like below:
-
-unreferenced object 0xffffa0de69e08420 (size 32):
-  comm "kworker/u16:3", pid 176, jiffies 4294918275 (age 82858.876s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 28 84 e0 69 de a0 ff ff  ........(..i....
-    28 84 e0 69 de a0 ff ff 03 00 00 00 00 00 00 00  (..i............
-  backtrace:
-    [<00000000e252af0a>] qrtr_node_enqueue+0x38e/0x400 [qrtr]
-    [<000000009cea437f>] qrtr_sendmsg+0x1e0/0x2a0 [qrtr]
-    [<000000008bddbba4>] sock_sendmsg+0x5b/0x60
-    [<0000000003beb43a>] qmi_send_message.isra.3+0xbe/0x110 [qmi_helpers]
-    [<000000009c9ae7de>] qmi_send_request+0x1c/0x20 [qmi_helpers]
-
-Signed-off-by: Carl Huang <cjhuang@codeaurora.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/1585232945-23368-1-git-send-email-Anson.Huang@nxp.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/qrtr/qrtr.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/thermal/imx_thermal.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/net/qrtr/qrtr.c
-+++ b/net/qrtr/qrtr.c
-@@ -166,6 +166,7 @@ static void __qrtr_node_release(struct k
+diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+index e761c9b422179..1b84ea674edb7 100644
+--- a/drivers/thermal/imx_thermal.c
++++ b/drivers/thermal/imx_thermal.c
+@@ -649,7 +649,7 @@ MODULE_DEVICE_TABLE(of, of_imx_thermal_match);
+ static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
  {
- 	struct qrtr_node *node = container_of(kref, struct qrtr_node, ref);
- 	struct radix_tree_iter iter;
-+	struct qrtr_tx_flow *flow;
- 	unsigned long flags;
- 	void __rcu **slot;
+ 	struct device_node *np;
+-	int ret;
++	int ret = 0;
  
-@@ -181,8 +182,9 @@ static void __qrtr_node_release(struct k
- 
- 	/* Free tx flow counters */
- 	radix_tree_for_each_slot(slot, &node->qrtr_tx_flow, &iter, 0) {
-+		flow = *slot;
- 		radix_tree_iter_delete(&node->qrtr_tx_flow, &iter, slot);
--		kfree(*slot);
-+		kfree(flow);
+ 	data->policy = cpufreq_cpu_get(0);
+ 	if (!data->policy) {
+@@ -664,11 +664,12 @@ static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
+ 		if (IS_ERR(data->cdev)) {
+ 			ret = PTR_ERR(data->cdev);
+ 			cpufreq_cpu_put(data->policy);
+-			return ret;
+ 		}
  	}
- 	kfree(node);
+ 
+-	return 0;
++	of_node_put(np);
++
++	return ret;
  }
+ 
+ static void imx_thermal_unregister_legacy_cooling(struct imx_thermal_data *data)
+-- 
+2.25.1
+
 
 
