@@ -2,166 +2,133 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBE8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9DAC4361C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0151E207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1440E22C9D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595281124;
+	bh=UTI4JbY9snt80IwD2G44S5ZsfU8SHhCvOdHambn10Kg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VXkGY2SC+e1PRC01yp7yo6HhuNiVsc7QGIIftwzaHvwWBOckReJFY14bhTujIBPpb
+	 Fkb91TCGIWLuv4ocyEir79IaYXClxLwI0pwXYzYpnaHv8gYF+qbdXL2dz6LfSn5Hra
+	 IIQ4fTpOSyAU5ZCo+uIklqRAV2TvGmdMBVa1Q1Gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgGTViX (ORCPT
+        id S1728230AbgGTVim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:38:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbgGTViI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:08 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15BBDC061794;
-        Mon, 20 Jul 2020 14:38:08 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 890D1BC17B;
-        Mon, 20 Jul 2020 21:38:04 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     jeffrey.t.kirsher@intel.com, davem@davemloft.net, kuba@kernel.org,
-        corbet@lwn.net, intel-wired-lan@lists.osuosl.org,
-        netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH v2] Documentation: intel: Replace HTTP links with HTTPS ones
-Date:   Mon, 20 Jul 2020 23:37:58 +0200
-Message-Id: <20200720213758.64556-1-grandmaster@al2klimov.de>
-In-Reply-To: <CAKgT0Ud4jwxD_NHqLdcWXJSdVJ3CZtzosCwODtdfKnV48GfPfQ@mail.gmail.com>
-References: <CAKgT0Ud4jwxD_NHqLdcWXJSdVJ3CZtzosCwODtdfKnV48GfPfQ@mail.gmail.com>
+        Mon, 20 Jul 2020 17:38:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728077AbgGTViS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:18 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13D01207FC;
+        Mon, 20 Jul 2020 21:38:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595281097;
+        bh=UTI4JbY9snt80IwD2G44S5ZsfU8SHhCvOdHambn10Kg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iuACcuGUyLvRWcjkkj4VbzqKovUFODZFiqPb0Fef/WLNd765INOThKPY8/o+5jaGn
+         v4yMKIZqus3PmCCixGTMkuTplQnmkGo53iGB8zQYS1+cKekPGRxKQDzyFp5DNxtcFL
+         gjxbK0p/Wj977whaS7hU9WuwxrIaT6W2j+y6+ktQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "leilk.liu" <leilk.liu@mediatek.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 08/34] spi: mediatek: use correct SPI_CFG2_REG MACRO
+Date:   Mon, 20 Jul 2020 17:37:41 -0400
+Message-Id: <20200720213807.407380-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
+References: <20200720213807.407380-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+From: "leilk.liu" <leilk.liu@mediatek.com>
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+[ Upstream commit 44b37eb79e16a56cb30ba55b2da452396b941e7a ]
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+this patch use correct SPI_CFG2_REG offset.
+
+Signed-off-by: leilk.liu <leilk.liu@mediatek.com>
+Link: https://lore.kernel.org/r/20200701090020.7935-1-leilk.liu@mediatek.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- v2: Undone broken link.
+ drivers/spi/spi-mt65xx.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
- Documentation/networking/device_drivers/intel/e100.rst  | 4 ++--
- Documentation/networking/device_drivers/intel/fm10k.rst | 2 +-
- Documentation/networking/device_drivers/intel/iavf.rst  | 2 +-
- Documentation/networking/device_drivers/intel/igb.rst   | 2 +-
- Documentation/networking/device_drivers/intel/igbvf.rst | 2 +-
- Documentation/networking/device_drivers/intel/ixgb.rst  | 2 +-
- 6 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/networking/device_drivers/intel/e100.rst b/Documentation/networking/device_drivers/intel/e100.rst
-index 3ac21e7119a7..3d4a9ba21946 100644
---- a/Documentation/networking/device_drivers/intel/e100.rst
-+++ b/Documentation/networking/device_drivers/intel/e100.rst
-@@ -41,7 +41,7 @@ Identifying Your Adapter
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 6888a4dcff6de..8acf24f7c5d40 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -36,7 +36,6 @@
+ #define SPI_CFG0_SCK_LOW_OFFSET           8
+ #define SPI_CFG0_CS_HOLD_OFFSET           16
+ #define SPI_CFG0_CS_SETUP_OFFSET          24
+-#define SPI_ADJUST_CFG0_SCK_LOW_OFFSET    16
+ #define SPI_ADJUST_CFG0_CS_HOLD_OFFSET    0
+ #define SPI_ADJUST_CFG0_CS_SETUP_OFFSET   16
  
- For information on how to identify your adapter, and for the latest Intel
- network drivers, refer to the Intel Support website:
--http://www.intel.com/support
-+https://www.intel.com/support
+@@ -48,6 +47,8 @@
+ #define SPI_CFG1_CS_IDLE_MASK             0xff
+ #define SPI_CFG1_PACKET_LOOP_MASK         0xff00
+ #define SPI_CFG1_PACKET_LENGTH_MASK       0x3ff0000
++#define SPI_CFG2_SCK_HIGH_OFFSET          0
++#define SPI_CFG2_SCK_LOW_OFFSET           16
  
- Driver Configuration Parameters
- ===============================
-@@ -179,7 +179,7 @@ filtering by
- Support
- =======
- For general information, go to the Intel support website at:
--http://www.intel.com/support/
-+https://www.intel.com/support/
+ #define SPI_CMD_ACT                  BIT(0)
+ #define SPI_CMD_RESUME               BIT(1)
+@@ -279,7 +280,7 @@ static void mtk_spi_set_cs(struct spi_device *spi, bool enable)
+ static void mtk_spi_prepare_transfer(struct spi_master *master,
+ 				     struct spi_transfer *xfer)
+ {
+-	u32 spi_clk_hz, div, sck_time, cs_time, reg_val = 0;
++	u32 spi_clk_hz, div, sck_time, cs_time, reg_val;
+ 	struct mtk_spi *mdata = spi_master_get_devdata(master);
  
- or the Intel Wired Networking project hosted by Sourceforge at:
- http://sourceforge.net/projects/e1000
-diff --git a/Documentation/networking/device_drivers/intel/fm10k.rst b/Documentation/networking/device_drivers/intel/fm10k.rst
-index 4d279e64e221..9258ef6f515c 100644
---- a/Documentation/networking/device_drivers/intel/fm10k.rst
-+++ b/Documentation/networking/device_drivers/intel/fm10k.rst
-@@ -22,7 +22,7 @@ Ethernet Multi-host Controller.
+ 	spi_clk_hz = clk_get_rate(mdata->spi_clk);
+@@ -292,18 +293,18 @@ static void mtk_spi_prepare_transfer(struct spi_master *master,
+ 	cs_time = sck_time * 2;
  
- For information on how to identify your adapter, and for the latest Intel
- network drivers, refer to the Intel Support website:
--http://www.intel.com/support
-+https://www.intel.com/support
- 
- 
- Flow Control
-diff --git a/Documentation/networking/device_drivers/intel/iavf.rst b/Documentation/networking/device_drivers/intel/iavf.rst
-index 84ac7e75f363..52e037b11c97 100644
---- a/Documentation/networking/device_drivers/intel/iavf.rst
-+++ b/Documentation/networking/device_drivers/intel/iavf.rst
-@@ -43,7 +43,7 @@ device.
- 
- For information on how to identify your adapter, and for the latest NVM/FW
- images and Intel network drivers, refer to the Intel Support website:
--http://www.intel.com/support
-+https://www.intel.com/support
- 
- 
- Additional Features and Configurations
-diff --git a/Documentation/networking/device_drivers/intel/igb.rst b/Documentation/networking/device_drivers/intel/igb.rst
-index 87e560fe5eaa..d46289e182cf 100644
---- a/Documentation/networking/device_drivers/intel/igb.rst
-+++ b/Documentation/networking/device_drivers/intel/igb.rst
-@@ -20,7 +20,7 @@ Identifying Your Adapter
- ========================
- For information on how to identify your adapter, and for the latest Intel
- network drivers, refer to the Intel Support website:
--http://www.intel.com/support
-+https://www.intel.com/support
- 
- 
- Command Line Parameters
-diff --git a/Documentation/networking/device_drivers/intel/igbvf.rst b/Documentation/networking/device_drivers/intel/igbvf.rst
-index 557fc020ef31..40fa210c5e14 100644
---- a/Documentation/networking/device_drivers/intel/igbvf.rst
-+++ b/Documentation/networking/device_drivers/intel/igbvf.rst
-@@ -35,7 +35,7 @@ Identifying Your Adapter
- ========================
- For information on how to identify your adapter, and for the latest Intel
- network drivers, refer to the Intel Support website:
--http://www.intel.com/support
-+https://www.intel.com/support
- 
- 
- Additional Features and Configurations
-diff --git a/Documentation/networking/device_drivers/intel/ixgb.rst b/Documentation/networking/device_drivers/intel/ixgb.rst
-index ab624f1a44a8..c6a233e68ad6 100644
---- a/Documentation/networking/device_drivers/intel/ixgb.rst
-+++ b/Documentation/networking/device_drivers/intel/ixgb.rst
-@@ -203,7 +203,7 @@ With the 10 Gigabit server adapters, the default Linux configuration will
- very likely limit the total available throughput artificially.  There is a set
- of configuration changes that, when applied together, will increase the ability
- of Linux to transmit and receive data.  The following enhancements were
--originally acquired from settings published at http://www.spec.org/web99/ for
-+originally acquired from settings published at https://www.spec.org/web99/ for
- various submitted results using Linux.
- 
- NOTE:
+ 	if (mdata->dev_comp->enhance_timing) {
++		reg_val = (((sck_time - 1) & 0xffff)
++			   << SPI_CFG2_SCK_HIGH_OFFSET);
+ 		reg_val |= (((sck_time - 1) & 0xffff)
+-			   << SPI_CFG0_SCK_HIGH_OFFSET);
+-		reg_val |= (((sck_time - 1) & 0xffff)
+-			   << SPI_ADJUST_CFG0_SCK_LOW_OFFSET);
++			   << SPI_CFG2_SCK_LOW_OFFSET);
+ 		writel(reg_val, mdata->base + SPI_CFG2_REG);
+-		reg_val |= (((cs_time - 1) & 0xffff)
++		reg_val = (((cs_time - 1) & 0xffff)
+ 			   << SPI_ADJUST_CFG0_CS_HOLD_OFFSET);
+ 		reg_val |= (((cs_time - 1) & 0xffff)
+ 			   << SPI_ADJUST_CFG0_CS_SETUP_OFFSET);
+ 		writel(reg_val, mdata->base + SPI_CFG0_REG);
+ 	} else {
+-		reg_val |= (((sck_time - 1) & 0xff)
++		reg_val = (((sck_time - 1) & 0xff)
+ 			   << SPI_CFG0_SCK_HIGH_OFFSET);
+ 		reg_val |= (((sck_time - 1) & 0xff) << SPI_CFG0_SCK_LOW_OFFSET);
+ 		reg_val |= (((cs_time - 1) & 0xff) << SPI_CFG0_CS_HOLD_OFFSET);
 -- 
-2.27.0
+2.25.1
 
