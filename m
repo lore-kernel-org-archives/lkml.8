@@ -2,269 +2,114 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78919C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD871C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E50F22CB2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E6A2176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:41:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpARwnel"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KHoe2U7W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgGTLkq (ORCPT
+        id S1728630AbgGTLly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 07:40:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728458AbgGTLkp (ORCPT
+        Mon, 20 Jul 2020 07:41:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24379 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728582AbgGTLly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 07:40:45 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 656F3C061794;
-        Mon, 20 Jul 2020 04:40:45 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 18so11883013otv.6;
-        Mon, 20 Jul 2020 04:40:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MAUX8js4HRTNIEB/e+TDgl4jAut/dSAHvoJrfuW4RUk=;
-        b=fpARwnel7o+8D9zi/yqJwccr8VdQHwVuuWEfgMtFBzchyLBu1R1R4ewBLhzey2S5Yo
-         U6n08gPnYVl1FGcSwONy/mASFE957/YQlgDiD0NKWSlEN1YCrP/p1zih6hrPzDOC6HkC
-         XG0OdBI3y/n8JY+o7lG9jxz+Tw94JekscESYCoRrjhSHgcJPZEguyU8FOYr++WcePZT6
-         N3lqcJX6v5DKsGP1DdBfwl+v1sQ+etP7rm6x2gMV7UkQN82g3rdT6+cPsn9Nwj5o6HQ+
-         iJhvPwqxzz/qhEhrIZTtk4W1XHaLos4z37cFGqtUHcmwdCXLtBrwrYe5I/wmBD7qX/7h
-         XE4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MAUX8js4HRTNIEB/e+TDgl4jAut/dSAHvoJrfuW4RUk=;
-        b=eyiEKAshJPzHKg1Nz16dYDN2sm4Df6lTlKbP4QVYi042icIITwqaqeFMgc9XPBs+tW
-         FOCU8voQQ3wJMTKKbDh/LbyuLx/2W2LyqXNgV6sHA5fYpoZZsbvwM9TnnoDwuehRrQPO
-         mHLoBJ/dSeHG3fW9aE2CwKeWnzKI6Yix73nnG8TOnA6xXDBzvjOLGwyIepnGN4rkYhYs
-         COMxD50gYkzLHn/MRiQShWn6ZsM8/J73Iwh6FkvqIAcvAOuyIsuMtqF9NDHnufHX3nUM
-         iHgtIRqqXZRreyAuhzaCO0b8M8vDsWMy8BCQvXrsNp59P2wrAXshHSl5N4UWAm3ERBY2
-         CJyg==
-X-Gm-Message-State: AOAM532n/7pLQSP3emybExNyBOitUmrxJv9HDGYJSOD6FshZRk2MZt3W
-        hkbI3I2PBSxDFAvi0PNbIz5DE99mXkz3O/oTTzc=
-X-Google-Smtp-Source: ABdhPJxViFlAHBGoX3IHKpT8S1+2gECbLDMmGWvvpuRb1tbGtN7COvBruE1BhiXvI6dUDLtiuFdjW9TnDbzjh1oJXYE=
-X-Received: by 2002:a9d:480d:: with SMTP id c13mr20072257otf.224.1595245244703;
- Mon, 20 Jul 2020 04:40:44 -0700 (PDT)
+        Mon, 20 Jul 2020 07:41:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595245312;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=9BjEoccwDObYkvGGdqWSZpoF9EidBez5eJ1httHSghI=;
+        b=KHoe2U7WeG0i68RMn0BigyME2r9w7lFBMgbn3e8sFlcpYWsSAMLAEDOBmd/eQw3UfVZPUE
+        SBCbiKuKsijqXjb+dvHorDMJBuMFtgL5NPb5q99+KuVLO5D5F4Ht31vGkVgBMOuI0FLFtx
+        ZCr9UpYjmFwWVGtPlqrOqSExteGfjNM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-179-ku6p1qM-NbSF5QOiH-mibQ-1; Mon, 20 Jul 2020 07:41:50 -0400
+X-MC-Unique: ku6p1qM-NbSF5QOiH-mibQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 95D641085;
+        Mon, 20 Jul 2020 11:41:49 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A641A87313;
+        Mon, 20 Jul 2020 11:41:47 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net] rxrpc: Fix sendmsg() returning EPIPE due to recvmsg()
+ returning ENODATA
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 20 Jul 2020 12:41:46 +0100
+Message-ID: <159524530669.329784.1191492556041235335.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-References: <20200714051111.17892-1-alexandru.ardelean@analog.com> <20200720122947.7c3cfc6e@archlinux>
-In-Reply-To: <20200720122947.7c3cfc6e@archlinux>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Mon, 20 Jul 2020 14:40:33 +0300
-Message-ID: <CA+U=DsoLh94p6XhMZDjDWcUEG7MiD4suPeXySkKpUVJCSamdhg@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: ad7124: move chip ID & name on the chip_info table
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 2:30 PM Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Tue, 14 Jul 2020 08:11:11 +0300
-> Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
->
-> > This change does the following:
-> > * removes the SPI device table in favor of the OF device table
-> > * adds 'name' && 'chip_id' fields to chip_info
-> > * implements chip ID & silicon revision checking; the device ID for
-> >   AD7124-4 is 0x0, so just checking that value can be useless;
-> >   but at least the silicon revision isn't 0, so a non-zero value can be
-> >   used to check that "a" device is on the SPI bus; it's probably the best
-> >   way to narrow it down to one of the 2 AD7124 chip IDs
-> >
-> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> Nice patch.
->
-> Applied to the togreg branch of iio.git and pushed out as testing for
-> the auto builders to play with it.
->
-> At somepoint we could think about moving this driver over to generic
-> fw interfaces, but that is a bigger job and no particular reason to
-> do that now (if it's even possible!)
+rxrpc_sendmsg() returns EPIPE if there's an outstanding error, such as if
+rxrpc_recvmsg() indicating ENODATA if there's nothing for it to read.
 
-That's also on my list [for the ADI drivers].
-Need to find someone to delegate to, since it will take a while before
-I can get to it.
+Change rxrpc_recvmsg() to return EAGAIN instead if there's nothing to read
+as this particular error doesn't get stored in ->sk_err by the networking
+core.
 
->
-> Thanks,
->
-> Jonathan
->
-> > ---
-> >  drivers/iio/adc/ad7124.c | 73 ++++++++++++++++++++++++++++++++--------
-> >  1 file changed, 59 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-> > index bb53ab265b64..8dce06e9e69c 100644
-> > --- a/drivers/iio/adc/ad7124.c
-> > +++ b/drivers/iio/adc/ad7124.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/interrupt.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> > +#include <linux/of_device.h>
-> >  #include <linux/regulator/consumer.h>
-> >  #include <linux/spi/spi.h>
-> >
-> > @@ -47,6 +48,15 @@
-> >  #define AD7124_ADC_CTRL_MODE_MSK     GENMASK(5, 2)
-> >  #define AD7124_ADC_CTRL_MODE(x)      FIELD_PREP(AD7124_ADC_CTRL_MODE_MSK, x)
-> >
-> > +/* AD7124 ID */
-> > +#define AD7124_DEVICE_ID_MSK         GENMASK(7, 4)
-> > +#define AD7124_DEVICE_ID_GET(x)              FIELD_GET(AD7124_DEVICE_ID_MSK, x)
-> > +#define AD7124_SILICON_REV_MSK               GENMASK(3, 0)
-> > +#define AD7124_SILICON_REV_GET(x)    FIELD_GET(AD7124_SILICON_REV_MSK, x)
-> > +
-> > +#define CHIPID_AD7124_4                      0x0
-> > +#define CHIPID_AD7124_8                      0x1
-> > +
-> >  /* AD7124_CHANNEL_X */
-> >  #define AD7124_CHANNEL_EN_MSK                BIT(15)
-> >  #define AD7124_CHANNEL_EN(x)         FIELD_PREP(AD7124_CHANNEL_EN_MSK, x)
-> > @@ -120,6 +130,8 @@ static const char * const ad7124_ref_names[] = {
-> >  };
-> >
-> >  struct ad7124_chip_info {
-> > +     const char *name;
-> > +     unsigned int chip_id;
-> >       unsigned int num_inputs;
-> >  };
-> >
-> > @@ -165,9 +177,13 @@ static const struct iio_chan_spec ad7124_channel_template = {
-> >
-> >  static struct ad7124_chip_info ad7124_chip_info_tbl[] = {
-> >       [ID_AD7124_4] = {
-> > +             .name = "ad7127-4",
-> > +             .chip_id = CHIPID_AD7124_4,
-> >               .num_inputs = 8,
-> >       },
-> >       [ID_AD7124_8] = {
-> > +             .name = "ad7127-8",
-> > +             .chip_id = CHIPID_AD7124_8,
-> >               .num_inputs = 16,
-> >       },
-> >  };
-> > @@ -503,6 +519,34 @@ static int ad7124_soft_reset(struct ad7124_state *st)
-> >       return -EIO;
-> >  }
-> >
-> > +static int ad7124_check_chip_id(struct ad7124_state *st)
-> > +{
-> > +     unsigned int readval, chip_id, silicon_rev;
-> > +     int ret;
-> > +
-> > +     ret = ad_sd_read_reg(&st->sd, AD7124_ID, 1, &readval);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     chip_id = AD7124_DEVICE_ID_GET(readval);
-> > +     silicon_rev = AD7124_SILICON_REV_GET(readval);
-> > +
-> > +     if (chip_id != st->chip_info->chip_id) {
-> > +             dev_err(&st->sd.spi->dev,
-> > +                     "Chip ID mismatch: expected %u, got %u\n",
-> > +                     st->chip_info->chip_id, chip_id);
-> > +             return -ENODEV;
-> > +     }
-> > +
-> > +     if (silicon_rev == 0) {
-> > +             dev_err(&st->sd.spi->dev,
-> > +                     "Silicon revision empty. Chip may not be present\n");
-> > +             return -ENODEV;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  static int ad7124_init_channel_vref(struct ad7124_state *st,
-> >                                   unsigned int channel_number)
-> >  {
-> > @@ -665,25 +709,28 @@ static int ad7124_setup(struct ad7124_state *st)
-> >
-> >  static int ad7124_probe(struct spi_device *spi)
-> >  {
-> > -     const struct spi_device_id *id;
-> > +     const struct ad7124_chip_info *info;
-> >       struct ad7124_state *st;
-> >       struct iio_dev *indio_dev;
-> >       int i, ret;
-> >
-> > +     info = of_device_get_match_data(&spi->dev);
-> > +     if (!info)
-> > +             return -ENODEV;
-> > +
-> >       indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-> >       if (!indio_dev)
-> >               return -ENOMEM;
-> >
-> >       st = iio_priv(indio_dev);
-> >
-> > -     id = spi_get_device_id(spi);
-> > -     st->chip_info = &ad7124_chip_info_tbl[id->driver_data];
-> > +     st->chip_info = info;
-> >
-> >       ad_sd_init(&st->sd, indio_dev, spi, &ad7124_sigma_delta_info);
-> >
-> >       spi_set_drvdata(spi, indio_dev);
-> >
-> > -     indio_dev->name = spi_get_device_id(spi)->name;
-> > +     indio_dev->name = st->chip_info->name;
-> >       indio_dev->modes = INDIO_DIRECT_MODE;
-> >       indio_dev->info = &ad7124_info;
-> >
-> > @@ -721,6 +768,10 @@ static int ad7124_probe(struct spi_device *spi)
-> >       if (ret < 0)
-> >               goto error_clk_disable_unprepare;
-> >
-> > +     ret = ad7124_check_chip_id(st);
-> > +     if (ret)
-> > +             goto error_clk_disable_unprepare;
-> > +
-> >       ret = ad7124_setup(st);
-> >       if (ret < 0)
-> >               goto error_clk_disable_unprepare;
-> > @@ -768,16 +819,11 @@ static int ad7124_remove(struct spi_device *spi)
-> >       return 0;
-> >  }
-> >
-> > -static const struct spi_device_id ad7124_id_table[] = {
-> > -     { "ad7124-4", ID_AD7124_4 },
-> > -     { "ad7124-8", ID_AD7124_8 },
-> > -     {}
-> > -};
-> > -MODULE_DEVICE_TABLE(spi, ad7124_id_table);
-> > -
-> >  static const struct of_device_id ad7124_of_match[] = {
-> > -     { .compatible = "adi,ad7124-4" },
-> > -     { .compatible = "adi,ad7124-8" },
-> > +     { .compatible = "adi,ad7124-4",
-> > +             .data = &ad7124_chip_info_tbl[ID_AD7124_4], },
-> > +     { .compatible = "adi,ad7124-8",
-> > +             .data = &ad7124_chip_info_tbl[ID_AD7124_8], },
-> >       { },
-> >  };
-> >  MODULE_DEVICE_TABLE(of, ad7124_of_match);
-> > @@ -789,7 +835,6 @@ static struct spi_driver ad71124_driver = {
-> >       },
-> >       .probe = ad7124_probe,
-> >       .remove = ad7124_remove,
-> > -     .id_table = ad7124_id_table,
-> >  };
-> >  module_spi_driver(ad71124_driver);
-> >
->
+Also change rxrpc_sendmsg() so that it doesn't fail with delayed receive
+errors (there's no way for it to report which call, if any, the error was
+caused by).
+
+Fixes: 17926a79320a ("[AF_RXRPC]: Provide secure RxRPC sockets for use by userspace and kernel both")
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ net/rxrpc/recvmsg.c |    2 +-
+ net/rxrpc/sendmsg.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/rxrpc/recvmsg.c b/net/rxrpc/recvmsg.c
+index 2989742a4aa1..490b1927215c 100644
+--- a/net/rxrpc/recvmsg.c
++++ b/net/rxrpc/recvmsg.c
+@@ -543,7 +543,7 @@ int rxrpc_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 	    list_empty(&rx->recvmsg_q) &&
+ 	    rx->sk.sk_state != RXRPC_SERVER_LISTENING) {
+ 		release_sock(&rx->sk);
+-		return -ENODATA;
++		return -EAGAIN;
+ 	}
+ 
+ 	if (list_empty(&rx->recvmsg_q)) {
+diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
+index 1304b8608f56..03a30d014bb6 100644
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -304,7 +304,7 @@ static int rxrpc_send_data(struct rxrpc_sock *rx,
+ 	/* this should be in poll */
+ 	sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
+ 
+-	if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN))
++	if (sk->sk_shutdown & SEND_SHUTDOWN)
+ 		return -EPIPE;
+ 
+ 	more = msg->msg_flags & MSG_MORE;
+
+
