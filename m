@@ -2,124 +2,170 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A65C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A616C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93A1422CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:03:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595242996;
-	bh=dONBMDD5LZ2vZmwe51cbIkvnEd/Aviv6J8B5VLnLMwE=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=GLqbSSccj5PXhqMjgyqV+wxUscREnT9pPwIpLP/e5EvHi7ty15dJazYcrrq0XRzkV
-	 pkX9HLJZfXx/Yt0L7Q3DW01XRlbMG4OOjdzTCkA5XDkm8lZKGZmB0HEEjfqGNn93FL
-	 JRAFtvN9/Hx/8XG9pP01zhI/Eupn9J603WKcYInM=
+	by mail.kernel.org (Postfix) with ESMTP id 49BC322CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:03:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="fcs+8Vbu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgGTLDP (ORCPT
+        id S1728515AbgGTLD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 07:03:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728348AbgGTLDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 07:03:13 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 979B222BF3;
-        Mon, 20 Jul 2020 11:03:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595242993;
-        bh=dONBMDD5LZ2vZmwe51cbIkvnEd/Aviv6J8B5VLnLMwE=;
-        h=From:To:Subject:Date:From;
-        b=WtV5qGsmtTqSnUl+bSdlJIgXBC4W//GkRSqUNCjhs+mEzL7vpCKlL2XGpB+lQwUSR
-         CQb73fvHzx1S3eLMuESoI4dfNkB+nIShhMXl791Dixk78xNg4s3JH1wiLN+O/UGvmb
-         8N1G/zNJf9KeVXS4B5ZCCcwnrn1zadf1spI1sCuo=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Luba <lukasz.luba@arm.com>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] memory: samsung: exynos5422-dmc: Do not ignore return code of regmap_read()
-Date:   Mon, 20 Jul 2020 13:03:01 +0200
-Message-Id: <20200720110301.22996-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 20 Jul 2020 07:03:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728348AbgGTLDZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 07:03:25 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 595FFC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 04:03:25 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id o22so9917524pjw.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 04:03:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TZpfzFnX8WqDOlpA9HEWnI2tpqRJdN7b0nMifIKxRt8=;
+        b=fcs+8VbuWGNf1oxNKQwZnvGJPD/QaJ3RhoO4oRPf3vmjd1YMiMzi9vv38Uz6PCNdMe
+         m4hJ1A0BkoIQ+teqNgXeCrWysMh9ti4WzwXOEa3ChiW7sBhPqe09KvOf10u6eujhn8U2
+         PrCWj+JWfYVBZAlQ2nPP97mbMTLHVHIkSM4BA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TZpfzFnX8WqDOlpA9HEWnI2tpqRJdN7b0nMifIKxRt8=;
+        b=N13vLtXgTN30lPFK0hvxON2M7BrHHNfMkjy5Tk7H2VQfn5iHk2m5X2p98DmabGgcHT
+         0OrwV6mEz5/C4mkbbOB4AU9VCV0NwmB4wVt6QdW1NUsKkBrrO2tLLtjXeT3XxBgMrrf8
+         SokSCasb6iw0iqVcTJ8UPa/Lzp+Nj57/eumh5aKhtvjNgogTm8nhbxcQF8Ok6m6oU7ml
+         3kiu7VPJmBuH+Orovyqm8ICuW3FNAiSGCgk7ahkcBPpLso9EIkTKIdBoHHBOe+nEs+ML
+         a73SQ6qKHP7Bk2ZISYFPaxwjqoNVVwA3+p0P1z8bnE/Wr9hf9yRt4WhbIsZ7mXIfXZ23
+         BV6w==
+X-Gm-Message-State: AOAM532nLC+BL6miK7Ay+Q46eSfjCBiWdtxjbZbuqY3+X/JJHo8+vONV
+        G5h7ct6sz8CHFZrD3u9XGl/PfPJTEYAWZw==
+X-Google-Smtp-Source: ABdhPJyYuFoGgRbx+53KR1oquEeqgi7QbPMQVW0P5UXinT7PjM14QfPFT1Gj7VUjePEdDQaAndVrug==
+X-Received: by 2002:a17:902:a708:: with SMTP id w8mr18141835plq.128.1595243004882;
+        Mon, 20 Jul 2020 04:03:24 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:8c21:db7b:4558:fba3])
+        by smtp.gmail.com with ESMTPSA id o10sm11445876pjs.27.2020.07.20.04.03.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 04:03:23 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
+Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 3/3] arm64: dts: rockchip: Add PCIe for RockPI N10
+Date:   Mon, 20 Jul 2020 16:32:30 +0530
+Message-Id: <20200720110230.367985-3-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200720110230.367985-1-jagan@amarulasolutions.com>
+References: <20200720110230.367985-1-jagan@amarulasolutions.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check for regmap_read() return code before using the read value in
-following write in exynos5_switch_timing_regs().  Pass reading error
-code to the callers.
+This patch adds support to enable PCIe for RockPI N10.
 
-This does not introduce proper error handling for such failed reads (and
-obviously regmap_write() error is still ignored) because the driver
-ignored this in all places.  Therefor it only fixes reported issue while
-matching current driver coding style:
-
-       drivers/memory/samsung/exynos5422-dmc.c: In function 'exynos5_switch_timing_regs':
-    >> drivers/memory/samsung/exynos5422-dmc.c:216:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- drivers/memory/samsung/exynos5422-dmc.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 41 ++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-index 93e9c2429c0d..2c326998cb1c 100644
---- a/drivers/memory/samsung/exynos5422-dmc.c
-+++ b/drivers/memory/samsung/exynos5422-dmc.c
-@@ -270,12 +270,14 @@ static int find_target_freq_idx(struct exynos5_dmc *dmc,
-  * This function switches between these banks according to the
-  * currently used clock source.
-  */
--static void exynos5_switch_timing_regs(struct exynos5_dmc *dmc, bool set)
-+static int exynos5_switch_timing_regs(struct exynos5_dmc *dmc, bool set)
- {
- 	unsigned int reg;
- 	int ret;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+index ebccc4a153a2..b415b8a16c78 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+@@ -11,6 +11,19 @@
  
- 	ret = regmap_read(dmc->clk_regmap, CDREX_LPDDR3PHY_CON3, &reg);
-+	if (ret)
-+		return ret;
- 
- 	if (set)
- 		reg |= EXYNOS5_TIMING_SET_SWI;
-@@ -283,6 +285,8 @@ static void exynos5_switch_timing_regs(struct exynos5_dmc *dmc, bool set)
- 		reg &= ~EXYNOS5_TIMING_SET_SWI;
- 
- 	regmap_write(dmc->clk_regmap, CDREX_LPDDR3PHY_CON3, reg);
+ / {
+ 	compatible = "vamrs,rk3399pro-vmarc-som", "rockchip,rk3399pro";
 +
-+	return 0;
- }
++
++	vcc3v3_pcie: vcc-pcie-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio4 RK_PD4 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pcie_pwr>;
++		regulator-name = "vcc3v3_pcie";
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc5v0_sys>;
++	};
+ };
  
- /**
-@@ -516,7 +520,7 @@ exynos5_dmc_switch_to_bypass_configuration(struct exynos5_dmc *dmc,
- 	/*
- 	 * Delays are long enough, so use them for the new coming clock.
- 	 */
--	exynos5_switch_timing_regs(dmc, USE_MX_MSPLL_TIMINGS);
-+	ret = exynos5_switch_timing_regs(dmc, USE_MX_MSPLL_TIMINGS);
+ &cpu_l0 {
+@@ -142,7 +155,8 @@ vcca_0v9: LDO_REG1 {
+ 				regulator-min-microvolt = <900000>;
+ 				regulator-max-microvolt = <900000>;
+ 				regulator-state-mem {
+-					regulator-off-in-suspend;
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <900000>;
+ 				};
+ 			};
  
- 	return ret;
- }
-@@ -577,7 +581,9 @@ exynos5_dmc_change_freq_and_volt(struct exynos5_dmc *dmc,
+@@ -177,7 +191,8 @@ vcca_1v8: LDO_REG4 {
+ 				regulator-min-microvolt = <1850000>;
+ 				regulator-max-microvolt = <1850000>;
+ 				regulator-state-mem {
+-					regulator-off-in-suspend;
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1850000>;
+ 				};
+ 			};
  
- 	clk_set_rate(dmc->fout_bpll, target_rate);
+@@ -304,6 +319,22 @@ &io_domains {
+ 	sdmmc-supply = <&vccio_sd>;
+ };
  
--	exynos5_switch_timing_regs(dmc, USE_BPLL_TIMINGS);
-+	ret = exynos5_switch_timing_regs(dmc, USE_BPLL_TIMINGS);
-+	if (ret)
-+		goto disable_clocks;
++&pcie_phy {
++	status = "okay";
++};
++
++&pcie0 {
++	ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
++	max-link-speed = <2>;
++	num-lanes = <4>;
++	pinctrl-0 = <&pcie_clkreqnb_cpm>;
++	pinctrl-names = "default";
++	vpcie0v9-supply = <&vcca_0v9>;	/* VCC_0V9_S0 */
++	vpcie1v8-supply = <&vcca_1v8>;	/* VCC_1V8_S0 */
++	vpcie3v3-supply = <&vcc3v3_pcie>;
++	status = "okay";
++};
++
+ &pinctrl {
+ 	hym8563 {
+ 		hym8563_int: hym8563-int {
+@@ -311,6 +342,12 @@ hym8563_int: hym8563-int {
+ 		};
+ 	};
  
- 	ret = clk_set_parent(dmc->mout_mclk_cdrex, dmc->mout_bpll);
- 	if (ret)
++	pcie {
++		pcie_pwr: pcie-pwr {
++			rockchip,pins =	<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
+ 	pmic {
+ 		pmic_int_l: pmic-int-l {
+ 			rockchip,pins = <1 RK_PC2 0 &pcfg_pull_up>;
 -- 
-2.17.1
+2.25.1
 
