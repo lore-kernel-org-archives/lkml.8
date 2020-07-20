@@ -2,203 +2,190 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B28E3C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C825C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A1EA22B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5673822BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:09:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AN9DdqOo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sFpY6PKN"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Kj5cvrFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgGTKIv (ORCPT
+        id S1728297AbgGTKJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 06:08:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728001AbgGTKIu (ORCPT
+        Mon, 20 Jul 2020 06:09:12 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:42690 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728001AbgGTKJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 06:08:50 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79EE1C061794;
-        Mon, 20 Jul 2020 03:08:50 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595239728;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BxrLT5OO8VVnt/lsBoQzr6HhEU8ioJ8QRLnEkjNYsa8=;
-        b=AN9DdqOoQ9igheMYCJMVwq1S5xiGUqz9xbMTDHPJmDyY7qQ+1j845Ngqu5mWJhKKXhMxYh
-        CprUH3H6nl5sywboIOPjTuzXsjKUZ+eCvC6EYv3d2nMgNqkjjXK0axRmVDZa3gKRWiAM60
-        q0aBRYyyLc7oUQF+iUlTImGFsqE3dwX7nkORww/xSSXYvqfpsd1wZ1zvaq4kVj5fam4h4B
-        fOQrWvlAzKWjioz7kHdHhQh3m1/+9fTn6m3LDmEUY3h6i615j4Ugwc4CsF4Fg3HL9YQoD+
-        QOCXPsbtJFF6W2EZoJJnuyLaa03uG9+gjH4dmtNhl3baC+Y5JkjCAJV9qNeViA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595239728;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BxrLT5OO8VVnt/lsBoQzr6HhEU8ioJ8QRLnEkjNYsa8=;
-        b=sFpY6PKNr4+f3NvSLNIw3Ac3fU3okqtU+lGXTektLQ6F7TcMwglOxbVyg4WGpHmwYql0P3
-        ZkJqIgtlwPXu/sCQ==
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
-        willy@infradead.org, luto@kernel.org, gofmanp@gmail.com,
-        keescook@chromium.org, linux-kselftest@vger.kernel.org,
-        shuah@kernel.org, Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [PATCH v4 1/2] kernel: Implement selective syscall userspace redirection
-In-Reply-To: <20200716193141.4068476-2-krisman@collabora.com>
-References: <20200716193141.4068476-1-krisman@collabora.com> <20200716193141.4068476-2-krisman@collabora.com>
-Date:   Mon, 20 Jul 2020 12:08:47 +0200
-Message-ID: <87v9iimrbk.fsf@nanos.tec.linutronix.de>
+        Mon, 20 Jul 2020 06:09:11 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06KA8lI4055763;
+        Mon, 20 Jul 2020 05:08:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595239727;
+        bh=4jIoux7pzrwHmWvTNtj5VIbjexNeK5pWA2lzrqZk11s=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Kj5cvrFs7UkWH6yyoiiEJn/0Dmbad6M75MjFOI3OaYsW/Sk9DZPl0GnDb1w9edj4D
+         /P+TU7qvoedBtXfqYM5dhYauaFkMbp2VpYMPRs8PiSy8jvd209HgVrpjapFGWtnOhU
+         7qflnoMwNd65qd1WYgOsOMVv158tkYp3z2XfFhQU=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06KA8lZI032915
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 Jul 2020 05:08:47 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
+ Jul 2020 05:08:47 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 20 Jul 2020 05:08:47 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KA8hCW014697;
+        Mon, 20 Jul 2020 05:08:43 -0500
+Subject: Re: [PATCH v7 00/14] Add PCIe support to TI's J721E SoC
+To:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200713110141.13156-1-kishon@ti.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <f5811855-976e-ef66-4711-6880ddcbf57b@ti.com>
+Date:   Mon, 20 Jul 2020 15:38:42 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200713110141.13156-1-kishon@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gabriel,
+Hi Rob/Lorenzo,
 
-Gabriel Krisman Bertazi <krisman@collabora.com> writes:
-> Introduce a mechanism to quickly disable/enable syscall handling for a
-> specific process and redirect to userspace via SIGSYS.  This is useful
-> for processes with parts that require syscall redirection and parts that
-> don't, but who need to perform this boundary crossing really fast,
-> without paying the cost of a system call to reconfigure syscall handling
-> on each boundary transition.  This is particularly important for Windows
-> games running over Wine.
->
-> The proposed interface looks like this:
->
->   prctl(PR_SET_SYSCALL_USER_DISPATCH, <op>, <start_addr>, <end_addr>, [selector])
->
-> The range [<start_addr>,<end_addr>] is a part of the process memory map
-> that is allowed to by-pass the redirection code and dispatch syscalls
-> directly, such that in fast paths a process doesn't need to disable the
-> trap nor the kernel has to check the selector.  This is essential to
-> return from SIGSYS to a blocked area without triggering another SIGSYS
-> from rt_sigreturn.
+On 7/13/2020 4:31 PM, Kishon Vijay Abraham I wrote:
+> TI's J721E SoC uses Cadence PCIe core to implement both RC mode
+> and EP mode.
 
-Why isn't rt_sigreturn() exempt from that redirection in the first place?
+Any comments on this series?
 
-> ---
->  arch/Kconfig                          | 20 ++++++
->  arch/x86/Kconfig                      |  1 +
->  arch/x86/entry/common.c               |  5 ++
->  arch/x86/include/asm/thread_info.h    |  4 +-
->  arch/x86/kernel/signal_compat.c       |  2 +-
->  fs/exec.c                             |  2 +
->  include/linux/sched.h                 |  3 +
->  include/linux/syscall_user_dispatch.h | 50 +++++++++++++++
->  include/uapi/asm-generic/siginfo.h    |  3 +-
->  include/uapi/linux/prctl.h            |  5 ++
->  kernel/Makefile                       |  1 +
->  kernel/fork.c                         |  1 +
->  kernel/sys.c                          |  5 ++
->  kernel/syscall_user_dispatch.c        | 92 +++++++++++++++++++++++++++
+Thanks
+Kishon
 
-A big combo patch is not how we do that. Please split it up into the
-core part and a patch enabling it for a particular architexture.
-
-As I said in my reply to Andy, this wants to go on top of the generic
-entry/exit work stuff:
-
-  https://lore.kernel.org/r/20200716182208.180916541@linutronix.de
-
-and then syscall_user_dispatch.c ends up in kernel/entry/ and the
-dispatching function is not exposed outside of that directory.
-
-I'm going to post a new version later today. Will cc you.
-
-> --- a/arch/x86/include/asm/thread_info.h
-> +++ b/arch/x86/include/asm/thread_info.h
-> @@ -93,6 +93,7 @@ struct thread_info {
->  #define TIF_NOTSC		16	/* TSC is not accessible in userland */
->  #define TIF_IA32		17	/* IA32 compatibility process */
->  #define TIF_SLD			18	/* Restore split lock detection on context switch */
-> +#define TIF_SYSCALL_USER_DISPATCH 19	/* Redirect syscall for userspace handling */
-
-There are two other things out there which compete about the last TIF
-bits on x86, so we need to clean that up first.
-
-> +static void trigger_sigsys(struct pt_regs *regs)
-> +{
-> +	struct kernel_siginfo info;
-> +
-> +	clear_siginfo(&info);
-> +	info.si_signo = SIGSYS;
-> +	info.si_code = SYS_USER_DISPATCH;
-> +	info.si_call_addr = (void __user *)KSTK_EIP(current);
-> +	info.si_errno = 0;
-> +	info.si_arch = syscall_get_arch(current);
-> +	info.si_syscall = syscall_get_nr(current, regs);
-> +
-> +	force_sig_info(&info);
-> +}
-> +
-> +int do_syscall_user_dispatch(struct pt_regs *regs)
-> +{
-> +	struct syscall_user_dispatch *sd = &current->syscall_dispatch;
-> +	unsigned long ip = instruction_pointer(regs);
-> +	char state;
-> +
-> +	if (likely(ip >= sd->dispatcher_start && ip <= sd->dispatcher_end))
-> +		return 0;
-> +
-> +	if (likely(sd->selector)) {
-> +		if (unlikely(__get_user(state, sd->selector)))
-
-__get_user() mandates an explicit access_ok() which happened in the
-prctl(). So this wants a comment why there is none right here.
-
-> +			do_exit(SIGSEGV);
-> +
-> +		if (likely(state == 0))
-> +			return 0;
-> +
-> +		if (state != 1)
-> +			do_exit(SIGSEGV);
-
-If that happens its going to be quite interesting to debug.
-
-Also please use proper defines which are exposed to user space instead
-of 0/1.
-
-> +	}
-> +
-> +	syscall_rollback(current, regs);
-> +	trigger_sigsys(regs);
-> +
-> +	return 1;
-> +}
-> +
-> +int set_syscall_user_dispatch(int mode, unsigned long dispatcher_start,
-> +			      unsigned long dispatcher_end, char __user *selector)
-> +{
-> +	switch (mode) {
-> +	case PR_SYS_DISPATCH_OFF:
-> +		if (dispatcher_start || dispatcher_end || selector)
-> +			return -EINVAL;
-> +		break;
-> +	case PR_SYS_DISPATCH_ON:
-> +		/*
-> +		 * Validate the direct dispatcher region just for basic
-> +		 * sanity.  If the user is able to submit a syscall from
-> +		 * an address, that address is obviously valid.
-> +		 */
-> +		if (dispatcher_end < dispatcher_start)
-> +			return -EINVAL;
-> +
-> +		if (selector && !access_ok(selector, 1))
-
-  sizeof(*selector)
-
-Thanks,
-
-        tglx
+> 
+> The high level features are:
+>   *) Supports Legacy, MSI and MSI-X interrupt
+>   *) Supports upto GEN4 speed mode
+>   *) Supports SR-IOV
+>   *) Supports multiple physical function
+>   *) Ability to route all transactions via SMMU
+> 
+> This patch series
+>   *) Add support in Cadence PCIe core to be used for TI's J721E SoC
+>   *) Add a driver for J721E PCIe wrapper
+> 
+> v1 of the series can be found @ [1]
+> v2 of the series can be found @ [2]
+> v3 of the series can be found @ [5]
+> v4 of the series can be found @ [6]
+> v5 of the series can be found @ [7]
+> v6 of the series can be found @ [8]
+> 
+> Changes from v6:
+> 1) Fixed bot found errors running 'make dt_binding_check'
+> 
+> Changes from v5:
+> 1) Added Reviewed-by: for PATCH #6
+> 2) Protect writes to PCI_STATUS with spin_lock during raising interrupts
+>    in EP mode to reduce the time between read and write of RMW.
+> 
+> Changes from v4:
+> 1) Added Reviewed-by: & Acked-by: tags from RobH
+> 2) Removed un-used accessors for pcie-cadence.h and removed having ops
+>    for read/write accessors
+> 3) Updated cdns,cdns-pcie-host.yaml to remove "mem" from reg
+> 
+> Changes from v3:
+> 1) Changed the order of files in MAINTAINTERS file to fix Joe's comments
+> 2) Fixed indentation and added Reviewed-by: Rob Herring <robh@kernel.org>
+> 3) Cleaned up computing msix_tbl
+> 4) Fixed RobH's comment on J721E driver
+> 
+> Changes from v2:
+> 1) Converting Cadence binding to YAML schema was done as a
+>    separate series [3] & [4]. [3] is merged and [4] is
+>    pending.
+> 2) Included MSI-X support in this series
+> 3) Added link down interrupt handling (only error message)
+> 4) Rebased to latest 5.7-rc1
+> 5) Adapted TI J721E binding to [3] & [4]
+> 
+> Changes from v1:
+> 1) Added DT schemas cdns-pcie-host.yaml, cdns-pcie-ep.yaml and
+>    cdns-pcie.yaml for Cadence PCIe core and included it in
+>    TI's PCIe DT schema.
+> 2) Added cpu_addr_fixup() for Cadence Platform driver.
+> 3) Fixed subject/description/renamed functions as commented by
+>    Andrew Murray.
+> 
+> [1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
+> [2] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+> [3] -> http://lore.kernel.org/r/20200305103017.16706-1-kishon@ti.com
+> [4] -> http://lore.kernel.org/r/20200417114322.31111-1-kishon@ti.com
+> [5] -> http://lore.kernel.org/r/20200417125753.13021-1-kishon@ti.com
+> [6] -> http://lore.kernel.org/r/20200506151429.12255-1-kishon@ti.com
+> [7] -> http://lore.kernel.org/r/20200522033631.32574-1-kishon@ti.com
+> [8] -> http://lore.kernel.org/r/20200708093018.28474-1-kishon@ti.com
+> 
+> Alan Douglas (1):
+>   PCI: cadence: Add MSI-X support to Endpoint driver
+> 
+> Kishon Vijay Abraham I (13):
+>   PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error path
+>   linux/kernel.h: Add PTR_ALIGN_DOWN macro
+>   PCI: cadence: Convert all r/w accessors to perform only 32-bit
+>     accesses
+>   PCI: cadence: Add support to start link and verify link status
+>   PCI: cadence: Allow pci_host_bridge to have custom pci_ops
+>   dt-bindings: PCI: cadence: Remove "mem" from reg binding
+>   PCI: cadence: Add new *ops* for CPU addr fixup
+>   PCI: cadence: Fix updating Vendor ID and Subsystem Vendor ID register
+>   dt-bindings: PCI: Add host mode dt-bindings for TI's J721E SoC
+>   dt-bindings: PCI: Add EP mode dt-bindings for TI's J721E SoC
+>   PCI: j721e: Add TI J721E PCIe driver
+>   misc: pci_endpoint_test: Add J721E in pci_device_id table
+>   MAINTAINERS: Add Kishon Vijay Abraham I for TI J721E SoC PCIe
+> 
+>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |   8 +-
+>  .../bindings/pci/ti,j721e-pci-ep.yaml         |  94 ++++
+>  .../bindings/pci/ti,j721e-pci-host.yaml       | 113 ++++
+>  MAINTAINERS                                   |   4 +-
+>  drivers/misc/pci_endpoint_test.c              |   9 +
+>  drivers/pci/controller/cadence/Kconfig        |  23 +
+>  drivers/pci/controller/cadence/Makefile       |   1 +
+>  drivers/pci/controller/cadence/pci-j721e.c    | 493 ++++++++++++++++++
+>  .../pci/controller/cadence/pcie-cadence-ep.c  | 129 ++++-
+>  .../controller/cadence/pcie-cadence-host.c    |  59 ++-
+>  .../controller/cadence/pcie-cadence-plat.c    |  13 +
+>  drivers/pci/controller/cadence/pcie-cadence.c |   8 +-
+>  drivers/pci/controller/cadence/pcie-cadence.h | 133 ++++-
+>  include/linux/kernel.h                        |   1 +
+>  14 files changed, 1035 insertions(+), 53 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+>  create mode 100644 drivers/pci/controller/cadence/pci-j721e.c
+> 
