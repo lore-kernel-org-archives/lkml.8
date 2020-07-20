@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EADC433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE36CC433E3
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7D02065E
+	by mail.kernel.org (Postfix) with ESMTP id A316E22D2C
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lYFPP3k4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EjEp3oh2"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZecZm1YU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ohg76ZgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731781AbgGTP4R (ORCPT
+        id S1731308AbgGTP4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:56:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731531AbgGTP4C (ORCPT
+        Mon, 20 Jul 2020 11:56:20 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58762 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730307AbgGTP4H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:56:02 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A695C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 08:56:02 -0700 (PDT)
+        Mon, 20 Jul 2020 11:56:07 -0400
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595260560;
+        s=2020; t=1595260565;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hTejVaczVZ4+w4L8i2iPGvYmmuPlo78b2DCMDOKBNPE=;
-        b=lYFPP3k4u36S1kCMfdfAvF++/+hiaSOdrK/t1OyZ+qd5hUVxBN3r3Ni0d6pqH6I3LgqXYd
-        UAiuisMsTooKVUdFRPQiAQ+sz0ip/Wepb0oKk1c2TPwqBdPuK32DgeUDv5UUNNfTeAcPij
-        9TPrxqnSI9EyL8iecLZjacul0aLJdW0rwnM4LTNxSUEZ9+X9MXinObmFOUbDbk6GyueI3G
-        Gu/51NmnMnjeZExiUeHwTmgcSf0Ed96FViVkU0b6IFio52eOQmtKJ+OlOR3jhgFkql88eW
-        3Ft1hsSqHCHHzPJ+0hOX214kfxPNoF1/7EX4gN3PLYUKUEjACzKpp+Lk6PkJEw==
+        bh=fuyy0zLiX9oqGaNGjgjh+XXT41N87KSvgPNDfMsD0N4=;
+        b=ZecZm1YU70HSXnGpMlZe9VTWjCaEHdsnteUyILUtdbVSezQ/LavSa+TajTUy5KRZ9C3onc
+        hMDNuKBipOpId9Jil8SHeSTr0qElVmULMjmmkQ+IjmE3pn5Dg0j/K9VTlhchhm9Wl4tXCd
+        v22Txi3y+7yNBG9ASOHc4xJ9TR6SJ5agxXBdTEaSlYx8/FynKdBS2KWsOE7Om748qruIak
+        py3DwiZwK/fl3WhWeLdLtiYdOyWFDg9kA0cc55hVYMTeKHm7ZxgZrvxddzWIa3XcKbNa3P
+        p33KscI4xTzQEmdZKq757dpfWdo8Sc9YHbHYEsdq04rEDZOpYfdnWqRc/iXoxQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595260560;
+        s=2020e; t=1595260565;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hTejVaczVZ4+w4L8i2iPGvYmmuPlo78b2DCMDOKBNPE=;
-        b=EjEp3oh2PwsfLThRtM9JrTA+oJeXpqs2Pjua5FH30R18ERPFNmxB2sDq8lLDNvL/L+0Rbi
-        5C65eXeBUguf7oDw==
+        bh=fuyy0zLiX9oqGaNGjgjh+XXT41N87KSvgPNDfMsD0N4=;
+        b=ohg76ZgGDwrBYFBW0kVzECDbTJf5R9GJy9xLHaOPNpUmMnY4vYlkCahnBj5+50STdHp1Va
+        q3TWG4k4jOMYpECQ==
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -57,9 +54,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Subject: [PATCH v4 06/24] seqlock: Implement raw_seqcount_begin() in terms of raw_read_seqcount()
-Date:   Mon, 20 Jul 2020 17:55:12 +0200
-Message-Id: <20200720155530.1173732-7-a.darwish@linutronix.de>
+Subject: [PATCH v4 07/24] lockdep: Add preemption enabled/disabled assertion APIs
+Date:   Mon, 20 Jul 2020 17:55:13 +0200
+Message-Id: <20200720155530.1173732-8-a.darwish@linutronix.de>
 In-Reply-To: <20200720155530.1173732-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
  <20200720155530.1173732-1-a.darwish@linutronix.de>
@@ -70,39 +67,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-raw_seqcount_begin() has the same code as raw_read_seqcount(), with the
-exception of masking the sequence counter's LSB before returning it to
-the caller.
+Asserting that preemption is enabled or disabled is a critical sanity
+check.  Developers are usually reluctant to add such a check in a
+fastpath as reading the preemption count can be costly.
 
-Note, raw_seqcount_begin() masks the counter's LSB before returning it
-to the caller so that read_seqcount_retry() can fail if the counter is
-odd -- without the overhead of an extra branching instruction.
+Extend the lockdep API with macros asserting that preemption is disabled
+or enabled. If lockdep is disabled, or if the underlying architecture
+does not support kernel preemption, this assert has no runtime overhead.
 
+References: f54bb2ec02c8 ("locking/lockdep: Add IRQs disabled/enabled assertion APIs: ...")
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- include/linux/seqlock.h | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ include/linux/lockdep.h | 19 +++++++++++++++++++
+ lib/Kconfig.debug       |  1 +
+ 2 files changed, 20 insertions(+)
 
-diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-index 85fb3ac93ffb..e885702d8b82 100644
---- a/include/linux/seqlock.h
-+++ b/include/linux/seqlock.h
-@@ -199,10 +199,11 @@ static inline unsigned raw_read_seqcount(const seqcount_t *s)
-  */
- static inline unsigned raw_seqcount_begin(const seqcount_t *s)
- {
--	unsigned ret = READ_ONCE(s->sequence);
--	smp_rmb();
--	kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);
--	return ret & ~1;
-+	/*
-+	 * If the counter is odd, let read_seqcount_retry() fail
-+	 * by decrementing the counter.
-+	 */
-+	return raw_read_seqcount(s) & ~1;
- }
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 7aafba0ddcf9..39a35699d0d6 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -549,6 +549,22 @@ do {									\
+ 	WARN_ON_ONCE(debug_locks && !this_cpu_read(hardirq_context));	\
+ } while (0)
  
- /**
++#define lockdep_assert_preemption_enabled()				\
++do {									\
++	WARN_ON_ONCE(IS_ENABLED(CONFIG_PREEMPT_COUNT)	&&		\
++		     debug_locks			&&		\
++		     (preempt_count() != 0		||		\
++		      !this_cpu_read(hardirqs_enabled)));		\
++} while (0)
++
++#define lockdep_assert_preemption_disabled()				\
++do {									\
++	WARN_ON_ONCE(IS_ENABLED(CONFIG_PREEMPT_COUNT)	&&		\
++		     debug_locks			&&		\
++		     (preempt_count() == 0		&&		\
++		      this_cpu_read(hardirqs_enabled)));		\
++} while (0)
++
+ #else
+ # define might_lock(lock) do { } while (0)
+ # define might_lock_read(lock) do { } while (0)
+@@ -557,6 +573,9 @@ do {									\
+ # define lockdep_assert_irqs_enabled() do { } while (0)
+ # define lockdep_assert_irqs_disabled() do { } while (0)
+ # define lockdep_assert_in_irq() do { } while (0)
++
++# define lockdep_assert_preemption_enabled() do { } while (0)
++# define lockdep_assert_preemption_disabled() do { } while (0)
+ #endif
+ 
+ #ifdef CONFIG_PROVE_RAW_LOCK_NESTING
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 9ad9210d70a1..5379931ba3b5 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1117,6 +1117,7 @@ config PROVE_LOCKING
+ 	select DEBUG_RWSEMS
+ 	select DEBUG_WW_MUTEX_SLOWPATH
+ 	select DEBUG_LOCK_ALLOC
++	select PREEMPT_COUNT if !ARCH_NO_PREEMPT
+ 	select TRACE_IRQFLAGS
+ 	default n
+ 	help
 -- 
 2.20.1
 
