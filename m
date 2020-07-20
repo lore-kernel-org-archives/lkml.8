@@ -2,149 +2,167 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AABC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59323C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 202602073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:45:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263507;
-	bh=s6wQ1t3yKP/ifpNYjFTHv8Kz36NhoOFHrqTrO+1lVdQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ORVeb2LmDegt0zR138hI7dbIiPt7WBwFNwgLq4FqVLi5ayMG4bVotNiHo91Q5F8oc
-	 o8PWoLqwvCXVElE/8FISjrYr1LljLDn9mXlypqFNKhEeHunSk8t1aIqW6Ba9hn1rOQ
-	 /WNDs4+7KjJ6p/He6HRszMPz8TeTpqFxH9g+eNTA=
+	by mail.kernel.org (Postfix) with ESMTP id 31989206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:45:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nYUDInkC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389098AbgGTQpF (ORCPT
+        id S2389101AbgGTQpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:45:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33104 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:45:15 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:14165 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729179AbgGTPlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:41:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729854AbgGTPlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:41:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595259680; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=mgZPX/ORqnPLBZAJTpnFrkYtIjx2TWoOg4J5PqIxq8Y=; b=nYUDInkC95SuoNlbFL0F6RgtkEnYPNgkuM9FhqKJXkLd1tFeVGwJHoTr/RC1paoxH944W4y1
+ 7IkTuL5eFvkBgKEUJu+QR5FJoRUpYZO4k7HsONPQk4GyJTYhvv/tiYaHef1GGD7iZzCcK+KJ
+ FVmViFeo97dJATiznDu5LrFUkXE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f15bb1603c8596cdb481f1b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 15:41:10
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 18A44C433CB; Mon, 20 Jul 2020 15:41:06 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BA9F22D72;
-        Mon, 20 Jul 2020 15:41:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259681;
-        bh=s6wQ1t3yKP/ifpNYjFTHv8Kz36NhoOFHrqTrO+1lVdQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uUHpgkfjdZvCQp54hjmuZm31eTfRd421iyYd+/u6GBFi8kZdiDNTkynJ68M2utE6O
-         4+N0kss9Sidj75U7h7rf3pBf6W5BQvRxuIqK96qezU71R9ZwaIdXDBt795++3ZCREa
-         Vi2/tC3MCGkNYHj4GCOoHXifFauWMs4es7yX3K+I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.9 42/86] iio: magnetometer: ak8974: Fix runtime PM imbalance on error
-Date:   Mon, 20 Jul 2020 17:36:38 +0200
-Message-Id: <20200720152755.281969112@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
-References: <20200720152753.138974850@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C7775C433C6;
+        Mon, 20 Jul 2020 15:40:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C7775C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
+        iommu@lists.linux-foundation.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Brian Masney <masneyb@onstation.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Eric Anholt <eric@anholt.net>, Joerg Roedel <joro@8bytes.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Rob Clark <robdclark@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v10 00/13] iommu/arm-smmu: Add Adreno SMMU specific implementation
+Date:   Mon, 20 Jul 2020 09:40:34 -0600
+Message-Id: <20200720154047.3611092-1-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+(reworded the summary to reflect ongoing changes in the code)
 
-commit 0187294d227dfc42889e1da8f8ce1e44fc25f147 upstream.
+This series adds an Adreno SMMU implementation to arm-smmu to allow GPU hardware
+pagetable switching.
 
-When devm_regmap_init_i2c() returns an error code, a pairing
-runtime PM usage counter decrement is needed to keep the
-counter balanced. For error paths after ak8974_set_power(),
-ak8974_detect() and ak8974_reset(), things are the same.
+The Adreno GPU has built in capabilities to switch the TTBR0 pagetable during
+runtime to allow each individual instance or application to have its own
+pagetable.  In order to take advantage of the HW capabilities there are certain
+requirements needed of the SMMU hardware.
 
-However, When iio_triggered_buffer_setup() returns an error
-code, there will be two PM usgae counter decrements.
+This series adds support for an Adreno specific arm-smmu implementation. The new
+implementation 1) ensures that the GPU domain is always assigned context bank 0,
+2) enables split pagetable support (TTBR1) so that the instance specific
+pagetable can be swapped while the global memory remains in place and 3) shares
+the current pagetable configuration with the GPU driver to allow it to create
+its own io-pgtable instances.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Fixes: 7c94a8b2ee8c ("iio: magn: add a driver for AK8974")
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The series then adds the drm/msm code to enable these features. For targets that
+support it allocate new pagetables using the io-pgtable configuration shared by
+the arm-smmu driver and swap them in during runtime.
 
----
- drivers/iio/magnetometer/ak8974.c |   19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+This version of the series merges the previous patchset(s) [1] and [2]
+with the following improvements:
 
---- a/drivers/iio/magnetometer/ak8974.c
-+++ b/drivers/iio/magnetometer/ak8974.c
-@@ -675,19 +675,21 @@ static int ak8974_probe(struct i2c_clien
- 	ak8974->map = devm_regmap_init_i2c(i2c, &ak8974_regmap_config);
- 	if (IS_ERR(ak8974->map)) {
- 		dev_err(&i2c->dev, "failed to allocate register map\n");
-+		pm_runtime_put_noidle(&i2c->dev);
-+		pm_runtime_disable(&i2c->dev);
- 		return PTR_ERR(ak8974->map);
- 	}
- 
- 	ret = ak8974_set_power(ak8974, AK8974_PWR_ON);
- 	if (ret) {
- 		dev_err(&i2c->dev, "could not power on\n");
--		goto power_off;
-+		goto disable_pm;
- 	}
- 
- 	ret = ak8974_detect(ak8974);
- 	if (ret) {
- 		dev_err(&i2c->dev, "neither AK8974 nor AMI305 found\n");
--		goto power_off;
-+		goto disable_pm;
- 	}
- 
- 	ret = ak8974_selftest(ak8974);
-@@ -697,14 +699,9 @@ static int ak8974_probe(struct i2c_clien
- 	ret = ak8974_reset(ak8974);
- 	if (ret) {
- 		dev_err(&i2c->dev, "AK8974 reset failed\n");
--		goto power_off;
-+		goto disable_pm;
- 	}
- 
--	pm_runtime_set_autosuspend_delay(&i2c->dev,
--					 AK8974_AUTOSUSPEND_DELAY);
--	pm_runtime_use_autosuspend(&i2c->dev);
--	pm_runtime_put(&i2c->dev);
--
- 	indio_dev->dev.parent = &i2c->dev;
- 	indio_dev->channels = ak8974_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(ak8974_channels);
-@@ -757,6 +754,11 @@ no_irq:
- 		goto cleanup_buffer;
- 	}
- 
-+	pm_runtime_set_autosuspend_delay(&i2c->dev,
-+					 AK8974_AUTOSUSPEND_DELAY);
-+	pm_runtime_use_autosuspend(&i2c->dev);
-+	pm_runtime_put(&i2c->dev);
-+
- 	return 0;
- 
- cleanup_buffer:
-@@ -765,7 +767,6 @@ disable_pm:
- 	pm_runtime_put_noidle(&i2c->dev);
- 	pm_runtime_disable(&i2c->dev);
- 	ak8974_set_power(ak8974, AK8974_PWR_OFF);
--power_off:
- 	regulator_bulk_disable(ARRAY_SIZE(ak8974->regs), ak8974->regs);
- 
- 	return ret;
+  - arm-smmu: add implementation hook to allocate context banks
+  - arm-smmu: Match the GPU domain by stream ID instead of compatible string
+  - arm-smmu: Make DOMAIN_ATTR_PGTABLE_CFG bi-directional. The leaf driver
+    queries the configuration to create a pagetable and then sends the newly
+    created configuration back to the smmu-driver to enable TTBR0
+  - drm/msm: Add context reference counting for submissions
+  - drm/msm: Use dummy functions to skip TLB operations on per-instance
+    pagetables
 
+[1] https://lists.linuxfoundation.org/pipermail/iommu/2020-June/045653.html
+[2] https://lists.linuxfoundation.org/pipermail/iommu/2020-June/045659.html
+
+
+Jordan Crouse (13):
+  iommu/arm-smmu: Pass io-pgtable config to implementation specific
+    function
+  iommu/arm-smmu: Add support for split pagetables
+  iommu/arm-smmu: Add implementation hooks to configure contexts
+  iommu/arm-smmu-qcom: Add implementation for the adreno GPU SMMU
+  iommu: Add a domain attribute to get/set a pagetable configuration
+  iommu/arm-smmu-qcom: Get and set the pagetable config for split
+    pagetables
+  dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
+  drm/msm: Add a context pointer to the submitqueue
+  drm/msm: Set the global virtual address range from the IOMMU domain
+  drm/msm: Add support to create a local pagetable
+  drm/msm: Add support for private address space instances
+  drm/msm/a6xx: Add support for per-instance pagetables
+  arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
+
+ .../devicetree/bindings/iommu/arm,smmu.yaml   |   4 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   2 +-
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c         |  12 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c         |  58 ++++-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h         |   1 +
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  18 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h       |   3 +-
+ drivers/gpu/drm/msm/msm_drv.c                 |  16 +-
+ drivers/gpu/drm/msm/msm_drv.h                 |  13 ++
+ drivers/gpu/drm/msm/msm_gem.h                 |   1 +
+ drivers/gpu/drm/msm/msm_gem_submit.c          |   8 +-
+ drivers/gpu/drm/msm/msm_gem_vma.c             |   9 +
+ drivers/gpu/drm/msm/msm_gpu.c                 |  26 ++-
+ drivers/gpu/drm/msm/msm_gpu.h                 |  12 +-
+ drivers/gpu/drm/msm/msm_gpummu.c              |   2 +-
+ drivers/gpu/drm/msm/msm_iommu.c               | 198 +++++++++++++++++-
+ drivers/gpu/drm/msm/msm_mmu.h                 |  16 +-
+ drivers/gpu/drm/msm/msm_ringbuffer.h          |   1 +
+ drivers/gpu/drm/msm/msm_submitqueue.c         |   8 +-
+ drivers/iommu/arm-smmu-impl.c                 |   6 +-
+ drivers/iommu/arm-smmu-qcom.c                 | 130 +++++++++++-
+ drivers/iommu/arm-smmu.c                      | 108 +++++-----
+ drivers/iommu/arm-smmu.h                      |  65 +++++-
+ include/linux/iommu.h                         |   1 +
+ 24 files changed, 619 insertions(+), 99 deletions(-)
+
+-- 
+2.25.1
 
