@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26230C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C1CC433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 018AB22CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07262065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260107;
-	bh=xYNtf1K9Clxoc111B6sXE1QVfCLFVpgTKazDwptjWFk=;
+	s=default; t=1595260111;
+	bh=x37chkiE3RibfOnCA9OownYkXilLTGLp6mdRMCznAfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hfITBd0Z2jXsCxdKV2rWKjc4JFWlR+ZqMExdI5yNkHzc9Hkb/6tIpAwIyVNpQDP7S
-	 NoxJ3pqmPyV1+090uUUybDTQ9wgWQk7q7HzT769268mTtMzzcqm8BsGOcKcIGKo3xN
-	 IkGjWWNbIIoCZ/H82qmL1FhB8SH6NPAUfOY4BA5U=
+	b=DwCU0dSVeQMxK4XJBaPPtDX034U/3jHlZq30hDPViuYfd6fmLGnT/QK5fmJejam5k
+	 I7i98UA+2ju9k9xTE7py5AA2zGoNOQ4vdiFE0JECfImYcrYEAA8ivEVb4TkSFEQ3Sl
+	 Y7yD8IaBfknDmao4e4P6hY4+UKEttID2jaMQUS4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbgGTPsZ (ORCPT
+        id S1730895AbgGTPsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:48:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43982 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:48:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730145AbgGTPsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:48:23 -0400
+        id S1729843AbgGTPs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:48:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 031EA22CAF;
-        Mon, 20 Jul 2020 15:48:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08F0C2065E;
+        Mon, 20 Jul 2020 15:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260102;
-        bh=xYNtf1K9Clxoc111B6sXE1QVfCLFVpgTKazDwptjWFk=;
+        s=default; t=1595260105;
+        bh=x37chkiE3RibfOnCA9OownYkXilLTGLp6mdRMCznAfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKNqzX02VAQYAs1JGzbGZvScfDJqm7I9ot8+zVEsuOw4DhY4XR9b5vQjere6P8/MO
-         G5OHrYnPMkEbzRTs125E8MTL99HzE8oFTAfMMVuItu7/cLmX5pl4htwG/Hdtf1aeO/
-         UFfKUQJRQoArOTGhnM4dxiKEOvOa/ndjFdzFNOFc=
+        b=UZOXIpxv7gHv4NIs8+6Wn0uGPXV1+UKHZbA1TfIoSLm8JIJV3QX9mHNorhYGKmBkB
+         n2JhANpXsoI6VzGZFFjg3l2XUUt5O2XTtwjSA+Fw8T/XLOoiEpYEwAQLlNbDjV5fSh
+         BeF87XtsHeVDazbw+dxID8+nNIdmcOTuVUKZ3ksg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chirantan Ekbote <chirantan@chromium.org>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.14 107/125] fuse: Fix parameter for FS_IOC_{GET,SET}FLAGS
-Date:   Mon, 20 Jul 2020 17:37:26 +0200
-Message-Id: <20200720152808.195336396@linuxfoundation.org>
+        stable@vger.kernel.org, Wade Mealing <wmealing@redhat.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH 4.14 108/125] Revert "zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()"
+Date:   Mon, 20 Jul 2020 17:37:27 +0200
+Message-Id: <20200720152808.244532027@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -59,65 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chirantan Ekbote <chirantan@chromium.org>
+From: Wade Mealing <wmealing@redhat.com>
 
-commit 31070f6ccec09f3bd4f1e28cd1e592fa4f3ba0b6 upstream.
+commit 853eab68afc80f59f36bbdeb715e5c88c501e680 upstream.
 
-The ioctl encoding for this parameter is a long but the documentation says
-it should be an int and the kernel drivers expect it to be an int.  If the
-fuse driver treats this as a long it might end up scribbling over the stack
-of a userspace process that only allocated enough space for an int.
+Turns out that the permissions for 0400 really are what we want here,
+otherwise any user can read from this file.
 
-This was previously discussed in [1] and a patch for fuse was proposed in
-[2].  From what I can tell the patch in [2] was nacked in favor of adding
-new, "fixed" ioctls and using those from userspace.  However there is still
-no "fixed" version of these ioctls and the fact is that it's sometimes
-infeasible to change all userspace to use the new one.
+[fixed formatting, added changelog, and made attribute static - gregkh]
 
-Handling the ioctls specially in the fuse driver seems like the most
-pragmatic way for fuse servers to support them without causing crashes in
-userspace applications that call them.
-
-[1]: https://lore.kernel.org/linux-fsdevel/20131126200559.GH20559@hall.aurel32.net/T/
-[2]: https://sourceforge.net/p/fuse/mailman/message/31771759/
-
-Signed-off-by: Chirantan Ekbote <chirantan@chromium.org>
-Fixes: 59efec7b9039 ("fuse: implement ioctl support")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Reported-by: Wade Mealing <wmealing@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Fixes: f40609d1591f ("zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()")
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1847832
+Reviewed-by: Steffen Maier <maier@linux.ibm.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
+Link: https://lore.kernel.org/r/20200617114946.GA2131650@kroah.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/file.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/block/zram/zram_drv.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -17,6 +17,7 @@
- #include <linux/swap.h>
- #include <linux/falloc.h>
- #include <linux/uio.h>
-+#include <linux/fs.h>
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -1648,7 +1648,8 @@ static ssize_t hot_add_show(struct class
+ 		return ret;
+ 	return scnprintf(buf, PAGE_SIZE, "%d\n", ret);
+ }
+-static CLASS_ATTR_RO(hot_add);
++static struct class_attribute class_attr_hot_add =
++	__ATTR(hot_add, 0400, hot_add_show, NULL);
  
- static const struct file_operations fuse_direct_io_file_operations;
- 
-@@ -2534,7 +2535,16 @@ long fuse_do_ioctl(struct file *file, un
- 		struct iovec *iov = iov_page;
- 
- 		iov->iov_base = (void __user *)arg;
--		iov->iov_len = _IOC_SIZE(cmd);
-+
-+		switch (cmd) {
-+		case FS_IOC_GETFLAGS:
-+		case FS_IOC_SETFLAGS:
-+			iov->iov_len = sizeof(int);
-+			break;
-+		default:
-+			iov->iov_len = _IOC_SIZE(cmd);
-+			break;
-+		}
- 
- 		if (_IOC_DIR(cmd) & _IOC_WRITE) {
- 			in_iov = iov;
+ static ssize_t hot_remove_store(struct class *class,
+ 			struct class_attribute *attr,
 
 
