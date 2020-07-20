@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71140C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F64C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 477052070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5389D2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262799;
-	bh=dsu5b9IIjFUsGX50qBLDgmJ2Ketn/JuBNyJ68a8xfzk=;
+	s=default; t=1595262803;
+	bh=MGcaiByVE1bccexlQsQs+l0xFFnrtwtqmmCEwhROvzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gI6IvnPA0zZ56MjS12CbqFoNETrLuedlnfCBZOhZa/EwPXHqihdLG5Finlf3PZEZi
-	 IKO0CcObOjB6+5ZwL0bRzzT6Ai/a0s0IK90E3H8NkCxALEfdH+KhAzs+q0LgHM0Dvs
-	 8PXc34pGFOacMbOUoqqdcREGoY6gvkq2V59CJ/Y0=
+	b=E9SnhjHNg3Vw6JgcdbD0yPo/Al+zPuhDNLAfY7n1eF5moLYmWmc6YPQtPiZO7RNHD
+	 +l93XWvpIU6G9wObxT6YHcBfMjIelgmH4cA9niOnHA92IWcHMi1t3oe1l6oHTtyDjY
+	 07eT+igxZvAUsRSyZ9E6kLCpi1x9QHIt7TnDn1VE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388945AbgGTQdP (ORCPT
+        id S2388947AbgGTQdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:33:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:33:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731789AbgGTP4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:56:20 -0400
+        id S1731780AbgGTP4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:56:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4945C22BEF;
-        Mon, 20 Jul 2020 15:56:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 802A52065E;
+        Mon, 20 Jul 2020 15:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260579;
-        bh=dsu5b9IIjFUsGX50qBLDgmJ2Ketn/JuBNyJ68a8xfzk=;
+        s=default; t=1595260577;
+        bh=MGcaiByVE1bccexlQsQs+l0xFFnrtwtqmmCEwhROvzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2iapsulwR8of0jvVl2uFjjpLgG1OiQESS9u3q3wIqy9pUTaZ9iV9UzKx/ldnQWAi4
-         dkkrjEmkB/yVhXyYmwRXyGA/EV1ZC85OlDe4+vRojdAq8lQRYCyWtDHZnBh5V4q0Rx
-         tt2tCTS54YNxs3mtEbOqn7RWEL+1fEIYFZJ6suko=
+        b=J7go1Ii/cCspqIR6p4PUIXUzalFXWJJoQ7SIXYjf/Vvk2Kn+ciq/fETPe/dD4uVXA
+         nQgM6h/YwyUURuQxqVuo/NVB7NgG9w/0jZHQ/JfII4MAQFD9wiaWbdP74Gfec2wq/w
+         iqHaJe9qv6II97lBGPTguCSj1A3fBdqhcO2UrcBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: [PATCH 5.4 002/215] crypto: atmel - Fix build error of CRYPTO_AUTHENC
-Date:   Mon, 20 Jul 2020 17:34:44 +0200
-Message-Id: <20200720152820.257058678@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 019/215] tcp: md5: add missing memory barriers in tcp_md5_do_add()/tcp_md5_hash_key()
+Date:   Mon, 20 Jul 2020 17:35:01 +0200
+Message-Id: <20200720152821.085547358@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -61,59 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit aee1f9f3c30e1e20e7f74729ced61eac7d74ca68 upstream.
+[ Upstream commit 6a2febec338df7e7699a52d00b2e1207dcf65b28 ]
 
-If CRYPTO_DEV_ATMEL_AUTHENC is m, CRYPTO_DEV_ATMEL_SHA is m,
-but CRYPTO_DEV_ATMEL_AES is y, building will fail:
+MD5 keys are read with RCU protection, and tcp_md5_do_add()
+might update in-place a prior key.
 
-drivers/crypto/atmel-aes.o: In function `atmel_aes_authenc_init_tfm':
-atmel-aes.c:(.text+0x670): undefined reference to `atmel_sha_authenc_get_reqsize'
-atmel-aes.c:(.text+0x67a): undefined reference to `atmel_sha_authenc_spawn'
-drivers/crypto/atmel-aes.o: In function `atmel_aes_authenc_setkey':
-atmel-aes.c:(.text+0x7e5): undefined reference to `atmel_sha_authenc_setkey'
+Normally, typical RCU updates would allocate a new piece
+of memory. In this case only key->key and key->keylen might
+be updated, and we do not care if an incoming packet could
+see the old key, the new one, or some intermediate value,
+since changing the key on a live flow is known to be problematic
+anyway.
 
-Make CRYPTO_DEV_ATMEL_AUTHENC depend on CRYPTO_DEV_ATMEL_AES,
-and select CRYPTO_DEV_ATMEL_SHA and CRYPTO_AUTHENC for it under there.
+We only want to make sure that in the case key->keylen
+is changed, cpus in tcp_md5_hash_key() wont try to use
+uninitialized data, or crash because key->keylen was
+read twice to feed sg_init_one() and ahash_request_set_crypt()
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Suggested-by: Herbert Xu <herbert@gondor.apana.org.au>
-Fixes: 89a82ef87e01 ("crypto: atmel-authenc - add support to...")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 9ea88a153001 ("tcp: md5: check md5 signature without socket lock")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
 ---
- drivers/crypto/Kconfig |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/ipv4/tcp.c      |    7 +++++--
+ net/ipv4/tcp_ipv4.c |    3 +++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -491,10 +491,9 @@ if CRYPTO_DEV_UX500
- endif # if CRYPTO_DEV_UX500
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3847,10 +3847,13 @@ EXPORT_SYMBOL(tcp_md5_hash_skb_data);
  
- config CRYPTO_DEV_ATMEL_AUTHENC
--	tristate "Support for Atmel IPSEC/SSL hw accelerator"
-+	bool "Support for Atmel IPSEC/SSL hw accelerator"
- 	depends on ARCH_AT91 || COMPILE_TEST
--	select CRYPTO_DEV_ATMEL_AES
--	select CRYPTO_DEV_ATMEL_SHA
-+	depends on CRYPTO_DEV_ATMEL_AES
- 	help
- 	  Some Atmel processors can combine the AES and SHA hw accelerators
- 	  to enhance support of IPSEC/SSL.
-@@ -507,7 +506,8 @@ config CRYPTO_DEV_ATMEL_AES
- 	select CRYPTO_AES
- 	select CRYPTO_AEAD
- 	select CRYPTO_BLKCIPHER
--	select CRYPTO_AUTHENC
-+	select CRYPTO_AUTHENC if CRYPTO_DEV_ATMEL_AUTHENC
-+	select CRYPTO_DEV_ATMEL_SHA if CRYPTO_DEV_ATMEL_AUTHENC
- 	help
- 	  Some Atmel processors have AES hw accelerator.
- 	  Select this if you want to use the Atmel module for
+ int tcp_md5_hash_key(struct tcp_md5sig_pool *hp, const struct tcp_md5sig_key *key)
+ {
++	u8 keylen = key->keylen;
+ 	struct scatterlist sg;
+ 
+-	sg_init_one(&sg, key->key, key->keylen);
+-	ahash_request_set_crypt(hp->md5_req, &sg, NULL, key->keylen);
++	smp_rmb(); /* paired with smp_wmb() in tcp_md5_do_add() */
++
++	sg_init_one(&sg, key->key, keylen);
++	ahash_request_set_crypt(hp->md5_req, &sg, NULL, keylen);
+ 	return crypto_ahash_update(hp->md5_req);
+ }
+ EXPORT_SYMBOL(tcp_md5_hash_key);
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1079,6 +1079,9 @@ int tcp_md5_do_add(struct sock *sk, cons
+ 	if (key) {
+ 		/* Pre-existing entry - just update that one. */
+ 		memcpy(key->key, newkey, newkeylen);
++
++		smp_wmb(); /* pairs with smp_rmb() in tcp_md5_hash_key() */
++
+ 		key->keylen = newkeylen;
+ 		return 0;
+ 	}
 
 
