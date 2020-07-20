@@ -2,253 +2,219 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E74C43462
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97240C43458
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C15D722C9D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:49:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PEIxnuYK"
+	by mail.kernel.org (Postfix) with ESMTP id 7B61522C9C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbgGTMsv (ORCPT
+        id S1729408AbgGTMuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:48:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729189AbgGTMsq (ORCPT
+        Mon, 20 Jul 2020 08:50:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60030 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729391AbgGTMt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 08:48:46 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F94C061794;
-        Mon, 20 Jul 2020 05:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=mHiWtESnfpmKOGnGR9J/VvKy447qDpvbyAZDADMp9hY=; b=PEIxnuYKVsyL4VbGipt5/qeMxh
-        hdLo1McwTpyeTRwLfRW8ZgnD8c7KxJu0KZ/qM4WKOnDjX1k53poojoKl8WDY9mRYwM12pb/UJH4Ua
-        CjyNfvuUsmPtIdMkbXPySDCjC9omPKaUZTa4ecBGlbbyDsIipip7l9Xd+wV4Z2UN9foVgIgX+4hsa
-        KANIuyKJjP0qKJA+oPLGsnhL2kIOPH9R7JhwnddXENJ3aLzrcjP+UlS8SO64LU6yvSOrerU+9833A
-        Vh5Nitqyj536Ahxvaz9eEXy0pVwRw0YrrEuyg//N9bEQT+EfyRUcSOFTCy0UWfNW7ClrBPHCvB1de
-        bSeAcmkA==;
-Received: from [2001:4bb8:105:4a81:2a8f:15b1:2c3:7be7] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxVDd-0004cd-10; Mon, 20 Jul 2020 12:48:33 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Subject: [PATCH 19/24] net/ipv6: factor out a ipv6_set_opt_hdr helper
-Date:   Mon, 20 Jul 2020 14:47:32 +0200
-Message-Id: <20200720124737.118617-20-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720124737.118617-1-hch@lst.de>
-References: <20200720124737.118617-1-hch@lst.de>
+        Mon, 20 Jul 2020 08:49:57 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KCYhqA103217;
+        Mon, 20 Jul 2020 08:49:44 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32bw903jmw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 08:49:44 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KChKM5133823;
+        Mon, 20 Jul 2020 08:49:43 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32bw903jkr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 08:49:43 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KCeeQI029943;
+        Mon, 20 Jul 2020 12:49:41 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 32brq82ntj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 12:49:41 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KCncjK16187444
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 12:49:38 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9F28F4C040;
+        Mon, 20 Jul 2020 12:49:38 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4A8774C046;
+        Mon, 20 Jul 2020 12:49:35 +0000 (GMT)
+Received: from hbathini.in.ibm.com (unknown [9.85.112.199])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jul 2020 12:49:35 +0000 (GMT)
+Subject: [PATCH v4 00/12] ppc64: enable kdump support for kexec_file_load
+ syscall
+From:   Hari Bathini <hbathini@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+Date:   Mon, 20 Jul 2020 18:19:34 +0530
+Message-ID: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_07:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 malwarescore=0 adultscore=0 phishscore=0 mlxscore=0
+ suspectscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Factour out a helper to set the IPv6 option headers from
-do_ipv6_setsockopt.
+This patch series enables kdump support for kexec_file_load system
+call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
+code but heavily modified for kernel consumption.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+The first patch adds a weak arch_kexec_locate_mem_hole() function to
+override locate memory hole logic suiting arch needs. There are some
+special regions in ppc64 which should be avoided while loading buffer
+& there are multiple callers to kexec_add_buffer making it complicated
+to maintain range sanity and using generic lookup at the same time.
+
+The second patch marks ppc64 specific code within arch/powerpc/kexec
+and arch/powerpc/purgatory to make the subsequent code changes easy
+to understand.
+
+The next patch adds helper function to setup different memory ranges
+needed for loading kdump kernel, booting into it and exporting the
+crashing kernel's elfcore.
+
+The fourth patch overrides arch_kexec_locate_mem_hole() function to
+locate memory hole for kdump segments by accounting for the special
+memory regions, referred to as excluded memory ranges, and sets
+kbuf->mem when a suitable memory region is found.
+
+The fifth patch moves walk_drmem_lmbs() out of .init section with
+a few changes to reuse it for setting up kdump kernel's usable memory
+ranges. The next patch uses walk_drmem_lmbs() to look up the LMBs
+and set linux,drconf-usable-memory & linux,usable-memory properties
+in order to restrict kdump kernel's memory usage.
+
+The seventh patch adds relocation support for the purgatory. Patch 8
+helps setup the stack for the purgatory. The next patch setups up
+backup region as a segment while loading kdump kernel and teaches
+purgatory to copy it from source to destination.
+
+Patch 10 builds the elfcore header for the running kernel & passes
+the info to kdump kernel via "elfcorehdr=" parameter to export as
+/proc/vmcore file. The next patch sets up the memory reserve map
+for the kexec kernel and also claims kdump support for kdump as
+all the necessary changes are added.
+
+The last patch fixes a lookup issue for `kexec -l -s` case when
+memory is reserved for crashkernel.
+
+There is scope to improve purgatory to print messages, verify sha256,
+move code common across archs - like arch_kexec_apply_relocations_add
+and sha256 digest verification, build purgatory as position independent
+code & other Makefile improvements in purgatory which can be dealt with
+in a separate patch series as a follow-up.
+
+Tested the changes successfully on P8, P9 lpars, couple of OpenPOWER
+boxes, one with secureboot enabled and a simulator.
+
+v3 -> v4:
+* Updated get_node_path() to be an iterative function instead of a
+  recursive one.
+* Added comment explaining why low memory is added to kdump kernel's
+  usable memory ranges though it doesn't fall in crashkernel region.
+* Fixed stack_buf to be quadword aligned in accordance with ABI.
+* Added missing of_node_put() in setup_purgatory_ppc64().
+* Added a FIXME tag to indicate issue in adding opal/rtas regions to
+  core image.
+
+v2 -> v3:
+* Fixed TOC pointer calculation for purgatory by using section info
+  that has relocations applied.
+* Fixed arch_kexec_locate_mem_hole() function to fallback to generic
+  kexec_locate_mem_hole() lookup if exclude ranges list is empty.
+* Dropped check for backup_start in trampoline_64.S as purgatory()
+  function takes care of it anyway.
+
+v1 -> v2:
+* Introduced arch_kexec_locate_mem_hole() for override and dropped
+  weak arch_kexec_add_buffer().
+* Addressed warnings reported by lkp.
+* Added patch to address kexec load issue when memory is reserved
+  for crashkernel.
+* Used the appropriate license header for the new files added.
+* Added an option to merge ranges to minimize reallocations while
+  adding memory ranges.
+* Dropped within_crashkernel parameter for add_opal_mem_range() &
+  add_rtas_mem_range() functions as it is not really needed.
+
 ---
- net/ipv6/ipv6_sockglue.c | 150 +++++++++++++++++++--------------------
- 1 file changed, 75 insertions(+), 75 deletions(-)
 
-diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
-index 3897fb55372d38..90442c8366dff2 100644
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -315,6 +315,80 @@ static int compat_ipv6_mcast_join_leave(struct sock *sk, int optname,
- 	return ipv6_sock_mc_drop(sk, gr32.gr_interface, &psin6->sin6_addr);
- }
- 
-+static int ipv6_set_opt_hdr(struct sock *sk, int optname, void __user *optval,
-+		int optlen)
-+{
-+	struct ipv6_pinfo *np = inet6_sk(sk);
-+	struct ipv6_opt_hdr *new = NULL;
-+	struct net *net = sock_net(sk);
-+	struct ipv6_txoptions *opt;
-+	int err;
-+
-+	/* hop-by-hop / destination options are privileged option */
-+	if (optname != IPV6_RTHDR && !ns_capable(net->user_ns, CAP_NET_RAW))
-+		return -EPERM;
-+
-+	/* remove any sticky options header with a zero option
-+	 * length, per RFC3542.
-+	 */
-+	if (optlen > 0) {
-+		if (!optval)
-+			return -EINVAL;
-+		if (optlen < sizeof(struct ipv6_opt_hdr) ||
-+		    optlen & 0x7 ||
-+		    optlen > 8 * 255)
-+			return -EINVAL;
-+
-+		new = memdup_user(optval, optlen);
-+		if (IS_ERR(new))
-+			return PTR_ERR(new);
-+		if (unlikely(ipv6_optlen(new) > optlen)) {
-+			kfree(new);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	opt = rcu_dereference_protected(np->opt, lockdep_sock_is_held(sk));
-+	opt = ipv6_renew_options(sk, opt, optname, new);
-+	kfree(new);
-+	if (IS_ERR(opt))
-+		return PTR_ERR(opt);
-+
-+	/* routing header option needs extra check */
-+	err = -EINVAL;
-+	if (optname == IPV6_RTHDR && opt && opt->srcrt) {
-+		struct ipv6_rt_hdr *rthdr = opt->srcrt;
-+		switch (rthdr->type) {
-+#if IS_ENABLED(CONFIG_IPV6_MIP6)
-+		case IPV6_SRCRT_TYPE_2:
-+			if (rthdr->hdrlen != 2 || rthdr->segments_left != 1)
-+				goto sticky_done;
-+			break;
-+#endif
-+		case IPV6_SRCRT_TYPE_4:
-+		{
-+			struct ipv6_sr_hdr *srh =
-+				(struct ipv6_sr_hdr *)opt->srcrt;
-+
-+			if (!seg6_validate_srh(srh, optlen, false))
-+				goto sticky_done;
-+			break;
-+		}
-+		default:
-+			goto sticky_done;
-+		}
-+	}
-+
-+	err = 0;
-+	opt = ipv6_update_options(sk, opt);
-+sticky_done:
-+	if (opt) {
-+		atomic_sub(opt->tot_len, &sk->sk_omem_alloc);
-+		txopt_put(opt);
-+	}
-+	return err;
-+}
-+
- static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
- 		    char __user *optval, unsigned int optlen)
- {
-@@ -580,82 +654,8 @@ static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
- 	case IPV6_RTHDRDSTOPTS:
- 	case IPV6_RTHDR:
- 	case IPV6_DSTOPTS:
--	{
--		struct ipv6_txoptions *opt;
--		struct ipv6_opt_hdr *new = NULL;
--
--		/* hop-by-hop / destination options are privileged option */
--		retv = -EPERM;
--		if (optname != IPV6_RTHDR && !ns_capable(net->user_ns, CAP_NET_RAW))
--			break;
--
--		/* remove any sticky options header with a zero option
--		 * length, per RFC3542.
--		 */
--		if (optlen == 0)
--			optval = NULL;
--		else if (!optval)
--			goto e_inval;
--		else if (optlen < sizeof(struct ipv6_opt_hdr) ||
--			 optlen & 0x7 || optlen > 8 * 255)
--			goto e_inval;
--		else {
--			new = memdup_user(optval, optlen);
--			if (IS_ERR(new)) {
--				retv = PTR_ERR(new);
--				break;
--			}
--			if (unlikely(ipv6_optlen(new) > optlen)) {
--				kfree(new);
--				goto e_inval;
--			}
--		}
--
--		opt = rcu_dereference_protected(np->opt,
--						lockdep_sock_is_held(sk));
--		opt = ipv6_renew_options(sk, opt, optname, new);
--		kfree(new);
--		if (IS_ERR(opt)) {
--			retv = PTR_ERR(opt);
--			break;
--		}
--
--		/* routing header option needs extra check */
--		retv = -EINVAL;
--		if (optname == IPV6_RTHDR && opt && opt->srcrt) {
--			struct ipv6_rt_hdr *rthdr = opt->srcrt;
--			switch (rthdr->type) {
--#if IS_ENABLED(CONFIG_IPV6_MIP6)
--			case IPV6_SRCRT_TYPE_2:
--				if (rthdr->hdrlen != 2 ||
--				    rthdr->segments_left != 1)
--					goto sticky_done;
--
--				break;
--#endif
--			case IPV6_SRCRT_TYPE_4:
--			{
--				struct ipv6_sr_hdr *srh = (struct ipv6_sr_hdr *)
--							  opt->srcrt;
--
--				if (!seg6_validate_srh(srh, optlen, false))
--					goto sticky_done;
--				break;
--			}
--			default:
--				goto sticky_done;
--			}
--		}
--
--		retv = 0;
--		opt = ipv6_update_options(sk, opt);
--sticky_done:
--		if (opt) {
--			atomic_sub(opt->tot_len, &sk->sk_omem_alloc);
--			txopt_put(opt);
--		}
-+		retv = ipv6_set_opt_hdr(sk, optname, optval, optlen);
- 		break;
--	}
- 
- 	case IPV6_PKTINFO:
- 	{
--- 
-2.27.0
+Hari Bathini (12):
+      kexec_file: allow archs to handle special regions while locating memory hole
+      powerpc/kexec_file: mark PPC64 specific code
+      powerpc/kexec_file: add helper functions for getting memory ranges
+      ppc64/kexec_file: avoid stomping memory used by special regions
+      powerpc/drmem: make lmb walk a bit more flexible
+      ppc64/kexec_file: restrict memory usage of kdump kernel
+      ppc64/kexec_file: add support to relocate purgatory
+      ppc64/kexec_file: setup the stack for purgatory
+      ppc64/kexec_file: setup backup region for kdump kernel
+      ppc64/kexec_file: prepare elfcore header for crashing kernel
+      ppc64/kexec_file: add appropriate regions for memory reserve map
+      ppc64/kexec_file: fix kexec load failure with lack of memory hole
+
+
+ arch/powerpc/include/asm/crashdump-ppc64.h |   10 
+ arch/powerpc/include/asm/drmem.h           |    9 
+ arch/powerpc/include/asm/kexec.h           |   33 +
+ arch/powerpc/include/asm/kexec_ranges.h    |   25 
+ arch/powerpc/include/asm/purgatory.h       |   11 
+ arch/powerpc/kernel/prom.c                 |   13 
+ arch/powerpc/kexec/Makefile                |    2 
+ arch/powerpc/kexec/elf_64.c                |   36 +
+ arch/powerpc/kexec/file_load.c             |   60 +
+ arch/powerpc/kexec/file_load_64.c          | 1554 ++++++++++++++++++++++++++++
+ arch/powerpc/kexec/ranges.c                |  410 +++++++
+ arch/powerpc/mm/drmem.c                    |   87 +-
+ arch/powerpc/mm/numa.c                     |   13 
+ arch/powerpc/purgatory/Makefile            |   28 -
+ arch/powerpc/purgatory/purgatory_64.c      |   36 +
+ arch/powerpc/purgatory/trampoline.S        |  117 --
+ arch/powerpc/purgatory/trampoline_64.S     |  170 +++
+ include/linux/kexec.h                      |   29 -
+ kernel/kexec_file.c                        |   16 
+ 19 files changed, 2464 insertions(+), 195 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
+ create mode 100644 arch/powerpc/include/asm/kexec_ranges.h
+ create mode 100644 arch/powerpc/include/asm/purgatory.h
+ create mode 100644 arch/powerpc/kexec/file_load_64.c
+ create mode 100644 arch/powerpc/kexec/ranges.c
+ create mode 100644 arch/powerpc/purgatory/purgatory_64.c
+ delete mode 100644 arch/powerpc/purgatory/trampoline.S
+ create mode 100644 arch/powerpc/purgatory/trampoline_64.S
 
