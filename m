@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D76C28CFE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96003C2BB4C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3A9722C9D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6888E22BF5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281144;
-	bh=oGUrR/3CifRJrhJzUDoT4zDQtGxfmbqA1TZdgk9HqjY=;
+	s=default; t=1595281150;
+	bh=cPR2zPn5HSoqWO5iLEJ+606lEqfGx63K60WONIiPpHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JkRtjXrFK8DQK28F6VveyY1/rr6hdK8i7TViqFLTFy1QU+q6dTQzQom5bdCNdV+Do
-	 M9Oe5fyJ9yPyRvqYoda3xpUrW1jUml5TJS1FRCFRa9H0hG2aC9a8rh0muD4pspdjqP
-	 hq4fJQpUIqZfwAeBprl4/HVrHquR53gTfgOfhDqY=
+	b=BT5d3kXCIYCzi4A7AlT0upTRIWIX5gqG1O9/CGJfCXE8BJVsKve0pLiPwrl0AkA9F
+	 DcsN4G1K/WisEL9ALJ5LeNoIio9Znl+22w+v2V/dic/8cy5FTelAfkwi+x6M7Agc4/
+	 1zr+fzy4h1IH9qTPhS7Zia3shSZFf5DIR8pAsXXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgGTVjD (ORCPT
+        id S1728353AbgGTVjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:39:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57180 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:39:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728178AbgGTVie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:34 -0400
+        id S1728214AbgGTVij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C93522CAF;
-        Mon, 20 Jul 2020 21:38:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD88622CBB;
+        Mon, 20 Jul 2020 21:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281113;
-        bh=oGUrR/3CifRJrhJzUDoT4zDQtGxfmbqA1TZdgk9HqjY=;
+        s=default; t=1595281119;
+        bh=cPR2zPn5HSoqWO5iLEJ+606lEqfGx63K60WONIiPpHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dt/Zcx5hAXics12s2KptXMk/N0LpFuM921zCOGgmsbcoDah1zUbINLAiwsIf7P0lF
-         qvywkYTABA6JG9pO2T6eahwcDNZtY1C2PbRob3p3JE1cs/QSQi6gflgb7OX9VYgLer
-         c6v20r7/FnTZOTKHrsXuOinRdWTBPwf1NOjEfpnA=
+        b=w7px24BrMK++MpfKQNUFHvyokYLDgbc7tSgB9DLvihyVbFJfWnb31EdnQOlHvk2c5
+         IOuVCk/4dbPl8hxn69k0dKe10rzzhArPtNFrcvXpsB0/S7xU8xbTBxkLhHSPY5KpLL
+         P5edYgv/gA5Mzfz83qgJuxaqClXA2PFYfHuhHOQA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jack Xiao <Jack.Xiao@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 21/34] drm/amdgpu/gfx10: fix race condition for kiq
-Date:   Mon, 20 Jul 2020 17:37:54 -0400
-Message-Id: <20200720213807.407380-21-sashal@kernel.org>
+Cc:     Cristian Marussi <cristian.marussi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 26/34] hwmon: (scmi) Fix potential buffer overflow in scmi_hwmon_probe()
+Date:   Mon, 20 Jul 2020 17:37:59 -0400
+Message-Id: <20200720213807.407380-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
 References: <20200720213807.407380-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,55 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Xiao <Jack.Xiao@amd.com>
+From: Cristian Marussi <cristian.marussi@arm.com>
 
-[ Upstream commit 7d65a577bb58d4f27a3398a4c0cb0b00ab7d0511 ]
+[ Upstream commit 3ce17cd2b94907f6d91b81b32848044b84c97606 ]
 
-During preemption test for gfx10, it uses kiq to trigger
-gfx preemption, which would result in race condition
-with flushing TLB for kiq.
+SMATCH detected a potential buffer overflow in the manipulation of
+hwmon_attributes array inside the scmi_hwmon_probe function:
 
-Signed-off-by: Jack Xiao <Jack.Xiao@amd.com>
-Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Acked-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+drivers/hwmon/scmi-hwmon.c:226
+ scmi_hwmon_probe() error: buffer overflow 'hwmon_attributes' 6 <= 9
+
+Fix it by statically declaring the size of the array as the maximum
+possible as defined by hwmon_max define.
+
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Link: https://lore.kernel.org/r/20200715121338.GA18761@e119603-lin.cambridge.arm.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/hwmon/scmi-hwmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-index 6f118292e40fb..64d96eb0a2337 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-@@ -4683,12 +4683,17 @@ static int gfx_v10_0_ring_preempt_ib(struct amdgpu_ring *ring)
- 	struct amdgpu_device *adev = ring->adev;
- 	struct amdgpu_kiq *kiq = &adev->gfx.kiq;
- 	struct amdgpu_ring *kiq_ring = &kiq->ring;
-+	unsigned long flags;
+diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+index 8a7732c0bef3e..7cd13a217c615 100644
+--- a/drivers/hwmon/scmi-hwmon.c
++++ b/drivers/hwmon/scmi-hwmon.c
+@@ -147,7 +147,7 @@ static enum hwmon_sensor_types scmi_types[] = {
+ 	[ENERGY] = hwmon_energy,
+ };
  
- 	if (!kiq->pmf || !kiq->pmf->kiq_unmap_queues)
- 		return -EINVAL;
- 
--	if (amdgpu_ring_alloc(kiq_ring, kiq->pmf->unmap_queues_size))
-+	spin_lock_irqsave(&kiq->ring_lock, flags);
-+
-+	if (amdgpu_ring_alloc(kiq_ring, kiq->pmf->unmap_queues_size)) {
-+		spin_unlock_irqrestore(&kiq->ring_lock, flags);
- 		return -ENOMEM;
-+	}
- 
- 	/* assert preemption condition */
- 	amdgpu_ring_set_preempt_cond_exec(ring, false);
-@@ -4699,6 +4704,8 @@ static int gfx_v10_0_ring_preempt_ib(struct amdgpu_ring *ring)
- 				   ++ring->trail_seq);
- 	amdgpu_ring_commit(kiq_ring);
- 
-+	spin_unlock_irqrestore(&kiq->ring_lock, flags);
-+
- 	/* poll the trailing fence */
- 	for (i = 0; i < adev->usec_timeout; i++) {
- 		if (ring->trail_seq ==
+-static u32 hwmon_attributes[] = {
++static u32 hwmon_attributes[hwmon_max] = {
+ 	[hwmon_chip] = HWMON_C_REGISTER_TZ,
+ 	[hwmon_temp] = HWMON_T_INPUT | HWMON_T_LABEL,
+ 	[hwmon_in] = HWMON_I_INPUT | HWMON_I_LABEL,
 -- 
 2.25.1
 
