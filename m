@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7703C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC91CC43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 997EB2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C832070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262249;
-	bh=RqNBEJqQUF1iD1QlbiKbl3gj6EvsNqaGw9wtMeIXKro=;
+	s=default; t=1595262260;
+	bh=0S0MdIvexlqATgisYh+BVsnXvViVSBmHnw4wfvtKGwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GzqtPv+sApaKHa2J6fZOgMuKN22mnm5SXUte6/NR1d9xfMhzhyJBaQ4yc0NqjpcCT
-	 jHFKC9+gAH2oVuryuukhzWYArtbQ1GAwXz75uUIma6HwUe5u/yv7I3HRBIq7+29CVC
-	 Bv70IY7S+czUu1Ax9Hkkp5kcLg8FftsTMnY8g268=
+	b=rXS+qvWGN13wFM9D7MaT4TPp39BwJR+IhEJTTYhphdnuFm16OfCCLw+KobX+thveR
+	 3xW/z2jE5BpL2w0h9T9EKRbVl41p6m7FBvqY/Q/F3qkzJH1Z16Q5U0zS1bs9so2CtU
+	 kk6TE26KbgcOCeJgcuhRoLwwRdDuuTQfJsT9qJ+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388086AbgGTQYI (ORCPT
+        id S2388363AbgGTQYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:24:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38804 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732807AbgGTQEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:04:06 -0400
+        id S1732435AbgGTQDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:03:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B66720672;
-        Mon, 20 Jul 2020 16:04:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F252120773;
+        Mon, 20 Jul 2020 16:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261045;
-        bh=RqNBEJqQUF1iD1QlbiKbl3gj6EvsNqaGw9wtMeIXKro=;
+        s=default; t=1595261029;
+        bh=0S0MdIvexlqATgisYh+BVsnXvViVSBmHnw4wfvtKGwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hdvCiBt6HCic9AOoyIiRtEHQ+r1nfHS68ZewXLUi3fRRsBsjmXaiykFyS4eabk++1
-         fLXwnMYvIQ02PehLAbfsr11+TlWSTWCqs3Jxn+PkHo+W7a7sLZ5w+N3++miLlBRY/j
-         S0m1kQJG760xS23g27qwaqFyXrCkOkyXybKm1ir0=
+        b=YUdL2IS7X4oUm+M3yGTC8UCfVMTcMLQVw0/mUz5TNEaoGkSHgFFkkuMRrEzzTxjXu
+         CubO3lzT3GdwBQcR1GBFHhK0NfgUc5aHsCQhPpM3tdAsNbv0Be2TQ3hwJNQikR3cHS
+         NYD7/12iCbNBmiLNSUd4kiJVAhTtNbldXnAZuJrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.4 189/215] intel_th: pci: Add Jasper Lake CPU support
-Date:   Mon, 20 Jul 2020 17:37:51 +0200
-Message-Id: <20200720152829.175275670@linuxfoundation.org>
+        stable@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCH 5.4 183/215] timer: Prevent base->clk from moving backward
+Date:   Mon, 20 Jul 2020 17:37:45 +0200
+Message-Id: <20200720152828.877890659@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -60,35 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Frederic Weisbecker <frederic@kernel.org>
 
-commit 203c1f615052921901b7a8fbe2005d8ea6add076 upstream.
+commit 30c66fc30ee7a98c4f3adf5fb7e213b61884474f upstream.
 
-This adds support for the Trace Hub in Jasper Lake CPU.
+When a timer is enqueued with a negative delta (ie: expiry is below
+base->clk), it gets added to the wheel as expiring now (base->clk).
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@vger.kernel.org # v4.14+
-Link: https://lore.kernel.org/r/20200706161339.55468-2-alexander.shishkin@linux.intel.com
+Yet the value that gets stored in base->next_expiry, while calling
+trigger_dyntick_cpu(), is the initial timer->expires value. The
+resulting state becomes:
+
+	base->next_expiry < base->clk
+
+On the next timer enqueue, forward_timer_base() may accidentally
+rewind base->clk. As a possible outcome, timers may expire way too
+early, the worst case being that the highest wheel levels get spuriously
+processed again.
+
+To prevent from that, make sure that base->next_expiry doesn't get below
+base->clk.
+
+Fixes: a683f390b93f ("timers: Forward the wheel clock whenever possible")
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Tested-by: Juri Lelli <juri.lelli@redhat.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200703010657.2302-1-frederic@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/pci.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/time/timer.c |   17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -235,6 +235,11 @@ static const struct pci_device_id intel_
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
- 	{
-+		/* Jasper Lake CPU */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4e29),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
-+	{
- 		/* Elkhart Lake CPU */
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4529),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -585,7 +585,15 @@ trigger_dyntick_cpu(struct timer_base *b
+ 	 * Set the next expiry time and kick the CPU so it can reevaluate the
+ 	 * wheel:
+ 	 */
+-	base->next_expiry = timer->expires;
++	if (time_before(timer->expires, base->clk)) {
++		/*
++		 * Prevent from forward_timer_base() moving the base->clk
++		 * backward
++		 */
++		base->next_expiry = base->clk;
++	} else {
++		base->next_expiry = timer->expires;
++	}
+ 	wake_up_nohz_cpu(base->cpu);
+ }
+ 
+@@ -897,10 +905,13 @@ static inline void forward_timer_base(st
+ 	 * If the next expiry value is > jiffies, then we fast forward to
+ 	 * jiffies otherwise we forward to the next expiry value.
+ 	 */
+-	if (time_after(base->next_expiry, jnow))
++	if (time_after(base->next_expiry, jnow)) {
+ 		base->clk = jnow;
+-	else
++	} else {
++		if (WARN_ON_ONCE(time_before(base->next_expiry, base->clk)))
++			return;
+ 		base->clk = base->next_expiry;
++	}
+ #endif
+ }
+ 
 
 
