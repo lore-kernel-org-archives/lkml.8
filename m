@@ -2,135 +2,433 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F67C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF1A62073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:34:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262848;
-	bh=KJc236Beqe715ZNP7qUMd5cLfYkrychBQiDwOL6cJeo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gp1p0u7/6h7THQxBT1FmmS6L3HuAKD84hJ2mGfeB9ol/JnCAu16ysn+p7CVgSyZer
-	 5ufA6litKo6i4lsf2Hxk8poyj6oDfk2BxWhkpRuma7QwMWvXYONC6U1IyRwjFaqTNj
-	 VoNcm05r82IAsXkFBF7y5vcUm79/Lqeysw4fGiko=
+	by mail.kernel.org (Postfix) with ESMTP id C568B22CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:34:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J9/9xgHY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZjVgWpfb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731980AbgGTQeH (ORCPT
+        id S2388976AbgGTQeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:34:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730420AbgGTPzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:55:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C7162065E;
-        Mon, 20 Jul 2020 15:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260535;
-        bh=KJc236Beqe715ZNP7qUMd5cLfYkrychBQiDwOL6cJeo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mixajibxxjUzS6mN8LDrANCmuwYV1M9ypey+GaTK+6LIbgYkg6kXq/s3lw+t6epNL
-         c1Fywwou2zva9yxWxZT7JfVx+CP3eqm3FQoM/hefNMlJnSMwK29JU+XVAuUOXQa6Vk
-         rheXzsD3LRFp6WsZuOAS9yiGGjP7VtOl/elRT54Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=B6rgen=20Storvist?= <jorgen.storvist@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 097/133] USB: serial: option: add GosunCn GM500 series
-Date:   Mon, 20 Jul 2020 17:37:24 +0200
-Message-Id: <20200720152808.419655897@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
-References: <20200720152803.732195882@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 12:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731190AbgGTPzi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:55:38 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 316BDC061794;
+        Mon, 20 Jul 2020 08:55:38 -0700 (PDT)
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595260536;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qdH0Q0m6uPKPc8iXtsTXSJDQjodOrhKcpCVoTsv4sq0=;
+        b=J9/9xgHYNb70qSjEWIL8UGR2E8aVfV3B3W5hIZSeNJQEwj9PXJAmZmnSk7A3uRFGD2+zsR
+        lrzQhMcpgxeyTIpoHCLWJWE2+Zy2ADoHoFK8MPUl5/fJYSdLk/3zCnCchhhI5idIpNnPHx
+        2U43VbOFSbJt6PHBp0fErsKSTCrV1cus9COQkFxKMH3y1btdUSqnc4mu5Ipu7y869aj7a4
+        VCcQ84KgpRnFBN+p8Z0W220Nea14UuEPhhOFHjVSs4GPBjfa2RHHJTWCUZfEITUDFddO1s
+        EEnVbxjPdbshmC+HeA0DvR2gwobMkT43i1r+HVMcfrtcvCAJ+m4Q2lhbnaeX2A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595260536;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qdH0Q0m6uPKPc8iXtsTXSJDQjodOrhKcpCVoTsv4sq0=;
+        b=ZjVgWpfbh6yf+VKEnwkVyfGoALJAga15jkmoLFOiGu+MPYYgSwy5QWwNgWDqE78HAxhYwV
+        gI+hSGNJWnHsS3Aw==
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: [PATCH v4 01/24] Documentation: locking: Describe seqlock design and usage
+Date:   Mon, 20 Jul 2020 17:55:07 +0200
+Message-Id: <20200720155530.1173732-2-a.darwish@linutronix.de>
+In-Reply-To: <20200720155530.1173732-1-a.darwish@linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200720155530.1173732-1-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jörgen Storvist <jorgen.storvist@gmail.com>
+Proper documentation for the design and usage of sequence counters and
+sequential locks does not exist. Complete the seqlock.h documentation as
+follows:
 
-commit 08d4ef5cc9203a113702f24725f6cf4db476c958 upstream.
+  - Divide all documentation on a seqcount_t vs. seqlock_t basis. The
+    description for both mechanisms was intermingled, which is incorrect
+    since the usage constrains for each type are vastly different.
 
-Add USB IDs for GosunCn GM500 series cellular modules.
+  - Add an introductory paragraph describing the internal design of, and
+    rationale for, sequence counters.
 
-RNDIS config:
-usb-devices
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 12 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=305a ProdID=1404 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 1 Cls=e0(wlcon) Sub=01 Prot=03 Driver=rndis_host
-I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
-I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+  - Document seqcount_t writer non-preemptibility requirement, which was
+    not previously documented anywhere, and provide a clear rationale.
 
-MBIM config:
-usb-devices
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 11 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=305a ProdID=1405 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
-I:  If#=0x4 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
+  - Provide template code for seqcount_t and seqlock_t initialization
+    and reader/writer critical sections.
 
-ECM config:
-usb-devices
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 13 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=305a ProdID=1406 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 1 Cls=02(commc) Sub=06 Prot=00 Driver=cdc_ether
-I:  If#=0x4 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=cdc_ether
+  - Recommend using seqlock_t by default. It implicitly handles the
+    serialization and non-preemptibility requirements of writers.
 
-Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+At seqlock.h:
 
+  - Remove references to brlocks as they've long been removed from the
+    kernel.
+
+  - Remove references to gcc-3.x since the kernel's minimum supported
+    gcc version is 4.9.
+
+References: 0f6ed63b1707 ("no need to keep brlock macros anymore...")
+References: 6ec4476ac825 ("Raise gcc version requirement to 4.9")
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- drivers/usb/serial/option.c |    3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/locking/index.rst   |   1 +
+ Documentation/locking/seqlock.rst | 170 ++++++++++++++++++++++++++++++
+ include/linux/seqlock.h           |  81 +++++++-------
+ 3 files changed, 209 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/locking/seqlock.rst
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -2028,6 +2028,9 @@ static const struct usb_device_id option
- 	  .driver_info = RSVD(4) | RSVD(5) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0105, 0xff),			/* Fibocom NL678 series */
- 	  .driver_info = RSVD(6) },
-+	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1404, 0xff) },			/* GosunCn GM500 RNDIS */
-+	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1405, 0xff) },			/* GosunCn GM500 MBIM */
-+	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1406, 0xff) },			/* GosunCn GM500 ECM/NCM */
- 	{ } /* Terminating entry */
- };
- MODULE_DEVICE_TABLE(usb, option_ids);
-
+diff --git a/Documentation/locking/index.rst b/Documentation/locking/index.rst
+index d785878cad65..7003bd5aeff4 100644
+--- a/Documentation/locking/index.rst
++++ b/Documentation/locking/index.rst
+@@ -14,6 +14,7 @@ locking
+     mutex-design
+     rt-mutex-design
+     rt-mutex
++    seqlock
+     spinlocks
+     ww-mutex-design
+     preempt-locking
+diff --git a/Documentation/locking/seqlock.rst b/Documentation/locking/seqlock.rst
+new file mode 100644
+index 000000000000..366dd368d90a
+--- /dev/null
++++ b/Documentation/locking/seqlock.rst
+@@ -0,0 +1,170 @@
++======================================
++Sequence counters and sequential locks
++======================================
++
++Introduction
++============
++
++Sequence counters are a reader-writer consistency mechanism with
++lockless readers (read-only retry loops), and no writer starvation. They
++are used for data that's rarely written to (e.g. system time), where the
++reader wants a consistent set of information and is willing to retry if
++that information changes.
++
++A data set is consistent when the sequence count at the beginning of the
++read side critical section is even and the same sequence count value is
++read again at the end of the critical section. The data in the set must
++be copied out inside the read side critical section. If the sequence
++count has changed between the start and the end of the critical section,
++the reader must retry.
++
++Writers increment the sequence count at the start and the end of their
++critical section. After starting the critical section the sequence count
++is odd and indicates to the readers that an update is in progress. At
++the end of the write side critical section the sequence count becomes
++even again which lets readers make progress.
++
++A sequence counter write side critical section must never be preempted
++or interrupted by read side sections. Otherwise the reader will spin for
++the entire scheduler tick due to the odd sequence count value and the
++interrupted writer. If that reader belongs to a real-time scheduling
++class, it can spin forever and the kernel will livelock.
++
++This mechanism cannot be used if the protected data contains pointers,
++as the writer can invalidate a pointer that the reader is following.
++
++
++.. _seqcount_t:
++
++Sequence counters (``seqcount_t``)
++==================================
++
++This is the the raw counting mechanism, which does not protect against
++multiple writers.  Write side critical sections must thus be serialized
++by an external lock.
++
++If the write serialization primitive is not implicitly disabling
++preemption, preemption must be explicitly disabled before entering the
++write side section. If the read section can be invoked from hardirq or
++softirq contexts, interrupts or bottom halves must also be respectively
++disabled before entering the write section.
++
++If it's desired to automatically handle the sequence counter
++requirements of writer serialization and non-preemptibility, use
++:ref:`seqlock_t` instead.
++
++Initialization::
++
++	/* dynamic */
++	seqcount_t foo_seqcount;
++	seqcount_init(&foo_seqcount);
++
++	/* static */
++	static seqcount_t foo_seqcount = SEQCNT_ZERO(foo_seqcount);
++
++	/* C99 struct init */
++	struct {
++		.seq   = SEQCNT_ZERO(foo.seq),
++	} foo;
++
++Write path::
++
++	/* Serialized context with disabled preemption */
++
++	write_seqcount_begin(&foo_seqcount);
++
++	/* ... [[write-side critical section]] ... */
++
++	write_seqcount_end(&foo_seqcount);
++
++Read path::
++
++	do {
++		seq = read_seqcount_begin(&foo_seqcount);
++
++		/* ... [[read-side critical section]] ... */
++
++	} while (read_seqcount_retry(&foo_seqcount, seq));
++
++
++.. _seqlock_t:
++
++Sequential locks (``seqlock_t``)
++================================
++
++This contains the :ref:`seqcount_t` mechanism earlier discussed, plus an
++embedded spinlock for writer serialization and non-preemptibility.
++
++If the read side section can be invoked from hardirq or softirq context,
++use the write side function variants which disable interrupts or bottom
++halves respectively.
++
++Initialization::
++
++	/* dynamic */
++	seqlock_t foo_seqlock;
++	seqlock_init(&foo_seqlock);
++
++	/* static */
++	static DEFINE_SEQLOCK(foo_seqlock);
++
++	/* C99 struct init */
++	struct {
++		.seql   = __SEQLOCK_UNLOCKED(foo.seql)
++	} foo;
++
++Write path::
++
++	write_seqlock(&foo_seqlock);
++
++	/* ... [[write-side critical section]] ... */
++
++	write_sequnlock(&foo_seqlock);
++
++Read path, three categories:
++
++1. Normal Sequence readers which never block a writer but they must
++   retry if a writer is in progress by detecting change in the sequence
++   number.  Writers do not wait for a sequence reader::
++
++	do {
++		seq = read_seqbegin(&foo_seqlock);
++
++		/* ... [[read-side critical section]] ... */
++
++	} while (read_seqretry(&foo_seqlock, seq));
++
++2. Locking readers which will wait if a writer or another locking reader
++   is in progress. A locking reader in progress will also block a writer
++   from entering its critical section. This read lock is
++   exclusive. Unlike rwlock_t, only one locking reader can acquire it::
++
++	read_seqlock_excl(&foo_seqlock);
++
++	/* ... [[read-side critical section]] ... */
++
++	read_sequnlock_excl(&foo_seqlock);
++
++3. Conditional lockless reader (as in 1), or locking reader (as in 2),
++   according to a passed marker. This is used to avoid lockless readers
++   starvation (too much retry loops) in case of a sharp spike in write
++   activity. First, a lockless read is tried (even marker passed). If
++   that trial fails (odd sequence counter is returned, which is used as
++   the next iteration marker), the lockless read is transformed to a
++   full locking read and no retry loop is necessary::
++
++	/* marker; even initialization */
++	int seq = 0;
++	do {
++		read_seqbegin_or_lock(&foo_seqlock, &seq);
++
++		/* ... [[read-side critical section]] ... */
++
++	} while (need_seqretry(&foo_seqlock, seq));
++	done_seqretry(&foo_seqlock, seq);
++
++
++API documentation
++=================
++
++.. kernel-doc:: include/linux/seqlock.h
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index 8b97204f35a7..299d68f10325 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -1,36 +1,15 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef __LINUX_SEQLOCK_H
+ #define __LINUX_SEQLOCK_H
++
+ /*
+- * Reader/writer consistent mechanism without starving writers. This type of
+- * lock for data where the reader wants a consistent set of information
+- * and is willing to retry if the information changes. There are two types
+- * of readers:
+- * 1. Sequence readers which never block a writer but they may have to retry
+- *    if a writer is in progress by detecting change in sequence number.
+- *    Writers do not wait for a sequence reader.
+- * 2. Locking readers which will wait if a writer or another locking reader
+- *    is in progress. A locking reader in progress will also block a writer
+- *    from going forward. Unlike the regular rwlock, the read lock here is
+- *    exclusive so that only one locking reader can get it.
++ * seqcount_t / seqlock_t - a reader-writer consistency mechanism with
++ * lockless readers (read-only retry loops), and no writer starvation.
+  *
+- * This is not as cache friendly as brlock. Also, this may not work well
+- * for data that contains pointers, because any writer could
+- * invalidate a pointer that a reader was following.
++ * See Documentation/locking/seqlock.rst
+  *
+- * Expected non-blocking reader usage:
+- * 	do {
+- *	    seq = read_seqbegin(&foo);
+- * 	...
+- *      } while (read_seqretry(&foo, seq));
+- *
+- *
+- * On non-SMP the spin locks disappear but the writer still needs
+- * to increment the sequence variables because an interrupt routine could
+- * change the state of the data.
+- *
+- * Based on x86_64 vsyscall gettimeofday 
+- * by Keith Owens and Andrea Arcangeli
++ * Copyrights:
++ * - Based on x86_64 vsyscall gettimeofday: Keith Owens, Andrea Arcangeli
+  */
+ 
+ #include <linux/spinlock.h>
+@@ -41,8 +20,8 @@
+ #include <asm/processor.h>
+ 
+ /*
+- * The seqlock interface does not prescribe a precise sequence of read
+- * begin/retry/end. For readers, typically there is a call to
++ * The seqlock seqcount_t interface does not prescribe a precise sequence of
++ * read begin/retry/end. For readers, typically there is a call to
+  * read_seqcount_begin() and read_seqcount_retry(), however, there are more
+  * esoteric cases which do not follow this pattern.
+  *
+@@ -50,16 +29,30 @@
+  * via seqcount_t under KCSAN: upon beginning a seq-reader critical section,
+  * pessimistically mark the next KCSAN_SEQLOCK_REGION_MAX memory accesses as
+  * atomics; if there is a matching read_seqcount_retry() call, no following
+- * memory operations are considered atomic. Usage of seqlocks via seqlock_t
+- * interface is not affected.
++ * memory operations are considered atomic. Usage of the seqlock_t interface
++ * is not affected.
+  */
+ #define KCSAN_SEQLOCK_REGION_MAX 1000
+ 
+ /*
+- * Version using sequence counter only.
+- * This can be used when code has its own mutex protecting the
+- * updating starting before the write_seqcountbeqin() and ending
+- * after the write_seqcount_end().
++ * Sequence counters (seqcount_t)
++ *
++ * This is the raw counting mechanism, without any writer protection.
++ *
++ * Write side critical sections must be serialized and non-preemptible.
++ *
++ * If readers can be invoked from hardirq or softirq contexts,
++ * interrupts or bottom halves must also be respectively disabled before
++ * entering the write section.
++ *
++ * This mechanism can't be used if the protected data contains pointers,
++ * as the writer can invalidate a pointer that a reader is following.
++ *
++ * If it's desired to automatically handle the sequence counter writer
++ * serialization and non-preemptibility requirements, use a sequential
++ * lock (seqlock_t) instead.
++ *
++ * See Documentation/locking/seqlock.rst
+  */
+ typedef struct seqcount {
+ 	unsigned sequence;
+@@ -398,10 +391,6 @@ static inline void raw_write_seqcount_latch(seqcount_t *s)
+        smp_wmb();      /* increment "sequence" before following stores */
+ }
+ 
+-/*
+- * Sequence counter only version assumes that callers are using their
+- * own mutexing.
+- */
+ static inline void write_seqcount_begin_nested(seqcount_t *s, int subclass)
+ {
+ 	raw_write_seqcount_begin(s);
+@@ -434,15 +423,21 @@ static inline void write_seqcount_invalidate(seqcount_t *s)
+ 	kcsan_nestable_atomic_end();
+ }
+ 
++/*
++ * Sequential locks (seqlock_t)
++ *
++ * Sequence counters with an embedded spinlock for writer serialization
++ * and non-preemptibility.
++ *
++ * For more info, see:
++ *    - Comments on top of seqcount_t
++ *    - Documentation/locking/seqlock.rst
++ */
+ typedef struct {
+ 	struct seqcount seqcount;
+ 	spinlock_t lock;
+ } seqlock_t;
+ 
+-/*
+- * These macros triggered gcc-3.x compile-time problems.  We think these are
+- * OK now.  Be cautious.
+- */
+ #define __SEQLOCK_UNLOCKED(lockname)			\
+ 	{						\
+ 		.seqcount = SEQCNT_ZERO(lockname),	\
+-- 
+2.20.1
 
