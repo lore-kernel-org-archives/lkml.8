@@ -2,410 +2,183 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E4DC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45D4C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC7622CBE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA0121775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:33:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="d3lm389v";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="XJnwsAaV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgGTIaH (ORCPT
+        id S1727071AbgGTIdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:30:07 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8333 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727809AbgGTIaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:30:06 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B96D04557B5E0E7B3366;
-        Mon, 20 Jul 2020 16:30:01 +0800 (CST)
-Received: from localhost (10.174.149.93) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
- 16:29:51 +0800
-From:   Jay Zhou <jianjay.zhou@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
-CC:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
-        <maoming.maoming@huawei.com>, <jianjay.zhou@huawei.com>,
-        <weidong.huang@huawei.com>
-Subject: [PATCH] vfio dma_map/unmap: optimized for hugetlbfs pages
-Date:   Mon, 20 Jul 2020 16:29:47 +0800
-Message-ID: <20200720082947.1770-1-jianjay.zhou@huawei.com>
-X-Mailer: git-send-email 2.14.1.windows.1
+        Mon, 20 Jul 2020 04:33:16 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:43153 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgGTIdP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 04:33:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1595233994; x=1626769994;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=+7gZQryFplDiuMXNLD/M11ByxFkrOl4vd7gL1EbCGR8=;
+  b=d3lm389vTc9rHT3hJQph71pVUicj1g0z30Pg3VFrRURGnMpDEizL3b4H
+   GSL6oNqKywDp0w70DwkW3U+1tKi6eNkQsZO9QFeMtyt2bM7mK5Z7/VY8F
+   p2tYWH41UYoWyG04m3Krv4nBOoweXB5zSnNlngU3l/MeSMW87Ypojj/cT
+   DggbmtNBMS047KWY8afe5UI4ry343U6hAUJxYWj9OVbwMpyOkUOrKVqQQ
+   88Ti0VY31A1M9r1Z3I7c1Ax5wgIg9J0UQOXWcz8aNdeftLCOVeCAnKK03
+   a4xFKOiPLTr22XfjmlNrHFj3YUYFQ5hSacSXMFKYYbC3GErBG6mXyn61a
+   w==;
+IronPort-SDR: wUErtyOKTdONHMK1iBP087vdGQDAAMKFIueCLCtoXzFrfEA3aHSBLrIqFrmFehpR82mXDp3Yh2
+ T2KwPSk7H3ZrXnqshEJVTk1TqpHCfKj3rx/dbY7sre75E3o6cfMlyYtBoF73UkWA7iRr5pflYH
+ ePJbJdoPrLr4+anX9P5hwKytaOYdfLyD+JOjLAzyb5qk/2rgZBOnPSxDCttzjKsgNFEmNBUVns
+ eU4U5GYScN3U5FZ0QA6wKKBXncNs+rA3z4ue3B5RS3ThuScSwK94M8Iioc0OnAGavGmEG+qcVM
+ QzU=
+X-IronPort-AV: E=Sophos;i="5.75,374,1589266800"; 
+   d="scan'208";a="84575923"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Jul 2020 01:33:13 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 20 Jul 2020 01:33:13 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
+ Transport; Mon, 20 Jul 2020 01:32:37 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ksSa8tNClFVKvX1OPP87aVVbn5e1w7YElvo5/fQodfvGyUpvDCMskc6woQC6/zPYfFyXx5BLeDCs3X6DhlUv4DZpp+0oyQ5Dej31lBkGfQYNXmCaDZy4Yw9g5kJxBqEbUOpMYU2CSGvkmPWazzcLXGTCOYO+JVALO8xKv2ZkM4A3emwsVGVD0x0h/CSwsP+w0/1hDY9bXDhh5fy+nOPS0cJtPrzlvPE9KDWnuvwFcipV2g5oFElenUW9NTOl1X4FJXzdJ/5a+epIC0WtJLgyuXA33Wj0T0oV2o6qrPrC5XQrD9EmcW2EMz3zII1oVrHbJ9jyNH2B4FDurTqgANuXhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fYY4Exx7NgOXXHVyS6bcIFOqMW/sjPGTy2h3vkFn22M=;
+ b=oIefLUErya0w8tpqmRtBjjOBG0vq1RDbopoPD40o8dNJNwdC/YKYG7CX1MKWYX/t1ZmzDu2QM6pakxBFaVh/igze5VRRHLx47IZDzmnbOvPDPRMntOrhWFUTzamAASeMOSD+HH2fj4+QcEsm9okcvbBG8uxMYoO8aC2wogfzmC0rej3LPmIoZIKqTZJ1mnRZtNSPnQ5EIIBuODVPbJobXFfrQSo7QjnbspGen3jafKWEoa/OBnnaOBnDjQry3D5/ELuvHjb5NHhO8g0bhpcBUnuCsCeTjk+RtfH6ip5G4Tzw/7CWjV85irE6WR1RbMjV86V8S/H3FEliGcfjXmZcFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fYY4Exx7NgOXXHVyS6bcIFOqMW/sjPGTy2h3vkFn22M=;
+ b=XJnwsAaV0YyALTlx2sgS9xbHc5Ox+6wv9SWohbPdilhaZ5Nu1vNF6Q7bFVj7g2aG7S7u0zSO5InqF1QvK0KqJC4jbXnVg8pp7YSM7z3y19MFsKgAEeT0KZQ+mBDBOVtrYVGRqmBR8r7I2yxAZ5LYQ5jTcDm6JOIOLMV0LvuV7Co=
+Received: from MWHPR11MB0061.namprd11.prod.outlook.com (2603:10b6:301:65::37)
+ by MWHPR11MB1341.namprd11.prod.outlook.com (2603:10b6:300:2b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Mon, 20 Jul
+ 2020 08:33:12 +0000
+Received: from MWHPR11MB0061.namprd11.prod.outlook.com
+ ([fe80::c907:e7ec:bf95:f0be]) by MWHPR11MB0061.namprd11.prod.outlook.com
+ ([fe80::c907:e7ec:bf95:f0be%4]) with mapi id 15.20.3195.024; Mon, 20 Jul 2020
+ 08:33:12 +0000
+From:   <Nicolas.Ferre@microchip.com>
+To:     <kvalo@codeaurora.org>, <sfr@canb.auug.org.au>
+CC:     <vkoul@kernel.org>, <linux-wireless@vger.kernel.org>,
+        <linux-next@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Ludovic.Desroches@microchip.com>, <Ajay.Kathat@microchip.com>,
+        <vladimir.oltean@nxp.com>, <davem@davemloft.net>,
+        <alexandre.belloni@bootlin.com>
+Subject: Re: linux-next: manual merge of the dmaengine tree with the
+ wireless-drivers-next and Linus' trees
+Thread-Topic: linux-next: manual merge of the dmaengine tree with the
+ wireless-drivers-next and Linus' trees
+Thread-Index: AQHWXnBn5imCi5Rt602FuZ1dt9J6tA==
+Date:   Mon, 20 Jul 2020 08:33:12 +0000
+Message-ID: <5bc97453-15fa-b855-0d5a-886fcfb5e0df@microchip.com>
+References: <20200717165336.312dcf09@canb.auug.org.au>
+ <87tuy673e9.fsf@codeaurora.org>
+In-Reply-To: <87tuy673e9.fsf@codeaurora.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: codeaurora.org; dkim=none (message not signed)
+ header.d=none;codeaurora.org; dmarc=none action=none
+ header.from=microchip.com;
+x-originating-ip: [213.41.198.74]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d3e273dc-60b0-4e3e-0656-08d82c878a42
+x-ms-traffictypediagnostic: MWHPR11MB1341:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB13416FF4C2A70343F48D3B4AE07B0@MWHPR11MB1341.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: toqguEIEMx+k59LGhmV8i7pUBMYmiWW1/TWC9dOvwck7OnIlWHG2/tl6haheckxShK9NRpghjEEFQzqt3dldGUzUDg8NKIocLaJo9sWWcteAijit+28oW5SHcUcp/2GRurz1EXCHfkBgjUfblQlWKaC5MH9tb8ulc5wXnL9Kqnpovot4J7d6sXIajgOfS4x8VQ7Cb0Qa1ICBzUUsoM/11W1ABGfk++EyHm+lsk01qtqCQlYlyv/+xQiEcc5usiTaMCLDprNUzcMPWKH8UJSJFRynL4Rq59yUV7qyznCqdvIB5zUIr0N4rCm3iwjVTNaQyWk9RcLyOqKHUtngvS+MJWY5SToL+1j7lG5+3pjDJmQTyrSR0FOB3EcjrfvOnffB/o2whlqnz9dxSjRxv0BF7wB934VL/cIPD+GizMwFRMebos57+ROADkYXeCMcAvubO9gv/y6/+U6WLt/kxlKyUw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB0061.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(376002)(396003)(366004)(346002)(136003)(66946007)(2616005)(4744005)(966005)(64756008)(66476007)(76116006)(91956017)(66556008)(86362001)(2906002)(66446008)(6486002)(36756003)(6512007)(8676002)(31696002)(8936002)(26005)(186003)(53546011)(6506007)(31686004)(54906003)(110136005)(71200400001)(5660300002)(4326008)(316002)(478600001)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: hyBqSq/I0dAEgtXNHzKjM4ef6a93AXjWXQqKtHdUSdbC3Vb4ya6aH3ftMNejOkNwaenqZ2YZPzd1esjgxVrJ+nNXbHyKRm0whHu+ni9o2rDiH1x5UnDMyrrjNI97fqWT0q4irM8HpRErIOrgb8yhaPYpJowgV9Kpo3sM/GnGcNscFcbb1rMatczFjLRSEjrx6o0XkAJzR4lxgM5kUPP4shRLwiDuDXe3EAik/fA72m/ejbC+P4Ht4xfodKKa82kZhm4No9KBRGbhUN2F7YeBSJnY2qfp1bzWc7agxseZRyc5qBWh/4AfmDgBmFP/NO4CLXGB/aqsAQJmRIk621om52yXTe5nalcthIDn29+0977n+naC3TX2ZmevSnUHfnbkqLC5QYJCu/GRBrpa5KeEVXjc2n4e8dKvsZXab1vvnkE59poRAP+MKJQ0DZqkZQ0hQaasMkzEgvkIEsARJbFfv6cDECx5CpXrmGbDilypW40=
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <1753B72608AA1444B537757B266D5C85@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.149.93]
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB0061.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3e273dc-60b0-4e3e-0656-08d82c878a42
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 08:33:12.3635
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rq9ECiZqjgwK4S1QP24244FRsHrLN90QvAwxty3zqjEd5OqPoxS1DFNKjxe3gBwNppYyd69FoR/h5+SW/575fTjCO523vaGVpd1+VIXzRH4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1341
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Mao <maoming.maoming@huawei.com>
+On 17/07/2020 at 14:05, Kalle Valo wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know th=
+e content is safe
+>=20
+> Stephen Rothwell <sfr@canb.auug.org.au> writes:
+>=20
+>> Today's linux-next merge of the dmaengine tree got a conflict in:
+>>
+>>    MAINTAINERS
+>>
+>> between commit:
+>>
+>>    5625f965d764 ("wilc1000: move wilc driver out of staging")
+>>
+>> from the wireless-drivers-next tree, commit:
+>>
+>>    6e701c299469 ("MAINTAINERS: merge entries for felix and ocelot driver=
+s")
+>>
+>> from Linus' tree and commit:
+>>
+>>    c3846c4cce15 ("MAINTAINERS: dmaengine: Microchip: add Tudor Ambarus
+>> as co-maintainer")
+>>
+>> from the dmaengine tree.
+>=20
+> I think this is trivial enough that Linus can take care of it without
+> any extra actions. Thanks for the report.
 
-Hi all,
-I'm working on starting lots of big size
-Virtual Machines(memory: >128GB) with VFIO-devices. And I
-encounter a problem that is the waiting time of starting
-all Virtual Machines is too long. I analyze the startup log
-and find that the time of pinning/unpinning pages could be reduced.
+ From my perspective your resolution Stephen is good.
 
-In the original process, to make sure the pages are contiguous,
-we have to check all pages one by one. I think maybe we can use
-hugetlbfs pages which can skip this step.
-So I create a patch to do this.
-According to my test, the result of this patch is pretty well.
+Thanks to both of you for the heads-up.
 
-Virtual Machine: 50G memory, 32 CPU, 1 VFIO-device, 1G hugetlbfs page
-        original   after optimization
-pin time   700ms          0.1ms
+Best regards,
+   Nicolas
 
-I Suppose that:
-1)the hugetlbfs page should not be split
-2)PG_reserved is not relevant for hugetlbfs pages
-3)we can delete the for loops and use some operations
-(such as atomic_add,page_ref_add) instead
-
-please correct me if I am wrong.
-
-Thanks.
-
-Signed-off-by: Ming Mao <maoming.maoming@huawei.com>
----
- drivers/vfio/vfio_iommu_type1.c | 236 ++++++++++++++++++++++++++++++--
- include/linux/vfio.h            |  20 +++
- 2 files changed, 246 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 5e556ac91..42e25752e 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -415,6 +415,46 @@ static int put_pfn(unsigned long pfn, int prot)
- 	return 0;
- }
- 
-+/*
-+ * put pfns for a hugetlbfs page
-+ * @start:the 4KB-page we start to put,can be any page in this hugetlbfs page
-+ * @npage:the number of 4KB-pages need to put
-+ * @prot:IOMMU_READ/WRITE
-+ */
-+static int hugetlb_put_pfn(unsigned long start, unsigned int npage, int prot)
-+{
-+	struct page *page = NULL;
-+	struct page *head = NULL;
-+
-+	if (!npage || !pfn_valid(start))
-+		return 0;
-+
-+	page = pfn_to_page(start);
-+	if (!page || !PageHuge(page))
-+		return 0;
-+	head = compound_head(page);
-+	/*
-+	 * The last page should be in this hugetlbfs page.
-+	 * The number of putting pages should be equal to the number
-+	 * of getting pages.So the hugepage pinned refcount and the normal
-+	 * page refcount can not be smaller than npage.
-+	 */
-+	if ((head != compound_head(pfn_to_page(start + npage - 1)))
-+	    || (page_ref_count(head) < npage)
-+	    || (compound_pincount(page) < npage))
-+		return 0;
-+
-+	if ((prot & IOMMU_WRITE) && !PageDirty(page))
-+		set_page_dirty_lock(page);
-+
-+	atomic_sub(npage, compound_pincount_ptr(head));
-+	if (page_ref_sub_and_test(head, npage))
-+		__put_page(head);
-+
-+	mod_node_page_state(page_pgdat(head), NR_FOLL_PIN_RELEASED, npage);
-+	return 1;
-+}
-+
- static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
- 			    unsigned long vaddr, unsigned long *pfn,
- 			    bool write_fault)
-@@ -479,6 +519,90 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
- 	return ret;
- }
- 
-+struct vfio_hupetlbpage_info vfio_hugetlbpage_info[HUGE_MAX_HSTATE] = {
-+	{vfio_hugetlbpage_2M, PMD_SIZE, ~((1ULL << HPAGE_PMD_SHIFT) - 1)},
-+	{vfio_hugetlbpage_1G, PUD_SIZE, ~((1ULL << HPAGE_PUD_SHIFT) - 1)},
-+};
-+
-+static bool is_hugetlbpage(unsigned long pfn, enum vfio_hugetlbpage_type *type)
-+{
-+	struct page *page = NULL;
-+
-+	if (!pfn_valid(pfn) || !type)
-+		return false;
-+
-+	page = pfn_to_page(pfn);
-+	/* only check for hugetlbfs pages */
-+	if (!page || !PageHuge(page))
-+		return false;
-+
-+	switch (compound_order(compound_head(page))) {
-+	case PMD_ORDER:
-+		*type = vfio_hugetlbpage_2M;
-+		break;
-+	case PUD_ORDER:
-+		*type = vfio_hugetlbpage_1G;
-+		break;
-+	default:
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+/* Is the addr in the last page in hugetlbfs pages? */
-+static bool hugetlb_is_last_page(unsigned long addr, enum vfio_hugetlbpage_type type)
-+{
-+	unsigned int num = 0;
-+
-+	num = hugetlb_get_resdual_pages(addr & ~(PAGE_SIZE - 1), type);
-+
-+	if (num == 1)
-+		return true;
-+	else
-+		return false;
-+}
-+
-+static bool hugetlb_page_is_pinned(struct vfio_dma *dma,
-+				unsigned long start,
-+				unsigned long npages)
-+{
-+	struct vfio_pfn *vpfn = NULL;
-+	struct rb_node *node = rb_first(&dma->pfn_list);
-+	unsigned long end = start + npages - 1;
-+
-+	for (; node; node = rb_next(node)) {
-+		vpfn = rb_entry(node, struct vfio_pfn, node);
-+
-+		if ((vpfn->pfn >= start) && (vpfn->pfn <= end))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static unsigned int hugetlb_get_contiguous_pages_num(struct vfio_dma *dma,
-+						unsigned long pfn,
-+						unsigned long resdual_npage,
-+						unsigned long max_npage)
-+{
-+	unsigned int num = 0;
-+
-+	if (!dma)
-+		return 0;
-+
-+	num = resdual_npage < max_npage ? resdual_npage : max_npage;
-+	/*
-+	 * If there is only one page, it is no need to optimize them.
-+	 * Maybe some pages have been pinned and inserted into dma->pfn_list by others.
-+	 * In this case, we just goto the slow path simply.
-+	 */
-+	if ((num < 2) || hugetlb_page_is_pinned(dma, pfn, num))
-+		return 0;
-+
-+	return num;
-+}
-+
- /*
-  * Attempt to pin pages.  We really don't want to track all the pfns and
-  * the iommu can only map chunks of consecutive pfns anyway, so get the
-@@ -492,6 +616,7 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
- 	long ret, pinned = 0, lock_acct = 0;
- 	bool rsvd;
- 	dma_addr_t iova = vaddr - dma->vaddr + dma->iova;
-+	enum vfio_hugetlbpage_type type;
- 
- 	/* This code path is only user initiated */
- 	if (!current->mm)
-@@ -521,6 +646,55 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
- 	if (unlikely(disable_hugepages))
- 		goto out;
- 
-+	/*
-+	 * It is no need to get pages one by one for hugetlbfs pages.
-+	 * 4KB-pages in hugetlbfs pages are contiguous.
-+	 * But if the vaddr is in the last 4KB-page, we just goto the slow path.
-+	 */
-+	if (is_hugetlbpage(*pfn_base, &type) && !hugetlb_is_last_page(vaddr, type)) {
-+		unsigned long hugetlb_resdual_npage = 0;
-+		unsigned long contiguous_npage = 0;
-+		struct page *head = NULL;
-+
-+		hugetlb_resdual_npage =
-+			hugetlb_get_resdual_pages((vaddr + PAGE_SIZE) & ~(PAGE_SIZE - 1), type);
-+		/*
-+		 * Maybe the hugetlb_resdual_npage is invalid.
-+		 * For example, hugetlb_resdual_npage > (npage - 1) or
-+		 * some pages of this hugetlbfs page have been pinned.
-+		 */
-+		contiguous_npage = hugetlb_get_contiguous_pages_num(dma, *pfn_base + 1,
-+						hugetlb_resdual_npage, npage - 1);
-+		if (!contiguous_npage)
-+			goto slow_path;
-+
-+		/*
-+		 * Unlike THP, the splitting should not happen for hugetlbfs pages.
-+		 * Since PG_reserved is not relevant for compound pages, and the pfn of
-+		 * 4KB-page which in hugetlbfs pages is valid,
-+		 * it is no need to check rsvd for hugetlbfs pages.
-+		 */
-+		if (!dma->lock_cap &&
-+		    current->mm->locked_vm + lock_acct + contiguous_npage > limit) {
-+			pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
-+				 __func__, limit << PAGE_SHIFT);
-+			ret = -ENOMEM;
-+			goto unpin_out;
-+		}
-+		/*
-+		 * We got a hugetlbfs page using vaddr_get_pfn alreadly.
-+		 * In this case,we do not need to alloc pages and we can finish all
-+		 * work by a single operation to the head page.
-+		 */
-+		lock_acct += contiguous_npage;
-+		head = compound_head(pfn_to_page(*pfn_base));
-+		atomic_add(contiguous_npage, compound_pincount_ptr(head));
-+		page_ref_add(head, contiguous_npage);
-+		mod_node_page_state(page_pgdat(head), NR_FOLL_PIN_ACQUIRED, contiguous_npage);
-+		pinned += contiguous_npage;
-+		goto out;
-+	}
-+slow_path:
- 	/* Lock all the consecutive pages from pfn_base */
- 	for (vaddr += PAGE_SIZE, iova += PAGE_SIZE; pinned < npage;
- 	     pinned++, vaddr += PAGE_SIZE, iova += PAGE_SIZE) {
-@@ -569,7 +743,30 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
- {
- 	long unlocked = 0, locked = 0;
- 	long i;
-+	enum vfio_hugetlbpage_type type;
-+
-+	if (is_hugetlbpage(pfn, &type)) {
-+		unsigned long hugetlb_resdual_npage = 0;
-+		unsigned long contiguous_npage = 0;
- 
-+		hugetlb_resdual_npage = hugetlb_get_resdual_pages(iova & ~(PAGE_SIZE - 1), type);
-+		contiguous_npage = hugetlb_get_contiguous_pages_num(dma, pfn,
-+						hugetlb_resdual_npage, npage);
-+		/*
-+		 * There is not enough contiguous pages or this hugetlbfs page
-+		 * has been pinned.
-+		 * Let's try the slow path.
-+		 */
-+		if (!contiguous_npage)
-+			goto slow_path;
-+
-+		/* try the slow path if failed */
-+		if (hugetlb_put_pfn(pfn, contiguous_npage, dma->prot)) {
-+			unlocked = contiguous_npage;
-+			goto out;
-+		}
-+	}
-+slow_path:
- 	for (i = 0; i < npage; i++, iova += PAGE_SIZE) {
- 		if (put_pfn(pfn++, dma->prot)) {
- 			unlocked++;
-@@ -578,6 +775,7 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
- 		}
- 	}
- 
-+out:
- 	if (do_accounting)
- 		vfio_lock_acct(dma, locked - unlocked, true);
- 
-@@ -867,6 +1065,7 @@ static long vfio_unmap_unpin(struct vfio_iommu *iommu, struct vfio_dma *dma,
- 	struct iommu_iotlb_gather iotlb_gather;
- 	int unmapped_region_cnt = 0;
- 	long unlocked = 0;
-+	enum vfio_hugetlbpage_type type;
- 
- 	if (!dma->size)
- 		return 0;
-@@ -900,16 +1099,33 @@ static long vfio_unmap_unpin(struct vfio_iommu *iommu, struct vfio_dma *dma,
- 			continue;
- 		}
- 
--		/*
--		 * To optimize for fewer iommu_unmap() calls, each of which
--		 * may require hardware cache flushing, try to find the
--		 * largest contiguous physical memory chunk to unmap.
--		 */
--		for (len = PAGE_SIZE;
--		     !domain->fgsp && iova + len < end; len += PAGE_SIZE) {
--			next = iommu_iova_to_phys(domain->domain, iova + len);
--			if (next != phys + len)
--				break;
-+		if (is_hugetlbpage((phys >> PAGE_SHIFT), &type)
-+		    && (!domain->fgsp)) {
-+			unsigned long hugetlb_resdual_npage = 0;
-+			unsigned long contiguous_npage = 0;
-+
-+			hugetlb_resdual_npage =
-+				hugetlb_get_resdual_pages(iova & ~(PAGE_SIZE - 1), type);
-+			/*
-+			 * The number of contiguous page can not be larger than dma->size
-+			 * which is the number of pages pinned.
-+			 */
-+			contiguous_npage = ((dma->size >> PAGE_SHIFT) > hugetlb_resdual_npage) ?
-+				hugetlb_resdual_npage : (dma->size >> PAGE_SHIFT);
-+
-+			len = contiguous_npage * PAGE_SIZE;
-+		} else {
-+			/*
-+			 * To optimize for fewer iommu_unmap() calls, each of which
-+			 * may require hardware cache flushing, try to find the
-+			 * largest contiguous physical memory chunk to unmap.
-+			 */
-+			for (len = PAGE_SIZE;
-+			     !domain->fgsp && iova + len < end; len += PAGE_SIZE) {
-+				next = iommu_iova_to_phys(domain->domain, iova + len);
-+				if (next != phys + len)
-+					break;
-+			}
- 		}
- 
- 		/*
-diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index 38d3c6a8d..91ef2058f 100644
---- a/include/linux/vfio.h
-+++ b/include/linux/vfio.h
-@@ -214,4 +214,24 @@ extern int vfio_virqfd_enable(void *opaque,
- 			      void *data, struct virqfd **pvirqfd, int fd);
- extern void vfio_virqfd_disable(struct virqfd **pvirqfd);
- 
-+enum vfio_hugetlbpage_type {
-+	vfio_hugetlbpage_2M,
-+	vfio_hugetlbpage_1G,
-+};
-+
-+struct vfio_hupetlbpage_info {
-+	enum vfio_hugetlbpage_type type;
-+	unsigned long size;
-+	unsigned long mask;
-+};
-+
-+#define PMD_ORDER 9
-+#define PUD_ORDER 18
-+/*
-+ * get the number of resdual 4KB-pages in a hugetlbfs page
-+ * (including the page which pointed by this address)
-+ */
-+#define hugetlb_get_resdual_pages(address, type)				\
-+		((vfio_hugetlbpage_info[type].size				\
-+		- (address & ~vfio_hugetlbpage_info[type].mask)) >> PAGE_SHIFT)
- #endif /* VFIO_H */
--- 
-2.23.0
+> --
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpa=
+tches
+>=20
 
 
+--=20
+Nicolas Ferre
