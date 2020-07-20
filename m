@@ -2,110 +2,70 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76E1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE8EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A530D20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:06:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595232367;
-	bh=DBU10xCfPXi9S7q1y4HELT5+p2XXLy5mMLrB0UTptkw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mr9hiYNKfNerVsva8Wwz9OmfDN35EwS0+iayJsbkVAKPnML7pFe6FKNWxyg50TFqk
-	 PdoLrVLe9CzC3cGsVe5Wio0/u0pPjjdUX+WqapdSpA5Dz415GosekR0X406kgXScFT
-	 9xzy+UCSFq26qSWe6zpvrQv6kbSnnTB/DicExvWk=
+	by mail.kernel.org (Postfix) with ESMTP id 0E20E22CBB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:06:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgGTIGG (ORCPT
+        id S1726933AbgGTIGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:06:06 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37069 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgGTIGG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:06:06 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o2so24236749wmh.2;
-        Mon, 20 Jul 2020 01:06:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vg09xK5q93RhjkSo+BtXD7JwKBjiF9ZCt45w+OmMMVY=;
-        b=fUTMldOGfkrptj+n6jUNqqziKMMf/cgU3ebuM7YHLJZ0XgOOJqWml/zNAXU9MZAt1a
-         mGZvgYzT/+3kYDfQLwSwmS+97D3X71N0LmiMg3B5PnXTfT/0q4jEw+ErAXYjQu39erMv
-         PbSgzLHrqupo1/SbayKs7x3vx2lM2nE46s3LgQ2TmVm+ZkJXuxqz7NI3BWncEoacBi4W
-         3tC4eBog3hxZ4MDad6D6MPar6pq5JdCYA3wpVYVNh5IRU/TZf7xK3PDgIHBjkIQX+I5R
-         8xh6BibHYZ5Pd+acRH32bmKIZlUob72pbi5dVB2V9g6pE1J188m3hqVTBDOtLLNTNlyR
-         jLsw==
-X-Gm-Message-State: AOAM531qDr6XfPxZ57hpenTGrvUIwQWgLD3OZ9TpTfXB+rzzmUYaao2z
-        dP8m+sbw2MRjojiVe49Jaz++uIB7z3g=
-X-Google-Smtp-Source: ABdhPJxJ8ZIsf7AKkJqYCmB3NDTY1+PGtOCnwv5Wvo5iWqmnU/v7hbUEipw+IMyAcld5Qa3frDje4g==
-X-Received: by 2002:a7b:c3d0:: with SMTP id t16mr21900753wmj.117.1595232364225;
-        Mon, 20 Jul 2020 01:06:04 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.200])
-        by smtp.googlemail.com with ESMTPSA id l67sm34178337wml.13.2020.07.20.01.06.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 Jul 2020 01:06:03 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 10:06:01 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Marian Mihailescu <mihailescu2m@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Disable frequency scaling for FSYS bus
-Message-ID: <20200720080601.GA3845@kozik-lap>
-References: <CGME20200714064824eucas1p2ea0d2ee2c109c351fe489050905b4104@eucas1p2.samsung.com>
- <20200714064759.31772-1-m.szyprowski@samsung.com>
+        Mon, 20 Jul 2020 04:06:18 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45206 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725815AbgGTIGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 04:06:18 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B8920FD77153135EF878;
+        Mon, 20 Jul 2020 16:06:16 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 20 Jul 2020 16:06:07 +0800
+From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
+To:     <minyard@acm.org>, <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <cminyard@mvista.com>
+CC:     <openipmi-developer@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <jingxiangfeng@huawei.com>
+Subject: [PATCH] ipmi: remve duplicate code in __ipmi_bmc_register()
+Date:   Mon, 20 Jul 2020 16:08:38 +0800
+Message-ID: <20200720080838.148737-1-jingxiangfeng@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200714064759.31772-1-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 08:47:59AM +0200, Marek Szyprowski wrote:
-> Commit 1019fe2c7280 ("ARM: dts: exynos: Adjust bus related OPPs to the
-> values correct for Exynos5422 Odroids") changed the parameters of the
-> OPPs for the FSYS bus. Besides the frequency adjustments, it also removed
-> the 'shared-opp' property from the OPP table used for FSYS_APB and FSYS
-> busses.
-> 
-> This revealed that in fact the FSYS bus frequency scaling never worked.
-> When one OPP table is marked as 'opp-shared', only the first bus which
-> selects the OPP sets the rate of its clock. Then OPP core assumes that
-> the other busses have been changed to that OPP and no change to their
-> clock rates are needed. Thus when FSYS_APB bus, which was registered
-> first, set the rate for its clock, the OPP core did not change the FSYS
-> bus clock later.
-> 
-> The mentioned commit removed that behavior, what introduced a regression
-> on some OdroidXU3 boards. Frequency scaling of the FSYS bus causes
-> instability of the USB host operation, what can be observed as network
-> hangs. To restore old behavior, simply disable frequency scaling for the
-> FSYS bus.
-> 
-> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
-> Fixes: 1019fe2c7280 ("ARM: dts: exynos: Adjust bus related OPPs to the values correct for Exynos5422 Odroids")
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 6 ------
->  1 file changed, 6 deletions(-)
+__ipmi_bmc_register() jumps to the label 'out_free_my_dev_name' in an
+error path. So we can remove duplicate code in the if (rv).
 
-Thanks Willy and Marek for digging into this, applied.
+Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+---
+ drivers/char/ipmi/ipmi_msghandler.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-A follow up question would be if other boards (Exynos4412) require the
-same?
-
-Best regards,
-Krzysztof
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index e1b22fe0916c..737c0b6b24ea 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -3080,8 +3080,6 @@ static int __ipmi_bmc_register(struct ipmi_smi *intf,
+ 	rv = sysfs_create_link(&bmc->pdev.dev.kobj, &intf->si_dev->kobj,
+ 			       intf->my_dev_name);
+ 	if (rv) {
+-		kfree(intf->my_dev_name);
+-		intf->my_dev_name = NULL;
+ 		dev_err(intf->si_dev, "Unable to create symlink to bmc: %d\n",
+ 			rv);
+ 		goto out_free_my_dev_name;
+-- 
+2.17.1
 
