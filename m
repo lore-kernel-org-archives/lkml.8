@@ -2,96 +2,174 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D76C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8879EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6B36208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="hR02xQhh"
+	by mail.kernel.org (Postfix) with ESMTP id 6575F20729
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595282818;
+	bh=78BdF/HR6s7qSjh/SH8MXr7/WJ4eMmExO0xS180B/h8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=HUHJAKgHbJJNHh3w0NsB3AEi20Jdph5HHNt4jeW1EXC5BTNmf4Q67kvPmq7oYkhfm
+	 G2iBFbhgj6vvk5PYAsSdTRXUJaSz7xMD5+ezTWCSFqAFV/U+O0KfZjQ/ysv0bG7cKp
+	 JkLkL09Uqb7KO57L3Vsob7gXJRIRcPjLWYBCD0Eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgGTWBu (ORCPT
+        id S1727050AbgGTWG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 18:01:50 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:50766 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgGTWBt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 18:01:49 -0400
-X-Greylist: delayed 1215 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jul 2020 18:01:49 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
-        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=EI4HV6io6QvxPNiiP4h3U+USCze8na4pN1lXIYxzsKE=; b=hR02xQhhHkzb0x75CmE926uQPi
-        kl8Qui+dyXxqehG+rEIaDSxHS5IkQAoE+3VCIQZM+SJ6igXfHmxalPZozHDne+U6Wb9olrPFi/QTL
-        w7nu84wzNw7+EzIxnYSIwatdu20/yhGJYD5R1DiN5L068fm8V1mvO3mbNcSGY76JTd/IC8YN3IC7A
-        pu6YaSkr3LvhIORG9nK5gDlVAd6kt2Z/XBXIhiIO3tFsBtEveBTG4RQ4EFidyCm7iKocAsKTBEfnO
-        wrWbv7OUVOImZ1Dx38WrbJ0MgJJcRukmDbnbLxlB3q7GYA177bJk5/cso0881QsVNzQOxnfMKrV6U
-        AJxIQ3ZA==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jxdXL-0002HX-UZ; Mon, 20 Jul 2020 15:41:28 -0600
-To:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20200716203319.16022-1-logang@deltatee.com>
- <20200716203319.16022-8-logang@deltatee.com> <20200720141606.GF4627@lst.de>
- <e939dd43-9e7f-8ef0-162b-2a27f53e6e1a@grimberg.me>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <5cc390cf-9b0b-b48b-7447-37934be51ee0@deltatee.com>
-Date:   Mon, 20 Jul 2020 15:41:24 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 18:06:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726021AbgGTWGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 18:06:54 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CE5C2073A;
+        Mon, 20 Jul 2020 22:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595282813;
+        bh=78BdF/HR6s7qSjh/SH8MXr7/WJ4eMmExO0xS180B/h8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Wp0hVRJHHRmiSwwTStGNUkQO8nKQV3GvxlL/+Yl6CcnItiPNE2UPJ3GquBbGaLHrD
+         lIz+NYuJufRZa8YxDjkw53fgIH/V08rtzV7ztEx9NWHApo4AlrTz6Ibb/Lip5dTRrf
+         AuanM1RI7uQ/IrAFaLihcTON45oNGcNH/4FCif6c=
+Date:   Mon, 20 Jul 2020 17:06:51 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     ricky_wu@realtek.com
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org, ulf.hansson@linaro.org,
+        rui_feng@realsil.com.cn, bhelgaas@google.com, kdlnx@doth.eu,
+        linus.walleij@linaro.org, rmfrfs@gmail.com,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        Puranjay Mohan <puranjay12@gmail.com>
+Subject: Re: [PATCH] misc: rtsx: Add support new chip rts5228 mmc:  rtsx: Add
+ support MMC_CAP2_NO_MMC
+Message-ID: <20200720220651.GA1035857@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <e939dd43-9e7f-8ef0-162b-2a27f53e6e1a@grimberg.me>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, hch@lst.de, sagi@grimberg.me
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v15 7/9] nvmet-passthru: Add passthru code to process
- commands
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706070259.32565-1-ricky_wu@realtek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the review Christoph. I think I should be able to make all
-the requested changes in the next week or two.
+[+cc Puranjay, for LTR issues, original posting at
+https://lore.kernel.org/r/20200706070259.32565-1-ricky_wu@realtek.com]
 
-On 2020-07-20 1:35 p.m., Sagi Grimberg wrote:
+I've complained about some of this stuff before, but we haven't really
+made any progress yet:
+
+  https://lore.kernel.org/lkml/20171214222522.GL30595@bhelgaas-glaptop.roam.corp.google.com/
+
+On Mon, Jul 06, 2020 at 03:02:59PM +0800, ricky_wu@realtek.com wrote:
+> From: Ricky Wu <ricky_wu@realtek.com>
 > 
->> I'm still not so happy about having to look up the namespace and still
->> wonder if we should generalize the connect_q to a passthrough_q.  But
->> I guess we can do that later and then reduce some of the exports here..
-> 
-> That is a neat idea! should be easy to do (and we can then lose the host
-> xarray stuff). I don't mind having it on a later patch, but it should be
-> easy enough to do even before...
-> 
+> In order to support new chip rts5228, the definitions of some internal
+> registers and workflow have to be modified.
+> Added rts5228.c rts5228.h for independent functions of the new chip rts5228
 
-I sort of follow this. I can try to work something up but it will
-probably take me a few iterations to get it to where you want it. So,
-roughly, we'd create a passthrough_q in core with the controller's IO
-tagset and then cleanup the fabrics hosts to use that instead of each
-independently creating their connect_q?
+> +static void rts5228_init_from_cfg(struct rtsx_pcr *pcr)
+> +{
+> +	u32 lval;
+> +	struct rtsx_cr_option *option = &pcr->option;
+> +
+> +	rtsx_pci_read_config_dword(pcr, PCR_ASPM_SETTING_REG1, &lval);
+> +
+> +
+> +	if (0 == (lval & 0x0F))
+> +		rtsx_pci_enable_oobs_polling(pcr);
+> +	else
+> +		rtsx_pci_disable_oobs_polling(pcr);
+> +
+> +	if (lval & ASPM_L1_1_EN_MASK)
+> +		rtsx_set_dev_flag(pcr, ASPM_L1_1_EN);
+> +	else
+> +		rtsx_clear_dev_flag(pcr, ASPM_L1_1_EN);
+> +
+> +	if (lval & ASPM_L1_2_EN_MASK)
+> +		rtsx_set_dev_flag(pcr, ASPM_L1_2_EN);
+> +	else
+> +		rtsx_clear_dev_flag(pcr, ASPM_L1_2_EN);
+> +
+> +	if (lval & PM_L1_1_EN_MASK)
+> +		rtsx_set_dev_flag(pcr, PM_L1_1_EN);
+> +	else
+> +		rtsx_clear_dev_flag(pcr, PM_L1_1_EN);
+> +
+> +	if (lval & PM_L1_2_EN_MASK)
+> +		rtsx_set_dev_flag(pcr, PM_L1_2_EN);
+> +	else
+> +		rtsx_clear_dev_flag(pcr, PM_L1_2_EN);
 
-Though, I don't understand how this relates to the host xarray stuff
-that Sagi mentioned...
+This looks like a bunch of driver-specific #defines that should be
+using the PCI core #defines instead (PCI_L1SS_CTL1_ASPM_L1_1,
+PCI_L1SS_CTL1_ASPM_L1_2, etc).
 
-Logan
+rtsx_pci_read_config_dword() adds very little value and obscures the
+code unnecessarily.
+
+PCR_ASPM_SETTING_REG1 probably should be removed and replaced with
+something like pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_L1SS).
+
+> +	rtsx_pci_write_register(pcr, ASPM_FORCE_CTL, 0xFF, 0);
+> +	if (option->ltr_en) {
+> +		u16 val;
+> +
+> +		pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &val);
+> +		if (val & PCI_EXP_DEVCTL2_LTR_EN) {
+> +			option->ltr_enabled = true;
+> +			option->ltr_active = true;
+> +			rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
+
+I do not believe this LTR programming is correct.  But I'd be glad to
+be corrected with specific references to the spec.
+
+One reason I don't think it's correct is because PCIe r5.0, sec 6.18,
+says LTR must not be enabled unless the Root Complex and all
+intermediate Switches indicate support for LTR.  I don't see any
+checking for that here.
+
+I *assume* that rtsx_set_ltr_latency() sets values in the LTR
+Extended Capability.  That should be done with
+pci_write_config_word(), not with rtsx_pci_write_register() as is done
+in rtsx_comm_set_ltr_latency().  But maybe rtsx_set_ltr_latency()
+isn't doing what I think it is.
+
+I think the values programmed into the LTR Capability depend on some
+platform-specific values that can only be learned from an ACPI _DSM;
+see the PCI Firmware spec, v3.2, sec 4.6.6.
+
+It looks like option->ltr_active_latency is always
+LTR_ACTIVE_LATENCY_DEF (0x883C).  How did you derive that value?
+
+All the LTR programming should be done by the PCI core.  The PCI core
+does some of that, but not all.  We should work on getting support
+done instead of spreading it around in drivers.
+
+> +static void rts5228_enable_aspm(struct rtsx_pcr *pcr, bool enable)
+> +{
+> +	u8 mask, val;
+> +
+> +	if (pcr->aspm_enabled == enable)
+> +		return;
+> +
+> +	mask = FORCE_ASPM_VAL_MASK | FORCE_ASPM_CTL0 | FORCE_ASPM_CTL1;
+> +	val = FORCE_ASPM_CTL0 | FORCE_ASPM_CTL1;
+> +	val |= (pcr->aspm_en & 0x02);
+> +	rtsx_pci_write_register(pcr, ASPM_FORCE_CTL, mask, val);
+> +	pcie_capability_clear_and_set_word(pcr->pci, PCI_EXP_LNKCTL,
+> +					   PCI_EXP_LNKCTL_ASPMC, pcr->aspm_en);
+> +	pcr->aspm_enabled = enable;
+
+ASPM configuration should also be done by the PCI core.
+
+Correct ASPM configuration can only be done by looking at *both* ends
+of the link.  The PCI core is in a position to do that, but individual
+drivers really are not.
+
+Bjorn
