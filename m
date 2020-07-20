@@ -2,86 +2,126 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_05,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8503DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C49D52070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C822177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:50:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKy3hwHD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PL5iTwbB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgGTDq7 (ORCPT
+        id S1726503AbgGTDuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 23:46:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41308 "EHLO
+        Sun, 19 Jul 2020 23:50:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726123AbgGTDq7 (ORCPT
+        with ESMTP id S1726123AbgGTDuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 23:46:59 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9ABCC0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 20:46:58 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id r12so12072477ilh.4
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 20:46:58 -0700 (PDT)
+        Sun, 19 Jul 2020 23:50:01 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E0BC0619D2;
+        Sun, 19 Jul 2020 20:50:01 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u185so8391550pfu.1;
+        Sun, 19 Jul 2020 20:50:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to:cc;
-        bh=a1D5IvnLIw6eOoDUSvZwCn256QlPXNdEfwkFkSghmTc=;
-        b=kKy3hwHDJiu5X0/GyHMRKTHtTUZ47hgCwgKRWkzuWq0eguRYagL0FmWYa5/YsJY6oO
-         oLj+JA05/1dlx5Scp6SAvc5KCTDLPKAU6OcspirNKCyTFCI1xNoNQ9JY5CFHWwplrm+d
-         eWUn2VgraTcgUXOgyhte69csm+byYjpJzwgmmvA3N6lxztyaN5SrNP8YVIQGzkdwf/je
-         vvocsDZS/9dkAm7s3mEEtiP8vi3F29HXFj4I06Z7fsylnd3J2qdHbXcRM5lknb8IbGX1
-         PnG07qoKMwJ/F96prDsUxyVHvr4h1bshjwViZPszvJLYqGNyWuQZNwCcNO9sn07oB3Mn
-         GbNA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zpNQ7DCGwSOUMSEK/HU3GfgSbODJuk/1Ak8yOIxI+Lo=;
+        b=PL5iTwbBGXyIVqSqB9VAq4WTd8xfZWF8q75j3na4O4bCRxjSjklJNYvZVGX5coNz4E
+         KHDBEMUFejqwBRaahP+8+HrtEudl0YuIWYcWroqKFc7s6Da5ZWWdOKcvfDxwGntinkTF
+         WHw7YGSJnICohHpFqBxp96oNnEw3+JFMSFWmuyXoJwZm5CIILgKor33Hv/BWiQy7oBNm
+         3A69TWqMWFjCvKLFIPXcwbkHz0CRVPVG6le3bXIHOSxMP99D74XFSJviTYqixvihWQtg
+         npG7q6taxiuGUPVPdX5u8rRmaLHIVZkAL0bg3a+g2uSsz350kIVvLzykt0ec0sBLQ0sP
+         FxUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=a1D5IvnLIw6eOoDUSvZwCn256QlPXNdEfwkFkSghmTc=;
-        b=WGTFdg98Hfvd67CI1aA7ZVxkIFxEFURiYjQX48+h5GWj049DOaIAf9LUiHKGgxK09x
-         83/roTq/vo19Ga1YE31icCOFr9ZwNyk/uNFLnOyoDB1PBVBebSbgPrJ3JYDgJd4Ty84T
-         UJoQhBBGuU2Weoxbq18f6NF32oKUYtLqikopCVgiNrYd56BidYwNOEBUdkvh92CTgcz+
-         5v1cRZIroLfzrlqqzmOefTqb4hI11VDx/DgM4F9uvRv1+Gvf7aZczj4rNYxsGJEVhG1f
-         lobBWa5iW3Sh1VbZHXg+YKYXHgza6GEJdGEujq1U669pGuz1sRrHYhZQfBj+PRm+mI72
-         jEfg==
-X-Gm-Message-State: AOAM53398u9FdCHU6nIfFTARar5dC41VjwZUg/MEZafFeWa3kQ2qWLwr
-        PNm+Jt9Serjxm8ifZxRncqvcgiRyvDjUFYEM0aT+hxqva8M=
-X-Google-Smtp-Source: ABdhPJyS/UGslgi2H3gEFVGP0PO+kDewpH7BpEnA5hWpGZPwZD+Hsr2q2raBOoC4E970IKQg1dtcPqwo4YHgpe1BLh0=
-X-Received: by 2002:a92:d843:: with SMTP id h3mr22246540ilq.255.1595216818314;
- Sun, 19 Jul 2020 20:46:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zpNQ7DCGwSOUMSEK/HU3GfgSbODJuk/1Ak8yOIxI+Lo=;
+        b=PkjL9PsHiN/4vRNwMZDkvnOE6il+pWSg+AVPZhGPt2DOWea4eZA/dbbyrMYs9mbBOd
+         plGJ5GYRelyFVfZwEBKwD4tH9UBD/ycpyyIFlQ5dhTyjWXZDbDDLH7+0e4vx5ugFyihZ
+         DomhfUnwZM+eTJOO2ULQNN4VyrdXdCRtcsqg1HpF0nbiZ5PjdxFTtfTcjxIQ8KGXPy7y
+         UcvESUEm6HtaU8f/OWep2xweTHIDniXiYZ88uci7nfedQ5jP6GaZ3cD5McMcL5/QdzbK
+         m1VPeg97BD/x8voHw7wS+WAnN0wXO19kHtN8y0so+Ysx1nz9eAia9SXMk0YFcta02EOi
+         s//Q==
+X-Gm-Message-State: AOAM531VqKuzGmiuUiFtUFkB2eCOP26dsT1oAaeJqAAz34BRwI+Tqorx
+        LeP76xpq4uBAaZoRFhmBdEGXmRvd
+X-Google-Smtp-Source: ABdhPJyqoti0uhXOTBdcSbHSU2nkj0p0nV2nSMZQ7vPSfhtXeSYwVu7FJEke/oup3/tyyKRNwiclrA==
+X-Received: by 2002:a05:6a00:14ce:: with SMTP id w14mr18393710pfu.121.1595217000500;
+        Sun, 19 Jul 2020 20:50:00 -0700 (PDT)
+Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id z11sm15183445pfj.104.2020.07.19.20.49.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Jul 2020 20:49:59 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        linux-kernel@vger.kernel.org (open list), olteanv@gmail.com
+Subject: [PATCH net-next v2 0/4] net: dsa: Setup dsa_netdev_ops
+Date:   Sun, 19 Jul 2020 20:49:50 -0700
+Message-Id: <20200720034954.66895-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 20 Jul 2020 05:46:47 +0200
-Message-ID: <CA+icZUUGO0__SEZ7YvuQzfSdaWfTnCHW=73-3W4X=Vz51wHd+w@mail.gmail.com>
-Subject: Re: Linux 5.8-rc6
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi David, Jakub,
 
-thanks for the new RC.
+This patch series addresses the overloading of a DSA CPU/management
+interface's netdev_ops for the purpose of providing useful information
+from the switch side.
 
-I wonder why there is a time gap between tagging v5.8-rc6 in [1]
-(first) and [2] (15-16mins later).
-Can you explain that?
-( Here it is UTC+2 means 9 hours ahead of your local-time - I started
-my build 01:02 a.m. local-time. )
+Up until now we had duplicated the existing netdev_ops structure and
+added specific function pointers to return information of interest. Here
+we have a more controlled way of doing this by involving the specific
+netdev_ops function pointers that we want to be patched, which is easier
+for auditing code in the future. As a byproduct we can now maintain
+netdev_ops pointer comparisons which would be failing before (no known
+in tree problems because of that though).
 
-Thanks.
+Let me know if this approach looks reasonable to you and we might do the
+same with our ethtool_ops overloading as well.
 
-Regards,
-- Sedat -
+Thanks!
 
-[1] https://github.com/torvalds/linux
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/
+Changes in v2:
+
+- use static inline int vs. static int inline (Kbuild robot)
+- fixed typos in patch 4 (Andrew)
+- avoid using macros (Andrew)
+
+Florian Fainelli (4):
+  net: Wrap ndo_do_ioctl() to prepare for DSA stacked ops
+  net: dsa: Add wrappers for overloaded ndo_ops
+  net: Call into DSA netdevice_ops wrappers
+  net: dsa: Setup dsa_netdev_ops
+
+ include/net/dsa.h    | 71 +++++++++++++++++++++++++++++++++++++++++++-
+ net/core/dev.c       |  5 ++++
+ net/core/dev_ioctl.c | 29 +++++++++++++-----
+ net/dsa/master.c     | 52 ++++++++------------------------
+ 4 files changed, 110 insertions(+), 47 deletions(-)
+
+-- 
+2.25.1
+
