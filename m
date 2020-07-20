@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F50C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B42C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E16820672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0455A2176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260819;
-	bh=/29qPsw6MCZ0MhDodL6x0mL4qnnc1Ff9ruQ13MBKVRc=;
+	s=default; t=1595260824;
+	bh=lye9nEJslbJYSdaSkBheYwWegDQY9ewGWMpaayLWwxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g0NhcJCi+OE7Ysi0O2YTro5fLZJ3yRFvNocmzBDQ50ng3V7m0QbrKwH0/ykRbI8x9
-	 QqFggZ7syjzAKZXWMAOtqruKwLVNbphX4X1k6Fszwn7aqdn3TpkhAVFD4pC7yJP4ol
-	 ND/12tNYO8lmMoKIeMxXfi5FzoKDfa6zofR9uMCY=
+	b=IxTNDIk2HGinxfJr1S7lhWCGqAuanF0oS2JXpPTlT9M+tgtfNE6kjegWqyQyoml8D
+	 MiByTNHKn5Q4hvntigdRLxlin7kn6sjYPyrRzE8z0K7GOeCGlIUVTSEp5LzkdqQvlV
+	 Vezpm+8qblKTWwIVU/DklYE9MovI4iAGl0tzuooI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732378AbgGTQAR (ORCPT
+        id S1732390AbgGTQAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:00:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33144 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:00:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731840AbgGTQAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:00:14 -0400
+        id S1732374AbgGTQAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:00:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2111722D00;
-        Mon, 20 Jul 2020 16:00:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B535A20773;
+        Mon, 20 Jul 2020 16:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260813;
-        bh=/29qPsw6MCZ0MhDodL6x0mL4qnnc1Ff9ruQ13MBKVRc=;
+        s=default; t=1595260816;
+        bh=lye9nEJslbJYSdaSkBheYwWegDQY9ewGWMpaayLWwxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wtw8X/PYaFZxOodvjlsDc1DAtWA/Syz1FqKSIiOLrvcUQVtXqNiwpgxuElVYuNzdI
-         kxmz9DuieD0a0/3/iErRpXn7ncxlFJ/CxpQ9T/2OmnSu2bEjK1MhO2SSLEYWlXTYkg
-         5r8ByHqhXjvJ7xaqy2Qm0Gnf4RmAupiwZSqoJpvg=
+        b=gn3EdxzXbYjI/Dl3nHjkMygkex+yYWEC++HDLDeJqRBuzKJF2I0Fhj3TDfmhAUBPq
+         E+2a3wBbubvqENofivqIfxoow2QOcoATI7VKfZAfpbLc9x+pc9YXNgFFOdSO7VgRHi
+         5uxplFzaKaNCUAdfAWuTbCG0Aoa5W9ZdwvLgkh8g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 106/215] usb: gadget: udc: atmel: fix uninitialized read in debug printk
-Date:   Mon, 20 Jul 2020 17:36:28 +0200
-Message-Id: <20200720152825.247062770@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Ian Abbott <abbotti@mev.co.uk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 107/215] staging: comedi: verify array index is correct before using it
+Date:   Mon, 20 Jul 2020 17:36:29 +0200
+Message-Id: <20200720152825.296852581@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -61,34 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 30517ffeb3bff842e1355cbc32f1959d9dbb5414 ]
+[ Upstream commit ef75e14a6c935eec82abac07ab68e388514e39bc ]
 
-Fixed commit moved the assignment of 'req', but did not update a
-reference in the DBG() call. Use the argument as it was renamed.
+This code reads from the array before verifying that "trig" is a valid
+index.  If the index is wildly out of bounds then reading from an
+invalid address could lead to an Oops.
 
-Fixes: 5fb694f96e7c ("usb: gadget: udc: atmel: fix possible oops when unloading module")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: a8c66b684efa ("staging: comedi: addi_apci_1500: rewrite the subdevice support functions")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20200709102936.GA20875@mwanda
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/atmel_usba_udc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/comedi/drivers/addi_apci_1500.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index 58e5b015d40e6..bebe814f55e6a 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -870,7 +870,7 @@ static int usba_ep_dequeue(struct usb_ep *_ep, struct usb_request *_req)
- 	u32 status;
+diff --git a/drivers/staging/comedi/drivers/addi_apci_1500.c b/drivers/staging/comedi/drivers/addi_apci_1500.c
+index 45ad4ba92f94f..689acd69a1b9c 100644
+--- a/drivers/staging/comedi/drivers/addi_apci_1500.c
++++ b/drivers/staging/comedi/drivers/addi_apci_1500.c
+@@ -456,9 +456,9 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
+ 	unsigned int lo_mask = data[5] << shift;
+ 	unsigned int chan_mask = hi_mask | lo_mask;
+ 	unsigned int old_mask = (1 << shift) - 1;
+-	unsigned int pm = devpriv->pm[trig] & old_mask;
+-	unsigned int pt = devpriv->pt[trig] & old_mask;
+-	unsigned int pp = devpriv->pp[trig] & old_mask;
++	unsigned int pm;
++	unsigned int pt;
++	unsigned int pp;
  
- 	DBG(DBG_GADGET | DBG_QUEUE, "ep_dequeue: %s, req %p\n",
--			ep->ep.name, req);
-+			ep->ep.name, _req);
+ 	if (trig > 1) {
+ 		dev_dbg(dev->class_dev,
+@@ -471,6 +471,10 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
+ 		return -EINVAL;
+ 	}
  
- 	spin_lock_irqsave(&udc->lock, flags);
- 
++	pm = devpriv->pm[trig] & old_mask;
++	pt = devpriv->pt[trig] & old_mask;
++	pp = devpriv->pp[trig] & old_mask;
++
+ 	switch (data[2]) {
+ 	case COMEDI_DIGITAL_TRIG_DISABLE:
+ 		/* clear trigger configuration */
 -- 
 2.25.1
 
