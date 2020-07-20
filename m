@@ -2,146 +2,117 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5C1C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6DBC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08B2E22CBE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:39:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263166;
-	bh=W62ia5m/lLG3h2WMA0WMI8k8XLQQOyoychS7NhLSahU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zgR8nX0yxN3qDVaXp7/R22ErtYruffdDwTM4ETg/o5D9ZQYYznuNAblctS/FtI9QE
-	 uslMAeo/tfMYyLJL3/fhFbZGvK88Irwj5W/bv+GCJLsEO69mbdrPkfOQ/FFZ1i2icQ
-	 ZVSgPcJypn4InE1K9+gGItwsCXEPkm+tIJN5il2M=
+	by mail.kernel.org (Postfix) with ESMTP id 6FDEC20773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:39:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WGiBVFDx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731485AbgGTQjY (ORCPT
+        id S1732748AbgGTQjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:39:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731018AbgGTPt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:49:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBF8A2064B;
-        Mon, 20 Jul 2020 15:49:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260166;
-        bh=W62ia5m/lLG3h2WMA0WMI8k8XLQQOyoychS7NhLSahU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=db3kCuPU61BoUfO4PjG/uVRVZVvAGM0owW1spyykBt4n/HSML86h0rVtGx2auKD1H
-         A1AZEK7s59EMRM8hEgk8Wew9jOQZoL6Rh3K16SI0r5DZWfyMpWHg7do4AU3r0Q7Buk
-         GkvWV6Qix9KBDlZLQc8zsPwYKSsH7T7QlSFrggjk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        Samuel Mendoza-Jonas <samjonas@amazon.com>,
-        Frank van der Linden <fllinden@amazon.com>
-Subject: [PATCH 4.14 123/125] x86/cpu: Move x86_cache_bits settings
-Date:   Mon, 20 Jul 2020 17:37:42 +0200
-Message-Id: <20200720152809.008857024@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
-References: <20200720152802.929969555@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 12:39:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730967AbgGTPtF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:49:05 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6C69C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 08:49:04 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id k6so13693163ili.6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 08:49:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=D/CA+/3/bTndVqHDVfOkxSHtDGUPSGt5x3VVKQfqZbg=;
+        b=WGiBVFDxkDK9ZFg0IrwsBU9TGmD+ri9d6HGdShiF1Ll+N1iHXGFQmIfLUSjif3Cmp+
+         AVeUuZqUIux5ykvvGzRtLUa1DylQFhVVOKR7da7PHAgVzIKkJcHa7BONkoYjb/tCizfw
+         1j4ywtzIffpQMa6dfjP3vGDCMKE5fn+PykRLQgbP431T/6VxhaOEmuCQyGkis6crNs5T
+         HmAg41n3TmKIBU5R3qZ0YW8M+/EMEkE+3TpK2YDfQrsc5H8hJC9ES3ygxd+39EonR6Cx
+         BDO3PHM1BrFlmkKI/BU0weuKzZ9PE3fTQTc4HoMAoDdTfYmVdfAxVSUf4Jd14SZHpD+K
+         LVhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=D/CA+/3/bTndVqHDVfOkxSHtDGUPSGt5x3VVKQfqZbg=;
+        b=JUdYs82RPV9wDXuq8mV6bljW1Hh3RBPyKCK1wWeX9acSmo77+4sCgi41Vdechx300z
+         QVIbLIgTkzVvUg7wjq9nKK5GVlxVWet9to/AbedAS+UtGRo4V1Wt4CXrUU1I6mGUtvtI
+         WMSRry0IKMNQr5PAddKG2Af0ZpQtDzzKTu2hNwjOV2g+BjWWr00QVofpgMT9dTi6Y+Df
+         OkDyEw6IWiOKCssNMdeAo2lbvMUCpYhSVNKRDVhuEhDWYsu4MIqjSne+aPxHDMs5zAyJ
+         3+P4hRXiaBXlS3lRl1BfUutpB25YCaTEZkUo82wHkrH0IyvxsEkkgQMwfE8lRwqiTVtw
+         3eoQ==
+X-Gm-Message-State: AOAM53200WaVo1NdLavzSEYzauWohz57LgtSS8Z0rqUmmu4rRdtl5VBf
+        9HyfsIK6A2UoGSGMStgGBvsmfyt2imhX5A==
+X-Google-Smtp-Source: ABdhPJxoefCUr9kZLZrdpjB1/kG/khSkCyqABdVEAysM2MGxbfvjcaNVbWEaW6P3bgONfYG5iyq/kw==
+X-Received: by 2002:a05:6e02:605:: with SMTP id t5mr23516270ils.116.1595260144075;
+        Mon, 20 Jul 2020 08:49:04 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id z78sm9474809ilk.72.2020.07.20.08.49.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2020 08:49:03 -0700 (PDT)
+Subject: Re: [PATCH 0/2] task_put batching
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1595021626.git.asml.silence@gmail.com>
+ <cf209c59-547e-0a69-244d-7c1fec00a978@kernel.dk>
+ <b01e7f2d-d9a6-5593-3afb-5008d96695c6@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a2aa8de0-a2d0-3381-3415-4b523c2b66a5@kernel.dk>
+Date:   Mon, 20 Jul 2020 09:49:02 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <b01e7f2d-d9a6-5593-3afb-5008d96695c6@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suraj Jitindar Singh <surajjs@amazon.com>
+On 7/20/20 9:22 AM, Pavel Begunkov wrote:
+> On 18/07/2020 17:37, Jens Axboe wrote:
+>> On 7/18/20 2:32 AM, Pavel Begunkov wrote:
+>>> For my a bit exaggerated test case perf continues to show high CPU
+>>> cosumption by io_dismantle(), and so calling it io_iopoll_complete().
+>>> Even though the patch doesn't yield throughput increase for my setup,
+>>> probably because the effect is hidden behind polling, but it definitely
+>>> improves relative percentage. And the difference should only grow with
+>>> increasing number of CPUs. Another reason to have this is that atomics
+>>> may affect other parallel tasks (e.g. which doesn't use io_uring)
+>>>
+>>> before:
+>>> io_iopoll_complete: 5.29%
+>>> io_dismantle_req:   2.16%
+>>>
+>>> after:
+>>> io_iopoll_complete: 3.39%
+>>> io_dismantle_req:   0.465%
+>>
+>> Still not seeing a win here, but it's clean and it _should_ work. For
+>> some reason I end up getting the offset in task ref put growing the
+>> fput_many(). Which doesn't (on the surface) make a lot of sense, but
+>> may just mean that we have some weird side effects.
+> 
+> It grows because the patch is garbage, the second condition is always false.
+> See the diff. Could you please drop both patches?
 
-This patch is to fix the backport of the upstream patch:
-cc51e5428ea5 x86/speculation/l1tf: Increase l1tf memory limit for Nehalem+
+Hah, indeed. With this on top, it looks like it should in terms of
+performance and profiles.
 
-When this was backported to the 4.9 and 4.14 stable branches the line
-+       c->x86_cache_bits = c->x86_phys_bits;
-was applied in the wrong place, being added to the
-identify_cpu_without_cpuid() function instead of the get_cpu_cap()
-function which it was correctly applied to in the 4.4 backport.
+I can just fold this into the existing one, if you'd like.
 
-This means that x86_cache_bits is not set correctly resulting in the
-following warning due to the cache bits being left uninitalised (zero).
-
- WARNING: CPU: 0 PID: 7566 at arch/x86/kvm/mmu.c:284 kvm_mmu_set_mmio_spte_mask+0x4e/0x60 [kvm
- Modules linked in: kvm_intel(+) kvm irqbypass ipv6 crc_ccitt binfmt_misc evdev lpc_ich mfd_core ioatdma pcc_cpufreq dca ena acpi_power_meter hwmon acpi_pad button ext4 crc16 mbcache jbd2 fscrypto nvme nvme_core dm_mirror dm_region_hash dm_log dm_mod dax
- Hardware name: Amazon EC2 i3.metal/Not Specified, BIOS 1.0 10/16/2017
- task: ffff88ff77704c00 task.stack: ffffc9000edac000
- RIP: 0010:kvm_mmu_set_mmio_spte_mask+0x4e/0x60 [kvm
- RSP: 0018:ffffc9000edafc60 EFLAGS: 00010206
- RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00000000ffffff45
- RDX: 000000000000002e RSI: 0008000000000001 RDI: 0008000000000001
- RBP: ffffffffa036f000 R08: ffffffffffffff80 R09: ffffe8ffffccb3c0
- R10: 0000000000000038 R11: 0000000000000000 R12: 0000000000005b80
- R13: ffffffffa0370e40 R14: 0000000000000001 R15: ffff88bf7c0927e0
- FS:  00007fa316f24740(0000) GS:ffff88bf7f600000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 00007fa316ea0000 CR3: 0000003f7e986004 CR4: 00000000003606f0
- DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- Call Trace:
-  kvm_mmu_module_init+0x166/0x230 [kvm
-  kvm_arch_init+0x5d/0x150 [kvm
-  kvm_init+0x1c/0x2d0 [kvm
-  ? hardware_setup+0x4a6/0x4a6 [kvm_intel
-  vmx_init+0x23/0x6aa [kvm_intel
-  ? hardware_setup+0x4a6/0x4a6 [kvm_intel
-  do_one_initcall+0x3e/0x15d
-  do_init_module+0x5b/0x1e5
-  load_module+0x19e6/0x1dc0
-  ? SYSC_init_module+0x13b/0x170
-  SYSC_init_module+0x13b/0x170
-  do_syscall_64+0x67/0x110
-  entry_SYSCALL_64_after_hwframe+0x41/0xa6
- RIP: 0033:0x7fa316828f3a
- RSP: 002b:00007ffc9d65c1f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000af
- RAX: ffffffffffffffda RBX: 00007fa316b08849 RCX: 00007fa316828f3a
- RDX: 00007fa316b08849 RSI: 0000000000071328 RDI: 00007fa316e37000
- RBP: 0000000000b47e80 R08: 0000000000000003 R09: 0000000000000000
- R10: 00007fa316822dba R11: 0000000000000246 R12: 0000000000b46340
- R13: 0000000000b464c0 R14: 0000000000000000 R15: 0000000000040000
- Code: e9 65 06 00 75 25 48 b8 00 00 00 00 00 00 00 40 48 09 c6 48 09 c7 48 89 35 f8 65 06 00 48 89 3d f9 65 06 00 c3 0f 0b 0f 0b eb d2 <0f> 0b eb d7 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44
-
-Fixes: 4.9.x  ef3d45c95764 x86/speculation/l1tf: Increase l1tf memory limit for Nehalem+
-Fixes: 4.14.x ec4034835eaf x86/speculation/l1tf: Increase l1tf memory limit for Nehalem+
-Cc: stable@vger.kernel.org # 4.9.x-4.14.x
-Signed-off-by: Suraj Jitindar Singh <surajjs@amazon.com>
-Reviewed-by: Samuel Mendoza-Jonas <samjonas@amazon.com>
-Reviewed-by: Frank van der Linden <fllinden@amazon.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/kernel/cpu/common.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -854,6 +854,7 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
- 	else if (cpu_has(c, X86_FEATURE_PAE) || cpu_has(c, X86_FEATURE_PSE36))
- 		c->x86_phys_bits = 36;
- #endif
-+	c->x86_cache_bits = c->x86_phys_bits;
- 
- 	if (c->extended_cpuid_level >= 0x8000000a)
- 		c->x86_capability[CPUID_8000_000A_EDX] = cpuid_edx(0x8000000a);
-@@ -894,7 +895,6 @@ static void identify_cpu_without_cpuid(s
- 			}
- 		}
- #endif
--	c->x86_cache_bits = c->x86_phys_bits;
- }
- 
- #define NO_SPECULATION		BIT(0)
-
+-- 
+Jens Axboe
 
