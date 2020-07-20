@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F76C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 503A9C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCE7E22CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2963B206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262513;
-	bh=PKJqW285Wyj9VDxoQk/MlK8bcvV3xkLNjAGN/bWGlpM=;
+	s=default; t=1595262521;
+	bh=djA/OeVubFzdOM4XtK81Q1LOrasjYL79GbYkuCRyh+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rjM6Ixwep0G3ZxM2vaQy5iw5eIs4Bgi//BApkH3HfBSYlGOnBtySENLK3MXpIZ72e
-	 +uU3QNHPwv5m1ENBjXw8eL5iGlgxaJTFNUZihy3KAbQhQNvM3eMkVpbIEFBcd8xda9
-	 REoSx3gDOE5d3p5m8zyyGbuZ4uq+CwjdqXWccBw4=
+	b=wzQQ7AhuRxuGrtDqYY08K8f+myIjcD5eH+9X5XjBQdqIP0DYgbamlbx+r9ykEGqyU
+	 5oAoU3sAy2RvBRKIlkSnun2FJew0GXRXbtkRYCMD9sFyKwTvsSYCdZjnJxjSPbFR9p
+	 4A/vFwoTXb5ibqFHl25OGNZ/PyUMylb7rlwkI7rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732230AbgGTP71 (ORCPT
+        id S1732700AbgGTQ2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:59:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59798 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:28:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732167AbgGTP7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:16 -0400
+        id S1731343AbgGTP7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DFC222CAF;
-        Mon, 20 Jul 2020 15:59:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F99222BEF;
+        Mon, 20 Jul 2020 15:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260755;
-        bh=PKJqW285Wyj9VDxoQk/MlK8bcvV3xkLNjAGN/bWGlpM=;
+        s=default; t=1595260769;
+        bh=djA/OeVubFzdOM4XtK81Q1LOrasjYL79GbYkuCRyh+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bWMJJGgtQMuG4OCAup9ii3EelFawAYX+akAnjE6PoLNfhooravtpGTs975br2rrtO
-         /7o7Vo+A2KIZSl73SSgFY1LiuvfKhjyLu+5toAhlvOw+hqviCQQbQdRQ3k9TTWHIWk
-         42boah6oX5xIn6IsX4O57CtmRe9c+ok+taUbAhjY=
+        b=gNFTxQfWY9z6ZHWbn8CJ3TdaiJ7zbQkcVrbS+MOXdN432VRs4yiXwfNXYTnt8MKaG
+         8c02Q9keEIONbxLvQP153Q4c5iTmC0Dvt45T9uj5hvn0Pc5CqmWD5sLHvbUe2NhTXP
+         jUfQZ7ZPxBNQb3JMrR93Av3KGsvSwWagUaufV+kY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haibo Chen <haibo.chen@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Andi Shyti <andi@etezian.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 084/215] mmc: sdhci: do not enable card detect interrupt for gpio cd type
-Date:   Mon, 20 Jul 2020 17:36:06 +0200
-Message-Id: <20200720152824.202443009@linuxfoundation.org>
+Subject: [PATCH 5.4 089/215] Input: mms114 - add extra compatible for mms345l
+Date:   Mon, 20 Jul 2020 17:36:11 +0200
+Message-Id: <20200720152824.437605708@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -62,40 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haibo Chen <haibo.chen@nxp.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit e65bb38824711559844ba932132f417bc5a355e2 ]
+[ Upstream commit 7842087b0196d674ed877d768de8f2a34d7fdc53 ]
 
-Except SDHCI_QUIRK_BROKEN_CARD_DETECTION and MMC_CAP_NONREMOVABLE,
-we also do not need to handle controller native card detect interrupt
-for gpio cd type.
-If we wrong enabled the card detect interrupt for gpio case, it will
-cause a lot of unexpected card detect interrupts during data transfer
-which should not happen.
+MMS345L is another first generation touch screen from Melfas,
+which uses mostly the same registers as MMS152.
 
-Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/1582100563-20555-2-git-send-email-haibo.chen@nxp.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+However, there is some garbage printed during initialization.
+Apparently MMS345L does not have the MMS152_COMPAT_GROUP register
+that is read+printed during initialization.
+
+  TSP FW Rev: bootloader 0x6 / core 0x26 / config 0x26, Compat group: \x06
+
+On earlier kernel versions the compat group was actually printed as
+an ASCII control character, seems like it gets escaped now.
+
+But we probably shouldn't print something from a random register.
+
+Add a separate "melfas,mms345l" compatible that avoids reading
+from the MMS152_COMPAT_GROUP register. This might also help in case
+there is some other device-specific quirk in the future.
+
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Andi Shyti <andi@etezian.org>
+Link: https://lore.kernel.org/r/20200423102431.2715-1-stephan@gerhold.net
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/mms114.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 50514fedbc76f..136f9737713d8 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -152,7 +152,7 @@ static void sdhci_set_card_detection(struct sdhci_host *host, bool enable)
- 	u32 present;
+diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
+index fca908ba4841f..fb28fd2d6f1c5 100644
+--- a/drivers/input/touchscreen/mms114.c
++++ b/drivers/input/touchscreen/mms114.c
+@@ -54,6 +54,7 @@
+ enum mms_type {
+ 	TYPE_MMS114	= 114,
+ 	TYPE_MMS152	= 152,
++	TYPE_MMS345L	= 345,
+ };
  
- 	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
--	    !mmc_card_is_removable(host->mmc))
-+	    !mmc_card_is_removable(host->mmc) || mmc_can_gpio_cd(host->mmc))
- 		return;
+ struct mms114_data {
+@@ -250,6 +251,15 @@ static int mms114_get_version(struct mms114_data *data)
+ 	int error;
  
- 	if (enable) {
+ 	switch (data->type) {
++	case TYPE_MMS345L:
++		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
++		if (error)
++			return error;
++
++		dev_info(dev, "TSP FW Rev: bootloader 0x%x / core 0x%x / config 0x%x\n",
++			 buf[0], buf[1], buf[2]);
++		break;
++
+ 	case TYPE_MMS152:
+ 		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
+ 		if (error)
+@@ -287,8 +297,8 @@ static int mms114_setup_regs(struct mms114_data *data)
+ 	if (error < 0)
+ 		return error;
+ 
+-	/* MMS152 has no configuration or power on registers */
+-	if (data->type == TYPE_MMS152)
++	/* Only MMS114 has configuration and power on registers */
++	if (data->type != TYPE_MMS114)
+ 		return 0;
+ 
+ 	error = mms114_set_active(data, true);
+@@ -598,6 +608,9 @@ static const struct of_device_id mms114_dt_match[] = {
+ 	}, {
+ 		.compatible = "melfas,mms152",
+ 		.data = (void *)TYPE_MMS152,
++	}, {
++		.compatible = "melfas,mms345l",
++		.data = (void *)TYPE_MMS345L,
+ 	},
+ 	{ }
+ };
 -- 
 2.25.1
 
