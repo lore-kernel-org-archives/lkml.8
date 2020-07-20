@@ -2,119 +2,173 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84C7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B25C822482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A61622CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:32:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="fTHeSVsV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dr+FFtEE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728694AbgGTPaP (ORCPT
+        id S1728356AbgGTPcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:30:15 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:31446 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726899AbgGTPaO (ORCPT
+        Mon, 20 Jul 2020 11:32:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25468 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726769AbgGTPcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:30:14 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KFU3jJ028595;
-        Mon, 20 Jul 2020 08:30:07 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=0xdZMKt+U7nc+qc2EGzH2Mt6XJPg3diT9cpjObCq0HM=;
- b=fTHeSVsV9iwWiZp0fu3DMWqzeZjVWtoh0abil1mm6B0C6HvhFnpLzSV4IMjEZcadQAHI
- AEcWL7+3OLOVLexYbT8uD9VMPMOze6ANAB4jucQWS++hgM3trIwKiWMcTnThU3SZXc5X
- Pfic51wcgSVsCc7D00aQPJPVRmObeXD6EY8GjHun1VLmbD6jF8GJEf0pPcxBO9z2kn/x
- mDW16wLnuYhN9UquJtfMj/eMt4kTXFwY8u3HCf9xdH3oa3HUBO1hSwvN/YJBIzxpIjAI
- u0kSZnw+ifw7H0W951Ok/aOfkDXYrD38QAw1QYXP2y9d7Ud0M9MZMKJEdavqWiweHxAP nA== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0a-0016f401.pphosted.com with ESMTP id 32bxenf600-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 08:30:06 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 20 Jul
- 2020 08:30:05 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 20 Jul
- 2020 08:30:04 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 20 Jul 2020 08:30:04 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 46C623F703F;
-        Mon, 20 Jul 2020 08:29:59 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     Joe Perches <joe@perches.com>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "Denis Bolotin" <denis.bolotin@marvell.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        <GR-everest-linux-l2@marvell.com>,
-        <QLogic-Storage-Upstream@marvell.com>, <netdev@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 net-next 01/14] qed: convert link mode from u32 to bitmap
-Date:   Mon, 20 Jul 2020 18:29:30 +0300
-Message-ID: <20200720152930.8485-1-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <de4b0ef6b1b7b58acc184d1d7e80456f6c3b56c0.camel@perches.com>
-References: <de4b0ef6b1b7b58acc184d1d7e80456f6c3b56c0.camel@perches.com>
- <20200719212100.GM1383417@lunn.ch>
- <20200719201453.3648-1-alobakin@marvell.com>
- <20200719201453.3648-2-alobakin@marvell.com>
- <20200720092306.355-1-alobakin@marvell.com>
+        Mon, 20 Jul 2020 11:32:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595259129;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WuO0ceoCrlI5WXUN1sWSIg1Q1X5L1heUQCujYy6OI5U=;
+        b=dr+FFtEEHZfOORQeyMRiWp/aHfxgHzNtEgn3UM/mCXO2a6zYQkdVWUW3RtEszHOP1OjVn9
+        jdn3Mr3/5HeXjAPO8tCjMi+G/couIHL6uyg+KCWx5D5qEll+7JnQcOIIbVSzcmh3oXtrWT
+        tMbu4TSjkcHbr+X75CCgL1GxKADoAmw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-vnxIcrmOOIilaeTxaZfx1A-1; Mon, 20 Jul 2020 11:32:07 -0400
+X-MC-Unique: vnxIcrmOOIilaeTxaZfx1A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 69853106B247;
+        Mon, 20 Jul 2020 15:32:06 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4433C710A4;
+        Mon, 20 Jul 2020 15:32:06 +0000 (UTC)
+Received: from zmail18.collab.prod.int.phx2.redhat.com (zmail18.collab.prod.int.phx2.redhat.com [10.5.83.21])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 0DB6D94EE2;
+        Mon, 20 Jul 2020 15:32:06 +0000 (UTC)
+Date:   Mon, 20 Jul 2020 11:32:03 -0400 (EDT)
+From:   Waiman Long <longman@redhat.com>
+Reply-To: Waiman Long <longman@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
+        Eric Sandeen <sandeen@redhat.com>
+Message-ID: <104087053.24407245.1595259123778.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20200713164112.GZ7606@magnolia>
+References: <20200707191629.13911-1-longman@redhat.com> <20200713164112.GZ7606@magnolia>
+Subject: Re: [PATCH v6] xfs: Fix false positive lockdep warning with
+ sb_internal & fs_reclaim
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.10.113.230, 10.4.195.2]
+Thread-Topic: Fix false positive lockdep warning with sb_internal & fs_reclaim
+Thread-Index: WmhqTmYfplYkpIlak7AmgyVLRnpP0Q==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
 
-From: Joe Perches <joe@perches.com>
-Date: Mon, 20 Jul 2020 08:19:52 -0700
 
-> On Mon, 2020-07-20 at 12:23 +0300, Alexander Lobakin wrote:
->> Date: Sun, 19 Jul 2020 23:21:00 +0200 From: Andrew Lunn <andrew@lunn.ch>
->>> On Sun, Jul 19, 2020 at 11:14:40PM +0300, Alexander Lobakin wrote:
->>>> Currently qed driver already ran out of 32 bits to store link modes,
->>>> and this doesn't allow to add and support more speeds.
->>>> Convert link mode to bitmap that will always have enough space for
->>>> any number of speeds and modes.
-> []
->>> Why not just throw away all these QED_LM_ defines and use the kernel
->>> link modes? The fact you are changing the u32 to a bitmap suggests the
->>> hardware does not use them.
->> 
->> I've just double-checked, and you're right, management firmware operates
->> with NVM_* definitions, while QED_LM_* are used only in QED and QEDE to
->> fill Ethtool link settings.
->> I didn't notice this while working on the series, but it would be really
->> a lot better to just use generic definitions.
->> So I'll send v3 soon.
->
-> While you're at it, why are you using __set_bit and not set_bit?
+----- Original Message -----
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
+To: "Waiman Long" <longman@redhat.com>
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, "Dave Chinner" <david@fromorbit.com>, "Qian Cai" <cai@lca.pw>, "Eric Sandeen" <sandeen@redhat.com>
+Sent: Monday, July 13, 2020 12:41:12 PM
+Subject: Re: [PATCH v6] xfs: Fix false positive lockdep warning with sb_internal & fs_reclaim
 
-Because I'm filling link modes and don't need any atomicity at all.
-If you refer linkmode_*() functions [1], they also use non-atomic
-variants of bitops.
+On Tue, Jul 07, 2020 at 03:16:29PM -0400, Waiman Long wrote:
+> Depending on the workloads, the following circular locking dependency
+> warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
+> lock) may show up:
+> 
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 5.0.0-rc1+ #60 Tainted: G        W
+> ------------------------------------------------------
+> fsfreeze/4346 is trying to acquire lock:
+> 0000000026f1d784 (fs_reclaim){+.+.}, at:
+> fs_reclaim_acquire.part.19+0x5/0x30
+> 
+> but task is already holding lock:
+> 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+> 
+> which lock already depends on the new lock.
+>   :
+>  Possible unsafe locking scenario:
+> 
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(sb_internal);
+>                                lock(fs_reclaim);
+>                                lock(sb_internal);
+>   lock(fs_reclaim);
+> 
+>  *** DEADLOCK ***
+> 
+> 4 locks held by fsfreeze/4346:
+>  #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
+>  #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
+>  #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
+>  #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+> 
+> stack backtrace:
+> Call Trace:
+>  dump_stack+0xe0/0x19a
+>  print_circular_bug.isra.10.cold.34+0x2f4/0x435
+>  check_prev_add.constprop.19+0xca1/0x15f0
+>  validate_chain.isra.14+0x11af/0x3b50
+>  __lock_acquire+0x728/0x1200
+>  lock_acquire+0x269/0x5a0
+>  fs_reclaim_acquire.part.19+0x29/0x30
+>  fs_reclaim_acquire+0x19/0x20
+>  kmem_cache_alloc+0x3e/0x3f0
+>  kmem_zone_alloc+0x79/0x150
+>  xfs_trans_alloc+0xfa/0x9d0
+>  xfs_sync_sb+0x86/0x170
+>  xfs_log_sbcount+0x10f/0x140
+>  xfs_quiesce_attr+0x134/0x270
+>  xfs_fs_freeze+0x4a/0x70
+>  freeze_super+0x1af/0x290
+>  do_vfs_ioctl+0xedc/0x16c0
+>  ksys_ioctl+0x41/0x80
+>  __x64_sys_ioctl+0x73/0xa9
+>  do_syscall_64+0x18f/0xd23
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> This is a false positive as all the dirty pages are flushed out before
+> the filesystem can be frozen.
+> 
+> One way to avoid this splat is to add GFP_NOFS to the affected allocation
+> calls by using the memalloc_nofs_save()/memalloc_nofs_restore() pair.
+> This shouldn't matter unless the system is really running out of memory.
+> In that particular case, the filesystem freeze operation may fail while
+> it was succeeding previously.
+> 
+> Without this patch, the command sequence below will show that the lock
+> dependency chain sb_internal -> fs_reclaim exists.
+> 
+>  # fsfreeze -f /home
+>  # fsfreeze --unfreeze /home
+>  # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
+> 
+> After applying the patch, such sb_internal -> fs_reclaim lock dependency
+> chain can no longer be found. Because of that, the locking dependency
+> warning will not be shown.
+> 
+> Suggested-by: Dave Chinner <david@fromorbit.com>
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-Al
+Looks good to me,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-[1] https://elixir.bootlin.com/linux/v5.8-rc4/source/include/linux/linkmode.h
+Will this patch be merged into the xfs tree soon?
+
+Thanks,
+Longman
+
