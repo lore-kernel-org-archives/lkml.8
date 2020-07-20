@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D15CC43468
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA50C4743A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA35222C7B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D67206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281512;
-	bh=kOVhulJk+pdwU88duSZrqzaEiuBdYU+NRWyGSP6HyBo=;
+	s=default; t=1595281524;
+	bh=myRiqgsrgu8L7BwSvXexwZdTgvqMXP0UprAQ0a3Razo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D/HMRqqLVhTv1HWme6JWyPGZ876R45WUtD59umeK76LI69KYN4w4Dwn2SXlPlJZRz
-	 ksVIY2gnq95DCEZVMP56I0W69fX1gHPPVIuHIple69rXMDY8Cb9DMkeGAeTvF4Qnbs
-	 GwwYZeDbMuEJ0hATB9GI8sMatQKouBGklmilvaXw=
+	b=SrfnUF5ccl4068C1uskrPSaH9zm0gR+ktvI4sJ3yV7cWFeqsCFU4Me8v+kWAcUNlI
+	 crTbLmX6b3ZYOfoZy1jQpoYW/X7hiZSzi2YZ1MHNLEReUefIDs6u9J3Y3D8Lf3/2DK
+	 dElDb7E7Bh0mkzmMK0PVMGOgVqrBF0dBzXEQMS48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbgGTVpK (ORCPT
+        id S1728452AbgGTVpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:45:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55572 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:45:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727107AbgGTVhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:37:38 -0400
+        id S1727095AbgGTVhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:37:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA89922CF7;
-        Mon, 20 Jul 2020 21:37:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B47122CBB;
+        Mon, 20 Jul 2020 21:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281058;
-        bh=kOVhulJk+pdwU88duSZrqzaEiuBdYU+NRWyGSP6HyBo=;
+        s=default; t=1595281056;
+        bh=myRiqgsrgu8L7BwSvXexwZdTgvqMXP0UprAQ0a3Razo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lSI6WBQm5bu6GLlliKvJ5aBO4BgjfQc4VwOpAulO9DqE9WI2lsx91iIlSyecWi3/s
-         VftoFwXi4lt6OwE0q2IHOqUY1Etj3POIWLoJurY2QdC8NHhyeV/iYjhvJwmUNgvW+p
-         TSq4qqwt7KNqcj1cJv3l/2MlhBHb99/t7+flscsg=
+        b=sh9daKaNcXiSbHfgTv4CPbPSBwtAhuKeyIk1BGLq7wxNpFUQWwRvFiXHgFmQu+xlZ
+         PDLz9TXkQG+B9xU2Qu+cyQfpyL/ONYhJlhc6vEn+9O6QdtjHj8NdSRH4qXHwBD3r+T
+         UI1FKzP8JjZViuRxqnQKFUi6MS9x1RhZzqKiBf3o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Katsnelson <me@0upti.me>, Lyude Paul <lyude@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 18/40] Input: synaptics - enable InterTouch for ThinkPad X1E 1st gen
-Date:   Mon, 20 Jul 2020 17:36:53 -0400
-Message-Id: <20200720213715.406997-18-sashal@kernel.org>
+Cc:     Angelo Dureghello <angelo.dureghello@timesys.com>,
+        kbuild test robot <lkp@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 16/40] dmaengine: fsl-edma: fix wrong tcd endianness for big-endian cpu
+Date:   Mon, 20 Jul 2020 17:36:51 -0400
+Message-Id: <20200720213715.406997-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213715.406997-1-sashal@kernel.org>
 References: <20200720213715.406997-1-sashal@kernel.org>
@@ -59,34 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Katsnelson <me@0upti.me>
+From: Angelo Dureghello <angelo.dureghello@timesys.com>
 
-[ Upstream commit dcb00fc799dc03fd320e123e4c81b3278c763ea5 ]
+[ Upstream commit 8678c71c17721e0f771f135967ef0cce8f69ce9a ]
 
-Tested on my own laptop, touchpad feels slightly more responsive with
-this on, though it might just be placebo.
+Due to recent fixes in m68k arch-specific I/O accessor macros, this
+driver is not working anymore for ColdFire. Fix wrong tcd endianness
+removing additional swaps, since edma_writex() functions should already
+take care of any eventual swap if needed.
 
-Signed-off-by: Ilya Katsnelson <me@0upti.me>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Link: https://lore.kernel.org/r/20200703143457.132373-1-me@0upti.me
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Note, i could only test the change in ColdFire mcf54415 and Vybrid
+vf50 / Colibri where i don't see any issue. So, every feedback and
+test for all other SoCs involved is really appreciated.
+
+Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Link: https://lore.kernel.org/r/20200701225205.1674463-1-angelo.dureghello@timesys.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/synaptics.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/fsl-edma-common.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-index 758dae8d65006..4b81b2d0fe067 100644
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -179,6 +179,7 @@ static const char * const smbus_pnp_ids[] = {
- 	"LEN0093", /* T480 */
- 	"LEN0096", /* X280 */
- 	"LEN0097", /* X280 -> ALPS trackpoint */
-+	"LEN0099", /* X1 Extreme 1st */
- 	"LEN009b", /* T580 */
- 	"LEN200f", /* T450s */
- 	"LEN2044", /* L470  */
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index 5697c3622699b..9285884758b27 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -352,26 +352,28 @@ static void fsl_edma_set_tcd_regs(struct fsl_edma_chan *fsl_chan,
+ 	/*
+ 	 * TCD parameters are stored in struct fsl_edma_hw_tcd in little
+ 	 * endian format. However, we need to load the TCD registers in
+-	 * big- or little-endian obeying the eDMA engine model endian.
++	 * big- or little-endian obeying the eDMA engine model endian,
++	 * and this is performed from specific edma_write functions
+ 	 */
+ 	edma_writew(edma, 0,  &regs->tcd[ch].csr);
+-	edma_writel(edma, le32_to_cpu(tcd->saddr), &regs->tcd[ch].saddr);
+-	edma_writel(edma, le32_to_cpu(tcd->daddr), &regs->tcd[ch].daddr);
+ 
+-	edma_writew(edma, le16_to_cpu(tcd->attr), &regs->tcd[ch].attr);
+-	edma_writew(edma, le16_to_cpu(tcd->soff), &regs->tcd[ch].soff);
++	edma_writel(edma, (s32)tcd->saddr, &regs->tcd[ch].saddr);
++	edma_writel(edma, (s32)tcd->daddr, &regs->tcd[ch].daddr);
+ 
+-	edma_writel(edma, le32_to_cpu(tcd->nbytes), &regs->tcd[ch].nbytes);
+-	edma_writel(edma, le32_to_cpu(tcd->slast), &regs->tcd[ch].slast);
++	edma_writew(edma, (s16)tcd->attr, &regs->tcd[ch].attr);
++	edma_writew(edma, tcd->soff, &regs->tcd[ch].soff);
+ 
+-	edma_writew(edma, le16_to_cpu(tcd->citer), &regs->tcd[ch].citer);
+-	edma_writew(edma, le16_to_cpu(tcd->biter), &regs->tcd[ch].biter);
+-	edma_writew(edma, le16_to_cpu(tcd->doff), &regs->tcd[ch].doff);
++	edma_writel(edma, (s32)tcd->nbytes, &regs->tcd[ch].nbytes);
++	edma_writel(edma, (s32)tcd->slast, &regs->tcd[ch].slast);
+ 
+-	edma_writel(edma, le32_to_cpu(tcd->dlast_sga),
++	edma_writew(edma, (s16)tcd->citer, &regs->tcd[ch].citer);
++	edma_writew(edma, (s16)tcd->biter, &regs->tcd[ch].biter);
++	edma_writew(edma, (s16)tcd->doff, &regs->tcd[ch].doff);
++
++	edma_writel(edma, (s32)tcd->dlast_sga,
+ 			&regs->tcd[ch].dlast_sga);
+ 
+-	edma_writew(edma, le16_to_cpu(tcd->csr), &regs->tcd[ch].csr);
++	edma_writew(edma, (s16)tcd->csr, &regs->tcd[ch].csr);
+ }
+ 
+ static inline
 -- 
 2.25.1
 
