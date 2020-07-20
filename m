@@ -2,96 +2,133 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A810C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2A7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E87E20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:40:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="i7Mf4L2g"
+	by mail.kernel.org (Postfix) with ESMTP id C3E3B22B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgGTNkf (ORCPT
+        id S1726535AbgGTNmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:40:35 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:6799 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726535AbgGTNke (ORCPT
+        Mon, 20 Jul 2020 09:42:42 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:51445 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725792AbgGTNmm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 09:40:34 -0400
-X-UUID: e6697f5f9bbd4450abe130800530c3de-20200720
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=yjrsMDbea0ajD15SAf9EUujh8AYZA8JCoirJ5p5xHCA=;
-        b=i7Mf4L2gZG92BzRUmc7p6ux/bmAuNWA3rJIpiJY0In3ntaNiRJA3wshccrHysRXE9YMGzsLaSGZYtlsA2AlMjUdvU449YSrHerKLF2cC1WGMiqKSD7ba7Vo8NDEgzOTbv0/r7U5ABpXGTLmi5NV+OeDrMihBDwFIYDrmBnZlTy8=;
-X-UUID: e6697f5f9bbd4450abe130800530c3de-20200720
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <frankie.chang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1297103856; Mon, 20 Jul 2020 21:40:32 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 20 Jul 2020 21:40:28 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 20 Jul 2020 21:40:28 +0800
-Message-ID: <1595252430.5899.6.camel@mtkswgap22>
-Subject: Re: [PATCH v5] binder: transaction latency tracking for user build
-From:   Frankie Chang <Frankie.Chang@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ". Todd Kjos" <tkjos@google.com>
-CC:     Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        Arve =?ISO-8859-1?Q?Hj=F8nnev=E5g?= <arve@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Jian-Min Liu <Jian-Min.Liu@mediatek.com>
-Date:   Mon, 20 Jul 2020 21:40:30 +0800
-In-Reply-To: <1593696357.5899.3.camel@mtkswgap22>
-References: <20200507085544.GB1097552@kroah.com>
-         <1591791827-23871-1-git-send-email-Frankie.Chang@mediatek.com>
-         <1593696357.5899.3.camel@mtkswgap22>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 20 Jul 2020 09:42:42 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1jxW3z-0031Ku-6H; Mon, 20 Jul 2020 15:42:39 +0200
+Received: from x590eb6ee.dyn.telefonica.de ([89.14.182.238] helo=[192.168.1.10])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jxW3y-0024tW-Vi; Mon, 20 Jul 2020 15:42:39 +0200
+Subject: Re: ioremap and dma cleanups and fixes for superh (2nd resend)
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200714121856.955680-1-hch@lst.de>
+ <b0745e43-0ff1-58f7-70d5-60b9c8b8d81b@physik.fu-berlin.de>
+ <20200714155914.GA24404@brightrain.aerifal.cx>
+ <8cbf2963-d0e4-0ca8-4ffe-c2057694447f@physik.fu-berlin.de>
+ <011f29e6-ad71-366e-dbff-bc8471f3da60@physik.fu-berlin.de>
+ <20200720133800.GA3084@lst.de>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <661f7d56-bffc-f688-54e3-291cd5e7e18d@physik.fu-berlin.de>
+Date:   Mon, 20 Jul 2020 15:42:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200720133800.GA3084@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 89.14.182.238
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR3JlZywgVG9kZCBhbmQgYWxsDQoNCkdlbnRsZSBwaW5nIGZvciB0aGlzIHBhdGNoIHNldA0K
-DQpUaGFua3MNCg0KT24gVGh1LCAyMDIwLTA3LTAyIGF0IDIxOjI1ICswODAwLCBGcmFua2llIENo
-YW5nIHdyb3RlOg0KPiBIaSBHcmVnLCBUb2RkIGFuZCBhbGwNCj4gDQo+IEdlbnRsZSByZW1pbmQg
-b2YgdGhpcyBwYXRjaCBzZXQNCj4gDQo+IFRoYW5rcy4NCj4gRnJhbmtpZQ0KPiANCj4gT24gV2Vk
-LCAyMDIwLTA2LTEwIGF0IDIwOjIzICswODAwLCBGcmFua2llIENoYW5nIHdyb3RlOg0KPiA+IEZy
-YW5raWUuQ2hhbmcgKDMpOg0KPiA+ICAgYmluZGVyOiBtb3ZlIHN0cnVjdHMgZnJvbSBjb3JlIGZp
-bGUgdG8gaGVhZGVyIGZpbGUNCj4gPiAgIGJpbmRlcjogYWRkIHRyYWNlIGF0IGZyZWUgdHJhbnNh
-Y3Rpb24uDQo+ID4gICBiaW5kZXI6IGFkZCB0cmFuc2FjdGlvbiBsYXRlbmN5IHRyYWNlcg0KPiA+
-IA0KPiA+ICBkcml2ZXJzL2FuZHJvaWQvS2NvbmZpZyAgICAgICAgICAgICAgICAgfCAgIDggKw0K
-PiA+ICBkcml2ZXJzL2FuZHJvaWQvTWFrZWZpbGUgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiA+
-ICBkcml2ZXJzL2FuZHJvaWQvYmluZGVyLmMgICAgICAgICAgICAgICAgfCA0MDggKy0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0NCj4gPiAgZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9pbnRlcm5hbC5oICAg
-ICAgIHwgNDE2ICsrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICBkcml2ZXJzL2FuZHJvaWQv
-YmluZGVyX2xhdGVuY3lfdHJhY2VyLmMgfCAxMDggKysrKysrDQo+ID4gIGRyaXZlcnMvYW5kcm9p
-ZC9iaW5kZXJfdHJhY2UuaCAgICAgICAgICB8ICA0OSArKysNCj4gPiAgNiBmaWxlcyBjaGFuZ2Vk
-LCA1ODYgaW5zZXJ0aW9ucygrKSwgNDA0IGRlbGV0aW9ucygtKSAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IGRyaXZlcnMvYW5kcm9pZC9iaW5kZXJfbGF0ZW5jeV90cmFjZXIuYw0KPiA+IA0KPiA+IENoYW5n
-ZSBmcm9tIHY1Og0KPiA+ICAgLSBjaGFuZ2UgY29uZmlnIG5hbWUgdG8gdGhlIHByb3BlciBvbmUs
-IENPTkZJR19CSU5ERVJfVFJBTlNBQ1RJT05fTEFURU5DWV9UUkFDS0lORy4NCj4gPiAgIC0gY2hh
-bmdlIHRyYWNlcG9pbnQgbmFtZSB0byBtb3JlIGRlc2NyaXB0aXZlIG9uZSwgdHJhY2VfYmluZGVy
-X3R4bl9sYXRlbmN5XyhhbGxvY3xpbmZvfGZyZWUpDQo+ID4gICAtIGVuaGFuY2Ugc29tZSBsb2Nr
-IHByb3RlY3Rpb24uDQo+ID4gDQo+ID4gQ2hhbmdlIGZyb20gdjQ6DQo+ID4gICAtIHNwbGl0IHVw
-IGludG8gcGF0Y2ggc2VyaWVzLg0KPiA+IA0KPiA+IENoYW5nZSBmcm9tIHYzOg0KPiA+ICAgLSB1
-c2UgdHJhY2Vwb2ludHMgZm9yIGJpbmRlcl91cGRhdGVfaW5mbyBhbmQgcHJpbnRfYmluZGVyX3Ry
-YW5zYWN0aW9uX2V4dCwNCj4gPiAgICAgaW5zdGVhZCBvZiBjdXN0b20gcmVnaXN0cmF0aW9uIGZ1
-bmN0aW9ucy4NCj4gPiANCj4gPiBDaGFuZ2UgZnJvbSB2MjoNCj4gPiAgIC0gY3JlYXRlIHRyYW5z
-YWN0aW9uIGxhdGVuY3kgbW9kdWxlIHRvIG1vbml0b3Igc2xvdyB0cmFuc2FjdGlvbi4NCj4gPiAN
-Cj4gPiBDaGFuZ2UgZnJvbSB2MToNCj4gPiAgIC0gZmlyc3QgcGF0Y2hzZXQuDQo+IA0KDQo=
+Hi Christoph!
 
+On 7/20/20 3:38 PM, Christoph Hellwig wrote:
+> On Wed, Jul 15, 2020 at 01:12:33AM +0200, John Paul Adrian Glaubitz wrote:
+>> Hello!
+>>
+>> I have applied Christoph's full series on top of Linus' tree and I can confirm that
+>> the kernel boots fine on my SH-7785LCR board.
+>>
+>> Thus, for the whole series of patches:
+>>
+>> Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> 
+> Any chance we get the patches queue up while you're all sorting out
+> totally independent issues?
+
+I would love to buy only Rich can do that. I'm fine with your patches
+and would much appreciate if Rich could queue them up.
+
+I'm also still waiting for my patch to be queued as well.
+
+Adrian
+
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
