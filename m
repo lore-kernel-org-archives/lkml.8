@@ -2,125 +2,128 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534AEC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 314BFC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2414C2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1992080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:03:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dqyRVB5n"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="lXnoT4FI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgGTJCK (ORCPT
+        id S1727811AbgGTJDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:02:10 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:53658 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726030AbgGTJCJ (ORCPT
+        Mon, 20 Jul 2020 05:03:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgGTJDH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:02:09 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595235729; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=zHN3yyOoB+/6mEYmNshsBTczmFu7lRzATlYwvFIc5ko=; b=dqyRVB5nQuTZdeaXUQvKBfdiKX6k2YTfyljXWNQgsXZTOzDoIievLIuO8MLm/TvipimlQNxk
- 2o+rAY12NdpuolkNTRamfk5HyBTr/hI6+OCdpcwamrhb5q18EGyq1+2ukGK7qIumZ7h8guN6
- 02jyxloz4fUvqQG6EGBaXUs2zZE=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-east-1.postgun.com with SMTP id
- 5f155d70e3bee125101807a5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 09:01:36
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2308EC4339C; Mon, 20 Jul 2020 09:01:35 +0000 (UTC)
-Received: from [192.168.0.12] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DDC02C433C6;
-        Mon, 20 Jul 2020 09:01:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DDC02C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH] soc: qcom: geni: Fix NULL pointer dereference
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
-        saipraka@codeaurora.org, msavaliy@codeaurora.org
-References: <1594996342-26964-1-git-send-email-akashast@codeaurora.org>
- <20200717144840.GT3191083@google.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <238543d2-60fc-8c76-e345-a9de04a7562c@codeaurora.org>
-Date:   Mon, 20 Jul 2020 14:31:15 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 05:03:07 -0400
+Received: from mail.kmu-office.ch (mail.kmu-office.ch [IPv6:2a02:418:6a02::a2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57476C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:03:06 -0700 (PDT)
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id DE4C95C2657;
+        Mon, 20 Jul 2020 11:03:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1595235784;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZGN64Po53f3Pa0cff0t7HE/aei+YsCtVQ1Yq8k7+wZs=;
+        b=lXnoT4FIexWZkT91juROAc/bi9uHHT9cZ/CcEw91QKSWzrNaESFylxO9Xgqnz7hu5nSW8a
+        ajYx1IjFtwnw+sqoVnQ4Yx/2OWNDMLtCffchE5a9UjCjI/xuOf+YeYZ2n11z/qZDHrb56g
+        ApH+eBJ5BshrQU6TCoNJEuqajZ1z+js=
 MIME-Version: 1.0
-In-Reply-To: <20200717144840.GT3191083@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 20 Jul 2020 11:03:04 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     Lucas Stach <l.stach@pengutronix.de>, Marek Vasut <marex@denx.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/mxsfb: Make supported modifiers explicit
+In-Reply-To: <20200718171407.GA72952@bogon.m.sigxcpu.org>
+References: <26877532e272c12a74c33188e2a72abafc9a2e1c.1584973664.git.agx@sigxcpu.org>
+ <d39209a3664179f895a7dfabbd02d27a6adb9895.camel@pengutronix.de>
+ <20200718171407.GA72952@bogon.m.sigxcpu.org>
+User-Agent: Roundcube Webmail/1.4.1
+Message-ID: <427ac44d83e9502afb5a809f28544d6c@agner.ch>
+X-Sender: stefan@agner.ch
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
-
-On 7/17/2020 8:18 PM, Matthias Kaehlcke wrote:
-> Please make sure to cc the linux-arm-msm@vger list for patches of
-> Qualcomm code.
-Sure.
-> On Fri, Jul 17, 2020 at 08:02:22PM +0530, Akash Asthana wrote:
->> pdev struct doesn't exits for the devices whose status are disabled
-> s/exits/exist/
-ok
->
->> from DT node, in such cases NULL is returned from 'of_find_device_by_node'
->> Later when we try to get drvdata from pdev struct NULL pointer dereference
->> is triggered.
+On 2020-07-18 19:14, Guido Günther wrote:
+> Hi,
+> On Mon, Mar 23, 2020 at 04:51:05PM +0100, Lucas Stach wrote:
+>> Am Montag, den 23.03.2020, 15:52 +0100 schrieb Guido Günther:
+>> > In contrast to other display controllers on imx like DCSS and ipuv3
+>> > lcdif/mxsfb does not support detiling e.g. vivante tiled layouts.
+>> > Since mesa might assume otherwise make it explicit that only
+>> > DRM_FORMAT_MOD_LINEAR is supported.
+>> >
+>> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
 >>
->> Add a NULL check for return values to fix the issue.
+>> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> 
+> Can i do anything to get this applied?
+> Cheers,
+>  -- Guido
+
+Sorry about the delay, I was thinking to apply it with another patchset
+which is not ready though.
+
+Pushed this patch to drm-misc-next just now.
+
+--
+Stefan
+
+> 
 >>
->> We were hitting this issue when one of QUP is disabled.
+>> > ---
+>> >  drivers/gpu/drm/mxsfb/mxsfb_drv.c | 9 +++++++--
+>> >  1 file changed, 7 insertions(+), 2 deletions(-)
+>> >
+>> > diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+>> > index 762379530928..fc71e7a7a02e 100644
+>> > --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+>> > +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+>> > @@ -73,6 +73,11 @@ static const uint32_t mxsfb_formats[] = {
+>> >  	DRM_FORMAT_RGB565
+>> >  };
+>> >
+>> > +static const uint64_t mxsfb_modifiers[] = {
+>> > +	DRM_FORMAT_MOD_LINEAR,
+>> > +	DRM_FORMAT_MOD_INVALID
+>> > +};
+>> > +
+>> >  static struct mxsfb_drm_private *
+>> >  drm_pipe_to_mxsfb_drm_private(struct drm_simple_display_pipe *pipe)
+>> >  {
+>> > @@ -334,8 +339,8 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
+>> >  	}
+>> >
+>> >  	ret = drm_simple_display_pipe_init(drm, &mxsfb->pipe, &mxsfb_funcs,
+>> > -			mxsfb_formats, ARRAY_SIZE(mxsfb_formats), NULL,
+>> > -			mxsfb->connector);
+>> > +			mxsfb_formats, ARRAY_SIZE(mxsfb_formats),
+>> > +			mxsfb_modifiers, mxsfb->connector);
+>> >  	if (ret < 0) {
+>> >  		dev_err(drm->dev, "Cannot setup simple display pipe\n");
+>> >  		goto err_vblank;
 >>
->> Fixes: 048eb908a1f2 ("soc: qcom-geni-se: Add interconnect support to fix earlycon crash")
->> Reported-by: Sai Prakash Ranjan <saipraka@codeaurora.org>
->> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
->> ---
->>   drivers/soc/qcom/qcom-geni-se.c | 8 +++++++-
->>   1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
->> index 355d503..6e5fe65 100644
->> --- a/drivers/soc/qcom/qcom-geni-se.c
->> +++ b/drivers/soc/qcom/qcom-geni-se.c
->> @@ -820,6 +820,7 @@ void geni_remove_earlycon_icc_vote(void)
->>   	struct geni_wrapper *wrapper;
->>   	struct device_node *parent;
->>   	struct device_node *child;
->> +	struct platform_device *wrapper_pdev;
-> nit: since there is no other 'pdev' in this function you could just name
-> it 'pdev', which is less clunky. The variable is only used immediately
-> after it is assigned, so it's clear from the context that it refers to
-> the 'wrapper'.
-
-ok
-
-Thankyou for review!.
-
-
-regards,
-
-Akash
-
->
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
-
