@@ -2,141 +2,240 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79646C433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5413EC433E0
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3792250E
+	by mail.kernel.org (Postfix) with ESMTP id 36D3121744
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:38:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKUpi/C/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgGTAiW (ORCPT
+        id S1726637AbgGTAhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 20:38:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbgGTAiV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 20:38:21 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45BFEC0619D2;
-        Sun, 19 Jul 2020 17:38:21 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id s26so8204317pfm.4;
-        Sun, 19 Jul 2020 17:38:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:mime-version:message-id
-         :content-transfer-encoding;
-        bh=XFq1tbFsgX2AZdMgYvw8N+gQKnN3+VgEwdSA0SX4/tw=;
-        b=mKUpi/C/VrbkHgaAlfwHD+1TzhYa5ul9sEEkCLJouYkaK5jdWeGoRgaXfbw07dzvX2
-         NzyjGf4e8K0QeJ2EDCqXqSQJIOSUgchdsOZcx6pUC26pIDCvP5XCwEsy4wIRtUaVmzrr
-         kPZGnmnUm1qxmh2p4NkAaXSIxKcrHlAWA1EfQ2ayfOL3U1OuCne6OD72Yug7GE646uuP
-         Mk9QZhIb+UM3SQFn5yCYG0ubBU7qfQjsAnANXBJdGyHYKz4U9e3x9t0aJFNQLYwVTGzN
-         MY3+Hn7teHGvhHaBOLkQmK16Rj4yVCZEc1OdpXfMwapUOQoZyox8ZEh2W2gj5N/T//Hn
-         Vh6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:mime-version:message-id
-         :content-transfer-encoding;
-        bh=XFq1tbFsgX2AZdMgYvw8N+gQKnN3+VgEwdSA0SX4/tw=;
-        b=syZ0nG86x5KI5/qw0BrtFd32IJlISdmmX19e6QQbQgf90R+95Q+Uf71hPDtqnAJk52
-         312gAMAtObuqftm7Nj1Gq5gb5ihAhcN2F5bowgRHNeXxxi2Q3jX4KAG30l//W5olrkE2
-         SvY42v5h/tF0P+f7y4Ewhr5svRo9xKTNoDfImWgP/MIuyUzjVVs/1ofnpvr83zRKVFgw
-         p+QR5hlkdMd9ZTtx/uZ3uZSObDHLJfUhrC7lc37ByDWSgPhQAm+VTPkT1MFMG8TDheh2
-         8A9/uSbEUCzwBTtn8VnyyJJLiPLhQp5lXBP0uLuux8OKx/Xm1orItktaK7HgY/cSOEor
-         hWaQ==
-X-Gm-Message-State: AOAM5307JgEFnPjMICYHXajAuqcoLTn/9GckWeaMsk640UH6z0GAsLn1
-        YMNFR+LB3wVf6/4jzYAc2tw=
-X-Google-Smtp-Source: ABdhPJwKnuIipkmIajupZTNxeEfnOBQT2VjNliL94btuuxQncHtcH3EQkViU0lPNZOjdJTZ6aogM6g==
-X-Received: by 2002:a05:6a00:1596:: with SMTP id u22mr17321339pfk.102.1595205500660;
-        Sun, 19 Jul 2020 17:38:20 -0700 (PDT)
-Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id z11sm14633320pfk.46.2020.07.19.17.38.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 17:38:20 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 10:38:15 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: io_uring kthread_use_mm / mmget_not_zero possible abuse
-To:     Jens Axboe <axboe@kernel.dk>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
+        Sun, 19 Jul 2020 20:37:35 -0400
+Received: from mga12.intel.com ([192.55.52.136]:53255 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726312AbgGTAhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 20:37:35 -0400
+IronPort-SDR: 1zFh+DVdjkeB++37mEbz+MHuwSSoy6obb7jIicwlEmIwJB/8DZl8lcQ4Cny3lZfJWJPaDuVNZZ
+ XqvnKT5Mgz3Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9687"; a="129402705"
+X-IronPort-AV: E=Sophos;i="5.75,373,1589266800"; 
+   d="scan'208,223";a="129402705"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2020 17:37:32 -0700
+IronPort-SDR: QASjX8aZ9SiI/UYzwGq5mBeNGkyS3mm5TcGBk4zDKjeIrq9Y8Fkygysskzr6cl4FWNkAKCA480
+ IQHPNzffkpfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,373,1589266800"; 
+   d="scan'208,223";a="317868424"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga008.jf.intel.com with ESMTP; 19 Jul 2020 17:37:33 -0700
+Received: from fmsmsx156.amr.corp.intel.com (10.18.116.74) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 19 Jul 2020 17:37:33 -0700
+Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
+ fmsmsx156.amr.corp.intel.com (10.18.116.74) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 19 Jul 2020 17:37:32 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.135]) by
+ shsmsx102.ccr.corp.intel.com ([169.254.2.43]) with mapi id 14.03.0439.000;
+ Mon, 20 Jul 2020 08:37:30 +0800
+From:   "Huang, Ying" <ying.huang@intel.com>
+To:     Qian Cai <cai@lca.pw>
+CC:     Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>
+Subject: RE: linux-next: not-present page at swap_vma_readahead()
+Thread-Topic: linux-next: not-present page at swap_vma_readahead()
+Thread-Index: AQHWEmmYtAO3HUjxOE6ed8VDneXiZah4msgAgGI3K9eANWRSjA==
+Date:   Mon, 20 Jul 2020 00:37:30 +0000
+Message-ID: <CA2E3DE2DD06CA4FA11644750E4E292F454E35A9@SHSMSX104.ccr.corp.intel.com>
+References: <62A0ACFC-E023-4269-8121-F96B879A8C51@lca.pw>
+ <81F06AA9-F25B-4342-9CF7-2763AC394A18@lca.pw>
+ <874ktl1p7y.fsf@yhuang-dev.intel.com>,<20200616011334.GA815@lca.pw>
+In-Reply-To: <20200616011334.GA815@lca.pw>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.109.78.81]
+Content-Type: multipart/mixed;
+        boundary="_002_CA2E3DE2DD06CA4FA11644750E4E292F454E35A9SHSMSX104ccrcor_"
 MIME-Version: 1.0
-Message-Id: <1595203632.x8vplwce1a.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I last looked at this (predating io_uring), as far as I remember it wa=
-s=20
-not permitted to actually switch to (use_mm) an mm user context that was=20
-pinned with mmget_not_zero. Those pins were only allowed to look at page=20
-tables, vmas, etc., but not actually run the CPU in that mm context.
+--_002_CA2E3DE2DD06CA4FA11644750E4E292F454E35A9SHSMSX104ccrcor_
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 
-sparc/kernel/smp_64.c depends heavily on this, e.g.,
+Hi,=0A=
+=0A=
+Sorry for late reply.  I found a problem in the swap readahead code.  Can y=
+ou help to check whether it can fix this?=0A=
+=0A=
+Best Regards,=0A=
+Huang, Ying=0A=
+________________________________________=0A=
+From: Qian Cai [cai@lca.pw]=0A=
+Sent: Tuesday, June 16, 2020 9:13 AM=0A=
+To: Huang, Ying=0A=
+Cc: Linux-MM; LKML; Minchan Kim; Hugh Dickins; Andrew Morton=0A=
+Subject: Re: linux-next: not-present page at swap_vma_readahead()=0A=
+=0A=
+On Wed, Apr 15, 2020 at 10:01:53AM +0800, Huang, Ying wrote:=0A=
+> Qian Cai <cai@lca.pw> writes:=0A=
+>=0A=
+> >> On Apr 14, 2020, at 10:32 AM, Qian Cai <cai@lca.pw> wrote:=0A=
+> >>=0A=
+> >> Fuzzers are unhappy. Thoughts?=0A=
+> >=0A=
+> > This is rather to reproduce. All the traces so far are from copy_from_u=
+ser() to trigger a page fault,=0A=
+> > and then it dereferences a bad pte in swap_vma_readahead(),=0A=
+> >=0A=
+> >     for (i =3D 0, pte =3D ra_info.ptes; i < ra_info.nr_pte;=0A=
+> >          i++, pte++) {=0A=
+> >             pentry =3D *pte;   <=97 crashed here.=0A=
+> >             if (pte_none(pentry))=0A=
+>=0A=
+> Is it possible to bisect this?=0A=
+>=0A=
+> Because the crash point is identified, it may be helpful to collect and=
+=0A=
+> analyze the status of the faulting page table and readahead ptes.  But I=
+=0A=
+> am not familiar with the ARM64 architecture.  So I cannot help much=0A=
+> here.=0A=
+=0A=
+Ying, looks like the bug is still there today which manifests itself=0A=
+into a different form. Looking at the logs, I believe it was involved=0A=
+with swapoff(). Any other thought? I still have not found time to bisect=0A=
+this yet.=0A=
+=0A=
+[  785.477183][ T8727] BUG: KASAN: slab-out-of-bounds in swapin_readahead+0=
+x7b8/0xbc0=0A=
+swap_vma_readahead at mm/swap_state.c:759=0A=
+(inlined by) swapin_readahead at mm/swap_state.c:803=0A=
+[  785.484752][ T8727] Read of size 8 at addr ffff00886ecaffe8 by task trin=
+ity-c35/8727=0A=
+[  785.492488][ T8727]=0A=
+[  785.494675][ T8727] CPU: 35 PID: 8727 Comm: trinity-c35 Not tainted 5.7.=
+0-next-20200610 #3=0A=
+[  785.502942][ T8727] Hardware name: HPE Apollo 70             /C01_APACHE=
+_MB         , BIOS L50_5.13_1.11 06/18/2019=0A=
+[  785.513387][ T8727] Call trace:=0A=
+[  785.516538][ T8727]  dump_backtrace+0x0/0x398=0A=
+[  785.520891][ T8727]  show_stack+0x14/0x20=0A=
+[  785.524900][ T8727]  dump_stack+0x140/0x1b8=0A=
+[  785.529087][ T8727]  print_address_description.isra.12+0x54/0x4a8=0A=
+[  785.535185][ T8727]  kasan_report+0x134/0x1b8=0A=
+[  785.539545][ T8727]  __asan_report_load8_noabort+0x2c/0x50=0A=
+[  785.545036][ T8727]  swapin_readahead+0x7b8/0xbc0=0A=
+[  785.549745][ T8727]  do_swap_page+0xb1c/0x19a0=0A=
+[  785.554195][ T8727]  handle_mm_fault+0xf10/0x2b30=0A=
+[  785.558905][ T8727]  do_page_fault+0x230/0x908=0A=
+[  785.563354][ T8727]  do_translation_fault+0xe0/0x108=0A=
+[  785.568323][ T8727]  do_mem_abort+0x64/0x180=0A=
+[  785.572597][ T8727]  el1_sync_handler+0x188/0x1b8=0A=
+[  785.577305][ T8727]  el1_sync+0x7c/0x100=0A=
+[  785.581232][ T8727]  __arch_copy_to_user+0xc4/0x158=0A=
+[  785.586115][ T8727]  __arm64_sys_sysinfo+0x2c/0xd0=0A=
+[  785.590912][ T8727]  do_el0_svc+0x124/0x220=0A=
+[  785.595100][ T8727]  el0_sync_handler+0x260/0x408=0A=
+[  785.599807][ T8727]  el0_sync+0x140/0x180=0A=
+[  785.603818][ T8727]=0A=
+[  785.606007][ T8727] Allocated by task 8673:=0A=
+[  785.610193][ T8727]  save_stack+0x24/0x50=0A=
+[  785.614208][ T8727]  __kasan_kmalloc.isra.13+0xc4/0xe0=0A=
+[  785.619350][ T8727]  kasan_slab_alloc+0x14/0x20=0A=
+[  785.623885][ T8727]  slab_post_alloc_hook+0x50/0xa8=0A=
+[  785.628769][ T8727]  kmem_cache_alloc+0x18c/0x438=0A=
+[  785.633479][ T8727]  create_object+0x58/0x960=0A=
+[  785.637844][ T8727]  kmemleak_alloc+0x2c/0x38=0A=
+[  785.642205][ T8727]  slab_post_alloc_hook+0x70/0xa8=0A=
+[  785.647089][ T8727]  kmem_cache_alloc_trace+0x178/0x308=0A=
+[  785.652322][ T8727]  refill_pi_state_cache.part.10+0x3c/0x1a8=0A=
+[  785.658073][ T8727]  futex_lock_pi+0x404/0x5e0=0A=
+[  785.662519][ T8727]  do_futex+0x790/0x1448=0A=
+[  785.666618][ T8727]  __arm64_sys_futex+0x204/0x588=0A=
+[  785.671411][ T8727]  do_el0_svc+0x124/0x220=0A=
+[  785.675603][ T8727]  el0_sync_handler+0x260/0x408=0A=
+[  785.680312][ T8727]  el0_sync+0x140/0x180=0A=
+[  785.684322][ T8727]=0A=
+[  785.686510][ T8727] Freed by task 0:=0A=
+[  785.690088][ T8727]  save_stack+0x24/0x50=0A=
+[  785.694104][ T8727]  __kasan_slab_free+0x124/0x198=0A=
+[  785.698899][ T8727]  kasan_slab_free+0x10/0x18=0A=
+[  785.703340][ T8727]  slab_free_freelist_hook+0x110/0x298=0A=
+[  785.708648][ T8727]  kmem_cache_free+0xc8/0x3e0=0A=
+[  785.713175][ T8727]  free_object_rcu+0x1e0/0x3b8=0A=
+[  785.717796][ T8727]  rcu_core+0x8bc/0xf40=0A=
+[  785.721810][ T8727]  rcu_core_si+0xc/0x18=0A=
+[  785.725825][ T8727]  efi_header_end+0x2d8/0x1204=0A=
+[  785.730442][ T8727]=0A=
+[  785.732625][ T8727] The buggy address belongs to the object at ffff00886=
+ecafd28=0A=
+[  785.732625][ T8727]  which belongs to the cache kmemleak_object of size =
+368=0A=
+[  785.746875][ T8727] The buggy address is located 336 bytes to the right =
+of=0A=
+[  785.746875][ T8727]  368-byte region [ffff00886ecafd28, ffff00886ecafe98=
+)=0A=
+[  785.760519][ T8727] The buggy address belongs to the page:=0A=
+[  785.766009][ T8727] page:ffffffe021fbb280 refcount:1 mapcount:0 mapping:=
+0000000000000000 index:0xffff00886ecaa8c8=0A=
+[  785.776268][ T8727] flags: 0x7ffff800000200(slab)=0A=
+[  785.780971][ T8727] raw: 007ffff800000200 ffffffe0222c12c8 ffffffe0223a1=
+488 ffff000000323080=0A=
+[  785.789410][ T8727] raw: ffff00886ecaa8c8 00000000005b001d 00000001fffff=
+fff 0000000000000000=0A=
+[  785.797849][ T8727] page dumped because: kasan: bad access85.811794][ T8=
+7270886ecaff00: fc  fc fc fc fc fc     ^=0A=
+[  785.842727]  ffff00886ecb0080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00=
+ 00 00=0A=
+[  785.858703][ T8727] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
+[  785.866621][ T8727] Disabling lock debugging due to kernel taint=0A=
+[  785.872714][ T8727] get_swap_device: Bad swap file entry 58025a5a5a5a5a5=
+a=0A=
+[  785.879523][ T8727] get_swap_device: Bad swap file entry 58025a5a5a5a5a5=
+a=0A=
+[  785.886322][ T8727] get_swap_device: Bad swap file entry 58025a5a5a5a5a5=
+a=0A=
 
-void smp_flush_tlb_mm(struct mm_struct *mm)
-{
-        u32 ctx =3D CTX_HWBITS(mm->context);
-        int cpu =3D get_cpu();
+--_002_CA2E3DE2DD06CA4FA11644750E4E292F454E35A9SHSMSX104ccrcor_
+Content-Type: text/x-patch;
+	name="0001-dbg-Fix-a-logic-hole-in-swap_ra_info.patch"
+Content-Description: 0001-dbg-Fix-a-logic-hole-in-swap_ra_info.patch
+Content-Disposition: attachment;
+	filename="0001-dbg-Fix-a-logic-hole-in-swap_ra_info.patch"; size=796;
+	creation-date="Mon, 20 Jul 2020 00:36:45 GMT";
+	modification-date="Mon, 20 Jul 2020 00:36:45 GMT"
+Content-Transfer-Encoding: base64
 
-        if (atomic_read(&mm->mm_users) =3D=3D 1) {
-                cpumask_copy(mm_cpumask(mm), cpumask_of(cpu));
-                goto local_flush_and_out;
-        }
+RnJvbSBiNmNhZDQzYWQzY2Y2M2Q3M2U1MzllM2VhYWRkNGVjOWQyNzQ0ZGM2IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBIdWFuZyBZaW5nIDx5aW5nLmh1YW5nQGludGVsLmNvbT4KRGF0
+ZTogRnJpLCAxMCBKdWwgMjAyMCAxNzoyNzo0NSArMDgwMApTdWJqZWN0OiBbUEFUQ0hdIGRiZzog
+Rml4IGEgbG9naWMgaG9sZSBpbiBzd2FwX3JhX2luZm8oKQoKLS0tCiBtbS9zd2FwX3N0YXRlLmMg
+fCA1ICsrLS0tCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygt
+KQoKZGlmZiAtLWdpdCBhL21tL3N3YXBfc3RhdGUuYyBiL21tL3N3YXBfc3RhdGUuYwppbmRleCAw
+NTg4OWU4ZTNjOTcuLjg0ODFjMTU4MjliMiAxMDA2NDQKLS0tIGEvbW0vc3dhcF9zdGF0ZS5jCisr
+KyBiL21tL3N3YXBfc3RhdGUuYwpAQCAtNjY5LDEyICs2NjksMTEgQEAgc3RhdGljIHZvaWQgc3dh
+cF9yYV9pbmZvKHN0cnVjdCB2bV9mYXVsdCAqdm1mLAogCXB0ZV90ICp0cHRlOwogI2VuZGlmCiAK
+KwlyYV9pbmZvLT53aW4gPSAxOwogCW1heF93aW4gPSAxIDw8IG1pbl90KHVuc2lnbmVkIGludCwg
+UkVBRF9PTkNFKHBhZ2VfY2x1c3RlciksCiAJCQkgICAgIFNXQVBfUkFfT1JERVJfQ0VJTElORyk7
+Ci0JaWYgKG1heF93aW4gPT0gMSkgewotCQlyYV9pbmZvLT53aW4gPSAxOworCWlmIChtYXhfd2lu
+ID09IDEpCiAJCXJldHVybjsKLQl9CiAKIAlmYWRkciA9IHZtZi0+YWRkcmVzczsKIAlvcmlnX3B0
+ZSA9IHB0ZSA9IHB0ZV9vZmZzZXRfbWFwKHZtZi0+cG1kLCBmYWRkcik7Ci0tIAoyLjI3LjAKCg==
 
-        smp_cross_call_masked(&xcall_flush_tlb_mm,
-                              ctx, 0, 0,
-                              mm_cpumask(mm));
-
-local_flush_and_out:
-        __flush_tlb_mm(ctx, SECONDARY_CONTEXT);
-
-        put_cpu();
-}
-
-If a kthread comes in concurrently between the mm_users test and the=20
-mm_cpumask reset, and does mmget_not_zero(); kthread_use_mm() then we have=20
-another CPU switched to mm context but not in the mm_cpumask. It's then=20
-possible for our thread to schedule on that CPU and not go through a=20
-switch_mm (because kthread_unuse_mm will make it lazy, then we can switch=20
-back to our user thread and un-lazy it).
-
-powerpc has something similar.
-
-I don't think this is documented anywhere and certainly isn't checked for=20
-unfortunately, so I don't really blame io_uring.
-
-The simplest fix is for io_uring to carry mm_users references. If that can'=
-t=20
-be done or we decide to lift the limitation on mmget_not_zero references, w=
-e=20
-can come up with a way to synchronize things.
-
-On powerpc for example, we IPI all targets in mm_cpumask before clearing=20
-them, so we could disable interrupts while kthread_use_mm does the mm switc=
-h=20
-sequence, and have the IPI handler check that current->mm hasn't been set t=
-o=20
-mm, for example.
-
-sparc is a bit harder because it doesn't IPI targets if it thinks it can=20
-avoid it. But powerpc found that just doing one IPI isn't a big burden here=
-=20
-so maybe we change sparc to do that too. I would be inclined to fix this=20
-mmget_not_zero quirk if we can, unless someone has a very good way to test=20
-and enforce it, it'll just happen again.
-
-Comments?
-
-Thanks,
-Nick
+--_002_CA2E3DE2DD06CA4FA11644750E4E292F454E35A9SHSMSX104ccrcor_--
