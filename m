@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEE9C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC16C433FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18C3F2065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E6D2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261726;
-	bh=L5RiK5AUlbXgr5VqCx8Xe5ofd/ZjjQoDI6iJqP7wBqo=;
+	s=default; t=1595261729;
+	bh=JPEzLH6tKL+WMDuIPV6rnfvXsiGH+MU8f5d/RrU/mdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=scaq4oLSC5Z2qck0bJCUKqHMN78hmOjqiDaZ74iwYTFxCT2DCeZKXqT5Pop+QeGmI
-	 glkgSK+aMuZtMLa5HIRZS5tH4GZFJ/YZYk0JG6qs+fbWSjIbKKLZXpPAQJ1FqjgXGE
-	 HYj1c+N7b1jgA/k6k8NdiC0PtwCLuIHJeo9objOI=
+	b=vheuBElmuNlGgIsMZUamqGINwNMbsRSPFUZAl5NqjcSFnVmQs/mqhQqo2+75bUSCH
+	 WjW/DWJE2O2T+2tHbm2dbHquEP9VtC9nBGdHA57xzEPsTZLQBHF32yqyr9DShwyk5S
+	 dE14ypc/4UnWSY5Iw8wJInO1C11e04MGlJLjimJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388408AbgGTQPY (ORCPT
+        id S2388416AbgGTQP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:15:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56162 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:15:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388394AbgGTQPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:15:20 -0400
+        id S2388410AbgGTQPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:15:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C79D920656;
-        Mon, 20 Jul 2020 16:15:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52CDF20656;
+        Mon, 20 Jul 2020 16:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261719;
-        bh=L5RiK5AUlbXgr5VqCx8Xe5ofd/ZjjQoDI6iJqP7wBqo=;
+        s=default; t=1595261724;
+        bh=JPEzLH6tKL+WMDuIPV6rnfvXsiGH+MU8f5d/RrU/mdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wksnU4/Auel2cB1JhqvwdjKoDhzcvhn0vW1DPM+aGesOex+SiI2rxNlzGYxSSN8eT
-         UI+K8/xqVqPrqFU9gxbK+oGVzEDmgj893AqbH6SnqLiHjxR/L27RffpU9+OP8we4hF
-         Ka17SYZXDFePVdoxx1SPXnfTyFdbZtBWfeYeeLnU=
+        b=jV6qWQxJjbtpWQxUffQXqYE0HJkIZse2luGdK5apWavP772u1YGdu7/7EOqbzdqAG
+         yTaRFlfEE2nNuCdYpBUs2d76uDyYWxqwA07jUXcSEjQxZKal5F/VqpRNUccHBKDxrh
+         zE/u5kEFhjqCx5c9qa/pOwnXL8CJUBw4DPsY0Ir8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Luis Machado <luis.machado@linaro.org>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.7 218/244] arm64: compat: Ensure upper 32 bits of x0 are zero on syscall return
-Date:   Mon, 20 Jul 2020 17:38:09 +0200
-Message-Id: <20200720152836.216836726@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: [PATCH 5.7 220/244] sched/fair: handle case of task_h_load() returning 0
+Date:   Mon, 20 Jul 2020 17:38:11 +0200
+Message-Id: <20200720152836.312927779@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -61,70 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-commit 15956689a0e60aa0c795174f3c310b60d8794235 upstream.
+commit 01cfcde9c26d8555f0e6e9aea9d6049f87683998 upstream.
 
-Although we zero the upper bits of x0 on entry to the kernel from an
-AArch32 task, we do not clear them on the exception return path and can
-therefore expose 64-bit sign extended syscall return values to userspace
-via interfaces such as the 'perf_regs' ABI, which deal exclusively with
-64-bit registers.
+task_h_load() can return 0 in some situations like running stress-ng
+mmapfork, which forks thousands of threads, in a sched group on a 224 cores
+system. The load balance doesn't handle this correctly because
+env->imbalance never decreases and it will stop pulling tasks only after
+reaching loop_max, which can be equal to the number of running tasks of
+the cfs. Make sure that imbalance will be decreased by at least 1.
 
-Explicitly clear the upper 32 bits of x0 on return from a compat system
-call.
+misfit task is the other feature that doesn't handle correctly such
+situation although it's probably more difficult to face the problem
+because of the smaller number of CPUs and running tasks on heterogenous
+system.
 
-Cc: <stable@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Keno Fischer <keno@juliacomputing.com>
-Cc: Luis Machado <luis.machado@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+We can't simply ensure that task_h_load() returns at least one because it
+would imply to handle underflow in other places.
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: <stable@vger.kernel.org> # v4.4+
+Link: https://lkml.kernel.org/r/20200710152426.16981-1-vincent.guittot@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/syscall.h |   12 +++++++++++-
- arch/arm64/kernel/syscall.c      |    3 +++
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ kernel/sched/fair.c |   15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/include/asm/syscall.h
-+++ b/arch/arm64/include/asm/syscall.h
-@@ -34,6 +34,10 @@ static inline long syscall_get_error(str
- 				     struct pt_regs *regs)
- {
- 	unsigned long error = regs->regs[0];
-+
-+	if (is_compat_thread(task_thread_info(task)))
-+		error = sign_extend64(error, 31);
-+
- 	return IS_ERR_VALUE(error) ? error : 0;
- }
- 
-@@ -47,7 +51,13 @@ static inline void syscall_set_return_va
- 					    struct pt_regs *regs,
- 					    int error, long val)
- {
--	regs->regs[0] = (long) error ? error : val;
-+	if (error)
-+		val = error;
-+
-+	if (is_compat_thread(task_thread_info(task)))
-+		val = lower_32_bits(val);
-+
-+	regs->regs[0] = val;
- }
- 
- #define SYSCALL_MAX_ARGS 6
---- a/arch/arm64/kernel/syscall.c
-+++ b/arch/arm64/kernel/syscall.c
-@@ -50,6 +50,9 @@ static void invoke_syscall(struct pt_reg
- 		ret = do_ni_syscall(regs, scno);
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4033,7 +4033,11 @@ static inline void update_misfit_status(
+ 		return;
  	}
  
-+	if (is_compat_task())
-+		ret = lower_32_bits(ret);
-+
- 	regs->regs[0] = ret;
+-	rq->misfit_task_load = task_h_load(p);
++	/*
++	 * Make sure that misfit_task_load will not be null even if
++	 * task_h_load() returns 0.
++	 */
++	rq->misfit_task_load = max_t(unsigned long, task_h_load(p), 1);
  }
  
+ #else /* CONFIG_SMP */
+@@ -7633,7 +7637,14 @@ static int detach_tasks(struct lb_env *e
+ 
+ 		switch (env->migration_type) {
+ 		case migrate_load:
+-			load = task_h_load(p);
++			/*
++			 * Depending of the number of CPUs and tasks and the
++			 * cgroup hierarchy, task_h_load() can return a null
++			 * value. Make sure that env->imbalance decreases
++			 * otherwise detach_tasks() will stop only after
++			 * detaching up to loop_max tasks.
++			 */
++			load = max_t(unsigned long, task_h_load(p), 1);
+ 
+ 			if (sched_feat(LB_MIN) &&
+ 			    load < 16 && !env->sd->nr_balance_failed)
 
 
