@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E6CC433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327BCC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7D9D22CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F93E206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260224;
-	bh=q64sLE5KM8tsbvF1NTx9fUgz7UsKdr5xL5orCqsm/jo=;
+	s=default; t=1595260227;
+	bh=9KhHqBXkWZhpapyyubANsiVW5kyAcqwcwaYiq9rGRD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nqiaiOJra2dBAGJWwM8ue/LIQTyQVW9DFekzidx+msCKmQVmSB/YzzdHNQPnYVUi8
-	 bt8L6l0Rq/jAPh3R2O26bv2eMEIHFFq7Fal5kQ8vElpDbxgdJ9ZcdmSTb4dWv5FnpJ
-	 pFFwNErKvJgCmMW1hIExn+BLsbsec7RhrT2ysF6Q=
+	b=ffRQbHNmHwAZNjf+ZlO+ifXy07DGhQvcxYeI7x5zx5aMcK1HJh7S59wChhtEgoQ4n
+	 ovgv/dKi1utzVgSJJpFEooHv0C8pLgY96LRiLTiNjiGtJyC9Spe344fCChiy3/QZ8K
+	 zx/lmsmAG/PKWqOGSH+lJ2WcXd85Meq4Wp3xdWmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgGTPuW (ORCPT
+        id S1729840AbgGTPu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:50:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46718 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:50:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731116AbgGTPuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:50:17 -0400
+        id S1731134AbgGTPuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:50:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DC63206E9;
-        Mon, 20 Jul 2020 15:50:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC902206E9;
+        Mon, 20 Jul 2020 15:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260216;
-        bh=q64sLE5KM8tsbvF1NTx9fUgz7UsKdr5xL5orCqsm/jo=;
+        s=default; t=1595260222;
+        bh=9KhHqBXkWZhpapyyubANsiVW5kyAcqwcwaYiq9rGRD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K6A90PGn9ZA1v7zhY1Y5MvIYgBFRToHlw1gx9ju7DosaV1Sf2cbFLa0gQTgjF2R17
-         ockRb2FD8rRWbsJHaZReASf5afP+Yi6jpZBLir2/FcRvNt1cZJnnWX5HdX76L6mz2e
-         3P1NgOUCgjN3TeAyn3MNa5DGqIFhOY7dIP8Dgh+A=
+        b=RuyRdOrivFmQtK4VPzp5expEDRM8p/pYopz/T1o5Wu53tnwfc061L7q+637Rj9YWo
+         r6OVcWdud2NHnntTjhzsm1eqe3y4sVP7bX3slv85H6ViaQm4VdSEBLmBXxrrLxwwrR
+         1AdssRwJhtuvvFmQS3KxpDcBDzYEE/xBAMagF6xg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 022/133] m68k: nommu: register start of the memory with memblock
-Date:   Mon, 20 Jul 2020 17:36:09 +0200
-Message-Id: <20200720152804.797713455@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Dave P Martin <dave.martin@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 024/133] arm64/alternatives: use subsections for replacement sequences
+Date:   Mon, 20 Jul 2020 17:36:11 +0200
+Message-Id: <20200720152804.899456369@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -60,61 +63,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit d63bd8c81d8ab64db506ffde569cc8ff197516e2 ]
+[ Upstream commit f7b93d42945cc71e1346dd5ae07c59061d56745e ]
 
-The m68k nommu setup code didn't register the beginning of the physical
-memory with memblock because it was anyway occupied by the kernel. However,
-commit fa3354e4ea39 ("mm: free_area_init: use maximal zone PFNs rather than
-zone sizes") changed zones initialization to use memblock.memory to detect
-the zone extents and this caused inconsistency between zone PFNs and the
-actual PFNs:
+When building very large kernels, the logic that emits replacement
+sequences for alternatives fails when relative branches are present
+in the code that is emitted into the .altinstr_replacement section
+and patched in at the original site and fixed up. The reason is that
+the linker will insert veneers if relative branches go out of range,
+and due to the relative distance of the .altinstr_replacement from
+the .text section where its branch targets usually live, veneers
+may be emitted at the end of the .altinstr_replacement section, with
+the relative branches in the sequence pointed at the veneers instead
+of the actual target.
 
-BUG: Bad page state in process swapper  pfn:20165
-page:41fe0ca0 refcount:0 mapcount:1 mapping:00000000 index:0x0 flags: 0x0()
-raw: 00000000 00000100 00000122 00000000 00000000 00000000 00000000 00000000
-page dumped because: nonzero mapcount
-CPU: 0 PID: 1 Comm: swapper Not tainted 5.8.0-rc1-00001-g3a38f8a60c65-dirty #1
-Stack from 404c9ebc:
-        404c9ebc 4029ab28 4029ab28 40088470 41fe0ca0 40299e21 40299df1 404ba2a4
-        00020165 00000000 41fd2c10 402c7ba0 41fd2c04 40088504 41fe0ca0 40299e21
-        00000000 40088a12 41fe0ca0 41fe0ca4 0000020a 00000000 00000001 402ca000
-        00000000 41fe0ca0 41fd2c10 41fd2c10 00000000 00000000 402b2388 00000001
-        400a0934 40091056 404c9f44 404c9f44 40088db4 402c7ba0 00000001 41fd2c04
-        41fe0ca0 41fd2000 41fe0ca0 40089e02 4026ecf4 40089e4e 41fe0ca0 ffffffff
-Call Trace:
-        [<40088470>] 0x40088470
- [<40088504>] 0x40088504
- [<40088a12>] 0x40088a12
- [<402ca000>] 0x402ca000
- [<400a0934>] 0x400a0934
+The alternatives patching logic will attempt to fix up the branch to
+point to its original target, which will be the veneer in this case,
+but given that the patch site is likely to be far away as well, it
+will be out of range and so patching will fail. There are other cases
+where these veneers are problematic, e.g., when the target of the
+branch is in .text while the patch site is in .init.text, in which
+case putting the replacement sequence inside .text may not help either.
 
-Adjust the memory registration with memblock to include the beginning of
-the physical memory and make sure that the area occupied by the kernel is
-marked as reserved.
+So let's use subsections to emit the replacement code as closely as
+possible to the patch site, to ensure that veneers are only likely to
+be emitted if they are required at the patch site as well, in which
+case they will be in range for the replacement sequence both before
+and after it is transported to the patch site.
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+This will prevent alternative sequences in non-init code from being
+released from memory after boot, but this is tolerable given that the
+entire section is only 512 KB on an allyesconfig build (which weighs in
+at 500+ MB for the entire Image). Also, note that modules today carry
+the replacement sequences in non-init sections as well, and any of
+those that target init code will be emitted into init sections after
+this change.
+
+This fixes an early crash when booting an allyesconfig kernel on a
+system where any of the alternatives sequences containing relative
+branches are activated at boot (e.g., ARM64_HAS_PAN on TX2)
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Andre Przywara <andre.przywara@arm.com>
+Cc: Dave P Martin <dave.martin@arm.com>
+Link: https://lore.kernel.org/r/20200630081921.13443-1-ardb@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/kernel/setup_no.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/alternative.h | 16 ++++++++--------
+ arch/arm64/kernel/vmlinux.lds.S      |  3 ---
+ 2 files changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/arch/m68k/kernel/setup_no.c b/arch/m68k/kernel/setup_no.c
-index cfd5475bfc315..4625acc1e7c4d 100644
---- a/arch/m68k/kernel/setup_no.c
-+++ b/arch/m68k/kernel/setup_no.c
-@@ -140,7 +140,8 @@ void __init setup_arch(char **cmdline_p)
- 	pr_debug("MEMORY -> ROMFS=0x%p-0x%06lx MEM=0x%06lx-0x%06lx\n ",
- 		 __bss_stop, memory_start, memory_start, memory_end);
+diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
+index 1a7ba3de70793..849d891c60a81 100644
+--- a/arch/arm64/include/asm/alternative.h
++++ b/arch/arm64/include/asm/alternative.h
+@@ -73,11 +73,11 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ 	".pushsection .altinstructions,\"a\"\n"				\
+ 	ALTINSTR_ENTRY(feature)						\
+ 	".popsection\n"							\
+-	".pushsection .altinstr_replacement, \"a\"\n"			\
++	".subsection 1\n"						\
+ 	"663:\n\t"							\
+ 	newinstr "\n"							\
+ 	"664:\n\t"							\
+-	".popsection\n\t"						\
++	".previous\n\t"							\
+ 	".org	. - (664b-663b) + (662b-661b)\n\t"			\
+ 	".org	. - (662b-661b) + (664b-663b)\n"			\
+ 	".endif\n"
+@@ -117,9 +117,9 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ 662:	.pushsection .altinstructions, "a"
+ 	altinstruction_entry 661b, 663f, \cap, 662b-661b, 664f-663f
+ 	.popsection
+-	.pushsection .altinstr_replacement, "ax"
++	.subsection 1
+ 663:	\insn2
+-664:	.popsection
++664:	.previous
+ 	.org	. - (664b-663b) + (662b-661b)
+ 	.org	. - (662b-661b) + (664b-663b)
+ 	.endif
+@@ -160,7 +160,7 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ 	.pushsection .altinstructions, "a"
+ 	altinstruction_entry 663f, 661f, \cap, 664f-663f, 662f-661f
+ 	.popsection
+-	.pushsection .altinstr_replacement, "ax"
++	.subsection 1
+ 	.align 2	/* So GAS knows label 661 is suitably aligned */
+ 661:
+ .endm
+@@ -179,9 +179,9 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ .macro alternative_else
+ 662:
+ 	.if .Lasm_alt_mode==0
+-	.pushsection .altinstr_replacement, "ax"
++	.subsection 1
+ 	.else
+-	.popsection
++	.previous
+ 	.endif
+ 663:
+ .endm
+@@ -192,7 +192,7 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ .macro alternative_endif
+ 664:
+ 	.if .Lasm_alt_mode==0
+-	.popsection
++	.previous
+ 	.endif
+ 	.org	. - (664b-663b) + (662b-661b)
+ 	.org	. - (662b-661b) + (664b-663b)
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index 74e469f8a8507..d6050c6e65bc1 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -154,9 +154,6 @@ SECTIONS
+ 		*(.altinstructions)
+ 		__alt_instructions_end = .;
+ 	}
+-	.altinstr_replacement : {
+-		*(.altinstr_replacement)
+-	}
  
--	memblock_add(memory_start, memory_end - memory_start);
-+	memblock_add(_rambase, memory_end - _rambase);
-+	memblock_reserve(_rambase, memory_start - _rambase);
- 
- 	/* Keep a copy of command line */
- 	*cmdline_p = &command_line[0];
+ 	. = ALIGN(PAGE_SIZE);
+ 	__inittext_end = .;
 -- 
 2.25.1
 
