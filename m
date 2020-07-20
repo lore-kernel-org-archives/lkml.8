@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE5EC433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05A5C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E17D12064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92CE2206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260349;
-	bh=nh1xRDrN6zBEI2NrGoxZOGj0ZeTCvBgg7tyKQG3W9mI=;
+	s=default; t=1595260354;
+	bh=Ha27OoJsTOQOL01Z4waSg8KdBzez44H6nXY3En0tDMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YOBRX5svWLskF5LiPk0np4VkNRyL/75TDqcpMW5zlVmqoYSYs/0UJaw8R5yqOmBdM
-	 mVOeRUwOa2YXaUv0GYYGqxZNBj+auzxildF/56a4savNIroPoKxOTd9SIJD90QZ++6
-	 et7wQZ6iXwZClSK1hRhERGPAdhpi7eKD2HpGJQpY=
+	b=mjTs0Jrk1+MA7ALN3uMmspYF6tck595FGYuKsM7eJVm54n1Tncwh/JD3d5V9n13kn
+	 obPa7PBIFFso1jXRnewWaIQq+keVT+i4ujKGHfjW0D7VHuP9WtRFgw949asYSahV8B
+	 aI94c8mMkSp/yh1dFx6Y5tQzr/GUitZ/opaK1DBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731358AbgGTPw1 (ORCPT
+        id S1730053AbgGTPwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:52:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:52:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731351AbgGTPwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:52:19 -0400
+        id S1731323AbgGTPwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:52:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4107F22CF6;
-        Mon, 20 Jul 2020 15:52:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2180F2064B;
+        Mon, 20 Jul 2020 15:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260338;
-        bh=nh1xRDrN6zBEI2NrGoxZOGj0ZeTCvBgg7tyKQG3W9mI=;
+        s=default; t=1595260344;
+        bh=Ha27OoJsTOQOL01Z4waSg8KdBzez44H6nXY3En0tDMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h+GiSVN/8zXi49LdbPgjz2Hsiri6oSQJ2qJfbJ3FWfn7vMn6yA9nj4oQdtYTffJfi
-         5pkoSi90Xt5wZ0uLr8WsCC56ebxrdPLOSEX82Mjw+AaoGDPXiO8Goj290PIOpTW72k
-         ZAG3JcI8wma7WGgstr3ylsbEflI7VT8QsvsLV9sc=
+        b=UJTLxVyffisE8j2Dwcw/3NRU0PlNuls479fBzVM9Uu3x09l9e6ru5gP+qB39nh8/8
+         pIh9JSb8X5hrYQkawnXnCf3y3eZtUB2NZYHHMfOts4mlqMN80qeUjk967u2h9XEDNJ
+         sao1PG2I8lSDiD+W51qKeuHwi78QNGb6gW0LUyg8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Angelo Dureghello <angelo@sysam.it>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 037/133] spi: fix initial SPI_SR value in spi-fsl-dspi
-Date:   Mon, 20 Jul 2020 17:36:24 +0200
-Message-Id: <20200720152805.510958657@linuxfoundation.org>
+Subject: [PATCH 4.19 039/133] net: dsa: bcm_sf2: Fix node reference count
+Date:   Mon, 20 Jul 2020 17:36:26 +0200
+Message-Id: <20200720152805.608409123@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -60,40 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Angelo Dureghello <angelo@sysam.it>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit aa54c1c9d90e6db75190813907190fadcce1bf45 ]
+[ Upstream commit 8dbe4c5d5e40fe140221024f7b16bec9f310bf70 ]
 
-On ColdFire mcf54418, using DSPI_DMA_MODE mode, spi transfers
-at first boot stage are not succeding:
+of_find_node_by_name() will do an of_node_put() on the "from" argument.
+With CONFIG_OF_DYNAMIC enabled which checks for device_node reference
+counts, we would be getting a warning like this:
 
-m25p80 spi0.1: unrecognized JEDEC id bytes: 00, 00, 00
+[    6.347230] refcount_t: increment on 0; use-after-free.
+[    6.352498] WARNING: CPU: 3 PID: 77 at lib/refcount.c:156
+refcount_inc_checked+0x38/0x44
+[    6.360601] Modules linked in:
+[    6.363661] CPU: 3 PID: 77 Comm: kworker/3:1 Tainted: G        W
+5.4.46-gb78b3e9956e6 #13
+[    6.372546] Hardware name: BCM97278SV (DT)
+[    6.376649] Workqueue: events deferred_probe_work_func
+[    6.381796] pstate: 60000005 (nZCv daif -PAN -UAO)
+[    6.386595] pc : refcount_inc_checked+0x38/0x44
+[    6.391133] lr : refcount_inc_checked+0x38/0x44
+...
+[    6.478791] Call trace:
+[    6.481243]  refcount_inc_checked+0x38/0x44
+[    6.485433]  kobject_get+0x3c/0x4c
+[    6.488840]  of_node_get+0x24/0x34
+[    6.492247]  of_irq_find_parent+0x3c/0xe0
+[    6.496263]  of_irq_parse_one+0xe4/0x1d0
+[    6.500191]  irq_of_parse_and_map+0x44/0x84
+[    6.504381]  bcm_sf2_sw_probe+0x22c/0x844
+[    6.508397]  platform_drv_probe+0x58/0xa8
+[    6.512413]  really_probe+0x238/0x3fc
+[    6.516081]  driver_probe_device+0x11c/0x12c
+[    6.520358]  __device_attach_driver+0xa8/0x100
+[    6.524808]  bus_for_each_drv+0xb4/0xd0
+[    6.528650]  __device_attach+0xd0/0x164
+[    6.532493]  device_initial_probe+0x24/0x30
+[    6.536682]  bus_probe_device+0x38/0x98
+[    6.540524]  deferred_probe_work_func+0xa8/0xd4
+[    6.545061]  process_one_work+0x178/0x288
+[    6.549078]  process_scheduled_works+0x44/0x48
+[    6.553529]  worker_thread+0x218/0x270
+[    6.557285]  kthread+0xdc/0xe4
+[    6.560344]  ret_from_fork+0x10/0x18
+[    6.563925] ---[ end trace 68f65caf69bb152a ]---
 
-The reason is the SPI_SR initial value set by the driver, that
-is not clearing (not setting to 1) the RF_DF flag. After a tour
-on the dspi hw modules that use this driver(Vybrid, ColdFire and
-ls1021a) a better init value for SR register has been set.
+Fix this by adding a of_node_get() to increment the reference count
+prior to the call.
 
-Signed-off-by: Angelo Dureghello <angelo@sysam.it>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: afa3b592953b ("net: dsa: bcm_sf2: Ensure correct sub-node is parsed")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-dspi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/bcm_sf2.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 2844c9a72a980..1144d022cc582 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -71,7 +71,7 @@
- #define SPI_SR			0x2c
- #define SPI_SR_EOQF		0x10000000
- #define SPI_SR_TCFQF		0x80000000
--#define SPI_SR_CLEAR		0xdaad0000
-+#define SPI_SR_CLEAR		0x9aaf0000
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index ccba648452c42..c0bba680d4a88 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -1078,6 +1078,8 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+ 	set_bit(0, priv->cfp.used);
+ 	set_bit(0, priv->cfp.unique);
  
- #define SPI_RSER_TFFFE		BIT(25)
- #define SPI_RSER_TFFFD		BIT(24)
++	/* Balance of_node_put() done by of_find_node_by_name() */
++	of_node_get(dn);
+ 	ports = of_find_node_by_name(dn, "ports");
+ 	if (ports) {
+ 		bcm_sf2_identify_ports(priv, ports);
 -- 
 2.25.1
 
