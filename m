@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B387C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4FDC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A5BB22CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0FC2065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259814;
-	bh=m681DT4o3aG8++UII+u8CSlUWPO3GIpQI3OqZ06SJLQ=;
+	s=default; t=1595259815;
+	bh=R7PcGtApXb+A8urvYiYpVDWaNd2ykP9H4RWR7q5QJwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ICx0uT82DjYOhrBsBLRV9niH6zWr4G11QzuiRr4BfNeHb+sEaFbxStD31XiJ7jyj/
-	 s+qMLKYovwd3a9uiNRzxo/Bf2Qa3CL99nRga9EjAFNAi6u4ggrNxDyz2SJmQk9gw91
-	 K1esK7UO9oxw3syMOqYARfR2UvaSAT9vj4a8cb/4=
+	b=CTWkaaq2AcLnowbhaZAQGbHOSILaoueWYqlgCMnmiSwZDBPRBAkTXRELrH8cwQ+E3
+	 kUVQswec+OfLQUGHFo4n/1aO4rVdKgW2v+4gskk+PWOQCQOU2Dtx4/3T0t+3+K1sZa
+	 KEyumJqHFIjf6DZ5gbMNzZU5InRtUOvtg/l4MjsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbgGTPnc (ORCPT
+        id S1730263AbgGTPna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:43:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36872 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:43:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729711AbgGTPn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:43:29 -0400
+        id S1729636AbgGTPn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:43:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50C882176B;
-        Mon, 20 Jul 2020 15:43:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97CD122CE3;
+        Mon, 20 Jul 2020 15:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259808;
-        bh=m681DT4o3aG8++UII+u8CSlUWPO3GIpQI3OqZ06SJLQ=;
+        s=default; t=1595259806;
+        bh=R7PcGtApXb+A8urvYiYpVDWaNd2ykP9H4RWR7q5QJwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b0D1jjLxW2KCkClIhdCLfFLhIoLigBUW4W5puaCPfJvtMTr/V5zz4IRZvdKSSoGkB
-         fdxS84grpX2Ef6GA5dWQDU11h/UC2grwCMUdzMuFk8hLHcbHmyyOja7fFCDHFSqh4t
-         iGNj5Y9pGvgegb+2sqnhPyLtAW1PavpbM2ERZFFI=
+        b=sPnSZKb+tBvzQyDsQ9lzjitvZnCuMnelAH6/JmaZnMcTr18ZDVLUtS7uMLT6Ai5xx
+         qEyqLHseCSMA51+dLuQWXL23PNvu0a5tysIFWCXPFQk7Rm19oPdflLYKdv48vSY/2n
+         Eh2EAf19a+L2T38jNTlf7O03HMTL/Zdn+CMfwcO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 4.9 66/86] usb: chipidea: core: add wakeup support for extcon
-Date:   Mon, 20 Jul 2020 17:37:02 +0200
-Message-Id: <20200720152756.491357480@linuxfoundation.org>
+        Suraj Jitindar Singh <surajjs@amazon.com>,
+        Samuel Mendoza-Jonas <samjonas@amazon.com>,
+        Frank van der Linden <fllinden@amazon.com>
+Subject: [PATCH 4.9 86/86] x86/cpu: Move x86_cache_bits settings
+Date:   Mon, 20 Jul 2020 17:37:22 +0200
+Message-Id: <20200720152757.605261721@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -60,67 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Suraj Jitindar Singh <surajjs@amazon.com>
 
-commit 876d4e1e8298ad1f94d9e9392fc90486755437b4 upstream.
+This patch is to fix the backport of the upstream patch:
+cc51e5428ea5 x86/speculation/l1tf: Increase l1tf memory limit for Nehalem+
 
-If wakeup event occurred by extcon event, it needs to call
-ci_irq again since the first ci_irq calling at extcon notifier
-only wakes up controller, but do noop for event handling,
-it causes the extcon use case can't work well from low power mode.
+When this was backported to the 4.9 and 4.14 stable branches the line
++       c->x86_cache_bits = c->x86_phys_bits;
+was applied in the wrong place, being added to the
+identify_cpu_without_cpuid() function instead of the get_cpu_cap()
+function which it was correctly applied to in the 4.4 backport.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 3ecb3e09b042 ("usb: chipidea: Use extcon framework for VBUS and ID detect")
-Reported-by: Philippe Schenker <philippe.schenker@toradex.com>
-Tested-by: Philippe Schenker <philippe.schenker@toradex.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/20200707060601.31907-2-peter.chen@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This means that x86_cache_bits is not set correctly resulting in the
+following warning due to the cache bits being left uninitalised (zero).
+
+ WARNING: CPU: 0 PID: 7566 at arch/x86/kvm/mmu.c:284 kvm_mmu_set_mmio_spte_mask+0x4e/0x60 [kvm
+ Modules linked in: kvm_intel(+) kvm irqbypass ipv6 crc_ccitt binfmt_misc evdev lpc_ich mfd_core ioatdma pcc_cpufreq dca ena acpi_power_meter hwmon acpi_pad button ext4 crc16 mbcache jbd2 fscrypto nvme nvme_core dm_mirror dm_region_hash dm_log dm_mod dax
+ Hardware name: Amazon EC2 i3.metal/Not Specified, BIOS 1.0 10/16/2017
+ task: ffff88ff77704c00 task.stack: ffffc9000edac000
+ RIP: 0010:kvm_mmu_set_mmio_spte_mask+0x4e/0x60 [kvm
+ RSP: 0018:ffffc9000edafc60 EFLAGS: 00010206
+ RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00000000ffffff45
+ RDX: 000000000000002e RSI: 0008000000000001 RDI: 0008000000000001
+ RBP: ffffffffa036f000 R08: ffffffffffffff80 R09: ffffe8ffffccb3c0
+ R10: 0000000000000038 R11: 0000000000000000 R12: 0000000000005b80
+ R13: ffffffffa0370e40 R14: 0000000000000001 R15: ffff88bf7c0927e0
+ FS:  00007fa316f24740(0000) GS:ffff88bf7f600000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007fa316ea0000 CR3: 0000003f7e986004 CR4: 00000000003606f0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ Call Trace:
+  kvm_mmu_module_init+0x166/0x230 [kvm
+  kvm_arch_init+0x5d/0x150 [kvm
+  kvm_init+0x1c/0x2d0 [kvm
+  ? hardware_setup+0x4a6/0x4a6 [kvm_intel
+  vmx_init+0x23/0x6aa [kvm_intel
+  ? hardware_setup+0x4a6/0x4a6 [kvm_intel
+  do_one_initcall+0x3e/0x15d
+  do_init_module+0x5b/0x1e5
+  load_module+0x19e6/0x1dc0
+  ? SYSC_init_module+0x13b/0x170
+  SYSC_init_module+0x13b/0x170
+  do_syscall_64+0x67/0x110
+  entry_SYSCALL_64_after_hwframe+0x41/0xa6
+ RIP: 0033:0x7fa316828f3a
+ RSP: 002b:00007ffc9d65c1f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000af
+ RAX: ffffffffffffffda RBX: 00007fa316b08849 RCX: 00007fa316828f3a
+ RDX: 00007fa316b08849 RSI: 0000000000071328 RDI: 00007fa316e37000
+ RBP: 0000000000b47e80 R08: 0000000000000003 R09: 0000000000000000
+ R10: 00007fa316822dba R11: 0000000000000246 R12: 0000000000b46340
+ R13: 0000000000b464c0 R14: 0000000000000000 R15: 0000000000040000
+ Code: e9 65 06 00 75 25 48 b8 00 00 00 00 00 00 00 40 48 09 c6 48 09 c7 48 89 35 f8 65 06 00 48 89 3d f9 65 06 00 c3 0f 0b 0f 0b eb d2 <0f> 0b eb d7 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44
+
+Fixes: 4.9.x  ef3d45c95764 x86/speculation/l1tf: Increase l1tf memory limit for Nehalem+
+Fixes: 4.14.x ec4034835eaf x86/speculation/l1tf: Increase l1tf memory limit for Nehalem+
+Cc: stable@vger.kernel.org # 4.9.x-4.14.x
+Signed-off-by: Suraj Jitindar Singh <surajjs@amazon.com>
+Reviewed-by: Samuel Mendoza-Jonas <samjonas@amazon.com>
+Reviewed-by: Frank van der Linden <fllinden@amazon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/chipidea/core.c |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/x86/kernel/cpu/common.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -1110,6 +1110,29 @@ static void ci_controller_suspend(struct
- 	enable_irq(ci->irq);
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -849,6 +849,7 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+ 	else if (cpu_has(c, X86_FEATURE_PAE) || cpu_has(c, X86_FEATURE_PSE36))
+ 		c->x86_phys_bits = 36;
+ #endif
++	c->x86_cache_bits = c->x86_phys_bits;
+ 
+ 	if (c->extended_cpuid_level >= 0x8000000a)
+ 		c->x86_capability[CPUID_8000_000A_EDX] = cpuid_edx(0x8000000a);
+@@ -888,7 +889,6 @@ static void identify_cpu_without_cpuid(s
+ 			}
+ 		}
+ #endif
+-	c->x86_cache_bits = c->x86_phys_bits;
  }
  
-+/*
-+ * Handle the wakeup interrupt triggered by extcon connector
-+ * We need to call ci_irq again for extcon since the first
-+ * interrupt (wakeup int) only let the controller be out of
-+ * low power mode, but not handle any interrupts.
-+ */
-+static void ci_extcon_wakeup_int(struct ci_hdrc *ci)
-+{
-+	struct ci_hdrc_cable *cable_id, *cable_vbus;
-+	u32 otgsc = hw_read_otgsc(ci, ~0);
-+
-+	cable_id = &ci->platdata->id_extcon;
-+	cable_vbus = &ci->platdata->vbus_extcon;
-+
-+	if (!IS_ERR(cable_id->edev) && ci->is_otg &&
-+		(otgsc & OTGSC_IDIE) && (otgsc & OTGSC_IDIS))
-+		ci_irq(ci->irq, ci);
-+
-+	if (!IS_ERR(cable_vbus->edev) && ci->is_otg &&
-+		(otgsc & OTGSC_BSVIE) && (otgsc & OTGSC_BSVIS))
-+		ci_irq(ci->irq, ci);
-+}
-+
- static int ci_controller_resume(struct device *dev)
- {
- 	struct ci_hdrc *ci = dev_get_drvdata(dev);
-@@ -1136,6 +1159,7 @@ static int ci_controller_resume(struct d
- 		enable_irq(ci->irq);
- 		if (ci_otg_is_fsm_mode(ci))
- 			ci_otg_fsm_wakeup_by_srp(ci);
-+		ci_extcon_wakeup_int(ci);
- 	}
- 
- 	return 0;
+ #define NO_SPECULATION		BIT(0)
 
 
