@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16278C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2E5C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E02D120684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD0A206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261530;
-	bh=nHFcYKuESz6YGPy3IhjNj1H/CLmIVkZlIyzW7Y8HBHw=;
+	s=default; t=1595261533;
+	bh=WWdC/8JRDZCpZNHg7v589mBckIuYNk/cwpy8NeYCGjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xfSDYNndfyiQX3BYYI4POM9LCDhltc0TMmaudwndwaHhnpkq/AAHKrNbQ7KwoFIrB
-	 AjYLkTf7pvlbCGsecN1r4kaEr+irteR54vsEzrLDG1shHNrdGFhT9EhFGSkQvvnCq8
-	 v/kDsNCzheV38wPuWCFm0LV5bLQg24wdHNKhxK/0=
+	b=Br02DHvwR4gxm28lYeKYxCHc9HJk/Okw7zeR67JRP8YOa5WUm97mj4cUlCHJL9LoG
+	 +ycqbL1sHGFb+3Aaw+BgCVkrfJARJroPjPBfz+JsuBwmpdkIVuwprfqhoSpO23VhFt
+	 1nJOTg+aAEnHfvz65B437u0+cueoI6LUjats9jN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387915AbgGTQMJ (ORCPT
+        id S1733137AbgGTQMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:12:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51462 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:12:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387898AbgGTQMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:12:02 -0400
+        id S2387889AbgGTQMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:12:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9A8020684;
-        Mon, 20 Jul 2020 16:12:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37EBF2064B;
+        Mon, 20 Jul 2020 16:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261522;
-        bh=nHFcYKuESz6YGPy3IhjNj1H/CLmIVkZlIyzW7Y8HBHw=;
+        s=default; t=1595261519;
+        bh=WWdC/8JRDZCpZNHg7v589mBckIuYNk/cwpy8NeYCGjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wJtRPLTiAjQmtW/695V/7V+XNetRNFC6r2vb1JRhSPxTFVjxbIHYDjWpmJncp5bz1
-         8QH29NQ3HBQb2O/WpHU4ulCaDnRRZyz5Uk9B4aZF8zGvJXEaDqu+lkGMZU7EtW7wct
-         5OHyHLpRGkk7uC+UaqcyJ7OUiO6wf3MhNDD+JJaA=
+        b=a8o0bm9ZNd27kh6OW8NzVNlBKBAHjjqBLObavN/4DXTTNn+kYtDD/w/LX8In1mkMo
+         RlId9siPFlJ61LQnrm3TZOp2qzxiFVzRHQk1l3QUGNO+UMxFhA/aJ4KFI1/0OepR+Q
+         +yWAAZBFjASQXKD3fnkcPmk76a+NYqBBD+WhPTXA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 105/244] xprtrdma: Fix return code from rpcrdma_xprt_connect()
-Date:   Mon, 20 Jul 2020 17:36:16 +0200
-Message-Id: <20200720152830.823401261@linuxfoundation.org>
+Subject: [PATCH 5.7 114/244] keys: asymmetric: fix error return code in software_key_query()
+Date:   Mon, 20 Jul 2020 17:36:25 +0200
+Message-Id: <20200720152831.265834535@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,66 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit dda9a951dd6dd6073bbaf2c8d3119da2f8fe2d5b ]
+[ Upstream commit 6cbba1f9114a8134cff9138c79add15012fd52b9 ]
 
-I noticed that when rpcrdma_xprt_connect() returns -ENOMEM,
-instead of retrying the connect, the RPC client kills the
-RPC task that requested the connection. We want a retry
-here.
+Fix to return negative error code -ENOMEM from kmalloc() error handling
+case instead of 0, as done elsewhere in this function.
 
-Fixes: cb586decbb88 ("xprtrdma: Make sendctx queue lifetime the same as connection lifetime")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: f1774cb8956a ("X.509: parse public key parameters from x509 for akcipher")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/verbs.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ crypto/asymmetric_keys/public_key.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 00ee62579137b..220c2d2eeb3e5 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -398,7 +398,7 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys/public_key.c
+index d7f43d4ea925a..e5fae4e838c06 100644
+--- a/crypto/asymmetric_keys/public_key.c
++++ b/crypto/asymmetric_keys/public_key.c
+@@ -119,6 +119,7 @@ static int software_key_query(const struct kernel_pkey_params *params,
+ 	if (IS_ERR(tfm))
+ 		return PTR_ERR(tfm);
  
- 	ep = kzalloc(sizeof(*ep), GFP_NOFS);
- 	if (!ep)
--		return -EAGAIN;
-+		return -ENOTCONN;
- 	ep->re_xprt = &r_xprt->rx_xprt;
- 	kref_init(&ep->re_kref);
- 
-@@ -534,10 +534,6 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
- 	rpcrdma_ep_get(ep);
- 	rpcrdma_post_recvs(r_xprt, true);
- 
--	rc = rpcrdma_sendctxs_create(r_xprt);
--	if (rc)
--		goto out;
--
- 	rc = rdma_connect(ep->re_id, &ep->re_remote_cma);
- 	if (rc)
- 		goto out;
-@@ -551,9 +547,17 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
- 		goto out;
- 	}
- 
-+	rc = rpcrdma_sendctxs_create(r_xprt);
-+	if (rc) {
-+		rc = -ENOTCONN;
-+		goto out;
-+	}
-+
- 	rc = rpcrdma_reqs_setup(r_xprt);
--	if (rc)
-+	if (rc) {
-+		rc = -ENOTCONN;
- 		goto out;
-+	}
- 	rpcrdma_mrs_create(r_xprt);
- 
- out:
++	ret = -ENOMEM;
+ 	key = kmalloc(pkey->keylen + sizeof(u32) * 2 + pkey->paramlen,
+ 		      GFP_KERNEL);
+ 	if (!key)
 -- 
 2.25.1
 
