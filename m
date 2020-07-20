@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FFDC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E96C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D07FA20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B3D20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261807;
-	bh=pQ+eqRO82I54RBC7+dnC80ZO8u1//XIuHLoK2yJpOZk=;
+	s=default; t=1595261814;
+	bh=K8BnlKWbx51fDnS7WXBDrKEyvYzspamqjSRyQDeBlAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YQF0TsBVfTRiEVxPgBY550rYrcjRLzEwTmCN+C9Hno3MP/ue5Rn9EyunPAb68pAwB
-	 gsao5XjgngmzH4IeM21CGIeqn5oWPMAq8iANTGZ1YxsgZEEK0yKrazmbXB91cv0+AJ
-	 iuxdZNQdTRALgL+XWsbbeHsiKoFH10TQy98jqncE=
+	b=BnTm0wCmiJvg3RzumBJgR7gNrp1cwsGqSDYMaQXtExlfKBeGGbiGZ6EmJJEC6u/z4
+	 aZirbSVJ6n59yYkORbpE9X1oViieTzccUr9/coeHJ2RtkcI4N4VkNu66Evnp9+mbjp
+	 WYTFFgb5yAtJunSqqK8y8k8Ii82TYxgS2D+FQ4sk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388592AbgGTQQr (ORCPT
+        id S2388610AbgGTQQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:16:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58038 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388176AbgGTQQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:16:42 -0400
+        id S2388176AbgGTQQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:16:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF53220656;
-        Mon, 20 Jul 2020 16:16:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8317320656;
+        Mon, 20 Jul 2020 16:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261802;
-        bh=pQ+eqRO82I54RBC7+dnC80ZO8u1//XIuHLoK2yJpOZk=;
+        s=default; t=1595261808;
+        bh=K8BnlKWbx51fDnS7WXBDrKEyvYzspamqjSRyQDeBlAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dad8PwmB2pnhgD/PlINGz/9a7g6RvpkdPfDURtP7dIJBF8y1EfXc9vU5MZq58coyQ
-         RVweP+rnUy5mKnE5A0yzwNKVRv6RXlAIF6PYHn9Jn/5S2dVjkSASKNm9X9A2WEViFp
-         rMTdPC3MXGcpNFm9rQOJN4ozC1LlvqBxRTQenTTo=
+        b=ut9sELf0KTNj6g1Paun9XeiKkzPF2d15+Sn+sD0CgplhvpjUc93l0k/ia6TYcUaNM
+         lt7PXeRaihH52gtdPYJftw1I5TQiD9r1H6lj3xjfvyW8qCbWCDwOPjlXiIyVvgnipb
+         J/DPqCjodpFe8mD5i6yrHVun+2oRuirIwB6Yg/to=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Colin Xu <colin.xu@intel.com>
-Subject: [PATCH 5.7 240/244] drm/i915/gvt: Fix two CFL MMIO handling caused by regression.
-Date:   Mon, 20 Jul 2020 17:38:31 +0200
-Message-Id: <20200720152837.253689680@linuxfoundation.org>
+        stable@vger.kernel.org, Lorenz Bauer <lmb@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 5.7 242/244] bpf: sockmap: Check value of unused args to BPF_PROG_ATTACH
+Date:   Mon, 20 Jul 2020 17:38:33 +0200
+Message-Id: <20200720152837.350344065@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,40 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Xu <colin.xu@intel.com>
+From: Lorenz Bauer <lmb@cloudflare.com>
 
-commit fccd0f7cf4d532674d727c7f204f038456675dee upstream.
+commit 9b2b09717e1812e450782a43ca0c2790651cf380 upstream.
 
-D_CFL was incorrectly removed for:
-GAMT_CHKN_BIT_REG
-GEN9_CTX_PREEMPT_REG
+Using BPF_PROG_ATTACH on a sockmap program currently understands no
+flags or replace_bpf_fd, but accepts any value. Return EINVAL instead.
 
-V2: Update commit message.
-V3: Rebase and split Fixes and mis-handled MMIO.
-
-Fixes: 43226e6fe798 (drm/i915/gvt: replaced register address with name)
-Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Signed-off-by: Colin Xu <colin.xu@intel.com>
-Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20200601030638.16002-1-colin.xu@intel.com
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200629095630.7933-4-lmb@cloudflare.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gvt/handlers.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/core/sock_map.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/gpu/drm/i915/gvt/handlers.c
-+++ b/drivers/gpu/drm/i915/gvt/handlers.c
-@@ -3131,8 +3131,8 @@ static int init_skl_mmio_info(struct int
- 	MMIO_DFH(GEN9_WM_CHICKEN3, D_SKL_PLUS, F_MODE_MASK | F_CMD_ACCESS,
- 		 NULL, NULL);
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -70,6 +70,9 @@ int sock_map_get_from_fd(const union bpf
+ 	struct fd f;
+ 	int ret;
  
--	MMIO_D(GAMT_CHKN_BIT_REG, D_KBL);
--	MMIO_D(GEN9_CTX_PREEMPT_REG, D_KBL | D_SKL);
-+	MMIO_D(GAMT_CHKN_BIT_REG, D_KBL | D_CFL);
-+	MMIO_D(GEN9_CTX_PREEMPT_REG, D_SKL_PLUS);
- 
- 	return 0;
- }
++	if (attr->attach_flags || attr->replace_bpf_fd)
++		return -EINVAL;
++
+ 	f = fdget(ufd);
+ 	map = __bpf_map_get(f);
+ 	if (IS_ERR(map))
 
 
