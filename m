@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29664C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7762BC43457
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0771B207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5375D2176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261942;
-	bh=3DIIuFvolpU1ejUNjM2ZXn6NWLeSQpweIh1U63zDc4M=;
+	s=default; t=1595261945;
+	bh=YKuN1e9nj+vT0ZACDA0Wb9WbZ52t3QdCAHvvnz8SdeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LvMLUMjBrUToWx3C0RePEYx92s6q43WBFrriMCwKAlYE0xXX5BdpNnK26PlJjZ+AQ
-	 cSboFn4q2BS1nWFV/8u7VdA5o1IKfW/2q00jgOb55WUbNoZLBIDN92p6/eJCiXZRib
-	 OGSwV4V0lFUboQMPKQrEhwKMQLQHdZgbMrleNa4Q=
+	b=KMXmEiFF0HNu5z2Q0UQTqDEDkPO45sP1zqiG7fK5kz+K4kH3Zg3XbiGzj3bmq1N24
+	 UmzxGqJx8mN4ofnfNw5Yk16Tw7UvtEhfhmz+PDEyzZuAnhFH8LgJMNG45GdX+eOISm
+	 5o9rqmKFc6ZdYIuQm5mRvOwITpnD860Phmf75Bbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387998AbgGTQMi (ORCPT
+        id S2387977AbgGTQMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52192 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:12:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387985AbgGTQMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:12:36 -0400
+        id S2387947AbgGTQMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:12:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B5C120684;
-        Mon, 20 Jul 2020 16:12:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5871206E9;
+        Mon, 20 Jul 2020 16:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261556;
-        bh=3DIIuFvolpU1ejUNjM2ZXn6NWLeSQpweIh1U63zDc4M=;
+        s=default; t=1595261550;
+        bh=YKuN1e9nj+vT0ZACDA0Wb9WbZ52t3QdCAHvvnz8SdeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lMPBrbVY40RBdcgE4vh3PmDgFO7xTex1VDtsdHScQ167nyAox1Cl5zrCV1vx0mCfp
-         KGxqyg0QK3lhGwFuGj2ePq1ygiUwKJIBBNOSk4KjFuwX3sflnfXG36K/knl2BtlUvS
-         rxQuW4PMdY0t46n/zaOLUJe1/qvvHrksVEREGZwA=
+        b=ad0kb+YZsYz5/dgtLTRqnAeDLDdO6hDVsKY2S+94n1TSkVbM6X/Zr8ELOamFiB+KM
+         gi3mKK2LzztW8cuigqVK1EbFsE2OUoPTiNS75n/ZWuqGkufLrgH77o/TDRDEIsPM4p
+         GjhIq2pe/tTlduHOLVcZ/2XKXvYh+8mteWP9WIvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.7 141/244] mtd: rawnand: oxnas: Unregister all devices on error
-Date:   Mon, 20 Jul 2020 17:36:52 +0200
-Message-Id: <20200720152832.559295181@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 157/244] ALSA: hda/realtek - Enable Speaker for ASUS UX533 and UX534
+Date:   Mon, 20 Jul 2020 17:37:08 +0200
+Message-Id: <20200720152833.320563906@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -58,48 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Kailang Yang <kailang@realtek.com>
 
-commit b60391eb17b2956ff2fc4c348e5a464da21ff9cb upstream.
+commit 473fbe13fd6f9082e413aea37e624ecbce5463cc upstream.
 
-On error, the oxnas probe path just frees the device which failed and
-aborts the probe, leaving unreleased resources.
+ASUS UX533 and UX534 speaker still can't output.
+End User feedback speaker didn't have output.
+Add this COEF value will enable it.
 
-Fix this situation by calling mtd_device_unregister()/nand_cleanup()
-on these.
-
-Fixes: 668592492409 ("mtd: nand: Add OX820 NAND Support")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-38-miquel.raynal@bootlin.com
+Fixes: 4e051106730d ("ALSA: hda/realtek: Enable audio jacks of ASUS UX533FD with ALC294")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Link: https://lore.kernel.org/r/80334402a93b48e385f8f4841b59ae09@realtek.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/raw/oxnas_nand.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/pci/hda/patch_realtek.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/mtd/nand/raw/oxnas_nand.c
-+++ b/drivers/mtd/nand/raw/oxnas_nand.c
-@@ -82,6 +82,7 @@ static int oxnas_nand_probe(struct platf
- 	struct resource *res;
- 	int count = 0;
- 	int err = 0;
-+	int i;
- 
- 	/* Allocate memory for the device structure (and zero it) */
- 	oxnas = devm_kzalloc(&pdev->dev, sizeof(*oxnas),
-@@ -161,6 +162,13 @@ err_cleanup_nand:
- 	nand_cleanup(chip);
- err_release_child:
- 	of_node_put(nand_np);
-+
-+	for (i = 0; i < oxnas->nchips; i++) {
-+		chip = oxnas->chips[i];
-+		WARN_ON(mtd_device_unregister(nand_to_mtd(chip)));
-+		nand_cleanup(chip);
-+	}
-+
- err_clk_unprepare:
- 	clk_disable_unprepare(oxnas->clk);
- 	return err;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7101,6 +7101,8 @@ static const struct hda_fixup alc269_fix
+ 			/* Set EAPD high */
+ 			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x40 },
+ 			{ 0x20, AC_VERB_SET_PROC_COEF, 0x8800 },
++			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x0f },
++			{ 0x20, AC_VERB_SET_PROC_COEF, 0x7774 },
+ 			{ }
+ 		},
+ 		.chained = true,
 
 
