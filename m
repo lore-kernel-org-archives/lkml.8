@@ -2,156 +2,196 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03119C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562CDC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D856022B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:17:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F28QR+9Z"
+	by mail.kernel.org (Postfix) with ESMTP id 3AC4F22B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730816AbgGTTRB (ORCPT
+        id S1730902AbgGTTRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:17:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgGTTRA (ORCPT
+        Mon, 20 Jul 2020 15:17:15 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7852 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726899AbgGTTRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:17:00 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E735C061794;
-        Mon, 20 Jul 2020 12:17:00 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id e12so14100340qtr.9;
-        Mon, 20 Jul 2020 12:17:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZY4P2StN02i9zxiuCmah02SFOxscsBn3x480+rE92BE=;
-        b=F28QR+9Zzm0roouNa+pdVdhRBMtPLP8uaMFAVzvMQkm1Kv0EaR/K6lMQRh9Ri299bS
-         ZtsdVBd3SvpaRAG0yMQzvFN32O0GsJ43Gpx7akMZ62K3ddLXXtdlP+NcxCCyU+nTgTKz
-         Zjtx2z6EauSPnrEHx2VCb9p28vFxbZvHxu4Er4yWh/bWfdXnC5jgQH1LyxHGTRhuSY6W
-         win8CwCqZKHYEPmjahxQh1DgBf/WWK+v5RBRnbB+YUZjyyWKJjgpilizDUf8aja3vQEy
-         xrEyJqOOSunZL+CmpMS5H+o0Dnn1qpds9WN+sgBaoK2Goet9+KZdMoeio+nB88U8f7PI
-         mP3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=ZY4P2StN02i9zxiuCmah02SFOxscsBn3x480+rE92BE=;
-        b=rdXR92+75RIEuDv0g8jS597QvGdLzRRu1HJzNFmzRFI0KUht1i1tCf7IrtEWfkUfIY
-         cNUMo33FVn8x6XfG5iXvn8blZGLQokBFdoWKqvj8dpWW4UwwhJ646MIHSX0xcEYRWDou
-         4wt7BOLwY/SKxP5d5gL4y8dIgbAOhp9V2Oe0Jp1L8RJnyiuHKWuaHbJCV+6wUZ2Cas1s
-         cHmwrzpVOYSQIXSiVdxyaynqFE5hVwWO6E3vWuCq3BjfwjniyOE1iNtYkuy/5JNoc3Vg
-         X0VtWQTL+FcoUsFcPlxbzV+Bt6wqfDCedSKBWBNe8RbBl+uIjc11qHYZDoxSj9iGAkRr
-         wpMg==
-X-Gm-Message-State: AOAM532N/STtbr88gdwSdfLzAuZ+KjezNtaQ9OZ7c/dvykn443+dxufF
-        JT1hyopGar999BnfWvX5jw==
-X-Google-Smtp-Source: ABdhPJy3nesTMpxh3lXG9vD395BscPdn44YrLAJo2RIXxBzNeiY4nr3RSj0p6V0uAyk27kBDJgoSjw==
-X-Received: by 2002:ac8:4f13:: with SMTP id b19mr25858680qte.146.1595272619590;
-        Mon, 20 Jul 2020 12:16:59 -0700 (PDT)
-Received: from PWN (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id f41sm21133029qtk.55.2020.07.20.12.16.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 12:16:59 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 15:16:56 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v1] usbhid: Fix slab-out-of-bounds
- write in hiddev_ioctl_usage()
-Message-ID: <20200720191656.GA3366@PWN>
-Reply-To: 20200720121257.GJ2571@kadam
-References: <20200718231218.170730-1-yepeilin.cs@gmail.com>
- <20200720115400.GI2549@kadam>
- <20200720121257.GJ2571@kadam>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720121257.GJ2571@kadam>
+        Mon, 20 Jul 2020 15:17:14 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KJ3Kws110242;
+        Mon, 20 Jul 2020 15:16:36 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5h7y11u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 15:16:36 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KJ3QeO110872;
+        Mon, 20 Jul 2020 15:16:35 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5h7y11c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 15:16:35 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KJ6AQW029169;
+        Mon, 20 Jul 2020 19:16:34 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma03dal.us.ibm.com with ESMTP id 32brq90hx8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 19:16:34 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KJGWTR38207870
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 19:16:32 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 41D1D78064;
+        Mon, 20 Jul 2020 19:16:32 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 55DB078066;
+        Mon, 20 Jul 2020 19:16:26 +0000 (GMT)
+Received: from [153.66.254.194] (unknown [9.85.132.116])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jul 2020 19:16:26 +0000 (GMT)
+Message-ID: <1595272585.4554.28.camel@linux.ibm.com>
+Subject: Re: [PATCH 3/6] mm: introduce secretmemfd system call to create
+ "secret" memory areas
+From:   James Bottomley <jejb@linux.ibm.com>
+Reply-To: jejb@linux.ibm.com
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mike Rapoport <rppt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linaro-mm-sig@lists.linaro.org,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Mon, 20 Jul 2020 12:16:25 -0700
+In-Reply-To: <CAK8P3a34kx4aAFY=-SBHX3suCLwxeZY7+YSRzct93YM_OFbSWA@mail.gmail.com>
+References: <20200720092435.17469-1-rppt@kernel.org>
+         <20200720092435.17469-4-rppt@kernel.org>
+         <CAK8P3a0NyvRMqH7X0YNO5E6DGtvZXD5ZcD6Y6n7AkocufkMnHA@mail.gmail.com>
+         <1595260305.4554.9.camel@linux.ibm.com>
+         <CAK8P3a34kx4aAFY=-SBHX3suCLwxeZY7+YSRzct93YM_OFbSWA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 adultscore=0 clxscore=1015 mlxscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I made some mistakes in the previous e-mail. Please ignore that. There
-are a lot of things going on...Sorry for that.
+On Mon, 2020-07-20 at 20:08 +0200, Arnd Bergmann wrote:
+> On Mon, Jul 20, 2020 at 5:52 PM James Bottomley <jejb@linux.ibm.com>
+> wrote:
+> > On Mon, 2020-07-20 at 13:30 +0200, Arnd Bergmann wrote:
+> > 
+> > I'll assume you mean the dmabuf userspace API?  Because the kernel
+> > API is completely device exchange specific and wholly inappropriate
+> > for this use case.
+> > 
+> > The user space API of dmabuf uses a pseudo-filesystem.  So you
+> > mount the dmabuf file type (and by "you" I mean root because an
+> > ordinary user doesn't have sufficient privilege).  This is
+> > basically because every dmabuf is usable by any user who has
+> > permissions.  This really isn't the initial interface we want for
+> > secret memory because secret regions are supposed to be per process
+> > and not shared (at least we don't want other tenants to see who's
+> > using what).
+> > 
+> > Once you have the fd, you can seek to find the size, mmap, poll and
+> > ioctl it.  The ioctls are all to do with memory synchronization (as
+> > you'd expect from a device backed region) and the mmap is handled
+> > by the dma_buf_ops, which is device specific.  Sizing is missing
+> > because that's reported by the device not settable by the user.
+> 
+> I was mainly talking about the in-kernel interface that is used for
+> sharing a buffer with hardware. Aside from the limited ioctls,
+> anything in the kernel can decide on how it wants to export a dma_buf
+> by calling dma_buf_export()/dma_buf_fd(), which is roughly what the
+> new syscall does as well. Using dma_buf vs the proposed
+> implementation for this is not a big difference in complexity.
 
-On Mon, Jul 20, 2020 at 03:12:57PM +0300, Dan Carpenter wrote:
-> So another option would be to just add HIDIOCGUSAGE and HIDIOCSUSAGE to
-> the earlier check.  That risks breaking userspace.  Another option is to
-> just add a check like you did earlier to the HIDIOCGUSAGE case.
-> Probably just do option #2 and resend.
+I have thought about it, but haven't got much further:  We can't couple
+to SGX without a huge break in the current simple userspace API (it
+becomes complex because you'd have to enter the enclave each time you
+want to use the memory, or put the whole process in the enclave, which
+is a bit of a nightmare for simplicity), and we could only couple it to
+SEV if the memory encryption engine would respond to PCID as well as
+ASID, which it doesn't.
 
-Sure, I will just add the same check to the HIDIOCGUSAGE case for the
-time being. Thank you for the detailed explanation.
+> The one thing that a dma_buf does is that it allows devices to
+> do DMA on it. This is either something that can turn out to be
+> useful later, or it is not. From the description, it sounded like
+> the sharing might be useful, since we already have known use
+> cases in which "secret" data is exchanged with a trusted execution
+> environment using the dma-buf interface.
 
-Here's what I found after digging a bit further though:
+The current use case for private keys is that you take an encrypted
+file (which would be the DMA coupled part) and you decrypt the contents
+into the secret memory.  There might possibly be a DMA component later
+where a HSM like device DMAs a key directly into your secret memory to
+avoid exposure, but I wouldn't anticipate any need for anything beyond
+the usual page cache API for that case (effectively this would behave
+like an ordinary page cache page except that only the current process
+would be able to touch the contents).
 
-hid_open_report() calls different functions in order to process
-different type of items:
+> If there is no way the data stored in this new secret memory area
+> would relate to secret data in a TEE or some other hardware
+> device, then I agree that dma-buf has no value.
 
-drivers/hid/hid-core.c:1193:
+Never say never, but current TEE designs tend to require full
+confidentiality for the entire execution.  What we're probing is
+whether we can improve security by doing an API that requires less than
+full confidentiality for the process.  I think if the API proves useful
+then we will get HW support for it, but it likely won't be in the
+current TEE of today form.
 
-        static int (*dispatch_type[])(struct hid_parser *parser,
-                                      struct hid_item *item) = {
-                hid_parser_main,
-                hid_parser_global,
-                hid_parser_local,
-                hid_parser_reserved
-        };
+> > What we want is the ability to get an fd, set the properties and
+> > the size and mmap it.  This is pretty much a 100% overlap with the
+> > memfd API and not much overlap with the dmabuf one, which is why I
+> > don't think the interface is very well suited.
+> 
+> Does that mean you are suggesting to use additional flags on
+> memfd_create() instead of a new system call?
 
-In this case, hid_parser_main() calls hid_add_field(), which in turn
-calls hid_register_field(), which allocates the `field` object as you
-mentioned:
+Well, that was what the previous patch did.  I'm agnostic on the
+mechanism for obtaining the fd: new syscall as this patch does or
+extension to memfd like the old one did.  All I was saying is that once
+you have the fd, the API you use on it is the same as the memfd API.
 
-drivers/hid/hid-core.c:102:
+James
 
-        field = kzalloc((sizeof(struct hid_field) +
-                         usages * sizeof(struct hid_usage) +
-                         values * sizeof(unsigned)), GFP_KERNEL);
-
-Here, `values` equals to `global.report_count`. See how it is being
-called:
-
-drivers/hid/hid-core.c:303:
-
-        field = hid_register_field(report, usages, parser->global.report_count);
-
-In hid_open_report(), `global.report_count` can be set by calling
-hid_parser_global().
-
-However, the syzkaller reproducer made hid_open_report() to call
-hid_parser_main() __before__ `global.report_count` is properly set. It's
-zero. So hid_register_field() allocated `field` with `values` equals to
-zero - No room for value[] at all. I believe this caused the bug.
-
-Apparently hid_open_report() doesn't care about which item (main, local,
-global and reserved) gets processed first. I am new to this code and I
-don't know whether this is by design, but this arbitrarity is
-apparently causing some issues.
-
-As another example, in hid_add_field():
-
-drivers/hid/hid-core.c:289:
-
-        report->size += parser->global.report_size * parser->global.report_count;
-
-If `global.report_count` is zero, `report->size` gets increased by zero.
-Is this working as intended? It seems weird to me.
-
-Thank you,
-
-Peilin Ye
