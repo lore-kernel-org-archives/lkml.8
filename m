@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B933CC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9035FC433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD9122D03
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE752064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261060;
-	bh=Y/zWR9qtvEQbATV+qXey+DSENWV9ufEwXodCAcF07go=;
+	s=default; t=1595261066;
+	bh=8n6WyCnf4uOT8u/UC9lAYwFf3DIBEdlqg7odhu7VMNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=miDu13uzkFHpy+0ipV8pENr12WNaeXmvq7pWF77uaWJ13vykyUlJTzS0h4BmB3f0Y
-	 VZP107e+xH8ivRr6GNi+zSzurK+FAD/t9xO+DwPELr5AKR7odyLmmfvjtjbhCRakVn
-	 +tCYUaa4yQTpZdEYtuAMZ3/HMXT22IrbjcIKcxaE=
+	b=ZcwW6MdLuY9yjH2ihEEFI1ZJEmN0HvW4cCeUmdkTTqktVEWXoBU8DnT5722lHlJAZ
+	 WNXG9X/aRXRx2JYlUbkCMKM0nQri+n3rb+ZmcW2ttR0jLS+O11+7Cq/blaz4ljcS4f
+	 DEVwM56t16D+8CTssRdF1fu7aS5hltXv+uthNwm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732832AbgGTQET (ORCPT
+        id S1732630AbgGTQEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:04:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38992 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:04:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732823AbgGTQEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:04:15 -0400
+        id S1732301AbgGTQEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:04:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D606720672;
-        Mon, 20 Jul 2020 16:04:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86AF120773;
+        Mon, 20 Jul 2020 16:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261054;
-        bh=Y/zWR9qtvEQbATV+qXey+DSENWV9ufEwXodCAcF07go=;
+        s=default; t=1595261060;
+        bh=8n6WyCnf4uOT8u/UC9lAYwFf3DIBEdlqg7odhu7VMNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zrsH4lvSKvJABojcrRVSoDM+a+TTdcFfuB+ilW7n89XktRfFx5rnlWNs9NEKdp2+0
-         If/5D3lkHHcJuC7FS/7LxjKyoQYcx9aLqMx4FrgEKMboYoy9KZ5aO+bNnjNHVfTnOq
-         dVS4J4jrLOTlYQCjGZSooljr5r1H6yZrOd3eCE9I=
+        b=aBNINDO7yuEJaKzfckz/+qmf/4HOvI0QPUlPggB7b9iL2bp41hepfQH+EgbGrrX0a
+         37IwmKPEBNwdkXRJ9ni7Y+7KzDhjUq48spktQLiktOmBOZ+m/k5ezblJHCviycpFeq
+         mnpYYxGzNVPbUZdnDIRnCaJC4RJnKBhnoifezTeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 5.4 165/215] virt: vbox: Fix guest capabilities mask check
-Date:   Mon, 20 Jul 2020 17:37:27 +0200
-Message-Id: <20200720152828.031839401@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.4 193/215] dmaengine: fsl-edma: Fix NULL pointer exception in fsl_edma_tx_handler
+Date:   Mon, 20 Jul 2020 17:37:55 +0200
+Message-Id: <20200720152829.362855569@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,47 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit 59d1d2e8e1e7c50d2657d5e4812b53f71f507968 upstream.
+commit f5e5677c420346b4e9788051c2e4d750996c428c upstream.
 
-Check the passed in capabilities against VMMDEV_GUEST_CAPABILITIES_MASK
-instead of against VMMDEV_EVENT_VALID_EVENT_MASK.
-This tightens the allowed mask from 0x7ff to 0x7.
+NULL pointer exception happens occasionally on serial output initiated
+by login timeout.  This was reproduced only if kernel was built with
+significant debugging options and EDMA driver is used with serial
+console.
 
-Fixes: 0ba002bc4393 ("virt: Add vboxguest driver for Virtual Box Guest integration")
-Cc: stable@vger.kernel.org
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200709120858.63928-3-hdegoede@redhat.com
+    col-vf50 login: root
+    Password:
+    Login timed out after 60 seconds.
+    Unable to handle kernel NULL pointer dereference at virtual address 00000044
+    Internal error: Oops: 5 [#1] ARM
+    CPU: 0 PID: 157 Comm: login Not tainted 5.7.0-next-20200610-dirty #4
+    Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+      (fsl_edma_tx_handler) from [<8016eb10>] (__handle_irq_event_percpu+0x64/0x304)
+      (__handle_irq_event_percpu) from [<8016eddc>] (handle_irq_event_percpu+0x2c/0x7c)
+      (handle_irq_event_percpu) from [<8016ee64>] (handle_irq_event+0x38/0x5c)
+      (handle_irq_event) from [<801729e4>] (handle_fasteoi_irq+0xa4/0x160)
+      (handle_fasteoi_irq) from [<8016ddcc>] (generic_handle_irq+0x34/0x44)
+      (generic_handle_irq) from [<8016e40c>] (__handle_domain_irq+0x54/0xa8)
+      (__handle_domain_irq) from [<80508bc8>] (gic_handle_irq+0x4c/0x80)
+      (gic_handle_irq) from [<80100af0>] (__irq_svc+0x70/0x98)
+    Exception stack(0x8459fe80 to 0x8459fec8)
+    fe80: 72286b00 e3359f64 00000001 0000412d a0070013 85c98840 85c98840 a0070013
+    fea0: 8054e0d4 00000000 00000002 00000000 00000002 8459fed0 8081fbe8 8081fbec
+    fec0: 60070013 ffffffff
+      (__irq_svc) from [<8081fbec>] (_raw_spin_unlock_irqrestore+0x30/0x58)
+      (_raw_spin_unlock_irqrestore) from [<8056cb48>] (uart_flush_buffer+0x88/0xf8)
+      (uart_flush_buffer) from [<80554e60>] (tty_ldisc_hangup+0x38/0x1ac)
+      (tty_ldisc_hangup) from [<8054c7f4>] (__tty_hangup+0x158/0x2bc)
+      (__tty_hangup) from [<80557b90>] (disassociate_ctty.part.1+0x30/0x23c)
+      (disassociate_ctty.part.1) from [<8011fc18>] (do_exit+0x580/0xba0)
+      (do_exit) from [<801214f8>] (do_group_exit+0x3c/0xb4)
+      (do_group_exit) from [<80121580>] (__wake_up_parent+0x0/0x14)
+
+Issue looks like race condition between interrupt handler fsl_edma_tx_handler()
+(called as result of fsl_edma_xfer_desc()) and terminating the transfer with
+fsl_edma_terminate_all().
+
+The fsl_edma_tx_handler() handles interrupt for a transfer with already freed
+edesc and idle==true.
+
+Fixes: d6be34fbd39b ("dma: Add Freescale eDMA engine driver support")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1591877861-28156-2-git-send-email-krzk@kernel.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/virt/vboxguest/vboxguest_core.c |    2 +-
- drivers/virt/vboxguest/vmmdev.h         |    2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/fsl-edma.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/virt/vboxguest/vboxguest_core.c
-+++ b/drivers/virt/vboxguest/vboxguest_core.c
-@@ -1443,7 +1443,7 @@ static int vbg_ioctl_change_guest_capabi
- 	or_mask = caps->u.in.or_mask;
- 	not_mask = caps->u.in.not_mask;
+--- a/drivers/dma/fsl-edma.c
++++ b/drivers/dma/fsl-edma.c
+@@ -45,6 +45,13 @@ static irqreturn_t fsl_edma_tx_handler(i
+ 			fsl_chan = &fsl_edma->chans[ch];
  
--	if ((or_mask | not_mask) & ~VMMDEV_EVENT_VALID_EVENT_MASK)
-+	if ((or_mask | not_mask) & ~VMMDEV_GUEST_CAPABILITIES_MASK)
- 		return -EINVAL;
- 
- 	ret = vbg_set_session_capabilities(gdev, session, or_mask, not_mask,
---- a/drivers/virt/vboxguest/vmmdev.h
-+++ b/drivers/virt/vboxguest/vmmdev.h
-@@ -206,6 +206,8 @@ VMMDEV_ASSERT_SIZE(vmmdev_mask, 24 + 8);
-  * not.
-  */
- #define VMMDEV_GUEST_SUPPORTS_GRAPHICS                      BIT(2)
-+/* The mask of valid capabilities, for sanity checking. */
-+#define VMMDEV_GUEST_CAPABILITIES_MASK                      0x00000007U
- 
- /** struct vmmdev_hypervisorinfo - Hypervisor info structure. */
- struct vmmdev_hypervisorinfo {
+ 			spin_lock(&fsl_chan->vchan.lock);
++
++			if (!fsl_chan->edesc) {
++				/* terminate_all called before */
++				spin_unlock(&fsl_chan->vchan.lock);
++				continue;
++			}
++
+ 			if (!fsl_chan->edesc->iscyclic) {
+ 				list_del(&fsl_chan->edesc->vdesc.node);
+ 				vchan_cookie_complete(&fsl_chan->edesc->vdesc);
 
 
