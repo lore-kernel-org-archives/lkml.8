@@ -2,148 +2,88 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62B4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F049C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBE12080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:22:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lR/qQt9T"
+	by mail.kernel.org (Postfix) with ESMTP id 5492C21702
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:23:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595287396;
+	bh=CmjiBtNa6KB4IjS9/V99TRrvKhtZXBHGyuXzHFKf9oI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kiZQLg/7yhZ59SDrZu8sTNjL8BPtX6bbvIO0gpyBIXp8K18ydd4+pc7ySsC2rnGXl
+	 Kj0o5SyFRqMJmYzcNZepts3/tCO5D1w+xHbJreoZASAsWK/wSIolmxL8QGPc3KKrjI
+	 qI6izkLxzOjw5bpGuuGfx8ss4eDzN8OxZ7O8SqEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgGTXWm (ORCPT
+        id S1728114AbgGTXXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:22:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgGTXWl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 19:22:41 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A16FC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:22:41 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f18so19440026wrs.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:22:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kv0NaqFL/MR42WjWhxs6aF0qnAcBzA6JCukXdkBQly4=;
-        b=lR/qQt9T+gy9aLRTKA4gUwCKLPdnpwLfyJJLu/qa9jJfLwqtY942thJc1BfRJh63/c
-         ENCYhvzhzXjI0moeU19a7Ao6hdu/bhjh/BKvOsXXP6wl/o2ErarBHl7DbgQ5YLI7H/ra
-         QKBwP2TDe20wVnkrMHio8QS4Z6ZdJIzk3PTXhFOZ9swlmO8xU880mMZ2fQYdCAArDJbB
-         +9HvjmyTXmDMdWql31URvFNGL/lVjfEgKLJw7xgSiCclvyyVWdngkRR43e+yZKoBLeJR
-         mTmfaTcXpokh7L02NssfuleBN9ui9JWz98uxrnVTOeI1VnibPUIzZR2+MLVrJW9xafVT
-         PnTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=kv0NaqFL/MR42WjWhxs6aF0qnAcBzA6JCukXdkBQly4=;
-        b=etvpqAPzizXeZJNpGgSgOUD/SJi3HwqNUHnWdndTjvluRz7sRIfhZ2CCxurGbSmHVA
-         1lhr0gdplBC2R60mLSPeiZ9/EB7Pbjv0qfiARFfKGbakBFWW8ndZHkL5DiIRdJ+J+eml
-         vkxVq+QG4tLBo+pPkZPkclP3t0ZzQDNmtJ4MVUJkNxPpN4SDpWAAVc98BmQHUoYN1JpL
-         sz9N3HOo9xsBQwaUr4hGj4RXdH8POQkrejyhWoF8wzU0APQjKRC7zG182b6cU6sl54GG
-         NvF1G6hbBkig+iK0zk2TdX2RI0ciZtHl6Ib7TK/vaDf3e5d2oiEaP9hNF+zfoQUDNmzR
-         gLUA==
-X-Gm-Message-State: AOAM532qDTpd3aIIlrQND7PatZsp7TWOBaGzP4eHoVekvHF7wF+N5KC6
-        VdtodwI6Sh48QwA24neZZkwzPoMX
-X-Google-Smtp-Source: ABdhPJyD5VsQvmSju/YziKTHtXPB87buPCWcofiROAnPXRLEV6faC6zKZ81I4Rbr77gnfH4Ggz1lVQ==
-X-Received: by 2002:adf:f54d:: with SMTP id j13mr23059561wrp.427.1595287359989;
-        Mon, 20 Jul 2020 16:22:39 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id i14sm5052314wrc.19.2020.07.20.16.22.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 16:22:39 -0700 (PDT)
-Subject: Re: [PATCH] bus: brcmstb_gisb: Shorten prints
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200709232746.6141-1-f.fainelli@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <8c5ed8c5-cffe-7e33-8b5a-8b6cfe396b99@gmail.com>
-Date:   Mon, 20 Jul 2020 16:22:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200709232746.6141-1-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 20 Jul 2020 19:23:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726021AbgGTXXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 19:23:15 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 497C32080D;
+        Mon, 20 Jul 2020 23:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595287394;
+        bh=CmjiBtNa6KB4IjS9/V99TRrvKhtZXBHGyuXzHFKf9oI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jzXMKwtfn5KFI0f04Uvy84IaDuRB8NTrky6Xp9lzKW3GFzqjGlpfUF0RVQRmSEpsD
+         d5XeamDDBR0ktCVRI9C11mNj7NVPRE8sOHpSnsydSzAHnoGp+xmt7oEHXw/RG+PXyq
+         0SLcONObYH9PwSUwuqyBpGuAtUlwuDiEpghdysNA=
+Date:   Mon, 20 Jul 2020 16:23:13 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     js1304@gmail.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] mm/page_alloc: fix non cma alloc context
+Message-Id: <20200720162313.1381e1ec82daa6a92ae4cda7@linux-foundation.org>
+In-Reply-To: <1595220978-9890-1-git-send-email-iamjoonsoo.kim@lge.com>
+References: <1595220978-9890-1-git-send-email-iamjoonsoo.kim@lge.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/20 4:27 PM, Florian Fainelli wrote:
-> Do not print the full function name (brcmstb_gisb_arb_decode_addr) which
-> is quite long, and reduces our chances to printing a full line, instead
-> just use "GISB: " as a prefix for these prints.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Mon, 20 Jul 2020 13:56:15 +0900 js1304@gmail.com wrote:
 
-Applied to drivers/next, thanks!
--- 
-Florian
+> Currently, preventing cma area in page allocation is implemented by using
+> current_gfp_context(). However, there are two problems of this
+> implementation.
+> 
+> First, this doesn't work for allocation fastpath. In the fastpath,
+> original gfp_mask is used since current_gfp_context() is introduced in
+> order to control reclaim and it is on slowpath.
+> Second, clearing __GFP_MOVABLE has a side effect to exclude the memory
+> on the ZONE_MOVABLE for allocation target.
+> 
+> To fix these problems, this patch changes the implementation to exclude
+> cma area in page allocation. Main point of this change is using the
+> alloc_flags. alloc_flags is mainly used to control allocation so it fits
+> for excluding cma area in allocation.
+> 
+> Fixes: d7fefcc8de91 (mm/cma: add PF flag to force non cma alloc)
+> Cc: <stable@vger.kernel.org>
+
+This patch is against linux-next (or -mm) and has a lot of issues
+applying to mainline.  If we indeed wish to backport it to -stable, it
+should be against mainline, please.
