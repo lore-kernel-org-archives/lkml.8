@@ -2,143 +2,92 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFF1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A56C3C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBA2F2176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:40:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595234402;
-	bh=9y8oyfXCi9qMS0EsBRlsVc15TI9TwTZDQvSUwSEyG18=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=DPxJxD6COd9dCiWOWCBGX0MYDmzwonIJEDkR5jJemZgyJxYreZttfweBq457CayKt
-	 rG/85uVjJSjweGa/YzYIQvLnxCeGUaWNa/ylkyzBHW43zuKdEuwfKCDCjmI99apQhH
-	 Od10l09JoKgfNZs/NE3aS96ybwlg6Xjovp03oCNw=
+	by mail.kernel.org (Postfix) with ESMTP id 85209207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:40:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="a13MgTJM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgGTIkB (ORCPT
+        id S1727914AbgGTIkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:40:01 -0400
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:33518 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgGTIkA (ORCPT
+        Mon, 20 Jul 2020 04:40:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgGTIko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:40:00 -0400
-Received: by mail-wr1-f51.google.com with SMTP id f18so16989911wrs.0;
-        Mon, 20 Jul 2020 01:39:59 -0700 (PDT)
+        Mon, 20 Jul 2020 04:40:44 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D0A9C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 01:40:44 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z2so16980961wrp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 01:40:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BlDAyGJ84Q1MRWobMfZ2vz9Jimz7XhVN3a5fTfxyjNs=;
+        b=a13MgTJMMzogWZOltIcLHCW2hq/KoC1zE+dDLltAUYUmzQdrJr6tjEV7VvDiZhuwlR
+         Yo8nZFNRL38L5Dz8X3OVwcnAstv4WrCyEZHaDPLuhZfmcSQsxB0yh4k+Pe0dq3B8lgom
+         a1fVL49DUFm6GOW+EQ7e26z7d3pBDRTjIUH9n9fv1VxnnqvNe7NxWTODXkZ6KoRJ+Ylj
+         0+HOSJBs6HCVE4vDY2IN7+CoX41S4wpZ/s2smuQtKTkSdez12xKk3wazc7/uVQ8UGx2M
+         RuhaboOxHn15h63TyfYdNKSvO2uY9NF0qNgfmuZY4FZn3R5ymv2GcWg7pRdUAKBHR5t9
+         h3Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=zNRmZlw4fbHaNuCudbx8u1IP8YQ+VhQGzyHsJPFQ81E=;
-        b=IanS8zfw4kWexwCmhxqxObaKEQDbKbzJkDA6gch80V19iPKXwVXUVdkAox8I6yj7zK
-         0tsP2EMzW4br2lsMZDcCcojvqJ4Q98cbEdPIrpCb6Ql4jxhqoLUB0TFDl1fnrK9cgqIq
-         Y2NNmSL6hIi5ZnRaQeD5m8lq9NqqS2Me1jam2bs62OJcGAaOCvz3cv4fAo2Vfilf+PPF
-         zA/1zSYm5DUeSTWhY9UHi69q2TVMygw4vdZK6ZuSuohqIgzcvRI69FNClEw9lc8jUhna
-         vqGOrTPXBbOV+JGNlQ47FQqPINkdTdqEVC2m7huwzmBxRIS9StaCE/wIkhDoXEdiLDmN
-         tOnw==
-X-Gm-Message-State: AOAM531+ffxD2O/WhNooW+pd43inQqFpzYko9ciRehaMiEqiThRfSUFX
-        5mu6sfcIoEh7lKaplpwEEdPhNYmr
-X-Google-Smtp-Source: ABdhPJy2pL6Z9cx5U0XTuyBRWAfK0iDuRC8VJndTmXZJlJwq4Phzu72gxXyFGR2rYnCYt3bsfA76xw==
-X-Received: by 2002:adf:80c7:: with SMTP id 65mr21737911wrl.246.1595234398703;
-        Mon, 20 Jul 2020 01:39:58 -0700 (PDT)
-Received: from localhost (ip-37-188-169-187.eurotel.cz. [37.188.169.187])
-        by smtp.gmail.com with ESMTPSA id 129sm31527819wmd.48.2020.07.20.01.39.57
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BlDAyGJ84Q1MRWobMfZ2vz9Jimz7XhVN3a5fTfxyjNs=;
+        b=A0EggHGf3oAJdUWK8lvHpNKEfa9yiZFi6xwUBERp+hD3AkqWdKkuICceCjM0u7cvkF
+         Ty+rYMdzUFyreIJ4VCFdIhYUcjR6cXe5azXiBqOlSl9jUFE/eACD2B1hhGhejDv/jGGJ
+         jK1Zi1VD12HALnHH8u+/G+E/0EJZJJdYE8+67GnnmnNaZZ8XMCIp5VZT4UisHiWUU2kd
+         3flfJ+wo1RpK88d/0r6EZBxgtqNApUAqukZES5ZtSUqAa0KVNUA8gbi+HGRR6ElENH+z
+         9sZkHcMDojLZtmNxw9t2XTyPJugCNUxm7okmuJJMFnLp1TAmKBBGRDWrAUeZPTIQKFtd
+         iDZQ==
+X-Gm-Message-State: AOAM530jQ6r/yDohiHdYC+S8TIGe0+oY27kAF3BEWbkQPifmiMxXHdBA
+        gfSZwzzBxLp0ViQ+tQ3xxIWdAQ==
+X-Google-Smtp-Source: ABdhPJxvqyPIo2tbAstdzEdwSSMus8KQtHJorvgTkfjy+Kqv+jAGv/J+zdFKKQEDaZRQHlz2b5jYvw==
+X-Received: by 2002:adf:f60b:: with SMTP id t11mr22778978wrp.249.1595234442821;
+        Mon, 20 Jul 2020 01:40:42 -0700 (PDT)
+Received: from Red ([2a01:cb1d:3d5:a100:264b:feff:fe03:2806])
+        by smtp.googlemail.com with ESMTPSA id x11sm29153952wmc.26.2020.07.20.01.40.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 01:39:58 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 10:39:56 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: kworker/0:3+pm hogging CPU
-Message-ID: <20200720083956.GA4074@dhcp22.suse.cz>
+        Mon, 20 Jul 2020 01:40:42 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 10:40:40 +0200
+From:   LABBE Corentin <clabbe@baylibre.com>
+To:     Qinglang Miao <miaoqinglang@huawei.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] crypto: amlogic: Convert to DEFINE_SHOW_ATTRIBUTE
+Message-ID: <20200720084040.GA23952@Red>
+References: <20200716090411.13573-1-miaoqinglang@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200716090411.13573-1-miaoqinglang@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-I am not sure when this started happening but at least 5.6, 5.7 and
-5.8-rc6 all exhibit this problem. Please note that the this is happining
-on a laptop which is not completely healthy. The BIOS complains that the
-Battery cannot be charged because the power supply cannot be recognized.
-This is somehting I have for a longer time without noticing the
-kworker/0:3+pm problem so I do not think they are related but who knows.
+On Thu, Jul 16, 2020 at 05:04:11PM +0800, Qinglang Miao wrote:
+> From: Liu Shixin <liushixin2@huawei.com>
+> 
+> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+> 
+> Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+> ---
+>  drivers/crypto/amlogic/amlogic-gxl-core.c | 15 ++-------------
+>  1 file changed, 2 insertions(+), 13 deletions(-)
+> 
 
-Anyway, kworker/0:3+pm is hogging CPU. /proc/<pid>/0:3+pm is very often
-empty so I suspect it just schedules very often and performs only small
-amount of work. Here are few backtraces I've managed to catch
+Acked-by: Corentin Labbe <clabbe@baylibre.com>
+Tested-by: Corentin Labbe <clabbe@baylibre.com>
 
-[<0>] preempt_schedule_thunk+0x16/0x18
-[<0>] usb_hcd_submit_urb+0x686/0x773
-[<0>] usb_start_wait_urb+0x59/0xc8
-[<0>] usb_control_msg+0xd4/0x10d
-[<0>] get_port_status+0x51/0x6f
-[<0>] hub_port_status+0x41/0xa3
-[<0>] hub_activate+0x230/0x4ee
-[<0>] hub_resume+0x20/0x9a
-[<0>] usb_resume_interface.isra.0+0xb0/0xd0
-[<0>] usb_suspend_both+0xf6/0x20c
-[<0>] usb_runtime_suspend+0x32/0x62
-[<0>] __rpm_callback+0x70/0xd4
-[<0>] rpm_callback+0x55/0x6b
-[<0>] rpm_suspend+0x2af/0x440
-[<0>] __pm_runtime_suspend+0x48/0x62
-[<0>] usb_runtime_idle+0x26/0x2d
-[<0>] __rpm_callback+0x70/0xd4
-[<0>] rpm_idle+0x179/0x1df
-[<0>] pm_runtime_work+0x6b/0x81
-[<0>] process_one_work+0x1bd/0x2c6
-[<0>] worker_thread+0x19c/0x240
-[<0>] kthread+0x11b/0x123
-[<0>] ret_from_fork+0x22/0x30
-
-[<0>] slab_pre_alloc_hook+0x15/0x46
-[<0>] __kmalloc+0x148/0x15a
-[<0>] usb_hcd_submit_urb+0x5c6/0x773
-[<0>] usb_start_wait_urb+0x59/0xc8
-[<0>] usb_control_msg+0xd4/0x10d
-[<0>] get_port_status+0x51/0x6f
-[<0>] hub_port_status+0x41/0xa3
-[<0>] hub_activate+0x230/0x4ee
-[<0>] hub_resume+0x20/0x9a
-[<0>] usb_resume_interface.isra.0+0xb0/0xd0
-[<0>] usb_suspend_both+0xf6/0x20c
-
-[<0>] slab_pre_alloc_hook+0x15/0x46
-[<0>] __kmalloc+0x148/0x15a
-[<0>] usb_hcd_submit_urb+0x5c6/0x773
-[<0>] usb_start_wait_urb+0x59/0xc8
-[<0>] usb_control_msg+0xd4/0x10d
-[<0>] set_port_feature+0x33/0x38
-[<0>] hub_suspend+0x15c/0x16a
-[<0>] usb_suspend_both+0x91/0x20c
-[<0>] usb_runtime_suspend+0x32/0x62
-[<0>] __rpm_callback+0x70/0xd4
-[<0>] rpm_callback+0x55/0x6b
-[<0>] rpm_suspend+0x2af/0x440
-[<0>] __pm_runtime_suspend+0x48/0x62
-[<0>] usb_runtime_idle+0x26/0x2d
-[<0>] __rpm_callback+0x70/0xd4
-[<0>] rpm_idle+0x179/0x1df
-[<0>] pm_runtime_work+0x6b/0x81
-[<0>] process_one_work+0x1bd/0x2c6
-[<0>] worker_thread+0x19c/0x240
-[<0>] kthread+0x11b/0x123
-[<0>] ret_from_fork+0x22/0x30
-
-Is this something known or something I can give more information about?
-From a very quick look into the code it sounds as if the system wanted
-to suspend an USB device/controller but that keeps failing again and
-again.
--- 
-Michal Hocko
-SUSE Labs
+Thanks
