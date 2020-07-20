@@ -2,160 +2,73 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D231C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DED6E2176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:43:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IVK09e1l"
+	by mail.kernel.org (Postfix) with ESMTP id 1573920773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgGTHnT (ORCPT
+        id S1726846AbgGTHn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:43:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgGTHnS (ORCPT
+        Mon, 20 Jul 2020 03:43:59 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46619 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726015AbgGTHn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 03:43:18 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8902EC0619D7
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 00:43:17 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g10so11308322wmc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 00:43:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=m6yytUMdKpAiiKF/+CcuV8LMm9NpXNcKGc9Sb6F7cqo=;
-        b=IVK09e1ld+9cwoXx1bqDODaFImU/E8BERDq0mWlu1Dh3gZ8IilQ3NLb5AgUJs2EZ6A
-         DOpTQs9i1N8ia2cP2g7Hb9P6XoaJ7E0SsvqJvP109FQdN1+ZnJhAs2U+kTjtokXyi7kX
-         KZWHKc+5M16aNSA+dKO3bVZQ3Ch6eBOqPwHOhmW6ZcCXCA9lkNv0mus2J2Dg295523dN
-         wlMsuRQmfpFIbc8P/E473L2Usu9r1pSH6N0HzqC+VSRl0++AZtaLlfi6afz/RKsfOi1+
-         pBDqXeB4fWSWXBmqduD5AQBaV8vSZx9hm2B0U5J2k7sG/cAbFhzBStssMGIksHjKYPH5
-         ApOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=m6yytUMdKpAiiKF/+CcuV8LMm9NpXNcKGc9Sb6F7cqo=;
-        b=tZVEJhtIM4I06zW82AkbMBduD/DGbYy58b+1ZvaWRJ8V4ha0dmTGR/cXYX0QJWNQmr
-         yuqzA7ST+AYS0fKNGACCk9MOK+u9iGRt9LzoQ4CAu0KL5nzb06fv8ZtSi0qfASHBbJT7
-         MLRwUPMnjkBjUat7r/jNjP0hr28Lm26vpp1rQI/5D3o0hBlSBCvVEsYleI6LYFyoiGsC
-         vJXKX7VHwgLkvYoq2hg/6UlxmYfRZszGy6H16X3y8OHynwox0wWXlFt6Cpcfq231ecYh
-         Vx3Zqp72qdeJB9KLfIbjRkkd+B/LjK97zQdM/I+BqlxPrw/iFwVilcmFI870UJwco7Lw
-         ddSw==
-X-Gm-Message-State: AOAM533/qImwgSLJPqOifL11Mb6Y5lLf2OsiJsvjLRXbwSayV6SVrLrO
-        VExSTRbYgG91eudN7QXUoEvBAURqBeI=
-X-Google-Smtp-Source: ABdhPJzdJSdBbBWM2quCXUnipLg3+n/33qPK8Rxd7dlcJHIfTbXk90f6awCJz9w28J/D1s9VK8ooPw==
-X-Received: by 2002:a1c:408b:: with SMTP id n133mr20209577wma.88.1595230995865;
-        Mon, 20 Jul 2020 00:43:15 -0700 (PDT)
-Received: from dell ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id o7sm17531643wrv.50.2020.07.20.00.43.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 00:43:15 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 08:43:12 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 02/13] mfd: add simple regmap based I2C driver
-Message-ID: <20200720074312.GL3165313@dell>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-3-michael@walle.cc>
- <20200717090656.GF3165313@dell>
- <52d85ea1ddc488762df547168e2001e9@walle.cc>
+        Mon, 20 Jul 2020 03:43:58 -0400
+Received: from [78.134.114.177] (port=42258 helo=[192.168.77.62])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jxQSp-0001Yt-L9; Mon, 20 Jul 2020 09:43:55 +0200
+Subject: Re: [PATCH v2 2/3] dt-bindings: media: imx274: Add optional input
+ clock and supplies
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, leonl@leopardimaging.com, robh+dt@kernel.org,
+        lgirdwood@gmail.com, broonie@kernel.org
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1595013322-15077-1-git-send-email-skomatineni@nvidia.com>
+ <1595013322-15077-2-git-send-email-skomatineni@nvidia.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <75b7e3bb-cdc1-a266-09cb-3eedd79d198d@lucaceresoli.net>
+Date:   Mon, 20 Jul 2020 09:43:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <1595013322-15077-2-git-send-email-skomatineni@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <52d85ea1ddc488762df547168e2001e9@walle.cc>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020, Michael Walle wrote:
-
-> Am 2020-07-17 11:06, schrieb Lee Jones:
-> > On Mon, 06 Jul 2020, Michael Walle wrote:
-> > 
-> > > There are I2C devices which contain several different functions but
-> > > doesn't require any special access functions. For these kind of
-> > > drivers
-> > > an I2C regmap should be enough.
-> > > 
-> > > Create an I2C driver which creates an I2C regmap and enumerates its
-> > > children. If a device wants to use this as its MFD core driver, it has
-> > > to add an individual compatible string. It may provide its own regmap
-> > > configuration.
-> > > 
-> > > Subdevices can use dev_get_regmap() on the parent to get their regmap
-> > > instance.
-> > > 
-> > > Signed-off-by: Michael Walle <michael@walle.cc>
-> > > ---
-> > > Changes since v4:
-> > >  - new patch. Lee, please bear with me. I didn't want to delay the
-> > >    new version (where a lot of remarks on the other patches were
-> > >    addressed) even more, just because we haven't figured out how
-> > >    to deal with the MFD part. So for now, I've included this one.
-> > > 
-> > >  drivers/mfd/Kconfig          |  9 +++++++
-> > >  drivers/mfd/Makefile         |  1 +
-> > >  drivers/mfd/simple-mfd-i2c.c | 50
-> > > ++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 60 insertions(+)
-> > >  create mode 100644 drivers/mfd/simple-mfd-i2c.c
-> > > 
-> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > index 33df0837ab41..f1536a710aca 100644
-> > > --- a/drivers/mfd/Kconfig
-> > > +++ b/drivers/mfd/Kconfig
-> > > @@ -1162,6 +1162,15 @@ config MFD_SI476X_CORE
-> > >  	  To compile this driver as a module, choose M here: the
-> > >  	  module will be called si476x-core.
-> > > 
-> > > +config MFD_SIMPLE_MFD_I2C
-> > > +	tristate "Simple regmap based I2C devices"
-> > 
-> > Doesn't look like tristate to me.
-> > 
-> > Haven't you made this builtin only?
+On 17/07/20 21:15, Sowjanya Komatineni wrote:
+> This patch adds IMX274 optional external clock input and voltage
+> supplies to device tree bindings.
 > 
-> Mh yeah, I forgot to change it to module in the driver. I don't
-> know whats better though, have it tristate or just offer a boolean
-> option because it should be small anyway. What do you think?
-> My interrupt driver will force it to boolean anyway.
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-Better to give consumers the choice I think.
+Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Luca
