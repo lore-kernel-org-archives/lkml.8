@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2D1C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A647CC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0810B206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76ED722CBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260341;
-	bh=a22zVVN/NvJGBrt6FAWnyk1s+vGlWcTw0O9Xcqc6ys8=;
+	s=default; t=1595260345;
+	bh=eVx2whG+iEhdi/wNAA8mHJvtFWijfFiSbn2YqjBTA2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PJD+41rvcVcgjbGZaiUKpXXfNHsq8LXNb+eaLWuUAxZRvRsMqh6YrtJZl4TLJ70m3
-	 JYp3GezejkaRiB6dHXf+rCyl/AAxXejom2bdxNYBmoten5tjo64ts4JbHihIA+dSMa
-	 t9HrrFOnIJi1VLSwY0pIbgROlqSgjXjxkMODE85c=
+	b=SLur3ojmvD4Twmt2Cb/LNsmVtgEKTlSDJ98KAsF/8mtjHvL60ZI2lpweCagE0JJDe
+	 8hGMr+2Oc5wwg99zoj7FniudRBWUJzJuZrTHv0ttsmxOjzakqlJwW8VXNuIfKd+Mw3
+	 K4kIELijMW8E+DBM6xR5h6vLqV8IYrxwClI/7pWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731352AbgGTPwT (ORCPT
+        id S1730754AbgGTPwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:52:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50024 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:52:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731334AbgGTPwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:52:16 -0400
+        id S1731323AbgGTPwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:52:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 116A62065E;
-        Mon, 20 Jul 2020 15:52:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DC9722D3E;
+        Mon, 20 Jul 2020 15:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260335;
-        bh=a22zVVN/NvJGBrt6FAWnyk1s+vGlWcTw0O9Xcqc6ys8=;
+        s=default; t=1595260333;
+        bh=eVx2whG+iEhdi/wNAA8mHJvtFWijfFiSbn2YqjBTA2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tC/VI29vpSgmueeUMcKM4JXBTnKlRvPVkgv2zDELM4xGkBmKfrm40/abZnlk2LmBy
-         rr9MvyyZbICdvnf+INIECpz/j6d5Wa0+BeB++/gO4oiZ8gnYUNbSK74B4vCUQYmn+D
-         vtY7wH4okoLa95FuN+fpIZOI8UkVIPExpfn9ncko=
+        b=ffhlf+wyWKlt1EOsFMRQxL6uqruTbLcx3XxYiM2ZZ1nIkGOLsfoHASzXtyNWHiKhu
+         790JoGvzUVGDpSz6QX1HzLyeGmTRS8YVcmy/YRSmqEpu3/9uOcbsF17aDKfDmHDbtN
+         0Pa0IESpTlXc8/4qTOP7rJxcf4Tlz75XzPpudK2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Andrew F. Davis" <afd@ti.com>, Stable@vger.kernel.org
-Subject: [PATCH 4.19 036/133] iio:health:afe4403 Fix timestamp alignment and prevent data leak.
-Date:   Mon, 20 Jul 2020 17:36:23 +0200
-Message-Id: <20200720152805.462507150@linuxfoundation.org>
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Stable@vger.kernel.org
+Subject: [PATCH 4.19 035/133] iio:pressure:ms5611 Fix buffer element alignment
+Date:   Mon, 20 Jul 2020 17:36:22 +0200
+Message-Id: <20200720152805.415751582@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -62,79 +63,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-commit 3f9c6d38797e9903937b007a341dad0c251765d6 upstream.
+commit 8db4afe163bbdd93dca6fcefbb831ef12ecc6b4d upstream.
 
 One of a class of bugs pointed out by Lars in a recent review.
 iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
 to the size of the timestamp (8 bytes).  This is not guaranteed in
-this driver which uses a 32 byte array of smaller elements on the stack.
-As Lars also noted this anti pattern can involve a leak of data to
-userspace and that indeed can happen here.  We close both issues by
-moving to a suitable structure in the iio_priv() data with alignment
-explicitly requested.  This data is allocated with kzalloc so no
-data can leak appart from previous readings.
+this driver which uses an array of smaller elements on the stack.
+Here there is no data leak possibility so use an explicit structure
+on the stack to ensure alignment and nice readable fashion.
 
-Fixes: eec96d1e2d31 ("iio: health: Add driver for the TI AFE4403 heart monitor")
+The forced alignment of ts isn't strictly necessary in this driver
+as the padding will be correct anyway (there isn't any).  However
+it is probably less fragile to have it there and it acts as
+documentation of the requirement.
+
+Fixes: 713bbb4efb9dc ("iio: pressure: ms5611: Add triggered buffer support")
 Reported-by: Lars-Peter Clausen <lars@metafoo.de>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Andrew F. Davis <afd@ti.com>
+Acked-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
 Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/health/afe4403.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/iio/pressure/ms5611_core.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/health/afe4403.c
-+++ b/drivers/iio/health/afe4403.c
-@@ -71,6 +71,7 @@ static const struct reg_field afe4403_re
-  * @regulator: Pointer to the regulator for the IC
-  * @trig: IIO trigger for this device
-  * @irq: ADC_RDY line interrupt number
-+ * @buffer: Used to construct data layout to push into IIO buffer.
-  */
- struct afe4403_data {
- 	struct device *dev;
-@@ -80,6 +81,8 @@ struct afe4403_data {
- 	struct regulator *regulator;
- 	struct iio_trigger *trig;
- 	int irq;
-+	/* Ensure suitable alignment for timestamp */
-+	s32 buffer[8] __aligned(8);
- };
- 
- enum afe4403_chan_id {
-@@ -317,7 +320,6 @@ static irqreturn_t afe4403_trigger_handl
+--- a/drivers/iio/pressure/ms5611_core.c
++++ b/drivers/iio/pressure/ms5611_core.c
+@@ -215,16 +215,21 @@ static irqreturn_t ms5611_trigger_handle
+ 	struct iio_poll_func *pf = p;
  	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct afe4403_data *afe = iio_priv(indio_dev);
- 	int ret, bit, i = 0;
--	s32 buffer[8];
- 	u8 tx[4] = {AFE440X_CONTROL0, 0x0, 0x0, AFE440X_CONTROL0_READ};
- 	u8 rx[3];
+ 	struct ms5611_state *st = iio_priv(indio_dev);
+-	s32 buf[4]; /* s32 (pressure) + s32 (temp) + 2 * s32 (timestamp) */
++	/* Ensure buffer elements are naturally aligned */
++	struct {
++		s32 channels[2];
++		s64 ts __aligned(8);
++	} scan;
+ 	int ret;
  
-@@ -334,9 +336,9 @@ static irqreturn_t afe4403_trigger_handl
- 		if (ret)
- 			goto err;
- 
--		buffer[i++] = (rx[0] << 16) |
--				(rx[1] << 8) |
--				(rx[2]);
-+		afe->buffer[i++] = (rx[0] << 16) |
-+				   (rx[1] << 8) |
-+				   (rx[2]);
- 	}
- 
- 	/* Disable reading from the device */
-@@ -345,7 +347,8 @@ static irqreturn_t afe4403_trigger_handl
- 	if (ret)
+ 	mutex_lock(&st->lock);
+-	ret = ms5611_read_temp_and_pressure(indio_dev, &buf[1], &buf[0]);
++	ret = ms5611_read_temp_and_pressure(indio_dev, &scan.channels[1],
++					    &scan.channels[0]);
+ 	mutex_unlock(&st->lock);
+ 	if (ret < 0)
  		goto err;
  
--	iio_push_to_buffers_with_timestamp(indio_dev, buffer, pf->timestamp);
-+	iio_push_to_buffers_with_timestamp(indio_dev, afe->buffer,
-+					   pf->timestamp);
- err:
- 	iio_trigger_notify_done(indio_dev->trig);
+-	iio_push_to_buffers_with_timestamp(indio_dev, buf,
++	iio_push_to_buffers_with_timestamp(indio_dev, &scan,
+ 					   iio_get_time_ns(indio_dev));
  
+ err:
 
 
