@@ -2,101 +2,80 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68035C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB46C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4529722B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995EF22B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HDnSr4SF"
+	dkim=pass (1024-bit key) header.d=mutex.one header.i=@mutex.one header.b="CpFPhet9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgGTGnh (ORCPT
+        id S1726755AbgGTGn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 02:43:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55294 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725805AbgGTGng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:43:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595227415;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ciF2+1AsFOhctkHIotBDF5T5LP3R/nd9/VEpQ+S2kN4=;
-        b=HDnSr4SFCsRhkfCxDVGLmCJ1hmQMaigcXsgLRvmD3q1/hWohdz0IlVhKBaOn13t6mRinSZ
-        o2SSzG7kwUi/4YZ5tJ9WZl5x0/or+QYh0/swl8RFG2iag6ll+kfetW6LsVf/qqHXJsTW3m
-        6wR/GgWxmU6r51wzgDH7BSQGWj9i288=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-hXXR15E0ORa6kVV3b1X2jg-1; Mon, 20 Jul 2020 02:43:33 -0400
-X-MC-Unique: hXXR15E0ORa6kVV3b1X2jg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 20 Jul 2020 02:43:28 -0400
+Received: from mail.mutex.one ([62.77.152.124]:35962 "EHLO mail.mutex.one"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725805AbgGTGn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 02:43:27 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.mutex.one (Postfix) with ESMTP id 8ABA8BF40815;
+        Mon, 20 Jul 2020 09:43:25 +0300 (EEST)
+X-Virus-Scanned: Debian amavisd-new at mail.mutex.one
+Received: from mail.mutex.one ([127.0.0.1])
+        by localhost (mail.mutex.one [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id aUSDTB5AIWjP; Mon, 20 Jul 2020 09:43:12 +0300 (EEST)
+Received:  [127.0.0.1] (localhost [127.0.0.1])nknown [109.103.89.101])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02482106B245;
-        Mon, 20 Jul 2020 06:43:31 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.147])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 04F7478526;
-        Mon, 20 Jul 2020 06:43:27 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 20 Jul 2020 08:43:30 +0200 (CEST)
-Date:   Mon, 20 Jul 2020 08:43:26 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Jiri Slaby <jirislaby@kernel.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        christian@brauner.io, "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Dave Jones <davej@codemonkey.org.uk>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
-Message-ID: <20200720064326.GA6612@redhat.com>
-References: <6b253b55-586d-0bc4-9f58-c45c631abc60@kernel.org>
- <5a8c4c38-7aeb-981a-8d3b-a7a5c8ca5564@kernel.org>
- <20200717122651.GA6067@redhat.com>
- <20200717124017.GB6067@redhat.com>
- <2c8ef23c-43b4-39d4-8e84-92769c948da9@kernel.org>
- <20200718171406.GB16791@redhat.com>
- <20200718174448.4btbjcvp6wbbdgts@wittgenstein>
- <badcb9d5-f628-2be1-7a72-902cf08010bd@kernel.org>
+        by mail.mutex.one (Postfix) with ESMTPSA id 6ABCFBF403B7;
+        Mon, 20 Jul 2020 09:43:12 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mutex.one; s=default;
+        t=1595227392; bh=ab3sxIvVtMy1RpXy10nipXf7bkDHQgf370zh7TMSvNE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CpFPhet9j73/ovt+/LAfa/zcl+PZl6teedHLNxHqC9p7BFKqsl+/BZn5lutmWsCim
+         E4paD9c/4t+6HT5A5tlWGvUrw6GlCmWe9OBC3stkWDoCkDZF8lJMYm1hDjKD90E7lQ
+         bZ/cIRda5hxP2gTyrOFaJzXq9CC0WGVeeNsgzRhs=
+From:   Marian Posteuca <posteuca@mutex.one>
+To:     Ioana Radulescu <ruxandra.radulescu@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
+Cc:     Marian Posteuca <posteuca@mutex.one>
+Subject: [PATCH v2] staging: dpaa2-ethsw: fix switch/case fallthrough warning
+Date:   Mon, 20 Jul 2020 09:42:05 +0300
+Message-Id: <20200720064205.10323-1-posteuca@mutex.one>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <badcb9d5-f628-2be1-7a72-902cf08010bd@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/20, Jiri Slaby wrote:
->
-> You tackled it, we cherry-picked dbfb089d360 to our kernels. Ccing more
-> people.
+Fix the fallthrough warning that is reported by checkpatch.
 
-Thanks... so with this patch __schedule() does
+Signed-off-by: Marian Posteuca <posteuca@mutex.one>
+---
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	prev_state = prev->state;
-
-	...
-
-	if (!preempt && prev_state && prev_state == prev->state) {
-		if (signal_pending_state(prev_state, prev)) {
-			prev->state = TASK_RUNNING;
-		} else {
-
-and ptrace_freeze_traced() can change ->state in between. This means
-that this task can return from __schedule() with ->state != RUNNING,
-this can explain BUG_ON(task_is_stopped_or_traced) in do_notify_parent()
-you reported.
-
-Oleg.
+diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+index 2fb75a7c9314..db10fd18914d 100644
+--- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
++++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+@@ -1362,7 +1362,7 @@ static int port_switchdev_blocking_event(struct notifier_block *unused,
+ 		return NOTIFY_DONE;
+ 
+ 	switch (event) {
+-	case SWITCHDEV_PORT_OBJ_ADD: /* fall through */
++	case SWITCHDEV_PORT_OBJ_ADD:
+ 	case SWITCHDEV_PORT_OBJ_DEL:
+ 		return ethsw_switchdev_port_obj_event(event, dev, ptr);
+ 	case SWITCHDEV_PORT_ATTR_SET:
+-- 
+2.26.2
 
