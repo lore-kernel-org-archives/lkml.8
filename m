@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF6CC433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F689C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A55320773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A3420773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259863;
-	bh=yyl96vjlmSmH5Y5qIXm5qvZTpqD4Eb0LGQhvzz+9sJQ=;
+	s=default; t=1595259866;
+	bh=jbrqa1TlsxACgyIJ8RubZ7MWTCEb+XfE2GmkyHrhL9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dt7NsGvUI1NsoAs+xX8SAvFwK5m3kjf4FV3i80P6fuvI219wvJZPIMu1v1oJmATFP
-	 IRysxEW8T+dR0CzYhc/fhOFM1pudHPMKJdi0iAnBPqWoqMY9O/JLQpUkvxvtdyDVv8
-	 ZVuo6hKMBCHc8i7dMwwW7W6fviHMNt+IQVGht3QY=
+	b=Vmzmy6QAUKf3vBNu+TDPYp1RzbrOQkGGkUjmGFv6ojT7WsJrRdPSFkIsA7djPcDqA
+	 CalqdwIEZS4FfbI7M99y6vrarF5wdNxEIPvuX+5e/tpuoosE6SGqA3utzvtvqJjAJh
+	 IqMt7hc7V/rqqYy8Z9GA/qYNWMu01Moy71VFA8GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730393AbgGTPoW (ORCPT
+        id S1730399AbgGTPoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:44:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38192 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:44:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730385AbgGTPoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:44:19 -0400
+        id S1729130AbgGTPoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:44:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 476222064B;
-        Mon, 20 Jul 2020 15:44:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C17042064B;
+        Mon, 20 Jul 2020 15:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259858;
-        bh=yyl96vjlmSmH5Y5qIXm5qvZTpqD4Eb0LGQhvzz+9sJQ=;
+        s=default; t=1595259861;
+        bh=jbrqa1TlsxACgyIJ8RubZ7MWTCEb+XfE2GmkyHrhL9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VwrMfs/obWy8Gtxn1/cFlkyM0h3+viPZs1bjBeFl9nE1W2KkXz7g8ohHVj4q+uYWZ
-         O1roYPhnQQ5gEblSlcwb7dM8f8f1XbNSyCicPH+Kmkio/P3hy8VhP50JEv6RqK2/2+
-         hLLQVSoHJY8DTMTVqxu/HqOdfpiSjiyNiUekHoIw=
+        b=aQBUvSGoRwkuwgKZRWDzwTt57xDgGleMpWYA+4U9r44J1bioL6zME24zEyRdBNqw5
+         P8oHN4zS+2r9e3lhLrcYV25OpnILkX5PLz8CfaoxdIzWxIFQhrGoF01cbksj2J79Eq
+         l8WQ5CfEIkfd57uG40roLsYxqxwWHXXVqIzAFGaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Edich <andre.edich@microchip.com>,
-        Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Peng Ma <peng.ma@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 019/125] smsc95xx: avoid memory leak in smsc95xx_bind
-Date:   Mon, 20 Jul 2020 17:35:58 +0200
-Message-Id: <20200720152803.905294995@linuxfoundation.org>
+Subject: [PATCH 4.14 002/125] spi: spi-fsl-dspi: Adding shutdown hook
+Date:   Mon, 20 Jul 2020 17:35:41 +0200
+Message-Id: <20200720152803.059182758@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -61,37 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Edich <andre.edich@microchip.com>
+From: Peng Ma <peng.ma@nxp.com>
 
-[ Upstream commit 3ed58f96a70b85ef646d5427258f677f1395b62f ]
+[ Upstream commit dc234825997ec6ff05980ca9e2204f4ac3f8d695 ]
 
-In a case where the ID_REV register read is failed, the memory for a
-private data structure has to be freed before returning error from the
-function smsc95xx_bind.
+We need to ensure dspi controller could be stopped in order for kexec
+to start the next kernel.
+So add the shutdown operation support.
 
-Fixes: bbd9f9ee69242 ("smsc95xx: add wol support for more frame types")
-Signed-off-by: Andre Edich <andre.edich@microchip.com>
-Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
+Link: https://lore.kernel.org/r/20200424061216.27445-1-peng.ma@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/smsc95xx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi-fsl-dspi.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
-index 859dfb4a9a576..bc6bcea67bff3 100644
---- a/drivers/net/usb/smsc95xx.c
-+++ b/drivers/net/usb/smsc95xx.c
-@@ -1307,7 +1307,8 @@ static int smsc95xx_bind(struct usbnet *dev, struct usb_interface *intf)
- 	/* detect device revision as different features may be available */
- 	ret = smsc95xx_read_reg(dev, ID_REV, &val);
- 	if (ret < 0)
--		return ret;
-+		goto free_pdata;
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index ca013dd4ff6bb..d5b56b7814fe3 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -49,6 +49,9 @@
+ #define SPI_MCR_PCSIS		(0x3F << 16)
+ #define SPI_MCR_CLR_TXF	(1 << 11)
+ #define SPI_MCR_CLR_RXF	(1 << 10)
++#define SPI_MCR_DIS_TXF		(1 << 13)
++#define SPI_MCR_DIS_RXF		(1 << 12)
++#define SPI_MCR_HALT		(1 << 0)
+ 
+ #define SPI_TCR			0x08
+ #define SPI_TCR_GET_TCNT(x)	(((x) & 0xffff0000) >> 16)
+@@ -1074,6 +1077,24 @@ static int dspi_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static void dspi_shutdown(struct platform_device *pdev)
++{
++	struct spi_controller *ctlr = platform_get_drvdata(pdev);
++	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
 +
- 	val >>= 16;
- 	pdata->chip_id = val;
- 	pdata->mdix_ctrl = get_mdix_status(dev->net);
++	/* Disable RX and TX */
++	regmap_update_bits(dspi->regmap, SPI_MCR,
++			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF,
++			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF);
++
++	/* Stop Running */
++	regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
++
++	dspi_release_dma(dspi);
++	clk_disable_unprepare(dspi->clk);
++	spi_unregister_controller(dspi->master);
++}
++
+ static struct platform_driver fsl_dspi_driver = {
+ 	.driver.name    = DRIVER_NAME,
+ 	.driver.of_match_table = fsl_dspi_dt_ids,
+@@ -1081,6 +1102,7 @@ static struct platform_driver fsl_dspi_driver = {
+ 	.driver.pm = &dspi_pm,
+ 	.probe          = dspi_probe,
+ 	.remove		= dspi_remove,
++	.shutdown	= dspi_shutdown,
+ };
+ module_platform_driver(fsl_dspi_driver);
+ 
 -- 
 2.25.1
 
