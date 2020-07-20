@@ -2,122 +2,145 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00660C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AD4C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFCC321775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:27:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aGfxJuM3"
+	by mail.kernel.org (Postfix) with ESMTP id 2ADAB22B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgGTI1I (ORCPT
+        id S1727993AbgGTI1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:27:08 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45365 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725845AbgGTI1I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:27:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595233627;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=M4z7nR04vRuVBvqoFTXOBrRy4wubg3LXnzAisW2rHG8=;
-        b=aGfxJuM3H9G6LWu/gDCs6wpNflRlT16UIrfLz8Ft5Vb5encZsEe5GNuc2dPLhcsyLCLd4A
-        TzGfH+bmuTNOj5sEdFaf2cmXTq6SFGCsVTsGt6/NbBtvDFV3NLws+3QN6NzBJqj6Fu1dgp
-        jPIl0eaVzVRNFR6SqJLU/5Qsb5qy3h8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-251--lMo-fx-NMyyAy6e2oW7CA-1; Mon, 20 Jul 2020 04:27:03 -0400
-X-MC-Unique: -lMo-fx-NMyyAy6e2oW7CA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A94EC800597;
-        Mon, 20 Jul 2020 08:27:01 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.147])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4D90773058;
-        Mon, 20 Jul 2020 08:26:59 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 20 Jul 2020 10:27:01 +0200 (CEST)
-Date:   Mon, 20 Jul 2020 10:26:58 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Jiri Slaby <jirislaby@kernel.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        christian@brauner.io, "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Dave Jones <davej@codemonkey.org.uk>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
-Message-ID: <20200720082657.GC6612@redhat.com>
-References: <6b253b55-586d-0bc4-9f58-c45c631abc60@kernel.org>
- <5a8c4c38-7aeb-981a-8d3b-a7a5c8ca5564@kernel.org>
- <20200717122651.GA6067@redhat.com>
- <20200717124017.GB6067@redhat.com>
- <2c8ef23c-43b4-39d4-8e84-92769c948da9@kernel.org>
- <20200718171406.GB16791@redhat.com>
- <20200718174448.4btbjcvp6wbbdgts@wittgenstein>
- <badcb9d5-f628-2be1-7a72-902cf08010bd@kernel.org>
- <20200720064326.GA6612@redhat.com>
+        Mon, 20 Jul 2020 04:27:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58642 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725845AbgGTI1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 04:27:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id BE7EBADF2;
+        Mon, 20 Jul 2020 08:27:16 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720064326.GA6612@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 20 Jul 2020 10:27:10 +0200
+From:   osalvador@suse.de
+To:     =?UTF-8?Q?HORIGUCHI_NAOYA=28=E5=A0=80=E5=8F=A3=E3=80=80=E7=9B=B4?=
+         =?UTF-8?Q?=E4=B9=9F=29?= <naoya.horiguchi@nec.com>
+Cc:     akpm@linux-foundation.org, Michal Hocko <MHocko@suse.com>,
+        linux-mm@kvack.org, mike.kravetz@oracle.com, david@redhat.com,
+        aneesh.kumar@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        Oscar Salvador <OSalvador@suse.com>
+Subject: Re: [PATCH v4 12/15] mm,hwpoison: Rework soft offline for in-use
+ pages
+In-Reply-To: <f7387d64d0024d15a1bc821a8e19b8f0@DB7PR04MB5180.eurprd04.prod.outlook.com>
+References: <20200716123810.25292-1-osalvador@suse.de>
+ <20200716123810.25292-13-osalvador@suse.de>
+ <f7387d64d0024d15a1bc821a8e19b8f0@DB7PR04MB5180.eurprd04.prod.outlook.com>
+User-Agent: Roundcube Webmail
+Message-ID: <c19693eb3600832976f44ffa746a263a@suse.de>
+X-Sender: osalvador@suse.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter,
+On 2020-07-17 08:55, HORIGUCHI NAOYA wrote:
+> I ran Quan Cai's test program (https://github.com/cailca/linux-mm) on a
+> small (4GB memory) VM, and weiredly found that (1) the target hugepages
+> are not always dissolved and (2) dissovled hugetpages are still counted
+> in "HugePages_Total:". See below:
+> 
+>     $ ./random 1
+>     - start: migrate_huge_offline
+>     - use NUMA nodes 0,1.
+>     - mmap and free 8388608 bytes hugepages on node 0
+>     - mmap and free 8388608 bytes hugepages on node 1
+>     madvise: Cannot allocate memory
+> 
+>     $ cat /proc/meminfo
+>     MemTotal:        4026772 kB
+>     MemFree:          976300 kB
+>     MemAvailable:     892840 kB
+>     Buffers:           20936 kB
+>     Cached:            99768 kB
+>     SwapCached:         5904 kB
+>     Active:            84332 kB
+>     Inactive:         116328 kB
+>     Active(anon):      27944 kB
+>     Inactive(anon):    68524 kB
+>     Active(file):      56388 kB
+>     Inactive(file):    47804 kB
+>     Unevictable:        7532 kB
+>     Mlocked:               0 kB
+>     SwapTotal:       2621436 kB
+>     SwapFree:        2609844 kB
+>     Dirty:                56 kB
+>     Writeback:             0 kB
+>     AnonPages:         81764 kB
+>     Mapped:            54348 kB
+>     Shmem:              8948 kB
+>     KReclaimable:      22744 kB
+>     Slab:              52056 kB
+>     SReclaimable:      22744 kB
+>     SUnreclaim:        29312 kB
+>     KernelStack:        3888 kB
+>     PageTables:         2804 kB
+>     NFS_Unstable:          0 kB
+>     Bounce:                0 kB
+>     WritebackTmp:          0 kB
+>     CommitLimit:     3260612 kB
+>     Committed_AS:     828196 kB
+>     VmallocTotal:   34359738367 kB
+>     VmallocUsed:       19260 kB
+>     VmallocChunk:          0 kB
+>     Percpu:             5120 kB
+>     HardwareCorrupted:  5368 kB
+>     AnonHugePages:     18432 kB
+>     ShmemHugePages:        0 kB
+>     ShmemPmdMapped:        0 kB
+>     FileHugePages:         0 kB
+>     FilePmdMapped:         0 kB
+>     CmaTotal:              0 kB
+>     CmaFree:               0 kB
+>     HugePages_Total:    1342     // still counted as hugetlb pages.
+>     HugePages_Free:        0     // all hugepage are still allocated
+> (or leaked?)
+>     HugePages_Rsvd:        0
+>     HugePages_Surp:      762     // some are counted in surplus.
+>     Hugepagesize:       2048 kB
+>     Hugetlb:         2748416 kB
+>     DirectMap4k:      112480 kB
+>     DirectMap2M:     4081664 kB
+> 
+> 
+>     $ page-types -b hwpoison
+>                  flags      page-count       MB  symbolic-flags
+>              long-symbolic-flags
+>     0x0000000000080008             421        1
+> ___U_______________X_______________________      uptodate,hwpoison
+>     0x00000000000a8018               1        0
+> ___UD__________H_G_X_______________________
+> uptodate,dirty,compound_head,huge,hwpoison
+>     0x00000000000a801c             920        3
+> __RUD__________H_G_X_______________________
+> referenced,uptodate,dirty,compound_head,huge,hwpoison
+>                  total            1342        5
+> 
+> This means that some hugepages are dissolved, but the others not,
+> maybe which is not desirable.
+> I'll dig this more later but just let me share at first.
+> 
+> A few minor comment below ...
 
-Let me add another note. TASK_TRACED/TASK_STOPPED was always protected by
-->siglock. In particular, ttwu(__TASK_TRACED) must be always called with
-->siglock held. That is why ptrace_freeze_traced() assumes it can safely
-do s/TASK_TRACED/__TASK_TRACED/ under spin_lock(siglock).
 
-Can this change race with
+Uhm, weird.
 
-		if (signal_pending_state(prev->state, prev)) {
-			prev->state = TASK_RUNNING;
-		}
+I will be taking a look today.
 
-in __schedule() ? Hopefully not, signal-state is protected by siglock too.
-
-So I think this logic was correct even if it doesn't look nice. But "doesn't
-look nice" is true for the whole ptrace code ;)
-
-On 07/20, Oleg Nesterov wrote:
->
-> On 07/20, Jiri Slaby wrote:
-> >
-> > You tackled it, we cherry-picked dbfb089d360 to our kernels. Ccing more
-> > people.
->
-> Thanks... so with this patch __schedule() does
->
-> 	prev_state = prev->state;
->
-> 	...
->
-> 	if (!preempt && prev_state && prev_state == prev->state) {
-> 		if (signal_pending_state(prev_state, prev)) {
-> 			prev->state = TASK_RUNNING;
-> 		} else {
->
-> and ptrace_freeze_traced() can change ->state in between. This means
-> that this task can return from __schedule() with ->state != RUNNING,
-> this can explain BUG_ON(task_is_stopped_or_traced) in do_notify_parent()
-> you reported.
->
-> Oleg.
+Thanks
 
