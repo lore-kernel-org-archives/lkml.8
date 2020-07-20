@@ -2,117 +2,69 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DE2C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8178921702
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:32:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L3CaE1u0"
+	by mail.kernel.org (Postfix) with ESMTP id E85E121702
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:35:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgGTXc3 (ORCPT
+        id S1727050AbgGTXfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55180 "EHLO
+        Mon, 20 Jul 2020 19:35:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgGTXc2 (ORCPT
+        with ESMTP id S1726521AbgGTXfA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 19:32:28 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE1B9C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:32:28 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id w17so9402624ply.11
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:32:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=+uXLuocAO8lxCToiXlu/ReZ2hnWMT9ytGR6dkaeKVcg=;
-        b=L3CaE1u0T+Opv+kLiWcX3Ec5X59jjbA9ANZp1cgG9bOS3DXa2o1L9a9YEcj4cXlKC2
-         YpsMhC0kPyoFSgBcTddfFOIKE7LiXt/QMGZWsarCu2NGjirgyXZxVIhiB74qP1gv62v9
-         Q1bvn8ox2SETeiMeFmiw8sTgBuT2J4USRqn5s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=+uXLuocAO8lxCToiXlu/ReZ2hnWMT9ytGR6dkaeKVcg=;
-        b=YhqOtSS1hheTeXENhGlBmufsj7y03BgzXreiHkSPMzXzPvRX0psnIuNk14sPeGGeHI
-         AOAeE4JfhAcXf3LSJbR903xv5D2OMOTtq/av4DMLFgc1Jkg+dZIx/hlo5L1U5GKkDw1m
-         e5CNi5pooqCTLNsk36JA2GqtNiNbCGcvcLyGneSYfjpQN01wUMLF+/Ej8p/OPCvoRL5f
-         4GnT5LE489zfGPPG5/uN1/WRxbV1VHbSRHWV4jMEjXbmB5y7VC1pc1921iHMLvRA42d2
-         lEoFEvfs5sSLDpW9bTJKhJTaDP/DmymdpsefbOnx37DjhO3vX23ABr+7N1Cft0w0+zWs
-         Ko7g==
-X-Gm-Message-State: AOAM532sy9zPOnOo4IQUOe4osm2Qa3bLs9cdt97uJLATwyXqKlyty/K1
-        GarNkOGC9Cq45to7KeX97ZSfPA==
-X-Google-Smtp-Source: ABdhPJyzZqIFkJvQhLWQiuq3uOD8kLbvlBxMBgJb3gbD3D7nIYizU92Vunzu1FrFGUCCZSH/KMaTmw==
-X-Received: by 2002:a17:90a:7487:: with SMTP id p7mr1715589pjk.233.1595287948100;
-        Mon, 20 Jul 2020 16:32:28 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id a9sm18301137pfr.103.2020.07.20.16.32.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 16:32:27 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <91a8eef836c1939cb57942c6fdcf2772@codeaurora.org>
-References: <20200707184125.15114-1-khsieh@codeaurora.org> <159527632812.1987609.6364896740387949838@swboyd.mtv.corp.google.com> <91a8eef836c1939cb57942c6fdcf2772@codeaurora.org>
-Subject: Re: [PATCH] drm/msm/dp: Add DP compliance tests on Snapdragon Chipsets
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     robdclark@gmail.com, sean@poorly.run, tanmay@codeaurora.org,
-        abhinavk@codeaurora.org, aravindh@codeaurora.org, airlied@linux.ie,
-        daniel@ffwll.ch, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-To:     khsieh@codeaurora.org
-Date:   Mon, 20 Jul 2020 16:32:26 -0700
-Message-ID: <159528794676.3847286.1584696687662833591@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        Mon, 20 Jul 2020 19:35:00 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E4DC061794;
+        Mon, 20 Jul 2020 16:35:00 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0596B11E8EC0A;
+        Mon, 20 Jul 2020 16:34:58 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 16:34:58 -0700 (PDT)
+Message-Id: <20200720.163458.475401930020484350.davem@davemloft.net>
+To:     ndesaulniers@google.com
+Cc:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        oss-drivers@netronome.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kuba@kernel.org, elder@linaro.org
+Subject: Re: [PATCH v2 0/2 net] bitfield.h cleanups
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <CAKwvOdkGmgdh6-4VRUGkd1KRC-PgFcGwP5vKJvO9Oj3cB_Qh6Q@mail.gmail.com>
+References: <20200708230402.1644819-1-ndesaulniers@google.com>
+        <CAKwvOdmXtFo8YoNd7pgBnTQEwTZw0nGx-LypDiFKRR_HzZm9aA@mail.gmail.com>
+        <CAKwvOdkGmgdh6-4VRUGkd1KRC-PgFcGwP5vKJvO9Oj3cB_Qh6Q@mail.gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 Jul 2020 16:34:59 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting khsieh@codeaurora.org (2020-07-20 15:48:13)
-> On 2020-07-20 13:18, Stephen Boyd wrote:
-> > Quoting Kuogee Hsieh (2020-07-07 11:41:25)
-> >>  drivers/gpu/drm/msm/dp/dp_power.c           |  32 +-
-> >>  drivers/gpu/drm/msm/dp/dp_power.h           |   1 +
-> >>  drivers/gpu/drm/msm/dp/dp_reg.h             |   1 +
-> >>  17 files changed, 861 insertions(+), 424 deletions(-)
-> >=20
-> > It seems to spread various changes throughout the DP bits and only has =
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Mon, 20 Jul 2020 12:48:38 -0700
 
-> > a
-> > short description about what's changing. Given that the series above
-> > isn't merged it would be better to get rid of this change and make the
-> > changes in the patches that introduce these files.
-> >=20
->=20
-> Yes, the base DP driver is not yet merged as its still in reviews and=20
-> has been for a while.
-> While it is being reviewed, different developers are working on=20
-> different aspects of DP such as base DP driver, DP compliance, audio etc =
+> Hi David, bumping for review.
 
-> to keep things going in parallel.
-> To maintain the authorship of the different developers, we prefer having =
+If it's not active in my networking patchwork you can't just bump your original
+submission like this.
 
-> them as separate changes and not merge them.
-> We can make all these changes as part of the same series if that shall=20
-> help to keep things together but would prefer the changes themselves to=20
-> be separate.
-> Please consider this and let us know if that works.
->=20
+You have to submit your series entirely again.
 
-I'm not the maintainer here so it's not really up to me, but this is why
-we have the Co-developed-by tag, to show that multiple people worked on
-some patch. The patch is supposed to logically stand on its own
-regardless of how many people worked on it. Authorship is a single
-person but the Co-developed-by tag helps express that more than one
-person is the actual author of the patch. Can you use that tag instead
-and then squash this into the other DP patches?
+And if it is in patchwork, such "bumping" is %100 unnecessary.  It's
+in my queue, it is not lost, and I will process it when I have the
+time.
+
+Thank you.
