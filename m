@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA62C43446
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0E3C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD3822070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082B620773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:23:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262225;
-	bh=KJc236Beqe715ZNP7qUMd5cLfYkrychBQiDwOL6cJeo=;
+	s=default; t=1595262230;
+	bh=gY7M0vHhcIvdmRdJ5D1OZsFINYfqQm6+7Tw5ej3VREQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sKoUXc26w6lfR5v/HfZT0vu76Fe7jkG5Jc7wClBg1kfchEBcqhySmX5x8XENIfKJ9
-	 dSjXUbEFy7ynUdKArkKX//NYBSTRy0VoPkl/xuCIDXLc2zpgAMwwWFuqWYJiCKE6+X
-	 ij1f/ip3P3EDeihDrYLhJNse7+PPLO7XI5VHgzbY=
+	b=xlNzbZoJIZ0qIcqlKS/2E9GjKg2YFME5wPJ+VmL2OK7qyVINvkKxBEZbZ1ABSstHb
+	 3lU+3i105zPnEKSsYjogamuppH0/AZlAeFeTOFTQcMsFY8EEfHJbyW/nio3ps3zhps
+	 1Zw6n4BkWeekRwxAFjB84UMT13T4hUiXW2AM/clA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732895AbgGTQEs (ORCPT
+        id S2387643AbgGTQXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:04:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39792 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:23:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732045AbgGTQEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:04:43 -0400
+        id S1732893AbgGTQEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:04:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAD8320734;
-        Mon, 20 Jul 2020 16:04:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F41C20734;
+        Mon, 20 Jul 2020 16:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261082;
-        bh=KJc236Beqe715ZNP7qUMd5cLfYkrychBQiDwOL6cJeo=;
+        s=default; t=1595261087;
+        bh=gY7M0vHhcIvdmRdJ5D1OZsFINYfqQm6+7Tw5ej3VREQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kIA+4GE0/2elSQjbaXk2dNQGoH9HAbxTF6n2A8aLRCOHcaG4GE3NXrIElgF0bZVO6
-         ExMocb+NwvfDTl1a6RSEWQwbrLMWeghdJqFxYZUv6isjlRyhhlskB3WKqoyFcWpNm9
-         Z2fZFxSeZanXBsCoPYK4S2SpwkTehw88KxyQhjxw=
+        b=Uq5N5tSoHfZOw01btgiM11rZ/lLIRDmX5lJs8AGDYyf3Z/uJJdLdGRUnB+Rp8lt76
+         PupVg6Lu721wnyyy1P+5sJ7V2wvT0BUnaL0NAbmBzkO4sPU/z1D2FR4mxm5OCEojzj
+         3UDcQx9CQe5pjZOlZ43O31Z955Tw63yUkLkah5Eg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=B6rgen=20Storvist?= <jorgen.storvist@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 162/215] USB: serial: option: add GosunCn GM500 series
-Date:   Mon, 20 Jul 2020 17:37:24 +0200
-Message-Id: <20200720152827.888827755@linuxfoundation.org>
+        stable@vger.kernel.org, Le Ma <le.ma@amd.com>,
+        Xiaojie Yuan <xiaojie.yuan@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 205/215] drm/amdgpu/sdma5: fix wptr overwritten in ->get_wptr()
+Date:   Mon, 20 Jul 2020 17:38:07 +0200
+Message-Id: <20200720152829.915314645@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -60,77 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jörgen Storvist <jorgen.storvist@gmail.com>
+From: Xiaojie Yuan <xiaojie.yuan@amd.com>
 
-commit 08d4ef5cc9203a113702f24725f6cf4db476c958 upstream.
+commit 05051496b2622e4d12e2036b35165969aa502f89 upstream.
 
-Add USB IDs for GosunCn GM500 series cellular modules.
+"u64 *wptr" points to the the wptr value in write back buffer and
+"*wptr = (*wptr) >> 2;" results in the value being overwritten each time
+when ->get_wptr() is called.
 
-RNDIS config:
-usb-devices
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 12 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=305a ProdID=1404 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 1 Cls=e0(wlcon) Sub=01 Prot=03 Driver=rndis_host
-I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
-I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+umr uses /sys/kernel/debug/dri/0/amdgpu_ring_sdma0 to get rptr/wptr and
+decode ring content and it is affected by this issue.
 
-MBIM config:
-usb-devices
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 11 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=305a ProdID=1405 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
-I:  If#=0x4 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
+fix and simplify the logic similar as sdma_v4_0_ring_get_wptr().
 
-ECM config:
-usb-devices
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 13 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=305a ProdID=1406 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 1 Cls=02(commc) Sub=06 Prot=00 Driver=cdc_ether
-I:  If#=0x4 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=cdc_ether
+v2: fix for sdma5.2 as well
+v3: drop sdma 5.2 changes for 5.8 and stable
 
-Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
+Suggested-by: Le Ma <le.ma@amd.com>
+Signed-off-by: Xiaojie Yuan <xiaojie.yuan@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c |   26 ++++++++------------------
+ 1 file changed, 8 insertions(+), 18 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -2028,6 +2028,9 @@ static const struct usb_device_id option
- 	  .driver_info = RSVD(4) | RSVD(5) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0105, 0xff),			/* Fibocom NL678 series */
- 	  .driver_info = RSVD(6) },
-+	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1404, 0xff) },			/* GosunCn GM500 RNDIS */
-+	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1405, 0xff) },			/* GosunCn GM500 MBIM */
-+	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1406, 0xff) },			/* GosunCn GM500 ECM/NCM */
- 	{ } /* Terminating entry */
- };
- MODULE_DEVICE_TABLE(usb, option_ids);
+--- a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
+@@ -286,30 +286,20 @@ static uint64_t sdma_v5_0_ring_get_rptr(
+ static uint64_t sdma_v5_0_ring_get_wptr(struct amdgpu_ring *ring)
+ {
+ 	struct amdgpu_device *adev = ring->adev;
+-	u64 *wptr = NULL;
+-	uint64_t local_wptr = 0;
++	u64 wptr;
+ 
+ 	if (ring->use_doorbell) {
+ 		/* XXX check if swapping is necessary on BE */
+-		wptr = ((u64 *)&adev->wb.wb[ring->wptr_offs]);
+-		DRM_DEBUG("wptr/doorbell before shift == 0x%016llx\n", *wptr);
+-		*wptr = (*wptr) >> 2;
+-		DRM_DEBUG("wptr/doorbell after shift == 0x%016llx\n", *wptr);
++		wptr = READ_ONCE(*((u64 *)&adev->wb.wb[ring->wptr_offs]));
++		DRM_DEBUG("wptr/doorbell before shift == 0x%016llx\n", wptr);
+ 	} else {
+-		u32 lowbit, highbit;
+-
+-		wptr = &local_wptr;
+-		lowbit = RREG32(sdma_v5_0_get_reg_offset(adev, ring->me, mmSDMA0_GFX_RB_WPTR)) >> 2;
+-		highbit = RREG32(sdma_v5_0_get_reg_offset(adev, ring->me, mmSDMA0_GFX_RB_WPTR_HI)) >> 2;
+-
+-		DRM_DEBUG("wptr [%i]high== 0x%08x low==0x%08x\n",
+-				ring->me, highbit, lowbit);
+-		*wptr = highbit;
+-		*wptr = (*wptr) << 32;
+-		*wptr |= lowbit;
++		wptr = RREG32(sdma_v5_0_get_reg_offset(adev, ring->me, mmSDMA0_GFX_RB_WPTR_HI));
++		wptr = wptr << 32;
++		wptr |= RREG32(sdma_v5_0_get_reg_offset(adev, ring->me, mmSDMA0_GFX_RB_WPTR));
++		DRM_DEBUG("wptr before shift [%i] wptr == 0x%016llx\n", ring->me, wptr);
+ 	}
+ 
+-	return *wptr;
++	return wptr >> 2;
+ }
+ 
+ /**
 
 
