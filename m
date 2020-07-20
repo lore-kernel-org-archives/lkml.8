@@ -2,71 +2,89 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AA5C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F763C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 922C520B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:19:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595215150;
-	bh=U4xZaTXPavwGjE6wjx6abzQrdFTPKV9Q1lnbcwX5aQ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=glWNhPrCUzv5TukDyhIFzM7jKaTJSUg7Nrt8Y7TnFfsK12p6JjFQe5cDWJv+L1SPm
-	 tyglw5VJA52IhWAItEWz+2fFXEEkrrrOmSTSGoWfIyEuQca2sTwnnSAJ+LkKFK+AD3
-	 VR3IvlDyCeKCpRh7yH5g5hnr+Fp8PYxjKQaAPlso=
+	by mail.kernel.org (Postfix) with ESMTP id 6A6F620724
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgGTDTJ (ORCPT
+        id S1726983AbgGTDU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 23:19:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbgGTDTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 23:19:09 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BA832080D;
-        Mon, 20 Jul 2020 03:19:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595215148;
-        bh=U4xZaTXPavwGjE6wjx6abzQrdFTPKV9Q1lnbcwX5aQ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SC8+13t9DW8+6+LqNG30/oWMv3xC6Rkq4Fv6+to44/1jeuYiGYsuWm9lRIn77tEmg
-         Eq7j3dcIQw4p05g79arhiUvKs1ughB9Qy66Pr65Yj4jEgEWWbRwMF2RdiWrwztcDcb
-         DTsWz4pH9EIM5TwNBIkCKWuMjP62C1d0D97gq0iI=
-Date:   Mon, 20 Jul 2020 11:18:58 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Chris Healy <cphealy@gmail.com>
-Cc:     s.hauer@pengutronix.de, stefan@agner.ch, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andrew.smirnov@gmail.com,
-        Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: vf610-zii-ssmb-dtu: Add no-sdio/no-sd
- properties
-Message-ID: <20200720031734.GK11560@dragon>
-References: <20200715213148.26905-1-cphealy@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715213148.26905-1-cphealy@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sun, 19 Jul 2020 23:20:57 -0400
+Received: from smtp23.cstnet.cn ([159.226.251.23]:41796 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726499AbgGTDU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 23:20:57 -0400
+Received: from localhost (unknown [159.226.5.99])
+        by APP-03 (Coremail) with SMTP id rQCowAB3fwMICxVf3jTfAQ--.59253S2;
+        Mon, 20 Jul 2020 11:10:00 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     jdmason@kudzu.us, davem@davemloft.net, kuba@kernel.org,
+        snelson@pensando.io, hkallweit1@gmail.com, mhabets@solarflare.com,
+        vulab@iscas.ac.cn, mst@redhat.com, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] net: vxge-main: Remove unnecessary cast in kfree()
+Date:   Mon, 20 Jul 2020 03:09:59 +0000
+Message-Id: <20200720030959.7365-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: rQCowAB3fwMICxVf3jTfAQ--.59253S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JrWxurW8uryruw4DurWUXFb_yoWkAwbE9F
+        WIqr1rWrs8G3y2kw4UCrn3Zr9I9Fs8X34fuayxKrZxAayDJrZ8Ar18XFsavr95Wr1fGF9x
+        Jwn2yryfW340qjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb3AFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7
+        v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF
+        7I0E8cxan2IY04v7MxkIecxEwVAFwVW8GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+        67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+        CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+        3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCT
+        nIWIevJa73UjIFyTuYvjfUenmRUUUUU
+X-Originating-IP: [159.226.5.99]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiAgIDA1Jhbk1DqQAAs6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 02:31:48PM -0700, Chris Healy wrote:
-> esdhc0 is connected to an eMMC, so it is safe to pass the "no-sdio"/"no-sd"
-> properties.
-> 
-> esdhc1 is wired to a standard SD socket, so pass the "no-sdio" property.
-> 
-> Signed-off-by: Chris Healy <cphealy@gmail.com>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Remove unnecassary casts in the argument to kfree.
 
-Applied, thanks.
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ drivers/net/ethernet/neterion/vxge/vxge-main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/neterion/vxge/vxge-main.c b/drivers/net/ethernet/neterion/vxge/vxge-main.c
+index 9b63574b6202..3a43ec603a8b 100644
+--- a/drivers/net/ethernet/neterion/vxge/vxge-main.c
++++ b/drivers/net/ethernet/neterion/vxge/vxge-main.c
+@@ -1075,7 +1075,7 @@ static int vxge_mac_list_del(struct vxge_vpath *vpath, struct macInfo *mac)
+ 	list_for_each_safe(entry, next, &vpath->mac_addr_list) {
+ 		if (((struct vxge_mac_addrs *)entry)->macaddr == del_mac) {
+ 			list_del(entry);
+-			kfree((struct vxge_mac_addrs *)entry);
++			kfree(entry);
+ 			vpath->mac_addr_cnt--;
+ 
+ 			if (is_multicast_ether_addr(mac->macaddr))
+@@ -2912,7 +2912,7 @@ static void vxge_free_mac_add_list(struct vxge_vpath *vpath)
+ 
+ 	list_for_each_safe(entry, next, &vpath->mac_addr_list) {
+ 		list_del(entry);
+-		kfree((struct vxge_mac_addrs *)entry);
++		kfree(entry);
+ 	}
+ }
+ 
+-- 
+2.17.1
+
