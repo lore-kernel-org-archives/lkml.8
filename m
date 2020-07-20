@@ -2,295 +2,147 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25058C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11355C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA0612250E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF25B2250E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:56:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="iVf/3KLj"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=biamp.com header.i=@biamp.com header.b="B9nHWytW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgGTDyQ (ORCPT
+        id S1726668AbgGTD4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 23:54:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726123AbgGTDyQ (ORCPT
+        Sun, 19 Jul 2020 23:56:04 -0400
+Received: from outbound-ip8b.ess.barracuda.com ([209.222.82.190]:50794 "EHLO
+        outbound-ip8b.ess.barracuda.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726123AbgGTD4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 23:54:16 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C843AC0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 20:54:15 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id k18so14072135qke.4
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 20:54:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nwv4yPsKXS69ogucNlUVJoIIl8vVneEnRMqzIyNPpLM=;
-        b=iVf/3KLj/BCKYhsXaq3EM3jxZzbKcHOnQ1q25MJOFAMP6fFR7yHhBfETbGYSc8ClF4
-         OzpztYl2FIh3vWzNWUYgraKIcP/fM1G/RTCHI0mUlf6zr16j90xBCatn/4ez9MhafxS/
-         U0oVUWKV4Nm4cp/nwv1aWFNPsvVC2L1gKH9KmteSUTlCGihXMwLAMWv9UqWzydh7iTXY
-         aAoF15JNN8eYsh2jpLQ37eWXAO8xwtWvnMsAC4J6vVLaEZ04puh0G3xAaRbvO0jRmweU
-         Yl51pfiqaxBR+cCHJEW8d3FXTFtk5Q6ml6XhhK/OrbjuRi9UDXUrLMEt5I4YfriUvVax
-         gS8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nwv4yPsKXS69ogucNlUVJoIIl8vVneEnRMqzIyNPpLM=;
-        b=Fixjb+U/Jl3dS4uXJDz+tjonpoLPhOTYHQakptS12SXj+qpPP4mPzbVoTvk3jPy2rb
-         MzWLPiPJhMT8unQwJBAxpubCsY3qIC4Wh9wwxBeoV8aUWRRU84Gm3aL4VKlfwl94K39G
-         GRofPTWblhl1PoMfaBgEzlG7ZmAa6h2rQ2zNaw3ib4wqMILzYzEEl123VqScmGVlcyHG
-         qzhw7EPh/QQLbWepVuahcnvxSrTrQ9Ia78IkQ1jtGZutc4ud4/CTkQUHLS46dyoAonmT
-         uHhBuvxl3dLwW5Q8ThTCARkoDy0+RuIY+5A6G3sikNCDCAy5jz8Z9+AUjsM+89IRUby0
-         0InQ==
-X-Gm-Message-State: AOAM530DPt+69R6uxy8MMHzVzKUCxGG+dkbHu/3bTlWnTRLaCbL5B0oT
-        R9ulPb4k0GzjvlE3thSv8HDhpw==
-X-Google-Smtp-Source: ABdhPJxh+TTjd0D2tbiGavkfYTeT2BTrRRV1cWBWtaKxUNPsxou6814URSBUZTrImQ98c9QSxJ/11w==
-X-Received: by 2002:a37:a38e:: with SMTP id m136mr19273967qke.162.1595217254861;
-        Sun, 19 Jul 2020 20:54:14 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id q65sm9826446qkf.50.2020.07.19.20.54.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 20:54:14 -0700 (PDT)
-Date:   Sun, 19 Jul 2020 23:54:12 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: linux-next: not-present page at swap_vma_readahead()
-Message-ID: <20200720035411.GB7354@lca.pw>
-References: <62A0ACFC-E023-4269-8121-F96B879A8C51@lca.pw>
- <81F06AA9-F25B-4342-9CF7-2763AC394A18@lca.pw>
- <874ktl1p7y.fsf@yhuang-dev.intel.com>
- <20200616011334.GA815@lca.pw>
- <CA2E3DE2DD06CA4FA11644750E4E292F454E35A9@SHSMSX104.ccr.corp.intel.com>
- <20200720021227.GA7354@lca.pw>
- <CA2E3DE2DD06CA4FA11644750E4E292F454E3B6D@SHSMSX104.ccr.corp.intel.com>
+        Sun, 19 Jul 2020 23:56:03 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2102.outbound.protection.outlook.com [104.47.58.102]) by mx4.us-east-2b.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Mon, 20 Jul 2020 03:55:59 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iD5nAqmPrV7yL64umLSgk9pSdTMs8ODF53px7AcemiiOxHcik1f1QDMVIprOEdI8g3k0FOHyVAu15B88wDgnkHeFtw3CyGY1RU43GxfXXNNBlI9+lATq0Vpja/gMUPcn+Jvxssbkn7nbCTTKrmzMq/ZNBewFXL+jNpm2d7euyRizZkt5wGWMDZgp9xJQyMK8bXGkoKLMFyYcwzetUyEyZ4v2iz1bWqxMybEbfAg4qDD2xypIoF2eroCOm5RxlS6tNUa61Ruo92cvO05qcH5oKq7yRRpSUiVGNgnye4faAmi5CFfatoenzZJWg1XXZMVlUH5sVEPJnGEB+OgluAG4Gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9m/hY38WXMFlT1+3eTngf4z3YIPyR3xllmcCMIeWPdg=;
+ b=IXyIOxyFwJ8c/hM6CSRSLZpFd1iRubHEcsSu4hWet/DmYgJODAX8QYcrXO1zVINwYTUSfGUSAWhS/4jkpSokc/Hc9xriFx7KuDNnx5PEA6kYaquPnymYzABN5nikXWdJ1W/wNSq1A1L62CSz/nALenwgA96j0ccz6dq+uKk88C86LBHoaQvhS3G5OlJUn4mxJ2oKCnm50qTC6YKNvF0eScLlcEeXtBmDGxAtXOK7N4FpVLTtN3+K2LZTePXv3wTUqN22cF7jF0JpMeXUCNlij3paVJ3jjnWhr0hJXwS/BoUVbSnY5LidlEPJ+ia6YSZBqaCfYCO/DMGPc7v0Ke7dfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=biamp.com; dmarc=pass action=none header.from=biamp.com;
+ dkim=pass header.d=biamp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=biamp.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9m/hY38WXMFlT1+3eTngf4z3YIPyR3xllmcCMIeWPdg=;
+ b=B9nHWytWYFFc1pJgb8qHo2Zwbs3t1CcjBYWpz8yOP+fwM4ASsL0X8j91MvKXo6jH0j2KRGqLS+JSnh+vcH3Tf2RNSS+Ri4pMMe6UFWlNX4rCV5WLbWINGDr+UK3G3F+2eJZuwzPNiAYIq2ol4+PT2xl36imsCROb6I9S2h+RoiI=
+Received: from MN2PR17MB2974.namprd17.prod.outlook.com (2603:10b6:208:dc::30)
+ by MN2PR17MB3774.namprd17.prod.outlook.com (2603:10b6:208:203::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Mon, 20 Jul
+ 2020 03:55:56 +0000
+Received: from MN2PR17MB2974.namprd17.prod.outlook.com
+ ([fe80::917e:95f1:fd23:39ac]) by MN2PR17MB2974.namprd17.prod.outlook.com
+ ([fe80::917e:95f1:fd23:39ac%5]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
+ 03:55:56 +0000
+From:   Shreyas Joshi <Shreyas.Joshi@biamp.com>
+To:     Shreyas Joshi <Shreyas.Joshi@biamp.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "shreyasjoshi15@gmail.com" <shreyasjoshi15@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] spi: spi-cadence: add support for chip select high
+Thread-Topic: [PATCH] spi: spi-cadence: add support for chip select high
+Thread-Index: AQHWVnXjIZ8I7rtqmEm/hkQ/IY2X3akBUfSAgA6UWOA=
+Date:   Mon, 20 Jul 2020 03:55:55 +0000
+Message-ID: <MN2PR17MB29743B1AE9419961F152EC73FC7B0@MN2PR17MB2974.namprd17.prod.outlook.com>
+References: <20200710045140.458-1-shreyas.joshi@biamp.com>
+ <20200710211655.1564-1-shreyas.joshi@biamp.com>
+In-Reply-To: <20200710211655.1564-1-shreyas.joshi@biamp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: biamp.com; dkim=none (message not signed)
+ header.d=none;biamp.com; dmarc=none action=none header.from=biamp.com;
+x-originating-ip: [203.54.172.50]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c5935cbc-e3b2-411f-4e4a-08d82c60ce40
+x-ms-traffictypediagnostic: MN2PR17MB3774:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR17MB3774B6D7E5AF95A48785F472FC7B0@MN2PR17MB3774.namprd17.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 11fCbGvC5W29z4SIfw0rDVSWI5ONg+zLHb9n+9o2GSSXv5xMtZwrtlN5amS6H9jo7YK9NxNR67VWv0lLMzSHnjC+Ss7hsq2Ki91r3zFHL9HGrolTUPRt+IT9cTCvVKQryGXtre+iyABOApdvcy5aQmRpSORoC891IrceXmx21QYhKZuo3MycK/NYVi2P7E6afQRtpThiOPAqkW6G+IvTSiR7Oou+/ZPLA6eeo4qYaj3YUtcCpo132w4BsD2fDVvuNWOJwX/ToJ8ecH6CjePOkTh//SXbVnlt+sfYOCMgKVUzxNMPMt5Rl5DZCK8j1nlwQMZHOrWjObaGE3cjQk2YDg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR17MB2974.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(376002)(346002)(39840400004)(136003)(76116006)(55016002)(83380400001)(66446008)(64756008)(66476007)(66946007)(66556008)(9686003)(5660300002)(52536014)(26005)(8936002)(33656002)(6506007)(71200400001)(7696005)(53546011)(478600001)(186003)(86362001)(110136005)(4326008)(316002)(8676002)(2906002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: QHMyHBzhibYnLTXJc9gjswPCyxP5IykWPVP8i2Vrueck40FReJFygKW4Qsw5w+GTkYeFVknH8zOGK+yls68GNVJyxPEqjP58/p7eK/yipvKRiKEJScUExhwqyo9+LhILds6hv83FMmD/sx3hXeugZ7152hBNxmBpjFSGFtLw0MLgorDlGlIwnenZU+0A9TfQbnuvVzm5OGjWr42F/axmfSwquvqcli+3FGyJaUKGS7jomFUyo7bQutpXPP7wZNhCA6MNlsP0KszV7wx8thwXXIU7XLptse59ZVpvzwGj1Z63fwmScfO+Ckt2RVFJZOmyuDoufsMny6duUXf6351Ny5MRyKfB4wCodFemLnXGj09cD2V73+zSmJ6aYOdL52b2eke8sytoX6wjy6GSg+cwMUEgzFDEtFCmEEj+IjCW+28qf3stSdjn3UIvjMhu06/uq2+35SfV1xoB7AY6/Q1mgrEVuyXwHDdnbtVLKZIHDkY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA2E3DE2DD06CA4FA11644750E4E292F454E3B6D@SHSMSX104.ccr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: biamp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR17MB2974.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5935cbc-e3b2-411f-4e4a-08d82c60ce40
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 03:55:56.0009
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 341ac572-066c-46f6-bf06-b2d0c7ddf1be
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2VrW7RD51r2DwBckfqcYy9x6M8ZfoILVI05ZM8Rew/6CHjpxxdvk5jPXLoTlOL9qtrnYBGilP8Fbdj4NAGW0oA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR17MB3774
+X-BESS-ID: 1595217359-893007-23819-404840-1
+X-BESS-VER: 2019.1_20200714.1757
+X-BESS-Apparent-Source-IP: 104.47.58.102
+X-BESS-Outbound-Spam-Score: 0.50
+X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.225590 [from 
+        cloudscan21-226.us-east-2b.ess.aws.cudaops.com]
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------
+        0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
+        0.50 BSF_SC0_SA_TO_FROM_ADDR_MATCH META: Sender Address Matches Recipient Address  
+X-BESS-Outbound-Spam-Status: SCORE=0.50 using account:ESS74049 scores of KILL_LEVEL=7.0 tests=BSF_BESS_OUTBOUND, BSF_SC0_SA_TO_FROM_ADDR_MATCH
+X-BESS-BRTS-Status: 1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 03:32:59AM +0000, Huang, Ying wrote:
-> Thanks!  Can you try the dbg patch attached?  That will print more debugging information when abnormal PTE pointer is detected.
+Were you able to patch my driver successfully?
 
-Here with both of your patches applied,
+-----Original Message-----
+From: Shreyas Joshi <shreyas.joshi@biamp.com>=20
+Sent: Saturday, 11 July 2020 7:17 AM
+To: broonie@kernel.org; linux-spi@vger.kernel.org; shreyasjoshi15@gmail.com
+Cc: linux-kernel@vger.kernel.org; Shreyas Joshi <Shreyas.Joshi@biamp.com>
+Subject: [PATCH] spi: spi-cadence: add support for chip select high
 
-[  183.627876][ T3959] ra_info: 8, 3, 4, 00000000aabe3209
-[  183.633160][ T3959] i: 0, pte: 00000000aabe3209, faddr: 0
-[  183.638574][ T3959] ra_info: 8, 3, 4, 00000000aabe3209
-[  183.643787][ T3959] i: 1, pte: 0000000006e61f24, faddr: 0
-[  183.649189][ T3959] ra_info: 8, 3, 4, 00000000aabe3209
-[  183.654371][ T3959] i: 2, pte: 00000000ce16a68e, faddr: 0
-[  183.851372][ T3839] ra_info: 8, 3, 4, 0000000085efad17
-[  183.856550][ T3839] i: 0, pte: 0000000085efad17, faddr: 0
-[  183.862503][ T3839] ==================================================================
-[  183.870563][ T3839] BUG: KASAN: slab-out-of-bounds in swapin_readahead+0x840/0xd60
-[  183.878147][ T3839] Read of size 8 at addr ffff008919f1ffe8 by task trinity-c128/3839
-[  183.886001][ T3839] CPU: 9 PID: 3839 Comm: trinity-c128 Not tainted 5.8.0-rc5-next-20200717+ #2
-[  183.894710][ T3839] Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
-[  183.905157][ T3839] Call trace:
-[  183.908314][ T3839]  dump_backtrace+0x0/0x398
-[  183.912680][ T3839]  show_stack+0x14/0x20
-[  183.916704][ T3839]  dump_stack+0x140/0x1c8
-[  183.920910][ T3839]  print_address_description.constprop.10+0x54/0x550
-[  183.927454][ T3839]  kasan_report+0x134/0x1b8
-[  183.931833][ T3839]  __asan_report_load8_noabort+0x2c/0x50
-[  183.937334][ T3839]  swapin_readahead+0x840/0xd60
-[  183.942049][ T3839]  do_swap_page+0xb1c/0x1a78
-[  183.946508][ T3839]  handle_mm_fault+0xfd0/0x2c50
-[  183.948789][ T3754] ra_info: 8, 3, 4, 00000000d0b6ebd5
-[  183.951229][ T3839]  do_page_fault+0x230/0x818
-[  183.956402][ T3754] i: 0, pte: 00000000d0b6ebd5, faddr: 0
-[  183.960896][ T3839]  do_translation_fault+0x90/0xb0
-[  183.966330][ T3754] get_swap_device: Bad swap file entry 58025a5a5a5a5a5a
-[  183.971172][ T3839]  do_mem_abort+0x64/0x180
-[  183.971192][ T3839]  el0_sync_handler+0x2a0/0x410
-[  183.971207][ T3839]  el0_sync+0x140/0x180
-[  183.977984][ T3754] ra_info: 8, 3, 4, 00000000d0b6ebd5
-[  183.977997][ T3754] i: 1, pte: 00000000530a7b17, faddr: 0
-[  183.982278][ T3839] Allocated by task 3699:
-[  183.982296][ T3839]  kasan_save_stack+0x24/0x50
-[  183.982310][ T3839]  __kasan_kmalloc.isra.10+0xc4/0xe0
-[  183.987003][ T3754] get_swap_device: Bad swap file entry 58025a5a5a5a5a5a
-[  183.987019][ T3754] ra_info: 8, 3, 4, 00000000d0b6ebd5
-[  183.991033][ T3839]  kasan_slab_alloc+0x14/0x20
-[  183.991048][ T3839]  slab_post_alloc_hook+0x58/0x5d0
-[  183.991064][ T3839]  kmem_cache_alloc+0x19c/0x448
-[  183.996185][ T3754] i: 2, pte: 00000000031f0751, faddr: 0
-[  183.996200][ T3754] get_swap_device: Bad swap file entry 58025a5a5a5a5a5a
-[  184.001617][ T3839]  create_object+0x58/0x960
-[  184.001639][ T3839]  kmemleak_alloc+0x2c/0x38
-[  184.001657][ T3839]  slab_post_alloc_hook+0x78/0x5d0
-[  184.025674][ T3830] ra_info: 8, 3, 4, 00000000d77f2b57
-[  184.027442][ T3839]  kmem_cache_alloc+0x19c/0x448
-[  184.032002][ T3830] i: 0, pte: 0026 (3737) used g  184.047047][ T193][ T3839]  co T3932] i: 0, pt59417][ T3932] i: 1, pte: 00000000e38ee039, faddr: 0
-[  184.059424][ T3932] ra_info: 8, 3, 4, 000000004ae69ce9
-[  184.059431][ T3932] i: 2, pte: 0000000035544c25, faddr: 0
-[  184.062563][ T3830] ra_info: 8, 3, 4, 00000000d77f2b57
-[  184.067511][ T3839]  _do_fork+0x128/0x11f8
-[  184.072663][ T3830] i: 2, pte: 000000002f241b20, faddr: 0
-[  184.077369][ T3839]  __do_sys_clone+0xac/0xd8
-[  184.110993][ T3997] ra_info: 8, 3, 4, 00000000d40684b7
-[  184.113421][ T3839]  __arm64_sys_clone+0xa0/0xf8
-[  184.116524][ T3832] ra_info: 8, 3, 4, 00000000b572965a
-[  184.116534][ T3832] i: 0, pte: 00000000b572965a, faddr: 0
-[  184.116541][ T3832] ra_info: 8, 3, 4, 00000000b572965a
-[  184.116549][ T3832] i: 1, pte: 000000007c91cc64, faddr: 0
-[  184.116556][ T3832] ra_info: 8, 3, 4, 00000000b572965a
-[  184.116563][ T3832] i: 2, pte: 0000000024f944e4, faddr: 0
-[  184.118541][ T3997] i: 0, pte: 00000000d40684b7, faddr: 0
-[  184.118552][ T3997] ra_info: 8, 3, 4, 00000000d40684b7
-[  184.123956][ T3839]  do_el0_svc+0x124/0x228
-[  184.123970][ T3839]  el0_sync_handler+0x260/0x410
-[  184.123988][ T3839]  el0_sync+0x140/0x180
-[  184.129119][ T3997] i: 1, pte: 0000000035d81ad0, faddr: 0
-[  184.134523][ T3839] The buggy address belongs to the object at ffff008919f1fd28
-[  184.134523][ T3839]  which belongs to the cache kmemleak_object of size 368
-[  184.134535][ T3839] The buggy address is located 336 bytes to the right of
-[  184.134535][ T3839]  368-byte region [ffff008919f1fd28, ffff008919f1fe98)
-[  184.134542][ T3839] The buggy address belongs to the page:
-[  184.139678][ T3997] ra_info: 8, 3, 4, 00000000d40684b7
-[  184.142537][ T3814] ra_info: 8, 3, 4, 000000005be43c1f
-[  184.142548][ T3814] i: 0, pte: 000000005be43c1f, faddr: 0
-[  184.142555][ T3814] ra_info: 8, 3, 4, 000000005be43c1f
-[  184.142563][ T3814] i: 1, pte: 00000000f65153b4, faddr: 0
-[  184.142570][ T3814] ra_info: 8, 3, 4, 000000005be43c1f
-[  184.142577][ T3814] i: 2, pte: 0000000057432c18, faddr: 0
-[  184.145074][ T3839] page:00000000ab369b24 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x8999f1
-[  184.145085][ T3839] flags: 0x7ffff800000200(slab)
-[  184.145097][ T3839] raw: 007ffff800000200 ffffffe0222685c8 ffffffe022268848 ffff000000322480
-[  184.145107][ T3839] raw: 0000000000000000 00000000005b005b 00000001ffffffff 0000000000000000
-[  184.145117][ T3839] page dumped because: kasan: bad access detected
-[  184.150249][ T3997] i: 2, pte: 0000000073c2aff0, faddr: 0
-[  184.154339][ T3839] Memory state around the buggy address:
-[  184.154347][ T3839]  ffff008919f1fe80: 00 00 00 fc fc fc fc fc fc fc fc fc fc fc fc fc
-[  184.154353][ T3839]  ffff008919f1ff00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[  184.154359][ T3839] >ffff008919f1ff80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[  184.154366][ T3839]                                                           ^
-[  184.171894][ T3831] ra_info: 8, 3, 4, 00000000cf472abe
-[  184.173847][ T3839]  ffff008919f20000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[  184.178980][ T3831] i: 0, pte: 00000000cf472abe, faddr: 0
-[  184.184366][ T3839]  ffff008919f20080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[  184.184370][ T3839] ==================================================================
-[  184.184374][ T3839] Disabling lock debugging due to kernel taint
-[  184.184407][ T3839] get_swap_device: Bad swap file entry 58025a5a5a5a5a5a
-[  184.184415][ T3839] ra_info: 8, 3, 4, 0000000085efad17
-[  184.184420][ T3839] i: 1, pte: 00000000e75f3a33, faddr: 0
-[  184.184425][ T3839] get_swap_device: Bad swap file entry 58025a5a5a5a5a5a
-[  184.184445][ T3839] ra_info: 8, 3, 4, 0000000085efad17
-[  184.189580][ T3831] ra_info: 8, 3, 4, 00000000cf472abe
-[  184.194979][ T3839] i: 2, pte: 0000000076a382e8, faddr: 0
-[  184.194985][ T3839] get_swap_device: Bad swap file entry 58025a5a5a5a5a5a
-[  184.211498][ T3749] ra_info: 8, 3, 4, 000000001c9e06b8
-[  184.216321][ T3831] i: 1, pte: 00000000d0a5b31e, faddr: 0
-[  184.220485][ T3749] i: 0, pte: 000000001c9e06b8, faddr: 0
-[  184.220499][ T3749] ra_info: 8, 3, 4, 000000001c9e06b8
-[  184.225255][ T3831] ra_info: 8, 3, 4, 00000000cf472abe
-[  184.229226][ T3749] i: 1, pte: 000000003db42685, faddr: 0
-[  184.229238][ T3749] ra_info: 8, 3, 4, 000000001c9e06b8
-[  184.234658][ T3831] i: 2, pte: 000000002ff7eea4, faddr: 0
-[  184.248902][ T3749] i: 2, pte: 00000000f6f36e76, faddr: 0
-[  184.278122][ T3946] ra_info: 8, 3, 4, 0000000084aa2721
-[  184.279536][ T3720] trinity-c9 (3720) used greatest stack depth: 19440 bytes left
-[  184.283740][ T3946] i: 0, pte: 0000000084aa2721, faddr: 0
-[  184.283746][ T3946] ra_info: 8, 3, 4, 0000000084aa2721
-[  184.283751][ T3946] i: 1, pte: 00000000baf34b7a, faddr: 0
-[  184.283757][ T3946] ra_info: 8, 3, 4, 0000000084aa2721
-[  184.283762][ T3946] i: 2, pte: 0000000097da2f82, faddr: 0
-[  184.311719][ T3789] ra_info: 8, 3, 4, 00000000642615f8
-[  184.346297][ T3846] ra_info: 8, 3, 4, 00000000bfc701b4
-[  184.348700][ T3789] i: 0, pte: 00000000642615f8, faddr: 0
-[  184.357498][ T3846] i: 0, pte: 00000000bfc701b4, faddr: 0
-[  184.362168][ T3789] ra_info: 8, 3, 4, 00000000642615f8
-[  184.370076][ T3846] ra_info: 8, 3, 4, 00000000bfc701b4
-[  184.377998][ T3789] i: 1, pte: 000000002e399dd1, faddr: 0
-[  184.378008][ T3789] ra_info: 8, 3, 4, 00000000642615f8
-[  184.385317][ T3846] i: 1, pte: 000000002f17c4d4, faddr: 0
-[  184.385324][ T3846] ra_info: 8, 3, 4, 00000000bfc701b4
-[  184.390452][ T3789] i: 2, pte: 000000006b9fd0f4, faddr: 0
-[  184.398368][ T3846] i: 2, pte: 00000000b6695126, faddr: 0
+The spi cadence driver should support spi-cs-high in mode bits so that the =
+peripherals that needs the chip select to be high active can use it. Add th=
+e SPI-CS-HIGH flag in the supported mode bits.
 
-> 
-> > From b6cad43ad3cf63d73e539e3eaadd4ec9d2744dc6 Mon Sep 17 00:00:00 2001
-> > From: Huang Ying <ying.huang@intel.com>
-> > Date: Fri, 10 Jul 2020 17:27:45 +0800
-> > Subject: [PATCH] dbg: Fix a logic hole in swap_ra_info()
-> >
-> > ---
-> >  mm/swap_state.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/mm/swap_state.c b/mm/swap_state.c
-> > index 05889e8e3c97..8481c15829b2 100644
-> > --- a/mm/swap_state.c
-> > +++ b/mm/swap_state.c
-> > @@ -669,12 +669,11 @@ static void swap_ra_info(struct vm_fault *vmf,
-> >       pte_t *tpte;
-> >  #endif
-> >
-> > +     ra_info->win = 1;
-> >       max_win = 1 << min_t(unsigned int, READ_ONCE(page_cluster),
-> >                            SWAP_RA_ORDER_CEILING);
-> > -     if (max_win == 1) {
-> > -             ra_info->win = 1;
-> > +     if (max_win == 1)
-> >               return;
-> > -     }
-> >
-> >       faddr = vmf->address;
-> >       orig_pte = pte = pte_offset_map(vmf->pmd, faddr);
-> > --
-> > 2.27.0
-> >
-> 
+Signed-off-by: Shreyas Joshi <shreyas.joshi@biamp.com>
+---
+ drivers/spi/spi-cadence.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> From 3ca7a9ba58541d8692d3f83cbded2ad17be23359 Mon Sep 17 00:00:00 2001
-> From: Huang Ying <ying.huang@intel.com>
-> Date: Mon, 20 Jul 2020 11:29:38 +0800
-> Subject: [PATCH] dbg: dump upon abnormal pte values
-> 
-> ---
->  mm/swap_state.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/mm/swap_state.c b/mm/swap_state.c
-> index 05889e8e3c97..c1973136d035 100644
-> --- a/mm/swap_state.c
-> +++ b/mm/swap_state.c
-> @@ -756,6 +756,17 @@ static struct page *swap_vma_readahead(swp_entry_t fentry, gfp_t gfp_mask,
->  	blk_start_plug(&plug);
->  	for (i = 0, pte = ra_info.ptes; i < ra_info.nr_pte;
->  	     i++, pte++) {
-> +		pte_t *tpte = pte_offset_map(vmf->pmd, vmf->address);
-> +
-> +		if (((unsigned long)pte >> PAGE_SHIFT) !=
-> +		    ((unsigned long)tpte >> PAGE_SHIFT)) {
-> +			pr_info("ra_info: %d, %d, %d, %p\n",
-> +				ra_info.win, ra_info.offset, ra_info.nr_pte,
-> +				ra_info.ptes);
-> +			pr_info("i: %d, pte: %p, faddr: %lx\n", i, pte,
-> +				vmf->address);
-> +		}
-> +		pte_unmap(tpte);
->  		pentry = *pte;
->  		if (pte_none(pentry))
->  			continue;
-> -- 
-> 2.27.0
-> 
+diff --git a/drivers/spi/spi-cadence.c b/drivers/spi/spi-cadence.c index 82=
+a0ee09cbe1..2b6b9c1ad9d0 100644
+--- a/drivers/spi/spi-cadence.c
++++ b/drivers/spi/spi-cadence.c
+@@ -556,7 +556,7 @@ static int cdns_spi_probe(struct platform_device *pdev)
+ 	master->unprepare_transfer_hardware =3D cdns_unprepare_transfer_hardware;
+ 	master->set_cs =3D cdns_spi_chipselect;
+ 	master->auto_runtime_pm =3D true;
+-	master->mode_bits =3D SPI_CPOL | SPI_CPHA;
++	master->mode_bits =3D SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
+=20
+ 	/* Set to default valid value */
+ 	master->max_speed_hz =3D clk_get_rate(xspi->ref_clk) / 4;
+--
+2.20.1
 
