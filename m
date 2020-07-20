@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775BEC433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBD2C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 521492065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 639762065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261376;
-	bh=JYZE1ZJF74xJACzrCIs0hmji7cehT0m4hN0HhSTsEbs=;
+	s=default; t=1595261380;
+	bh=+RogU8qMklfNJsyUiqiWxEMpF0Ok1b40BT273JMLjwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bOP5TjxLHiKobmYOTFViw6MtYmTrxzeMLbqjfmPc2pd1447eOqEz9VJchMeAV4IU1
-	 lmf4Lc2kAizh2R8uApJWocF0iMUHZn3Bl1+Uu1LPuL5rhWlq31Bc2ZeX7Mzf2hQweQ
-	 2OhHigj7PgjaRoeVYlSJ0eCbaRdvMqFCeS3zMOV8=
+	b=Ij/RQ/Wt4h3NBUoErvogAQhDuAV6nB4j7dReI1YmKsFhN+vvX74HkQW9Lgs2jg/+M
+	 obH8Cmo9uwQdLCj+B5p5t6K2+OG821gh2rA3LW9i3mVqoY7mgPCPUMndeGsG1AazcE
+	 JhjGOpnq0vaTgHTaihwZcOvwtOw7OJRWunAxsRKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732885AbgGTQJf (ORCPT
+        id S2387548AbgGTQJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:09:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47410 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:09:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387529AbgGTQJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:09:28 -0400
+        id S2387539AbgGTQJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:09:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 681292064B;
-        Mon, 20 Jul 2020 16:09:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FEC62064B;
+        Mon, 20 Jul 2020 16:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261368;
-        bh=JYZE1ZJF74xJACzrCIs0hmji7cehT0m4hN0HhSTsEbs=;
+        s=default; t=1595261375;
+        bh=+RogU8qMklfNJsyUiqiWxEMpF0Ok1b40BT273JMLjwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2mVdNIM2X8c7Vzgykcjl4krGSGx6GKpaB4nIvYUckZxiqOaTEwxf98MtuWXxr+7Fi
-         QyUVJqwTZALCVI8pK274SjemgEvtjMWKv2e8p9lvTbfx2ZQ5m2mUDry8Jilot2KMbd
-         YL0WDszSP1uHAwjdf/qIudTxumeM0w6I2bvsnRMU=
+        b=08CELHQUXl7GGsxkhWNqQpgsvMbq0/9TlehewhD7YDyJIdJ7j5BDAA0MHq+H/hjKN
+         oOy1TDZVBtptU+25tqmsBvXHo1b/0H3em8UCLtuVHjv5f7BSriZLD2ERR/Op2Dep6Z
+         Ac1E/0VV1YnNRm9xdx/+j0ZjEsSre4qf5EdWYBlQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 091/244] bus: ti-sysc: Fix wakeirq sleeping function called from invalid context
-Date:   Mon, 20 Jul 2020 17:36:02 +0200
-Message-Id: <20200720152830.163017771@linuxfoundation.org>
+Subject: [PATCH 5.7 093/244] bus: ti-sysc: Do not disable on suspend for no-idle
+Date:   Mon, 20 Jul 2020 17:36:04 +0200
+Message-Id: <20200720152830.262287752@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -61,60 +63,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 9f9113925018d500a95df539014d9ff11ac2c02d ]
+[ Upstream commit a55de412228cc5a2b4bf8d2a09849898102633e2 ]
 
-With CONFIG_DEBUG_ATOMIC_SLEEP enabled we can see the following with
-wakeirqs and serial console idled:
+If we have "ti,no-idle" specified for a module we must not disable
+the the module on suspend to keep things backwards compatible.
 
-BUG: sleeping function called from invalid context at drivers/bus/ti-sysc.c:242
-...
-(sysc_wait_softreset) from [<c0606894>] (sysc_enable_module+0x48/0x274)
-(sysc_enable_module) from [<c0606c5c>] (sysc_runtime_resume+0x19c/0x1d8)
-(sysc_runtime_resume) from [<c0606cf0>] (sysc_child_runtime_resume+0x58/0x84)
-(sysc_child_runtime_resume) from [<c06eb7bc>] (__rpm_callback+0x30/0x12c)
-(__rpm_callback) from [<c06eb8d8>] (rpm_callback+0x20/0x80)
-(rpm_callback) from [<c06eb434>] (rpm_resume+0x638/0x7fc)
-(rpm_resume) from [<c06eb658>] (__pm_runtime_resume+0x60/0x9c)
-(__pm_runtime_resume) from [<c06edc08>] (handle_threaded_wake_irq+0x24/0x60)
-(handle_threaded_wake_irq) from [<c01befec>] (irq_thread_fn+0x1c/0x78)
-(irq_thread_fn) from [<c01bf30c>] (irq_thread+0x140/0x26c)
-
-We have __pm_runtime_resume() call the sysc_runtime_resume() with spinlock
-held and interrupts disabled.
-
-Fixes: d46f9fbec719 ("bus: ti-sysc: Use optional clocks on for enable and wait for softreset bit")
+Fixes: 386cb76681ca ("bus: ti-sysc: Handle missed no-idle property in addition to no-idle-on-init")
+Reported-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/bus/ti-sysc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index db9541f385055..a160c3a1f09a3 100644
+index a3a279f30177c..3b0417a014946 100644
 --- a/drivers/bus/ti-sysc.c
 +++ b/drivers/bus/ti-sysc.c
-@@ -236,15 +236,14 @@ static int sysc_wait_softreset(struct sysc *ddata)
- 		syss_done = ddata->cfg.syss_mask;
+@@ -1278,7 +1278,8 @@ static int __maybe_unused sysc_noirq_suspend(struct device *dev)
  
- 	if (syss_offset >= 0) {
--		error = readx_poll_timeout(sysc_read_sysstatus, ddata, rstval,
--					   (rstval & ddata->cfg.syss_mask) ==
--					   syss_done,
--					   100, MAX_MODULE_SOFTRESET_WAIT);
-+		error = readx_poll_timeout_atomic(sysc_read_sysstatus, ddata,
-+				rstval, (rstval & ddata->cfg.syss_mask) ==
-+				syss_done, 100, MAX_MODULE_SOFTRESET_WAIT);
+ 	ddata = dev_get_drvdata(dev);
  
- 	} else if (ddata->cfg.quirks & SYSC_QUIRK_RESET_STATUS) {
--		error = readx_poll_timeout(sysc_read_sysconfig, ddata, rstval,
--					   !(rstval & sysc_mask),
--					   100, MAX_MODULE_SOFTRESET_WAIT);
-+		error = readx_poll_timeout_atomic(sysc_read_sysconfig, ddata,
-+				rstval, !(rstval & sysc_mask),
-+				100, MAX_MODULE_SOFTRESET_WAIT);
- 	}
+-	if (ddata->cfg.quirks & SYSC_QUIRK_LEGACY_IDLE)
++	if (ddata->cfg.quirks &
++	    (SYSC_QUIRK_LEGACY_IDLE | SYSC_QUIRK_NO_IDLE))
+ 		return 0;
  
- 	return error;
+ 	return pm_runtime_force_suspend(dev);
+@@ -1290,7 +1291,8 @@ static int __maybe_unused sysc_noirq_resume(struct device *dev)
+ 
+ 	ddata = dev_get_drvdata(dev);
+ 
+-	if (ddata->cfg.quirks & SYSC_QUIRK_LEGACY_IDLE)
++	if (ddata->cfg.quirks &
++	    (SYSC_QUIRK_LEGACY_IDLE | SYSC_QUIRK_NO_IDLE))
+ 		return 0;
+ 
+ 	return pm_runtime_force_resume(dev);
 -- 
 2.25.1
 
