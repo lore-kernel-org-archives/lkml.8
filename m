@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21D5C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAC9C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5C8206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BE2206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263281;
-	bh=IXXT0E0Vl8OIHfSze40IxrOU8LHgj8gyfchqlMvDDp4=;
+	s=default; t=1595263295;
+	bh=8OtSB7nWPHAUJcX3LrVccg62zsMc6i0VFnEsdZpoOHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P8AQBYCSbFqeRCDt1/Y6GTL2Og+vFP12oR3HDBuwaonYWgEhHu5ak0Rj8hpQCeSAh
-	 Ar69YmGF12i4SI9rgZsnJEUVAtnWYjtg5SONrJF+olhw5+hOQgH9bp3DO5xdyVWYtD
-	 Az+vV9NtXL51iy9qXhpPICp7qevwQlmJaSTM0qTE=
+	b=joKFDzds7J7uESKSjNMiVBffgYlh/3GfJ2xUDc4yBdJDp92f0vxuAV3B5z9rql41J
+	 7OtJq9OeEZgHonJkSDM2VFm+Q+oWpyNRzlTbJt6FmCFTJBzP71rhKXr1fivTth3pDm
+	 yUjhoSwaR1EoH0GiuHuHlILRHztnp9PlbicIWLMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389010AbgGTQlT (ORCPT
+        id S1731121AbgGTQle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:41:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40396 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:41:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730577AbgGTPpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:45:53 -0400
+        id S1730523AbgGTPp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:45:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 251462064B;
-        Mon, 20 Jul 2020 15:45:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F3D32065E;
+        Mon, 20 Jul 2020 15:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259952;
-        bh=IXXT0E0Vl8OIHfSze40IxrOU8LHgj8gyfchqlMvDDp4=;
+        s=default; t=1595259927;
+        bh=8OtSB7nWPHAUJcX3LrVccg62zsMc6i0VFnEsdZpoOHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fssVC9jxYOn7SU+s1fCjLEYkdqADN23mKCjX1lkewCaWAw64JPIFQ7b/ZXYUIOdUW
-         M9/rPQviyINUuRcSgg3LlLeNy3SOh+yRu6Mux1Rxhem5ktHuTClBsIF7S7qm/MTECY
-         TJT3wxNg4+JT3FNXB6Pjer3xgA9tqCc804oyYyE8=
+        b=gZDzv/zAI8gw/Ws3fw6NfgyRt5rtEn9dEWH4rS7x2lc1Ck5HGpZ1LUWrl1NOO+pwo
+         vXeqlb5idCSTwXjMuJHLK/5BB4RYaE54swDWVSqnWleInfBWtiIlCUSWKJpFrLsscQ
+         6QMsWJFJivTijPZcM7Ya7tyZLXRMOe+VPAu8hbSc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Wang <weiwan@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        James Chapman <jchapman@katalix.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 051/125] tcp: make sure listeners dont initialize congestion-control state
-Date:   Mon, 20 Jul 2020 17:36:30 +0200
-Message-Id: <20200720152805.484894108@linuxfoundation.org>
+Subject: [PATCH 4.14 043/125] l2tp: remove skb_dst_set() from l2tp_xmit_skb()
+Date:   Mon, 20 Jul 2020 17:36:22 +0200
+Message-Id: <20200720152805.087450344@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -61,145 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Paasch <cpaasch@apple.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit ce69e563b325f620863830c246a8698ccea52048 ]
+[ Upstream commit 27d53323664c549b5bb2dfaaf6f7ad6e0376a64e ]
 
-syzkaller found its way into setsockopt with TCP_CONGESTION "cdg".
-tcp_cdg_init() does a kcalloc to store the gradients. As sk_clone_lock
-just copies all the memory, the allocated pointer will be copied as
-well, if the app called setsockopt(..., TCP_CONGESTION) on the listener.
-If now the socket will be destroyed before the congestion-control
-has properly been initialized (through a call to tcp_init_transfer), we
-will end up freeing memory that does not belong to that particular
-socket, opening the door to a double-free:
+In the tx path of l2tp, l2tp_xmit_skb() calls skb_dst_set() to set
+skb's dst. However, it will eventually call inet6_csk_xmit() or
+ip_queue_xmit() where skb's dst will be overwritten by:
 
-[   11.413102] ==================================================================
-[   11.414181] BUG: KASAN: double-free or invalid-free in tcp_cleanup_congestion_control+0x58/0xd0
-[   11.415329]
-[   11.415560] CPU: 3 PID: 4884 Comm: syz-executor.5 Not tainted 5.8.0-rc2 #80
-[   11.416544] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-[   11.418148] Call Trace:
-[   11.418534]  <IRQ>
-[   11.418834]  dump_stack+0x7d/0xb0
-[   11.419297]  print_address_description.constprop.0+0x1a/0x210
-[   11.422079]  kasan_report_invalid_free+0x51/0x80
-[   11.423433]  __kasan_slab_free+0x15e/0x170
-[   11.424761]  kfree+0x8c/0x230
-[   11.425157]  tcp_cleanup_congestion_control+0x58/0xd0
-[   11.425872]  tcp_v4_destroy_sock+0x57/0x5a0
-[   11.426493]  inet_csk_destroy_sock+0x153/0x2c0
-[   11.427093]  tcp_v4_syn_recv_sock+0xb29/0x1100
-[   11.427731]  tcp_get_cookie_sock+0xc3/0x4a0
-[   11.429457]  cookie_v4_check+0x13d0/0x2500
-[   11.433189]  tcp_v4_do_rcv+0x60e/0x780
-[   11.433727]  tcp_v4_rcv+0x2869/0x2e10
-[   11.437143]  ip_protocol_deliver_rcu+0x23/0x190
-[   11.437810]  ip_local_deliver+0x294/0x350
-[   11.439566]  __netif_receive_skb_one_core+0x15d/0x1a0
-[   11.441995]  process_backlog+0x1b1/0x6b0
-[   11.443148]  net_rx_action+0x37e/0xc40
-[   11.445361]  __do_softirq+0x18c/0x61a
-[   11.445881]  asm_call_on_stack+0x12/0x20
-[   11.446409]  </IRQ>
-[   11.446716]  do_softirq_own_stack+0x34/0x40
-[   11.447259]  do_softirq.part.0+0x26/0x30
-[   11.447827]  __local_bh_enable_ip+0x46/0x50
-[   11.448406]  ip_finish_output2+0x60f/0x1bc0
-[   11.450109]  __ip_queue_xmit+0x71c/0x1b60
-[   11.451861]  __tcp_transmit_skb+0x1727/0x3bb0
-[   11.453789]  tcp_rcv_state_process+0x3070/0x4d3a
-[   11.456810]  tcp_v4_do_rcv+0x2ad/0x780
-[   11.457995]  __release_sock+0x14b/0x2c0
-[   11.458529]  release_sock+0x4a/0x170
-[   11.459005]  __inet_stream_connect+0x467/0xc80
-[   11.461435]  inet_stream_connect+0x4e/0xa0
-[   11.462043]  __sys_connect+0x204/0x270
-[   11.465515]  __x64_sys_connect+0x6a/0xb0
-[   11.466088]  do_syscall_64+0x3e/0x70
-[   11.466617]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   11.467341] RIP: 0033:0x7f56046dc469
-[   11.467844] Code: Bad RIP value.
-[   11.468282] RSP: 002b:00007f5604dccdd8 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-[   11.469326] RAX: ffffffffffffffda RBX: 000000000068bf00 RCX: 00007f56046dc469
-[   11.470379] RDX: 0000000000000010 RSI: 0000000020000000 RDI: 0000000000000004
-[   11.471311] RBP: 00000000ffffffff R08: 0000000000000000 R09: 0000000000000000
-[   11.472286] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-[   11.473341] R13: 000000000041427c R14: 00007f5604dcd5c0 R15: 0000000000000003
-[   11.474321]
-[   11.474527] Allocated by task 4884:
-[   11.475031]  save_stack+0x1b/0x40
-[   11.475548]  __kasan_kmalloc.constprop.0+0xc2/0xd0
-[   11.476182]  tcp_cdg_init+0xf0/0x150
-[   11.476744]  tcp_init_congestion_control+0x9b/0x3a0
-[   11.477435]  tcp_set_congestion_control+0x270/0x32f
-[   11.478088]  do_tcp_setsockopt.isra.0+0x521/0x1a00
-[   11.478744]  __sys_setsockopt+0xff/0x1e0
-[   11.479259]  __x64_sys_setsockopt+0xb5/0x150
-[   11.479895]  do_syscall_64+0x3e/0x70
-[   11.480395]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   11.481097]
-[   11.481321] Freed by task 4872:
-[   11.481783]  save_stack+0x1b/0x40
-[   11.482230]  __kasan_slab_free+0x12c/0x170
-[   11.482839]  kfree+0x8c/0x230
-[   11.483240]  tcp_cleanup_congestion_control+0x58/0xd0
-[   11.483948]  tcp_v4_destroy_sock+0x57/0x5a0
-[   11.484502]  inet_csk_destroy_sock+0x153/0x2c0
-[   11.485144]  tcp_close+0x932/0xfe0
-[   11.485642]  inet_release+0xc1/0x1c0
-[   11.486131]  __sock_release+0xc0/0x270
-[   11.486697]  sock_close+0xc/0x10
-[   11.487145]  __fput+0x277/0x780
-[   11.487632]  task_work_run+0xeb/0x180
-[   11.488118]  __prepare_exit_to_usermode+0x15a/0x160
-[   11.488834]  do_syscall_64+0x4a/0x70
-[   11.489326]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+   skb_dst_set_noref(skb, dst);
 
-Wei Wang fixed a part of these CDG-malloc issues with commit c12014440750
-("tcp: memset ca_priv data to 0 properly").
+without releasing the old dst in skb. Then it causes dst/dev refcnt leak:
 
-This patch here fixes the listener-scenario: We make sure that listeners
-setting the congestion-control through setsockopt won't initialize it
-(thus CDG never allocates on listeners). For those who use AF_UNSPEC to
-reuse a socket, tcp_disconnect() is changed to cleanup afterwards.
+  unregister_netdevice: waiting for eth0 to become free. Usage count = 1
 
-(The issue can be reproduced at least down to v4.4.x.)
+This can be reproduced by simply running:
 
-Cc: Wei Wang <weiwan@google.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Fixes: 2b0a8c9eee81 ("tcp: add CDG congestion control")
-Signed-off-by: Christoph Paasch <cpaasch@apple.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+  # modprobe l2tp_eth && modprobe l2tp_ip
+  # sh ./tools/testing/selftests/net/l2tp.sh
+
+So before going to inet6_csk_xmit() or ip_queue_xmit(), skb's dst
+should be dropped. This patch is to fix it by removing skb_dst_set()
+from l2tp_xmit_skb() and moving skb_dst_drop() into l2tp_xmit_core().
+
+Fixes: 3557baabf280 ("[L2TP]: PPP over L2TP driver core")
+Reported-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: James Chapman <jchapman@katalix.com>
+Tested-by: James Chapman <jchapman@katalix.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp.c      |    3 +++
- net/ipv4/tcp_cong.c |    2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ net/l2tp/l2tp_core.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2366,6 +2366,9 @@ int tcp_disconnect(struct sock *sk, int
- 	tp->snd_cwnd_cnt = 0;
- 	tp->window_clamp = 0;
- 	tp->delivered = 0;
-+	if (icsk->icsk_ca_ops->release)
-+		icsk->icsk_ca_ops->release(sk);
-+	memset(icsk->icsk_ca_priv, 0, sizeof(icsk->icsk_ca_priv));
- 	tcp_set_ca_state(sk, TCP_CA_Open);
- 	tp->is_sack_reneg = 0;
- 	tcp_clear_retrans(tp);
---- a/net/ipv4/tcp_cong.c
-+++ b/net/ipv4/tcp_cong.c
-@@ -199,7 +199,7 @@ static void tcp_reinit_congestion_contro
- 	icsk->icsk_ca_setsockopt = 1;
- 	memset(icsk->icsk_ca_priv, 0, sizeof(icsk->icsk_ca_priv));
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -1141,6 +1141,7 @@ static int l2tp_xmit_core(struct l2tp_se
  
--	if (sk->sk_state != TCP_CLOSE)
-+	if (!((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)))
- 		tcp_init_congestion_control(sk);
- }
+ 	/* Queue the packet to IP for output */
+ 	skb->ignore_df = 1;
++	skb_dst_drop(skb);
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	if (l2tp_sk_is_v6(tunnel->sock))
+ 		error = inet6_csk_xmit(tunnel->sock, skb, NULL);
+@@ -1214,10 +1215,6 @@ int l2tp_xmit_skb(struct l2tp_session *s
+ 		goto out_unlock;
+ 	}
  
+-	/* Get routing info from the tunnel socket */
+-	skb_dst_drop(skb);
+-	skb_dst_set(skb, sk_dst_check(sk, 0));
+-
+ 	inet = inet_sk(sk);
+ 	fl = &inet->cork.fl;
+ 	switch (tunnel->encap) {
 
 
