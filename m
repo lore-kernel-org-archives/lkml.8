@@ -2,137 +2,90 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84E0C43446
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D89C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9709F20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BQchVYHn"
+	by mail.kernel.org (Postfix) with ESMTP id D750620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595261982;
+	bh=BCseF6yIY3Ulzlh+XSpynom55BCuEJ7b8LcoqTRukrU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jPMzuLfQva0k2pv8dojU5ej4CeRrwaqenukaA7uaO9f/vDU7h2V6qQSw46iPdh6af
+	 t7QWpYXp94LiTaRfnV3DtZd7om7NBJnrMyWeFT0JurTA2X/cZZeZhjC6EpFsQnNlOb
+	 bB7Kgsgk5ZfK8mqPW4E4h6fIQaojXkqKvJU17s6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388263AbgGTQTv (ORCPT
+        id S2388376AbgGTQTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387796AbgGTQLY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:11:24 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD86C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:11:24 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id a12so18147055ion.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:11:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=BYqUr1CXn/LWbIDpCFv95fWgX/X0sTMN+KIEoKgBT9g=;
-        b=BQchVYHnt5hj8+P/O/cuHxnVgddKs3pyZkKWOh5J6SMY22W8AJIRR7krPhr7M7MXnj
-         F/Ud8Kh7hO9fD5nZqhlkBEhQ1vbil0jhOjxHGgwDmlBVPKvjaDigBtOKE8QVJWWma3YK
-         FlHwdEORKOaiKW9zaO6h4COzjoDdLYQxOyblL2GwPQrgn9ZTQ4+XuwbIbmW9g3p8aiDK
-         tpIkINkuVtBf8AMJPqGcpNXTv0WxHFoefO2WZ4PV2+4aGmW2/TCD7g6HAsLmpsY9fyIa
-         hP6f9DGDYQzeYc7FsKqwRQJDyJjZN+mGL4lS3RW7yn9+ECZVrmhW6XzvFHEGYjvXM8YX
-         P6Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BYqUr1CXn/LWbIDpCFv95fWgX/X0sTMN+KIEoKgBT9g=;
-        b=T5fEW+qptqUVfdX2okdqNo266ad63KTNIhMKSau8B2tTd4UcGJk2Af+1I8zCQRAP8B
-         fj8/1Ip3eO2DoLLmHpYHk92IuPoOdwqP5xr3GOPN5YdXsR1c4iRrHZAXdmh2pVZxwUOm
-         X8QlGL/8wuzpDKhHaUgJwC9Tb1YTRCxwVYS8fi3eCgvsb1iTJkx79uKawqTOnX7bSozv
-         7DTmVDXTZyfdQhOoYqf3VsZuXDCcCPz4tSF8NyCGbYEnN64iyT0p5n6nLXfOImRNQiGQ
-         WN7btul667PEnxPgMKCn/hXX+TB2chbKQOz+MVutn+F0EONpFUeXBYFHoiGWPeT7zK6R
-         lx4Q==
-X-Gm-Message-State: AOAM532sB4jnn8cq6pgRJGbGXNd+csqNZ6/Er32Fy55mR5QUmqWW847N
-        vsBrtvYd3tp7bt0Jya+hkfBgkOCoHvu/OA==
-X-Google-Smtp-Source: ABdhPJxE9tIgYp1nGsXBaolEaOkucSVFotXZks2yPE9czV87tx+DxvBw0F4pZ4M+UPtq4KQzbX0BCA==
-X-Received: by 2002:a02:694c:: with SMTP id e73mr27185708jac.17.1595261483087;
-        Mon, 20 Jul 2020 09:11:23 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id t7sm9034365iol.2.2020.07.20.09.11.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 09:11:22 -0700 (PDT)
-Subject: Re: [PATCH 0/2] task_put batching
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1595021626.git.asml.silence@gmail.com>
- <cf209c59-547e-0a69-244d-7c1fec00a978@kernel.dk>
- <b01e7f2d-d9a6-5593-3afb-5008d96695c6@gmail.com>
- <a2aa8de0-a2d0-3381-3415-4b523c2b66a5@kernel.dk>
- <5b20b94d-13f7-66ee-610a-6f37ec8caa8d@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <35740763-8123-a0d7-3cc6-593c7fcc63e7@kernel.dk>
-Date:   Mon, 20 Jul 2020 10:11:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 12:19:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387821AbgGTQLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:11:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48A222065E;
+        Mon, 20 Jul 2020 16:11:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595261494;
+        bh=BCseF6yIY3Ulzlh+XSpynom55BCuEJ7b8LcoqTRukrU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TWst2nKprIRSkcNt/lDmx1nVIRv9OvbMaqgn7s1Gs40AXuT6e4r47S/D29PKQgkIw
+         DJHTZQ8bQu5kwV60BCX7sax/Kmuo4eNixufvUGVnVp74M+tm7f25otS8Y/AQFxVUk2
+         u5oocfc49kP7K+m3u3UKjx/wrkzxRWT+/Psd60/U=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: [PATCH 5.7 135/244] mtd: rawnand: marvell: Use nand_cleanup() when the device is not yet registered
+Date:   Mon, 20 Jul 2020 17:36:46 +0200
+Message-Id: <20200720152832.268573955@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
+References: <20200720152825.863040590@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <5b20b94d-13f7-66ee-610a-6f37ec8caa8d@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/20/20 10:06 AM, Pavel Begunkov wrote:
-> On 20/07/2020 18:49, Jens Axboe wrote:
->> On 7/20/20 9:22 AM, Pavel Begunkov wrote:
->>> On 18/07/2020 17:37, Jens Axboe wrote:
->>>> On 7/18/20 2:32 AM, Pavel Begunkov wrote:
->>>>> For my a bit exaggerated test case perf continues to show high CPU
->>>>> cosumption by io_dismantle(), and so calling it io_iopoll_complete().
->>>>> Even though the patch doesn't yield throughput increase for my setup,
->>>>> probably because the effect is hidden behind polling, but it definitely
->>>>> improves relative percentage. And the difference should only grow with
->>>>> increasing number of CPUs. Another reason to have this is that atomics
->>>>> may affect other parallel tasks (e.g. which doesn't use io_uring)
->>>>>
->>>>> before:
->>>>> io_iopoll_complete: 5.29%
->>>>> io_dismantle_req:   2.16%
->>>>>
->>>>> after:
->>>>> io_iopoll_complete: 3.39%
->>>>> io_dismantle_req:   0.465%
->>>>
->>>> Still not seeing a win here, but it's clean and it _should_ work. For
->>>> some reason I end up getting the offset in task ref put growing the
->>>> fput_many(). Which doesn't (on the surface) make a lot of sense, but
->>>> may just mean that we have some weird side effects.
->>>
->>> It grows because the patch is garbage, the second condition is always false.
->>> See the diff. Could you please drop both patches?
->>
->> Hah, indeed. With this on top, it looks like it should in terms of
->> performance and profiles.
-> 
-> It just shows, that it doesn't really matters for a single-threaded app,
-> as expected. Worth to throw some contention though. I'll think about
-> finding some time to get/borrow a multi-threaded one.
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-But it kind of did here, ended up being mostly a wash in terms of perf
-here as my testing reported. With the incremental applied, it's up a bit
-over before the task put batching.
+commit 7a0c18fb5c71c6ac7d4662a145e4227dcd4a36a3 upstream.
 
->> I can just fold this into the existing one, if you'd like.
-> 
-> Would be nice. I'm going to double-check the counter and re-measure anyway.
-> BTW, how did you find it? A tool or a proc file would be awesome.
+Do not call nand_release() while the MTD device has not been
+registered, use nand_cleanup() instead.
 
-For this kind of testing, I just use t/io_uring out of fio. It's probably
-the lowest overhead kind of tool:
+Fixes: 02f26ecf8c77 ("mtd: nand: add reworked Marvell NAND controller driver")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Link: https://lore.kernel.org/linux-mtd/20200424164501.26719-4-miquel.raynal@bootlin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-# sudo taskset -c 0 t/io_uring -b512 -p1 /dev/nvme2n1
+---
+ drivers/mtd/nand/raw/marvell_nand.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--- 
-Jens Axboe
+--- a/drivers/mtd/nand/raw/marvell_nand.c
++++ b/drivers/mtd/nand/raw/marvell_nand.c
+@@ -2664,7 +2664,7 @@ static int marvell_nand_chip_init(struct
+ 		ret = mtd_device_register(mtd, NULL, 0);
+ 	if (ret) {
+ 		dev_err(dev, "failed to register mtd device: %d\n", ret);
+-		nand_release(chip);
++		nand_cleanup(chip);
+ 		return ret;
+ 	}
+ 
+
 
