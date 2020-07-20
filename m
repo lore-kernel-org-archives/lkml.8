@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C078C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3997FC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE0642070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A5D2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262393;
-	bh=WBOpl+qCM21lOclAgoFINRbipzR2TN0rGGdG9h3cQaA=;
+	s=default; t=1595262399;
+	bh=WvytojH2IH+WuRea9tphH3q+Rxcve4U2HgOws2wIJWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WXE6lGRfcB85tdpM9g2vRU3XbCQpiYx7K4+IT2acggpGNji3JM0OUBldOEzLWTL37
-	 oY7iI/Y538vcvfgyExgMvxASbEmTAPkaECN5AzFp2cGYhE8vVdkOpGLQS1QeKbx2Se
-	 Ds+TMESueQ9CU8LYSFLZl4Xsm/XhIAxrD/vf6VvQ=
+	b=buLrRhi3nKeaxBX/T0Uy2yeu3hlfqX2Ru7ps4XdHLPsVdrlPdoSsU/5m8uG8zVLQK
+	 QWUOUabIyT6o5RxFjR1C6y4SdGnZuoZr18JyIUn740BoSPKxEG2MO2EfEUT0dSX92Z
+	 Zyp3KrSZSJFxv6kEBeUVR1J10N/W6aKYAifSxHqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732264AbgGTQ0b (ORCPT
+        id S1728604AbgGTQ0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:26:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32960 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:26:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731830AbgGTQAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:00:05 -0400
+        id S1732340AbgGTP77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A6F320773;
-        Mon, 20 Jul 2020 16:00:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C5C722CAF;
+        Mon, 20 Jul 2020 15:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260805;
-        bh=WBOpl+qCM21lOclAgoFINRbipzR2TN0rGGdG9h3cQaA=;
+        s=default; t=1595260799;
+        bh=WvytojH2IH+WuRea9tphH3q+Rxcve4U2HgOws2wIJWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S2mQzJ22gy7BNuq7+1nsV4hvRdx+vT3PnzZ1WPqI5SmTOHqvMYbGDJ5zRBlh4at6g
-         pdkc3g+LpXOgAAXdX0WxpSXo5l9n4aSLtppdfSwLLdoL683kJ15g7QwfKgWKYsR38m
-         pbYW8QBuD6dxByW2jkeugbQyQAr6xasUYKteQu5Q=
+        b=zJ60EqCH8yJKbMnJXEx/bBfDECmFjbLy9KsHYaXI1q8yxPSdurCwkPI8KqTZcaTIj
+         UgXwSR1unvHoo1dKMElkQIIx3N8fotnksmchZV0Dzw94KwkAEfNIC0OhwkctVQlmA7
+         bBZcgY0OnBZF/WtQCvrQgxBRZmQzubL3H13a4ZmY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 062/215] Revert "usb/ehci-platform: Set PM runtime as active on resume"
-Date:   Mon, 20 Jul 2020 17:35:44 +0200
-Message-Id: <20200720152823.160345861@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 070/215] HID: quirks: Remove ITE 8595 entry from hid_have_special_driver
+Date:   Mon, 20 Jul 2020 17:35:52 +0200
+Message-Id: <20200720152823.545485689@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -58,53 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 335d720bb4bd9d2808cae5af6f3c636c87f19596.
+From: Hans de Goede <hdegoede@redhat.com>
 
-Eugeniu Rosca writes:
+[ Upstream commit 3045696d0ce663d67c95dcb8206d3de57f6841ec ]
 
-On Thu, Jul 09, 2020 at 09:00:23AM +0200, Eugeniu Rosca wrote:
->After integrating v4.14.186 commit 5410d158ca2a50 ("usb/ehci-platform:
->Set PM runtime as active on resume") into downstream v4.14.x, we started
->to consistently experience below panic [1] on every second s2ram of
->R-Car H3 Salvator-X Renesas reference board.
->
->After some investigations, we concluded the following:
-> - the issue does not exist in vanilla v5.8-rc4+
-> - [bisecting shows that] the panic on v4.14.186 is caused by the lack
->   of v5.6-rc1 commit 987351e1ea7772 ("phy: core: Add consumer device
->   link support"). Getting evidence for that is easy. Reverting
->   987351e1ea7772 in vanilla leads to a similar backtrace [2].
->
->Questions:
-> - Backporting 987351e1ea7772 ("phy: core: Add consumer device
->   link support") to v4.14.187 looks challenging enough, so probably not
->   worth it. Anybody to contradict this?
-> - Assuming no plans to backport the missing mainline commit to v4.14.x,
->   should the following three v4.14.186 commits be reverted on v4.14.x?
->   * baef809ea497a4 ("usb/ohci-platform: Fix a warning when hibernating")
->   * 9f33eff4958885 ("usb/xhci-plat: Set PM runtime as active on resume")
->   * 5410d158ca2a50 ("usb/ehci-platform: Set PM runtime as active on resume")
+The ITE 8595 chip used in various 2-in-1 keyboard docks works fine with
+the hid-generic driver (minus the RF_KILL key) and also keeps working fine
+when swapping drivers, so there is no need to have it in the
+hid_have_special_driver list.
 
+Note the other 2 USB ids in hid-ite.c were never added to
+hid_have_special_driver.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ehci-platform.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/hid/hid-quirks.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-index e9a49007cce4a..e4fc3f66d43bf 100644
---- a/drivers/usb/host/ehci-platform.c
-+++ b/drivers/usb/host/ehci-platform.c
-@@ -455,10 +455,6 @@ static int ehci_platform_resume(struct device *dev)
- 
- 	ehci_resume(hcd, priv->reset_on_resume);
- 
--	pm_runtime_disable(dev);
--	pm_runtime_set_active(dev);
--	pm_runtime_enable(dev);
--
- 	if (priv->quirk_poll)
- 		quirk_poll_init(priv);
- 
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 168fdaa1999fe..70c72b33d35e2 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -400,9 +400,6 @@ static const struct hid_device_id hid_have_special_driver[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HOLTEK_ALT, USB_DEVICE_ID_HOLTEK_ALT_MOUSE_A081) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HOLTEK_ALT, USB_DEVICE_ID_HOLTEK_ALT_MOUSE_A0C2) },
+ #endif
+-#if IS_ENABLED(CONFIG_HID_ITE)
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_ITE, USB_DEVICE_ID_ITE8595) },
+-#endif
+ #if IS_ENABLED(CONFIG_HID_ICADE)
+ 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_ION, USB_DEVICE_ID_ICADE) },
+ #endif
 -- 
 2.25.1
 
