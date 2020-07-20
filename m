@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254AEC433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C2EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F33A5206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DA2206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262422;
-	bh=63C2BzO4C1F7uvfStR458+NxPuILGJ2wLEBMtiBq4e4=;
+	s=default; t=1595262430;
+	bh=NomYTq+0FW0vXa/NUBZAOXpeDTLafjBT7dbllml5m18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U36BGxcxF0gW3aICjABaA8cMJ6YdV9f47c2G2ort4PUBjfWfLBTw0XybEgDEj2Sbf
-	 RS1RVV1ArctMi4ckql0E2IUMxB0Su/Y8fTXA1w6wbvxMFzwotTOkiGhl2xzJeuHNMR
-	 kHkTHm76f5cKgQlLVmUp2JL1cZyqwi1pNUN8DRlo=
+	b=iUXmcuX6QLZKW5N73rxB7v2rlISqzshRp4WR05ueP9IIFCFPn+5evO0iJ45nsALgP
+	 qIzTTep5Tae8X6QjhYFq8RYc2iFsrvZ3q/BYWDeWqlfMw2Ca27XvhbrTv61STjnYIB
+	 h0RslVYVZ+/MUlTTsG84hD4eR9EiAHhejeFwvxPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733086AbgGTQ05 (ORCPT
+        id S2387697AbgGTQ1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:26:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60816 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:27:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732308AbgGTP7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:49 -0400
+        id S1732297AbgGTP7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CB6A22CE3;
-        Mon, 20 Jul 2020 15:59:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13D0D22D00;
+        Mon, 20 Jul 2020 15:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260788;
-        bh=63C2BzO4C1F7uvfStR458+NxPuILGJ2wLEBMtiBq4e4=;
+        s=default; t=1595260785;
+        bh=NomYTq+0FW0vXa/NUBZAOXpeDTLafjBT7dbllml5m18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gfAGVH4hC8evtYrs475y0N2Ign6Bz/NkvEZUu2fe46Rk0df4yqXyvSvmhbtX1WBCs
-         J3hK1IKW3V1Cq/BeotHPB/fvRYyepTPhoIDwAc8i4s8AD/ae2HKCHsGmhwmX/RF5NJ
-         nSr29gWEBNmlt34cLXQLYMSLf5qRhFVGCgmnc7Aw=
+        b=vkZpeT0j65smYhvGFv2Jz0rEiRZVo3ZXsCw+qDdJbvEVB+uIK17kyX93cJHcIGpbl
+         trr64GmwVM78OSpg0YTpx/7V3PWS0VgGFLz4PPDHKkzU/YK4hAl9QCi1bm6gQpPcDU
+         skXOoevBPHZa/YyJHKK6QiKt+0Y/stWuo/6htGiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 066/215] ARM: OMAP4+: remove pdata quirks for omap4+ iommus
-Date:   Mon, 20 Jul 2020 17:35:48 +0200
-Message-Id: <20200720152823.349765045@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@gmail.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 094/215] soundwire: intel: fix memory leak with devm_kasprintf
+Date:   Mon, 20 Jul 2020 17:36:16 +0200
+Message-Id: <20200720152824.683390342@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -60,52 +65,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit e4c4b540e1e6c21ff8b987e92b2bd170ee006a94 ]
+[ Upstream commit bf6d6e68d2028a2d82f4c106f50ec75cc1e6ef89 ]
 
-IOMMU driver will be using ti-sysc bus driver for power management control
-going forward, and the pdata quirks are not needed for anything anymore.
+The dais are allocated with devm_kcalloc() but their name isn't
+resourced managed and never freed. Fix by also using devm_ for the dai
+names as well.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: c46302ec554c5 ('soundwire: intel: Add audio DAI ops')
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Daniel Baluta <daniel.baluta@gmail.com>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
+Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Link: https://lore.kernel.org/r/20200617163536.17401-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/pdata-quirks.c | 14 --------------
- 1 file changed, 14 deletions(-)
+ drivers/soundwire/intel.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 247e3f8acffe6..5acd29cb8d749 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -311,16 +311,6 @@ static void __init omap3_pandora_legacy_init(void)
- }
- #endif /* CONFIG_ARCH_OMAP3 */
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index d1839707128a8..243af8198d1c6 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -842,8 +842,9 @@ static int intel_create_dai(struct sdw_cdns *cdns,
  
--#if defined(CONFIG_ARCH_OMAP4) || defined(CONFIG_SOC_OMAP5)
--static struct iommu_platform_data omap4_iommu_pdata = {
--	.reset_name = "mmu_cache",
--	.assert_reset = omap_device_assert_hardreset,
--	.deassert_reset = omap_device_deassert_hardreset,
--	.device_enable = omap_device_enable,
--	.device_idle = omap_device_idle,
--};
--#endif
--
- #if defined(CONFIG_SOC_AM33XX) || defined(CONFIG_SOC_AM43XX)
- static struct wkup_m3_platform_data wkup_m3_data = {
- 	.reset_name = "wkup_m3",
-@@ -543,10 +533,6 @@ static struct of_dev_auxdata omap_auxdata_lookup[] = {
- 		       &wkup_m3_data),
- #endif
- #if defined(CONFIG_ARCH_OMAP4) || defined(CONFIG_SOC_OMAP5)
--	OF_DEV_AUXDATA("ti,omap4-iommu", 0x4a066000, "4a066000.mmu",
--		       &omap4_iommu_pdata),
--	OF_DEV_AUXDATA("ti,omap4-iommu", 0x55082000, "55082000.mmu",
--		       &omap4_iommu_pdata),
- 	OF_DEV_AUXDATA("ti,omap4-smartreflex-iva", 0x4a0db000,
- 		       "4a0db000.smartreflex", &omap_sr_pdata[OMAP_SR_IVA]),
- 	OF_DEV_AUXDATA("ti,omap4-smartreflex-core", 0x4a0dd000,
+ 	 /* TODO: Read supported rates/formats from hardware */
+ 	for (i = off; i < (off + num); i++) {
+-		dais[i].name = kasprintf(GFP_KERNEL, "SDW%d Pin%d",
+-					 cdns->instance, i);
++		dais[i].name = devm_kasprintf(cdns->dev, GFP_KERNEL,
++					      "SDW%d Pin%d",
++					      cdns->instance, i);
+ 		if (!dais[i].name)
+ 			return -ENOMEM;
+ 
 -- 
 2.25.1
 
