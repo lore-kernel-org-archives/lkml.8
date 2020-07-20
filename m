@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985CDC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEFEC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 753DC2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E50022CF6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261113;
-	bh=j2H3mILcNIXq0cwxB0SDAvXIxNI/pTujaWGBOk2jz5o=;
+	s=default; t=1595261115;
+	bh=IufbSqnQoO/XlYrV0tWMAZ9tLze7G+NS2wb+k+R0EUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kA10nT0v4ckxz8bA4BIxIiElPDzqok+QaIt0d22hI6ShH6pVpX6WSmqe9w+dEoGAF
-	 qo1inFwDmgIk/rmN37vq0D1uS7kI6uRJ6rEKHmzHsUdAo28UCTCPx9ivatpijEyVZL
-	 o8QZM+iBf6Rjn/jE9+ISSsjQrEzzsYop8IA1eZaM=
+	b=X/8bVyI4K6ghORRRBvsx5fbFvemKbADSUwwIpaSY/WDFq2VZn4hhXzvFBLc+BTcZQ
+	 X4v60kENhAqHrILnvFzVqPP15YY+uGAwEgr0VIcujOJu8l1RJ0PjdA1lzBOp8AWsv2
+	 C3LLP6+3GQ2YN53zCrDNHw8y/vN1ffIehCBfKoYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732948AbgGTQFM (ORCPT
+        id S1732956AbgGTQFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:05:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40496 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:05:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732650AbgGTQFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:05:10 -0400
+        id S1732365AbgGTQFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:05:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E5D72176B;
-        Mon, 20 Jul 2020 16:05:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4AC92064B;
+        Mon, 20 Jul 2020 16:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261109;
-        bh=j2H3mILcNIXq0cwxB0SDAvXIxNI/pTujaWGBOk2jz5o=;
+        s=default; t=1595261112;
+        bh=IufbSqnQoO/XlYrV0tWMAZ9tLze7G+NS2wb+k+R0EUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K3QF2Ha1BebUFoXfzl8f6mPTHAWCsfXUbJtpEor+G+mudhxSqi3vLLW7CzAzYIFbE
-         odsY3FAUy+2+tfbMCpDTKfnfOznhBq+7bsf6O0yMdgRJnQ+sQLGmx99OYfTTa9g4ol
-         R07ztYhEMFNxBeAXTkyxZdDIwY7AtZJ+0v6r4WYY=
+        b=ndTurylZXonI5tpV4fcKpzgb8h1/52/2vWvP4/xlD46BhEuSRGOTS8VX2Zk3IutAH
+         abvVkjP9Uaztb8yQmn6h39B9eQEnzFkFnqdhHRiabbj8/Gc8WuObvoHcSBztOWqr8d
+         bASZXBP1HO5R4S2muT9pUw3jTqUqnkG5Ay78edJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 5.4 213/215] iommu/vt-d: Make Intel SVM code 64-bit only
-Date:   Mon, 20 Jul 2020 17:38:15 +0200
-Message-Id: <20200720152830.278952493@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Colin Xu <colin.xu@intel.com>
+Subject: [PATCH 5.4 214/215] drm/i915/gvt: Fix two CFL MMIO handling caused by regression.
+Date:   Mon, 20 Jul 2020 17:38:16 +0200
+Message-Id: <20200720152830.328049538@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,38 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Colin Xu <colin.xu@intel.com>
 
-commit 9486727f5981a5ec5c0b699fb1777451bd6786e4 upstream.
+commit fccd0f7cf4d532674d727c7f204f038456675dee upstream.
 
-Current Intel SVM is designed by setting the pgd_t of the processor page
-table to FLPTR field of the PASID entry. The first level translation only
-supports 4 and 5 level paging structures, hence it's infeasible for the
-IOMMU to share a processor's page table when it's running in 32-bit mode.
-Let's disable 32bit support for now and claim support only when all the
-missing pieces are ready in the future.
+D_CFL was incorrectly removed for:
+GAMT_CHKN_BIT_REG
+GEN9_CTX_PREEMPT_REG
 
-Fixes: 1c4f88b7f1f92 ("iommu/vt-d: Shared virtual address in scalable mode")
-Suggested-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Link: https://lore.kernel.org/r/20200622231345.29722-2-baolu.lu@linux.intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+V2: Update commit message.
+V3: Rebase and split Fixes and mis-handled MMIO.
+
+Fixes: 43226e6fe798 (drm/i915/gvt: replaced register address with name)
+Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Colin Xu <colin.xu@intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200601030638.16002-1-colin.xu@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/i915/gvt/handlers.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -205,7 +205,7 @@ config INTEL_IOMMU_DEBUGFS
+--- a/drivers/gpu/drm/i915/gvt/handlers.c
++++ b/drivers/gpu/drm/i915/gvt/handlers.c
+@@ -3103,8 +3103,8 @@ static int init_skl_mmio_info(struct int
+ 	MMIO_DFH(GEN9_WM_CHICKEN3, D_SKL_PLUS, F_MODE_MASK | F_CMD_ACCESS,
+ 		 NULL, NULL);
  
- config INTEL_IOMMU_SVM
- 	bool "Support for Shared Virtual Memory with Intel IOMMU"
--	depends on INTEL_IOMMU && X86
-+	depends on INTEL_IOMMU && X86_64
- 	select PCI_PASID
- 	select MMU_NOTIFIER
- 	help
+-	MMIO_D(GAMT_CHKN_BIT_REG, D_KBL);
+-	MMIO_D(GEN9_CTX_PREEMPT_REG, D_KBL | D_SKL);
++	MMIO_D(GAMT_CHKN_BIT_REG, D_KBL | D_CFL);
++	MMIO_D(GEN9_CTX_PREEMPT_REG, D_SKL_PLUS);
+ 
+ 	return 0;
+ }
 
 
