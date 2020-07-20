@@ -2,129 +2,469 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6AAC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D32AA208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BB8208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:37:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="fYMwKP8c"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ApdQytgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbgGTJhP (ORCPT
+        id S1728189AbgGTJh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:37:15 -0400
-Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:60760 "EHLO
-        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727062AbgGTJhO (ORCPT
+        Mon, 20 Jul 2020 05:37:29 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39426 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727862AbgGTJh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:37:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1595237833;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nwPJa3NUFyEUiPP7p8oQoME8KchN1Curaq49nRiJSr0=;
-  b=fYMwKP8cenGPoU7mH9agCOVNlbUNuqtl+b/h67ELLn2z49ebvGng8oJ2
-   3uqQwOJ0cjk33uoNIULdGigKi6PU3/ilTjaQ9JflnIuX7KWFwKDk4GxCi
-   yGoIqY01MIY8rv4EVbQrwxaRWx3U5golWH8mIAx1jCiZ6uZMPx1PmzNdE
-   4=;
-Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: 4hmgLSfnkocyYHfNLmECegraULYWfvgO+2ir3ZYwO5eOasBTEYVWmVfPwW4mzeVVL17AAtcZVd
- bUVOns9d+KznUSTWedAW/WhA4LDQ6fI22ZVr7E0i6W1qt7UqqwxosEHno3/M1gQyUdpcDOjoqF
- Nj70/QuhTm+JOMOwc9sysRtdWdhiTtL0p7pcoHDnQAPgaCsxfhMhr0r+0WqS9xxrS3GSrFbPO0
- NyjgT8OXTOod2Cdp5jysswqlD0JX8QMphFc9cBJwZ90Kl5ucVrm3e0q6KBg1OKyPj5+tG+RRay
- t54=
-X-SBRS: 2.7
-X-MesageID: 23586900
-X-Ironport-Server: esa4.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.75,374,1589256000"; 
-   d="scan'208";a="23586900"
-Date:   Mon, 20 Jul 2020 11:37:05 +0200
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-CC:     Anchal Agarwal <anchalag@amazon.com>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-        <x86@kernel.org>, <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
-        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
-        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
-        <eduval@amazon.com>, <sblbir@amazon.com>,
-        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>
-Subject: Re: [PATCH v2 01/11] xen/manage: keep track of the on-going suspend
- mode
-Message-ID: <20200720093705.GG7191@Air-de-Roger>
-References: <cover.1593665947.git.anchalag@amazon.com>
- <20200702182136.GA3511@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <50298859-0d0e-6eb0-029b-30df2a4ecd63@oracle.com>
- <20200715204943.GB17938@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <0ca3c501-e69a-d2c9-a24c-f83afd4bdb8c@oracle.com>
- <20200717191009.GA3387@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <5464f384-d4b4-73f0-d39e-60ba9800d804@oracle.com>
+        Mon, 20 Jul 2020 05:37:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595237846;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vz16cbD3dDVm72RXEFAxS3bJXzMO/k75AjNcpZo4v54=;
+        b=ApdQytgHYQdVQPxhAq36LmloGYqvB3YHn3gF0K2cukksNQDR/QWOCpOqdbhIkL4dQGCsD0
+        XDTv5s9rYjqGUROrNmC69QQQgh5fesnlfpxUTPOzM05jucyvMkfSEXuYgbQgNLdGl5A7ZT
+        /O0gvWLwyEECYMIDFdV66aUpSBH7KKg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-382-0VFTlDa1OuGzr6miJYmIBw-1; Mon, 20 Jul 2020 05:37:22 -0400
+X-MC-Unique: 0VFTlDa1OuGzr6miJYmIBw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6262E18C63C0;
+        Mon, 20 Jul 2020 09:37:20 +0000 (UTC)
+Received: from [10.36.115.54] (ovpn-115-54.ams2.redhat.com [10.36.115.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 10AA210021B3;
+        Mon, 20 Jul 2020 09:37:10 +0000 (UTC)
+Subject: Re: [PATCH v5 10/15] vfio/type1: Support binding guest page tables to
+ PASID
+To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
+        stefanha@gmail.com, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
+ <1594552870-55687-11-git-send-email-yi.l.liu@intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <c51215a0-3462-1303-1295-7d71675cf469@redhat.com>
+Date:   Mon, 20 Jul 2020 11:37:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <5464f384-d4b4-73f0-d39e-60ba9800d804@oracle.com>
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+In-Reply-To: <1594552870-55687-11-git-send-email-yi.l.liu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 09:47:04PM -0400, Boris Ostrovsky wrote:
-> (Roger, question for you at the very end)
-> 
-> On 7/17/20 3:10 PM, Anchal Agarwal wrote:
-> > On Wed, Jul 15, 2020 at 05:18:08PM -0400, Boris Ostrovsky wrote:
-> >> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
-> >>
-> >>
-> >>
-> >> On 7/15/20 4:49 PM, Anchal Agarwal wrote:
-> >>> On Mon, Jul 13, 2020 at 11:52:01AM -0400, Boris Ostrovsky wrote:
-> >>>> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 7/2/20 2:21 PM, Anchal Agarwal wrote:
-> >>>> And PVH dom0.
-> >>> That's another good use case to make it work with however, I still
-> >>> think that should be tested/worked upon separately as the feature itself
-> >>> (PVH Dom0) is very new.
-> >>
-> >> Same question here --- will this break PVH dom0?
-> >>
-> > I haven't tested it as a part of this series. Is that a blocker here?
-> 
-> 
-> I suspect dom0 will not do well now as far as hibernation goes, in which
-> case you are not breaking anything.
-> 
-> 
-> Roger?
+Yi,
 
-I sadly don't have any box ATM that supports hibernation where I
-could test it. We have hibernation support for PV dom0, so while I
-haven't done anything specific to support or test hibernation on PVH
-dom0 I would at least aim to not make this any worse, and hence the
-check should at least also fail for a PVH dom0?
+On 7/12/20 1:21 PM, Liu Yi L wrote:
+> Nesting translation allows two-levels/stages page tables, with 1st level
+> for guest translations (e.g. GVA->GPA), 2nd level for host translations
+> (e.g. GPA->HPA). This patch adds interface for binding guest page tables
+> to a PASID. This PASID must have been allocated to user space before the
+by the userspace?
+> binding request.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+> v3 -> v4:
+> *) address comments from Alex on v3
+> 
+> v2 -> v3:
+> *) use __iommu_sva_unbind_gpasid() for unbind call issued by VFIO
+>    https://lore.kernel.org/linux-iommu/1592931837-58223-6-git-send-email-jacob.jun.pan@linux.intel.com/
+> 
+> v1 -> v2:
+> *) rename subject from "vfio/type1: Bind guest page tables to host"
+> *) remove VFIO_IOMMU_BIND, introduce VFIO_IOMMU_NESTING_OP to support bind/
+>    unbind guet page table
+> *) replaced vfio_iommu_for_each_dev() with a group level loop since this
+>    series enforces one group per container w/ nesting type as start.
+> *) rename vfio_bind/unbind_gpasid_fn() to vfio_dev_bind/unbind_gpasid_fn()
+> *) vfio_dev_unbind_gpasid() always successful
+> *) use vfio_mm->pasid_lock to avoid race between PASID free and page table
+>    bind/unbind
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 166 ++++++++++++++++++++++++++++++++++++++++
+>  drivers/vfio/vfio_pasid.c       |  26 +++++++
+>  include/linux/vfio.h            |  20 +++++
+>  include/uapi/linux/vfio.h       |  31 ++++++++
+>  4 files changed, 243 insertions(+)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 55b4065..f0f21ff 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -149,6 +149,30 @@ struct vfio_regions {
+>  #define DIRTY_BITMAP_PAGES_MAX	 ((u64)INT_MAX)
+>  #define DIRTY_BITMAP_SIZE_MAX	 DIRTY_BITMAP_BYTES(DIRTY_BITMAP_PAGES_MAX)
+>  
+> +struct domain_capsule {
+> +	struct vfio_group *group;
+> +	struct iommu_domain *domain;
+> +	void *data;
+> +};
+> +
+> +/* iommu->lock must be held */
+> +static struct vfio_group *vfio_find_nesting_group(struct vfio_iommu *iommu)
+> +{
+> +	struct vfio_domain *d;
+> +	struct vfio_group *group = NULL;
+> +
+> +	if (!iommu->nesting_info)
+> +		return NULL;
+> +
+> +	/* only support singleton container with nesting type */
+> +	list_for_each_entry(d, &iommu->domain_list, next) {
+> +		list_for_each_entry(group, &d->group_list, next) {
+> +			break;
+use list_first_entry?
+> +		}
+> +	}
+> +	return group;
+> +}
+> +
+>  static int put_pfn(unsigned long pfn, int prot);
+>  
+>  static struct vfio_group *vfio_iommu_find_iommu_group(struct vfio_iommu *iommu,
+> @@ -2349,6 +2373,48 @@ static int vfio_iommu_resv_refresh(struct vfio_iommu *iommu,
+>  	return ret;
+>  }
+>  
+> +static int vfio_dev_bind_gpasid_fn(struct device *dev, void *data)
+> +{
+> +	struct domain_capsule *dc = (struct domain_capsule *)data;
+> +	unsigned long arg = *(unsigned long *)dc->data;
+> +
+> +	return iommu_sva_bind_gpasid(dc->domain, dev, (void __user *)arg);
+> +}
+> +
+> +static int vfio_dev_unbind_gpasid_fn(struct device *dev, void *data)
+> +{
+> +	struct domain_capsule *dc = (struct domain_capsule *)data;
+> +	unsigned long arg = *(unsigned long *)dc->data;
+> +
+> +	iommu_sva_unbind_gpasid(dc->domain, dev, (void __user *)arg);
+> +	return 0;
+> +}
+> +
+> +static int __vfio_dev_unbind_gpasid_fn(struct device *dev, void *data)
+> +{
+> +	struct domain_capsule *dc = (struct domain_capsule *)data;
+> +	struct iommu_gpasid_bind_data *unbind_data =
+> +				(struct iommu_gpasid_bind_data *)dc->data;
+> +
+> +	__iommu_sva_unbind_gpasid(dc->domain, dev, unbind_data);
+> +	return 0;
+> +}
+> +
+> +static void vfio_group_unbind_gpasid_fn(ioasid_t pasid, void *data)
+> +{
+> +	struct domain_capsule *dc = (struct domain_capsule *)data;
+> +	struct iommu_gpasid_bind_data unbind_data;
+> +
+> +	unbind_data.argsz = offsetof(struct iommu_gpasid_bind_data, vendor);
+> +	unbind_data.flags = 0;
+> +	unbind_data.hpasid = pasid;
+> +
+> +	dc->data = &unbind_data;
+> +
+> +	iommu_group_for_each_dev(dc->group->iommu_group,
+> +				 dc, __vfio_dev_unbind_gpasid_fn);
+> +}
+> +
+>  static void vfio_iommu_type1_detach_group(void *iommu_data,
+>  					  struct iommu_group *iommu_group)
+>  {
+> @@ -2392,6 +2458,21 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
+>  		if (!group)
+>  			continue;
+>  
+> +		if (iommu->nesting_info && iommu->vmm &&
+> +		    (iommu->nesting_info->features &
+> +					IOMMU_NESTING_FEAT_BIND_PGTBL)) {
+> +			struct domain_capsule dc = { .group = group,
+> +						     .domain = domain->domain,
+> +						     .data = NULL };
+> +
+> +			/*
+> +			 * Unbind page tables bound with system wide PASIDs
+> +			 * which are allocated to user space.
+> +			 */
+> +			vfio_mm_for_each_pasid(iommu->vmm, &dc,
+> +					       vfio_group_unbind_gpasid_fn);
+> +		}
+> +
+>  		vfio_iommu_detach_group(domain, group);
+>  		update_dirty_scope = !group->pinned_page_dirty_scope;
+>  		list_del(&group->next);
+> @@ -2938,6 +3019,89 @@ static int vfio_iommu_type1_pasid_request(struct vfio_iommu *iommu,
+>  	}
+>  }
+>  
+> +static long vfio_iommu_handle_pgtbl_op(struct vfio_iommu *iommu,
+> +				       bool is_bind, unsigned long arg)
+> +{
+> +	struct iommu_nesting_info *info;
+> +	struct domain_capsule dc = { .data = &arg };
+> +	struct vfio_group *group;
+> +	struct vfio_domain *domain;
+> +	int ret;
+> +
+> +	mutex_lock(&iommu->lock);
+> +
+> +	info = iommu->nesting_info;
+> +	if (!info || !(info->features & IOMMU_NESTING_FEAT_BIND_PGTBL)) {
+> +		ret = -EOPNOTSUPP;
+> +		goto out_unlock_iommu;
+> +	}
+> +
+> +	if (!iommu->vmm) {
+> +		ret = -EINVAL;
+> +		goto out_unlock_iommu;
+> +	}
+> +
+> +	group = vfio_find_nesting_group(iommu);
+is it realy useful to introduce vfio_find_nesting_group?
+in this function you already test info, you fetch the first domain
+below. So you would only need to fetch the 1st group?
+> +	if (!group) {
+> +		ret = -EINVAL;
+can it happen?
+> +		goto out_unlock_iommu;
+> +	}
+> +
+> +	domain = list_first_entry(&iommu->domain_list,
+> +				  struct vfio_domain, next);
+> +	dc.group = group;
+> +	dc.domain = domain->domain;
+> +
+> +	/* Avoid race with other containers within the same process */
+> +	vfio_mm_pasid_lock(iommu->vmm);
+> +
+> +	if (is_bind) {
+> +		ret = iommu_group_for_each_dev(group->iommu_group, &dc,
+> +					       vfio_dev_bind_gpasid_fn);
+> +		if (ret)
+> +			iommu_group_for_each_dev(group->iommu_group, &dc,
+> +						 vfio_dev_unbind_gpasid_fn);
+> +	} else {
+> +		iommu_group_for_each_dev(group->iommu_group,
+> +					 &dc, vfio_dev_unbind_gpasid_fn);
+> +		ret = 0;
 
-if (!xen_hvm_domain() || xen_initial_domain())
-    return -ENODEV;
+int ret = 0;
 
-Ie: none of this should be applied to a PVH dom0, as it doesn't have
-PV devices and hence should follow the bare metal device suspend.
+if (is_bind) {
+ret = iommu_group_for_each_dev(group->iommu_group, &dc,
+ 			       vfio_dev_bind_gpasid_fn);
+}
+if (ret || !is_bind) {
+	iommu_group_for_each_dev(group->iommu_group,
+			&dc, vfio_dev_unbind_gpasid_fn);
+}
+> +	}
+> +
+> +	vfio_mm_pasid_unlock(iommu->vmm);
+> +out_unlock_iommu:
+> +	mutex_unlock(&iommu->lock);
+> +	return ret;
+> +}
+> +
+> +static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
+> +					unsigned long arg)
+> +{
+> +	struct vfio_iommu_type1_nesting_op hdr;
+> +	unsigned int minsz;
+> +	int ret;
+> +
+> +	minsz = offsetofend(struct vfio_iommu_type1_nesting_op, flags);
+> +
+> +	if (copy_from_user(&hdr, (void __user *)arg, minsz))
+> +		return -EFAULT;
+> +
+> +	if (hdr.argsz < minsz || hdr.flags & ~VFIO_NESTING_OP_MASK)
+> +		return -EINVAL;
+> +
+> +	switch (hdr.flags & VFIO_NESTING_OP_MASK) {
+> +	case VFIO_IOMMU_NESTING_OP_BIND_PGTBL:
+> +		ret = vfio_iommu_handle_pgtbl_op(iommu, true, arg + minsz);
+> +		break;
+> +	case VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL:
+> +		ret = vfio_iommu_handle_pgtbl_op(iommu, false, arg + minsz);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  				   unsigned int cmd, unsigned long arg)
+>  {
+> @@ -2956,6 +3120,8 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  		return vfio_iommu_type1_dirty_pages(iommu, arg);
+>  	case VFIO_IOMMU_PASID_REQUEST:
+>  		return vfio_iommu_type1_pasid_request(iommu, arg);
+> +	case VFIO_IOMMU_NESTING_OP:
+> +		return vfio_iommu_type1_nesting_op(iommu, arg);
+>  	default:
+>  		return -ENOTTY;
+>  	}
+> diff --git a/drivers/vfio/vfio_pasid.c b/drivers/vfio/vfio_pasid.c
+> index ebec244..ecabaaa 100644
+> --- a/drivers/vfio/vfio_pasid.c
+> +++ b/drivers/vfio/vfio_pasid.c
+> @@ -216,6 +216,8 @@ void vfio_pasid_free_range(struct vfio_mm *vmm,
+>  	 * IOASID core will notify PASID users (e.g. IOMMU driver) to
+>  	 * teardown necessary structures depending on the to-be-freed
+>  	 * PASID.
+> +	 * Hold pasid_lock also avoids race with PASID usages like bind/
+> +	 * unbind page tables to requested PASID.
+>  	 */
+>  	mutex_lock(&vmm->pasid_lock);
+>  	while ((vid = vfio_find_pasid(vmm, min, max)) != NULL)
+> @@ -224,6 +226,30 @@ void vfio_pasid_free_range(struct vfio_mm *vmm,
+>  }
+>  EXPORT_SYMBOL_GPL(vfio_pasid_free_range);
+>  
+> +int vfio_mm_for_each_pasid(struct vfio_mm *vmm, void *data,
+> +			   void (*fn)(ioasid_t id, void *data))
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&vmm->pasid_lock);
+> +	ret = ioasid_set_for_each_ioasid(vmm->ioasid_sid, fn, data);
+> +	mutex_unlock(&vmm->pasid_lock);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(vfio_mm_for_each_pasid);
+> +
+> +void vfio_mm_pasid_lock(struct vfio_mm *vmm)
+> +{
+> +	mutex_lock(&vmm->pasid_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(vfio_mm_pasid_lock);
+> +
+> +void vfio_mm_pasid_unlock(struct vfio_mm *vmm)
+> +{
+> +	mutex_unlock(&vmm->pasid_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(vfio_mm_pasid_unlock);
+> +
+>  static int __init vfio_pasid_init(void)
+>  {
+>  	mutex_init(&vfio_mm_lock);
+> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> index a111108..2bc8347 100644
+> --- a/include/linux/vfio.h
+> +++ b/include/linux/vfio.h
+> @@ -105,6 +105,11 @@ int vfio_mm_ioasid_sid(struct vfio_mm *vmm);
+>  extern int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max);
+>  extern void vfio_pasid_free_range(struct vfio_mm *vmm,
+>  				  ioasid_t min, ioasid_t max);
+> +extern int vfio_mm_for_each_pasid(struct vfio_mm *vmm, void *data,
+> +				  void (*fn)(ioasid_t id, void *data));
+> +extern void vfio_mm_pasid_lock(struct vfio_mm *vmm);
+> +extern void vfio_mm_pasid_unlock(struct vfio_mm *vmm);
+> +
+>  #else
+>  static inline struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task)
+>  {
+> @@ -129,6 +134,21 @@ static inline void vfio_pasid_free_range(struct vfio_mm *vmm,
+>  					  ioasid_t min, ioasid_t max)
+>  {
+>  }
+> +
+> +static inline int vfio_mm_for_each_pasid(struct vfio_mm *vmm, void *data,
+> +					 void (*fn)(ioasid_t id, void *data))
+> +{
+> +	return -ENOTTY;
+> +}
+> +
+> +static inline void vfio_mm_pasid_lock(struct vfio_mm *vmm)
+> +{
+> +}
+> +
+> +static inline void vfio_mm_pasid_unlock(struct vfio_mm *vmm)
+> +{
+> +}
+> +
+>  #endif /* CONFIG_VFIO_PASID */
+>  
+>  /*
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 96a115f..a8ad786 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -1209,6 +1209,37 @@ struct vfio_iommu_type1_pasid_request {
+>  
+>  #define VFIO_IOMMU_PASID_REQUEST	_IO(VFIO_TYPE, VFIO_BASE + 18)
+>  
+> +/**
+> + * VFIO_IOMMU_NESTING_OP - _IOW(VFIO_TYPE, VFIO_BASE + 19,
+> + *				struct vfio_iommu_type1_nesting_op)
+> + *
+> + * This interface allows user space to utilize the nesting IOMMU
+> + * capabilities as reported in VFIO_IOMMU_TYPE1_INFO_CAP_NESTING
+> + * cap through VFIO_IOMMU_GET_INFO.
+> + *
+> + * @data[] types defined for each op:
+> + * +=================+===============================================+
+> + * | NESTING OP      |      @data[]                                  |
+> + * +=================+===============================================+
+> + * | BIND_PGTBL      |      struct iommu_gpasid_bind_data            |
+> + * +-----------------+-----------------------------------------------+
+> + * | UNBIND_PGTBL    |      struct iommu_gpasid_bind_data            |
+> + * +-----------------+-----------------------------------------------+
+> + *
+> + * returns: 0 on success, -errno on failure.
+> + */
+> +struct vfio_iommu_type1_nesting_op {
+> +	__u32	argsz;
+> +	__u32	flags;
+> +#define VFIO_NESTING_OP_MASK	(0xffff) /* lower 16-bits for op */
+> +	__u8	data[];
+> +};
+> +
+> +#define VFIO_IOMMU_NESTING_OP_BIND_PGTBL	(0)
+> +#define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL	(1)
+> +
+> +#define VFIO_IOMMU_NESTING_OP		_IO(VFIO_TYPE, VFIO_BASE + 19)
+> +
+>  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
+>  
+>  /*
+> 
+Thanks
 
-Also I would contact the QubesOS guys, they rely heavily on the
-suspend feature for dom0, and that's something not currently tested by
-osstest so any breakages there go unnoticed.
+Eric
 
-Thanks, Roger.
