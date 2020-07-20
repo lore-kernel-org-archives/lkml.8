@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D05DC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC710C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48DA32064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A8E2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260250;
-	bh=412nGVgyVmkRZyzaJjo8NpyhjCgcd9mR7FnJzv4+7fg=;
+	s=default; t=1595260256;
+	bh=MSSuzrTjBxIywH7AGVb1SkCXr5Meme8CiHb0TaLnz/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Co4sF4JmkPr3SIT+WHSPh0noQW9O/Nf7AQonOT7CFPbNYe3YSIPLN+a2XPtwayDTo
-	 JbMhcXIfX3X1yx2yTKpDSy6EiUcg/zutcu3xjXd11ZjOsl8+g4doN6uhQwQ/gTzzzg
-	 eP0XO1GYrj7PEefHmZLtQWneUJIyH+6fRzpFEDl4=
+	b=ccgCo4lQ8BIZS1FW1Ma9dm4LrS5Bg38vBT3BoBaLx6WguRw5qZl/U1c+ZrEDEnBlA
+	 WRXC55x1AglK04bWxTWwYH4EyDiNzohz9G4RcBP142MqgOHU+Akt2zUVR4awa4CoNR
+	 m12NtgxnDJFkZsuv3nnLnTMpYMFtuzuGm+l1HO4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731163AbgGTPus (ORCPT
+        id S1731169AbgGTPuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:50:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47400 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:50:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730556AbgGTPur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:50:47 -0400
+        id S1729044AbgGTPuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:50:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BA232065E;
-        Mon, 20 Jul 2020 15:50:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A75B520657;
+        Mon, 20 Jul 2020 15:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260246;
-        bh=412nGVgyVmkRZyzaJjo8NpyhjCgcd9mR7FnJzv4+7fg=;
+        s=default; t=1595260244;
+        bh=MSSuzrTjBxIywH7AGVb1SkCXr5Meme8CiHb0TaLnz/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hBeqUtKO2LjTil2ZdnCEJzMX7MHcTGPEO8apVeTI94R8MAgZ7dMpvt2o7BuyaZoPY
-         nmiL4Y0fBd2VCnEjLvk/2r8z6wjdUZToXNolMm1pREws6DYtm9g18IlQtcJN8vSA8a
-         X0ZA0v4G6UgYdlQ5In40RiCZj2+6zbGeesnACKWo=
+        b=CwKYYBXj011YR2UXoSeE1OJa/3w8XDWGODSGTn5rxFEdwKnThRlsYN33key1anEI0
+         gh7qBA3qEKHnIwMZ9lbfYtvddQxRb5DRG3V7YYpsRFUMPIoJzQBt6J3wmmGb4W8HH7
+         g8LK9m/EfW9TP6GTOT1uy6b0XDzcslQ8FTYCVEbQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        James Chapman <jchapman@katalix.com>,
+        stable@vger.kernel.org, Paul Wouters <pwouters@redhat.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 005/133] l2tp: remove skb_dst_set() from l2tp_xmit_skb()
-Date:   Mon, 20 Jul 2020 17:35:52 +0200
-Message-Id: <20200720152803.998437522@linuxfoundation.org>
+Subject: [PATCH 4.19 004/133] ipv4: fill fl4_icmp_{type,code} in ping_v4_sendmsg
+Date:   Mon, 20 Jul 2020 17:35:51 +0200
+Message-Id: <20200720152803.950494317@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -61,60 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit 27d53323664c549b5bb2dfaaf6f7ad6e0376a64e ]
+[ Upstream commit 5eff06902394425c722f0a44d9545909a8800f79 ]
 
-In the tx path of l2tp, l2tp_xmit_skb() calls skb_dst_set() to set
-skb's dst. However, it will eventually call inet6_csk_xmit() or
-ip_queue_xmit() where skb's dst will be overwritten by:
+IPv4 ping sockets don't set fl4.fl4_icmp_{type,code}, which leads to
+incomplete IPsec ACQUIRE messages being sent to userspace. Currently,
+both raw sockets and IPv6 ping sockets set those fields.
 
-   skb_dst_set_noref(skb, dst);
+Expected output of "ip xfrm monitor":
+    acquire proto esp
+      sel src 10.0.2.15/32 dst 8.8.8.8/32 proto icmp type 8 code 0 dev ens4
+      policy src 10.0.2.15/32 dst 8.8.8.8/32
+        <snip>
 
-without releasing the old dst in skb. Then it causes dst/dev refcnt leak:
+Currently with ping sockets:
+    acquire proto esp
+      sel src 10.0.2.15/32 dst 8.8.8.8/32 proto icmp type 0 code 0 dev ens4
+      policy src 10.0.2.15/32 dst 8.8.8.8/32
+        <snip>
 
-  unregister_netdevice: waiting for eth0 to become free. Usage count = 1
+The Libreswan test suite found this problem after Fedora changed the
+value for the sysctl net.ipv4.ping_group_range.
 
-This can be reproduced by simply running:
-
-  # modprobe l2tp_eth && modprobe l2tp_ip
-  # sh ./tools/testing/selftests/net/l2tp.sh
-
-So before going to inet6_csk_xmit() or ip_queue_xmit(), skb's dst
-should be dropped. This patch is to fix it by removing skb_dst_set()
-from l2tp_xmit_skb() and moving skb_dst_drop() into l2tp_xmit_core().
-
-Fixes: 3557baabf280 ("[L2TP]: PPP over L2TP driver core")
-Reported-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: James Chapman <jchapman@katalix.com>
-Tested-by: James Chapman <jchapman@katalix.com>
+Fixes: c319b4d76b9e ("net: ipv4: add IPPROTO_ICMP socket kind")
+Reported-by: Paul Wouters <pwouters@redhat.com>
+Tested-by: Paul Wouters <pwouters@redhat.com>
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/l2tp/l2tp_core.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ net/ipv4/ping.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -1033,6 +1033,7 @@ static void l2tp_xmit_core(struct l2tp_s
+--- a/net/ipv4/ping.c
++++ b/net/ipv4/ping.c
+@@ -791,6 +791,9 @@ static int ping_v4_sendmsg(struct sock *
+ 			   inet_sk_flowi_flags(sk), faddr, saddr, 0, 0,
+ 			   sk->sk_uid);
  
- 	/* Queue the packet to IP for output */
- 	skb->ignore_df = 1;
-+	skb_dst_drop(skb);
- #if IS_ENABLED(CONFIG_IPV6)
- 	if (l2tp_sk_is_v6(tunnel->sock))
- 		error = inet6_csk_xmit(tunnel->sock, skb, NULL);
-@@ -1104,10 +1105,6 @@ int l2tp_xmit_skb(struct l2tp_session *s
- 		goto out_unlock;
- 	}
- 
--	/* Get routing info from the tunnel socket */
--	skb_dst_drop(skb);
--	skb_dst_set(skb, sk_dst_check(sk, 0));
--
- 	inet = inet_sk(sk);
- 	fl = &inet->cork.fl;
- 	switch (tunnel->encap) {
++	fl4.fl4_icmp_type = user_icmph.type;
++	fl4.fl4_icmp_code = user_icmph.code;
++
+ 	security_sk_classify_flow(sk, flowi4_to_flowi(&fl4));
+ 	rt = ip_route_output_flow(net, &fl4, sk);
+ 	if (IS_ERR(rt)) {
 
 
