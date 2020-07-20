@@ -2,157 +2,133 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38813C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD570C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC7F20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BF420709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:51:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N49dDLbt"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Yoty4xJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388922AbgGTRtz (ORCPT
+        id S2389169AbgGTRva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:49:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgGTRty (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:49:54 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB883C061794;
-        Mon, 20 Jul 2020 10:49:54 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id t4so15027610oij.9;
-        Mon, 20 Jul 2020 10:49:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E/WF9LmUo71c0bgV0jc9EPEVEVSzt8bdBdlMxd+6u9o=;
-        b=N49dDLbtcc8GbCc/rK6VzmC408aRyQNWvV2bsAzf2369GrbLTIqe/8AIHtgH8i6iaW
-         h/LY7IMO/tCttISFJNT44Z/7d4MHx61mUdhl7VwwPWWqMa7MU4SX9WD9axAZXlQyrzoC
-         kN4uyoHIBMFMYgKDZWHQFOJZ5bQvHz38NdxFbHVTQlijvrcuRDRDpXxVewmi8WAAd8cX
-         A5VIQvWKJvdLBpNbj2tA13i1Dq+V0c71YItqmQR+p3kOTaJbFHiqfuJ+RzS4PiX7/7NZ
-         WdNXkAuLJ9mudeJFNhLM5OsCtgF1Sjtk58ZvJJlZLVt9S8IjPNtMd7P0ghmaYvKCIW6K
-         E8pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E/WF9LmUo71c0bgV0jc9EPEVEVSzt8bdBdlMxd+6u9o=;
-        b=COKKPd7ki6sFuMgWhtMAt5skMZoXs2N0z4k8cXCVZsvozpX2jHHJ5ctanYp+dXzAco
-         loNEuzpjZLGfe9/kn4NtLArzZq6k1yymTefgF/eXuwISlmObRNyqQzNvp5pRnPqgdDYB
-         zTMG4DrE3M/F6pSCXdm3eZHEHvMRURzH5jVyGKyS+rEXCa1iCfKeqlpjowexysAeTiPS
-         IOKXwo7qPU25sV/bPXJtHsu+aDDh6nVdA3/Sw1lEKdFCzO4IHofDIWwmRLv6YeVEJw6Q
-         Nctk5ONNlDjbicOWFV2Yg8VuDTDyRrPrgHQ0ncZBkfStIXJt2qcBb1xUYqyc9WKhcatr
-         YHrg==
-X-Gm-Message-State: AOAM5320/3+d1YFo05t2kp/eCMSY5YdGlGJiDvWrpE4HUeSS4sqG/+FE
-        PBEq++8rz1o4EnMOz6OTzbQt2GwTYJSq+Z43Y81MVA==
-X-Google-Smtp-Source: ABdhPJw1Ddg81VAJhNmhtE0Qulu8T/IcFBqzefZSxTWJ1RiLL7hGzoUJLJYUNL3KckdDR7CVcAzOxVuv71RyuDv3w+0=
-X-Received: by 2002:aca:2807:: with SMTP id 7mr374627oix.140.1595267394146;
- Mon, 20 Jul 2020 10:49:54 -0700 (PDT)
+        Mon, 20 Jul 2020 13:51:30 -0400
+Received: from mail-co1nam11on2120.outbound.protection.outlook.com ([40.107.220.120]:18209
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726437AbgGTRv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 13:51:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Urb/WLge3sCGJOcqzaaSUudenjXjs6YOFYkPb3o4ywaENUDtSvtjB/RBTWwrVE5ZOD9J8piCPPvr4+vm+ITZKX0GVhl+Jrq+8xuZazCvPmHh2CVMYncbSo2IfwlceGVXu1577O+ltpXr9vGogGAQ6BliSjMBybElqTolE9yTqF5w+dQrUr1WIF0y6UQRfaKbIK/zugQceqp+Zs11T7cBzl/mKl5efgzmMXXGNFHupxhVhMiWME/ryju7ffpkvLJCzu+21VOgU+EgYANPpqhfGRk17ka6yq2G5Pjwz/vDX9gDIpy6jJUpkZiyQapyN2aAKQuiznM02N4LLU3i0UzyPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QR+Y2fAkmPe6JYkFP/rOoE4jDpQ1qxzH1x2DnzpA4fE=;
+ b=eJI+7C6USuRD/uxgJYrKOzIrPHl06hXn3+eBFIZVmEbLjYxNEdJipokEutcN5mncIDwkIxAEklhsCGFMig2Tf++veo4QdOydPvYgkKUm9G/UYXixNukxTlZ7bssi+WZ814TYYNFElAiU+mJeL6V3SUjcS9N1NOGYIIBLSVyN9McLOtSTnStZk0cge66ffZxR+RutrxuFSr6Ga6j61JBg++2F6eUiM+Iaq7eDKUFCarS05UpW3TulNT8Hp12N9sCL289F9N8MWcp0vhFYvh+7Tb3Le5tXtWe2irwrE7ExtGsXnpfOhwOyabZUAt6+NbU4SsFVrQPOIgmEu2gh9dtNkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QR+Y2fAkmPe6JYkFP/rOoE4jDpQ1qxzH1x2DnzpA4fE=;
+ b=Yoty4xJH2UNTTuGPSkmn7KVHS+6auojj/l0qD/tO3JRQNZEM5bdaVtMFBBSxlzOGT+TWAGFSvDJ9hl+Zr3U9ulAXg356abMwpDJlJ9E1WhSUGw67S6Hkp9AkmQFjlM6qfPcPKQOnpPfzkdnj1F8PvKta7Kr0sbO9TZi/c7HvaAU=
+Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
+ (2603:10b6:207:30::18) by BL0PR2101MB1090.namprd21.prod.outlook.com
+ (2603:10b6:207:37::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.1; Mon, 20 Jul
+ 2020 17:51:26 +0000
+Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
+ ([fe80::f5a4:d43f:75c1:1b33]) by BL0PR2101MB0930.namprd21.prod.outlook.com
+ ([fe80::f5a4:d43f:75c1:1b33%5]) with mapi id 15.20.3239.001; Mon, 20 Jul 2020
+ 17:51:26 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Sriram Krishnan <srirakr2@cisco.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+CC:     "mbumgard@cisco.com" <mbumgard@cisco.com>,
+        "ugm@cisco.com" <ugm@cisco.com>, "nimm@cisco.com" <nimm@cisco.com>,
+        "xe-linux-external@cisco.com" <xe-linux-external@cisco.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3] net: hyperv: add support for vlans in netvsc driver
+Thread-Topic: [PATCH v3] net: hyperv: add support for vlans in netvsc driver
+Thread-Index: AQHWXrU+cNEwHb7+0Uu0LFIibsmHIakQvsqA
+Date:   Mon, 20 Jul 2020 17:51:25 +0000
+Message-ID: <BL0PR2101MB09302E2F00839462B1D70F08CA7B0@BL0PR2101MB0930.namprd21.prod.outlook.com>
+References: <20200720164551.14153-1-srirakr2@cisco.com>
+In-Reply-To: <20200720164551.14153-1-srirakr2@cisco.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-20T17:51:24Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5d0d978b-5779-4471-9133-f33f9c4aa39f;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: cisco.com; dkim=none (message not signed)
+ header.d=none;cisco.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [75.100.88.238]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 51924ae2-ab90-4c76-3fd5-08d82cd58618
+x-ms-traffictypediagnostic: BL0PR2101MB1090:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR2101MB10900066DEDFFE9274FF84D1CA7B0@BL0PR2101MB1090.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: p0KCYCwfadksexxs4PyOBnHX6gYvya/rglYbYD5L4no0dvZedOkIvH+M2iXMrRpMIOfx3G8WFxCdf0Al0SyjWdxiBTMmKgp6T9HlGfJ26SzhBq5Pi77oJFJzq5vY9miAei7xc+DU3So+TSGnsS7OUs4ICAf/xEHoj10NeAyvGJRJqNlBwdagBWFl+Y4TGHQJkdEMiTDKcOvwLaO+rNrGbCIIaeWLtG/guW3wEeTagTk7NPCz5XZVYMk+gEly7Z829jwEr1Z86azS02vYHeeArV0iBxskojTc1b8YHkcDvX+/Dv8Wm4YDduxiGUypKgYE7ZWanxG03ZZGM/u1l/Vlkw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB0930.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(366004)(136003)(346002)(396003)(86362001)(478600001)(316002)(33656002)(5660300002)(54906003)(76116006)(82950400001)(8936002)(10290500003)(71200400001)(8990500004)(82960400001)(4326008)(66946007)(4744005)(66556008)(52536014)(6506007)(7696005)(8676002)(9686003)(186003)(83380400001)(2906002)(55016002)(66446008)(64756008)(110136005)(66476007)(26005)(7416002)(53546011);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: c3BBgYKftfZ7MK6tHsel5smm3sEsCtcEgbCXyG5BFczk8eh5nvFx8qVZXGD3E/SULjKK9riD3RLPeaHWoTVjcVPuDiS7i/oiBrATCLJr80WJ5pMi554o3/naiavBB+riTEYo0HZz2QjIJ/H47KMDZXDSOOt40zBD4P9Zcy7/e+GPfO8HCFPCGI35pGVAdVdAGtNOItDb1Phf6EfQd9zOjkakaIUUEryv48In5K8AGgQQifMVJWb7gApuX0+S7s+K7JV4qnQ7kJZdl+Z7UmwcmquNzLuecL5W7YFZRLlF8T7ZZPrgAtLMeXlhD4CO4f+j0nU67Za6vhpf0Mvkb8DcgBmL4ErX5fZp1JueBJIR6VOPy9iPytZ2Jv6OZ+Nvp4hcptqiIazOX0Dn4M5zTdZWQnvMLbJov9Y3wfBTEqUAbG9pekgH6p29/Z30H00S4c7WRnT0I6CfmaMF79Qh7WAE/NzVQSwkS84EAV100vLQ8+ZdRCZ2WH23QIXqbTfDzc6rB9tGDatj4VzUcoQHOuMCqya8ruhWDch6cysTxAz5dobBPSHsmAeXQTRzrLJOny1TClS3X3zBVm8W5PEqEYnwkRAUCiHBxdTgpT7RrJ64sX1AFS3fhobjAZaMI6XSu6v6X4xLguNDvAHqCiEg7owz4Q==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200717222819.26198-1-nramas@linux.microsoft.com>
- <20200717222819.26198-5-nramas@linux.microsoft.com> <CAEjxPJ7xQtZToF4d2w_o8SXFKG9kPZaWTWTFqyC-7GwBWnQa0A@mail.gmail.com>
- <c0fbfcf3-ec36-872a-c389-b3fea214848c@linux.microsoft.com>
- <CAEjxPJ7VH18bEo6+U1GWrx=tHVGr=6XtF5_ygcfQYgdtZ74J+g@mail.gmail.com>
- <bea0cb52-2e13-fb14-b66c-b57287c23c3f@linux.microsoft.com> <CAEjxPJ6Rt7u3shLbxoPRHgr-D=CD9d_eXRB07A9qN7RmJwZAwA@mail.gmail.com>
-In-Reply-To: <CAEjxPJ6Rt7u3shLbxoPRHgr-D=CD9d_eXRB07A9qN7RmJwZAwA@mail.gmail.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Mon, 20 Jul 2020 13:49:43 -0400
-Message-ID: <CAEjxPJ6-jHha+CeqSdQ2O0bpyQe_9buj2ENZz6FNj6S87XSSfg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] LSM: Define SELinux function to measure security state
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB0930.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51924ae2-ab90-4c76-3fd5-08d82cd58618
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 17:51:26.1028
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bDeKlYB3O3DdPti9FTkwGKOjF2jXG1RCcw3uvyrjwjRb4kvU+EjhGE5NP+UC5muyEBcH4uDhJ+sGX8Cowa4lxQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 1:40 PM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
->
-> On Mon, Jul 20, 2020 at 1:34 PM Lakshmi Ramasubramanian
-> <nramas@linux.microsoft.com> wrote:
-> >
-> > On 7/20/20 10:06 AM, Stephen Smalley wrote:
-> >
-> > >> The above will ensure the following sequence will be measured:
-> > >>    #1 State A - Measured
-> > >>    #2 Change from State A to State B - Measured
-> > >>    #3 Change from State B back to State A - Since the measured data is
-> > >> same as in #1, the change will be measured only if the event name is
-> > >> different between #1 and #3
-> > >
-> > > Perhaps the timestamp / sequence number should be part of the hashed
-> > > data instead of the event name?
-> >
-> > If the timestamp/seqno is part of the hashed data, on every call to
-> > measure IMA will add a new entry in the IMA log. This would fill up the
-> > IMA log - even when there is no change in the measured data.
-> >
-> > To avoid that I keep the last measurement in SELinux and measure only
-> > when there is a change with the timestamp in the event name.
-> >
-> > > I can see the appraiser wanting to know two things:
-> > > 1) The current state of the system (e.g. is it enforcing, is the
-> > > currently loaded policy the expected one?).
-> > > 2) Has the system ever been in an unexpected state (e.g. was it
-> > > temporarily switched to permissive or had an unexpected policy
-> > > loaded?)
-> >
-> > Yes - you are right.
-> > The appraiser will have to look at the entire IMA log (and the
-> > corresponding TPM PCR data) to know the above.
-> >
-> > Time t0 => State of the system measured
-> > Time tn => State changed and the new state measured
-> > Time tm => State changed again and the new state measured.
-> >
-> > Say, the measurement at "Time tn" was an illegal change, the appraiser
-> > would know.
-> >
-> > >
-> > > I applied the patch series on top of the next-integrity branch, added
-> > > measure func=LSM_STATE to ima-policy, and booted that kernel.  I get
-> > > the following entries in ascii_runtime_measurements, but seemingly
-> > > missing the final field:
-> > >
-> > > 10 8a09c48af4f8a817f59b495bd82971e096e2e367 ima-ng
-> > > sha256:21c3d7b09b62b4d0b3ed15ba990f816b94808f90b76787bfae755c4b3a44cd24
-> > > selinux-state
-> > > 10 e610908931d70990a2855ddb33c16af2d82ce56a ima-ng
-> > > sha256:c8898652afd5527ef4eaf8d85f5fee1d91fcccee34bc97f6e55b96746bedb318
-> > > selinux-policy-hash
-> > >
-> > > Thus, I cannot verify. What am I missing?
-> > >
-> >
-> > Looks like the template used is ima-ng which doesn't include the
-> > measured buffer. Please set template to "ima-buf" in the policy.
-> >
-> > For example,
-> > measure func=LSM_STATE template=ima-buf
->
-> It seems like one shouldn't need to manually specify it if it is the
-> only template that yields a useful result for the LSM_STATE function?
 
-Actually, if we used ima-ng template for selinux-policy-hash, then
-instead of needing to hash the policy
-first and passing the hash to IMA, we could just pass the policy as
-the buffer and IMA would take care of the hashing, right?
-And we only need to use ima-buf for the selinux-state if we want the
-measurement list to include the string value that
-was hashed; if we just want to compare against a known-good, it would
-suffice to use ima-ng for it as well, right?
+
+> -----Original Message-----
+> From: Sriram Krishnan <srirakr2@cisco.com>
+> Sent: Monday, July 20, 2020 12:46 PM
+> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> Wei Liu <wei.liu@kernel.org>
+> Cc: mbumgard@cisco.com; ugm@cisco.com; nimm@cisco.com; xe-linux-
+> external@cisco.com; David S. Miller <davem@davemloft.net>; Jakub Kicinski
+> <kuba@kernel.org>; linux-hyperv@vger.kernel.org; netdev@vger.kernel.org;
+> linux-kernel@vger.kernel.org
+> Subject: [PATCH v3] net: hyperv: add support for vlans in netvsc driver
+
+Also netvsc already supports vlan in "regular" cases. Please be more specif=
+ic in the subject.
+Suggested subject: hv_netvsc: add support for vlans in AF_PACKET mode
+
+Thanks,
+- Haiyang
