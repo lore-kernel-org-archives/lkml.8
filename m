@@ -2,146 +2,162 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2481C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C7BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4DD22C9D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED34F22482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:38:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="InuP5ggH"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bgYq4sPm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgGTKiO (ORCPT
+        id S1728453AbgGTKid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 06:38:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728200AbgGTKiN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 06:38:13 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3735CC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:38:13 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id a14so2459713wra.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:38:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=N+KShEFnJxGX9yyx1xEF9LSqKvHu0acMJ8Lfm+hfvF0=;
-        b=InuP5ggHa1/pALofoPR9I3mpWK6lk35q8MGa+FJ0Cza+bBiYtFfAfJifs5zPiJVAKO
-         CSLgdxPzxyqBiXe2uGN/mkOvmK79TKhwicrYic0fPSwbvA1F2oYSeo6BnetKrChAk48K
-         RphsMD8e2J70zfqCIDM8f8/BX73vUE0Z2Ia+w26NKh8JaxhJndQox54CkzJLPm91UjXc
-         DczOioE6l7MGFL2/aBhgWuSQP6Va27Dm3aIXNq//YPAH0ckPXiXknmAjFN1Bo4N8Oyob
-         HjJp9feTK7Mg2/cI61mhCw7+gbtK7C6kpJ+P/DHeZGYRrsZfJ8RoYMxCiT2cGVJ3rtfD
-         ISlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=N+KShEFnJxGX9yyx1xEF9LSqKvHu0acMJ8Lfm+hfvF0=;
-        b=sOd90OvFWglGMqqbnBLASJVZAJBU2qzMNdCKO9g2VDA67UTzNc4zu+O+p44DLL8H+D
-         kWFMY4sr2wZTgm+/CKtqH6PGQN/dhAu7lRG08HSuK2r4trfGQGNy+FwGKakbU2iqy93+
-         Eq57dwVsUi2cPEEy8b1BXiPpe6yxWnJ/gjUpkXs8Iu/yyXRV+04QkXc17OO53eGzKw8I
-         dfWIDKNOxIhI6RpsUtTn94vifZL6/9XQY71RkgX3O6v76B/mLQOwxGPIGjyOffkx8O33
-         YbXdt357ZAHuX/L32n3GZcKwEwVIhDaFRngw23LJJQHhE1nfwFjsKEYSiul7MduFO15N
-         reVw==
-X-Gm-Message-State: AOAM530XSePSuszVUaxRr//1EVj7FRFQdOAtb+sZXYEIxeNTX+RBlTf8
-        sbB20qwQ2DMAHVUqxZQ8IL6pbg==
-X-Google-Smtp-Source: ABdhPJw1/id93mBovoy22Lfk5BHPwv61GWmvOT4Bygs+7ogCIaqufAY1PEFM0xd4XmzTqhaH/IU8vg==
-X-Received: by 2002:a5d:548f:: with SMTP id h15mr5097677wrv.331.1595241491766;
-        Mon, 20 Jul 2020 03:38:11 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:3590:b402:869a:11fc? ([2a01:e34:ed2f:f020:3590:b402:869a:11fc])
-        by smtp.googlemail.com with ESMTPSA id t141sm33345477wmt.26.2020.07.20.03.38.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 03:38:11 -0700 (PDT)
-Subject: Re: [PATCH v4 08/16] thermal: sun8i: add TEMP_CALIB_MASK for
- calibration data in sun50i_h6_ths_calibrate
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     Frank Lee <frank@allwinnertech.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
-        liyong@allwinnertech.com
-References: <cover.1594708863.git.frank@allwinnertech.com>
- <b8761e036b25f20873534e5f8d10b37b5d2ce72c.1594708864.git.frank@allwinnertech.com>
- <4771acd6-ecd3-b8e1-8605-75d78720b1d3@linaro.org>
- <CAEExFWv9_1kec_b+t+nnvT3cziXzmVa8GzJT3pQAZiCf4KA0ig@mail.gmail.com>
- <836e1b23-1c75-57fe-6e45-f7141272071c@linaro.org>
- <CAEExFWsJBizFArd+9Mh6D=o6rvD7GLPZ-1pNFzTvBiE+uKwVhQ@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <c1491845-ebd0-27d2-cf50-a8c5847869ab@linaro.org>
-Date:   Mon, 20 Jul 2020 12:38:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 06:38:33 -0400
+Received: from mail-eopbgr150072.outbound.protection.outlook.com ([40.107.15.72]:51840
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728200AbgGTKid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 06:38:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G5wqStpiyUgOgsBZQNrIovjfmM/EW+lt9H2zZ5Xvo7C4nUiNdTnANNWZ9bdS2jTizhh08bJbia45OYzLOMFjRw2eDQe73xhQZmTXZgdSl4N6J+ALpaGMjBxgV2VvhrgVPer67O0YktVbtVSuEqJIGaN7q7lQllpTgRDWkGpCihZ69t++PBHPzlUwR2Nh0ohhXDVjRsKbOnPHndS8wtkGOHbJf6p4hmCzqzuYhVqtUCpy+7BjuKpsXHNc08NDX2mkCV9RPLcfDYkcNh8eVmYuP2Tk3eaSAVOHh7qfSUZXNoKxCPP4G44ztufQBkhNcycL9VNkuV5AbVHLaI2XCjcjfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Plgb1Y7EdU4GAPagI7YeaATcZqrNuHiqbe5le8Xon98=;
+ b=Ri8XrCFyOC6wtHsGNpXG/riHgOosP9Q/8QnG6DyQmHMvIp0Gl34kdVRkiY6J5jQdvxLJqt99i+LC6wKtXwEYccvIWQSxyTHy9XeREr4vxporXHc/N+L9XQCGVCZ1lPMiCwkq5jNiVXSa/9nW7NXsDyT0eNJKtXMHxqxj0pPe+oX3ub4eAd35Ju7rcIwi+0iBfv+bWdjvwRBrCy8x7Xnyt2LSWsFkGh1ia0YQcQfytNMt2Ci+Wty0c5zVf/Rkq9O+bbJv/90m/11sT8X3O1e4sYrv2QpbISPlIBdGmO3tlOr9UA4Nr8isG+hHCWBWZaa4tsotNDI2ANJ5wo+u7Q3eOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Plgb1Y7EdU4GAPagI7YeaATcZqrNuHiqbe5le8Xon98=;
+ b=bgYq4sPmDpxQv3NPr9B6fuckcjogi7tsW4bpOBbCUKRn0/+geCe241JiObI16+57DuqOMqn5/LA/PIeEeSppYk0hX3Rpo+h8l84MZqn3W9R2z29VxJYqcVcE1OVNLpGifCSejsaGS8HQAOJRHYD2lhwyUjtatDEtUwnlwM65fqE=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR04MB5103.eurprd04.prod.outlook.com (2603:10a6:803:51::19)
+ by VI1PR04MB5005.eurprd04.prod.outlook.com (2603:10a6:803:57::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.25; Mon, 20 Jul
+ 2020 10:38:30 +0000
+Received: from VI1PR04MB5103.eurprd04.prod.outlook.com
+ ([fe80::596d:cc81:f48a:daf7]) by VI1PR04MB5103.eurprd04.prod.outlook.com
+ ([fe80::596d:cc81:f48a:daf7%2]) with mapi id 15.20.3174.030; Mon, 20 Jul 2020
+ 10:38:30 +0000
+From:   hongbo.wang@nxp.com
+To:     xiaoliang.yang_1@nxp.com, allan.nielsen@microchip.com,
+        po.liu@nxp.com, claudiu.manoil@nxp.com,
+        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
+        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
+        f.fainelli@gmail.com, vivien.didelot@gmail.com,
+        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
+        kuba@kernel.org, vinicius.gomes@intel.com,
+        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, linux-devel@linux.nxdi.nxp.com
+Cc:     "hongbo.wang" <hongbo.wang@nxp.com>
+Subject: [PATCH 1/2] net: dsa: Add flag for 802.1AD when adding VLAN for dsa  switch and port
+Date:   Mon, 20 Jul 2020 18:41:18 +0800
+Message-Id: <20200720104119.19146-1-hongbo.wang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SGAP274CA0009.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::21)
+ To VI1PR04MB5103.eurprd04.prod.outlook.com (2603:10a6:803:51::19)
 MIME-Version: 1.0
-In-Reply-To: <CAEExFWsJBizFArd+9Mh6D=o6rvD7GLPZ-1pNFzTvBiE+uKwVhQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from whb-OptiPlex-790.ap.freescale.net (119.31.174.73) by SGAP274CA0009.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17 via Frontend Transport; Mon, 20 Jul 2020 10:38:22 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [119.31.174.73]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e822d21e-5d83-4d5d-92a2-08d82c990ac4
+X-MS-TrafficTypeDiagnostic: VI1PR04MB5005:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB50050BD105A8DE63C9CA0B21E17B0@VI1PR04MB5005.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: apJkkIwemWwcGn7UjH+grPrNhTcBsSo3hbhc246ELLAgxnD3lyQatYEnhQjDjaBzkXW8TK3hazmCA/qkQ/4tbfVN7yCQuT6yxsHOVkx+NSMrxw0LKQYJaeBWfhRZ2i+TWqQmH5cs+zo1GnaBLHTkjykCB1/tL0RhytPtQ/JPxVSi3IcntG6mTetSgPOcE+Sx5CoaifiiXwkJ3QcIWfjdiD0B1dV8/Kyw3i9n31rApFipXyVWAm49StF5H5wqseUyM6UhPIaulpUJX6o+dgQfsU2f3omu69U0QqU6ufRfXGBKvKmUqi99utL95jwazgfZWGLj3TcAGaqNW0K7K71XXP+Jper6s+CsvJcSoaZVaIs=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5103.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(396003)(39860400002)(366004)(136003)(26005)(2906002)(316002)(36756003)(7416002)(83380400001)(86362001)(186003)(16526019)(52116002)(66946007)(6506007)(66556008)(66476007)(6486002)(2616005)(956004)(6666004)(9686003)(6512007)(8936002)(1076003)(5660300002)(4326008)(478600001)(8676002)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: dI4UoxmPvHtplLTdLqt9pxEOKCy89OWzsMhWTia1qz8tFs+6jeeGunsajuACGPsImvFZY8hRhVuFJqabQNOkq/ODryWQ1sy9bIqvPVPbGIQXUmSRPTOFMoEUVmW5xHdOu+1/wWrqMBkjB2t30168XEV0wGGBOdbfgqjhb+ZeavW/AcVxQL8jz8cNUuwdoqLsPLDeVa7qqkwVMfT76STIa0sRpk0iwAz/jRxCdhju4LHuARxnLdlpGfLhdNGpi/pKD7zOPaelI7NvpzHhKahfClGFvswNHhpFzlSDeJglcUzkeIadjEam4yRd6X1vKeiUKTXBpYq0x9oGiRlkf2X5IdsGyk+lhOLP1tS3fIhg7kHP5Wx4/LrWa+YaxhfCq5ry1T6/3LtjsSLku4XzBckQUcVLEYOq7VtkYDDcHgOKQcFuwwvLFWcaZbiA772h6/U+K4I3vle5EEzutO8Dk0KA2Cm7d4AImseQMH5wpZMwZxs=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e822d21e-5d83-4d5d-92a2-08d82c990ac4
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5103.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 10:38:29.8326
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H665WB22f1jTHmu0wU6OgmcFIsMcGtGQw2e6agANPySlBBmTVkzSj506sRWZu5+jY4zSmPRkgzkBTtFjbACW4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5005
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/07/2020 11:27, Frank Lee wrote:
-> HI,
-> On Fri, Jul 17, 2020 at 3:56 PM Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
->>
->> On 17/07/2020 09:35, Frank Lee wrote:
->>> On Fri, Jul 17, 2020 at 12:26 PM Daniel Lezcano
->>> <daniel.lezcano@linaro.org> wrote:
->>>>
->>>> On 14/07/2020 09:13, Frank Lee wrote:
->>>>> From: Yangtao Li <frank@allwinnertech.com>
->>>>>
->>>>> For sun50i_h6_ths_calibrate(), the data read from nvmem needs a round of
->>>>> calculation. On the other hand, the newer SOC may store other data in
->>>>> the space other than 12bit sensor data. Add mask operation to read data
->>>>> to avoid conversion error.
->>>>>
->>>>> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
->>>>> Reviewed-by: Yangtao Li <tiny.windzz@gmail.com>
->>>>
->>>> Can you clarify these SoB ?
->>>
->>> Previously I used 'Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>',
->>> maybe this should be removed directly?
->>>
->>>>
->>>> Frank Lee==Yangtao Li==frank@allwinnertech.com==tiny.windzz@gmail.com ?
->>>>
->>>
->>> Yeah.
->>
->> You are not supposed to add reviewed-by yourself. Please remove it.
-> 
-> Should I resend the entire series or just the thermal patch?
-> What about those that have been applied.
+From: "hongbo.wang" <hongbo.wang@nxp.com>
 
-I can not speak on behalf of other maintainers.
+the following command can be supported:
+ip link add link swp1 name swp1.100 type vlan protocol 802.1ad id 100
 
-The simplest would be to ask them directly.
+Signed-off-by: hongbo.wang <hongbo.wang@nxp.com>
+---
+ include/uapi/linux/if_bridge.h | 1 +
+ net/dsa/slave.c                | 9 +++++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-If you want to go forward with the thermal changes, you can send them
-separately but Maxim's Ack will be needed anyway.
-
-
+diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
+index caa6914a3e53..ecd960aa65c7 100644
+--- a/include/uapi/linux/if_bridge.h
++++ b/include/uapi/linux/if_bridge.h
+@@ -132,6 +132,7 @@ enum {
+ #define BRIDGE_VLAN_INFO_RANGE_END	(1<<4) /* VLAN is end of vlan range */
+ #define BRIDGE_VLAN_INFO_BRENTRY	(1<<5) /* Global bridge VLAN entry */
+ #define BRIDGE_VLAN_INFO_ONLY_OPTS	(1<<6) /* Skip create/delete/flags */
++#define BRIDGE_VLAN_INFO_8021AD	(1<<7) /* VLAN is 802.1AD protocol */
+ 
+ struct bridge_vlan_info {
+ 	__u16 flags;
+diff --git a/net/dsa/slave.c b/net/dsa/slave.c
+index 4c7f086a047b..376d7ac5f1e5 100644
+--- a/net/dsa/slave.c
++++ b/net/dsa/slave.c
+@@ -1232,6 +1232,7 @@ static int dsa_slave_get_ts_info(struct net_device *dev,
+ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
+ 				     u16 vid)
+ {
++	u16 flags = 0;
+ 	struct dsa_port *dp = dsa_slave_to_port(dev);
+ 	struct bridge_vlan_info info;
+ 	int ret;
+@@ -1252,7 +1253,10 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
+ 			return -EBUSY;
+ 	}
+ 
+-	ret = dsa_port_vid_add(dp, vid, 0);
++	if (ntohs(proto) == ETH_P_8021AD)
++		flags |= BRIDGE_VLAN_INFO_8021AD;
++
++	ret = dsa_port_vid_add(dp, vid, flags);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1744,7 +1748,8 @@ int dsa_slave_create(struct dsa_port *port)
+ 
+ 	slave_dev->features = master->vlan_features | NETIF_F_HW_TC;
+ 	if (ds->ops->port_vlan_add && ds->ops->port_vlan_del)
+-		slave_dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER;
++		slave_dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER |
++				       NETIF_F_HW_VLAN_STAG_FILTER;
+ 	slave_dev->hw_features |= NETIF_F_HW_TC;
+ 	slave_dev->features |= NETIF_F_LLTX;
+ 	slave_dev->ethtool_ops = &dsa_slave_ethtool_ops;
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.17.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
