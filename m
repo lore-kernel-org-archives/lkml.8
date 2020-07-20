@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83E2C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BFBC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C007122CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EA7F22BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260244;
-	bh=CxX0AJT363wpSILQqMtjxZO6oSEWTDFfl6+P8HsqE2E=;
+	s=default; t=1595260248;
+	bh=bYcsp+lTAjYQXjg17ZAbSyfn2+pSwrVpblngizYvBnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a6fUQ+M015XykdrC0jw1OF+OSTu5wwUVvMcrzWV9VAp56sTBkONV8v76zy8GEqndA
-	 PzOWYX8mb7qUXwjqk8XsY5/vD+N4f4OlHtfEm00hya0IOOeKumrRBKqrw+XPb9FRS4
-	 YAdjbzG87K6SRURzYJMx4lSKPUUnFn+BUoOHh5Go=
+	b=WxRp77H/cQ5ncppAUE8ayPN0AjDunCw2qZVfvUSxCtFZ8Z1oUgEHhRttj1SzEEvmb
+	 93UDqne4zMnM/s/ybv4KeV0YbLvBjJCl2RG+NL6SmPHgQ1lZjGzts67GJHCeDhhKVl
+	 vHXMuMcyhMbuiM6Fj0tWk9j9DcSeVsticS4/Uu7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731152AbgGTPun (ORCPT
+        id S1730547AbgGTPuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:50:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47168 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:50:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730427AbgGTPug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:50:36 -0400
+        id S1731148AbgGTPum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:50:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A05E2065E;
-        Mon, 20 Jul 2020 15:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D651E206E9;
+        Mon, 20 Jul 2020 15:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260235;
-        bh=CxX0AJT363wpSILQqMtjxZO6oSEWTDFfl6+P8HsqE2E=;
+        s=default; t=1595260241;
+        bh=bYcsp+lTAjYQXjg17ZAbSyfn2+pSwrVpblngizYvBnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OfPqu1/lkxImMUtDcILKydIZqAw2jbCc2P4E+35QVh+wpaeqD7l1YKlebroLVpFEl
-         HiD1gFYdP/sDTt8K9KtPxMldnSMm4CHvoGjEoLcsUseMy+nxYxGNm5WQctqijY4/3t
-         UrN92q7xlZlSeBMSNutLnXrc09kIGK3NsFaOijUk=
+        b=vsvGioOlssbVPZ78droZfVkvWIqqm1p58xHXC+B8uzbCVkzusX/TenLU18S+QyBUI
+         XBVgIUeixFGsdQp7WFlISI9gaBHnhJFSVD0ayENr1ieDUXUJWdXBvGfBzvc4wFa4vM
+         AKjjjjrGwt88uQvEvhW5PmbaukuKihOi1b4hkcDM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        Alison Schofield <amsfield22@gmail.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Stable@vger.kernel.org
-Subject: [PATCH 4.19 029/133] iio:magnetometer:ak8974: Fix alignment and data leak issues
-Date:   Mon, 20 Jul 2020 17:36:16 +0200
-Message-Id: <20200720152805.143300701@linuxfoundation.org>
+Subject: [PATCH 4.19 030/133] iio:humidity:hdc100x Fix alignment and data leak issues
+Date:   Mon, 20 Jul 2020 17:36:17 +0200
+Message-Id: <20200720152805.191228617@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -63,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-commit 838e00b13bfd4cac8b24df25bfc58e2eb99bcc70 upstream.
+commit ea5e7a7bb6205d24371373cd80325db1bc15eded upstream.
 
 One of a class of bugs pointed out by Lars in a recent review.
 iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
@@ -72,58 +73,58 @@ this driver which uses an array of smaller elements on the stack.
 As Lars also noted this anti pattern can involve a leak of data to
 userspace and that indeed can happen here.  We close both issues by
 moving to a suitable structure in the iio_priv() data.
+This data is allocated with kzalloc so no data can leak apart
+from previous readings.
 
-This data is allocated with kzalloc so no data can leak appart from
-previous readings.
-
-Fixes: 7c94a8b2ee8cf ("iio: magn: add a driver for AK8974")
+Fixes: 16bf793f86b2 ("iio: humidity: hdc100x: add triggered buffer support for HDC100X")
 Reported-by: Lars-Peter Clausen <lars@metafoo.de>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Cc: Alison Schofield <amsfield22@gmail.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/magnetometer/ak8974.c |   10 +++++++---
+ drivers/iio/humidity/hdc100x.c |   10 +++++++---
  1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/magnetometer/ak8974.c
-+++ b/drivers/iio/magnetometer/ak8974.c
-@@ -184,6 +184,11 @@ struct ak8974 {
- 	bool drdy_irq;
- 	struct completion drdy_complete;
- 	bool drdy_active_low;
-+	/* Ensure timestamp is naturally aligned */
+--- a/drivers/iio/humidity/hdc100x.c
++++ b/drivers/iio/humidity/hdc100x.c
+@@ -38,6 +38,11 @@ struct hdc100x_data {
+ 
+ 	/* integration time of the sensor */
+ 	int adc_int_us[2];
++	/* Ensure natural alignment of timestamp */
 +	struct {
-+		__le16 channels[3];
++		__be16 channels[2];
 +		s64 ts __aligned(8);
 +	} scan;
  };
  
- static const char ak8974_reg_avdd[] = "avdd";
-@@ -580,7 +585,6 @@ static void ak8974_fill_buffer(struct ii
- {
- 	struct ak8974 *ak8974 = iio_priv(indio_dev);
+ /* integration time in us */
+@@ -319,7 +324,6 @@ static irqreturn_t hdc100x_trigger_handl
+ 	struct i2c_client *client = data->client;
+ 	int delay = data->adc_int_us[0] + data->adc_int_us[1];
  	int ret;
--	__le16 hw_values[8]; /* Three axes + 64bit padding */
+-	s16 buf[8];  /* 2x s16 + padding + 8 byte timestamp */
  
- 	pm_runtime_get_sync(&ak8974->i2c->dev);
- 	mutex_lock(&ak8974->lock);
-@@ -590,13 +594,13 @@ static void ak8974_fill_buffer(struct ii
- 		dev_err(&ak8974->i2c->dev, "error triggering measure\n");
- 		goto out_unlock;
+ 	/* dual read starts at temp register */
+ 	mutex_lock(&data->lock);
+@@ -330,13 +334,13 @@ static irqreturn_t hdc100x_trigger_handl
  	}
--	ret = ak8974_getresult(ak8974, hw_values);
-+	ret = ak8974_getresult(ak8974, ak8974->scan.channels);
- 	if (ret) {
- 		dev_err(&ak8974->i2c->dev, "error getting measures\n");
- 		goto out_unlock;
+ 	usleep_range(delay, delay + 1000);
+ 
+-	ret = i2c_master_recv(client, (u8 *)buf, 4);
++	ret = i2c_master_recv(client, (u8 *)data->scan.channels, 4);
+ 	if (ret < 0) {
+ 		dev_err(&client->dev, "cannot read sensor data\n");
+ 		goto err;
  	}
  
--	iio_push_to_buffers_with_timestamp(indio_dev, hw_values,
-+	iio_push_to_buffers_with_timestamp(indio_dev, &ak8974->scan,
+-	iio_push_to_buffers_with_timestamp(indio_dev, buf,
++	iio_push_to_buffers_with_timestamp(indio_dev, &data->scan,
  					   iio_get_time_ns(indio_dev));
- 
-  out_unlock:
+ err:
+ 	mutex_unlock(&data->lock);
 
 
