@@ -2,128 +2,140 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD418C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFEFC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93EF520758
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:37:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qlsUEVfW"
+	by mail.kernel.org (Postfix) with ESMTP id 1E4EB20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgGTFhL (ORCPT
+        id S1726349AbgGTFmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 01:37:11 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54493 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgGTFhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 01:37:10 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B99Tc3QHKz9sRN;
-        Mon, 20 Jul 2020 15:37:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595223428;
-        bh=2XgeZBjjdE0EpxfJtO9yXEaHdZMYFiS96jVy6kfAMZM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qlsUEVfWLhZzsoGzVlHp4kZq8qiAa6D5Om5fTtMuWSeNBwrT++rUkJ9L+HPA6Ym2h
-         dq1LXz+GdkdigcGaojJ45vM7QwW0poZ5TKCOYroY4uqOrAnok4NkdN1j3pA6dxRm5e
-         gUw2SkLPB+f8VDsuFeqPCQZp2ss+rxedWeEG3f6UavxxDBliaLU1BcuP0uQgF4WF3N
-         Jwu6dNahdOFOWEgwkHSlg2Wp2kBLarMI7DI58S4tor4UiFFzrm8WxIr0EdDr/MvOQ6
-         kJquRxwR5KD4xV2516E6bopxvuhF6o/CxfJraDDnvtu1c8bttF3+0+Kk85PCXIk/xl
-         UfW+jZvczW1eA==
-Date:   Mon, 20 Jul 2020 15:37:06 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20200720153706.440b86b5@canb.auug.org.au>
-In-Reply-To: <20200714135012.447d185c@canb.auug.org.au>
-References: <20200622113700.3dd74527@canb.auug.org.au>
-        <20200630125459.0ca67c38@canb.auug.org.au>
-        <20200707123301.79ca8a94@canb.auug.org.au>
-        <20200714135012.447d185c@canb.auug.org.au>
+        Mon, 20 Jul 2020 01:42:51 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:49593 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725845AbgGTFmu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 01:42:50 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0U3CmdbJ_1595223766;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U3CmdbJ_1595223766)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 20 Jul 2020 13:42:47 +0800
+Subject: Re: [PATCH] mm/vmstat: don't do count if no needs
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20200720052348.428564-1-alex.shi@linux.alibaba.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <1ef9baa0-9788-5917-2590-a8c3fc593b81@linux.alibaba.com>
+Date:   Mon, 20 Jul 2020 13:42:45 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Mns_sDvtX/2R3KX_Xse_pB5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200720052348.428564-1-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Mns_sDvtX/2R3KX_Xse_pB5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+From 4cb977d34227e4bafa95b8da5e47dbd8b6141d26 Mon Sep 17 00:00:00 2001
+From: Alex Shi <alex.shi@linux.alibaba.com>
+Date: Mon, 20 Jul 2020 11:50:12 +0800
+Subject: [PATCH v2] mm/vmstat: don't do count if no needs
 
-On Tue, 14 Jul 2020 13:50:12 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Tue, 7 Jul 2020 12:33:01 +1000 Stephen Rothwell <sfr@canb.auug.org.au>=
- wrote:
-> >
-> > On Tue, 30 Jun 2020 12:54:59 +1000 Stephen Rothwell <sfr@canb.auug.org.=
-au> wrote: =20
-> > >
-> > > On Mon, 22 Jun 2020 11:37:00 +1000 Stephen Rothwell <sfr@canb.auug.or=
-g.au> wrote:   =20
-> > > >
-> > > > After merging the tip tree, today's linux-next build (x86_64 allmod=
-config)
-> > > > failed like this:
-> > > >=20
-> > > > ERROR: modpost: "sched_setscheduler" [kernel/trace/ring_buffer_benc=
-hmark.ko] undefined!
-> > > >=20
-> > > > Caused by commit
-> > > >=20
-> > > >   616d91b68cd5 ("sched: Remove sched_setscheduler*() EXPORTs")
-> > > >=20
-> > > > Missed one :-)
-> > > >=20
-> > > > I have reverted that commit for today.     =20
-> > >=20
-> > > I am still reverting that commit.   =20
-> >=20
-> > Ditto ... =20
->=20
-> Ping?
+For couple of vmstat account funcs, the caller usually doesn't check the
+delta value, if delta == 0, irq or atomic operator is a waste. That's
+better to be skipped, also add unlikey() since !delta is less happened.
 
-OK, it has now been three weeks ... I must admit I was a little
-suprised that initial testing of the tip tree (or even the branch that
-this commit is on) did not pick this up.
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/vmstat.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-Unless there is something really weird going on here, Linus will notice
-if you try to get him to pull this as he tests with an x86_64
-allmodconfig build.
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index 3fb23a21f6dd..b02d99dff443 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -321,6 +321,9 @@ void __mod_zone_page_state(struct zone *zone, enum zone_stat_item item,
+ 	long x;
+ 	long t;
+ 
++	if (unlikely(!delta))
++		return;
++
+ 	x = delta + __this_cpu_read(*p);
+ 
+ 	t = __this_cpu_read(pcp->stat_threshold);
+@@ -341,6 +344,9 @@ void __mod_node_page_state(struct pglist_data *pgdat, enum node_stat_item item,
+ 	long x;
+ 	long t;
+ 
++	if (unlikely(!delta))
++		return;
++
+ 	x = delta + __this_cpu_read(*p);
+ 
+ 	t = __this_cpu_read(pcp->stat_threshold);
+@@ -484,6 +490,9 @@ static inline void mod_zone_state(struct zone *zone,
+ 	s8 __percpu *p = pcp->vm_stat_diff + item;
+ 	long o, n, t, z;
+ 
++	if (unlikely(!delta))
++		return;
++
+ 	do {
+ 		z = 0;  /* overflow to zone counters */
+ 
+@@ -518,6 +527,9 @@ static inline void mod_zone_state(struct zone *zone,
+ void mod_zone_page_state(struct zone *zone, enum zone_stat_item item,
+ 			 long delta)
+ {
++	if (unlikely(!delta))
++		return;
++
+ 	mod_zone_state(zone, item, delta, 0);
+ }
+ EXPORT_SYMBOL(mod_zone_page_state);
+@@ -541,6 +553,9 @@ static inline void mod_node_state(struct pglist_data *pgdat,
+ 	s8 __percpu *p = pcp->vm_node_stat_diff + item;
+ 	long o, n, t, z;
+ 
++	if (unlikely(!delta))
++		return;
++
+ 	do {
+ 		z = 0;  /* overflow to node counters */
+ 
+@@ -604,6 +619,9 @@ void mod_zone_page_state(struct zone *zone, enum zone_stat_item item,
+ {
+ 	unsigned long flags;
+ 
++	if (unlikely(!delta))
++		return;
++
+ 	local_irq_save(flags);
+ 	__mod_zone_page_state(zone, item, delta);
+ 	local_irq_restore(flags);
+@@ -647,6 +665,9 @@ void mod_node_page_state(struct pglist_data *pgdat, enum node_stat_item item,
+ {
+ 	unsigned long flags;
+ 
++	if (unlikely(!delta))
++		return;
++
+ 	local_irq_save(flags);
+ 	__mod_node_page_state(pgdat, item, delta);
+ 	local_irq_restore(flags);
+-- 
+2.18.4
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Mns_sDvtX/2R3KX_Xse_pB5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8VLYIACgkQAVBC80lX
-0GwklAf/QO1rgP8S5l24OL7AOPztYJ3K+g/LfkrM2C5KVqrNqs4s8Gibgc+jXjLD
-GcfmJ9DUgAlh6868Z6CRhKS9dxZCwojICPrJxDQ6Kbxb7/27oOdY1mAABBy7IOZq
-YO4GeJ9804pRzVXO+CDKsvcWMTiig60cjELmpqBS3j0AkkSdiVUYTE1vuJERRAjy
-AVhyshcgRQRNZ/7innrdIedENhDFabukPYNntOylbREJ/O7MyVVS5x6POgKn5NuF
-wFMU+KhL1eI7ZFGqUIAmbi+vmxjd9w0XidfnhjaPp1s4X68Qkeg8PkHvPbUhOkpz
-gCZlHd+sEounzSD61fz8mz0itFlrWA==
-=IZ0s
------END PGP SIGNATURE-----
-
---Sig_/Mns_sDvtX/2R3KX_Xse_pB5--
