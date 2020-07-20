@@ -2,70 +2,70 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792F4C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3E4208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF752080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:05:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgGTJEb (ORCPT
+        id S1728145AbgGTJFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:04:31 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53244 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726030AbgGTJEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:04:30 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D975527FA9C33330A3E9;
-        Mon, 20 Jul 2020 17:04:23 +0800 (CST)
-Received: from NRM-11.huawei.com (10.175.101.78) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 20 Jul 2020 17:04:12 +0800
-From:   Wang Yufen <wangyufen@huawei.com>
-To:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <brcm80211-dev-list@cypress.com>, <linux-wireless@vger.kernel.org>,
-        <davem@davemloft.net>, <kvalo@codeaurora.org>, <kuba@kernel.org>,
-        <franky.lin@broadcom.com>, <wright.feng@cypress.com>
-CC:     Wang Yufen <wangyufen@huawei.com>
-Subject: [PATCH net-next] ath11k: Fix possible memleak in ath11k_qmi_init_service
-Date:   Mon, 20 Jul 2020 17:36:44 +0800
-Message-ID: <1595237804-66297-1-git-send-email-wangyufen@huawei.com>
-X-Mailer: git-send-email 1.8.3
+        Mon, 20 Jul 2020 05:05:01 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:45371 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726030AbgGTJFB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 05:05:01 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0U3FgSDJ_1595235887;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U3FgSDJ_1595235887)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 20 Jul 2020 17:04:48 +0800
+Subject: Re: [PATCH v16 14/22] mm/thp: add tail pages into lru anyway in
+ split_huge_page()
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        =?UTF-8?Q?Mika_Penttil=c3=a4?= <mika.penttila@nextfour.com>
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1594429136-20002-15-git-send-email-alex.shi@linux.alibaba.com>
+ <d478a44b-c598-e99b-d438-9387f208ad37@linux.alibaba.com>
+ <20200720084931.jusstogio6j74uhs@box>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <dd33c5ae-7924-393d-ecd2-3c7fc1bfd1cc@linux.alibaba.com>
+Date:   Mon, 20 Jul 2020 17:04:46 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.101.78]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200720084931.jusstogio6j74uhs@box>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When qmi_add_lookup fail, we should destroy the workqueue
 
-Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Yufen <wangyufen@huawei.com>
----
- drivers/net/wireless/ath/ath11k/qmi.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
-index c00a99a..497cff7 100644
---- a/drivers/net/wireless/ath/ath11k/qmi.c
-+++ b/drivers/net/wireless/ath/ath11k/qmi.c
-@@ -2419,6 +2419,7 @@ int ath11k_qmi_init_service(struct ath11k_base *ab)
- 			     ATH11K_QMI_WLFW_SERVICE_INS_ID_V01);
- 	if (ret < 0) {
- 		ath11k_warn(ab, "failed to add qmi lookup\n");
-+		destroy_workqueue(ab->qmi.event_wq);
- 		return ret;
- 	}
- 
--- 
-1.8.3
+ÔÚ 2020/7/20 ÏÂÎç4:49, Kirill A. Shutemov Ð´µÀ:
+>>
+>> Split_huge_page() must start with PageLRU(head), and we are holding the
+>> lru_lock here. If the head was cleared lru bit unexpected, tracking it.
+>>
+>> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
+Hi Kirill,
+
+Millions thanks for review!
+
+Alex
