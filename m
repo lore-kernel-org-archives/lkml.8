@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FB0C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108CDC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F11C22CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4CB62064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260314;
-	bh=djA/OeVubFzdOM4XtK81Q1LOrasjYL79GbYkuCRyh+M=;
+	s=default; t=1595260317;
+	bh=2SI/obxwnO+F9HcxmYMvx5zfZB5dUmpSq9hdVd+K+0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KdS26MUXQ0/Jum+ggdeymgo7hQKwwD5KMa/JxIjsiC7tZLesWZ6O3iZQBIuLsBBq8
-	 1Cb7JYhlX6uZuI+BZRX8j7pnarHznE2iJTWaPfO2rktkB1E4w5cYr6FPGt7vSs2SPz
-	 wJcXhPj4ViPZIsUFbPLaQJtaX9CJiw6btEKEgURE=
+	b=TdY0H7x9rArwuyHIx7Diu9oTmFCXtECmTSnQYAUlzwrRS1IeoldqnqYUMWdh85rMl
+	 4yh9FhU9JXfbHiP04aCau0GxnQUp/QfEj13mq46G0e1maFULp+XO4JKMG5CQSX4yZE
+	 BIuiNvVIn69+uY5mdPLOJT4sspB7NIZliv2lbeLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730728AbgGTPvx (ORCPT
+        id S1731292AbgGTPv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48880 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:51:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731277AbgGTPvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:51:48 -0400
+        id S1731285AbgGTPvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:51:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F2C72064B;
-        Mon, 20 Jul 2020 15:51:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 342F0206E9;
+        Mon, 20 Jul 2020 15:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260308;
-        bh=djA/OeVubFzdOM4XtK81Q1LOrasjYL79GbYkuCRyh+M=;
+        s=default; t=1595260313;
+        bh=2SI/obxwnO+F9HcxmYMvx5zfZB5dUmpSq9hdVd+K+0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=swhCrwHvKO6H0p8m2Al8Wc8N/GlV4kJAIXL3tqZWcKTcdObpVTe3YjEEFapR6cX+8
-         9prV1qus4P3bFJli1NRGXfHmghZTd8QSsLtWhONwtKcdSm6NiSWy5VTPrEAqLUARpz
-         Sgx9qz2DJH9z6xxjzRA7rtuQMFbRbM7jo+AU/Z54=
+        b=z3p5LuVwasnqcT82CRwuT74wjLAtk+allki5MV8FuXRsXVEgwvY1fNPz6cv1wIqwv
+         yz7se1JeTOFf/GQePaqarfwPjMmBXdK+2ha26vzbGZyf1sWdbKUqMbHeTu6nOPOeuB
+         EMnqccYkFKF5YhV5b2LAgdjxRIbx1Csz8txz5fD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        Andi Shyti <andi@etezian.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 055/133] Input: mms114 - add extra compatible for mms345l
-Date:   Mon, 20 Jul 2020 17:36:42 +0200
-Message-Id: <20200720152806.377497942@linuxfoundation.org>
+        stable@vger.kernel.org, Christoffer Nielsen <cn@obviux.dk>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 057/133] ALSA: usb-audio: Add registration quirk for Kingston HyperX Cloud Flight S
+Date:   Mon, 20 Jul 2020 17:36:44 +0200
+Message-Id: <20200720152806.481069031@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -61,86 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Christoffer Nielsen <cn@obviux.dk>
 
-[ Upstream commit 7842087b0196d674ed877d768de8f2a34d7fdc53 ]
+[ Upstream commit 73094608b8e214952444fb104651704c98a37aeb ]
 
-MMS345L is another first generation touch screen from Melfas,
-which uses mostly the same registers as MMS152.
+Similar to the Kingston HyperX AMP, the Kingston HyperX Cloud
+Alpha S (0951:0x16ea) uses two interfaces, but only the second
+interface contains the capture stream. This patch delays the
+registration until the second interface appears.
 
-However, there is some garbage printed during initialization.
-Apparently MMS345L does not have the MMS152_COMPAT_GROUP register
-that is read+printed during initialization.
-
-  TSP FW Rev: bootloader 0x6 / core 0x26 / config 0x26, Compat group: \x06
-
-On earlier kernel versions the compat group was actually printed as
-an ASCII control character, seems like it gets escaped now.
-
-But we probably shouldn't print something from a random register.
-
-Add a separate "melfas,mms345l" compatible that avoids reading
-from the MMS152_COMPAT_GROUP register. This might also help in case
-there is some other device-specific quirk in the future.
-
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Andi Shyti <andi@etezian.org>
-Link: https://lore.kernel.org/r/20200423102431.2715-1-stephan@gerhold.net
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Christoffer Nielsen <cn@obviux.dk>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/CAOtG2YHOM3zy+ed9KS-J4HkZo_QGzcUG9MigSp4e4_-13r6B=Q@mail.gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/mms114.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ sound/usb/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
-index fca908ba4841f..fb28fd2d6f1c5 100644
---- a/drivers/input/touchscreen/mms114.c
-+++ b/drivers/input/touchscreen/mms114.c
-@@ -54,6 +54,7 @@
- enum mms_type {
- 	TYPE_MMS114	= 114,
- 	TYPE_MMS152	= 152,
-+	TYPE_MMS345L	= 345,
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 15d7d1e92245c..e9ec6166acc65 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1528,6 +1528,7 @@ struct registration_quirk {
+ static const struct registration_quirk registration_quirks[] = {
+ 	REG_QUIRK_ENTRY(0x0951, 0x16d8, 2),	/* Kingston HyperX AMP */
+ 	REG_QUIRK_ENTRY(0x0951, 0x16ed, 2),	/* Kingston HyperX Cloud Alpha S */
++	REG_QUIRK_ENTRY(0x0951, 0x16ea, 2),	/* Kingston HyperX Cloud Flight S */
+ 	{ 0 }					/* terminator */
  };
  
- struct mms114_data {
-@@ -250,6 +251,15 @@ static int mms114_get_version(struct mms114_data *data)
- 	int error;
- 
- 	switch (data->type) {
-+	case TYPE_MMS345L:
-+		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
-+		if (error)
-+			return error;
-+
-+		dev_info(dev, "TSP FW Rev: bootloader 0x%x / core 0x%x / config 0x%x\n",
-+			 buf[0], buf[1], buf[2]);
-+		break;
-+
- 	case TYPE_MMS152:
- 		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
- 		if (error)
-@@ -287,8 +297,8 @@ static int mms114_setup_regs(struct mms114_data *data)
- 	if (error < 0)
- 		return error;
- 
--	/* MMS152 has no configuration or power on registers */
--	if (data->type == TYPE_MMS152)
-+	/* Only MMS114 has configuration and power on registers */
-+	if (data->type != TYPE_MMS114)
- 		return 0;
- 
- 	error = mms114_set_active(data, true);
-@@ -598,6 +608,9 @@ static const struct of_device_id mms114_dt_match[] = {
- 	}, {
- 		.compatible = "melfas,mms152",
- 		.data = (void *)TYPE_MMS152,
-+	}, {
-+		.compatible = "melfas,mms345l",
-+		.data = (void *)TYPE_MMS345L,
- 	},
- 	{ }
- };
 -- 
 2.25.1
 
