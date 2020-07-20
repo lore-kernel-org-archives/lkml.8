@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8194C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09241C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76B7020684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF15F20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260900;
-	bh=03I4/cVaQmrkswviRdPNtFlcOl81leKqOafE+i78oiE=;
+	s=default; t=1595260907;
+	bh=Wx7PdpUCk4pt6D9wXcsrxs6ytZVrxI8u6eKHPIONvs0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ssm19WlR2q/f/bO8cVgvb9LYAq2X5JrpGPKhbRc6Auie1VycA5AolG3wJnZrKx7/Z
-	 A3oKyuM50fgYM3jsixTeHOjmBBBh+KgMnZgGhH8Ub1wtt0QBVJ/tdHlVr1K0cm5e/k
-	 EK+kMbagvE5R6EYMOr13FAshcufnnRF731RYmMbk=
+	b=IcCKq40/KLDULhyxHQG2LU9BZ1w+nRpOOaHprthFyddHCoOSJgq8VEAY/mjFUOn/d
+	 2AASSeguG1d0f51N/hL6h4P8LI8BUcOP+txXbS/hAYm9o/uZK8RqpPnADIPyrtmfqk
+	 1tC2JEsMg6usmlyoXrohQ/14dfOvsxSQgen+oo0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732235AbgGTQBj (ORCPT
+        id S1731700AbgGTQBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:01:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:01:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731073AbgGTQBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:01:31 -0400
+        id S1731073AbgGTQBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:01:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB2CA22D02;
-        Mon, 20 Jul 2020 16:01:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15BEB20672;
+        Mon, 20 Jul 2020 16:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260891;
-        bh=03I4/cVaQmrkswviRdPNtFlcOl81leKqOafE+i78oiE=;
+        s=default; t=1595260899;
+        bh=Wx7PdpUCk4pt6D9wXcsrxs6ytZVrxI8u6eKHPIONvs0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ml2gD/BY151+vHRu4tfPq0IXBVue0DurRlWpJ20mbeDm6LCwOlLadc1MoheuaV5Nk
-         EQUdA3i3Fo3CoKWF61fRXyYys+GLFPqlSIqURVOHujeabutsYeUgWoElbCihZCVWbP
-         gPP6p6paizZ/aPOGkfXtvNrFLTgyC1lozFOMt8Q8=
+        b=bRnbIgY5zUNgW4JYj05Bqstp7KHg1ajpQtTi8l4vjj1911Z92HWW6Fzo886J5Q1Xf
+         m8sgB15L/MoPg6iRvXMMacJopc57WMBynPc7EkTZnmuMcm7rsQe/Su2AUUGTH7NdWu
+         HXd/sPvWWn1mzMNY+ZdFcnqeqP0VAFZwu8pPpgOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Renato Lui Geh <renatogeh@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 102/215] iio: adc: ad7780: Fix a resource handling path in ad7780_probe()
-Date:   Mon, 20 Jul 2020 17:36:24 +0200
-Message-Id: <20200720152825.059287518@linuxfoundation.org>
+        stable@vger.kernel.org, Hien Dang <hien.dang.eb@renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 095/215] dmaengine: sh: usb-dmac: set tx_result parameters
+Date:   Mon, 20 Jul 2020 17:36:17 +0200
+Message-Id: <20200720152824.734501006@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -62,36 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit b0536f9826a5ed3328d527b4fc1686867a9f3041 ]
+[ Upstream commit 466257d9968ac79575831250b039dc07566c7b13 ]
 
-If 'ad7780_init_gpios()' fails, we must not release some resources that
-have not been allocated yet. Return directly instead.
+A client driver (renesas_usbhs) assumed that
+dmaengine_tx_status() could return the residue even if
+the transfer was completed. However, this was not correct
+usage [1] and this caused to break getting the residue after
+the commit 24461d9792c2 ("dmaengine: virt-dma: Fix access after
+free in vchan_complete()") actually. So, this is possible to get
+wrong received size if the usb controller gets a short packet.
+For example, g_zero driver causes "bad OUT byte" errors.
 
-Fixes: 5bb30e7daf00 ("staging: iio: ad7780: move regulator to after GPIO init")
-Fixes: 9085daa4abcc ("staging: iio: ad7780: add gain & filter gpio support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Acked-by: Renato Lui Geh <renatogeh@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To use the tx_result from the renesas_usbhs driver when
+the transfer is completed, set the tx_result parameters.
+
+Notes that the renesas_usbhs driver needs to update for it.
+
+[1]
+https://lore.kernel.org/dmaengine/20200616165550.GP2324254@vkoul-mobl/
+
+Reported-by: Hien Dang <hien.dang.eb@renesas.com>
+Fixes: 24461d9792c2 ("dmaengine: virt-dma: Fix access after free in vchan_complete()")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1592482053-19433-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/ad7780.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/sh/usb-dmac.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iio/adc/ad7780.c b/drivers/iio/adc/ad7780.c
-index 217a5a5c3c6d9..7e741294de7b8 100644
---- a/drivers/iio/adc/ad7780.c
-+++ b/drivers/iio/adc/ad7780.c
-@@ -309,7 +309,7 @@ static int ad7780_probe(struct spi_device *spi)
+diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
+index b218a013c2600..8f7ceb698226c 100644
+--- a/drivers/dma/sh/usb-dmac.c
++++ b/drivers/dma/sh/usb-dmac.c
+@@ -586,6 +586,8 @@ static void usb_dmac_isr_transfer_end(struct usb_dmac_chan *chan)
+ 		desc->residue = usb_dmac_get_current_residue(chan, desc,
+ 							desc->sg_index - 1);
+ 		desc->done_cookie = desc->vd.tx.cookie;
++		desc->vd.tx_result.result = DMA_TRANS_NOERROR;
++		desc->vd.tx_result.residue = desc->residue;
+ 		vchan_cookie_complete(&desc->vd);
  
- 	ret = ad7780_init_gpios(&spi->dev, st);
- 	if (ret)
--		goto error_cleanup_buffer_and_trigger;
-+		return ret;
- 
- 	st->reg = devm_regulator_get(&spi->dev, "avdd");
- 	if (IS_ERR(st->reg))
+ 		/* Restart the next transfer if this driver has a next desc */
 -- 
 2.25.1
 
