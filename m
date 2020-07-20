@@ -2,263 +2,168 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE30C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEE2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D282206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DBBD206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:04:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="wfCs5R6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbgGTQ7n (ORCPT
+        id S1729955AbgGTREg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:59:43 -0400
-Received: from mga01.intel.com ([192.55.52.88]:34689 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbgGTQ7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:59:42 -0400
-IronPort-SDR: X5i7G/3fOU8XWBUgB0C894DnURMjAwSfyJqHTm8RgmmcgXZAY6e4HLlVf0LOvXeYKgrt4DftkH
- RRw/BZ4qZzYw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="168102499"
-X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="scan'208";a="168102499"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 09:59:41 -0700
-IronPort-SDR: pDzSBFM4yJH1tXx4Kp7X64fNGS8OeidMosNuhZ4pmB+IxdQ1QIUfyNyWorsyqe1LEcQzrKgWS6
- NlhiyE6EaGaw==
-X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="scan'208";a="392088999"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.209.123.246])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 09:59:38 -0700
-Message-ID: <23893338061f2066693f4eb18c8d059d59327952.camel@linux.intel.com>
-Subject: Re: [PATCH v4 09/10] kallsyms: Hide layout
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        arjan@linux.intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        rick.p.edgecombe@intel.com, Tony Luck <tony.luck@intel.com>
-Date:   Mon, 20 Jul 2020 09:59:35 -0700
-In-Reply-To: <202007191815.D39859C@keescook>
-References: <20200717170008.5949-1-kristen@linux.intel.com>
-         <20200717170008.5949-10-kristen@linux.intel.com>
-         <202007191815.D39859C@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 20 Jul 2020 13:04:36 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:51184 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729322AbgGTREf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 13:04:35 -0400
+Received: from vla1-fdfb804fb3f3.qloud-c.yandex.net (vla1-fdfb804fb3f3.qloud-c.yandex.net [IPv6:2a02:6b8:c0d:3199:0:640:fdfb:804f])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id CF8172E1518;
+        Mon, 20 Jul 2020 20:04:32 +0300 (MSK)
+Received: from vla1-81430ab5870b.qloud-c.yandex.net (vla1-81430ab5870b.qloud-c.yandex.net [2a02:6b8:c0d:35a1:0:640:8143:ab5])
+        by vla1-fdfb804fb3f3.qloud-c.yandex.net (mxbackcorp/Yandex) with ESMTP id C1WzD3voiw-4Vs07Qlq;
+        Mon, 20 Jul 2020 20:04:32 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1595264672; bh=9nc5QhNzzf3iw2FswYDHWVtv9fk5oYfLZ674amcL4Ng=;
+        h=In-Reply-To:Message-Id:References:Date:Subject:To:From:Cc;
+        b=wfCs5R6UIKKZvgtfiMFoIwW2B3uUWxWCLG5i/phDFGnhyLObsjeOiuG8QAGh1/Qe2
+         qmvFUP3rhpfxokfyxCGkkN+OI09UatStqU4Tu74nZXYWnExqvVAlJRbMQRjnjc9YRO
+         mzW1X4lltZMG1ewsPrSNo1niGRToXBnNliQeZRy4=
+Authentication-Results: vla1-fdfb804fb3f3.qloud-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from 95.108.174.193-red.dhcp.yndx.net (95.108.174.193-red.dhcp.yndx.net [95.108.174.193])
+        by vla1-81430ab5870b.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id gk6qeYCCCz-4ViKeTXI;
+        Mon, 20 Jul 2020 20:04:31 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+From:   Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
+        paolo.valente@linaro.org,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Subject: [PATCH] block: bfq fix blkio cgroup leakage v2
+Date:   Mon, 20 Jul 2020 17:04:11 +0000
+Message-Id: <20200720170411.21250-1-dmtrmonakhov@yandex-team.ru>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <b4561a09-f00f-568b-9d55-0a2893de4be5@kernel.dk>
+References: <b4561a09-f00f-568b-9d55-0a2893de4be5@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-07-19 at 18:25 -0700, Kees Cook wrote:
-> On Fri, Jul 17, 2020 at 10:00:06AM -0700, Kristen Carlson Accardi
-> wrote:
-> > This patch makes /proc/kallsyms display in a random order, rather
-> > than sorted by address in order to hide the newly randomized
-> > address
-> > layout.
-> 
-> Ah! Much nicer. Is there any reason not to just do this
-> unconditionally,
-> regardless of FGKASLR? It's a smallish dynamic allocation, and
-> displaying kallsyms is hardly fast-path...
+commit db37a34c563b ("block, bfq: get a ref to a group when adding it to a service tree")
+introduce leak forbfq_group and blkcg_gq objects because of get/put
+imbalance. See trace balow:
+-> blkg_alloc
+   -> bfq_pq_alloc
+     -> bfqg_get (+1)
+->bfq_activate_bfqq
+  ->bfq_activate_requeue_entity
+    -> __bfq_activate_entity
+       ->bfq_get_entity
+         ->bfqg_and_blkg_get (+1)  <==== : Note1
+->bfq_del_bfqq_busy
+  ->bfq_deactivate_entity+0x53/0xc0 [bfq]
+    ->__bfq_deactivate_entity+0x1b8/0x210 [bfq]
+      -> bfq_forget_entity(is_in_service = true)
+	 entity->on_st_or_in_serv = false   <=== :Note2
+	 if (is_in_service)
+	     return;  ==> do not touch reference
+-> blkcg_css_offline
+ -> blkcg_destroy_blkgs
+  -> blkg_destroy
+   -> bfq_pd_offline
+    -> __bfq_deactivate_entity
+         if (!entity->on_st_or_in_serv) /* true, because (Note2)
+		return false;
+ -> bfq_pd_free
+    -> bfqg_put() (-1, byt bfqg->ref == 2) because of (Note2)
+So bfq_group and blkcg_gq  will leak forever, see test-case below.
 
-My only concern would be whether or not there are scripts out there
-which assume the list would be ordered. If someone chooses to enable
-CONFIG_FG_KASLR, I think that it is reasonable to break those scripts.
-On the flip side, I don't know why it needs to come out of
-/proc/kallsyms in order, you can always just sort it after the fact if
-you need it sorted. It would make it more maintainable to not special
-case this. Hopefully a maintainer will comment on their preference.
-Another thing I do in this patch is continue to use the existing sorted
-by address functions if you are root. I didn't know if this was
-neccessary - it'd be nice if we could just do it the same way all the
-time. But I need some guidance here.
+We should drop group reference once it finaly removed from service
+inside __bfq_bfqd_reset_in_service, as we do with queue entities.
 
-> 
-> > Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-> > Reviewed-by: Tony Luck <tony.luck@intel.com>
-> > Tested-by: Tony Luck <tony.luck@intel.com>
-> > ---
-> >  kernel/kallsyms.c | 163
-> > +++++++++++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 162 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-> > index bb14e64f62a4..45d147f7f10e 100644
-> > --- a/kernel/kallsyms.c
-> > +++ b/kernel/kallsyms.c
-> > @@ -446,6 +446,12 @@ struct kallsym_iter {
-> >  	int show_value;
-> >  };
-> >  
-> > +struct kallsyms_shuffled_iter {
-> > +	struct kallsym_iter iter;
-> > +	loff_t total_syms;
-> > > 
-> > > (I need to go read how kallsyms doesn't miscount in general when
-> > the
-> > > symbol table changes out from under it...)
-> > > 
-> > > 
-> > +	loff_t shuffled_index[];
-> > +};
-> > +
-> >  int __weak arch_get_kallsym(unsigned int symnum, unsigned long
-> > *value,
-> >  			    char *type, char *name)
-> >  {
-> > @@ -661,7 +667,7 @@ bool kallsyms_show_value(const struct cred
-> > *cred)
-> >  	}
-> >  }
-> >  
-> > -static int kallsyms_open(struct inode *inode, struct file *file)
-> > +static int __kallsyms_open(struct inode *inode, struct file *file)
-> >  {
-> >  	/*
-> >  	 * We keep iterator in m->private, since normal case is to
-> > @@ -682,6 +688,161 @@ static int kallsyms_open(struct inode *inode,
-> > struct file *file)
-> >  	return 0;
-> >  }
-> >  
-> > +/*
-> > + * When function granular kaslr is enabled, we need to print out
-> > the symbols
-> > + * at random so we don't reveal the new layout.
-> > + */
-> > +#if defined(CONFIG_FG_KASLR)
-> > +static int update_random_pos(struct kallsyms_shuffled_iter
-> > *s_iter,
-> > +			     loff_t pos, loff_t *new_pos)
-> > +{
-> > +	loff_t new;
-> > +
-> > +	if (pos >= s_iter->total_syms)
-> > +		return 0;
-> > +
-> > +	new = s_iter->shuffled_index[pos];
-> > +
-> > +	/*
-> > +	 * normally this would be done as part of update_iter, however,
-> > +	 * we want to avoid triggering this in the event that new is
-> > +	 * zero since we don't want to blow away our pos end
-> > indicators.
-> > +	 */
-> > +	if (new == 0) {
-> > +		s_iter->iter.name[0] = '\0';
-> > +		s_iter->iter.nameoff = get_symbol_offset(new);
-> > +		s_iter->iter.pos = new;
-> > +	}
-> > +
-> > +	*new_pos = new;
-> > +	return 1;
-> > +}
-> > +
-> > +static void *shuffled_start(struct seq_file *m, loff_t *pos)
-> > +{
-> > +	struct kallsyms_shuffled_iter *s_iter = m->private;
-> > +	loff_t new_pos;
-> > +
-> > +	if (!update_random_pos(s_iter, *pos, &new_pos))
-> > +		return NULL;
-> > +
-> > +	return s_start(m, &new_pos);
-> > +}
-> > +
-> > +static void *shuffled_next(struct seq_file *m, void *p, loff_t
-> > *pos)
-> > +{
-> > +	struct kallsyms_shuffled_iter *s_iter = m->private;
-> > +	loff_t new_pos;
-> > +
-> > +	(*pos)++;
-> > +
-> > +	if (!update_random_pos(s_iter, *pos, &new_pos))
-> > +		return NULL;
-> > +
-> > +	if (!update_iter(m->private, new_pos))
-> > +		return NULL;
-> > +
-> > +	return p;
-> > +}
-> > +
-> > +/*
-> > + * shuffle_index_list()
-> > + * Use a Fisher Yates algorithm to shuffle a list of text
-> > sections.
-> > + */
-> > +static void shuffle_index_list(loff_t *indexes, loff_t size)
-> > +{
-> > +	int i;
-> > +	unsigned int j;
-> > +	loff_t temp;
-> > +
-> > +	for (i = size - 1; i > 0; i--) {
-> > +		/* pick a random index from 0 to i */
-> > +		get_random_bytes(&j, sizeof(j));
-> > +		j = j % (i + 1);
-> > +
-> > +		temp = indexes[i];
-> > +		indexes[i] = indexes[j];
-> > +		indexes[j] = temp;
-> > +	}
-> > +}
-> > +
-> > +static const struct seq_operations kallsyms_shuffled_op = {
-> > +	.start = shuffled_start,
-> > +	.next = shuffled_next,
-> > +	.stop = s_stop,
-> > +	.show = s_show
-> > +};
-> > +
-> > +static int kallsyms_random_open(struct inode *inode, struct file
-> > *file)
-> > +{
-> > +	loff_t pos;
-> > +	struct kallsyms_shuffled_iter *shuffled_iter;
-> > +	struct kallsym_iter iter;
-> > +	bool show_value;
-> > +
-> > +	/*
-> > +	 * If privileged, go ahead and use the normal algorithm for
-> > +	 * displaying symbols
-> > +	 */
-> > +	show_value = kallsyms_show_value(file->f_cred);
-> > +	if (show_value)
-> > +		return __kallsyms_open(inode, file);
-> > +
-> > +	/*
-> > +	 * we need to figure out how many extra symbols there are
-> > +	 * to print out past kallsyms_num_syms
-> > +	 */
-> > +	pos = kallsyms_num_syms;
-> > +	reset_iter(&iter, 0);
-> > +	do {
-> > +		if (!update_iter(&iter, pos))
-> > +			break;
-> > +		pos++;
-> > +	} while (1);
-> 
-> Can this be tracked separately instead of needing to search for it
-> every
-> time? (Looks like it's modules and ftrace? Could they each have a
-> *_num_sysms?)
+##TESTCASE_BEGIN:
+#!/bin/bash
 
-It could, but I'd probably have to make more changes to those
-subsystems to keep this information there than I would to just do this
-search here. Because we start search at the end of the kernel core
-symbols, I don't think this search takes too many cycles to complete.
-On my system running a standard distro config the number of module and
-bpf symbols is not all that many, especially compared to the kernel
-core symbols.
+max_iters=${1:-100}
+#prep cgroup mounts
+mount -t tmpfs cgroup_root /sys/fs/cgroup
+mkdir /sys/fs/cgroup/blkio
+mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
 
+# Prepare blkdev
+grep blkio /proc/cgroups
+truncate -s 1M img
+losetup /dev/loop0 img
+echo bfq > /sys/block/loop0/queue/scheduler
+
+grep blkio /proc/cgroups
+for ((i=0;i<max_iters;i++))
+do
+    mkdir -p /sys/fs/cgroup/blkio/a
+    echo 0 > /sys/fs/cgroup/blkio/a/cgroup.procs
+    dd if=/dev/loop0 bs=4k count=1 of=/dev/null iflag=direct 2> /dev/null
+    echo 0 > /sys/fs/cgroup/blkio/cgroup.procs
+    rmdir /sys/fs/cgroup/blkio/a
+    grep blkio /proc/cgroups
+done
+##TESTCASE_END:
+
+Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+---
+ block/bfq-wf2q.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
+
+diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+index 8113138..93b236c 100644
+--- a/block/bfq-wf2q.c
++++ b/block/bfq-wf2q.c
+@@ -635,14 +635,10 @@ static void bfq_idle_insert(struct bfq_service_tree *st,
+  * @entity: the entity being removed.
+  * @is_in_service: true if entity is currently the in-service entity.
+  *
+- * Forget everything about @entity. In addition, if entity represents
+- * a queue, and the latter is not in service, then release the service
+- * reference to the queue (the one taken through bfq_get_entity). In
+- * fact, in this case, there is really no more service reference to
+- * the queue, as the latter is also outside any service tree. If,
+- * instead, the queue is in service, then __bfq_bfqd_reset_in_service
+- * will take care of putting the reference when the queue finally
+- * stops being served.
++ * Forget everything about @entity. If entity is not in service, then release
++ * the service reference to the entity (the one taken through  bfq_get_entity).
++ * If the entity is in service, then __bfq_bfqd_reset_in_service will take care
++ * of putting the reference when the entity finally stops being served.
+  */
+ static void bfq_forget_entity(struct bfq_service_tree *st,
+ 			      struct bfq_entity *entity,
+@@ -1626,9 +1622,16 @@ bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
+ 	 * execute the final step: reset in_service_entity along the
+ 	 * path from entity to the root.
+ 	 */
+-	for_each_entity(entity)
++	for_each_entity(entity) {
+ 		entity->sched_data->in_service_entity = NULL;
+-
++		/*
++		 * Release bfq_groups reference if it was not released in
++		 * bfq_forget_entity, which was taken in bfq_get_entity.
++		 */
++		if (!bfq_entity_to_bfqq(entity) && !entity->on_st_or_in_serv)
++			bfqg_and_blkg_put(container_of(entity, struct bfq_group,
++						       entity));
++	}
+ 	/*
+ 	 * in_serv_entity is no longer in service, so, if it is in no
+ 	 * service tree either, then release the service reference to
+-- 
+2.7.4
 
