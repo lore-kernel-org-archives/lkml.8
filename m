@@ -2,131 +2,107 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B2AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39C8821775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:28:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="u7nt3GoC"
+	by mail.kernel.org (Postfix) with ESMTP id 733C521775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 08:30:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgGTI2P (ORCPT
+        id S1727817AbgGTIaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:28:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgGTI2O (ORCPT
+        Mon, 20 Jul 2020 04:30:04 -0400
+Received: from regular1.263xmail.com ([211.150.70.196]:47470 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbgGTIaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:28:14 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D63C061794;
-        Mon, 20 Jul 2020 01:28:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=O6HfgQ+/4qiZLGt2UojtUQ3Ga/x/jgpuR6s1a87yytM=; b=u7nt3GoCT7WBM27aXRtZnWNUD
-        bXmH223IdV7epuWwcz8hui1tkCQJvtfRu5hvQZkEMVcZmE60DFtMY8VD0hNJF0UubpeKhjIsXV0KV
-        wQml0xJTy9YZPIFESQKbMFRQY60X5KxoYD+m9vVq/30t4DlNFeJ74X0DZFJ31zENrDfg0+5XChBMX
-        87NF0WKQXOkI7CpKZnM+RFs8y8HtoYgi00zTMK9U3om7Pv5aPxBmcCtvotb9ASctJZcL52BbW6iaN
-        ag23tbDPGsTcJCtj6GmQypV1xEXZSJxh7N56EzdK+u3BZNeqU0YuZqMpVsbmrfqihoSQCkOba0Wvx
-        SXgUBjiBg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41816)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jxR9b-0002m6-AD; Mon, 20 Jul 2020 09:28:07 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jxR9X-0004pY-Ga; Mon, 20 Jul 2020 09:28:03 +0100
-Date:   Mon, 20 Jul 2020 09:28:03 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        linux-sunxi@googlegroups.com, Zhang Rui <rui.zhang@intel.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
-Message-ID: <20200720082803.GS1551@shell.armlinux.org.uk>
-References: <20200708105527.868987-1-megous@megous.com>
- <20200708110301.GB1551@shell.armlinux.org.uk>
- <86689f81367716e3f88ec363edd0d302deca0a1f.camel@aosc.io>
+        Mon, 20 Jul 2020 04:30:03 -0400
+X-Greylist: delayed 439 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jul 2020 04:30:02 EDT
+Received: from localhost (unknown [192.168.167.13])
+        by regular1.263xmail.com (Postfix) with ESMTP id ADD4715E5;
+        Mon, 20 Jul 2020 16:22:26 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.12.230] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P17843T139820244399872S1595233344948995_;
+        Mon, 20 Jul 2020 16:22:26 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <ee61f11e52c0f1bdab7b994fbb736568>
+X-RL-SENDER: andy.yan@rock-chips.com
+X-SENDER: yxj@rock-chips.com
+X-LOGIN-NAME: andy.yan@rock-chips.com
+X-FST-TO: linux-arm-kernel@lists.infradead.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_2/5=5d_drm=3a_rockchip=3a_add_missing_regi?=
+ =?UTF-8?B?c3RlcnMgZm9yIFJLMzE4OOOAkOivt+azqOaEj++8jOmCruS7tueUsWxpbnV4LXJv?=
+ =?UTF-8?Q?ckchip-bounces+andy=2eyan=3drock-chips=2ecom=40lists=2einfradead?=
+ =?UTF-8?B?Lm9yZ+S7o+WPkeOAkQ==?=
+To:     Alex Bee <knaerzche@gmail.com>, Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc:     David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200718200323.3559-1-knaerzche@gmail.com>
+ <20200718200323.3559-3-knaerzche@gmail.com>
+From:   Andy Yan <andy.yan@rock-chips.com>
+Message-ID: <871ce1ac-2d5b-c0a2-60a6-6aba0f296c18@rock-chips.com>
+Date:   Mon, 20 Jul 2020 16:22:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <86689f81367716e3f88ec363edd0d302deca0a1f.camel@aosc.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200718200323.3559-3-knaerzche@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 03:55:26PM +0800, Icenowy Zheng wrote:
-> 在 2020-07-08星期三的 12:03 +0100，Russell King - ARM Linux admin写道：
-> > On Wed, Jul 08, 2020 at 12:55:27PM +0200, Ondrej Jirman wrote:
-> > > I noticed several mobile Linux distributions failing to enable the
-> > > thermal regulation correctly, because the kernel is silent
-> > > when thermal driver fails to probe. Add enough error reporting
-> > > to debug issues and warn users in case thermal sensor is failing
-> > > to probe.
-> > > 
-> > > Failing to notify users means, that SoC can easily overheat under
-> > > load.
-> > > 
-> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > > ---
-> > >  drivers/thermal/sun8i_thermal.c | 55 ++++++++++++++++++++++++++---
-> > > ----
-> > >  1 file changed, 43 insertions(+), 12 deletions(-)
-> > > 
-> > > diff --git a/drivers/thermal/sun8i_thermal.c
-> > > b/drivers/thermal/sun8i_thermal.c
-> > > index 74d73be16496..9065e79ae743 100644
-> > > --- a/drivers/thermal/sun8i_thermal.c
-> > > +++ b/drivers/thermal/sun8i_thermal.c
-> > > @@ -287,8 +287,12 @@ static int sun8i_ths_calibrate(struct
-> > > ths_device *tmdev)
-> > >  
-> > >  	calcell = devm_nvmem_cell_get(dev, "calibration");
-> > >  	if (IS_ERR(calcell)) {
-> > > +		dev_err(dev, "Failed to get calibration nvmem cell
-> > > (%ld)\n",
-> > > +			PTR_ERR(calcell));
-> > 
-> > Consider using:
-> > 
-> > 		dev_err(dev, "Failed to get calibration nvmem cell
-> > (%pe)\n",
-> > 			calcell);
-> > 
-> > which means the kernel can print the symbolic errno value.
-> 
-> Oh interesting format here.
-> 
-> When we need to deal with a int return value, is it "%e"?
+Hi Alex:
 
-No, because that will lose the ability for the compiler to check the
-format string and arguments correspond.  All the extensions are
-documented at Documentation/core-api/printk-formats.rst.
+On 7/19/20 4:03 AM, Alex Bee wrote:
+> This patch adds dither_up, dsp_lut_en, data_blank and dsp_data_swap
+> registers to enable their respective functionality for RK3188's VOP.
+>
+> Signed-off-by: Alex Bee <knaerzche@gmail.com>
+> ---
+>   drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+> index b046910129fb..971a6bda7458 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+> @@ -512,6 +512,10 @@ static const struct vop_common rk3188_common = {
+>   	.dither_down_en = VOP_REG(RK3188_DSP_CTRL0, 0x1, 11),
+>   	.dither_down_mode = VOP_REG(RK3188_DSP_CTRL0, 0x1, 10),
+>   	.dsp_blank = VOP_REG(RK3188_DSP_CTRL1, 0x3, 24),
+> +	.dither_up = VOP_REG(RK3188_DSP_CTRL0, 0x1, 9),
+> +	.dsp_lut_en = VOP_REG(RK3188_SYS_CTRL, 0x1, 28),
+> +	.data_blank = VOP_REG(RK3188_DSP_CTRL1, 0x1, 25),
+> +	.dsp_data_swap = VOP_REG(RK3188_DSP_CTRL1, 0x1f, 26),
 
-Use %pe and ERR_PTR(...) to print an integer -ve errno return value.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+
+I can't find the definition of dsp_data_swap, or I missed something?
+
+
+
+>   };
+>   
+>   static const struct vop_win_data rk3188_vop_win_data[] = {
+
+
