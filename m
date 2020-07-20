@@ -2,172 +2,240 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99503C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFBBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 704CA20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E3B22CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:57:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="B2Eh2bjm";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="SwXXCHi4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QePSCcK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgGTH4D (ORCPT
+        id S1727032AbgGTH5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:56:03 -0400
-Received: from relay5.mymailcheap.com ([159.100.241.64]:56940 "EHLO
-        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbgGTH4C (ORCPT
+        Mon, 20 Jul 2020 03:57:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgGTH5B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 03:56:02 -0400
-Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.119.157])
-        by relay5.mymailcheap.com (Postfix) with ESMTPS id 564BE200EA;
-        Mon, 20 Jul 2020 07:55:59 +0000 (UTC)
-Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
-        by relay3.mymailcheap.com (Postfix) with ESMTPS id B9DA83F15F;
-        Mon, 20 Jul 2020 09:55:57 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter2.mymailcheap.com (Postfix) with ESMTP id 967742A8B1;
-        Mon, 20 Jul 2020 09:55:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1595231757;
-        bh=JDIzmC6xzWVV+edmzQ2cj84tjI5FaofU5GCv/dpHT/U=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=B2Eh2bjm0yxlT86fQf4ccOV63/dFBj3EfHSM8yVkHRDetMG7XTzId7/frV3RpS5wL
-         ltyTOQHmfkPylDTYID8gPaoAIQhe3yC16nCBNIiApdVORaGqy0FcrL68hUNsBCHCxS
-         5281KtsS8tH1dE/WJys0jijhML5JhvQx5JXH1oIo=
-X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
-Received: from filter2.mymailcheap.com ([127.0.0.1])
-        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SY47Ma7yVLDD; Mon, 20 Jul 2020 09:55:56 +0200 (CEST)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by filter2.mymailcheap.com (Postfix) with ESMTPS;
-        Mon, 20 Jul 2020 09:55:56 +0200 (CEST)
-Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id 413BD40143;
-        Mon, 20 Jul 2020 07:55:55 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=aosc.io header.i=@aosc.io header.b="SwXXCHi4";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from ice-e5v2.local (unknown [59.41.162.238])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 51ADD40143;
-        Mon, 20 Jul 2020 07:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-        t=1595231735; bh=JDIzmC6xzWVV+edmzQ2cj84tjI5FaofU5GCv/dpHT/U=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SwXXCHi44C7Qrhq27xC5WSDidT3TJJzjZl2oG9Z5x3CyoYh1Li9OQGTk5+w589zcF
-         KjsiQ/wJ/84ankootRmH7ZtsJKfrKp9J9DD7YR7VYZ9BqG3IgS0acWqxiAm9nGRPEx
-         DDiWjuk8lwi4hKGkn9nsdnLYAClk8R5m3RYf5u7U=
-Message-ID: <86689f81367716e3f88ec363edd0d302deca0a1f.camel@aosc.io>
-Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Ondrej Jirman <megous@megous.com>
-Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        linux-sunxi@googlegroups.com, Zhang Rui <rui.zhang@intel.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 20 Jul 2020 15:55:26 +0800
-In-Reply-To: <20200708110301.GB1551@shell.armlinux.org.uk>
-References: <20200708105527.868987-1-megous@megous.com>
-         <20200708110301.GB1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0 
+        Mon, 20 Jul 2020 03:57:01 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA51EC0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 00:57:00 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f18so16856231wrs.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 00:57:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XKQtYvYGtM0N/Ct4CJlyU+ij1I7Ll/jDSuKe/r+tpV8=;
+        b=QePSCcK44UIZmJ+7DxfyU1stV2IDfXAudhLIu4v/IMxSh8Vo2pcJb27KTvxXFjLFM+
+         LP8YkYzbjZCsk/yVjQmLbGiUNJlrC+f5jBGzNKpOcuuVqIO/0ByNOIBahGxYYJACP2S3
+         YnVWBTQCVl4dIsL5SGS9oj+oida3cWbwMSWqgU9xEeWzzNRKWLxhQo8k1vngaN8p8Ai+
+         1qy3Rsc9bLjsIo4w14Ok0AXZZOc1A/mf+OFmTDYpjhvPP24VV0cMrhFHYssj1HWuQDY+
+         x2Q+4NL4p4WOe4sLAIhsnWrJwh397PCWL/9S69t6WBIJIQb6N9ZBW7XYcBznB/t8mVHQ
+         Cwwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XKQtYvYGtM0N/Ct4CJlyU+ij1I7Ll/jDSuKe/r+tpV8=;
+        b=Ab3H9PBFUZAS2UO7z9TpdJoSRX30uFiNWGD/1UI9VhjzT14K9Ffn20K825MjxvoP6J
+         j4PL/tyyq1Ia9mErBJk20N+1qoZi2i0q+ivASGiAn/C+4dS/90NyoGFps72l8xMliOvK
+         Ubf936hzwfJQ0FGs5xNSwmDbJrXbFvtGotYAzg5/b3H6x35eG8WQ+6mPeRy13FqWn9ok
+         K0ODXQn60HcBbFZ+IJ39QOnuiH374YRkdqqdQ7n/MkMolslqjLSsNzxoX3Zh2sWleGWH
+         jVEWjAsg3Jgx0/zBm1lllxdDdoIrjJIc4GZTHcT2mvSO5qcxQxWmWDjHg9EN1kV/Cx31
+         P7GQ==
+X-Gm-Message-State: AOAM533ayXhU7XOid7IddPIY3/HwHXyDoiBw61lPn3V8P5MMsUP+p6Q/
+        32QBCek5k3m4cdf/yCq7JAzXxndgBkg=
+X-Google-Smtp-Source: ABdhPJzE09wAmkmLbE0ZLSzAWTmKyq12TseLHzepWKU2Mh0MBwqpfoiX9ZxPvEJ9HRW9CPX/lIlSjA==
+X-Received: by 2002:a5d:61c8:: with SMTP id q8mr11044972wrv.160.1595231819481;
+        Mon, 20 Jul 2020 00:56:59 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:3590:b402:869a:11fc? ([2a01:e34:ed2f:f020:3590:b402:869a:11fc])
+        by smtp.googlemail.com with ESMTPSA id h11sm7223446wrb.68.2020.07.20.00.56.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2020 00:56:58 -0700 (PDT)
+Subject: Re: [PATCH v8 1/2] dt-bindings: timer: Add Ingenic X1000 OST
+ bindings.
+To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        tglx@linutronix.de, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, paul@crapouillou.net
+References: <20200719114247.56100-1-zhouyanjie@wanyeetech.com>
+ <20200719114247.56100-2-zhouyanjie@wanyeetech.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <53448115-2aa0-0aa0-03d8-a5993e8c84e9@linaro.org>
+Date:   Mon, 20 Jul 2020 09:56:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200719114247.56100-2-zhouyanjie@wanyeetech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 413BD40143
-X-Spamd-Result: default: False [1.40 / 10.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[aosc.io:s=default];
-         MID_RHS_MATCH_FROM(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DMARC_NA(0.00)[aosc.io];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1];
-         ML_SERVERS(-3.10)[213.133.102.83];
-         DKIM_TRACE(0.00)[aosc.io:+];
-         RCPT_COUNT_TWELVE(0.00)[13];
-         RCVD_IN_DNSWL_NONE(0.00)[213.133.102.83:from];
-         RECEIVED_SPAMHAUS_PBL(0.00)[59.41.162.238:received];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
-         FREEMAIL_CC(0.00)[verdurent.com,vger.kernel.org,gmail.com,linaro.org,kernel.org,googlegroups.com,intel.com,csie.org,lists.infradead.org];
-         SUSPICIOUS_RECIPS(1.50)[];
-         RCVD_COUNT_TWO(0.00)[2]
-X-Rspamd-Server: mail20.mymailcheap.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020-07-08星期三的 12:03 +0100，Russell King - ARM Linux admin写道：
-> On Wed, Jul 08, 2020 at 12:55:27PM +0200, Ondrej Jirman wrote:
-> > I noticed several mobile Linux distributions failing to enable the
-> > thermal regulation correctly, because the kernel is silent
-> > when thermal driver fails to probe. Add enough error reporting
-> > to debug issues and warn users in case thermal sensor is failing
-> > to probe.
-> > 
-> > Failing to notify users means, that SoC can easily overheat under
-> > load.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  drivers/thermal/sun8i_thermal.c | 55 ++++++++++++++++++++++++++---
-> > ----
-> >  1 file changed, 43 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/drivers/thermal/sun8i_thermal.c
-> > b/drivers/thermal/sun8i_thermal.c
-> > index 74d73be16496..9065e79ae743 100644
-> > --- a/drivers/thermal/sun8i_thermal.c
-> > +++ b/drivers/thermal/sun8i_thermal.c
-> > @@ -287,8 +287,12 @@ static int sun8i_ths_calibrate(struct
-> > ths_device *tmdev)
-> >  
-> >  	calcell = devm_nvmem_cell_get(dev, "calibration");
-> >  	if (IS_ERR(calcell)) {
-> > +		dev_err(dev, "Failed to get calibration nvmem cell
-> > (%ld)\n",
-> > +			PTR_ERR(calcell));
-> 
-> Consider using:
-> 
-> 		dev_err(dev, "Failed to get calibration nvmem cell
-> (%pe)\n",
-> 			calcell);
-> 
-> which means the kernel can print the symbolic errno value.
+On 19/07/2020 13:42, 周琰杰 (Zhou Yanjie) wrote:
+> Add the OST bindings for the X10000 SoC from Ingenic.
 
-Oh interesting format here.
 
-When we need to deal with a int return value, is it "%e"?
+Description: [v8,1/2] dt-bindings: timer: Add Ingenic X1000 OST bindings.
+Applying: dt-bindings: timer: Add Ingenic X1000 OST bindings.
+.git/rebase-apply/patch:91: space before tab in indent.
+    		compatible = "ingenic,x1000-ost";
+.git/rebase-apply/patch:92: space before tab in indent.
+    		reg = <0x12000000 0x3c>;
+.git/rebase-apply/patch:94: space before tab in indent.
+    		#clock-cells = <1>;
+.git/rebase-apply/patch:96: space before tab in indent.
+    		clocks = <&cgu X1000_CLK_OST>;
+.git/rebase-apply/patch:97: space before tab in indent.
+    		clock-names = "ost";
+warning: squelched 3 whitespace errors
+warning: 8 lines add whitespace errors.
 
-Thanks
 
+> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
 > 
+> Notes:
+>     v1->v2:
+>     No change.
+>     
+>     v2->v3:
+>     Fix wrong parameters in "clocks".
+>     
+>     v3->v4:
+>     1.Rename "ingenic,ost.yaml" to "ingenic,sysost.yaml".
+>     2.Rename "ingenic,ost.h" to "ingenic,sysost.h".
+>     3.Modify the description in "ingenic,sysost.yaml".
+>     
+>     v4->v5:
+>     No change.
+>     
+>     v5->v6:
+>     1.Drop "oneOf" and the blank line.
+>     2.Add "additionalProperties: false".
+>     
+>     v6->v7:
+>     No change.
+>     
+>     v7->v8:
+>     No change.
+> 
+>  .../devicetree/bindings/timer/ingenic,sysost.yaml  | 63 ++++++++++++++++++++++
+>  include/dt-bindings/clock/ingenic,sysost.h         | 12 +++++
+>  2 files changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+>  create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+> new file mode 100644
+> index 000000000000..1dae2e538725
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+> @@ -0,0 +1,63 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/timer/ingenic,sysost.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for SYSOST in Ingenic XBurst family SoCs
+> +
+> +maintainers:
+> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> +
+> +description:
+> +  The SYSOST in an Ingenic SoC provides one 64bit timer for clocksource
+> +  and one or more 32bit timers for clockevent.
+> +
+> +properties:
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  compatible:
+> +    enum:
+> +      - ingenic,x1000-ost
+> +      - ingenic,x2000-ost
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: ost
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - "#clock-cells"
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/x1000-cgu.h>
+> +
+> +    ost: timer@12000000 {
+> +    		compatible = "ingenic,x1000-ost";
+> +    		reg = <0x12000000 0x3c>;
+> +
+> +    		#clock-cells = <1>;
+> +
+> +    		clocks = <&cgu X1000_CLK_OST>;
+> +    		clock-names = "ost";
+> +
+> +    		interrupt-parent = <&cpuintc>;
+> +    		interrupts = <3>;
+> +    	};
+> +...
+> diff --git a/include/dt-bindings/clock/ingenic,sysost.h b/include/dt-bindings/clock/ingenic,sysost.h
+> new file mode 100644
+> index 000000000000..9ac88e90babf
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/ingenic,sysost.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * This header provides clock numbers for the ingenic,tcu DT binding.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_CLOCK_INGENIC_OST_H__
+> +#define __DT_BINDINGS_CLOCK_INGENIC_OST_H__
+> +
+> +#define OST_CLK_PERCPU_TIMER	0
+> +#define OST_CLK_GLOBAL_TIMER	1
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_INGENIC_OST_H__ */
+> 
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
