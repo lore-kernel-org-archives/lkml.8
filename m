@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2564C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0601C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E852206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC74A20734
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261436;
-	bh=fvKTvQppfJjOPm9ev9R0LLaRbKSdKwZuxaEYJ+Ekcjg=;
+	s=default; t=1595261439;
+	bh=zSLIqHYNiz6fKO5WOj4GvcUQob4ronNMos2S6vOcuA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ChrEfoFW40Ffq3qh/VSyioSmj0r0re1mSwRGVTthRtQb6n0wix7AGckhkR1dVp767
-	 gdqRP98IAuqmCzb0TbI/9f4gYffLSiuiyahmIy0ZVqLuaybChKexdNwsafbZbwsffK
-	 dBtBW/LOBPAOcm3joslF8ewUOgZt9tJIyhTOs4ms=
+	b=bfbp9ln2WwGobPx2CNGOnU/eMxFRtE6W2el3uZ/hvwLF96JzPcAkDtJGda7Uc6kWZ
+	 uIJl3CTevOUy0YKI3t3p9r6uRWIElFEUOcIsfCTH1Y13MKNwCXBqEPQtzmWvS9wSz8
+	 hrRdT16aibKUH7yIIwFhvBpCOfSFptD/oINsyymo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732954AbgGTQKe (ORCPT
+        id S2387686AbgGTQKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48946 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:10:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387656AbgGTQK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:10:26 -0400
+        id S2387677AbgGTQKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:10:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 081D42065E;
-        Mon, 20 Jul 2020 16:10:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B11B920672;
+        Mon, 20 Jul 2020 16:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261425;
-        bh=fvKTvQppfJjOPm9ev9R0LLaRbKSdKwZuxaEYJ+Ekcjg=;
+        s=default; t=1595261431;
+        bh=zSLIqHYNiz6fKO5WOj4GvcUQob4ronNMos2S6vOcuA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fXbZnC8n4w50Cy4shKIIZ+oZ/0Jm5OusJ6anO9Dc/B3iWobqY5rDcuMiZLAZnTCoV
-         CvCe4XDV/tCuQIiz/Rh0gz/qHaE5a70e42uzXUuUwmWoi2UDni0Eex7npP1pkkR0Va
-         klUVRpnF/Y446u0jqJAVNfKIYMitxVM93t8fhDFE=
+        b=E2Ia4ZM6xovFooyEEY4TGbL0gnC9AhJM8x8fH7+/dTScc7fR7bFapbxyZ6Rkkgk4W
+         y82MtKE1B6zcgREjVac1WxcgeonqZ/kUsNrhL9HAzSNQAh4jFvO5RL9XG0lf7fdzi3
+         UGhqYMTibdBZacTZ0VpWTXsddmTvjbzBmhXzLG14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@gmail.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 081/244] soundwire: intel: fix memory leak with devm_kasprintf
-Date:   Mon, 20 Jul 2020 17:35:52 +0200
-Message-Id: <20200720152829.695257062@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Aloni <dan@kernelim.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 106/244] xprtrdma: Fix handling of connect errors
+Date:   Mon, 20 Jul 2020 17:36:17 +0200
+Message-Id: <20200720152830.871081296@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -65,44 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit bf6d6e68d2028a2d82f4c106f50ec75cc1e6ef89 ]
+[ Upstream commit af667527b0e34912d2cb3586d585f66db4e4f486 ]
 
-The dais are allocated with devm_kcalloc() but their name isn't
-resourced managed and never freed. Fix by also using devm_ for the dai
-names as well.
+Ensure that the connect worker is awoken if an attempt to establish
+a connection is unsuccessful. Otherwise the worker waits forever
+and the transport workload hangs.
 
-Fixes: c46302ec554c5 ('soundwire: intel: Add audio DAI ops')
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@gmail.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Link: https://lore.kernel.org/r/20200617163536.17401-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Connect errors should not attempt to destroy the ep, since the
+connect worker continues to use it after the handler runs, so these
+errors are now handled independently of DISCONNECTED events.
+
+Reported-by: Dan Aloni <dan@kernelim.com>
+Fixes: e28ce90083f0 ("xprtrdma: kmalloc rpcrdma_ep separate from rpcrdma_xprt")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soundwire/intel.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/sunrpc/xprtrdma/verbs.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index 3c83e76c6bf90..cab425070e641 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -930,8 +930,9 @@ static int intel_create_dai(struct sdw_cdns *cdns,
- 
- 	 /* TODO: Read supported rates/formats from hardware */
- 	for (i = off; i < (off + num); i++) {
--		dais[i].name = kasprintf(GFP_KERNEL, "SDW%d Pin%d",
--					 cdns->instance, i);
-+		dais[i].name = devm_kasprintf(cdns->dev, GFP_KERNEL,
-+					      "SDW%d Pin%d",
-+					      cdns->instance, i);
- 		if (!dais[i].name)
- 			return -ENOMEM;
- 
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 220c2d2eeb3e5..26e89c65ba564 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -279,17 +279,19 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+ 		break;
+ 	case RDMA_CM_EVENT_CONNECT_ERROR:
+ 		ep->re_connect_status = -ENOTCONN;
+-		goto disconnected;
++		goto wake_connect_worker;
+ 	case RDMA_CM_EVENT_UNREACHABLE:
+ 		ep->re_connect_status = -ENETUNREACH;
+-		goto disconnected;
++		goto wake_connect_worker;
+ 	case RDMA_CM_EVENT_REJECTED:
+ 		dprintk("rpcrdma: connection to %pISpc rejected: %s\n",
+ 			sap, rdma_reject_msg(id, event->status));
+ 		ep->re_connect_status = -ECONNREFUSED;
+ 		if (event->status == IB_CM_REJ_STALE_CONN)
+ 			ep->re_connect_status = -ENOTCONN;
+-		goto disconnected;
++wake_connect_worker:
++		wake_up_all(&ep->re_connect_wait);
++		return 0;
+ 	case RDMA_CM_EVENT_DISCONNECTED:
+ 		ep->re_connect_status = -ECONNABORTED;
+ disconnected:
 -- 
 2.25.1
 
