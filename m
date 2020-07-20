@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90290C38159
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC0DC43470
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A42E206F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9FE1206F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281538;
-	bh=o5c30dPBIoiKVvY7B/0EsgbYA7WNgUsTJDZEOAgANTM=;
+	s=default; t=1595281540;
+	bh=nE+iPYVH7YUcPYLNkoCTd+IU2wP0RX1TQuOswIQft7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EQ34JdeoJBnpI/gLD29WS8IWgdd1AbNTnOBdHaLMJTmpuiPGfNkevVwqC8Qmzwfmz
-	 67je2Wy0I4du54N88gZZboNH9JFAydpUxo9AutUGvU8EeM/pfxGeynTcNKIXdCFA5L
-	 RZSqROpvB9QptbTjkeJD6Z5Ele5L6efDF7LR9jCA=
+	b=ug8woDUT1u/X+z1g5sMvpuNYOk7H36xfuZ1yyLjCN1Yxp3GMzsotnxK3lxEX0sEuT
+	 36y38Iqq7e+iocAIe2r6A4nETjC1oiZ7dffyHZN6fRfDifzjX2rlMmeIXKWU59yvvD
+	 rpreHWo9Z7gfG7ewudx5adT6h7As5isx3vPJX4mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbgGTVpg (ORCPT
+        id S1729124AbgGTVpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:45:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55418 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727071AbgGTVhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:37:33 -0400
+        id S1727038AbgGTVha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:37:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9361D207FC;
-        Mon, 20 Jul 2020 21:37:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0DFD20717;
+        Mon, 20 Jul 2020 21:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281052;
-        bh=o5c30dPBIoiKVvY7B/0EsgbYA7WNgUsTJDZEOAgANTM=;
+        s=default; t=1595281049;
+        bh=nE+iPYVH7YUcPYLNkoCTd+IU2wP0RX1TQuOswIQft7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cWxgtuCmGcXj+zstRYlAVZFAyjmsbB3dTAgTXmU/yw5tm6qiydMO/YYp1XOQTXkAS
-         5gJud7JN0sypxCQEcBIQ6WnjkMgDAmkbOHHgDd7Qv/v2PimrMi/t9tTdPd1a6NHzv5
-         fjqhtrsf3Ln0ARNS+zOGNXWCXhWTzdoCikb43/AI=
+        b=GirtVvwb6StIReCdQNoYpkVuyTMivzjg4UrR2kjQuUk65t/1KDRqvmzVuFnxwWZ9D
+         de1umVlhnrIbSXGIbV/O30DKHaBPPeC5V4F0LUPi6VjFTNRcfMwLM4gKaa4XUfx8Dv
+         Fc6rW4gatW1PVQlo+Svaot9IxrpC9Co0+YH81Wco=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "leilk.liu" <leilk.liu@mediatek.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 13/40] spi: mediatek: use correct SPI_CFG2_REG MACRO
-Date:   Mon, 20 Jul 2020 17:36:48 -0400
-Message-Id: <20200720213715.406997-13-sashal@kernel.org>
+Cc:     Merlijn Wajer <merlijn@wizzup.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 11/40] Input: add `SW_MACHINE_COVER`
+Date:   Mon, 20 Jul 2020 17:36:46 -0400
+Message-Id: <20200720213715.406997-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213715.406997-1-sashal@kernel.org>
 References: <20200720213715.406997-1-sashal@kernel.org>
@@ -61,74 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "leilk.liu" <leilk.liu@mediatek.com>
+From: Merlijn Wajer <merlijn@wizzup.org>
 
-[ Upstream commit 44b37eb79e16a56cb30ba55b2da452396b941e7a ]
+[ Upstream commit c463bb2a8f8d7d97aa414bf7714fc77e9d3b10df ]
 
-this patch use correct SPI_CFG2_REG offset.
+This event code represents the state of a removable cover of a device.
+Value 0 means that the cover is open or removed, value 1 means that the
+cover is closed.
 
-Signed-off-by: leilk.liu <leilk.liu@mediatek.com>
-Link: https://lore.kernel.org/r/20200701090020.7935-1-leilk.liu@mediatek.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Merlijn Wajer <merlijn@wizzup.org>
+Link: https://lore.kernel.org/r/20200612125402.18393-2-merlijn@wizzup.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-mt65xx.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ include/linux/mod_devicetable.h        | 2 +-
+ include/uapi/linux/input-event-codes.h | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-index 6783e12c40c22..a556795caeef4 100644
---- a/drivers/spi/spi-mt65xx.c
-+++ b/drivers/spi/spi-mt65xx.c
-@@ -36,7 +36,6 @@
- #define SPI_CFG0_SCK_LOW_OFFSET           8
- #define SPI_CFG0_CS_HOLD_OFFSET           16
- #define SPI_CFG0_CS_SETUP_OFFSET          24
--#define SPI_ADJUST_CFG0_SCK_LOW_OFFSET    16
- #define SPI_ADJUST_CFG0_CS_HOLD_OFFSET    0
- #define SPI_ADJUST_CFG0_CS_SETUP_OFFSET   16
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+index 0754b8d71262b..8a84f11bf1246 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -318,7 +318,7 @@ struct pcmcia_device_id {
+ #define INPUT_DEVICE_ID_LED_MAX		0x0f
+ #define INPUT_DEVICE_ID_SND_MAX		0x07
+ #define INPUT_DEVICE_ID_FF_MAX		0x7f
+-#define INPUT_DEVICE_ID_SW_MAX		0x0f
++#define INPUT_DEVICE_ID_SW_MAX		0x10
+ #define INPUT_DEVICE_ID_PROP_MAX	0x1f
  
-@@ -48,6 +47,8 @@
- #define SPI_CFG1_CS_IDLE_MASK             0xff
- #define SPI_CFG1_PACKET_LOOP_MASK         0xff00
- #define SPI_CFG1_PACKET_LENGTH_MASK       0x3ff0000
-+#define SPI_CFG2_SCK_HIGH_OFFSET          0
-+#define SPI_CFG2_SCK_LOW_OFFSET           16
+ #define INPUT_DEVICE_ID_MATCH_BUS	1
+diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+index b6a835d378263..0c2e27d28e0ac 100644
+--- a/include/uapi/linux/input-event-codes.h
++++ b/include/uapi/linux/input-event-codes.h
+@@ -888,7 +888,8 @@
+ #define SW_LINEIN_INSERT	0x0d  /* set = inserted */
+ #define SW_MUTE_DEVICE		0x0e  /* set = device disabled */
+ #define SW_PEN_INSERTED		0x0f  /* set = pen inserted */
+-#define SW_MAX			0x0f
++#define SW_MACHINE_COVER	0x10  /* set = cover closed */
++#define SW_MAX			0x10
+ #define SW_CNT			(SW_MAX+1)
  
- #define SPI_CMD_ACT                  BIT(0)
- #define SPI_CMD_RESUME               BIT(1)
-@@ -283,7 +284,7 @@ static void mtk_spi_set_cs(struct spi_device *spi, bool enable)
- static void mtk_spi_prepare_transfer(struct spi_master *master,
- 				     struct spi_transfer *xfer)
- {
--	u32 spi_clk_hz, div, sck_time, cs_time, reg_val = 0;
-+	u32 spi_clk_hz, div, sck_time, cs_time, reg_val;
- 	struct mtk_spi *mdata = spi_master_get_devdata(master);
- 
- 	spi_clk_hz = clk_get_rate(mdata->spi_clk);
-@@ -296,18 +297,18 @@ static void mtk_spi_prepare_transfer(struct spi_master *master,
- 	cs_time = sck_time * 2;
- 
- 	if (mdata->dev_comp->enhance_timing) {
-+		reg_val = (((sck_time - 1) & 0xffff)
-+			   << SPI_CFG2_SCK_HIGH_OFFSET);
- 		reg_val |= (((sck_time - 1) & 0xffff)
--			   << SPI_CFG0_SCK_HIGH_OFFSET);
--		reg_val |= (((sck_time - 1) & 0xffff)
--			   << SPI_ADJUST_CFG0_SCK_LOW_OFFSET);
-+			   << SPI_CFG2_SCK_LOW_OFFSET);
- 		writel(reg_val, mdata->base + SPI_CFG2_REG);
--		reg_val |= (((cs_time - 1) & 0xffff)
-+		reg_val = (((cs_time - 1) & 0xffff)
- 			   << SPI_ADJUST_CFG0_CS_HOLD_OFFSET);
- 		reg_val |= (((cs_time - 1) & 0xffff)
- 			   << SPI_ADJUST_CFG0_CS_SETUP_OFFSET);
- 		writel(reg_val, mdata->base + SPI_CFG0_REG);
- 	} else {
--		reg_val |= (((sck_time - 1) & 0xff)
-+		reg_val = (((sck_time - 1) & 0xff)
- 			   << SPI_CFG0_SCK_HIGH_OFFSET);
- 		reg_val |= (((sck_time - 1) & 0xff) << SPI_CFG0_SCK_LOW_OFFSET);
- 		reg_val |= (((cs_time - 1) & 0xff) << SPI_CFG0_CS_HOLD_OFFSET);
+ /*
 -- 
 2.25.1
 
