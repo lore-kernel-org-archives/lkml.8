@@ -2,265 +2,691 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E5BC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D8CC4345A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC9F22CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD4522B51
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tN8yesRP"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="VBE2mlFu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389332AbgGTSJw (ORCPT
+        id S2389337AbgGTSJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 14:09:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733095AbgGTSJt (ORCPT
+        Mon, 20 Jul 2020 14:09:54 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:11150 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729172AbgGTSJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 14:09:49 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1182C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 11:09:48 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id 6so13909971qtt.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 11:09:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dwEJsfwlCgYoOoc7ZO6uJZf/vr4ZXlXX4a+d3KSul78=;
-        b=tN8yesRPMfvGOoe7LjdmwksRHEV9CfANZwTGD2WB1She1GOgdXPPh/yBn8ZOYyE4QH
-         4jnnVTgXbnN06EmDApSrk15aC4ZKnEPr7fNu2s3mlwbz9Na8nsqp4P4FTmsRnjt8FgnD
-         wfFNtv/iDHFLKxOZQs64LrvoRiQZuMnQtE+eVWjHK6Y1Mf9INicJj5m4RRrXwnGJqR3H
-         4U/IAoJf/wy+wjfvimt6GfwehyO85dH7HSeT7EcAAbjbzzR6PHuodGEvcRgf3lmSOzQ1
-         lwDXCoCccdB8HCgFX4AkyDO/HxEgtevAkoUmjoviHstoTu8Oz6807p55OpTD+xLq0ZsY
-         vSNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dwEJsfwlCgYoOoc7ZO6uJZf/vr4ZXlXX4a+d3KSul78=;
-        b=s73XSY4H9FQV0TRjarj3urjrgvuwGE68Xy+ozFjBdkkXkLnwejNGIfItbKQpd4StuC
-         baCqOX8Z9pLU7klz4dG6QR6ogOxlZxpNr3Epo8l1hkQRD8EjOgA6iY0awkU4vkT0soyt
-         7ifO/rr37xxGbwRk0za2AvOuh7WlJWwxlpmpjcg5fmyQO3H+Eq2eHTXhVGcqatWXEG0j
-         apH0gHSC0iG/zSn5BzfGkfCIGQYiXs/1Qzvytuc/uVKeyhJ4if6XI+cnSZwLOjfnKjOa
-         HzFnfjMSCQpoxKJFe160vudRUKF4zcvdtrEGjvR0mCXREbUqlAUMbbXRpC8XW4caMliz
-         Zc9Q==
-X-Gm-Message-State: AOAM531h30a/ufsTXDM2etGoGxa9qEtTZHK+NvR8lFLcJFtyuFCv5P2b
-        wAe2lUQ84/w0QEmLNJqOIpc=
-X-Google-Smtp-Source: ABdhPJwRPEqgd7V9ut9+6Hy1hWEBVav428Xzxi706m1O9CYbZz2Rqgiku2MLIW3nnVOSMo4aO11hsw==
-X-Received: by 2002:aed:252c:: with SMTP id v41mr25356387qtc.234.1595268587842;
-        Mon, 20 Jul 2020 11:09:47 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id x3sm274009qkd.62.2020.07.20.11.09.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 11:09:47 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 11:09:45 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Luca Stefani <luca.stefani.ge1@gmail.com>
-Cc:     akpm@linux-foundation.org, freak07 <michalechner92@googlemail.com>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        linux-ntfs-dev@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] ntfs: Fix ntfs_test_inode and ntfs_init_locked_inode
- function type
-Message-ID: <20200720180945.GA6045@ubuntu-n2-xlarge-x86>
-References: <20200627190230.1191796-1-luca.stefani.ge1@gmail.com>
- <20200718112513.533800-1-luca.stefani.ge1@gmail.com>
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KHtqxv019581;
+        Mon, 20 Jul 2020 11:09:41 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=MQbMYRZusqwud1j6fzV9f448dOqD046v72K1XQ1Jtu4=;
+ b=VBE2mlFujLSDvfSr2y4iLEJ11ELhM1UhNd2VXsvmQBDGRVs4qWk8bh9VXy5KcXGBJTgn
+ 2EYPlSNkjc61r32vbKnUydeO1tc8VlDbWM3RA6WrsTUHjC2YskmKpUX81ZIm33HM9mOE
+ jX8vzHFSDimd7YSFvwb2m7ZLxSQghkPUOaB3l5eOWTQ4qO1iNKXzm3oktxac0UEuTxpy
+ UBSUDdeLQn3n++i0K6GDqdJgG+MQg2OLgrGibviJUhciv9FEfIVtRZLflJYjr04Xln8Q
+ 6m7S3FG38IxQubEeQMFpTWDn5rbPPHH0dBY3Bin5LyGI+If60GoC+nBHrDJRgugoHg5Q Tg== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 32bxenfx00-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 11:09:41 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 20 Jul
+ 2020 11:09:40 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 20 Jul
+ 2020 11:09:39 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 20 Jul 2020 11:09:39 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id CC9A23F703F;
+        Mon, 20 Jul 2020 11:09:34 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "Ariel Elior" <aelior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        <GR-everest-linux-l2@marvell.com>,
+        <QLogic-Storage-Upstream@marvell.com>, <netdev@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 net-next 11/16] qed: reformat several structures a bit
+Date:   Mon, 20 Jul 2020 21:08:10 +0300
+Message-ID: <20200720180815.107-12-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200720180815.107-1-alobakin@marvell.com>
+References: <20200720180815.107-1-alobakin@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200718112513.533800-1-luca.stefani.ge1@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 01:25:13PM +0200, Luca Stefani wrote:
-> Clang's Control Flow Integrity (CFI) is a security mechanism that can
-> help prevent JOP chains, deployed extensively in downstream kernels
-> used in Android.
-> 
-> It's deployment is hindered by mismatches in function signatures.  For
-> this case, we make callbacks match their intended function signature,
-> and cast parameters within them rather than casting the callback when
-> passed as a parameter.
-> 
-> When running `mount -t ntfs ...` we observe the following trace:
-> 
-> Call trace:
-> __cfi_check_fail+0x1c/0x24
-> name_to_dev_t+0x0/0x404
-> iget5_locked+0x594/0x5e8
-> ntfs_fill_super+0xbfc/0x43ec
-> mount_bdev+0x30c/0x3cc
-> ntfs_mount+0x18/0x24
-> mount_fs+0x1b0/0x380
-> vfs_kern_mount+0x90/0x398
-> do_mount+0x5d8/0x1a10
-> SyS_mount+0x108/0x144
-> el0_svc_naked+0x34/0x38
-> 
-> Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
-> Tested-by: freak07 <michalechner92@googlemail.com>
-> Acked-by: Anton Altaparmakov <anton@tuxera.com>
+Reformat a few nvm_cfg* structures (and partly qed_dev) prior to adding
+new fields and definitions.
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+---
+ drivers/net/ethernet/qlogic/qed/qed.h     | 109 +++----
+ drivers/net/ethernet/qlogic/qed/qed_hsi.h | 345 +++++++++++-----------
+ drivers/net/ethernet/qlogic/qed/qed_mcp.h |  12 +-
+ 3 files changed, 237 insertions(+), 229 deletions(-)
 
-> ---
->  fs/ntfs/dir.c   |  2 +-
->  fs/ntfs/inode.c | 27 ++++++++++++++-------------
->  fs/ntfs/inode.h |  4 +---
->  fs/ntfs/mft.c   |  4 ++--
->  4 files changed, 18 insertions(+), 19 deletions(-)
-> 
-> diff --git a/fs/ntfs/dir.c b/fs/ntfs/dir.c
-> index 3c4811469ae8..e278bfc5ee7f 100644
-> --- a/fs/ntfs/dir.c
-> +++ b/fs/ntfs/dir.c
-> @@ -1503,7 +1503,7 @@ static int ntfs_dir_fsync(struct file *filp, loff_t start, loff_t end,
->  	na.type = AT_BITMAP;
->  	na.name = I30;
->  	na.name_len = 4;
-> -	bmp_vi = ilookup5(vi->i_sb, vi->i_ino, (test_t)ntfs_test_inode, &na);
-> +	bmp_vi = ilookup5(vi->i_sb, vi->i_ino, ntfs_test_inode, &na);
->  	if (bmp_vi) {
->   		write_inode_now(bmp_vi, !datasync);
->  		iput(bmp_vi);
-> diff --git a/fs/ntfs/inode.c b/fs/ntfs/inode.c
-> index d4359a1df3d5..9bb9f0952b18 100644
-> --- a/fs/ntfs/inode.c
-> +++ b/fs/ntfs/inode.c
-> @@ -30,10 +30,10 @@
->  /**
->   * ntfs_test_inode - compare two (possibly fake) inodes for equality
->   * @vi:		vfs inode which to test
-> - * @na:		ntfs attribute which is being tested with
-> + * @data:	data which is being tested with
->   *
->   * Compare the ntfs attribute embedded in the ntfs specific part of the vfs
-> - * inode @vi for equality with the ntfs attribute @na.
-> + * inode @vi for equality with the ntfs attribute @data.
->   *
->   * If searching for the normal file/directory inode, set @na->type to AT_UNUSED.
->   * @na->name and @na->name_len are then ignored.
-> @@ -43,8 +43,9 @@
->   * NOTE: This function runs with the inode_hash_lock spin lock held so it is not
->   * allowed to sleep.
->   */
-> -int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
-> +int ntfs_test_inode(struct inode *vi, void *data)
->  {
-> +	ntfs_attr *na = (ntfs_attr *)data;
->  	ntfs_inode *ni;
->  
->  	if (vi->i_ino != na->mft_no)
-> @@ -72,9 +73,9 @@ int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
->  /**
->   * ntfs_init_locked_inode - initialize an inode
->   * @vi:		vfs inode to initialize
-> - * @na:		ntfs attribute which to initialize @vi to
-> + * @data:	data which to initialize @vi to
->   *
-> - * Initialize the vfs inode @vi with the values from the ntfs attribute @na in
-> + * Initialize the vfs inode @vi with the values from the ntfs attribute @data in
->   * order to enable ntfs_test_inode() to do its work.
->   *
->   * If initializing the normal file/directory inode, set @na->type to AT_UNUSED.
-> @@ -87,8 +88,9 @@ int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
->   * NOTE: This function runs with the inode->i_lock spin lock held so it is not
->   * allowed to sleep. (Hence the GFP_ATOMIC allocation.)
->   */
-> -static int ntfs_init_locked_inode(struct inode *vi, ntfs_attr *na)
-> +static int ntfs_init_locked_inode(struct inode *vi, void *data)
->  {
-> +	ntfs_attr *na = (ntfs_attr *)data;
->  	ntfs_inode *ni = NTFS_I(vi);
->  
->  	vi->i_ino = na->mft_no;
-> @@ -131,7 +133,6 @@ static int ntfs_init_locked_inode(struct inode *vi, ntfs_attr *na)
->  	return 0;
->  }
->  
-> -typedef int (*set_t)(struct inode *, void *);
->  static int ntfs_read_locked_inode(struct inode *vi);
->  static int ntfs_read_locked_attr_inode(struct inode *base_vi, struct inode *vi);
->  static int ntfs_read_locked_index_inode(struct inode *base_vi,
-> @@ -164,8 +165,8 @@ struct inode *ntfs_iget(struct super_block *sb, unsigned long mft_no)
->  	na.name = NULL;
->  	na.name_len = 0;
->  
-> -	vi = iget5_locked(sb, mft_no, (test_t)ntfs_test_inode,
-> -			(set_t)ntfs_init_locked_inode, &na);
-> +	vi = iget5_locked(sb, mft_no, ntfs_test_inode,
-> +			ntfs_init_locked_inode, &na);
->  	if (unlikely(!vi))
->  		return ERR_PTR(-ENOMEM);
->  
-> @@ -225,8 +226,8 @@ struct inode *ntfs_attr_iget(struct inode *base_vi, ATTR_TYPE type,
->  	na.name = name;
->  	na.name_len = name_len;
->  
-> -	vi = iget5_locked(base_vi->i_sb, na.mft_no, (test_t)ntfs_test_inode,
-> -			(set_t)ntfs_init_locked_inode, &na);
-> +	vi = iget5_locked(base_vi->i_sb, na.mft_no, ntfs_test_inode,
-> +			ntfs_init_locked_inode, &na);
->  	if (unlikely(!vi))
->  		return ERR_PTR(-ENOMEM);
->  
-> @@ -280,8 +281,8 @@ struct inode *ntfs_index_iget(struct inode *base_vi, ntfschar *name,
->  	na.name = name;
->  	na.name_len = name_len;
->  
-> -	vi = iget5_locked(base_vi->i_sb, na.mft_no, (test_t)ntfs_test_inode,
-> -			(set_t)ntfs_init_locked_inode, &na);
-> +	vi = iget5_locked(base_vi->i_sb, na.mft_no, ntfs_test_inode,
-> +			ntfs_init_locked_inode, &na);
->  	if (unlikely(!vi))
->  		return ERR_PTR(-ENOMEM);
->  
-> diff --git a/fs/ntfs/inode.h b/fs/ntfs/inode.h
-> index 98e670fbdd31..363e4e820673 100644
-> --- a/fs/ntfs/inode.h
-> +++ b/fs/ntfs/inode.h
-> @@ -253,9 +253,7 @@ typedef struct {
->  	ATTR_TYPE type;
->  } ntfs_attr;
->  
-> -typedef int (*test_t)(struct inode *, void *);
-> -
-> -extern int ntfs_test_inode(struct inode *vi, ntfs_attr *na);
-> +extern int ntfs_test_inode(struct inode *vi, void *data);
->  
->  extern struct inode *ntfs_iget(struct super_block *sb, unsigned long mft_no);
->  extern struct inode *ntfs_attr_iget(struct inode *base_vi, ATTR_TYPE type,
-> diff --git a/fs/ntfs/mft.c b/fs/ntfs/mft.c
-> index fbb9f1bc623d..0d62cd5bb7f8 100644
-> --- a/fs/ntfs/mft.c
-> +++ b/fs/ntfs/mft.c
-> @@ -958,7 +958,7 @@ bool ntfs_may_write_mft_record(ntfs_volume *vol, const unsigned long mft_no,
->  		 * dirty code path of the inode dirty code path when writing
->  		 * $MFT occurs.
->  		 */
-> -		vi = ilookup5_nowait(sb, mft_no, (test_t)ntfs_test_inode, &na);
-> +		vi = ilookup5_nowait(sb, mft_no, ntfs_test_inode, &na);
->  	}
->  	if (vi) {
->  		ntfs_debug("Base inode 0x%lx is in icache.", mft_no);
-> @@ -1019,7 +1019,7 @@ bool ntfs_may_write_mft_record(ntfs_volume *vol, const unsigned long mft_no,
->  		vi = igrab(mft_vi);
->  		BUG_ON(vi != mft_vi);
->  	} else
-> -		vi = ilookup5_nowait(sb, na.mft_no, (test_t)ntfs_test_inode,
-> +		vi = ilookup5_nowait(sb, na.mft_no, ntfs_test_inode,
->  				&na);
->  	if (!vi) {
->  		/*
-> -- 
-> 2.27.0
-> 
+diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
+index ced805399e4f..e2d7a4bbab53 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed.h
++++ b/drivers/net/ethernet/qlogic/qed/qed.h
+@@ -280,48 +280,49 @@ enum qed_db_rec_exec {
+ 
+ struct qed_hw_info {
+ 	/* PCI personality */
+-	enum qed_pci_personality personality;
+-#define QED_IS_RDMA_PERSONALITY(dev)			    \
+-	((dev)->hw_info.personality == QED_PCI_ETH_ROCE ||  \
+-	 (dev)->hw_info.personality == QED_PCI_ETH_IWARP || \
++	enum qed_pci_personality	personality;
++#define QED_IS_RDMA_PERSONALITY(dev)					\
++	((dev)->hw_info.personality == QED_PCI_ETH_ROCE ||		\
++	 (dev)->hw_info.personality == QED_PCI_ETH_IWARP ||		\
+ 	 (dev)->hw_info.personality == QED_PCI_ETH_RDMA)
+-#define QED_IS_ROCE_PERSONALITY(dev)			   \
+-	((dev)->hw_info.personality == QED_PCI_ETH_ROCE || \
++#define QED_IS_ROCE_PERSONALITY(dev)					\
++	((dev)->hw_info.personality == QED_PCI_ETH_ROCE ||		\
+ 	 (dev)->hw_info.personality == QED_PCI_ETH_RDMA)
+-#define QED_IS_IWARP_PERSONALITY(dev)			    \
+-	((dev)->hw_info.personality == QED_PCI_ETH_IWARP || \
++#define QED_IS_IWARP_PERSONALITY(dev)					\
++	((dev)->hw_info.personality == QED_PCI_ETH_IWARP ||		\
+ 	 (dev)->hw_info.personality == QED_PCI_ETH_RDMA)
+-#define QED_IS_L2_PERSONALITY(dev)		      \
+-	((dev)->hw_info.personality == QED_PCI_ETH || \
++#define QED_IS_L2_PERSONALITY(dev)					\
++	((dev)->hw_info.personality == QED_PCI_ETH ||			\
+ 	 QED_IS_RDMA_PERSONALITY(dev))
+-#define QED_IS_FCOE_PERSONALITY(dev) \
++#define QED_IS_FCOE_PERSONALITY(dev)					\
+ 	((dev)->hw_info.personality == QED_PCI_FCOE)
+-#define QED_IS_ISCSI_PERSONALITY(dev) \
++#define QED_IS_ISCSI_PERSONALITY(dev)					\
+ 	((dev)->hw_info.personality == QED_PCI_ISCSI)
+ 
+ 	/* Resource Allocation scheme results */
+ 	u32				resc_start[QED_MAX_RESC];
+ 	u32				resc_num[QED_MAX_RESC];
+-	u32				feat_num[QED_MAX_FEATURES];
++#define RESC_START(_p_hwfn, resc)	((_p_hwfn)->hw_info.resc_start[resc])
++#define RESC_NUM(_p_hwfn, resc)		((_p_hwfn)->hw_info.resc_num[resc])
++#define RESC_END(_p_hwfn, resc)		(RESC_START(_p_hwfn, resc) +	\
++					 RESC_NUM(_p_hwfn, resc))
+ 
+-#define RESC_START(_p_hwfn, resc) ((_p_hwfn)->hw_info.resc_start[resc])
+-#define RESC_NUM(_p_hwfn, resc) ((_p_hwfn)->hw_info.resc_num[resc])
+-#define RESC_END(_p_hwfn, resc) (RESC_START(_p_hwfn, resc) + \
+-				 RESC_NUM(_p_hwfn, resc))
+-#define FEAT_NUM(_p_hwfn, resc) ((_p_hwfn)->hw_info.feat_num[resc])
++	u32				feat_num[QED_MAX_FEATURES];
++#define FEAT_NUM(_p_hwfn, resc)		((_p_hwfn)->hw_info.feat_num[resc])
+ 
+ 	/* Amount of traffic classes HW supports */
+-	u8 num_hw_tc;
++	u8				num_hw_tc;
+ 
+ 	/* Amount of TCs which should be active according to DCBx or upper
+ 	 * layer driver configuration.
+ 	 */
+-	u8 num_active_tc;
++	u8				num_active_tc;
++
+ 	u8				offload_tc;
+ 	bool				offload_tc_set;
+ 
+ 	bool				multi_tc_roce_en;
+-#define IS_QED_MULTI_TC_ROCE(p_hwfn) (((p_hwfn)->hw_info.multi_tc_roce_en))
++#define IS_QED_MULTI_TC_ROCE(p_hwfn)	((p_hwfn)->hw_info.multi_tc_roce_en)
+ 
+ 	u32				concrete_fid;
+ 	u16				opaque_fid;
+@@ -338,10 +339,10 @@ struct qed_hw_info {
+ 
+ 	u32				port_mode;
+ 	u32				hw_mode;
+-	unsigned long		device_capabilities;
++	unsigned long			device_capabilities;
+ 	u16				mtu;
+ 
+-	enum qed_wol_support b_wol_support;
++	enum qed_wol_support		b_wol_support;
+ };
+ 
+ /* maximun size of read/write commands (HW limit) */
+@@ -715,41 +716,41 @@ struct qed_dbg_feature {
+ };
+ 
+ struct qed_dev {
+-	u32	dp_module;
+-	u8	dp_level;
+-	char	name[NAME_SIZE];
+-
+-	enum	qed_dev_type type;
+-/* Translate type/revision combo into the proper conditions */
+-#define QED_IS_BB(dev)  ((dev)->type == QED_DEV_TYPE_BB)
+-#define QED_IS_BB_B0(dev)       (QED_IS_BB(dev) && \
+-				 CHIP_REV_IS_B0(dev))
+-#define QED_IS_AH(dev)  ((dev)->type == QED_DEV_TYPE_AH)
+-#define QED_IS_K2(dev)  QED_IS_AH(dev)
+-
+-	u16	vendor_id;
+-	u16	device_id;
+-#define QED_DEV_ID_MASK		0xff00
+-#define QED_DEV_ID_MASK_BB	0x1600
+-#define QED_DEV_ID_MASK_AH	0x8000
+-#define QED_IS_E4(dev)  (QED_IS_BB(dev) || QED_IS_AH(dev))
+-
+-	u16	chip_num;
+-#define CHIP_NUM_MASK                   0xffff
+-#define CHIP_NUM_SHIFT                  16
+-
+-	u16	chip_rev;
+-#define CHIP_REV_MASK                   0xf
+-#define CHIP_REV_SHIFT                  12
+-#define CHIP_REV_IS_B0(_cdev)   ((_cdev)->chip_rev == 1)
++	u32				dp_module;
++	u8				dp_level;
++	char				name[NAME_SIZE];
++
++	enum qed_dev_type		type;
++	/* Translate type/revision combo into the proper conditions */
++#define QED_IS_BB(dev)			((dev)->type == QED_DEV_TYPE_BB)
++#define QED_IS_BB_B0(dev)		(QED_IS_BB(dev) && CHIP_REV_IS_B0(dev))
++#define QED_IS_AH(dev)			((dev)->type == QED_DEV_TYPE_AH)
++#define QED_IS_K2(dev)			QED_IS_AH(dev)
++#define QED_IS_E4(dev)			(QED_IS_BB(dev) || QED_IS_AH(dev))
++
++	u16				vendor_id;
++
++	u16				device_id;
++#define QED_DEV_ID_MASK			0xff00
++#define QED_DEV_ID_MASK_BB		0x1600
++#define QED_DEV_ID_MASK_AH		0x8000
++
++	u16				chip_num;
++#define CHIP_NUM_MASK			0xffff
++#define CHIP_NUM_SHIFT			16
++
++	u16				chip_rev;
++#define CHIP_REV_MASK			0xf
++#define CHIP_REV_SHIFT			12
++#define CHIP_REV_IS_B0(_cdev)		((_cdev)->chip_rev == 1)
+ 
+ 	u16				chip_metal;
+-#define CHIP_METAL_MASK                 0xff
+-#define CHIP_METAL_SHIFT                4
++#define CHIP_METAL_MASK			0xff
++#define CHIP_METAL_SHIFT		4
+ 
+ 	u16				chip_bond_id;
+-#define CHIP_BOND_ID_MASK               0xf
+-#define CHIP_BOND_ID_SHIFT              0
++#define CHIP_BOND_ID_MASK		0xf
++#define CHIP_BOND_ID_SHIFT		0
+ 
+ 	u8				num_engines;
+ 	u8				num_ports;
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_hsi.h b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
+index 7c1d4efffbff..a4a845579fd2 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_hsi.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
+@@ -12532,67 +12532,67 @@ struct public_drv_mb {
+ #define DRV_MB_PARAM_SET_LED_MODE_ON		0x1
+ #define DRV_MB_PARAM_SET_LED_MODE_OFF		0x2
+ 
+-#define DRV_MB_PARAM_TRANSCEIVER_PORT_OFFSET		0
+-#define DRV_MB_PARAM_TRANSCEIVER_PORT_MASK		0x00000003
+-#define DRV_MB_PARAM_TRANSCEIVER_SIZE_OFFSET		2
+-#define DRV_MB_PARAM_TRANSCEIVER_SIZE_MASK		0x000000FC
+-#define DRV_MB_PARAM_TRANSCEIVER_I2C_ADDRESS_OFFSET	8
+-#define DRV_MB_PARAM_TRANSCEIVER_I2C_ADDRESS_MASK	0x0000FF00
+-#define DRV_MB_PARAM_TRANSCEIVER_OFFSET_OFFSET		16
+-#define DRV_MB_PARAM_TRANSCEIVER_OFFSET_MASK		0xFFFF0000
++#define DRV_MB_PARAM_TRANSCEIVER_PORT_OFFSET			0
++#define DRV_MB_PARAM_TRANSCEIVER_PORT_MASK			0x00000003
++#define DRV_MB_PARAM_TRANSCEIVER_SIZE_OFFSET			2
++#define DRV_MB_PARAM_TRANSCEIVER_SIZE_MASK			0x000000fc
++#define DRV_MB_PARAM_TRANSCEIVER_I2C_ADDRESS_OFFSET		8
++#define DRV_MB_PARAM_TRANSCEIVER_I2C_ADDRESS_MASK		0x0000ff00
++#define DRV_MB_PARAM_TRANSCEIVER_OFFSET_OFFSET			16
++#define DRV_MB_PARAM_TRANSCEIVER_OFFSET_MASK			0xffff0000
+ 
+ 	/* Resource Allocation params - Driver version support */
+-#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_MASK	0xFFFF0000
+-#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_SHIFT	16
+-#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_MASK	0x0000FFFF
+-#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_SHIFT	0
+-
+-#define DRV_MB_PARAM_BIST_REGISTER_TEST		1
+-#define DRV_MB_PARAM_BIST_CLOCK_TEST		2
+-#define DRV_MB_PARAM_BIST_NVM_TEST_NUM_IMAGES	3
+-#define DRV_MB_PARAM_BIST_NVM_TEST_IMAGE_BY_INDEX	4
+-
+-#define DRV_MB_PARAM_BIST_RC_UNKNOWN		0
+-#define DRV_MB_PARAM_BIST_RC_PASSED		1
+-#define DRV_MB_PARAM_BIST_RC_FAILED		2
+-#define DRV_MB_PARAM_BIST_RC_INVALID_PARAMETER	3
+-
+-#define DRV_MB_PARAM_BIST_TEST_INDEX_SHIFT	0
+-#define DRV_MB_PARAM_BIST_TEST_INDEX_MASK	0x000000FF
+-#define DRV_MB_PARAM_BIST_TEST_IMAGE_INDEX_SHIFT	8
+-#define DRV_MB_PARAM_BIST_TEST_IMAGE_INDEX_MASK		0x0000FF00
+-
+-#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_MASK		0x0000FFFF
+-#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_OFFSET	0
+-#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_EEE		0x00000002
+-#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_FEC_CONTROL	0x00000004
+-#define DRV_MB_PARAM_FEATURE_SUPPORT_FUNC_VLINK		0x00010000
++#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_MASK		0xffff0000
++#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_SHIFT		16
++#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_MASK		0x0000ffff
++#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_SHIFT		0
++
++#define DRV_MB_PARAM_BIST_REGISTER_TEST				1
++#define DRV_MB_PARAM_BIST_CLOCK_TEST				2
++#define DRV_MB_PARAM_BIST_NVM_TEST_NUM_IMAGES			3
++#define DRV_MB_PARAM_BIST_NVM_TEST_IMAGE_BY_INDEX		4
++
++#define DRV_MB_PARAM_BIST_RC_UNKNOWN				0
++#define DRV_MB_PARAM_BIST_RC_PASSED				1
++#define DRV_MB_PARAM_BIST_RC_FAILED				2
++#define DRV_MB_PARAM_BIST_RC_INVALID_PARAMETER			3
++
++#define DRV_MB_PARAM_BIST_TEST_INDEX_SHIFT			0
++#define DRV_MB_PARAM_BIST_TEST_INDEX_MASK			0x000000ff
++#define DRV_MB_PARAM_BIST_TEST_IMAGE_INDEX_SHIFT		8
++#define DRV_MB_PARAM_BIST_TEST_IMAGE_INDEX_MASK			0x0000ff00
++
++#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_MASK			0x0000ffff
++#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_OFFSET		0
++#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_EEE			0x00000002
++#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_FEC_CONTROL		0x00000004
++#define DRV_MB_PARAM_FEATURE_SUPPORT_FUNC_VLINK			0x00010000
+ 
+ /* DRV_MSG_CODE_DEBUG_DATA_SEND parameters */
+-#define DRV_MSG_CODE_DEBUG_DATA_SEND_SIZE_OFFSET	0
+-#define DRV_MSG_CODE_DEBUG_DATA_SEND_SIZE_MASK		0xFF
++#define DRV_MSG_CODE_DEBUG_DATA_SEND_SIZE_OFFSET		0
++#define DRV_MSG_CODE_DEBUG_DATA_SEND_SIZE_MASK			0xff
+ 
+ /* Driver attributes params */
+-#define DRV_MB_PARAM_ATTRIBUTE_KEY_OFFSET		0
+-#define DRV_MB_PARAM_ATTRIBUTE_KEY_MASK			0x00FFFFFF
+-#define DRV_MB_PARAM_ATTRIBUTE_CMD_OFFSET		24
+-#define DRV_MB_PARAM_ATTRIBUTE_CMD_MASK			0xFF000000
+-
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ID_OFFSET		0
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ID_SHIFT		0
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ID_MASK		0x0000FFFF
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ALL_SHIFT		16
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ALL_MASK		0x00010000
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_INIT_SHIFT		17
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_INIT_MASK		0x00020000
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_COMMIT_SHIFT	18
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_COMMIT_MASK		0x00040000
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_FREE_SHIFT		19
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_FREE_MASK		0x00080000
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_SEL_SHIFT	20
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_SEL_MASK	0x00100000
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_ID_SHIFT	24
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_ID_MASK	0x0f000000
++#define DRV_MB_PARAM_ATTRIBUTE_KEY_OFFSET			0
++#define DRV_MB_PARAM_ATTRIBUTE_KEY_MASK				0x00ffffff
++#define DRV_MB_PARAM_ATTRIBUTE_CMD_OFFSET			24
++#define DRV_MB_PARAM_ATTRIBUTE_CMD_MASK				0xff000000
++
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ID_OFFSET			0
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ID_SHIFT			0
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ID_MASK			0x0000ffff
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ALL_SHIFT			16
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ALL_MASK			0x00010000
++#define DRV_MB_PARAM_NVM_CFG_OPTION_INIT_SHIFT			17
++#define DRV_MB_PARAM_NVM_CFG_OPTION_INIT_MASK			0x00020000
++#define DRV_MB_PARAM_NVM_CFG_OPTION_COMMIT_SHIFT		18
++#define DRV_MB_PARAM_NVM_CFG_OPTION_COMMIT_MASK			0x00040000
++#define DRV_MB_PARAM_NVM_CFG_OPTION_FREE_SHIFT			19
++#define DRV_MB_PARAM_NVM_CFG_OPTION_FREE_MASK			0x00080000
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_SEL_SHIFT		20
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_SEL_MASK		0x00100000
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_ID_SHIFT		24
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_ID_MASK		0x0f000000
+ 
+ 	u32 fw_mb_header;
+ #define FW_MSG_CODE_MASK			0xffff0000
+@@ -12639,56 +12639,56 @@ struct public_drv_mb {
+ 
+ #define FW_MSG_CODE_MDUMP_INVALID_CMD		0x00030000
+ 
+-	u32						fw_mb_param;
+-#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_MASK	0xffff0000
+-#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_SHIFT	16
+-#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_MASK	0x0000ffff
+-#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_SHIFT	0
++	u32							fw_mb_param;
++#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_MASK		0xffff0000
++#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_SHIFT		16
++#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_MASK		0x0000ffff
++#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_SHIFT		0
+ 
+ 	/* Get PF RDMA protocol command response */
+-#define FW_MB_PARAM_GET_PF_RDMA_NONE			0x0
+-#define FW_MB_PARAM_GET_PF_RDMA_ROCE			0x1
+-#define FW_MB_PARAM_GET_PF_RDMA_IWARP			0x2
+-#define FW_MB_PARAM_GET_PF_RDMA_BOTH			0x3
++#define FW_MB_PARAM_GET_PF_RDMA_NONE				0x0
++#define FW_MB_PARAM_GET_PF_RDMA_ROCE				0x1
++#define FW_MB_PARAM_GET_PF_RDMA_IWARP				0x2
++#define FW_MB_PARAM_GET_PF_RDMA_BOTH				0x3
+ 
+ 	/* Get MFW feature support response */
+-#define FW_MB_PARAM_FEATURE_SUPPORT_SMARTLINQ		0x00000001
+-#define FW_MB_PARAM_FEATURE_SUPPORT_EEE			0x00000002
+-#define FW_MB_PARAM_FEATURE_SUPPORT_FEC_CONTROL		0x00000020
+-#define FW_MB_PARAM_FEATURE_SUPPORT_VLINK		0x00010000
++#define FW_MB_PARAM_FEATURE_SUPPORT_SMARTLINQ			BIT(0)
++#define FW_MB_PARAM_FEATURE_SUPPORT_EEE				BIT(1)
++#define FW_MB_PARAM_FEATURE_SUPPORT_FEC_CONTROL			BIT(5)
++#define FW_MB_PARAM_FEATURE_SUPPORT_VLINK			BIT(16)
+ 
+-#define FW_MB_PARAM_LOAD_DONE_DID_EFUSE_ERROR		BIT(0)
++#define FW_MB_PARAM_LOAD_DONE_DID_EFUSE_ERROR			BIT(0)
+ 
+-#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALID_MASK	0x00000001
+-#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALID_SHIFT	0
+-#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALUE_MASK	0x00000002
+-#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALUE_SHIFT	1
+-#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALID_MASK		0x00000004
+-#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALID_SHIFT	2
+-#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALUE_MASK		0x00000008
+-#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALUE_SHIFT	3
++#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALID_MASK		0x00000001
++#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALID_SHIFT		0
++#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALUE_MASK		0x00000002
++#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALUE_SHIFT		1
++#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALID_MASK			0x00000004
++#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALID_SHIFT		2
++#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALUE_MASK			0x00000008
++#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALUE_SHIFT		3
+ 
+-#define FW_MB_PARAM_PPFID_BITMAP_MASK			0xff
+-#define FW_MB_PARAM_PPFID_BITMAP_SHIFT			0
++#define FW_MB_PARAM_PPFID_BITMAP_MASK				0xff
++#define FW_MB_PARAM_PPFID_BITMAP_SHIFT				0
+ 
+-	u32						drv_pulse_mb;
+-#define DRV_PULSE_SEQ_MASK				0x00007fff
+-#define DRV_PULSE_SYSTEM_TIME_MASK			0xffff0000
+-#define DRV_PULSE_ALWAYS_ALIVE				0x00008000
++	u32							drv_pulse_mb;
++#define DRV_PULSE_SEQ_MASK					0x00007fff
++#define DRV_PULSE_SYSTEM_TIME_MASK				0xffff0000
++#define DRV_PULSE_ALWAYS_ALIVE					0x00008000
+ 
+-	u32						mcp_pulse_mb;
+-#define MCP_PULSE_SEQ_MASK				0x00007fff
+-#define MCP_PULSE_ALWAYS_ALIVE				0x00008000
+-#define MCP_EVENT_MASK					0xffff0000
+-#define MCP_EVENT_OTHER_DRIVER_RESET_REQ		0x00010000
++	u32							mcp_pulse_mb;
++#define MCP_PULSE_SEQ_MASK					0x00007fff
++#define MCP_PULSE_ALWAYS_ALIVE					0x00008000
++#define MCP_EVENT_MASK						0xffff0000
++#define MCP_EVENT_OTHER_DRIVER_RESET_REQ			0x00010000
+ 
+-	union drv_union_data				union_data;
++	union drv_union_data					union_data;
+ };
+ 
+-#define FW_MB_PARAM_NVM_PUT_FILE_REQ_OFFSET_MASK	0x00ffffff
+-#define FW_MB_PARAM_NVM_PUT_FILE_REQ_OFFSET_SHIFT	0
+-#define FW_MB_PARAM_NVM_PUT_FILE_REQ_SIZE_MASK		0xff000000
+-#define FW_MB_PARAM_NVM_PUT_FILE_REQ_SIZE_SHIFT		24
++#define FW_MB_PARAM_NVM_PUT_FILE_REQ_OFFSET_MASK		0x00ffffff
++#define FW_MB_PARAM_NVM_PUT_FILE_REQ_OFFSET_SHIFT		0
++#define FW_MB_PARAM_NVM_PUT_FILE_REQ_SIZE_MASK			0xff000000
++#define FW_MB_PARAM_NVM_PUT_FILE_REQ_SIZE_SHIFT			24
+ 
+ enum MFW_DRV_MSG_TYPE {
+ 	MFW_DRV_MSG_LINK_CHANGE,
+@@ -12975,86 +12975,93 @@ enum tlvs {
+ };
+ 
+ struct nvm_cfg_mac_address {
+-	u32 mac_addr_hi;
+-#define NVM_CFG_MAC_ADDRESS_HI_MASK	0x0000FFFF
+-#define NVM_CFG_MAC_ADDRESS_HI_OFFSET	0
+-	u32 mac_addr_lo;
++	u32							mac_addr_hi;
++#define NVM_CFG_MAC_ADDRESS_HI_MASK				0x0000ffff
++#define NVM_CFG_MAC_ADDRESS_HI_OFFSET				0
++
++	u32							mac_addr_lo;
+ };
+ 
+ struct nvm_cfg1_glob {
+-	u32 generic_cont0;
+-#define NVM_CFG1_GLOB_MF_MODE_MASK		0x00000FF0
+-#define NVM_CFG1_GLOB_MF_MODE_OFFSET		4
+-#define NVM_CFG1_GLOB_MF_MODE_MF_ALLOWED	0x0
+-#define NVM_CFG1_GLOB_MF_MODE_DEFAULT		0x1
+-#define NVM_CFG1_GLOB_MF_MODE_SPIO4		0x2
+-#define NVM_CFG1_GLOB_MF_MODE_NPAR1_0		0x3
+-#define NVM_CFG1_GLOB_MF_MODE_NPAR1_5		0x4
+-#define NVM_CFG1_GLOB_MF_MODE_NPAR2_0		0x5
+-#define NVM_CFG1_GLOB_MF_MODE_BD		0x6
+-#define NVM_CFG1_GLOB_MF_MODE_UFP		0x7
+-	u32 engineering_change[3];
+-	u32 manufacturing_id;
+-	u32 serial_number[4];
+-	u32 pcie_cfg;
+-	u32 mgmt_traffic;
+-	u32 core_cfg;
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_MASK		0x000000FF
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_OFFSET		0
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_2X40G	0x0
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X50G		0x1
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_1X100G	0x2
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X10G_F		0x3
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_4X10G_E	0x4
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_4X20G	0x5
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_1X40G		0xB
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X25G		0xC
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_1X25G		0xD
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X25G		0xE
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X10G		0xF
+-
+-	u32 e_lane_cfg1;
+-	u32 e_lane_cfg2;
+-	u32 f_lane_cfg1;
+-	u32 f_lane_cfg2;
+-	u32 mps10_preemphasis;
+-	u32 mps10_driver_current;
+-	u32 mps25_preemphasis;
+-	u32 mps25_driver_current;
+-	u32 pci_id;
+-	u32 pci_subsys_id;
+-	u32 bar;
+-	u32 mps10_txfir_main;
+-	u32 mps10_txfir_post;
+-	u32 mps25_txfir_main;
+-	u32 mps25_txfir_post;
+-	u32 manufacture_ver;
+-	u32 manufacture_time;
+-	u32 led_global_settings;
+-	u32 generic_cont1;
+-	u32 mbi_version;
+-#define NVM_CFG1_GLOB_MBI_VERSION_0_MASK		0x000000FF
+-#define NVM_CFG1_GLOB_MBI_VERSION_0_OFFSET		0
+-#define NVM_CFG1_GLOB_MBI_VERSION_1_MASK		0x0000FF00
+-#define NVM_CFG1_GLOB_MBI_VERSION_1_OFFSET		8
+-#define NVM_CFG1_GLOB_MBI_VERSION_2_MASK		0x00FF0000
+-#define NVM_CFG1_GLOB_MBI_VERSION_2_OFFSET		16
+-	u32 mbi_date;
+-	u32 misc_sig;
+-	u32 device_capabilities;
+-#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_ETHERNET	0x1
+-#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_FCOE		0x2
+-#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_ISCSI		0x4
+-#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_ROCE		0x8
+-	u32 power_dissipated;
+-	u32 power_consumed;
+-	u32 efi_version;
+-	u32 multi_network_modes_capability;
+-	u32 reserved[41];
++	u32							generic_cont0;
++#define NVM_CFG1_GLOB_MF_MODE_MASK				0x00000ff0
++#define NVM_CFG1_GLOB_MF_MODE_OFFSET				4
++#define NVM_CFG1_GLOB_MF_MODE_MF_ALLOWED			0x0
++#define NVM_CFG1_GLOB_MF_MODE_DEFAULT				0x1
++#define NVM_CFG1_GLOB_MF_MODE_SPIO4				0x2
++#define NVM_CFG1_GLOB_MF_MODE_NPAR1_0				0x3
++#define NVM_CFG1_GLOB_MF_MODE_NPAR1_5				0x4
++#define NVM_CFG1_GLOB_MF_MODE_NPAR2_0				0x5
++#define NVM_CFG1_GLOB_MF_MODE_BD				0x6
++#define NVM_CFG1_GLOB_MF_MODE_UFP				0x7
++
++	u32							engineering_change[3];
++	u32							manufacturing_id;
++	u32							serial_number[4];
++	u32							pcie_cfg;
++	u32							mgmt_traffic;
++
++	u32							core_cfg;
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_MASK			0x000000ff
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_OFFSET			0
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_2X40G		0x0
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X50G			0x1
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_1X100G		0x2
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X10G_F			0x3
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_4X10G_E		0x4
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_4X20G		0x5
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_1X40G			0xb
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X25G			0xc
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_1X25G			0xd
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X25G			0xe
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X10G			0xf
++
++	u32							e_lane_cfg1;
++	u32							e_lane_cfg2;
++	u32							f_lane_cfg1;
++	u32							f_lane_cfg2;
++	u32							mps10_preemphasis;
++	u32							mps10_driver_current;
++	u32							mps25_preemphasis;
++	u32							mps25_driver_current;
++	u32							pci_id;
++	u32							pci_subsys_id;
++	u32							bar;
++	u32							mps10_txfir_main;
++	u32							mps10_txfir_post;
++	u32							mps25_txfir_main;
++	u32							mps25_txfir_post;
++	u32							manufacture_ver;
++	u32							manufacture_time;
++	u32							led_global_settings;
++	u32							generic_cont1;
++
++	u32							mbi_version;
++#define NVM_CFG1_GLOB_MBI_VERSION_0_MASK			0x000000ff
++#define NVM_CFG1_GLOB_MBI_VERSION_0_OFFSET			0
++#define NVM_CFG1_GLOB_MBI_VERSION_1_MASK			0x0000ff00
++#define NVM_CFG1_GLOB_MBI_VERSION_1_OFFSET			8
++#define NVM_CFG1_GLOB_MBI_VERSION_2_MASK			0x00ff0000
++#define NVM_CFG1_GLOB_MBI_VERSION_2_OFFSET			16
++
++	u32							mbi_date;
++	u32							misc_sig;
++
++	u32							device_capabilities;
++#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_ETHERNET		0x1
++#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_FCOE			0x2
++#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_ISCSI			0x4
++#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_ROCE			0x8
++
++	u32							power_dissipated;
++	u32							power_consumed;
++	u32							efi_version;
++	u32							multi_net_modes_cap;
++	u32							reserved[41];
+ };
+ 
+ struct nvm_cfg1_path {
+-	u32 reserved[30];
++	u32							reserved[30];
+ };
+ 
+ struct nvm_cfg1_port {
+@@ -13082,7 +13089,7 @@ struct nvm_cfg1_port {
+ #define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_OFFSET		0
+ #define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_1G		0x1
+ #define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_10G		0x2
+-#define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_20G             0x4
++#define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_20G		0x4
+ #define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_25G		0x8
+ #define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_40G		0x10
+ #define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_50G		0x20
+@@ -13094,7 +13101,7 @@ struct nvm_cfg1_port {
+ #define NVM_CFG1_PORT_DRV_LINK_SPEED_AUTONEG			0x0
+ #define NVM_CFG1_PORT_DRV_LINK_SPEED_1G				0x1
+ #define NVM_CFG1_PORT_DRV_LINK_SPEED_10G			0x2
+-#define NVM_CFG1_PORT_DRV_LINK_SPEED_20G                        0x3
++#define NVM_CFG1_PORT_DRV_LINK_SPEED_20G			0x3
+ #define NVM_CFG1_PORT_DRV_LINK_SPEED_25G			0x4
+ #define NVM_CFG1_PORT_DRV_LINK_SPEED_40G			0x5
+ #define NVM_CFG1_PORT_DRV_LINK_SPEED_50G			0x6
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.h b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
+index 5e50405854e6..ea956c43e596 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_mcp.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
+@@ -16,15 +16,15 @@
+ #include "qed_dev_api.h"
+ 
+ struct qed_mcp_link_speed_params {
+-	bool    autoneg;
+-	u32     advertised_speeds;      /* bitmask of DRV_SPEED_CAPABILITY */
+-	u32     forced_speed;	   /* In Mb/s */
++	bool					autoneg;
++	u32					advertised_speeds;
++	u32					forced_speed;	   /* In Mb/s */
+ };
+ 
+ struct qed_mcp_link_pause_params {
+-	bool    autoneg;
+-	bool    forced_rx;
+-	bool    forced_tx;
++	bool					autoneg;
++	bool					forced_rx;
++	bool					forced_tx;
+ };
+ 
+ enum qed_mcp_eee_mode {
+-- 
+2.25.1
+
