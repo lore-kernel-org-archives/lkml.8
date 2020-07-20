@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32441C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875CEC43457
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11ED320656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D3EF20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261895;
-	bh=IDWALL32/WD5RmizqctBoBElm3QSOBlZvqtulB53trc=;
+	s=default; t=1595261899;
+	bh=tC1G5VM5FfFophslm6pkzLu96fYci1vgWUsC2Z1iWhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CXMcdOMc4Zes84JEFnCviJ1Hwfo2bd8ITqHbz2vepQ+dzZjY4FeCqzWu26/cmMPNz
-	 HYaVzLJFHa5cTLaLzOvgBTA9SLHxCxV2tfLaLNKXpUX5towPd6zEok/14dp0l16K9Y
-	 SGwoK98hhvJODfa1PnNP/mwHiAJpAj9uE8ybExLo=
+	b=SSM0jebTrmT38m8scG+zpstg936cGs3tQZRinzM1+kV08sIj749g/yPJKOdqMQXrw
+	 EHBxvf++inRHoL3zZqBOJ700W94c6CpKoWEM78jmhrmT5mUVzv+uhM/4MuUYzN1ajN
+	 52ExruoN686J5ZCZvsYTFE6QxwCWMv62UOhMLuYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388426AbgGTQSN (ORCPT
+        id S2388156AbgGTQNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:18:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54408 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:13:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387844AbgGTQOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:14:08 -0400
+        id S2388148AbgGTQNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:13:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5E4D2064B;
-        Mon, 20 Jul 2020 16:14:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06DA20734;
+        Mon, 20 Jul 2020 16:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261647;
-        bh=IDWALL32/WD5RmizqctBoBElm3QSOBlZvqtulB53trc=;
+        s=default; t=1595261625;
+        bh=tC1G5VM5FfFophslm6pkzLu96fYci1vgWUsC2Z1iWhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kdsi8jqJLo96lq22iBcnBmvvxdBjeYUBQQE2gsaOEQg+uxYpe8lOritR0lf8UgxEn
-         xKaPMC9cIqX71NPWzKrpqmu+SZtu745Ck9FlUpWjZpeZ7Y+qBnsTvOf/m0hnFdHD/h
-         T670DVH/4FUxQu3InQVAdp5JFLVBz4bvOhGqRKPw=
+        b=c8nH8AEp6BXyxvcchngWEyct2ARSVHdwqoS3pnzzQnfG45CQJg0HaO8jPBdWmhX2e
+         rBRoEMqh4mOR3I8IZWAzR6gcf0VB57okH6Zm4RRWmxlQXpcslQGYLJVxzyr0PXql/z
+         cN67b41ZQMoOdHFx4wWU+Y0FEeGTcv+vUH4ablPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Subject: [PATCH 5.7 174/244] serial: sh-sci: Initialize spinlock for uart console
-Date:   Mon, 20 Jul 2020 17:37:25 +0200
-Message-Id: <20200720152834.113843439@linuxfoundation.org>
+        stable@vger.kernel.org, Chirantan Ekbote <chirantan@chromium.org>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.7 184/244] fuse: Fix parameter for FS_IOC_{GET,SET}FLAGS
+Date:   Mon, 20 Jul 2020 17:37:35 +0200
+Message-Id: <20200720152834.593335193@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,65 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Chirantan Ekbote <chirantan@chromium.org>
 
-commit f38278e9b810b06aff2981d505267be984423ba3 upstream.
+commit 31070f6ccec09f3bd4f1e28cd1e592fa4f3ba0b6 upstream.
 
-serial core expects the spinlock to be initialized by the controller
-driver for serial console, this patch makes sure the spinlock is
-initialized, fixing the below issue:
+The ioctl encoding for this parameter is a long but the documentation says
+it should be an int and the kernel drivers expect it to be an int.  If the
+fuse driver treats this as a long it might end up scribbling over the stack
+of a userspace process that only allocated enough space for an int.
 
-[    0.865928] BUG: spinlock bad magic on CPU#0, swapper/0/1
-[    0.865945]  lock: sci_ports+0x0/0x4c80, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
-[    0.865955] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #112
-[    0.865961] Hardware name: HopeRun HiHope RZ/G2H with sub board (DT)
-[    0.865968] Call trace:
-[    0.865979]  dump_backtrace+0x0/0x1d8
-[    0.865985]  show_stack+0x14/0x20
-[    0.865996]  dump_stack+0xe8/0x130
-[    0.866006]  spin_dump+0x6c/0x88
-[    0.866012]  do_raw_spin_lock+0xb0/0xf8
-[    0.866023]  _raw_spin_lock_irqsave+0x80/0xa0
-[    0.866032]  uart_add_one_port+0x3a4/0x4e0
-[    0.866039]  sci_probe+0x504/0x7c8
-[    0.866048]  platform_drv_probe+0x50/0xa0
-[    0.866059]  really_probe+0xdc/0x330
-[    0.866066]  driver_probe_device+0x58/0xb8
-[    0.866072]  device_driver_attach+0x6c/0x90
-[    0.866078]  __driver_attach+0x88/0xd0
-[    0.866085]  bus_for_each_dev+0x74/0xc8
-[    0.866091]  driver_attach+0x20/0x28
-[    0.866098]  bus_add_driver+0x14c/0x1f8
-[    0.866104]  driver_register+0x60/0x110
-[    0.866109]  __platform_driver_register+0x40/0x48
-[    0.866119]  sci_init+0x2c/0x34
-[    0.866127]  do_one_initcall+0x88/0x428
-[    0.866137]  kernel_init_freeable+0x2c0/0x328
-[    0.866143]  kernel_init+0x10/0x108
-[    0.866150]  ret_from_fork+0x10/0x18
+This was previously discussed in [1] and a patch for fuse was proposed in
+[2].  From what I can tell the patch in [2] was nacked in favor of adding
+new, "fixed" ioctls and using those from userspace.  However there is still
+no "fixed" version of these ioctls and the fact is that it's sometimes
+infeasible to change all userspace to use the new one.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-Fixes: a3cb39d258ef ("serial: core: Allow detach and attach serial device for console")
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1593618100-2151-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com
+Handling the ioctls specially in the fuse driver seems like the most
+pragmatic way for fuse servers to support them without causing crashes in
+userspace applications that call them.
+
+[1]: https://lore.kernel.org/linux-fsdevel/20131126200559.GH20559@hall.aurel32.net/T/
+[2]: https://sourceforge.net/p/fuse/mailman/message/31771759/
+
+Signed-off-by: Chirantan Ekbote <chirantan@chromium.org>
+Fixes: 59efec7b9039 ("fuse: implement ioctl support")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/sh-sci.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/fuse/file.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -3301,6 +3301,9 @@ static int sci_probe_single(struct platf
- 		sciport->port.flags |= UPF_HARD_FLOW;
- 	}
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -18,6 +18,7 @@
+ #include <linux/swap.h>
+ #include <linux/falloc.h>
+ #include <linux/uio.h>
++#include <linux/fs.h>
  
-+	if (sci_uart_driver.cons->index == sciport->port.line)
-+		spin_lock_init(&sciport->port.lock);
+ static struct page **fuse_pages_alloc(unsigned int npages, gfp_t flags,
+ 				      struct fuse_page_desc **desc)
+@@ -2758,7 +2759,16 @@ long fuse_do_ioctl(struct file *file, un
+ 		struct iovec *iov = iov_page;
+ 
+ 		iov->iov_base = (void __user *)arg;
+-		iov->iov_len = _IOC_SIZE(cmd);
 +
- 	ret = uart_add_one_port(&sci_uart_driver, &sciport->port);
- 	if (ret) {
- 		sci_cleanup_single(sciport);
++		switch (cmd) {
++		case FS_IOC_GETFLAGS:
++		case FS_IOC_SETFLAGS:
++			iov->iov_len = sizeof(int);
++			break;
++		default:
++			iov->iov_len = _IOC_SIZE(cmd);
++			break;
++		}
+ 
+ 		if (_IOC_DIR(cmd) & _IOC_WRITE) {
+ 			in_iov = iov;
 
 
