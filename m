@@ -2,137 +2,94 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5804C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4411DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8D052250E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A92C22BF5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:46:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595209573;
+	bh=9CMTCIaoKPSzdHPi/QcAOfkskF0XSZJLAgb8wK7crQ0=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
+	b=YOBtFo3h/3NvEcd/LmD2GmEcLrutu30W1hgr9aZ2+wztjbNvH/8rnhzq6YmYAj7ED
+	 YdCYcY5EzQM4B2KkQmJvZJPW2a6wyFM4u8pqX8YBRGh7nQd1f6WlKhrKQou8kLM7MN
+	 35CkH+CUK6Ep6v0gcSqnIodccNTAtJrc241CiC4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgGTBqG (ORCPT
+        id S1726854AbgGTBqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 21:46:06 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:40952 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbgGTBqG (ORCPT
+        Sun, 19 Jul 2020 21:46:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbgGTBqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 21:46:06 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 054172A113;
-        Sun, 19 Jul 2020 21:45:59 -0400 (EDT)
-Date:   Mon, 20 Jul 2020 11:46:01 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 13/16] scripts/kallsyms: move ignored symbol types to
- is_ignored_symbol()
-In-Reply-To: <20191123160444.11251-14-yamada.masahiro@socionext.com>
-Message-ID: <alpine.LNX.2.23.453.2007201132240.8@nippy.intranet>
-References: <20191123160444.11251-1-yamada.masahiro@socionext.com> <20191123160444.11251-14-yamada.masahiro@socionext.com>
+        Sun, 19 Jul 2020 21:46:11 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FDBEC0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 18:46:11 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id t9so8859231lfl.5
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 18:46:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=YRv1ZMPeKloCXiGnvm9THeGZ4g4sw/J7xcl2dIGNecY=;
+        b=BqRGNksrNI+sXQdAcQqOyxO9nFkkPMzCGvpq6AiHtUOzn+xgygcRiaN9/CSvE59mlH
+         3wlUPCvpwcOl1DdyGJjL14JMFKPBRfj6lfHjLueEVsv78X1uJ/MD8J0RiL1d1C4znWG5
+         XLdyEu8pWrkJh2BY8qeOgIUu7lcuIpD4nmic8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=YRv1ZMPeKloCXiGnvm9THeGZ4g4sw/J7xcl2dIGNecY=;
+        b=OgE9W/MBxB3Bt6WbLrV5y2cLJy0zfL1snuCKKMUvqBH3I2sUwZ2/A6YUWLI5L/ZLzU
+         P9OpTuIsUidtZUWmAFgL+dAISqfODERt9gfs0uCFD02RvGN/8fgSxLI5Ao1tI/5Rave3
+         wRPQlLMnkCoQipdtlogPDHMroY1CRpgOicrZ8qINAGvKCnZPiPJlzszI4jr5ELoJK9O0
+         xPitJzqeNUbyZq8Mqvy4E9W02wfZY3WvkJct7VOD266MmgphaWZoBZKJcVa8sYa2UE2g
+         oG/3RLv37k4mn7Plpc0vhf+2IxMlmNmIYQGP5I29pJc9rnz8PKkBia1dsoPTo6hSEobh
+         PyKg==
+X-Gm-Message-State: AOAM531ESWUNjOHJzlBtTJ47sHz2gsx5P4AoLOiJKHJ1RkfdsXWp3saN
+        6CayWY4b6sGbVuGIyqnmzV694qwM9lM=
+X-Google-Smtp-Source: ABdhPJyjLoXsfy8CgHGr1om7+BbLWxe7yel3LGlLR0M+w1kY/6s0EawpjiTqI7w8k7c9HEO41t0fAg==
+X-Received: by 2002:a19:428c:: with SMTP id p134mr9188351lfa.70.1595209569261;
+        Sun, 19 Jul 2020 18:46:09 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id h22sm2956379ljg.1.2020.07.19.18.46.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 19 Jul 2020 18:46:08 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id e8so18499534ljb.0
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 18:46:08 -0700 (PDT)
+X-Received: by 2002:a2e:760b:: with SMTP id r11mr9758613ljc.285.1595209567723;
+ Sun, 19 Jul 2020 18:46:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <CAHk-=wj_gy9xpqFx_aLTtLtFTCTKKLfV9E2bgE5J2GeKit3MCg@mail.gmail.com>
+ <20200720004709.GA16677@Gentoo>
+In-Reply-To: <20200720004709.GA16677@Gentoo>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 19 Jul 2020 18:45:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjGTkHgJDrK8F7-OOu=mjVQ2bb4MsUu92E_Eo7TPOehdA@mail.gmail.com>
+Message-ID: <CAHk-=wjGTkHgJDrK8F7-OOu=mjVQ2bb4MsUu92E_Eo7TPOehdA@mail.gmail.com>
+Subject: Re: Oops build error...Linux 5.8-rc6
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 Nov 2019, Masahiro Yamada wrote:
+On Sun, Jul 19, 2020 at 5:47 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
+>
+>    CLEAN   arch/x86/entry/vdso
+>    make[3]: *** arch/x86/platform/sfi/Makefile: Input/output error.
+>    Stop.
 
-> Collect the ignored patterns to is_ignored_symbol().
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+That _sounds_ like filesystem corruption on your end. EIO isn't
+exactly the usual "it won't compile" problem.
 
-This commit (887df76de67f5) caused a regression in my powerpc builds as it 
-causes symbol names to disappear from backtraces:
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 0 at kernel/smp.c:433 _einittext+0x3f9e5120/0x3feb71b8
-Modules linked in:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc7-pmac-00055-g887df76de67f5 #18
-NIP:  c00aef68 LR: c00af114 CTR: c001272c
-REGS: c0705c40 TRAP: 0700   Not tainted  (5.4.0-rc7-pmac-00055-g887df76de67f5)
-MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 42000044  XER: 00000000
-
-GPR00: 001f0100 c0705cf8 c06dc300 c070af1c c001258c 00000000 00000000 ef7fb5bc 
-GPR08: 08800000 00000100 00000001 00000100 42000044 00000000 c0709040 00000004 
-GPR16: 00000001 c06022b4 c058297c 00200002 ffff8cb9 00000000 c06d84a0 c0710000 
-GPR24: c0710000 00000000 00000000 c070af1c c070af1c 00000000 c001258c 00000000 
-NIP [c00aef68] _einittext+0x3f9e5120/0x3feb71b8
-LR [c00af114] _einittext+0x3f9e52cc/0x3feb71b8
-Call Trace:
-[c0705cf8] [ef006320] 0xef006320 (unreliable)
-[c0705d38] [c00af114] _einittext+0x3f9e52cc/0x3feb71b8
-[c0705d48] [c00af158] _einittext+0x3f9e5310/0x3feb71b8
-[c0705d68] [c0012768] _einittext+0x3f948920/0x3feb71b8
-[c0705d78] [c0092c04] _einittext+0x3f9c8dbc/0x3feb71b8
-[c0705d88] [c0092d18] _einittext+0x3f9c8ed0/0x3feb71b8
-[c0705da8] [c0093a2c] _einittext+0x3f9c9be4/0x3feb71b8
-[c0705de8] [c0580224] _einittext+0x3feb63dc/0x3feb71b8
-[c0705e48] [c00382ec] _einittext+0x3f96e4a4/0x3feb71b8
-[c0705e58] [c000d2a0] _einittext+0x3f943458/0x3feb71b8
-[c0705e88] [c001353c] _einittext+0x3f9496f4/0x3feb71b8
---- interrupt: 901 at _einittext+0x3f941058/0x3feb71b8
-    LR = _einittext+0x3f941058/0x3feb71b8
-[c0705f50] [c06cc214] 0xc06cc214 (unreliable)
-[c0705f60] [c057fa20] _einittext+0x3feb5bd8/0x3feb71b8
-[c0705f70] [c005de48] _einittext+0x3f994000/0x3feb71b8
-[c0705f90] [c005e050] _einittext+0x3f994208/0x3feb71b8
-[c0705fa0] [c0004cc8] _einittext+0x3f93ae80/0x3feb71b8
-[c0705fb0] [c069a36c] _einittext+0x3ffd0524/0x40000000
-[c0705ff0] [00003500] 0x3500
-Instruction dump:
-7c0803a6 7fa5eb78 7d808120 7ea6ab78 baa10014 38210040 4bfffbb0 7f64db78 
-7f85e378 484b31b1 7c601b78 4bfffdf4 <0fe00000> 4bfffd60 9421ffe0 7c0802a6 
----[ end trace a06fef4788747c72 ]---
-
-
-Prior to that (e.g. 97261e1e2240f), I get backtraces like this:
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 0 at kernel/smp.c:433 smp_call_function_many+0x318/0x320
-Modules linked in:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc7-pmac-00054-g97261e1e2240f #20
-NIP:  c00aef68 LR: c00af114 CTR: c001272c
-REGS: c075dc40 TRAP: 0700   Not tainted  (5.4.0-rc7-pmac-00054-g97261e1e2240f)
-MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 42000044  XER: 00000000
-
-GPR00: 001f0100 c075dcf8 c0733300 c0762f1c c001258c 00000000 00000000 ef7fb5bc 
-GPR08: 04800000 00000100 00000001 00000100 42000044 00000000 c0761040 00000004 
-GPR16: 00000001 c0658e58 c058297c 00200002 ffff8cb9 00000000 c072f4a0 c0760000 
-GPR24: c0760000 00000000 00000000 c0762f1c c0762f1c 00000000 c001258c 00000000 
-NIP [c00aef68] smp_call_function_many+0x318/0x320
-LR [c00af114] smp_call_function+0x34/0x44
-Call Trace:
-[c075dcf8] [ef006320] 0xef006320 (unreliable)
-[c075dd38] [c00af114] smp_call_function+0x34/0x44
-[c075dd48] [c00af158] on_each_cpu+0x1c/0x4c
-[c075dd68] [c0012768] tau_timeout_smp+0x3c/0x4c
-[c075dd78] [c0092c04] call_timer_fn.isra.26+0x20/0x84
-[c075dd88] [c0092d18] expire_timers+0xb0/0xc0
-[c075dda8] [c0093a2c] run_timer_softirq+0xa4/0x1a4
-[c075dde8] [c0580224] __do_softirq+0x11c/0x280
-[c075de48] [c00382ec] irq_exit+0xc0/0xd4
-[c075de58] [c000d2a0] timer_interrupt+0x154/0x260
-[c075de88] [c001353c] ret_from_except+0x0/0x14
---- interrupt: 901 at arch_cpu_idle+0x24/0x78
-    LR = arch_cpu_idle+0x24/0x78
-[c075df50] [c0723214] 0xc0723214 (unreliable)
-[c075df60] [c057fa20] default_idle_call+0x38/0x58
-[c075df70] [c005de48] do_idle+0xd4/0x17c
-[c075df90] [c005e054] cpu_startup_entry+0x24/0x28
-[c075dfa0] [c0004cc8] rest_init+0xa8/0xbc
-[c075dfb0] [c06f136c] start_kernel+0x40c/0x420
-[c075dff0] [00003500] 0x3500
-Instruction dump:
-7c0803a6 7fa5eb78 7d808120 7ea6ab78 baa10014 38210040 4bfffbb0 7f64db78 
-7f85e378 484b31b1 7c601b78 4bfffdf4 <0fe00000> 4bfffd60 9421ffe0 7c0802a6 
----[ end trace 784c7f15ecd23941 ]---
-
-Has anyone else observed these problems (either the WARNING from 
-smp_call_function_many() or the missing symbol names)?
-
-What is the best way to fix this? Should I upgrade binutils?
+                Linus
