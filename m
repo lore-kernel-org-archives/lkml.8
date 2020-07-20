@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22414C433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50916C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC0E320672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A3CA20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261429;
-	bh=ztvvJNc23Tfq8oh061M+xvD+2X0usFBKy9lq8ciHcC0=;
+	s=default; t=1595261433;
+	bh=u0ikDbyX9GOqbbaXAuuFaHnxV4s/a95o1MGijX8LtEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dr/CcHWSYzp5hl0h9dzft4EvToCE7E9aXecopfCHzsIRqrkdjNm9YEdbFrDzetQSp
-	 o7H20rPdLzhOntNj8AkfSjwgyuXcDN+8zjcLyvSOVKzyH6A1VR/JBRkmGY1Jfnbj/y
-	 5g722OjmJiuG78sZvibPUcZRhqrfSwmMcpw2Cbdg=
+	b=xNzu8euw4IkMVDiPKYzIBgoKiIJzhSu6EO47h6PJ9jRGsX/mC5ERNnBVbk7iR5wZa
+	 sE+DLox2gABEtko2NoED4B1EWddozNkauBgaHJk/A+lXOy2J2D6DtNELiuL1WIBrfq
+	 +RVzC+s66jftQavIpchVUcvvp1ZwEOiju8b2tAvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387669AbgGTQK1 (ORCPT
+        id S1731822AbgGTQKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:10:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48880 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:10:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731840AbgGTQKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:10:23 -0400
+        id S1731840AbgGTQK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:10:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 335FA2065E;
-        Mon, 20 Jul 2020 16:10:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B48C02064B;
+        Mon, 20 Jul 2020 16:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261422;
-        bh=ztvvJNc23Tfq8oh061M+xvD+2X0usFBKy9lq8ciHcC0=;
+        s=default; t=1595261428;
+        bh=u0ikDbyX9GOqbbaXAuuFaHnxV4s/a95o1MGijX8LtEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OhFXzqdt8UlsfrfLlGz2CE/4i6NTvsD3IsNK2C60t3tkHi6L2dC4QMAK2NHGgsJns
-         o/6rkj2zv4vIW0KJxqSaM6Igqi4Ug4MqjOWnHlVWZvK7YbIlMn9uHUYGIaZtF+R2Xa
-         T/58wnqAevBltMtRBZGaaImIEfg0PWPfbdQF0xpI=
+        b=d0v46QKZVDQF0JjXUGKd+NpPB74F6SBLpP3WH5Bv60+3FgPdc3od23Nc65IhW7b0a
+         N1i92nWyTEmYQSGz/Ug4EvO6F0JfllfmFMzHTVVpKlYwl266UfXBJKkHyrSvJumnSy
+         c300lGDGjB7JNkf/EjZsE78dobPkRwwXhDivq2eE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 080/244] dmaengine: ti: k3-udma: Use correct node to read "ti,udma-atype"
-Date:   Mon, 20 Jul 2020 17:35:51 +0200
-Message-Id: <20200720152829.648727707@linuxfoundation.org>
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 072/244] net: ethernet: mvneta: Add back interface mode validation
+Date:   Mon, 20 Jul 2020 17:35:43 +0200
+Message-Id: <20200720152829.265726913@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,35 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit 9f2f3ce3daed229eecf647acac44defbdee1f7c0 ]
+[ Upstream commit 41c2b6b4f0f807803bb49f65835d136941a70f85 ]
 
-The "ti,udma-atype" property is expected in the UDMA node and not in the
-parent navss node.
+When writing the serdes configuration register was moved to
+mvneta_config_interface() the whole code block was removed from
+mvneta_port_power_up() in the assumption that its only purpose was to
+write the serdes configuration register. As mentioned by Russell King
+its purpose was also to check for valid interface modes early so that
+later in the driver we do not have to care for unexpected interface
+modes.
+Add back the test to let the driver bail out early on unhandled
+interface modes.
 
-Fixes: 0ebcf1a274c5 ("dmaengine: ti: k3-udma: Implement support for atype (for virtualization)")
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20200527065357.30791-1-peter.ujfalusi@ti.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: b4748553f53f ("net: ethernet: mvneta: Fix Serdes configuration for SoCs without comphy")
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ti/k3-udma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/mvneta.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index a90e154b0ae0d..baf7ab64f1d7d 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -3609,7 +3609,7 @@ static int udma_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index 7faeb4bfc282e..b2da295e2fc01 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -5003,10 +5003,18 @@ static void mvneta_conf_mbus_windows(struct mvneta_port *pp,
+ }
  
--	ret = of_property_read_u32(navss_node, "ti,udma-atype", &ud->atype);
-+	ret = of_property_read_u32(dev->of_node, "ti,udma-atype", &ud->atype);
- 	if (!ret && ud->atype > 2) {
- 		dev_err(dev, "Invalid atype: %u\n", ud->atype);
- 		return -EINVAL;
+ /* Power up the port */
+-static void mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
++static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
+ {
+ 	/* MAC Cause register should be cleared */
+ 	mvreg_write(pp, MVNETA_UNIT_INTR_CAUSE, 0);
++
++	if (phy_mode != PHY_INTERFACE_MODE_QSGMII &&
++	    phy_mode != PHY_INTERFACE_MODE_SGMII &&
++	    !phy_interface_mode_is_8023z(phy_mode) &&
++	    !phy_interface_mode_is_rgmii(phy_mode))
++		return -EINVAL;
++
++	return 0;
+ }
+ 
+ /* Device initialization routine */
+@@ -5192,7 +5200,11 @@ static int mvneta_probe(struct platform_device *pdev)
+ 	if (err < 0)
+ 		goto err_netdev;
+ 
+-	mvneta_port_power_up(pp, phy_mode);
++	err = mvneta_port_power_up(pp, pp->phy_interface);
++	if (err < 0) {
++		dev_err(&pdev->dev, "can't power up port\n");
++		return err;
++	}
+ 
+ 	/* Armada3700 network controller does not support per-cpu
+ 	 * operation, so only single NAPI should be initialized.
+@@ -5346,7 +5358,11 @@ static int mvneta_resume(struct device *device)
+ 		}
+ 	}
+ 	mvneta_defaults_set(pp);
+-	mvneta_port_power_up(pp, pp->phy_interface);
++	err = mvneta_port_power_up(pp, pp->phy_interface);
++	if (err < 0) {
++		dev_err(device, "can't power up port\n");
++		return err;
++	}
+ 
+ 	netif_device_attach(dev);
+ 
 -- 
 2.25.1
 
