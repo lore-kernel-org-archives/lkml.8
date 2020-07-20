@@ -2,140 +2,128 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D644AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB4C722482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7042070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:34:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfJBApBk"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VNdAmeiW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732626AbgGTRdS (ORCPT
+        id S1732961AbgGTReL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:33:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726812AbgGTRdR (ORCPT
+        Mon, 20 Jul 2020 13:34:11 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:37202 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbgGTReL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:33:17 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FBC3C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:33:16 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id s9so1439444lfs.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:33:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GlE22XiDFB+02pU5gzklDIha+BcKyqLDHWBhHRmLvCg=;
-        b=dfJBApBkPqCxrfZaO8xj/Jd/hhxetMuW26nEQCNgDBr6vF++y2LiHqPaOr1n+OKIZu
-         /U4IY9i+lR09yAOqpMqYvzuGB9ZkLFmuvo2qMhWI5MSqV4t9/Nxt497aI37ATZoJd+a6
-         S/L43y2Qe+I+2ZtGX2pcGaO0WBVoUdl/1eVmgkq7pmLyKMCLqMhNL8D//TjqyKbvftDg
-         lR+S1reD0MPs2fPw8jgCcPJetsFjmnESHyo+DoDljyDpFRJfDvzxdY+VkAXQShrkOGNX
-         920eCIyJyJmNm/LSDuRjDQ/LxF3Z2m6hKy63hranT86ULSBf1F/hsGgXAjY8G/Td+jwF
-         a62Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GlE22XiDFB+02pU5gzklDIha+BcKyqLDHWBhHRmLvCg=;
-        b=R9PuIc3yxIw2/JvRhEP2QPoVCSlSranL4+evCTs7TGIcuhLvhvOmJfVFTM7BC7e48K
-         R7jE/CcV0vgxuCx2fxI/xwg4MrO/v9G3RjjztnS3MXlgFCbvlrR5g6sQ++kRkvFt/HI2
-         ul3RGTUxQTKJCakToUCb6QaaGa1XncNtF7dHybca1wFbWxa19uewhUUa6WKWExibJlkF
-         hAFyWUmsyxB0vGKniRJcgvH+ZodrYeKGUpdpzhfAIVtAJY4St+DnLrcEUXDJMKgW5g4I
-         llcL05JuR5vVPxiB2CNdyoLERCjHjg8JzNS7pUjReI8o+5aU3+2d04Iu6cJ63cRHtFiw
-         r5tQ==
-X-Gm-Message-State: AOAM532UdyK+s3OeRPll99BhJufCVOSCrAL7X8vxHUYRO8+EDIIgaFXV
-        TUkIrjedkC6Wsb8t9z75S0c=
-X-Google-Smtp-Source: ABdhPJxJJDO67I4deiu1pOuDSqU1htLlr6KC7I1YBKGhlRjQtjdi5ZcH8VtUL2xBeI+gAUF1R1mSqg==
-X-Received: by 2002:a05:6512:31d5:: with SMTP id j21mr11355350lfe.83.1595266395106;
-        Mon, 20 Jul 2020 10:33:15 -0700 (PDT)
-Received: from grain.localdomain ([5.18.171.94])
-        by smtp.gmail.com with ESMTPSA id b9sm976048lfi.88.2020.07.20.10.33.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 10:33:13 -0700 (PDT)
-Received: by grain.localdomain (Postfix, from userid 1000)
-        id 5CE871A007A; Mon, 20 Jul 2020 20:33:13 +0300 (MSK)
-Date:   Mon, 20 Jul 2020 20:33:13 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     kan.liang@linux.intel.com
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org, dave.hansen@intel.com,
-        yu-cheng.yu@intel.com, bigeasy@linutronix.de, hpa@zytor.com,
-        eranian@google.com, ak@linux.intel.com, chang.seok.bae@intel.com
-Subject: Re: [PATCH] x86/fpu/xstate: Fix an xstate size check warning
-Message-ID: <20200720173313.GA4221@grain>
-References: <1595253051-75374-1-git-send-email-kan.liang@linux.intel.com>
+        Mon, 20 Jul 2020 13:34:11 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 7E77B20B4909;
+        Mon, 20 Jul 2020 10:34:10 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7E77B20B4909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595266450;
+        bh=IZbk6/wtyJwvcs8UDH0IEXfn70iZQSY+5CSfF+kU3Rc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VNdAmeiW7jXcjnKnfNMnaEBf/ezZled7360IOAy1VUzHALwt7jjuWoAkwpSXHpul/
+         4qfljZOmlJYttBy+0X7xXG+shb+uBTxDvlNY08zkr5FvlqeFMYE2GE92azX5ggHui+
+         +DsrMVMna+iBrldPtiweIP24gad0m/PYLoQGCPlg=
+Subject: Re: [PATCH v3 4/5] LSM: Define SELinux function to measure security
+ state
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200717222819.26198-1-nramas@linux.microsoft.com>
+ <20200717222819.26198-5-nramas@linux.microsoft.com>
+ <CAEjxPJ7xQtZToF4d2w_o8SXFKG9kPZaWTWTFqyC-7GwBWnQa0A@mail.gmail.com>
+ <c0fbfcf3-ec36-872a-c389-b3fea214848c@linux.microsoft.com>
+ <CAEjxPJ7VH18bEo6+U1GWrx=tHVGr=6XtF5_ygcfQYgdtZ74J+g@mail.gmail.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <bea0cb52-2e13-fb14-b66c-b57287c23c3f@linux.microsoft.com>
+Date:   Mon, 20 Jul 2020 10:34:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595253051-75374-1-git-send-email-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.14.5 (2020-06-23)
+In-Reply-To: <CAEjxPJ7VH18bEo6+U1GWrx=tHVGr=6XtF5_ygcfQYgdtZ74J+g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 06:50:51AM -0700, kan.liang@linux.intel.com wrote:
-...
->  static unsigned int __init get_xsave_size(void)
->  {
->  	unsigned int eax, ebx, ecx, edx;
-> @@ -710,7 +741,7 @@ static int __init init_xstate_size(void)
->  	xsave_size = get_xsave_size();
->  
->  	if (boot_cpu_has(X86_FEATURE_XSAVES))
-> -		possible_xstate_size = get_xsaves_size();
-> +		possible_xstate_size = get_xsaves_size_no_dynamic();
->  	else
->  		possible_xstate_size = xsave_size;
+On 7/20/20 10:06 AM, Stephen Smalley wrote:
 
-Hi! Maybe we could enhance get_xsaves_size instead ? The get_xsaves_size is
-static and __init function (thus not a hot path) used once as far as I see.
-Say
+>> The above will ensure the following sequence will be measured:
+>>    #1 State A - Measured
+>>    #2 Change from State A to State B - Measured
+>>    #3 Change from State B back to State A - Since the measured data is
+>> same as in #1, the change will be measured only if the event name is
+>> different between #1 and #3
+> 
+> Perhaps the timestamp / sequence number should be part of the hashed
+> data instead of the event name?
 
-static unsigned int __init get_xsaves_size(void)
-{
-	u64 mask = xfeatures_mask_dynamic();
-	unsigned int eax, ebx, ecx, edx;
+If the timestamp/seqno is part of the hashed data, on every call to 
+measure IMA will add a new entry in the IMA log. This would fill up the 
+IMA log - even when there is no change in the measured data.
 
-	/*
-	 * In case if dynamic features are present make
-	 * sure they are not accounted in the result since
-	 * the buffer should be allocated separately from
-	 * task->fpu.
-	 */
-	if (mask)
-		wrmsrl(MSR_IA32_XSS, xfeatures_mask_supervisor());
+To avoid that I keep the last measurement in SELinux and measure only 
+when there is a change with the timestamp in the event name.
 
-	/*
-	 * - CPUID function 0DH, sub-function 1:
-	 *    EBX enumerates the size (in bytes) required by
-	 *    the XSAVES instruction for an XSAVE area
-	 *    containing all the state components
-	 *    corresponding to bits currently set in
-	 *    XCR0 | IA32_XSS.
-	 */
-	cpuid_count(XSTATE_CPUID, 1, &eax, &ebx, &ecx, &edx);
+> I can see the appraiser wanting to know two things:
+> 1) The current state of the system (e.g. is it enforcing, is the
+> currently loaded policy the expected one?).
+> 2) Has the system ever been in an unexpected state (e.g. was it
+> temporarily switched to permissive or had an unexpected policy
+> loaded?)
 
-	if (mask)
-		wrmsrl(MSR_IA32_XSS, xfeatures_mask_supervisor() | mask);
+Yes - you are right.
+The appraiser will have to look at the entire IMA log (and the 
+corresponding TPM PCR data) to know the above.
 
-	return ebx;
-}
+Time t0 => State of the system measured
+Time tn => State changed and the new state measured
+Time tm => State changed again and the new state measured.
 
-but if you expect more use of get_xsaves_size_no_dynamic() and
-get_xsaves_size() in future then sure, we need a separate function.
+Say, the measurement at "Time tn" was an illegal change, the appraiser 
+would know.
 
-The benefit from such extension is that when you read get_xsaves_size
-you'll notice the dependency on dynamic features immediaely.
+> 
+> I applied the patch series on top of the next-integrity branch, added
+> measure func=LSM_STATE to ima-policy, and booted that kernel.  I get
+> the following entries in ascii_runtime_measurements, but seemingly
+> missing the final field:
+> 
+> 10 8a09c48af4f8a817f59b495bd82971e096e2e367 ima-ng
+> sha256:21c3d7b09b62b4d0b3ed15ba990f816b94808f90b76787bfae755c4b3a44cd24
+> selinux-state
+> 10 e610908931d70990a2855ddb33c16af2d82ce56a ima-ng
+> sha256:c8898652afd5527ef4eaf8d85f5fee1d91fcccee34bc97f6e55b96746bedb318
+> selinux-policy-hash
+> 
+> Thus, I cannot verify. What am I missing?
+> 
 
-Though I'm fine with current patch as well, up to you. Thanks for the patch!
+Looks like the template used is ima-ng which doesn't include the 
+measured buffer. Please set template to "ima-buf" in the policy.
 
-Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
+For example,
+measure func=LSM_STATE template=ima-buf
+
+thanks,
+  -lakshmi
+
+
