@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB92EC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874D8C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE0C522BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58EB422BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260840;
-	bh=xn0D/tzDqjhKFWrjKYeEsuhHoeqsIK0mp/IoX8f0R+I=;
+	s=default; t=1595260847;
+	bh=Qg6TVuwJkgK/nqLQ+vyedbQ43HGyb3v9UlsWhO8FsWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dFeECHK+Nj1Bo2fMBoWe9XMCz0oxor+UDqIGj+jwvMYwvYy0YAO6dVhfQY02liz0N
-	 KyTHZQYxEkuiovqAuqgzo+zANe7i63IB8xMnvlbTW5g5kcj9fLL1LsbhsbLxoAGNIH
-	 ekv3Yir0Qs4pV+uoYCJknbNdiOjMr7YW2b+K/OEM=
+	b=XxPu0Cg6A7sAkS04RpKiYiAGXAslmBSxiHGdLV0DqB54cNhRYgZR0EosUQC2VNTgf
+	 lkXdp5Xqpc3maKCOjHnEYh2QTIf17v7XMtyNtAZcbOUqZj32y0MCVU0mRRMmx6FbTj
+	 KeXWB9QLcvyKBwqgk7KCsXNW2MWgfEoVOMf4vWz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732036AbgGTQAj (ORCPT
+        id S1732443AbgGTQAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:00:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33654 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:00:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732425AbgGTQAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:00:36 -0400
+        id S1732431AbgGTQAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:00:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DCCE20672;
-        Mon, 20 Jul 2020 16:00:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7C6B22CAF;
+        Mon, 20 Jul 2020 16:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260835;
-        bh=xn0D/tzDqjhKFWrjKYeEsuhHoeqsIK0mp/IoX8f0R+I=;
+        s=default; t=1595260841;
+        bh=Qg6TVuwJkgK/nqLQ+vyedbQ43HGyb3v9UlsWhO8FsWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cdMSe71Y5RZG+pRCKATYzzJsl6CJPNA4PLhCyJX1Mq4R352KMNvE/PKrwijp3+DgZ
-         GKU8wirU5tMeKRO6dRQnBmVbMu05AReVpH/v0W2vCDIMPIEZZdUJjDc0mZ8CPiOOnx
-         u77aFRO5ruYn0rYFIMAGL4gGnBAUYIC7NhF2vvBM=
+        b=SgMKHaeQd/3dT3ZchNBUFz03gigJ1xx5UUx59+wgCwm1T9wq3ChNkm1eJovpQokIF
+         p8b89Ioc5pbAb12fDkIAk77ZG9bJADg5QjADrPR5Iqc0bJGieGmT8P9RXB0r6sFErU
+         7lblwQP1Q1/PdWKa7t/xo6/9WRUptA5OnlwI4UyQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 114/215] xprtrdma: fix incorrect header size calculations
-Date:   Mon, 20 Jul 2020 17:36:36 +0200
-Message-Id: <20200720152825.622123745@linuxfoundation.org>
+Subject: [PATCH 5.4 115/215] ARM: dts: socfpga: Align L2 cache-controller nodename with dtschema
+Date:   Mon, 20 Jul 2020 17:36:37 +0200
+Message-Id: <20200720152825.670637440@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -61,47 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit 912288442cb2f431bf3c8cb097a5de83bc6dbac1 ]
+[ Upstream commit d7adfe5ffed9faa05f8926223086b101e14f700d ]
 
-Currently the header size calculations are using an assignment
-operator instead of a += operator when accumulating the header
-size leading to incorrect sizes.  Fix this by using the correct
-operator.
+Fix dtschema validator warnings like:
+    l2-cache@fffff000: $nodename:0:
+        'l2-cache@fffff000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
-Addresses-Coverity: ("Unused value")
-Fixes: 302d3deb2068 ("xprtrdma: Prevent inline overflow")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 475dc86d08de ("arm: dts: socfpga: Add a base DTSI for Altera's Arria10 SOC")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/rpc_rdma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/socfpga.dtsi         | 2 +-
+ arch/arm/boot/dts/socfpga_arria10.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index c56e6cfc4a623..21970185485fc 100644
---- a/net/sunrpc/xprtrdma/rpc_rdma.c
-+++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -71,7 +71,7 @@ static unsigned int rpcrdma_max_call_header_size(unsigned int maxsegs)
- 	size = RPCRDMA_HDRLEN_MIN;
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 4f3993cc02279..4510308972209 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -710,7 +710,7 @@ ocram-ecc@ffd08144 {
+ 			};
+ 		};
  
- 	/* Maximum Read list size */
--	size = maxsegs * rpcrdma_readchunk_maxsz * sizeof(__be32);
-+	size += maxsegs * rpcrdma_readchunk_maxsz * sizeof(__be32);
+-		L2: l2-cache@fffef000 {
++		L2: cache-controller@fffef000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfffef000 0x1000>;
+ 			interrupts = <0 38 0x04>;
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index 2a86e72d97918..906bfb580e9e7 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -636,7 +636,7 @@ sdr: sdr@ffcfb100 {
+ 			reg = <0xffcfb100 0x80>;
+ 		};
  
- 	/* Minimal Read chunk size */
- 	size += sizeof(__be32);	/* segment count */
-@@ -96,7 +96,7 @@ static unsigned int rpcrdma_max_reply_header_size(unsigned int maxsegs)
- 	size = RPCRDMA_HDRLEN_MIN;
- 
- 	/* Maximum Write list size */
--	size = sizeof(__be32);		/* segment count */
-+	size += sizeof(__be32);		/* segment count */
- 	size += maxsegs * rpcrdma_segment_maxsz * sizeof(__be32);
- 	size += sizeof(__be32);	/* list discriminator */
- 
+-		L2: l2-cache@fffff000 {
++		L2: cache-controller@fffff000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfffff000 0x1000>;
+ 			interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.25.1
 
