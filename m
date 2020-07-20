@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22C3C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFECC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9137022CBB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A98022CE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259988;
-	bh=MghslNDfsPh9gy/qHpEx77Ft/76TiVM7mpIbPAQjwmE=;
+	s=default; t=1595259992;
+	bh=zsOsrZPmZ+wzBNHgbq+dUtl76rka1sDLeA+nyTO+bA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CXAQ8nMvoQwmifWdB8dsK4Jqqc1Rn+RlhZcucX1vDtXn4LJieWNLQ9DJm80mDN4nL
-	 OyO3gz2nEqmj3SHlpKI0P1nt+4a4YVpEcEybjQ1Uyek8ftjxhya5KGXtk3YbIRvhwX
-	 One9ZebcL1OSzcQcJ5SXasj1vnrCUf03ADyWc4rw=
+	b=cWHcKp9cru9nrz2CSOlOzaiNtX/HOrKjkeO+oPdY0o6K4TvBPtYKmH2RXNRVb46lW
+	 oAFJE4VpnLliqa2qJH/MsuxCrUR98ojU2O9O0zg4si5kRMAwPy39V99oZzinIbpsZP
+	 JS/OtLid4+uDp/+KZ5X0wBdiBmBTqtGngHDcc8Xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730003AbgGTPq0 (ORCPT
+        id S1730667AbgGTPqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:46:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41078 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:46:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729625AbgGTPqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:46:24 -0400
+        id S1730664AbgGTPq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:46:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 054CD2176B;
-        Mon, 20 Jul 2020 15:46:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C0702065E;
+        Mon, 20 Jul 2020 15:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259983;
-        bh=MghslNDfsPh9gy/qHpEx77Ft/76TiVM7mpIbPAQjwmE=;
+        s=default; t=1595259986;
+        bh=zsOsrZPmZ+wzBNHgbq+dUtl76rka1sDLeA+nyTO+bA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fx5uRmIf0XRhbSp1izKpK5uLIVDJj1Zs0N2yFs4uaetbAx2TmsXCg7LHe1sYROJ6g
-         pJURLIbAXECUKh11CivYhL8W5E557SdRqBXCTnCf7IFhYgX/XlhGpALmjMb8wk9NMu
-         TW6m6trzSqpbHqrMUjyVXgxzvToH/lvZjRvPtTKc=
+        b=JXVrAk5vudvXgdFAmhJa33vFdAdrJ9ojlu7ZEh/41hscKTAw+Oej1RywPO7PW8k/Z
+         2vhm0KX1R9qv0EV8cgpHFXbAG/h7X9afAfM4dYLgbELhsHK3L9pHIdAvMEvDsr7N2U
+         8S2Y46EOZfcVg5BA2KPrj0gJ9PGUc36073NfjwUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.14 064/125] iio: magnetometer: ak8974: Fix runtime PM imbalance on error
-Date:   Mon, 20 Jul 2020 17:36:43 +0200
-Message-Id: <20200720152806.117074575@linuxfoundation.org>
+Subject: [PATCH 4.14 065/125] iio: mma8452: Add missed iio_device_unregister() call in mma8452_probe()
+Date:   Mon, 20 Jul 2020 17:36:44 +0200
+Message-Id: <20200720152806.165916820@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -61,90 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 0187294d227dfc42889e1da8f8ce1e44fc25f147 upstream.
+commit d7369ae1f4d7cffa7574d15e1f787dcca184c49d upstream.
 
-When devm_regmap_init_i2c() returns an error code, a pairing
-runtime PM usage counter decrement is needed to keep the
-counter balanced. For error paths after ak8974_set_power(),
-ak8974_detect() and ak8974_reset(), things are the same.
+The function iio_device_register() was called in mma8452_probe().
+But the function iio_device_unregister() was not called after
+a call of the function mma8452_set_freefall_mode() failed.
+Thus add the missed function call for one error case.
 
-However, When iio_triggered_buffer_setup() returns an error
-code, there will be two PM usgae counter decrements.
-
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Fixes: 7c94a8b2ee8c ("iio: magn: add a driver for AK8974")
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 1a965d405fc6 ("drivers:iio:accel:mma8452: added cleanup provision in case of failure.")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/magnetometer/ak8974.c |   19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/iio/accel/mma8452.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/iio/magnetometer/ak8974.c
-+++ b/drivers/iio/magnetometer/ak8974.c
-@@ -769,19 +769,21 @@ static int ak8974_probe(struct i2c_clien
- 	ak8974->map = devm_regmap_init_i2c(i2c, &ak8974_regmap_config);
- 	if (IS_ERR(ak8974->map)) {
- 		dev_err(&i2c->dev, "failed to allocate register map\n");
-+		pm_runtime_put_noidle(&i2c->dev);
-+		pm_runtime_disable(&i2c->dev);
- 		return PTR_ERR(ak8974->map);
- 	}
+--- a/drivers/iio/accel/mma8452.c
++++ b/drivers/iio/accel/mma8452.c
+@@ -1583,10 +1583,13 @@ static int mma8452_probe(struct i2c_clie
  
- 	ret = ak8974_set_power(ak8974, AK8974_PWR_ON);
- 	if (ret) {
- 		dev_err(&i2c->dev, "could not power on\n");
--		goto power_off;
-+		goto disable_pm;
- 	}
+ 	ret = mma8452_set_freefall_mode(data, false);
+ 	if (ret < 0)
+-		goto buffer_cleanup;
++		goto unregister_device;
  
- 	ret = ak8974_detect(ak8974);
- 	if (ret) {
- 		dev_err(&i2c->dev, "neither AK8974 nor AMI30x found\n");
--		goto power_off;
-+		goto disable_pm;
- 	}
- 
- 	ret = ak8974_selftest(ak8974);
-@@ -791,14 +793,9 @@ static int ak8974_probe(struct i2c_clien
- 	ret = ak8974_reset(ak8974);
- 	if (ret) {
- 		dev_err(&i2c->dev, "AK8974 reset failed\n");
--		goto power_off;
-+		goto disable_pm;
- 	}
- 
--	pm_runtime_set_autosuspend_delay(&i2c->dev,
--					 AK8974_AUTOSUSPEND_DELAY);
--	pm_runtime_use_autosuspend(&i2c->dev);
--	pm_runtime_put(&i2c->dev);
--
- 	indio_dev->dev.parent = &i2c->dev;
- 	indio_dev->channels = ak8974_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(ak8974_channels);
-@@ -851,6 +848,11 @@ no_irq:
- 		goto cleanup_buffer;
- 	}
- 
-+	pm_runtime_set_autosuspend_delay(&i2c->dev,
-+					 AK8974_AUTOSUSPEND_DELAY);
-+	pm_runtime_use_autosuspend(&i2c->dev);
-+	pm_runtime_put(&i2c->dev);
-+
  	return 0;
  
- cleanup_buffer:
-@@ -859,7 +861,6 @@ disable_pm:
- 	pm_runtime_put_noidle(&i2c->dev);
- 	pm_runtime_disable(&i2c->dev);
- 	ak8974_set_power(ak8974, AK8974_PWR_OFF);
--power_off:
- 	regulator_bulk_disable(ARRAY_SIZE(ak8974->regs), ak8974->regs);
++unregister_device:
++	iio_device_unregister(indio_dev);
++
+ buffer_cleanup:
+ 	iio_triggered_buffer_cleanup(indio_dev);
  
- 	return ret;
 
 
