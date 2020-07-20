@@ -2,104 +2,212 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 624E0C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A951C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37BAA2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260309;
-	bh=3lBGO2Iv9sJPX2bMerkCQLqWXSqK1YKfsw4sgDb4muU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cxv1sXSKGeNJFrTrKisGKkm8IRs2Gwwjh6nOP7cjmsTDjDO1HP8P0eBFGz4cCo8Mj
-	 fjIDesPd/VaXc44RXG5lxTqeR2Oh/QMeM0xYiByjg3/6ocx8wuvwswbeHc/LWc7n5m
-	 VbSzHwPTP/gbtdssTC2Mni0c6bL1RwBkSY3kNPAs=
+	by mail.kernel.org (Postfix) with ESMTP id 0791222BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZT0n3IZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731275AbgGTPvr (ORCPT
+        id S1731283AbgGTPvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:51:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730108AbgGTPvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:51:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF9DD2065E;
-        Mon, 20 Jul 2020 15:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260302;
-        bh=3lBGO2Iv9sJPX2bMerkCQLqWXSqK1YKfsw4sgDb4muU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=paEPmxt3/0nxzORPCxm/hY92GhuyhfZaD+GM/AOxKDIwKT9FjPGMNz8kJG/JhRtLh
-         F0cr5l9wv0s6ttTayjgYOvveVuYHDJwU7mXGdETOkSMPUTYjmN83LFI4lMMNycXICW
-         6rXXTaC6Pof8oQ4av5fy55B+yieFU5rtNpUCrpmM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 053/133] ACPI: video: Use native backlight on Acer Aspire 5783z
-Date:   Mon, 20 Jul 2020 17:36:40 +0200
-Message-Id: <20200720152806.275847284@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
-References: <20200720152803.732195882@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 11:51:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731269AbgGTPvo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:51:44 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F04C061794;
+        Mon, 20 Jul 2020 08:51:44 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id t6so10476115pgq.1;
+        Mon, 20 Jul 2020 08:51:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J3DxpFDz2en6MDVSIDSJcw1EYyuDLb4b/ATPWNGpNV8=;
+        b=JZT0n3IZ2gmQ8fpJFxdKTwqEWfpNF++ce0QdDWhdVdxr95qPcbh12WKSRwbsQLeSSF
+         vAT5atm2XlURTCu3d+jZSJCMxlZNyPAOO2j0kNv8yW0UOfJDr+zQQBgzZ5CeDlnY3Ptf
+         jGJTd5Xt11Y0jEMIIqDZPJk75Bpb4IrrNV36FiMwXtJiUQS50pxXu7P39aIG2aiRlvHN
+         KEqVgJcjiVJlsd5cNwVYM1g45AHN/FEGXcd+gixlyZTmyGViSl/DU97wDlm14vYG9Nxu
+         1BZbiZ1wHE+1mNtgl3942CsfrPTStdowCFujfvelJCYljzBDFDIojreFa2jBdiMik/eM
+         p3jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J3DxpFDz2en6MDVSIDSJcw1EYyuDLb4b/ATPWNGpNV8=;
+        b=tflvJnxs75RY/E1GpiS4mF8rzXvrboKZhZ+ual84JV7mngo9R4d1i9WT/cHgokeHWq
+         hz/0yydOhhYMF5O+B6+EjRPlaCm5YincXWFlwTSdRnphFTyghunxAID6e0hKz5Ohvfmk
+         I70wUStpgRqFQ0AfTziOV8+rucrnuvPN5U4ljYbebzwOUP1UL5eQNbUzpItZ1x2SbKke
+         OrMxtiQM5Nc4eRvJmj7YdrIxRvheoq2eh9Y+YdNO1hPbNN3lhzhiJUnkeD5wwInn/WjR
+         01k3q99CECG3NPrlW+e+0rRu2Re6j55/9UIdH2AnkKOCeWjwKXoFHeVJ8dXG2Wfw9KKe
+         mcAQ==
+X-Gm-Message-State: AOAM532Vw1vtzUEpcqy4iuZJjq45RZA7jGIshIQTXyqYbrXV0NOHjScR
+        2LqSpJwRPUt84zbFzSXSdDE=
+X-Google-Smtp-Source: ABdhPJzC1AV8b2NC4pIEODxLLgIgLr/0Kx8Shaq9WssLYQ8JPbaXLtX5iMiXFAjy+mcm9+SNoW4n6Q==
+X-Received: by 2002:aa7:9570:: with SMTP id x16mr21351591pfq.124.1595260304185;
+        Mon, 20 Jul 2020 08:51:44 -0700 (PDT)
+Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
+        by smtp.gmail.com with ESMTPSA id z9sm15604146pgh.94.2020.07.20.08.51.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 08:51:42 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     iommu@lists.linux-foundation.org
+Cc:     linux-arm-msm@vger.kernel.org,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] iommu/qcom: Use domain rather than dev as tlb cookie
+Date:   Mon, 20 Jul 2020 08:52:17 -0700
+Message-Id: <20200720155217.274994-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit 1c8fbc1f9bfb804ef2f0d4ee9397ab800e33f23a ]
+The device may be torn down, but the domain should still be valid.  Lets
+use that as the tlb flush ops cookie.
 
-The Acer Aspire 5783z shipped with Windows 7 and as such does not trigger
-our "win8 ready" heuristic for prefering the native backlight interface.
+Fixes a problem reported in [1]
 
-Still ACPI backlight control doesn't work on this model, where as the
-native (intel_video) backlight interface does work. Add a quirk to
-force using native backlight control on this model.
+[1] https://lkml.org/lkml/2020/7/20/104
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/acpi/video_detect.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Note I don't have a good setup to test this atm, but I think it should
+work.
 
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index 214c4e2e8ade1..5f0178967d14c 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -328,6 +328,15 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Precision 7510"),
- 		},
- 	},
-+	{
-+	 .callback = video_detect_force_native,
-+	 .ident = "Acer Aspire 5738z",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5738"),
-+		DMI_MATCH(DMI_BOARD_NAME, "JV50"),
-+		},
-+	},
+ drivers/iommu/qcom_iommu.c | 37 +++++++++++++++++--------------------
+ 1 file changed, 17 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
+index c3e1fbd1988c..d176df569af8 100644
+--- a/drivers/iommu/qcom_iommu.c
++++ b/drivers/iommu/qcom_iommu.c
+@@ -65,6 +65,7 @@ struct qcom_iommu_domain {
+ 	struct mutex		 init_mutex; /* Protects iommu pointer */
+ 	struct iommu_domain	 domain;
+ 	struct qcom_iommu_dev	*iommu;
++	struct iommu_fwspec	*fwspec;
+ };
  
- 	/*
- 	 * Desktops which falsely report a backlight and which our heuristics
+ static struct qcom_iommu_domain *to_qcom_iommu_domain(struct iommu_domain *dom)
+@@ -84,9 +85,9 @@ static struct qcom_iommu_dev * to_iommu(struct device *dev)
+ 	return dev_iommu_priv_get(dev);
+ }
+ 
+-static struct qcom_iommu_ctx * to_ctx(struct device *dev, unsigned asid)
++static struct qcom_iommu_ctx * to_ctx(struct qcom_iommu_domain *d, unsigned asid)
+ {
+-	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
++	struct qcom_iommu_dev *qcom_iommu = d->iommu;
+ 	if (!qcom_iommu)
+ 		return NULL;
+ 	return qcom_iommu->ctxs[asid - 1];
+@@ -118,14 +119,12 @@ iommu_readq(struct qcom_iommu_ctx *ctx, unsigned reg)
+ 
+ static void qcom_iommu_tlb_sync(void *cookie)
+ {
+-	struct iommu_fwspec *fwspec;
+-	struct device *dev = cookie;
++	struct qcom_iommu_domain *qcom_domain = cookie;
++	struct iommu_fwspec *fwspec = qcom_domain->fwspec;
+ 	unsigned i;
+ 
+-	fwspec = dev_iommu_fwspec_get(dev);
+-
+ 	for (i = 0; i < fwspec->num_ids; i++) {
+-		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
++		struct qcom_iommu_ctx *ctx = to_ctx(qcom_domain, fwspec->ids[i]);
+ 		unsigned int val, ret;
+ 
+ 		iommu_writel(ctx, ARM_SMMU_CB_TLBSYNC, 0);
+@@ -139,14 +138,12 @@ static void qcom_iommu_tlb_sync(void *cookie)
+ 
+ static void qcom_iommu_tlb_inv_context(void *cookie)
+ {
+-	struct device *dev = cookie;
+-	struct iommu_fwspec *fwspec;
++	struct qcom_iommu_domain *qcom_domain = cookie;
++	struct iommu_fwspec *fwspec = qcom_domain->fwspec;
+ 	unsigned i;
+ 
+-	fwspec = dev_iommu_fwspec_get(dev);
+-
+ 	for (i = 0; i < fwspec->num_ids; i++) {
+-		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
++		struct qcom_iommu_ctx *ctx = to_ctx(qcom_domain, fwspec->ids[i]);
+ 		iommu_writel(ctx, ARM_SMMU_CB_S1_TLBIASID, ctx->asid);
+ 	}
+ 
+@@ -156,16 +153,14 @@ static void qcom_iommu_tlb_inv_context(void *cookie)
+ static void qcom_iommu_tlb_inv_range_nosync(unsigned long iova, size_t size,
+ 					    size_t granule, bool leaf, void *cookie)
+ {
+-	struct device *dev = cookie;
+-	struct iommu_fwspec *fwspec;
++	struct qcom_iommu_domain *qcom_domain = cookie;
++	struct iommu_fwspec *fwspec = qcom_domain->fwspec;
+ 	unsigned i, reg;
+ 
+ 	reg = leaf ? ARM_SMMU_CB_S1_TLBIVAL : ARM_SMMU_CB_S1_TLBIVA;
+ 
+-	fwspec = dev_iommu_fwspec_get(dev);
+-
+ 	for (i = 0; i < fwspec->num_ids; i++) {
+-		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
++		struct qcom_iommu_ctx *ctx = to_ctx(qcom_domain, fwspec->ids[i]);
+ 		size_t s = size;
+ 
+ 		iova = (iova >> 12) << 12;
+@@ -256,7 +251,9 @@ static int qcom_iommu_init_domain(struct iommu_domain *domain,
+ 	};
+ 
+ 	qcom_domain->iommu = qcom_iommu;
+-	pgtbl_ops = alloc_io_pgtable_ops(ARM_32_LPAE_S1, &pgtbl_cfg, dev);
++	qcom_domain->fwspec = fwspec;
++
++	pgtbl_ops = alloc_io_pgtable_ops(ARM_32_LPAE_S1, &pgtbl_cfg, qcom_domain);
+ 	if (!pgtbl_ops) {
+ 		dev_err(qcom_iommu->dev, "failed to allocate pagetable ops\n");
+ 		ret = -ENOMEM;
+@@ -269,7 +266,7 @@ static int qcom_iommu_init_domain(struct iommu_domain *domain,
+ 	domain->geometry.force_aperture = true;
+ 
+ 	for (i = 0; i < fwspec->num_ids; i++) {
+-		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
++		struct qcom_iommu_ctx *ctx = to_ctx(qcom_domain, fwspec->ids[i]);
+ 
+ 		if (!ctx->secure_init) {
+ 			ret = qcom_scm_restore_sec_cfg(qcom_iommu->sec_id, ctx->asid);
+@@ -419,7 +416,7 @@ static void qcom_iommu_detach_dev(struct iommu_domain *domain, struct device *de
+ 
+ 	pm_runtime_get_sync(qcom_iommu->dev);
+ 	for (i = 0; i < fwspec->num_ids; i++) {
+-		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
++		struct qcom_iommu_ctx *ctx = to_ctx(qcom_domain, fwspec->ids[i]);
+ 
+ 		/* Disable the context bank: */
+ 		iommu_writel(ctx, ARM_SMMU_CB_SCTLR, 0);
 -- 
-2.25.1
-
-
+2.26.2
 
