@@ -2,75 +2,126 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E26C43446
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048E7C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3DE22CF6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D1A206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:30:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262607;
+	bh=eWR97KZdZqdhZuunMtUlHVwl+sGP4UI1lXvOCitD8/I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=d2GtHloPQ9mx6eH3RB7eG0Iw3OOOW4bSsYXd79Fx5oxe4ZKzttsAW/IMEdpzGe+Kf
+	 lKanasUrdiB3BjxtevG8xESAw7j7iL42DCf3lqM9lqdI+fmBnKVIvOttfHx5IGTPAQ
+	 He880NON8m4X67PRgx9K2KfDpnpp07+61N0Z9xME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbgGTQaC (ORCPT
+        id S1732129AbgGTP7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:30:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44762 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732020AbgGTQ35 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:29:57 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jxYfp-0007ej-3W; Mon, 20 Jul 2020 16:29:53 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Seungwon Jeon <essuuj@gmail.com>,
-        Kiwoong Kim <kwmad.kim@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] phy: samsung-ufs: fix check on failed devm_clk_get call for rx1_symbol_clk
-Date:   Mon, 20 Jul 2020 17:29:52 +0100
-Message-Id: <20200720162952.339697-1-colin.king@canonical.com>
+        Mon, 20 Jul 2020 11:59:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732115AbgGTP7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8059322BEF;
+        Mon, 20 Jul 2020 15:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260745;
+        bh=eWR97KZdZqdhZuunMtUlHVwl+sGP4UI1lXvOCitD8/I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=U7mLKtSLb2eft6e+PNsoQ9dfAFKZlZdzVmiRwUQVOFbAm9C2tqaCc77Vljw0VEzAw
+         CzShwgwCRdqmtMvkLPW1UTeI1rwFcxXWyVuR67Ha2Ba+i2mkCPP69z/wyKawASRZKW
+         IYoZPzp0qHmWtKIgPkN8lOe/YxKzfPZUcB+A+90o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "Sergei A. Trusov" <sergei.a.trusov@ya.ru>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, Arkadiy <arkan49@yandex.ru>
+Subject: [PATCH 5.4 081/215] Input: goodix - fix touch coordinates on Cube I15-TC
+Date:   Mon, 20 Jul 2020 17:36:03 +0200
+Message-Id: <20200720152824.065026716@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Sergei A. Trusov <sergei.a.trusov@ya.ru>
 
-The check to see if the call to devm_clk_get on rx1_symbol_clk is checking
-the wrong variable, this looks like a copy-paste error. Fix this to check
-phy->rx1_symbol instead of phy->rx0_symbol.
+[ Upstream commit 1dd5ddc125b4625c3beb8e644ae872445d739bbc ]
 
-Addresses-Coverity: ("Copy-paste error")
-Fixes: bca21e930451 ("phy: samsung-ufs: add UFS PHY driver for samsung SoC")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+The touchscreen on the Cube I15-TC don't match the default display,
+with 0,0 touches being reported when touching at the top-right of
+the screen.
+
+Add a quirk to invert the x coordinate.
+
+Reported-and-tested-by: Arkadiy <arkan49@yandex.ru>
+Signed-off-by: Sergei A. Trusov <sergei.a.trusov@ya.ru>
+Reviewed-by: Bastien Nocera <hadess@hadess.net>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/samsung/phy-samsung-ufs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/goodix.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/phy/samsung/phy-samsung-ufs.c b/drivers/phy/samsung/phy-samsung-ufs.c
-index 43ef77d1d96c..9832599a0283 100644
---- a/drivers/phy/samsung/phy-samsung-ufs.c
-+++ b/drivers/phy/samsung/phy-samsung-ufs.c
-@@ -147,7 +147,7 @@ static int samsung_ufs_phy_symbol_clk_init(struct samsung_ufs_phy *phy)
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index 0403102e807e1..37b35ab97beb2 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -168,6 +168,22 @@ static const struct dmi_system_id nine_bytes_report[] = {
+ 	{}
+ };
+ 
++/*
++ * Those tablets have their x coordinate inverted
++ */
++static const struct dmi_system_id inverted_x_screen[] = {
++#if defined(CONFIG_DMI) && defined(CONFIG_X86)
++	{
++		.ident = "Cube I15-TC",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Cube"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "I15-TC")
++		},
++	},
++#endif
++	{}
++};
++
+ /**
+  * goodix_i2c_read - read data from a register of the i2c slave device.
+  *
+@@ -780,6 +796,12 @@ static int goodix_configure_dev(struct goodix_ts_data *ts)
+ 			"Non-standard 9-bytes report format quirk\n");
  	}
  
- 	phy->rx1_symbol_clk = devm_clk_get(phy->dev, "rx1_symbol_clk");
--	if (IS_ERR(phy->rx0_symbol_clk)) {
-+	if (IS_ERR(phy->rx1_symbol_clk)) {
- 		dev_err(phy->dev, "failed to get rx1_symbol_clk clock\n");
- 		return PTR_ERR(phy->rx1_symbol_clk);
- 	}
++	if (dmi_check_system(inverted_x_screen)) {
++		ts->prop.invert_x = true;
++		dev_dbg(&ts->client->dev,
++			"Applying 'inverted x screen' quirk\n");
++	}
++
+ 	error = input_mt_init_slots(ts->input_dev, ts->max_touch_num,
+ 				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
+ 	if (error) {
 -- 
-2.27.0
+2.25.1
+
+
 
