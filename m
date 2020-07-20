@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CA0C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6933CC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57BA320773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47939206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263216;
-	bh=i6z5wAOGKay2yoCvdUnPgPzFvWJm4qfzKtRJ0+eiRlg=;
+	s=default; t=1595263221;
+	bh=Swp8vPi5pt2DL5xSBSuUFqwdNoRvMuvcU4GsNIbyCe8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o5y1PsuLqtaZMxVuV/tz3LfO5StvOIeNjAv/LaDAyVgGHbOuEfjnszW+Qv7EtncHA
-	 Pm2Ekn7iUpqpqcFlWlf7TIQXr2dvKdzQYQZPSQYtQjATczXGfFCT+5TnBiMxzod+4s
-	 6SA7OE3yXbt1XvmkkS/7qJ00olenKal3857ZKY3M=
+	b=Cjw35Y91K/K7YRaVG24vr96acJHCsPaKdo6OALqCf/HOCgRAf6xxYfs6gjolZ7qbd
+	 Lfem//Kc/jMZOKlA0fCb3YG6urkhsx4KbLacoH7tYhcHwZ/Mdhn8g7EHU1H4LsBOja
+	 6+zt+sW5/TTzK7Ub3o17NNxiUo+YMzPTIDOW1yHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbgGTPrg (ORCPT
+        id S1730115AbgGTQkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:47:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42556 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:40:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730768AbgGTPrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:47:25 -0400
+        id S1729852AbgGTPrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:47:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B53D2065E;
-        Mon, 20 Jul 2020 15:47:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A46C2064B;
+        Mon, 20 Jul 2020 15:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260044;
-        bh=i6z5wAOGKay2yoCvdUnPgPzFvWJm4qfzKtRJ0+eiRlg=;
+        s=default; t=1595260055;
+        bh=Swp8vPi5pt2DL5xSBSuUFqwdNoRvMuvcU4GsNIbyCe8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Upme2DBDmqXvSkY9AWuNlVFoicqN9MtYeTi5vfePfXViTwQ9AoP2O6PXM6T6gIFCR
-         RSQdob5GyoanvWLw73pZGrz5AB5jsfpdSUdjuU7XUCVqI+qm4DMau/8OHhugf9REku
-         GmetiQCl6eAYTtiiNWCdo/j49pSTZYI95ZEvtdts=
+        b=xf0ojegXZsH49EYPpWMqpGOU08L5iJnPuqOe0yhSDVw4tFtehJvqvmBme8hCqxbSd
+         uyvXvq+3ciUqx9jB74jMY8l8Bq6+Fl1A3M2odDRVkagGLyAirVsePak3Sjn9cf3FYN
+         /rIzr1qB+W50mPN156X8z8pyym0r4PFkPBMQwKZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Ian Abbott <abbotti@mev.co.uk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 085/125] staging: comedi: verify array index is correct before using it
-Date:   Mon, 20 Jul 2020 17:37:04 +0200
-Message-Id: <20200720152807.121300435@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 060/125] arm64: alternative: Use true and false for boolean values
+Date:   Mon, 20 Jul 2020 17:36:39 +0200
+Message-Id: <20200720152805.933322350@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -59,52 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-[ Upstream commit ef75e14a6c935eec82abac07ab68e388514e39bc ]
+[ Upstream commit 3c4d9137eefecf273a520d392071ffc9df0a9a7a ]
 
-This code reads from the array before verifying that "trig" is a valid
-index.  If the index is wildly out of bounds then reading from an
-invalid address could lead to an Oops.
+Return statements in functions returning bool should use true or false
+instead of an integer value. This code was detected with the help of
+Coccinelle.
 
-Fixes: a8c66b684efa ("staging: comedi: addi_apci_1500: rewrite the subdevice support functions")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20200709102936.GA20875@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/comedi/drivers/addi_apci_1500.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/alternative.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/comedi/drivers/addi_apci_1500.c b/drivers/staging/comedi/drivers/addi_apci_1500.c
-index 63991c49ff230..79a8799b12628 100644
---- a/drivers/staging/comedi/drivers/addi_apci_1500.c
-+++ b/drivers/staging/comedi/drivers/addi_apci_1500.c
-@@ -465,9 +465,9 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
- 	unsigned int lo_mask = data[5] << shift;
- 	unsigned int chan_mask = hi_mask | lo_mask;
- 	unsigned int old_mask = (1 << shift) - 1;
--	unsigned int pm = devpriv->pm[trig] & old_mask;
--	unsigned int pt = devpriv->pt[trig] & old_mask;
--	unsigned int pp = devpriv->pp[trig] & old_mask;
-+	unsigned int pm;
-+	unsigned int pt;
-+	unsigned int pp;
+diff --git a/arch/arm64/kernel/alternative.c b/arch/arm64/kernel/alternative.c
+index 5c4bce4ac381a..b9045d8d05d88 100644
+--- a/arch/arm64/kernel/alternative.c
++++ b/arch/arm64/kernel/alternative.c
+@@ -47,11 +47,11 @@ static bool branch_insn_requires_update(struct alt_instr *alt, unsigned long pc)
+ 	unsigned long replptr;
  
- 	if (trig > 1) {
- 		dev_dbg(dev->class_dev,
-@@ -480,6 +480,10 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
- 		return -EINVAL;
- 	}
+ 	if (kernel_text_address(pc))
+-		return 1;
++		return true;
  
-+	pm = devpriv->pm[trig] & old_mask;
-+	pt = devpriv->pt[trig] & old_mask;
-+	pp = devpriv->pp[trig] & old_mask;
-+
- 	switch (data[2]) {
- 	case COMEDI_DIGITAL_TRIG_DISABLE:
- 		/* clear trigger configuration */
+ 	replptr = (unsigned long)ALT_REPL_PTR(alt);
+ 	if (pc >= replptr && pc <= (replptr + alt->alt_len))
+-		return 0;
++		return false;
+ 
+ 	/*
+ 	 * Branching into *another* alternate sequence is doomed, and
 -- 
 2.25.1
 
