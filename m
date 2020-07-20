@@ -2,53 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F62C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2D1C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDFE5206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0810B206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260336;
-	bh=8zZTNXY8pmrk4LecvshwRC08JghCAfeXzBD9W5Vuuxg=;
+	s=default; t=1595260341;
+	bh=a22zVVN/NvJGBrt6FAWnyk1s+vGlWcTw0O9Xcqc6ys8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rA3Ji/5ytAnbISSr829lhowvBSXjiXXWefyLfUhBMcf7nLKz2qdxieFFRdZKLIUl7
-	 VhsxgwCs6ruyZWZtswbbUbaKjSNfxyu/W6Q/RALRR3qfDvJLO873hw314xXfw+HVNW
-	 0pxnXeF3chIlOqkxldyDVk6DFfF2fGfFabyRJmZc=
+	b=PJD+41rvcVcgjbGZaiUKpXXfNHsq8LXNb+eaLWuUAxZRvRsMqh6YrtJZl4TLJ70m3
+	 JYp3GezejkaRiB6dHXf+rCyl/AAxXejom2bdxNYBmoten5tjo64ts4JbHihIA+dSMa
+	 t9HrrFOnIJi1VLSwY0pIbgROlqSgjXjxkMODE85c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731340AbgGTPwN (ORCPT
+        id S1731352AbgGTPwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:52:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49768 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:52:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731331AbgGTPwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:52:10 -0400
+        id S1731334AbgGTPwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:52:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAA7622482;
-        Mon, 20 Jul 2020 15:52:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 116A62065E;
+        Mon, 20 Jul 2020 15:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260330;
-        bh=8zZTNXY8pmrk4LecvshwRC08JghCAfeXzBD9W5Vuuxg=;
+        s=default; t=1595260335;
+        bh=a22zVVN/NvJGBrt6FAWnyk1s+vGlWcTw0O9Xcqc6ys8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WsS3tvtx2ixDofop+viW5moX2ocFg+oeujnDVZXn7bCmzBfzfj9gm+4TVCpuRZ77i
-         q3AJd8U/l2t2TkfTLqtYfplr0Q/ggq0PDQEuAZV0zmdfJ9F98P26KqdjNWipHL41RP
-         fZtU4yh8obD83wT2haBK5iXCsiPrJNKFzkxSrHNI=
+        b=tC/VI29vpSgmueeUMcKM4JXBTnKlRvPVkgv2zDELM4xGkBmKfrm40/abZnlk2LmBy
+         rr9MvyyZbICdvnf+INIECpz/j6d5Wa0+BeB++/gO4oiZ8gnYUNbSK74B4vCUQYmn+D
+         vtY7wH4okoLa95FuN+fpIZOI8UkVIPExpfn9ncko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 062/133] usb: gadget: udc: atmel: fix uninitialized read in debug printk
-Date:   Mon, 20 Jul 2020 17:36:49 +0200
-Message-Id: <20200720152806.729562549@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Andrew F. Davis" <afd@ti.com>, Stable@vger.kernel.org
+Subject: [PATCH 4.19 036/133] iio:health:afe4403 Fix timestamp alignment and prevent data leak.
+Date:   Mon, 20 Jul 2020 17:36:23 +0200
+Message-Id: <20200720152805.462507150@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -61,36 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-[ Upstream commit 30517ffeb3bff842e1355cbc32f1959d9dbb5414 ]
+commit 3f9c6d38797e9903937b007a341dad0c251765d6 upstream.
 
-Fixed commit moved the assignment of 'req', but did not update a
-reference in the DBG() call. Use the argument as it was renamed.
+One of a class of bugs pointed out by Lars in a recent review.
+iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
+to the size of the timestamp (8 bytes).  This is not guaranteed in
+this driver which uses a 32 byte array of smaller elements on the stack.
+As Lars also noted this anti pattern can involve a leak of data to
+userspace and that indeed can happen here.  We close both issues by
+moving to a suitable structure in the iio_priv() data with alignment
+explicitly requested.  This data is allocated with kzalloc so no
+data can leak appart from previous readings.
 
-Fixes: 5fb694f96e7c ("usb: gadget: udc: atmel: fix possible oops when unloading module")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: eec96d1e2d31 ("iio: health: Add driver for the TI AFE4403 heart monitor")
+Reported-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Andrew F. Davis <afd@ti.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/gadget/udc/atmel_usba_udc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/health/afe4403.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index a4ab230335786..23691a32759fe 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -860,7 +860,7 @@ static int usba_ep_dequeue(struct usb_ep *_ep, struct usb_request *_req)
- 	u32 status;
+--- a/drivers/iio/health/afe4403.c
++++ b/drivers/iio/health/afe4403.c
+@@ -71,6 +71,7 @@ static const struct reg_field afe4403_re
+  * @regulator: Pointer to the regulator for the IC
+  * @trig: IIO trigger for this device
+  * @irq: ADC_RDY line interrupt number
++ * @buffer: Used to construct data layout to push into IIO buffer.
+  */
+ struct afe4403_data {
+ 	struct device *dev;
+@@ -80,6 +81,8 @@ struct afe4403_data {
+ 	struct regulator *regulator;
+ 	struct iio_trigger *trig;
+ 	int irq;
++	/* Ensure suitable alignment for timestamp */
++	s32 buffer[8] __aligned(8);
+ };
  
- 	DBG(DBG_GADGET | DBG_QUEUE, "ep_dequeue: %s, req %p\n",
--			ep->ep.name, req);
-+			ep->ep.name, _req);
+ enum afe4403_chan_id {
+@@ -317,7 +320,6 @@ static irqreturn_t afe4403_trigger_handl
+ 	struct iio_dev *indio_dev = pf->indio_dev;
+ 	struct afe4403_data *afe = iio_priv(indio_dev);
+ 	int ret, bit, i = 0;
+-	s32 buffer[8];
+ 	u8 tx[4] = {AFE440X_CONTROL0, 0x0, 0x0, AFE440X_CONTROL0_READ};
+ 	u8 rx[3];
  
- 	spin_lock_irqsave(&udc->lock, flags);
+@@ -334,9 +336,9 @@ static irqreturn_t afe4403_trigger_handl
+ 		if (ret)
+ 			goto err;
  
--- 
-2.25.1
-
+-		buffer[i++] = (rx[0] << 16) |
+-				(rx[1] << 8) |
+-				(rx[2]);
++		afe->buffer[i++] = (rx[0] << 16) |
++				   (rx[1] << 8) |
++				   (rx[2]);
+ 	}
+ 
+ 	/* Disable reading from the device */
+@@ -345,7 +347,8 @@ static irqreturn_t afe4403_trigger_handl
+ 	if (ret)
+ 		goto err;
+ 
+-	iio_push_to_buffers_with_timestamp(indio_dev, buffer, pf->timestamp);
++	iio_push_to_buffers_with_timestamp(indio_dev, afe->buffer,
++					   pf->timestamp);
+ err:
+ 	iio_trigger_notify_done(indio_dev->trig);
+ 
 
 
