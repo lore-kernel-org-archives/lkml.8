@@ -2,51 +2,51 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A74DC433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755D6C433FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F26FE22CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49EC22065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259826;
-	bh=GjzTNAD2SRCoK8sJDxSQRELwKr0irgmWB87gKjOlOwM=;
+	s=default; t=1595259829;
+	bh=cuo+juPufaXmy7d316bkfcGe0dqdvApZ/1cf6hrJbV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fZo4f+eNXYCbPMbX+CJSMEO+cKAJd/4fvalgxpaZ6J/Xq9WtPk+YggMalzgXcxGbV
-	 SzoIcaMr19CH2bB9RYnHSGpwXeAxhOiBVBYwZgGO7sBm6aAF/r8NUc/Cdi8RT5TUt+
-	 tvXq00PvyxO4KiSwYewxmvg/gLyPYQLFaJYOLAdU=
+	b=2ptMKAIbiugLrBtbPA0/q09gsDfWgGY1VL5S2855c92T14a4NBIMkNTGGVmYwICAz
+	 Fw6o8X3rVbhAMNmw3hCZXFAecRsXCp1C6YVuItQWYa+4qmhvulX6K7fLE2bUDwEXi1
+	 iVv8lWcxqDqzVHYM+0H+Q04xvxUh0TOI/6SC1qdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730303AbgGTPno (ORCPT
+        id S1730317AbgGTPns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:43:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37102 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:43:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730290AbgGTPnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:43:40 -0400
+        id S1730306AbgGTPnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:43:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 396EF2064B;
-        Mon, 20 Jul 2020 15:43:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10F4B2064B;
+        Mon, 20 Jul 2020 15:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259819;
-        bh=GjzTNAD2SRCoK8sJDxSQRELwKr0irgmWB87gKjOlOwM=;
+        s=default; t=1595259825;
+        bh=cuo+juPufaXmy7d316bkfcGe0dqdvApZ/1cf6hrJbV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t3XLQmRwqr6/d3xw/Tk9QTodSnD/Z5hYFLLIN+k8vIS02U7opZ7gOg1hOEc9unDtD
-         x4vtLpnBHxLFvKuSnhVu82zPVKaDarJQICYTdAHR3HjELWLGKpooeKyU+fX8wPPUWm
-         NtVs6s6eGtZykSN0R8yU3QVQz2WU3eRIOJrjj2a0=
+        b=mUrHMpWdy+RaFrFLNlMr1Zva/krqIrHBWpSteyVrHhaOXBcUIwOryTdOjyh591wu5
+         yv/RgDn6xba6qNsRjGY2yoj4X60/3yuVdph+/BFfN6oLtUD1Y897TMMA4mfrwLmwmV
+         pHzOGU95ktYNbmbBoJobEIFAfEg6l/Y/CZM+hRwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Igor Moura <imphilippini@gmail.com>,
+        stable@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 70/86] USB: serial: ch341: add new Product ID for CH340
-Date:   Mon, 20 Jul 2020 17:37:06 +0200
-Message-Id: <20200720152756.700560296@linuxfoundation.org>
+Subject: [PATCH 4.9 72/86] USB: serial: option: add Quectel EG95 LTE modem
+Date:   Mon, 20 Jul 2020 17:37:08 +0200
+Message-Id: <20200720152756.804215302@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -59,38 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Moura <imphilippini@gmail.com>
+From: AceLan Kao <acelan.kao@canonical.com>
 
-commit 5d0136f8e79f8287e6a36780601f0ce797cf11c2 upstream.
+commit da6902e5b6dbca9081e3d377f9802d4fd0c5ea59 upstream.
 
-Add PID for CH340 that's found on some ESP8266 dev boards made by
-LilyGO. The specific device that contains such serial converter can be
-seen here: https://github.com/LilyGO/LILYGO-T-OI.
+Add support for Quectel Wireless Solutions Co., Ltd. EG95 LTE modem
 
-Apparently, it's a regular CH340, but I've confirmed with others that
-also bought this board that the PID found on this device (0x7522)
-differs from other devices with the "same" converter (0x7523).
-Simply adding its PID to the driver and rebuilding it made it work
-as expected.
+T:  Bus=01 Lev=01 Prnt=01 Port=02 Cnt=02 Dev#=  5 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=2c7c ProdID=0195 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
 
-Signed-off-by: Igor Moura <imphilippini@gmail.com>
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ch341.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/serial/option.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/serial/ch341.c
-+++ b/drivers/usb/serial/ch341.c
-@@ -71,6 +71,7 @@
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -248,6 +248,7 @@ static void option_instat_callback(struc
+ /* These Quectel products use Quectel's vendor ID */
+ #define QUECTEL_PRODUCT_EC21			0x0121
+ #define QUECTEL_PRODUCT_EC25			0x0125
++#define QUECTEL_PRODUCT_EG95			0x0195
+ #define QUECTEL_PRODUCT_BG96			0x0296
+ #define QUECTEL_PRODUCT_EP06			0x0306
  
- static const struct usb_device_id id_table[] = {
- 	{ USB_DEVICE(0x4348, 0x5523) },
-+	{ USB_DEVICE(0x1a86, 0x7522) },
- 	{ USB_DEVICE(0x1a86, 0x7523) },
- 	{ USB_DEVICE(0x1a86, 0x5523) },
- 	{ },
+@@ -1095,6 +1096,8 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EC25),
+ 	  .driver_info = RSVD(4) },
++	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EG95),
++	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_BG96),
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EP06),
 
 
