@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490E0C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928C2C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2832920656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 720E020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261875;
-	bh=aJQ/DIQ+rul2GS/VuIwymqZJGkffWutP1LK6HMOdbYI=;
+	s=default; t=1595261880;
+	bh=oCqEXrTFfYzvCucMV7gFfqEy+cvS22N40zuJ4tPIm1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z6AinAEvnnqV3ZF5AcoT6XiPWgNwyah1AjlF48u1Fr9T9TX1Vgf8qMV2WrgzXT3y9
-	 j3wB/aiIFCa0NCJ58yzVpzCFO4Vq6mt5+Gkz8cFKKEp3FIk466xuifRkmyrxR3p3tR
-	 J48bEBuj9oxdMUfmEk10SKQCv/KBAOogAh7lOeig=
+	b=fychtFT5Iz6aUH+hWRMbUslNXYsyPG6QsdN1ofL6U24dfuTqyQKflRw7TzGUL/jfJ
+	 5y75XilSbfwM19sETmp5B76Y9hXbWYRmlMl5tglZpUE5UratsHoWx2iS8uSilJ7Q14
+	 4Rut0RbjWBI5Vgr+JuDn2digHYd/0abfCw3WPzM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388324AbgGTQOv (ORCPT
+        id S2388282AbgGTQOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:14:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55440 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:14:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387888AbgGTQOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:14:49 -0400
+        id S2388271AbgGTQOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:14:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C8B4207DD;
-        Mon, 20 Jul 2020 16:14:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F285320684;
+        Mon, 20 Jul 2020 16:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261688;
-        bh=aJQ/DIQ+rul2GS/VuIwymqZJGkffWutP1LK6HMOdbYI=;
+        s=default; t=1595261669;
+        bh=oCqEXrTFfYzvCucMV7gFfqEy+cvS22N40zuJ4tPIm1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nz/cbvuOJ0vsLAqqdGmUGi2bqNiZWy9MuWiUHdh+CIJZjFGnxW67utTIqPHkO8m/0
-         PKklTFtTMH1uSuRoyX5hx/EDsz7N7tv2Kl7/eAqbO7MXRWBelolIWYtzYVQT5Vjlo4
-         J5rlSd4jCxn312j60MpdTMqX8/2s9SjTviyRCxFM=
+        b=2I9jtNlhYyv6FZUPlV43HD29UP0WL3ieIg5UM1193OilBbxbu+r2yPz6NyfZtdN/Y
+         bHJ4DxiK2yBXowbGxxmsVMLCpxAbfSPZp6Y0IOSyqDshdq4lzSZZY4EUiX7V956SEK
+         Nh5iX+QdSqmjUGaQcujxrVco4eQdSlaWXnls7CWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.7 176/244] Revert "serial: core: Refactor uart_unlock_and_check_sysrq()"
-Date:   Mon, 20 Jul 2020 17:37:27 +0200
-Message-Id: <20200720152834.210555871@linuxfoundation.org>
+        stable@vger.kernel.org, Sandipan Das <sandipan@linux.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.7 199/244] powerpc/book3s64/pkeys: Fix pkey_access_permitted() for execute disable pkey
+Date:   Mon, 20 Jul 2020 17:37:50 +0200
+Message-Id: <20200720152835.310813986@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,79 +60,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit 10652a9e9fe3fbcaca090f99cd3060ac3fee2913 upstream.
+commit 192b6a780598976feb7321ff007754f8511a4129 upstream.
 
-This reverts commit da9a5aa3402db0ff3b57216d8dbf2478e1046cae.
+Even if the IAMR value denies execute access, the current code returns
+true from pkey_access_permitted() for an execute permission check, if
+the AMR read pkey bit is cleared.
 
-In order to ease backporting a fix for a sysrq regression, revert this
-rewrite which was since added on top.
+This results in repeated page fault loop with a test like below:
 
-The other sysrq helpers now bail out early when sysrq is not enabled;
-it's better to keep that pattern here as well.
+  #define _GNU_SOURCE
+  #include <errno.h>
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <signal.h>
+  #include <inttypes.h>
 
-Note that the __releases() attribute won't be needed after the follow-on
-fix either.
+  #include <assert.h>
+  #include <malloc.h>
+  #include <unistd.h>
+  #include <pthread.h>
+  #include <sys/mman.h>
 
-Fixes: da9a5aa3402d ("serial: core: Refactor uart_unlock_and_check_sysrq()")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20200610152232.16925-2-johan@kernel.org
+  #ifdef SYS_pkey_mprotect
+  #undef SYS_pkey_mprotect
+  #endif
+
+  #ifdef SYS_pkey_alloc
+  #undef SYS_pkey_alloc
+  #endif
+
+  #ifdef SYS_pkey_free
+  #undef SYS_pkey_free
+  #endif
+
+  #undef PKEY_DISABLE_EXECUTE
+  #define PKEY_DISABLE_EXECUTE	0x4
+
+  #define SYS_pkey_mprotect	386
+  #define SYS_pkey_alloc		384
+  #define SYS_pkey_free		385
+
+  #define PPC_INST_NOP		0x60000000
+  #define PPC_INST_BLR		0x4e800020
+  #define PROT_RWX		(PROT_READ | PROT_WRITE | PROT_EXEC)
+
+  static int sys_pkey_mprotect(void *addr, size_t len, int prot, int pkey)
+  {
+  	return syscall(SYS_pkey_mprotect, addr, len, prot, pkey);
+  }
+
+  static int sys_pkey_alloc(unsigned long flags, unsigned long access_rights)
+  {
+  	return syscall(SYS_pkey_alloc, flags, access_rights);
+  }
+
+  static int sys_pkey_free(int pkey)
+  {
+  	return syscall(SYS_pkey_free, pkey);
+  }
+
+  static void do_execute(void *region)
+  {
+  	/* jump to region */
+  	asm volatile(
+  		"mtctr	%0;"
+  		"bctrl"
+  		: : "r"(region) : "ctr", "lr");
+  }
+
+  static void do_protect(void *region)
+  {
+  	size_t pgsize;
+  	int i, pkey;
+
+  	pgsize = getpagesize();
+
+  	pkey = sys_pkey_alloc(0, PKEY_DISABLE_EXECUTE);
+  	assert (pkey > 0);
+
+  	/* perform mprotect */
+  	assert(!sys_pkey_mprotect(region, pgsize, PROT_RWX, pkey));
+  	do_execute(region);
+
+  	/* free pkey */
+  	assert(!sys_pkey_free(pkey));
+
+  }
+
+  int main(int argc, char **argv)
+  {
+  	size_t pgsize, numinsns;
+  	unsigned int *region;
+  	int i;
+
+  	/* allocate memory region to protect */
+  	pgsize = getpagesize();
+  	region = memalign(pgsize, pgsize);
+  	assert(region != NULL);
+  	assert(!mprotect(region, pgsize, PROT_RWX));
+
+  	/* fill page with NOPs with a BLR at the end */
+  	numinsns = pgsize / sizeof(region[0]);
+  	for (i = 0; i < numinsns - 1; i++)
+  		region[i] = PPC_INST_NOP;
+  	region[i] = PPC_INST_BLR;
+
+  	do_protect(region);
+
+  	return EXIT_SUCCESS;
+  }
+
+The fix is to only check the IAMR for an execute check, the AMR value
+is not relevant.
+
+Fixes: f2407ef3ba22 ("powerpc: helper to validate key-access permissions of a pte")
+Cc: stable@vger.kernel.org # v4.16+
+Reported-by: Sandipan Das <sandipan@linux.ibm.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+[mpe: Add detail to change log, tweak wording & formatting]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200712132047.1038594-1-aneesh.kumar@linux.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/serial_core.c |   23 +++++++++++++----------
- include/linux/serial_core.h      |    3 ++-
- 2 files changed, 15 insertions(+), 11 deletions(-)
+ arch/powerpc/mm/book3s64/pkeys.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -3251,19 +3251,22 @@ int uart_prepare_sysrq_char(struct uart_
+--- a/arch/powerpc/mm/book3s64/pkeys.c
++++ b/arch/powerpc/mm/book3s64/pkeys.c
+@@ -357,12 +357,14 @@ static bool pkey_access_permitted(int pk
+ 		return true;
+ 
+ 	pkey_shift = pkeyshift(pkey);
+-	if (execute && !(read_iamr() & (IAMR_EX_BIT << pkey_shift)))
+-		return true;
++	if (execute)
++		return !(read_iamr() & (IAMR_EX_BIT << pkey_shift));
++
++	amr = read_amr();
++	if (write)
++		return !(amr & (AMR_WR_BIT << pkey_shift));
+ 
+-	amr = read_amr(); /* Delay reading amr until absolutely needed */
+-	return ((!write && !(amr & (AMR_RD_BIT << pkey_shift))) ||
+-		(write &&  !(amr & (AMR_WR_BIT << pkey_shift))));
++	return !(amr & (AMR_RD_BIT << pkey_shift));
  }
- EXPORT_SYMBOL_GPL(uart_prepare_sysrq_char);
  
--void uart_unlock_and_check_sysrq(struct uart_port *port, unsigned long flags)
--__releases(&port->lock)
-+void uart_unlock_and_check_sysrq(struct uart_port *port, unsigned long irqflags)
- {
--	if (port->has_sysrq) {
--		int sysrq_ch = port->sysrq_ch;
-+	int sysrq_ch;
- 
--		port->sysrq_ch = 0;
--		spin_unlock_irqrestore(&port->lock, flags);
--		if (sysrq_ch)
--			handle_sysrq(sysrq_ch);
--	} else {
--		spin_unlock_irqrestore(&port->lock, flags);
-+	if (!port->has_sysrq) {
-+		spin_unlock_irqrestore(&port->lock, irqflags);
-+		return;
- 	}
-+
-+	sysrq_ch = port->sysrq_ch;
-+	port->sysrq_ch = 0;
-+
-+	spin_unlock_irqrestore(&port->lock, irqflags);
-+
-+	if (sysrq_ch)
-+		handle_sysrq(sysrq_ch);
- }
- EXPORT_SYMBOL_GPL(uart_unlock_and_check_sysrq);
- 
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -462,7 +462,8 @@ extern void uart_insert_char(struct uart
- 
- extern int uart_handle_sysrq_char(struct uart_port *port, unsigned int ch);
- extern int uart_prepare_sysrq_char(struct uart_port *port, unsigned int ch);
--extern void uart_unlock_and_check_sysrq(struct uart_port *port, unsigned long flags);
-+extern void uart_unlock_and_check_sysrq(struct uart_port *port,
-+					unsigned long irqflags);
- extern int uart_handle_break(struct uart_port *port);
- 
- /*
+ bool arch_pte_access_permitted(u64 pte, bool write, bool execute)
 
 
