@@ -2,193 +2,102 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E01C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F76C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 150BA206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rS5LCpJj"
+	by mail.kernel.org (Postfix) with ESMTP id DCE7E22CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262513;
+	bh=PKJqW285Wyj9VDxoQk/MlK8bcvV3xkLNjAGN/bWGlpM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rjM6Ixwep0G3ZxM2vaQy5iw5eIs4Bgi//BApkH3HfBSYlGOnBtySENLK3MXpIZ72e
+	 +uU3QNHPwv5m1ENBjXw8eL5iGlgxaJTFNUZihy3KAbQhQNvM3eMkVpbIEFBcd8xda9
+	 REoSx3gDOE5d3p5m8zyyGbuZ4uq+CwjdqXWccBw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732240AbgGTP7b (ORCPT
+        id S1732230AbgGTP71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:59:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730641AbgGTP7R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:17 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0038C0619D2;
-        Mon, 20 Jul 2020 08:59:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=wapfVARVdu2rPD3BwjJEB1KyGijoqrlGPwEotE0t0IY=; b=rS5LCpJj7ZaZb8gf7tdqf0ITny
-        HIUK9sLiT6OVcFKzRaclbtvxUcg5v0Ve7yva7ffZOU0vt618YY0/E3bERcBB5Wp0cOh6mUvoGJEC6
-        UON0B6Cph6M/kd4i/jgP5wD8hKh2xKruQOFpXCh0/d88+xguXsMnnV8Vcnsubu8ZQhj4L5dK7SRCp
-        djGwMhvpqxq/Sx1DkrJ/Wh+ZbQPkLdZKQZPgsi7GUvyUmKFU/y2IFYz5iNVXMUpopdu5Gjxp+rjpk
-        R3A6d6qH2w1S9A3pimN/eEwxfsPzbGV38Aj86OtBF8/v48CFmJ20dpoqko65UGpqdeNg8UjetLEIK
-        vcd8umiQ==;
-Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxYCA-0007nt-0H; Mon, 20 Jul 2020 15:59:14 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
+        Mon, 20 Jul 2020 11:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732167AbgGTP7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DFC222CAF;
+        Mon, 20 Jul 2020 15:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260755;
+        bh=PKJqW285Wyj9VDxoQk/MlK8bcvV3xkLNjAGN/bWGlpM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bWMJJGgtQMuG4OCAup9ii3EelFawAYX+akAnjE6PoLNfhooravtpGTs975br2rrtO
+         /7o7Vo+A2KIZSl73SSgFY1LiuvfKhjyLu+5toAhlvOw+hqviCQQbQdRQ3k9TTWHIWk
+         42boah6oX5xIn6IsX4O57CtmRe9c+ok+taUbAhjY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 07/24] fs: add a kern_chroot helper
-Date:   Mon, 20 Jul 2020 17:58:45 +0200
-Message-Id: <20200720155902.181712-8-hch@lst.de>
+        stable@vger.kernel.org, Haibo Chen <haibo.chen@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 084/215] mmc: sdhci: do not enable card detect interrupt for gpio cd type
+Date:   Mon, 20 Jul 2020 17:36:06 +0200
+Message-Id: <20200720152824.202443009@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720155902.181712-1-hch@lst.de>
-References: <20200720155902.181712-1-hch@lst.de>
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a simple helper for a chroot with a kernelspace name and use it in
-the early init code instead of relying on the implicit set_fs(KERNEL_DS)
-there.  Remove the now unused ksys_chroot.
+From: Haibo Chen <haibo.chen@nxp.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+[ Upstream commit e65bb38824711559844ba932132f417bc5a355e2 ]
+
+Except SDHCI_QUIRK_BROKEN_CARD_DETECTION and MMC_CAP_NONREMOVABLE,
+we also do not need to handle controller native card detect interrupt
+for gpio cd type.
+If we wrong enabled the card detect interrupt for gpio case, it will
+cause a lot of unexpected card detect interrupts during data transfer
+which should not happen.
+
+Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/1582100563-20555-2-git-send-email-haibo.chen@nxp.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/devtmpfs.c  |  2 +-
- fs/open.c                | 15 ++++++++++-----
- include/linux/fs.h       |  1 +
- include/linux/syscalls.h |  1 -
- init/do_mounts.c         |  2 +-
- init/do_mounts_initrd.c  |  4 ++--
- 6 files changed, 15 insertions(+), 10 deletions(-)
+ drivers/mmc/host/sdhci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
-index 2cedeb62706f18..a5126e7be34c8a 100644
---- a/drivers/base/devtmpfs.c
-+++ b/drivers/base/devtmpfs.c
-@@ -389,7 +389,7 @@ static int devtmpfs_setup(void *p)
- 	if (err)
- 		goto out;
- 	kern_chdir("/.."); /* will traverse into overmounted root */
--	ksys_chroot(".");
-+	kern_chroot(".");
- out:
- 	*(int *)p = err;
- 	complete(&setup_done);
-diff --git a/fs/open.c b/fs/open.c
-index 3d62f4d2604739..424db905da5f18 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -540,15 +540,15 @@ SYSCALL_DEFINE1(fchdir, unsigned int, fd)
- 	return error;
- }
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 50514fedbc76f..136f9737713d8 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -152,7 +152,7 @@ static void sdhci_set_card_detection(struct sdhci_host *host, bool enable)
+ 	u32 present;
  
--int ksys_chroot(const char __user *filename)
-+static int do_chroot(struct filename *name)
- {
- 	struct path path;
- 	int error;
- 	unsigned int lookup_flags = LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
- retry:
--	error = user_path_at(AT_FDCWD, filename, lookup_flags, &path);
-+	error = filename_lookup(AT_FDCWD, name, lookup_flags, &path, NULL);
- 	if (error)
--		goto out;
-+		return error;
+ 	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
+-	    !mmc_card_is_removable(host->mmc))
++	    !mmc_card_is_removable(host->mmc) || mmc_can_gpio_cd(host->mmc))
+ 		return;
  
- 	error = inode_permission(path.dentry->d_inode, MAY_EXEC | MAY_CHDIR);
- 	if (error)
-@@ -569,13 +569,18 @@ int ksys_chroot(const char __user *filename)
- 		lookup_flags |= LOOKUP_REVAL;
- 		goto retry;
- 	}
--out:
-+	putname(name);
- 	return error;
- }
- 
-+int kern_chroot(const char *filename)
-+{
-+	return do_chroot(getname_kernel(filename));
-+}
-+
- SYSCALL_DEFINE1(chroot, const char __user *, filename)
- {
--	return ksys_chroot(filename);
-+	return do_chroot(getname(filename));
- }
- 
- static int chmod_common(const struct path *path, umode_t mode)
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index dccb37407e9bad..0205355bffb1bc 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3672,5 +3672,6 @@ static inline int inode_drain_writes(struct inode *inode)
- }
- 
- int kern_chdir(const char *filename);
-+int kern_chroot(const char *filename);
- 
- #endif /* _LINUX_FS_H */
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index f2a181776b0409..a3176d1a521467 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1236,7 +1236,6 @@ asmlinkage long sys_ni_syscall(void);
-  * the ksys_xyzyyz() functions prototyped below.
-  */
- 
--int ksys_chroot(const char __user *filename);
- ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
- int ksys_fchown(unsigned int fd, uid_t user, gid_t group);
- ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count);
-diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 8c3fca8e2d3c6e..31b8dedb189b57 100644
---- a/init/do_mounts.c
-+++ b/init/do_mounts.c
-@@ -629,7 +629,7 @@ void __init prepare_namespace(void)
- out:
- 	devtmpfs_mount();
- 	do_kern_mount(".", "/", NULL, MS_MOVE, NULL);
--	ksys_chroot(".");
-+	kern_chroot(".");
- }
- 
- static bool is_tmpfs;
-diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
-index 522554d703b785..1cbc9988d2e0ad 100644
---- a/init/do_mounts_initrd.c
-+++ b/init/do_mounts_initrd.c
-@@ -63,7 +63,7 @@ static int __init init_linuxrc(struct subprocess_info *info, struct cred *new)
- 	/* move initrd over / and chdir/chroot in initrd root */
- 	kern_chdir("/root");
- 	do_kern_mount(".", "/", NULL, MS_MOVE, NULL);
--	ksys_chroot(".");
-+	kern_chroot(".");
- 	ksys_setsid();
- 	return 0;
- }
-@@ -101,7 +101,7 @@ static void __init handle_initrd(void)
- 	/* move initrd to rootfs' /old */
- 	do_kern_mount("..", ".", NULL, MS_MOVE, NULL);
- 	/* switch root and cwd back to / of rootfs */
--	ksys_chroot("..");
-+	kern_chroot("..");
- 
- 	if (new_decode_dev(real_root_dev) == Root_RAM0) {
- 		kern_chdir("/old");
+ 	if (enable) {
 -- 
-2.27.0
+2.25.1
+
+
 
