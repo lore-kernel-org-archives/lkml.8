@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D550C433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E52C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25745206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA0A2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260015;
-	bh=a/wF/P/zlabevIzH5R9RAFZsgw4KRZvxNRAL8nXyJvU=;
+	s=default; t=1595260018;
+	bh=MWUrtPM5nHIkXkdryef7R2aGNqdQ+yXU5ZLChvXzslk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PQWZ+cghH9RJd2bXtZ1yaJL8Z1UrdH7LZziKaGJ2tLXrpp5MolXzwedrBi2eGrAbF
-	 ZoNl5i74DxQnt7wsUXUii9b3HvOdLID+iD0o2aUdJJadjE7kw7iLhdS6Pb2cgTsWQx
-	 Nyq49yso6U+kKCHdn2CkgW+UgD9geMkJZwG2eYhY=
+	b=DaIwnFTwLCsidVRvda0faXk3iA9tnAmbKhPEt4GoHmL3fdg+R1klQRUqVmITiUbGD
+	 8x81CyyYYB4k7uTz3DUJDp1NVWUyv2lrKwMq+cluB/ebXtZ0AeMd2/HvQW9FxkW59o
+	 RBQDCq9MsWlTeqEPSIqFUuZOzRzN+yhImnHjBHvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730704AbgGTPqx (ORCPT
+        id S1730711AbgGTPq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:46:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41694 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:46:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730694AbgGTPqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:46:49 -0400
+        id S1730308AbgGTPqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:46:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C018E2065E;
-        Mon, 20 Jul 2020 15:46:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 901392064B;
+        Mon, 20 Jul 2020 15:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260009;
-        bh=a/wF/P/zlabevIzH5R9RAFZsgw4KRZvxNRAL8nXyJvU=;
+        s=default; t=1595260012;
+        bh=MWUrtPM5nHIkXkdryef7R2aGNqdQ+yXU5ZLChvXzslk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1IFJ0D8c05jYjIddAzmjVT5cqpG3pyNl129hOlDMgWWty4CGCxoCf2zj7o4/7oJ0c
-         DesI7aW8YWlFQha7k/9zWTk0WNRLPtDVVRGMQTEZ/qxslGxihI3XAo2WmCQeR/kEJ7
-         20QsKUgqXZfXejLW3qFtaZzM1IYdQJKTmAmUHLug=
+        b=07mb4x1e1pg7nH6bL24rLGjqkaqIrROKRtF1apXKaYKjvBxiK6HnT+TYZdLvvks1+
+         J2qy5jBI0Z/nr6cNNcrunhEXwHn9WtfEi+qSBTdyuEYNtkMOKQKyDX2YTLhTGaBnlI
+         gMFnCsYcUTaPXZxMSvl8xatA0UyzuTs569GAJ4pE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 073/125] Revert "usb/ohci-platform: Fix a warning when hibernating"
-Date:   Mon, 20 Jul 2020 17:36:52 +0200
-Message-Id: <20200720152806.529047725@linuxfoundation.org>
+Subject: [PATCH 4.14 074/125] Revert "usb/ehci-platform: Set PM runtime as active on resume"
+Date:   Mon, 20 Jul 2020 17:36:53 +0200
+Message-Id: <20200720152806.577103728@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -58,7 +58,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit baef809ea497a4f21fa67814b61094bbcc191c39.
+This reverts commit 5410d158ca2a50bcf3f48c57f6cd73f4cf479e69.
 
 Eugeniu Rosca writes:
 
@@ -87,17 +87,17 @@ On Thu, Jul 09, 2020 at 09:00:23AM +0200, Eugeniu Rosca wrote:
 
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ohci-platform.c | 5 -----
+ drivers/usb/host/ehci-platform.c | 5 -----
  1 file changed, 5 deletions(-)
 
-diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-index 742cefa22c2b5..61fe2b985070f 100644
---- a/drivers/usb/host/ohci-platform.c
-+++ b/drivers/usb/host/ohci-platform.c
-@@ -355,11 +355,6 @@ static int ohci_platform_resume(struct device *dev)
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index 6fcd332880143..f1908ea9fbd86 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -390,11 +390,6 @@ static int ehci_platform_resume(struct device *dev)
  	}
  
- 	ohci_resume(hcd, false);
+ 	ehci_resume(hcd, priv->reset_on_resume);
 -
 -	pm_runtime_disable(dev);
 -	pm_runtime_set_active(dev);
