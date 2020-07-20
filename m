@@ -7,47 +7,55 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3E6C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 347FCC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF342065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0463422CB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259757;
-	bh=rFoy4+bilLHmpMG120DrVDDOAD844hgaxHpfK202y14=;
+	s=default; t=1595259761;
+	bh=iN43UrU09nwTp1zCVdClYerTQcxqUQ6fO53FIPvMZi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zR0OuhLKHv1gGM5yFGwoPKoLDAPZ+KEL0MfZnOs9bTOUmBpia8uPqsvVch92qypAA
-	 qFGuFDPd4q1GYyUrOgoUh7H9UM+aRu0EjiqRzOviTCOK+C9kPzipf+sMJHeWp9joUC
-	 TokXSAJd053MPX8ZAFfEnh5b1A7qkFrTyXS2qbVU=
+	b=cNJQYGbY2CUkGBhdbeTT+vq/lgiD/hlm5PQhULxwOkgdrvXKw9GzguJ7jscmfvDVC
+	 BYsoovsquHBXlE2Mc+VNB27RprhRscBUIw5QAK+599EQxoJXMXVFe8qzXuF01h4wjP
+	 n/10ZnTL6cITTp1W2/I4FUzqzjrlCnv8ilrgf2Eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbgGTPmg (ORCPT
+        id S1730112AbgGTPmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:42:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35530 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:42:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729399AbgGTPme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:42:34 -0400
+        id S1729597AbgGTPmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:42:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F104F2065E;
-        Mon, 20 Jul 2020 15:42:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97D4420773;
+        Mon, 20 Jul 2020 15:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259753;
-        bh=rFoy4+bilLHmpMG120DrVDDOAD844hgaxHpfK202y14=;
+        s=default; t=1595259756;
+        bh=iN43UrU09nwTp1zCVdClYerTQcxqUQ6fO53FIPvMZi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1STfUrMpHbfJ+XyXGT9U/njHXZUBrnzx+OBh1KliEpLpfeswl+FIvqtFOVREDfo2w
-         AQpBr3ivDZIWZa4Ow6ZtvT1TMAQALZjfDFKyOP7l25k+yjxdY3hO8ZTvDYL2aEhCXB
-         o9ZEF553GA9wMJCERQD+6uxO/aRTFd8HERpwKUfE=
+        b=ZIKK9+JDdlEWQBliQfA04yZ9Tscpfl/uec8geRbBFq0grRhPNUXnIFU1vLXR04FRt
+         sQh1VyOmE6mchwgLHqvGW+yqq9XVmH2CVctQS7F7a3OLmrRYwMBFmUp1B0ghcxSKcN
+         SGIiAHJ380U0wE6ILuFMOYHTZ/9SM3gTSYc5k3VM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        stable@vger.kernel.org, Cameron Berkenpas <cam@neo-zeon.de>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Lu Fengqi <lufq.fnst@cn.fujitsu.com>,
+        =?UTF-8?q?Dani=C3=ABl=20Sonck?= <dsonck92@gmail.com>,
+        Zhang Qiang <qiang.zhang@windriver.com>,
+        Thomas Lamprecht <t.lamprecht@proxmox.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Zefan Li <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
+        Roman Gushchin <guro@fb.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 37/86] tcp: md5: allow changing MD5 keys in all socket states
-Date:   Mon, 20 Jul 2020 17:36:33 +0200
-Message-Id: <20200720152755.030511978@linuxfoundation.org>
+Subject: [PATCH 4.9 38/86] cgroup: fix cgroup_sk_alloc() for sk_clone_lock()
+Date:   Mon, 20 Jul 2020 17:36:34 +0200
+Message-Id: <20200720152755.083928761@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -60,66 +68,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 1ca0fafd73c5268e8fc4b997094b8bb2bfe8deea ]
+[ Upstream commit ad0f75e5f57ccbceec13274e1e242f2b5a6397ed ]
 
-This essentially reverts commit 721230326891 ("tcp: md5: reject TCP_MD5SIG
-or TCP_MD5SIG_EXT on established sockets")
+When we clone a socket in sk_clone_lock(), its sk_cgrp_data is
+copied, so the cgroup refcnt must be taken too. And, unlike the
+sk_alloc() path, sock_update_netprioidx() is not called here.
+Therefore, it is safe and necessary to grab the cgroup refcnt
+even when cgroup_sk_alloc is disabled.
 
-Mathieu reported that many vendors BGP implementations can
-actually switch TCP MD5 on established flows.
+sk_clone_lock() is in BH context anyway, the in_interrupt()
+would terminate this function if called there. And for sk_alloc()
+skcd->val is always zero. So it's safe to factor out the code
+to make it more readable.
 
-Quoting Mathieu :
-   Here is a list of a few network vendors along with their behavior
-   with respect to TCP MD5:
+The global variable 'cgroup_sk_alloc_disabled' is used to determine
+whether to take these reference counts. It is impossible to make
+the reference counting correct unless we save this bit of information
+in skcd->val. So, add a new bit there to record whether the socket
+has already taken the reference counts. This obviously relies on
+kmalloc() to align cgroup pointers to at least 4 bytes,
+ARCH_KMALLOC_MINALIGN is certainly larger than that.
 
-   - Cisco: Allows for password to be changed, but within the hold-down
-     timer (~180 seconds).
-   - Juniper: When password is initially set on active connection it will
-     reset, but after that any subsequent password changes no network
-     resets.
-   - Nokia: No notes on if they flap the tcp connection or not.
-   - Ericsson/RedBack: Allows for 2 password (old/new) to co-exist until
-     both sides are ok with new passwords.
-   - Meta-Switch: Expects the password to be set before a connection is
-     attempted, but no further info on whether they reset the TCP
-     connection on a change.
-   - Avaya: Disable the neighbor, then set password, then re-enable.
-   - Zebos: Would normally allow the change when socket connected.
+This bug seems to be introduced since the beginning, commit
+d979a39d7242 ("cgroup: duplicate cgroup reference when cloning sockets")
+tried to fix it but not compeletely. It seems not easy to trigger until
+the recent commit 090e28b229af
+("netprio_cgroup: Fix unlimited memory leak of v2 cgroups") was merged.
 
-We can revert my prior change because commit 9424e2e7ad93 ("tcp: md5: fix potential
-overestimation of TCP option space") removed the leak of 4 kernel bytes to
-the wire that was the main reason for my patch.
-
-While doing my investigations, I found a bug when a MD5 key is changed, leading
-to these commits that stable teams want to consider before backporting this revert :
-
- Commit 6a2febec338d ("tcp: md5: add missing memory barriers in tcp_md5_do_add()/tcp_md5_hash_key()")
- Commit e6ced831ef11 ("tcp: md5: refine tcp_md5_do_add()/tcp_md5_hash_key() barriers")
-
-Fixes: 721230326891 "tcp: md5: reject TCP_MD5SIG or TCP_MD5SIG_EXT on established sockets"
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Fixes: bd1060a1d671 ("sock, cgroup: add sock->sk_cgroup")
+Reported-by: Cameron Berkenpas <cam@neo-zeon.de>
+Reported-by: Peter Geis <pgwipeout@gmail.com>
+Reported-by: Lu Fengqi <lufq.fnst@cn.fujitsu.com>
+Reported-by: Daniël Sonck <dsonck92@gmail.com>
+Reported-by: Zhang Qiang <qiang.zhang@windriver.com>
+Tested-by: Cameron Berkenpas <cam@neo-zeon.de>
+Tested-by: Peter Geis <pgwipeout@gmail.com>
+Tested-by: Thomas Lamprecht <t.lamprecht@proxmox.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Zefan Li <lizefan@huawei.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Roman Gushchin <guro@fb.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ include/linux/cgroup-defs.h |    6 ++++--
+ include/linux/cgroup.h      |    4 +++-
+ kernel/cgroup.c             |   24 ++++++++++++++++++------
+ net/core/sock.c             |    2 +-
+ 4 files changed, 26 insertions(+), 10 deletions(-)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2672,10 +2672,7 @@ static int do_tcp_setsockopt(struct sock
- 
- #ifdef CONFIG_TCP_MD5SIG
- 	case TCP_MD5SIG:
--		if ((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN))
--			err = tp->af_specific->md5_parse(sk, optval, optlen);
--		else
--			err = -EINVAL;
-+		err = tp->af_specific->md5_parse(sk, optval, optlen);
- 		break;
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -587,7 +587,8 @@ struct sock_cgroup_data {
+ 	union {
+ #ifdef __LITTLE_ENDIAN
+ 		struct {
+-			u8	is_data;
++			u8	is_data : 1;
++			u8	no_refcnt : 1;
+ 			u8	padding;
+ 			u16	prioidx;
+ 			u32	classid;
+@@ -597,7 +598,8 @@ struct sock_cgroup_data {
+ 			u32	classid;
+ 			u16	prioidx;
+ 			u8	padding;
+-			u8	is_data;
++			u8	no_refcnt : 1;
++			u8	is_data : 1;
+ 		} __packed;
  #endif
- 	case TCP_USER_TIMEOUT:
+ 		u64		val;
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -657,6 +657,7 @@ extern spinlock_t cgroup_sk_update_lock;
+ 
+ void cgroup_sk_alloc_disable(void);
+ void cgroup_sk_alloc(struct sock_cgroup_data *skcd);
++void cgroup_sk_clone(struct sock_cgroup_data *skcd);
+ void cgroup_sk_free(struct sock_cgroup_data *skcd);
+ 
+ static inline struct cgroup *sock_cgroup_ptr(struct sock_cgroup_data *skcd)
+@@ -670,7 +671,7 @@ static inline struct cgroup *sock_cgroup
+ 	 */
+ 	v = READ_ONCE(skcd->val);
+ 
+-	if (v & 1)
++	if (v & 3)
+ 		return &cgrp_dfl_root.cgrp;
+ 
+ 	return (struct cgroup *)(unsigned long)v ?: &cgrp_dfl_root.cgrp;
+@@ -682,6 +683,7 @@ static inline struct cgroup *sock_cgroup
+ #else	/* CONFIG_CGROUP_DATA */
+ 
+ static inline void cgroup_sk_alloc(struct sock_cgroup_data *skcd) {}
++static inline void cgroup_sk_clone(struct sock_cgroup_data *skcd) {}
+ static inline void cgroup_sk_free(struct sock_cgroup_data *skcd) {}
+ 
+ #endif	/* CONFIG_CGROUP_DATA */
+--- a/kernel/cgroup.c
++++ b/kernel/cgroup.c
+@@ -6326,12 +6326,8 @@ void cgroup_sk_alloc_disable(void)
+ 
+ void cgroup_sk_alloc(struct sock_cgroup_data *skcd)
+ {
+-	if (cgroup_sk_alloc_disabled)
+-		return;
+-
+-	/* Socket clone path */
+-	if (skcd->val) {
+-		cgroup_get(sock_cgroup_ptr(skcd));
++	if (cgroup_sk_alloc_disabled) {
++		skcd->no_refcnt = 1;
+ 		return;
+ 	}
+ 
+@@ -6355,8 +6351,24 @@ void cgroup_sk_alloc(struct sock_cgroup_
+ 	rcu_read_unlock();
+ }
+ 
++void cgroup_sk_clone(struct sock_cgroup_data *skcd)
++{
++	/* Socket clone path */
++	if (skcd->val) {
++		/*
++		 * We might be cloning a socket which is left in an empty
++		 * cgroup and the cgroup might have already been rmdir'd.
++		 * Don't use cgroup_get_live().
++		 */
++		cgroup_get(sock_cgroup_ptr(skcd));
++	}
++}
++
+ void cgroup_sk_free(struct sock_cgroup_data *skcd)
+ {
++	if (skcd->no_refcnt)
++		return;
++
+ 	cgroup_put(sock_cgroup_ptr(skcd));
+ }
+ 
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1533,7 +1533,7 @@ struct sock *sk_clone_lock(const struct
+ 		newsk->sk_userlocks	= sk->sk_userlocks & ~SOCK_BINDPORT_LOCK;
+ 
+ 		sock_reset_flag(newsk, SOCK_DONE);
+-		cgroup_sk_alloc(&newsk->sk_cgrp_data);
++		cgroup_sk_clone(&newsk->sk_cgrp_data);
+ 		skb_queue_head_init(&newsk->sk_error_queue);
+ 
+ 		filter = rcu_dereference_protected(newsk->sk_filter, 1);
 
 
