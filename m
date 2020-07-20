@@ -2,175 +2,95 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638C0C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B86C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 391F5206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e433WSzz"
+	by mail.kernel.org (Postfix) with ESMTP id 826DE206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262544;
+	bh=CxQlNwpzu/HtjbDgXa4Hn6fTEwibh3vRBOmu6FNrMz0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Dd4XuP26hEBV7PJz9Z2iWx9OD7hvR/gtiLhkPrdGSRgKGVF4IZ0MIxVMiNYpBwK6n
+	 jynH3Qhb8Fw6CCftXG8qk28TAZNvqTgvtbFC2M711Zz1A12ROSphXO+lMvIypeP+Jx
+	 CgxnvH9v6ZUKRRAw1a0wUpfIaH4TuXYvN8dgiqhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388219AbgGTQ2s (ORCPT
+        id S1732218AbgGTQ3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732218AbgGTP7Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:25 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81AEC061794;
-        Mon, 20 Jul 2020 08:59:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=y1dPItBmZKcvSo985WsMlTxvtNzxD63bJREW0GA5b/M=; b=e433WSzzwsp/Kfz0ckwD1yJy3J
-        +jQNrQ8OKYZXYltBtzntPs+h+aDDTsYbuMbGDCnWE43JVIgVMANJxmcVnPVp86u1u2LHU9QpBUK04
-        7otT0hLWG+qjO80neJwzJbioRxOswOlX7hLsaRK7jM4QD6d8EviAlRPrJKElP+N2jWlotZWft9MBk
-        VQA4wqQ5UJNlR3p1Tmn1TuGe6XlFBpUDfOdj5THGv4DEjapg19WyA+Y2CeWWvVm0x00vwkds4yavp
-        nE4ps1PRc9WdgDKp96bSEZCgxUAgGCBgW2CwmYI65RRF/y6PH5rVYRd75f2OJ8GYnLmiO207rdsB3
-        EdUrZZHg==;
-Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxYCG-0007ok-4t; Mon, 20 Jul 2020 15:59:21 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
+        Mon, 20 Jul 2020 12:29:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732207AbgGTP7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 273152065E;
+        Mon, 20 Jul 2020 15:59:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260763;
+        bh=CxQlNwpzu/HtjbDgXa4Hn6fTEwibh3vRBOmu6FNrMz0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lm3EB6u2A/62h9wd3/dQuPS6SvoFCD6gYnGgdoAaQFs0GVF4cX46qqjGB7ij2o/XZ
+         KrTrjOWqNC5gndaN8WclHpDoTkftdT+1Qdt38R6S25mqB/WBm+mzEIZjf3R9FP/fg9
+         cSi58jPwisqjNFbfhm/ugsx49lxHPb61crKDsxOY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 10/24] fs: move the uid16 (f)chown syscalls to fs/open.c
-Date:   Mon, 20 Jul 2020 17:58:48 +0200
-Message-Id: <20200720155902.181712-11-hch@lst.de>
+        stable@vger.kernel.org,
+        Emmanuel Pescosta <emmanuelpescosta099@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 087/215] ALSA: usb-audio: Add registration quirk for Kingston HyperX Cloud Alpha S
+Date:   Mon, 20 Jul 2020 17:36:09 +0200
+Message-Id: <20200720152824.342120264@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720155902.181712-1-hch@lst.de>
-References: <20200720155902.181712-1-hch@lst.de>
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows to keep the internal (f)chown helper private in open.c.
+From: Emmanuel Pescosta <emmanuelpescosta099@gmail.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+[ Upstream commit fd60e0683e8e9107e09cd2e4798f3e27e85d2705 ]
+
+Similar to the Kingston HyperX AMP, the Kingston HyperX Cloud
+Alpha S (0951:16d8) uses two interfaces, but only the second
+interface contains the capture stream. This patch delays the
+registration until the second interface appears.
+
+Signed-off-by: Emmanuel Pescosta <emmanuelpescosta099@gmail.com>
+Link: https://lore.kernel.org/r/20200404153843.9288-1-emmanuelpescosta099@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/open.c                | 25 ++++++++++++++++++++++---
- include/linux/syscalls.h |  4 ----
- kernel/uid16.c           | 17 -----------------
- 3 files changed, 22 insertions(+), 24 deletions(-)
+ sound/usb/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/open.c b/fs/open.c
-index 7d7456070503f2..8157db254c8f8a 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -714,7 +714,7 @@ static int chown_common(const struct path *path, uid_t user, gid_t group)
- 	return error;
- }
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index ad557ab65e043..5341d045e6a48 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1801,6 +1801,7 @@ struct registration_quirk {
  
--int do_fchownat(int dfd, struct filename *name, uid_t user, gid_t group,
-+static int do_fchownat(int dfd, struct filename *name, uid_t user, gid_t group,
- 		int flag)
- {
- 	struct path path;
-@@ -787,7 +787,7 @@ int vfs_fchown(struct file *file, uid_t user, gid_t group)
- 	return error;
- }
+ static const struct registration_quirk registration_quirks[] = {
+ 	REG_QUIRK_ENTRY(0x0951, 0x16d8, 2),	/* Kingston HyperX AMP */
++	REG_QUIRK_ENTRY(0x0951, 0x16ed, 2),	/* Kingston HyperX Cloud Alpha S */
+ 	{ 0 }					/* terminator */
+ };
  
--int ksys_fchown(unsigned int fd, uid_t user, gid_t group)
-+static int do_fchown(unsigned int fd, uid_t user, gid_t group)
- {
- 	struct fd f = fdget(fd);
- 	int error = -EBADF;
-@@ -801,9 +801,28 @@ int ksys_fchown(unsigned int fd, uid_t user, gid_t group)
- 
- SYSCALL_DEFINE3(fchown, unsigned int, fd, uid_t, user, gid_t, group)
- {
--	return ksys_fchown(fd, user, group);
-+	return do_fchown(fd, user, group);
- }
- 
-+#ifdef CONFIG_UID16
-+SYSCALL_DEFINE3(chown16, const char __user *, filename, old_uid_t, user, old_gid_t, group)
-+{
-+	return do_fchownat(AT_FDCWD, getname(filename), low2highuid(user),
-+			low2highgid(group), 0);
-+}
-+
-+SYSCALL_DEFINE3(lchown16, const char __user *, filename, old_uid_t, user, old_gid_t, group)
-+{
-+	return do_fchownat(AT_FDCWD, getname(filename), low2highuid(user),
-+			low2highgid(group), AT_SYMLINK_NOFOLLOW);
-+}
-+
-+SYSCALL_DEFINE3(fchown16, unsigned int, fd, old_uid_t, user, old_gid_t, group)
-+{
-+	return do_fchown(fd, low2highuid(user), low2highgid(group));
-+}
-+#endif /* CONFIG_UID16 */
-+
- static int do_dentry_open(struct file *f,
- 			  struct inode *inode,
- 			  int (*open)(struct inode *, struct file *))
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 42dd2715e07688..82346a68a73877 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1237,7 +1237,6 @@ asmlinkage long sys_ni_syscall(void);
-  */
- 
- ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
--int ksys_fchown(unsigned int fd, uid_t user, gid_t group);
- ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count);
- void ksys_sync(void);
- int ksys_unshare(unsigned long unshare_flags);
-@@ -1326,9 +1325,6 @@ static inline int ksys_chmod(const char __user *filename, umode_t mode)
- 	return do_fchmodat(AT_FDCWD, filename, mode);
- }
- 
--extern int do_fchownat(int dfd, struct filename *name, uid_t user,
--		       gid_t group, int flag);
--
- extern long do_sys_ftruncate(unsigned int fd, loff_t length, int small);
- 
- static inline long ksys_ftruncate(unsigned int fd, loff_t length)
-diff --git a/kernel/uid16.c b/kernel/uid16.c
-index a332947e92d12e..ec2a5634e99af6 100644
---- a/kernel/uid16.c
-+++ b/kernel/uid16.c
-@@ -20,23 +20,6 @@
- 
- #include "uid16.h"
- 
--SYSCALL_DEFINE3(chown16, const char __user *, filename, old_uid_t, user, old_gid_t, group)
--{
--	return do_fchownat(AT_FDCWD, getname(filename), low2highuid(user),
--			low2highgid(group), 0);
--}
--
--SYSCALL_DEFINE3(lchown16, const char __user *, filename, old_uid_t, user, old_gid_t, group)
--{
--	return do_fchownat(AT_FDCWD, getname(filename), low2highuid(user),
--			low2highgid(group), AT_SYMLINK_NOFOLLOW);
--}
--
--SYSCALL_DEFINE3(fchown16, unsigned int, fd, old_uid_t, user, old_gid_t, group)
--{
--	return ksys_fchown(fd, low2highuid(user), low2highgid(group));
--}
--
- SYSCALL_DEFINE2(setregid16, old_gid_t, rgid, old_gid_t, egid)
- {
- 	return __sys_setregid(low2highgid(rgid), low2highgid(egid));
 -- 
-2.27.0
+2.25.1
+
+
 
