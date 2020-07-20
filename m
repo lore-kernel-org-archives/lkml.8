@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391F6C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF60C43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19B4320773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB0020773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259731;
-	bh=i6z5wAOGKay2yoCvdUnPgPzFvWJm4qfzKtRJ0+eiRlg=;
+	s=default; t=1595259733;
+	bh=PYcGYWEKJHL1xvHc6lIFXf1DqZyj0ZTcjXP8hIo7Ouk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dn/UULaQkz5eoIyxx13VwDbZCd1NY2KWp2PqzCe2LVHnBK/8kcjyFqFUlH/BzkwQm
-	 DmvvS6Gcyuu/ySqFbHiyozU2dcqaiBy+qQk5V7teTtmZNg8DZNpJ/VTh3WE4icPCR6
-	 ZHw3HwlMcU4XmXUji9a0kA/pfLKWVZ5VLPxg0FcU=
+	b=xR0NT3WMXq4RHdVuNN1d/dpIjufrqP4d68hTqn+vmc4JksFwnbNBcTTtMzZsZG9+w
+	 +QnI+7ar33SRTQSTobjzh5vV+8RdqQlr73nsgT8hCWrXnSTqN5WzySzM7KYoizeO8h
+	 kJvz9SZRF+IyVwGr/0MuCQRk0YkUh1jgnfJeF2fY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbgGTPmJ (ORCPT
+        id S1730023AbgGTPmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:42:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34528 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:42:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729977AbgGTPmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:42:00 -0400
+        id S1729391AbgGTPmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:42:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 178BD2064B;
-        Mon, 20 Jul 2020 15:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA94B20773;
+        Mon, 20 Jul 2020 15:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259719;
-        bh=i6z5wAOGKay2yoCvdUnPgPzFvWJm4qfzKtRJ0+eiRlg=;
+        s=default; t=1595259725;
+        bh=PYcGYWEKJHL1xvHc6lIFXf1DqZyj0ZTcjXP8hIo7Ouk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mYqlehPalEAi9lH9kZLdkT+KJ0GE9aP8TZc3nb+vMpY2QdUTUqJG+iaBySuwsbn7z
-         rLcUZpa0PCJeBMKwllog7IH0/Dj5SbLy7wIzFOXwyRbCMbm1WYa3f78G/se/ZZE1uA
-         Ilf6HrdW9N/ozAsmtZSdBfKCRKERzMf25h+JNI68=
+        b=D+oiGUbYSnz6nmHlv7xe+jI2fgs2879BRY7j7DMO5V5o97FEiOrLkc7UBb5nguGPX
+         5NqOqz8UGe6TssXcOJaM1T7yNMKaYEl3MmGqAcis84vpjBjFXgm0fOsXaQ4rmeGFvD
+         H43UfkwnVeqGOvDHZ5MZqfy2f49+7XAXIc2c6P+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Ian Abbott <abbotti@mev.co.uk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 55/86] staging: comedi: verify array index is correct before using it
-Date:   Mon, 20 Jul 2020 17:36:51 +0200
-Message-Id: <20200720152755.928515742@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 57/86] ARM: dts: socfpga: Align L2 cache-controller nodename with dtschema
+Date:   Mon, 20 Jul 2020 17:36:53 +0200
+Message-Id: <20200720152756.026656813@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -59,52 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit ef75e14a6c935eec82abac07ab68e388514e39bc ]
+[ Upstream commit d7adfe5ffed9faa05f8926223086b101e14f700d ]
 
-This code reads from the array before verifying that "trig" is a valid
-index.  If the index is wildly out of bounds then reading from an
-invalid address could lead to an Oops.
+Fix dtschema validator warnings like:
+    l2-cache@fffff000: $nodename:0:
+        'l2-cache@fffff000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
-Fixes: a8c66b684efa ("staging: comedi: addi_apci_1500: rewrite the subdevice support functions")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20200709102936.GA20875@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 475dc86d08de ("arm: dts: socfpga: Add a base DTSI for Altera's Arria10 SOC")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/comedi/drivers/addi_apci_1500.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/socfpga.dtsi         | 2 +-
+ arch/arm/boot/dts/socfpga_arria10.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/comedi/drivers/addi_apci_1500.c b/drivers/staging/comedi/drivers/addi_apci_1500.c
-index 63991c49ff230..79a8799b12628 100644
---- a/drivers/staging/comedi/drivers/addi_apci_1500.c
-+++ b/drivers/staging/comedi/drivers/addi_apci_1500.c
-@@ -465,9 +465,9 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
- 	unsigned int lo_mask = data[5] << shift;
- 	unsigned int chan_mask = hi_mask | lo_mask;
- 	unsigned int old_mask = (1 << shift) - 1;
--	unsigned int pm = devpriv->pm[trig] & old_mask;
--	unsigned int pt = devpriv->pt[trig] & old_mask;
--	unsigned int pp = devpriv->pp[trig] & old_mask;
-+	unsigned int pm;
-+	unsigned int pt;
-+	unsigned int pp;
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index f0702d8063d9b..9a2db3df5edef 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -676,7 +676,7 @@ ocram-ecc@ffd08144 {
+ 			};
+ 		};
  
- 	if (trig > 1) {
- 		dev_dbg(dev->class_dev,
-@@ -480,6 +480,10 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
- 		return -EINVAL;
- 	}
+-		L2: l2-cache@fffef000 {
++		L2: cache-controller@fffef000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfffef000 0x1000>;
+ 			interrupts = <0 38 0x04>;
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index f520cbff5e1c9..4d496479e1353 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -567,7 +567,7 @@ sdr: sdr@ffc25000 {
+ 			reg = <0xffcfb100 0x80>;
+ 		};
  
-+	pm = devpriv->pm[trig] & old_mask;
-+	pt = devpriv->pt[trig] & old_mask;
-+	pp = devpriv->pp[trig] & old_mask;
-+
- 	switch (data[2]) {
- 	case COMEDI_DIGITAL_TRIG_DISABLE:
- 		/* clear trigger configuration */
+-		L2: l2-cache@fffff000 {
++		L2: cache-controller@fffff000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfffff000 0x1000>;
+ 			interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.25.1
 
