@@ -2,97 +2,111 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173EFC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13A4C43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD682206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263647;
-	bh=Goq3gE73MFyJrQ8A7qmzhAcc5rjHku2kdxLwaQUMtBY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IkZe5egEaYjSp/junEt4zrotNlrriDlfWYtx0+rJ8QctLFrxDjIucWg74c6Gh1KOA
-	 mT0/z4MH84s60a/xUQZbh6LgjUuFiMRg4KsoXYbOAPApVHHWpVsF4IpoJXloP7YNYx
-	 KsXsQmctZYsMYBBJiF1aeirzQKBLpi72QdLPUCSc=
+	by mail.kernel.org (Postfix) with ESMTP id B160B206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BiHDGagd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgGTPj1 (ORCPT
+        id S1730249AbgGTQrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:39:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbgGTPjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:39:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D76222CAF;
-        Mon, 20 Jul 2020 15:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259563;
-        bh=Goq3gE73MFyJrQ8A7qmzhAcc5rjHku2kdxLwaQUMtBY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KFyA5l8iFX8gySpwTv/Ej42Ocg2ydvgVnn0yh/Or3DUzIEVimctRfD3fMrBmg7Ozx
-         MWK+tzIgS2lZ1f6QwNX4TbkC6YthYV4vpzvKrbuzzRM3thDEpDAgGlHbAltiV9UO2M
-         +Pz+zaiXQqrIseT8imPApaeTIgYaX+y+eCff8zgU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishwas M <vishwas.reddy.vr@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 55/58] hwmon: (emc2103) fix unable to change fan pwm1_enable attribute
-Date:   Mon, 20 Jul 2020 17:37:11 +0200
-Message-Id: <20200720152750.024884509@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
-References: <20200720152747.127988571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 12:47:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729363AbgGTPjS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:39:18 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F17C061794;
+        Mon, 20 Jul 2020 08:39:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ni3GtEq//rn/T0Y31rT9wL4PCiqDOjTkE6241aZZHHo=; b=BiHDGagd+pgP536ZQhYUL4DrI0
+        cMFa6Nval3D9C3UFIeLO/+EGQjO3Mhic3hTUpI/yH9aoBNux/iQOFfJIryUL+8t9hgOoNK/6izEJJ
+        UqzGFdBpIsrvOJALzW9a6S5U06lVkps5GrJwFxYuzn+XlCKgZJtDOsxf+g3OAvHkisZShKt+UC1I2
+        A6WXqG5gbdrFpDpmKms+BNaV7LP68vdeR/ewhPKwnrKCnKvnjPk/62G+D/5qFJ/BprKn7rmdI1BTb
+        fqHsANZLurUqXW+PLa3ubnx9KtVTWG2dtIDfrhyga6bBl3rIBA2zDH8OV1BfiERufy7dWhKGOaxxA
+        EAyk21xw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxXsl-0005o1-Ni; Mon, 20 Jul 2020 15:39:12 +0000
+Date:   Mon, 20 Jul 2020 16:39:11 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
+Message-ID: <20200720153911.GX12769@casper.infradead.org>
+References: <20200717044427.68747-1-ebiggers@kernel.org>
+ <20200718014204.GN5369@dread.disaster.area>
+ <20200718140811.GA1179836@rowland.harvard.edu>
+ <20200720013320.GP5369@dread.disaster.area>
+ <20200720145211.GC1228057@rowland.harvard.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720145211.GC1228057@rowland.harvard.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishwas M <vishwas.reddy.vr@gmail.com>
+On Mon, Jul 20, 2020 at 10:52:11AM -0400, Alan Stern wrote:
+> On Mon, Jul 20, 2020 at 11:33:20AM +1000, Dave Chinner wrote:
+> > On Sat, Jul 18, 2020 at 10:08:11AM -0400, Alan Stern wrote:
+> > > > This is one of the reasons that the LKMM documetnation is so damn
+> > > > difficult to read and understand: just understanding the vocabulary
+> > > > it uses requires a huge learning curve, and it's not defined
+> > > > anywhere. Understanding the syntax of examples requires a huge
+> > > > learning curve, because it's not defined anywhere. 
+> > > 
+> > > Have you seen tools/memory-model/Documentation/explanation.txt?
+> > 
+> > <raises eyebrow>
+> > 
+> > Well, yes. Several times. I look at it almost daily, but that
+> > doesn't mean it's approachable, easy to read or even -that I
+> > understand what large parts of it say-. IOWs, that's one of the 
+> > problematic documents that I've been saying have a huge learning
+> > curve.
+> 
+> Can you be more specific?  For example, exactly where does it start to 
+> become unapproachable or difficult to read?
+> 
+> Don't forget that this document was meant to help mitigate the LKMM's 
+> learning curve.  If it isn't successful, I want to improve it.
 
-commit 14b0e83dc4f1e52b94acaeb85a18fd7fdd46d2dc upstream.
+I can't speak for Dave, but the introduction to that documentation makes
+it clear to me that it's not the document I want to read.
 
-This patch fixes a bug which does not let FAN mode to be changed from
-sysfs(pwm1_enable). i.e pwm1_enable can not be set to 3, it will always
-remain at 0.
+: This document describes the ideas underlying the LKMM.  It is meant
+: for people who want to understand how the model was designed.  It does
+: not go into the details of the code in the .bell and .cat files;
+: rather, it explains in English what the code expresses symbolically.
 
-This is caused because the device driver handles the result of
-"read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg)" incorrectly. The
-driver thinks an error has occurred if the (result != 0). This has been
-fixed by changing the condition to (result < 0).
+I don't want to know how the model was designed.  I want to write a
+device driver, or filesystem, or whatever.
 
-Signed-off-by: Vishwas M <vishwas.reddy.vr@gmail.com>
-Link: https://lore.kernel.org/r/20200707142747.118414-1-vishwas.reddy.vr@gmail.com
-Fixes: 9df7305b5a86 ("hwmon: Add driver for SMSC EMC2103 temperature monitor and fan controller")
-Cc: stable@vger.kernel.org
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/hwmon/emc2103.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/hwmon/emc2103.c
-+++ b/drivers/hwmon/emc2103.c
-@@ -452,7 +452,7 @@ static ssize_t set_pwm_enable(struct dev
- 	}
- 
- 	result = read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg);
--	if (result) {
-+	if (result < 0) {
- 		count = result;
- 		goto err;
- 	}
-
-
+Honestly, even the term "release semantics" trips me up _every_ time.
+It's a barrier to understanding because I have to translate it into "Oh,
+he means it's like an unlock".  Why can't you just say "unlock semantics"?
