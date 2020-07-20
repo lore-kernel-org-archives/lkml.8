@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1424C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC4BC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF41920709
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3455F207EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgGTGgK (ORCPT
+        id S1727903AbgGTGgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 02:36:10 -0400
+        Mon, 20 Jul 2020 02:36:12 -0400
 Received: from labrats.qualcomm.com ([199.106.110.90]:5831 "EHLO
         labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgGTGgH (ORCPT
+        with ESMTP id S1726821AbgGTGgK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:36:07 -0400
-IronPort-SDR: bA0f+rOOMxZIZUWQsidAv72INfEBHAxg9rtWxwPTbHu6uAeBGSyPDrdV77lU57plbpVvbcyuhU
- Flp6EUPbi9kNXF9g89XqON2RILUAHdodnJ3Az3hI2aezCjPLtZ3deTYsxyfMzxQIA/2bZ7Xcqo
- akWtlqj0lHf6yrTO8l2mKPf86csu/V7IPNJK1zCqfq/juvxtAYxsxfirETe4EsVwxm88+5xVZJ
- L8P2KDZQmLWFKXR7FWMW2hRC913Rkt+Oy6982KTSGBnKOzPB/HV5Vw0ljL21ACf8Bou09rNJ1U
- 0nE=
+        Mon, 20 Jul 2020 02:36:10 -0400
+IronPort-SDR: CLDaHBzZ4YJFjYnJGf+W5/f3sQkr5yeCMqB9PsXjSmm8RRB5BFLqqsGxHvqaKhgHNkqlJhEoP7
+ a+hE3aHo0K3KL1Z+sSAiln/4HNswSjQVwPhEcNyL29D+h2szfHezRAeYWAVKxevxOeuu0AalJ3
+ CRqb+u4NZvxXwDZ+O4DAJf6RrqNc6jfxUtk1EPaWI+sNyLsYnT+W409VZFwL4Oa6unHDz5W9H5
+ AGGFWWBsNteUPWaAI76tKiymRsfyYRNnnqM8Ct5t73z0YV5GceVCywNI2ZW1gx0Kj/rKdaB0sV
+ umE=
 X-IronPort-AV: E=Sophos;i="5.75,374,1589266800"; 
-   d="scan'208";a="47226981"
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by labrats.qualcomm.com with ESMTP; 19 Jul 2020 23:36:07 -0700
+   d="scan'208";a="47226982"
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by labrats.qualcomm.com with ESMTP; 19 Jul 2020 23:36:08 -0700
 Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 19 Jul 2020 23:36:06 -0700
+  by ironmsg05-sd.qualcomm.com with ESMTP; 19 Jul 2020 23:36:07 -0700
 Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
-        id D891622DA5; Sun, 19 Jul 2020 23:36:06 -0700 (PDT)
+        id 8549B22DA5; Sun, 19 Jul 2020 23:36:07 -0700 (PDT)
 From:   Can Guo <cang@codeaurora.org>
 To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
         hongwus@codeaurora.org, rnayak@codeaurora.org,
         sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
         kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
         cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
         Avri Altman <avri.altman@wdc.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
+        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 2/8] scsi: ufs: Fix imbalanced scsi_block_reqs_cnt caused by ufshcd_hold()
-Date:   Sun, 19 Jul 2020 23:35:49 -0700
-Message-Id: <1595226956-7779-3-git-send-email-cang@codeaurora.org>
+Subject: [PATCH v4 3/8] ufs: ufs-qcom: Fix a few BUGs in func ufs_qcom_dump_dbg_regs()
+Date:   Sun, 19 Jul 2020 23:35:50 -0700
+Message-Id: <1595226956-7779-4-git-send-email-cang@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595226956-7779-1-git-send-email-cang@codeaurora.org>
 References: <1595226956-7779-1-git-send-email-cang@codeaurora.org>
@@ -59,39 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The scsi_block_reqs_cnt increased in ufshcd_hold() is supposed to be
-decreased back in ufshcd_ungate_work() in a paired way. However, if
-specific ufshcd_hold/release sequences are met, it is possible that
-scsi_block_reqs_cnt is increased twice but only one ungate work is
-queued. To make sure scsi_block_reqs_cnt is handled by ufshcd_hold() and
-ufshcd_ungate_work() in a paired way, increase it only if queue_work()
-returns true.
+Dumping testbus registers needs to sleep a bit intermittently as there are
+too many of them. Skip them for those contexts where sleep is not allowed.
+
+Meanwhile, if ufs_qcom_dump_dbg_regs() calls ufs_qcom_testbus_config() from
+ufshcd_suspend/resume and/or clk gate/ungate context, pm_runtime_get_sync()
+and ufshcd_hold() will cause racing problems. Fix it by removing the
+unnecessary calls of pm_runtime_get_sync() and ufshcd_hold().
 
 Signed-off-by: Can Guo <cang@codeaurora.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/ufs/ufs-qcom.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 99bd3e4..2907828 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1611,12 +1611,12 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
- 		 */
- 		/* fallthrough */
- 	case CLKS_OFF:
--		ufshcd_scsi_block_requests(hba);
- 		hba->clk_gating.state = REQ_CLKS_ON;
- 		trace_ufshcd_clk_gating(dev_name(hba->dev),
- 					hba->clk_gating.state);
--		queue_work(hba->clk_gating.clk_gating_workq,
--			   &hba->clk_gating.ungate_work);
-+		if (queue_work(hba->clk_gating.clk_gating_workq,
-+			       &hba->clk_gating.ungate_work))
-+			ufshcd_scsi_block_requests(hba);
- 		/*
- 		 * fall through to check if we should wait for this
- 		 * work to be done or not.
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index 2e6ddb5..3743c17 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -1604,9 +1604,6 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
+ 	 */
+ 	}
+ 	mask <<= offset;
+-
+-	pm_runtime_get_sync(host->hba->dev);
+-	ufshcd_hold(host->hba, false);
+ 	ufshcd_rmwl(host->hba, TEST_BUS_SEL,
+ 		    (u32)host->testbus.select_major << 19,
+ 		    REG_UFS_CFG1);
+@@ -1619,8 +1616,6 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
+ 	 * committed before returning.
+ 	 */
+ 	mb();
+-	ufshcd_release(host->hba);
+-	pm_runtime_put_sync(host->hba->dev);
+ 
+ 	return 0;
+ }
+@@ -1658,11 +1653,13 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
+ 
+ 	/* sleep a bit intermittently as we are dumping too much data */
+ 	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
+-	udelay(1000);
+-	ufs_qcom_testbus_read(hba);
+-	udelay(1000);
+-	ufs_qcom_print_unipro_testbus(hba);
+-	udelay(1000);
++	if (in_task()) {
++		udelay(1000);
++		ufs_qcom_testbus_read(hba);
++		udelay(1000);
++		ufs_qcom_print_unipro_testbus(hba);
++		udelay(1000);
++	}
+ }
+ 
+ /**
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
