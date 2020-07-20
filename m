@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CC1C4345D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E43E1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBF722CBB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C3E20773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263634;
-	bh=Ii21Y4dB2dtPOuktMfoSercnM/W9406kERuSR4p265M=;
+	s=default; t=1595263637;
+	bh=ZJbHCFIdZH4X4ZBrUiUDxNPeZ/xp15aUJQ4HRBDeBgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FDeufpIjfOhnjt7Nb2hDNqlsjYIzaAHmN2qZ3POHnK7DKjFNAZFrTl67VPnO+4fOF
-	 sbesx/c4XkZXCR07XxkiJlSR3Q6QwhC2y0bhxoLW8WPAYShsvrSlgBG6UJqDpBn2gT
-	 NJYfHfEs4IJ8+nMc2tVnYTgM2qOcc4kX4KoRJUKk=
+	b=RQCXQMTlOJlPIWPPVw5gufppww2aKHVS4KaiYwCqd2jNKOMQAej7PYtYKRWeZPd7O
+	 92SgZ3Mjbn9kPjsabZBdsxaPZzzIJuLAJvQUHAK5tUw0+dtfBDyHBIjVwCeb4H/4PS
+	 s5vSU45wJ7/Po3+Iwub9ZZBYz/W9vhzOXCDgWYSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbgGTPj6 (ORCPT
+        id S1730044AbgGTQrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:39:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59184 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:47:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728518AbgGTPjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:39:54 -0400
+        id S1729579AbgGTPjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:39:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 777AF22B4E;
-        Mon, 20 Jul 2020 15:39:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BC1522CB2;
+        Mon, 20 Jul 2020 15:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259594;
-        bh=Ii21Y4dB2dtPOuktMfoSercnM/W9406kERuSR4p265M=;
+        s=default; t=1595259588;
+        bh=ZJbHCFIdZH4X4ZBrUiUDxNPeZ/xp15aUJQ4HRBDeBgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KImI5IiPFeUaFpc0x84DI59NrEMTCFylIFDMSFO+c2GRVPlmGlT5Uti2dZZ9/B/l/
-         ELnOf5nDjog2Ti2J8odB/OK1N7AAG+BscJvJG5qUA1uGQBmoA0vL/c8WMR4TaMM9X3
-         HK7QJ8E/9ri+6iV/H5azOyDWQD7ZEjkGdLkKBAsk=
+        b=KM7Gl0NV6G/zP5aIekXV0bDaw3QFFpMsmcC/1IFr9gDJUVqAhiwLYg/X3jM2Ht+7R
+         sDVy2vLNTmZHaK/Yl8bl+PhS/l57Z2i/OQ3oPZi/wf1k5FmpSYSVF4xDSuzllR8hOu
+         Ny+0vZU3JRVDc60F5elxpaX031LrbcBwBsvGiMzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yariv <oigevald+kernel@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.4 37/58] HID: magicmouse: do not set up autorepeat
-Date:   Mon, 20 Jul 2020 17:36:53 +0200
-Message-Id: <20200720152749.056128636@linuxfoundation.org>
+        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.4 45/58] USB: serial: cypress_m8: enable Simply Automated UPB PIM
+Date:   Mon, 20 Jul 2020 17:37:01 +0200
+Message-Id: <20200720152749.488265934@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
 References: <20200720152747.127988571@linuxfoundation.org>
@@ -60,39 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: James Hilliard <james.hilliard1@gmail.com>
 
-commit 6363d2065cd399cf9d6dc9d08c437f8658831100 upstream.
+commit 5c45d04c5081c1830d674f4d22d4400ea2083afe upstream.
 
-Neither the trackpad, nor the mouse want input core to generate autorepeat
-events for their buttons, so let's reset the bit (as hid-input sets it for
-these devices based on the usage vendor code).
+This is a UPB (Universal Powerline Bus) PIM (Powerline Interface Module)
+which allows for controlling multiple UPB compatible devices from Linux
+using the standard serial interface.
 
+Based on vendor application source code there are two different models
+of USB based PIM devices in addition to a number of RS232 based PIM's.
+
+The vendor UPB application source contains the following USB ID's:
+
+	#define USB_PCS_VENDOR_ID 0x04b4
+	#define USB_PCS_PIM_PRODUCT_ID 0x5500
+
+	#define USB_SAI_VENDOR_ID 0x17dd
+	#define USB_SAI_PIM_PRODUCT_ID 0x5500
+
+The first set of ID's correspond to the PIM variant sold by Powerline
+Control Systems while the second corresponds to the Simply Automated
+Incorporated PIM. As the product ID for both of these match the default
+cypress HID->COM RS232 product ID it assumed that they both use an
+internal variant of this HID->COM RS232 converter hardware. However
+as the vendor ID for the Simply Automated variant is different we need
+to also add it to the cypress_M8 driver so that it is properly
+detected.
+
+Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
+Link: https://lore.kernel.org/r/20200616220403.1807003-1-james.hilliard1@gmail.com
 Cc: stable@vger.kernel.org
-Reported-by: Yariv <oigevald+kernel@gmail.com>
-Tested-by: Yariv <oigevald+kernel@gmail.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+[ johan: amend VID define entry ]
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-magicmouse.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/usb/serial/cypress_m8.c |    2 ++
+ drivers/usb/serial/cypress_m8.h |    3 +++
+ 2 files changed, 5 insertions(+)
 
---- a/drivers/hid/hid-magicmouse.c
-+++ b/drivers/hid/hid-magicmouse.c
-@@ -451,6 +451,12 @@ static int magicmouse_setup_input(struct
- 		__set_bit(MSC_RAW, input->mscbit);
- 	}
+--- a/drivers/usb/serial/cypress_m8.c
++++ b/drivers/usb/serial/cypress_m8.c
+@@ -63,6 +63,7 @@ static const struct usb_device_id id_tab
  
-+	/*
-+	 * hid-input may mark device as using autorepeat, but neither
-+	 * the trackpad, nor the mouse actually want it.
-+	 */
-+	__clear_bit(EV_REP, input->evbit);
+ static const struct usb_device_id id_table_cyphidcomrs232[] = {
+ 	{ USB_DEVICE(VENDOR_ID_CYPRESS, PRODUCT_ID_CYPHIDCOM) },
++	{ USB_DEVICE(VENDOR_ID_SAI, PRODUCT_ID_CYPHIDCOM) },
+ 	{ USB_DEVICE(VENDOR_ID_POWERCOM, PRODUCT_ID_UPS) },
+ 	{ USB_DEVICE(VENDOR_ID_FRWD, PRODUCT_ID_CYPHIDCOM_FRWD) },
+ 	{ }						/* Terminating entry */
+@@ -77,6 +78,7 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(VENDOR_ID_DELORME, PRODUCT_ID_EARTHMATEUSB) },
+ 	{ USB_DEVICE(VENDOR_ID_DELORME, PRODUCT_ID_EARTHMATEUSB_LT20) },
+ 	{ USB_DEVICE(VENDOR_ID_CYPRESS, PRODUCT_ID_CYPHIDCOM) },
++	{ USB_DEVICE(VENDOR_ID_SAI, PRODUCT_ID_CYPHIDCOM) },
+ 	{ USB_DEVICE(VENDOR_ID_POWERCOM, PRODUCT_ID_UPS) },
+ 	{ USB_DEVICE(VENDOR_ID_FRWD, PRODUCT_ID_CYPHIDCOM_FRWD) },
+ 	{ USB_DEVICE(VENDOR_ID_DAZZLE, PRODUCT_ID_CA42) },
+--- a/drivers/usb/serial/cypress_m8.h
++++ b/drivers/usb/serial/cypress_m8.h
+@@ -24,6 +24,9 @@
+ #define VENDOR_ID_CYPRESS		0x04b4
+ #define PRODUCT_ID_CYPHIDCOM		0x5500
+ 
++/* Simply Automated HID->COM UPB PIM (using Cypress PID 0x5500) */
++#define VENDOR_ID_SAI			0x17dd
 +
- 	return 0;
- }
- 
+ /* FRWD Dongle - a GPS sports watch */
+ #define VENDOR_ID_FRWD			0x6737
+ #define PRODUCT_ID_CYPHIDCOM_FRWD	0x0001
 
 
