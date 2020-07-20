@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAB0C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422C2C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84E4D207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A54A207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261619;
-	bh=jMZAkAiRPeB/WryBfB1XZTDKBjG80bl3r5X+Z+hlUPk=;
+	s=default; t=1595261622;
+	bh=XpVYNTG7d63c1wj1Uwh5uvfSxJPpzA9JbBiqS/oVjqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ANnlvASAXKj/myr9AlPbbs9x4q4AJ2pgJ5zciIB4da2ykQY3QyboVxhNdoY6/saYc
-	 POOiRsFuI8fu8k7AstSIascbxYkr0lrYm98vgjzg70D0WTio3R+a8lteILkvJ0iA9K
-	 PQq6kVXl/WcXPdB0FE5TaGs7aM47hYkdf5XS1tAI=
+	b=dpdFyjmGHhezkoFlQOOFHeOhJ3we2ngA9/S1Ui9LaWLsm7CY61FhrtztudWgUF8aA
+	 K/aD6y6PBVhBsvRiWBVNiDXmIUBYxDoBI5zEv0UX5QBuBDVYKEYZ+/JSMZ4//GsyWn
+	 o4C0gSrTsNaeMmm09cdSF/Xa5c8TVPfiuPvsDT/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388132AbgGTQNi (ORCPT
+        id S2388140AbgGTQNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:13:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53384 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:13:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732632AbgGTQN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:13:26 -0400
+        id S2387666AbgGTQNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:13:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 629E42064B;
-        Mon, 20 Jul 2020 16:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5850F2065E;
+        Mon, 20 Jul 2020 16:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261606;
-        bh=jMZAkAiRPeB/WryBfB1XZTDKBjG80bl3r5X+Z+hlUPk=;
+        s=default; t=1595261616;
+        bh=XpVYNTG7d63c1wj1Uwh5uvfSxJPpzA9JbBiqS/oVjqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zm9ZTwFhxSXrDrDfp57VJ9u4FFOPIFTb8Ie6jQFTVd53AFA8rFwYTbmCJ/0sFxGrN
-         EVCrm6vQ6ctY3uPCyWT6XNuwip466pjIpU1x/xgoNMihNWvLJY+cq9bDMLL3WGIfjw
-         vaeOHqGz8P8v//rPgJDsgb70faai4cQEUNUN5zoA=
+        b=t0/2SVyckCyKWOk0YipXLE2Oc1sHfBveVEY22Kc53fBiDFguHrF+eDao1/Z3id3/y
+         fu42hO0GAF+kDdvB21mbpcayZaLl1YVI+gJQ7PxMYHgjsp/49PmcK8dAgw4sxES5pn
+         1COcP+cm/TEqD14EBcsVSTG1MA4Kv10ZC4wgasUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Saravana Kannan <saravanak@google.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 5.7 146/244] slimbus: core: Fix mismatch in of_node_get/put
-Date:   Mon, 20 Jul 2020 17:36:57 +0200
-Message-Id: <20200720152832.795778263@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@pm.me>,
+        Amit Shah <amit@kernel.org>
+Subject: [PATCH 5.7 173/244] virtio: virtio_console: add missing MODULE_DEVICE_TABLE() for rproc serial
+Date:   Mon, 20 Jul 2020 17:37:24 +0200
+Message-Id: <20200720152834.064507603@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,32 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saravana Kannan <saravanak@google.com>
+From: Alexander Lobakin <alobakin@pm.me>
 
-commit 01360857486c0e4435dea3aa2f78b47213b7cf6a upstream.
+commit 897c44f0bae574c5fb318c759b060bebf9dd6013 upstream.
 
-Adding missing corresponding of_node_put
+rproc_serial_id_table lacks an exposure to module devicetable, so
+when remoteproc firmware requests VIRTIO_ID_RPROC_SERIAL, no uevent
+is generated and no module autoloading occurs.
+Add missing MODULE_DEVICE_TABLE() annotation and move the existing
+one for VIRTIO_ID_CONSOLE right to the table itself.
 
-Fixes: 7588a511bdb4 ("slimbus: core: add support to device tree helper")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-[Srini: added fixes tag, removed NULL check and updated log]
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200511151334.362-3-srinivas.kandagatla@linaro.org
+Fixes: 1b6370463e88 ("virtio_console: Add support for remoteproc serial")
+Cc: <stable@vger.kernel.org> # v3.8+
+Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+Reviewed-by: Amit Shah <amit@kernel.org>
+Link: https://lore.kernel.org/r/x7C_CbeJtoGMy258nwAXASYz3xgFMFpyzmUvOyZzRnQrgWCREBjaqBOpAUS7ol4NnZYvSVwmTsCG0Ohyfvta-ygw6HMHcoeKK0C3QFiAO_Q=@pm.me
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/slimbus/core.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/char/virtio_console.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/slimbus/core.c
-+++ b/drivers/slimbus/core.c
-@@ -283,6 +283,7 @@ EXPORT_SYMBOL_GPL(slim_register_controll
- /* slim_remove_device: Remove the effect of slim_add_device() */
- static void slim_remove_device(struct slim_device *sbdev)
- {
-+	of_node_put(sbdev->dev.of_node);
- 	device_unregister(&sbdev->dev);
- }
+--- a/drivers/char/virtio_console.c
++++ b/drivers/char/virtio_console.c
+@@ -2116,6 +2116,7 @@ static struct virtio_device_id id_table[
+ 	{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
+ 	{ 0 },
+ };
++MODULE_DEVICE_TABLE(virtio, id_table);
  
+ static unsigned int features[] = {
+ 	VIRTIO_CONSOLE_F_SIZE,
+@@ -2128,6 +2129,7 @@ static struct virtio_device_id rproc_ser
+ #endif
+ 	{ 0 },
+ };
++MODULE_DEVICE_TABLE(virtio, rproc_serial_id_table);
+ 
+ static unsigned int rproc_serial_features[] = {
+ };
+@@ -2280,6 +2282,5 @@ static void __exit fini(void)
+ module_init(init);
+ module_exit(fini);
+ 
+-MODULE_DEVICE_TABLE(virtio, id_table);
+ MODULE_DESCRIPTION("Virtio console driver");
+ MODULE_LICENSE("GPL");
 
 
