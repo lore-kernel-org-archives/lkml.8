@@ -2,119 +2,94 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8231EC433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC46C43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9A72073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25FB52070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263702;
-	bh=/IwVN506rfOpkCinfHi7vgr2U8ERfEwEzTd3EPt9fyg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mhqgflnoHnKdCccw2oWJYW1nINXj/1UNPHaMJn5OcuNkK1td7D9z6FpGMfXxoousm
-	 PjaxXuFuELw5gwOntELLQF2cW7cX7RIW3weCAJxIMvYFMJV1GfbDh0sSJNagqU07D7
-	 nVm70i46yzFAnAfkHXtFNO8L9q7cu/jGnBHn26Qs=
+	s=default; t=1595263720;
+	bh=B32T7XX0RrcZDQHlnbjMiXi4HNK1V+2Ce4kqChrBAw4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TBJqBbGfkGhKWC01SYutBgDF7wnca+UlWNSeljzKP67QNucEu/h1nsK3ItpcuHVtD
+	 1cqI//jzdpLKIGtIDGV+ToMvJ5XRMi02wFmSGE+4M/3RsgKGgmmwVqGeuXNZ7TXIxs
+	 A9QHlVqa5OKHebK7r7YtMh8qabOseVCeUrmLVryk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389147AbgGTQsV (ORCPT
+        id S2389168AbgGTQsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:48:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729174AbgGTPiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:38:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728122AbgGTQsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:48:32 -0400
+Received: from localhost (unknown [213.57.247.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A687822CB2;
-        Mon, 20 Jul 2020 15:38:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE6D92070A;
+        Mon, 20 Jul 2020 16:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259504;
-        bh=/IwVN506rfOpkCinfHi7vgr2U8ERfEwEzTd3EPt9fyg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w2K7z9La1RV9sUcgFu7kEAbwbfqeZCdy2g3ANAjqyk0HOFYFxDj5T/rPZrEfGOkO8
-         48CtyqNGUKSnKcmmNrzLBA3hEJZl5WKprK4lt2RgIRZWmy7shINb4UBPVTV1v7phyM
-         7KxL1qsQebs8D299J3osZoXkjVDiyHK5GndInz24=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 31/58] Revert "usb/xhci-plat: Set PM runtime as active on resume"
-Date:   Mon, 20 Jul 2020 17:36:47 +0200
-Message-Id: <20200720152748.706320589@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
-References: <20200720152747.127988571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1595263711;
+        bh=B32T7XX0RrcZDQHlnbjMiXi4HNK1V+2Ce4kqChrBAw4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0p95UMPsI+SLQ/px2SMeYee/6o+1tBfH4pxfbp4QSTo8wx2tls9KVU3kAT68AMC09
+         CmmEx+sV2rbPwiDZpbhinYv4OR/+Gfibkp5Ux7TonCoAawZS+Kx2J2lIAiHHQhGF1G
+         6vtnR8ik3H0zy8LWD2zqBPa8FjLZTwUoL7kA4ux8=
+Date:   Mon, 20 Jul 2020 19:48:27 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        santosh.shilimkar@oracle.com, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH for v5.9] RDS: Replace HTTP links with HTTPS ones
+Message-ID: <20200720164827.GC1080481@unreal>
+References: <20200719155845.59947-1-grandmaster@al2klimov.de>
+ <20200720045626.GF127306@unreal>
+ <20200720075848.26bc3dfe@lwn.net>
+ <20200720140716.GB1080481@unreal>
+ <20200720083635.3e7880ce@lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720083635.3e7880ce@lwn.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 737c975db35b0117fc5c702072ca2df6f2f7eb63.
-
-Eugeniu Rosca writes:
-
-On Thu, Jul 09, 2020 at 09:00:23AM +0200, Eugeniu Rosca wrote:
->After integrating v4.14.186 commit 5410d158ca2a50 ("usb/ehci-platform:
->Set PM runtime as active on resume") into downstream v4.14.x, we started
->to consistently experience below panic [1] on every second s2ram of
->R-Car H3 Salvator-X Renesas reference board.
+On Mon, Jul 20, 2020 at 08:36:35AM -0600, Jonathan Corbet wrote:
+> On Mon, 20 Jul 2020 17:07:16 +0300
+> Leon Romanovsky <leon@kernel.org> wrote:
 >
->After some investigations, we concluded the following:
-> - the issue does not exist in vanilla v5.8-rc4+
-> - [bisecting shows that] the panic on v4.14.186 is caused by the lack
->   of v5.6-rc1 commit 987351e1ea7772 ("phy: core: Add consumer device
->   link support"). Getting evidence for that is easy. Reverting
->   987351e1ea7772 in vanilla leads to a similar backtrace [2].
+> > > Do *you* want to review that megapatch?  The number of issues that have
+> > > come up make it clear that these patches do, indeed, need review...
+> >
+> > Can you point me to the issues?
+> > What can go wrong with such a simple replacement?
 >
->Questions:
-> - Backporting 987351e1ea7772 ("phy: core: Add consumer device
->   link support") to v4.14.187 looks challenging enough, so probably not
->   worth it. Anybody to contradict this?
-> - Assuming no plans to backport the missing mainline commit to v4.14.x,
->   should the following three v4.14.186 commits be reverted on v4.14.x?
->   * baef809ea497a4 ("usb/ohci-platform: Fix a warning when hibernating")
->   * 9f33eff4958885 ("usb/xhci-plat: Set PM runtime as active on resume")
->   * 5410d158ca2a50 ("usb/ehci-platform: Set PM runtime as active on resume")
+> Some bits of the conversation:
+>
+>   https://lore.kernel.org/lkml/20200626110219.7ae21265@lwn.net/
+>   https://lore.kernel.org/lkml/20200626110706.7b5d4a38@lwn.net/
+>   https://lore.kernel.org/lkml/20200705142506.1f26a7e0@lwn.net/
+>   https://lore.kernel.org/lkml/20200713114321.783f0ae6@lwn.net/
+>   https://lore.kernel.org/lkml/202007081531.085533FC5@keescook/
+>
+> etc.
 
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/host/xhci-plat.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+After reading your links and especially this one.
+https://lore.kernel.org/lkml/20200713114321.783f0ae6@lwn.net/
+I don't understand why are we still seeing these patches?
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 510fb7853f92a..c4c40e9d42471 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -249,17 +249,8 @@ static int xhci_plat_resume(struct device *dev)
- {
- 	struct usb_hcd	*hcd = dev_get_drvdata(dev);
- 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
--	int ret;
--
--	ret = xhci_resume(xhci, 0);
--	if (ret)
--		return ret;
- 
--	pm_runtime_disable(dev);
--	pm_runtime_set_active(dev);
--	pm_runtime_enable(dev);
--
--	return 0;
-+	return xhci_resume(xhci, 0);
- }
- 
- static const struct dev_pm_ops xhci_plat_pm_ops = {
--- 
-2.25.1
+I gave to the author comments too, which were ignored.
+https://patchwork.kernel.org/patch/11644683/#23466547
 
+Thanks
 
-
+>
+> jon
