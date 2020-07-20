@@ -2,119 +2,119 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2632C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8231EC433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5F7720773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9A72073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595263702;
+	bh=/IwVN506rfOpkCinfHi7vgr2U8ERfEwEzTd3EPt9fyg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mhqgflnoHnKdCccw2oWJYW1nINXj/1UNPHaMJn5OcuNkK1td7D9z6FpGMfXxoousm
+	 PjaxXuFuELw5gwOntELLQF2cW7cX7RIW3weCAJxIMvYFMJV1GfbDh0sSJNagqU07D7
+	 nVm70i46yzFAnAfkHXtFNO8L9q7cu/jGnBHn26Qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389160AbgGTQsa (ORCPT
+        id S2389147AbgGTQsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:48:30 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:51462 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728122AbgGTQsW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:48:22 -0400
-Received: by mail-il1-f197.google.com with SMTP id s137so11365753ilc.18
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:48:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=52vgdGaAA8hcUPFlyYtitvwg340NDLC7/fQIeVBuX18=;
-        b=NNZHlX1XU2fpHGAQw9Pky7oAmF5eZm6NQawUPrrx6MWFDwyBCltFZkdaP+3h0wtD1M
-         kUYbS17wvpIZu/4uA3bzElSlrLvy+sIBCCfEIQdEN2HJqJzs6XcHAYUsRtGCQpWuE5zk
-         ckEiox0uKbvERg9NzfuZhHdkHWG1YhrEFYhjrksDeiy+SENEUtqWdV+aglzzm8m/F5eA
-         5bpnPAJ4B0/opCBDQdDx1kdNc11Ckrze8CNdiORBTYU02C9elLCeabnE+wS7bfHVKQI2
-         KfwEHbJOF1lKzR0x7GohjzZuUqGLDRLwsPR/Q4far1RI0yu3RuS0LhgbixuEFRkL4SsY
-         u/JA==
-X-Gm-Message-State: AOAM533npieTSz0B2ys4dnJ79F7/HuQIBj99gS+JXEnEYw9mlQ6zQJaJ
-        q56V0iKptFJrYWj7hARbCXDZeMi0ZOb6PKK72c219SPvZ7LH
-X-Google-Smtp-Source: ABdhPJy58JS4cE77WSSYRgFG6obmjU2yddsYxThq4PWwqhYKRsFd+VPkQu8IsDYbqRgP6hlD9BEImNQdCHOEYPl2L/ThChPnaouR
+        Mon, 20 Jul 2020 12:48:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729174AbgGTPiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:38:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A687822CB2;
+        Mon, 20 Jul 2020 15:38:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595259504;
+        bh=/IwVN506rfOpkCinfHi7vgr2U8ERfEwEzTd3EPt9fyg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=w2K7z9La1RV9sUcgFu7kEAbwbfqeZCdy2g3ANAjqyk0HOFYFxDj5T/rPZrEfGOkO8
+         48CtyqNGUKSnKcmmNrzLBA3hEJZl5WKprK4lt2RgIRZWmy7shINb4UBPVTV1v7phyM
+         7KxL1qsQebs8D299J3osZoXkjVDiyHK5GndInz24=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 31/58] Revert "usb/xhci-plat: Set PM runtime as active on resume"
+Date:   Mon, 20 Jul 2020 17:36:47 +0200
+Message-Id: <20200720152748.706320589@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
+References: <20200720152747.127988571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:961:: with SMTP id q1mr22201056ilt.94.1595263701276;
- Mon, 20 Jul 2020 09:48:21 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 09:48:21 -0700
-In-Reply-To: <000000000000588c2c05aa156b2b@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003cdc6c05aae24652@google.com>
-Subject: Re: kernel BUG at mm/vmalloc.c:LINE! (2)
-From:   syzbot <syzbot+5f326d255ca648131f87@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org,
-        mingo@redhat.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+This reverts commit 737c975db35b0117fc5c702072ca2df6f2f7eb63.
 
-HEAD commit:    ab8be66e Add linux-next specific files for 20200720
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=161a0cc8900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c4bf77d63d0cf88c
-dashboard link: https://syzkaller.appspot.com/bug?extid=5f326d255ca648131f87
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=151192bb100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12d7a873100000
+Eugeniu Rosca writes:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5f326d255ca648131f87@syzkaller.appspotmail.com
+On Thu, Jul 09, 2020 at 09:00:23AM +0200, Eugeniu Rosca wrote:
+>After integrating v4.14.186 commit 5410d158ca2a50 ("usb/ehci-platform:
+>Set PM runtime as active on resume") into downstream v4.14.x, we started
+>to consistently experience below panic [1] on every second s2ram of
+>R-Car H3 Salvator-X Renesas reference board.
+>
+>After some investigations, we concluded the following:
+> - the issue does not exist in vanilla v5.8-rc4+
+> - [bisecting shows that] the panic on v4.14.186 is caused by the lack
+>   of v5.6-rc1 commit 987351e1ea7772 ("phy: core: Add consumer device
+>   link support"). Getting evidence for that is easy. Reverting
+>   987351e1ea7772 in vanilla leads to a similar backtrace [2].
+>
+>Questions:
+> - Backporting 987351e1ea7772 ("phy: core: Add consumer device
+>   link support") to v4.14.187 looks challenging enough, so probably not
+>   worth it. Anybody to contradict this?
+> - Assuming no plans to backport the missing mainline commit to v4.14.x,
+>   should the following three v4.14.186 commits be reverted on v4.14.x?
+>   * baef809ea497a4 ("usb/ohci-platform: Fix a warning when hibernating")
+>   * 9f33eff4958885 ("usb/xhci-plat: Set PM runtime as active on resume")
+>   * 5410d158ca2a50 ("usb/ehci-platform: Set PM runtime as active on resume")
 
-------------[ cut here ]------------
-kernel BUG at mm/vmalloc.c:3089!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.8.0-rc6-next-20200720-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events pcpu_balance_workfn
-RIP: 0010:free_vm_area mm/vmalloc.c:3089 [inline]
-RIP: 0010:free_vm_area mm/vmalloc.c:3085 [inline]
-RIP: 0010:pcpu_free_vm_areas+0x96/0xc0 mm/vmalloc.c:3432
-Code: 75 48 48 8b 2b 48 8d 7d 08 48 89 f8 48 c1 e8 03 42 80 3c 30 00 75 2c 48 8b 7d 08 e8 c4 c8 ff ff 48 39 c5 74 a5 e8 ea c3 c9 ff <0f> 0b e8 e3 c3 c9 ff 4c 89 ff 5b 5d 41 5c 41 5d 41 5e 41 5f e9 71
-RSP: 0018:ffffc90000d2fba8 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff8880a801be00 RCX: 0000000000000000
-RDX: ffff8880a95fa300 RSI: ffffffff81aa7c76 RDI: 0000000000000001
-RBP: ffff8880a2b38180 R08: 0000000000000000 R09: ffffffff89cfecc3
-R10: fffffbfff139fd98 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000001 R14: dffffc0000000000 R15: ffff8880a801be00
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004c8e48 CR3: 00000000a4c08000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- pcpu_destroy_chunk mm/percpu-vm.c:366 [inline]
- __pcpu_balance_workfn mm/percpu.c:1982 [inline]
- pcpu_balance_workfn+0x8b3/0x1310 mm/percpu.c:2069
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Modules linked in:
----[ end trace 6a2e56ec52e1f480 ]---
-RIP: 0010:free_vm_area mm/vmalloc.c:3089 [inline]
-RIP: 0010:free_vm_area mm/vmalloc.c:3085 [inline]
-RIP: 0010:pcpu_free_vm_areas+0x96/0xc0 mm/vmalloc.c:3432
-Code: 75 48 48 8b 2b 48 8d 7d 08 48 89 f8 48 c1 e8 03 42 80 3c 30 00 75 2c 48 8b 7d 08 e8 c4 c8 ff ff 48 39 c5 74 a5 e8 ea c3 c9 ff <0f> 0b e8 e3 c3 c9 ff 4c 89 ff 5b 5d 41 5c 41 5d 41 5e 41 5f e9 71
-RSP: 0018:ffffc90000d2fba8 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff8880a801be00 RCX: 0000000000000000
-RDX: ffff8880a95fa300 RSI: ffffffff81aa7c76 RDI: 0000000000000001
-RBP: ffff8880a2b38180 R08: 0000000000000000 R09: ffffffff89cfecc3
-R10: fffffbfff139fd98 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000001 R14: dffffc0000000000 R15: ffff8880a801be00
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004c8e48 CR3: 00000000a4c08000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/host/xhci-plat.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 510fb7853f92a..c4c40e9d42471 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -249,17 +249,8 @@ static int xhci_plat_resume(struct device *dev)
+ {
+ 	struct usb_hcd	*hcd = dev_get_drvdata(dev);
+ 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+-	int ret;
+-
+-	ret = xhci_resume(xhci, 0);
+-	if (ret)
+-		return ret;
+ 
+-	pm_runtime_disable(dev);
+-	pm_runtime_set_active(dev);
+-	pm_runtime_enable(dev);
+-
+-	return 0;
++	return xhci_resume(xhci, 0);
+ }
+ 
+ static const struct dev_pm_ops xhci_plat_pm_ops = {
+-- 
+2.25.1
+
+
 
