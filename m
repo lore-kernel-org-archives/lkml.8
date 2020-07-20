@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A673C2D0A8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F63C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5135D22C9D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D85420717
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281190;
-	bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
+	s=default; t=1595281202;
+	bh=HE1tTQZPf/uXLBnCJG+o1pp+WMQMH2wEqncDBLCC6p8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XYtZRd7T6b+GCVmPGIsu+lUQSU/1M/+UPFsAK1G5A67E8COk/TaKKC1lucXeP70TP
-	 zZKGS4PVJ+hWTeap66f0i8yG1hFv5q+eVMz11cl8QcI0QebDXCdQ5S8gBM0WSwgUHk
-	 UN0JS9x07tfGKee+f5z98nLhdDVJigMRQphnM79k=
+	b=tMvk0j05zgdxw44dPWaT7HmInvjkGYYIgm/d8ss7GhSvIJDpXJHCvFMCJe4cIDkKz
+	 uQ95uLhfS/ByYDcc+nA8X8o27wrNR4cRgykRaPybtUOWA/Zo/PU9AIqqydYjJQhoAb
+	 Pa5mFxux5q0SMjX95ckR9naA1ZyOEAi60+isK6V8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbgGTVjt (ORCPT
+        id S1728630AbgGTVkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:39:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58430 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:40:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728391AbgGTVjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:12 -0400
+        id S1728456AbgGTVj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E4F722CF7;
-        Mon, 20 Jul 2020 21:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B66D022CBB;
+        Mon, 20 Jul 2020 21:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281151;
-        bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
+        s=default; t=1595281165;
+        bh=HE1tTQZPf/uXLBnCJG+o1pp+WMQMH2wEqncDBLCC6p8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rH4yzy1O0XQ9lMJKN+65EnrxjxJ2gGKtiIZAn4WMR38YIDRB1WV5u864WYW+L2vD0
-         imBJH9LkJOVk6FOOx8/JaecNG15o2NDVILFdlcClAC8pyV+mMFdK1K+BdTfE6Tm7ET
-         kphsrzsnuCdGmL18BNNn2WF/mYqDPH+H9DB1Ocqg=
+        b=NWs8h0UG0XNPhWNqzzFoard324nVeAgw6945E8GtkDVnasSdCVsNXHN9sETj+QjyE
+         TcXZ1f8s7y92H7rzIzxpYUMCMwYJi0T22/ot8sjC18uOj0Bl4+HluiC/BjtIe6wMhY
+         kQthyg06NcPu93pzM2ySNlmC6gY7lMHpKDxz5Doo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 17/19] x86: math-emu: Fix up 'cmp' insn for clang ias
-Date:   Mon, 20 Jul 2020 17:38:48 -0400
-Message-Id: <20200720213851.407715-17-sashal@kernel.org>
+Cc:     Leonid Ravich <Leonid.Ravich@emc.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 08/13] dmaengine: ioat setting ioat timeout as module parameter
+Date:   Mon, 20 Jul 2020 17:39:09 -0400
+Message-Id: <20200720213914.407919-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213851.407715-1-sashal@kernel.org>
-References: <20200720213851.407715-1-sashal@kernel.org>
+In-Reply-To: <20200720213914.407919-1-sashal@kernel.org>
+References: <20200720213914.407919-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,41 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-[ Upstream commit 81e96851ea32deb2c921c870eecabf335f598aeb ]
+[ Upstream commit 87730ccbddcb48478b1b88e88b14e73424130764 ]
 
-The clang integrated assembler requires the 'cmp' instruction to
-have a length prefix here:
+DMA transaction time to completion is a function of PCI bandwidth,
+transaction size and a queue depth.  So hard coded value for timeouts
+might be wrong for some scenarios.
 
-arch/x86/math-emu/wm_sqrt.S:212:2: error: ambiguous instructions require an explicit suffix (could be 'cmpb', 'cmpw', or 'cmpl')
- cmp $0xffffffff,-24(%ebp)
- ^
-
-Make this a 32-bit comparison, which it was clearly meant to be.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lkml.kernel.org/r/20200527135352.1198078-1-arnd@arndb.de
+Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/20200701184816.29138-1-leonid.ravich@dell.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/math-emu/wm_sqrt.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/ioat/dma.c | 12 ++++++++++++
+ drivers/dma/ioat/dma.h |  2 --
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/math-emu/wm_sqrt.S b/arch/x86/math-emu/wm_sqrt.S
-index f031c0e193565..515cdee90df72 100644
---- a/arch/x86/math-emu/wm_sqrt.S
-+++ b/arch/x86/math-emu/wm_sqrt.S
-@@ -209,7 +209,7 @@ sqrt_stage_2_finish:
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index e3899ae429e0f..4c2b41beaf638 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -38,6 +38,18 @@
  
- #ifdef PARANOID
- /* It should be possible to get here only if the arg is ffff....ffff */
--	cmp	$0xffffffff,FPU_fsqrt_arg_1
-+	cmpl	$0xffffffff,FPU_fsqrt_arg_1
- 	jnz	sqrt_stage_2_error
- #endif /* PARANOID */
+ #include "../dmaengine.h"
  
++int completion_timeout = 200;
++module_param(completion_timeout, int, 0644);
++MODULE_PARM_DESC(completion_timeout,
++		"set ioat completion timeout [msec] (default 200 [msec])");
++int idle_timeout = 2000;
++module_param(idle_timeout, int, 0644);
++MODULE_PARM_DESC(idle_timeout,
++		"set ioat idel timeout [msec] (default 2000 [msec])");
++
++#define IDLE_TIMEOUT msecs_to_jiffies(idle_timeout)
++#define COMPLETION_TIMEOUT msecs_to_jiffies(completion_timeout)
++
+ static char *chanerr_str[] = {
+ 	"DMA Transfer Source Address Error",
+ 	"DMA Transfer Destination Address Error",
+diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
+index 56200eefcf5ee..01f9299572303 100644
+--- a/drivers/dma/ioat/dma.h
++++ b/drivers/dma/ioat/dma.h
+@@ -111,8 +111,6 @@ struct ioatdma_chan {
+ 	#define IOAT_RUN 5
+ 	#define IOAT_CHAN_ACTIVE 6
+ 	struct timer_list timer;
+-	#define COMPLETION_TIMEOUT msecs_to_jiffies(100)
+-	#define IDLE_TIMEOUT msecs_to_jiffies(2000)
+ 	#define RESET_DELAY msecs_to_jiffies(100)
+ 	struct ioatdma_device *ioat_dma;
+ 	dma_addr_t completion_dma;
 -- 
 2.25.1
 
