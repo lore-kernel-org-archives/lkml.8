@@ -2,99 +2,93 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05816C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87431C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA4882070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595246186;
-	bh=/UaHuvv/N6zEnDH3a7uxqwhmtAhJjPRJyrmfudr9r4Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r4heDN7wQKYjAZZaQh0Ts8Jhb4XhYRcfU+DWDSu39exAkYXDHYtShDvyEEsvUGpFX
-	 h8A4nYbfTKOjBP3WhZmEQlkqvQb4gNv8vPBD+nJz5BfAR3caSuSBjyYHspi2MzAiVC
-	 DA1ahXGtAU/tYS4imq93KXDfDlIKnxFtKHorLpDg=
+	by mail.kernel.org (Postfix) with ESMTP id 59BF22070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:58:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pzO5UY59"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgGTL4Z (ORCPT
+        id S1728643AbgGTL6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 07:56:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728469AbgGTL4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 07:56:25 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D1CC20773;
-        Mon, 20 Jul 2020 11:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595246184;
-        bh=/UaHuvv/N6zEnDH3a7uxqwhmtAhJjPRJyrmfudr9r4Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JgpMW2ZHb8ZkEKMlQlIKL2GYAEYHFnR2OPW2FX1bGSOOH5BPUbgD74/ljwX/cK7w1
-         RAEeANkHk+VP9qURl4vMyo92BPscXjjMkJA/nemw/7LYmrOaUmV3zsewyLjKtoogmv
-         xlUMv/7geCOuzDv5gmRJkjPmTpVmqwfChleN71U4=
-From:   Will Deacon <will@kernel.org>
-To:     joro@8bytes.org, robh+dt@kernel.org,
-        Krishna Reddy <vdumpa@nvidia.com>, robin.murphy@arm.com,
-        jonathanh@nvidia.com, treding@nvidia.com
-Cc:     catalin.marinas@arm.com, kernel-team@android.com,
-        Will Deacon <will@kernel.org>, linux-tegra@vger.kernel.org,
-        bhuntsman@nvidia.com, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, bbiswas@nvidia.com,
-        talho@nvidia.com, praithatha@nvidia.com, yhsu@nvidia.com,
-        nicoleotsuka@gmail.com, nicolinc@nvidia.com,
-        linux-kernel@vger.kernel.org, snikam@nvidia.com,
-        devicetree@vger.kernel.org, mperttunen@nvidia.com
-Subject: Re: [PATCH v11 0/5] NVIDIA ARM SMMU Implementation
-Date:   Mon, 20 Jul 2020 12:56:09 +0100
-Message-Id: <159523385148.790143.14826100945729579786.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200718193457.30046-1-vdumpa@nvidia.com>
-References: <20200718193457.30046-1-vdumpa@nvidia.com>
+        Mon, 20 Jul 2020 07:58:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728058AbgGTL6e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 07:58:34 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 993AEC061794;
+        Mon, 20 Jul 2020 04:58:34 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id u64so1671314qka.12;
+        Mon, 20 Jul 2020 04:58:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oyadEz0eZwOz4veMiu/99Xwk84Lj2bAOI1P6STGAbTM=;
+        b=pzO5UY59E2I78nkbHVVchIb8xSq5dpsUcOpNS7Gkxof5sNSjCEODEhGzsvVVjAfJyl
+         VSwzSp6U1Zs9krrRKUF/u2Bk2AkyMb7A4vyZNN5lBySozBpWv75kuuSymSQ75I0lOQIq
+         /aNfumnu9UNKeQqzNIgsFnNCRnWlLEXCl5HKsdcBqoLY2AX4WupdTDUkutMtkReFDd/p
+         7rLcMb8CsQvVO2aMkGCvC0cISIr9opF8PILSUSavYLWpTTSmyGJ8atrT4DsGICF1czPS
+         GjukeM8re+7Is53uuqLc1gz9fVVpsyasqxmhyXdVNJb4jwNSaNcNEMbvPaz5r/mI8alC
+         KLmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oyadEz0eZwOz4veMiu/99Xwk84Lj2bAOI1P6STGAbTM=;
+        b=Y4CledokJc6GI0n6XJUpXO1Iy42iDV40Vm+i5Wi3eBacq6KYNoq2KmB/n0j0qQjhPG
+         WdxK8emySDybueGcv3LByUrKFevz9aAbJ/3IxzNipfzWfhxsTq/T+SksofUineYlu54L
+         Pslw2GWv1VqlEgN8FK37XazhuIGKVOy3u8npCkdODWcOyRdUKdXTnbwOYSUi/XirioQc
+         CzZe6vlB7aGJ4VWVbqEx9odqL4KpN3xZuv/zoqIftUimPxwH5jVOE+UwVbL1WH5Ww6ls
+         zQ9ZAj3mgWe6KuuupeV7V71IxbsiZCbsC/+GL4NsejI1C0mo7PbieQGG3ElJeq22e8h1
+         Psgw==
+X-Gm-Message-State: AOAM532q4BcFDn1SQcD5gmDldO30sN4yaHsco2aHqOARwywJsH+20skt
+        49xWIm1A2aRCQiYZixu2lANPEEGq6GbwUMqIGsw=
+X-Google-Smtp-Source: ABdhPJxZvpi5p/rGIGspu/X0VuST2fAly2yyAucRwLGlbJciYxHfYOGN4y9O3LRxtfeMHSSpDlexGGV5rTPgQNTp1kc=
+X-Received: by 2002:a37:9147:: with SMTP id t68mr20753351qkd.34.1595246313907;
+ Mon, 20 Jul 2020 04:58:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200720075148.172156-1-hch@lst.de> <20200720075148.172156-5-hch@lst.de>
+In-Reply-To: <20200720075148.172156-5-hch@lst.de>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Mon, 20 Jul 2020 13:58:22 +0200
+Message-ID: <CAFLxGvxNHGEOrj6nKTtDeiU+Rx4xv_6asjSQYcFWXhk5m=1cBA@mail.gmail.com>
+Subject: Re: [PATCH 04/14] bdi: initialize ->ra_pages in bdi_init
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        device-mapper development <dm-devel@redhat.com>,
+        linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-mm@kvack.org, cgroups mailinglist <cgroups@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Jul 2020 12:34:52 -0700, Krishna Reddy wrote:
-> Changes in v11:
-> Addressed Rob comment on DT binding patch to set min/maxItems of reg property in else part.
-> Rebased on top of https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-joerg/arm-smmu/updates.
-> 
-> Changes in v10:
-> Perform SMMU base ioremap before calling implementation init.
-> Check for Global faults across both ARM MMU-500s during global interrupt.
-> Check for context faults across all contexts of both ARM MMU-500s during context fault interrupt.
-> Add new DT binding nvidia,smmu-500 for NVIDIA implementation.
-> https://lkml.org/lkml/2020/7/8/57
-> 
-> [...]
+Hello Chrstoph,
 
-Applied to will (for-joerg/arm-smmu/updates), thanks!
+On Mon, Jul 20, 2020 at 9:53 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Set up a readahead size by default.  This changes behavior for mtd,
+> ubifs, and vboxsf to actually enabled readahead, the lack of which
+> very much looks like an oversight.
 
-[1/5] iommu/arm-smmu: move TLB timeout and spin count macros
-      https://git.kernel.org/will/c/cd8479cf0de9
-[2/5] iommu/arm-smmu: ioremap smmu mmio region before implementation init
-      https://git.kernel.org/will/c/6c019f4e697e
-[3/5] iommu/arm-smmu: add NVIDIA implementation for ARM MMU-500 usage
-      https://git.kernel.org/will/c/aab5a1c88276
-[4/5] dt-bindings: arm-smmu: add binding for Tegra194 SMMU
-      https://git.kernel.org/will/c/3d2deb0cdb69
-[5/5] iommu/arm-smmu: Add global/context fault implementation hooks
-      https://git.kernel.org/will/c/aa7ec73297df
+UBIFS doesn't enable readahead on purpose, please see:
+http://www.linux-mtd.infradead.org/doc/ubifs.html#L_readahead
 
-Cheers,
 -- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+Thanks,
+//richard
