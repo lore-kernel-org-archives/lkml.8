@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F86FC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EBBC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC3320672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D698922CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261177;
-	bh=G71Z+aewa1npRl+DKfXp7O8RaVo/ZP2tQoAlI3F0TQM=;
+	s=default; t=1595261179;
+	bh=pwKYZjnPPUY/xozZBqm/JjR/lvm2sqB8mwfojRtnjCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H8OPFFW48SndMbwsQIdtWe4LkbuxvEGQLvYG6I3HmPSY9qQGKlhEnxArCwBz3XsjX
-	 3ieBeiv7apbEXYffMpyurBH6T3FF73N0K6imV18z/Tz5gz4kGxXyESsmVMAUwXDRuN
-	 y3HZIzqp5xH5spQGdK4f7ZV1w1IWZscc6zU4XiDY=
+	b=OpiwCbAEsiiAjDPmm6t0lRzMW/SdLjnncwYUmwoq1lquB31Iq7JpwswgqUgr5O/5J
+	 TILJyes24dgFtFt1kv8RBTGSokEqn3JAYo8vmW3NwmGbanYKWhJe9EhB3MWI0bOIqm
+	 KrDDR0OmgGw4rxqHIAf6kc60qnEhHWF/XSkG7WM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733036AbgGTQGQ (ORCPT
+        id S1731761AbgGTQGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:06:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42122 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:06:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733038AbgGTQGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:06:06 -0400
+        id S1732568AbgGTQGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:06:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5F652065E;
-        Mon, 20 Jul 2020 16:06:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0D992065E;
+        Mon, 20 Jul 2020 16:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261165;
-        bh=G71Z+aewa1npRl+DKfXp7O8RaVo/ZP2tQoAlI3F0TQM=;
+        s=default; t=1595261171;
+        bh=pwKYZjnPPUY/xozZBqm/JjR/lvm2sqB8mwfojRtnjCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NfiaQIdN5nBQVAoebWS7iGENmB2j4aKYTLVBTtgxFbmNVi1ouC76xfaBjTcO0D51g
-         G+KOs+0BzfvNcMdLvU+jTlPCvVSYPhOr7tx1xZO/4uz+95jdNxq6MBf7YDTgQgzVKW
-         WPYldUUq3LnmFg6hg3eTbYUB89rJe0l7yty9W1uU=
+        b=Ln5LCG5J2G9L/EofPbUfGAPBdvOhXg+1zVCPZ4cRyy2Bb9IYyvSXg1Jj7TAHft4ii
+         Cmm0fi4djrQKaAtIx6dpg0amf8zv+PKlXR0RYbOShpEIE+xfsFHPohivMIgXxQ2OYk
+         sCalFUAdCAsbFm/JLV9ZAh4UXcDOFfxn0UWaWvk0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Florian Westphal <fw@strlen.de>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Marco Elver <elver@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 017/244] tcp: md5: do not send silly options in SYNCOOKIES
-Date:   Mon, 20 Jul 2020 17:34:48 +0200
-Message-Id: <20200720152826.695051936@linuxfoundation.org>
+Subject: [PATCH 5.7 019/244] tcp: md5: refine tcp_md5_do_add()/tcp_md5_hash_key() barriers
+Date:   Mon, 20 Jul 2020 17:34:50 +0200
+Message-Id: <20200720152826.791128900@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -63,80 +64,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit e114e1e8ac9d31f25b9dd873bab5d80c1fc482ca ]
+[ Upstream commit e6ced831ef11a2a06e8d00aad9d4fc05b610bf38 ]
 
-Whenever cookie_init_timestamp() has been used to encode
-ECN,SACK,WSCALE options, we can not remove the TS option in the SYNACK.
+My prior fix went a bit too far, according to Herbert and Mathieu.
 
-Otherwise, tcp_synack_options() will still advertize options like WSCALE
-that we can not deduce later when receiving the packet from the client
-to complete 3WHS.
+Since we accept that concurrent TCP MD5 lookups might see inconsistent
+keys, we can use READ_ONCE()/WRITE_ONCE() instead of smp_rmb()/smp_wmb()
 
-Note that modern linux TCP stacks wont use MD5+TS+SACK in a SYN packet,
-but we can not know for sure that all TCP stacks have the same logic.
+Clearing all key->key[] is needed to avoid possible KMSAN reports,
+if key->keylen is increased. Since tcp_md5_do_add() is not fast path,
+using __GFP_ZERO to clear all struct tcp_md5sig_key is simpler.
 
-Before the fix a tcpdump would exhibit this wrong exchange :
+data_race() was added in linux-5.8 and will prevent KCSAN reports,
+this can safely be removed in stable backports, if data_race() is
+not yet backported.
 
-10:12:15.464591 IP C > S: Flags [S], seq 4202415601, win 65535, options [nop,nop,md5 valid,mss 1400,sackOK,TS val 456965269 ecr 0,nop,wscale 8], length 0
-10:12:15.464602 IP S > C: Flags [S.], seq 253516766, ack 4202415602, win 65535, options [nop,nop,md5 valid,mss 1400,nop,nop,sackOK,nop,wscale 8], length 0
-10:12:15.464611 IP C > S: Flags [.], ack 1, win 256, options [nop,nop,md5 valid], length 0
-10:12:15.464678 IP C > S: Flags [P.], seq 1:13, ack 1, win 256, options [nop,nop,md5 valid], length 12
-10:12:15.464685 IP S > C: Flags [.], ack 13, win 65535, options [nop,nop,md5 valid], length 0
+v2: use data_race() both in tcp_md5_hash_key() and tcp_md5_do_add()
 
-After this patch the exchange looks saner :
-
-11:59:59.882990 IP C > S: Flags [S], seq 517075944, win 65535, options [nop,nop,md5 valid,mss 1400,sackOK,TS val 1751508483 ecr 0,nop,wscale 8], length 0
-11:59:59.883002 IP S > C: Flags [S.], seq 1902939253, ack 517075945, win 65535, options [nop,nop,md5 valid,mss 1400,sackOK,TS val 1751508479 ecr 1751508483,nop,wscale 8], length 0
-11:59:59.883012 IP C > S: Flags [.], ack 1, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508483 ecr 1751508479], length 0
-11:59:59.883114 IP C > S: Flags [P.], seq 1:13, ack 1, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508483 ecr 1751508479], length 12
-11:59:59.883122 IP S > C: Flags [.], ack 13, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508483 ecr 1751508483], length 0
-11:59:59.883152 IP S > C: Flags [P.], seq 1:13, ack 13, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508484 ecr 1751508483], length 12
-11:59:59.883170 IP C > S: Flags [.], ack 13, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508484 ecr 1751508484], length 0
-
-Of course, no SACK block will ever be added later, but nothing should break.
-Technically, we could remove the 4 nops included in MD5+TS options,
-but again some stacks could break seeing not conventional alignment.
-
-Fixes: 4957faade11b ("TCPCT part 1g: Responder Cookie => Initiator")
+Fixes: 6a2febec338d ("tcp: md5: add missing memory barriers in tcp_md5_do_add()/tcp_md5_hash_key()")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Florian Westphal <fw@strlen.de>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Marco Elver <elver@google.com>
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_output.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/ipv4/tcp.c      |    6 +++---
+ net/ipv4/tcp_ipv4.c |   14 ++++++++++----
+ 2 files changed, 13 insertions(+), 7 deletions(-)
 
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -700,7 +700,8 @@ static unsigned int tcp_synack_options(c
- 				       unsigned int mss, struct sk_buff *skb,
- 				       struct tcp_out_options *opts,
- 				       const struct tcp_md5sig_key *md5,
--				       struct tcp_fastopen_cookie *foc)
-+				       struct tcp_fastopen_cookie *foc,
-+				       enum tcp_synack_type synack_type)
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3880,13 +3880,13 @@ EXPORT_SYMBOL(tcp_md5_hash_skb_data);
+ 
+ int tcp_md5_hash_key(struct tcp_md5sig_pool *hp, const struct tcp_md5sig_key *key)
  {
- 	struct inet_request_sock *ireq = inet_rsk(req);
- 	unsigned int remaining = MAX_TCP_OPTION_SPACE;
-@@ -715,7 +716,8 @@ static unsigned int tcp_synack_options(c
- 		 * rather than TS in order to fit in better with old,
- 		 * buggy kernels, but that was deemed to be unnecessary.
- 		 */
--		ireq->tstamp_ok &= !ireq->sack_ok;
-+		if (synack_type != TCP_SYNACK_COOKIE)
-+			ireq->tstamp_ok &= !ireq->sack_ok;
+-	u8 keylen = key->keylen;
++	u8 keylen = READ_ONCE(key->keylen); /* paired with WRITE_ONCE() in tcp_md5_do_add */
+ 	struct scatterlist sg;
+ 
+-	smp_rmb(); /* paired with smp_wmb() in tcp_md5_do_add() */
+-
+ 	sg_init_one(&sg, key->key, keylen);
+ 	ahash_request_set_crypt(hp->md5_req, &sg, NULL, keylen);
++
++	/* tcp_md5_do_add() might change key->key under us */
+ 	return crypto_ahash_update(hp->md5_req);
+ }
+ EXPORT_SYMBOL(tcp_md5_hash_key);
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1103,12 +1103,18 @@ int tcp_md5_do_add(struct sock *sk, cons
+ 
+ 	key = tcp_md5_do_lookup_exact(sk, addr, family, prefixlen, l3index);
+ 	if (key) {
+-		/* Pre-existing entry - just update that one. */
++		/* Pre-existing entry - just update that one.
++		 * Note that the key might be used concurrently.
++		 */
+ 		memcpy(key->key, newkey, newkeylen);
+ 
+-		smp_wmb(); /* pairs with smp_rmb() in tcp_md5_hash_key() */
++		/* Pairs with READ_ONCE() in tcp_md5_hash_key().
++		 * Also note that a reader could catch new key->keylen value
++		 * but old key->key[], this is the reason we use __GFP_ZERO
++		 * at sock_kmalloc() time below these lines.
++		 */
++		WRITE_ONCE(key->keylen, newkeylen);
+ 
+-		key->keylen = newkeylen;
+ 		return 0;
  	}
- #endif
  
-@@ -3388,7 +3390,7 @@ struct sk_buff *tcp_make_synack(const st
- #endif
- 	skb_set_hash(skb, tcp_rsk(req)->txhash, PKT_HASH_TYPE_L4);
- 	tcp_header_size = tcp_synack_options(sk, req, mss, skb, &opts, md5,
--					     foc) + sizeof(*th);
-+					     foc, synack_type) + sizeof(*th);
+@@ -1124,7 +1130,7 @@ int tcp_md5_do_add(struct sock *sk, cons
+ 		rcu_assign_pointer(tp->md5sig_info, md5sig);
+ 	}
  
- 	skb_push(skb, tcp_header_size);
- 	skb_reset_transport_header(skb);
+-	key = sock_kmalloc(sk, sizeof(*key), gfp);
++	key = sock_kmalloc(sk, sizeof(*key), gfp | __GFP_ZERO);
+ 	if (!key)
+ 		return -ENOMEM;
+ 	if (!tcp_alloc_md5sig_pool()) {
 
 
