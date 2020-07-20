@@ -2,552 +2,1035 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8C4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0016C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CAD22080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F46B2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EXeu2nvC"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oLmFhOoR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgGTWqS (ORCPT
+        id S1727829AbgGTWs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 18:46:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49426 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726531AbgGTWqR (ORCPT
+        Mon, 20 Jul 2020 18:48:29 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:19856 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726021AbgGTWs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 18:46:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595285174;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EWKmrTrQETuKElSLNIbgIEKqM+kupAvxE6/XwMWPhHQ=;
-        b=EXeu2nvC+DNnSy7KBdvOtjOMYvyvcUm4F54p8Z7wxoKArPCDvaJmiknqr87yN+J5VQ4FdP
-        kitFs8WmoakCXwXiBn3B9vo9nyDgrEi96GrExGOs9ORfDBXdxW7tcVR3s2GF9Uq4Egm9yQ
-        oVJohpjOsuXhL6WNHTHByhGdaP1VXZk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-32-of_UzjfBNV2CpdiAvkNy-g-1; Mon, 20 Jul 2020 18:46:10 -0400
-X-MC-Unique: of_UzjfBNV2CpdiAvkNy-g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 20 Jul 2020 18:48:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595285305; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=s0jG+iqI1xm5qE8hGJ4Y5CHq8zc7tYz9BsVJvtMkJVE=;
+ b=oLmFhOoRL/fbJzCLA49evH//xwBtfDHjHdeTVoF92+Azs2fxGWMN7/Hn3nc1AhO3L4bA68PL
+ k0aw2SXSu7WQe2vezGJ3ATizkEtxBBSgfznf6FCrALyIoKncPmrbc89onG7oXADwXRBbtaae
+ beRYfs+24DN8lk03P1A/kFES8BI=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
+ 5f161f30d3d6508422ca91ad (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 22:48:16
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DB0C5C433CB; Mon, 20 Jul 2020 22:48:15 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 79ED618A1DFB;
-        Mon, 20 Jul 2020 22:46:08 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 81EB92DE6B;
-        Mon, 20 Jul 2020 22:46:04 +0000 (UTC)
-Date:   Mon, 20 Jul 2020 16:46:03 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jay Zhou <jianjay.zhou@huawei.com>
-Cc:     <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <cohuck@redhat.com>, <maoming.maoming@huawei.com>,
-        <weidong.huang@huawei.com>, Peter Xu <peterx@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH] vfio dma_map/unmap: optimized for hugetlbfs pages
-Message-ID: <20200720164603.3a622548@x1.home>
-In-Reply-To: <20200720082947.1770-1-jianjay.zhou@huawei.com>
-References: <20200720082947.1770-1-jianjay.zhou@huawei.com>
-Organization: Red Hat
+        (Authenticated sender: khsieh)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3761BC433C6;
+        Mon, 20 Jul 2020 22:48:13 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Date:   Mon, 20 Jul 2020 15:48:13 -0700
+From:   khsieh@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     robdclark@gmail.com, sean@poorly.run, tanmay@codeaurora.org,
+        abhinavk@codeaurora.org, aravindh@codeaurora.org, airlied@linux.ie,
+        daniel@ffwll.ch, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/msm/dp: Add DP compliance tests on Snapdragon
+ Chipsets
+In-Reply-To: <159527632812.1987609.6364896740387949838@swboyd.mtv.corp.google.com>
+References: <20200707184125.15114-1-khsieh@codeaurora.org>
+ <159527632812.1987609.6364896740387949838@swboyd.mtv.corp.google.com>
+Message-ID: <91a8eef836c1939cb57942c6fdcf2772@codeaurora.org>
+X-Sender: khsieh@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 16:29:47 +0800
-Jay Zhou <jianjay.zhou@huawei.com> wrote:
-
-> From: Ming Mao <maoming.maoming@huawei.com>
+On 2020-07-20 13:18, Stephen Boyd wrote:
+> Quoting Kuogee Hsieh (2020-07-07 11:41:25)
+>> add event thread to execute events serially from event queue. Also
+>> timeout mode is supported  which allow an event be deferred to be
+>> executed at later time. Both link and phy compliant tests had been
+>> done successfully.
+>> 
+>> This change depends-on following series:
+>>         
+>> https://lore.kernel.org/dri-devel/20200630184507.15589-1-tanmay@codeaurora.org/
+>> 
 > 
-> Hi all,
-> I'm working on starting lots of big size
-> Virtual Machines(memory: >128GB) with VFIO-devices. And I
-> encounter a problem that is the waiting time of starting
-> all Virtual Machines is too long. I analyze the startup log
-> and find that the time of pinning/unpinning pages could be reduced.
+> Can this be sent along with that series?
 > 
-> In the original process, to make sure the pages are contiguous,
-> we have to check all pages one by one. I think maybe we can use
-> hugetlbfs pages which can skip this step.
-> So I create a patch to do this.
-> According to my test, the result of this patch is pretty well.
+>> Signed-off-by: Kuogee Hsieh <khsieh@codeaurora.org>
+>> ---
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c |  12 +-
+>>  drivers/gpu/drm/msm/dp/dp_aux.c             |   4 +
+>>  drivers/gpu/drm/msm/dp/dp_aux.h             |   1 +
+>>  drivers/gpu/drm/msm/dp/dp_catalog.c         |  78 ++-
+>>  drivers/gpu/drm/msm/dp/dp_ctrl.c            | 361 +++++++----
+>>  drivers/gpu/drm/msm/dp/dp_ctrl.h            |   3 +-
+>>  drivers/gpu/drm/msm/dp/dp_display.c         | 654 
+>> +++++++++++++-------
+>>  drivers/gpu/drm/msm/dp/dp_hpd.c             |   2 +-
+>>  drivers/gpu/drm/msm/dp/dp_hpd.h             |   1 +
+>>  drivers/gpu/drm/msm/dp/dp_link.c            |  22 +-
+>>  drivers/gpu/drm/msm/dp/dp_panel.c           |  56 +-
+>>  drivers/gpu/drm/msm/dp/dp_panel.h           |  10 +-
+>>  drivers/gpu/drm/msm/dp/dp_parser.c          |  45 +-
+>>  drivers/gpu/drm/msm/dp/dp_parser.h          |   2 +
+>>  drivers/gpu/drm/msm/dp/dp_power.c           |  32 +-
+>>  drivers/gpu/drm/msm/dp/dp_power.h           |   1 +
+>>  drivers/gpu/drm/msm/dp/dp_reg.h             |   1 +
+>>  17 files changed, 861 insertions(+), 424 deletions(-)
 > 
-> Virtual Machine: 50G memory, 32 CPU, 1 VFIO-device, 1G hugetlbfs page
->         original   after optimization
-> pin time   700ms          0.1ms
+> It seems to spread various changes throughout the DP bits and only has 
+> a
+> short description about what's changing. Given that the series above
+> isn't merged it would be better to get rid of this change and make the
+> changes in the patches that introduce these files.
 > 
-> I Suppose that:
-> 1)the hugetlbfs page should not be split
-> 2)PG_reserved is not relevant for hugetlbfs pages
-> 3)we can delete the for loops and use some operations
-> (such as atomic_add,page_ref_add) instead
+
+Yes, the base DP driver is not yet merged as its still in reviews and 
+has been for a while.
+While it is being reviewed, different developers are working on 
+different aspects of DP such as base DP driver, DP compliance, audio etc 
+to keep things going in parallel.
+To maintain the authorship of the different developers, we prefer having 
+them as separate changes and not merge them.
+We can make all these changes as part of the same series if that shall 
+help to keep things together but would prefer the changes themselves to 
+be separate.
+Please consider this and let us know if that works.
+
+>> 
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c 
+>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> index b439e482fc80..87b291b8d7b7 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> @@ -1183,13 +1183,6 @@ static void dpu_encoder_virt_disable(struct 
+>> drm_encoder *drm_enc)
+>>         dpu_kms = to_dpu_kms(priv->kms);
+>>         global_state = dpu_kms_get_existing_global_state(dpu_kms);
+>> 
+>> -       if (drm_enc->encoder_type == DRM_MODE_ENCODER_TMDS && 
+>> priv->dp) {
+>> -               if (msm_dp_display_disable(priv->dp, drm_enc)) {
+>> -                       DPU_ERROR_ENC(dpu_enc, "dp display disable 
+>> failed\n");
+>> -                       return;
+>> -               }
+>> -       }
+>> -
+>>         trace_dpu_enc_disable(DRMID(drm_enc));
+>> 
+>>         /* wait for idle */
+>> @@ -1220,6 +1213,11 @@ static void dpu_encoder_virt_disable(struct 
+>> drm_encoder *drm_enc)
+>> 
+>>         dpu_rm_release(global_state, drm_enc);
+>> 
+>> +       if (drm_enc->encoder_type == DRM_MODE_ENCODER_TMDS && 
+>> priv->dp) {
+>> +               if (msm_dp_display_disable(priv->dp, drm_enc))
+>> +                       DPU_ERROR_ENC(dpu_enc, "dp display disable 
+>> failed\n");
+>> +       }
+>> +
+>>         mutex_unlock(&dpu_enc->enc_lock);
+>>  }
+>> 
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_aux.c 
+>> b/drivers/gpu/drm/msm/dp/dp_aux.c
+>> index 696dc8741f1e..c0e8ad031895 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_aux.c
+>> +++ b/drivers/gpu/drm/msm/dp/dp_aux.c
+>> @@ -189,6 +189,8 @@ static void dp_aux_native_handler(struct 
+>> dp_aux_private *aux)
+>>                 aux->aux_error_num = DP_AUX_ERR_TOUT;
+>>         if (isr & DP_INTR_NACK_DEFER)
+>>                 aux->aux_error_num = DP_AUX_ERR_NACK;
+>> +       if (isr & DP_INTR_AUX_ERROR)
+>> +               aux->aux_error_num = DP_AUX_ERR_DPPHY_AUX;
+>> 
+>>         complete(&aux->comp);
+>>  }
+>> @@ -359,6 +361,8 @@ static ssize_t dp_aux_transfer(struct drm_dp_aux 
+>> *dp_aux,
+>>                                         PHY_AUX_CFG1);
+>>                         dp_catalog_aux_reset(aux->catalog);
+>>                 }
+>> +               if (aux->aux_error_num == DP_AUX_ERR_DPPHY_AUX)
+>> +                       usleep_range(400, 400); /* need 400us before 
+>> next try */
 > 
-> please correct me if I am wrong.
+> Typically usleep_range() should be a range, and not the same number
+> for both ends of the range.
 > 
-> Thanks.
+>>                 goto unlock_exit;
+>>         }
+>> 
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.c 
+>> b/drivers/gpu/drm/msm/dp/dp_catalog.c
+>> index ab69ae3e2dbd..367eb54c9a68 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_catalog.c
+>> +++ b/drivers/gpu/drm/msm/dp/dp_catalog.c
+>> @@ -452,7 +452,6 @@ void dp_catalog_aux_setup(struct dp_catalog 
+>> *dp_catalog)
+>>         dp_write_phy(catalog, REG_DP_PHY_PD_CTL, 
+>> DP_PHY_PD_CTL_PSR_PWRDN);
+>> 
+>>         /* Make sure that hardware is done with  PSR power down */
+>> -       wmb();
 > 
-> Signed-off-by: Ming Mao <maoming.maoming@huawei.com>
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 236 ++++++++++++++++++++++++++++++--
->  include/linux/vfio.h            |  20 +++
->  2 files changed, 246 insertions(+), 10 deletions(-)
+> Is that comment above now not needed?
 > 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 5e556ac91..42e25752e 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -415,6 +415,46 @@ static int put_pfn(unsigned long pfn, int prot)
->  	return 0;
->  }
->  
-> +/*
-> + * put pfns for a hugetlbfs page
-> + * @start:the 4KB-page we start to put,can be any page in this hugetlbfs page
-> + * @npage:the number of 4KB-pages need to put
-
-This code supports systems where PAGE_SIZE is not 4KB.
-
-> + * @prot:IOMMU_READ/WRITE
-> + */
-> +static int hugetlb_put_pfn(unsigned long start, unsigned int npage, int prot)
-> +{
-> +	struct page *page = NULL;
-> +	struct page *head = NULL;
-
-Unnecessary initialization.
-
-> +
-> +	if (!npage || !pfn_valid(start))
-> +		return 0;
-> +
-> +	page = pfn_to_page(start);
-> +	if (!page || !PageHuge(page))
-> +		return 0;
-> +	head = compound_head(page);
-> +	/*
-> +	 * The last page should be in this hugetlbfs page.
-> +	 * The number of putting pages should be equal to the number
-> +	 * of getting pages.So the hugepage pinned refcount and the normal
-> +	 * page refcount can not be smaller than npage.
-> +	 */
-> +	if ((head != compound_head(pfn_to_page(start + npage - 1)))
-> +	    || (page_ref_count(head) < npage)
-> +	    || (compound_pincount(page) < npage))
-> +		return 0;
-> +
-> +	if ((prot & IOMMU_WRITE) && !PageDirty(page))
-> +		set_page_dirty_lock(page);
-> +
-> +	atomic_sub(npage, compound_pincount_ptr(head));
-> +	if (page_ref_sub_and_test(head, npage))
-> +		__put_page(head);
-> +
-> +	mod_node_page_state(page_pgdat(head), NR_FOLL_PIN_RELEASED, npage);
-> +	return 1;
-> +}
-> +
->  static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
->  			    unsigned long vaddr, unsigned long *pfn,
->  			    bool write_fault)
-> @@ -479,6 +519,90 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
->  	return ret;
->  }
->  
-> +struct vfio_hupetlbpage_info vfio_hugetlbpage_info[HUGE_MAX_HSTATE] = {
-> +	{vfio_hugetlbpage_2M, PMD_SIZE, ~((1ULL << HPAGE_PMD_SHIFT) - 1)},
-> +	{vfio_hugetlbpage_1G, PUD_SIZE, ~((1ULL << HPAGE_PUD_SHIFT) - 1)},
-
-Other architectures support more huge page sizes, also 0-day identified
-these #defines don't exist when THP is not configured.  But why
-couldn't we figure out all of these form the compound_order()?  order
-== shift, size = PAGE_SIZE << order.
-
-> +};
-> +
-> +static bool is_hugetlbpage(unsigned long pfn, enum vfio_hugetlbpage_type *type)
-> +{
-> +	struct page *page = NULL;
-
-Unnecessary initialization.
-
-> +
-> +	if (!pfn_valid(pfn) || !type)
-> +		return false;
-> +
-> +	page = pfn_to_page(pfn);
-> +	/* only check for hugetlbfs pages */
-> +	if (!page || !PageHuge(page))
-> +		return false;
-> +
-> +	switch (compound_order(compound_head(page))) {
-> +	case PMD_ORDER:
-> +		*type = vfio_hugetlbpage_2M;
-> +		break;
-> +	case PUD_ORDER:
-> +		*type = vfio_hugetlbpage_1G;
-> +		break;
-> +	default:
-> +		return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +/* Is the addr in the last page in hugetlbfs pages? */
-> +static bool hugetlb_is_last_page(unsigned long addr, enum vfio_hugetlbpage_type type)
-> +{
-> +	unsigned int num = 0;
-
-Unnecessary initialization, and in fact unnecessary variable altogether.
-ie.
-
-	return hugetlb_get_resdual_pages(addr & ~(PAGE_SIZE - 1), type) == 1;
-
-
-> +
-> +	num = hugetlb_get_resdual_pages(addr & ~(PAGE_SIZE - 1), type);
-
-residual?
-
-> +
-> +	if (num == 1)
-> +		return true;
-> +	else
-> +		return false;
-> +}
-> +
-> +static bool hugetlb_page_is_pinned(struct vfio_dma *dma,
-> +				unsigned long start,
-> +				unsigned long npages)
-> +{
-> +	struct vfio_pfn *vpfn = NULL;
-
-Unnecessary initialization.
-
-> +	struct rb_node *node = rb_first(&dma->pfn_list);
-> +	unsigned long end = start + npages - 1;
-> +
-> +	for (; node; node = rb_next(node)) {
-> +		vpfn = rb_entry(node, struct vfio_pfn, node);
-> +
-> +		if ((vpfn->pfn >= start) && (vpfn->pfn <= end))
-> +			return true;
-
-This function could be named better, it suggests the hugetlbfs page is
-pinned, but really we're only looking for any pfn_list pinnings
-overlapping the pfn range.
-
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static unsigned int hugetlb_get_contiguous_pages_num(struct vfio_dma *dma,
-> +						unsigned long pfn,
-> +						unsigned long resdual_npage,
-> +						unsigned long max_npage)
-> +{
-> +	unsigned int num = 0;
-
-Unnecessary initialization
-
-> +
-> +	if (!dma)
-> +		return 0;
-> +
-> +	num = resdual_npage < max_npage ? resdual_npage : max_npage;
-
-min(resdual_npage, max_npage)
-
-
-> +	/*
-> +	 * If there is only one page, it is no need to optimize them.
-
-s/no need/not necessary/
-
-> +	 * Maybe some pages have been pinned and inserted into dma->pfn_list by others.
-> +	 * In this case, we just goto the slow path simply.
-> +	 */
-> +	if ((num < 2) || hugetlb_page_is_pinned(dma, pfn, num))
-> +		return 0;
-
-Why does having pinnings in the pfn_list disqualify it from hugetlbfs pinning?
-
-Testing for the last page here is redundant to the pinning path, should
-it only be done here?  Can num be zero?  
-
-Maybe better to return -errno for this and above zero conditions rather
-than return a value that doesn't reflect the purpose of the function?
-
-> +
-> +	return num;
-> +}
-> +
->  /*
->   * Attempt to pin pages.  We really don't want to track all the pfns and
->   * the iommu can only map chunks of consecutive pfns anyway, so get the
-> @@ -492,6 +616,7 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
->  	long ret, pinned = 0, lock_acct = 0;
->  	bool rsvd;
->  	dma_addr_t iova = vaddr - dma->vaddr + dma->iova;
-> +	enum vfio_hugetlbpage_type type;
->  
->  	/* This code path is only user initiated */
->  	if (!current->mm)
-> @@ -521,6 +646,55 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
->  	if (unlikely(disable_hugepages))
->  		goto out;
->  
-> +	/*
-> +	 * It is no need to get pages one by one for hugetlbfs pages.
-
-s/no need/not necessary/
-
-> +	 * 4KB-pages in hugetlbfs pages are contiguous.
-> +	 * But if the vaddr is in the last 4KB-page, we just goto the slow path.
-
-
-s/4KB-/PAGE_SIZE /
-
-Please explain the significance of vaddr being in the last PAGE_SIZE
-page of a hugetlbfs page.  Is it simply that we should take the slow
-path for mapping a single page before the end of the hugetlbfs page?
-Is this optimization worthwhile?  Isn't it more consistent to handle
-all mappings over hugetlbfs pages the same?  Should we be operating on
-vaddr here for the hugetlbfs page alignment or base_pfn?
-
-> +	 */
-> +	if (is_hugetlbpage(*pfn_base, &type) && !hugetlb_is_last_page(vaddr, type)) {
-> +		unsigned long hugetlb_resdual_npage = 0;
-> +		unsigned long contiguous_npage = 0;
-> +		struct page *head = NULL;
-> +
-> +		hugetlb_resdual_npage =
-> +			hugetlb_get_resdual_pages((vaddr + PAGE_SIZE) & ~(PAGE_SIZE - 1), type);
-
-~(PAGE_SIZE - 1) is PAGE_MASK, but that whole operation looks like a
-PAGE_ALIGN(vaddr)
-
-This is trying to get the number of pages after this page to the end of
-the hugetlbfs page, right?  Rather than the hugetlb_is_last_page()
-above, shouldn't we have recorded the number of pages there and used
-math to get this value?
-
-> +		/*
-> +		 * Maybe the hugetlb_resdual_npage is invalid.
-> +		 * For example, hugetlb_resdual_npage > (npage - 1) or
-> +		 * some pages of this hugetlbfs page have been pinned.
-> +		 */
-> +		contiguous_npage = hugetlb_get_contiguous_pages_num(dma, *pfn_base + 1,
-> +						hugetlb_resdual_npage, npage - 1);
-> +		if (!contiguous_npage)
-> +			goto slow_path;
-> +
-> +		/*
-> +		 * Unlike THP, the splitting should not happen for hugetlbfs pages.
-> +		 * Since PG_reserved is not relevant for compound pages, and the pfn of
-> +		 * 4KB-page which in hugetlbfs pages is valid,
-
-s/4KB/PAGE_SIZE/
-
-> +		 * it is no need to check rsvd for hugetlbfs pages.
-
-s/no need/not necessary/
-
-> +		 */
-> +		if (!dma->lock_cap &&
-> +		    current->mm->locked_vm + lock_acct + contiguous_npage > limit) {
-> +			pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
-> +				 __func__, limit << PAGE_SHIFT);
-> +			ret = -ENOMEM;
-> +			goto unpin_out;
-> +		}
-> +		/*
-> +		 * We got a hugetlbfs page using vaddr_get_pfn alreadly.
-> +		 * In this case,we do not need to alloc pages and we can finish all
-> +		 * work by a single operation to the head page.
-> +		 */
-> +		lock_acct += contiguous_npage;
-> +		head = compound_head(pfn_to_page(*pfn_base));
-> +		atomic_add(contiguous_npage, compound_pincount_ptr(head));
-> +		page_ref_add(head, contiguous_npage);
-> +		mod_node_page_state(page_pgdat(head), NR_FOLL_PIN_ACQUIRED, contiguous_npage);
-> +		pinned += contiguous_npage;
-> +		goto out;
-
-I'm hoping Peter or Andrea understand this, but I think we still have
-pfn_base pinned separately and I don't see that we've done an unpin
-anywhere, so are we leaking the pin of the first page??
-
-> +	}
-> +slow_path:
->  	/* Lock all the consecutive pages from pfn_base */
->  	for (vaddr += PAGE_SIZE, iova += PAGE_SIZE; pinned < npage;
->  	     pinned++, vaddr += PAGE_SIZE, iova += PAGE_SIZE) {
-> @@ -569,7 +743,30 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
->  {
->  	long unlocked = 0, locked = 0;
->  	long i;
-> +	enum vfio_hugetlbpage_type type;
-> +
-> +	if (is_hugetlbpage(pfn, &type)) {
-> +		unsigned long hugetlb_resdual_npage = 0;
-> +		unsigned long contiguous_npage = 0;
-
-Unnecessary initialization...
-
->  
-> +		hugetlb_resdual_npage = hugetlb_get_resdual_pages(iova & ~(PAGE_SIZE - 1), type);
-
-PAGE_MASK
-
-Like above, is it pfn or iova that we should be using when looking at
-hugetlbfs alignment?
-
-> +		contiguous_npage = hugetlb_get_contiguous_pages_num(dma, pfn,
-> +						hugetlb_resdual_npage, npage);
-> +		/*
-> +		 * There is not enough contiguous pages or this hugetlbfs page
-> +		 * has been pinned.
-> +		 * Let's try the slow path.
-> +		 */
-> +		if (!contiguous_npage)
-> +			goto slow_path;
-> +
-> +		/* try the slow path if failed */
-> +		if (hugetlb_put_pfn(pfn, contiguous_npage, dma->prot)) {
-> +			unlocked = contiguous_npage;
-> +			goto out;
-> +		}
-
-Should probably break the pin path into a separate get_pfn function for symmetry.
-
-
-> +	}
-> +slow_path:
->  	for (i = 0; i < npage; i++, iova += PAGE_SIZE) {
->  		if (put_pfn(pfn++, dma->prot)) {
->  			unlocked++;
-> @@ -578,6 +775,7 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
->  		}
->  	}
->  
-> +out:
->  	if (do_accounting)
->  		vfio_lock_acct(dma, locked - unlocked, true);
->  
-> @@ -867,6 +1065,7 @@ static long vfio_unmap_unpin(struct vfio_iommu *iommu, struct vfio_dma *dma,
->  	struct iommu_iotlb_gather iotlb_gather;
->  	int unmapped_region_cnt = 0;
->  	long unlocked = 0;
-> +	enum vfio_hugetlbpage_type type;
->  
->  	if (!dma->size)
->  		return 0;
-> @@ -900,16 +1099,33 @@ static long vfio_unmap_unpin(struct vfio_iommu *iommu, struct vfio_dma *dma,
->  			continue;
->  		}
->  
-> -		/*
-> -		 * To optimize for fewer iommu_unmap() calls, each of which
-> -		 * may require hardware cache flushing, try to find the
-> -		 * largest contiguous physical memory chunk to unmap.
-> -		 */
-> -		for (len = PAGE_SIZE;
-> -		     !domain->fgsp && iova + len < end; len += PAGE_SIZE) {
-> -			next = iommu_iova_to_phys(domain->domain, iova + len);
-> -			if (next != phys + len)
-> -				break;
-> +		if (is_hugetlbpage((phys >> PAGE_SHIFT), &type)
-> +		    && (!domain->fgsp)) {
-
-Reverse the order of these tests.
-
-> +			unsigned long hugetlb_resdual_npage = 0;
-> +			unsigned long contiguous_npage = 0;
-
-
-Unnecessary...
-
-> +			hugetlb_resdual_npage =
-> +				hugetlb_get_resdual_pages(iova & ~(PAGE_SIZE - 1), type);
-
-PAGE_MASK
-
-> +			/*
-> +			 * The number of contiguous page can not be larger than dma->size
-> +			 * which is the number of pages pinned.
-> +			 */
-> +			contiguous_npage = ((dma->size >> PAGE_SHIFT) > hugetlb_resdual_npage) ?
-> +				hugetlb_resdual_npage : (dma->size >> PAGE_SHIFT);
-
-min()
-
-> +
-> +			len = contiguous_npage * PAGE_SIZE;
-> +		} else {
-> +			/*
-> +			 * To optimize for fewer iommu_unmap() calls, each of which
-> +			 * may require hardware cache flushing, try to find the
-> +			 * largest contiguous physical memory chunk to unmap.
-> +			 */
-> +			for (len = PAGE_SIZE;
-> +			     !domain->fgsp && iova + len < end; len += PAGE_SIZE) {
-> +				next = iommu_iova_to_phys(domain->domain, iova + len);
-> +				if (next != phys + len)
-> +					break;
-> +			}
->  		}
->  
->  		/*
-> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> index 38d3c6a8d..91ef2058f 100644
-> --- a/include/linux/vfio.h
-> +++ b/include/linux/vfio.h
-> @@ -214,4 +214,24 @@ extern int vfio_virqfd_enable(void *opaque,
->  			      void *data, struct virqfd **pvirqfd, int fd);
->  extern void vfio_virqfd_disable(struct virqfd **pvirqfd);
->  
-> +enum vfio_hugetlbpage_type {
-> +	vfio_hugetlbpage_2M,
-> +	vfio_hugetlbpage_1G,
-> +};
-> +
-> +struct vfio_hupetlbpage_info {
-> +	enum vfio_hugetlbpage_type type;
-
-The enum within the structure serves no purpose.
-
-> +	unsigned long size;
-> +	unsigned long mask;
-> +};
-> +
-> +#define PMD_ORDER 9
-> +#define PUD_ORDER 18
-
-Architecture specific.
-
-> +/*
-> + * get the number of resdual 4KB-pages in a hugetlbfs page
-> + * (including the page which pointed by this address)
-
-s/4KB/PAGE_SIZE/
-
-> + */
-> +#define hugetlb_get_resdual_pages(address, type)				\
-> +		((vfio_hugetlbpage_info[type].size				\
-> +		- (address & ~vfio_hugetlbpage_info[type].mask)) >> PAGE_SHIFT)
->  #endif /* VFIO_H */
-
+>>         dp_write_phy(catalog, REG_DP_PHY_PD_CTL, DP_PHY_PD_CTL_PWRDN |
+>>                 DP_PHY_PD_CTL_AUX_PWRDN | DP_PHY_PD_CTL_LANE_0_1_PWRDN
+>>                 | DP_PHY_PD_CTL_LANE_2_3_PWRDN | 
+>> DP_PHY_PD_CTL_PLL_PWRDN
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.c 
+>> b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+>> index 98654f39806c..100ab84375f7 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_ctrl.c
+>> +++ b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+>> @@ -26,6 +26,13 @@
+>>  #define MR_LINK_SYMBOL_ERM 0x80
+>>  #define MR_LINK_PRBS7 0x100
+>>  #define MR_LINK_CUSTOM80 0x200
+>> +#define MR_LINK_TRAINING4  0x40
+>> +
+>> +enum {
+>> +       DP_TRAINING_NONE,
+>> +       DP_TRAINING_1,
+>> +       DP_TRAINING_2,
+>> +};
+>> 
+>>  struct dp_tu_calc_input {
+>>         u64 lclk;        /* 162, 270, 540 and 810 */
+>> @@ -58,7 +65,6 @@ struct dp_vc_tu_mapping_table {
+>> 
+>>  struct dp_ctrl_private {
+>>         struct dp_ctrl dp_ctrl;
+>> -
+>>         struct device *dev;
+>>         struct drm_dp_aux *aux;
+>>         struct dp_panel *panel;
+>> @@ -68,10 +74,16 @@ struct dp_ctrl_private {
+>>         struct dp_catalog *catalog;
+>> 
+>>         struct completion idle_comp;
+>> -       struct mutex push_idle_mutex;
+>>         struct completion video_comp;
+>>  };
+>> 
+>> +struct dp_cr_status {
+>> +       u8 lane_0_1;
+>> +       u8 lane_2_3;
+>> +};
+>> +
+>> +#define DP_LANE0_1_CR_DONE     0x11
+>> +
+>>  static int dp_aux_link_configure(struct drm_dp_aux *aux,
+>>                                         struct dp_link_info *link)
+>>  {
+>> @@ -97,8 +109,6 @@ void dp_ctrl_push_idle(struct dp_ctrl *dp_ctrl)
+>> 
+>>         ctrl = container_of(dp_ctrl, struct dp_ctrl_private, dp_ctrl);
+>> 
+>> -       mutex_lock(&ctrl->push_idle_mutex);
+>> -
+>>         reinit_completion(&ctrl->idle_comp);
+>>         dp_catalog_ctrl_state_ctrl(ctrl->catalog, 
+>> DP_STATE_CTRL_PUSH_IDLE);
+>> 
+>> @@ -106,7 +116,6 @@ void dp_ctrl_push_idle(struct dp_ctrl *dp_ctrl)
+>>                         IDLE_PATTERN_COMPLETION_TIMEOUT_JIFFIES))
+>>                 pr_warn("PUSH_IDLE pattern timedout\n");
+>> 
+>> -       mutex_unlock(&ctrl->push_idle_mutex);
+>>         pr_debug("mainlink off done\n");
+>>  }
+>> 
+>> @@ -985,7 +994,7 @@ static int dp_ctrl_wait4video_ready(struct 
+>> dp_ctrl_private *ctrl)
+>> 
+>>         if (!wait_for_completion_timeout(&ctrl->video_comp,
+>>                                 WAIT_FOR_VIDEO_READY_TIMEOUT_JIFFIES)) 
+>> {
+>> -               DRM_ERROR("Link Train timedout\n");
+>> +               DRM_ERROR("wait4video timedout\n");
+>>                 ret = -ETIMEDOUT;
+>>         }
+>>         return ret;
+>> @@ -1006,13 +1015,13 @@ static int dp_ctrl_update_vx_px(struct 
+>> dp_ctrl_private *ctrl)
+>>         if (ret)
+>>                 return ret;
+>> 
+>> -       if (voltage_swing_level > DP_TRAIN_VOLTAGE_SWING_MAX) {
+>> +       if (voltage_swing_level >= DP_TRAIN_VOLTAGE_SWING_MAX) {
+>>                 DRM_DEBUG_DP("max. voltage swing level reached %d\n",
+>>                                 voltage_swing_level);
+>>                 max_level_reached |= DP_TRAIN_MAX_SWING_REACHED;
+>>         }
+>> 
+>> -       if (pre_emphasis_level == DP_TRAIN_PRE_EMPHASIS_MAX) {
+>> +       if (pre_emphasis_level >= DP_TRAIN_PRE_EMPHASIS_MAX) {
+>>                 DRM_DEBUG_DP("max. pre-emphasis level reached %d\n",
+>>                                 pre_emphasis_level);
+>>                 max_level_reached  |= 
+>> DP_TRAIN_MAX_PRE_EMPHASIS_REACHED;
+>> @@ -1044,8 +1053,11 @@ static bool dp_ctrl_train_pattern_set(struct 
+>> dp_ctrl_private *ctrl,
+>>         DRM_DEBUG_DP("sink: pattern=%x\n", pattern);
+>> 
+>>         buf = pattern;
+>> -       ret = drm_dp_dpcd_writeb(ctrl->aux,
+>> -                                       DP_TRAINING_PATTERN_SET, buf);
+>> +
+>> +       if (pattern && pattern != DP_TRAINING_PATTERN_4)
+>> +               buf |= DP_LINK_SCRAMBLING_DISABLE;
+>> +
+>> +       ret = drm_dp_dpcd_writeb(ctrl->aux, DP_TRAINING_PATTERN_SET, 
+>> buf);
+>>         return ret == 1;
+>>  }
+>> 
+>> @@ -1071,19 +1083,23 @@ static int dp_ctrl_read_link_status(struct 
+>> dp_ctrl_private *ctrl,
+>>         return -ETIMEDOUT;
+>>  }
+>> 
+>> -static int dp_ctrl_link_train_1(struct dp_ctrl_private *ctrl)
+>> +static int dp_ctrl_link_train_1(struct dp_ctrl_private *ctrl,
+>> +               struct dp_cr_status *cr, int *training_step)
+>>  {
+>>         int tries, old_v_level, ret = 0;
+>>         u8 link_status[DP_LINK_STATUS_SIZE];
+>> -       int const maximum_retries = 5;
+>> +       int const maximum_retries = 4;
+>> 
+>>         dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
+>> 
+>> +       *training_step = DP_TRAINING_1;
+>> +
+>>         ret = dp_catalog_ctrl_set_pattern(ctrl->catalog, 
+>> DP_TRAINING_PATTERN_1);
+>>         if (ret)
+>>                 return ret;
+>>         dp_ctrl_train_pattern_set(ctrl, DP_TRAINING_PATTERN_1 |
+>>                 DP_LINK_SCRAMBLING_DISABLE);
+>> +
+>>         ret = dp_ctrl_update_vx_px(ctrl);
+>>         if (ret)
+>>                 return ret;
+>> @@ -1097,12 +1113,15 @@ static int dp_ctrl_link_train_1(struct 
+>> dp_ctrl_private *ctrl)
+>>                 if (ret)
+>>                         return ret;
+>> 
+>> +               cr->lane_0_1 = link_status[0];
+>> +               cr->lane_2_3 = link_status[1];
+>> +
+>>                 if (drm_dp_clock_recovery_ok(link_status,
+>>                         ctrl->link->link_params.num_lanes)) {
+>> -                       return ret;
+>> +                       return 0;
+>>                 }
+>> 
+>> -               if (ctrl->link->phy_params.v_level >
+>> +               if (ctrl->link->phy_params.v_level >=
+>>                         DP_TRAIN_VOLTAGE_SWING_MAX) {
+>>                         DRM_ERROR_RATELIMITED("max v_level 
+>> reached\n");
+>>                         return -EAGAIN;
+>> @@ -1125,8 +1144,10 @@ static int dp_ctrl_link_train_1(struct 
+>> dp_ctrl_private *ctrl)
+>>         return -ETIMEDOUT;
+>>  }
+>> 
+>> -static void dp_ctrl_link_rate_down_shift(struct dp_ctrl_private 
+>> *ctrl)
+>> +static int dp_ctrl_link_rate_down_shift(struct dp_ctrl_private *ctrl)
+>>  {
+>> +       int ret = 0;
+>> +
+>>         switch (ctrl->link->link_params.rate) {
+>>         case 810000:
+>>                 ctrl->link->link_params.rate = 540000;
+>> @@ -1135,13 +1156,32 @@ static void 
+>> dp_ctrl_link_rate_down_shift(struct dp_ctrl_private *ctrl)
+>>                 ctrl->link->link_params.rate = 270000;
+>>                 break;
+>>         case 270000:
+>> +               ctrl->link->link_params.rate = 162000;
+>> +               break;
+>>         case 162000:
+>>         default:
+>> -               ctrl->link->link_params.rate = 162000;
+>> +               ret = -1;
+> 
+> Use a real error code instead of -1?
+> 
+>>                 break;
+>>         };
+>> 
+>>         DRM_DEBUG_DP("new rate=0x%x\n", ctrl->link->link_params.rate);
+> 
+> Maybe this should be under a condition like if (!ret)?
+> 
+>> +
+>> +       return ret;
+>> +}
+>> +
+>>  static void dp_ctrl_clear_training_pattern(struct dp_ctrl_private 
+>> *ctrl)
+>> @@ -1214,18 +1260,20 @@ static int dp_ctrl_link_train(struct 
+>> dp_ctrl_private *ctrl)
+>>         drm_dp_dpcd_write(ctrl->aux, DP_MAIN_LINK_CHANNEL_CODING_SET,
+>>                                 &encoding, 1);
+>> 
+>> -       ret = dp_ctrl_link_train_1(ctrl);
+>> +       ret = dp_ctrl_link_train_1(ctrl, cr, training_step);
+>>         if (ret) {
+>>                 DRM_ERROR("link training #1 failed. ret=%d\n", ret);
+>> +               ret = -EAGAIN;
+>>                 goto end;
+>>         }
+>> 
+>>         /* print success info as this is a result of user initiated 
+>> action */
+>>         DRM_DEBUG_DP("link training #1 successful\n");
+>> 
+>> -       ret = dp_ctrl_link_training_2(ctrl);
+>> +       ret = dp_ctrl_link_train_2(ctrl, cr, training_step);
+>>         if (ret) {
+>>                 DRM_ERROR("link training #2 failed. ret=%d\n", ret);
+>> +               ret = -EAGAIN;
+> 
+> Why override ret?
+> 
+>>                 goto end;
+>>         }
+>> 
+>> @@ -1235,58 +1283,36 @@ static int dp_ctrl_link_train(struct 
+>> dp_ctrl_private *ctrl)
+>> -static int dp_ctrl_setup_main_link(struct dp_ctrl_private *ctrl, bool 
+>> train)
+>> +static int dp_ctrl_setup_main_link(struct dp_ctrl_private *ctrl,
+>> +               struct dp_cr_status *cr, int *training_step)
+>>  {
+>> -       bool mainlink_ready = false;
+>>         int ret = 0;
+>> 
+>>         dp_catalog_ctrl_mainlink_ctrl(ctrl->catalog, true);
+>> 
+>> -       ret = dp_link_psm_config(ctrl->link, &ctrl->panel->link_info, 
+>> false);
+>> -       if (ret)
+>> -               return ret;
+>> -
+>>         if (ctrl->link->sink_request & DP_TEST_LINK_PHY_TEST_PATTERN)
+>>                 return ret;
+>> 
+>> -       if (train) {
+>> -               /*
+>> -                * As part of previous calls, DP controller state 
+>> might have
+>> -                * transitioned to PUSH_IDLE. In order to start 
+>> transmitting
+>> -                * a link training pattern, we have to first do soft 
+>> reset.
+>> -                */
+>> -               dp_catalog_ctrl_reset(ctrl->catalog);
+>> -
+>> -               ret = dp_ctrl_link_train(ctrl);
+>> -               if (ret)
+>> -                       return ret;
+>> -       }
+>> -
+>>         /*
+>> -        * Set up transfer unit values and set controller state to 
+>> send
+>> -        * video.
+>> +        * As part of previous calls, DP controller state might have
+>> +        * transitioned to PUSH_IDLE. In order to start transmitting
+>> +        * a link training pattern, we have to first do soft reset.
+>>          */
+>> -       dp_ctrl_setup_tr_unit(ctrl);
+>> -       dp_catalog_ctrl_state_ctrl(ctrl->catalog, 
+>> DP_STATE_CTRL_SEND_VIDEO);
+>> +       dp_catalog_ctrl_reset(ctrl->catalog);
+>> 
+>> -       ret = dp_ctrl_wait4video_ready(ctrl);
+>> -       if (ret)
+>> -               return ret;
+>> +       ret = dp_ctrl_link_train(ctrl, cr, training_step);
+>> 
+>> -       mainlink_ready = 
+>> dp_catalog_ctrl_mainlink_ready(ctrl->catalog);
+>> -       DRM_DEBUG_DP("mainlink %s\n", mainlink_ready ? "READY" : "NOT 
+>> READY");
+>>         return ret;
+>>  }
+>> 
+>>  static void dp_ctrl_set_clock_rate(struct dp_ctrl_private *ctrl,
+>> -                                  char *name, u32 rate)
+>> +                       enum dp_pm_type module, char *name, u32 rate)
+>>  {
+>> -       u32 num = ctrl->parser->mp[DP_CTRL_PM].num_clk;
+>> -       struct dss_clk *cfg = ctrl->parser->mp[DP_CTRL_PM].clk_config;
+>> +       u32 num = ctrl->parser->mp[module].num_clk;
+>> +       struct dss_clk *cfg = ctrl->parser->mp[module].clk_config;
+>> 
+>>         while (num && strcmp(cfg->clk_name, name)) {
+>>                 num--;
+>> @@ -1308,16 +1334,33 @@ static int 
+>> dp_ctrl_enable_mainlink_clocks(struct dp_ctrl_private *ctrl)
+>> 
+>>         dp_power_set_link_clk_parent(ctrl->power);
+>> 
+>> -       dp_ctrl_set_clock_rate(ctrl, "ctrl_link",
+>> +       dp_ctrl_set_clock_rate(ctrl, DP_CTRL_PM, "ctrl_link",
+>>                                         ctrl->link->link_params.rate);
+>> 
+>> -       dp_ctrl_set_clock_rate(ctrl, "stream_pixel",
+>> -                                       ctrl->dp_ctrl.pixel_rate);
+>> -
+>>         ret = dp_power_clk_enable(ctrl->power, DP_CTRL_PM, true);
+>>         if (ret)
+>>                 DRM_ERROR("Unable to start link clocks. ret=%d\n", 
+>> ret);
+>> 
+>> +       DRM_DEBUG_DP("link rate=%d pixel_clk=%d\n",
+>> +               ctrl->link->link_params.rate, 
+>> ctrl->dp_ctrl.pixel_rate);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static int dp_ctrl_enable_stream_clocks(struct dp_ctrl_private *ctrl)
+>> +{
+>> +       int ret = 0;
+>> +
+>> +       dp_ctrl_set_clock_rate(ctrl, DP_STREAM_PM, "stream_pixel",
+>> +                                       ctrl->dp_ctrl.pixel_rate);
+>> +
+>> +       ret = dp_power_clk_enable(ctrl->power, DP_STREAM_PM, true);
+>> +       if (ret)
+>> +               DRM_ERROR("Unabled to start pixel clocks. ret=%d\n", 
+>> ret);
+>> +
+>> +       DRM_DEBUG_DP("link rate=%d pixel_clk=%d\n",
+>> +                       ctrl->link->link_params.rate, 
+>> ctrl->dp_ctrl.pixel_rate);
+>> +
+>>         return ret;
+>>  }
+>> 
+>> @@ -1407,37 +1450,30 @@ static int 
+>> dp_ctrl_reinitialize_mainlink(struct dp_ctrl_private *ctrl)
+>>                 return ret;
+>>         }
+>> 
+>> -       dp_ctrl_configure_source_params(ctrl);
+>> -       dp_catalog_ctrl_config_msa(ctrl->catalog,
+>> -               ctrl->link->link_params.rate,
+>> -               ctrl->dp_ctrl.pixel_rate, 
+>> dp_ctrl_use_fixed_nvid(ctrl));
+>> -       reinit_completion(&ctrl->idle_comp);
+>> -
+>>         return ret;
+>>  }
+>> 
+>>  static int dp_ctrl_link_maintenance(struct dp_ctrl_private *ctrl)
+>>  {
+>>         int ret = 0;
+>> -       int tries;
+>> +       struct dp_cr_status cr;
+>> +       int training_step = DP_TRAINING_NONE;
+>> 
+>>         dp_ctrl_push_idle(&ctrl->dp_ctrl);
+>>         dp_catalog_ctrl_reset(ctrl->catalog);
+>> 
+>>         ctrl->dp_ctrl.pixel_rate = 
+>> ctrl->panel->dp_mode.drm_mode.clock;
+>> 
+>> -       for (tries = 0; tries < 10; tries++) {
+>> -               ret = dp_ctrl_reinitialize_mainlink(ctrl);
+>> -               if (ret) {
+>> -                       DRM_ERROR("Failed to reinitialize mainlink. 
+>> ret=%d\n",
+>> -                                       ret);
+>> -                       break;
+>> -               }
+>> +       ret = dp_ctrl_setup_main_link(ctrl, &cr, &training_step);
+>> +       if (ret)
+>> +               goto end;
+>> 
+>> -               ret = dp_ctrl_setup_main_link(ctrl, true);
+>> -               if (ret == -EAGAIN) /* try with lower link rate */
+>> -                       dp_ctrl_link_rate_down_shift(ctrl);
+>> -       }
+>> +       dp_ctrl_clear_training_pattern(ctrl);
+>> +
+>> +       dp_catalog_ctrl_state_ctrl(ctrl->catalog, 
+>> DP_STATE_CTRL_SEND_VIDEO);
+>> +
+>> +       ret = dp_ctrl_wait4video_ready(ctrl);
+>> +end:
+>>         return ret;
+>>  }
+>> 
+>> @@ -1450,22 +1486,22 @@ static int 
+>> dp_ctrl_process_phy_test_request(struct dp_ctrl_private *ctrl)
+>>                 return ret;
+>>         }
+>> 
+>> -       dp_ctrl_push_idle(&ctrl->dp_ctrl);
+>>         /*
+>>          * The global reset will need DP link related clocks to be
+>>          * running. Add the global reset just before disabling the
+>>          * link clocks and core clocks.
+>>          */
+>> -       dp_catalog_ctrl_reset(ctrl->catalog);
+>>         ret = dp_ctrl_off(&ctrl->dp_ctrl);
+>>         if (ret) {
+>>                 DRM_ERROR("failed to disable DP controller\n");
+>>                 return ret;
+>>         }
+>> 
+>> -       ret = dp_ctrl_on(&ctrl->dp_ctrl);
+>> -       if (ret)
+>> -               DRM_ERROR("failed to enable DP controller\n");
+>> +       ret = dp_ctrl_on_link(&ctrl->dp_ctrl);
+>> +       if (!ret)
+>> +               ret = dp_ctrl_on_stream(&ctrl->dp_ctrl);
+>> +       else
+>> +               DRM_ERROR("failed to enable DP link controller\n");
+>> 
+>>         return ret;
+>>  }
+>> @@ -1485,27 +1521,33 @@ static bool 
+>> dp_ctrl_send_phy_test_pattern(struct dp_ctrl_private *ctrl)
+>>                 return false;
+>>         }
+>>         dp_catalog_ctrl_send_phy_pattern(ctrl->catalog, 
+>> pattern_requested);
+>> +       dp_ctrl_update_vx_px(ctrl);
+>>         dp_link_send_test_response(ctrl->link);
+>> 
+>>         pattern_sent = 
+>> dp_catalog_ctrl_read_phy_pattern(ctrl->catalog);
+>> 
+>>         switch (pattern_sent) {
+>>         case MR_LINK_TRAINING1:
+>> -               success = pattern_requested ==
+>> -                               DP_LINK_QUAL_PATTERN_D10_2;
+>> +               success = (pattern_requested ==
+>> +                               DP_PHY_TEST_PATTERN_D10_2);
+>>                 break;
+>>         case MR_LINK_SYMBOL_ERM:
+>> -               success = (pattern_requested ==
+>> -                               DP_LINK_QUAL_PATTERN_ERROR_RATE)
+>> -                       || (pattern_requested ==
+>> -                               DP_LINK_QUAL_PATTERN_HBR2_EYE);
+>> +               success = ((pattern_requested ==
+>> +                               DP_PHY_TEST_PATTERN_ERROR_COUNT) ||
+>> +                               (pattern_requested ==
+>> +                               DP_PHY_TEST_PATTERN_CP2520));
+>>                 break;
+>>         case MR_LINK_PRBS7:
+>> -               success = pattern_requested == 
+>> DP_LINK_QUAL_PATTERN_PRBS7;
+>> +               success = (pattern_requested ==
+>> +                               DP_PHY_TEST_PATTERN_PRBS7);
+>>                 break;
+>>         case MR_LINK_CUSTOM80:
+>> -               success = pattern_requested ==
+>> -                               DP_LINK_QUAL_PATTERN_80BIT_CUSTOM;
+>> +               success = (pattern_requested ==
+>> +                               DP_PHY_TEST_PATTERN_80BIT_CUSTOM);
+>> +               break;
+>> +       case MR_LINK_TRAINING4:
+>> +               success = (pattern_requested ==
+>> +                               DP_PHY_TEST_PATTERN_SEL_MASK);
+>>                 break;
+>>         default:
+>>                 success = false;
+>> @@ -1537,12 +1579,12 @@ void dp_ctrl_handle_sink_request(struct 
+>> dp_ctrl *dp_ctrl)
+>>                 }
+>>         }
+>> 
+>> -       if (sink_request & DP_LINK_STATUS_UPDATED)
+>> +       if (sink_request & DP_LINK_STATUS_UPDATED) {
+>>                 if (dp_ctrl_link_maintenance(ctrl)) {
+>> -                       DRM_ERROR("LM failed: STATUS_UPDATED\n");
+>> +                       DRM_ERROR("LM failed: TEST_LINK_TRAINING\n");
+>>                         return;
+>>                 }
+>> -
+>> +       }
+>> 
+>>         if (sink_request & DP_TEST_LINK_TRAINING) {
+>>                 dp_link_send_test_response(ctrl->link);
+>> @@ -1553,13 +1595,15 @@ void dp_ctrl_handle_sink_request(struct 
+>> dp_ctrl *dp_ctrl)
+>>         }
+>>  }
+>> 
+>> -int dp_ctrl_on(struct dp_ctrl *dp_ctrl)
+>> +int dp_ctrl_on_link(struct dp_ctrl *dp_ctrl)
+>>  {
+>>         int rc = 0;
+>>         struct dp_ctrl_private *ctrl;
+>>         u32 rate = 0;
+>> -       u32 link_train_max_retries = 10;
+>> +       u32 link_train_max_retries = 5;
+> 
+> Any reason these variables are u32 instead of unsigned int? Does the
+> size of the variable matter if we're counting things?
+> 
+>>         u32 const phy_cts_pixel_clk_khz = 148500;
+>> +       struct dp_cr_status cr;
+>> +       int training_step;
+> 
+> Any reason to be int vs unsigned int?
+> 
+>> 
+>>         if (!dp_ctrl)
+>>                 return -EINVAL;
+>> @@ -1601,16 +1648,115 @@ int dp_ctrl_on(struct dp_ctrl *dp_ctrl)
+>>                                         rc);
+>>                         break;
+>>                 }
+>> -               rc = dp_ctrl_setup_main_link(ctrl, true);
+>> -               if (!rc)
+>> +
+>> +               training_step = DP_TRAINING_NONE;
+>> +               rc = dp_ctrl_setup_main_link(ctrl, &cr, 
+>> &training_step);
+>> +               if (rc == 0) {
+>> +                       /* training completed successfully */
+>>                         break;
+>> -               /* try with lower link rate */
+>> -               dp_ctrl_link_rate_down_shift(ctrl);
+>> +               } else if (training_step == DP_TRAINING_1) {
+>> +                       /* link train_1 failed */
+>> +                       rc = dp_ctrl_link_rate_down_shift(ctrl);
+>> +                       if (rc < 0) { /* alread in RBR = 1.6G */
+> 
+> already?
+> 
+>> +                               if (cr.lane_0_1 & DP_LANE0_1_CR_DONE) 
+>> {
+>> +                                       /*
+>> +                                        * some lanes are ready,
+>> +                                        * reduce lane number
+>> +                                        */
+>> +                                       rc = 
+>> dp_ctrl_link_lane_down_shift(ctrl);
+>> +                                       if (rc < 0) { /* lane == 1 
+>> already */
+>> +                                               /* end with failure */
+>> +                                               break;
+> [..]
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c 
+>> b/drivers/gpu/drm/msm/dp/dp_display.c
+>> index 36b6ee4131bb..23ff23a5259f 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_display.c
+>> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
+>> @@ -783,6 +807,182 @@ int dp_display_get_test_bpp(struct msm_dp *dp)
+>>                 dp_display->link->test_video.test_bit_depth);
+>>  }
+>> 
+>> +static void dp_display_config_hpd(struct dp_display_private *dp)
+>> +{
+>> +
+>> +       dp_display_host_init(dp);
+>> +       dp_catalog_ctrl_hpd_config(dp->catalog);
+>> +
+>> +       /* Enable interrupt first time
+>> +        * we are leaving dp clocks on during disconnect
+>> +        * and never disable interrupt
+>> +        */
+>> +       enable_irq(dp->irq);
+>> +}
+>> +
+>> +static int hpd_event_thread(void *data)
+>> +{
+>> +       struct dp_display_private *dp_priv;
+>> +       unsigned long flag;
+>> +       struct dp_event *todo;
+>> +       int timeout_mode = 0;
+>> +       int ret;
+>> +
+>> +       dp_priv = (struct dp_display_private *)data;
+>> +
+>> +       while (1) {
+>> +               if (timeout_mode) {
+>> +                       ret = wait_event_timeout(dp_priv->event_q,
+>> +                               (dp_priv->event_pndx == 
+>> dp_priv->event_gndx),
+>> +                                               EVENT_TIMEOUT);
+>> +               } else {
+>> +                       ret = wait_event_timeout(dp_priv->event_q,
+>> +                               (dp_priv->event_pndx != 
+>> dp_priv->event_gndx),
+>> +                                               EVENT_TIMEOUT);
+>> +               }
+>> +               spin_lock_irqsave(&dp_priv->event_lock, flag);
+>> +               todo = &dp_priv->event_list[dp_priv->event_gndx];
+>> +               if (todo->delay) {
+>> +                       struct dp_event *todo_next;
+>> +
+>> +                       dp_priv->event_gndx++;
+>> +                       dp_priv->event_gndx %= DP_EVENT_Q_MAX;
+>> +
+>> +                       /* re enter delay event into q */
+>> +                       todo_next = 
+>> &dp_priv->event_list[dp_priv->event_pndx++];
+>> +                       dp_priv->event_pndx %= DP_EVENT_Q_MAX;
+>> +                       todo_next->event_id = todo->event_id;
+>> +                       todo_next->data = todo->data;
+>> +                       todo_next->delay = todo->delay - 1;
+>> +
+>> +                       /* clean up older event */
+>> +                       todo->event_id = EV_NO_EVENT;
+>> +                       todo->delay = 0;
+>> +
+>> +                       /* switch to timeout mode */
+>> +                       timeout_mode = 1;
+>> +                       spin_unlock_irqrestore(&dp_priv->event_lock, 
+>> flag);
+>> +                       continue;
+>> +               }
+>> +
+>> +               /* timeout with no events in q */
+>> +               if (dp_priv->event_pndx == dp_priv->event_gndx) {
+>> +                       spin_unlock_irqrestore(&dp_priv->event_lock, 
+>> flag);
+>> +                       continue;
+>> +               }
+>> +
+>> +               dp_priv->event_gndx++;
+>> +               dp_priv->event_gndx %= DP_EVENT_Q_MAX;
+>> +               timeout_mode = 0;
+>> +               spin_unlock_irqrestore(&dp_priv->event_lock, flag);
+>> +
+>> +               switch (todo->event_id) {
+>> +               case EV_HPD_INIT_SETUP:
+>> +                       dp_display_config_hpd(dp_priv);
+>> +                       break;
+>> +               case EV_HPD_PLUG_INT:
+>> +                       dp_hpd_plug_handle(dp_priv, todo->data);
+>> +                       break;
+>> +               case EV_HPD_UNPLUG_INT:
+>> +                       dp_hpd_unplug_handle(dp_priv, todo->data);
+>> +                       break;
+>> +               case EV_IRQ_HPD_INT:
+>> +                       dp_irq_hpd_handle(dp_priv, todo->data);
+>> +                       break;
+>> +               case EV_HPD_REPLUG_INT:
+>> +                       /* do nothing */
+>> +                       break;
+>> +               case EV_USER_NOTIFICATION:
+>> +                       dp_display_send_hpd_notification(dp_priv,
+>> +                                               todo->data);
+>> +                       break;
+>> +               default:
+>> +                       break;
+>> +               }
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static void dp_hpd_event_setup(struct dp_display_private *dp_priv)
+>> +{
+>> +       init_waitqueue_head(&dp_priv->event_q);
+>> +       spin_lock_init(&dp_priv->event_lock);
+>> +
+>> +       kthread_run(hpd_event_thread, (void *)dp_priv, 
+>> "dp_hpd_handler");
+> 
+> Is the cast necessary?
+> 
+>> +}
+>> +
+>> @@ -890,8 +1069,13 @@ void msm_dp_irq_postinstall(struct msm_dp 
+>> *dp_display)
+>> 
+>>         dp = container_of(dp_display, struct dp_display_private, 
+>> dp_display);
+>> 
+>> -       INIT_DELAYED_WORK(&dp->config_hpd_work, 
+>> dp_display_config_hpd_work);
+>> -       queue_delayed_work(system_wq, &dp->config_hpd_work, HZ * 10);
+>> +       dp_hpd_event_setup(dp);
+>> +
+>> +       /* This hack Delays HPD configuration by 10 sec
+>> +        * ToDo(User): Implement correct boot sequence of
+> 
+> Typically todo is written "TODO(email@domain)" instead of User.
+> 
+>> +        * HPD configuration and remove this hack
+>> +        */
+>> +       dp_add_event(dp, EV_HPD_INIT_SETUP, 0, 100);
+>>  }
+>> 
+>>  int msm_dp_modeset_init(struct msm_dp *dp_display, struct drm_device 
+>> *dev,
+>> @@ -938,37 +1122,47 @@ int msm_dp_display_enable(struct msm_dp *dp, 
+>> struct drm_encoder *encoder)
+>>                 return -EINVAL;
+>>         }
+>> 
+>> +       mutex_lock(&dp_display->event_mutex);
+>> +
+>>         rc = dp_display_set_mode(dp, &dp_display->dp_mode);
+>>         if (rc) {
+>>                 DRM_ERROR("Failed to perform a mode set, rc=%d\n", 
+>> rc);
+>> +               mutex_unlock(&dp_display->event_mutex);
+>>                 return rc;
+>>         }
+>> 
+>>         rc = dp_display_prepare(dp);
+>>         if (rc) {
+>>                 DRM_ERROR("DP display prepare failed, rc=%d\n", rc);
+>> +               mutex_unlock(&dp_display->event_mutex);
+>>                 return rc;
+>>         }
+>> 
+>> -       rc = dp_display_enable(dp);
+>> -       if (rc) {
+>> -               DRM_ERROR("DP display enable failed, rc=%d\n", rc);
+>> -               dp_display_unprepare(dp);
+>> -               return rc;
+>> -       }
+>> +       dp_display_enable(dp_display, 0);
+>> 
+>>         rc = dp_display_post_enable(dp);
+>>         if (rc) {
+>>                 DRM_ERROR("DP display post enable failed, rc=%d\n", 
+>> rc);
+>> -               dp_display_disable(dp);
+>> +               dp_display_disable(dp_display, 0);
+>>                 dp_display_unprepare(dp);
+>>         }
+>> +
+>> +       /* completed connection */
+>> +       atomic_set(&dp_display->hpd_state, ST_CONNECTED);
+>> +
+>> +       mutex_unlock(&dp_display->event_mutex);
+>> +
+>>         return rc;
+>>  }
+>> 
+>>  int msm_dp_display_disable(struct msm_dp *dp, struct drm_encoder 
+>> *encoder)
+>>  {
+>>         int rc = 0;
+>> +       struct dp_display_private *dp_display;
+>> +
+>> +       dp_display = container_of(dp, struct dp_display_private, 
+>> dp_display);
+>> +
+>> +       mutex_lock(&dp_display->event_mutex);
+>> 
+>>         rc = dp_display_pre_disable(dp);
+>>         if (rc) {
+>> @@ -976,16 +1170,16 @@ int msm_dp_display_disable(struct msm_dp *dp, 
+>> struct drm_encoder *encoder)
+>>                 return rc;
+>>         }
+>> 
+>> -       rc = dp_display_disable(dp);
+>> -       if (rc) {
+>> -               DRM_ERROR("DP display disable failed, rc=%d\n", rc);
+>> -               return rc;
+>> -       }
+>> +       dp_display_disable(dp_display, 0);
+>> 
+>>         rc = dp_display_unprepare(dp);
+>>         if (rc)
+>>                 DRM_ERROR("DP display unprepare failed, rc=%d\n", rc);
+>> 
+>> +       /* completed disconnection */
+>> +       atomic_set(&dp_display->hpd_state, ST_DISCONNECTED);
+>> +
+>> +       mutex_unlock(&dp_display->event_mutex);
+>>         return rc;
+>>  }
+>> 
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_hpd.c 
+>> b/drivers/gpu/drm/msm/dp/dp_hpd.c
+>> index 5b08ce580702..5b8fe32022b5 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_hpd.c
+>> +++ b/drivers/gpu/drm/msm/dp/dp_hpd.c
+>> @@ -24,7 +24,7 @@ struct dp_hpd_private {
+>>         struct dp_usbpd dp_usbpd;
+>>  };
+>> 
+>> -static int dp_hpd_connect(struct dp_usbpd *dp_usbpd, bool hpd)
+>> +int dp_hpd_connect(struct dp_usbpd *dp_usbpd, bool hpd)
+>>  {
+>>         int rc = 0;
+>>         struct dp_hpd_private *hpd_priv;
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_hpd.h 
+>> b/drivers/gpu/drm/msm/dp/dp_hpd.h
+>> index c0178524bec7..5bc5bb64680f 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_hpd.h
+>> +++ b/drivers/gpu/drm/msm/dp/dp_hpd.h
+>> @@ -75,5 +75,6 @@ struct dp_usbpd *dp_hpd_get(struct device *dev, 
+>> struct dp_usbpd_cb *cb);
+>> 
+>>  int dp_hpd_register(struct dp_usbpd *dp_usbpd);
+>>  void dp_hpd_unregister(struct dp_usbpd *dp_usbpd);
+>> +int dp_hpd_connect(struct dp_usbpd *dp_usbpd, bool hpd);
+>> 
+>>  #endif /* _DP_HPD_H_ */
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_link.c 
+>> b/drivers/gpu/drm/msm/dp/dp_link.c
+>> index 9c75a4d327bb..f5e51c7988cb 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_link.c
+>> +++ b/drivers/gpu/drm/msm/dp/dp_link.c
+>> @@ -661,7 +661,6 @@ static int dp_link_parse_request(struct 
+>> dp_link_private *link)
+>> 
+>>         DRM_DEBUG_DP("Test:(0x%x) requested\n", data);
+>>         link->request.test_requested = data;
+>> -
+>>         if (link->request.test_requested == 
+>> DP_TEST_LINK_PHY_TEST_PATTERN) {
+>>                 ret = dp_link_parse_phy_test_params(link);
+>>                 if (ret)
+> 
+> Drop this hunk?
