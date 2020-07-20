@@ -2,194 +2,146 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 951E2C433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 383FFC433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66568206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:32:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262729;
-	bh=QH38lHZEFjVS1C39GYgoqcpSliyq7VHMywRWUrOsEGY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QzjZZj0RraQSC3nDXSXxn/ZR6WL7botHWtwXmlzTIeB3b0hTAdaAmOcGYzE52Kk+l
-	 V44BioduOba1birdODBb6fyYR8eCzKUKeYeCHAqHMLyVRqz1U/gfXOJaTz0k2LIb1R
-	 jmJ3i75xNq+tpkxpb7ubTHoTcfBrW+nguFfWaIS0=
+	by mail.kernel.org (Postfix) with ESMTP id 162532073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:32:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iD4xnpX0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g6j7cwiX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgGTQcI (ORCPT
+        id S2388862AbgGTQcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:32:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730248AbgGTP47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:56:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59C7B206E9;
-        Mon, 20 Jul 2020 15:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260618;
-        bh=QH38lHZEFjVS1C39GYgoqcpSliyq7VHMywRWUrOsEGY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cwpgFBEnzDhX+Zj1pozsiyzW3Y2TBoQP9XD/1KjoOm5KCoEcHO3IcZj3+bufypKCg
-         k8EIJgpT2kdOtS/IQbST5zpDAwJ2C2himW7j1O5jflYsLAFtP9Npo8xBjH+LIEdrrW
-         K4xdGfkYIuHqz+LXEnT1gUNL7EPAZi7/vQGYsMCg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        kernel test robot <lkp@intel.com>,
-        Sean Tranchetti <stranche@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 006/215] genetlink: remove genl_bind
-Date:   Mon, 20 Jul 2020 17:34:48 +0200
-Message-Id: <20200720152820.450806971@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
-References: <20200720152820.122442056@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 12:32:13 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58898 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731831AbgGTP4v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:56:51 -0400
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595260608;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fDImi88zFV81pjdnOgUX9XebIgS39WaOUsCCEI1b+mc=;
+        b=iD4xnpX0iRZgogyjOiHVrZQNGX7nsG9CgZhEFPYHTEdTFe8WWzp+BUtL1SZzNO5LEdU91C
+        MfN7kWQWUa/ZSUut/7hgdhQz0nxS7tHis1FOPupATFdK+Is3TQHURz7RqUXFGfeayWmMZa
+        E7gpnw3gLweWsoXyedn5AU1ITR2cR1wG9zkNnHCk4rejk/9hI+z0Y9q/E0mZ4zHe2/tS5V
+        OGCClXH2nwmhnSIgORzreuKhFhMzQBeZiXuhPgRAOdr8uT7Toc/rnBBpKCi0eh5GtJgSiI
+        nnWVpwdm7ETkC5djyIsNSJZdVK4K6FVvm9ANOth6AVAs1YAZpursJ+XOOFXglQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595260608;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fDImi88zFV81pjdnOgUX9XebIgS39WaOUsCCEI1b+mc=;
+        b=g6j7cwiXCKepe4U21OZ5BfpK36kd8eTsYX4jbS3n9Cu1A5VTcDUF0yLW52NzEAkZ3nlWem
+        2GCVU32cKO8fF8Bg==
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH v4 16/24] xfrm: policy: Use sequence counters with associated lock
+Date:   Mon, 20 Jul 2020 17:55:22 +0200
+Message-Id: <20200720155530.1173732-17-a.darwish@linutronix.de>
+In-Reply-To: <20200720155530.1173732-1-a.darwish@linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200720155530.1173732-1-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Tranchetti <stranche@codeaurora.org>
+A sequence counter write side critical section must be protected by some
+form of locking to serialize writers. If the serialization primitive is
+not disabling preemption implicitly, preemption has to be explicitly
+disabled before entering the sequence counter write side critical
+section.
 
-[ Upstream commit 1e82a62fec613844da9e558f3493540a5b7a7b67 ]
+A plain seqcount_t does not contain the information of which lock must
+be held when entering a write side critical section.
 
-A potential deadlock can occur during registering or unregistering a
-new generic netlink family between the main nl_table_lock and the
-cb_lock where each thread wants the lock held by the other, as
-demonstrated below.
+Use the new seqcount_spinlock_t and seqcount_mutex_t data types instead,
+which allow to associate a lock with the sequence counter. This enables
+lockdep to verify that the lock used for writer serialization is held
+when the write side critical section is entered.
 
-1) Thread 1 is performing a netlink_bind() operation on a socket. As part
-   of this call, it will call netlink_lock_table(), incrementing the
-   nl_table_users count to 1.
-2) Thread 2 is registering (or unregistering) a genl_family via the
-   genl_(un)register_family() API. The cb_lock semaphore will be taken for
-   writing.
-3) Thread 1 will call genl_bind() as part of the bind operation to handle
-   subscribing to GENL multicast groups at the request of the user. It will
-   attempt to take the cb_lock semaphore for reading, but it will fail and
-   be scheduled away, waiting for Thread 2 to finish the write.
-4) Thread 2 will call netlink_table_grab() during the (un)registration
-   call. However, as Thread 1 has incremented nl_table_users, it will not
-   be able to proceed, and both threads will be stuck waiting for the
-   other.
+If lockdep is disabled this lock association is compiled out and has
+neither storage size nor runtime overhead.
 
-genl_bind() is a noop, unless a genl_family implements the mcast_bind()
-function to handle setting up family-specific multicast operations. Since
-no one in-tree uses this functionality as Cong pointed out, simply removing
-the genl_bind() function will remove the possibility for deadlock, as there
-is no attempt by Thread 1 above to take the cb_lock semaphore.
-
-Fixes: c380d9a7afff ("genetlink: pass multicast bind/unbind to families")
-Suggested-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Johannes Berg <johannes.berg@intel.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- include/net/genetlink.h |    8 -------
- net/netlink/genetlink.c |   49 ------------------------------------------------
- 2 files changed, 57 deletions(-)
+ net/xfrm/xfrm_policy.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/include/net/genetlink.h
-+++ b/include/net/genetlink.h
-@@ -35,12 +35,6 @@ struct genl_info;
-  *	do additional, common, filtering and return an error
-  * @post_doit: called after an operation's doit callback, it may
-  *	undo operations done by pre_doit, for example release locks
-- * @mcast_bind: a socket bound to the given multicast group (which
-- *	is given as the offset into the groups array)
-- * @mcast_unbind: a socket was unbound from the given multicast group.
-- *	Note that unbind() will not be called symmetrically if the
-- *	generic netlink family is removed while there are still open
-- *	sockets.
-  * @attrbuf: buffer to store parsed attributes (private)
-  * @mcgrps: multicast groups used by this family
-  * @n_mcgrps: number of multicast groups
-@@ -64,8 +58,6 @@ struct genl_family {
- 	void			(*post_doit)(const struct genl_ops *ops,
- 					     struct sk_buff *skb,
- 					     struct genl_info *info);
--	int			(*mcast_bind)(struct net *net, int group);
--	void			(*mcast_unbind)(struct net *net, int group);
- 	struct nlattr **	attrbuf;	/* private */
- 	const struct genl_ops *	ops;
- 	const struct genl_multicast_group *mcgrps;
---- a/net/netlink/genetlink.c
-+++ b/net/netlink/genetlink.c
-@@ -989,60 +989,11 @@ static struct genl_family genl_ctrl __ro
- 	.netnsok = true,
- };
+diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+index 564aa6492e7c..732a940468b0 100644
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -122,7 +122,7 @@ struct xfrm_pol_inexact_bin {
+ 	/* list containing '*:*' policies */
+ 	struct hlist_head hhead;
  
--static int genl_bind(struct net *net, int group)
--{
--	struct genl_family *f;
--	int err = -ENOENT;
--	unsigned int id;
--
--	down_read(&cb_lock);
--
--	idr_for_each_entry(&genl_fam_idr, f, id) {
--		if (group >= f->mcgrp_offset &&
--		    group < f->mcgrp_offset + f->n_mcgrps) {
--			int fam_grp = group - f->mcgrp_offset;
--
--			if (!f->netnsok && net != &init_net)
--				err = -ENOENT;
--			else if (f->mcast_bind)
--				err = f->mcast_bind(net, fam_grp);
--			else
--				err = 0;
--			break;
--		}
--	}
--	up_read(&cb_lock);
--
--	return err;
--}
--
--static void genl_unbind(struct net *net, int group)
--{
--	struct genl_family *f;
--	unsigned int id;
--
--	down_read(&cb_lock);
--
--	idr_for_each_entry(&genl_fam_idr, f, id) {
--		if (group >= f->mcgrp_offset &&
--		    group < f->mcgrp_offset + f->n_mcgrps) {
--			int fam_grp = group - f->mcgrp_offset;
--
--			if (f->mcast_unbind)
--				f->mcast_unbind(net, fam_grp);
--			break;
--		}
--	}
--	up_read(&cb_lock);
--}
--
- static int __net_init genl_pernet_init(struct net *net)
+-	seqcount_t count;
++	seqcount_spinlock_t count;
+ 	/* tree sorted by daddr/prefix */
+ 	struct rb_root root_d;
+ 
+@@ -155,7 +155,7 @@ static struct xfrm_policy_afinfo const __rcu *xfrm_policy_afinfo[AF_INET6 + 1]
+ 						__read_mostly;
+ 
+ static struct kmem_cache *xfrm_dst_cache __ro_after_init;
+-static __read_mostly seqcount_t xfrm_policy_hash_generation;
++static __read_mostly seqcount_mutex_t xfrm_policy_hash_generation;
+ 
+ static struct rhashtable xfrm_policy_inexact_table;
+ static const struct rhashtable_params xfrm_pol_inexact_params;
+@@ -719,7 +719,7 @@ xfrm_policy_inexact_alloc_bin(const struct xfrm_policy *pol, u8 dir)
+ 	INIT_HLIST_HEAD(&bin->hhead);
+ 	bin->root_d = RB_ROOT;
+ 	bin->root_s = RB_ROOT;
+-	seqcount_init(&bin->count);
++	seqcount_spinlock_init(&bin->count, &net->xfrm.xfrm_policy_lock);
+ 
+ 	prev = rhashtable_lookup_get_insert_key(&xfrm_policy_inexact_table,
+ 						&bin->k, &bin->head,
+@@ -1906,7 +1906,7 @@ static int xfrm_policy_match(const struct xfrm_policy *pol,
+ 
+ static struct xfrm_pol_inexact_node *
+ xfrm_policy_lookup_inexact_addr(const struct rb_root *r,
+-				seqcount_t *count,
++				seqcount_spinlock_t *count,
+ 				const xfrm_address_t *addr, u16 family)
  {
- 	struct netlink_kernel_cfg cfg = {
- 		.input		= genl_rcv,
- 		.flags		= NL_CFG_F_NONROOT_RECV,
--		.bind		= genl_bind,
--		.unbind		= genl_unbind,
- 	};
+ 	const struct rb_node *parent;
+@@ -4153,7 +4153,7 @@ void __init xfrm_init(void)
+ {
+ 	register_pernet_subsys(&xfrm_net_ops);
+ 	xfrm_dev_init();
+-	seqcount_init(&xfrm_policy_hash_generation);
++	seqcount_mutex_init(&xfrm_policy_hash_generation, &hash_resize_mutex);
+ 	xfrm_input_init();
  
- 	/* we'll bump the group number right afterwards */
-
+ #ifdef CONFIG_INET_ESPINTCP
+-- 
+2.20.1
 
