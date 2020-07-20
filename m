@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A84C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B609C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40E1022482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F8E822482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260478;
-	bh=OAWEiNj0HxY5JoeCvIkJcL6gK3NsMqhllUtgiuN1mrQ=;
+	s=default; t=1595260481;
+	bh=Im+ui7xrDY+1uPqPsd5zagZko41qbiBiA3DWNeKStOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GbGwjUzthgvyi1384LOtl92UdhGf21fzmJUggHj6+welfoKVeMs0/fZ+OvYdFoZPG
-	 yTdbUJgkuaPwqTVHLvyAXMJo3SiQku9iGFSkzZhaXFuG3Ndd0U/yBIXTsq3YhhkAle
-	 s/6SxTaHRi7QdDS0thT2LfeWrOZwCZru7IatmqqY=
+	b=QMCaDJ+OJsu5cV6Qq+EpsfgrCjlCvsURwycMHgK6yM/CFRXRruit5vGOpY/GFmRRl
+	 OiwX7moIZrUtqfXFp6TmGh0c/4wBgGLfff+X7zLsefMKEhIL40F9HYH3GDGgX5L1au
+	 svr758IUlH24FMz89WiOOU/lrUo7AulyKZyxqgvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731585AbgGTPyh (ORCPT
+        id S1731588AbgGTPyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:54:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53212 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:54:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731567AbgGTPy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:54:29 -0400
+        id S1731073AbgGTPyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:54:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87C0B22482;
-        Mon, 20 Jul 2020 15:54:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC31322CAF;
+        Mon, 20 Jul 2020 15:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260469;
-        bh=OAWEiNj0HxY5JoeCvIkJcL6gK3NsMqhllUtgiuN1mrQ=;
+        s=default; t=1595260477;
+        bh=Im+ui7xrDY+1uPqPsd5zagZko41qbiBiA3DWNeKStOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GlO1lDUAfAZVPLAYO77Eoqzuun8XlKS/84N9/IwmJQgnkOMBapTcIFnVujOLRF2PS
-         HfAojgt1pdxVeJ/KxgRWY/bu4uLQgMdl1gniDJnf0BzQHrJ4PE97kDTCipwOaryPKI
-         1zHPuyVbc4NVAVMqy/gd2/6VobUjlMjib8yN1dy0=
+        b=w73aMPw9uElwHcRKxm1sfR+0IkV6x2+teVTTNwYit4KyQdVcm2/saIHRZxXrisugT
+         2uys2sAKMHhWORv9ZVPwBO5lULHC3mHlBaG/O+HYOTqaWJOI8mMdRlOewEN5x7TEo+
+         0UswUGSeAf5U2RNT26tm7BeyGbkFRCazxarWYZtw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Schwab <schwab@suse.de>,
-        Anup Patel <anup@brainfault.org>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH 4.19 114/133] riscv: use 16KB kernel stack on 64-bit
-Date:   Mon, 20 Jul 2020 17:37:41 +0200
-Message-Id: <20200720152809.246674298@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 4.19 099/133] virt: vbox: Fix VBGL_IOCTL_VMMDEV_REQUEST_BIG and _LOG req numbers to match upstream
+Date:   Mon, 20 Jul 2020 17:37:26 +0200
+Message-Id: <20200720152808.510660301@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -60,39 +59,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Schwab <schwab@suse.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 0cac21b02ba5f3095fd2dcc77c26a25a0b2432ed upstream.
+commit f794db6841e5480208f0c3a3ac1df445a96b079e upstream.
 
-With the current 8KB stack size there are frequent overflows in a 64-bit
-configuration.  We may split IRQ stacks off in the future, but this fixes a
-number of issues right now.
+Until this commit the mainline kernel version (this version) of the
+vboxguest module contained a bug where it defined
+VBGL_IOCTL_VMMDEV_REQUEST_BIG and VBGL_IOCTL_LOG using
+_IOC(_IOC_READ | _IOC_WRITE, 'V', ...) instead of
+_IO(V, ...) as the out of tree VirtualBox upstream version does.
 
-Signed-off-by: Andreas Schwab <schwab@suse.de>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-[Palmer: mention irqstack in the commit text]
-Fixes: 7db91e57a0ac ("RISC-V: Task implementation")
+Since the VirtualBox userspace bits are always built against VirtualBox
+upstream's headers, this means that so far the mainline kernel version
+of the vboxguest module has been failing these 2 ioctls with -ENOTTY.
+I guess that VBGL_IOCTL_VMMDEV_REQUEST_BIG is never used causing us to
+not hit that one and sofar the vboxguest driver has failed to actually
+log any log messages passed it through VBGL_IOCTL_LOG.
+
+This commit changes the VBGL_IOCTL_VMMDEV_REQUEST_BIG and VBGL_IOCTL_LOG
+defines to match the out of tree VirtualBox upstream vboxguest version,
+while keeping compatibility with the old wrong request defines so as
+to not break the kernel ABI in case someone has been using the old
+request defines.
+
+Fixes: f6ddd094f579 ("virt: Add vboxguest driver for Virtual Box Guest integration UAPI")
 Cc: stable@vger.kernel.org
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200709120858.63928-2-hdegoede@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/riscv/include/asm/thread_info.h |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/virt/vboxguest/vboxguest_core.c  |    4 +++-
+ drivers/virt/vboxguest/vboxguest_core.h  |   15 +++++++++++++++
+ drivers/virt/vboxguest/vboxguest_linux.c |    3 ++-
+ include/uapi/linux/vboxguest.h           |    4 ++--
+ 4 files changed, 22 insertions(+), 4 deletions(-)
 
---- a/arch/riscv/include/asm/thread_info.h
-+++ b/arch/riscv/include/asm/thread_info.h
-@@ -20,7 +20,11 @@
- #include <linux/const.h>
+--- a/drivers/virt/vboxguest/vboxguest_core.c
++++ b/drivers/virt/vboxguest/vboxguest_core.c
+@@ -1482,7 +1482,8 @@ int vbg_core_ioctl(struct vbg_session *s
  
- /* thread information allocation */
-+#ifdef CONFIG_64BIT
-+#define THREAD_SIZE_ORDER	(2)
-+#else
- #define THREAD_SIZE_ORDER	(1)
-+#endif
- #define THREAD_SIZE		(PAGE_SIZE << THREAD_SIZE_ORDER)
+ 	/* For VMMDEV_REQUEST hdr->type != VBG_IOCTL_HDR_TYPE_DEFAULT */
+ 	if (req_no_size == VBG_IOCTL_VMMDEV_REQUEST(0) ||
+-	    req == VBG_IOCTL_VMMDEV_REQUEST_BIG)
++	    req == VBG_IOCTL_VMMDEV_REQUEST_BIG ||
++	    req == VBG_IOCTL_VMMDEV_REQUEST_BIG_ALT)
+ 		return vbg_ioctl_vmmrequest(gdev, session, data);
  
- #ifndef __ASSEMBLY__
+ 	if (hdr->type != VBG_IOCTL_HDR_TYPE_DEFAULT)
+@@ -1520,6 +1521,7 @@ int vbg_core_ioctl(struct vbg_session *s
+ 	case VBG_IOCTL_HGCM_CALL(0):
+ 		return vbg_ioctl_hgcm_call(gdev, session, f32bit, data);
+ 	case VBG_IOCTL_LOG(0):
++	case VBG_IOCTL_LOG_ALT(0):
+ 		return vbg_ioctl_log(data);
+ 	}
+ 
+--- a/drivers/virt/vboxguest/vboxguest_core.h
++++ b/drivers/virt/vboxguest/vboxguest_core.h
+@@ -15,6 +15,21 @@
+ #include <linux/vboxguest.h>
+ #include "vmmdev.h"
+ 
++/*
++ * The mainline kernel version (this version) of the vboxguest module
++ * contained a bug where it defined VBGL_IOCTL_VMMDEV_REQUEST_BIG and
++ * VBGL_IOCTL_LOG using _IOC(_IOC_READ | _IOC_WRITE, 'V', ...) instead
++ * of _IO(V, ...) as the out of tree VirtualBox upstream version does.
++ *
++ * These _ALT definitions keep compatibility with the wrong defines the
++ * mainline kernel version used for a while.
++ * Note the VirtualBox userspace bits have always been built against
++ * VirtualBox upstream's headers, so this is likely not necessary. But
++ * we must never break our ABI so we keep these around to be 100% sure.
++ */
++#define VBG_IOCTL_VMMDEV_REQUEST_BIG_ALT _IOC(_IOC_READ | _IOC_WRITE, 'V', 3, 0)
++#define VBG_IOCTL_LOG_ALT(s)             _IOC(_IOC_READ | _IOC_WRITE, 'V', 9, s)
++
+ struct vbg_session;
+ 
+ /** VBox guest memory balloon. */
+--- a/drivers/virt/vboxguest/vboxguest_linux.c
++++ b/drivers/virt/vboxguest/vboxguest_linux.c
+@@ -112,7 +112,8 @@ static long vbg_misc_device_ioctl(struct
+ 	 * the need for a bounce-buffer and another copy later on.
+ 	 */
+ 	is_vmmdev_req = (req & ~IOCSIZE_MASK) == VBG_IOCTL_VMMDEV_REQUEST(0) ||
+-			 req == VBG_IOCTL_VMMDEV_REQUEST_BIG;
++			 req == VBG_IOCTL_VMMDEV_REQUEST_BIG ||
++			 req == VBG_IOCTL_VMMDEV_REQUEST_BIG_ALT;
+ 
+ 	if (is_vmmdev_req)
+ 		buf = vbg_req_alloc(size, VBG_IOCTL_HDR_TYPE_DEFAULT);
+--- a/include/uapi/linux/vboxguest.h
++++ b/include/uapi/linux/vboxguest.h
+@@ -103,7 +103,7 @@ VMMDEV_ASSERT_SIZE(vbg_ioctl_driver_vers
+ 
+ 
+ /* IOCTL to perform a VMM Device request larger then 1KB. */
+-#define VBG_IOCTL_VMMDEV_REQUEST_BIG	_IOC(_IOC_READ | _IOC_WRITE, 'V', 3, 0)
++#define VBG_IOCTL_VMMDEV_REQUEST_BIG	_IO('V', 3)
+ 
+ 
+ /** VBG_IOCTL_HGCM_CONNECT data structure. */
+@@ -198,7 +198,7 @@ struct vbg_ioctl_log {
+ 	} u;
+ };
+ 
+-#define VBG_IOCTL_LOG(s)		_IOC(_IOC_READ | _IOC_WRITE, 'V', 9, s)
++#define VBG_IOCTL_LOG(s)		_IO('V', 9)
+ 
+ 
+ /** VBG_IOCTL_WAIT_FOR_EVENTS data structure. */
 
 
