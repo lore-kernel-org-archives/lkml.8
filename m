@@ -2,144 +2,137 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F76C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B07C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEF022C9C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25F322C9D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:59:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgGTO60 (ORCPT
+        id S1728270AbgGTO7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:58:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15410 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726046AbgGTO6Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:58:25 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KEXt6l046593;
-        Mon, 20 Jul 2020 10:58:18 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32dcyq93r8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 10:58:18 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KEYJap048848;
-        Mon, 20 Jul 2020 10:58:17 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32dcyq93qj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 10:58:17 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KEjraO017836;
-        Mon, 20 Jul 2020 14:58:15 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma02fra.de.ibm.com with ESMTP id 32brq7tukj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 14:58:15 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KEuvu627066708
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 14:56:57 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD9F1A405F;
-        Mon, 20 Jul 2020 14:56:57 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 42802A405C;
-        Mon, 20 Jul 2020 14:56:56 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.145.253])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Jul 2020 14:56:56 +0000 (GMT)
-Message-ID: <1595257015.5055.8.camel@linux.ibm.com>
-Subject: Re: [PATCH v6] ima: move APPRAISE_BOOTPARAM dependency on
- ARCH_POLICY to runtime
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Nayna <nayna@linux.vnet.ibm.com>,
-        Bruno Meneguele <bmeneg@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Cc:     erichte@linux.ibm.com, nayna@linux.ibm.com, stable@vger.kernel.org
-Date:   Mon, 20 Jul 2020 10:56:55 -0400
-In-Reply-To: <d337cbba-e996-e898-1e75-9f142d480e5e@linux.vnet.ibm.com>
-References: <20200713164830.101165-1-bmeneg@redhat.com>
-         <d337cbba-e996-e898-1e75-9f142d480e5e@linux.vnet.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0
- mlxlogscore=999 spamscore=0 phishscore=0 clxscore=1015 priorityscore=1501
- mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007200099
+        Mon, 20 Jul 2020 10:59:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35670 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbgGTO7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 10:59:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 96548AED7;
+        Mon, 20 Jul 2020 14:59:45 +0000 (UTC)
+Date:   Mon, 20 Jul 2020 16:59:38 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] i2c: busses: Use fallthrough pseudo-keyword
+Message-ID: <20200720165938.31bb6b10@endymion>
+In-Reply-To: <20200716220307.GA19706@embeddedor>
+References: <20200716220307.GA19706@embeddedor>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-07-20 at 10:40 -0400, Nayna wrote:
-> On 7/13/20 12:48 PM, Bruno Meneguele wrote:
-> > The IMA_APPRAISE_BOOTPARAM config allows enabling different "ima_appraise="
-> > modes - log, fix, enforce - at run time, but not when IMA architecture
-> > specific policies are enabled.  This prevents properly labeling the
-> > filesystem on systems where secure boot is supported, but not enabled on the
-> > platform.  Only when secure boot is actually enabled should these IMA
-> > appraise modes be disabled.
-> >
-> > This patch removes the compile time dependency and makes it a runtime
-> > decision, based on the secure boot state of that platform.
-> >
-> > Test results as follows:
-> >
-> > -> x86-64 with secure boot enabled
-> >
-> > [    0.015637] Kernel command line: <...> ima_policy=appraise_tcb ima_appraise=fix
-> > [    0.015668] ima: Secure boot enabled: ignoring ima_appraise=fix boot parameter option
-> >
+Hi Gustavo,
 
-Is it common to have two colons in the same line?  Is the colon being
-used as a delimiter when parsing the kernel logs?  Should the second
-colon be replaced with a hyphen?  (No need to repost.  I'll fix it
-up.)
- 
-
-> > -> powerpc with secure boot disabled
-> >
-> > [    0.000000] Kernel command line: <...> ima_policy=appraise_tcb ima_appraise=fix
-> > [    0.000000] Secure boot mode disabled
-> >
-> > -> Running the system without secure boot and with both options set:
-> >
-> > CONFIG_IMA_APPRAISE_BOOTPARAM=y
-> > CONFIG_IMA_ARCH_POLICY=y
-> >
-> > Audit prompts "missing-hash" but still allow execution and, consequently,
-> > filesystem labeling:
-> >
-> > type=INTEGRITY_DATA msg=audit(07/09/2020 12:30:27.778:1691) : pid=4976
-> > uid=root auid=root ses=2
-> > subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=appraise_data
-> > cause=missing-hash comm=bash name=/usr/bin/evmctl dev="dm-0" ino=493150
-> > res=no
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: d958083a8f64 ("x86/ima: define arch_get_ima_policy() for x86")
-> > Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
+On Thu, 16 Jul 2020 17:03:07 -0500, Gustavo A. R. Silva wrote:
+> Replace the existing /* fall through */ comments and its variants with
+> the new pseudo-keyword macro fallthrough[1].
 > 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 > 
-> Reviewed-by: Nayna Jain<nayna@linux.ibm.com>
-> Tested-by: Nayna Jain<nayna@linux.ibm.com>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/i2c/busses/i2c-amd8111.c | 2 +-
+>  drivers/i2c/busses/i2c-i801.c    | 8 ++++----
+>  drivers/i2c/busses/i2c-viapro.c  | 2 +-
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-amd8111.c b/drivers/i2c/busses/i2c-amd8111.c
+> index 2b14fef5bf26..34862ad3423e 100644
+> --- a/drivers/i2c/busses/i2c-amd8111.c
+> +++ b/drivers/i2c/busses/i2c-amd8111.c
+> @@ -381,7 +381,7 @@ static s32 amd8111_access(struct i2c_adapter * adap, u16 addr,
+>  			if (status)
+>  				return status;
+>  			len = min_t(u8, len, I2C_SMBUS_BLOCK_MAX);
+> -			/* fall through */
+> +			fallthrough;
+>  		case I2C_SMBUS_I2C_BLOCK_DATA:
+>  			for (i = 0; i < len; i++) {
+>  				status = amd_ec_read(smbus, AMD_SMB_DATA + i,
+> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+> index 1fc7ae77753d..638e7f7c66cc 100644
+> --- a/drivers/i2c/busses/i2c-i801.c
+> +++ b/drivers/i2c/busses/i2c-i801.c
+> @@ -1765,19 +1765,19 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  	case PCI_DEVICE_ID_INTEL_WELLSBURG_SMBUS_MS1:
+>  	case PCI_DEVICE_ID_INTEL_WELLSBURG_SMBUS_MS2:
+>  		priv->features |= FEATURE_IDF;
+> -		/* fall through */
+> +		fallthrough;
+>  	default:
+>  		priv->features |= FEATURE_BLOCK_PROC;
+>  		priv->features |= FEATURE_I2C_BLOCK_READ;
+>  		priv->features |= FEATURE_IRQ;
+> -		/* fall through */
+> +		fallthrough;
+>  	case PCI_DEVICE_ID_INTEL_82801DB_3:
+>  		priv->features |= FEATURE_SMBUS_PEC;
+>  		priv->features |= FEATURE_BLOCK_BUFFER;
+> -		/* fall through */
+> +		fallthrough;
+>  	case PCI_DEVICE_ID_INTEL_82801CA_3:
+>  		priv->features |= FEATURE_HOST_NOTIFY;
+> -		/* fall through */
+> +		fallthrough;
+>  	case PCI_DEVICE_ID_INTEL_82801BA_2:
+>  	case PCI_DEVICE_ID_INTEL_82801AB_3:
+>  	case PCI_DEVICE_ID_INTEL_82801AA_3:
+> diff --git a/drivers/i2c/busses/i2c-viapro.c b/drivers/i2c/busses/i2c-viapro.c
+> index 05aa92a3fbe0..970ccdcbb889 100644
+> --- a/drivers/i2c/busses/i2c-viapro.c
+> +++ b/drivers/i2c/busses/i2c-viapro.c
+> @@ -228,7 +228,7 @@ static s32 vt596_access(struct i2c_adapter *adap, u16 addr,
+>  			goto exit_unsupported;
+>  		if (read_write == I2C_SMBUS_READ)
+>  			outb_p(data->block[0], SMBHSTDAT0);
+> -		/* Fall through */
+> +		fallthrough;
+>  	case I2C_SMBUS_BLOCK_DATA:
+>  		outb_p(command, SMBHSTCMD);
+>  		if (read_write == I2C_SMBUS_WRITE) {
 
-Thanks, Nayna.
+Looks good to me, thanks for doing that.
 
-Mimi
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
 
+However I see many occurrences in other drivers within
+drivers/i2c/busses, which are not covered by this patch:
+
+drivers/i2c/busses/i2c-designware-pcidrv.c
+drivers/i2c/busses/i2c-mv64xxx.c
+drivers/i2c/busses/i2c-omap.c
+drivers/i2c/busses/i2c-synquacer.c
+drivers/i2c/busses/i2c-ibm_iic.c
+drivers/i2c/busses/i2c-aspeed.c
+drivers/i2c/busses/scx200_acb.c
+drivers/i2c/busses/i2c-digicolor.c
+drivers/i2c/busses/i2c-opal.c
+
+Are they covered by another patch of yours?
+
+Thanks,
+-- 
+Jean Delvare
+SUSE L3 Support
