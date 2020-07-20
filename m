@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD48C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32116C433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3DF2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1649206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261127;
-	bh=vLX9FaXwbX361xZKoxrNQ5wbHdFNkfiK2AFD3ea92PM=;
+	s=default; t=1595261130;
+	bh=jJTY4CpwJBiOsJxX+eJrLO3bhqUPTbK7A8zPNtjrGbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RX9Zc8TsxVz9gXPrkgcCKR+YLpptYILB3Bea0SKn+M0dmSpmi1CQA5WrIpR3Ao8qv
-	 q/8rQAYRyELaojGP5t2jHPLgQxUaRKeyzEm+sXsEb6JPcNnjyL+Yx3qvBZb5W1bk7y
-	 YwEoprpTTQiHF5cLEkvPbXtvn1nBRykui2ljLAdw=
+	b=P1LW6ud6CY7znJAYk/vxfUUwCaXkPkc7/0DPpet3DueGsOI1ToBsVWmOs4GFr89HV
+	 Y242dBhL1iflU8tpA8Bu4KtYR8WOhCez/RvrbkDMVvSbslyEMcBDNlcwjIKxSu9bh5
+	 8lD2Kpjbwz+rV1rnNO54HUyvgEvWSfQj0tLHmdlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732975AbgGTQF0 (ORCPT
+        id S1732983AbgGTQF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:05:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40704 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:05:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732417AbgGTQFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:05:18 -0400
+        id S1732966AbgGTQFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:05:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A393B206E9;
-        Mon, 20 Jul 2020 16:05:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51DCA2064B;
+        Mon, 20 Jul 2020 16:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261118;
-        bh=vLX9FaXwbX361xZKoxrNQ5wbHdFNkfiK2AFD3ea92PM=;
+        s=default; t=1595261120;
+        bh=jJTY4CpwJBiOsJxX+eJrLO3bhqUPTbK7A8zPNtjrGbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sus9yuXbuFXdJ+CCicfgw6dY7fj+pizYCl2g75MLyz+xakAU0sHvDhYgxoxo4OUiU
-         5/iPEK2MW1RBFjmQJmJwShqkm4Qm9x+RiOFpNJvHFySCHorohSSr5bPPTkaml8rDTc
-         jglM2gN5aHrNI8mhvoAUDJ4LmSBjC7OHDXuM7wjw=
+        b=LIyjtARgfgDUrv3+kw/O91V5Cu/Di17KbQdlbTpehHdOf8SwK+r8jTweYZ8QF4eJ5
+         THNePQ7Rs6jp9s6sIw4HwXRG1LrgT3FOYSgb5XGKYislsrZR3q50IKs9hb/79ld7UJ
+         OiqryfVDEo3szuTmma6qfOEEWn4soHbgQmPBW0/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 5.4 215/215] gpio: pca953x: disable regmap locking for automatic address incrementing
-Date:   Mon, 20 Jul 2020 17:38:17 +0200
-Message-Id: <20200720152830.376869792@linuxfoundation.org>
+        stable@vger.kernel.org, Finley Xiao <finley.xiao@rock-chips.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 5.4 198/215] thermal/drivers/cpufreq_cooling: Fix wrong frequency converted from power
+Date:   Mon, 20 Jul 2020 17:38:00 +0200
+Message-Id: <20200720152829.583394765@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -62,38 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Finley Xiao <finley.xiao@rock-chips.com>
 
-commit ec3decd21380081e3b5de4ba8d85d90a95f201a0 upstream.
+commit 371a3bc79c11b707d7a1b7a2c938dc3cc042fffb upstream.
 
-It's a repetition of the commit aa58a21ae378
-  ("gpio: pca953x: disable regmap locking")
-which states the following:
+The function cpu_power_to_freq is used to find a frequency and set the
+cooling device to consume at most the power to be converted. For example,
+if the power to be converted is 80mW, and the em table is as follow.
+struct em_cap_state table[] = {
+	/* KHz     mW */
+	{ 1008000, 36, 0 },
+	{ 1200000, 49, 0 },
+	{ 1296000, 59, 0 },
+	{ 1416000, 72, 0 },
+	{ 1512000, 86, 0 },
+};
+The target frequency should be 1416000KHz, not 1512000KHz.
 
-  This driver uses its own locking but regmap silently uses
-  a mutex for all operations too. Add the option to disable
-  locking to the regmap config struct.
-
-Fixes: bcf41dc480b1 ("gpio: pca953x: fix handling of automatic address incrementing")
-Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Fixes: 349d39dc5739 ("thermal: cpu_cooling: merge frequency and power tables")
+Cc: <stable@vger.kernel.org> # v4.13+
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200619090825.32747-1-finley.xiao@rock-chips.com
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-pca953x.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/thermal/cpu_cooling.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -398,6 +398,7 @@ static const struct regmap_config pca953
- 	.writeable_reg = pca953x_writeable_register,
- 	.volatile_reg = pca953x_volatile_register,
+--- a/drivers/thermal/cpu_cooling.c
++++ b/drivers/thermal/cpu_cooling.c
+@@ -210,11 +210,11 @@ static u32 cpu_power_to_freq(struct cpuf
+ 	int i;
+ 	struct freq_table *freq_table = cpufreq_cdev->freq_table;
  
-+	.disable_locking = true,
- 	.cache_type = REGCACHE_RBTREE,
- 	.max_register = 0x7f,
- };
+-	for (i = 1; i <= cpufreq_cdev->max_level; i++)
+-		if (power > freq_table[i].power)
++	for (i = 0; i < cpufreq_cdev->max_level; i++)
++		if (power >= freq_table[i].power)
+ 			break;
+ 
+-	return freq_table[i - 1].frequency;
++	return freq_table[i].frequency;
+ }
+ 
+ /**
 
 
