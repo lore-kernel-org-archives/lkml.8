@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4BEC43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16A4C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA4ED2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7FE2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262582;
-	bh=fra+96VQKFgP3IACQaR2naE/me3ML7PhEZDuOGT3y6I=;
+	s=default; t=1595262587;
+	bh=cS5sXh8R8EECFabwRlhfigWsqZ9n88SnscShNI+HJNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BPJGWiiBqT2Ij0rBTIbEbS05wvVhybnVrx1MGfSFQDAy29/lyCOxmHPk3LUtVCvGD
-	 5iLE5elM12nGHKKWP4V/N1aX0NKCdRaK1G+I6SYQxtfDBckeiY7aPA3LJI7sgXetAa
-	 LQF7MMg7cl6mmFLfKWEwWyenlCAT7NnwUaG8PPx8=
+	b=qSk41fuZWY7M5ACC8XJivJl4tBarPM9/TsDuivwIr1qfUb3OtxHjdpgFRY8gtjL/E
+	 ej2+1XZoLlopyXfQof+LRRO5cxlktVg1c+W0VI5G4AQ4hTvvdH6Fqmreq2+tt3UsSy
+	 aQLhqKQEBI5x3Ubf/AojSdvpzYTtKTz7330jXWA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732144AbgGTP7L (ORCPT
+        id S2388793AbgGTQ3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:59:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59562 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:29:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732124AbgGTP7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:08 -0400
+        id S1731645AbgGTP7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E06E206E9;
-        Mon, 20 Jul 2020 15:59:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3B3D2065E;
+        Mon, 20 Jul 2020 15:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260747;
-        bh=fra+96VQKFgP3IACQaR2naE/me3ML7PhEZDuOGT3y6I=;
+        s=default; t=1595260750;
+        bh=cS5sXh8R8EECFabwRlhfigWsqZ9n88SnscShNI+HJNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xUpYSXp/gRMyA73t+VXm2AVI60JwU3IG25lqTRSyXYWiZP1hiP+94DSELUnnbOyn9
-         yOF2BiHir6Fbp2umhQPV8li8fwyvgyYIAySklocdAL5PPwDyU5gUUgNffcfEFoZVIS
-         v7v3HVKJIPRV4o6oFdPDPayz2N5BRytJu2bIfYXE=
+        b=CfX1H6Ajt43TalJdDMGbt7k1x/j/j/bIpLVcBL7SkED6SX77/VJ+juDCISvUfzwwY
+         +XLyR90SZv6LQfP9+SjldfjTVoJRMwnaV4m3tSJ+qxV6OS5TQvw6BcYFCVpHfLjcQA
+         h1+ZaRs3hrFP0URg0e3tCebAe/67ytkaR+bL8gBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 064/215] net: sfp: add support for module quirks
-Date:   Mon, 20 Jul 2020 17:35:46 +0200
-Message-Id: <20200720152823.257580873@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wulff <crwulff@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 082/215] ALSA: usb-audio: Create a registration quirk for Kingston HyperX Amp (0951:16d8)
+Date:   Mon, 20 Jul 2020 17:36:04 +0200
+Message-Id: <20200720152824.113641618@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -62,122 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Chris Wulff <crwulff@gmail.com>
 
-[ Upstream commit b34bb2cb5b62c7397c28fcc335e8047a687eada4 ]
+[ Upstream commit 55f7326170d9e83e2d828591938e1101982a679c ]
 
-Add support for applying module quirks to the list of supported
-ethtool link modes.
+Create a quirk that allows special processing and/or
+skipping the call to snd_card_register.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+For HyperX AMP, which uses two interfaces, but only has
+a capture stream in the second, this allows the capture
+stream to merge with the first PCM.
+
+Signed-off-by: Chris Wulff <crwulff@gmail.com>
+Link: https://lore.kernel.org/r/20200314165449.4086-3-crwulff@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/sfp-bus.c | 54 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ sound/usb/card.c   | 12 ++++++++----
+ sound/usb/quirks.c | 14 ++++++++++++++
+ sound/usb/quirks.h |  3 +++
+ 3 files changed, 25 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/phy/sfp-bus.c b/drivers/net/phy/sfp-bus.c
-index b23fc41896ef5..35caf2eb2c275 100644
---- a/drivers/net/phy/sfp-bus.c
-+++ b/drivers/net/phy/sfp-bus.c
-@@ -9,6 +9,12 @@
- 
- #include "sfp.h"
- 
-+struct sfp_quirk {
-+	const char *vendor;
-+	const char *part;
-+	void (*modes)(const struct sfp_eeprom_id *id, unsigned long *modes);
-+};
-+
- /**
-  * struct sfp_bus - internal representation of a sfp bus
-  */
-@@ -21,6 +27,7 @@ struct sfp_bus {
- 	const struct sfp_socket_ops *socket_ops;
- 	struct device *sfp_dev;
- 	struct sfp *sfp;
-+	const struct sfp_quirk *sfp_quirk;
- 
- 	const struct sfp_upstream_ops *upstream_ops;
- 	void *upstream;
-@@ -30,6 +37,46 @@ struct sfp_bus {
- 	bool started;
- };
- 
-+static const struct sfp_quirk sfp_quirks[] = {
-+};
-+
-+static size_t sfp_strlen(const char *str, size_t maxlen)
-+{
-+	size_t size, i;
-+
-+	/* Trailing characters should be filled with space chars */
-+	for (i = 0, size = 0; i < maxlen; i++)
-+		if (str[i] != ' ')
-+			size = i + 1;
-+
-+	return size;
-+}
-+
-+static bool sfp_match(const char *qs, const char *str, size_t len)
-+{
-+	if (!qs)
-+		return true;
-+	if (strlen(qs) != len)
-+		return false;
-+	return !strncmp(qs, str, len);
-+}
-+
-+static const struct sfp_quirk *sfp_lookup_quirk(const struct sfp_eeprom_id *id)
-+{
-+	const struct sfp_quirk *q;
-+	unsigned int i;
-+	size_t vs, ps;
-+
-+	vs = sfp_strlen(id->base.vendor_name, ARRAY_SIZE(id->base.vendor_name));
-+	ps = sfp_strlen(id->base.vendor_pn, ARRAY_SIZE(id->base.vendor_pn));
-+
-+	for (i = 0, q = sfp_quirks; i < ARRAY_SIZE(sfp_quirks); i++, q++)
-+		if (sfp_match(q->vendor, id->base.vendor_name, vs) &&
-+		    sfp_match(q->part, id->base.vendor_pn, ps))
-+			return q;
-+
-+	return NULL;
-+}
- /**
-  * sfp_parse_port() - Parse the EEPROM base ID, setting the port type
-  * @bus: a pointer to the &struct sfp_bus structure for the sfp module
-@@ -233,6 +280,9 @@ void sfp_parse_support(struct sfp_bus *bus, const struct sfp_eeprom_id *id,
- 			phylink_set(modes, 1000baseX_Full);
+diff --git a/sound/usb/card.c b/sound/usb/card.c
+index f9a64e9526f54..2284377cbb98d 100644
+--- a/sound/usb/card.c
++++ b/sound/usb/card.c
+@@ -659,10 +659,14 @@ static int usb_audio_probe(struct usb_interface *intf,
+ 			goto __error;
  	}
  
-+	if (bus->sfp_quirk)
-+		bus->sfp_quirk->modes(id, modes);
-+
- 	bitmap_or(support, support, modes, __ETHTOOL_LINK_MODE_MASK_NBITS);
+-	/* we are allowed to call snd_card_register() many times */
+-	err = snd_card_register(chip->card);
+-	if (err < 0)
+-		goto __error;
++	/* we are allowed to call snd_card_register() many times, but first
++	 * check to see if a device needs to skip it or do anything special
++	 */
++	if (snd_usb_registration_quirk(chip, ifnum) == 0) {
++		err = snd_card_register(chip->card);
++		if (err < 0)
++			goto __error;
++	}
  
- 	phylink_set(support, Autoneg);
-@@ -553,6 +603,8 @@ int sfp_module_insert(struct sfp_bus *bus, const struct sfp_eeprom_id *id)
- 	const struct sfp_upstream_ops *ops = sfp_get_upstream_ops(bus);
- 	int ret = 0;
- 
-+	bus->sfp_quirk = sfp_lookup_quirk(id);
-+
- 	if (ops && ops->module_insert)
- 		ret = ops->module_insert(bus->upstream, id);
- 
-@@ -566,6 +618,8 @@ void sfp_module_remove(struct sfp_bus *bus)
- 
- 	if (ops && ops->module_remove)
- 		ops->module_remove(bus->upstream);
-+
-+	bus->sfp_quirk = NULL;
+ 	if (quirk && quirk->shares_media_device) {
+ 		/* don't want to fail when snd_media_device_create() fails */
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 9d11ff742e5f5..f3e26e65c3257 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1782,3 +1782,17 @@ void snd_usb_audioformat_attributes_quirk(struct snd_usb_audio *chip,
+ 		break;
+ 	}
  }
- EXPORT_SYMBOL_GPL(sfp_module_remove);
++
++int snd_usb_registration_quirk(struct snd_usb_audio *chip,
++			       int iface)
++{
++	switch (chip->usb_id) {
++	case USB_ID(0x0951, 0x16d8): /* Kingston HyperX AMP */
++		/* Register only when we reach interface 2 so that streams can
++		 * merge correctly into PCMs from interface 0
++		 */
++		return (iface != 2);
++	}
++	/* Register as normal */
++	return 0;
++}
+diff --git a/sound/usb/quirks.h b/sound/usb/quirks.h
+index df0355843a4c1..3afc01eabc7e2 100644
+--- a/sound/usb/quirks.h
++++ b/sound/usb/quirks.h
+@@ -51,4 +51,7 @@ void snd_usb_audioformat_attributes_quirk(struct snd_usb_audio *chip,
+ 					  struct audioformat *fp,
+ 					  int stream);
  
++int snd_usb_registration_quirk(struct snd_usb_audio *chip,
++			       int iface);
++
+ #endif /* __USBAUDIO_QUIRKS_H */
 -- 
 2.25.1
 
