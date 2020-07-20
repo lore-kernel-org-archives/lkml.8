@@ -2,68 +2,105 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1004B2176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F3020684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ZOrgMAHK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgGTJdX (ORCPT
+        id S1728228AbgGTJd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:33:23 -0400
-Received: from verein.lst.de ([213.95.11.211]:46152 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbgGTJdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:33:23 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 14CAB68C4E; Mon, 20 Jul 2020 11:33:20 +0200 (CEST)
-Date:   Mon, 20 Jul 2020 11:33:19 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 15/23] seq_file: switch over direct seq_read method
- calls to seq_read_iter
-Message-ID: <20200720093319.GA18123@lst.de>
-References: <20200707174801.4162712-1-hch@lst.de> <20200707174801.4162712-16-hch@lst.de> <87eep9rgqu.fsf@nanos.tec.linutronix.de>
+        Mon, 20 Jul 2020 05:33:58 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:58191 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727940AbgGTJd6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 05:33:58 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id xSBEjXfufNPeYxSBFjmpBm; Mon, 20 Jul 2020 11:33:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1595237635; bh=Oc0K8sxEqzjVn3DRenx9PPLPz8qOmAYt7tiqTMtQV/8=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=ZOrgMAHK6VX7sSLWKh2lJ6Kpr6+aGjXNBtiBxze4tRsjcBhWimaw+Tl4tu3Pk8mCT
+         XXHNzLoeoFdZr0Ik3KWfSSMcNYkzHLTnw6dK5ISvvbXIdQijNTweujUTHhLv9Twy+u
+         5CKQAxiom4mt4Qv9ZDUQEVSySOGUeIfCAJauNn5ojzCrMUevQ0mXpeke+EVSCy1R8F
+         L424HpuRDsVe2c6K++fi+ZGZYMOuP5Yeoiwq1U2d2hXgT2BqT0cRz+i/K4kJrV+YRF
+         P4xFMEz2yhau0kiC8aY3ZfZHUaGFDQz2VU45Q1prGtn/JBucSII1xcBa4RWwMpZWs1
+         d3sot+j6T49PA==
+Subject: Re: [PATCH 4/4] media: docs: Depricate mfc frame skip control
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Maheshwar Ajja <majja@codeaurora.org>
+References: <20200705121128.5250-1-stanimir.varbanov@linaro.org>
+ <20200705121128.5250-5-stanimir.varbanov@linaro.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <58ba8d2e-58a4-86bd-3eb1-668f9d743e6c@xs4all.nl>
+Date:   Mon, 20 Jul 2020 11:33:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87eep9rgqu.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200705121128.5250-5-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfLMczbqR7cwh/AUTIzSsEONhK6t0ca5X3CCS9RZt3DLrosrG+W2asUcuud2padTPmwP13Xbvdc06srwZ3WaqfK5sQHolUhq330f8vF4ulbkZzod3dcy0
+ Ic3UQ8jcJHP6aRl2+P991m9vYKdZuz4lm5FYaI2oW4l+2j4YRorw2lTvkUs+QM7DvMb9BewXHAL9UUSvKpuZMNIcv+um36sdHWJiYxv0Yjc2TsLoXXVMy5lp
+ H1zFW/IxTK//auY3zEJvUEYwNEPA1YE0tVcdqpLZHQbnpW017F+OMsrgutQtDAMg3bQlyKcc3acAYX2VBrrv/b3evDCSNRcgZN8JJohMdQKxc+jCjd0V+qhq
+ bA2sGaJ7xfJ68npWwXD0E8Ei7nf4mA0003WLfD3XW+w4Up7dKh3ds+Z5JGxctTI9jXkJ9673VRMqnDAnJ//X+/6qgqDhf6n8Q52DTJqFHe8gWFeRoU0dxJe/
+ 4sBeVp5Y2MwuXPRqlVBkAYO5yjo1vqypaRzONeSNl5NwQzDwdLo89jX1wl2P+ByNyOm8VAjsPTv8OuB0AKJqboklN1XVoLPAP5ZROpeebs3dDDOqgrE8Y537
+ vgaNSKjb4SZp1z2z/hdzGNj5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 11:09:13PM +0200, Thomas Gleixner wrote:
-> Christoph Hellwig <hch@lst.de> writes:
+On 05/07/2020 14:11, Stanimir Varbanov wrote:
+> Depricate mfc private frame skip mode control for new
+
+Depricate -> Deprecate (same in the patch below).
+
+> clients and use the standard one instead.
 > 
-> > Switch over all instances used directly as methods using these sed
-> > expressions:
-> >
-> > sed -i -e 's/\.read\(\s*=\s*\)seq_read/\.read_iter\1seq_read_iter/g'
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> This sucks, really. I just got a patch against this converting the
-> changed version to DEFINE_SHOW_ATTRIBUTE(somefile) and thereby removing
-> the whole open coded gunk.
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index a8b4c0b40747..c0760bfc54d4 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -2805,6 +2805,11 @@ MFC 5.1 Control IDs
+>  ``V4L2_CID_MPEG_MFC51_VIDEO_FRAME_SKIP_MODE``
+>      (enum)
+>  
+> +    .. note::
+> +
+> +       This control is depricated. Use the standard one
 
-The changed version of what?
+s/one//
 
-> If we do a tree wide change like this, then can we pretty please use a
-> coccinelle script to convert all trivial instances to use
-> DEFINE_SHOW_ATTRIBUTE so we don't have to touch the same place over and
-> over.
+> +       ``V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE`` instead.
 
-I'm not going to complain about that if someone offers a script
-for that.
+s/instead/control instead/
+
+> +
+>  enum v4l2_mpeg_mfc51_video_frame_skip_mode -
+>      Indicates in what conditions the encoder should skip frames. If
+>      encoding a frame would cause the encoded stream to be larger then a
+> 
+
