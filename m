@@ -2,52 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7034BC433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16DEC433FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50FBF2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC9B22CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261511;
-	bh=4nK5NQWB3DmhBrrh/5SW8PmVkZ22ZwS90BowG8FmDc4=;
+	s=default; t=1595261513;
+	bh=vg9YMEJudIGa74wiK/zveMa/qjPJ0bOrKOKXGsBDXlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WQdHe5YBFAp+krZUSGFyIz4XyLQFjccAocOwXrbTR8mBvc2mss2O1udzAn09QV/ih
-	 7NfBTg0+TQ8aXbeq0B7wfwgbqPPTiKAOVG+Kel3BrNM7PxWft4frU74wm+03ab4Dg4
-	 Cs1H41Wf8fTjDhFD/2x5A6w2BsHL3VG41JnXf2mk=
+	b=Pm4OXXuOhjW9LPKv/TZfjtI9cJLVTMvb6CLYHM8t9sBOlBetfXGD5umPByknYQ1Um
+	 0mbXtU0gcYkYrRKyNQSN6q4xKtiS3nq9c6KG3gNFxQdKvKZ4ddNS6Dk/9756+6MRHB
+	 bEAyEVNyuFCMCdD/HEtQiKqN5EkvcxdwkWsXI6GI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387858AbgGTQLt (ORCPT
+        id S2387867AbgGTQLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:11:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50922 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:11:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387840AbgGTQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:11:43 -0400
+        id S2387834AbgGTQLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:11:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4CA32065E;
-        Mon, 20 Jul 2020 16:11:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89C602064B;
+        Mon, 20 Jul 2020 16:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261503;
-        bh=4nK5NQWB3DmhBrrh/5SW8PmVkZ22ZwS90BowG8FmDc4=;
+        s=default; t=1595261506;
+        bh=vg9YMEJudIGa74wiK/zveMa/qjPJ0bOrKOKXGsBDXlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GZip6hKCbQI/JBdNGL2RlcHysX0Tc8R2QcjiskGomerrlPOwpoNPEEN9JsxDBdJ/T
-         CZ260RbY74fLEcUDnhndV7RLjktXQCEJWKfwlmTgKkqUE3GdQprAU4ITDJvkdFzsE+
-         4BYbvP26IG5Go5jZLPiteXoW4vA+HGb6oA+S3Qlc=
+        b=xWLQIgJm5ceGeYBIvmTXEitQFb8vtWrLvgJ7Q7LOGLM9+tLaimKuxGmnLCWNFCZ/q
+         OzhE9VeDLL/T1quGhirIdrXA3eVFPEDRgU9YA8SfSGEFC4QeYe2Vi5f6TFYngFZSwH
+         MbfaM8EkJbRndgHfBgAD/1GxYYJvclC24+dnb52c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.7 138/244] mtd: rawnand: brcmnand: correctly verify erased pages
-Date:   Mon, 20 Jul 2020 17:36:49 +0200
-Message-Id: <20200720152832.411806264@linuxfoundation.org>
+        stable@vger.kernel.org, dillon min <dillon.minfei@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 109/244] ARM: dts: Fix dcan driver probe failed on am437x platform
+Date:   Mon, 20 Jul 2020 17:36:20 +0200
+Message-Id: <20200720152831.015053488@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,66 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Álvaro Fernández Rojas <noltari@gmail.com>
+From: dillon min <dillon.minfei@gmail.com>
 
-commit dcb351c03f2fa6a599de1061b174167e03ee312b upstream.
+[ Upstream commit 2a4117df9b436a0e4c79d211284ab2097bcd00dc ]
 
-The current code checks that the whole OOB area is erased.
-This is a problem when JFFS2 cleanmarkers are added to the OOB, since it will
-fail due to the usable OOB bytes not being 0xff.
-Correct this by only checking that data and ECC bytes aren't 0xff.
+Got following d_can probe errors with kernel 5.8-rc1 on am437x
 
-Fixes: 02b88eea9f9c ("mtd: brcmnand: Add check for erased page bitflips")
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200512082451.771212-1-noltari@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[   10.730822] CAN device driver interface
+Starting Wait for Network to be Configured...
+[  OK  ] Reached target Network.
+[   10.787363] c_can_platform 481cc000.can: probe failed
+[   10.792484] c_can_platform: probe of 481cc000.can failed with error -2
+[   10.799457] c_can_platform 481d0000.can: probe failed
+[   10.804617] c_can_platform: probe of 481d0000.can failed with error -2
 
+actually, Tony has fixed this issue on am335x with the patch [3]
+
+Since am437x has the same clock structure with am335x
+[1][2], so reuse the code from Tony Lindgren's patch [3] to fix it.
+
+[1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
+     Integration
+[2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
+     Integration
+[3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on
+     am335x")
+
+Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during init to read revision")
+Signed-off-by: dillon min <dillon.minfei@gmail.com>
+[tony@atomide.com: aligned commit message a bit for readability]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/brcmnand/brcmnand.c |   19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/am437x-l4.dtsi | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -2021,28 +2021,31 @@ static int brcmnand_read_by_pio(struct m
- static int brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
- 		  struct nand_chip *chip, void *buf, u64 addr)
- {
--	int i, sas;
--	void *oob = chip->oob_poi;
-+	struct mtd_oob_region ecc;
-+	int i;
- 	int bitflips = 0;
- 	int page = addr >> chip->page_shift;
- 	int ret;
-+	void *ecc_bytes;
- 	void *ecc_chunk;
- 
- 	if (!buf)
- 		buf = nand_get_data_buf(chip);
- 
--	sas = mtd->oobsize / chip->ecc.steps;
--
- 	/* read without ecc for verification */
- 	ret = chip->ecc.read_page_raw(chip, buf, true, page);
- 	if (ret)
- 		return ret;
- 
--	for (i = 0; i < chip->ecc.steps; i++, oob += sas) {
-+	for (i = 0; i < chip->ecc.steps; i++) {
- 		ecc_chunk = buf + chip->ecc.size * i;
--		ret = nand_check_erased_ecc_chunk(ecc_chunk,
--						  chip->ecc.size,
--						  oob, sas, NULL, 0,
-+
-+		mtd_ooblayout_ecc(mtd, i, &ecc);
-+		ecc_bytes = chip->oob_poi + ecc.offset;
-+
-+		ret = nand_check_erased_ecc_chunk(ecc_chunk, chip->ecc.size,
-+						  ecc_bytes, ecc.length,
-+						  NULL, 0,
- 						  chip->ecc.strength);
- 		if (ret < 0)
- 			return ret;
+diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
+index 49c6a872052e4..e30089e96263a 100644
+--- a/arch/arm/boot/dts/am437x-l4.dtsi
++++ b/arch/arm/boot/dts/am437x-l4.dtsi
+@@ -1544,8 +1544,9 @@ target-module@cc000 {			/* 0x481cc000, ap 50 46.0 */
+ 			reg = <0xcc020 0x4>;
+ 			reg-names = "rev";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+-			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN0_CLKCTRL 0>;
+-			clock-names = "fck";
++			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN0_CLKCTRL 0>,
++			<&dcan0_fck>;
++			clock-names = "fck", "osc";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0xcc000 0x2000>;
+@@ -1553,6 +1554,8 @@ target-module@cc000 {			/* 0x481cc000, ap 50 46.0 */
+ 			dcan0: can@0 {
+ 				compatible = "ti,am4372-d_can", "ti,am3352-d_can";
+ 				reg = <0x0 0x2000>;
++				clocks = <&dcan0_fck>;
++				clock-names = "fck";
+ 				syscon-raminit = <&scm_conf 0x644 0>;
+ 				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+@@ -1564,8 +1567,9 @@ target-module@d0000 {			/* 0x481d0000, ap 52 3a.0 */
+ 			reg = <0xd0020 0x4>;
+ 			reg-names = "rev";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+-			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN1_CLKCTRL 0>;
+-			clock-names = "fck";
++			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN1_CLKCTRL 0>,
++			<&dcan1_fck>;
++			clock-names = "fck", "osc";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0xd0000 0x2000>;
+@@ -1573,6 +1577,8 @@ target-module@d0000 {			/* 0x481d0000, ap 52 3a.0 */
+ 			dcan1: can@0 {
+ 				compatible = "ti,am4372-d_can", "ti,am3352-d_can";
+ 				reg = <0x0 0x2000>;
++				clocks = <&dcan1_fck>;
++				clock-name = "fck";
+ 				syscon-raminit = <&scm_conf 0x644 1>;
+ 				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+-- 
+2.25.1
+
 
 
