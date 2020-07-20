@@ -2,269 +2,149 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303E4C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3427FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F91206F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OJrAnC24"
+	by mail.kernel.org (Postfix) with ESMTP id 1037C206F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:19:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595261956;
+	bh=qK77h3fwBf9BYnbF8S0ae2S5oBVr7gjLkM9sGOG0uL0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lkveJhI+gDvhIl9sZAsytZPkhCmuFVWIUL0T4Om48WTvkpfYwmymtRbBCjt7Q49pM
+	 pPiA3uIsT9GtYalAU+QJVK673ZSQ/012asYDcNyVqSpJ53BYhuw1Xy4gBO8KFfDzK5
+	 0X56DpeYKM2lr4FrplB4YGC6GoQqiw1zdgUFxHjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgGTQM2 (ORCPT
+        id S2388058AbgGTQTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:12:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387949AbgGTQMZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:12:25 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96998C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:12:25 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id o1so8889524plk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2F4okR0544vetAlDfB7iTkE3QWvIeEOYCah5TZgQj2o=;
-        b=OJrAnC24SNIdD4WiC3bvYWrYj6F1F8Ft4xqUAxkPu5wqB1dMQ87lONlUYCW2pmccaS
-         hYs7gCXc4Nu5pmwWmWEPfHVTHNEylA/07R3CoyS4WRIaY1YF1CpGo5ypPvXIF3FxJdSy
-         b3LfrY9VP7mULG0QqGZux77z4/5i+rctveZhQoEpM7f3GgRT8M2Lng1J/QP/GFwZ91DU
-         +bQXSK36kI/+gX9XBzWiQgnmWPoti+CrmMpCktgwiJrf7n6hJ4PlCH3NEOaFeMzuFTYF
-         St37vWDYivZmLa6CwvnUT7Z3DJSNuQOIyeiIafcZ9qvoKmhfcz/n2FZFrjTSHJ1fPyXt
-         7m7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2F4okR0544vetAlDfB7iTkE3QWvIeEOYCah5TZgQj2o=;
-        b=RntpowkRovc5RLL7DO765Gaaj6Y/EXOLr3b0o1ZZ3lC1sGASAaRjONFxFzZgBApqu7
-         FgvEPaVmn9e35jPRHE9BYxJGNwS8GMR7wcfgM/Er6Xg1JOvZDwhxczhqCwmLG8FzxnoD
-         MfdSK8cKIqoSSs1fmLD1LUhVcmsfOJLq+ezNpFhMUuqMfAGubkb5OpfiWmgggFr2J6Bf
-         ICkeT5kYKfX9HTxgP+LcAjMeyMW/VDy3QmGRXNywFws7Ev8Gmshu6hkzlb2LYd5yalJr
-         mOnk5Fz2+Z4TmGRirKR8b8jXU/i/CXMCZODFpfRCgWyOIvTmFrIX1H6gvvMHBlPUB7/l
-         mNyw==
-X-Gm-Message-State: AOAM533H3upzGi0+OglzGB2W5BxI6oRG7i+2vDCUauiBDYwlSeNMixZm
-        RvCqSouzOWS1qTaI7yaMm37O0zWzN6U1+M3TTs5TqA==
-X-Google-Smtp-Source: ABdhPJyF+ZUKZIxRociEgrADM+zlY+uhpV7CRGEU2dU589TgtL4i/ARGsszMGAArLEZUbBci4WwOehEDoUlAk+vAFYI=
-X-Received: by 2002:a17:90a:30ea:: with SMTP id h97mr170399pjb.32.1595261544607;
- Mon, 20 Jul 2020 09:12:24 -0700 (PDT)
+        Mon, 20 Jul 2020 12:19:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387937AbgGTQMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:12:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B62BB20684;
+        Mon, 20 Jul 2020 16:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595261539;
+        bh=qK77h3fwBf9BYnbF8S0ae2S5oBVr7gjLkM9sGOG0uL0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WfhU0MoSMdR8GgQT8VwBJzineSjAlH3YTNJrMwFoCGWQ8s0Y2rnpUJHDeAt70ImcL
+         Ngu98fWD0emIgXLDeILkx6H3R6GayRAf9Bv0Gjl8nF3vvNC+3NzywtvmasZsV+fwXS
+         2mBCVclqTdFalTuRBpGPKvBZTWNUDFRBdQH7FDlg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+0f4ecfe6a2c322c81728@syzkaller.appspotmail.com,
+        syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 153/244] ALSA: usb-audio: Fix race against the error recovery URB submission
+Date:   Mon, 20 Jul 2020 17:37:04 +0200
+Message-Id: <20200720152833.129085983@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
+References: <20200720152825.863040590@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200627190230.1191796-1-luca.stefani.ge1@gmail.com> <20200718112513.533800-1-luca.stefani.ge1@gmail.com>
-In-Reply-To: <20200718112513.533800-1-luca.stefani.ge1@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 20 Jul 2020 09:12:14 -0700
-Message-ID: <CAKwvOd=wVeUuxcLThf0hr+CL0PhjLjUtXAqwrF9S6-qzfWOxDQ@mail.gmail.com>
-Subject: Re: [PATCH v2] ntfs: Fix ntfs_test_inode and ntfs_init_locked_inode
- function type
-To:     Luca Stefani <luca.stefani.ge1@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        freak07 <michalechner92@googlemail.com>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        linux-ntfs-dev@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 4:25 AM Luca Stefani <luca.stefani.ge1@gmail.com> wrote:
->
-> Clang's Control Flow Integrity (CFI) is a security mechanism that can
-> help prevent JOP chains, deployed extensively in downstream kernels
-> used in Android.
->
-> It's deployment is hindered by mismatches in function signatures.  For
-> this case, we make callbacks match their intended function signature,
-> and cast parameters within them rather than casting the callback when
-> passed as a parameter.
->
-> When running `mount -t ntfs ...` we observe the following trace:
->
-> Call trace:
-> __cfi_check_fail+0x1c/0x24
-> name_to_dev_t+0x0/0x404
-> iget5_locked+0x594/0x5e8
-> ntfs_fill_super+0xbfc/0x43ec
-> mount_bdev+0x30c/0x3cc
-> ntfs_mount+0x18/0x24
-> mount_fs+0x1b0/0x380
-> vfs_kern_mount+0x90/0x398
-> do_mount+0x5d8/0x1a10
-> SyS_mount+0x108/0x144
-> el0_svc_naked+0x34/0x38
->
-> Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
-> Tested-by: freak07 <michalechner92@googlemail.com>
-> Acked-by: Anton Altaparmakov <anton@tuxera.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-Make sure to set an explicit --to!
+commit 9b7e5208a941e2e491a83eb5fa83d889e888fa2f upstream.
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+USB MIDI driver has an error recovery mechanism to resubmit the URB in
+the delayed timer handler, and this may race with the standard start /
+stop operations.  Although both start and stop operations themselves
+don't race with each other due to the umidi->mutex protection, but
+this isn't applied to the timer handler.
 
-> ---
->  fs/ntfs/dir.c   |  2 +-
->  fs/ntfs/inode.c | 27 ++++++++++++++-------------
->  fs/ntfs/inode.h |  4 +---
->  fs/ntfs/mft.c   |  4 ++--
->  4 files changed, 18 insertions(+), 19 deletions(-)
->
-> diff --git a/fs/ntfs/dir.c b/fs/ntfs/dir.c
-> index 3c4811469ae8..e278bfc5ee7f 100644
-> --- a/fs/ntfs/dir.c
-> +++ b/fs/ntfs/dir.c
-> @@ -1503,7 +1503,7 @@ static int ntfs_dir_fsync(struct file *filp, loff_t start, loff_t end,
->         na.type = AT_BITMAP;
->         na.name = I30;
->         na.name_len = 4;
-> -       bmp_vi = ilookup5(vi->i_sb, vi->i_ino, (test_t)ntfs_test_inode, &na);
-> +       bmp_vi = ilookup5(vi->i_sb, vi->i_ino, ntfs_test_inode, &na);
->         if (bmp_vi) {
->                 write_inode_now(bmp_vi, !datasync);
->                 iput(bmp_vi);
-> diff --git a/fs/ntfs/inode.c b/fs/ntfs/inode.c
-> index d4359a1df3d5..9bb9f0952b18 100644
-> --- a/fs/ntfs/inode.c
-> +++ b/fs/ntfs/inode.c
-> @@ -30,10 +30,10 @@
->  /**
->   * ntfs_test_inode - compare two (possibly fake) inodes for equality
->   * @vi:                vfs inode which to test
-> - * @na:                ntfs attribute which is being tested with
-> + * @data:      data which is being tested with
->   *
->   * Compare the ntfs attribute embedded in the ntfs specific part of the vfs
-> - * inode @vi for equality with the ntfs attribute @na.
-> + * inode @vi for equality with the ntfs attribute @data.
->   *
->   * If searching for the normal file/directory inode, set @na->type to AT_UNUSED.
->   * @na->name and @na->name_len are then ignored.
-> @@ -43,8 +43,9 @@
->   * NOTE: This function runs with the inode_hash_lock spin lock held so it is not
->   * allowed to sleep.
->   */
-> -int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
-> +int ntfs_test_inode(struct inode *vi, void *data)
->  {
-> +       ntfs_attr *na = (ntfs_attr *)data;
->         ntfs_inode *ni;
->
->         if (vi->i_ino != na->mft_no)
-> @@ -72,9 +73,9 @@ int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
->  /**
->   * ntfs_init_locked_inode - initialize an inode
->   * @vi:                vfs inode to initialize
-> - * @na:                ntfs attribute which to initialize @vi to
-> + * @data:      data which to initialize @vi to
->   *
-> - * Initialize the vfs inode @vi with the values from the ntfs attribute @na in
-> + * Initialize the vfs inode @vi with the values from the ntfs attribute @data in
->   * order to enable ntfs_test_inode() to do its work.
->   *
->   * If initializing the normal file/directory inode, set @na->type to AT_UNUSED.
-> @@ -87,8 +88,9 @@ int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
->   * NOTE: This function runs with the inode->i_lock spin lock held so it is not
->   * allowed to sleep. (Hence the GFP_ATOMIC allocation.)
->   */
-> -static int ntfs_init_locked_inode(struct inode *vi, ntfs_attr *na)
-> +static int ntfs_init_locked_inode(struct inode *vi, void *data)
->  {
-> +       ntfs_attr *na = (ntfs_attr *)data;
->         ntfs_inode *ni = NTFS_I(vi);
->
->         vi->i_ino = na->mft_no;
-> @@ -131,7 +133,6 @@ static int ntfs_init_locked_inode(struct inode *vi, ntfs_attr *na)
->         return 0;
->  }
->
-> -typedef int (*set_t)(struct inode *, void *);
->  static int ntfs_read_locked_inode(struct inode *vi);
->  static int ntfs_read_locked_attr_inode(struct inode *base_vi, struct inode *vi);
->  static int ntfs_read_locked_index_inode(struct inode *base_vi,
-> @@ -164,8 +165,8 @@ struct inode *ntfs_iget(struct super_block *sb, unsigned long mft_no)
->         na.name = NULL;
->         na.name_len = 0;
->
-> -       vi = iget5_locked(sb, mft_no, (test_t)ntfs_test_inode,
-> -                       (set_t)ntfs_init_locked_inode, &na);
-> +       vi = iget5_locked(sb, mft_no, ntfs_test_inode,
-> +                       ntfs_init_locked_inode, &na);
->         if (unlikely(!vi))
->                 return ERR_PTR(-ENOMEM);
->
-> @@ -225,8 +226,8 @@ struct inode *ntfs_attr_iget(struct inode *base_vi, ATTR_TYPE type,
->         na.name = name;
->         na.name_len = name_len;
->
-> -       vi = iget5_locked(base_vi->i_sb, na.mft_no, (test_t)ntfs_test_inode,
-> -                       (set_t)ntfs_init_locked_inode, &na);
-> +       vi = iget5_locked(base_vi->i_sb, na.mft_no, ntfs_test_inode,
-> +                       ntfs_init_locked_inode, &na);
->         if (unlikely(!vi))
->                 return ERR_PTR(-ENOMEM);
->
-> @@ -280,8 +281,8 @@ struct inode *ntfs_index_iget(struct inode *base_vi, ntfschar *name,
->         na.name = name;
->         na.name_len = name_len;
->
-> -       vi = iget5_locked(base_vi->i_sb, na.mft_no, (test_t)ntfs_test_inode,
-> -                       (set_t)ntfs_init_locked_inode, &na);
-> +       vi = iget5_locked(base_vi->i_sb, na.mft_no, ntfs_test_inode,
-> +                       ntfs_init_locked_inode, &na);
->         if (unlikely(!vi))
->                 return ERR_PTR(-ENOMEM);
->
-> diff --git a/fs/ntfs/inode.h b/fs/ntfs/inode.h
-> index 98e670fbdd31..363e4e820673 100644
-> --- a/fs/ntfs/inode.h
-> +++ b/fs/ntfs/inode.h
-> @@ -253,9 +253,7 @@ typedef struct {
->         ATTR_TYPE type;
->  } ntfs_attr;
->
-> -typedef int (*test_t)(struct inode *, void *);
-> -
-> -extern int ntfs_test_inode(struct inode *vi, ntfs_attr *na);
-> +extern int ntfs_test_inode(struct inode *vi, void *data);
->
->  extern struct inode *ntfs_iget(struct super_block *sb, unsigned long mft_no);
->  extern struct inode *ntfs_attr_iget(struct inode *base_vi, ATTR_TYPE type,
-> diff --git a/fs/ntfs/mft.c b/fs/ntfs/mft.c
-> index fbb9f1bc623d..0d62cd5bb7f8 100644
-> --- a/fs/ntfs/mft.c
-> +++ b/fs/ntfs/mft.c
-> @@ -958,7 +958,7 @@ bool ntfs_may_write_mft_record(ntfs_volume *vol, const unsigned long mft_no,
->                  * dirty code path of the inode dirty code path when writing
->                  * $MFT occurs.
->                  */
-> -               vi = ilookup5_nowait(sb, mft_no, (test_t)ntfs_test_inode, &na);
-> +               vi = ilookup5_nowait(sb, mft_no, ntfs_test_inode, &na);
->         }
->         if (vi) {
->                 ntfs_debug("Base inode 0x%lx is in icache.", mft_no);
-> @@ -1019,7 +1019,7 @@ bool ntfs_may_write_mft_record(ntfs_volume *vol, const unsigned long mft_no,
->                 vi = igrab(mft_vi);
->                 BUG_ON(vi != mft_vi);
->         } else
-> -               vi = ilookup5_nowait(sb, na.mft_no, (test_t)ntfs_test_inode,
-> +               vi = ilookup5_nowait(sb, na.mft_no, ntfs_test_inode,
->                                 &na);
->         if (!vi) {
->                 /*
-> --
-> 2.27.0
->
-> --
+For fixing this potential race, the following changes are applied:
 
--- 
-Thanks,
-~Nick Desaulniers
+- Since the timer handler can't use the mutex, we apply the
+  umidi->disc_lock protection at each input stream URB submission;
+  this also needs to change the GFP flag to GFP_ATOMIC
+- Add a check of the URB refcount and skip if already submitted
+- Move the timer cancel call at disconnection to the beginning of the
+  procedure; this assures the in-flight timer handler is gone properly
+  before killing all pending URBs
+
+Reported-by: syzbot+0f4ecfe6a2c322c81728@syzkaller.appspotmail.com
+Reported-by: syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200710160656.16819-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ sound/usb/midi.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+--- a/sound/usb/midi.c
++++ b/sound/usb/midi.c
+@@ -1499,6 +1499,8 @@ void snd_usbmidi_disconnect(struct list_
+ 	spin_unlock_irq(&umidi->disc_lock);
+ 	up_write(&umidi->disc_rwsem);
+ 
++	del_timer_sync(&umidi->error_timer);
++
+ 	for (i = 0; i < MIDI_MAX_ENDPOINTS; ++i) {
+ 		struct snd_usb_midi_endpoint *ep = &umidi->endpoints[i];
+ 		if (ep->out)
+@@ -1525,7 +1527,6 @@ void snd_usbmidi_disconnect(struct list_
+ 			ep->in = NULL;
+ 		}
+ 	}
+-	del_timer_sync(&umidi->error_timer);
+ }
+ EXPORT_SYMBOL(snd_usbmidi_disconnect);
+ 
+@@ -2301,16 +2302,22 @@ void snd_usbmidi_input_stop(struct list_
+ }
+ EXPORT_SYMBOL(snd_usbmidi_input_stop);
+ 
+-static void snd_usbmidi_input_start_ep(struct snd_usb_midi_in_endpoint *ep)
++static void snd_usbmidi_input_start_ep(struct snd_usb_midi *umidi,
++				       struct snd_usb_midi_in_endpoint *ep)
+ {
+ 	unsigned int i;
++	unsigned long flags;
+ 
+ 	if (!ep)
+ 		return;
+ 	for (i = 0; i < INPUT_URBS; ++i) {
+ 		struct urb *urb = ep->urbs[i];
+-		urb->dev = ep->umidi->dev;
+-		snd_usbmidi_submit_urb(urb, GFP_KERNEL);
++		spin_lock_irqsave(&umidi->disc_lock, flags);
++		if (!atomic_read(&urb->use_count)) {
++			urb->dev = ep->umidi->dev;
++			snd_usbmidi_submit_urb(urb, GFP_ATOMIC);
++		}
++		spin_unlock_irqrestore(&umidi->disc_lock, flags);
+ 	}
+ }
+ 
+@@ -2326,7 +2333,7 @@ void snd_usbmidi_input_start(struct list
+ 	if (umidi->input_running || !umidi->opened[1])
+ 		return;
+ 	for (i = 0; i < MIDI_MAX_ENDPOINTS; ++i)
+-		snd_usbmidi_input_start_ep(umidi->endpoints[i].in);
++		snd_usbmidi_input_start_ep(umidi, umidi->endpoints[i].in);
+ 	umidi->input_running = 1;
+ }
+ EXPORT_SYMBOL(snd_usbmidi_input_start);
+
+
