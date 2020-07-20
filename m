@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5186BC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA736C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19754206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21BB22CBB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:59:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ragr2qUY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GIY1Vo37"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbgGTP7N (ORCPT
+        id S1731896AbgGTP7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:59:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41968 "EHLO
+        Mon, 20 Jul 2020 11:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732127AbgGTP7I (ORCPT
+        with ESMTP id S1732163AbgGTP7O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:08 -0400
+        Mon, 20 Jul 2020 11:59:14 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EF1BC061794;
-        Mon, 20 Jul 2020 08:59:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A52C061794;
+        Mon, 20 Jul 2020 08:59:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=wH1km2ojPC19iQ5ljU6mKThZqRhQ0p6SNiSca9bvcb4=; b=ragr2qUYABEngfygXGZqb8ZnM0
-        yhbkiW5TKV6WWYluat9zuI7JpscuFj/2xPIGQwaG8Jh4rC83L4qD+4+oMlrMW9JmuO1zcizt0hj6e
-        gd+DivP8iaenwZv8HQWe0pj16vPSvXR1+gdlLUOb2DqSfSfSPwLKsDRq8cpgzMbB+WUfFA55E7Gl5
-        SKdWXmekWSmLXqxqViJgJUc/7jm4ljuBjLE1zZNyB2pTEVWqr8O8TDCaORM4dJgLmRvwRYtv272AH
-        Z+bfZCn2SeApfZCWhObEM4woQUwlQMuxhKAQIazTU5FiUVX1M7rfvxaqRfN31Hf/a0wVoxtsndG75
-        OewVjeAA==;
+        bh=odQbkjUxFzFbuRy/BvdmjLaA+rlQMKoZDJWHpbta07k=; b=GIY1Vo37RS232P6603hY2FmVZg
+        xjy9iUZMV66tye6HDkbPmBX6BokK6zYlkozUTzAmuJ3qiaqXwvy1mt/yeB+pKw4chHLHUKBOukBcK
+        IyZqWmEbiduutlH7PQXKeUv0OQzxm5Qkts7n5X1EwLrVJninoPqCbjWgiIOp5eSpfi2Bit/yriOV7
+        bK0hOjuEPrfjxAPx8Ce/rkvaU13hAEvTKmnCcMrVRGLhdHi8SGwaGr+CePd6xynRIqRL/nkHueflB
+        8K2BBY5gvZDKIgvWg6zfZsA2b1eue3lI1Xp8lxuXzyWfVFzx0qmlSu2VoHf99jLRIARp0ebEviXzm
+        YLBL3pzA==;
 Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxYC0-0007md-NU; Mon, 20 Jul 2020 15:59:05 +0000
+        id 1jxYC6-0007nJ-CS; Mon, 20 Jul 2020 15:59:10 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 01/24] init: initialize ramdisk_execute_command at compile time
-Date:   Mon, 20 Jul 2020 17:58:39 +0200
-Message-Id: <20200720155902.181712-2-hch@lst.de>
+Subject: [PATCH 05/24] fs: move the putname from filename_lookup to the callers
+Date:   Mon, 20 Jul 2020 17:58:43 +0200
+Message-Id: <20200720155902.181712-6-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720155902.181712-1-hch@lst.de>
 References: <20200720155902.181712-1-hch@lst.de>
@@ -60,39 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set ramdisk_execute_command to "/init" at compile time.  The command
-line can still override it, but this saves a few instructions and
-removes a NULL check.
+This allows reusing the struct filename for retries, and will also allow
+pushing the getname up the stack for a few places to allower for better
+handling of kernel space filenames.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- init/main.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ fs/fs_parser.c |  1 +
+ fs/namei.c     | 28 ++++++++++++++++++++--------
+ 2 files changed, 21 insertions(+), 8 deletions(-)
 
-diff --git a/init/main.c b/init/main.c
-index db0621dfbb0468..c2c9143db96795 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -154,7 +154,7 @@ static bool initargs_found;
- #endif
+diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+index ab53e42a874aaa..58d5e53d74eeb7 100644
+--- a/fs/fs_parser.c
++++ b/fs/fs_parser.c
+@@ -171,6 +171,7 @@ int fs_lookup_param(struct fs_context *fc,
+ 		errorf(fc, "%s: Lookup failure for '%s'", param->key, f->name);
+ 		goto out;
+ 	}
++	putname(f);
  
- static char *execute_command;
--static char *ramdisk_execute_command;
-+static char *ramdisk_execute_command = "/init";
+ 	if (want_bdev &&
+ 	    !S_ISBLK(d_backing_inode(_path->dentry)->i_mode)) {
+diff --git a/fs/namei.c b/fs/namei.c
+index 6ebe400c9736d2..6daffd59e97270 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2372,8 +2372,9 @@ int filename_lookup(int dfd, struct filename *name, unsigned flags,
+ 	if (likely(!retval))
+ 		audit_inode(name, path->dentry,
+ 			    flags & LOOKUP_MOUNTPOINT ? AUDIT_INODE_NOEVAL : 0);
++	else
++		putname(name);
+ 	restore_nameidata();
+-	putname(name);
+ 	return retval;
+ }
  
- /*
-  * Used to generate warnings if static_key manipulation functions are used
-@@ -1514,10 +1514,6 @@ static noinline void __init kernel_init_freeable(void)
- 	 * check if there is an early userspace init.  If yes, let it do all
- 	 * the work
- 	 */
--
--	if (!ramdisk_execute_command)
--		ramdisk_execute_command = "/init";
--
- 	if (ksys_access((const char __user *)
- 			ramdisk_execute_command, 0) != 0) {
- 		ramdisk_execute_command = NULL;
+@@ -2450,8 +2451,12 @@ struct dentry *kern_path_locked(const char *name, struct path *path)
+ 
+ int kern_path(const char *name, unsigned int flags, struct path *path)
+ {
+-	return filename_lookup(AT_FDCWD, getname_kernel(name),
+-			       flags, path, NULL);
++	struct filename *f = getname_kernel(name);
++	int ret = filename_lookup(AT_FDCWD, f, flags, path, NULL);
++
++	if (!ret)
++		putname(f);
++	return ret;
+ }
+ EXPORT_SYMBOL(kern_path);
+ 
+@@ -2468,9 +2473,12 @@ int vfs_path_lookup(struct dentry *dentry, struct vfsmount *mnt,
+ 		    struct path *path)
+ {
+ 	struct path root = {.mnt = mnt, .dentry = dentry};
+-	/* the first argument of filename_lookup() is ignored with root */
+-	return filename_lookup(AT_FDCWD, getname_kernel(name),
+-			       flags , path, &root);
++	struct filename *f = getname_kernel(name);
++	int ret = filename_lookup(AT_FDCWD, f, flags, path, &root);
++
++	if (!ret)
++		putname(f);
++	return ret;
+ }
+ EXPORT_SYMBOL(vfs_path_lookup);
+ 
+@@ -2643,8 +2651,12 @@ int path_pts(struct path *path)
+ int user_path_at_empty(int dfd, const char __user *name, unsigned flags,
+ 		 struct path *path, int *empty)
+ {
+-	return filename_lookup(dfd, getname_flags(name, flags, empty),
+-			       flags, path, NULL);
++	struct filename *f = getname_flags(name, flags, empty);
++	int ret = filename_lookup(dfd, f, flags, path, NULL);
++
++	if (!ret)
++		putname(f);
++	return ret;
+ }
+ EXPORT_SYMBOL(user_path_at_empty);
+ 
 -- 
 2.27.0
 
