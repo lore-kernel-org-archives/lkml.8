@@ -8,68 +8,66 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390F9C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62B4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8C021702
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BBE12080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:22:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0Kr+5yD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lR/qQt9T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgGTXVr (ORCPT
+        id S1728049AbgGTXWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:21:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53512 "EHLO
+        Mon, 20 Jul 2020 19:22:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgGTXVr (ORCPT
+        with ESMTP id S1726021AbgGTXWl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 19:21:47 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C913DC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:21:46 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o2so1076515wmh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:21:46 -0700 (PDT)
+        Mon, 20 Jul 2020 19:22:41 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A16FC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:22:41 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f18so19440026wrs.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:22:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zObFgXKT9Ds10ztGpJtKjYyqMsMMLzpLPFZF79HphxE=;
-        b=A0Kr+5yDSL4zPHtw4VBduOwno00SvIHjPuiBAJXxa0kuooKm38b7kcUyORmqXUSa6X
-         a3arTqa3KaSmW1bDz6jxo/9g8s4q+5cOiGxNcc3H/CU9OMa13ss1EjFySc9o+Jlt0VEF
-         ZHVj2pBOd+RSlj23YilEPnaqMD9a+H+uJAocRMaMk2A+Pb6aKrBpaQd43gkx2vyNedT9
-         taEfPOKFhd0HOzyo8swiWUgz1rhX/KNzgHLhlMEnkz6WknJeTN/KxD0jPCIgOBwDvJem
-         YvnVaTSL8foe87GInRykGozJTOOpqRZruS3TLdVECdt9MzEFWJ5OpFyMgpcq4bOS0S2y
-         /iSg==
+        bh=kv0NaqFL/MR42WjWhxs6aF0qnAcBzA6JCukXdkBQly4=;
+        b=lR/qQt9T+gy9aLRTKA4gUwCKLPdnpwLfyJJLu/qa9jJfLwqtY942thJc1BfRJh63/c
+         ENCYhvzhzXjI0moeU19a7Ao6hdu/bhjh/BKvOsXXP6wl/o2ErarBHl7DbgQ5YLI7H/ra
+         QKBwP2TDe20wVnkrMHio8QS4Z6ZdJIzk3PTXhFOZ9swlmO8xU880mMZ2fQYdCAArDJbB
+         +9HvjmyTXmDMdWql31URvFNGL/lVjfEgKLJw7xgSiCclvyyVWdngkRR43e+yZKoBLeJR
+         mTmfaTcXpokh7L02NssfuleBN9ui9JWz98uxrnVTOeI1VnibPUIzZR2+MLVrJW9xafVT
+         PnTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=zObFgXKT9Ds10ztGpJtKjYyqMsMMLzpLPFZF79HphxE=;
-        b=XFLynT1R4cq6bT03/DFCRWJ8xnFMqtNN+WejpJSxCGdqom+zDj0m+dLEK/TnlCDvm8
-         94ofTLdSgg4OlgbfoQhZPhxiODax5kGQPOohAVX9ylaiQ32YpJGTMuW7Qwd+O5XJugU7
-         RuzWCSJbPaPcmFoC3k8TWQ9jbnxwL0UrR45/VdsdDoRbKLG0JuIrye5Yh0GxpkB4PvAA
-         vf5dApUNgi8B2Xsk8ROh50HAXko/ta/wfmPtaV872Ac40vxdnCNzruXywOrOdMBjrhQF
-         Ji5LgFyliMUvLYkfUWB5VFiddzZAvTuCucL1NT/k63eOl9vel7znx8MH08EUaYUurWQ1
-         8cSg==
-X-Gm-Message-State: AOAM532SXaP/wjTYBAx0q7uU9QyKdOXDcNSuMb7U4J3SKrzYKsYX5tQy
-        nnM8+nPWul9YBgvexvtstAPp8VOp
-X-Google-Smtp-Source: ABdhPJzdodig+xN6Lc+kboKCy4t9zpVHfRjK2qOJke4BgRva7o31aJGt9V1DynuQMm/Ga5kOSD7Wcg==
-X-Received: by 2002:a1c:984d:: with SMTP id a74mr1456397wme.140.1595287304981;
-        Mon, 20 Jul 2020 16:21:44 -0700 (PDT)
+        bh=kv0NaqFL/MR42WjWhxs6aF0qnAcBzA6JCukXdkBQly4=;
+        b=etvpqAPzizXeZJNpGgSgOUD/SJi3HwqNUHnWdndTjvluRz7sRIfhZ2CCxurGbSmHVA
+         1lhr0gdplBC2R60mLSPeiZ9/EB7Pbjv0qfiARFfKGbakBFWW8ndZHkL5DiIRdJ+J+eml
+         vkxVq+QG4tLBo+pPkZPkclP3t0ZzQDNmtJ4MVUJkNxPpN4SDpWAAVc98BmQHUoYN1JpL
+         sz9N3HOo9xsBQwaUr4hGj4RXdH8POQkrejyhWoF8wzU0APQjKRC7zG182b6cU6sl54GG
+         NvF1G6hbBkig+iK0zk2TdX2RI0ciZtHl6Ib7TK/vaDf3e5d2oiEaP9hNF+zfoQUDNmzR
+         gLUA==
+X-Gm-Message-State: AOAM532qDTpd3aIIlrQND7PatZsp7TWOBaGzP4eHoVekvHF7wF+N5KC6
+        VdtodwI6Sh48QwA24neZZkwzPoMX
+X-Google-Smtp-Source: ABdhPJyD5VsQvmSju/YziKTHtXPB87buPCWcofiROAnPXRLEV6faC6zKZ81I4Rbr77gnfH4Ggz1lVQ==
+X-Received: by 2002:adf:f54d:: with SMTP id j13mr23059561wrp.427.1595287359989;
+        Mon, 20 Jul 2020 16:22:39 -0700 (PDT)
 Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id a123sm1227325wmd.28.2020.07.20.16.21.42
+        by smtp.googlemail.com with ESMTPSA id i14sm5052314wrc.19.2020.07.20.16.22.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 16:21:44 -0700 (PDT)
-Subject: Re: [PATCH] ARM: bcm: Enable BCM7038_L1_IRQ for ARCH_BRCMSTB
+        Mon, 20 Jul 2020 16:22:39 -0700 (PDT)
+Subject: Re: [PATCH] bus: brcmstb_gisb: Shorten prints
 To:     Florian Fainelli <f.fainelli@gmail.com>,
         linux-arm-kernel@lists.infradead.org
-Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+Cc:     "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <bcm-kernel-feedback-list@broadcom.com>,
-        Russell King <linux@armlinux.org.uk>,
         open list <linux-kernel@vger.kernel.org>
-References: <20200709234557.5380-1-f.fainelli@gmail.com>
+References: <20200709232746.6141-1-f.fainelli@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -125,12 +123,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <981bb8b8-e5a4-dcd0-70df-5921e2e318ab@gmail.com>
-Date:   Mon, 20 Jul 2020 16:21:41 -0700
+Message-ID: <8c5ed8c5-cffe-7e33-8b5a-8b6cfe396b99@gmail.com>
+Date:   Mon, 20 Jul 2020 16:22:37 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200709234557.5380-1-f.fainelli@gmail.com>
+In-Reply-To: <20200709232746.6141-1-f.fainelli@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -139,12 +137,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/20 4:45 PM, Florian Fainelli wrote:
-> ARCH_BRCMSTB makes use of the irq-bcm7038-l1.c irqchip driver, enable
-> it.
+On 7/9/20 4:27 PM, Florian Fainelli wrote:
+> Do not print the full function name (brcmstb_gisb_arb_decode_addr) which
+> is quite long, and reduces our chances to printing a full line, instead
+> just use "GISB: " as a prefix for these prints.
 > 
 > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Applied to soc/next, thanks!
+Applied to drivers/next, thanks!
 -- 
 Florian
