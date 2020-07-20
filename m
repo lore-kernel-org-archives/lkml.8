@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FFEC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F24C2C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF9782064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13E32065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260374;
-	bh=cAFuMYMSI+hC05opE2iqvyvBHqjp9gab63WrRRX/0w4=;
+	s=default; t=1595260378;
+	bh=crJYIvivXNC90Eok6L3CAdfejlbjG3R3FNRn61Sp718=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p7D3booQzIrtAW/D+4SMwrsAfVc7Qd9nLBLQTg21VSS+KQdagfx/wWFiCwVkalQ7a
-	 a7gv2DriD6vZ5lMDvqijpedg0Fizs9iYtEtFteG3E/4BHx93kHFb567MH3PpIrHjWt
-	 OPHzpZQRSD+tC+rVyl8Z+6a+HnMjeLygxxNjTS18=
+	b=SEnr5hKWv7U6kM/Xg/vZbcdO/NA+4KQ96Qs2+kYgSrgi3KX0VRLXaH193cuksovN2
+	 4M47Hb9evpV/CKQq6qi0zfDL8/JSNRem8jd9+d0hIQ2v1splgs/DIibaDONbDST/SH
+	 AllXrjw/tTeGlkR8+GqegSKL7p04sRnc0+DFEIoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbgGTPwx (ORCPT
+        id S1731430AbgGTPw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:52:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51116 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:52:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbgGTPwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:52:49 -0400
+        id S1731404AbgGTPwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:52:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B6632064B;
-        Mon, 20 Jul 2020 15:52:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 246FE2065E;
+        Mon, 20 Jul 2020 15:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260368;
-        bh=cAFuMYMSI+hC05opE2iqvyvBHqjp9gab63WrRRX/0w4=;
+        s=default; t=1595260374;
+        bh=crJYIvivXNC90Eok6L3CAdfejlbjG3R3FNRn61Sp718=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O4CYwaUctCBpWAOBNhVYC0CtivYSvEOoe5w+1lOjSbBcunLVTBRjBFz9ZdQilbNVB
-         lFtzNSPzNo1K7YidRlmoJEFBX00CmPcKqv5B3+MnhYPZZvRdV2qTf1UzouzblOHK7y
-         7GxQAwWkZt9avWs1FA4zsICvXYxoVKV5nJNAODW8=
+        b=uvvgyrYm8hy92+kONm9fpkkY2JGgYxu0JLe96jgl/J4pAMafxGni0R2vtp026gZd1
+         NgeFyh+5tkfHmxt726bTPIVIEA7XXb9A8p4aWEctqDVIbLgLKqeBHNZcAL2KFLuJPf
+         K8gj0Hf7Bu6unKiTOFQuETy9wm0d0OJGEI7JTVzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.19 078/133] mtd: rawnand: oxnas: Keep track of registered devices
-Date:   Mon, 20 Jul 2020 17:37:05 +0200
-Message-Id: <20200720152807.473463028@linuxfoundation.org>
+Subject: [PATCH 4.19 080/133] mtd: rawnand: oxnas: Release all devices in the _remove() path
+Date:   Mon, 20 Jul 2020 17:37:07 +0200
+Message-Id: <20200720152807.570110342@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -60,56 +60,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit 383fc3f613e7eac9f2e3c13b6f9fb8c1f39cb9d5 upstream.
+commit 0a5f45e57e35d0840bedb816974ce2e63406cd8b upstream.
 
-All initialized and registered devices should be listed somewhere so
-that we can unregister/free them in the _remove() path.
-
-This patch is not a fix per-se but is needed to apply three other
-fixes coming right after, explaining the Fixes/Cc: stable tags.
+oxnans_nand_remove() should release all MTD devices and clean all NAND
+devices, not only the first one registered.
 
 Fixes: 668592492409 ("mtd: nand: Add OX820 NAND Support")
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-36-miquel.raynal@bootlin.com
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-39-miquel.raynal@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/raw/oxnas_nand.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/mtd/nand/raw/oxnas_nand.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 --- a/drivers/mtd/nand/raw/oxnas_nand.c
 +++ b/drivers/mtd/nand/raw/oxnas_nand.c
-@@ -36,6 +36,7 @@ struct oxnas_nand_ctrl {
- 	void __iomem *io_base;
- 	struct clk *clk;
- 	struct nand_chip *chips[OXNAS_NAND_MAX_CHIPS];
-+	unsigned int nchips;
- };
+@@ -184,9 +184,13 @@ err_clk_unprepare:
+ static int oxnas_nand_remove(struct platform_device *pdev)
+ {
+ 	struct oxnas_nand_ctrl *oxnas = platform_get_drvdata(pdev);
++	struct nand_chip *chip;
++	int i;
  
- static uint8_t oxnas_nand_read_byte(struct mtd_info *mtd)
-@@ -86,7 +87,6 @@ static int oxnas_nand_probe(struct platf
- 	struct nand_chip *chip;
- 	struct mtd_info *mtd;
- 	struct resource *res;
--	int nchips = 0;
- 	int count = 0;
- 	int err = 0;
+-	if (oxnas->chips[0])
+-		nand_release(oxnas->chips[0]);
++	for (i = 0; i < oxnas->nchips; i++) {
++		chip = oxnas->chips[i];
++		nand_release(chip);
++	}
  
-@@ -150,12 +150,12 @@ static int oxnas_nand_probe(struct platf
- 		if (err)
- 			goto err_cleanup_nand;
+ 	clk_disable_unprepare(oxnas->clk);
  
--		oxnas->chips[nchips] = chip;
--		++nchips;
-+		oxnas->chips[oxnas->nchips] = chip;
-+		++oxnas->nchips;
- 	}
- 
- 	/* Exit if no chips found */
--	if (!nchips) {
-+	if (!oxnas->nchips) {
- 		err = -ENODEV;
- 		goto err_clk_unprepare;
- 	}
 
 
