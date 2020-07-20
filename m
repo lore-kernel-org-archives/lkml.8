@@ -2,170 +2,154 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A616C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CB0C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49BC322CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADB522BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:04:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="fcs+8Vbu"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kqJAJ1cH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgGTLD0 (ORCPT
+        id S1728528AbgGTLEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 07:03:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728348AbgGTLDZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 07:03:25 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 595FFC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 04:03:25 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id o22so9917524pjw.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 04:03:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TZpfzFnX8WqDOlpA9HEWnI2tpqRJdN7b0nMifIKxRt8=;
-        b=fcs+8VbuWGNf1oxNKQwZnvGJPD/QaJ3RhoO4oRPf3vmjd1YMiMzi9vv38Uz6PCNdMe
-         m4hJ1A0BkoIQ+teqNgXeCrWysMh9ti4WzwXOEa3ChiW7sBhPqe09KvOf10u6eujhn8U2
-         PrCWj+JWfYVBZAlQ2nPP97mbMTLHVHIkSM4BA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TZpfzFnX8WqDOlpA9HEWnI2tpqRJdN7b0nMifIKxRt8=;
-        b=N13vLtXgTN30lPFK0hvxON2M7BrHHNfMkjy5Tk7H2VQfn5iHk2m5X2p98DmabGgcHT
-         0OrwV6mEz5/C4mkbbOB4AU9VCV0NwmB4wVt6QdW1NUsKkBrrO2tLLtjXeT3XxBgMrrf8
-         SokSCasb6iw0iqVcTJ8UPa/Lzp+Nj57/eumh5aKhtvjNgogTm8nhbxcQF8Ok6m6oU7ml
-         3kiu7VPJmBuH+Orovyqm8ICuW3FNAiSGCgk7ahkcBPpLso9EIkTKIdBoHHBOe+nEs+ML
-         a73SQ6qKHP7Bk2ZISYFPaxwjqoNVVwA3+p0P1z8bnE/Wr9hf9yRt4WhbIsZ7mXIfXZ23
-         BV6w==
-X-Gm-Message-State: AOAM532nLC+BL6miK7Ay+Q46eSfjCBiWdtxjbZbuqY3+X/JJHo8+vONV
-        G5h7ct6sz8CHFZrD3u9XGl/PfPJTEYAWZw==
-X-Google-Smtp-Source: ABdhPJyYuFoGgRbx+53KR1oquEeqgi7QbPMQVW0P5UXinT7PjM14QfPFT1Gj7VUjePEdDQaAndVrug==
-X-Received: by 2002:a17:902:a708:: with SMTP id w8mr18141835plq.128.1595243004882;
-        Mon, 20 Jul 2020 04:03:24 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:8c21:db7b:4558:fba3])
-        by smtp.gmail.com with ESMTPSA id o10sm11445876pjs.27.2020.07.20.04.03.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 04:03:23 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 3/3] arm64: dts: rockchip: Add PCIe for RockPI N10
-Date:   Mon, 20 Jul 2020 16:32:30 +0530
-Message-Id: <20200720110230.367985-3-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720110230.367985-1-jagan@amarulasolutions.com>
-References: <20200720110230.367985-1-jagan@amarulasolutions.com>
+        Mon, 20 Jul 2020 07:04:48 -0400
+Received: from mail-eopbgr60050.outbound.protection.outlook.com ([40.107.6.50]:13795
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728348AbgGTLEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 07:04:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f9qnQX2NepmsgN7mHz43ApBDa8dKS5UvMZxNkaEconFnOFgjSwjlAdWi93PbzrBCESo0XB3U58q21D9FY6HPLIYD4szhQXwsCDptcjN9qThp+5Jt01je4HAfhNpfmmYDnb+mZ7Bu8yl4yfNb5+Y2N0POR+6+OqXp49KrdOfbUF+CBGa3g95lfjUm8fjaBi18Q92Vjm6JF7cph/L5+O8TIrXuhjDCKMJb0xR8tVnej/Oa1xF6dtb2PU1hIMroCPjoFds0h7nEffwEfOB34Xgq+IXSs0NZ17P3c/k6rXxkJ4BHPEu6ETy+Ty73E7+abFKje6OswD84DCdt0yrEr7Rgyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JzkPV9JOyJV3WZ4TU7e6GlD7MOjlnEchY5o1Hh7L+Pk=;
+ b=oSwc0YxNS7FvImWEqz2lDCgz4gKu+nTIrqbRopQ6E7IzZax1ioUThUcQu+oLRihhUpqlQwFZEfMBzRmtb5gbb5sTWbpGBKquRiYd5CT8be76QESLIpKyj9bGcEdaW6czZXtI7YgWwiOta+w5ZVDtXt+PTe9LUKCZGvtDHoq3j31wjSFZFc9L1q3vTEgQtF7sPuS6RCc+vauAvyLyydmaCnx8+J6DOrVDBqcdgk2Xu/5SpsLKs0RhsVInf/pZ0XD+qNBqAVSTZXVAraL913sJAapgbH1Uk8dkMTmXNDGPuEfWayBgxmVwzZ8+0uKOPGNNvfgtGJn3ORqbIqUItQLvkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JzkPV9JOyJV3WZ4TU7e6GlD7MOjlnEchY5o1Hh7L+Pk=;
+ b=kqJAJ1cHJPb11R/0rr895ES1ykZ5O1c1GmycRzXkXShZRemw+02CNzc3M0foYReMSfbLw6Fd8nK8ojjmjrxYP7Zf8f/siWcZBqLBqUuzg4FDVNyg3sV2juqZcfpdGY0lt5xHiD+sablSTAJrvdSq9UeRsKu3wiH157Lbd6Ox6rA=
+Received: from DB8PR04MB5785.eurprd04.prod.outlook.com (2603:10a6:10:b0::22)
+ by DB7PR04MB4107.eurprd04.prod.outlook.com (2603:10a6:5:1e::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Mon, 20 Jul
+ 2020 11:04:43 +0000
+Received: from DB8PR04MB5785.eurprd04.prod.outlook.com
+ ([fe80::346e:3fb3:d929:b227]) by DB8PR04MB5785.eurprd04.prod.outlook.com
+ ([fe80::346e:3fb3:d929:b227%2]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
+ 11:04:43 +0000
+From:   Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Vladimir Oltean <olteanv@gmail.com>
+CC:     Joergen Andreasen <joergen.andreasen@microchip.com>,
+        Po Liu <po.liu@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Ido Schimmel <idosch@idosch.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>
+Subject: RE: [EXT] Re: [PATCH v2 net-next 03/10] net: mscc: ocelot: allocated
+ rules to different hardware VCAP TCAMs by chain index
+Thread-Topic: [EXT] Re: [PATCH v2 net-next 03/10] net: mscc: ocelot: allocated
+ rules to different hardware VCAP TCAMs by chain index
+Thread-Index: AQHWOJ4IR5sw1Ew6RUWo30td44MCGqjFAIOAgAGq+gCACByDgIABgUeAgAHscQCAN6b3AIAATnYAgAAVANCAAE4SgIABGeCAgAAaboCAAKgRgIAELWsw
+Date:   Mon, 20 Jul 2020 11:04:42 +0000
+Message-ID: <DB8PR04MB57851720278B98EE6E348E22F07B0@DB8PR04MB5785.eurprd04.prod.outlook.com>
+References: <CA+h21hocBOyuDFvnLq-sBEG5phaJPxbhvZ_P5H8HnTkBDv1x+w@mail.gmail.com>
+ <20200608135633.jznoxwny6qtzxjng@ws.localdomain>
+ <CA+h21hqoZdQeSxTtrEsVEHi6ZP1LrWKQGwZ9zPvjyWZ62TNfbg@mail.gmail.com>
+ <20200610181802.2sqdhsoyrkd4awcg@ws.localdomain>
+ <DB8PR04MB57851605ACFE209B4E54208EF07F0@DB8PR04MB5785.eurprd04.prod.outlook.com>
+ <20200716085044.wzwdca535aa5oiv4@soft-dev16>
+ <DB8PR04MB578594DD3C106D8BDE291B95F07F0@DB8PR04MB5785.eurprd04.prod.outlook.com>
+ <20200716144519.4dftowe74by3syzk@skbuf>
+ <20200717073411.vjjyq6ekhlqqnk2p@soft-dev16>
+ <20200717090847.snxizsgaqebbwyui@skbuf>
+ <20200717191019.tvkmwrw2xwdxzmds@ws.localdomain>
+In-Reply-To: <20200717191019.tvkmwrw2xwdxzmds@ws.localdomain>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: microchip.com; dkim=none (message not signed)
+ header.d=none;microchip.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 57082c96-cfdd-42f1-e5b3-08d82c9cb4c9
+x-ms-traffictypediagnostic: DB7PR04MB4107:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB410707AB44A63CCCF360562BF07B0@DB7PR04MB4107.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DCvBng8/PjY/noWFsjjmIJH4bW8ba0ZllkPq2/FqpTVMowVEz8LBlJ1Z6bfscvjHT688G89WEKrqqB3KcNikZ2CKs3BM85D4Foot7wD/vpqxDhViGfvtmW6XuCUXlhl3OTpcamdbmq0NCLMuFg0Rgx0VyxLSqExfyhjaaKnc8yyklYr4f6rOKhzdwrC3em/fNDwD3psIbIbyGMyjRTEvKU4ie7dUH7H8gL/bUiQa3Gq/ndes3mEUiI/cGU1RrkZSmcNwAK1o5xlO9GPvSAhrOUBCltFkLOJdT2tF0dK8Os7SKz/ns8nVvhwnMcgfRSqVOiyj6rH7JnUorvPrZEpkHg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB5785.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(366004)(136003)(396003)(346002)(478600001)(86362001)(316002)(33656002)(54906003)(76116006)(5660300002)(8936002)(71200400001)(4326008)(66946007)(66556008)(52536014)(8676002)(7696005)(6506007)(9686003)(186003)(83380400001)(2906002)(55016002)(66446008)(64756008)(110136005)(66476007)(26005)(7416002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 0z0VMHgYZBCds3nJcY2ZmUzusYZl5hyChDRmozWqwvgRhoG+DlcwlY/rQA3ER7ZsODalfl7JHRdB0lL51+OlrXSQEedxI7tY9dGY95dIOSgPNZ0r/jVqT4une7V8n6X6pn67foX1gjZrmkWFCsBVYwFd7+0xxJvj8ZJVRfzO7S8zjREZJQ9h7YurwGVJ8weysj/gjxgoft4NoeFNgVdz4mD5JVNgGxaLLnrAqtnc/Sdc+uOuPnvgt3t88ASQT8O5PpltjuTSj1tx38gPTfp79jAKS3TSuDkBj1/ujBcKneDdm21mDTnaHYe84w3cmmMsOpH/2V0PH7QvUH4O4YpKVA3zLw97V8SwUAzqe2YPGdf54+nIAtYZzVFhYFdhaAhLZkYAJrOR0Hlexxv/mJ+ZXDwhz6ZVikNgfHIQekUXeX87bQFvQdPCaBN4Jv9KtbhdoQowXsdhYX7+wOjVDst84AVT5jQTDMTjMEXYLPo9pTY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB5785.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57082c96-cfdd-42f1-e5b3-08d82c9cb4c9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 11:04:43.0377
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SXZNql6flyh3LeZ/kbk7icg/gTuiKUj30TtzG1mTgsLuBHKk3Am9qmVIdm9Np8aj2pp5VViHSm6We5dFsqm31xZ7EU1tDjK2JOAMOjTo6KI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support to enable PCIe for RockPI N10.
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 41 ++++++++++++++++++-
- 1 file changed, 39 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-index ebccc4a153a2..b415b8a16c78 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-@@ -11,6 +11,19 @@
- 
- / {
- 	compatible = "vamrs,rk3399pro-vmarc-som", "rockchip,rk3399pro";
-+
-+
-+	vcc3v3_pcie: vcc-pcie-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio4 RK_PD4 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pcie_pwr>;
-+		regulator-name = "vcc3v3_pcie";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
- };
- 
- &cpu_l0 {
-@@ -142,7 +155,8 @@ vcca_0v9: LDO_REG1 {
- 				regulator-min-microvolt = <900000>;
- 				regulator-max-microvolt = <900000>;
- 				regulator-state-mem {
--					regulator-off-in-suspend;
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <900000>;
- 				};
- 			};
- 
-@@ -177,7 +191,8 @@ vcca_1v8: LDO_REG4 {
- 				regulator-min-microvolt = <1850000>;
- 				regulator-max-microvolt = <1850000>;
- 				regulator-state-mem {
--					regulator-off-in-suspend;
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1850000>;
- 				};
- 			};
- 
-@@ -304,6 +319,22 @@ &io_domains {
- 	sdmmc-supply = <&vccio_sd>;
- };
- 
-+&pcie_phy {
-+	status = "okay";
-+};
-+
-+&pcie0 {
-+	ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
-+	max-link-speed = <2>;
-+	num-lanes = <4>;
-+	pinctrl-0 = <&pcie_clkreqnb_cpm>;
-+	pinctrl-names = "default";
-+	vpcie0v9-supply = <&vcca_0v9>;	/* VCC_0V9_S0 */
-+	vpcie1v8-supply = <&vcca_1v8>;	/* VCC_1V8_S0 */
-+	vpcie3v3-supply = <&vcc3v3_pcie>;
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	hym8563 {
- 		hym8563_int: hym8563-int {
-@@ -311,6 +342,12 @@ hym8563_int: hym8563-int {
- 		};
- 	};
- 
-+	pcie {
-+		pcie_pwr: pcie-pwr {
-+			rockchip,pins =	<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
- 	pmic {
- 		pmic_int_l: pmic-int-l {
- 			rockchip,pins = <1 RK_PC2 0 &pcfg_pull_up>;
--- 
-2.25.1
-
+DQoxOC4wNy4yMDIwIDM6MTAsIEFsbGFuIHdyb3RlOg0KPg0KPiBPa2F5IC0gSSB3aWxsIG5lZWQg
+dG8gbG9vayBkZWVwZXIgaW50byB0byB0aGlzIHRvIHJlYWxseSB1bmRlcnN0YW5kIHRoZSBjb25z
+ZXF1ZW5jZXMgb2YgbWl4aW5nIGRpZmZlcmVudCB0eXBlcyBvZiBmaWx0ZXJzLiBBcyBmYXIgYXMg
+Sm9lcmdlbnMgZXhhbXBsZSBnb2VzLCAibWF0Y2hhbGwiIGlzIHJlYWxseSB0aGUgc2FtZSBhcyBh
+IGZsb3dlciB3aXRob3V0IGFueSBtYXRjaGVzLg0KPg0KPiBMb25nIHN0b3J5IHNob3J0LCB0byBt
+ZSB0aGUgbW9zdCBpbXBvcnRhbnQgc3RlcCBoZXJlIGlzIHRoYXQgd2UgY29tZSB1cCB3aXRoIGEg
+ZGVzaWduIHdoZXJlIHdlIGNhbiBleHBvc2UgdGhlIDMgbG9va3VwcyBpbiBJUzEgYXMgc2VwYXJh
+dGUgY2hhaW5zLCBhbmQgdGhhdCB3ZSBoYXZlIHNvbWV0aGluZyB3aGljaCBiZWhhdmVzIHRoZSBz
+YW1lIGluIEhXIGFuZCBTVy4NCj4NCj4gT25jZSB3ZSBoYXZlIHRoYXQsIHdlIGNhbiBhZGQgdGVt
+cGxhdGVzLCBzaGFyZWQgYmxvY2tzLCBzaGFyZWQgYWN0aW9ucyBldGMuIGluIHRoZSBmdXR1cmUu
+DQo+IA0KPiBJIGtub3cgSSBoYXZlIG5vdCBiZWVuIHZlcnkgYWN0aXZlIG9uIHRoaXMgdGhyZWFk
+IGZvciB0aGUgcGFzdCBjb3VwbGUgb2YgZGF5cywgYnV0IEknbSBjZXJ0YWlubHkgaW50ZXJlc3Rp
+bmcgaW4gY29udGludWUgd29ya2luZy9yZXZpZXdpbmcgdGhpcy4NCj4gSSB3aWxsIGJlIE9PTyBm
+b3IgdGhlIG5leHQgMyB3ZWVrcywgd2l0aCB2ZXJ5IGxpbWl0ZWQgb3B0aW9ucyBmb3IgcmV2aWV3
+aW5nL2NvbW1lbnRpbmcgb24gdGhpcywgYnV0IGFmdGVyIHRoYXQgSSdtIGJhY2sgYWdhaW4uDQo+
+DQo+L0FsbGFuDQo+DQoNClNvIGNoYWluIHRlbXBsYXRlIGlzIHVzZWQgdG8gY29uZmlndXJlIGtl
+eSB0eXBlIG9uIElTMSwgd2UgY2FuIHNldCBvbmUga2V5IHR5cGUgZm9yIGVhY2ggb2YgdGhlIHRo
+cmVlIGxvb2t1cHMuIEluIG9yZGVyIHRvIHN1cHBvcnQgYWxsIGtleSB0eXBlcywgd2UgbmVlZCB0
+byBhZGQgaGFsZiBrZXlzLCBmdWxsIGtleXMgYW5kIHF1YXJkIGtleXMgc3VwcG9ydC4gSWYgdGhl
+cmUgaXMgbm8gdGVtcGxhdGUgc2V0LCB1c2luZyBhIGRlZmF1bHQgIlMxXzdUVVBMRSIga2V5IHR5
+cGUsIHdoaWNoIGNhbiBjb3ZlciBtb3N0IGtleXMuDQoNCkluIGdlbmVyYWwsIHVzaW5nIGEgZGVm
+YXVsdCBrZXkgdHlwZSBmb3IgZWFjaCBvZiB0aGUgdGhyZWUgbG9va3VwcywgYW5kIGxpbWl0ZWQg
+b25lIGFjdGlvbiBvbiBvbmUgbG9va3VwIGNoYWluLCB0aGVzZSBjYW4gc3VwcG9ydCB0aHJlZSBw
+YXJhbGxlbCBsb29rdXAgb24gSVMxLiBBZGQgUEFHIHN1cHBvcnQgYXMgdHdvIGxvb2t1cHMgb24g
+SVMyLCB0aGVuIHRlbXBsYXRlcyBhbmQgc2hhcmVkIGJsb2NrcyBjYW4gYmUgc3VwcG9ydGVkIGFm
+dGVyIHRoYXQuDQoNClRoYW5rcywNClhpYW9saWFuZw0K
