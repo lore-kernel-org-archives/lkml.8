@@ -2,115 +2,155 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F19C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6512AC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C337222D00
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44ED22065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:44:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=moxa.com header.i=@moxa.com header.b="icjgXRpP"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="dqdxmTZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgGTKoq (ORCPT
+        id S1728446AbgGTKos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Jul 2020 06:44:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728407AbgGTKoq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 06:44:46 -0400
-Received: from mail-eopbgr1320074.outbound.protection.outlook.com ([40.107.132.74]:28134
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728001AbgGTKop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 06:44:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bINMlU41NLzo97BxK0NlCT3bvMbZIEI9yahxc1h69aTNijJo4FtypHpbWAWezlZM6PhKbbtHnAlzFkF3g1DG+yXpTqvWTTw7rFE0lERRjwn21S5hemIK49iULH7VOBXphumVVN9kpUgYrWSXplbwH1Th1vCs4r+IThNXk8o6wEeduRhDiO2LIWWpmL/2u5+7O3VOvwATRpJykcYx14Yux9RX0nnN9dSEV5egoqXAYkCMvy5PmNt1I/oC3//YJ9RFRqVmPuaBC15sDmrOff2kIZM7b46JUxhYbM+BEuZtdJCco2uBe5mQncnMakCcZmzWa/MvnhCUwW6Ve9nhkXplhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gRUWZqokLyKscv67QChhkajfrjE6DlQtCkgYAlOh2lg=;
- b=D5G6866ceg1wRre45uBcVJNA4oMnAiVXYLHcn2tVZeMnQy7yuEU5ci/s9pmb6/wCT428eGaYIVdKkGy0afvPu9uRYl0vkx/G/cAU7NNRP0Wsb0mDJtq3JnNvzZfTRK8YvEuBzSMIPy92bU3/jdGRSiyQsxYlTh/yMQWdLwjpYUo0+iRNM+uNtLRzjdUL4/yApYwkClu3qRu3EuxPuwE73sqeh8/6V8nC/YogAr0RfJo9d6B65WWnUhv3yhp/GNHhyHKtaP3GBa0acF4sS3QgLTWxAMwfc5j+7aiK6EJ3SxNgMiK0peYENCb1YbSJjmRLxnyoT9r62mIj/MgWydrWKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=moxa.com; dmarc=pass action=none header.from=moxa.com;
- dkim=pass header.d=moxa.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=moxa.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gRUWZqokLyKscv67QChhkajfrjE6DlQtCkgYAlOh2lg=;
- b=icjgXRpPdn39zTadZ2vpy8JiPo3Cpz0SyjguMjmbnoFrneAaV/uEEWwaFQjDwYnfR6jsQ5OEkD3qlA3YnDYtBIF9WaPWeKgf3vBWRPgTCvocPZL5GF7cnZuJjspnobTrfNvE1pYvBtuyvdAE542cCATfVxl1texh06jZik9bevk=
-Received: from HK2PR01MB3281.apcprd01.prod.exchangelabs.com
- (2603:1096:202:22::12) by HK0PR01MB2771.apcprd01.prod.exchangelabs.com
- (2603:1096:203:9b::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Mon, 20 Jul
- 2020 10:44:41 +0000
-Received: from HK2PR01MB3281.apcprd01.prod.exchangelabs.com
- ([fe80::dce:9650:6c58:8b77]) by HK2PR01MB3281.apcprd01.prod.exchangelabs.com
- ([fe80::dce:9650:6c58:8b77%4]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
- 10:44:41 +0000
-From:   =?utf-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
-        <JohnsonCH.Chen@moxa.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: RE: [PATCH v5] rtc: rtc-ds1374: wdt: Use watchdog core for watchdog
- part
-Thread-Topic: [PATCH v5] rtc: rtc-ds1374: wdt: Use watchdog core for watchdog
- part
-Thread-Index: AQHWXnkat6/TbeWp0Uerbrrj6duJcakQQ4OAgAABYPA=
-Date:   Mon, 20 Jul 2020 10:44:41 +0000
-Message-ID: <HK2PR01MB3281AE06720A1C7013603B07FA7B0@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
-References: <HK2PR01MB32811CE9FE5DB463A69E94C8FA7B0@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
- <20200720102629.GE3428@piout.net>
-In-Reply-To: <20200720102629.GE3428@piout.net>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: bootlin.com; dkim=none (message not signed)
- header.d=none;bootlin.com; dmarc=none action=none header.from=moxa.com;
-x-originating-ip: [123.51.145.16]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 84928569-331d-41ab-92d1-08d82c99e841
-x-ms-traffictypediagnostic: HK0PR01MB2771:
-x-microsoft-antispam-prvs: <HK0PR01MB27710A5AB853353F7BECFB19FA7B0@HK0PR01MB2771.apcprd01.prod.exchangelabs.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: capvl2KOvEZo2+YVOxWJPHTMG9O6xZwVT6+85biLPqefPCRxlFPVNQCn0ouOrIR2KY6bFM/OqOFZqUqAB5PQaEKy4H2UPoJXiTw1pa/9TVK2B9UfvRf69U2WGj9pFs/J1uNwOaf//ZFt0zS0tsILoBKR1sjvnAUgH5L1Nh8onoC0xxy5CVAgAtoV1MroTqoaym/pu2DvvFnV2lPja3nEMASdqXjY04KhaLWBSmcTbbi5j4y9qnBmu8BxXLeNoYxGxPEGjx4sSVH+KXcBWs2V9r98mfMCOytMN9ifWMwVI0BJ3IAzPf+fL/n/AysAdVwAPxTBkly43wUXxc6QmKuBDT1KbiqndWejUToWxDPhgwPgE68jUq5WQQo1zHqHr1X4
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK2PR01MB3281.apcprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(136003)(376002)(346002)(39850400004)(4744005)(2906002)(6506007)(54906003)(66476007)(478600001)(4326008)(8936002)(316002)(9686003)(8676002)(66946007)(186003)(64756008)(33656002)(85182001)(6916009)(76116006)(5660300002)(26005)(55016002)(7696005)(52536014)(66556008)(71200400001)(66446008)(86362001)(171213001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: q9sRE2Wm32s0B0DaUvlmEJodb3cuyrjhAbGcOXwzlljU3PcFJunY4bMGpSVkoFfFcEduDdrP/ePXL+gsd+2Di4Wle7Xr4LrMmhxFjTHpV3QOQCOWOoJ2gwqBrhPD/t2XAT0BpHHuTwE5uZuQdaO4a7qmJafER65H2k3dA61S7O26TZIvd24qE2pS8GqsspBQVptQ1CQK6IddvqQ8ilzRG6oIukNRwD/X8S832UkjEaeTj+Us2ebDPOaXeQiI//mnrdwBFrho5PLORAWYAjKCL7s9Edze68Q7s0pjVq5wEXk9R2FxyPJNoNz5HndFrDDJ1Y8XCmJZY4fimGIs+oQMXnj2RyRKtSYh/6I1IFB6oAe4qYgVyw9nQeJRlQGEDbFytaOamp6po7UhA5bRKD7dmHCsJI8iaB5obvuL52BZ+2oBv9hBrl1hdjwJWLSsRX5N5MODxLnJGz9WII1AFSVIVLP0grQmeTCedMS1CM6A2rY=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEAF4C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:44:45 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id 88so7060253wrh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:44:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=wG7K0uq8mpLNpl6r6yyIK1jp2dXYWitOo/oUfoeSlAo=;
+        b=dqdxmTZ6+gN++MK7rDSC7D5QKx04y3ZsSX2bGExyrfDLLkwc3HAre+/5CJjXb8DRCG
+         L1b+S+GhVUwfYW/t1Y7dqnLxaAe75m8yZlBo+767cn+ilAhdFEu5ix23YEbE+8xiRUl/
+         kbTW8xI6L8oQb24MX72zy2OlV4vKU/QhRL/Xc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wG7K0uq8mpLNpl6r6yyIK1jp2dXYWitOo/oUfoeSlAo=;
+        b=gIeRgwb2jLksHzt4ekyHK5UOARJ04TLlGrgrUg8Kd4Px5xGEDOEKCeAM2OJDXFzkFI
+         XedaTIWaoNeTmMaH4HG+U92mfs7pVBbGpiLF2opAIUqtYVB7gN5411XbPne0fROWq92E
+         mT10P5eBbq16Ua4WdTN/56kES5xXDhrMov7NHe8k9l6MxPcAverb46jFTbkV3NoN3LzW
+         A/GfGdPi5uTLVPg/NqGUujIGoGs+guMdKAD3iE7qb+8+rlEEQ0cnIjz3G1AJGH9tb/Ij
+         8jRyEApCXDsSMdGC2HhrJ3f+SJOBCdIiiknQ2+T0uPs+ZZnszaSsNEnmp95QqG9nskRE
+         uIpw==
+X-Gm-Message-State: AOAM5322QXS/6NFB1cppp2cnrQ2GMOc0h8spzURv+YZvgUmLNfSsCBg8
+        fDZUxvebQmGyTdg6/N9hPA6hYw==
+X-Google-Smtp-Source: ABdhPJycW9SMvCj+IwJIi5ruNoHI7H4Hqf0HBuMTqROBaRA08TgGoNei9d52jp9Pa0Kxd2bDH0z0qQ==
+X-Received: by 2002:a5d:4c8a:: with SMTP id z10mr21330200wrs.384.1595241884483;
+        Mon, 20 Jul 2020 03:44:44 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id x7sm31909992wrr.72.2020.07.20.03.44.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2020 03:44:43 -0700 (PDT)
+Subject: Re: [PATCH 1/2] net: dsa: Add flag for 802.1AD when adding VLAN for
+ dsa switch and port
+To:     hongbo.wang@nxp.com, xiaoliang.yang_1@nxp.com,
+        allan.nielsen@microchip.com, po.liu@nxp.com,
+        claudiu.manoil@nxp.com, alexandru.marginean@nxp.com,
+        vladimir.oltean@nxp.com, leoyang.li@nxp.com, mingkai.hu@nxp.com,
+        andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com,
+        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
+        kuba@kernel.org, vinicius.gomes@intel.com,
+        roopa@cumulusnetworks.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, horatiu.vultur@microchip.com,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        linux-devel@linux.nxdi.nxp.com
+References: <20200720104119.19146-1-hongbo.wang@nxp.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <05b06d46-d705-7d06-b4dd-2bee90f75168@cumulusnetworks.com>
+Date:   Mon, 20 Jul 2020 13:44:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: moxa.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HK2PR01MB3281.apcprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84928569-331d-41ab-92d1-08d82c99e841
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 10:44:41.0425
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5571c7d4-286b-47f6-9dd5-0aa688773c8e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: k7G1b4vXX4qtOhZGM0QSaLP5tnt0WVHbcCcRHKuIto2d+UCt+6Tlhly4PNrUrV5j7whlT9ppaeDuw73MgdU0+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR01MB2771
+In-Reply-To: <20200720104119.19146-1-hongbo.wang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWxleGFuZHJlLA0KDQo+ID4gdjQtPnY1Og0KPiA+IC0gRml4IHJlcG9ydGVkIGJ1aWxkIGVy
-cm9yIGJ5IHJlcGxhY2luZyBSVENfRFJWX0RTMTM3NF9XRFQgd2l0aA0KPiA+IFdBVENIRE9HX0NP
-UkUNCj4gPg0KPiANCj4gVGhpcyBpcyBub3QgdGhlIGNvcnJlY3Qgc29sdXRpb24gYXMgdGhpcyB3
-aWxsIHJlbW92ZSB0aGUgYWxhcm0gZnVuY3Rpb25hbGl0eSBmb3INCj4gYW55b25lIGVuYWJsaW5n
-IFdBVENIRE9HLiBJIGFscmVhZHkgc3VibWl0dGVkIGEgcHJvcGVyIGZpeC4NCj4gDQoNCkl0J3Mg
-YW4gYXBwcm9wcmlhdGUgYW5kIGJldHRlciBzb2x1dGlvbi4gVGhhbmtzIQ0KDQpSVENfRFJWX0RT
-MTM3NF9XRFQgc3RpbGwgc2hvdWxkIHNlbGVjdCBXQVRDSERPR19DT1JFIHRvIGF2b2lkIGJ1aWxk
-IGVycm9yIGlmIFdBVENIRE9HX0NPUkUgaXMgc2V0IHRvICJtIiwgYW5kIGl0IHNob3VsZCBiZSBk
-ZXBlbmRlZCBvbiBSVENfRFJWX0RTMTM3NCBhbmQgV0FUQ0hET0cuDQoNCj4gPiB2My0+djQ6DQo+
-ID4gLSBGaXggY29kaW5nIHN0eWxlcw0KPiA+IC0gUmVtb3ZlIGRldl9pbmZvKCkgaW4gZHMxMzc0
-X3dkdF9zZXR0aW1lb3V0KCkNCj4gPiAtIEZpeCBtaXNzaW5nIGVycm9yIGNoZWNrDQo+ID4NCj4g
-DQo+IC0tDQoNCkJlc3QgcmVnYXJkcywNCkpvaG5zb24NCg==
+On 20/07/2020 13:41, hongbo.wang@nxp.com wrote:
+> From: "hongbo.wang" <hongbo.wang@nxp.com>
+> 
+> the following command can be supported:
+> ip link add link swp1 name swp1.100 type vlan protocol 802.1ad id 100
+> 
+> Signed-off-by: hongbo.wang <hongbo.wang@nxp.com>
+> ---
+>  include/uapi/linux/if_bridge.h | 1 +
+>  net/dsa/slave.c                | 9 +++++++--
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+> 
+
+This is not bridge related at all, please leave its flags out of it.
+
+Nacked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+
+
+
+> diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
+> index caa6914a3e53..ecd960aa65c7 100644
+> --- a/include/uapi/linux/if_bridge.h
+> +++ b/include/uapi/linux/if_bridge.h
+> @@ -132,6 +132,7 @@ enum {
+>  #define BRIDGE_VLAN_INFO_RANGE_END	(1<<4) /* VLAN is end of vlan range */
+>  #define BRIDGE_VLAN_INFO_BRENTRY	(1<<5) /* Global bridge VLAN entry */
+>  #define BRIDGE_VLAN_INFO_ONLY_OPTS	(1<<6) /* Skip create/delete/flags */
+> +#define BRIDGE_VLAN_INFO_8021AD	(1<<7) /* VLAN is 802.1AD protocol */
+>  
+>  struct bridge_vlan_info {
+>  	__u16 flags;
+> diff --git a/net/dsa/slave.c b/net/dsa/slave.c
+> index 4c7f086a047b..376d7ac5f1e5 100644
+> --- a/net/dsa/slave.c
+> +++ b/net/dsa/slave.c
+> @@ -1232,6 +1232,7 @@ static int dsa_slave_get_ts_info(struct net_device *dev,
+>  static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
+>  				     u16 vid)
+>  {
+> +	u16 flags = 0;
+>  	struct dsa_port *dp = dsa_slave_to_port(dev);
+>  	struct bridge_vlan_info info;
+>  	int ret;
+> @@ -1252,7 +1253,10 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
+>  			return -EBUSY;
+>  	}
+>  
+> -	ret = dsa_port_vid_add(dp, vid, 0);
+> +	if (ntohs(proto) == ETH_P_8021AD)
+> +		flags |= BRIDGE_VLAN_INFO_8021AD;
+> +
+> +	ret = dsa_port_vid_add(dp, vid, flags);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -1744,7 +1748,8 @@ int dsa_slave_create(struct dsa_port *port)
+>  
+>  	slave_dev->features = master->vlan_features | NETIF_F_HW_TC;
+>  	if (ds->ops->port_vlan_add && ds->ops->port_vlan_del)
+> -		slave_dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER;
+> +		slave_dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER |
+> +				       NETIF_F_HW_VLAN_STAG_FILTER;
+>  	slave_dev->hw_features |= NETIF_F_HW_TC;
+>  	slave_dev->features |= NETIF_F_LLTX;
+>  	slave_dev->ethtool_ops = &dsa_slave_ethtool_ops;
+> 
+
