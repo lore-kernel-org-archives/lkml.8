@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9E5C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1944C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22D632065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEAF822482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260539;
-	bh=9IYFXvNdzrOsWw+bw1eHWtHAmTn0VG0xwVdxYbgrFo4=;
+	s=default; t=1595260540;
+	bh=W53BsZm+C62+lVYag4YGNaCS3zxpPusbjcwi4DiGubg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D80+wRQEfGOEv2C5bo6JWJBqFm3VSote61J5TFFJ9zaGBXOUJu7AdkwGM5G3eDj0p
-	 1qLkuVDR4Klpp+/U8DnhSxd8iBV0W9ugLHfc3lwYdkVeblhqQznQKiBS4RU06JiWJr
-	 92A6dVGa1Q89GADgA30K2YOtwI0JMJjtkpG40198=
+	b=F/tjdd3C5kG3Q1QXUxo6MPfctkuX3nSfgV5zgnnTCoGqFP9ZUBJyey5UGK1m3cadz
+	 YtHRscVhhqQllLtCMcFdEZ7x0Q+vcmgGWbM/qpoGh3LvPsFI6kgbE1/pCJtsWHbQeo
+	 52Q9nVWRgjYAhlx2c/wFdAcu3bduTn+npDrls+b8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731057AbgGTPzh (ORCPT
+        id S1731709AbgGTPzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:55:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54668 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731008AbgGTPzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:55:33 -0400
+        id S1731692AbgGTPza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:55:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D21C2065E;
-        Mon, 20 Jul 2020 15:55:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45763206E9;
+        Mon, 20 Jul 2020 15:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260532;
-        bh=9IYFXvNdzrOsWw+bw1eHWtHAmTn0VG0xwVdxYbgrFo4=;
+        s=default; t=1595260529;
+        bh=W53BsZm+C62+lVYag4YGNaCS3zxpPusbjcwi4DiGubg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V6VmSkhb2YZlqtvZ+iHtLB2eYvG0KFV2eXNIqx9HGBH5r884e+hDweS0Kb6XZdNUF
-         INbly9oEc5bALn5wtitkJxsCpcqkuha6QQ6nMYFQZ+0agB2FoqA4CykxTWzj80CDHA
-         mRezr+OLExRaH786hvKE9ZXfqCN/FeyfXlg3ZUJc=
+        b=nBFmgJ0/dg32hWwAdWR5h5QnoREU16wEnqGUuUuy3cncbJ4zq+vzcL+sOhBPv28r5
+         JsABvAVY6myB0TVeaH/5B4adqtL5PROK4XtG+xN9o1b284wssr6Vcr5UbYSETl9Npx
+         aIBHqAvxRcjIbqA34/7k9ZKRAZigy4tu1844k9Oc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chirantan Ekbote <chirantan@chromium.org>,
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
         Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.19 106/133] fuse: Fix parameter for FS_IOC_{GET,SET}FLAGS
-Date:   Mon, 20 Jul 2020 17:37:33 +0200
-Message-Id: <20200720152808.866418357@linuxfoundation.org>
+Subject: [PATCH 4.19 105/133] ovl: fix unneeded call to ovl_change_flags()
+Date:   Mon, 20 Jul 2020 17:37:32 +0200
+Message-Id: <20200720152808.822466751@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -59,65 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chirantan Ekbote <chirantan@chromium.org>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit 31070f6ccec09f3bd4f1e28cd1e592fa4f3ba0b6 upstream.
+commit 81a33c1ee941c3bb9ffc6bac8f676be13351344e upstream.
 
-The ioctl encoding for this parameter is a long but the documentation says
-it should be an int and the kernel drivers expect it to be an int.  If the
-fuse driver treats this as a long it might end up scribbling over the stack
-of a userspace process that only allocated enough space for an int.
+The check if user has changed the overlay file was wrong, causing unneeded
+call to ovl_change_flags() including taking f_lock on every file access.
 
-This was previously discussed in [1] and a patch for fuse was proposed in
-[2].  From what I can tell the patch in [2] was nacked in favor of adding
-new, "fixed" ioctls and using those from userspace.  However there is still
-no "fixed" version of these ioctls and the fact is that it's sometimes
-infeasible to change all userspace to use the new one.
-
-Handling the ioctls specially in the fuse driver seems like the most
-pragmatic way for fuse servers to support them without causing crashes in
-userspace applications that call them.
-
-[1]: https://lore.kernel.org/linux-fsdevel/20131126200559.GH20559@hall.aurel32.net/T/
-[2]: https://sourceforge.net/p/fuse/mailman/message/31771759/
-
-Signed-off-by: Chirantan Ekbote <chirantan@chromium.org>
-Fixes: 59efec7b9039 ("fuse: implement ioctl support")
-Cc: <stable@vger.kernel.org>
+Fixes: d989903058a8 ("ovl: do not generate duplicate fsnotify events for "fake" path")
+Cc: <stable@vger.kernel.org> # v4.19+
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/file.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ fs/overlayfs/file.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -18,6 +18,7 @@
- #include <linux/swap.h>
- #include <linux/falloc.h>
- #include <linux/uio.h>
-+#include <linux/fs.h>
+--- a/fs/overlayfs/file.c
++++ b/fs/overlayfs/file.c
+@@ -24,13 +24,16 @@ static char ovl_whatisit(struct inode *i
+ 		return 'm';
+ }
  
- static const struct file_operations fuse_direct_io_file_operations;
- 
-@@ -2535,7 +2536,16 @@ long fuse_do_ioctl(struct file *file, un
- 		struct iovec *iov = iov_page;
- 
- 		iov->iov_base = (void __user *)arg;
--		iov->iov_len = _IOC_SIZE(cmd);
++/* No atime modificaton nor notify on underlying */
++#define OVL_OPEN_FLAGS (O_NOATIME | FMODE_NONOTIFY)
 +
-+		switch (cmd) {
-+		case FS_IOC_GETFLAGS:
-+		case FS_IOC_SETFLAGS:
-+			iov->iov_len = sizeof(int);
-+			break;
-+		default:
-+			iov->iov_len = _IOC_SIZE(cmd);
-+			break;
-+		}
+ static struct file *ovl_open_realfile(const struct file *file,
+ 				      struct inode *realinode)
+ {
+ 	struct inode *inode = file_inode(file);
+ 	struct file *realfile;
+ 	const struct cred *old_cred;
+-	int flags = file->f_flags | O_NOATIME | FMODE_NONOTIFY;
++	int flags = file->f_flags | OVL_OPEN_FLAGS;
  
- 		if (_IOC_DIR(cmd) & _IOC_WRITE) {
- 			in_iov = iov;
+ 	old_cred = ovl_override_creds(inode->i_sb);
+ 	realfile = open_with_fake_path(&file->f_path, flags, realinode,
+@@ -51,8 +54,7 @@ static int ovl_change_flags(struct file
+ 	struct inode *inode = file_inode(file);
+ 	int err;
+ 
+-	/* No atime modificaton on underlying */
+-	flags |= O_NOATIME | FMODE_NONOTIFY;
++	flags |= OVL_OPEN_FLAGS;
+ 
+ 	/* If some flag changed that cannot be changed then something's amiss */
+ 	if (WARN_ON((file->f_flags ^ flags) & ~OVL_SETFL_MASK))
+@@ -105,7 +107,7 @@ static int ovl_real_fdget_meta(const str
+ 	}
+ 
+ 	/* Did the flags change since open? */
+-	if (unlikely((file->f_flags ^ real->file->f_flags) & ~O_NOATIME))
++	if (unlikely((file->f_flags ^ real->file->f_flags) & ~OVL_OPEN_FLAGS))
+ 		return ovl_change_flags(real->file, file->f_flags);
+ 
+ 	return 0;
 
 
