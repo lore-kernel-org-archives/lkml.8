@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8299C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9E5C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88048206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D632065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260535;
-	bh=RFsfywAtYx/DgJXRzwO7LJohgfSzhyyehseVmJch2n4=;
+	s=default; t=1595260539;
+	bh=9IYFXvNdzrOsWw+bw1eHWtHAmTn0VG0xwVdxYbgrFo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uZGQFx5Exd9elYI88qB1G6irTNLS9IiXpGm9vFoudxVWTZys+pWsJpYdkb9Zq8zaP
-	 GD7SY/2hcz1M8n9/M/CtVzA5HCyU38dC8AqGHuiqbHjyFeQx+NZoCgoeRKgJOTcwi5
-	 g+BotXoKEkg6385CeKSBGlEn5fcyceqHv/a2zRog=
+	b=D80+wRQEfGOEv2C5bo6JWJBqFm3VSote61J5TFFJ9zaGBXOUJu7AdkwGM5G3eDj0p
+	 1qLkuVDR4Klpp+/U8DnhSxd8iBV0W9ugLHfc3lwYdkVeblhqQznQKiBS4RU06JiWJr
+	 92A6dVGa1Q89GADgA30K2YOtwI0JMJjtkpG40198=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731688AbgGTPz3 (ORCPT
+        id S1731057AbgGTPzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:55:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54542 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:55:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729251AbgGTPzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:55:24 -0400
+        id S1731008AbgGTPzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:55:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB5D12065E;
-        Mon, 20 Jul 2020 15:55:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D21C2065E;
+        Mon, 20 Jul 2020 15:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260524;
-        bh=RFsfywAtYx/DgJXRzwO7LJohgfSzhyyehseVmJch2n4=;
+        s=default; t=1595260532;
+        bh=9IYFXvNdzrOsWw+bw1eHWtHAmTn0VG0xwVdxYbgrFo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fgk/68aHPHXkvPfxdxIi1poNLpvjkjRVkli8oai1lBU/8WLRhmlIu/k0l0EAJJilu
-         XV36ucjb/L7CKtAJ9kja22ihxv43uUB2l4q7eXFXz62Eo3Zu7yzaR/kHVe2SO4NbJq
-         CPnlqq9c2QySSm5Aew6gKzQWB1BDmEie2OXU6BSE=
+        b=V6VmSkhb2YZlqtvZ+iHtLB2eYvG0KFV2eXNIqx9HGBH5r884e+hDweS0Kb6XZdNUF
+         INbly9oEc5bALn5wtitkJxsCpcqkuha6QQ6nMYFQZ+0agB2FoqA4CykxTWzj80CDHA
+         mRezr+OLExRaH786hvKE9ZXfqCN/FeyfXlg3ZUJc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        youngjun <her0gyugyu@gmail.com>,
+        stable@vger.kernel.org, Chirantan Ekbote <chirantan@chromium.org>,
         Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.19 103/133] ovl: inode reference leak in ovl_is_inuse true case.
-Date:   Mon, 20 Jul 2020 17:37:30 +0200
-Message-Id: <20200720152808.713104576@linuxfoundation.org>
+Subject: [PATCH 4.19 106/133] fuse: Fix parameter for FS_IOC_{GET,SET}FLAGS
+Date:   Mon, 20 Jul 2020 17:37:33 +0200
+Message-Id: <20200720152808.866418357@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -60,50 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: youngjun <her0gyugyu@gmail.com>
+From: Chirantan Ekbote <chirantan@chromium.org>
 
-commit 24f14009b8f1754ec2ae4c168940c01259b0f88a upstream.
+commit 31070f6ccec09f3bd4f1e28cd1e592fa4f3ba0b6 upstream.
 
-When "ovl_is_inuse" true case, trap inode reference not put.  plus adding
-the comment explaining sequence of ovl_is_inuse after ovl_setup_trap.
+The ioctl encoding for this parameter is a long but the documentation says
+it should be an int and the kernel drivers expect it to be an int.  If the
+fuse driver treats this as a long it might end up scribbling over the stack
+of a userspace process that only allocated enough space for an int.
 
-Fixes: 0be0bfd2de9d ("ovl: fix regression caused by overlapping layers detection")
-Cc: <stable@vger.kernel.org> # v4.19+
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: youngjun <her0gyugyu@gmail.com>
+This was previously discussed in [1] and a patch for fuse was proposed in
+[2].  From what I can tell the patch in [2] was nacked in favor of adding
+new, "fixed" ioctls and using those from userspace.  However there is still
+no "fixed" version of these ioctls and the fact is that it's sometimes
+infeasible to change all userspace to use the new one.
+
+Handling the ioctls specially in the fuse driver seems like the most
+pragmatic way for fuse servers to support them without causing crashes in
+userspace applications that call them.
+
+[1]: https://lore.kernel.org/linux-fsdevel/20131126200559.GH20559@hall.aurel32.net/T/
+[2]: https://sourceforge.net/p/fuse/mailman/message/31771759/
+
+Signed-off-by: Chirantan Ekbote <chirantan@chromium.org>
+Fixes: 59efec7b9039 ("fuse: implement ioctl support")
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/overlayfs/super.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ fs/fuse/file.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/fs/overlayfs/super.c
-+++ b/fs/overlayfs/super.c
-@@ -1310,14 +1310,23 @@ static int ovl_get_lower_layers(struct s
- 		if (err < 0)
- 			goto out;
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -18,6 +18,7 @@
+ #include <linux/swap.h>
+ #include <linux/falloc.h>
+ #include <linux/uio.h>
++#include <linux/fs.h>
  
-+		/*
-+		 * Check if lower root conflicts with this overlay layers before
-+		 * checking if it is in-use as upperdir/workdir of "another"
-+		 * mount, because we do not bother to check in ovl_is_inuse() if
-+		 * the upperdir/workdir is in fact in-use by our
-+		 * upperdir/workdir.
-+		 */
- 		err = ovl_setup_trap(sb, stack[i].dentry, &trap, "lowerdir");
- 		if (err)
- 			goto out;
+ static const struct file_operations fuse_direct_io_file_operations;
  
- 		if (ovl_is_inuse(stack[i].dentry)) {
- 			err = ovl_report_in_use(ofs, "lowerdir");
--			if (err)
-+			if (err) {
-+				iput(trap);
- 				goto out;
-+			}
- 		}
+@@ -2535,7 +2536,16 @@ long fuse_do_ioctl(struct file *file, un
+ 		struct iovec *iov = iov_page;
  
- 		mnt = clone_private_mount(&stack[i]);
+ 		iov->iov_base = (void __user *)arg;
+-		iov->iov_len = _IOC_SIZE(cmd);
++
++		switch (cmd) {
++		case FS_IOC_GETFLAGS:
++		case FS_IOC_SETFLAGS:
++			iov->iov_len = sizeof(int);
++			break;
++		default:
++			iov->iov_len = _IOC_SIZE(cmd);
++			break;
++		}
+ 
+ 		if (_IOC_DIR(cmd) & _IOC_WRITE) {
+ 			in_iov = iov;
 
 
