@@ -2,88 +2,172 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE86C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B09C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1962176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595272689;
-	bh=wT6ZbRqs1FwBWdTqqZNSPBlcmRYq9taL3gCf95gXAB0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U6enX/nTvwwc8VnTFrtQTEfCll2xNEBv6iXktUcV6PqHmhB5mkMBtpX1txAziFEAh
-	 4XslxUPddnkJrMkqesPqIpTQGBsZUo2vY2ScKV316XWQx00eWTX00nXd9sFh/dEtqE
-	 uTaElXns72kU3KpOYAg7tS5tCzxGImAFEsSX4Lwc=
+	by mail.kernel.org (Postfix) with ESMTP id 855BF22B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:18:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="H+amt+np"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbgGTTSI (ORCPT
+        id S1730939AbgGTTSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:18:08 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45842 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729093AbgGTTSH (ORCPT
+        Mon, 20 Jul 2020 15:18:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729093AbgGTTSN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:18:07 -0400
-Received: by mail-io1-f65.google.com with SMTP id e64so18796720iof.12;
-        Mon, 20 Jul 2020 12:18:07 -0700 (PDT)
+        Mon, 20 Jul 2020 15:18:13 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66522C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 12:18:13 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id q15so575072wmj.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 12:18:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yaZqAO3nKIfmNsrLqv5DBCPJCzdK9eS546Xyk4jyW9M=;
+        b=H+amt+npvX6KeGem+yMAg+AytnxNVrgytC9J++r9xdn9WFECt5ptyKvMmOQuW3wOgb
+         hY3oCDsRRs58U3AMFtvo/WBy2nyN1AeFd1mHzp4unfFJnsGNk3ASB0zLJg8aw3LI1nXb
+         NHncGxOI2uDd8RdVVDqvEMOrSmyIYRUUUGYMk5UkZfInVQR5LBPMGrF2KInKIo/WhyjM
+         K1O27qZe3NoHk8/GEYFCs4mBc4Isj2i14W5qLzMlMIyns9vXbwK1cIbbCIpI3Wd3c6Z5
+         A4tmfx3nhFBLCqh50edU/PtGJa+wlPyxfV2P7XjMmITxBbIyuGG12KoNlwp7jUxHE1du
+         5T1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uv9DwJeqFVU3ixKGtQQTS9+FOIa16rZ9Ojp6k1PsA9k=;
-        b=Uv9wkHXLT9izjlBoI1LYkZRU7zGNpt/BeIJLXTS41+I3pRckyhv5sBHFh/KkMjm9oR
-         Ppkkv3Kw8qMHsIShCUTDG9Ar8od7WovwZXwB0BMtNh78Pnt/c4e6aRrXF4HvBrgIvyFj
-         tb3VwMfrIZ6/XUNLBJJdRZyAFnL8uA0OaD0pD+BhayWNhOlye2Wkd299kVeaoBpYv/a3
-         yyeYjXU7JhJdFlBe1zvU8zEFgf+UNkyt9tWQ78CXqMGZ2LdFiYZQU6rJihQo546aUrUg
-         mLIv3/4ysYVPFwj/4P84szuhqvhhikX85glhyqDYG1FNkMYXxun8boGv8CbdCNZTfBJG
-         /Zzw==
-X-Gm-Message-State: AOAM533b38ao5Z0IrMEtAgps1MzpKKMpsOsqFtxkX9gGP04/6Ken433S
-        QKumx/6iFQ66u8FQPxF8JR80TRYiJw==
-X-Google-Smtp-Source: ABdhPJzZ1vqvkCvQlbnANMQkRpMdXUHvSUgwd4hRCkvF0VWDDV/3eh547Y6ph5RTvSFlzRUciVYNdA==
-X-Received: by 2002:a6b:5813:: with SMTP id m19mr24164940iob.29.1595272686659;
-        Mon, 20 Jul 2020 12:18:06 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id x5sm201740iol.36.2020.07.20.12.18.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yaZqAO3nKIfmNsrLqv5DBCPJCzdK9eS546Xyk4jyW9M=;
+        b=Drsjo2z2xXJUNrbbIk2ddtCOErWNvGhSQdgCRSGfVqmPvPqY+fzDjd33EuRgZemPMM
+         yz0xbQgM+DzL5kkqEsrl/O0ppr4Egu0UShF12oIEkCmwpJqaP5zC4orpQU7POG7GE5I0
+         nDylclA2QuLpfXOAQZ5cGpma3RPA7GuALmsV2mwRYZnRKKuuRd5i0OJfM78tZz9zugHU
+         JnoHV7QdI5s/M6WoG4OgztbsJkbZrd1Ft2F1uXjPcot5o/PXJ64UHYOQSVutnJGCr8Qe
+         SHsiONV5Eg2UeQcyi9gDfoiZYq4pWtQlkCMQtE6Z3kK7qqGiBLs2Kc97+EcxNoYa1s1z
+         oBqA==
+X-Gm-Message-State: AOAM533CtmOxgDtVMqxggnBgNjlcKHPe0b8Ag7cXHSdkTPqN8Syrl1WR
+        RwH1Q6mvKWOQxV0N1BBt5Ywvzw==
+X-Google-Smtp-Source: ABdhPJyB+VEQK9W7zD6JNKPCUQ4pMpb8V5cDoJ5UL/o7pV3Co5i/hs4T/c0jP1Ob9UO3dySLw1b33Q==
+X-Received: by 2002:a1c:a557:: with SMTP id o84mr728057wme.42.1595272692062;
+        Mon, 20 Jul 2020 12:18:12 -0700 (PDT)
+Received: from localhost.localdomain (50.red-80-27-209.dynamicip.rima-tde.net. [80.27.209.50])
+        by smtp.gmail.com with ESMTPSA id t4sm666716wmf.4.2020.07.20.12.18.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 12:18:05 -0700 (PDT)
-Received: (nullmailer pid 2847072 invoked by uid 1000);
-        Mon, 20 Jul 2020 19:18:04 -0000
-Date:   Mon, 20 Jul 2020 13:18:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kathiravan T <kathirav@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
-        lgirdwood@gmail.com, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, broonie@kernel.org, sricharan@codeaurora.org,
-        sivaprak@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org
-Subject: Re: [PATCH V3 3/4] dt-bindings: soc: qcom: convert the SMD-RPM
- document to YAML schema
-Message-ID: <20200720191804.GA2846983@bogus>
-References: <1595225543-12127-1-git-send-email-kathirav@codeaurora.org>
- <1595225543-12127-4-git-send-email-kathirav@codeaurora.org>
+        Mon, 20 Jul 2020 12:18:10 -0700 (PDT)
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Cc:     Drew Fustini <drew@beagleboard.org>
+Subject: [PATCH v2] pinctrl: core: print gpio in pins debugfs file
+Date:   Mon, 20 Jul 2020 21:17:41 +0200
+Message-Id: <20200720191740.1974132-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595225543-12127-4-git-send-email-kathirav@codeaurora.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 11:42:22 +0530, Kathiravan T wrote:
-> Convert the qcom,smd-rpm.txt document to YAML schema
-> 
-> Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
-> ---
->  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.txt  | 65 ----------------
->  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml | 87 ++++++++++++++++++++++
->  2 files changed, 87 insertions(+), 65 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
-> 
+If there is a gpio range mapping for the pin, then print out the gpio
+number for the pin in the debugfs 'pins' file.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Here is an example output on the BeagleBone Black from:
+/sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
+
+pin 100 (PIN100) gpiochip:gpio-96-127 line-name:P1.36 [PWM0A] 44e10990 00000001 pinctrl-single 
+pin 101 (PIN101) gpiochip:gpio-96-127 line-name:P1.33 [PRU0.1] 44e10994 00000027 pinctrl-single 
+pin 102 (PIN102) gpiochip:gpio-96-127 line-name:P2.32 [PRU0.2] 44e10998 00000027 pinctrl-single 
+pin 103 (PIN103) gpiochip:gpio-96-127 line-name:P2.30 [PRU0.3] 44e1099c 00000027 pinctrl-single 
+pin 104 (PIN104) gpiochip:gpio-96-127 line-name:P1.31 [PRU0.4] 44e109a0 0000002c pinctrl-single 
+pin 105 (PIN105) gpiochip:gpio-96-127 line-name:P2.34 [PRU0.5] 44e109a4 00000027 pinctrl-single 
+pin 106 (PIN106) gpiochip:gpio-96-127 line-name:P2.28 [PRU0.6] 44e109a8 00000027 pinctrl-single 
+pin 107 (PIN107) gpiochip:gpio-96-127 line-name:P1.29 [PRU0.7] 44e109ac 00000027 pinctrl-single 
+pin 108 (PIN108) gpiochip:gpio-0-31 line-name:P2.31 [SPI1_CS] 44e109b0 00000027 pinctrl-single 
+pin 109 (PIN109) gpiochip:gpio-0-31 line-name:P1.20 [PRU0.16] 44e109b4 00000027 pinctrl-single 
+pin 110 (PIN110) NA 44e109b8 00000030 pinctrl-single 
+pin 111 (PIN111) NA 44e109bc 00000028 pinctrl-single 
+pin 112 (PIN112) NA 44e109c0 00000030 pinctrl-single 
+pin 113 (PIN113) NA 44e109c4 00000028 pinctrl-single 
+pin 114 (PIN114) NA 44e109c8 00000028 pinctrl-single 
+pin 115 (PIN115) NA 44e109cc 00000028 pinctrl-single 
+
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Suggested-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+ drivers/pinctrl/core.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+v2 changes:
+- only include GPIO information if CONFIG_GPIOLIB
+- print gpiochip and line name instead of global GPIO number
+
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 821242bb4b16..b61fab96c5c2 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -27,6 +27,7 @@
+ #include <linux/pinctrl/machine.h>
+ 
+ #ifdef CONFIG_GPIOLIB
++#include "../gpio/gpiolib.h"
+ #include <asm-generic/gpio.h>
+ #endif
+ 
+@@ -1601,6 +1602,11 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+ 	struct pinctrl_dev *pctldev = s->private;
+ 	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+ 	unsigned i, pin;
++	struct pinctrl_gpio_range *range;
++	unsigned int gpio_num;
++	struct gpio_chip *chip;
++	struct gpio_desc *gdesc;
++
+ 
+ 	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
+ 
+@@ -1618,6 +1624,30 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+ 
+ 		seq_printf(s, "pin %d (%s) ", pin, desc->name);
+ 
++#ifdef CONFIG_GPIOLIB
++		gpio_num = 0;
++		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
++			if ((pin >= range->pin_base) &&
++			    (pin < (range->pin_base + range->npins))) {
++				gpio_num = range->base + (pin - range->pin_base);
++				break;
++			}
++		}
++		if (gpio_num > 0) {
++			chip = gpio_to_chip(gpio_num);
++			if (chip != NULL) {
++				if (chip->label)
++					seq_printf(s, "gpiochip:%s ", chip->label);
++			}
++			gdesc = gpio_to_desc(gpio_num);
++			if (gdesc != NULL)
++				if (gdesc->name)
++					seq_printf(s, "line-name:%s ", gdesc->name);
++		} else {
++			seq_puts(s, "NA ");
++		}
++#endif
++
+ 		/* Driver-specific info per pin */
+ 		if (ops->pin_dbg_show)
+ 			ops->pin_dbg_show(pctldev, s, pin);
+-- 
+2.25.1
+
