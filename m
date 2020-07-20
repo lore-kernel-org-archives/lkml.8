@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4C9C433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B6BC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0729C2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CA262065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260360;
-	bh=PYHRM3/vuupAlPy3KFuJj1++LvMrnbsTNPrhIdDVqkQ=;
+	s=default; t=1595260362;
+	bh=PORYz7Wbze4EhD0RcXJzdnktzYcKspJ3cuEg6I8qGx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cStmMMoCnoNo58vUTLj++B3JVMjdjXgpncMF3UzBBJEXtZHZiWMrVDfGlH+tJynOb
-	 9tpjvMa8dyphARxqVBiQuIByFyij52zCuzE/Z3kPKlw/GCaJ1deNrACyWSaSq8ynRk
-	 OljrBMWkQ0Sf2HXC1MIqQFkGLYtX1IlBug3cW5Mg=
+	b=eLLNL9kBif7Ho3N64CnPVNxW6ahxEbCOdxP2nOz7AjMnajNt4lpeCog2oVPJUXNXo
+	 n517OWoouJovr4alHMlk5tq0dNMXboI2NWzHQCoEWRaf4STHidkIod2dxUlsoYUbT5
+	 ApLrpprRye3g57Mecnjp2ac7EidnAnkrlOfclGbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731379AbgGTPwi (ORCPT
+        id S1731387AbgGTPwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:52:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50724 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:52:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731366AbgGTPwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:52:32 -0400
+        id S1730785AbgGTPwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:52:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D43D2065E;
-        Mon, 20 Jul 2020 15:52:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17B8E2064B;
+        Mon, 20 Jul 2020 15:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260350;
-        bh=PYHRM3/vuupAlPy3KFuJj1++LvMrnbsTNPrhIdDVqkQ=;
+        s=default; t=1595260355;
+        bh=PORYz7Wbze4EhD0RcXJzdnktzYcKspJ3cuEg6I8qGx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P+yEYzl9edIZ6BsIIIKZeAtyg/vurCv8gicZqBPAH+4FLEuXSNbwBtTbU7hoP+9TH
-         R9R7vpcPNm2BL6AhD1tp2403n1MskAt/VED/Tts9qHKefCMjZh/LBtC54SeP6wAiWg
-         Xv/aMysCYOTfEp6GxCjZgBnEc6hEZr0eXnqCmq5Q=
+        b=yasDwTZqt2GqwKX82zd9wxbqB0sx/4sSzpbfjx1sBGEEhv580vzLq3JsOHXUlnjb/
+         TU3ttku5OJJNmLCzarZJg3JcuZQbvxt3X4ujsSyLHn9QMalMSGwPF3b1pmuyvV1VAM
+         VlGaR+Op5vAznqtuUdcRqoAEE7LKGYUbhFLBx13A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 031/133] iio: magnetometer: ak8974: Fix runtime PM imbalance on error
-Date:   Mon, 20 Jul 2020 17:36:18 +0200
-Message-Id: <20200720152805.241721533@linuxfoundation.org>
+        stable@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 4.19 073/133] soc: qcom: rpmh-rsc: Allow using free WAKE TCS for active request
+Date:   Mon, 20 Jul 2020 17:37:00 +0200
+Message-Id: <20200720152807.236993516@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -61,90 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Maulik Shah <mkshah@codeaurora.org>
 
-commit 0187294d227dfc42889e1da8f8ce1e44fc25f147 upstream.
+commit 38427e5a47bf83299da930bd474c6cb2632ad810 upstream.
 
-When devm_regmap_init_i2c() returns an error code, a pairing
-runtime PM usage counter decrement is needed to keep the
-counter balanced. For error paths after ak8974_set_power(),
-ak8974_detect() and ak8974_reset(), things are the same.
+When there are more than one WAKE TCS available and there is no dedicated
+ACTIVE TCS available, invalidating all WAKE TCSes and waiting for current
+transfer to complete in first WAKE TCS blocks using another free WAKE TCS
+to complete current request.
 
-However, When iio_triggered_buffer_setup() returns an error
-code, there will be two PM usgae counter decrements.
+Remove rpmh_rsc_invalidate() to happen from tcs_write() when WAKE TCSes
+is re-purposed to be used for Active mode. Clear only currently used
+WAKE TCS's register configuration.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Fixes: 7c94a8b2ee8c ("iio: magn: add a driver for AK8974")
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 2de4b8d33eab (drivers: qcom: rpmh-rsc: allow active requests from wake TCS)
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/1586703004-13674-7-git-send-email-mkshah@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/magnetometer/ak8974.c |   19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/soc/qcom/rpmh-rsc.c |   23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
---- a/drivers/iio/magnetometer/ak8974.c
-+++ b/drivers/iio/magnetometer/ak8974.c
-@@ -768,19 +768,21 @@ static int ak8974_probe(struct i2c_clien
- 	ak8974->map = devm_regmap_init_i2c(i2c, &ak8974_regmap_config);
- 	if (IS_ERR(ak8974->map)) {
- 		dev_err(&i2c->dev, "failed to allocate register map\n");
-+		pm_runtime_put_noidle(&i2c->dev);
-+		pm_runtime_disable(&i2c->dev);
- 		return PTR_ERR(ak8974->map);
- 	}
+--- a/drivers/soc/qcom/rpmh-rsc.c
++++ b/drivers/soc/qcom/rpmh-rsc.c
+@@ -148,7 +148,7 @@ int rpmh_rsc_invalidate(struct rsc_drv *
+ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
+ 					 const struct tcs_request *msg)
+ {
+-	int type, ret;
++	int type;
+ 	struct tcs_group *tcs;
  
- 	ret = ak8974_set_power(ak8974, AK8974_PWR_ON);
- 	if (ret) {
- 		dev_err(&i2c->dev, "could not power on\n");
--		goto power_off;
-+		goto disable_pm;
- 	}
+ 	switch (msg->state) {
+@@ -169,19 +169,10 @@ static struct tcs_group *get_tcs_for_msg
+ 	 * If we are making an active request on a RSC that does not have a
+ 	 * dedicated TCS for active state use, then re-purpose a wake TCS to
+ 	 * send active votes.
+-	 * NOTE: The driver must be aware that this RSC does not have a
+-	 * dedicated AMC, and therefore would invalidate the sleep and wake
+-	 * TCSes before making an active state request.
+ 	 */
+ 	tcs = get_tcs_of_type(drv, type);
+-	if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs) {
++	if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs)
+ 		tcs = get_tcs_of_type(drv, WAKE_TCS);
+-		if (tcs->num_tcs) {
+-			ret = rpmh_rsc_invalidate(drv);
+-			if (ret)
+-				return ERR_PTR(ret);
+-		}
+-	}
  
- 	ret = ak8974_detect(ak8974);
- 	if (ret) {
- 		dev_err(&i2c->dev, "neither AK8974 nor AMI30x found\n");
--		goto power_off;
-+		goto disable_pm;
- 	}
+ 	return tcs;
+ }
+@@ -406,8 +397,16 @@ static int tcs_write(struct rsc_drv *drv
  
- 	ret = ak8974_selftest(ak8974);
-@@ -790,14 +792,9 @@ static int ak8974_probe(struct i2c_clien
- 	ret = ak8974_reset(ak8974);
- 	if (ret) {
- 		dev_err(&i2c->dev, "AK8974 reset failed\n");
--		goto power_off;
-+		goto disable_pm;
- 	}
+ 	tcs->req[tcs_id - tcs->offset] = msg;
+ 	set_bit(tcs_id, drv->tcs_in_use);
+-	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS)
++	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS) {
++		/*
++		 * Clear previously programmed WAKE commands in selected
++		 * repurposed TCS to avoid triggering them. tcs->slots will be
++		 * cleaned from rpmh_flush() by invoking rpmh_rsc_invalidate()
++		 */
++		write_tcs_reg_sync(drv, RSC_DRV_CMD_ENABLE, tcs_id, 0);
++		write_tcs_reg_sync(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, 0);
+ 		enable_tcs_irq(drv, tcs_id, true);
++	}
+ 	spin_unlock(&drv->lock);
  
--	pm_runtime_set_autosuspend_delay(&i2c->dev,
--					 AK8974_AUTOSUSPEND_DELAY);
--	pm_runtime_use_autosuspend(&i2c->dev);
--	pm_runtime_put(&i2c->dev);
--
- 	indio_dev->dev.parent = &i2c->dev;
- 	indio_dev->channels = ak8974_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(ak8974_channels);
-@@ -850,6 +847,11 @@ no_irq:
- 		goto cleanup_buffer;
- 	}
- 
-+	pm_runtime_set_autosuspend_delay(&i2c->dev,
-+					 AK8974_AUTOSUSPEND_DELAY);
-+	pm_runtime_use_autosuspend(&i2c->dev);
-+	pm_runtime_put(&i2c->dev);
-+
- 	return 0;
- 
- cleanup_buffer:
-@@ -858,7 +860,6 @@ disable_pm:
- 	pm_runtime_put_noidle(&i2c->dev);
- 	pm_runtime_disable(&i2c->dev);
- 	ak8974_set_power(ak8974, AK8974_PWR_OFF);
--power_off:
- 	regulator_bulk_disable(ARRAY_SIZE(ak8974->regs), ak8974->regs);
- 
- 	return ret;
+ 	__tcs_buffer_write(drv, tcs_id, 0, msg);
 
 
