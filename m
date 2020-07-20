@@ -2,53 +2,51 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21176C4345B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CA0C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F395422D2A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57BA320773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263213;
-	bh=CxX0AJT363wpSILQqMtjxZO6oSEWTDFfl6+P8HsqE2E=;
+	s=default; t=1595263216;
+	bh=i6z5wAOGKay2yoCvdUnPgPzFvWJm4qfzKtRJ0+eiRlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uKLcBgST+NvIm3r26/gtd1vob4LsL51uyTcOg5FzJJV3PzMUx95HI9WdEK4Z5EPpl
-	 e7HriRuR919ccNUtbEg6rXxIqk8CW/43tHa9HJW6PcOHhq1Q2qdHlNal9ygkDyMlBP
-	 psvQmyJI4/ndJJMfgyQb58uFQOkZmdElH+p5wCuc=
+	b=o5y1PsuLqtaZMxVuV/tz3LfO5StvOIeNjAv/LaDAyVgGHbOuEfjnszW+Qv7EtncHA
+	 Pm2Ekn7iUpqpqcFlWlf7TIQXr2dvKdzQYQZPSQYtQjATczXGfFCT+5TnBiMxzod+4s
+	 6SA7OE3yXbt1XvmkkS/7qJ00olenKal3857ZKY3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730805AbgGTPrp (ORCPT
+        id S1729521AbgGTPrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:47:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42968 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730780AbgGTPrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:47:42 -0400
+        id S1730768AbgGTPrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:47:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3E342065E;
-        Mon, 20 Jul 2020 15:47:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B53D2065E;
+        Mon, 20 Jul 2020 15:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260061;
-        bh=CxX0AJT363wpSILQqMtjxZO6oSEWTDFfl6+P8HsqE2E=;
+        s=default; t=1595260044;
+        bh=i6z5wAOGKay2yoCvdUnPgPzFvWJm4qfzKtRJ0+eiRlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fyBPHYfB/NYnPrnRBeusP3l9AV4uPs2A+9iAa9xoUZ+rLsEe7VyIkNnyuP60RoScX
-         XekkOhWWxnk1kHO3IeUBo6cRZV2xtdFWmMlQFeYOHvYcpSR/E3KIiW8/u95q8DLzl6
-         XkPcn9qtEgVMm3byGM/C/JgdU1RfP+wJbkvZ4Cg4=
+        b=Upme2DBDmqXvSkY9AWuNlVFoicqN9MtYeTi5vfePfXViTwQ9AoP2O6PXM6T6gIFCR
+         RSQdob5GyoanvWLw73pZGrz5AB5jsfpdSUdjuU7XUCVqI+qm4DMau/8OHhugf9REku
+         GmetiQCl6eAYTtiiNWCdo/j49pSTZYI95ZEvtdts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Stable@vger.kernel.org
-Subject: [PATCH 4.14 062/125] iio:magnetometer:ak8974: Fix alignment and data leak issues
-Date:   Mon, 20 Jul 2020 17:36:41 +0200
-Message-Id: <20200720152806.033894436@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Ian Abbott <abbotti@mev.co.uk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 085/125] staging: comedi: verify array index is correct before using it
+Date:   Mon, 20 Jul 2020 17:37:04 +0200
+Message-Id: <20200720152807.121300435@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -61,69 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 838e00b13bfd4cac8b24df25bfc58e2eb99bcc70 upstream.
+[ Upstream commit ef75e14a6c935eec82abac07ab68e388514e39bc ]
 
-One of a class of bugs pointed out by Lars in a recent review.
-iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
-to the size of the timestamp (8 bytes).  This is not guaranteed in
-this driver which uses an array of smaller elements on the stack.
-As Lars also noted this anti pattern can involve a leak of data to
-userspace and that indeed can happen here.  We close both issues by
-moving to a suitable structure in the iio_priv() data.
+This code reads from the array before verifying that "trig" is a valid
+index.  If the index is wildly out of bounds then reading from an
+invalid address could lead to an Oops.
 
-This data is allocated with kzalloc so no data can leak appart from
-previous readings.
-
-Fixes: 7c94a8b2ee8cf ("iio: magn: add a driver for AK8974")
-Reported-by: Lars-Peter Clausen <lars@metafoo.de>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: <Stable@vger.kernel.org>
+Fixes: a8c66b684efa ("staging: comedi: addi_apci_1500: rewrite the subdevice support functions")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20200709102936.GA20875@mwanda
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/magnetometer/ak8974.c |   10 +++++++---
+ drivers/staging/comedi/drivers/addi_apci_1500.c | 10 +++++++---
  1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/magnetometer/ak8974.c
-+++ b/drivers/iio/magnetometer/ak8974.c
-@@ -184,6 +184,11 @@ struct ak8974 {
- 	bool drdy_irq;
- 	struct completion drdy_complete;
- 	bool drdy_active_low;
-+	/* Ensure timestamp is naturally aligned */
-+	struct {
-+		__le16 channels[3];
-+		s64 ts __aligned(8);
-+	} scan;
- };
+diff --git a/drivers/staging/comedi/drivers/addi_apci_1500.c b/drivers/staging/comedi/drivers/addi_apci_1500.c
+index 63991c49ff230..79a8799b12628 100644
+--- a/drivers/staging/comedi/drivers/addi_apci_1500.c
++++ b/drivers/staging/comedi/drivers/addi_apci_1500.c
+@@ -465,9 +465,9 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
+ 	unsigned int lo_mask = data[5] << shift;
+ 	unsigned int chan_mask = hi_mask | lo_mask;
+ 	unsigned int old_mask = (1 << shift) - 1;
+-	unsigned int pm = devpriv->pm[trig] & old_mask;
+-	unsigned int pt = devpriv->pt[trig] & old_mask;
+-	unsigned int pp = devpriv->pp[trig] & old_mask;
++	unsigned int pm;
++	unsigned int pt;
++	unsigned int pp;
  
- static const char ak8974_reg_avdd[] = "avdd";
-@@ -580,7 +585,6 @@ static void ak8974_fill_buffer(struct ii
- {
- 	struct ak8974 *ak8974 = iio_priv(indio_dev);
- 	int ret;
--	__le16 hw_values[8]; /* Three axes + 64bit padding */
- 
- 	pm_runtime_get_sync(&ak8974->i2c->dev);
- 	mutex_lock(&ak8974->lock);
-@@ -590,13 +594,13 @@ static void ak8974_fill_buffer(struct ii
- 		dev_err(&ak8974->i2c->dev, "error triggering measure\n");
- 		goto out_unlock;
- 	}
--	ret = ak8974_getresult(ak8974, hw_values);
-+	ret = ak8974_getresult(ak8974, ak8974->scan.channels);
- 	if (ret) {
- 		dev_err(&ak8974->i2c->dev, "error getting measures\n");
- 		goto out_unlock;
+ 	if (trig > 1) {
+ 		dev_dbg(dev->class_dev,
+@@ -480,6 +480,10 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
+ 		return -EINVAL;
  	}
  
--	iio_push_to_buffers_with_timestamp(indio_dev, hw_values,
-+	iio_push_to_buffers_with_timestamp(indio_dev, &ak8974->scan,
- 					   iio_get_time_ns(indio_dev));
- 
-  out_unlock:
++	pm = devpriv->pm[trig] & old_mask;
++	pt = devpriv->pt[trig] & old_mask;
++	pp = devpriv->pp[trig] & old_mask;
++
+ 	switch (data[2]) {
+ 	case COMEDI_DIGITAL_TRIG_DISABLE:
+ 		/* clear trigger configuration */
+-- 
+2.25.1
+
 
 
