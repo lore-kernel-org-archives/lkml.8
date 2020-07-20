@@ -2,122 +2,111 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E41C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE86208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26920208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 09:41:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cGw1MLyg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vUBM16Je"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgGTJlI (ORCPT
+        id S1728298AbgGTJl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:41:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39876 "EHLO
+        Mon, 20 Jul 2020 05:41:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728088AbgGTJlH (ORCPT
+        with ESMTP id S1728239AbgGTJl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:41:07 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3827C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:41:07 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id x83so13916335oif.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:41:07 -0700 (PDT)
+        Mon, 20 Jul 2020 05:41:57 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 314EFC0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:41:57 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q7so19549798ljm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 02:41:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ZlSWX3kEKIVtH3Ty/sQ1R+KtTQUTPa6eMcEinYxdwjs=;
-        b=cGw1MLyg8nvEL2n5ObAVNMtFCCDs4tRZwFLvRut5ODbQeKh3ZN1feqi80KP/0+weXA
-         zo/VbZgcLyQwKaeQw0fYG6sx2I8QjriLT4flEyy4c16kW4WEtYhcC8IeR0aDf3NNjpyZ
-         hxkYfMZaWGurvdgZB0m7CWT/eMwL9+ZnYOUBsbRTVVjLlSllTkLS40RiyXzx6LhE88ge
-         DBF6sXuhKoelMt07Ocgsf6yXVb44/rkOuM1kVyciCDwHm10kFptpxoPf5MNW7WEWJCWW
-         y/2K6eGWHt5uHb5EYJcex9nMM5s3h1zJrOimRejUsM0VtOfwmrfZI14IeWv8jUMIZJ9L
-         qWEA==
+        bh=twhRHN8GmGnSaOWdhFH407w2bJQWN/XspQavxD2E7NU=;
+        b=vUBM16JedblSszCmKcUOtNNCpBXv3CIhGha5f39iVCq+GLQjc1+5sjVAf3MGajt6eb
+         js3i3eEdyXIM2MQPvSQWiAbe6gPeB4YjU2Sab0OH0PF9+7BZ1Hfg3dMIm6fiTGmnLQGE
+         WN52jmOtjrzVTwhA5TpOoRi5fzEqLaC3gBn8SKr5iixPXGEf8j0ueAKU4MbazsVA6aRf
+         FyvYHaaSBU57IPmfcX0ILw4NWbPu9l8TUYzGeGQoqnmJtc7HHBIKatEXj/thpaDFX2WV
+         Aokyu21j7CqO9w7d6xuJ7PUwJIG1UxxaIPnap6CCEB8zRyeuqnRZ3bACsucfj0UgkFkX
+         fSxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZlSWX3kEKIVtH3Ty/sQ1R+KtTQUTPa6eMcEinYxdwjs=;
-        b=N9SnzNziTtLa9IulvOnymOtoCQJTHN5er0QgRZH7cGtryE5m6oryf/uDmrIMy0IEOX
-         yZha4iVy2u040T3apFyAV7K/Ua3nAbTxIKtcENu1y3t8FMGz+OSjOF1OxZZyiMlKcTuv
-         kuUfPU/glXbaHGGYmc9awfr3KEJ/97/smkU2JK+jFe6a7TPNj2vdALa+AF37lktmgZX4
-         8hMxX2o+nRyGV6ibVNVUJdf3NPIY0dODQQr8MaFZ1XriYB2cLSiHYs1P67sZ2hwWvFaY
-         iKkGwkQh+vYkHq3FVn3T7CFgAZHzCHVALU+YgM9HQpTPx0hblxD11iwnO9fbkEk/EVB/
-         UI9Q==
-X-Gm-Message-State: AOAM5317+WiEUCo8AdnVyffsCuHQk5fVyFX/vfiwMiE7fqd2xNCanUvN
-        d0WRn2o1DQvIRt+KbgxDDOioLZLuojTLqOnPa3Egrg==
-X-Google-Smtp-Source: ABdhPJw7Rpzewc4ms74dHaYrrggRaeNJqLHtIwdbLvxFsTbeqVUEjiuDarE9DlHUbYMVVBXXtBHfY7qNOkAXLP5EHi0=
-X-Received: by 2002:aca:cf4f:: with SMTP id f76mr17083895oig.172.1595238066764;
- Mon, 20 Jul 2020 02:41:06 -0700 (PDT)
+        bh=twhRHN8GmGnSaOWdhFH407w2bJQWN/XspQavxD2E7NU=;
+        b=CDhZFohC2jRpCkqgI2qGLvRyvDXUIrG05cKRVn1JBF6s3zRGg+CfxgQsEnaFu6Khk8
+         uDi9NLun8o9VGQMbCzxz8QJdC8sRS8vVn8ShStnT/EEyRD2HukJvZEWTMFS59LkH11RI
+         7rPUR5b47WPM+XatsED6lfGrDt1D64cchCzaJrU5tnVv7EPOGujpCeqcVs3smV1T3zBi
+         U6IfnQgZYgZ3Ta69+IDbQXm9hN0bKIs+o2qksPgfvWXFQCuZHmNF+XbYOLnDad2yL/Nx
+         RmtGp4EejTaCnmBbsqVCK8NmdWu+WyeORZVyErfw94UbF0Wd3xumooLPUgqvIOEHCZJU
+         hhhw==
+X-Gm-Message-State: AOAM5322ljKt/tufuGypLIST1miYxfs/sf/pAywItw+uCUvfB7f8DpkO
+        Rwk97ACI/3U+2Fz14o6lrh3I4UsqKCc2hfx94U6NmA==
+X-Google-Smtp-Source: ABdhPJzp2xsR54WZ1Ot/7m0WsiusF7Y4zChVz+CNR+5Bym/Dcaq3ISLURbaFVL1WyVZW8pynmK9Y5DvEDxM1d6oFID4=
+X-Received: by 2002:a2e:9b8c:: with SMTP id z12mr10226971lji.35.1595238115661;
+ Mon, 20 Jul 2020 02:41:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200709132344.760-1-john.ogness@linutronix.de>
- <20200709132344.760-5-john.ogness@linutronix.de> <20200718121053.GA691245@elver.google.com>
- <20200719034312.GA566736@jagdpanzerIV.localdomain> <20200720064303.GA2144711@elver.google.com>
- <20200720084102.GC463@jagdpanzerIV.localdomain>
-In-Reply-To: <20200720084102.GC463@jagdpanzerIV.localdomain>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 20 Jul 2020 11:40:52 +0200
-Message-ID: <CANpmjNPbnwmHyif79MaXdA478UGUKysB=u=HmtBiD10PPPTEcw@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] printk: use the lockless ringbuffer
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20200716022817.30439-1-ansuelsmth@gmail.com> <20200716022817.30439-2-ansuelsmth@gmail.com>
+In-Reply-To: <20200716022817.30439-2-ansuelsmth@gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 20 Jul 2020 15:11:44 +0530
+Message-ID: <CAP245DUqvTYENmaxG3rjUn1XrzrmvdFmKG_vaef2BxKL6jY+Rg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] ipq806x: gcc: add support for child probe
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 at 10:41, Sergey Senozhatsky
-<sergey.senozhatsky@gmail.com> wrote:
+On Thu, Jul 16, 2020 at 7:58 AM Ansuel Smith <ansuelsmth@gmail.com> wrote:
 >
-> On (20/07/20 08:43), Marco Elver wrote:
-> > On Sun, Jul 19, 2020 at 12:43PM +0900, Sergey Senozhatsky wrote:
-> >
-> > As I said, a number of debugging tools use them to format reports to be
-> > more readable (visually separate title and report body, and separate
-> > parts of the report). Also, such reports are often parsed by CI systems,
-> > and by changing the reports, these CI systems may break. But those are
-> > just the usecases I'm acutely aware of
+> Add support for child probing needed for tsens driver that share the
+> seme regs of gcc for this platform.
+
+Typo: same
+
+
 >
-> Can you give example of such CI systems? // that's a real question //
-
-None of ours should break; I agree the CI system is brittle if it
-relies on newlines. Parsed and displayed reports are changing, however
--- what irks me is now all the reports sent to the LKML look ugly.
-
-Some random KASAN reports (just compare formatting):
-next (ugly): https://lore.kernel.org/lkml/000000000000c87b7305aadb6dba@google.com/
-mainline (normal):
-https://lore.kernel.org/lkml/000000000000f4ef6a05aa92ec6c@google.com/
-
-The same problem exists with lockdep reports, KCSAN reports, ... If
-newline-printks to insert blank lines are now banned, what are we to
-do? Send dozens of patches to switch everyone to printk(" \n")? Or
-some better suggestion? I cannot yet see how that is an improvement.
-(And if the behaviour is not reverted, please document the new
-behaviour.)
-
-That also doesn't yet address the ~400 other newline-printk users, and
-somebody needs to do the due diligence to understand if it's just a
-flush, or an intentional blank line.
-
-Thanks,
--- Marco
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/clk/qcom/gcc-ipq806x.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-ipq806x.c
+> index a8456e09c44d..d6b7adb4be38 100644
+> --- a/drivers/clk/qcom/gcc-ipq806x.c
+> +++ b/drivers/clk/qcom/gcc-ipq806x.c
+> @@ -3089,7 +3089,7 @@ static int gcc_ipq806x_probe(struct platform_device *pdev)
+>         regmap_write(regmap, 0x3cf8, 8);
+>         regmap_write(regmap, 0x3d18, 8);
+>
+> -       return 0;
+> +       return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+>  }
+>
+>  static struct platform_driver gcc_ipq806x_driver = {
+> --
+> 2.27.0
+>
