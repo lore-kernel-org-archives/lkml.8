@@ -2,105 +2,127 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00620C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 825F6C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACD86207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:34:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595248466;
-	bh=hzeVc/gxIpFnmrFKoc8d5uPMWXQwJhcaHk2T74oAuKw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F7Tci9rAgu3M2w11gIPVbfL0LFgjNHv4a7H3swrcmh7I4loK27W7xUR92VKvZ7RYU
-	 HTM1rzeXm+mlcG5ZfcfIWPwO3daU0p8FswvwRyJxoGvVzgz33jYVurcCZ1Ro3mWP+K
-	 iNNTH0S0j6b0AdK1QwPs4hPhU4/0PRvdcb17yWWk=
+	by mail.kernel.org (Postfix) with ESMTP id 60D36207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:35:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U0zlyf/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbgGTMe0 (ORCPT
+        id S1728601AbgGTMfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:34:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728200AbgGTMeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 08:34:25 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 20 Jul 2020 08:35:45 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40292 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728074AbgGTMfo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 08:35:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595248543;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QyfSYuwzCMJwlPSjgt3xH5r/wR3EoTKDYmEm2e5lk4g=;
+        b=U0zlyf/8KQE+1n6HF4otcfVHCMQBDb5tjUFiC/9NIQE9ktcWnPSA9ZRLB50pfJ1LrySbQK
+        vs6hBky3XSIjPLzVkk9nB4tuC2uSF+OzRv7vyWn0e2fXjzxaXzY/WebsmoRr7TWICjFCIL
+        1MRFcUVRAFhcVcLxXu64kSPu61211nQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-252-L7QMf2XhPMWTg43hs6byrQ-1; Mon, 20 Jul 2020 08:35:40 -0400
+X-MC-Unique: L7QMf2XhPMWTg43hs6byrQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EDEB20729;
-        Mon, 20 Jul 2020 12:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595248465;
-        bh=hzeVc/gxIpFnmrFKoc8d5uPMWXQwJhcaHk2T74oAuKw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SNIQRNLUeaOm242lCQ//ekAiVmUhx4VAmkq9bfkDhwmtF0S5WvuZ7aj/k/7l0pIYm
-         Kl3c32NGAgK1v7AzJwyojQKwjnmuiMusPRlZ6xsKLLu9Z/6QRuS+AgmtiYfue2k4GK
-         Uy/0r56WaWZ3EszQWp+HLQodDw9hsf97KxBsOaG0=
-Date:   Mon, 20 Jul 2020 13:34:12 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     perex@perex.cz, tiwai@suse.com, kuninori.morimoto.gx@renesas.com,
-        robh+dt@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, digetx@gmail.com,
-        alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
-        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
-        dramesh@nvidia.com, atalambedu@nvidia.com, nwartikar@nvidia.com,
-        swarren@nvidia.com, nicoleotsuka@gmail.com
-Subject: Re: [PATCH v5 01/11] ASoC: dt-bindings: tegra: Add DT bindings for
- Tegra210
-Message-ID: <20200720123412.GD4601@sirena.org.uk>
-References: <1595134890-16470-1-git-send-email-spujar@nvidia.com>
- <1595134890-16470-2-git-send-email-spujar@nvidia.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2011A1E03;
+        Mon, 20 Jul 2020 12:35:38 +0000 (UTC)
+Received: from [10.36.115.54] (ovpn-115-54.ams2.redhat.com [10.36.115.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F15E90341;
+        Mon, 20 Jul 2020 12:35:28 +0000 (UTC)
+Subject: Re: [PATCH v5 13/15] vfio/pci: Expose PCIe PASID capability to guest
+To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
+        stefanha@gmail.com, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
+ <1594552870-55687-14-git-send-email-yi.l.liu@intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <63d4c058-246d-1a11-af66-e97fd5ec9bd3@redhat.com>
+Date:   Mon, 20 Jul 2020 14:35:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tEFtbjk+mNEviIIX"
-Content-Disposition: inline
-In-Reply-To: <1595134890-16470-2-git-send-email-spujar@nvidia.com>
-X-Cookie: Be different: conform.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1594552870-55687-14-git-send-email-yi.l.liu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Yi,
 
---tEFtbjk+mNEviIIX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 7/12/20 1:21 PM, Liu Yi L wrote:
+> This patch exposes PCIe PASID capability to guest for assigned devices.
+> Existing vfio_pci driver hides it from guest by setting the capability
+> length as 0 in pci_ext_cap_length[].
+> 
+> And this patch only exposes PASID capability for devices which has PCIe
+> PASID extended struture in its configuration space. So VFs, will will
+s/will//
+> not see PASID capability on VFs as VF doesn't implement PASID extended
+suggested rewording: VFs will not expose the PASID capability as they do
+not implement the PASID extended structure in their config space?
+> structure in its configuration space. For VF, it is a TODO in future.
+> Related discussion can be found in below link:
+> 
+> https://lkml.org/lkml/2020/4/7/693
 
-On Sun, Jul 19, 2020 at 10:31:20AM +0530, Sameer Pujar wrote:
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> ---
+> v1 -> v2:
+> *) added in v2, but it was sent in a separate patchseries before
+> ---
+>  drivers/vfio/pci/vfio_pci_config.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index d98843f..07ff2e6 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+> @@ -95,7 +95,7 @@ static const u16 pci_ext_cap_length[PCI_EXT_CAP_ID_MAX + 1] = {
+>  	[PCI_EXT_CAP_ID_LTR]	=	PCI_EXT_CAP_LTR_SIZEOF,
+>  	[PCI_EXT_CAP_ID_SECPCI]	=	0,	/* not yet */
+>  	[PCI_EXT_CAP_ID_PMUX]	=	0,	/* not yet */
+> -	[PCI_EXT_CAP_ID_PASID]	=	0,	/* not yet */
+> +	[PCI_EXT_CAP_ID_PASID]	=	PCI_EXT_CAP_PASID_SIZEOF,
+>  };
+>  
+>  /*
+> 
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
->  * DSPK
-> DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-> 	t=1595134894; bh=DX96zRQRNplPikN828HbAfbjGumAn9IgtktrsenKjgk=;
-> 	h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-> 	 In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-> 	 Content-Type;
-> 	b=IhfGFjMxsnRHso1Ku2GEGC+mtLCy3AbRKPfgTS56XGqEWquUr/1s8n9tFpriqF7a+
-> 	 tJGrTN9mKhRQGrwdey/AHsMY4Tbm4fKEWxIASgAV/lFPCfgP3BnVjEdHclc7FdBaB0
-> 	 Qvd3zs8HFsgoIzksLrtHNMrUepkeZajn0/XnC7nghGDRim4+6Hauupr5kj/KVlihsS
-> 	 KS1YQ2Zz9TZzLaC5QXALiHj3ATLvBFrmIf6Vj19q7hePt0menTZVzQNy+y3h4xZfLH
-> 	 +OvBCsLgHGGhq+iM9rm64D+S5Op2vCslwq3Q/42TnYZ0vDbD7aA9nTAQzfYeI6HK6b
-> 	 vi7eYbryzCTSg==
+Thanks
 
-You appear to have a bit of mail header in here.
+Eric
 
---tEFtbjk+mNEviIIX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8Vj0QACgkQJNaLcl1U
-h9Cb+Af+OINXrdCpdw+ER9s3wYRO8uormKGyLZ3qGxOVdkNfbg3pIVwmGiNxWjbo
-vjrchHQ4sQKrmvZOHal6nz2Wy3rqifGaSiahI+K4RzmwFWphmnn44nDRVEr2DUfh
-fuZkL5bBbAOkg28gsOsxgkQ5PIXvuegd+KCCgf7HyU1G6qLABL0N4fCIf1ozPQuZ
-XgLXm9YwnEtl/mi7wTjywScrnkiq60Q9aij06zBPfhzKKnmNmxZPpPwi/ENZEmoZ
-rkplukCeIK4k+uXl4mttEzUjt9YcWKRa5t1fS/8SYkG8Z2Fu8ixFTQhC36V9JLQG
-VcFXVBJqQJ7bisywwAvne+poBEpP2g==
-=2HYu
------END PGP SIGNATURE-----
-
---tEFtbjk+mNEviIIX--
