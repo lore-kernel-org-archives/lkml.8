@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F8AC433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6BFC43446
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDB020717
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6DB620717
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281206;
-	bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
+	s=default; t=1595281219;
+	bh=1DC36zulnrTR4UQVCUR7JDdTyotCWqbHbyfSEQjISsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mci2JDn9mP8o0DI1SlHLYUzK5H5kudjk07D40cMecbsXAvKHzmyjmxb5+Yg90ht9X
-	 No+YtCQ0UlgXCEjkYv20j0wdthD7xZ71qPKiAPWLwyszQPhI3Dhj0ixBgfSdcy/MuL
-	 p+XJwWU6X7v60sI2LsssxHpEPdnFEnOIvO45rbig=
+	b=dkuR9QKNf/iKl1FRs7qb7fjLC8M1lsDvMtn2+o69pU3Bp1zdVrhIQlqfAg69MvXOt
+	 SBWJB4+gsvWMeXJfWjIRGOb6F8bYOOSE2dAX3QWDfB/z1r+A0F+oxDP4lQuMWEFogG
+	 qqOnFGbZD5BfKJDw3291vouzAE8oM8Y6GqwPmeqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgGTVkF (ORCPT
+        id S1728706AbgGTVkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:40:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59228 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:40:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728479AbgGTVja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:30 -0400
+        id S1726982AbgGTVjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7364822CBB;
-        Mon, 20 Jul 2020 21:39:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D6B522CAF;
+        Mon, 20 Jul 2020 21:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281170;
-        bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
+        s=default; t=1595281182;
+        bh=1DC36zulnrTR4UQVCUR7JDdTyotCWqbHbyfSEQjISsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QzaV/5Cn//U7bvjCp4E2bVZJpU7Eyd86OfPUkC8l+SQrbjlkOKTfjHwp2To6Ge7ah
-         TOrunyaXXWo5B0EXIuHLor7MpscS6CwdHGp4DAdeRhPX4u31J7+Tp1I8tNSSeadyFt
-         eXIRi2ew2wZrK63qTRuM1Xmya32MZz/RpJsmIf1U=
+        b=FyiL24pVHO9n0/PEHifUZIeK2pZo3hqUXPegL9J/yuP0m6WaXv1oeUwiY1wsbpRnW
+         0epA1JBYWTk3c4o4wt2PGePJ8eMRi4zSvTj5zK93YyVzTPXeZ76+xFMlcjF72KYO7c
+         A//91WKvTfgsfeeNm/+pSO7D6GRRGCeBEKynBgD4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -46,12 +46,12 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Sasha Levin <sashal@kernel.org>,
         clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 12/13] x86: math-emu: Fix up 'cmp' insn for clang ias
-Date:   Mon, 20 Jul 2020 17:39:13 -0400
-Message-Id: <20200720213914.407919-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 8/9] x86: math-emu: Fix up 'cmp' insn for clang ias
+Date:   Mon, 20 Jul 2020 17:39:31 -0400
+Message-Id: <20200720213932.408089-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213914.407919-1-sashal@kernel.org>
-References: <20200720213914.407919-1-sashal@kernel.org>
+In-Reply-To: <20200720213932.408089-1-sashal@kernel.org>
+References: <20200720213932.408089-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -84,10 +84,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/math-emu/wm_sqrt.S b/arch/x86/math-emu/wm_sqrt.S
-index f031c0e193565..515cdee90df72 100644
+index d258f59564e11..3b40c98bbbd40 100644
 --- a/arch/x86/math-emu/wm_sqrt.S
 +++ b/arch/x86/math-emu/wm_sqrt.S
-@@ -209,7 +209,7 @@ sqrt_stage_2_finish:
+@@ -208,7 +208,7 @@ sqrt_stage_2_finish:
  
  #ifdef PARANOID
  /* It should be possible to get here only if the arg is ffff....ffff */
