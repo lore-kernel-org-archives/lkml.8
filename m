@@ -2,181 +2,116 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6082AC433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7DCC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F16822CBB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CMJQmbau"
+	by mail.kernel.org (Postfix) with ESMTP id A6CDD2065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595260043;
+	bh=qcJinvA9UWAln0obTJFKjUkwzI+BlB1bSmeMSMmtkFM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YA0urg03nyQCZjmQO0xWBGtoZbigMxlbnAnSq6N4e3wQcmvOr2EhFVOvYEZ7jrVFD
+	 9MUqFG+rMOQ9ienBQnvfioIyN1w5KkrVQ6LK8SxGAFxvXXthpUMjGVUh2WxhScsJOS
+	 7Qu1Ng2zXDDH1QL/1O3Ip5dPhd9Mc+TZQEKNkl8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730751AbgGTPrR (ORCPT
+        id S1729964AbgGTPrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:47:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21165 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730733AbgGTPrF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:47:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730737AbgGTPrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 11:47:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595260023;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hQ1H7l9Ohk9cYexEWkkOl7WIuCDqSZlPZluQHWvxb1I=;
-        b=CMJQmbau19PE96nWqtHBVGYW1fHCBZQPFxWt7Ywsx/b6jPZHRwWaKbRFkmUF/k5/Qk58uF
-        EIUJXgEGXhEqJ66T/R1zVAVElGX+FMtHoE3gXN5vRiOCBxNk0S7Nmtcg6pk71cpxfjkOh4
-        GHolbTCVqZ7+OndxGu9mnHQs6A9aFqo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-66-kQ0JMy5zMwax-kYED5mPiQ-1; Mon, 20 Jul 2020 11:46:59 -0400
-X-MC-Unique: kQ0JMy5zMwax-kYED5mPiQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DC0818A1DFE;
-        Mon, 20 Jul 2020 15:46:58 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-113-230.rdu2.redhat.com [10.10.113.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 46C8C7EF81;
-        Mon, 20 Jul 2020 15:46:57 +0000 (UTC)
-Subject: Re: [PATCH v6] xfs: Fix false positive lockdep warning with
- sb_internal & fs_reclaim
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
-        Eric Sandeen <sandeen@redhat.com>
-References: <20200707191629.13911-1-longman@redhat.com>
- <20200713164112.GZ7606@magnolia>
- <104087053.24407245.1595259123778.JavaMail.zimbra@redhat.com>
- <20200720154043.GV7625@magnolia>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <d5218324-ee26-464b-8db6-3ca05ba98f3d@redhat.com>
-Date:   Mon, 20 Jul 2020 11:46:56 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 10A212065E;
+        Mon, 20 Jul 2020 15:47:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260025;
+        bh=qcJinvA9UWAln0obTJFKjUkwzI+BlB1bSmeMSMmtkFM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qsXSUMKAtQtBFk2lMIYu6wwXAO7coflnWEJacARXHeEqljI6sqPDC14SwAUPVxG3n
+         PjEBk2NK/Uys/o7/8ET+sOHlr9xgU92mRh2rUxTHQwLGX9zwOe0YS6KWVZpJ0dumiE
+         NeZJR45xHZxV9wJyNl2UwMSoC7LvJNhNAsfOgNzw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 079/125] ACPI: video: Use native backlight on Acer TravelMate 5735Z
+Date:   Mon, 20 Jul 2020 17:36:58 +0200
+Message-Id: <20200720152806.833911321@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
+References: <20200720152802.929969555@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200720154043.GV7625@magnolia>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/20/20 11:40 AM, Darrick J. Wong wrote:
-> On Mon, Jul 20, 2020 at 11:32:03AM -0400, Waiman Long wrote:
->>
->> ----- Original Message -----
->> From: "Darrick J. Wong" <darrick.wong@oracle.com>
->> To: "Waiman Long" <longman@redhat.com>
->> Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, "Dave Chinner" <david@fromorbit.com>, "Qian Cai" <cai@lca.pw>, "Eric Sandeen" <sandeen@redhat.com>
->> Sent: Monday, July 13, 2020 12:41:12 PM
->> Subject: Re: [PATCH v6] xfs: Fix false positive lockdep warning with sb_internal & fs_reclaim
->>
->> On Tue, Jul 07, 2020 at 03:16:29PM -0400, Waiman Long wrote:
->>> Depending on the workloads, the following circular locking dependency
->>> warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
->>> lock) may show up:
->>>
->>> ======================================================
->>> WARNING: possible circular locking dependency detected
->>> 5.0.0-rc1+ #60 Tainted: G        W
->>> ------------------------------------------------------
->>> fsfreeze/4346 is trying to acquire lock:
->>> 0000000026f1d784 (fs_reclaim){+.+.}, at:
->>> fs_reclaim_acquire.part.19+0x5/0x30
->>>
->>> but task is already holding lock:
->>> 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
->>>
->>> which lock already depends on the new lock.
->>>    :
->>>   Possible unsafe locking scenario:
->>>
->>>         CPU0                    CPU1
->>>         ----                    ----
->>>    lock(sb_internal);
->>>                                 lock(fs_reclaim);
->>>                                 lock(sb_internal);
->>>    lock(fs_reclaim);
->>>
->>>   *** DEADLOCK ***
->>>
->>> 4 locks held by fsfreeze/4346:
->>>   #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
->>>   #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
->>>   #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
->>>   #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
->>>
->>> stack backtrace:
->>> Call Trace:
->>>   dump_stack+0xe0/0x19a
->>>   print_circular_bug.isra.10.cold.34+0x2f4/0x435
->>>   check_prev_add.constprop.19+0xca1/0x15f0
->>>   validate_chain.isra.14+0x11af/0x3b50
->>>   __lock_acquire+0x728/0x1200
->>>   lock_acquire+0x269/0x5a0
->>>   fs_reclaim_acquire.part.19+0x29/0x30
->>>   fs_reclaim_acquire+0x19/0x20
->>>   kmem_cache_alloc+0x3e/0x3f0
->>>   kmem_zone_alloc+0x79/0x150
->>>   xfs_trans_alloc+0xfa/0x9d0
->>>   xfs_sync_sb+0x86/0x170
->>>   xfs_log_sbcount+0x10f/0x140
->>>   xfs_quiesce_attr+0x134/0x270
->>>   xfs_fs_freeze+0x4a/0x70
->>>   freeze_super+0x1af/0x290
->>>   do_vfs_ioctl+0xedc/0x16c0
->>>   ksys_ioctl+0x41/0x80
->>>   __x64_sys_ioctl+0x73/0xa9
->>>   do_syscall_64+0x18f/0xd23
->>>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>
->>> This is a false positive as all the dirty pages are flushed out before
->>> the filesystem can be frozen.
->>>
->>> One way to avoid this splat is to add GFP_NOFS to the affected allocation
->>> calls by using the memalloc_nofs_save()/memalloc_nofs_restore() pair.
->>> This shouldn't matter unless the system is really running out of memory.
->>> In that particular case, the filesystem freeze operation may fail while
->>> it was succeeding previously.
->>>
->>> Without this patch, the command sequence below will show that the lock
->>> dependency chain sb_internal -> fs_reclaim exists.
->>>
->>>   # fsfreeze -f /home
->>>   # fsfreeze --unfreeze /home
->>>   # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
->>>
->>> After applying the patch, such sb_internal -> fs_reclaim lock dependency
->>> chain can no longer be found. Because of that, the locking dependency
->>> warning will not be shown.
->>>
->>> Suggested-by: Dave Chinner <david@fromorbit.com>
->>> Signed-off-by: Waiman Long <longman@redhat.com>
->> Looks good to me,
->> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
->>
->> Will this patch be merged into the xfs tree soon?
-> It should appear in for-next in the next day or so.  I am trying to push
-> there only every other couple of weeks to reduce the amount of developer
-> tree rebasing that has to go on when people are trying to land a complex
-> series.
->
-> --D
+From: Paul Menzel <pmenzel@molgen.mpg.de>
 
-Thanks for the clarification.
+[ Upstream commit c41c36e900a337b4132b12ccabc97f5578248b44 ]
 
-Cheers,
-Longman
+Currently, changing the brightness of the internal display of the Acer
+TravelMate 5735Z does not work. Pressing the function keys or changing the
+slider, GNOME Shell 3.36.2 displays the OSD (five steps), but the
+brightness does not change.
+
+The Acer TravelMate 5735Z shipped with Windows 7 and as such does not
+trigger our "win8 ready" heuristic for preferring the native backlight
+interface.
+
+Still ACPI backlight control doesn't work on this model, where as the
+native (intel_video) backlight interface does work by adding
+`acpi_backlight=native` or `acpi_backlight=none` to Linux’ command line.
+
+So, add a quirk to force using native backlight control on this model.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=207835
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/acpi/video_detect.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 5f0178967d14c..ab1da5e6e7e3e 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -337,6 +337,16 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
+ 		DMI_MATCH(DMI_BOARD_NAME, "JV50"),
+ 		},
+ 	},
++	{
++	 /* https://bugzilla.kernel.org/show_bug.cgi?id=207835 */
++	 .callback = video_detect_force_native,
++	 .ident = "Acer TravelMate 5735Z",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++		DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate 5735Z"),
++		DMI_MATCH(DMI_BOARD_NAME, "BA51_MV"),
++		},
++	},
+ 
+ 	/*
+ 	 * Desktops which falsely report a backlight and which our heuristics
+-- 
+2.25.1
+
+
 
