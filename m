@@ -2,50 +2,47 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543EAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3978722B51
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 01:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6CC20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:02:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgGTB5N (ORCPT
+        id S1727045AbgGTCC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 21:57:13 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8327 "EHLO huawei.com"
+        Sun, 19 Jul 2020 22:02:28 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8328 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726225AbgGTB5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 21:57:12 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9B4F05A83FAD185F2C1B;
-        Mon, 20 Jul 2020 09:57:10 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.238) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
- 09:57:02 +0800
-Subject: Re: [PATCH] net: neterion: vxge: reduce stack usage in
- VXGE_COMPLETE_VPATH_TX
-To:     Stephen Hemminger <stephen@networkplumber.org>
-CC:     <davem@davemloft.net>, <kuba@kernel.org>,
-        <linux-next@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <jdmason@kudzu.us>,
-        <christophe.jaillet@wanadoo.fr>, <john.wanghui@huawei.com>
-References: <20200716173247.78912-1-cuibixuan@huawei.com>
- <20200719100522.220a6f5a@hermes.lan>
-From:   Bixuan Cui <cuibixuan@huawei.com>
-Message-ID: <71b4229e-f442-9e8c-d8ab-c5610db881b9@huawei.com>
-Date:   Mon, 20 Jul 2020 09:57:01 +0800
+        id S1726225AbgGTCC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 22:02:27 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 70072127977A10258C6E;
+        Mon, 20 Jul 2020 10:02:25 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.91) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
+ 10:02:20 +0800
+Subject: Re: [PATCH -next] memory: Convert to DEFINE_SHOW_ATTRIBUTE
+To:     Pavel Machek <pavel@denx.de>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        <linux-bcache@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200716090303.13154-1-miaoqinglang@huawei.com>
+ <20200717211420.GA4140@amd>
+From:   miaoqinglang <miaoqinglang@huawei.com>
+Message-ID: <55762551-4f14-b7f8-c2ae-e93e75ef3299@huawei.com>
+Date:   Mon, 20 Jul 2020 10:02:19 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200719100522.220a6f5a@hermes.lan>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.238]
+In-Reply-To: <20200717211420.GA4140@amd>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.91]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -54,26 +51,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2020/7/20 1:05, Stephen Hemminger wrote:
-> On Thu, 16 Jul 2020 17:32:47 +0000
-> Bixuan Cui <cuibixuan@huawei.com> wrote:
-> 
->> Fix the warning: [-Werror=-Wframe-larger-than=]
+在 2020/7/18 5:14, Pavel Machek 写道:
+> On Thu 2020-07-16 17:03:03, Qinglang Miao wrote:
+>> From: Yongqiang Liu <liuyongqiang13@huawei.com>
 >>
->> drivers/net/ethernet/neterion/vxge/vxge-main.c:
->> In function'VXGE_COMPLETE_VPATH_TX.isra.37':
->> drivers/net/ethernet/neterion/vxge/vxge-main.c:119:1:
->> warning: the frame size of 1056 bytes is larger than 1024 bytes
+>> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
 >>
->> Signed-off-by: Bixuan Cui <cuibixuan@huawei.com>
-> Dropping the NR_SKB_COMPLETED to 16 won't have much impact
-> on performance, and shrink the size.
+>> Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
+>> ---
+>>   drivers/memory/emif.c               | 22 ++--------------------
+>>   drivers/memory/tegra/tegra124-emc.c | 14 +-------------
+>>   2 files changed, 3 insertions(+), 33 deletions(-)
+>>
+>> diff --git a/drivers/memory/emif.c b/drivers/memory/emif.c
+>> index 58a82eea5..aab8ddad7 100644
+>> --- a/drivers/memory/emif.c
+>> +++ b/drivers/memory/emif.c
+>> @@ -131,16 +131,7 @@ static int emif_regdump_show(struct seq_file *s, void *unused)
+>>   	return 0;
+>>   }
+>>   
+>> -static int emif_regdump_open(struct inode *inode, struct file *file)
+>> -{
+>> -	return single_open(file, emif_regdump_show, inode->i_private);
+>> -}
+>> -
+>> -static const struct file_operations emif_regdump_fops = {
+>> -	.open			= emif_regdump_open,
+>> -	.read_iter			= seq_read_iter,
+>> -	.release		= single_release,
+>> -};
+>> +DEFINE_SHOW_ATTRIBUTE(emif_regdump);
 > 
-> Doing 16 skb's at a time instead of 128 probably costs
-> less than one allocation. Especially since it is unlikely
-> that the device completed that many transmits at once.
+> This is not equivalent (and I guess changelog should mention that).
 > 
+> Along with other changes, we get:
 > 
-I will send the v2 patch based on your suggestions.
-thanks
+>          .owner          = THIS_MODULE,
+>          .llseek         = seq_lseek,
+> 
+> . Is that okay thing to add?
+> 									Pavel
+> 
+Hi Pavel,
+
+​You're right, I should of mention it in changelog.
+
+​There's no impact theoretically with these two changes. Here's my thoughs:
+
+1. The llseek method is used to change the current read/write position 
+in a file which can be ignored if you don't use it.
+2. The owner is not even a method. Instead, it is a pointer to the 
+module that “owns” this structure; it is used by the kernel to maintain 
+the module's usage count which I believe can be ignored.
+
+If you don't mind I can send a new patch with more specific changelog.
+
+​Thanks.
+
+Qinglang
+
+.
+
+
 
