@@ -2,261 +2,68 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7C6C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBAEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4193821775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5974E22B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:34:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595226842;
+	bh=ZwOeL3EPgtxnw9BleSgHpslrspXGbH6eZ9G5FUI9tNI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EyEkImYJxOA/qtdQcnlyP4cRVKNXwSjC8RLPJH+Gn+y6fLT61a4+WPMDndv/qPqfd
+	 0ae5TH5J+nbfJHeCgt4bwFH2NDp9JDMQTMOw+uJactSz9RNre8watWa1W4AqbnenJ6
+	 QZul6F3jvOeybPyZZUOUrSyH0a0NtuNnq57OIz/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgGTGdP (ORCPT
+        id S1726867AbgGTGeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 02:33:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6316 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725805AbgGTGdO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:33:14 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06K6UdVp090276;
-        Mon, 20 Jul 2020 02:33:09 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32bw8yrxy6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 02:33:09 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06K6W0Xd094790;
-        Mon, 20 Jul 2020 02:33:08 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32bw8yrxxd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 02:33:08 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06K6TrxA001796;
-        Mon, 20 Jul 2020 06:33:07 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 32brq7tad4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 06:33:06 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06K6VoH855378026
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 06:31:50 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E3727A405F;
-        Mon, 20 Jul 2020 06:31:49 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 451BAA405B;
-        Mon, 20 Jul 2020 06:31:48 +0000 (GMT)
-Received: from drishya.in.ibm.com (unknown [9.85.113.150])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 20 Jul 2020 06:31:48 +0000 (GMT)
-Date:   Mon, 20 Jul 2020 12:01:45 +0530
-From:   Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Neuling <mikey@neuling.org>, linuxppc-dev@ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 4/5] cpuidle-pseries : Include extended CEDE states in
- cpuidle framework
-Message-ID: <20200720063145.GE4000@drishya.in.ibm.com>
-Reply-To: svaidy@linux.ibm.com
-References: <1594120299-31389-1-git-send-email-ego@linux.vnet.ibm.com>
- <1594120299-31389-5-git-send-email-ego@linux.vnet.ibm.com>
+        Mon, 20 Jul 2020 02:34:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725805AbgGTGeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 02:34:00 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D6FE21775;
+        Mon, 20 Jul 2020 06:33:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595226840;
+        bh=ZwOeL3EPgtxnw9BleSgHpslrspXGbH6eZ9G5FUI9tNI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uLi390TykNl3+X/IzwX6uYWWyFfmdB/yK++H3Yb8EF2QDrxBB8NxGJRddyZrHve3U
+         W4S/i4ojU6STz9UX2p2HufluJHs6oQCjowBhfLO28jAm6CGtOES1/bnigmZaRg+JUo
+         XALHEvdS+mgaApCcPDcaYbh5Hi/JeKWXDKQlso+s=
+Date:   Mon, 20 Jul 2020 12:03:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     kishon@ti.com, wsa+renesas@sang-engineering.com,
+        geert+renesas@glider.be, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] phy: renesas: rcar-gen3-usb2: fix an issue and
+ minor update
+Message-ID: <20200720063356.GD12965@vkoul-mobl>
+References: <1594986297-12434-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594120299-31389-5-git-send-email-ego@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-20_01:2020-07-17,2020-07-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- impostorscore=0 malwarescore=0 adultscore=0 phishscore=0 mlxscore=0
- suspectscore=1 bulkscore=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007200045
+In-Reply-To: <1594986297-12434-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Gautham R Shenoy <ego@linux.vnet.ibm.com> [2020-07-07 16:41:38]:
+On 17-07-20, 20:44, Yoshihiro Shimoda wrote:
+> The patch 1 can fix an issue which SError happen if CONFIG_DEBUG_SHIRQ
+> is enabled.
+> The patch 2 is a incremental patch from patch 1. It's better to avoid
+> unexpected behaviors if request_irq() failed.
 
-> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-> 
-> This patch exposes those extended CEDE states to the cpuidle framework
-> which are responsive to external interrupts and do not need an H_PROD.
-> 
-> Since as per the PAPR, all the extended CEDE states are non-responsive
-> to timers, we indicate this to the cpuidle subsystem via the
-> CPUIDLE_FLAG_TIMER_STOP flag for all those extende CEDE states which
-> can wake up on external interrupts.
-> 
-> With the patch, we are able to see the extended CEDE state with
-> latency hint = 1 exposed via the cpuidle framework.
-> 
-> 	$ cpupower idle-info
-> 	CPUidle driver: pseries_idle
-> 	CPUidle governor: menu
-> 	analyzing CPU 0:
-> 
-> 	Number of idle states: 3
-> 	Available idle states: snooze CEDE XCEDE1
-> 	snooze:
-> 	Flags/Description: snooze
-> 	Latency: 0
-> 	Usage: 33429446
-> 	Duration: 27006062
-> 	CEDE:
-> 	Flags/Description: CEDE
-> 	Latency: 1
-> 	Usage: 10272
-> 	Duration: 110786770
-> 	XCEDE1:
-> 	Flags/Description: XCEDE1
-> 	Latency: 12
-> 	Usage: 26445
-> 	Duration: 1436433815
-> 
-> Benchmark results:
-> TLDR: Over all we do not see any additional benefit from having XCEDE1 over
-> CEDE.
-> 
-> ebizzy :
-> 2 threads bound to a big-core. With this patch, we see a 3.39%
-> regression compared to with only CEDE0 latency fixup.
-> x With only CEDE0 latency fixup
-> * With CEDE0 latency fixup + CEDE1
->     N           Min           Max        Median           Avg        Stddev
-> x  10       2893813       5834474       5832448     5327281.3     1055941.4
-> *  10       2907329       5834923       5831398     5146614.6     1193874.8
-> 
-> context_switch2:
-> With the context_switch2 there are no observable regressions in the
-> results.
-> 
-> context_switch2 CPU0 CPU1 (Same Big-core, different small-cores).
-> No difference with and without patch.
-> x without_patch
-> * with_patch
->     N           Min           Max        Median           Avg        Stddev
-> x 500        343644        348778        345444     345584.02     1035.1658
-> * 500        344310        347646        345776     345877.22     802.19501
-> 
-> context_switch2 CPU0 CPU8 (different big-cores). Minor 0.05% improvement
-> with patch
-> x without_patch
-> * with_patch
->     N           Min           Max        Median           Avg        Stddev
-> x 500        287562        288756        288162     288134.76     262.24328
-> * 500        287874        288960        288306     288274.66     187.57034
-> 
-> schbench:
-> No regressions observed with schbench
-> 
-> Without Patch:
-> Latency percentiles (usec)
-> 	50.0th: 29
-> 	75.0th: 40
-> 	90.0th: 50
-> 	95.0th: 61
-> 	*99.0th: 13648
-> 	99.5th: 14768
-> 	99.9th: 15664
-> 	min=0, max=29812
-> 
-> With Patch:
-> Latency percentiles (usec)
-> 	50.0th: 30
-> 	75.0th: 40
-> 	90.0th: 51
-> 	95.0th: 59
-> 	*99.0th: 13616
-> 	99.5th: 14512
-> 	99.9th: 15696
-> 	min=0, max=15996
-> 
-> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Applied, thanks
 
-Reviewed-by: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-
-> ---
->  drivers/cpuidle/cpuidle-pseries.c | 50 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
-> 
-> diff --git a/drivers/cpuidle/cpuidle-pseries.c b/drivers/cpuidle/cpuidle-pseries.c
-> index 502f906..6f893cd 100644
-> --- a/drivers/cpuidle/cpuidle-pseries.c
-> +++ b/drivers/cpuidle/cpuidle-pseries.c
-> @@ -362,9 +362,59 @@ static int add_pseries_idle_states(void)
->  	for (i = 0; i < nr_xcede_records; i++) {
->  		u64 latency_tb = xcede_records[i].wakeup_latency_tb_ticks;
->  		u64 latency_us = tb_to_ns(latency_tb) / NSEC_PER_USEC;
-> +		char name[CPUIDLE_NAME_LEN];
-> +		unsigned int latency_hint = xcede_records[i].latency_hint;
-> +		u64 residency_us;
-> +
-> +		if (!xcede_records[i].responsive_to_irqs) {
-> +			pr_info("cpuidle : Skipping XCEDE%d. Not responsive to IRQs\n",
-> +				latency_hint);
-> +			continue;
-> +		}
-> 
->  		if (latency_us < min_latency_us)
->  			min_latency_us = latency_us;
-> +		snprintf(name, CPUIDLE_NAME_LEN, "XCEDE%d", latency_hint);
-> +
-> +		/*
-> +		 * As per the section 14.14.1 of PAPR version 2.8.1
-> +		 * says that alling H_CEDE with the value of the cede
-> +		 * latency specifier set greater than zero allows the
-> +		 * processor timer facility to be disabled (so as not
-> +		 * to cause gratuitous wake-ups - the use of H_PROD,
-> +		 * or other external interrupt is required to wake the
-> +		 * processor in this case).
-> +		 *
-> +		 * So, inform the cpuidle-subsystem that the timer
-> +		 * will be stopped for these states.
-> +		 *
-> +		 * Also, bump up the latency by 10us, since cpuidle
-> +		 * would use timer-offload framework which will need
-> +		 * to send an IPI to wakeup a CPU whose timer has
-> +		 * expired.
-> +		 */
-> +		if (latency_hint > 0) {
-> +			dedicated_states[nr_states].flags = CPUIDLE_FLAG_TIMER_STOP;
-> +			latency_us += 10;
-> +		}
-> +
-> +		/*
-> +		 * Thumb rule : Reside in the XCEDE state for at least
-> +		 * 10x the time required to enter and exit that state.
-> +		 */
-> +		residency_us = latency_us * 10;
-> +
-> +		strlcpy(dedicated_states[nr_states].name, (const char *)name,
-> +			CPUIDLE_NAME_LEN);
-> +		strlcpy(dedicated_states[nr_states].desc, (const char *)name,
-> +			CPUIDLE_NAME_LEN);
-> +		dedicated_states[nr_states].exit_latency = latency_us;
-> +		dedicated_states[nr_states].target_residency = residency_us;
-> +		dedicated_states[nr_states].enter = &dedicated_cede_loop;
-> +		cede_latency_hint[nr_states] = latency_hint;
-> +		pr_info("cpuidle : Added %s. latency-hint = %d\n",
-> +			name, latency_hint);
-> +		nr_states++;
-
-This patch demonstrates the various use cases of the previous patches
-in the series that helps interface with the platform firmware better.
-On current platforms these benefits are very limited, but the
-framework built by the previous patches helps Linux exploit new and
-enhanced idle states that will be available on newer platform and
-firmware.
-
---Vaidy
+-- 
+~Vinod
