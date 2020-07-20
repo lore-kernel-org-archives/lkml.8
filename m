@@ -2,157 +2,236 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B23C43457
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12526C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31A232073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8A82073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 07:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="c2blEXv0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Nq90Hzd6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgGTHbR (ORCPT
+        id S1726735AbgGTHcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:31:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgGTHbQ (ORCPT
+        Mon, 20 Jul 2020 03:32:47 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55702 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgGTHcr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 03:31:16 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 377A2C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 00:31:16 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 22so21218973wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 00:31:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=OVJCr1m5cczEE11Y4OrOEI2+d5VysNb+avvmYGzz5EQ=;
-        b=c2blEXv0PV3Forf/ih8O0N/mHD2GxHU2L/pCRcwYxPtM45rL0mRfdPLxH55yIKq/hQ
-         A9wJ6pwhd6rMsNEnULADCT0fxYXXijggxfgpwa+AOCL8LW2a6O1iVuYlDSBFXV3uqekV
-         OdRhqh8OBMAJvnxn57iZOwlGdigLtnkVQMBpc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=OVJCr1m5cczEE11Y4OrOEI2+d5VysNb+avvmYGzz5EQ=;
-        b=Ye9K7p8tfygWSKE6lmJmd7JVc/lAt77C9pdzBmHlcqosar1SLRpwCUujZQrt3ZyRD0
-         e1Rm+Mo+4+SEMWKL+zY5YI1K22QbK5wd5Rf8zzvG4NNEq73GFVtg7O58xeA9dpc911hN
-         sx3KNg7kce/erf1XFTXE2yjK0rtiI0oM6fqoT/cv+x/5wZcaVYxQH2MhTTPrd6JcrIsH
-         7am0/vVHb+3uy6hc45FvrIb2rTqsak2RGBMiQGRIWNvg/5p8mXWwbSVFo3AQEFPubMaf
-         NjBxeJMe21+SXtuVtLnJw6kjvCw3WuFKZUMYz8Z2VdlSIz16RURKcwWLg8XQes37aM3l
-         imNw==
-X-Gm-Message-State: AOAM533GcdogFLZHoNlEQJCwByWXezRZ44LkruNHT1y4rV6UZqo3BWCs
-        7L5eS8o2txUYdOjjnQ5mXa/tzA==
-X-Google-Smtp-Source: ABdhPJxN7p0owcN96PIeSqEMA5x15Cm1uEAARNlBA5eLxTQA3ETt1N2u3muHoio5moLJDyia7v05Vw==
-X-Received: by 2002:a1c:48e:: with SMTP id 136mr19492056wme.164.1595230274849;
-        Mon, 20 Jul 2020 00:31:14 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id h11sm7051935wrb.68.2020.07.20.00.31.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 00:31:14 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 09:31:12 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Lucas Stach <l.stach@pengutronix.de>, Marek Vasut <marex@denx.de>,
-        Stefan Agner <stefan@agner.ch>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/mxsfb: Make supported modifiers explicit
-Message-ID: <20200720073112.GU3278063@phenom.ffwll.local>
-Mail-Followup-To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        Lucas Stach <l.stach@pengutronix.de>, Marek Vasut <marex@denx.de>,
-        Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <26877532e272c12a74c33188e2a72abafc9a2e1c.1584973664.git.agx@sigxcpu.org>
- <d39209a3664179f895a7dfabbd02d27a6adb9895.camel@pengutronix.de>
- <20200718171407.GA72952@bogon.m.sigxcpu.org>
+        Mon, 20 Jul 2020 03:32:47 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06K7WI1d021738;
+        Mon, 20 Jul 2020 02:32:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595230338;
+        bh=/jWIiALzK5V8fvNl6MphNcf2kmWQpId+dgZUsAkatZo=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=Nq90Hzd6Wbf2o2UFZXbEwdU6FyZSUD0LYkHs/SNRN8N1Fr4tpmG3JWlx7WzPNOPBV
+         BL2lMJOvHcyjlo70f0AY/JmO0Tyrn2EDf6CScFYn/7NlexcDbVYXkaq0ZUgxT3T4TQ
+         CdYcPTEZZnujGkppNZLotdZXfGglX7y8kj2SK4r8=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06K7WIid074617
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 Jul 2020 02:32:18 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
+ Jul 2020 02:32:18 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 20 Jul 2020 02:32:18 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06K7WEUK125332;
+        Mon, 20 Jul 2020 02:32:15 -0500
+Subject: Re: [PATCH] firmware: ti_sci: Replace HTTP links with HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>, <nm@ti.com>,
+        <ssantosh@kernel.org>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <maz@kernel.org>, <robh+dt@kernel.org>,
+        <p.zabel@pengutronix.de>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200718105538.9542-1-grandmaster@al2klimov.de>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <7b6caa87-8672-b5d5-ef8d-2fd38a4b53e6@ti.com>
+Date:   Mon, 20 Jul 2020 10:32:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200718171407.GA72952@bogon.m.sigxcpu.org>
-X-Operating-System: Linux phenom 5.6.0-1-amd64 
+In-Reply-To: <20200718105538.9542-1-grandmaster@al2klimov.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 07:14:07PM +0200, Guido Günther wrote:
-> Hi,
-> On Mon, Mar 23, 2020 at 04:51:05PM +0100, Lucas Stach wrote:
-> > Am Montag, den 23.03.2020, 15:52 +0100 schrieb Guido Günther:
-> > > In contrast to other display controllers on imx like DCSS and ipuv3
-> > > lcdif/mxsfb does not support detiling e.g. vivante tiled layouts.
-> > > Since mesa might assume otherwise make it explicit that only
-> > > DRM_FORMAT_MOD_LINEAR is supported.
-> > > 
-> > > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > 
-> > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Hi Alexander,
+
+One comment below.
+
+On 18/07/2020 13:55, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> Can i do anything to get this applied?
-> Cheers,
-
-Lucas has drm-misc commit rights, I expect him to push.
--Daniel
-
->  -- Guido
+> Deterministic algorithm:
+> For each file:
+>    If not .svg:
+>      For each line:
+>        If doesn't contain `\bxmlns\b`:
+>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>              If both the HTTP and HTTPS versions
+>              return 200 OK and serve the same content:
+>                Replace HTTP with HTTPS.
 > 
-> > 
-> > > ---
-> > >  drivers/gpu/drm/mxsfb/mxsfb_drv.c | 9 +++++++--
-> > >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> > > index 762379530928..fc71e7a7a02e 100644
-> > > --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> > > +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> > > @@ -73,6 +73,11 @@ static const uint32_t mxsfb_formats[] = {
-> > >  	DRM_FORMAT_RGB565
-> > >  };
-> > >  
-> > > +static const uint64_t mxsfb_modifiers[] = {
-> > > +	DRM_FORMAT_MOD_LINEAR,
-> > > +	DRM_FORMAT_MOD_INVALID
-> > > +};
-> > > +
-> > >  static struct mxsfb_drm_private *
-> > >  drm_pipe_to_mxsfb_drm_private(struct drm_simple_display_pipe *pipe)
-> > >  {
-> > > @@ -334,8 +339,8 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
-> > >  	}
-> > >  
-> > >  	ret = drm_simple_display_pipe_init(drm, &mxsfb->pipe, &mxsfb_funcs,
-> > > -			mxsfb_formats, ARRAY_SIZE(mxsfb_formats), NULL,
-> > > -			mxsfb->connector);
-> > > +			mxsfb_formats, ARRAY_SIZE(mxsfb_formats),
-> > > +			mxsfb_modifiers, mxsfb->connector);
-> > >  	if (ret < 0) {
-> > >  		dev_err(drm->dev, "Cannot setup simple display pipe\n");
-> > >  		goto err_vblank;
-> > 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>   Continuing my work started at 93431e0607e5.
+>   See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+> 
+>   If there are any URLs to be removed completely
+>   or at least not (just) HTTPSified:
+>   Just clearly say so and I'll *undo my change*.
+>   See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>   If there are any valid, but yet not changed URLs:
+>   See: https://lkml.org/lkml/2020/6/26/837
+> 
+>   If you apply the patch, please let me know.
+> 
+> 
+>   .../devicetree/bindings/interrupt-controller/ti,sci-intr.txt    | 2 +-
+>   drivers/firmware/ti_sci.c                                       | 2 +-
+>   drivers/firmware/ti_sci.h                                       | 2 +-
+>   drivers/irqchip/irq-ti-sci-inta.c                               | 2 +-
+>   drivers/irqchip/irq-ti-sci-intr.c                               | 2 +-
+>   drivers/reset/reset-ti-sci.c                                    | 2 +-
+>   include/linux/soc/ti/ti_sci_inta_msi.h                          | 2 +-
+>   include/linux/soc/ti/ti_sci_protocol.h                          | 2 +-
+>   8 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+> index 1a8718f8855d..178fca08278f 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+> @@ -55,7 +55,7 @@ Required Properties:
+>   			corresponds to a range of host irqs.
+>   
+>   For more details on TISCI IRQ resource management refer:
+> -http://downloads.ti.com/tisci/esd/latest/2_tisci_msgs/rm/rm_irq.html
+> +https://downloads.ti.com/tisci/esd/latest/2_tisci_msgs/rm/rm_irq.html
+>   
+>   Example:
+>   --------
+> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+> index 4126be9e3216..53cee17d0115 100644
+> --- a/drivers/firmware/ti_sci.c
+> +++ b/drivers/firmware/ti_sci.c
+> @@ -2,7 +2,7 @@
+>   /*
+>    * Texas Instruments System Control Interface Protocol Driver
+>    *
+> - * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2015-2016 Texas Instruments Incorporated - https://www.ti.com/
+>    *	Nishanth Menon
+>    */
+>   
+> diff --git a/drivers/firmware/ti_sci.h b/drivers/firmware/ti_sci.h
+> index f0d068c03944..57cd04062994 100644
+> --- a/drivers/firmware/ti_sci.h
+> +++ b/drivers/firmware/ti_sci.h
+> @@ -6,7 +6,7 @@
+>    * The system works in a message response protocol
+>    * See: http://processors.wiki.ti.com/index.php/TISCI for details
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+^^^^
+
+You should probably replace that one as well to be https while doing the 
+rest of the changes, even though the wiki is being deprecated during 
+this year.
+
+-Tero
+
+>    *
+> - * Copyright (C)  2015-2016 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C)  2015-2016 Texas Instruments Incorporated - https://www.ti.com/
+>    */
+>   
+>   #ifndef __TI_SCI_H
+> diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
+> index 7e3ebf6ed2cd..85de19fe9b6e 100644
+> --- a/drivers/irqchip/irq-ti-sci-inta.c
+> +++ b/drivers/irqchip/irq-ti-sci-inta.c
+> @@ -2,7 +2,7 @@
+>   /*
+>    * Texas Instruments' K3 Interrupt Aggregator irqchip driver
+>    *
+> - * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2018-2019 Texas Instruments Incorporated - https://www.ti.com/
+>    *	Lokesh Vutla <lokeshvutla@ti.com>
+>    */
+>   
+> diff --git a/drivers/irqchip/irq-ti-sci-intr.c b/drivers/irqchip/irq-ti-sci-intr.c
+> index 59d51a20bbd8..5ea148faf2ab 100644
+> --- a/drivers/irqchip/irq-ti-sci-intr.c
+> +++ b/drivers/irqchip/irq-ti-sci-intr.c
+> @@ -2,7 +2,7 @@
+>   /*
+>    * Texas Instruments' K3 Interrupt Router irqchip driver
+>    *
+> - * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2018-2019 Texas Instruments Incorporated - https://www.ti.com/
+>    *	Lokesh Vutla <lokeshvutla@ti.com>
+>    */
+>   
+> diff --git a/drivers/reset/reset-ti-sci.c b/drivers/reset/reset-ti-sci.c
+> index bf68729ab729..b799aefad547 100644
+> --- a/drivers/reset/reset-ti-sci.c
+> +++ b/drivers/reset/reset-ti-sci.c
+> @@ -1,7 +1,7 @@
+>   /*
+>    * Texas Instrument's System Control Interface (TI-SCI) reset driver
+>    *
+> - * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2015-2017 Texas Instruments Incorporated - https://www.ti.com/
+>    *	Andrew F. Davis <afd@ti.com>
+>    *
+>    * This program is free software; you can redistribute it and/or modify
+> diff --git a/include/linux/soc/ti/ti_sci_inta_msi.h b/include/linux/soc/ti/ti_sci_inta_msi.h
+> index 11fb5048f5f6..e3aa8b14612e 100644
+> --- a/include/linux/soc/ti/ti_sci_inta_msi.h
+> +++ b/include/linux/soc/ti/ti_sci_inta_msi.h
+> @@ -2,7 +2,7 @@
+>   /*
+>    * Texas Instruments' K3 TI SCI INTA MSI helper
+>    *
+> - * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2018-2019 Texas Instruments Incorporated - https://www.ti.com/
+>    *	Lokesh Vutla <lokeshvutla@ti.com>
+>    */
+>   
+> diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+> index 9531ec823298..0fc452dd96d4 100644
+> --- a/include/linux/soc/ti/ti_sci_protocol.h
+> +++ b/include/linux/soc/ti/ti_sci_protocol.h
+> @@ -2,7 +2,7 @@
+>   /*
+>    * Texas Instruments System Control Interface Protocol
+>    *
+> - * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2015-2016 Texas Instruments Incorporated - https://www.ti.com/
+>    *	Nishanth Menon
+>    */
+>   
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
