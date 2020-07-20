@@ -2,252 +2,124 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D88C2BB1B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4202C4727A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B39A22BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281371;
-	bh=rrYPwgY0lFW5PL5+vQ9DBmbkKCuq18MghKUF6N2ntoQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fpGEmxh6c673VSdaptXvsuWn7RbdHgYxJpUui2dQzSAQtd0CBXHqhUiNwBMQEzeNt
-	 CdNpQxPVq08OmAwkI6/eXkTwKQZesP7nvhAUFBngRndQXTRnBJJjSxOitaQG4dkD5Q
-	 dfLu1/A1uy//vb4hwim++vzUAjIbQWPNO2kXDqPQ=
+	by mail.kernel.org (Postfix) with ESMTP id BB1B7208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728908AbgGTVmt (ORCPT
+        id S1727098AbgGTVm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:42:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728086AbgGTVis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:48 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFBD222C9D;
-        Mon, 20 Jul 2020 21:38:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281127;
-        bh=rrYPwgY0lFW5PL5+vQ9DBmbkKCuq18MghKUF6N2ntoQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kNkrR26i5x2tWjXPi514SQ270yLhTADc7N1rVCnZ7JIXD0nVNyPvoX1QrMoF5+wlV
-         zXW2ccfrQfc85RJwRNvBB0cGvaHToQz0plaGI4h0UADbb+X2g+06yHtHTCiqKn05si
-         wbnpVY7Lx9Us5vfDish6KfVN9y/57ElqRXM1bCsA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qi Liu <liuqi115@huawei.com>, John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 32/34] drivers/perf: Prevent forced unbinding of PMU drivers
-Date:   Mon, 20 Jul 2020 17:38:05 -0400
-Message-Id: <20200720213807.407380-32-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
-References: <20200720213807.407380-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+        Mon, 20 Jul 2020 17:42:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35328 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728236AbgGTVip (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:45 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KKWocY152958;
+        Mon, 20 Jul 2020 17:38:25 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5x49up3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 17:38:25 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KKl885030148;
+        Mon, 20 Jul 2020 17:38:25 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5x49una-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 17:38:24 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KLZBL4020699;
+        Mon, 20 Jul 2020 21:38:22 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04fra.de.ibm.com with ESMTP id 32dbmn06yb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 21:38:22 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KLcKd744040416
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 21:38:20 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3D90BA4054;
+        Mon, 20 Jul 2020 21:38:20 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 856E2A4060;
+        Mon, 20 Jul 2020 21:38:18 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.145.253])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jul 2020 21:38:18 +0000 (GMT)
+Message-ID: <1595281097.5055.79.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 00/12] ima: Fix rule parsing bugs and extend
+ KEXEC_CMDLINE rule support
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        kexec@lists.infradead.org,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Date:   Mon, 20 Jul 2020 17:38:17 -0400
+In-Reply-To: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
+References: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ mlxscore=0 suspectscore=2 malwarescore=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 impostorscore=0 adultscore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qi Liu <liuqi115@huawei.com>
+[Cc'ing Sasha]
 
-[ Upstream commit f32ed8eb0e3f0d0ef4ddb854554d60ca5863a9f9 ]
+On Thu, 2020-07-09 at 01:18 -0500, Tyler Hicks wrote:
 
-Forcefully unbinding PMU drivers during perf sampling will lead to
-a kernel panic, because the perf upper-layer framework call a NULL
-pointer in this situation.
+> I envision patches 1-7 going to stable. The series is ordered in a way
+> that has all the fixes up front, followed by cleanups, followed by the
+> feature patch. The breakdown of patches looks like so:
+> 
+>  Memory leak fixes: 1-3
+>  Parser strictness fixes: 4-7
+>  Code cleanups made possible by the fixes: 8-11
+>  Extend KEXEC_CMDLINE rule support: 12
 
-To solve this issue, "suppress_bind_attrs" should be set to true, so
-that bind/unbind can be disabled via sysfs and prevent unbinding PMU
-drivers during perf sampling.
+I agree they should be backported, but they don't apply cleanly before
+linux-5.6.  The changes aren't that major.  Some patch hunks apply
+cleanly, but won't compile, while others patch hunks need to be
+dropped based on when the feature was upstreamed.  For these reasons,
+I'm not Cc'ing stable.
 
-Signed-off-by: Qi Liu <liuqi115@huawei.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Link: https://lore.kernel.org/r/1594975763-32966-1-git-send-email-liuqi115@huawei.com
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/perf/arm-cci.c                        | 1 +
- drivers/perf/arm-ccn.c                        | 1 +
- drivers/perf/arm_dsu_pmu.c                    | 1 +
- drivers/perf/arm_smmuv3_pmu.c                 | 1 +
- drivers/perf/arm_spe_pmu.c                    | 1 +
- drivers/perf/fsl_imx8_ddr_perf.c              | 1 +
- drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c | 1 +
- drivers/perf/hisilicon/hisi_uncore_hha_pmu.c  | 1 +
- drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c  | 1 +
- drivers/perf/qcom_l2_pmu.c                    | 1 +
- drivers/perf/qcom_l3_pmu.c                    | 1 +
- drivers/perf/thunderx2_pmu.c                  | 1 +
- drivers/perf/xgene_pmu.c                      | 1 +
- 13 files changed, 13 insertions(+)
+Feature upstreamed:
+- LSM policy update: linux 5.3
+- key command line: linux 5.3
+- blacklist: linux 5.5
+- keyrings: linux 5.6
 
-diff --git a/drivers/perf/arm-cci.c b/drivers/perf/arm-cci.c
-index 8f8606b9bc9ee..aca4570f78a86 100644
---- a/drivers/perf/arm-cci.c
-+++ b/drivers/perf/arm-cci.c
-@@ -1720,6 +1720,7 @@ static struct platform_driver cci_pmu_driver = {
- 	.driver = {
- 		   .name = DRIVER_NAME,
- 		   .of_match_table = arm_cci_pmu_matches,
-+		   .suppress_bind_attrs = true,
- 		  },
- 	.probe = cci_pmu_probe,
- 	.remove = cci_pmu_remove,
-diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
-index 6fc0273b6129d..336948b41bd16 100644
---- a/drivers/perf/arm-ccn.c
-+++ b/drivers/perf/arm-ccn.c
-@@ -1545,6 +1545,7 @@ static struct platform_driver arm_ccn_driver = {
- 	.driver = {
- 		.name = "arm-ccn",
- 		.of_match_table = arm_ccn_match,
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = arm_ccn_probe,
- 	.remove = arm_ccn_remove,
-diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
-index 70968c8c09d7f..4594e2ed13d59 100644
---- a/drivers/perf/arm_dsu_pmu.c
-+++ b/drivers/perf/arm_dsu_pmu.c
-@@ -759,6 +759,7 @@ static struct platform_driver dsu_pmu_driver = {
- 	.driver = {
- 		.name	= DRVNAME,
- 		.of_match_table = of_match_ptr(dsu_pmu_of_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = dsu_pmu_device_probe,
- 	.remove = dsu_pmu_device_remove,
-diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-index f8fc1b612119c..9cdd89b29334e 100644
---- a/drivers/perf/arm_smmuv3_pmu.c
-+++ b/drivers/perf/arm_smmuv3_pmu.c
-@@ -861,6 +861,7 @@ static void smmu_pmu_shutdown(struct platform_device *pdev)
- static struct platform_driver smmu_pmu_driver = {
- 	.driver = {
- 		.name = "arm-smmu-v3-pmcg",
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = smmu_pmu_probe,
- 	.remove = smmu_pmu_remove,
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 4e4984a55cd1b..079701e8de186 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -1228,6 +1228,7 @@ static struct platform_driver arm_spe_pmu_driver = {
- 	.driver	= {
- 		.name		= DRVNAME,
- 		.of_match_table	= of_match_ptr(arm_spe_pmu_of_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe	= arm_spe_pmu_device_probe,
- 	.remove	= arm_spe_pmu_device_remove,
-diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-index b241db6929c08..09f44c6e2eaf6 100644
---- a/drivers/perf/fsl_imx8_ddr_perf.c
-+++ b/drivers/perf/fsl_imx8_ddr_perf.c
-@@ -646,6 +646,7 @@ static struct platform_driver imx_ddr_pmu_driver = {
- 	.driver         = {
- 		.name   = "imx-ddr-pmu",
- 		.of_match_table = imx_ddr_pmu_dt_ids,
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe          = ddr_perf_probe,
- 	.remove         = ddr_perf_remove,
-diff --git a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-index 64712cf2f99ad..b79c96b14328b 100644
---- a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-@@ -420,6 +420,7 @@ static struct platform_driver hisi_ddrc_pmu_driver = {
- 	.driver = {
- 		.name = "hisi_ddrc_pmu",
- 		.acpi_match_table = ACPI_PTR(hisi_ddrc_pmu_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = hisi_ddrc_pmu_probe,
- 	.remove = hisi_ddrc_pmu_remove,
-diff --git a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-index a4004dad6bf1c..78865b4ac4a6f 100644
---- a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-@@ -431,6 +431,7 @@ static struct platform_driver hisi_hha_pmu_driver = {
- 	.driver = {
- 		.name = "hisi_hha_pmu",
- 		.acpi_match_table = ACPI_PTR(hisi_hha_pmu_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = hisi_hha_pmu_probe,
- 	.remove = hisi_hha_pmu_remove,
-diff --git a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-index 2f3f291b0c2ed..9dd50c3bc74ec 100644
---- a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-@@ -421,6 +421,7 @@ static struct platform_driver hisi_l3c_pmu_driver = {
- 	.driver = {
- 		.name = "hisi_l3c_pmu",
- 		.acpi_match_table = ACPI_PTR(hisi_l3c_pmu_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = hisi_l3c_pmu_probe,
- 	.remove = hisi_l3c_pmu_remove,
-diff --git a/drivers/perf/qcom_l2_pmu.c b/drivers/perf/qcom_l2_pmu.c
-index 21d6991dbe0ba..4da37f650f983 100644
---- a/drivers/perf/qcom_l2_pmu.c
-+++ b/drivers/perf/qcom_l2_pmu.c
-@@ -1028,6 +1028,7 @@ static struct platform_driver l2_cache_pmu_driver = {
- 	.driver = {
- 		.name = "qcom-l2cache-pmu",
- 		.acpi_match_table = ACPI_PTR(l2_cache_pmu_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = l2_cache_pmu_probe,
- 	.remove = l2_cache_pmu_remove,
-diff --git a/drivers/perf/qcom_l3_pmu.c b/drivers/perf/qcom_l3_pmu.c
-index 656e830798d9e..9ddb577c542b5 100644
---- a/drivers/perf/qcom_l3_pmu.c
-+++ b/drivers/perf/qcom_l3_pmu.c
-@@ -814,6 +814,7 @@ static struct platform_driver qcom_l3_cache_pmu_driver = {
- 	.driver = {
- 		.name = "qcom-l3cache-pmu",
- 		.acpi_match_table = ACPI_PTR(qcom_l3_cache_pmu_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = qcom_l3_cache_pmu_probe,
- };
-diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
-index 43d76c85da56b..9e1c3c7eeba9b 100644
---- a/drivers/perf/thunderx2_pmu.c
-+++ b/drivers/perf/thunderx2_pmu.c
-@@ -816,6 +816,7 @@ static struct platform_driver tx2_uncore_driver = {
- 	.driver = {
- 		.name		= "tx2-uncore-pmu",
- 		.acpi_match_table = ACPI_PTR(tx2_uncore_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = tx2_uncore_probe,
- 	.remove = tx2_uncore_remove,
-diff --git a/drivers/perf/xgene_pmu.c b/drivers/perf/xgene_pmu.c
-index 7e328d6385c37..328aea9f6be32 100644
---- a/drivers/perf/xgene_pmu.c
-+++ b/drivers/perf/xgene_pmu.c
-@@ -1981,6 +1981,7 @@ static struct platform_driver xgene_pmu_driver = {
- 		.name		= "xgene-pmu",
- 		.of_match_table = xgene_pmu_of_match,
- 		.acpi_match_table = ACPI_PTR(xgene_pmu_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- };
- 
--- 
-2.25.1
+For Linux 5.3:
+- Dependency on backporting commit 483ec26eed42 ("ima: ima/lsm policy
+rule loading logic bug fixes") to apply " ima: Free the entire rule if
+it fails to parse".
 
+Mimi
