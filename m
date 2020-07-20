@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4C3C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9E9C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 756CF20773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B93E20773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263186;
-	bh=MLuyLuxJ92mVOHKl3hSBDUBh/7NUAsbMJ0LTnWvG818=;
+	s=default; t=1595263189;
+	bh=/JGA2XoDIQuwLgX6TPhZdgryCg4I15FhD3O/4gOBQag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d6WjBLq+6b25OzmDxBSj48CBOm4+J7e4Wh+0GbmXxfu77wQmBZlv5anKp4tcr+jtF
-	 LgEaTFWcRIMcXlFbNdn7p9cqbzbn4m0pR8QtjDyfoGOl/DRVynR1Zw7O+RcUWPkQja
-	 bjYVtE0hkCni8m1wzRgCFD7yjLUAX8VUsEaGHUHo=
+	b=tV4wrSj6G4i2vfqCo3fGHRNHo5K6cWkxLdefoQ4hofoFMklqE1pouZU+q3f5+GDUP
+	 f9MkrqCh6PvEfaXyaiyjk53u2WZL+HuVaHc4MoHQobVesdyu13zjpn/I5OkS+X65M4
+	 a4fO+1bPF24p6P/yWA2ENlSHJQKgavJcAr2XLWSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730938AbgGTPsy (ORCPT
+        id S1730911AbgGTPsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44560 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:48:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729672AbgGTPss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:48:48 -0400
+        id S1730257AbgGTPsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:48:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A6282065E;
-        Mon, 20 Jul 2020 15:48:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B50CD2065E;
+        Mon, 20 Jul 2020 15:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260127;
-        bh=MLuyLuxJ92mVOHKl3hSBDUBh/7NUAsbMJ0LTnWvG818=;
+        s=default; t=1595260117;
+        bh=/JGA2XoDIQuwLgX6TPhZdgryCg4I15FhD3O/4gOBQag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J8/nKaEr3r+hggkMj1G+DPapY4iEMh9Q9+38z5bh6HfVgGmzPTtZN/3ZVt5cGv9C6
-         uPJSFa49Q47c5sGnjINfKMRAcPticE/XkrJD34Ds3ogJX5LNQogOSfp3wWrQiDDG1c
-         Mr7WXm6kkwafGOhlDTyV7ZUIX6xjq9R0CE8f2s/4=
+        b=Tjn5YY/BfDHct3wykIYin8KjwY+ytQyght2+bdzaE+LjnnnrkpvUm99mVF0Fubqvn
+         tCUxPC4P3fs4RzHf1j0YXUMqGuiiZ+fUUnvOGkM7EZBD/uR+9q1lYHXGzM3QvjJMKq
+         K2TSPJJyWfgg25yWXlukeOCiO46c1gVOzm5NOxpk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.14 089/125] perf stat: Zero all the ena and run array slot stats for interval mode
-Date:   Mon, 20 Jul 2020 17:37:08 +0200
-Message-Id: <20200720152807.309142406@linuxfoundation.org>
+        stable@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 112/125] timer: Fix wheel index calculation on last level
+Date:   Mon, 20 Jul 2020 17:37:31 +0200
+Message-Id: <20200720152808.435944012@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -64,49 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Frederic Weisbecker <frederic@kernel.org>
 
-commit 0e0bf1ea1147fcf74eab19c2d3c853cc3740a72f upstream.
+commit e2a71bdea81690b6ef11f4368261ec6f5b6891aa upstream.
 
-As the code comments in perf_stat_process_counter() say, we calculate
-counter's data every interval, and the display code shows ps->res_stats
-avg value. We need to zero the stats for interval mode.
+When an expiration delta falls into the last level of the wheel, that delta
+has be compared against the maximum possible delay and reduced to fit in if
+necessary.
 
-But the current code only zeros the res_stats[0], it doesn't zero the
-res_stats[1] and res_stats[2], which are for ena and run of counter.
+However instead of comparing the delta against the maximum, the code
+compares the actual expiry against the maximum. Then instead of fixing the
+delta to fit in, it sets the maximum delta as the expiry value.
 
-This patch zeros the whole res_stats[] for interval mode.
+This can result in various undesired outcomes, the worst possible one
+being a timer expiring 15 days ahead to fire immediately.
 
-Fixes: 51fd2df1e882 ("perf stat: Fix interval output values")
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200409070755.17261-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 500462a9de65 ("timers: Switch to a non-cascading wheel")
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200717140551.29076-2-frederic@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/stat.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ kernel/time/timer.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -350,8 +350,10 @@ int perf_stat_process_counter(struct per
- 	 * interval mode, otherwise overall avg running
- 	 * averages will be shown for each interval.
- 	 */
--	if (config->interval)
--		init_stats(ps->res_stats);
-+	if (config->interval) {
-+		for (i = 0; i < 3; i++)
-+			init_stats(&ps->res_stats[i]);
-+	}
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -502,8 +502,8 @@ static int calc_wheel_index(unsigned lon
+ 		 * Force expire obscene large timeouts to expire at the
+ 		 * capacity limit of the wheel.
+ 		 */
+-		if (expires >= WHEEL_TIMEOUT_CUTOFF)
+-			expires = WHEEL_TIMEOUT_MAX;
++		if (delta >= WHEEL_TIMEOUT_CUTOFF)
++			expires = clk + WHEEL_TIMEOUT_MAX;
  
- 	if (counter->per_pkg)
- 		zero_per_pkg(counter);
+ 		idx = calc_index(expires, LVL_DEPTH - 1);
+ 	}
 
 
