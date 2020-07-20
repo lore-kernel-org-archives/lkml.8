@@ -2,175 +2,263 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCF0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE30C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71510206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D282206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388827AbgGTRDQ (ORCPT
+        id S1729942AbgGTQ7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:03:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45940 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726989AbgGTRDO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:03:14 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KH1P4J136235;
-        Mon, 20 Jul 2020 13:03:03 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32d5h4uqu9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 13:03:03 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KH1rOx138946;
-        Mon, 20 Jul 2020 13:03:02 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32d5h4uqtv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 13:03:02 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KH0o6q009402;
-        Mon, 20 Jul 2020 17:03:01 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01dal.us.ibm.com with ESMTP id 32brq87gwg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 17:03:01 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KH2xEv18874680
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 17:02:59 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D619C7805E;
-        Mon, 20 Jul 2020 17:02:59 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 51ABA78064;
-        Mon, 20 Jul 2020 17:02:58 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.160.78.37])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Jul 2020 17:02:58 +0000 (GMT)
-Subject: Re: [PATCH v3 07/12] ima: Fail rule parsing when
- appraise_flag=blacklist is unsupportable
-To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Nayna Jain <nayna@linux.ibm.com>
-References: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
- <20200709061911.954326-8-tyhicks@linux.microsoft.com>
- <76d2b27b-3b59-1852-046a-b1718c62b167@linux.vnet.ibm.com>
- <20200717181133.GM3673@sequoia>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <bdd8d85e-8ae9-6095-bb58-24653862f682@linux.vnet.ibm.com>
-Date:   Mon, 20 Jul 2020 13:02:57 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 20 Jul 2020 12:59:43 -0400
+Received: from mga01.intel.com ([192.55.52.88]:34689 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728903AbgGTQ7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:59:42 -0400
+IronPort-SDR: X5i7G/3fOU8XWBUgB0C894DnURMjAwSfyJqHTm8RgmmcgXZAY6e4HLlVf0LOvXeYKgrt4DftkH
+ RRw/BZ4qZzYw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="168102499"
+X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
+   d="scan'208";a="168102499"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 09:59:41 -0700
+IronPort-SDR: pDzSBFM4yJH1tXx4Kp7X64fNGS8OeidMosNuhZ4pmB+IxdQ1QIUfyNyWorsyqe1LEcQzrKgWS6
+ NlhiyE6EaGaw==
+X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
+   d="scan'208";a="392088999"
+Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.209.123.246])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 09:59:38 -0700
+Message-ID: <23893338061f2066693f4eb18c8d059d59327952.camel@linux.intel.com>
+Subject: Re: [PATCH v4 09/10] kallsyms: Hide layout
+From:   Kristen Carlson Accardi <kristen@linux.intel.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com, Tony Luck <tony.luck@intel.com>
+Date:   Mon, 20 Jul 2020 09:59:35 -0700
+In-Reply-To: <202007191815.D39859C@keescook>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
+         <20200717170008.5949-10-kristen@linux.intel.com>
+         <202007191815.D39859C@keescook>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <20200717181133.GM3673@sequoia>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 clxscore=1015 mlxscore=0 malwarescore=0 bulkscore=0
- phishscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007200111
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 2020-07-19 at 18:25 -0700, Kees Cook wrote:
+> On Fri, Jul 17, 2020 at 10:00:06AM -0700, Kristen Carlson Accardi
+> wrote:
+> > This patch makes /proc/kallsyms display in a random order, rather
+> > than sorted by address in order to hide the newly randomized
+> > address
+> > layout.
+> 
+> Ah! Much nicer. Is there any reason not to just do this
+> unconditionally,
+> regardless of FGKASLR? It's a smallish dynamic allocation, and
+> displaying kallsyms is hardly fast-path...
 
-On 7/17/20 2:11 PM, Tyler Hicks wrote:
-> On 2020-07-17 13:40:22, Nayna wrote:
->> On 7/9/20 2:19 AM, Tyler Hicks wrote:
->>> The "appraise_flag" option is only appropriate for appraise actions
->>> and its "blacklist" value is only appropriate when
->>> CONFIG_IMA_APPRAISE_MODSIG is enabled and "appraise_flag=blacklist" is
->>> only appropriate when "appraise_type=imasig|modsig" is also present.
->>> Make this clear at policy load so that IMA policy authors don't assume
->>> that other uses of "appraise_flag=blacklist" are supported.
->>>
->>> Fixes: 273df864cf74 ("ima: Check against blacklisted hashes for files with modsig")
->>> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
->>> Cc: Nayna Jain <nayna@linux.ibm.com>
->>> ---
->>>
->>> * v3
->>>     - New patch
->>>
->>>    security/integrity/ima/ima_policy.c | 13 ++++++++++++-
->>>    1 file changed, 12 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
->>> index 81da02071d41..9842e2e0bc6d 100644
->>> --- a/security/integrity/ima/ima_policy.c
->>> +++ b/security/integrity/ima/ima_policy.c
->>> @@ -1035,6 +1035,11 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
->>>    		return false;
->>>    	}
->>> +	/* Ensure that combinations of flags are compatible with each other */
->>> +	if (entry->flags & IMA_CHECK_BLACKLIST &&
->>> +	    !(entry->flags & IMA_MODSIG_ALLOWED))
->>> +		return false;
->>> +
->>>    	return true;
->>>    }
->>> @@ -1371,8 +1376,14 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
->>>    				result = -EINVAL;
->>>    			break;
->>>    		case Opt_appraise_flag:
->>> +			if (entry->action != APPRAISE) {
->>> +				result = -EINVAL;
->>> +				break;
->>> +			}
->>> +
->>>    			ima_log_string(ab, "appraise_flag", args[0].from);
->>> -			if (strstr(args[0].from, "blacklist"))
->>> +			if (IS_ENABLED(CONFIG_IMA_APPRAISE_MODSIG) &&
->>> +			    strstr(args[0].from, "blacklist"))
->>>    				entry->flags |= IMA_CHECK_BLACKLIST;
->> If IMA_APPRAISE_MODSIG is disabled, it will allow the following rule to
->> load, which is not as expected.
->>
->> "appraise func=xxx_CHECK appraise_flag=blacklist appraise_type=imasig"
->>
->> Missing is the "else" condition to immediately reject the policy rule.
-> Thanks for the review. You're right. This change is needed:
->
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index 9842e2e0bc6d..cf3ddb38dfa8 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -1385,6 +1385,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
->   			if (IS_ENABLED(CONFIG_IMA_APPRAISE_MODSIG) &&
->   			    strstr(args[0].from, "blacklist"))
->   				entry->flags |= IMA_CHECK_BLACKLIST;
-> +			else
-> +				result = -EINVAL;
->   			break;
->   		case Opt_permit_directio:
->   			entry->flags |= IMA_PERMIT_DIRECTIO;
->
-Reviewed-by: Nayna Jain<nayna@linux.ibm.com>
+My only concern would be whether or not there are scripts out there
+which assume the list would be ordered. If someone chooses to enable
+CONFIG_FG_KASLR, I think that it is reasonable to break those scripts.
+On the flip side, I don't know why it needs to come out of
+/proc/kallsyms in order, you can always just sort it after the fact if
+you need it sorted. It would make it more maintainable to not special
+case this. Hopefully a maintainer will comment on their preference.
+Another thing I do in this patch is continue to use the existing sorted
+by address functions if you are root. I didn't know if this was
+neccessary - it'd be nice if we could just do it the same way all the
+time. But I need some guidance here.
 
-Tested-by: Nayna Jain<nayna@linux.ibm.com>
+> 
+> > Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+> > Reviewed-by: Tony Luck <tony.luck@intel.com>
+> > Tested-by: Tony Luck <tony.luck@intel.com>
+> > ---
+> >  kernel/kallsyms.c | 163
+> > +++++++++++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 162 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+> > index bb14e64f62a4..45d147f7f10e 100644
+> > --- a/kernel/kallsyms.c
+> > +++ b/kernel/kallsyms.c
+> > @@ -446,6 +446,12 @@ struct kallsym_iter {
+> >  	int show_value;
+> >  };
+> >  
+> > +struct kallsyms_shuffled_iter {
+> > +	struct kallsym_iter iter;
+> > +	loff_t total_syms;
+> > > 
+> > > (I need to go read how kallsyms doesn't miscount in general when
+> > the
+> > > symbol table changes out from under it...)
+> > > 
+> > > 
+> > +	loff_t shuffled_index[];
+> > +};
+> > +
+> >  int __weak arch_get_kallsym(unsigned int symnum, unsigned long
+> > *value,
+> >  			    char *type, char *name)
+> >  {
+> > @@ -661,7 +667,7 @@ bool kallsyms_show_value(const struct cred
+> > *cred)
+> >  	}
+> >  }
+> >  
+> > -static int kallsyms_open(struct inode *inode, struct file *file)
+> > +static int __kallsyms_open(struct inode *inode, struct file *file)
+> >  {
+> >  	/*
+> >  	 * We keep iterator in m->private, since normal case is to
+> > @@ -682,6 +688,161 @@ static int kallsyms_open(struct inode *inode,
+> > struct file *file)
+> >  	return 0;
+> >  }
+> >  
+> > +/*
+> > + * When function granular kaslr is enabled, we need to print out
+> > the symbols
+> > + * at random so we don't reveal the new layout.
+> > + */
+> > +#if defined(CONFIG_FG_KASLR)
+> > +static int update_random_pos(struct kallsyms_shuffled_iter
+> > *s_iter,
+> > +			     loff_t pos, loff_t *new_pos)
+> > +{
+> > +	loff_t new;
+> > +
+> > +	if (pos >= s_iter->total_syms)
+> > +		return 0;
+> > +
+> > +	new = s_iter->shuffled_index[pos];
+> > +
+> > +	/*
+> > +	 * normally this would be done as part of update_iter, however,
+> > +	 * we want to avoid triggering this in the event that new is
+> > +	 * zero since we don't want to blow away our pos end
+> > indicators.
+> > +	 */
+> > +	if (new == 0) {
+> > +		s_iter->iter.name[0] = '\0';
+> > +		s_iter->iter.nameoff = get_symbol_offset(new);
+> > +		s_iter->iter.pos = new;
+> > +	}
+> > +
+> > +	*new_pos = new;
+> > +	return 1;
+> > +}
+> > +
+> > +static void *shuffled_start(struct seq_file *m, loff_t *pos)
+> > +{
+> > +	struct kallsyms_shuffled_iter *s_iter = m->private;
+> > +	loff_t new_pos;
+> > +
+> > +	if (!update_random_pos(s_iter, *pos, &new_pos))
+> > +		return NULL;
+> > +
+> > +	return s_start(m, &new_pos);
+> > +}
+> > +
+> > +static void *shuffled_next(struct seq_file *m, void *p, loff_t
+> > *pos)
+> > +{
+> > +	struct kallsyms_shuffled_iter *s_iter = m->private;
+> > +	loff_t new_pos;
+> > +
+> > +	(*pos)++;
+> > +
+> > +	if (!update_random_pos(s_iter, *pos, &new_pos))
+> > +		return NULL;
+> > +
+> > +	if (!update_iter(m->private, new_pos))
+> > +		return NULL;
+> > +
+> > +	return p;
+> > +}
+> > +
+> > +/*
+> > + * shuffle_index_list()
+> > + * Use a Fisher Yates algorithm to shuffle a list of text
+> > sections.
+> > + */
+> > +static void shuffle_index_list(loff_t *indexes, loff_t size)
+> > +{
+> > +	int i;
+> > +	unsigned int j;
+> > +	loff_t temp;
+> > +
+> > +	for (i = size - 1; i > 0; i--) {
+> > +		/* pick a random index from 0 to i */
+> > +		get_random_bytes(&j, sizeof(j));
+> > +		j = j % (i + 1);
+> > +
+> > +		temp = indexes[i];
+> > +		indexes[i] = indexes[j];
+> > +		indexes[j] = temp;
+> > +	}
+> > +}
+> > +
+> > +static const struct seq_operations kallsyms_shuffled_op = {
+> > +	.start = shuffled_start,
+> > +	.next = shuffled_next,
+> > +	.stop = s_stop,
+> > +	.show = s_show
+> > +};
+> > +
+> > +static int kallsyms_random_open(struct inode *inode, struct file
+> > *file)
+> > +{
+> > +	loff_t pos;
+> > +	struct kallsyms_shuffled_iter *shuffled_iter;
+> > +	struct kallsym_iter iter;
+> > +	bool show_value;
+> > +
+> > +	/*
+> > +	 * If privileged, go ahead and use the normal algorithm for
+> > +	 * displaying symbols
+> > +	 */
+> > +	show_value = kallsyms_show_value(file->f_cred);
+> > +	if (show_value)
+> > +		return __kallsyms_open(inode, file);
+> > +
+> > +	/*
+> > +	 * we need to figure out how many extra symbols there are
+> > +	 * to print out past kallsyms_num_syms
+> > +	 */
+> > +	pos = kallsyms_num_syms;
+> > +	reset_iter(&iter, 0);
+> > +	do {
+> > +		if (!update_iter(&iter, pos))
+> > +			break;
+> > +		pos++;
+> > +	} while (1);
+> 
+> Can this be tracked separately instead of needing to search for it
+> every
+> time? (Looks like it's modules and ftrace? Could they each have a
+> *_num_sysms?)
 
-Thanks & Regards,
+It could, but I'd probably have to make more changes to those
+subsystems to keep this information there than I would to just do this
+search here. Because we start search at the end of the kernel core
+symbols, I don't think this search takes too many cycles to complete.
+On my system running a standard distro config the number of module and
+bpf symbols is not all that many, especially compared to the kernel
+core symbols.
 
-       - Nayna
 
