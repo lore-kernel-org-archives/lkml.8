@@ -2,51 +2,53 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0899DC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03278C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBC01206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB76B206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262110;
-	bh=MPIiRSXIw+RgAs8DqRmsqGIdg6Fimrhtbb/qeQv14zM=;
+	s=default; t=1595262117;
+	bh=qGfbsT5iZCWWrrtZuLByfzK4Pp8vIY/Tj1vr8QXNJOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VoCahHMwAsM52WyeauwoWbCI0dpQOFwnX1nK1JZ8tUMcc4UbejE0gXuwovY9/XxY/
-	 3EvQWt4S0OSCMVQJCxxw7FWIhphFIOikqeD4TOrmfSS8WA6x9sTJULOosHdviAjLDy
-	 GCkcI8i927Snc/1ndZvKfJMBzi4WBxeuVa8oRvq4=
+	b=m/ivKEf+JJ1SpYwbYOMlAOXgnMm0yMf+3K7347S9mkAET0f9TAgs+aBo/QKPs4yVi
+	 lZRcK1LRa/gIjWRn0XnUmacZ++dWJPuoLOH5VwyTu4FF+qQbS6U9U0tYt546ygtRqj
+	 KELyGTHdiwEbPqBt/xCuAGBePUZSEfZE4/x7GBxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388317AbgGTQVt (ORCPT
+        id S2388433AbgGTQV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:21:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44784 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:21:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731987AbgGTQHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:07:42 -0400
+        id S1732360AbgGTQHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:07:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 846A120672;
-        Mon, 20 Jul 2020 16:07:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABF6120734;
+        Mon, 20 Jul 2020 16:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261262;
-        bh=MPIiRSXIw+RgAs8DqRmsqGIdg6Fimrhtbb/qeQv14zM=;
+        s=default; t=1595261243;
+        bh=qGfbsT5iZCWWrrtZuLByfzK4Pp8vIY/Tj1vr8QXNJOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mHVJkcGBMgc9cT9eQ3JMcrAotcDwHDAAqay9Tdvv6lz12xRkMvpekaaJHFBSdK3OM
-         FxH/AI64DICYA/qTY3f5HsaUAEcExNqG/DxTylrhKpu7fAl22oNOQC59wbfHzGxoJB
-         qB5YvsiZBdT0+2Sd0xiBoc4sadRBk3oxWWe+Z15k=
+        b=UkFrYoSXURRUn5ucAatBIef+u1p9xLCPjyS2E8+mJ3OlcZtY36hzgvIsgviiz4peK
+         K1fr2WZQ7PkYFJpuShtcGlwacQIfOe7k0eN9jukNLXgVwUx0PrjKbUsIDOEuTS9KrL
+         0QRa/e2tw8R9R/Qck+kkxZNbiCz4tQqK0eXwgaj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 053/244] gfs2: When freezing gfs2, use GL_EXACT and not GL_NOCACHE
-Date:   Mon, 20 Jul 2020 17:35:24 +0200
-Message-Id: <20200720152828.382141361@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Wang <weiwan@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 015/244] tcp: make sure listeners dont initialize congestion-control state
+Date:   Mon, 20 Jul 2020 17:34:46 +0200
+Message-Id: <20200720152826.602779587@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,116 +61,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Christoph Paasch <cpaasch@apple.com>
 
-[ Upstream commit 623ba664b74a20f22a2ef7ebd71e171d2d7c626f ]
+[ Upstream commit ce69e563b325f620863830c246a8698ccea52048 ]
 
-Before this patch, the freeze code in gfs2 specified GL_NOCACHE in
-several places. That's wrong because we always want to know the state
-of whether the file system is frozen.
+syzkaller found its way into setsockopt with TCP_CONGESTION "cdg".
+tcp_cdg_init() does a kcalloc to store the gradients. As sk_clone_lock
+just copies all the memory, the allocated pointer will be copied as
+well, if the app called setsockopt(..., TCP_CONGESTION) on the listener.
+If now the socket will be destroyed before the congestion-control
+has properly been initialized (through a call to tcp_init_transfer), we
+will end up freeing memory that does not belong to that particular
+socket, opening the door to a double-free:
 
-There was also a problem with freeze/thaw transitioning the glock from
-frozen (EX) to thawed (SH) because gfs2 will normally grant glocks in EX
-to processes that request it in SH mode, unless GL_EXACT is specified.
-Therefore, the freeze/thaw code, which tried to reacquire the glock in
-SH mode would get the glock in EX mode, and miss the transition from EX
-to SH. That made it think the thaw had completed normally, but since the
-glock was still cached in EX, other nodes could not freeze again.
+[   11.413102] ==================================================================
+[   11.414181] BUG: KASAN: double-free or invalid-free in tcp_cleanup_congestion_control+0x58/0xd0
+[   11.415329]
+[   11.415560] CPU: 3 PID: 4884 Comm: syz-executor.5 Not tainted 5.8.0-rc2 #80
+[   11.416544] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+[   11.418148] Call Trace:
+[   11.418534]  <IRQ>
+[   11.418834]  dump_stack+0x7d/0xb0
+[   11.419297]  print_address_description.constprop.0+0x1a/0x210
+[   11.422079]  kasan_report_invalid_free+0x51/0x80
+[   11.423433]  __kasan_slab_free+0x15e/0x170
+[   11.424761]  kfree+0x8c/0x230
+[   11.425157]  tcp_cleanup_congestion_control+0x58/0xd0
+[   11.425872]  tcp_v4_destroy_sock+0x57/0x5a0
+[   11.426493]  inet_csk_destroy_sock+0x153/0x2c0
+[   11.427093]  tcp_v4_syn_recv_sock+0xb29/0x1100
+[   11.427731]  tcp_get_cookie_sock+0xc3/0x4a0
+[   11.429457]  cookie_v4_check+0x13d0/0x2500
+[   11.433189]  tcp_v4_do_rcv+0x60e/0x780
+[   11.433727]  tcp_v4_rcv+0x2869/0x2e10
+[   11.437143]  ip_protocol_deliver_rcu+0x23/0x190
+[   11.437810]  ip_local_deliver+0x294/0x350
+[   11.439566]  __netif_receive_skb_one_core+0x15d/0x1a0
+[   11.441995]  process_backlog+0x1b1/0x6b0
+[   11.443148]  net_rx_action+0x37e/0xc40
+[   11.445361]  __do_softirq+0x18c/0x61a
+[   11.445881]  asm_call_on_stack+0x12/0x20
+[   11.446409]  </IRQ>
+[   11.446716]  do_softirq_own_stack+0x34/0x40
+[   11.447259]  do_softirq.part.0+0x26/0x30
+[   11.447827]  __local_bh_enable_ip+0x46/0x50
+[   11.448406]  ip_finish_output2+0x60f/0x1bc0
+[   11.450109]  __ip_queue_xmit+0x71c/0x1b60
+[   11.451861]  __tcp_transmit_skb+0x1727/0x3bb0
+[   11.453789]  tcp_rcv_state_process+0x3070/0x4d3a
+[   11.456810]  tcp_v4_do_rcv+0x2ad/0x780
+[   11.457995]  __release_sock+0x14b/0x2c0
+[   11.458529]  release_sock+0x4a/0x170
+[   11.459005]  __inet_stream_connect+0x467/0xc80
+[   11.461435]  inet_stream_connect+0x4e/0xa0
+[   11.462043]  __sys_connect+0x204/0x270
+[   11.465515]  __x64_sys_connect+0x6a/0xb0
+[   11.466088]  do_syscall_64+0x3e/0x70
+[   11.466617]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   11.467341] RIP: 0033:0x7f56046dc469
+[   11.467844] Code: Bad RIP value.
+[   11.468282] RSP: 002b:00007f5604dccdd8 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+[   11.469326] RAX: ffffffffffffffda RBX: 000000000068bf00 RCX: 00007f56046dc469
+[   11.470379] RDX: 0000000000000010 RSI: 0000000020000000 RDI: 0000000000000004
+[   11.471311] RBP: 00000000ffffffff R08: 0000000000000000 R09: 0000000000000000
+[   11.472286] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+[   11.473341] R13: 000000000041427c R14: 00007f5604dcd5c0 R15: 0000000000000003
+[   11.474321]
+[   11.474527] Allocated by task 4884:
+[   11.475031]  save_stack+0x1b/0x40
+[   11.475548]  __kasan_kmalloc.constprop.0+0xc2/0xd0
+[   11.476182]  tcp_cdg_init+0xf0/0x150
+[   11.476744]  tcp_init_congestion_control+0x9b/0x3a0
+[   11.477435]  tcp_set_congestion_control+0x270/0x32f
+[   11.478088]  do_tcp_setsockopt.isra.0+0x521/0x1a00
+[   11.478744]  __sys_setsockopt+0xff/0x1e0
+[   11.479259]  __x64_sys_setsockopt+0xb5/0x150
+[   11.479895]  do_syscall_64+0x3e/0x70
+[   11.480395]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   11.481097]
+[   11.481321] Freed by task 4872:
+[   11.481783]  save_stack+0x1b/0x40
+[   11.482230]  __kasan_slab_free+0x12c/0x170
+[   11.482839]  kfree+0x8c/0x230
+[   11.483240]  tcp_cleanup_congestion_control+0x58/0xd0
+[   11.483948]  tcp_v4_destroy_sock+0x57/0x5a0
+[   11.484502]  inet_csk_destroy_sock+0x153/0x2c0
+[   11.485144]  tcp_close+0x932/0xfe0
+[   11.485642]  inet_release+0xc1/0x1c0
+[   11.486131]  __sock_release+0xc0/0x270
+[   11.486697]  sock_close+0xc/0x10
+[   11.487145]  __fput+0x277/0x780
+[   11.487632]  task_work_run+0xeb/0x180
+[   11.488118]  __prepare_exit_to_usermode+0x15a/0x160
+[   11.488834]  do_syscall_64+0x4a/0x70
+[   11.489326]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-This patch removes the GL_NOCACHE flag to allow the freeze glock to be
-cached. It also adds the GL_EXACT flag so the glock is fully transitioned
-from EX to SH, thereby allowing future freeze operations.
+Wei Wang fixed a part of these CDG-malloc issues with commit c12014440750
+("tcp: memset ca_priv data to 0 properly").
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch here fixes the listener-scenario: We make sure that listeners
+setting the congestion-control through setsockopt won't initialize it
+(thus CDG never allocates on listeners). For those who use AF_UNSPEC to
+reuse a socket, tcp_disconnect() is changed to cleanup afterwards.
+
+(The issue can be reproduced at least down to v4.4.x.)
+
+Cc: Wei Wang <weiwan@google.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Fixes: 2b0a8c9eee81 ("tcp: add CDG congestion control")
+Signed-off-by: Christoph Paasch <cpaasch@apple.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/gfs2/recovery.c |  4 ++--
- fs/gfs2/super.c    | 16 +++++++---------
- 2 files changed, 9 insertions(+), 11 deletions(-)
+ net/ipv4/tcp.c      |    3 +++
+ net/ipv4/tcp_cong.c |    2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/recovery.c b/fs/gfs2/recovery.c
-index 96c345f492738..390ea79d682c2 100644
---- a/fs/gfs2/recovery.c
-+++ b/fs/gfs2/recovery.c
-@@ -364,8 +364,8 @@ void gfs2_recover_func(struct work_struct *work)
- 		/* Acquire a shared hold on the freeze lock */
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2635,6 +2635,9 @@ int tcp_disconnect(struct sock *sk, int
+ 	tp->window_clamp = 0;
+ 	tp->delivered = 0;
+ 	tp->delivered_ce = 0;
++	if (icsk->icsk_ca_ops->release)
++		icsk->icsk_ca_ops->release(sk);
++	memset(icsk->icsk_ca_priv, 0, sizeof(icsk->icsk_ca_priv));
+ 	tcp_set_ca_state(sk, TCP_CA_Open);
+ 	tp->is_sack_reneg = 0;
+ 	tcp_clear_retrans(tp);
+--- a/net/ipv4/tcp_cong.c
++++ b/net/ipv4/tcp_cong.c
+@@ -197,7 +197,7 @@ static void tcp_reinit_congestion_contro
+ 	icsk->icsk_ca_setsockopt = 1;
+ 	memset(icsk->icsk_ca_priv, 0, sizeof(icsk->icsk_ca_priv));
  
- 		error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_SHARED,
--					   LM_FLAG_NOEXP | LM_FLAG_PRIORITY,
--					   &thaw_gh);
-+					   LM_FLAG_NOEXP | LM_FLAG_PRIORITY |
-+					   GL_EXACT, &thaw_gh);
- 		if (error)
- 			goto fail_gunlock_ji;
+-	if (sk->sk_state != TCP_CLOSE)
++	if (!((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)))
+ 		tcp_init_congestion_control(sk);
+ }
  
-diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
-index 956fced0a8ec2..3bc76cf382fb9 100644
---- a/fs/gfs2/super.c
-+++ b/fs/gfs2/super.c
-@@ -167,7 +167,7 @@ int gfs2_make_fs_rw(struct gfs2_sbd *sdp)
- 	if (error)
- 		return error;
- 
--	error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_SHARED, 0,
-+	error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_SHARED, GL_EXACT,
- 				   &freeze_gh);
- 	if (error)
- 		goto fail_threads;
-@@ -203,7 +203,6 @@ int gfs2_make_fs_rw(struct gfs2_sbd *sdp)
- 	return 0;
- 
- fail:
--	freeze_gh.gh_flags |= GL_NOCACHE;
- 	gfs2_glock_dq_uninit(&freeze_gh);
- fail_threads:
- 	if (sdp->sd_quotad_process)
-@@ -430,7 +429,7 @@ static int gfs2_lock_fs_check_clean(struct gfs2_sbd *sdp)
- 	}
- 
- 	error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_EXCLUSIVE,
--				   GL_NOCACHE, &sdp->sd_freeze_gh);
-+				   0, &sdp->sd_freeze_gh);
- 	if (error)
- 		goto out;
- 
-@@ -613,13 +612,14 @@ int gfs2_make_fs_ro(struct gfs2_sbd *sdp)
- 	    !gfs2_glock_is_locked_by_me(sdp->sd_freeze_gl)) {
- 		if (!log_write_allowed) {
- 			error = gfs2_glock_nq_init(sdp->sd_freeze_gl,
--						   LM_ST_SHARED, GL_NOCACHE |
--						   LM_FLAG_TRY, &freeze_gh);
-+						   LM_ST_SHARED,
-+						   LM_FLAG_TRY | GL_EXACT,
-+						   &freeze_gh);
- 			if (error == GLR_TRYFAILED)
- 				error = 0;
- 		} else {
- 			error = gfs2_glock_nq_init(sdp->sd_freeze_gl,
--						   LM_ST_SHARED, GL_NOCACHE,
-+						   LM_ST_SHARED, GL_EXACT,
- 						   &freeze_gh);
- 			if (error && !gfs2_withdrawn(sdp))
- 				return error;
-@@ -761,7 +761,7 @@ void gfs2_freeze_func(struct work_struct *work)
- 	struct super_block *sb = sdp->sd_vfs;
- 
- 	atomic_inc(&sb->s_active);
--	error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_SHARED, 0,
-+	error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_SHARED, GL_EXACT,
- 				   &freeze_gh);
- 	if (error) {
- 		fs_info(sdp, "GFS2: couldn't get freeze lock : %d\n", error);
-@@ -774,8 +774,6 @@ void gfs2_freeze_func(struct work_struct *work)
- 				error);
- 			gfs2_assert_withdraw(sdp, 0);
- 		}
--		if (!test_bit(SDF_JOURNAL_LIVE, &sdp->sd_flags))
--			freeze_gh.gh_flags |= GL_NOCACHE;
- 		gfs2_glock_dq_uninit(&freeze_gh);
- 	}
- 	deactivate_super(sb);
--- 
-2.25.1
-
 
 
