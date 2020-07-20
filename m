@@ -7,80 +7,91 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AB8C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488CDC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1FFA22C9D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E8502065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595255183;
-	bh=gVlnDGkUWvMCdg/rT+jwsxn+V/IwfZoJkQOFM6t2wbg=;
+	s=default; t=1595255241;
+	bh=RBnbtNc7P0abvcaGM8sF725QZck1VgBETyLJywQpVio=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RbCFcexlnR0xgcU0p60r8e2vbB8t08nfAg8CsdqTbGtLW5YPnMkkToPHhzHBAvfZM
-	 jFGC256dgzHynUHXzHKIX/bG801LKrHhONYOk2R3Dl93w2dpfshtuv1SVG36N2/2WE
-	 HVFoUx7LFvyrJf+kWe1qT5wLqhaUovW7k4a+6zOc=
+	b=VExJaSuqfl+myjE7NzVtBshzmaK2WqcoABfakoeG3XtCZoC6KlS9uQ/Hl76AAnTkd
+	 Je6oBZzakk1DzL/d3l9NtNeB0JNl6c4vQYmZfsQnatSTDhRrwOntADO2qTFZJCQVTd
+	 OErOUEzbOzi//ID4XubBsURHjfqgKpHMU8Zffbqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbgGTO0V (ORCPT
+        id S1728776AbgGTO1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:26:21 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34891 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgGTO0U (ORCPT
+        Mon, 20 Jul 2020 10:27:20 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:33678 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgGTO1T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:26:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z2so18106664wrp.2;
-        Mon, 20 Jul 2020 07:26:19 -0700 (PDT)
+        Mon, 20 Jul 2020 10:27:19 -0400
+Received: by mail-ej1-f65.google.com with SMTP id n26so18300962ejx.0;
+        Mon, 20 Jul 2020 07:27:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BNgYPqhxRYjSVXbbLgxK/P3mGTeHM4UuVOZDXwpk69E=;
-        b=h8XeQ5h2pR2NlhQGgB8rdlGtiPG93XKUs0pmFoRmn+S855ilNrMwQzNAN+Ez2LwQId
-         5miTZUr/XESwU4/r3/sqSEd0RWOCR14fThGrWXJBSTHpPK04/8USTdsK9Gj0vvtQcAC5
-         up80bN1yOnrN/GKsTFGnyfaNHdZRTkThY/ZMjbBiACiB0cusnTsIxvUK3WTI95DskTrJ
-         xkB02FiMwITNnDZOTd1SpwN4Wdd+ww/sQtLj6j6Ql7r7cdSVj0Phpoi1vTfHa/shjPzi
-         rRIjztgoFuu8OUvhW3JxIq4UN3VdtT2RakBkyZTTCWoaYgqP4+VDxktquxOf3I7Ub3Ko
-         TumA==
-X-Gm-Message-State: AOAM530+BoW2Po/02cbZ2kcLkEpcEiJsU32Th6E0Vzv1JI5y1lQ2PGd1
-        rScKO+vwG0R0g1A49iGI9adHuYfQ
-X-Google-Smtp-Source: ABdhPJw6mW1qUYBRfjMsIXYJ4SbujclQOLMqVmDd8akFz2pItNEPdQYgsTHNVkaIm8YpNCKM6dEqdQ==
-X-Received: by 2002:a5d:44d1:: with SMTP id z17mr22240315wrr.259.1595255178174;
-        Mon, 20 Jul 2020 07:26:18 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id 31sm15239867wrj.94.2020.07.20.07.26.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 07:26:17 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 14:26:16 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH] hyperv: hyperv.h: drop a duplicated word
-Message-ID: <20200720142616.usjwfqdvtquou2y6@liuwe-devbox-debian-v2>
-References: <20200719002841.20369-1-rdunlap@infradead.org>
+        bh=MVp/N1cSKfIiCoWIHHaYXJ/b42GmjNCJKzq1XoGLrEI=;
+        b=U92z+SNLqi0lTuUNMhqQj92mdJ6LjyGDJB1EA+aQwmPJ34T35OJ2NxtDFZAfmZvSrs
+         Apr42TEdXRRorb4WySaa7Q2vfcM9EwRyUU9TdJackfH4EtdrxTAAejpton4sEM7Gpru4
+         IL8OL8Pt7Dm1Lh3kdmhzxgEKL2sA39YzMcwZ0twviXq6v77Vl1YxJ5zs9scS57pOohDe
+         bcOr8gXpmZpwbWgpY/+KekwYe4Sbco3x6boZ+lLJ4JfSZCczgIy/L5UZ34P1JkA2Qqyu
+         qlXcjUqeMxOfyYjUdzcvmTO5O6I8dHaGMOsZCe1hptFK7cWd57D5kWoEGswTgjCv3Jha
+         kjUg==
+X-Gm-Message-State: AOAM532AsL7aWQQEXMddT8nkT4MtViQft2w7b/QrVKwkISZQ6PRxv0qf
+        YJNNspGuPwr0muiQwq3Drts=
+X-Google-Smtp-Source: ABdhPJzTT58G0Lg05eXfDTVXv7oanRtSZu0RR0A3J+bLXjHJcgedqcOGfq+QlukWEmL8dIMq0wsiZA==
+X-Received: by 2002:a17:906:fa13:: with SMTP id lo19mr20771386ejb.213.1595255237737;
+        Mon, 20 Jul 2020 07:27:17 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.200])
+        by smtp.googlemail.com with ESMTPSA id o14sm14739926eja.121.2020.07.20.07.27.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Jul 2020 07:27:16 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 16:27:14 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Thomas Abraham <thomas.ab@samsung.com>,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH 06/25] pinctrl: samsung: pinctrl-samsung: Demote obvious
+ misuse of kerneldoc to standard comment blocks
+Message-ID: <20200720142714.GA6747@kozik-lap>
+References: <20200713144930.1034632-1-lee.jones@linaro.org>
+ <20200713144930.1034632-7-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200719002841.20369-1-rdunlap@infradead.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200713144930.1034632-7-lee.jones@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 05:28:41PM -0700, Randy Dunlap wrote:
-> Drop the repeated word "the" in a comment.
+On Mon, Jul 13, 2020 at 03:49:11PM +0100, Lee Jones wrote:
+> No attempt has been made to document either of the demoted functions here.
 > 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: linux-hyperv@vger.kernel.org
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/pinctrl/samsung/pinctrl-samsung.c:1149: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_suspend'
+>  drivers/pinctrl/samsung/pinctrl-samsung.c:1199: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_resume'
+> 
+> Cc: Tomasz Figa <tomasz.figa@gmail.com>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: Thomas Abraham <thomas.ab@samsung.com>
+> Cc: linux-samsung-soc@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/pinctrl/samsung/pinctrl-samsung.c | 4 ++--
 
-Applied to hyperv-next. Thanks.
+Thanks, applied.
 
-Wei.
+Best regards,
+Krzysztof
+
