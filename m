@@ -2,94 +2,93 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC46C43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25FB52070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD1420B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263720;
-	bh=B32T7XX0RrcZDQHlnbjMiXi4HNK1V+2Ce4kqChrBAw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TBJqBbGfkGhKWC01SYutBgDF7wnca+UlWNSeljzKP67QNucEu/h1nsK3ItpcuHVtD
-	 1cqI//jzdpLKIGtIDGV+ToMvJ5XRMi02wFmSGE+4M/3RsgKGgmmwVqGeuXNZ7TXIxs
-	 A9QHlVqa5OKHebK7r7YtMh8qabOseVCeUrmLVryk=
+	s=default; t=1595263713;
+	bh=e7KyK4OB1UzHIXGzVDNoI0t/F1VqIxgJuv1jCIwbcOI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XYOPQUlXV6Yl4KVAG4txP4BcW/wgH1cFFxwu0wwoR/OM7hYlbctva/KO6XOt8a59F
+	 LAmY602H3DOvUlAYDQsrn9MBf+gHRYHvDqBIDRPIi1GDaf8P1UE6ItI9vPVRqZw1Wr
+	 Oo1+4F6eMc2QjirahSZHTMWheF0rcRzpXPb4cihg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389168AbgGTQsi (ORCPT
+        id S2389152AbgGTQs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33436 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:48:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728122AbgGTQsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:48:32 -0400
-Received: from localhost (unknown [213.57.247.131])
+        id S1729144AbgGTPiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:38:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE6D92070A;
-        Mon, 20 Jul 2020 16:48:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00FB522CBB;
+        Mon, 20 Jul 2020 15:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595263711;
-        bh=B32T7XX0RrcZDQHlnbjMiXi4HNK1V+2Ce4kqChrBAw4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0p95UMPsI+SLQ/px2SMeYee/6o+1tBfH4pxfbp4QSTo8wx2tls9KVU3kAT68AMC09
-         CmmEx+sV2rbPwiDZpbhinYv4OR/+Gfibkp5Ux7TonCoAawZS+Kx2J2lIAiHHQhGF1G
-         6vtnR8ik3H0zy8LWD2zqBPa8FjLZTwUoL7kA4ux8=
-Date:   Mon, 20 Jul 2020 19:48:27 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        santosh.shilimkar@oracle.com, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH for v5.9] RDS: Replace HTTP links with HTTPS ones
-Message-ID: <20200720164827.GC1080481@unreal>
-References: <20200719155845.59947-1-grandmaster@al2klimov.de>
- <20200720045626.GF127306@unreal>
- <20200720075848.26bc3dfe@lwn.net>
- <20200720140716.GB1080481@unreal>
- <20200720083635.3e7880ce@lwn.net>
+        s=default; t=1595259498;
+        bh=e7KyK4OB1UzHIXGzVDNoI0t/F1VqIxgJuv1jCIwbcOI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=crtjUValTNewQy4VTRMXq5K9B76ch2jcUC+DzuM+V11XQeC0FunuQcEksqrqBCGnN
+         1hpJMYOmUg0SuJKil276RWQomm+81ZTajfxewRHqf0gyQ34V0f9fH4dhFVQimLclOP
+         R16HDz9yvg65zmFJgHhd2qV37WKE6v8+A2LqLdx8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 29/58] i2c: eg20t: Load module automatically if ID matches
+Date:   Mon, 20 Jul 2020 17:36:45 +0200
+Message-Id: <20200720152748.599143777@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
+References: <20200720152747.127988571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720083635.3e7880ce@lwn.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 08:36:35AM -0600, Jonathan Corbet wrote:
-> On Mon, 20 Jul 2020 17:07:16 +0300
-> Leon Romanovsky <leon@kernel.org> wrote:
->
-> > > Do *you* want to review that megapatch?  The number of issues that have
-> > > come up make it clear that these patches do, indeed, need review...
-> >
-> > Can you point me to the issues?
-> > What can go wrong with such a simple replacement?
->
-> Some bits of the conversation:
->
->   https://lore.kernel.org/lkml/20200626110219.7ae21265@lwn.net/
->   https://lore.kernel.org/lkml/20200626110706.7b5d4a38@lwn.net/
->   https://lore.kernel.org/lkml/20200705142506.1f26a7e0@lwn.net/
->   https://lore.kernel.org/lkml/20200713114321.783f0ae6@lwn.net/
->   https://lore.kernel.org/lkml/202007081531.085533FC5@keescook/
->
-> etc.
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-After reading your links and especially this one.
-https://lore.kernel.org/lkml/20200713114321.783f0ae6@lwn.net/
-I don't understand why are we still seeing these patches?
+[ Upstream commit 5f90786b31fb7d1e199a8999d46c4e3aea672e11 ]
 
-I gave to the author comments too, which were ignored.
-https://patchwork.kernel.org/patch/11644683/#23466547
+The driver can't be loaded automatically because it misses
+module alias to be provided. Add corresponding MODULE_DEVICE_TABLE()
+call to the driver.
 
-Thanks
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/i2c/busses/i2c-eg20t.c | 1 +
+ 1 file changed, 1 insertion(+)
 
->
-> jon
+diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
+index eef3aa6007f10..ffd8f9772096c 100644
+--- a/drivers/i2c/busses/i2c-eg20t.c
++++ b/drivers/i2c/busses/i2c-eg20t.c
+@@ -189,6 +189,7 @@ static const struct pci_device_id pch_pcidev_id[] = {
+ 	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_I2C), 1, },
+ 	{0,}
+ };
++MODULE_DEVICE_TABLE(pci, pch_pcidev_id);
+ 
+ static irqreturn_t pch_i2c_handler(int irq, void *pData);
+ 
+-- 
+2.25.1
+
+
+
