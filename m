@@ -2,95 +2,103 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF45FC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE3AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF71207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56FDF207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:38:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hwmyKa+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbgGTTfP (ORCPT
+        id S1731003AbgGTTh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:35:15 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38533 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgGTTfP (ORCPT
+        Mon, 20 Jul 2020 15:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgGTTh6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:35:15 -0400
-Received: by mail-pj1-f67.google.com with SMTP id k5so366087pjg.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 12:35:15 -0700 (PDT)
+        Mon, 20 Jul 2020 15:37:58 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD306C061794;
+        Mon, 20 Jul 2020 12:37:57 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id i80so10353198lfi.13;
+        Mon, 20 Jul 2020 12:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sgXLRBaaylaS2C4gN9oP1CacUi+Zgix4Q9h2XdlkjFM=;
+        b=hwmyKa+wbbaz8q4bfXfO3z7rvx/ZhG7p5eG3b3XDUqtluypwYw/9hoRDYN179aPigz
+         zbXMm2BjYvvkeOcxBmxTg2wyVPd9LJSNO98x53xAU4Z0lG48Ajp6+lh4WQKmmJMBNbZG
+         y9l3qh9B5Eva4UN5r7vkDHx/bm7dvAMVRu/BsHrzbsgvCKftYhwI4+XeW78YuhG+fRNn
+         cWuF0d/ouBREyynZj68gZhQpDB5Ya5f/76uLcDEvQ4tcUiVNZ9JrBqqV1lGSixCOXSne
+         OkOLZMiGybwrlS8J0nzWyVofXaJBbMk/W/rz84oGfK+sNOZkFdMQDzB2vclCoaXFQhJk
+         RWqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FAwXDOVMSGZi/I7ZWIkACyNz/hh5wQgkUbg94T7/lP0=;
-        b=PDnPeP0/BwLwSgcaA4NPY4wSrsoIKvZomgDDv0ucZddjEFeMxbgrsznY9jl8HLAi2j
-         mdACbHZ71X1ngcDMVP1hvK3bjyZ9QcYuCSKl3u2uRQRCErOjeNwqSpoHq2J5Oaam0Ixl
-         t0sdExvW6FAi+51qkJH8Jzl7pbHG/D/lLOgMGfwOjB6CVp7xezhQh1zZYNBrXLxmGVsY
-         IjC/wOkpSWoVJ0+YU2/LkVoQ/CjFrhuhjPeif8HAzGTN3WdvP2BCpUU+Y8JpaH2rKc4/
-         mpwMjNrzqX5Y8fVW0BVQekLvnRBxU8Yt0mCh9hcQx1JE5FN5q3bRGWUDTfp6eTRc8lR5
-         Ei0g==
-X-Gm-Message-State: AOAM533fMDjh+mAD3AdWKZ2uQecuuda+Z2EKY+mNQNBUSMkc7R4+rPu9
-        mzz+9XuL1i8ChA3gzKmTW9M=
-X-Google-Smtp-Source: ABdhPJzdF+z//mhwQF07S3PExCuzsCXpZ0Kr+4nTeKZkNUDuKlHK2ZkqoHFZKnlhXhd+E6guqCWxDw==
-X-Received: by 2002:a17:90b:283:: with SMTP id az3mr992221pjb.38.1595273714639;
-        Mon, 20 Jul 2020 12:35:14 -0700 (PDT)
-Received: from ?IPv6:2601:647:4802:9070:81fd:84d6:3c38:f7ef? ([2601:647:4802:9070:81fd:84d6:3c38:f7ef])
-        by smtp.gmail.com with ESMTPSA id n15sm388993pjf.12.2020.07.20.12.35.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 12:35:13 -0700 (PDT)
-Subject: Re: [PATCH v15 7/9] nvmet-passthru: Add passthru code to process
- commands
-To:     Christoph Hellwig <hch@lst.de>,
-        Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20200716203319.16022-1-logang@deltatee.com>
- <20200716203319.16022-8-logang@deltatee.com> <20200720141606.GF4627@lst.de>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <e939dd43-9e7f-8ef0-162b-2a27f53e6e1a@grimberg.me>
-Date:   Mon, 20 Jul 2020 12:35:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sgXLRBaaylaS2C4gN9oP1CacUi+Zgix4Q9h2XdlkjFM=;
+        b=DgARxFC+5EDmZUnE5XtqnJYY3shlSe0yjwlYSDSHFDYk7FiJIeAwgO3hps9yJd5zID
+         nQOPWJAT1NB4iYvZoIFgyt8IACMNAjDSLZ+9hRtkZWhZqvHmbkS6mer/pM6PhAt8f21+
+         FZ17RDW6ihofiqmt13YPUH1WX7u03IM4ow6lCnoTG/wGqJslgenlviXCO6HZD7vCXJUh
+         4lSOfEQKsnXBN1n466cG6/ZJWr/FHqeZpLcTF0CIqJ9Uiv23o8ktIYj8GVSOwJhaJY/s
+         54zX/Ofpqi8pLjaarOfYxBvPVo3Szz6u5gjTR0AbsxTqZkC/oxfZkYyf7zvQQBTL3ZN9
+         tTyw==
+X-Gm-Message-State: AOAM532BxZz/5+XX/8kGFB9mVLpca3TkYcA2D5Q4iaafXoCy/0BMpuXu
+        h2a60H1s4YXAEaXfXhHDqn/Z/6slx5JHr91rWWc=
+X-Google-Smtp-Source: ABdhPJy1Jig5sDfVDdOSRyjt4VvlHQ9WhRxupA+W8Un21a1t7FbzrPXKASt/E5BtvMdxrDNU8FO+v8/2XARywqL/t1M=
+X-Received: by 2002:a05:6512:3610:: with SMTP id f16mr4307309lfs.8.1595273876184;
+ Mon, 20 Jul 2020 12:37:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200720141606.GF4627@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200720194225.17de9962@canb.auug.org.au> <a97220b2-9864-eb49-6e27-0ec5b7e5b977@infradead.org>
+ <20200721044902.24ebe681@canb.auug.org.au>
+In-Reply-To: <20200721044902.24ebe681@canb.auug.org.au>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Mon, 20 Jul 2020 12:37:44 -0700
+Message-ID: <CAADnVQJNU+tm3WT+JuPoY8TTHWXxQ8OJ0sGCLQGq2Avf+Ri7Yw@mail.gmail.com>
+Subject: Re: linux-next: Tree for Jul 20 (kernel/bpf/net_namespace)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 20, 2020 at 11:49 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> On Mon, 20 Jul 2020 08:51:54 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+> >
+> > on i386 or x86_64:
+> >
+> > # CONFIG_INET is not set
+> > # CONFIG_NET_NS is not set
+> >
+> > ld: kernel/bpf/net_namespace.o: in function `bpf_netns_link_release':
+> > net_namespace.c:(.text+0x32c): undefined reference to `bpf_sk_lookup_enabled'
+> > ld: kernel/bpf/net_namespace.o: in function `netns_bpf_link_create':
+> > net_namespace.c:(.text+0x8b7): undefined reference to `bpf_sk_lookup_enabled'
+> > ld: kernel/bpf/net_namespace.o: in function `netns_bpf_pernet_pre_exit':
+> > net_namespace.c:(.ref.text+0xa3): undefined reference to `bpf_sk_lookup_enabled'
+>
+> Caused by commit
+>
+>   1559b4aa1db4 ("inet: Run SK_LOOKUP BPF program on socket lookup")
+>
+> from the bpf-next tree.
 
->> Add passthru command handling capability for the NVMeOF target and
->> export passthru APIs which are used to integrate passthru
->> code with nvmet-core.
->>
->> The new file passthru.c handles passthru cmd parsing and execution.
->> In the passthru mode, we create a block layer request from the nvmet
->> request and map the data on to the block layer request.
->>
->> Admin commands and features are on a white list as there are a number
->> of each that don't make too much sense with passthrough. We use a
->> white list so that new commands can be considered before being blindly
->> passed through. In both cases, vendor specific commands are always
->> allowed.
->>
->> We also blacklist reservation IO commands as the underlying device
->> cannot differentiate between multiple hosts behind a fabric.
-> 
-> I'm still not so happy about having to look up the namespace and still
-> wonder if we should generalize the connect_q to a passthrough_q.  But
-> I guess we can do that later and then reduce some of the exports here..
-
-That is a neat idea! should be easy to do (and we can then lose the host
-xarray stuff). I don't mind having it on a later patch, but it should be
-easy enough to do even before...
+Jakub, please take a look.
