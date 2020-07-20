@@ -2,285 +2,1082 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B36EC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93988C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53FFA2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 578F92070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:47:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CTzipu1H"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="ZV/IzCNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgGTLqA (ORCPT
+        id S1728662AbgGTLrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 07:46:00 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54705 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728058AbgGTLp7 (ORCPT
+        Mon, 20 Jul 2020 07:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728573AbgGTLrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 07:45:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595245556;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xVTtZN1yW6PDq/VCwi0KTUBcBexhd/cNJy1JNokh2V4=;
-        b=CTzipu1HTYureAHTQf9Qx9qS/qv5nlEz181AG/ePmu5YIhyArK2GPJFNpWKgwzYhr7xeCc
-        W+avIcaVUK2gPU8BF/zS+VQ1CPYAcSV32HKevWhatgTJmPNO2etB8yJlOWd4BEaYXFjekf
-        8zfme6fx7KTxUpqFkFtGoo21P0pUa+Q=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-195-aBQlf3KONLqO3rsKP_GIFA-1; Mon, 20 Jul 2020 07:45:55 -0400
-X-MC-Unique: aBQlf3KONLqO3rsKP_GIFA-1
-Received: by mail-wr1-f72.google.com with SMTP id b8so12034133wro.19
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 04:45:54 -0700 (PDT)
+        Mon, 20 Jul 2020 07:47:11 -0400
+Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A05E7C0619D7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 04:47:10 -0700 (PDT)
+Received: by mail-ua1-x92a.google.com with SMTP id j21so4924586ual.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 04:47:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VAtXdGiEJOSPSuZTe2XEag3Phi+HIdEg0aiXw4By7vU=;
+        b=ZV/IzCNBTQMYsgyqdl8BY6y9GhYyeMhxTLSN3OLOkKKqAvnFuouU7U7NhYD5P2zlUX
+         TPzVM6oU8hVaBWtG4qXPymfeJhC+UGjMRIk+mKQSE9ZcpWml0I2dE1Oit0I5wHi8544q
+         b5qMJPBbqoGHFPDY0ih9MaHRP1LK+kOJVgxQFzrq6udRCpRJ9RIrl7ZZaf0oeRfiu/zg
+         50eh/+4e5jEOt3d0r8QuwpsXS8PFNAgX8LNiEoV+wcdr5u/fiYB7BLLRFWaLleswsGU0
+         WEt9Dx/VTBe15jwkEzY/Akw1nwXCdHfi027Vcygwm8YBKC06rWNo4OtKduBDfOtiFAYG
+         c/dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=xVTtZN1yW6PDq/VCwi0KTUBcBexhd/cNJy1JNokh2V4=;
-        b=HtIkPMCl0AvJPqr/lzSPjrJ+Azx/UHnmtYBropT2dZvuD3yxBDafxu3Tp5QbD4l1Nj
-         FVc09hFkETrLq3/SfhSlh0GGzh8GemIx/th7+QH6MfWf0wfpTCbfvqhbm29c2etdLDoj
-         M26B4GM4jBdibwsvV1ofU9mbUBtWhGET2oN0M0rScKDXGDwKaY+nHH3pgsX4KCfaJ+YQ
-         AZb1hrVZIV+rZVso1tfLWEE60ccOndXbPauDO5paob3gsDM7GFGHWck4SsVugmBZuUfP
-         EeNViYtURwJNxw+a+DFKkJ4CWthlgEnux1cNUTGgl0zm454eLOnEe6lYFRyZOAsFylys
-         Pkfg==
-X-Gm-Message-State: AOAM533WiH6mt5E96UiHq5DmM6pi9vuQ19UEecWZpzhUovLREg0T+ZFu
-        wN72BR1JDVyM2gt6PiSehAuhA0kLuNX6MVVIAGauPFCbkFmqx5S/dAlzJ/U8Eh+YOma9kq4PbrP
-        2ybKQA741jT3TfE3tj1jToytQ
-X-Received: by 2002:adf:ff8c:: with SMTP id j12mr21608425wrr.230.1595245554055;
-        Mon, 20 Jul 2020 04:45:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJywUX7LcIswRfFXg4IKadDwW85Nm02WIeN/kLTe6nu60lfJo1MyfmNao5wM684NFhYV4mfY2Q==
-X-Received: by 2002:adf:ff8c:: with SMTP id j12mr21608404wrr.230.1595245553799;
-        Mon, 20 Jul 2020 04:45:53 -0700 (PDT)
-Received: from redhat.com (bzq-79-180-10-140.red.bezeqint.net. [79.180.10.140])
-        by smtp.gmail.com with ESMTPSA id o205sm33683152wme.24.2020.07.20.04.45.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 04:45:52 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 07:45:50 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-Message-ID: <20200720074545-mutt-send-email-mst@kernel.org>
-References: <CAJaqyWedEg9TBkH1MxGP1AecYHD-e-=ugJ6XUN+CWb=rQGf49g@mail.gmail.com>
- <0a83aa03-8e3c-1271-82f5-4c07931edea3@redhat.com>
- <CAJaqyWeqF-KjFnXDWXJ2M3Hw3eQeCEE2-7p1KMLmMetMTm22DQ@mail.gmail.com>
- <20200709133438-mutt-send-email-mst@kernel.org>
- <7dec8cc2-152c-83f4-aa45-8ef9c6aca56d@redhat.com>
- <CAJaqyWdLOH2EceTUduKYXCQUUNo1XQ1tLgjYHTBGhtdhBPHn_Q@mail.gmail.com>
- <20200710015615-mutt-send-email-mst@kernel.org>
- <CAJaqyWf1skGxrjuT9GLr6dtgd-433y-rCkbtStLHaAs2W2jYXA@mail.gmail.com>
- <20200720051410-mutt-send-email-mst@kernel.org>
- <d4e29f0451f7551ee3a408ecfa40de2de2b8aa75.camel@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VAtXdGiEJOSPSuZTe2XEag3Phi+HIdEg0aiXw4By7vU=;
+        b=Mly4H6RNPamWSL5X5ntWpy32IHBGyr5wIHQgJC6fxd9ERYmcdo0Sx95kRGE+VcXV8k
+         vYgcHiQe+qFOPL415KJGDwCqq7HDcIRRa2K1vOz4SbM0uLj/dgVt34RSzcS6JnUm3sfW
+         kjtAKKHo+cGXicsq9hzRUXxyklpg93So20n2N79pW5oJU21fqupoVrzTztGK/S339Lex
+         A710WPgAj6IrkKAeE2tmpHY+dBGiH/0ujMN5n1sFUvtJ2M6IkMH2ftGuU4ocK+pEoPrd
+         IRp/yHa2KygibHBdg5ZHRc916t5e0yw8duEwMvB1C7+NmlTtNDQaKqWsZjSbAN5ff6Wp
+         tYCw==
+X-Gm-Message-State: AOAM531ZG2GldcZ0s1LU+7KfJRZwyX11n7sBlfk/MXV+sUs7G5xVCF3j
+        YBA2vvA7dvbTkzI8R30RJ9LMrxwXC3VE+ZDvibzXKZr8GghOgA==
+X-Google-Smtp-Source: ABdhPJzjDRjrldvtMDoAh6bhnNqnVipW8hyb36CReS+kekGottOyZ/MgxyvPNcueeGD4dhofURDqzduE3wJS91kjPVM=
+X-Received: by 2002:a9f:3113:: with SMTP id m19mr15258898uab.77.1595245628737;
+ Mon, 20 Jul 2020 04:47:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d4e29f0451f7551ee3a408ecfa40de2de2b8aa75.camel@redhat.com>
+References: <e9aacd33071a00568b67e110fa3bcc4d86d3e1e4.1595245166.git.amit.kucheria@linaro.org>
+In-Reply-To: <e9aacd33071a00568b67e110fa3bcc4d86d3e1e4.1595245166.git.amit.kucheria@linaro.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Mon, 20 Jul 2020 17:16:57 +0530
+Message-ID: <CAHLCerM+KMMKrjgw4kZAN47qsYoKW-BdTzLiae5U7Wi-dLQc=g@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: thermal: Get rid of thermal.txt and replace references
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Talel Shenhar <talel@amazon.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM STB AVS TMON DRIVER" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>
+Cc:     lakml <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-tegra@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 01:16:47PM +0200, Eugenio Pérez wrote:
-> 
-> On Mon, Jul 20, 2020 at 11:27 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > On Thu, Jul 16, 2020 at 07:16:27PM +0200, Eugenio Perez Martin wrote:
-> > > On Fri, Jul 10, 2020 at 7:58 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > On Fri, Jul 10, 2020 at 07:39:26AM +0200, Eugenio Perez Martin wrote:
-> > > > > > > How about playing with the batch size? Make it a mod parameter instead
-> > > > > > > of the hard coded 64, and measure for all values 1 to 64 ...
-> > > > > > 
-> > > > > > Right, according to the test result, 64 seems to be too aggressive in
-> > > > > > the case of TX.
-> > > > > > 
-> > > > > 
-> > > > > Got it, thanks both!
-> > > > 
-> > > > In particular I wonder whether with batch size 1
-> > > > we get same performance as without batching
-> > > > (would indicate 64 is too aggressive)
-> > > > or not (would indicate one of the code changes
-> > > > affects performance in an unexpected way).
-> > > > 
-> > > > --
-> > > > MST
-> > > > 
-> > > 
-> > > Hi!
-> > > 
-> > > Varying batch_size as drivers/vhost/net.c:VHOST_NET_BATCH,
-> > 
-> > sorry this is not what I meant.
-> > 
-> > I mean something like this:
-> > 
-> > 
-> > diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-> > index 0b509be8d7b1..b94680e5721d 100644
-> > --- a/drivers/vhost/net.c
-> > +++ b/drivers/vhost/net.c
-> > @@ -1279,6 +1279,10 @@ static void handle_rx_net(struct vhost_work *work)
-> >         handle_rx(net);
-> >  }
-> > 
-> > +MODULE_PARM_DESC(batch_num, "Number of batched descriptors. (offset from 64)");
-> > +module_param(batch_num, int, 0644);
-> > +static int batch_num = 0;
-> > +
-> >  static int vhost_net_open(struct inode *inode, struct file *f)
-> >  {
-> >         struct vhost_net *n;
-> > @@ -1333,7 +1337,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
-> >                 vhost_net_buf_init(&n->vqs[i].rxq);
-> >         }
-> >         vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
-> > -                      UIO_MAXIOV + VHOST_NET_BATCH,
-> > +                      UIO_MAXIOV + VHOST_NET_BATCH + batch_num,
-> >                        VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT, true,
-> >                        NULL);
-> > 
-> > 
-> > then you can try tweaking batching and playing with mod parameter without
-> > recompiling.
-> > 
-> > 
-> > VHOST_NET_BATCH affects lots of other things.
-> > 
-> 
-> Ok, got it. Since they were aligned from the start, I thought it was a good idea to maintain them in-sync.
-> 
-> > > and testing
-> > > the pps as previous mail says. This means that we have either only
-> > > vhost_net batching (in base testing, like previously to apply this
-> > > patch) or both batching sizes the same.
-> > > 
-> > > I've checked that vhost process (and pktgen) goes 100% cpu also.
-> > > 
-> > > For tx: Batching decrements always the performance, in all cases. Not
-> > > sure why bufapi made things better the last time.
-> > > 
-> > > Batching makes improvements until 64 bufs, I see increments of pps but like 1%.
-> > > 
-> > > For rx: Batching always improves performance. It seems that if we
-> > > batch little, bufapi decreases performance, but beyond 64, bufapi is
-> > > much better. The bufapi version keeps improving until I set a batching
-> > > of 1024. So I guess it is super good to have a bunch of buffers to
-> > > receive.
-> > > 
-> > > Since with this test I cannot disable event_idx or things like that,
-> > > what would be the next step for testing?
-> > > 
-> > > Thanks!
-> > > 
-> > > --
-> > > Results:
-> > > # Buf size: 1,16,32,64,128,256,512
-> > > 
-> > > # Tx
-> > > # ===
-> > > # Base
-> > > 2293304.308,3396057.769,3540860.615,3636056.077,3332950.846,3694276.154,3689820
-> > > # Batch
-> > > 2286723.857,3307191.643,3400346.571,3452527.786,3460766.857,3431042.5,3440722.286
-> > > # Batch + Bufapi
-> > > 2257970.769,3151268.385,3260150.538,3379383.846,3424028.846,3433384.308,3385635.231,3406554.538
-> > > 
-> > > # Rx
-> > > # ==
-> > > # pktgen results (pps)
-> > > 1223275,1668868,1728794,1769261,1808574,1837252,1846436
-> > > 1456924,1797901,1831234,1868746,1877508,1931598,1936402
-> > > 1368923,1719716,1794373,1865170,1884803,1916021,1975160
-> > > 
-> > > # Testpmd pps results
-> > > 1222698.143,1670604,1731040.6,1769218,1811206,1839308.75,1848478.75
-> > > 1450140.5,1799985.75,1834089.75,1871290,1880005.5,1934147.25,1939034
-> > > 1370621,1721858,1796287.75,1866618.5,1885466.5,1918670.75,1976173.5,1988760.75,1978316
-> > > 
-> > > pktgen was run again for rx with 1024 and 2048 buf size, giving
-> > > 1988760.75 and 1978316 pps. Testpmd goes the same way.
-> > 
-> > Don't really understand what does this data mean.
-> > Which number of descs is batched for each run?
-> > 
-> 
-> Sorry, I should have explained better. I will expand here, but feel free to skip it since we are going to discard the
-> data anyway. Or to propose a better way to tell them.
-> 
-> Is a CSV with the values I've obtained, in pps, from pktgen and testpmd. This way is easy to plot them.
-> 
-> Maybe is easier as tables, if mail readers/gmail does not misalign them.
-> 
-> > > # Tx
-> > > # ===
-> 
-> Base: With the previous code, not integrating any patch. testpmd is txonly mode, tap interface is XDP_DROP everything.
-> We vary VHOST_NET_BATCH (1, 16, 32, ...). As Jason put in a previous mail:
-> 
-> TX: testpmd(txonly) -> virtio-user -> vhost_net -> XDP_DROP on TAP
-> 
-> 
->      1     |     16     |     32     |     64     |     128    |    256     |   512  |
-> 2293304.308| 3396057.769| 3540860.615| 3636056.077| 3332950.846| 3694276.154| 3689820|
-> 
-> If we add the batching part of the series, but not the bufapi:
-> 
->       1     |     16     |     32     |     64     |     128    |    256    |     512    |
-> 2286723.857 | 3307191.643| 3400346.571| 3452527.786| 3460766.857| 3431042.5 | 3440722.286|
-> 
-> And if we add the bufapi part, i.e., all the series:
-> 
->       1    |     16     |     32     |     64     |     128    |     256    |     512    |    1024
-> 2257970.769| 3151268.385| 3260150.538| 3379383.846| 3424028.846| 3433384.308| 3385635.231| 3406554.538
-> 
-> For easier treatment, all in the same table:
-> 
->      1      |     16      |     32      |      64     |     128     |    256      |   512      |    1024
-> ------------+-------------+-------------+-------------+-------------+-------------+------------+------------
-> 2293304.308 | 3396057.769 | 3540860.615 | 3636056.077 | 3332950.846 | 3694276.154 | 3689820    |
-> 2286723.857 | 3307191.643 | 3400346.571 | 3452527.786 | 3460766.857 | 3431042.5   | 3440722.286|
-> 2257970.769 | 3151268.385 | 3260150.538 | 3379383.846 | 3424028.846 | 3433384.308 | 3385635.231| 3406554.538
->  
-> > > # Rx
-> > > # ==
-> 
-> The rx tests are done with pktgen injecting packets in tap interface, and testpmd in rxonly forward mode. Again, each
-> column is a different value of VHOST_NET_BATCH, and each row is base, +batching, and +buf_api:
-> 
-> > > # pktgen results (pps)
-> 
-> (Didn't record extreme cases like >512 bufs batching)
-> 
->    1   |   16   |   32   |   64   |   128  |  256   |   512
-> -------+--------+--------+--------+--------+--------+--------
-> 1223275| 1668868| 1728794| 1769261| 1808574| 1837252| 1846436
-> 1456924| 1797901| 1831234| 1868746| 1877508| 1931598| 1936402
-> 1368923| 1719716| 1794373| 1865170| 1884803| 1916021| 1975160
-> 
-> > > # Testpmd pps results
-> 
->       1     |     16     |     32     |     64    |    128    |    256     |    512     |    1024    |   2048
-> ------------+------------+------------+-----------+-----------+------------+------------+------------+---------
-> 1222698.143 | 1670604    | 1731040.6  | 1769218   | 1811206   | 1839308.75 | 1848478.75 |
-> 1450140.5   | 1799985.75 | 1834089.75 | 1871290   | 1880005.5 | 1934147.25 | 1939034    |
-> 1370621     | 1721858    | 1796287.75 | 1866618.5 | 1885466.5 | 1918670.75 | 1976173.5  | 1988760.75 | 1978316
-> 
-> The last extreme cases (>512 bufs batched) were recorded just for the bufapi case.
-> 
-> Does that make sense now?
-> 
-> Thanks!
+On Mon, Jul 20, 2020 at 5:13 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> Now that we have yaml bindings for the thermal subsystem, get rid of the
+> old bindings (thermal.txt).
+>
+> Replace all references to thermal.txt in the Documentation with a link
+> to the appropriate YAML bindings using the following search and replace
+> pattern:
+>  - If the reference is specific to the thermal-sensor-cells property,
+>  replace with a pointer to thermal-sensor.yaml
+>  - If the reference is to the cooling-cells property, replace with a
+>  pointer to thermal-cooling-devices.yaml
+>  - If the reference is generic thermal bindings, replace with a
+>  reference to thermal*.yaml.
+>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-yes, thanks!
+Please ignore. Forgot to add Rob's Ack and annotate with v2. Will resend.
 
+> ---
+> Changes since v1:
+>  - Rebase onto v.5.8-rc6 to make it apply again
+>  - Fix cpufreq/nvidia,tegra20-cpufreq.txt
+>  - Fix bindings/arm/freescale/fsl,scu.txt
+>
+>
+>  .../devicetree/bindings/arm/arm,scmi.txt      |   2 +-
+>  .../devicetree/bindings/arm/arm,scpi.txt      |   2 +-
+>  .../bindings/arm/freescale/fsl,scu.txt        |   2 +-
+>  .../arm/marvell/ap80x-system-controller.txt   |   2 +-
+>  .../arm/marvell/cp110-system-controller.txt   |   2 +-
+>  .../bindings/cpufreq/cpufreq-dt.txt           |   3 +-
+>  .../bindings/cpufreq/cpufreq-mediatek.txt     |   4 +-
+>  .../cpufreq/nvidia,tegra20-cpufreq.txt        |   2 +-
+>  .../devicetree/bindings/hwmon/gpio-fan.txt    |   3 +-
+>  .../devicetree/bindings/hwmon/lm90.txt        |   4 +-
+>  .../thermal/allwinner,sun8i-a83t-ths.yaml     |   2 +-
+>  .../bindings/thermal/amazon,al-thermal.txt    |   2 +-
+>  .../bindings/thermal/brcm,avs-ro-thermal.yaml |   2 +-
+>  .../bindings/thermal/brcm,bcm2835-thermal.txt |   2 +-
+>  .../bindings/thermal/hisilicon-thermal.txt    |   2 +-
+>  .../bindings/thermal/max77620_thermal.txt     |   6 +-
+>  .../bindings/thermal/mediatek-thermal.txt     |   2 +-
+>  .../thermal/nvidia,tegra124-soctherm.txt      |  10 +-
+>  .../thermal/nvidia,tegra186-bpmp-thermal.txt  |   2 +-
+>  .../bindings/thermal/qcom-spmi-temp-alarm.txt |   2 +-
+>  .../bindings/thermal/rockchip-thermal.txt     |   2 +-
+>  .../bindings/thermal/tango-thermal.txt        |   2 +-
+>  .../bindings/thermal/thermal-generic-adc.txt  |   2 +-
+>  .../devicetree/bindings/thermal/thermal.txt   | 586 ------------------
+>  24 files changed, 34 insertions(+), 616 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/thermal.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> index 1f293ea24cd85..55deb68230ebb 100644
+> --- a/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> @@ -102,7 +102,7 @@ Required sub-node properties:
+>  [0] http://infocenter.arm.com/help/topic/com.arm.doc.den0056a/index.html
+>  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>  [2] Documentation/devicetree/bindings/power/power-domain.yaml
+> -[3] Documentation/devicetree/bindings/thermal/thermal.txt
+> +[3] Documentation/devicetree/bindings/thermal/thermal*.yaml
+>  [4] Documentation/devicetree/bindings/sram/sram.yaml
+>  [5] Documentation/devicetree/bindings/reset/reset.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> index dd04d9d9a1b8e..bcd6c3ec471e6 100644
+> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> @@ -108,7 +108,7 @@ Required properties:
+>
+>  [0] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
+>  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> -[2] Documentation/devicetree/bindings/thermal/thermal.txt
+> +[2] Documentation/devicetree/bindings/thermal/thermal*.yaml
+>  [3] Documentation/devicetree/bindings/sram/sram.yaml
+>  [4] Documentation/devicetree/bindings/power/power-domain.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> index 10b8459e49f8c..6064d98b10314 100644
+> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> @@ -176,7 +176,7 @@ Required properties:
+>                                   "fsl,imx8qxp-sc-thermal"
+>                                 followed by "fsl,imx-sc-thermal";
+>
+> -- #thermal-sensor-cells:       See Documentation/devicetree/bindings/thermal/thermal.txt
+> +- #thermal-sensor-cells:       See Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+>                                 for a description.
+>
+>  Example (imx8qxp):
+> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
+> index 098d932fc9630..e31511255d8e3 100644
+> --- a/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
+> +++ b/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
+> @@ -111,7 +111,7 @@ Thermal:
+>  --------
+>
+>  For common binding part and usage, refer to
+> -Documentation/devicetree/bindings/thermal/thermal.txt
+> +Documentation/devicetree/bindings/thermal/thermal*.yaml
+>
+>  The thermal IP can probe the temperature all around the processor. It
+>  may feature several channels, each of them wired to one sensor.
+> diff --git a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
+> index f982a8ed93968..a21f7709596c0 100644
+> --- a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
+> +++ b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
+> @@ -203,7 +203,7 @@ It is possible to setup an overheat interrupt by giving at least one
+>  critical point to any subnode of the thermal-zone node.
+>
+>  For common binding part and usage, refer to
+> -Documentation/devicetree/bindings/thermal/thermal.txt
+> +Documentation/devicetree/bindings/thermal/thermal*.yaml
+>
+>  Required properties:
+>  - compatible: must be one of:
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-dt.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-dt.txt
+> index 332aed8f4597a..56f4423743838 100644
+> --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-dt.txt
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-dt.txt
+> @@ -18,7 +18,8 @@ Optional properties:
+>    in unit of nanoseconds.
+>  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.
+>  - #cooling-cells:
+> -     Please refer to Documentation/devicetree/bindings/thermal/thermal.txt.
+> +     Please refer to
+> +     Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml.
+>
+>  Examples:
+>
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+> index 0551c78619de8..ea4994b35207d 100644
+> --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+> @@ -21,8 +21,8 @@ Optional properties:
+>                flow is handled by hardware, hence no software "voltage tracking" is
+>                needed.
+>  - #cooling-cells:
+> -       Please refer to Documentation/devicetree/bindings/thermal/thermal.txt
+> -       for detail.
+> +       For details, please refer to
+> +       Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+>
+>  Example 1 (MT7623 SoC):
+>
+> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+> index daeca6ae6b769..52a24b82fd864 100644
+> --- a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+> @@ -5,7 +5,7 @@ Required properties:
+>  - clocks: Must contain an entry for the CPU clock.
+>    See ../clocks/clock-bindings.txt for details.
+>  - operating-points-v2: See ../bindings/opp/opp.txt for details.
+> -- #cooling-cells: Should be 2. See ../thermal/thermal.txt for details.
+> +- #cooling-cells: Should be 2. See ../thermal/thermal-cooling-devices.yaml for details.
+>
+>  For each opp entry in 'operating-points-v2' table:
+>  - opp-supported-hw: Two bitfields indicating:
+> diff --git a/Documentation/devicetree/bindings/hwmon/gpio-fan.txt b/Documentation/devicetree/bindings/hwmon/gpio-fan.txt
+> index 2becdcfdc840c..f4cfa350f6a14 100644
+> --- a/Documentation/devicetree/bindings/hwmon/gpio-fan.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/gpio-fan.txt
+> @@ -12,7 +12,8 @@ Optional properties:
+>  - alarm-gpios: This pin going active indicates something is wrong with
+>    the fan, and a udev event will be fired.
+>  - #cooling-cells: If used as a cooling device, must be <2>
+> -  Also see: Documentation/devicetree/bindings/thermal/thermal.txt
+> +  Also see:
+> +  Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+>    min and max states are derived from the speed-map of the fan.
+>
+>  Note: At least one the "gpios" or "alarm-gpios" properties must be set.
+> diff --git a/Documentation/devicetree/bindings/hwmon/lm90.txt b/Documentation/devicetree/bindings/hwmon/lm90.txt
+> index c76a7ac47c342..398dcb9657514 100644
+> --- a/Documentation/devicetree/bindings/hwmon/lm90.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/lm90.txt
+> @@ -34,8 +34,8 @@ Optional properties:
+>                LM90 "-ALERT" pin output.
+>                See interrupt-controller/interrupts.txt for the format.
+>
+> -- #thermal-sensor-cells: should be set to 1. See thermal/thermal.txt for
+> -             details. See <include/dt-bindings/thermal/lm90.h> for the
+> +- #thermal-sensor-cells: should be set to 1. See thermal/thermal-sensor.yaml
+> +             for details. See <include/dt-bindings/thermal/lm90.h> for the
+>               definition of the local, remote and 2nd remote sensor index
+>               constants.
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> index 87369264feb96..44ba6765697d8 100644
+> --- a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> @@ -50,7 +50,7 @@ properties:
+>    nvmem-cell-names:
+>      const: calibration
+>
+> -  # See ./thermal.txt for details
+> +  # See Documentation/devicetree/bindings/thermal/thermal-sensor.yaml for details
+>    "#thermal-sensor-cells":
+>      enum:
+>        - 0
+> diff --git a/Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt b/Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
+> index 703979dbd577d..12fc4ef04837f 100644
+> --- a/Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
+> @@ -6,7 +6,7 @@ transaction.
+>  Required properties:
+>  - compatible: "amazon,al-thermal".
+>  - reg: The physical base address and length of the sensor's registers.
+> -- #thermal-sensor-cells: Must be 1. See ./thermal.txt for a description.
+> +- #thermal-sensor-cells: Must be 1. See Documentation/devicetree/bindings/thermal/thermal-sensor.yaml for a description.
+>
+>  Example:
+>         thermal: thermal {
+> diff --git a/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
+> index f3e68ed03abf8..1ab5070c751d5 100644
+> --- a/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
+> @@ -23,7 +23,7 @@ properties:
+>    compatible:
+>      const: brcm,bcm2711-thermal
+>
+> -  # See ./thermal.txt for details
+> +  # See Documentation/devicetree/bindings/thermal/thermal-sensor.yaml for details
+>    "#thermal-sensor-cells":
+>      const: 0
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt
+> index da8c5b73ad105..a3e9ec5dc7ac4 100644
+> --- a/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt
+> @@ -7,7 +7,7 @@ compatible:             should be one of: "brcm,bcm2835-thermal",
+>                         "brcm,bcm2836-thermal" or "brcm,bcm2837-thermal"
+>  reg:                   Address range of the thermal registers.
+>  clocks:                Phandle of the clock used by the thermal sensor.
+> -#thermal-sensor-cells: should be 0 (see thermal.txt)
+> +#thermal-sensor-cells: should be 0 (see Documentation/devicetree/bindings/thermal/thermal-sensor.yaml)
+>
+>  Example:
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+> index cef716a236f1a..4b19d80e6558b 100644
+> --- a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+> @@ -9,7 +9,7 @@
+>    by /SOCTHERM/tsensor.
+>  - clock-names: Input clock name, should be 'thermal_clk'.
+>  - clocks: phandles for clock specified in "clock-names" property.
+> -- #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
+> +- #thermal-sensor-cells: Should be 1. See Documentation/devicetree/bindings/thermal/thermal-sensor.yaml for a description.
+>
+>  Example :
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/max77620_thermal.txt b/Documentation/devicetree/bindings/thermal/max77620_thermal.txt
+> index 323a3b3822aac..82ed5d4879666 100644
+> --- a/Documentation/devicetree/bindings/thermal/max77620_thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/max77620_thermal.txt
+> @@ -8,12 +8,12 @@ below threshold level.
+>
+>  Required properties:
+>  -------------------
+> -#thermal-sensor-cells: Please refer <devicetree/bindings/thermal/thermal.txt>
+> -                       for more details.
+> +#thermal-sensor-cells: For more details, please refer to
+> +                       <devicetree/bindings/thermal/thermal-sensor.yaml>
+>                         The value must be 0.
+>
+>  For more details, please refer generic thermal DT binding document
+> -<devicetree/bindings/thermal/thermal.txt>.
+> +<devicetree/bindings/thermal/thermal*.yaml>.
+>
+>  Please refer <devicetree/bindings/mfd/max77620.txt> for mfd DT binding
+>  document for the MAX77620.
+> diff --git a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+> index f8d7831f39740..1e249c42fae04 100644
+> --- a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+> @@ -23,7 +23,7 @@ Required properties:
+>  - resets: Reference to the reset controller controlling the thermal controller.
+>  - mediatek,auxadc: A phandle to the AUXADC which the thermal controller uses
+>  - mediatek,apmixedsys: A phandle to the APMIXEDSYS controller.
+> -- #thermal-sensor-cells : Should be 0. See ./thermal.txt for a description.
+> +- #thermal-sensor-cells : Should be 0. See Documentation/devicetree/bindings/thermal/thermal-sensor.yaml for a description.
+>
+>  Optional properties:
+>  - nvmem-cells: A phandle to the calibration data provided by a nvmem device. If
+> diff --git a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
+> index f02f38527a6b6..db880e7ed713e 100644
+> --- a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
+> +++ b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
+> @@ -28,9 +28,10 @@ Required properties :
+>    See ../reset/reset.txt for details.
+>  - reset-names : Must include the following entries:
+>    - soctherm
+> -- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description
+> -    of this property. See <dt-bindings/thermal/tegra124-soctherm.h> for a
+> -    list of valid values when referring to thermal sensors.
+> +- #thermal-sensor-cells : Should be 1. For a description of this property, see
+> +     Documentation/devicetree/bindings/thermal/thermal-sensor.yaml.
+> +    See <dt-bindings/thermal/tegra124-soctherm.h> for a list of valid values
+> +    when referring to thermal sensors.
+>  - throttle-cfgs: A sub-node which is a container of configuration for each
+>      hardware throttle events. These events can be set as cooling devices.
+>    * throttle events: Sub-nodes must be named as "light" or "heavy".
+> @@ -62,7 +63,8 @@ Required properties :
+>          TEGRA_SOCTHERM_THROT_LEVEL_MED (75%),
+>          TEGRA_SOCTHERM_THROT_LEVEL_HIGH (85%).
+>        - #cooling-cells: Should be 1. This cooling device only support on/off state.
+> -        See ./thermal.txt for a description of this property.
+> +        For a description of this property see:
+> +       Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+>
+>        Optional properties: The following properties are T210 specific and
+>        valid only for OCx throttle events.
+> diff --git a/Documentation/devicetree/bindings/thermal/nvidia,tegra186-bpmp-thermal.txt b/Documentation/devicetree/bindings/thermal/nvidia,tegra186-bpmp-thermal.txt
+> index e17c07be270b7..fc87f6aa1b8f5 100644
+> --- a/Documentation/devicetree/bindings/thermal/nvidia,tegra186-bpmp-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/nvidia,tegra186-bpmp-thermal.txt
+> @@ -8,7 +8,7 @@ exposed by BPMP.
+>  The BPMP thermal node must be located directly inside the main BPMP node. See
+>  ../firmware/nvidia,tegra186-bpmp.txt for details of the BPMP binding.
+>
+> -This node represents a thermal sensor. See thermal.txt for details of the
+> +This node represents a thermal sensor. See Documentation/devicetree/bindings/thermal/thermal-sensor.yaml for details of the
+>  core thermal binding.
+>
+>  Required properties:
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt b/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
+> index 0273a92a2a849..2d5b2ad03314b 100644
+> --- a/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
+> @@ -8,7 +8,7 @@ Required properties:
+>  - compatible:      Should contain "qcom,spmi-temp-alarm".
+>  - reg:             Specifies the SPMI address.
+>  - interrupts:      PMIC temperature alarm interrupt.
+> -- #thermal-sensor-cells: Should be 0. See thermal.txt for a description.
+> +- #thermal-sensor-cells: Should be 0. See Documentation/devicetree/bindings/thermal/thermal-sensor.yaml for a description.
+>
+>  Optional properties:
+>  - io-channels:     Should contain IIO channel specifier for the ADC channel,
+> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> index c6aac9bcacf1c..7f94669e9ebef 100644
+> --- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> @@ -24,7 +24,7 @@ Required properties:
+>  - pinctrl-1 : The "default" pinctrl state, it will be set after reset the
+>               TSADC controller.
+>  - pinctrl-2 : The "sleep" pinctrl state, it will be in for suspend.
+> -- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+> +- #thermal-sensor-cells : Should be 1. See Documentation/devicetree/bindings/thermal/thermal-sensor.yaml for a description.
+>
+>  Optional properties:
+>  - rockchip,hw-tshut-temp : The hardware-controlled shutdown temperature value.
+> diff --git a/Documentation/devicetree/bindings/thermal/tango-thermal.txt b/Documentation/devicetree/bindings/thermal/tango-thermal.txt
+> index 212198d4b9379..2c918d742867a 100644
+> --- a/Documentation/devicetree/bindings/thermal/tango-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/tango-thermal.txt
+> @@ -4,7 +4,7 @@ The SMP8758 SoC includes 3 instances of this temperature sensor
+>  (in the CPU, video decoder, and PCIe controller).
+>
+>  Required properties:
+> -- #thermal-sensor-cells: Should be 0 (see thermal.txt)
+> +- #thermal-sensor-cells: Should be 0 (see Documentation/devicetree/bindings/thermal/thermal-sensor.yaml)
+>  - compatible: "sigma,smp8758-thermal"
+>  - reg: Address range of the thermal registers
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt b/Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt
+> index 691a09db2fefc..e136946a2f4fd 100644
+> --- a/Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt
+> +++ b/Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt
+> @@ -8,7 +8,7 @@ temperature using voltage-temperature lookup table.
+>  Required properties:
+>  ===================
+>  - compatible:               Must be "generic-adc-thermal".
+> -- #thermal-sensor-cells:     Should be 1. See ./thermal.txt for a description
+> +- #thermal-sensor-cells:     Should be 1. See Documentation/devicetree/bindings/thermal/thermal-sensor.yaml for a description
+>                              of this property.
+>  Optional properties:
+>  ===================
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+> deleted file mode 100644
+> index f78bec19ca358..0000000000000
+> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+> +++ /dev/null
+> @@ -1,586 +0,0 @@
+> -* Thermal Framework Device Tree descriptor
+> -
+> -This file describes a generic binding to provide a way of
+> -defining hardware thermal structure using device tree.
+> -A thermal structure includes thermal zones and their components,
+> -such as trip points, polling intervals, sensors and cooling devices
+> -binding descriptors.
+> -
+> -The target of device tree thermal descriptors is to describe only
+> -the hardware thermal aspects. The thermal device tree bindings are
+> -not about how the system must control or which algorithm or policy
+> -must be taken in place.
+> -
+> -There are five types of nodes involved to describe thermal bindings:
+> -- thermal sensors: devices which may be used to take temperature
+> -  measurements.
+> -- cooling devices: devices which may be used to dissipate heat.
+> -- trip points: describe key temperatures at which cooling is recommended. The
+> -  set of points should be chosen based on hardware limits.
+> -- cooling maps: used to describe links between trip points and cooling devices;
+> -- thermal zones: used to describe thermal data within the hardware;
+> -
+> -The following is a description of each of these node types.
+> -
+> -* Thermal sensor devices
+> -
+> -Thermal sensor devices are nodes providing temperature sensing capabilities on
+> -thermal zones. Typical devices are I2C ADC converters and bandgaps. These are
+> -nodes providing temperature data to thermal zones. Thermal sensor devices may
+> -control one or more internal sensors.
+> -
+> -Required property:
+> -- #thermal-sensor-cells: Used to provide sensor device specific information
+> -  Type: unsigned        while referring to it. Typically 0 on thermal sensor
+> -  Size: one cell        nodes with only one sensor, and at least 1 on nodes
+> -                        with several internal sensors, in order
+> -                        to identify uniquely the sensor instances within
+> -                        the IC. See thermal zone binding for more details
+> -                        on how consumers refer to sensor devices.
+> -
+> -* Cooling device nodes
+> -
+> -Cooling devices are nodes providing control on power dissipation. There
+> -are essentially two ways to provide control on power dissipation. First
+> -is by means of regulating device performance, which is known as passive
+> -cooling. A typical passive cooling is a CPU that has dynamic voltage and
+> -frequency scaling (DVFS), and uses lower frequencies as cooling states.
+> -Second is by means of activating devices in order to remove
+> -the dissipated heat, which is known as active cooling, e.g. regulating
+> -fan speeds. In both cases, cooling devices shall have a way to determine
+> -the state of cooling in which the device is.
+> -
+> -Any cooling device has a range of cooling states (i.e. different levels
+> -of heat dissipation). For example a fan's cooling states correspond to
+> -the different fan speeds possible. Cooling states are referred to by
+> -single unsigned integers, where larger numbers mean greater heat
+> -dissipation. The precise set of cooling states associated with a device
+> -should be defined in a particular device's binding.
+> -For more examples of cooling devices, refer to the example sections below.
+> -
+> -Required properties:
+> -- #cooling-cells:      Used to provide cooling device specific information
+> -  Type: unsigned       while referring to it. Must be at least 2, in order
+> -  Size: one cell       to specify minimum and maximum cooling state used
+> -                       in the reference. The first cell is the minimum
+> -                       cooling state requested and the second cell is
+> -                       the maximum cooling state requested in the reference.
+> -                       See Cooling device maps section below for more details
+> -                       on how consumers refer to cooling devices.
+> -
+> -* Trip points
+> -
+> -The trip node is a node to describe a point in the temperature domain
+> -in which the system takes an action. This node describes just the point,
+> -not the action.
+> -
+> -Required properties:
+> -- temperature:         An integer indicating the trip temperature level,
+> -  Type: signed         in millicelsius.
+> -  Size: one cell
+> -
+> -- hysteresis:          A low hysteresis value on temperature property (above).
+> -  Type: unsigned       This is a relative value, in millicelsius.
+> -  Size: one cell
+> -
+> -- type:                        a string containing the trip type. Expected values are:
+> -       "active":       A trip point to enable active cooling
+> -       "passive":      A trip point to enable passive cooling
+> -       "hot":          A trip point to notify emergency
+> -       "critical":     Hardware not reliable.
+> -  Type: string
+> -
+> -* Cooling device maps
+> -
+> -The cooling device maps node is a node to describe how cooling devices
+> -get assigned to trip points of the zone. The cooling devices are expected
+> -to be loaded in the target system.
+> -
+> -Required properties:
+> -- cooling-device:      A list of phandles of cooling devices with their specifiers,
+> -  Type: phandle +      referring to which cooling devices are used in this
+> -    cooling specifier  binding. In the cooling specifier, the first cell
+> -                       is the minimum cooling state and the second cell
+> -                       is the maximum cooling state used in this map.
+> -- trip:                        A phandle of a trip point node within the same thermal
+> -  Type: phandle of     zone.
+> -   trip point node
+> -
+> -Optional property:
+> -- contribution:                The cooling contribution to the thermal zone of the
+> -  Type: unsigned       referred cooling device at the referred trip point.
+> -  Size: one cell       The contribution is a ratio of the sum
+> -                       of all cooling contributions within a thermal zone.
+> -
+> -Note: Using the THERMAL_NO_LIMIT (-1UL) constant in the cooling-device phandle
+> -limit specifier means:
+> -(i)   - minimum state allowed for minimum cooling state used in the reference.
+> -(ii)  - maximum state allowed for maximum cooling state used in the reference.
+> -Refer to include/dt-bindings/thermal/thermal.h for definition of this constant.
+> -
+> -* Thermal zone nodes
+> -
+> -The thermal zone node is the node containing all the required info
+> -for describing a thermal zone, including its cooling device bindings. The
+> -thermal zone node must contain, apart from its own properties, one sub-node
+> -containing trip nodes and one sub-node containing all the zone cooling maps.
+> -
+> -Required properties:
+> -- polling-delay:       The maximum number of milliseconds to wait between polls
+> -  Type: unsigned       when checking this thermal zone.
+> -  Size: one cell
+> -
+> -- polling-delay-passive: The maximum number of milliseconds to wait
+> -  Type: unsigned       between polls when performing passive cooling.
+> -  Size: one cell
+> -
+> -- thermal-sensors:     A list of thermal sensor phandles and sensor specifier
+> -  Type: list of                used while monitoring the thermal zone.
+> -  phandles + sensor
+> -  specifier
+> -
+> -- trips:               A sub-node which is a container of only trip point nodes
+> -  Type: sub-node       required to describe the thermal zone.
+> -
+> -Optional property:
+> -- cooling-maps:                A sub-node which is a container of only cooling device
+> -  Type: sub-node       map nodes, used to describe the relation between trips
+> -                       and cooling devices.
+> -
+> -- coefficients:                An array of integers (one signed cell) containing
+> -  Type: array          coefficients to compose a linear relation between
+> -  Elem size: one cell  the sensors listed in the thermal-sensors property.
+> -  Elem type: signed    Coefficients defaults to 1, in case this property
+> -                       is not specified. A simple linear polynomial is used:
+> -                       Z = c0 * x0 + c1 * x1 + ... + c(n-1) * x(n-1) + cn.
+> -
+> -                       The coefficients are ordered and they match with sensors
+> -                       by means of sensor ID. Additional coefficients are
+> -                       interpreted as constant offset.
+> -
+> -- sustainable-power:   An estimate of the sustainable power (in mW) that the
+> -  Type: unsigned       thermal zone can dissipate at the desired
+> -  Size: one cell       control temperature.  For reference, the
+> -                       sustainable power of a 4'' phone is typically
+> -                       2000mW, while on a 10'' tablet is around
+> -                       4500mW.
+> -
+> -Note: The delay properties are bound to the maximum dT/dt (temperature
+> -derivative over time) in two situations for a thermal zone:
+> -(i)  - when passive cooling is activated (polling-delay-passive); and
+> -(ii) - when the zone just needs to be monitored (polling-delay) or
+> -when active cooling is activated.
+> -
+> -The maximum dT/dt is highly bound to hardware power consumption and dissipation
+> -capability. The delays should be chosen to account for said max dT/dt,
+> -such that a device does not cross several trip boundaries unexpectedly
+> -between polls. Choosing the right polling delays shall avoid having the
+> -device in temperature ranges that may damage the silicon structures and
+> -reduce silicon lifetime.
+> -
+> -* The thermal-zones node
+> -
+> -The "thermal-zones" node is a container for all thermal zone nodes. It shall
+> -contain only sub-nodes describing thermal zones as in the section
+> -"Thermal zone nodes". The "thermal-zones" node appears under "/".
+> -
+> -* Examples
+> -
+> -Below are several examples on how to use thermal data descriptors
+> -using device tree bindings:
+> -
+> -(a) - CPU thermal zone
+> -
+> -The CPU thermal zone example below describes how to setup one thermal zone
+> -using one single sensor as temperature source and many cooling devices and
+> -power dissipation control sources.
+> -
+> -#include <dt-bindings/thermal/thermal.h>
+> -
+> -cpus {
+> -       /*
+> -        * Here is an example of describing a cooling device for a DVFS
+> -        * capable CPU. The CPU node describes its four OPPs.
+> -        * The cooling states possible are 0..3, and they are
+> -        * used as OPP indexes. The minimum cooling state is 0, which means
+> -        * all four OPPs can be available to the system. The maximum
+> -        * cooling state is 3, which means only the lowest OPPs (198MHz@0.85V)
+> -        * can be available in the system.
+> -        */
+> -       cpu0: cpu@0 {
+> -               ...
+> -               operating-points = <
+> -                       /* kHz    uV */
+> -                       970000  1200000
+> -                       792000  1100000
+> -                       396000  950000
+> -                       198000  850000
+> -               >;
+> -               #cooling-cells = <2>; /* min followed by max */
+> -       };
+> -       ...
+> -};
+> -
+> -&i2c1 {
+> -       ...
+> -       /*
+> -        * A simple fan controller which supports 10 speeds of operation
+> -        * (represented as 0-9).
+> -        */
+> -       fan0: fan@48 {
+> -               ...
+> -               #cooling-cells = <2>; /* min followed by max */
+> -       };
+> -};
+> -
+> -ocp {
+> -       ...
+> -       /*
+> -        * A simple IC with a single bandgap temperature sensor.
+> -        */
+> -       bandgap0: bandgap@0000ed00 {
+> -               ...
+> -               #thermal-sensor-cells = <0>;
+> -       };
+> -};
+> -
+> -thermal-zones {
+> -       cpu_thermal: cpu-thermal {
+> -               polling-delay-passive = <250>; /* milliseconds */
+> -               polling-delay = <1000>; /* milliseconds */
+> -
+> -               thermal-sensors = <&bandgap0>;
+> -
+> -               trips {
+> -                       cpu_alert0: cpu-alert0 {
+> -                               temperature = <90000>; /* millicelsius */
+> -                               hysteresis = <2000>; /* millicelsius */
+> -                               type = "active";
+> -                       };
+> -                       cpu_alert1: cpu-alert1 {
+> -                               temperature = <100000>; /* millicelsius */
+> -                               hysteresis = <2000>; /* millicelsius */
+> -                               type = "passive";
+> -                       };
+> -                       cpu_crit: cpu-crit {
+> -                               temperature = <125000>; /* millicelsius */
+> -                               hysteresis = <2000>; /* millicelsius */
+> -                               type = "critical";
+> -                       };
+> -               };
+> -
+> -               cooling-maps {
+> -                       map0 {
+> -                               trip = <&cpu_alert0>;
+> -                               cooling-device = <&fan0 THERMAL_NO_LIMIT 4>;
+> -                       };
+> -                       map1 {
+> -                               trip = <&cpu_alert1>;
+> -                               cooling-device = <&fan0 5 THERMAL_NO_LIMIT>, <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> -                       };
+> -               };
+> -       };
+> -};
+> -
+> -In the example above, the ADC sensor (bandgap0) at address 0x0000ED00 is
+> -used to monitor the zone 'cpu-thermal' using its sole sensor. A fan
+> -device (fan0) is controlled via I2C bus 1, at address 0x48, and has ten
+> -different cooling states 0-9. It is used to remove the heat out of
+> -the thermal zone 'cpu-thermal' using its cooling states
+> -from its minimum to 4, when it reaches trip point 'cpu_alert0'
+> -at 90C, as an example of active cooling. The same cooling device is used at
+> -'cpu_alert1', but from 5 to its maximum state. The cpu@0 device is also
+> -linked to the same thermal zone, 'cpu-thermal', as a passive cooling device,
+> -using all its cooling states at trip point 'cpu_alert1',
+> -which is a trip point at 100C. On the thermal zone 'cpu-thermal', at the
+> -temperature of 125C, represented by the trip point 'cpu_crit', the silicon
+> -is not reliable anymore.
+> -
+> -(b) - IC with several internal sensors
+> -
+> -The example below describes how to deploy several thermal zones based off a
+> -single sensor IC, assuming it has several internal sensors. This is a common
+> -case on SoC designs with several internal IPs that may need different thermal
+> -requirements, and thus may have their own sensor to monitor or detect internal
+> -hotspots in their silicon.
+> -
+> -#include <dt-bindings/thermal/thermal.h>
+> -
+> -ocp {
+> -       ...
+> -       /*
+> -        * A simple IC with several bandgap temperature sensors.
+> -        */
+> -       bandgap0: bandgap@0000ed00 {
+> -               ...
+> -               #thermal-sensor-cells = <1>;
+> -       };
+> -};
+> -
+> -thermal-zones {
+> -       cpu_thermal: cpu-thermal {
+> -               polling-delay-passive = <250>; /* milliseconds */
+> -               polling-delay = <1000>; /* milliseconds */
+> -
+> -                               /* sensor       ID */
+> -               thermal-sensors = <&bandgap0     0>;
+> -
+> -               trips {
+> -                       /* each zone within the SoC may have its own trips */
+> -                       cpu_alert: cpu-alert {
+> -                               temperature = <100000>; /* millicelsius */
+> -                               hysteresis = <2000>; /* millicelsius */
+> -                               type = "passive";
+> -                       };
+> -                       cpu_crit: cpu-crit {
+> -                               temperature = <125000>; /* millicelsius */
+> -                               hysteresis = <2000>; /* millicelsius */
+> -                               type = "critical";
+> -                       };
+> -               };
+> -
+> -               cooling-maps {
+> -                       /* each zone within the SoC may have its own cooling */
+> -                       ...
+> -               };
+> -       };
+> -
+> -       gpu_thermal: gpu-thermal {
+> -               polling-delay-passive = <120>; /* milliseconds */
+> -               polling-delay = <1000>; /* milliseconds */
+> -
+> -                               /* sensor       ID */
+> -               thermal-sensors = <&bandgap0     1>;
+> -
+> -               trips {
+> -                       /* each zone within the SoC may have its own trips */
+> -                       gpu_alert: gpu-alert {
+> -                               temperature = <90000>; /* millicelsius */
+> -                               hysteresis = <2000>; /* millicelsius */
+> -                               type = "passive";
+> -                       };
+> -                       gpu_crit: gpu-crit {
+> -                               temperature = <105000>; /* millicelsius */
+> -                               hysteresis = <2000>; /* millicelsius */
+> -                               type = "critical";
+> -                       };
+> -               };
+> -
+> -               cooling-maps {
+> -                       /* each zone within the SoC may have its own cooling */
+> -                       ...
+> -               };
+> -       };
+> -
+> -       dsp_thermal: dsp-thermal {
+> -               polling-delay-passive = <50>; /* milliseconds */
+> -               polling-delay = <1000>; /* milliseconds */
+> -
+> -                               /* sensor       ID */
+> -               thermal-sensors = <&bandgap0     2>;
+> -
+> -               trips {
+> -                       /* each zone within the SoC may have its own trips */
+> -                       dsp_alert: dsp-alert {
+> -                               temperature = <90000>; /* millicelsius */
+> -                               hysteresis = <2000>; /* millicelsius */
+> -                               type = "passive";
+> -                       };
+> -                       dsp_crit: gpu-crit {
+> -                               temperature = <135000>; /* millicelsius */
+> -                               hysteresis = <2000>; /* millicelsius */
+> -                               type = "critical";
+> -                       };
+> -               };
+> -
+> -               cooling-maps {
+> -                       /* each zone within the SoC may have its own cooling */
+> -                       ...
+> -               };
+> -       };
+> -};
+> -
+> -In the example above, there is one bandgap IC which has the capability to
+> -monitor three sensors. The hardware has been designed so that sensors are
+> -placed on different places in the DIE to monitor different temperature
+> -hotspots: one for CPU thermal zone, one for GPU thermal zone and the
+> -other to monitor a DSP thermal zone.
+> -
+> -Thus, there is a need to assign each sensor provided by the bandgap IC
+> -to different thermal zones. This is achieved by means of using the
+> -#thermal-sensor-cells property and using the first cell of the sensor
+> -specifier as sensor ID. In the example, then, <bandgap 0> is used to
+> -monitor CPU thermal zone, <bandgap 1> is used to monitor GPU thermal
+> -zone and <bandgap 2> is used to monitor DSP thermal zone. Each zone
+> -may be uncorrelated, having its own dT/dt requirements, trips
+> -and cooling maps.
+> -
+> -
+> -(c) - Several sensors within one single thermal zone
+> -
+> -The example below illustrates how to use more than one sensor within
+> -one thermal zone.
+> -
+> -#include <dt-bindings/thermal/thermal.h>
+> -
+> -&i2c1 {
+> -       ...
+> -       /*
+> -        * A simple IC with a single temperature sensor.
+> -        */
+> -       adc: sensor@49 {
+> -               ...
+> -               #thermal-sensor-cells = <0>;
+> -       };
+> -};
+> -
+> -ocp {
+> -       ...
+> -       /*
+> -        * A simple IC with a single bandgap temperature sensor.
+> -        */
+> -       bandgap0: bandgap@0000ed00 {
+> -               ...
+> -               #thermal-sensor-cells = <0>;
+> -       };
+> -};
+> -
+> -thermal-zones {
+> -       cpu_thermal: cpu-thermal {
+> -               polling-delay-passive = <250>; /* milliseconds */
+> -               polling-delay = <1000>; /* milliseconds */
+> -
+> -               thermal-sensors = <&bandgap0>,  /* cpu */
+> -                                 <&adc>;       /* pcb north */
+> -
+> -               /* hotspot = 100 * bandgap - 120 * adc + 484 */
+> -               coefficients =          <100    -120    484>;
+> -
+> -               trips {
+> -                       ...
+> -               };
+> -
+> -               cooling-maps {
+> -                       ...
+> -               };
+> -       };
+> -};
+> -
+> -In some cases, there is a need to use more than one sensor to extrapolate
+> -a thermal hotspot in the silicon. The above example illustrates this situation.
+> -For instance, it may be the case that a sensor external to CPU IP may be placed
+> -close to CPU hotspot and together with internal CPU sensor, it is used
+> -to determine the hotspot. Assuming this is the case for the above example,
+> -the hypothetical extrapolation rule would be:
+> -               hotspot = 100 * bandgap - 120 * adc + 484
+> -
+> -In other context, the same idea can be used to add fixed offset. For instance,
+> -consider the hotspot extrapolation rule below:
+> -               hotspot = 1 * adc + 6000
+> -
+> -In the above equation, the hotspot is always 6C higher than what is read
+> -from the ADC sensor. The binding would be then:
+> -        thermal-sensors =  <&adc>;
+> -
+> -               /* hotspot = 1 * adc + 6000 */
+> -       coefficients =          <1      6000>;
+> -
+> -(d) - Board thermal
+> -
+> -The board thermal example below illustrates how to setup one thermal zone
+> -with many sensors and many cooling devices.
+> -
+> -#include <dt-bindings/thermal/thermal.h>
+> -
+> -&i2c1 {
+> -       ...
+> -       /*
+> -        * An IC with several temperature sensor.
+> -        */
+> -       adc_dummy: sensor@50 {
+> -               ...
+> -               #thermal-sensor-cells = <1>; /* sensor internal ID */
+> -       };
+> -};
+> -
+> -thermal-zones {
+> -       batt-thermal {
+> -               polling-delay-passive = <500>; /* milliseconds */
+> -               polling-delay = <2500>; /* milliseconds */
+> -
+> -                               /* sensor       ID */
+> -               thermal-sensors = <&adc_dummy     4>;
+> -
+> -               trips {
+> -                       ...
+> -               };
+> -
+> -               cooling-maps {
+> -                       ...
+> -               };
+> -       };
+> -
+> -       board_thermal: board-thermal {
+> -               polling-delay-passive = <1000>; /* milliseconds */
+> -               polling-delay = <2500>; /* milliseconds */
+> -
+> -                               /* sensor       ID */
+> -               thermal-sensors = <&adc_dummy     0>, /* pcb top edge */
+> -                                 <&adc_dummy     1>, /* lcd */
+> -                                 <&adc_dummy     2>; /* back cover */
+> -               /*
+> -                * An array of coefficients describing the sensor
+> -                * linear relation. E.g.:
+> -                * z = c1*x1 + c2*x2 + c3*x3
+> -                */
+> -               coefficients =          <1200   -345    890>;
+> -
+> -               sustainable-power = <2500>;
+> -
+> -               trips {
+> -                       /* Trips are based on resulting linear equation */
+> -                       cpu_trip: cpu-trip {
+> -                               temperature = <60000>; /* millicelsius */
+> -                               hysteresis = <2000>; /* millicelsius */
+> -                               type = "passive";
+> -                       };
+> -                       gpu_trip: gpu-trip {
+> -                               temperature = <55000>; /* millicelsius */
+> -                               hysteresis = <2000>; /* millicelsius */
+> -                               type = "passive";
+> -                       }
+> -                       lcd_trip: lcp-trip {
+> -                               temperature = <53000>; /* millicelsius */
+> -                               hysteresis = <2000>; /* millicelsius */
+> -                               type = "passive";
+> -                       };
+> -                       crit_trip: crit-trip {
+> -                               temperature = <68000>; /* millicelsius */
+> -                               hysteresis = <2000>; /* millicelsius */
+> -                               type = "critical";
+> -                       };
+> -               };
+> -
+> -               cooling-maps {
+> -                       map0 {
+> -                               trip = <&cpu_trip>;
+> -                               cooling-device = <&cpu0 0 2>;
+> -                               contribution = <55>;
+> -                       };
+> -                       map1 {
+> -                               trip = <&gpu_trip>;
+> -                               cooling-device = <&gpu0 0 2>;
+> -                               contribution = <20>;
+> -                       };
+> -                       map2 {
+> -                               trip = <&lcd_trip>;
+> -                               cooling-device = <&lcd0 5 10>;
+> -                               contribution = <15>;
+> -                       };
+> -               };
+> -       };
+> -};
+> -
+> -The above example is a mix of previous examples, a sensor IP with several internal
+> -sensors used to monitor different zones, one of them is composed by several sensors and
+> -with different cooling devices.
+> --
+> 2.25.1
+>
