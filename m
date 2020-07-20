@@ -2,111 +2,235 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4822C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F993C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE9C82070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:54:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EGDNMaDL"
+	by mail.kernel.org (Postfix) with ESMTP id E862720709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbgGTLyR (ORCPT
+        id S1728640AbgGTLzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 07:54:17 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:59368 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728449AbgGTLyR (ORCPT
+        Mon, 20 Jul 2020 07:55:24 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35936 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728058AbgGTLzX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 07:54:17 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06KBgE1W113693;
-        Mon, 20 Jul 2020 11:54:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=/YXYJgmTLLawI09r+e1//mSAR/9LYPumoks746wreuI=;
- b=EGDNMaDLd+galPObfcvba4RicKEZv8G9eN7N1NBumwkfvVN7uJ+yRjA0Fh8l7szyr6Do
- Azhg98EboiE3x6X3KmL25ZCG78NC0WfHCZKRLJc9/pyKR+jop8Fig/j0khw+2N0lrfBS
- iCkzwtqW+dC8tnhKBfJ9P4Dk7eNFchp0MoguJUW2+uDukzx3zRMol3xxbi4M6BB5Z9sh
- xOfdEoaQ52l2AgL1H2n03CQuiGUpZ4HhssbEZiZQVZlKMkCdZSGBCN85u4v5Cbz4H6HP
- /Tg3RVc5VIoO55h706SXCeq+BWhjf/olPX6HAPKWBBLfbWil+gJ0ouSZAY542GUdSPe1 uA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 32bpkaxnh9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 20 Jul 2020 11:54:10 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06KBi7Gm143755;
-        Mon, 20 Jul 2020 11:54:09 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 32d9wb2np4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 11:54:09 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06KBs8fI012686;
-        Mon, 20 Jul 2020 11:54:08 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 Jul 2020 04:54:08 -0700
-Date:   Mon, 20 Jul 2020 14:54:01 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v1] usbhid: Fix slab-out-of-bounds
- write in hiddev_ioctl_usage()
-Message-ID: <20200720115400.GI2549@kadam>
-References: <20200718231218.170730-1-yepeilin.cs@gmail.com>
+        Mon, 20 Jul 2020 07:55:23 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jxUNi-0004wH-99; Mon, 20 Jul 2020 11:54:54 +0000
+Date:   Mon, 20 Jul 2020 13:54:52 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>
+Cc:     Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+        Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v6 0/7] capabilities: Introduce CAP_CHECKPOINT_RESTORE
+Message-ID: <20200720115452.ne2vqtdneuungb3j@wittgenstein>
+References: <20200719100418.2112740-1-areber@redhat.com>
+ <20200719181729.6f37lilhvov5a74f@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200718231218.170730-1-yepeilin.cs@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9687 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 adultscore=0 bulkscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007200082
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9687 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- mlxlogscore=999 mlxscore=0 malwarescore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 adultscore=0 priorityscore=1501 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007200082
+In-Reply-To: <20200719181729.6f37lilhvov5a74f@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 07:12:18PM -0400, Peilin Ye wrote:
-> `uref->usage_index` is not always being properly checked, causing
-> hiddev_ioctl_usage() to go out of bounds under some cases. Fix it.
+On Sun, Jul 19, 2020 at 08:17:30PM +0200, Christian Brauner wrote:
+> On Sun, Jul 19, 2020 at 12:04:10PM +0200, Adrian Reber wrote:
+> > This is v6 of the 'Introduce CAP_CHECKPOINT_RESTORE' patchset. The
+> > changes to v5 are:
+> > 
+> >  * split patch dealing with /proc/self/exe into two patches:
+> >    * first patch to enable changing it with CAP_CHECKPOINT_RESTORE
+> >      and detailed history in the commit message
+> >    * second patch changes -EINVAL to -EPERM
+> >  * use kselftest_harness.h infrastructure for test
+> >  * replace if (!capable(CAP_SYS_ADMIN) || !capable(CAP_CHECKPOINT_RESTORE))
+> >    with if (!checkpoint_restore_ns_capable(&init_user_ns))
+> > 
+> > Adrian Reber (5):
+> >   capabilities: Introduce CAP_CHECKPOINT_RESTORE
+> >   pid: use checkpoint_restore_ns_capable() for set_tid
+> >   pid_namespace: use checkpoint_restore_ns_capable() for ns_last_pid
+> >   proc: allow access in init userns for map_files with
+> >     CAP_CHECKPOINT_RESTORE
+> >   selftests: add clone3() CAP_CHECKPOINT_RESTORE test
+> > 
+> > Nicolas Viennot (2):
+> >   prctl: Allow local CAP_CHECKPOINT_RESTORE to change /proc/self/exe
+> >   prctl: exe link permission error changed from -EINVAL to -EPERM
+> > 
+> >  fs/proc/base.c                                |   8 +-
+> >  include/linux/capability.h                    |   6 +
+> >  include/uapi/linux/capability.h               |   9 +-
+> >  kernel/pid.c                                  |   2 +-
+> >  kernel/pid_namespace.c                        |   2 +-
+> >  kernel/sys.c                                  |  13 +-
+> >  security/selinux/include/classmap.h           |   5 +-
+> >  tools/testing/selftests/clone3/.gitignore     |   1 +
+> >  tools/testing/selftests/clone3/Makefile       |   4 +-
+> >  .../clone3/clone3_cap_checkpoint_restore.c    | 177 ++++++++++++++++++
+> >  10 files changed, 212 insertions(+), 15 deletions(-)
+> >  create mode 100644 tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
+> > 
+> > base-commit: d31958b30ea3b7b6e522d6bf449427748ad45822
 > 
+> Adrian, Nicolas thank you!
+> I grabbed the series to run the various core test-suites we've added
+> over the last year and pushed it to
+> https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=cap_checkpoint_restore
+> for now to let kbuild/ltp chew on it for a bit.
 
-Yeah.  This code is not obvious.  It doesn't come from the user directly
-so we don't have to worry about nospec.  It comes from hiddev_lookup_usage()
-where we set:
+Ok, I ran the test-suite this morning and there's nothing to worry about
+it all passes _but_ the selftests had a bug using SKIP() instead of
+XFAIL() and they mixed ksft_print_msg() and TH_LOG(). I know that I
+think I mentioned to you that you can't use TH_LOG() outside of TEST*().
+Turns out I was wrong. You can do it if you pass in a specific global
+variable. Here's the diff I applied on top of the selftests you sent.
+After these changes the output looks like this:
 
-	uref->usage_index = j;
+[==========] Running 1 tests from 1 test cases.
+[ RUN      ] global.clone3_cap_checkpoint_restore
+# clone3() syscall supported
+clone3_cap_checkpoint_restore.c:155:clone3_cap_checkpoint_restore:Child has PID 12303
+clone3_cap_checkpoint_restore.c:88:clone3_cap_checkpoint_restore:[12302] Trying clone3() with CLONE_SET_TID to 12303
+clone3_cap_checkpoint_restore.c:55:clone3_cap_checkpoint_restore:Operation not permitted - Failed to create new process
+clone3_cap_checkpoint_restore.c:90:clone3_cap_checkpoint_restore:[12302] clone3() with CLONE_SET_TID 12303 says:-1
+clone3_cap_checkpoint_restore.c:88:clone3_cap_checkpoint_restore:[12302] Trying clone3() with CLONE_SET_TID to 12303
+clone3_cap_checkpoint_restore.c:70:clone3_cap_checkpoint_restore:I am the parent (12302). My child's pid is 12303
+clone3_cap_checkpoint_restore.c:63:clone3_cap_checkpoint_restore:I am the child, my PID is 12303 (expected 12303)
+clone3_cap_checkpoint_restore.c:90:clone3_cap_checkpoint_restore:[12302] clone3() with CLONE_SET_TID 12303 says:0
+[       OK ] global.clone3_cap_checkpoint_restore
+[==========] 1 / 1 tests passed.
+[  PASSED  ]
 
-We know that j is less than field->maxusage but we do need to check
-against field->report_count like your patch does...  The two arrays
-are allocated in hid_register_field().
+Ok with this below being applied on top of it?
 
-I don't know the code well enough to say how these arrays are used or
-why the one is larger than the other so I can't give a proper
-reviewed-by.  But the patch looks reasonable and doesn't introduce any
-bugs which weren't there in the original code.
-
-regards,
-dan carpenter
-
+diff --git a/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c b/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
+index c0d83511cd28..9562425aa0a9 100644
+--- a/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
++++ b/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
+@@ -38,7 +38,8 @@ static void child_exit(int ret)
+ 	_exit(ret);
+ }
+ 
+-static int call_clone3_set_tid(pid_t *set_tid, size_t set_tid_size)
++static int call_clone3_set_tid(struct __test_metadata *_metadata,
++			       pid_t *set_tid, size_t set_tid_size)
+ {
+ 	int status;
+ 	pid_t pid = -1;
+@@ -51,7 +52,7 @@ static int call_clone3_set_tid(pid_t *set_tid, size_t set_tid_size)
+ 
+ 	pid = sys_clone3(&args, sizeof(struct clone_args));
+ 	if (pid < 0) {
+-		ksft_print_msg("%s - Failed to create new process\n", strerror(errno));
++		TH_LOG("%s - Failed to create new process", strerror(errno));
+ 		return -errno;
+ 	}
+ 
+@@ -59,18 +60,17 @@ static int call_clone3_set_tid(pid_t *set_tid, size_t set_tid_size)
+ 		int ret;
+ 		char tmp = 0;
+ 
+-		ksft_print_msg
+-		    ("I am the child, my PID is %d (expected %d)\n", getpid(), set_tid[0]);
++		TH_LOG("I am the child, my PID is %d (expected %d)", getpid(), set_tid[0]);
+ 
+ 		if (set_tid[0] != getpid())
+ 			child_exit(EXIT_FAILURE);
+ 		child_exit(EXIT_SUCCESS);
+ 	}
+ 
+-	ksft_print_msg("I am the parent (%d). My child's pid is %d\n", getpid(), pid);
++	TH_LOG("I am the parent (%d). My child's pid is %d", getpid(), pid);
+ 
+ 	if (waitpid(pid, &status, 0) < 0) {
+-		ksft_print_msg("Child returned %s\n", strerror(errno));
++		TH_LOG("Child returned %s", strerror(errno));
+ 		return -errno;
+ 	}
+ 
+@@ -80,13 +80,14 @@ static int call_clone3_set_tid(pid_t *set_tid, size_t set_tid_size)
+ 	return WEXITSTATUS(status);
+ }
+ 
+-static int test_clone3_set_tid(pid_t *set_tid, size_t set_tid_size)
++static int test_clone3_set_tid(struct __test_metadata *_metadata,
++			       pid_t *set_tid, size_t set_tid_size)
+ {
+ 	int ret;
+ 
+-	ksft_print_msg("[%d] Trying clone3() with CLONE_SET_TID to %d\n", getpid(), set_tid[0]);
+-	ret = call_clone3_set_tid(set_tid, set_tid_size);
+-	ksft_print_msg("[%d] clone3() with CLONE_SET_TID %d says:%d\n", getpid(), set_tid[0], ret);
++	TH_LOG("[%d] Trying clone3() with CLONE_SET_TID to %d", getpid(), set_tid[0]);
++	ret = call_clone3_set_tid(_metadata, set_tid, set_tid_size);
++	TH_LOG("[%d] clone3() with CLONE_SET_TID %d says:%d", getpid(), set_tid[0], ret);
+ 	return ret;
+ }
+ 
+@@ -144,7 +145,7 @@ TEST(clone3_cap_checkpoint_restore)
+ 	test_clone3_supported();
+ 
+ 	EXPECT_EQ(getuid(), 0)
+-		SKIP(return, "Skipping all tests as non-root\n");
++		XFAIL(return, "Skipping all tests as non-root\n");
+ 
+ 	memset(&set_tid, 0, sizeof(set_tid));
+ 
+@@ -162,16 +163,20 @@ TEST(clone3_cap_checkpoint_restore)
+ 
+ 	ASSERT_EQ(set_capability(), 0)
+ 		TH_LOG("Could not set CAP_CHECKPOINT_RESTORE");
+-	prctl(PR_SET_KEEPCAPS, 1, 0, 0, 0);
+-	setgid(1000);
+-	setuid(1000);
++
++	ASSERT_EQ(prctl(PR_SET_KEEPCAPS, 1, 0, 0, 0), 0);
++
++	EXPECT_EQ(setgid(65534), 0)
++		TH_LOG("Failed to setgid(65534)");
++	ASSERT_EQ(setuid(65534), 0);
++
+ 	set_tid[0] = pid;
+ 	/* This would fail without CAP_CHECKPOINT_RESTORE */
+-	ASSERT_EQ(test_clone3_set_tid(set_tid, 1), -EPERM);
++	ASSERT_EQ(test_clone3_set_tid(_metadata, set_tid, 1), -EPERM);
+ 	ASSERT_EQ(set_capability(), 0)
+ 		TH_LOG("Could not set CAP_CHECKPOINT_RESTORE");
+ 	/* This should work as we have CAP_CHECKPOINT_RESTORE as non-root */
+-	ASSERT_EQ(test_clone3_set_tid(set_tid, 1), 0);
++	ASSERT_EQ(test_clone3_set_tid(_metadata, set_tid, 1), 0);
+ }
+ 
+ TEST_HARNESS_MAIN
