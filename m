@@ -2,170 +2,153 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFABC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42751C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B94C222B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20106207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 20:24:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QkKkAZeh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vm+rTjwE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731323AbgGTUXB (ORCPT
+        id S1731224AbgGTUYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 16:23:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54408 "EHLO
+        Mon, 20 Jul 2020 16:24:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731224AbgGTUW4 (ORCPT
+        with ESMTP id S1729901AbgGTUYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 16:22:56 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47330C0619D2;
-        Mon, 20 Jul 2020 13:22:56 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id w2so10837845pgg.10;
-        Mon, 20 Jul 2020 13:22:56 -0700 (PDT)
+        Mon, 20 Jul 2020 16:24:15 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0D71C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:24:14 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id d11so9213027vsq.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:24:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=w+TorV6mA7rqY5GL2y/dxljOSmTJZvSpfXkQ2KHgU20=;
-        b=QkKkAZeh/YLKhEcBiQ0hP9C1kiZimO2XCXZrKaFRwnG9cmuXG5afpjy1umjjc3G7sr
-         bMR+JqyHma3BjXy6f7liB0y69JtB/3OfSRYqWEc450AEt8XHIgkb7oeoQdi5OeoJAJzw
-         HDMWBTfpFyXgHyso9hFO2X1dsyqYGw2rM6JGoTP/JDDrfHkx8NaG9JdY6izoqN6OJQX8
-         zAeCp7BvmPRv/0yQOztWmm60JPV2jgqiFN+WRVhywvNDZw+qkj+Qe18JfPbI4GR0KX8h
-         KBIPu9gC/nnZjkIwO4SPJha4mcrdG+gGn/rm/L4jA3/9uuU6vl4NurT1AWU/ubmrCufY
-         bcCQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f8OZQPM5EHX3K0LcIbG7M5SK0hksxqYnwmQqH5pq9aU=;
+        b=Vm+rTjwEti7KsrVH0G9zYwoD4ZvDR6asQnjKP0m5wquwlArH8wQZRdqCHpEs2vHPvD
+         g75u4ABiQ/mstLqHDFM3kEjUdBRDLkaT+aHsmawJTSXH6qiC4UZtxnBplOeiU32rw9e6
+         TVFHTnzR3EKkZyrNnb68WQkbezTZ8VZU5t++w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=w+TorV6mA7rqY5GL2y/dxljOSmTJZvSpfXkQ2KHgU20=;
-        b=hZsUStVVm1bg+I5bCZWwufyPUzudGGt6K+WAvPertSXfG1yZJyehetMWD2XfJmrkN7
-         y8l6PSL9dSo0PHbeMzf/wcq3MZ7sf0ZabAX3MdDVqrc8b+ZBbt1+HpVO8Sn6S0GtQZTX
-         skuWRjGRQqbKJLsHpZIdtCc/aIrIubQTWRayk7NPBB8yWf9Tsp7f/3CdV5i4poBkDVPa
-         GKo7qd4L5V1kaAh9ovrj1LGopeLOXZPde4oSkituGtUOlSad1wnBqLPfYc3DirEs8aIA
-         DLY5CiRIa91Sv57/+7jwlfLIIzMiPFlXzu2DKyf3UW9C8M0PLGORf1XaOaqnPn7cd8BP
-         ktLg==
-X-Gm-Message-State: AOAM530GSdbfnlpwzT7ti/ksW/hxwhIkmdVMrEWK6UqXeSyLt5OK0FWA
-        WhW2mLTcZzcHbSrIcCOLS169qlmz
-X-Google-Smtp-Source: ABdhPJxydgttZ8N8g+ET44350AvzkjYSZVQMiq06EJiaZfRwS+0ODGTp+WU3KLLSu6ZlrOXRKsSqqQ==
-X-Received: by 2002:a63:3c2:: with SMTP id 185mr20442576pgd.46.1595276575799;
-        Mon, 20 Jul 2020 13:22:55 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a68sm429122pje.35.2020.07.20.13.22.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 Jul 2020 13:22:55 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v2 4/4] platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
-Date:   Mon, 20 Jul 2020 13:22:43 -0700
-Message-Id: <20200720202243.180230-5-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200720202243.180230-1-linux@roeck-us.net>
-References: <20200720202243.180230-1-linux@roeck-us.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f8OZQPM5EHX3K0LcIbG7M5SK0hksxqYnwmQqH5pq9aU=;
+        b=mMReK0Qbn6ABIFwY7YwGigNZlLvoUXLFevFQrsFBbC4tHSGSVgQYQwcwhFEDo3oFuT
+         fOujgnlRm3mSuUOG5pIb9sCr4LCgWuTCWWvXHp0yHESykSp8UHVToFwWmd54lumE6oXD
+         za+UvrjFC1/vYNyvRtMXxPSR7UcviDZrATfB3ak73MjX6EBDmqm1fD552w0vEKj09iU/
+         DjbHJdUsYXpze2cF3zZKnTpVjk8M+WmcP1Jg2qllznj/4tUEqWBboUihtXBeBK55jee0
+         +Wg3r1/HXH3TxCXfYONQaHkJGZHrmd/AVEsRRt5MdGeVwrBu7IfxEB96L1+8szDzGk3L
+         bNyQ==
+X-Gm-Message-State: AOAM532a+KTz5AV6MRm3GaSqxL19Rd6fcsIGs6WcYZ6ARjSu4yQx7dPY
+        ggmFkkWQK6eSEgf4twfLAkodaPTZhu8=
+X-Google-Smtp-Source: ABdhPJyiIChQ6Ejh6h5Uyvl4Z9z+8ag8p+3p08KdThdd3OWoleK7beIwo+8ziBVQ28kiXixXgoh3tA==
+X-Received: by 2002:a67:db97:: with SMTP id f23mr17830354vsk.135.1595276653712;
+        Mon, 20 Jul 2020 13:24:13 -0700 (PDT)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id j189sm2387461vsd.24.2020.07.20.13.24.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2020 13:24:12 -0700 (PDT)
+Received: by mail-vs1-f44.google.com with SMTP id x13so9169764vsx.13
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 13:24:12 -0700 (PDT)
+X-Received: by 2002:a05:6102:20a:: with SMTP id z10mr17445636vsp.213.1595276651995;
+ Mon, 20 Jul 2020 13:24:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200716132120.1.I01e738cd469b61fc9b28b3ef1c6541a4f48b11bf@changeid>
+In-Reply-To: <20200716132120.1.I01e738cd469b61fc9b28b3ef1c6541a4f48b11bf@changeid>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 20 Jul 2020 13:24:00 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WonUcENxsY_jnYdw3d5rS0OMmrDAoMsDwYRZbMwCkJdw@mail.gmail.com>
+Message-ID: <CAD=FV=WonUcENxsY_jnYdw3d5rS0OMmrDAoMsDwYRZbMwCkJdw@mail.gmail.com>
+Subject: Re: [PATCH] drm: panel: simple: Delay HPD checking on
+ boe_nv133fhm_n61 for 15 ms
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Steev Klimaszewski <steev@kali.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EC reports a variety of error codes. Most of those, with the exception
-of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
-error code gets lost. In cros_ec_cmd_xfer_status(), convert all EC errors
-to Linux error codes to report a more meaningful error to the caller to aid
-debugging.
+Hi,
 
-Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc: Prashant Malani <pmalani@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-v2: No change
 
-Notes:
-    I would welcome feedback on the error code translations.
-    Can we do better ?
+On Thu, Jul 16, 2020 at 1:21 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> On boe_nv133fhm_n62 (and presumably on boe_nv133fhm_n61) a scope shows
+> a small spike on the HPD line right when you power the panel on.  The
+> picture looks something like this:
+>
+>          +--------------------------------------
+>          |
+>          |
+>          |
+> Power ---+
+>                                            +---
+>                                            |
+>               ++                           |
+>          +----+|                           |
+> HPD -----+     +---------------------------+
+>
+> So right when power is applied there's a little bump in HPD and then
+> there's small spike right before it goes low.  The total time of the
+> little bump plus the spike was measured on one panel as being 8 ms
+> long.  The total time for the HPD to go high on the same panel was
+> 51.2 ms, though the datasheet only promises it is < 200 ms.
+>
+> When asked about this glitch, BOE indicated that it was expected and
+> persisted until the TCON has been initialized.
+>
+> If this was a real hotpluggable DP panel then this wouldn't matter a
+> whole lot.  We'd debounce the HPD signal for a really long time and so
+> the little blip wouldn't hurt.  However, this is not a hotpluggable DP
+> panel and the the debouncing logic isn't needed and just shows down
+> the time needed to get the display working.  This is why the code in
+> panel_simple_prepare() doesn't do debouncing and just waits for HPD to
+> go high once.  Unfortunately if we get unlucky and happen to poll the
+> HPD line right at the spike we can try talking to the panel before
+> it's ready.
+>
+> Let's handle this situation by putting in a 15 ms prepare delay and
+> decreasing the "hpd absent delay" by 15 ms.  That means:
+> * If you don't have HPD hooked up at all you've still got the
+>   hardcoded 200 ms delay.
+> * If you've got HPD hooked up you will always wait at least 15 ms
+>   before checking HPD.  The only case where this could be bad is if
+>   the panel is sharing a voltage rail with something else in the
+>   system and was already turned on long before the panel came up.  In
+>   such a case we'll be delaying 15 ms for no reason, but it's not a
+>   huge delay and I don't see any other good solution to handle that
+>   case.
+>
+> Even though the delay was measured as 8 ms, 15 ms was chosen to give a
+> bit of margin.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> I don't actually have a device in front of me that is exhibiting these
+> problems.  I believe that it is only some devices and some of the
+> time.  Still, this patch seems safe and seems likely to fix the issue
+> given the scope shots.
 
-    -ENOTSUPP is not a recommended error code, and checkpatch complains
-    about it. It is used in existing code, so I did not change it, but it
-    might be worthwhile exploring if we can find a better error code to
-    report "version not supported". Possible candidates might be EPROTOTYPE,
-    ENOPROTOOPT, EPROTONOSUPPORT, EPFNOSUPPORT, or EAFNOSUPPORT. I don't
-    see a direct match, but NFS reports -EPROTONOSUPPORT for unsupported
-    protocol versions.
+Just to follow-up, I just heard that someone who had a panel
+exhibiting this problem tried my patch and it fixed it for them.  :-)
+So this is not such a shot in the dark anymore.
 
- drivers/platform/chrome/cros_ec_proto.c | 37 +++++++++++++++++++------
- 1 file changed, 29 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index 3e745e0fe092..10aa9e483d35 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -543,6 +543,29 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
- }
- EXPORT_SYMBOL(cros_ec_cmd_xfer);
- 
-+static const int cros_ec_error_map[] = {
-+	[EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
-+	[EC_RES_ERROR] = -EIO,
-+	[EC_RES_INVALID_PARAM] = -EINVAL,
-+	[EC_RES_ACCESS_DENIED] = -EACCES,
-+	[EC_RES_INVALID_RESPONSE] = -EPROTO,
-+	[EC_RES_INVALID_VERSION] = -ENOTSUPP,
-+	[EC_RES_INVALID_CHECKSUM] = -EBADMSG,
-+	[EC_RES_IN_PROGRESS] = -EINPROGRESS,
-+	[EC_RES_UNAVAILABLE] = -ENODATA,
-+	[EC_RES_TIMEOUT] = -ETIMEDOUT,
-+	[EC_RES_OVERFLOW] = -EOVERFLOW,
-+	[EC_RES_INVALID_HEADER] = -EBADR,
-+	[EC_RES_REQUEST_TRUNCATED] = -EBADR,
-+	[EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
-+	[EC_RES_BUS_ERROR] = -EFAULT,
-+	[EC_RES_BUSY] = -EBUSY,
-+	[EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
-+	[EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
-+	[EC_RES_INVALID_DATA_CRC] = -EBADMSG,
-+	[EC_RES_DUP_UNAVAILABLE] = -ENODATA,
-+};
-+
- /**
-  * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
-  * @ec_dev: EC device.
-@@ -555,8 +578,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer);
-  *
-  * Return:
-  * >=0 - The number of bytes transferred
-- * -ENOTSUPP - Operation not supported
-- * -EPROTO - Protocol error
-+ * <0 - Linux error code
-  */
- int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
- 			    struct cros_ec_command *msg)
-@@ -566,13 +588,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
- 	ret = cros_ec_cmd_xfer(ec_dev, msg);
- 	if (ret < 0) {
- 		dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
--	} else if (msg->result == EC_RES_INVALID_VERSION) {
--		dev_dbg(ec_dev->dev, "Command invalid version (err:%d)\n",
--			msg->result);
--		return -ENOTSUPP;
- 	} else if (msg->result != EC_RES_SUCCESS) {
--		dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
--		return -EPROTO;
-+		if (msg->result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[msg->result])
-+			ret = cros_ec_error_map[msg->result];
-+		else
-+			ret = -EPROTO;
-+		dev_dbg(ec_dev->dev, "Command result (err: %d [%d])\n", msg->result, ret);
- 	}
- 
- 	return ret;
--- 
-2.17.1
-
+-Doug
