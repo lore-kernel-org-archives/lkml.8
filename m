@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F232C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EB6C433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C1322BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC4E22CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260275;
-	bh=n5GM2xtcQsiskfkd81xbgvJBOG5hvwow6kFdJJsoFUg=;
+	s=default; t=1595260277;
+	bh=NBQwnVG2olcGqnEIA36AveyXcFU/IXivw+KEN1ps4S0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=If1MnZtFshvMJLoBNLuspZQP3fnNr7WmCOF/ak7FKS7cKEqpqInBGmRth1Ro96pVQ
-	 KzdjADKAkCogMB6DgovWoqH3+m6+VCOXv8TfIGHTTdonowcB/YQqMEFi3IioTTWQM5
-	 odx4l4401OsAHq0M2Bc1CeO2MKHwHuNibSLxUo9U=
+	b=D9Q+gBeQZO1T+0azvfC/fIxGWDkc9OCH+2+mytZth1j6AC0YdeoTVYKzCSGxumGrz
+	 JSEvW6OgrxEjEsPdQbLN1k23bhnvhvxlRXeiXwIP3olBTWDlaKbG7N2eJcmbTh+vTq
+	 ZHop9vtL7vYsXh8ComM9gKf7Jy1u3eeruC32I/cI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731214AbgGTPvO (ORCPT
+        id S1730915AbgGTPvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:51:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47960 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:51:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731203AbgGTPvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:51:09 -0400
+        id S1729686AbgGTPvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:51:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A38522064B;
-        Mon, 20 Jul 2020 15:51:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D7842064B;
+        Mon, 20 Jul 2020 15:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260269;
-        bh=n5GM2xtcQsiskfkd81xbgvJBOG5hvwow6kFdJJsoFUg=;
+        s=default; t=1595260271;
+        bh=NBQwnVG2olcGqnEIA36AveyXcFU/IXivw+KEN1ps4S0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PhU9p0P37STqv3uqeDaZQvGfCX+VY9FoQ30YMkwAHyRbQs01W6YQuazmHsB2FsW2w
-         q5Nx8MaZhmz2gaE11mGibN04gUjPCPhxjGCNJszrnijNpTWE1kLNgo54Z7kfyTjXL/
-         oEKIFPcHy6yUO+NdgoVMj8Zg5K1IPdolTVcMkKVw=
+        b=O1AG0IlVG3SlaocEWLsia/PQ7h38nyMto+tbZWKbDprJ8DfubUPF+ItCu7o83dS1P
+         GliuKfDK7U1yDdy0Npr+3xtpNKPiHk8Ujm7u/uJ//ksiJoeeI4cx7XqhjCJHPwPnJD
+         P+Oz9FDUxzEFIjGNB2XZyruJld3mKt3RFpyr3Ow0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 042/133] Revert "usb/xhci-plat: Set PM runtime as active on resume"
-Date:   Mon, 20 Jul 2020 17:36:29 +0200
-Message-Id: <20200720152805.751847223@linuxfoundation.org>
+Subject: [PATCH 4.19 043/133] Revert "usb/ehci-platform: Set PM runtime as active on resume"
+Date:   Mon, 20 Jul 2020 17:36:30 +0200
+Message-Id: <20200720152805.805310184@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -58,7 +58,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 661f5686a1c805e9b1bff65c312c38ef97faa91d.
+This reverts commit 71f660a1a74b2eae7896f18f31b68e9c4f4eaea3.
 
 Eugeniu Rosca writes:
 
@@ -83,34 +83,28 @@ On Thu, Jul 09, 2020 at 09:00:23AM +0200, Eugeniu Rosca wrote:
 >   should the following three v4.14.186 commits be reverted on v4.14.x?
 >   * baef809ea497a4 ("usb/ohci-platform: Fix a warning when hibernating")
 >   * 9f33eff4958885 ("usb/xhci-plat: Set PM runtime as active on resume")
->   * 5410d158ca2a50 ("usb/ehci-platform: Set PM runtime as active on resume"
+>   * 5410d158ca2a50 ("usb/ehci-platform: Set PM runtime as active on resume")
 
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-plat.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ drivers/usb/host/ehci-platform.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 65972c186c641..adc437ca83b88 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -408,15 +408,7 @@ static int __maybe_unused xhci_plat_resume(struct device *dev)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index cbc45941a699d..8a45362155c5a 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -457,10 +457,6 @@ static int ehci_platform_resume(struct device *dev)
  
--	ret = xhci_resume(xhci, 0);
--	if (ret)
--		return ret;
--
+ 	ehci_resume(hcd, priv->reset_on_resume);
+ 
 -	pm_runtime_disable(dev);
 -	pm_runtime_set_active(dev);
 -	pm_runtime_enable(dev);
 -
--	return 0;
-+	return xhci_resume(xhci, 0);
- }
+ 	if (priv->quirk_poll)
+ 		quirk_poll_init(priv);
  
- static int __maybe_unused xhci_plat_runtime_suspend(struct device *dev)
 -- 
 2.25.1
 
