@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FA8C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC093C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CEA720773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A745420773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262052;
-	bh=m1vrAI3M4keS+E/alhoTU7+dmNsnDQK4b3MZvYIXHlY=;
+	s=default; t=1595262058;
+	bh=iD4Sr9OwlsNAX3ujfe/kkTFXiAMIi4ON05yukDyDDUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=toFH3K/jDzi9LbSPPQMuDv6vASnCy/2ZiLP9IDAooks5zaEgjVa89zsujUJGA7YXI
-	 Ka5pJSdNLpRfxREoC9fxezCBImkkykviyeKvQ9VkCufC5JwJlKZDzKrnRfbEmyxu3p
-	 VR0femzkUxyBcph8LRezoMVDyWoSUxcAQJArCrnI=
+	b=lJDbJKLsjHVP24S9gk25O0Vr+CIQe3cNKHHIZnWk9ey6VFt/bW6iaTlV9j3axMMkG
+	 1b7cgBlBoJPt4rEWD4gEynR2M0b3f7qZJmqniTp99lZhfhCiLkdtZeO9rgfkSA83d6
+	 USQrwL5pBEZygkIJ2kVAx05TTCiS7/QPCmW3i9D4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387530AbgGTQJ2 (ORCPT
+        id S2387500AbgGTQJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:09:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47238 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:09:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387513AbgGTQJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:09:23 -0400
+        id S2387486AbgGTQJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:09:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 917F72064B;
-        Mon, 20 Jul 2020 16:09:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDDBB206E9;
+        Mon, 20 Jul 2020 16:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261362;
-        bh=m1vrAI3M4keS+E/alhoTU7+dmNsnDQK4b3MZvYIXHlY=;
+        s=default; t=1595261345;
+        bh=iD4Sr9OwlsNAX3ujfe/kkTFXiAMIi4ON05yukDyDDUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FH1pkzPVktEP5jRTwRLU+/6OrSSVu517aFRlvNG0n61qZeJXlEY0jgTRwge0pGYQi
-         qmqM6z5o+UP2u9i6hIQndaZzhfGLSb1KX3hmUVulHscfI3cSOK3ifsssZ0STk4Qsra
-         HjmgcixKDbVT/AQUeVIWM+UUb6K6+/WGJClaEQh4=
+        b=JSXrEGdDgJLLP0/ZAGfTkqDnE8WL+6CPsU13YTcow1Xc4mlnyz8vxRmv777xuJ8Pr
+         uZrX5TvkCr12hERUUZpXA3rF0rMoJF8lOZS79116A5ZTmS899dBSaS5Q2Vt1vffgva
+         xHxHD3ajQ/9FqYE8DR1uXxtjmzSekbF9QZLQefFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yixin Zhang <yixin.zhang@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
+        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 089/244] dmaengine: idxd: cleanup workqueue config after disabling
-Date:   Mon, 20 Jul 2020 17:36:00 +0200
-Message-Id: <20200720152830.075252592@linuxfoundation.org>
+Subject: [PATCH 5.7 083/244] dmaengine: ti: k3-udma: Fix delayed_work usage for tx drain workaround
+Date:   Mon, 20 Jul 2020 17:35:54 +0200
+Message-Id: <20200720152829.789699554@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,91 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Jiang <dave.jiang@intel.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit da32b28c95a79e399e18c03f8178f41aec9c66e4 ]
+[ Upstream commit d964d5ff68dba21b53368656adec3fb5f50426bb ]
 
-After disabling a device, we should clean up the internal state for
-the wqs and zero out the configuration registers. Without doing so can cause
-issues when the user reprogram the wqs.
+INIT_DELAYED_WORK_ONSTACK() must be used with on-stack delayed work, which
+is not the case here.
+Use normal delayed_work for the channels instead.
 
-Fixes: c52ca478233c ("dmaengine: idxd: add configuration component of driver")
-Reported-by: Yixin Zhang <yixin.zhang@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Tested-by: Yixin Zhang <yixin.zhang@intel.com>
-Link: https://lore.kernel.org/r/159311264246.1198.11955791213681679428.stgit@djiang5-desk3.ch.intel.com
+Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
+Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20200618114004.6268-1-peter.ujfalusi@ti.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/idxd/device.c | 25 +++++++++++++++++++++++++
- drivers/dma/idxd/idxd.h   |  1 +
- drivers/dma/idxd/sysfs.c  |  5 +++++
- 3 files changed, 31 insertions(+)
+ drivers/dma/ti/k3-udma.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 8d79a8787104d..8d2718c585dc6 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -320,6 +320,31 @@ void idxd_wq_unmap_portal(struct idxd_wq *wq)
- 	devm_iounmap(dev, wq->dportal);
- }
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index baf7ab64f1d7d..9760d67aa612a 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -1925,8 +1925,6 @@ static int udma_alloc_chan_resources(struct dma_chan *chan)
  
-+void idxd_wq_disable_cleanup(struct idxd_wq *wq)
-+{
-+	struct idxd_device *idxd = wq->idxd;
-+	struct device *dev = &idxd->pdev->dev;
-+	int i, wq_offset;
-+
-+	lockdep_assert_held(&idxd->dev_lock);
-+	memset(&wq->wqcfg, 0, sizeof(wq->wqcfg));
-+	wq->type = IDXD_WQT_NONE;
-+	wq->size = 0;
-+	wq->group = NULL;
-+	wq->threshold = 0;
-+	wq->priority = 0;
-+	clear_bit(WQ_FLAG_DEDICATED, &wq->flags);
-+	memset(wq->name, 0, WQ_NAME_SIZE);
-+
-+	for (i = 0; i < 8; i++) {
-+		wq_offset = idxd->wqcfg_offset + wq->id * 32 + i * sizeof(u32);
-+		iowrite32(0, idxd->reg_base + wq_offset);
-+		dev_dbg(dev, "WQ[%d][%d][%#x]: %#x\n",
-+			wq->id, i, wq_offset,
-+			ioread32(idxd->reg_base + wq_offset));
-+	}
-+}
-+
- /* Device control bits */
- static inline bool idxd_is_enabled(struct idxd_device *idxd)
- {
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index b8f8a363b4a71..908c8d0ef3ab6 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -290,6 +290,7 @@ int idxd_wq_enable(struct idxd_wq *wq);
- int idxd_wq_disable(struct idxd_wq *wq);
- int idxd_wq_map_portal(struct idxd_wq *wq);
- void idxd_wq_unmap_portal(struct idxd_wq *wq);
-+void idxd_wq_disable_cleanup(struct idxd_wq *wq);
+ 	udma_reset_rings(uc);
  
- /* submission */
- int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc);
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 3999827970aba..fbb455ece81e8 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -315,6 +315,11 @@ static int idxd_config_bus_remove(struct device *dev)
- 		idxd_unregister_dma_device(idxd);
- 		spin_lock_irqsave(&idxd->dev_lock, flags);
- 		rc = idxd_device_disable(idxd);
-+		for (i = 0; i < idxd->max_wqs; i++) {
-+			struct idxd_wq *wq = &idxd->wqs[i];
-+
-+			idxd_wq_disable_cleanup(wq);
-+		}
- 		spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 		module_put(THIS_MODULE);
- 		if (rc < 0)
+-	INIT_DELAYED_WORK_ONSTACK(&uc->tx_drain.work,
+-				  udma_check_tx_completion);
+ 	return 0;
+ 
+ err_irq_free:
+@@ -3038,7 +3036,6 @@ static void udma_free_chan_resources(struct dma_chan *chan)
+ 	}
+ 
+ 	cancel_delayed_work_sync(&uc->tx_drain.work);
+-	destroy_delayed_work_on_stack(&uc->tx_drain.work);
+ 
+ 	if (uc->irq_num_ring > 0) {
+ 		free_irq(uc->irq_num_ring, uc);
+@@ -3727,6 +3724,7 @@ static int udma_probe(struct platform_device *pdev)
+ 		tasklet_init(&uc->vc.task, udma_vchan_complete,
+ 			     (unsigned long)&uc->vc);
+ 		init_completion(&uc->teardown_completed);
++		INIT_DELAYED_WORK(&uc->tx_drain.work, udma_check_tx_completion);
+ 	}
+ 
+ 	ret = dma_async_device_register(&ud->ddev);
 -- 
 2.25.1
 
