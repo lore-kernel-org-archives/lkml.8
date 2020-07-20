@@ -2,195 +2,105 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DE6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34EBC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B654722CBB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5802065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:17:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jCza9kOb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgGTGQ4 (ORCPT
+        id S1726076AbgGTGRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 02:16:56 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48380 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725805AbgGTGQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:16:56 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id F053821341B1D8D5B252;
-        Mon, 20 Jul 2020 14:16:53 +0800 (CST)
-Received: from [127.0.0.1] (10.74.219.194) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
- 14:16:45 +0800
-Subject: Re: [PATCH v1 07/15] scsi: hisi_sas_v3_hw: use generic power
- management
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Adam Radford <aradford@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        John Garry <john.garry@huawei.com>,
-        Don Brace <don.brace@microsemi.com>,
-        James Smart <james.smart@broadcom.com>,
-        "Dick Kennedy" <dick.kennedy@broadcom.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>
-References: <20200717063438.175022-1-vaibhavgupta40@gmail.com>
- <20200717063438.175022-8-vaibhavgupta40@gmail.com>
-CC:     Shuah Khan <skhan@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-kernel-mentees@lists.linuxfoundation.org>,
-        <linux-scsi@vger.kernel.org>, <esc.storagedev@microsemi.com>,
-        <megaraidlinux.pdl@broadcom.com>,
-        <MPT-FusionLinux.pdl@broadcom.com>
-From:   "chenxiang (M)" <chenxiang66@hisilicon.com>
-Message-ID: <367bd5d3-f0a6-2bd7-2945-3095c827dbe6@hisilicon.com>
-Date:   Mon, 20 Jul 2020 14:16:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <20200717063438.175022-8-vaibhavgupta40@gmail.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.74.219.194]
-X-CFilter-Loop: Reflected
+        Mon, 20 Jul 2020 02:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgGTGRp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 02:17:45 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F5ABC0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 23:17:45 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id k4so9804466pll.6
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 23:17:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=hrTZ3ILM0xAvfuFOaXWaqEFvmBYS4j5nhBs2MogC2d4=;
+        b=jCza9kObWWd7hRrzAmTOlTIznNK5au/+obW9N2t3FEDENVbFaIuGNwvI+czZfkkjfj
+         yz5Acv84a48iP3jdHNxPq9oYAQ3JsaCd43nn72tDwiAb0KzKjz0D1eRaxZPmSvNI3v5p
+         14yBIbxUS2mz1cy/VgcYLfGAwLfyPgaeo6KCWa24lFD8fcp2A8oN/a5lernNHq87QTsg
+         uJDXeoEKZy1wotyY285VjM6pvyZt7ZdO0ouJqrQBQpT/blmMz44W6ZUa2RD3iVc6yJ3b
+         7Xl+rFZB34WWL6EpieqghLEjm+gNI2iCaVcFn7br2mXNH9ssLJR3SbfkLhib6q4xprWM
+         isOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=hrTZ3ILM0xAvfuFOaXWaqEFvmBYS4j5nhBs2MogC2d4=;
+        b=WhBqVFD9NzAe0jNh6bYoXzkOvEDukDDtYnDlhPbiO740ILcbEgnjZAHfEJTx5JZv7u
+         vtflUIR9cdGf3r5CzwAsSih2q3Cn60If1ntgLwBcSMr5EagZjidYVJ2iBSqEbDNSMMG8
+         c26lH5ICLZ8oyYzVXJGRCWoqv+3MXfm3+vUxjTmpLmqgmsYHoiKb92mk1Lt1cDfmQ9tR
+         00JQv+WngCykusi50slhQqz16fnU6/jzIf264syZGsI+OgYNrRjrgMjSGnD3wsqtjMkk
+         tHmo9eh74EzkKBjmZPPvzojOIbfHi5/NcZuQMjUztOA6ua0cjeswu7BSPPBx+Mp8Bgze
+         yPbg==
+X-Gm-Message-State: AOAM531xrxzRle3uOLKgBqA9Lk1dLXSEtiTjmAHvsD7GFj9VRwVxRF80
+        dhMHLMIoErjbFyqXCF3sMt3sNdAkYVO3
+X-Google-Smtp-Source: ABdhPJxZ8KghvpQ17ZJUvd8FHOaqBfl50iarL4t96zD8AY8mjE1sgffczbDNvDrTORIDxuIPH0nKQjc6wtWJ
+X-Received: by 2002:a17:902:b78b:: with SMTP id e11mr16332011pls.204.1595225864907;
+ Sun, 19 Jul 2020 23:17:44 -0700 (PDT)
+Date:   Sun, 19 Jul 2020 23:17:41 -0700
+Message-Id: <20200720061741.1514673-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+Subject: [PATCH v2] libbpf bpf_helpers: Use __builtin_offsetof for offsetof
+From:   Ian Rogers <irogers@google.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stanislav Fomichev <sdf@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vaibhav,
+The non-builtin route for offsetof has a dependency on size_t from
+stdlib.h/stdint.h that is undeclared and may break targets.
+The offsetof macro in bpf_helpers may disable the same macro in other
+headers that have a #ifdef offsetof guard. Rather than add additional
+dependencies improve the offsetof macro declared here to use the
+builtin that is available since llvm 3.7 (the first with a BPF backend).
 
-ÔÚ 2020/7/17 14:34, Vaibhav Gupta Ð´µÀ:
-> With legacy PM, drivers themselves were responsible for managing the
-> device's power states and takes care of register states.
->
-> After upgrading to the generic structure, PCI core will take care of
-> required tasks and drivers should do only device-specific operations.
->
-> The driver was calling pci_save/restore_state(), pci_choose_state(),
-> pci_enable/disable_device() and pci_set_power_state() which is no more
-> needed.
->
-> Compile-tested only.
->
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/lib/bpf/bpf_helpers.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Xiang Chen <chenxiang66@hisilicon.com>
-Just a small comment, below.
-
-> ---
->   drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 32 ++++++++------------------
->   1 file changed, 10 insertions(+), 22 deletions(-)
->
-> diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-> index 55e2321a65bc..45605a520bc8 100644
-> --- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-> +++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-> @@ -3374,13 +3374,13 @@ enum {
->   	hip08,
->   };
->   
-> -static int hisi_sas_v3_suspend(struct pci_dev *pdev, pm_message_t state)
-> +static int __maybe_unused hisi_sas_v3_suspend(struct device *dev_d)
->   {
-> +	struct pci_dev *pdev = to_pci_dev(dev_d);
->   	struct sas_ha_struct *sha = pci_get_drvdata(pdev);
->   	struct hisi_hba *hisi_hba = sha->lldd_ha;
->   	struct device *dev = hisi_hba->dev;
->   	struct Scsi_Host *shost = hisi_hba->shost;
-> -	pci_power_t device_state;
->   	int rc;
->   
->   	if (!pdev->pm_cap) {
-> @@ -3406,21 +3406,15 @@ static int hisi_sas_v3_suspend(struct pci_dev *pdev, pm_message_t state)
->   
->   	hisi_sas_init_mem(hisi_hba);
->   
-> -	device_state = pci_choose_state(pdev, state);
-> -	dev_warn(dev, "entering operating state [D%d]\n",
-> -			device_state);
-
-Please retain above print to keep consistence with the print in function 
-hisi_sas_v3_resume().
-
-> -	pci_save_state(pdev);
-> -	pci_disable_device(pdev);
-> -	pci_set_power_state(pdev, device_state);
-> -
->   	hisi_sas_release_tasks(hisi_hba);
->   
->   	sas_suspend_ha(sha);
->   	return 0;
->   }
->   
-> -static int hisi_sas_v3_resume(struct pci_dev *pdev)
-> +static int __maybe_unused hisi_sas_v3_resume(struct device *dev_d)
->   {
-> +	struct pci_dev *pdev = to_pci_dev(dev_d);
->   	struct sas_ha_struct *sha = pci_get_drvdata(pdev);
->   	struct hisi_hba *hisi_hba = sha->lldd_ha;
->   	struct Scsi_Host *shost = hisi_hba->shost;
-> @@ -3430,16 +3424,8 @@ static int hisi_sas_v3_resume(struct pci_dev *pdev)
->   
->   	dev_warn(dev, "resuming from operating state [D%d]\n",
->   		 device_state);
-> -	pci_set_power_state(pdev, PCI_D0);
-> -	pci_enable_wake(pdev, PCI_D0, 0);
-> -	pci_restore_state(pdev);
-> -	rc = pci_enable_device(pdev);
-> -	if (rc) {
-> -		dev_err(dev, "enable device failed during resume (%d)\n", rc);
-> -		return rc;
-> -	}
-> +	device_wakeup_disable(dev_d);
->   
-> -	pci_set_master(pdev);
->   	scsi_unblock_requests(shost);
->   	clear_bit(HISI_SAS_REJECT_CMD_BIT, &hisi_hba->flags);
->   
-> @@ -3447,7 +3433,6 @@ static int hisi_sas_v3_resume(struct pci_dev *pdev)
->   	rc = hw_init_v3_hw(hisi_hba);
->   	if (rc) {
->   		scsi_remove_host(shost);
-> -		pci_disable_device(pdev);
->   		return rc;
->   	}
->   	hisi_hba->hw->phys_init(hisi_hba);
-> @@ -3468,13 +3453,16 @@ static const struct pci_error_handlers hisi_sas_err_handler = {
->   	.reset_done	= hisi_sas_reset_done_v3_hw,
->   };
->   
-> +static SIMPLE_DEV_PM_OPS(hisi_sas_v3_pm_ops,
-> +			 hisi_sas_v3_suspend,
-> +			 hisi_sas_v3_resume);
-> +
->   static struct pci_driver sas_v3_pci_driver = {
->   	.name		= DRV_NAME,
->   	.id_table	= sas_v3_pci_table,
->   	.probe		= hisi_sas_v3_probe,
->   	.remove		= hisi_sas_v3_remove,
-> -	.suspend	= hisi_sas_v3_suspend,
-> -	.resume		= hisi_sas_v3_resume,
-> +	.driver.pm	= &hisi_sas_v3_pm_ops,
->   	.err_handler	= &hisi_sas_err_handler,
->   };
->   
-
+diff --git a/tools/lib/bpf/bpf_helpers.h b/tools/lib/bpf/bpf_helpers.h
+index a510d8ed716f..bc14db706b88 100644
+--- a/tools/lib/bpf/bpf_helpers.h
++++ b/tools/lib/bpf/bpf_helpers.h
+@@ -40,7 +40,7 @@
+  * Helper macro to manipulate data structures
+  */
+ #ifndef offsetof
+-#define offsetof(TYPE, MEMBER)  ((size_t)&((TYPE *)0)->MEMBER)
++#define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
+ #endif
+ #ifndef container_of
+ #define container_of(ptr, type, member)				\
+-- 
+2.28.0.rc0.105.gf9edc3c819-goog
 
