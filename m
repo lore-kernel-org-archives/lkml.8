@@ -2,172 +2,111 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A54CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28BD822B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:53:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Nwzysd2f"
+	by mail.kernel.org (Postfix) with ESMTP id B643B22B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:54:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595289276;
+	bh=boeIuvMyvV6JO24brtbKi8T/TPGTvsvSpquc1M1znxU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=yUcKJ8Z6W8tQsAMdRrsvrK+x2zOcqFh+bNVk2/mI2E/nf3bmfovh4tRL8vKAYCifc
+	 edZk91GJzjht6a4HkyKy+GyOpyWiUDKni1XRNdB4ShxAZLswM9OmFoUnDHzBbea8P7
+	 PLo7Dd8jbRBhAdW9cn61UcCpC5kEAJuQcZdn42Hw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgGTXxq (ORCPT
+        id S1727910AbgGTXye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:53:46 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2712 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbgGTXxp (ORCPT
+        Mon, 20 Jul 2020 19:54:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbgGTXye (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 19:53:45 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f162e110000>; Mon, 20 Jul 2020 16:51:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 20 Jul 2020 16:53:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 20 Jul 2020 16:53:45 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jul
- 2020 23:53:44 +0000
-Subject: Re: [PATCH v2 2/5] mm/migrate: add a direction parameter to
- migrate_vma
-To:     Jason Gunthorpe <jgg@nvidia.com>
-CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        <nouveau@lists.freedesktop.org>, <kvm-ppc@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Jerome Glisse" <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Christoph Hellwig" <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, Ben Skeggs <bskeggs@redhat.com>,
-        Bharata B Rao <bharata@linux.ibm.com>
-References: <20200713172149.2310-1-rcampbell@nvidia.com>
- <20200713172149.2310-3-rcampbell@nvidia.com>
- <20200720183643.GA3028737@nvidia.com>
- <2e775a5d-9d62-de52-6799-3bbb09c88c5a@nvidia.com>
- <20200720195943.GH2021234@nvidia.com>
- <fdfde6a0-f2bf-c0b2-0283-c882aa755292@nvidia.com>
- <20200720231633.GI2021234@nvidia.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <d458ffef-d205-e71d-1b8b-60721c42ca7f@nvidia.com>
-Date:   Mon, 20 Jul 2020 16:53:44 -0700
+        Mon, 20 Jul 2020 19:54:34 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAC89C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:54:33 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id x83so15785939oif.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 16:54:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=if+J3IVB9GmBlt0xwkKvRDuHXhNcTWZ9ERH3YUDWulU=;
+        b=PpZ7kO7OncEuLolD3qAx3ZaBqS9vrWM95lqFbasCA2aXj+MZ+rVQtPZWEMNIanGf61
+         Na6Oe+TcO5HMaPI7RB6zH6J/H5pLbYS/aukNu9udrsSzXPLt1r/0zM+8w1IfpiP1XrwB
+         AkuqoV0NW1nuCu6cUp39D3jYjEPD/Wm2wFo3A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=if+J3IVB9GmBlt0xwkKvRDuHXhNcTWZ9ERH3YUDWulU=;
+        b=FOnVx/13f7x8XKAMPN3/tbAupcxSS0KmoVM+7xwZYTI0RJc//mBDZ4siPBO5FIBPmM
+         Vt+5HWWNr7+PyR5tgfdyv+8zGiM+/QAp7KilVU366HPeJuN4+SHY9ha3louEMBvlzL5G
+         6c4FutQ7tQxPXV5Weu8DHxvQWgBY4Fq0DlB+qasd9ViOn6bJjrDNfwcQHh+4k61VPiI6
+         obigHejetWGPHs9P0unq2MLDOlRF2kAuNEi7aMbf86oU6sdTx7mrDQ/zHg2HIccPsKtM
+         evETTYYZ70oIq1Cv1Sn2R4Vmk++ceWGszlQzxaX4z/1cHKoqc/MvJKUTuwm4SThbEYd8
+         0KUA==
+X-Gm-Message-State: AOAM533zg/tdIbOARiErweZnYOUQdJBX3q9pOwWrT0035j2VRklmG2V2
+        QijtPmwk82VZ1MqWSsEVEZlAog==
+X-Google-Smtp-Source: ABdhPJyDkBbrRB4Iv7wLrYZEpKoiuxvmE0USp8a8BxXTGbsstY3eCXpSVmnlfwVnDfDA0j21MXvBSg==
+X-Received: by 2002:a05:6808:199:: with SMTP id w25mr1215562oic.38.1595289273305;
+        Mon, 20 Jul 2020 16:54:33 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id h16sm285021otr.10.2020.07.20.16.54.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2020 16:54:32 -0700 (PDT)
+Subject: Re: [PATCH 4.4 00/58] 4.4.231-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20200720152747.127988571@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <b089dde4-8f8b-908b-9131-52939b42a6a8@linuxfoundation.org>
+Date:   Mon, 20 Jul 2020 17:54:31 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200720231633.GI2021234@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595289105; bh=ZQjRhhF+y7yVrWHN10F4rwb8PZd9lDc5hIDmGv41Pnw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Nwzysd2f4rPxKQVih681HcCnyXf4qE7QVnsfF9tUtJg8Dc9oBycsJXLGLV3kaUfXV
-         nmm4LncwyqzoOLgco1FCThZHDdqbmM3+CjrFswyr5WV7DTb3AMo9EKjCt5biRhuWMB
-         lSRgCG173E4ml5n8MeKW+VBZQVkO0yyD5hf+OodIOjSKRiTXJ/tKAEye51AIva2T1U
-         FODQh+Z15ZUAjjTsNpkmriBFpTDfXwqEn0A6fxS4VnMjggS0A7MGoqiWrIfS4pU0+f
-         NlFesJezdyDMTEH/Zg4AeOZpuwCO6L+bQkrLw/S41vxNr5I2vrNdySmYHnqVEy3tJf
-         nQod1z/sAA/4w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 7/20/20 4:16 PM, Jason Gunthorpe wrote:
-> On Mon, Jul 20, 2020 at 01:49:09PM -0700, Ralph Campbell wrote:
->>
->> On 7/20/20 12:59 PM, Jason Gunthorpe wrote:
->>> On Mon, Jul 20, 2020 at 12:54:53PM -0700, Ralph Campbell wrote:
->>>>>> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
->>>>>> index 3e546cbf03dd..620f2235d7d4 100644
->>>>>> +++ b/include/linux/migrate.h
->>>>>> @@ -180,6 +180,11 @@ static inline unsigned long migrate_pfn(unsigned long pfn)
->>>>>>     	return (pfn << MIGRATE_PFN_SHIFT) | MIGRATE_PFN_VALID;
->>>>>>     }
->>>>>> +enum migrate_vma_direction {
->>>>>> +	MIGRATE_VMA_FROM_SYSTEM,
->>>>>> +	MIGRATE_VMA_FROM_DEVICE_PRIVATE,
->>>>>> +};
->>>>>
->>>>> I would have guessed this is more natural as _FROM_DEVICE_ and
->>>>> TO_DEVICE_ ?
->>>>
->>>> The caller controls where the destination memory is allocated so it isn't
->>>> necessarily device private memory, it could be from system to system.
->>>> The use case for system to system memory migration is for hardware
->>>> like ARM SMMU or PCIe ATS where a single set of page tables is shared by
->>>> the device and a CPU process over a coherent system memory bus.
->>>> Also many integrated GPUs in SOCs fall into this category too.
->>>
->>> Maybe just TO/FROM_DEIVCE then? Even though the memory is not
->>> DEVICE_PRIVATE it is still device owned pages right?
->>>
->>>> So to me, it makes more sense to specify the direction based on the
->>>> source location.
->>>
->>> It feels strange because the driver doesn't always know or control the
->>> source?
->>
->> The driver can't really know where the source is currently located because the
->> API is designed to not initially hold the page locks, migrate_vma_setup() only knows
->> the source once it holds the page table locks and isolates/locks the pages being
->> migrated. The direction and pgmap_owner are supposed to filter which pages
->> the caller is interested in migrating.
->> Perhaps the direction should instead be a flags field with separate bits for
->> system memory and device private memory selecting source candidates for
->> migration. I can imagine use cases for all 4 combinations of
->> d->d, d->s, s->d, and s->s being valid.
->>
->> I didn't really think a direction was needed, this was something that
->> Christoph Hellwig seemed to think made the API safer.
+On 7/20/20 9:36 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.231 release.
+> There are 58 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> If it is a filter then just using those names would make sense
+> Responses should be made by Wed, 22 Jul 2020 15:27:31 +0000.
+> Anything received after that time might be too late.
 > 
-> MIGRATE_VMA_SELECT_SYSTEM
-> MIGRATE_VMA_SELECT_DEVICE_PRIVATE
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.231-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
 > 
-> SYSTEM feels like the wrong name too, doesn't linux have a formal name
-> for RAM struct pages?
-
-Highmem? Movable? Zone normal?
-There are quite a few :-)
-At the moment, only anonymous pages are being migrated but I expect
-file backed pages to be supported at some point (but not DAX).
-VM_PFNMAP and VM_MIXEDMAP might make sense some day with peer-to-peer
-copies.
-
-So MIGRATE_VMA_SELECT_SYSTEM seems OK to me.
-
-> In your future coherent design how would the migrate select 'device'
-> pages that are fully coherent? Are they still zone something pages
-> that are OK for CPU usage?
+> thanks,
 > 
-> Jason
+> greg k-h
 > 
 
-For pages that are device private, the pgmap_owner selects them (plus the
-MIGRATE_VMA_SELECT_DEVICE_PRIVATE flag).
-For pages that are migrating from system memory to system memory, I expect
-the pages to be in different NUMA zones. Otherwise, there wouldn't be much
-point in migrating them. And yes, the CPU can access them.
-It might be useful to have a filter saying "migrate system memory not already
-in NUMA zone X" if the MIGRATE_VMA_SELECT_SYSTEM flag is set.
+Compiled and booted on my test system. No dmesg regressions.
 
-Also, in support of the flags field, I'm looking at THP migration and I can
-picture defining some request flags like hmm_range_fault() to say "migrate
-THPs if they exist, otherwise split THPs".
-A default_flags MIGRATE_PFN_REQ_FAULT would be useful if the source page is
-swapped out. Currently, migrate_vma_setup() just skips these pages without
-any indication to the caller why the page isn't being migrated or if retrying
-is worth attempting.
+thanks,
+-- Shuah
+
