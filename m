@@ -2,97 +2,169 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025E7C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7576D22B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:03:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LhPnnGZz"
+	by mail.kernel.org (Postfix) with ESMTP id E030A22B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbgGTPDb (ORCPT
+        id S1728895AbgGTPEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgGTPDa (ORCPT
+        Mon, 20 Jul 2020 11:04:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24334 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728517AbgGTPEM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:03:30 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3934C061794;
-        Mon, 20 Jul 2020 08:03:30 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id k23so17893507iom.10;
-        Mon, 20 Jul 2020 08:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pcfxvqUoA5Q84iZVIjEC8f/UAFuiPguvgTdlO6gr+z8=;
-        b=LhPnnGZz+comE1cgyo/Ade5S1kE4zEhoPaaFmdVrbq0kxfF79/KbgosYjWd3jhGj6z
-         PZ864OAiQJyZ8WPWu6phfbFiY0PR+batdntkmBkfGuUeF74RfofIncSfeHpmTOePF1pk
-         Ui72NQbpRw423r3rcUPqaiB/ILqEoJezxU+i2HJrkDVxCMHcaCT2tK0OwO7SS2KWX0dI
-         0NaiTW6dGdv3Ns2/bPxEVvBTpatUK2feYLsXNNkX3CxHcyhzEaXKMpxvhWxbF2avLfGW
-         rKAvuWuQy6krRYFHtP+y+ytu/TgFRuu8J0nceHE6k6yko8K9n5dtO1b6ghj3Q0EYWq68
-         rR2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pcfxvqUoA5Q84iZVIjEC8f/UAFuiPguvgTdlO6gr+z8=;
-        b=EUqb2uaQh6VGIkhtoaD1nBum/8JCW0WDJB5pBNmvFWpgl8o65jFLreW6Zbcf3tK3pA
-         NHX/HYP7BCpvc6FfNIFp9uzRM9ak2SSswVONLvNTip4I+U5w618jYQJk5V4vHEInaAkz
-         MK7n96jXC0KIuXSpNt3KPAHOADWyepS8DNbsKFpOIkd2hn3koskB2W+UNhJRt1pGU26A
-         x3xGQclC1njiWgmVyHVg1VjTWnlY+P8bwxu0TGjrNoXvZcJoCQ7F7Kd47KpBr9YkUqfN
-         WBci8AlRp0WMFTotD6H/USLza2K0nuLeLL3SOsvU6SQ4vUU28qfX4Sh2hhfMSE3qrzTO
-         W1AQ==
-X-Gm-Message-State: AOAM5301BzOZ30p0/h5jgcTsaQepuQ9jAm9mwSJplhlDaEOy9BunMz47
-        C6026salnyo/Av+yWRBBdAFgYL/YvcSHJJkxYntXnD9k
-X-Google-Smtp-Source: ABdhPJzIbmtiIdLPMhyi/GvPa8hA5p1L8XEl7Yhw3/V97KBA7XMRywAMZ5AtZBSscwPbiDM0aPGhETkFHsZErsQ6ju8=
-X-Received: by 2002:a5d:8d12:: with SMTP id p18mr23344299ioj.148.1595257409980;
- Mon, 20 Jul 2020 08:03:29 -0700 (PDT)
+        Mon, 20 Jul 2020 11:04:12 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KF3AAP165000;
+        Mon, 20 Jul 2020 11:04:09 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32dcyq9bug-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 11:04:09 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KF3bW8167846;
+        Mon, 20 Jul 2020 11:04:09 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32dcyq9bt3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 11:04:09 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KEjYBG007100;
+        Mon, 20 Jul 2020 15:04:08 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma01wdc.us.ibm.com with ESMTP id 32brq8j0j4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 15:04:08 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KF459X51577184
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 15:04:05 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 08EA56E04E;
+        Mon, 20 Jul 2020 15:04:05 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D864B6E058;
+        Mon, 20 Jul 2020 15:04:03 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com.com (unknown [9.85.188.6])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jul 2020 15:04:03 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH v9 10/15] s390/vfio-ap: allow configuration of matrix mdev in use by a KVM guest
+Date:   Mon, 20 Jul 2020 11:03:39 -0400
+Message-Id: <20200720150344.24488-11-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200720150344.24488-1-akrowiak@linux.ibm.com>
+References: <20200720150344.24488-1-akrowiak@linux.ibm.com>
 MIME-Version: 1.0
-References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
- <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com> <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu>
-In-Reply-To: <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 20 Jul 2020 08:03:32 -0700
-Message-ID: <CAF6AEGurrsd3nrbB=ktZjWfKTNbKwPHYwTFiZdD-NOW1T7gePQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
-        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
-        Jonathan <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=3
+ impostorscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=999 spamscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 3:01 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 15-07-20, 08:36, Rob Clark wrote:
-> > I can take the first two into msm-next, the 3rd will need to wait
-> > until dev_pm_opp_set_bw() lands
->
-> You can base that on a8351c12c6c7 in linux-next, I will make sure not to rebase
-> it anymore.
->
+The current support for pass-through crypto adapters does not allow
+configuration of a matrix mdev when it is in use by a KVM guest. Let's
+allow AP resources - i.e., adapters, domains and control domains - to be
+assigned to or unassigned from a matrix mdev while it is in use by a guest.
+This is in preparation for the introduction of support for dynamic
+configuration of the AP matrix for a running KVM guest.
 
-I can't really base on something newer than drm-next
+Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c | 24 ------------------------
+ 1 file changed, 24 deletions(-)
 
-BR,
--R
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index 24fd47e43b80..cf3321eb239b 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -773,10 +773,6 @@ static ssize_t assign_adapter_store(struct device *dev,
+ 	struct mdev_device *mdev = mdev_from_dev(dev);
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 
+-	/* If the guest is running, disallow assignment of adapter */
+-	if (matrix_mdev->kvm)
+-		return -EBUSY;
+-
+ 	ret = kstrtoul(buf, 0, &apid);
+ 	if (ret)
+ 		return ret;
+@@ -828,10 +824,6 @@ static ssize_t unassign_adapter_store(struct device *dev,
+ 	struct mdev_device *mdev = mdev_from_dev(dev);
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 
+-	/* If the guest is running, disallow un-assignment of adapter */
+-	if (matrix_mdev->kvm)
+-		return -EBUSY;
+-
+ 	ret = kstrtoul(buf, 0, &apid);
+ 	if (ret)
+ 		return ret;
+@@ -891,10 +883,6 @@ static ssize_t assign_domain_store(struct device *dev,
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 	unsigned long max_apqi = matrix_mdev->matrix.aqm_max;
+ 
+-	/* If the guest is running, disallow assignment of domain */
+-	if (matrix_mdev->kvm)
+-		return -EBUSY;
+-
+ 	ret = kstrtoul(buf, 0, &apqi);
+ 	if (ret)
+ 		return ret;
+@@ -946,10 +934,6 @@ static ssize_t unassign_domain_store(struct device *dev,
+ 	struct mdev_device *mdev = mdev_from_dev(dev);
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 
+-	/* If the guest is running, disallow un-assignment of domain */
+-	if (matrix_mdev->kvm)
+-		return -EBUSY;
+-
+ 	ret = kstrtoul(buf, 0, &apqi);
+ 	if (ret)
+ 		return ret;
+@@ -991,10 +975,6 @@ static ssize_t assign_control_domain_store(struct device *dev,
+ 	struct mdev_device *mdev = mdev_from_dev(dev);
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 
+-	/* If the guest is running, disallow assignment of control domain */
+-	if (matrix_mdev->kvm)
+-		return -EBUSY;
+-
+ 	ret = kstrtoul(buf, 0, &id);
+ 	if (ret)
+ 		return ret;
+@@ -1036,10 +1016,6 @@ static ssize_t unassign_control_domain_store(struct device *dev,
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 	unsigned long max_domid =  matrix_mdev->matrix.adm_max;
+ 
+-	/* If the guest is running, disallow un-assignment of control domain */
+-	if (matrix_mdev->kvm)
+-		return -EBUSY;
+-
+ 	ret = kstrtoul(buf, 0, &domid);
+ 	if (ret)
+ 		return ret;
+-- 
+2.21.1
+
