@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188A3C2BB4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA50C2BBCD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9EDE207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8443207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281381;
-	bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
+	s=default; t=1595281388;
+	bh=I3fzA3MRh6tQ1Zd+nKQcuJyA8OBl76Ep+agNP6A3b98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xpLND3tYzInjm6nzdezvtOKPBjK5IeXk3kMGpErTVTbYXvz6k1FiJCEbieMvnkKt/
-	 OYVq9wBXRn/dzoyQ7ARykAgU0nGR0j1OYmHYvwh15nt7r1k36L++0SuWO2FzlmA3OJ
-	 F57uZyOaryHLamJBkbrmlZvMpIvWR7udfQQnyO8s=
+	b=IWOKacXoFy7fW5OWmAVzzsHEn58fqt4y1B9/Bvadx1MtDAcLZdtncP/s/iObYIRmG
+	 1MJRIaFUxQeZQ0aF3NLiPbeO/uWEmifmyDX4Evt2erx2oaoXu0nU20bb9KBdt07TE6
+	 ntYSRfegGCGXu8yUeN2/KCV/RZz7MMVOa0ndVA1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgGTVnA (ORCPT
+        id S1728663AbgGTVnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:43:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:43:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728237AbgGTVip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:45 -0400
+        id S1728223AbgGTVik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63EBA22CAF;
-        Mon, 20 Jul 2020 21:38:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D233D22C7B;
+        Mon, 20 Jul 2020 21:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281124;
-        bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
+        s=default; t=1595281120;
+        bh=I3fzA3MRh6tQ1Zd+nKQcuJyA8OBl76Ep+agNP6A3b98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2sn3SJYX5rY2/n32kLS12n6+Omc0i0wfxi2SFQLwoWFVVnZdQFYCWxU/xsCyx/Dxb
-         yUS5OBHk8jJ1NRaXIB0Hu1tZvOwMehrnxMDI+aqE8jmuSdJNYx9ZTRzam0hKMjshE9
-         WydeGzTZVcBfD/pP3xapA+Oqp59mfzfhDYGYGbk4=
+        b=RKiVcvBOcBH/j0HLibggflGkSfsssXc3R+jKsKpPFTJ8vTYxPimroGkCIER+/4A1g
+         K720E9MPbq05Yaf4oj8LlqLjVV/0mEoHFFA+YfMW8v8wnK4499hlzWuC2C6nCiv8PG
+         4U6h1r6VHuAMIXXRVZLap4XToXt1z53AJIoxyKBY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 30/34] x86: math-emu: Fix up 'cmp' insn for clang ias
-Date:   Mon, 20 Jul 2020 17:38:03 -0400
-Message-Id: <20200720213807.407380-30-sashal@kernel.org>
+Cc:     PeiSen Hou <pshou@realtek.com.tw>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 27/34] ALSA: hda/realtek - fixup for yet another Intel reference board
+Date:   Mon, 20 Jul 2020 17:38:00 -0400
+Message-Id: <20200720213807.407380-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
 References: <20200720213807.407380-1-sashal@kernel.org>
@@ -61,41 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: PeiSen Hou <pshou@realtek.com.tw>
 
-[ Upstream commit 81e96851ea32deb2c921c870eecabf335f598aeb ]
+[ Upstream commit 5734e509d5d515c187f642937ef2de1e58d7715d ]
 
-The clang integrated assembler requires the 'cmp' instruction to
-have a length prefix here:
+Add headset_jack for the intel reference board support with
+10ec:1230.
 
-arch/x86/math-emu/wm_sqrt.S:212:2: error: ambiguous instructions require an explicit suffix (could be 'cmpb', 'cmpw', or 'cmpl')
- cmp $0xffffffff,-24(%ebp)
- ^
-
-Make this a 32-bit comparison, which it was clearly meant to be.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lkml.kernel.org/r/20200527135352.1198078-1-arnd@arndb.de
+Signed-off-by: PeiSen Hou <pshou@realtek.com.tw>
+Link: https://lore.kernel.org/r/20200716090134.9811-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/math-emu/wm_sqrt.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/math-emu/wm_sqrt.S b/arch/x86/math-emu/wm_sqrt.S
-index f031c0e193565..515cdee90df72 100644
---- a/arch/x86/math-emu/wm_sqrt.S
-+++ b/arch/x86/math-emu/wm_sqrt.S
-@@ -209,7 +209,7 @@ sqrt_stage_2_finish:
- 
- #ifdef PARANOID
- /* It should be possible to get here only if the arg is ffff....ffff */
--	cmp	$0xffffffff,FPU_fsqrt_arg_1
-+	cmpl	$0xffffffff,FPU_fsqrt_arg_1
- 	jnz	sqrt_stage_2_error
- #endif /* PARANOID */
- 
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 160e00e8007aa..c46651207a0ca 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7523,6 +7523,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x10cf, 0x1629, "Lifebook U7x7", ALC255_FIXUP_LIFEBOOK_U7x7_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x10cf, 0x1845, "Lifebook U904", ALC269_FIXUP_LIFEBOOK_EXTMIC),
+ 	SND_PCI_QUIRK(0x10ec, 0x10f2, "Intel Reference board", ALC700_FIXUP_INTEL_REFERENCE),
++	SND_PCI_QUIRK(0x10ec, 0x1230, "Intel Reference board", ALC225_FIXUP_HEADSET_JACK),
+ 	SND_PCI_QUIRK(0x10f7, 0x8338, "Panasonic CF-SZ6", ALC269_FIXUP_HEADSET_MODE),
+ 	SND_PCI_QUIRK(0x144d, 0xc109, "Samsung Ativ book 9 (NP900X3G)", ALC269_FIXUP_INV_DMIC),
+ 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
 -- 
 2.25.1
 
