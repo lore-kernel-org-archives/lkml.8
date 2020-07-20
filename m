@@ -2,53 +2,54 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E48C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B39A5C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 130DA22BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8202C206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260681;
-	bh=gBJjacVL2m/4ejgMgslD8NKdAbwGMCJFnQvE0Zo+e6Y=;
+	s=default; t=1595260685;
+	bh=mtj+mNPGKLcYYy3QzFutSBT6xxBGFplPVCbMFTnt/qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QZfKSv76V3HMhUFl5P1y58JcaF0vMKkyYOG5yl5azOr0Lx5GlIHVuQpMoDrSrg4M0
-	 ldh3ozecOVTBylz6NH1RK4R3Gveo3doZX7/yyvmCf7ogy74KpAt/+bjVhxZ6HqFAU2
-	 m1ML5Oqbxw/PwmnZpSKhGOAAGHiy4h0Vpcz34qWM=
+	b=n2yxdXtl9tYfzHTxjaQgHvLQ8FdgO4quxIfASm68+GIhY+GPuOWGJvHXeANPU7HVe
+	 KHjLlz1dmeh4XMIYpEefifIk3ijTRcIOrEKX3eXD+lEO/aO5EAKomVj2yW9w7sz2Uu
+	 gvzKjInunnpfg36VT+jW4znQopPCxe/oER8CzB1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731425AbgGTP57 (ORCPT
+        id S1731744AbgGTP6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57912 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:58:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731948AbgGTP5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:57:52 -0400
+        id S1731970AbgGTP57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:57:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7FD02176B;
-        Mon, 20 Jul 2020 15:57:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EE45206E9;
+        Mon, 20 Jul 2020 15:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260671;
-        bh=gBJjacVL2m/4ejgMgslD8NKdAbwGMCJFnQvE0Zo+e6Y=;
+        s=default; t=1595260678;
+        bh=mtj+mNPGKLcYYy3QzFutSBT6xxBGFplPVCbMFTnt/qk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hPbYSGjp5vnrALz9T0RNTQfCjCR4elZHepOU47ACv0DNg5PET6CY+U8cMeu+qa8D6
-         KB1r98dU7nBaPRKg3ziYSJ7+vpYMFNz/zIuxr1QR52Bn3wJ/S3lOSlo7Vmi+t/oX15
-         m998H1IJ5hFZXBHjpXzV+G/2rdgwfKiZNf02AAKk=
+        b=FfnpVHyl3y3+tfzivKVYnqFNnFFF2Wj3IWyxrUS9xWqLRoWt+rTl4NMaSiW+1pPp9
+         5isPD7VOBoOBRbQ2r7k/6vl1imgUBcLkBM/wkbrO8iL52ZwRxu3z1Awb0bEIxEkQRB
+         lIsnfupcxH0ps6EcwCNVQv/eY+wb+hU6t2wUyUrg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Stable@vger.kernel.org
-Subject: [PATCH 5.4 052/215] iio:humidity:hts221 Fix alignment and data leak issues
-Date:   Mon, 20 Jul 2020 17:35:34 +0200
-Message-Id: <20200720152822.680365104@linuxfoundation.org>
+        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 055/215] spi: spi-fsl-dspi: Fix lockup if device is shutdown during SPI transfer
+Date:   Mon, 20 Jul 2020 17:35:37 +0200
+Message-Id: <20200720152822.830220377@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -61,92 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit 5c49056ad9f3c786f7716da2dd47e4488fc6bd25 upstream.
+[ Upstream commit 3c525b69e8c1a9a6944e976603c7a1a713e728f9 ]
 
-One of a class of bugs pointed out by Lars in a recent review.
-iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
-to the size of the timestamp (8 bytes).  This is not guaranteed in
-this driver which uses an array of smaller elements on the stack.
-As Lars also noted this anti pattern can involve a leak of data to
-userspace and that indeed can happen here.  We close both issues by
-moving to a suitable structure in the iio_priv() data.
-This data is allocated with kzalloc so no data can leak
-apart from previous readings.
+During shutdown, the driver should unregister the SPI controller
+and stop the hardware.  Otherwise the dspi_transfer_one_message() could
+wait on completion infinitely.
 
-Explicit alignment of ts needed to ensure consistent padding
-on all architectures (particularly x86_32 with it's 4 byte alignment
-of s64)
+Additionally, calling spi_unregister_controller() first in device
+shutdown reverse-matches the probe function, where SPI controller is
+registered at the end.
 
-Fixes: e4a70e3e7d84 ("iio: humidity: add support to hts221 rh/temp combo device")
-Reported-by: Lars-Peter Clausen <lars@metafoo.de>
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: dc234825997e ("spi: spi-fsl-dspi: Adding shutdown hook")
+Reported-by: Vladimir Oltean <olteanv@gmail.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200622110543.5035-2-krzk@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/humidity/hts221.h        |    7 +++++--
- drivers/iio/humidity/hts221_buffer.c |    9 +++++----
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ drivers/spi/spi-fsl-dspi.c | 15 +--------------
+ 1 file changed, 1 insertion(+), 14 deletions(-)
 
---- a/drivers/iio/humidity/hts221.h
-+++ b/drivers/iio/humidity/hts221.h
-@@ -14,8 +14,6 @@
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 3e0e27731922e..c7560d7d16276 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -1184,20 +1184,7 @@ static int dspi_remove(struct platform_device *pdev)
  
- #include <linux/iio/iio.h>
- 
--#define HTS221_DATA_SIZE	2
--
- enum hts221_sensor_type {
- 	HTS221_SENSOR_H,
- 	HTS221_SENSOR_T,
-@@ -39,6 +37,11 @@ struct hts221_hw {
- 
- 	bool enabled;
- 	u8 odr;
-+	/* Ensure natural alignment of timestamp */
-+	struct {
-+		__le16 channels[2];
-+		s64 ts __aligned(8);
-+	} scan;
- };
- 
- extern const struct dev_pm_ops hts221_pm_ops;
---- a/drivers/iio/humidity/hts221_buffer.c
-+++ b/drivers/iio/humidity/hts221_buffer.c
-@@ -162,7 +162,6 @@ static const struct iio_buffer_setup_ops
- 
- static irqreturn_t hts221_buffer_handler_thread(int irq, void *p)
+ static void dspi_shutdown(struct platform_device *pdev)
  {
--	u8 buffer[ALIGN(2 * HTS221_DATA_SIZE, sizeof(s64)) + sizeof(s64)];
- 	struct iio_poll_func *pf = p;
- 	struct iio_dev *iio_dev = pf->indio_dev;
- 	struct hts221_hw *hw = iio_priv(iio_dev);
-@@ -172,18 +171,20 @@ static irqreturn_t hts221_buffer_handler
- 	/* humidity data */
- 	ch = &iio_dev->channels[HTS221_SENSOR_H];
- 	err = regmap_bulk_read(hw->regmap, ch->address,
--			       buffer, HTS221_DATA_SIZE);
-+			       &hw->scan.channels[0],
-+			       sizeof(hw->scan.channels[0]));
- 	if (err < 0)
- 		goto out;
+-	struct spi_controller *ctlr = platform_get_drvdata(pdev);
+-	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
+-
+-	/* Disable RX and TX */
+-	regmap_update_bits(dspi->regmap, SPI_MCR,
+-			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF,
+-			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF);
+-
+-	/* Stop Running */
+-	regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
+-
+-	dspi_release_dma(dspi);
+-	clk_disable_unprepare(dspi->clk);
+-	spi_unregister_controller(dspi->ctlr);
++	dspi_remove(pdev);
+ }
  
- 	/* temperature data */
- 	ch = &iio_dev->channels[HTS221_SENSOR_T];
- 	err = regmap_bulk_read(hw->regmap, ch->address,
--			       buffer + HTS221_DATA_SIZE, HTS221_DATA_SIZE);
-+			       &hw->scan.channels[1],
-+			       sizeof(hw->scan.channels[1]));
- 	if (err < 0)
- 		goto out;
- 
--	iio_push_to_buffers_with_timestamp(iio_dev, buffer,
-+	iio_push_to_buffers_with_timestamp(iio_dev, &hw->scan,
- 					   iio_get_time_ns(iio_dev));
- 
- out:
+ static struct platform_driver fsl_dspi_driver = {
+-- 
+2.25.1
+
 
 
