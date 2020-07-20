@@ -2,97 +2,108 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D18C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548B1C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABD1322BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:34:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ymSphsWO"
+	by mail.kernel.org (Postfix) with ESMTP id 2714620773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:34:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262880;
+	bh=Ahq+MFeqFQI5z4754L3jCb54hJ5FbH2RN46j9eSAkno=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LkyZR7cpvM3bQJAjoeN+q1WzOUYDnvZ8O79EeKAN2oB/+Ncjt/LkJRJA3uePniHdb
+	 du90XNLtSRR6OxzQmx8r6oZKNDyRm9on3CyqT06s1iGA0bU1nUeyEj20WmsLsvoyOj
+	 5jgF4XkG2ueAn9tYV/ryImJ4/XcnvbbI/daHHQZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389005AbgGTQe2 (ORCPT
+        id S1731278AbgGTPz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:34:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388992AbgGTQeN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:34:13 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 508C0C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:34:13 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id k6so13835833ili.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 09:34:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FNFbiBPENBEfe71XEJ6gFCWMcE5oolIikIpymSXLtU8=;
-        b=ymSphsWOGHRzYUqQryxfK6qsfrnfujA5wee3Do2OlMVkDKr0Gp5K3Y38NOoKGre2GR
-         O1ajgs627gAJuTjFk+29V6vz9GtS1aGP33HNVJTZZeMYNhSOzoecUXvrRrVUGgRiVntF
-         HimAl7avf1aE8KrJcJv9Q/5M6VbjdMoiigl6Lu0Xx+fGsClPF8ycOP9KoOC3mGHFlXUt
-         X/5UAvigI8KnzOSKq4s6EpQ0fmO9/Tj+3Sr32irPtVPRy+By0RG4h9a8xkHIx3GE7VV6
-         4EAOcZAlOycxB+PZm0VsCikFb0OInGLzplxcj8yVySgNRXLBLqplmzWZUduyqc1BrWWy
-         RdKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FNFbiBPENBEfe71XEJ6gFCWMcE5oolIikIpymSXLtU8=;
-        b=DM4o98M7h5hnslB7cJ42DeopwoTYZIH2tykLLiuoSvmcoHWJiQZYGWjCKDLYAF4nVv
-         F5tV4FPOvZQpqQfaZx1fA88UNM5s9FgnQZP3O5Qj187Lkge0ledFi/js+VOMtGraC1LS
-         7TlxhrtpEYsfCCYIWt6mt/IJNQ/lqxo/4Iy2sboY0X+Qd606b80hbSa1uhzKaJQ3dhtb
-         lr4sQaU1rz9O7clJvc6JewpXsEU7lVmUOsTcCkC8nNERRKhhNrgzA4/114suL+fjgeKR
-         ZF50bTxRmLnkyb8qCHGTsIr/YimoM1y9f2Koj1i1LdDGL3jVLGblriz5W1WctvGFMioc
-         Stqw==
-X-Gm-Message-State: AOAM531NGtlzsfNuWnXDw85EreTS8SJ3NpBfUkfug6hRhnSA8hMvJiCA
-        5vxFSiYPCwxNbfT/ezAuJObmMA==
-X-Google-Smtp-Source: ABdhPJyLSJytAUyvX8Jkdr+jZtHT7F9J3vtjWOjjFtSrZozAtQghAhoiEHYrlZwSGDKekTH3AuDhGw==
-X-Received: by 2002:a92:8982:: with SMTP id w2mr24108525ilk.163.1595262852660;
-        Mon, 20 Jul 2020 09:34:12 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id n1sm9046568ilo.68.2020.07.20.09.34.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 09:34:12 -0700 (PDT)
-Subject: Re: [PATCH] bfq: fix blkio cgroup leakage
-To:     Dmitry Monakhov <dmonakhov@gmail.com>,
-        Paolo Valente <paolo.valente@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org
-References: <20200702105751.20482-1-dmonakhov@gmail.com>
- <429E50C6-83BA-4A3F-BE9C-06C7C762AF33@linaro.org>
- <87k0zdrj7s.fsf@dmws.yandex.net>
- <545F1ABF-B2B2-4523-9259-D3F93A9BB330@linaro.org>
- <87h7uhqewn.fsf@dmws.yandex.net>
- <22087F19-BC93-447E-848A-109392E0622D@linaro.org>
- <87tuy2ml9j.fsf@dmws.yandex.net>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b4561a09-f00f-568b-9d55-0a2893de4be5@kernel.dk>
-Date:   Mon, 20 Jul 2020 10:34:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 11:55:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730755AbgGTPzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:55:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEE9F2065E;
+        Mon, 20 Jul 2020 15:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260518;
+        bh=Ahq+MFeqFQI5z4754L3jCb54hJ5FbH2RN46j9eSAkno=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ej+aOeak68kB76XtRI39utbA0Mnr3HgWY1/62KNk0SCCBsa8fkI2ElfJseKlm8X1T
+         44ALHUhJhqnHV8LeS01v4yz+tVv6hyyyybeyRxziOfpteuJ0B0VlLz4ptKl2neTbl9
+         yeMN40Lv7OoocrO9ZB78a+MVrDTS/NCN8dYYKpFs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@pm.me>,
+        Amit Shah <amit@kernel.org>
+Subject: [PATCH 4.19 101/133] virtio: virtio_console: add missing MODULE_DEVICE_TABLE() for rproc serial
+Date:   Mon, 20 Jul 2020 17:37:28 +0200
+Message-Id: <20200720152808.610888099@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
+References: <20200720152803.732195882@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <87tuy2ml9j.fsf@dmws.yandex.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/20/20 6:19 AM, Dmitry Monakhov wrote:
-> Ok you right, we should drop the group reference inside
-> __bfq_bfqd_reset_in_service() as we do for queue's entities. Please
-> see updated patch version.
+From: Alexander Lobakin <alobakin@pm.me>
 
-Can you please send that out as a proper v2?
+commit 897c44f0bae574c5fb318c759b060bebf9dd6013 upstream.
 
--- 
-Jens Axboe
+rproc_serial_id_table lacks an exposure to module devicetable, so
+when remoteproc firmware requests VIRTIO_ID_RPROC_SERIAL, no uevent
+is generated and no module autoloading occurs.
+Add missing MODULE_DEVICE_TABLE() annotation and move the existing
+one for VIRTIO_ID_CONSOLE right to the table itself.
+
+Fixes: 1b6370463e88 ("virtio_console: Add support for remoteproc serial")
+Cc: <stable@vger.kernel.org> # v3.8+
+Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+Reviewed-by: Amit Shah <amit@kernel.org>
+Link: https://lore.kernel.org/r/x7C_CbeJtoGMy258nwAXASYz3xgFMFpyzmUvOyZzRnQrgWCREBjaqBOpAUS7ol4NnZYvSVwmTsCG0Ohyfvta-ygw6HMHcoeKK0C3QFiAO_Q=@pm.me
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/char/virtio_console.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/char/virtio_console.c
++++ b/drivers/char/virtio_console.c
+@@ -2142,6 +2142,7 @@ static struct virtio_device_id id_table[
+ 	{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
+ 	{ 0 },
+ };
++MODULE_DEVICE_TABLE(virtio, id_table);
+ 
+ static unsigned int features[] = {
+ 	VIRTIO_CONSOLE_F_SIZE,
+@@ -2154,6 +2155,7 @@ static struct virtio_device_id rproc_ser
+ #endif
+ 	{ 0 },
+ };
++MODULE_DEVICE_TABLE(virtio, rproc_serial_id_table);
+ 
+ static unsigned int rproc_serial_features[] = {
+ };
+@@ -2306,6 +2308,5 @@ static void __exit fini(void)
+ module_init(init);
+ module_exit(fini);
+ 
+-MODULE_DEVICE_TABLE(virtio, id_table);
+ MODULE_DESCRIPTION("Virtio console driver");
+ MODULE_LICENSE("GPL");
+
 
