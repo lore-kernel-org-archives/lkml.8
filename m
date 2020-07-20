@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B75C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD34C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E983322D02
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD0A320672
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261354;
-	bh=IQtVVwASIV9iN5LpAQ0FqLnEWWJ0Umn2MdHysulL3lQ=;
+	s=default; t=1595261360;
+	bh=MR7PYcRcX1ev1bmrHvvbkcLvKZOjWSCMRCzeKzi9goI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zGqc3Pm9TQcJhirYpVd1pImFZYBoA7Il5N6JrvMxAv9Wqn4ed7U2vZJUTuX8szONI
-	 E0gMMyXsvgk7BJtP3ZfB+g054WcPcK7rK04hiMXOoF0u4spk/HxsZm/OOXI7PP3gL8
-	 e29ldtk/xwhkqt8BhsiS/CvON1wWolUX438+/RDc=
+	b=vbRg7I7Eny1MGRbMniigkts6JpXfmiA86KDgpp0SvIFhKOAgNUdORo5Ei5Xa+9TXa
+	 WN5RRJ3aVwy3TzOiED5SBPfBvHHo/IvnhKcLOxqlJ7HGQMRGVAplo6cLpfTeDQG5Vy
+	 T6GTk8a6izu/LWYfzYe81LRwHoVO92YDk3UXuGGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732350AbgGTQJM (ORCPT
+        id S2387502AbgGTQJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46770 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:09:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387461AbgGTQJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:09:03 -0400
+        id S2387490AbgGTQJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:09:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AF662065E;
-        Mon, 20 Jul 2020 16:09:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27EA7206E9;
+        Mon, 20 Jul 2020 16:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261342;
-        bh=IQtVVwASIV9iN5LpAQ0FqLnEWWJ0Umn2MdHysulL3lQ=;
+        s=default; t=1595261350;
+        bh=MR7PYcRcX1ev1bmrHvvbkcLvKZOjWSCMRCzeKzi9goI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mHD3ayACkiLDf7WleGsT0v+SYipGmn3ekMY91anz0UErKePkE5Yina2YMRVx03p8q
-         7ED9aGZp8BNqlmUXslqKCGfA1n30fjf0ki/BEL5p93fEYy4mS9ytEigIzoIgZTn7AZ
-         rZIwri1aW4v4mmIOlgZZdtmSnAIbGZdRoYgLltqs=
+        b=XzcLSQathvc6IZD8j2uK4Ck4263ID3a3VXvS/OYuck6XCJRdpDtKx89Q8yBvRXn4t
+         s9IDleYGBDo+LFGd0Er3T9hWbNauHhIlTVS0+WvC1/YN+JqwEm6N5GupUKfExxBmMb
+         YTXKwPQBbc+EV63SSUrIDCVX9jUsOj7zESPunj0I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikhil Rao <nikhil.rao@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
+        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Heiko Stuebner <heiko@sntech.de>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 082/244] dmaengine: idxd: fix cdev locking for open and release
-Date:   Mon, 20 Jul 2020 17:35:53 +0200
-Message-Id: <20200720152829.742328308@linuxfoundation.org>
+Subject: [PATCH 5.7 085/244] phy: rockchip: Fix return value of inno_dsidphy_probe()
+Date:   Mon, 20 Jul 2020 17:35:56 +0200
+Message-Id: <20200720152829.880983999@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,76 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikhil Rao <nikhil.rao@intel.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 66983bc18fad17d10766650b3685045f6f092d73 ]
+[ Upstream commit fdc355a03df537bc8d8909b86d1688fe07c7032b ]
 
-add the wq lock in cdev open and release call. This fixes
-race conditions observed in the open and close routines.
+When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+to check the return value and return PTR_ERR() if failed.
 
-Fixes: 42d279f9137a ("dmaengine: idxd: add char driver to expose submission portal to userland")
-Signed-off-by: Nikhil Rao <nikhil.rao@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/159285824892.64944.2905413694915141834.stgit@djiang5-desk3.ch.intel.com
+Fixes: b7535a3bc0ba ("phy/rockchip: Add support for Innosilicon MIPI/LVDS/TTL PHY")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lore.kernel.org/r/1590412138-13903-1-git-send-email-yangtiezhu@loongson.cn
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/idxd/cdev.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index ff49847e37a86..cb376cf6a2d2c 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -74,6 +74,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
- 	struct idxd_device *idxd;
- 	struct idxd_wq *wq;
- 	struct device *dev;
-+	int rc = 0;
+diff --git a/drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c b/drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c
+index a7c6c940a3a8c..8af8c6c5cc028 100644
+--- a/drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c
++++ b/drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c
+@@ -607,8 +607,8 @@ static int inno_dsidphy_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, inno);
  
- 	wq = inode_wq(inode);
- 	idxd = wq->idxd;
-@@ -81,17 +82,27 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+ 	inno->phy_base = devm_platform_ioremap_resource(pdev, 0);
+-	if (!inno->phy_base)
+-		return -ENOMEM;
++	if (IS_ERR(inno->phy_base))
++		return PTR_ERR(inno->phy_base);
  
- 	dev_dbg(dev, "%s called: %d\n", __func__, idxd_wq_refcount(wq));
- 
--	if (idxd_wq_refcount(wq) > 0 && wq_dedicated(wq))
--		return -EBUSY;
--
- 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
- 	if (!ctx)
- 		return -ENOMEM;
- 
-+	mutex_lock(&wq->wq_lock);
-+
-+	if (idxd_wq_refcount(wq) > 0 && wq_dedicated(wq)) {
-+		rc = -EBUSY;
-+		goto failed;
-+	}
-+
- 	ctx->wq = wq;
- 	filp->private_data = ctx;
- 	idxd_wq_get(wq);
-+	mutex_unlock(&wq->wq_lock);
- 	return 0;
-+
-+ failed:
-+	mutex_unlock(&wq->wq_lock);
-+	kfree(ctx);
-+	return rc;
- }
- 
- static int idxd_cdev_release(struct inode *node, struct file *filep)
-@@ -105,7 +116,9 @@ static int idxd_cdev_release(struct inode *node, struct file *filep)
- 	filep->private_data = NULL;
- 
- 	kfree(ctx);
-+	mutex_lock(&wq->wq_lock);
- 	idxd_wq_put(wq);
-+	mutex_unlock(&wq->wq_lock);
- 	return 0;
- }
- 
+ 	inno->ref_clk = devm_clk_get(dev, "ref");
+ 	if (IS_ERR(inno->ref_clk)) {
 -- 
 2.25.1
 
