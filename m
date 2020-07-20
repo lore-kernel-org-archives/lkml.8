@@ -2,95 +2,105 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF85C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B688222B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0CA22B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595283696;
-	bh=QBVEF6GoD/BriDC2232Tk+DSoCwhv1gZXWPuakVMLQ8=;
+	s=default; t=1595283793;
+	bh=POZiBwDIvDGG/iE1XNPde1Rvx1qw+5xNMnBSOIHMKrc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HBwlVGHeqXOeWxMQDYMnAXSAU/98DdZNh2wokxCOO3Y4TuO3R9WUg1ItmXNXuZsVC
-	 x0hzOH5catgulNk/H8k2B/FQhU8SQ81MqlrDI78XrvqO7VuLu98NMdOt7un22y5WMi
-	 7dfmYQe51l8IHS5sU9T3HkGsvMfPBzkNUF2lmpSU=
+	b=uJlj2OEfUSfuHbqD0hD/dVUykrEs7N3oWhAvW6wPJ65QcmtyVSI8pGA8dgoS8dCNj
+	 d/cQJ77mySo11MH+r9NiwqssI3vIx/aa6gg4okHdodQe+P15/9BaKS3sM7prI0CTur
+	 SLDgeGneiKSbvcHzSRDig/rfGiUBfciyHCbGP4Lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgGTWVf (ORCPT
+        id S1727790AbgGTWXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 18:21:35 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46039 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgGTWVe (ORCPT
+        Mon, 20 Jul 2020 18:23:11 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44123 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgGTWXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 18:21:34 -0400
-Received: by mail-io1-f68.google.com with SMTP id e64so19300901iof.12;
-        Mon, 20 Jul 2020 15:21:33 -0700 (PDT)
+        Mon, 20 Jul 2020 18:23:10 -0400
+Received: by mail-io1-f67.google.com with SMTP id i4so19261594iov.11;
+        Mon, 20 Jul 2020 15:23:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=bKYIymgYEsaoAp0VGuX+X+GdB+8XUwPd9yIWMXOJP1w=;
-        b=hyTu/7AZwsxWFKuXgHnq/8w3UkGTp2ZOT/wjdl+ecTqi+F7gHTc8szOv8BUYE1Wb1Y
-         Ie+uzbEwe0V02SvAEE7ajlFj85aMVKwxkFEhKDLQGmTiSNa/VuBjNT7Z8vudFQ3MJcWp
-         tBhgE+Q2Vdvym3BNc+bZ9GOv6l/pcphSDrXm3sJ+599u5xfFRmSwelKG3seOIvy65HCp
-         +cucKDdr4xMvr6ifw0ElxIybvbQKYvKPzIMcPK20KFdTzRoJ2EfIV6TJkVeoUM1b9erd
-         Da9Vc4U6BsIV8MAB/oxGFC1Aav0ABecPMzqpWF+hNBhGHwobBcbmaBzbDx3eJXkMixi2
-         D8VQ==
-X-Gm-Message-State: AOAM53133vsFyVUtIjvoUKePadMO4QtB+CaVrymcgsdU93ON2X3PhOMu
-        mVx/asb3fUiOSckQVflzfg==
-X-Google-Smtp-Source: ABdhPJyw7PV9vqQm9bNholJCp9qVWUHQhJ4HzWTR9RO+AmibGdJC53lLZ6Ro0lZ/VF/HqsMbn+QlAg==
-X-Received: by 2002:a05:6638:1187:: with SMTP id f7mr29447388jas.21.1595283693108;
-        Mon, 20 Jul 2020 15:21:33 -0700 (PDT)
+        bh=+CUr9tHT5PVLHwGkmwIOpkcnunWXimE18rjDQkGp1Yk=;
+        b=FZU6XCNWbEcG/HIhv2DPTYvx0269GDOvkwpSoOqVyOjrLjUN3BAf3B4t6XuVp2HQ0B
+         7Aj6WUcQ+VvJuDSYFkKrU52PivVPpv4zunuq8fW+xNVwx/lxU1Trp0v+GUyaRHDxsUQ5
+         ysFzUmjLWQMs1yU5cdn5Cc9EeusDUlsSE52yRCbeN0qrsUU7XDa3FoRHgXnEvNLa2bWk
+         /HmTt5YdXDmcFc9goXt2f8BNctsz751pwj7EC4cNh28dmV5eRqrx3qZNFlL8Z8zyObdx
+         Uxetsg/eN3W5Wld5xtbV2ql780GhupbnGCzayEKF1tDknh//PSuK0fwmdjB16W6LJixu
+         eKvQ==
+X-Gm-Message-State: AOAM532z21eTdnlrtQ2kZIjUZtcrpzpSJBt/4zlGfbhLxK9/fyPFdaEK
+        NYwh/SgvaF4O8ylPZ4m758sQYJOExQ==
+X-Google-Smtp-Source: ABdhPJwllR6kKvpNlj5U5ToaaUpZ/6dIW7JrJ1q8wXwbwU6yDnrnrQ4MzKOwoZKQo+WbuWg/9TAoaw==
+X-Received: by 2002:a05:6638:1495:: with SMTP id j21mr3018281jak.136.1595283790071;
+        Mon, 20 Jul 2020 15:23:10 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id n1sm9463052ilo.68.2020.07.20.15.21.31
+        by smtp.gmail.com with ESMTPSA id b14sm9767511ilg.86.2020.07.20.15.23.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 15:21:32 -0700 (PDT)
-Received: (nullmailer pid 3055517 invoked by uid 1000);
-        Mon, 20 Jul 2020 22:21:31 -0000
-Date:   Mon, 20 Jul 2020 16:21:31 -0600
+        Mon, 20 Jul 2020 15:23:09 -0700 (PDT)
+Received: (nullmailer pid 3057835 invoked by uid 1000);
+        Mon, 20 Jul 2020 22:23:07 -0000
+Date:   Mon, 20 Jul 2020 16:23:07 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-renesas-soc@vger.kernel.org,
-        Magnus Damm <magnus.damm@gmail.com>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-serial@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 4/8] dt-bindings: mmc: renesas,sdhi: Add r8a774e1 support
-Message-ID: <20200720222131.GA3055470@bogus>
-References: <1594230511-24790-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594230511-24790-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-i3c@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Conor Culhane <conor.culhane@silvaco.com>,
+        Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>
+Subject: Re: [PATCH 1/4] dt-bindings: Add vendor prefix for Silvaco
+Message-ID: <20200720222307.GA3056749@bogus>
+References: <20200709080159.2178-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594230511-24790-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200709080159.2178-1-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 Jul 2020 18:48:27 +0100, Lad Prabhakar wrote:
-> Document SDHI controller for RZ/G2H (R8A774E1) SoC, which is compatible
-> with R-Car Gen3 SoC family.
+On Thu, Jul 09, 2020 at 10:01:56AM +0200, Miquel Raynal wrote:
+> Silvaco, Inc. is an EDA provider of software tools used for process
+> and device development and for analog/mixed-signal, power IC and
+> memory design [1].
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> [1] https://www.silvaco.com/company/profile/profile.html
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > ---
->  Documentation/devicetree/bindings/mmc/renesas,sdhi.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 9aeab66be85f..5933966db783 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -1004,6 +1004,8 @@ patternProperties:
+>      description: Shenzhen Sunchip Technology Co., Ltd
+>    "^SUNW,.*":
+>      description: Sun Microsystems, Inc
+> +  "^svc,.*":
 
-Acked-by: Rob Herring <robh@kernel.org>
+Why not 'silvaco'?
+
+> +    description: Silvaco, Inc.
+>    "^swir,.*":
+>      description: Sierra Wireless
+>    "^syna,.*":
+> -- 
+> 2.20.1
+> 
