@@ -7,61 +7,97 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14CFC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15716C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB3562177B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E41882177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 03:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595215298;
-	bh=5Ce6Fn23kftLFu/23R3QrOFgjowinyYkVpoCqjWNCsA=;
+	s=default; t=1595215603;
+	bh=3vn9rZSLTQj5C4sEUB9yrej0wTjYfvGDXM+nwjtSmXk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=quHA5V5nR//tYIEKQeF3ZmeWlfH9MMwoAp+MVL6jDeosH6F8yW0fqppE7R6sr25QY
-	 LahVGSfmpbHU6FvsYC13cyvB112I6Jo46kMinN9GJuhbFpyzE61t3iGEUIQ7BxZY5z
-	 CApmPXEL7oUKhdNGbpGFHwfRruRmQtJDkbVYjjRw=
+	b=MUyoFsZRwv73fC5yQ4iDXJKIx7b7OIDZRgikXvPDqxtthoXsle7reRuqnYa0S2KAD
+	 rERf3XdOanHMyork8g/HKX/ruLfRW1mtL9i0/svs11bDzFRkkOC5QYQOEmpHOH3x9J
+	 pRYRfmzF1wOZt1Lk4L6v+X94VnxoHz6W1aLbJ57k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgGTDVh (ORCPT
+        id S1726824AbgGTD0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 23:21:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44538 "EHLO mail.kernel.org"
+        Sun, 19 Jul 2020 23:26:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726499AbgGTDVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 23:21:37 -0400
+        id S1726312AbgGTD0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 23:26:42 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6905720724;
-        Mon, 20 Jul 2020 03:21:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7980D20734;
+        Mon, 20 Jul 2020 03:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595215296;
-        bh=5Ce6Fn23kftLFu/23R3QrOFgjowinyYkVpoCqjWNCsA=;
+        s=default; t=1595215601;
+        bh=3vn9rZSLTQj5C4sEUB9yrej0wTjYfvGDXM+nwjtSmXk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sAzZRZ1sne0RFHtVAABjKRj8bu2k/+72KTxi3TxvBDSMJ3WnXYsS2dvPYQ1qXs0PM
-         2mqSuM7U0Ed/M3u8xvRDqK9p1g5XKJctbepfV6cIve3RslKW6Cb0MxLfrrlSSBjCsq
-         FzQucrVDnz4bCbAcOUztwarINEuaECrS9oAisPk4=
-Date:   Mon, 20 Jul 2020 11:21:28 +0800
+        b=mnUbnuNe9lZEbr3a54uN4kl8oF1XTayMmqC4vBHEZjHyJud1deBdGMcF7P8sKLPo6
+         C6pxbT4nsrdZ+vFOnZ9822OgeLwmeiWSR1H3N2ER4f6/zPtPt5hj48it3LpyAFGTsl
+         BiMPFtFikv8wWTONPzn5BQwvUHvHteWjgTnzv90w=
+Date:   Mon, 20 Jul 2020 11:26:32 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Chris Healy <cphealy@gmail.com>
-Cc:     s.hauer@pengutronix.de, stefan@agner.ch, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, festevam@gmail.com
-Subject: Re: [PATCH] ARM: dts: vf610-zii-ssmb-spu3: Add node for switch
- watchdog
-Message-ID: <20200720032127.GL11560@dragon>
-References: <20200715220758.3106-1-cphealy@gmail.com>
+To:     Suniel Mahesh <sunil@amarulasolutions.com>
+Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, gregkh@linuxfoundation.org,
+        sashal@kernel.org, jagan@amarulasolutions.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v3] ARM: dts: imx6qdl-icore: Fix OTG_ID pin and sdcard
+ detect
+Message-ID: <20200720032632.GM11560@dragon>
+References: <20200711135925.GG21277@dragon>
+ <1594973032-29671-1-git-send-email-sunil@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200715220758.3106-1-cphealy@gmail.com>
+In-Reply-To: <1594973032-29671-1-git-send-email-sunil@amarulasolutions.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 03:07:58PM -0700, Chris Healy wrote:
-> Add I2C child node for switch watchdog present on SPU3
+On Fri, Jul 17, 2020 at 01:33:52PM +0530, Suniel Mahesh wrote:
+> From: Michael Trimarchi <michael@amarulasolutions.com>
 > 
-> Signed-off-by: Chris Healy <cphealy@gmail.com>
+> The current pin muxing scheme muxes GPIO_1 pad for USB_OTG_ID
+> because of which when card is inserted, usb otg is enumerated
+> and the card is never detected.
+> 
+> [   64.492645] cfg80211: failed to load regulatory.db
+> [   64.492657] imx-sdma 20ec000.sdma: external firmware not found, using ROM firmware
+> [   76.343711] ci_hdrc ci_hdrc.0: EHCI Host Controller
+> [   76.349742] ci_hdrc ci_hdrc.0: new USB bus registered, assigned bus number 2
+> [   76.388862] ci_hdrc ci_hdrc.0: USB 2.0 started, EHCI 1.00
+> [   76.396650] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 5.08
+> [   76.405412] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+> [   76.412763] usb usb2: Product: EHCI Host Controller
+> [   76.417666] usb usb2: Manufacturer: Linux 5.8.0-rc1-next-20200618 ehci_hcd
+> [   76.424623] usb usb2: SerialNumber: ci_hdrc.0
+> [   76.431755] hub 2-0:1.0: USB hub found
+> [   76.435862] hub 2-0:1.0: 1 port detected
+> 
+> The TRM mentions GPIO_1 pad should be muxed/assigned for card detect
+> and ENET_RX_ER pad for USB_OTG_ID for proper operation.
+> 
+> This patch fixes pin muxing as per TRM and is tested on a
+> i.Core 1.5 MX6 DL SOM.
+> 
+> [   22.449165] mmc0: host does not support reading read-only switch, assuming write-enable
+> [   22.459992] mmc0: new high speed SDHC card at address 0001
+> [   22.469725] mmcblk0: mmc0:0001 EB1QT 29.8 GiB
+> [   22.478856]  mmcblk0: p1 p2
+> 
+> Fixes: 6df11287f7c9 ("ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+> Signed-off-by: Suniel Mahesh <sunil@amarulasolutions.com>
 
 Applied, thanks.
