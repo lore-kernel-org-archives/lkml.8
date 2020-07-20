@@ -2,108 +2,156 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B522C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54BDC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E98FC206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4621206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:03:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDSdkoTt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D1kNZ97u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731004AbgGTRDP (ORCPT
+        id S2389134AbgGTRDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:03:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51880 "EHLO
+        Mon, 20 Jul 2020 13:03:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbgGTRDO (ORCPT
+        with ESMTP id S1729957AbgGTRDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:03:14 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16861C061794;
-        Mon, 20 Jul 2020 10:03:14 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a15so3637538wrh.10;
-        Mon, 20 Jul 2020 10:03:14 -0700 (PDT)
+        Mon, 20 Jul 2020 13:03:19 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E37AC0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:03:18 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id y10so18847089eje.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:03:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2z6vfRN45O58360WXxB9JosENc0eD1jtyLCvWHGh1YY=;
-        b=NDSdkoTtQtN9k8e5yU0/Q6OJPgewxcja66aFKP8Z7ADQhogTJURkNUpGl91G2fpCCU
-         oIkZoqpmJ/x1DP3gXTsvgKPG2qkgxg7rLWiYBSMsPyfyECt8X4/CYlT8TvVEBnGbPnvO
-         yhxBYdlA2ZXvEuMIGUxXzn75G7Kua2nEsR2NMUAkmMiJg5uOmfWYmmVFAbfbQbesJWEt
-         LlS6Ou/POWTJOLnbo/h7xECwdjuxZ1t2atpEjWmxDllEDUmevYK9J1jM8unZROSC3aJf
-         TER0ScfQ2MpTlWMVo4cYQaU10tOokxlhrgFoiZVHfW2W4jXw8xxyOoPY/JVpEy8KWQ/C
-         V9Ew==
+        bh=/D99yVB3Oiz5Mh00scTWz5/c04ErKfScrbcBA6SkIPw=;
+        b=D1kNZ97uQbS+psUY/wpbNhL+V3j7kvil0De+3fNHHIbbmYkbXypwfizcVy0gp1lzE8
+         7PRzu+A/DJqCiXG3TFpg0CU2LqyzqlAcLEyovIpxOpRNKdKE/EdUIu5z2kXMQr928Q39
+         FS4Ga5tFbkn8/CP6o4go59NrA+6hN8L6Jic2QioJZzyLlPcKr0PoP434tfoWNi2AjRQC
+         JgNnc1qxestfxBJdBYM3QGUwlDRa96HrLWyP2xLc1v6hPUO+iB07p7nxvDyVMXF+3oaY
+         jGpI+XBdZQzcP4bCwpYBZrLCv/cGRpWAH+ITrpaSHEORxOjlOgZTjHcyXWHex5YWmq9d
+         8I7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2z6vfRN45O58360WXxB9JosENc0eD1jtyLCvWHGh1YY=;
-        b=rNTqgr0YeqS5MJRRck2jJ1YubKfKVvWigWXM0S4618NGxcbRyAxKc1sh2Foej0fZhu
-         +ofG0U/2CfPSX+VWDj3uj15ovuULmAC+By0O20VKi9DN6TBuyGNnFetAAojkKMYHdZXJ
-         5pHH16LjotwTm7CPZmIW2NOnuUu8WKzN7s+ho9VGkfeKaszCeeNfP0tz9InarT8w/L/J
-         MphzfIxTe1IAqrDFpa5PaEdjD0dvRAkkHyoyuiKXaqE4LwkLisVvfxZr/70kLXHerrUb
-         zv/nz2PnjpEhjQeS/9YhEnONw+r16lkXzrLeBfU6TOFPDVcYjnRQ94DNXZ88PBgO/jx6
-         jRRQ==
-X-Gm-Message-State: AOAM532a58aXQpjytQf7UTc9NmbqDEbbcmi+t6LMo1xibH88B85pNdpA
-        pLPaRhplkjA5QV+QcU6j+nGVIyhcOqvYfaT2DQ0=
-X-Google-Smtp-Source: ABdhPJzLTTWPjYGX0RzMnJeUOLrnHeGFH1UOcpvlUTIsjffcPcqfeW0pNI6XGZeS+hFgMQxoz0bLNak5dIzAX9LyPrY=
-X-Received: by 2002:adf:f0ce:: with SMTP id x14mr22109097wro.137.1595264592763;
- Mon, 20 Jul 2020 10:03:12 -0700 (PDT)
+        bh=/D99yVB3Oiz5Mh00scTWz5/c04ErKfScrbcBA6SkIPw=;
+        b=YYU2WYOIBRIrQqbZxgOk0QzWW6j8ew0OOUla3eSdfrbTUPGG1WNfEKOFLMt1JZ1mhU
+         BifCJFXjup7y7YFg7bYxqJM2Pzl+Ckb9vaImmkkOAYZhjqfDprPUp1CmNxZqagnz74e+
+         KTK/BGWAntLcPrdsdFGAYpSSVxJKWuyDWi69wYszuSPjcMGqv70ct+HyI11STQXoYVUR
+         cM1T2SfpE+KEb7iIP4mH4wv1yc0sidIbblPIBxeYSiwMOyhA+swcPR/Vea8keKZJXTLQ
+         0UZN+Fi8L7fkRD+qagmjibPqTXixcDNBOGqHM/8jlIhjTghQ3YjS8G0677uUw0ZWidRJ
+         TGjQ==
+X-Gm-Message-State: AOAM532nsVwytftmD2U1UIlhaOiRx6lAvPAq4U5eG2zBdJKuHl7xSFdt
+        Si2crNM3houVx/yiS112AZ3C2og2XXjimEttSDxpHg==
+X-Google-Smtp-Source: ABdhPJzW7jeqn8/HrRf1zvDOSBhWBELyOoysxnoaonrBp2ayMlaTV+GUKzwc1g6K05h7+lORk8nrO2ZkuRfId+MHg7g=
+X-Received: by 2002:a17:907:10d4:: with SMTP id rv20mr22660986ejb.413.1595264596856;
+ Mon, 20 Jul 2020 10:03:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
- <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk> <20200709085501.GA64935@infradead.org>
- <adc14700-8e95-10b2-d914-afa5029ae80c@kernel.dk> <20200709140053.GA7528@infradead.org>
- <2270907f-670c-5182-f4ec-9756dc645376@kernel.dk> <CA+1E3r+H7WEyfTufNz3xBQQynOVV-uD3myYynkfp7iU+D=Svuw@mail.gmail.com>
- <f5e3e931-ef1b-2eb6-9a03-44dd5589c8d3@kernel.dk> <20200710130912.GA7491@infradead.org>
- <CA+1E3rJSiS58TE=hHv5wVv-umJ19_7zKv-JqZTNzD=xi3MoX1g@mail.gmail.com> <20200710134350.GA14704@infradead.org>
-In-Reply-To: <20200710134350.GA14704@infradead.org>
-From:   Kanchan Joshi <joshiiitr@gmail.com>
-Date:   Mon, 20 Jul 2020 22:32:45 +0530
-Message-ID: <CA+1E3r+DgR=vVCsUv0cCbPC4MV3Rxfyzee-HWwTogSQ-7F=MoA@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Kanchan Joshi <joshi.k@samsung.com>,
-        viro@zeniv.linux.org.uk, bcrl@kvack.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        "Matias Bj??rling" <mb@lightnvm.io>, linux-kernel@vger.kernel.org,
-        linux-aio@kvack.org, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
+References: <20200715214312.2266839-1-haoluo@google.com> <20200715214312.2266839-2-haoluo@google.com>
+ <CAEf4BzZ5A+uMPFEmgom+0x+jju3JgTLXuuy=QB_dm2Skf--5Dg@mail.gmail.com>
+In-Reply-To: <CAEf4BzZ5A+uMPFEmgom+0x+jju3JgTLXuuy=QB_dm2Skf--5Dg@mail.gmail.com>
+From:   Hao Luo <haoluo@google.com>
+Date:   Mon, 20 Jul 2020 10:03:05 -0700
+Message-ID: <CA+khW7h1HBmV5LdALswF2d2q9cD_EU1CfbBEogdHszbHLnTVAQ@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next 1/2] bpf: BTF support for __ksym externs
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin@isovalent.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 7:13 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Fri, Jul 10, 2020 at 06:59:45PM +0530, Kanchan Joshi wrote:
-> > > block doesn't work for the case of writes to files that don't have
-> > > to be aligned in any way.  And that I think is the more broadly
-> > > applicable use case than zone append on block devices.
-> >
-> > But when can it happen that we do zone-append on a file (zonefs I
-> > asssume), and device returns a location (write-pointer essentially)
-> > which is not in multiple of 512b?
->
-> All the time.  You open a file with O_APPEND.  You write a record to
-> it of any kind of size, then the next write will return the position
-> it got written at, which can be anything.
-I understand if this is about cached write and we are talking about
-O_APPEND in general.
-But for direct block I/O write and ZoneFS writes, page-cache is not
-used, so write(and zone-append result) will be aligned to underlying
-block size.
-Even though this patchset uses O_APPEND, it filters regular files and
-non zoned-block devices by using new FMODE_ZONE_APPEND flag.
+Andrii,
 
--- 
-Joshi
+Thanks for taking a look at this. You comments are clear, I will fix them in v2.
+
+> Also, in the next version, please split kernel part and libbpf part
+> into separate patches.
+>
+
+Got it. Will do.
+
+> I don't think that's the right approach. It can't be the best effort.
+> It's actually pretty clear when a user wants a BTF-based variable with
+> ability to do direct memory access vs __ksym address that we have
+> right now: variable type info. In your patch you are only looking up
+> variable by name, but it needs to be more elaborate logic:
+>
+> 1. if variable type is `extern void` -- do what we do today (no BTF required)
+> 2. if the variable type is anything but `extern void`, then find that
+> variable in BTF. If no BTF or variable is not found -- hard error with
+> detailed enough message about what we expected to find in kernel BTF.
+> 3. If such a variable is found in the kernel, then might be a good
+> idea to additionally check type compatibility (e.g., struct/union
+> should match struct/union, int should match int, typedefs should get
+> resolved to underlying type, etc). I don't think deep comparison of
+> structs is right, though, due to CO-RE, so just high-level
+> compatibility checks to prevent the most obvious mistakes.
+>
+
+Ack.
+
+> >
+> > Also note since we need to carry the ksym's address (64bits) as well as
+> > its btf_id (32bits), pseudo_btf_id uses ld_imm64's both imm and off
+> > fields.
+>
+> For BTF-enabled ksyms, libbpf doesn't need to provide symbol address,
+> kernel will find it and substitute it, so BTF ID is the only
+> parameter. Thus it can just go into the imm field (and simplify
+> ldimm64 validation logic a bit).
+>
+
+Ack.
+
+> >  /* when bpf_call->src_reg == BPF_PSEUDO_CALL, bpf_call->imm == pc-relative
+> >   * offset to another bpf function
+> > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> > index 3c1efc9d08fd..3c925957b9b6 100644
+> > --- a/kernel/bpf/verifier.c
+> > +++ b/kernel/bpf/verifier.c
+> > @@ -7131,15 +7131,29 @@ static int check_ld_imm(struct bpf_verifier_env *env, struct bpf_insn *insn)
+> >                 verbose(env, "invalid BPF_LD_IMM insn\n");
+> >                 return -EINVAL;
+> >         }
+> > +       err = check_reg_arg(env, insn->dst_reg, DST_OP);
+> > +       if (err)
+> > +               return err;
+> > +
+> > +       /*
+> > +        * BPF_PSEUDO_BTF_ID insn's off fields carry the ksym's btf_id, so its
+> > +        * handling has to come before the reserved field check.
+> > +        */
+> > +       if (insn->src_reg == BPF_PSEUDO_BTF_ID) {
+> > +               u32 id = ((u32)(insn + 1)->off << 16) | (u32)insn->off;
+> > +               const struct btf_type *t = btf_type_by_id(btf_vmlinux, id);
+> > +
+>
+> This is the kernel, we should be paranoid and assume the hackers want
+> to do bad things. So check t for NULL. Check that it's actually a
+> BTF_KIND_VAR. Check the name, find ksym addr, etc.
+>
+
+Ack.
