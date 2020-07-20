@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1F6C2D0E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4687C43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2F41207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7B22068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281227;
-	bh=EK7AU3umgWF+MjgNKJPzI26DlG5PNOhqnBDJBBvQw98=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BnDx7NNFl7m+PnyB/GD7X9kRjk/aPsSkgdo7/ClH1dBDOuil3voEs8aAgbJ2ki9zX
-	 oOkhGNbRBS340I/vqJJP1D58UstIa9ffE7ipAtPoCsMJ0Xksvct3MGM4f8kCDp1H2x
-	 NKdx9bTsszh4ETU+G/9bmZhbRs8uCiwIwxfaVvho=
+	s=default; t=1595281217;
+	bh=EPHloOM0DXlDaIKPPfLO266b1vDEBjiAw24s/4FRhi0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gr4btrt8IbOG5yKWgtX43D9p7F73Jed97isvgxslyWUqZPY6gIvJ0VfnA+WgAVXJV
+	 ooIrV+iQXjvlAr5mo0FnriX2+bdjeodcVuTJ3ZHtkZUCDy02jBWp458zzsFPwoh2V6
+	 N9xKb5Hz2X8wxvshXNsU1YRFg3yNeeJkoaEsvOvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgGTVk0 (ORCPT
+        id S1728691AbgGTVkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:40:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59744 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:40:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728558AbgGTVjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:46 -0400
+        id S1728524AbgGTVjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DFE120717;
-        Mon, 20 Jul 2020 21:39:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1157207FC;
+        Mon, 20 Jul 2020 21:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281185;
-        bh=EK7AU3umgWF+MjgNKJPzI26DlG5PNOhqnBDJBBvQw98=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bN3ISFfoKOERraxW9itpeVZmN4dPDWaEJ2IS1rixUG9QE9UbR476c2xUCM6ZFsclU
-         6g5EGqFFQmH3MGjQy69PGIfkn0kdAvUA0zPNff4yn/MqvcGgvpGhT2C75kUcAv+LAM
-         7rEfF0KniTbdtF4/g7eH3Cl/h3GZB6JmyB1IJu/0=
+        s=default; t=1595281177;
+        bh=EPHloOM0DXlDaIKPPfLO266b1vDEBjiAw24s/4FRhi0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LUnD7FPOQ2dSFLIEh/fZZ4Drw7x3F/FyIqY+zYM5XsJO3yE1a/ObMYy6617UlryN4
+         EGpYBxcOSyi/6XI48rux/NNgu5yx07ijLGT6hMNA27S7PLSPUIgzHoD4VMh+xEgGE2
+         w3oQAXt41HjElxzgqsSmrkO03C90QasV4bW4WeSU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 1/4] regmap: dev_get_regmap_match(): fix string comparison
-Date:   Mon, 20 Jul 2020 17:39:40 -0400
-Message-Id: <20200720213944.408226-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 4/9] regmap: dev_get_regmap_match(): fix string comparison
+Date:   Mon, 20 Jul 2020 17:39:27 -0400
+Message-Id: <20200720213932.408089-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200720213932.408089-1-sashal@kernel.org>
+References: <20200720213932.408089-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -80,10 +82,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 77cabde977edd..4a4efc6f54b55 100644
+index 1799a1dfa46ea..cd984b59a8a16 100644
 --- a/drivers/base/regmap/regmap.c
 +++ b/drivers/base/regmap/regmap.c
-@@ -1106,7 +1106,7 @@ static int dev_get_regmap_match(struct device *dev, void *res, void *data)
+@@ -1239,7 +1239,7 @@ static int dev_get_regmap_match(struct device *dev, void *res, void *data)
  
  	/* If the user didn't specify a name match any */
  	if (data)
