@@ -2,103 +2,45 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6684DC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 018A3C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4408322BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595250243;
-	bh=IrHumJNNwPA5DDR5b4RIKODfqPUkFXljRiSqzAuKtGw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K+epynqBFrN2Fj3/5hctW7w5E17e4VBOvm0zCTgIcrEN7YM0xlFC8cl4n0eG2K3LI
-	 TFiuGUZnO/punv8omRL+XpppFjk8CAKv0umJPJQl5oxko6MdlNiHnR0cYuUnhmbg8t
-	 OpIT1uJpsauLYqvQLVkN9SakJCY22cnbkhseeg/s=
+	by mail.kernel.org (Postfix) with ESMTP id DADDA22B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:04:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgGTNEC (ORCPT
+        id S1727085AbgGTNE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:04:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37160 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 09:04:58 -0400
+Received: from verein.lst.de ([213.95.11.211]:46827 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727844AbgGTNEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 09:04:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D53C207FC;
-        Mon, 20 Jul 2020 13:04:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595250241;
-        bh=IrHumJNNwPA5DDR5b4RIKODfqPUkFXljRiSqzAuKtGw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tNkIcLz0gZ/B1LVcyqZLazYMATcvmu5gT0QMb0tiDqsxFc4v6SZXGw1VlZaqhQy9n
-         twMPX7AlSdky7q3P0paxzBfuPK9vj4P/udpzlSxrjfk0Yavud541HD/KKlapC5JXp5
-         XA9a3VYcWoV7x9fzL87yw3Qbsh0i6d+an7eaxAe0=
-Date:   Mon, 20 Jul 2020 15:04:11 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL VIRTUAL MACHINE FOR ARM64 (KVM/arm64)" 
-        <kvmarm@lists.cs.columbia.edu>
-Subject: Re: [PATCH stable v4.9 v2] arm64: entry: Place an SB sequence
- following an ERET instruction
-Message-ID: <20200720130411.GB494210@kroah.com>
-References: <20200709195034.15185-1-f.fainelli@gmail.com>
+        id S1726030AbgGTNE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 09:04:58 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9224168BFE; Mon, 20 Jul 2020 15:04:56 +0200 (CEST)
+Date:   Mon, 20 Jul 2020 15:04:56 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] uuid: Remove unused uuid_le_to_bin() definition
+Message-ID: <20200720130456.GA715@lst.de>
+References: <20200622075355.55936-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200709195034.15185-1-f.fainelli@gmail.com>
+In-Reply-To: <20200622075355.55936-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 12:50:23PM -0700, Florian Fainelli wrote:
-> From: Will Deacon <will.deacon@arm.com>
-> 
-> commit 679db70801da9fda91d26caf13bf5b5ccc74e8e8 upstream
-> 
-> Some CPUs can speculate past an ERET instruction and potentially perform
-> speculative accesses to memory before processing the exception return.
-> Since the register state is often controlled by a lower privilege level
-> at the point of an ERET, this could potentially be used as part of a
-> side-channel attack.
-> 
-> This patch emits an SB sequence after each ERET so that speculation is
-> held up on exception return.
-> 
-> Signed-off-by: Will Deacon <will.deacon@arm.com>
-> [florian: Adjust hyp-entry.S to account for the label
->  added change to hyp/entry.S]
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
-> Changes in v2:
-> 
-> - added missing hunk in hyp/entry.S per Will's feedback
+On Mon, Jun 22, 2020 at 10:53:55AM +0300, Andy Shevchenko wrote:
+> There is no more user, so remove it.
 
-What about 4.19.y and 4.14.y trees?  I can't take something for 4.9.y
-and then have a regression if someone moves to a newer release, right?
+Thanks,
 
-thanks,
-
-greg k-h
+applied to the uuid tree.
