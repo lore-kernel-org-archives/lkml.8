@@ -2,103 +2,156 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BABDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADDAC388D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 130D5207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BEC208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595281320;
+	bh=gsPJusJ2WJfAmoKVDrtfaIh+MKZOfkh8nvK442dShYQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qcjub2Pn62xZjKVV7FIOCsMQXOdSWKkDu4GPuEwrG+/6OXy48Pk0DJuNAyCPZUQ6Z
+	 8osqj/5Fh0cnHOkjtupMZaeFcP2n3/Y56SYALeB4T/hZHW2bL0utLhQUfjcRYSGjW0
+	 jr4s2HSx0ueO5uf97jHRmKm5stFe/pl2BshXPTYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728805AbgGTVl4 (ORCPT
+        id S1727941AbgGTVlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:41:56 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:34428 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728403AbgGTVjQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:16 -0400
-Date:   Mon, 20 Jul 2020 17:39:13 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Jia He <justin.he@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Kaly Xin <Kaly.Xin@arm.com>
-Subject: Re: [PATCH v3 3/6] sh/mm: use default dummy
- memory_add_physaddr_to_nid()
-Message-ID: <20200720213913.GM14669@brightrain.aerifal.cx>
-References: <20200709020629.91671-1-justin.he@arm.com>
- <20200709020629.91671-4-justin.he@arm.com>
- <f1a172b2-80c2-1ec7-483f-f3fba761ccb0@redhat.com>
+        Mon, 20 Jul 2020 17:41:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728418AbgGTVjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:18 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B81922D00;
+        Mon, 20 Jul 2020 21:39:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595281157;
+        bh=gsPJusJ2WJfAmoKVDrtfaIh+MKZOfkh8nvK442dShYQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ae1QCZk7knyyDqxX5TetPTHFGKTLt+hPdfTomlKXKmmkxoZhNGXUWVGa0VmbNhvKN
+         nWkAsdl9sH79tYo97PawTc8sjxsKNNgNk+bbaJj4QIWK96o1XlpuEQxIQGLKdjeLg2
+         d7pSFfLd/UuQhFktYnjBkBlyH/ok4PVDbieegKNQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Joao Moreno <mail@joaomoreno.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 02/13] HID: apple: Disable Fn-key key-re-mapping on clone keyboards
+Date:   Mon, 20 Jul 2020 17:39:03 -0400
+Message-Id: <20200720213914.407919-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200720213914.407919-1-sashal@kernel.org>
+References: <20200720213914.407919-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f1a172b2-80c2-1ec7-483f-f3fba761ccb0@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 11:10:36AM +0200, David Hildenbrand wrote:
-> On 09.07.20 04:06, Jia He wrote:
-> > After making default memory_add_physaddr_to_nid in mm/memory_hotplug,
-> > there is no use to define a similar one in arch specific directory.
-> > 
-> > Signed-off-by: Jia He <justin.he@arm.com>
-> > ---
-> >  arch/sh/mm/init.c | 9 ---------
-> >  1 file changed, 9 deletions(-)
-> > 
-> > diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-> > index a70ba0fdd0b3..f75932ba87a6 100644
-> > --- a/arch/sh/mm/init.c
-> > +++ b/arch/sh/mm/init.c
-> > @@ -430,15 +430,6 @@ int arch_add_memory(int nid, u64 start, u64 size,
-> >  	return ret;
-> >  }
-> >  
-> > -#ifdef CONFIG_NUMA
-> > -int memory_add_physaddr_to_nid(u64 addr)
-> > -{
-> > -	/* Node 0 for now.. */
-> > -	return 0;
-> > -}
-> > -EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
-> > -#endif
-> > -
-> >  void arch_remove_memory(int nid, u64 start, u64 size,
-> >  			struct vmem_altmap *altmap)
-> >  {
-> > 
-> 
-> Reviewed-by: David Hildenbrand <david@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-Acked-by: Rich Felker <dalias@libc.org>
+[ Upstream commit a5d81646fa294eed57786a9310b06ca48902adf8 ]
+
+The Maxxter KB-BT-001 Bluetooth keyboard, which looks somewhat like the
+Apple Wireless Keyboard, is using the vendor and product IDs (05AC:0239)
+of the Apple Wireless Keyboard (2009 ANSI version) <sigh>.
+
+But its F1 - F10 keys are marked as sending F1 - F10, not the special
+functions hid-apple.c maps them too; and since its descriptors do not
+contain the HID_UP_CUSTOM | 0x0003 usage apple-hid looks for for the
+Fn-key, apple_setup_input() never gets called, so F1 - F6 are mapped
+to key-codes which have not been set in the keybit array causing them
+to not send any events at all.
+
+The lack of a usage code matching the Fn key in the clone is actually
+useful as this allows solving this problem in a generic way.
+
+This commits adds a fn_found flag and it adds a input_configured
+callback which checks if this flag is set once all usages have been
+mapped. If it is not set, then assume this is a clone and clear the
+quirks bitmap so that the hid-apple code does not add any special
+handling to this keyboard.
+
+This fixes F1 - F6 not sending anything at all and F7 - F12 sending
+the wrong codes on the Maxxter KB-BT-001 Bluetooth keyboard and on
+similar clones.
+
+Cc: Joao Moreno <mail@joaomoreno.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hid/hid-apple.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index 8ab8f2350bbcd..b58ab769aa7b3 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -57,6 +57,7 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
+ struct apple_sc {
+ 	unsigned long quirks;
+ 	unsigned int fn_on;
++	unsigned int fn_found;
+ 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
+ };
+ 
+@@ -342,12 +343,15 @@ static int apple_input_mapping(struct hid_device *hdev, struct hid_input *hi,
+ 		struct hid_field *field, struct hid_usage *usage,
+ 		unsigned long **bit, int *max)
+ {
++	struct apple_sc *asc = hid_get_drvdata(hdev);
++
+ 	if (usage->hid == (HID_UP_CUSTOM | 0x0003) ||
+ 			usage->hid == (HID_UP_MSVENDOR | 0x0003) ||
+ 			usage->hid == (HID_UP_HPVENDOR2 | 0x0003)) {
+ 		/* The fn key on Apple USB keyboards */
+ 		set_bit(EV_REP, hi->input->evbit);
+ 		hid_map_usage_clear(hi, usage, bit, max, EV_KEY, KEY_FN);
++		asc->fn_found = true;
+ 		apple_setup_input(hi->input);
+ 		return 1;
+ 	}
+@@ -374,6 +378,19 @@ static int apple_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+ 	return 0;
+ }
+ 
++static int apple_input_configured(struct hid_device *hdev,
++		struct hid_input *hidinput)
++{
++	struct apple_sc *asc = hid_get_drvdata(hdev);
++
++	if ((asc->quirks & APPLE_HAS_FN) && !asc->fn_found) {
++		hid_info(hdev, "Fn key not found (Apple Wireless Keyboard clone?), disabling Fn key handling\n");
++		asc->quirks = 0;
++	}
++
++	return 0;
++}
++
+ static int apple_probe(struct hid_device *hdev,
+ 		const struct hid_device_id *id)
+ {
+@@ -588,6 +605,7 @@ static struct hid_driver apple_driver = {
+ 	.event = apple_event,
+ 	.input_mapping = apple_input_mapping,
+ 	.input_mapped = apple_input_mapped,
++	.input_configured = apple_input_configured,
+ };
+ module_hid_driver(apple_driver);
+ 
+-- 
+2.25.1
 
