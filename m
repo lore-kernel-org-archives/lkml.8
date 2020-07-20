@@ -2,271 +2,164 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF28C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525B3C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F27620702
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A22120702
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:40:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pjz/gyJw"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Te0Y+PvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732459AbgGTRiZ (ORCPT
+        id S1730535AbgGTRkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:38:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57284 "EHLO
+        Mon, 20 Jul 2020 13:40:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729336AbgGTRiY (ORCPT
+        with ESMTP id S1728876AbgGTRkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:38:24 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB8CC061794;
-        Mon, 20 Jul 2020 10:38:23 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b6so18660921wrs.11;
-        Mon, 20 Jul 2020 10:38:23 -0700 (PDT)
+        Mon, 20 Jul 2020 13:40:24 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E898C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:40:24 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id w3so322667wmi.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:40:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oJeYo89YY0BhkSwbtSpK9gId/AfBUzMOlhpSi6gngf0=;
-        b=Pjz/gyJw8nA7mmC1Lqy/kMcr09aIRJly7xOUIlxILV75QHRsFuWb9bO/Y7DoSdLKiI
-         W1QNfqkh3jqOKxBCcLWslI+CQZnhtcJrq6DeeqC5HeNWSTuuWImy+1uHhd9RGFQfc62Z
-         Yvk7iqzmeKRBM/+2RIJrjWUaqkkkQbeLS0pXJRJuX1lH/4/W2vonpsNiY3Q5AFr3gBVm
-         gHzui0SPD92RqQi8CkQp8kYJcTKJGWzX2jTMLCNfD1/b15eX+JMAI8+hKWolRc6Nai6T
-         K6sqsYRd+k9DAp8h7seNgi6rU5ons6oehYbaDvtm4JQgKR5oaC9jUftLCY/UVvyjsUVC
-         ysAQ==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=hNTtSnwQCPYkI9vVfOrEJLQRwWlzgGEc02Rqyshk+Hw=;
+        b=Te0Y+PvEO5oNpWcaCTFDOBSRHyVqXRNcCBjyZqDeeObYUqqdGcGttbA6SiV13LiTRM
+         jDRSdrsv1zfBWv+aHt0XqJT9ANTr9V5H0d7arLpfEDQkpIjNGKqJ7XLCUQpjiQbwIJVE
+         mATPyPyTeGi6yzCK76m2kDlZZ6FCjXI1ZRuYQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=oJeYo89YY0BhkSwbtSpK9gId/AfBUzMOlhpSi6gngf0=;
-        b=CGNuCmotgbznQywqS0ORto93Pml8+PYOxXWZwbE5h6tGAOXNmj/p0ilbSHeBpD0OSm
-         d0FrrPDiqnp2D90X+C/5QydMmAyx92W05ug3CCs41FZ8lUoI6EPmiGvDQCNAA7Ayxff8
-         LPZLOyNfvXKk/RWF8QD5uUb+2aLwichiGQIPVuKSk84Kr+tDpa4SzMIZVaqZsnmHpmmp
-         YOzIcK1Gj8q8vcpNY4N12k0cwAec+cIwokfOD+fGBggdWXd+A0bK4fL9AB041Lz9XxKa
-         U18qNyyWG9JC5RW4TqQZfXFD80A+vxKyUZc7o+qJoAJbearAYUVa1mpSO4RKJpABUVIZ
-         juBA==
-X-Gm-Message-State: AOAM531GTPn5Og6B0+jp0wH0vit2XwFtqSNxdmwfF/ig73A/puMRBPKe
-        IH+1mgS6BT4Rjyo5i7MVBkGwb1gz
-X-Google-Smtp-Source: ABdhPJxY7KzwCenjct7kV113gYUbESakxQ+p83IIKpQQDQlUlc+5wyKdt4/uAatt9Uc+DMBXRi9tdg==
-X-Received: by 2002:a5d:60c5:: with SMTP id x5mr23742512wrt.67.1595266702346;
-        Mon, 20 Jul 2020 10:38:22 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id 65sm256160wmd.20.2020.07.20.10.38.20
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=hNTtSnwQCPYkI9vVfOrEJLQRwWlzgGEc02Rqyshk+Hw=;
+        b=A5uleN8jPgiiSlmXbcHxMxO4OkJVHDD3vCTJoHDFXk88UKhd/f7K9Ea+LsmayZ7AGX
+         bheUpMU8qUDPRjDYPUrdz5cVTX0mMqhOG8JTpGrXF/o6rYvGoCz2hh+YOHa0Pzw+Y7qt
+         wQ2zRGsuNMMG46ojmCPzYX090kRt8ZMf7bzTQbi+QK1LSDodNEDbyJjPz1toTWuJhzht
+         s2SjwKPp0tH4SneAB3JFkUsJochZY55Eo0f7RX5qOjHtFimnlDJUEMg2hH+y+Idf/QYe
+         3K2/N0t9XBOW60T+kxqU4Og7rg5uy8E43gU/xW3I63u6Qs7AJjJXxzte+NAhjTL0tvtp
+         xGaA==
+X-Gm-Message-State: AOAM533/Vh8L76HCafSjWvKuQcI0tJ1ouUlHFeas3S1j3xSvPaeU2oaV
+        uiET7lvNcXfS/mpi9rSvBgbfeg==
+X-Google-Smtp-Source: ABdhPJxPFmPtcldJ9Rmp5A0gxl2dDeFwR6B9YKH2VhvyUueGRULhzNHEhWlNfh0zDPXM4rzLzJzCOQ==
+X-Received: by 2002:a1c:1b90:: with SMTP id b138mr392710wmb.21.1595266822926;
+        Mon, 20 Jul 2020 10:40:22 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id d13sm34202869wrq.89.2020.07.20.10.40.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 10:38:21 -0700 (PDT)
-Subject: Re: [PATCH] r6040: switch from 'pci_' to 'dma_' API
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        kuba@kernel.org, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20200720130242.366855-1-christophe.jaillet@wanadoo.fr>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <590b17b5-dba1-5446-d3c1-2bf5df9f5625@gmail.com>
-Date:   Mon, 20 Jul 2020 10:38:13 -0700
+        Mon, 20 Jul 2020 10:40:22 -0700 (PDT)
+Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Dhananjay Phadke <dphadke@linux.microsoft.com>
+Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+References: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
+ <CAHO=5PFGqyacnneCp76brDymyZK0axG+4n3RPThFp6w=-xP7hA@mail.gmail.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <f7397069-e22b-a921-132c-144ee3a07580@broadcom.com>
+Date:   Mon, 20 Jul 2020 10:40:16 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200720130242.366855-1-christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <CAHO=5PFGqyacnneCp76brDymyZK0axG+4n3RPThFp6w=-xP7hA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/20/20 6:02 AM, Christophe JAILLET wrote:
-> The wrappers in include/linux/pci-dma-compat.h should go away.
-> 
-> The patch has been generated with the coccinelle script below and has been
-> hand modified to replace GFP_ with a correct flag.
-> It has been compile tested.
-> 
-> When memory is allocated in 'r6040_open()', GFP_KERNEL can be used because
-> this is a net_device_ops' 'ndo_open' function. This function is protected
-> by the rtnl_lock() semaphore. So only a mutex is used and no spin_lock is
-> acquired.
-> 
-> 
-> @@
-> @@
-> -    PCI_DMA_BIDIRECTIONAL
-> +    DMA_BIDIRECTIONAL
-> 
-> @@
-> @@
-> -    PCI_DMA_TODEVICE
-> +    DMA_TO_DEVICE
-> 
-> @@
-> @@
-> -    PCI_DMA_FROMDEVICE
-> +    DMA_FROM_DEVICE
-> 
-> @@
-> @@
-> -    PCI_DMA_NONE
-> +    DMA_NONE
-> 
-> @@
-> expression e1, e2, e3;
-> @@
-> -    pci_alloc_consistent(e1, e2, e3)
-> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-> 
-> @@
-> expression e1, e2, e3;
-> @@
-> -    pci_zalloc_consistent(e1, e2, e3)
-> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_free_consistent(e1, e2, e3, e4)
-> +    dma_free_coherent(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_map_single(e1, e2, e3, e4)
-> +    dma_map_single(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_single(e1, e2, e3, e4)
-> +    dma_unmap_single(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4, e5;
-> @@
-> -    pci_map_page(e1, e2, e3, e4, e5)
-> +    dma_map_page(&e1->dev, e2, e3, e4, e5)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_page(e1, e2, e3, e4)
-> +    dma_unmap_page(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_map_sg(e1, e2, e3, e4)
-> +    dma_map_sg(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_sg(e1, e2, e3, e4)
-> +    dma_unmap_sg(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-> +    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-> +    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-> +    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-> +    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_dma_mapping_error(e1, e2)
-> +    dma_mapping_error(&e1->dev, e2)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_dma_mask(e1, e2)
-> +    dma_set_mask(&e1->dev, e2)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_consistent_dma_mask(e1, e2)
-> +    dma_set_coherent_mask(&e1->dev, e2)
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+looks good.
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+On 2020-07-19 12:59 a.m., Rayagonda Kokatanur wrote:
+> On Sun, Jul 19, 2020 at 5:10 AM Dhananjay Phadke
+> <dphadke@linux.microsoft.com> wrote:
+>> When i2c client unregisters, synchronize irq before setting
+>> iproc_i2c->slave to NULL.
+>>
+>> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000318
+>>
+>> [  371.020421] pc : bcm_iproc_i2c_isr+0x530/0x11f0
+>> [  371.025098] lr : __handle_irq_event_percpu+0x6c/0x170
+>> [  371.030309] sp : ffff800010003e40
+>> [  371.033727] x29: ffff800010003e40 x28: 0000000000000060
+>> [  371.039206] x27: ffff800010ca9de0 x26: ffff800010f895df
+>> [  371.044686] x25: ffff800010f18888 x24: ffff0008f7ff3600
+>> [  371.050165] x23: 0000000000000003 x22: 0000000001600000
+>> [  371.055645] x21: ffff800010f18888 x20: 0000000001600000
+>> [  371.061124] x19: ffff0008f726f080 x18: 0000000000000000
+>> [  371.066603] x17: 0000000000000000 x16: 0000000000000000
+>> [  371.072082] x15: 0000000000000000 x14: 0000000000000000
+>> [  371.077561] x13: 0000000000000000 x12: 0000000000000001
+>> [  371.083040] x11: 0000000000000000 x10: 0000000000000040
+>> [  371.088519] x9 : ffff800010f317c8 x8 : ffff800010f317c0
+>> [  371.093999] x7 : ffff0008f805b3b0 x6 : 0000000000000000
+>> [  371.099478] x5 : ffff0008f7ff36a4 x4 : ffff8008ee43d000
+>> [  371.104957] x3 : 0000000000000000 x2 : ffff8000107d64c0
+>> [  371.110436] x1 : 00000000c00000af x0 : 0000000000000000
+>>
+>> [  371.115916] Call trace:
+>> [  371.118439]  bcm_iproc_i2c_isr+0x530/0x11f0
+>> [  371.122754]  __handle_irq_event_percpu+0x6c/0x170
+>> [  371.127606]  handle_irq_event_percpu+0x34/0x88
+>> [  371.132189]  handle_irq_event+0x40/0x120
+>> [  371.136234]  handle_fasteoi_irq+0xcc/0x1a0
+>> [  371.140459]  generic_handle_irq+0x24/0x38
+>> [  371.144594]  __handle_domain_irq+0x60/0xb8
+>> [  371.148820]  gic_handle_irq+0xc0/0x158
+>> [  371.152687]  el1_irq+0xb8/0x140
+>> [  371.155927]  arch_cpu_idle+0x10/0x18
+>> [  371.159615]  do_idle+0x204/0x290
+>> [  371.162943]  cpu_startup_entry+0x24/0x60
+>> [  371.166990]  rest_init+0xb0/0xbc
+>> [  371.170322]  arch_call_rest_init+0xc/0x14
+>> [  371.174458]  start_kernel+0x404/0x430
+>>
+>> Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
+>> Signed-off-by: Dhananjay Phadke <dphadke@linux.microsoft.com>
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+>> ---
+>>   drivers/i2c/busses/i2c-bcm-iproc.c | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+>> index b58224b7b..37d2a79e7 100644
+>> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
+>> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+>> @@ -1074,14 +1074,15 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
+>>          if (!iproc_i2c->slave)
+>>                  return -EINVAL;
+>>
+>> -       iproc_i2c->slave = NULL;
+>> -
+>>          /* disable all slave interrupts */
+>>          tmp = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
+>>          tmp &= ~(IE_S_ALL_INTERRUPT_MASK <<
+>>                          IE_S_ALL_INTERRUPT_SHIFT);
+>>          iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, tmp);
+>>
+>> +       synchronize_irq(iproc_i2c->irq);
+>> +       iproc_i2c->slave = NULL;
+>> +
+>>          /* Erase the slave address programmed */
+>>          tmp = iproc_i2c_rd_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET);
+>>          tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
+> Looks good to me. Thank you for the patch.
+> Reviewed-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+>
+> Regards,
+> Rayagonda
+
