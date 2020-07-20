@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E65C433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5A0C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E31FA20734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1A320709
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262914;
-	bh=qt35y56Q9ltUGv8Vgju3aGakFWpJPRKM4Uteu2wSBWM=;
+	s=default; t=1595262942;
+	bh=eZusVHMwOTpgcMsBIQj4PYXuVUheo8UYetV/P3+E9Is=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tddVBFywQwLkM3iOIOSnyEmsrdfr5C+ZSBVRJKBATpnSzBetpKQ4E5/aFwJ7L292o
-	 NPr87Z6WgUHRhlPUXPEu7ttmlBjft1SK4AiTY5q+1p3r7ZB5bpHn8f89PC6pWIOpFc
-	 vYDcq/pGrXHufaoL/+fu3FAmv4c115qS5eEUqgXI=
+	b=rAnWAdOHKnMkcOlSXt9eVIivgwQQDjdhbOTxmSkvudoPOwJNjyA9TprYbGhtZMzED
+	 l6lYDEjb4x2thPtirPCqdwNvNJMUV2NguNmE+q1d+y0ELHsioos3VXKRfjMksHRI9v
+	 RRP4BBQ13vIobLU54Gp9gZUGxqNiHVh9HyQ0psfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731416AbgGTQfN (ORCPT
+        id S1729759AbgGTQfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:35:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53324 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:35:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731295AbgGTPye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:54:34 -0400
+        id S1730871AbgGTPyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:54:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9588D22482;
-        Mon, 20 Jul 2020 15:54:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9FCD2065E;
+        Mon, 20 Jul 2020 15:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260474;
-        bh=qt35y56Q9ltUGv8Vgju3aGakFWpJPRKM4Uteu2wSBWM=;
+        s=default; t=1595260452;
+        bh=eZusVHMwOTpgcMsBIQj4PYXuVUheo8UYetV/P3+E9Is=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nr+uW0Nc2b28qSjDEcf0G+JVEzE1n+Yvmj3pRrnIs1TtpFWhc9b/HYv95b0a9ZsqS
-         Q2jJqwHWggtoXz396V4AV/8IoAIwjX4p00gc608/OwdGrH+3jsuoAHj/lqh2Ox9mPw
-         3s+taBkl+mePYtgGL4VeuvBM9dN4doLePTQIfCmo=
+        b=CBcBU5Snuiqvysp+czAqpTnIWh9KAAAU6Lq/OYMWEUTkopvzbcl8Hj7PKRKDKQ9Kp
+         VuwgVJtxrpdPxJKzCcVStadPR8mEPxBtK0YMutDDo0ZOA8IbX1T0EbQlO/b3xQ3XNP
+         J5iQQsFL4G7aakFL3LIw8H53WDqiEjfdsOM6Z9O8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sandipan Das <sandipan@linux.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 116/133] powerpc/book3s64/pkeys: Fix pkey_access_permitted() for execute disable pkey
-Date:   Mon, 20 Jul 2020 17:37:43 +0200
-Message-Id: <20200720152809.340038500@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Whitcroft <apw@canonical.com>,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 4.19 108/133] mei: bus: dont clean driver pointer
+Date:   Mon, 20 Jul 2020 17:37:35 +0200
+Message-Id: <20200720152808.954433337@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -60,155 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 192b6a780598976feb7321ff007754f8511a4129 upstream.
+commit e852c2c251ed9c23ae6e3efebc5ec49adb504207 upstream.
 
-Even if the IAMR value denies execute access, the current code returns
-true from pkey_access_permitted() for an execute permission check, if
-the AMR read pkey bit is cleared.
+It's not needed to set driver to NULL in mei_cl_device_remove()
+which is bus_type remove() handler as this is done anyway
+in __device_release_driver().
 
-This results in repeated page fault loop with a test like below:
+Actually this is causing an endless loop in driver_detach()
+on ubuntu patched kernel, while removing (rmmod) the mei_hdcp module.
+The reason list_empty(&drv->p->klist_devices.k_list) is always not-empty.
+as the check is always true in  __device_release_driver()
+	if (dev->driver != drv)
+		return;
 
-  #define _GNU_SOURCE
-  #include <errno.h>
-  #include <stdio.h>
-  #include <stdlib.h>
-  #include <signal.h>
-  #include <inttypes.h>
+The non upstream patch is causing this behavior, titled:
+'vfio -- release device lock before userspace requests'
 
-  #include <assert.h>
-  #include <malloc.h>
-  #include <unistd.h>
-  #include <pthread.h>
-  #include <sys/mman.h>
+Nevertheless the fix is correct also for the upstream.
 
-  #ifdef SYS_pkey_mprotect
-  #undef SYS_pkey_mprotect
-  #endif
-
-  #ifdef SYS_pkey_alloc
-  #undef SYS_pkey_alloc
-  #endif
-
-  #ifdef SYS_pkey_free
-  #undef SYS_pkey_free
-  #endif
-
-  #undef PKEY_DISABLE_EXECUTE
-  #define PKEY_DISABLE_EXECUTE	0x4
-
-  #define SYS_pkey_mprotect	386
-  #define SYS_pkey_alloc		384
-  #define SYS_pkey_free		385
-
-  #define PPC_INST_NOP		0x60000000
-  #define PPC_INST_BLR		0x4e800020
-  #define PROT_RWX		(PROT_READ | PROT_WRITE | PROT_EXEC)
-
-  static int sys_pkey_mprotect(void *addr, size_t len, int prot, int pkey)
-  {
-  	return syscall(SYS_pkey_mprotect, addr, len, prot, pkey);
-  }
-
-  static int sys_pkey_alloc(unsigned long flags, unsigned long access_rights)
-  {
-  	return syscall(SYS_pkey_alloc, flags, access_rights);
-  }
-
-  static int sys_pkey_free(int pkey)
-  {
-  	return syscall(SYS_pkey_free, pkey);
-  }
-
-  static void do_execute(void *region)
-  {
-  	/* jump to region */
-  	asm volatile(
-  		"mtctr	%0;"
-  		"bctrl"
-  		: : "r"(region) : "ctr", "lr");
-  }
-
-  static void do_protect(void *region)
-  {
-  	size_t pgsize;
-  	int i, pkey;
-
-  	pgsize = getpagesize();
-
-  	pkey = sys_pkey_alloc(0, PKEY_DISABLE_EXECUTE);
-  	assert (pkey > 0);
-
-  	/* perform mprotect */
-  	assert(!sys_pkey_mprotect(region, pgsize, PROT_RWX, pkey));
-  	do_execute(region);
-
-  	/* free pkey */
-  	assert(!sys_pkey_free(pkey));
-
-  }
-
-  int main(int argc, char **argv)
-  {
-  	size_t pgsize, numinsns;
-  	unsigned int *region;
-  	int i;
-
-  	/* allocate memory region to protect */
-  	pgsize = getpagesize();
-  	region = memalign(pgsize, pgsize);
-  	assert(region != NULL);
-  	assert(!mprotect(region, pgsize, PROT_RWX));
-
-  	/* fill page with NOPs with a BLR at the end */
-  	numinsns = pgsize / sizeof(region[0]);
-  	for (i = 0; i < numinsns - 1; i++)
-  		region[i] = PPC_INST_NOP;
-  	region[i] = PPC_INST_BLR;
-
-  	do_protect(region);
-
-  	return EXIT_SUCCESS;
-  }
-
-The fix is to only check the IAMR for an execute check, the AMR value
-is not relevant.
-
-Fixes: f2407ef3ba22 ("powerpc: helper to validate key-access permissions of a pte")
-Cc: stable@vger.kernel.org # v4.16+
-Reported-by: Sandipan Das <sandipan@linux.ibm.com>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-[mpe: Add detail to change log, tweak wording & formatting]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200712132047.1038594-1-aneesh.kumar@linux.ibm.com
+Link: https://patchwork.ozlabs.org/project/ubuntu-kernel/patch/20180912085046.3401-2-apw@canonical.com/
+Cc: <stable@vger.kernel.org>
+Cc: Andy Whitcroft <apw@canonical.com>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20200628225359.2185929-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/mm/pkeys.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/misc/mei/bus.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/powerpc/mm/pkeys.c
-+++ b/arch/powerpc/mm/pkeys.c
-@@ -365,12 +365,14 @@ static bool pkey_access_permitted(int pk
- 		return true;
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -755,9 +755,8 @@ static int mei_cl_device_remove(struct d
  
- 	pkey_shift = pkeyshift(pkey);
--	if (execute && !(read_iamr() & (IAMR_EX_BIT << pkey_shift)))
--		return true;
-+	if (execute)
-+		return !(read_iamr() & (IAMR_EX_BIT << pkey_shift));
-+
-+	amr = read_amr();
-+	if (write)
-+		return !(amr & (AMR_WR_BIT << pkey_shift));
+ 	mei_cl_bus_module_put(cldev);
+ 	module_put(THIS_MODULE);
+-	dev->driver = NULL;
+-	return ret;
  
--	amr = read_amr(); /* Delay reading amr until absolutely needed */
--	return ((!write && !(amr & (AMR_RD_BIT << pkey_shift))) ||
--		(write &&  !(amr & (AMR_WR_BIT << pkey_shift))));
-+	return !(amr & (AMR_RD_BIT << pkey_shift));
++	return ret;
  }
  
- bool arch_pte_access_permitted(u64 pte, bool write, bool execute)
+ static ssize_t name_show(struct device *dev, struct device_attribute *a,
 
 
