@@ -2,105 +2,114 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9334DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF127C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5F822B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:09:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lgFmpgJ+"
+	by mail.kernel.org (Postfix) with ESMTP id A07F622BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 11:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595243536;
+	bh=9Yy+1VjcfL5aQqBqsh+BDfHhT28teG125L+0sNy5ehc=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=rm5udWBhOk6482oOPOkobfIvJJiUIcXstNsMohDtdjbxaHUHbO5nCLbKKvw5MhMYx
+	 GCkmUgrmbph4e/yPW8CUb6GBm23vdeW6ou+6GQtAUTfw/Lv2KuyExoe95xQuk/RkW0
+	 uKuT1E/Iai5qdsLof+dlxKZuerOPnTuEBvI4vKZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728498AbgGTLJb (ORCPT
+        id S1728425AbgGTLMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 07:09:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53554 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728232AbgGTLJa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 07:09:30 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC604C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 04:09:29 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f2so17382480wrp.7
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 04:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VtD27AzHPjp5ctCB4TnCpfZehd9FARDVSuneqwmIWdA=;
-        b=lgFmpgJ+cozNYAJd8bmW/Tgj1KkReN3kUAGRoRoSJBZHzxg2jestmQ3wJxAO6ZsEaw
-         Mdk7B8KSGIFOQQxemCmCpTpO2LvFls5YXEBsElq1EnpUG4or77eAhvSGgb5Gq/K21S7U
-         35VFEvz2w1bP+Wag6I6Oid7iIhGR9w1aYdccXGqBphLREYcDNCkpOlsFX4kOjAxTvxCS
-         alqeOZi933JqdHsvsm4ePn7WqKxN2wW0DKCgXqKS5tO6xW4znhmou2aYo1kli1M0GWY4
-         IbQ1yjw6Q1SVnSVUAoJp4RkPgbY4m32bxDHqAa33SwzjtDfevOBHhpPgkDbiz7ZYN6nl
-         eriA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VtD27AzHPjp5ctCB4TnCpfZehd9FARDVSuneqwmIWdA=;
-        b=qP6ZbDJfQOkUAJHlBxMBofZmv02Pi73K9HpB6266rcJI6ER0Av4jpNQVo13Ct9g9x/
-         F+pirIymEzj/SeA0yn4NG4jsLemA7GznQntjcoCrnCa7n7eRJo+6knQwhX3PjdIYax9M
-         mN7qmBkLSFCxpzTlRsTH/kFMh0KRBHmpa3F8psxQLdA+nZpmmH/m2BK8hIoXHOinUCVb
-         XKQ/1zvxDnGPyGZgtca/Xf4H47xAlU+R7EC9Sq2HcXOirij8g18tlNPcct1mt4R7qPwH
-         9Yxf45r64rtuvwiH4rlWj7K/0TMaXGTC0nIv/+/9Vcvg5MweRzuJXeDkolgXz1EaToWW
-         4/3g==
-X-Gm-Message-State: AOAM5327ZGuO8kjN/VQ6owU+YLD9gg45JOXewGx3X/WSzwcZvRHfKytq
-        BFXOreUWpeCpuEn6whtYlkPX1VwPQfGfDho8Quk=
-X-Google-Smtp-Source: ABdhPJywafOCwvKu3ixkl8hVwowbKpQHckqYNaDq9UHJmYWu9rlxdUvKAbh6FtleJp2tv1vlBcww+ORSzMqFW3C9Slc=
-X-Received: by 2002:adf:de12:: with SMTP id b18mr23342351wrm.390.1595243368551;
- Mon, 20 Jul 2020 04:09:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1593530334.git.vpillai@digitalocean.com>
- <c783b3890b6df669a72c7c4a3012950d009b8034.1593530334.git.vpillai@digitalocean.com>
- <871rl9r9xr.fsf@nanos.tec.linutronix.de> <20200720035359.GA4187092@google.com>
-In-Reply-To: <20200720035359.GA4187092@google.com>
-From:   Vineeth Pillai <vineethrp@gmail.com>
-Date:   Mon, 20 Jul 2020 07:09:17 -0400
-Message-ID: <CAOBnfPj6RjjCn4-+m0sNat30WGEGAVrxz2WHH8JOATEKxSbT5w@mail.gmail.com>
-Subject: Re: [RFC PATCH 14/16] irq: Add support for core-wide protection of
- IRQ and softirq
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Tim Chen <tim.c.chen@intel.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 20 Jul 2020 07:12:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727094AbgGTLMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 07:12:13 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 689E92073A;
+        Mon, 20 Jul 2020 11:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595243533;
+        bh=9Yy+1VjcfL5aQqBqsh+BDfHhT28teG125L+0sNy5ehc=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=hAnDisAU5CkKAmHpE/TlDXaSa61cF0JA6RYkNQwVsbS2KHEPnHbsA064m/XFR1u/T
+         z//PW9qlfb6Lwl2oAr78zQ6ONpyQ79rnqVCxfhGpQ0WbjKfNRt5Zp9J68zrYhDPdF8
+         wriqqXI+iRwPMIMpW2FBryFhRaNOpStEuiSEMfmY=
+Date:   Mon, 20 Jul 2020 12:12:00 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jakub Kicinski <kuba@kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Cc:     devicetree@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-i2c@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-spi@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+In-Reply-To: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 00/20] Add support for [H]SCIF/TMU/CMT/THS/SDHI/MSIOF/CAN[FD]/I2C/IIC/RWDT on R8A774E1
+Message-Id: <159524352070.8289.9628744508547399473.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 19, 2020 at 11:54 PM Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> These ifdeffery and checkpatch / command line parameter issues were added by
-> Vineeth before he sent out my patch. I'll let him comment on these, agreed
-> they all need fixing!
->
-Will fix this in the next iteration. Regarding the __setup code,
-I shamelessly copied it from page_alloc.c during development and
-missed reviewing it before sending it out. All valid points and
-will fix it with the next iteration.
+On Wed, 15 Jul 2020 12:08:50 +0100, Lad Prabhakar wrote:
+> This patch series enables support for following on RZ/G2H SoC,
+> * CPU OPP
+> * THS
+> * CMT/TMU
+> * I2C/IIC
+> * MSIOF
+> * RWDT
+> * SDHI
+> * SCIF/HSCIF
+> * CAN/CANFD
+> 
+> [...]
+
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+
+Thanks!
+
+[1/1] spi: renesas,sh-msiof: Add r8a774e1 support
+      commit: b4f7f5f5470588e45e5d004f1dc4887af20f18c0
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-Vineeth
+Mark
