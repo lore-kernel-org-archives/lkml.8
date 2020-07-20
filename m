@@ -2,217 +2,793 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 447FEC433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C253C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 114CB22BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:56:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260565;
-	bh=7WlQAxklApndpVq4BnML78kRdfxNpqoNhGpz7O6ZraI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qLye9PtnM+xWS6U/qRTDlROSketQDS1A09LWP8CDCNWJmZWAqBLL7PoCCWdWuz8vJ
-	 ivZQEbnD6O+gv03Q6yJ2AdpWk6ebmGWHvTyp0lOTqkniGBS0JTkYQHzB3Omlwc8T8R
-	 v1conrLdXfEJ/jxrymusqtKST/wb2kYzgrRIhdcE=
+	by mail.kernel.org (Postfix) with ESMTP id 65DD422BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:56:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MRkYCcEm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SNR9knsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731303AbgGTP4D (ORCPT
+        id S1731765AbgGTP4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:56:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731739AbgGTPz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:55:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AD4422CAF;
-        Mon, 20 Jul 2020 15:55:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260554;
-        bh=7WlQAxklApndpVq4BnML78kRdfxNpqoNhGpz7O6ZraI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K4jMC3XrPSw2Utt0DA+MlpXKYna9qVgaHjE/fsJtVB+76wZqY8+DbatQUG0Z8Km0f
-         xDPKR1IafufqqFCWsHe2K45p0ElQD6MSOAj89lx03GbR6obON8QztjNRcGSFAaNlxG
-         yr6ZGsU2h6IlLFCH7ptxZCvIPrnZ4nbOpfWdr80M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 011/215] llc: make sure applications use ARPHRD_ETHER
-Date:   Mon, 20 Jul 2020 17:34:53 +0200
-Message-Id: <20200720152820.703182981@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
-References: <20200720152820.122442056@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 11:56:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58740 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731741AbgGTP4A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:56:00 -0400
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595260555;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QFyPPGsxGYjD1Tm0xzI2FidMirC+Co7Cjufbs38tpB0=;
+        b=MRkYCcEm9ZfjHQ1mU0rE/Y2E0XP6X3Fbq0FDXEUDVYKvwwWAc+1LchyVnUvEEiGsKW+mYS
+        I6LIYYqWPidb5I4XUhkg88IIQkXb9Ux/tj1CVXdxyxKvDZO0FwS0+PMCgcez+r+CWr6bYS
+        lE9Eypdk8ugHy9YtfEgfhVxIR8Ko797FtS4BK5JcRo8WVZoiZ58WhuEehXVVUD9corpIWn
+        CSBA3A2QRl6FYVQ7Inh6XCfSpwnqKpJYmwrNjG4NKlBcVKi+u+U8swNbY/vxiZ3HJkRZEI
+        VNx6iyEqmxa9dVThI+2VanqJlHcXWcW5rVV7WO1+R8BtGQzB7TswNHUATc5iHA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595260555;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QFyPPGsxGYjD1Tm0xzI2FidMirC+Co7Cjufbs38tpB0=;
+        b=SNR9knsXFjsqR0j7cdanMviiMN2RV+bWRwSC/ItYXecSEyA0q3tMsdZHuNteZIfFoVzHR8
+        dvzs2qA/HyQ9bABA==
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: [PATCH v4 05/24] seqlock: Add kernel-doc for seqcount_t and seqlock_t APIs
+Date:   Mon, 20 Jul 2020 17:55:11 +0200
+Message-Id: <20200720155530.1173732-6-a.darwish@linutronix.de>
+In-Reply-To: <20200720155530.1173732-1-a.darwish@linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200720155530.1173732-1-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+seqlock.h is now included by kernel's RST documentation, but a small
+number of the the exported seqlock.h functions are kernel-doc annotated.
 
-[ Upstream commit a9b1110162357689a34992d5c925852948e5b9fd ]
+Add kernel-doc for all seqlock.h exported APIs.
 
-syzbot was to trigger a bug by tricking AF_LLC with
-non sensible addr->sllc_arphrd
-
-It seems clear LLC requires an Ethernet device.
-
-Back in commit abf9d537fea2 ("llc: add support for SO_BINDTODEVICE")
-Octavian Purdila added possibility for application to use a zero
-value for sllc_arphrd, convert it to ARPHRD_ETHER to not cause
-regressions on existing applications.
-
-BUG: KASAN: use-after-free in __read_once_size include/linux/compiler.h:199 [inline]
-BUG: KASAN: use-after-free in list_empty include/linux/list.h:268 [inline]
-BUG: KASAN: use-after-free in waitqueue_active include/linux/wait.h:126 [inline]
-BUG: KASAN: use-after-free in wq_has_sleeper include/linux/wait.h:160 [inline]
-BUG: KASAN: use-after-free in skwq_has_sleeper include/net/sock.h:2092 [inline]
-BUG: KASAN: use-after-free in sock_def_write_space+0x642/0x670 net/core/sock.c:2813
-Read of size 8 at addr ffff88801e0b4078 by task ksoftirqd/3/27
-
-CPU: 3 PID: 27 Comm: ksoftirqd/3 Not tainted 5.5.0-rc1-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
- __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:639
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- __read_once_size include/linux/compiler.h:199 [inline]
- list_empty include/linux/list.h:268 [inline]
- waitqueue_active include/linux/wait.h:126 [inline]
- wq_has_sleeper include/linux/wait.h:160 [inline]
- skwq_has_sleeper include/net/sock.h:2092 [inline]
- sock_def_write_space+0x642/0x670 net/core/sock.c:2813
- sock_wfree+0x1e1/0x260 net/core/sock.c:1958
- skb_release_head_state+0xeb/0x260 net/core/skbuff.c:652
- skb_release_all+0x16/0x60 net/core/skbuff.c:663
- __kfree_skb net/core/skbuff.c:679 [inline]
- consume_skb net/core/skbuff.c:838 [inline]
- consume_skb+0xfb/0x410 net/core/skbuff.c:832
- __dev_kfree_skb_any+0xa4/0xd0 net/core/dev.c:2967
- dev_kfree_skb_any include/linux/netdevice.h:3650 [inline]
- e1000_unmap_and_free_tx_resource.isra.0+0x21b/0x3a0 drivers/net/ethernet/intel/e1000/e1000_main.c:1963
- e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3854 [inline]
- e1000_clean+0x4cc/0x1d10 drivers/net/ethernet/intel/e1000/e1000_main.c:3796
- napi_poll net/core/dev.c:6532 [inline]
- net_rx_action+0x508/0x1120 net/core/dev.c:6600
- __do_softirq+0x262/0x98c kernel/softirq.c:292
- run_ksoftirqd kernel/softirq.c:603 [inline]
- run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
- smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
- kthread+0x361/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 8247:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:513 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
- kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:521
- slab_post_alloc_hook mm/slab.h:584 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x121/0x710 mm/slab.c:3484
- sock_alloc_inode+0x1c/0x1d0 net/socket.c:240
- alloc_inode+0x68/0x1e0 fs/inode.c:230
- new_inode_pseudo+0x19/0xf0 fs/inode.c:919
- sock_alloc+0x41/0x270 net/socket.c:560
- __sock_create+0xc2/0x730 net/socket.c:1384
- sock_create net/socket.c:1471 [inline]
- __sys_socket+0x103/0x220 net/socket.c:1513
- __do_sys_socket net/socket.c:1522 [inline]
- __se_sys_socket net/socket.c:1520 [inline]
- __ia32_sys_socket+0x73/0xb0 net/socket.c:1520
- do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
- do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
- entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-
-Freed by task 17:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:335 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
- __cache_free mm/slab.c:3426 [inline]
- kmem_cache_free+0x86/0x320 mm/slab.c:3694
- sock_free_inode+0x20/0x30 net/socket.c:261
- i_callback+0x44/0x80 fs/inode.c:219
- __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
- rcu_do_batch kernel/rcu/tree.c:2183 [inline]
- rcu_core+0x570/0x1540 kernel/rcu/tree.c:2408
- rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2417
- __do_softirq+0x262/0x98c kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff88801e0b4000
- which belongs to the cache sock_inode_cache of size 1152
-The buggy address is located 120 bytes inside of
- 1152-byte region [ffff88801e0b4000, ffff88801e0b4480)
-The buggy address belongs to the page:
-page:ffffea0000782d00 refcount:1 mapcount:0 mapping:ffff88807aa59c40 index:0xffff88801e0b4ffd
-raw: 00fffe0000000200 ffffea00008e6c88 ffffea0000782d48 ffff88807aa59c40
-raw: ffff88801e0b4ffd ffff88801e0b4000 0000000100000003 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88801e0b3f00: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
- ffff88801e0b3f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88801e0b4000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                                ^
- ffff88801e0b4080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88801e0b4100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-Fixes: abf9d537fea2 ("llc: add support for SO_BINDTODEVICE")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- net/llc/af_llc.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ include/linux/seqlock.h | 425 ++++++++++++++++++++++++++++++++--------
+ 1 file changed, 348 insertions(+), 77 deletions(-)
 
---- a/net/llc/af_llc.c
-+++ b/net/llc/af_llc.c
-@@ -273,6 +273,10 @@ static int llc_ui_autobind(struct socket
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index 4c1456008d89..85fb3ac93ffb 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -75,6 +75,10 @@ static inline void __seqcount_init(seqcount_t *s, const char *name,
+ # define SEQCOUNT_DEP_MAP_INIT(lockname) \
+ 		.dep_map = { .name = #lockname } \
  
- 	if (!sock_flag(sk, SOCK_ZAPPED))
- 		goto out;
-+	if (!addr->sllc_arphrd)
-+		addr->sllc_arphrd = ARPHRD_ETHER;
-+	if (addr->sllc_arphrd != ARPHRD_ETHER)
-+		goto out;
- 	rc = -ENODEV;
- 	if (sk->sk_bound_dev_if) {
- 		llc->dev = dev_get_by_index(&init_net, sk->sk_bound_dev_if);
-@@ -328,7 +332,9 @@ static int llc_ui_bind(struct socket *so
- 	if (unlikely(!sock_flag(sk, SOCK_ZAPPED) || addrlen != sizeof(*addr)))
- 		goto out;
- 	rc = -EAFNOSUPPORT;
--	if (unlikely(addr->sllc_family != AF_LLC))
-+	if (!addr->sllc_arphrd)
-+		addr->sllc_arphrd = ARPHRD_ETHER;
-+	if (unlikely(addr->sllc_family != AF_LLC || addr->sllc_arphrd != ARPHRD_ETHER))
- 		goto out;
- 	dprintk("%s: binding %02X\n", __func__, addr->sllc_sap);
- 	rc = -ENODEV;
-@@ -336,8 +342,6 @@ static int llc_ui_bind(struct socket *so
- 	if (sk->sk_bound_dev_if) {
- 		llc->dev = dev_get_by_index_rcu(&init_net, sk->sk_bound_dev_if);
- 		if (llc->dev) {
--			if (!addr->sllc_arphrd)
--				addr->sllc_arphrd = llc->dev->type;
- 			if (is_zero_ether_addr(addr->sllc_mac))
- 				memcpy(addr->sllc_mac, llc->dev->dev_addr,
- 				       IFHWADDRLEN);
-
++/**
++ * seqcount_init() - runtime initializer for seqcount_t
++ * @s: Pointer to the seqcount_t instance
++ */
+ # define seqcount_init(s)				\
+ 	do {						\
+ 		static struct lock_class_key __key;	\
+@@ -98,13 +102,15 @@ static inline void seqcount_lockdep_reader_access(const seqcount_t *s)
+ # define seqcount_lockdep_reader_access(x)
+ #endif
+ 
+-#define SEQCNT_ZERO(lockname) { .sequence = 0, SEQCOUNT_DEP_MAP_INIT(lockname)}
+-
++/**
++ * SEQCNT_ZERO() - static initializer for seqcount_t
++ * @name: Name of the seqcount_t instance
++ */
++#define SEQCNT_ZERO(name) { .sequence = 0, SEQCOUNT_DEP_MAP_INIT(name) }
+ 
+ /**
+- * __read_seqcount_begin - begin a seq-read critical section (without barrier)
+- * @s: pointer to seqcount_t
+- * Returns: count to be passed to read_seqcount_retry
++ * __read_seqcount_begin() - begin a seqcount_t read section w/o barrier
++ * @s: Pointer to seqcount_t
+  *
+  * __read_seqcount_begin is like read_seqcount_begin, but has no smp_rmb()
+  * barrier. Callers should ensure that smp_rmb() or equivalent ordering is
+@@ -113,6 +119,8 @@ static inline void seqcount_lockdep_reader_access(const seqcount_t *s)
+  *
+  * Use carefully, only in critical code, and comment how the barrier is
+  * provided.
++ *
++ * Return: count to be passed to read_seqcount_retry()
+  */
+ static inline unsigned __read_seqcount_begin(const seqcount_t *s)
+ {
+@@ -129,13 +137,10 @@ static inline unsigned __read_seqcount_begin(const seqcount_t *s)
+ }
+ 
+ /**
+- * raw_read_seqcount_begin - start seq-read critical section w/o lockdep
+- * @s: pointer to seqcount_t
+- * Returns: count to be passed to read_seqcount_retry
++ * raw_read_seqcount_begin() - begin a seqcount_t read section w/o lockdep
++ * @s: Pointer to seqcount_t
+  *
+- * raw_read_seqcount_begin opens a read critical section of the given
+- * seqcount, but without any lockdep checking. Validity of the critical
+- * section is tested by checking read_seqcount_retry function.
++ * Return: count to be passed to read_seqcount_retry()
+  */
+ static inline unsigned raw_read_seqcount_begin(const seqcount_t *s)
+ {
+@@ -145,13 +150,10 @@ static inline unsigned raw_read_seqcount_begin(const seqcount_t *s)
+ }
+ 
+ /**
+- * read_seqcount_begin - begin a seq-read critical section
+- * @s: pointer to seqcount_t
+- * Returns: count to be passed to read_seqcount_retry
++ * read_seqcount_begin() - begin a seqcount_t read critical section
++ * @s: Pointer to seqcount_t
+  *
+- * read_seqcount_begin opens a read critical section of the given seqcount.
+- * Validity of the critical section is tested by checking read_seqcount_retry
+- * function.
++ * Return: count to be passed to read_seqcount_retry()
+  */
+ static inline unsigned read_seqcount_begin(const seqcount_t *s)
+ {
+@@ -160,13 +162,15 @@ static inline unsigned read_seqcount_begin(const seqcount_t *s)
+ }
+ 
+ /**
+- * raw_read_seqcount - Read the raw seqcount
+- * @s: pointer to seqcount_t
+- * Returns: count to be passed to read_seqcount_retry
++ * raw_read_seqcount() - read the raw seqcount_t counter value
++ * @s: Pointer to seqcount_t
+  *
+  * raw_read_seqcount opens a read critical section of the given
+- * seqcount without any lockdep checking and without checking or
+- * masking the LSB. Calling code is responsible for handling that.
++ * seqcount_t, without any lockdep checking, and without checking or
++ * masking the sequence counter LSB. Calling code is responsible for
++ * handling that.
++ *
++ * Return: count to be passed to read_seqcount_retry()
+  */
+ static inline unsigned raw_read_seqcount(const seqcount_t *s)
+ {
+@@ -177,18 +181,21 @@ static inline unsigned raw_read_seqcount(const seqcount_t *s)
+ }
+ 
+ /**
+- * raw_seqcount_begin - begin a seq-read critical section
+- * @s: pointer to seqcount_t
+- * Returns: count to be passed to read_seqcount_retry
++ * raw_seqcount_begin() - begin a seqcount_t read critical section w/o
++ *                        lockdep and w/o counter stabilization
++ * @s: Pointer to seqcount_t
+  *
+- * raw_seqcount_begin opens a read critical section of the given seqcount.
+- * Validity of the critical section is tested by checking read_seqcount_retry
+- * function.
++ * raw_seqcount_begin opens a read critical section of the given
++ * seqcount_t. Unlike read_seqcount_begin(), this function will not wait
++ * for the count to stabilize. If a writer is active when it begins, it
++ * will fail the read_seqcount_retry() at the end of the read critical
++ * section instead of stabilizing at the beginning of it.
+  *
+- * Unlike read_seqcount_begin(), this function will not wait for the count
+- * to stabilize. If a writer is active when we begin, we will fail the
+- * read_seqcount_retry() instead of stabilizing at the beginning of the
+- * critical section.
++ * Use this only in special kernel hot paths where the read section is
++ * small and has a high probability of success through other external
++ * means. It will save a single branching instruction.
++ *
++ * Return: count to be passed to read_seqcount_retry()
+  */
+ static inline unsigned raw_seqcount_begin(const seqcount_t *s)
+ {
+@@ -199,10 +206,9 @@ static inline unsigned raw_seqcount_begin(const seqcount_t *s)
+ }
+ 
+ /**
+- * __read_seqcount_retry - end a seq-read critical section (without barrier)
+- * @s: pointer to seqcount_t
+- * @start: count, from read_seqcount_begin
+- * Returns: 1 if retry is required, else 0
++ * __read_seqcount_retry() - end a seqcount_t read section w/o barrier
++ * @s: Pointer to seqcount_t
++ * @start: count, from read_seqcount_begin()
+  *
+  * __read_seqcount_retry is like read_seqcount_retry, but has no smp_rmb()
+  * barrier. Callers should ensure that smp_rmb() or equivalent ordering is
+@@ -211,6 +217,8 @@ static inline unsigned raw_seqcount_begin(const seqcount_t *s)
+  *
+  * Use carefully, only in critical code, and comment how the barrier is
+  * provided.
++ *
++ * Return: true if a read section retry is required, else false
+  */
+ static inline int __read_seqcount_retry(const seqcount_t *s, unsigned start)
+ {
+@@ -219,14 +227,15 @@ static inline int __read_seqcount_retry(const seqcount_t *s, unsigned start)
+ }
+ 
+ /**
+- * read_seqcount_retry - end a seq-read critical section
+- * @s: pointer to seqcount_t
+- * @start: count, from read_seqcount_begin
+- * Returns: 1 if retry is required, else 0
++ * read_seqcount_retry() - end a seqcount_t read critical section
++ * @s: Pointer to seqcount_t
++ * @start: count, from read_seqcount_begin()
+  *
+- * read_seqcount_retry closes a read critical section of the given seqcount.
+- * If the critical section was invalid, it must be ignored (and typically
+- * retried).
++ * read_seqcount_retry closes the read critical section of given
++ * seqcount_t.  If the critical section was invalid, it must be ignored
++ * (and typically retried).
++ *
++ * Return: true if a read section retry is required, else false
+  */
+ static inline int read_seqcount_retry(const seqcount_t *s, unsigned start)
+ {
+@@ -234,6 +243,10 @@ static inline int read_seqcount_retry(const seqcount_t *s, unsigned start)
+ 	return __read_seqcount_retry(s, start);
+ }
+ 
++/**
++ * raw_write_seqcount_begin() - start a seqcount_t write section w/o lockdep
++ * @s: Pointer to seqcount_t
++ */
+ static inline void raw_write_seqcount_begin(seqcount_t *s)
+ {
+ 	kcsan_nestable_atomic_begin();
+@@ -241,6 +254,10 @@ static inline void raw_write_seqcount_begin(seqcount_t *s)
+ 	smp_wmb();
+ }
+ 
++/**
++ * raw_write_seqcount_end() - end a seqcount_t write section w/o lockdep
++ * @s: Pointer to seqcount_t
++ */
+ static inline void raw_write_seqcount_end(seqcount_t *s)
+ {
+ 	smp_wmb();
+@@ -248,17 +265,42 @@ static inline void raw_write_seqcount_end(seqcount_t *s)
+ 	kcsan_nestable_atomic_end();
+ }
+ 
++/**
++ * write_seqcount_begin_nested() - start a seqcount_t write section with
++ *                                 custom lockdep nesting level
++ * @s: Pointer to seqcount_t
++ * @subclass: lockdep nesting level
++ *
++ * See Documentation/locking/lockdep-design.rst
++ */
+ static inline void write_seqcount_begin_nested(seqcount_t *s, int subclass)
+ {
+ 	raw_write_seqcount_begin(s);
+ 	seqcount_acquire(&s->dep_map, subclass, 0, _RET_IP_);
+ }
+ 
++/**
++ * write_seqcount_begin() - start a seqcount_t write side critical section
++ * @s: Pointer to seqcount_t
++ *
++ * write_seqcount_begin opens a write side critical section of the given
++ * seqcount_t.
++ *
++ * Context: seqcount_t write side critical sections must be serialized and
++ * non-preemptible. If readers can be invoked from hardirq or softirq
++ * context, interrupts or bottom halves must be respectively disabled.
++ */
+ static inline void write_seqcount_begin(seqcount_t *s)
+ {
+ 	write_seqcount_begin_nested(s, 0);
+ }
+ 
++/**
++ * write_seqcount_end() - end a seqcount_t write side critical section
++ * @s: Pointer to seqcount_t
++ *
++ * The write section must've been opened with write_seqcount_begin().
++ */
+ static inline void write_seqcount_end(seqcount_t *s)
+ {
+ 	seqcount_release(&s->dep_map, _RET_IP_);
+@@ -266,12 +308,12 @@ static inline void write_seqcount_end(seqcount_t *s)
+ }
+ 
+ /**
+- * raw_write_seqcount_barrier - do a seq write barrier
+- * @s: pointer to seqcount_t
++ * raw_write_seqcount_barrier() - do a seqcount_t write barrier
++ * @s: Pointer to seqcount_t
+  *
+- * This can be used to provide an ordering guarantee instead of the
+- * usual consistency guarantee. It is one wmb cheaper, because we can
+- * collapse the two back-to-back wmb()s.
++ * This can be used to provide an ordering guarantee instead of the usual
++ * consistency guarantee. It is one wmb cheaper, because it can collapse
++ * the two back-to-back wmb()s.
+  *
+  * Note that writes surrounding the barrier should be declared atomic (e.g.
+  * via WRITE_ONCE): a) to ensure the writes become visible to other threads
+@@ -316,11 +358,12 @@ static inline void raw_write_seqcount_barrier(seqcount_t *s)
+ }
+ 
+ /**
+- * write_seqcount_invalidate - invalidate in-progress read-side seq operations
+- * @s: pointer to seqcount_t
++ * write_seqcount_invalidate() - invalidate in-progress seqcount_t read
++ *                               side operations
++ * @s: Pointer to seqcount_t
+  *
+- * After write_seqcount_invalidate, no read-side seq operations will complete
+- * successfully and see data older than this.
++ * After write_seqcount_invalidate, no seqcount_t read side operations
++ * will complete successfully and see data older than this.
+  */
+ static inline void write_seqcount_invalidate(seqcount_t *s)
+ {
+@@ -330,6 +373,21 @@ static inline void write_seqcount_invalidate(seqcount_t *s)
+ 	kcsan_nestable_atomic_end();
+ }
+ 
++/**
++ * raw_read_seqcount_latch() - pick even/odd seqcount_t latch data copy
++ * @s: Pointer to seqcount_t
++ *
++ * Use seqcount_t latching to switch between two storage places protected
++ * by a sequence counter. Doing so allows having interruptible, preemptible,
++ * seqcount_t write side critical sections.
++ *
++ * Check raw_write_seqcount_latch() for more details and a full reader and
++ * writer usage example.
++ *
++ * Return: sequence counter raw value. Use the lowest bit as an index for
++ * picking which data copy to read. The full counter value must then be
++ * checked with read_seqcount_retry().
++ */
+ static inline int raw_read_seqcount_latch(seqcount_t *s)
+ {
+ 	/* Pairs with the first smp_wmb() in raw_write_seqcount_latch() */
+@@ -338,8 +396,8 @@ static inline int raw_read_seqcount_latch(seqcount_t *s)
+ }
+ 
+ /**
+- * raw_write_seqcount_latch - redirect readers to even/odd copy
+- * @s: pointer to seqcount_t
++ * raw_write_seqcount_latch() - redirect readers to even/odd copy
++ * @s: Pointer to seqcount_t
+  *
+  * The latch technique is a multiversion concurrency control method that allows
+  * queries during non-atomic modifications. If you can guarantee queries never
+@@ -446,17 +504,28 @@ typedef struct {
+ 		.lock =	__SPIN_LOCK_UNLOCKED(lockname)	\
+ 	}
+ 
+-#define seqlock_init(x)					\
++/**
++ * seqlock_init() - dynamic initializer for seqlock_t
++ * @sl: Pointer to the seqlock_t instance
++ */
++#define seqlock_init(sl)				\
+ 	do {						\
+-		seqcount_init(&(x)->seqcount);		\
+-		spin_lock_init(&(x)->lock);		\
++		seqcount_init(&(sl)->seqcount);		\
++		spin_lock_init(&(sl)->lock);		\
+ 	} while (0)
+ 
+-#define DEFINE_SEQLOCK(x) \
+-		seqlock_t x = __SEQLOCK_UNLOCKED(x)
++/**
++ * DEFINE_SEQLOCK() - Define a statically allocated seqlock_t
++ * @sl: Name of the seqlock_t instance
++ */
++#define DEFINE_SEQLOCK(sl) \
++		seqlock_t sl = __SEQLOCK_UNLOCKED(sl)
+ 
+-/*
+- * Read side functions for starting and finalizing a read side section.
++/**
++ * read_seqbegin() - start a seqlock_t read side critical section
++ * @sl: Pointer to seqlock_t
++ *
++ * Return: count, to be passed to read_seqretry()
+  */
+ static inline unsigned read_seqbegin(const seqlock_t *sl)
+ {
+@@ -467,6 +536,17 @@ static inline unsigned read_seqbegin(const seqlock_t *sl)
+ 	return ret;
+ }
+ 
++/**
++ * read_seqretry() - end a seqlock_t read side section
++ * @sl: Pointer to seqlock_t
++ * @start: count, from read_seqbegin()
++ *
++ * read_seqretry closes the read side critical section of given seqlock_t.
++ * If the critical section was invalid, it must be ignored (and typically
++ * retried).
++ *
++ * Return: true if a read section retry is required, else false
++ */
+ static inline unsigned read_seqretry(const seqlock_t *sl, unsigned start)
+ {
+ 	/*
+@@ -478,10 +558,18 @@ static inline unsigned read_seqretry(const seqlock_t *sl, unsigned start)
+ 	return read_seqcount_retry(&sl->seqcount, start);
+ }
+ 
+-/*
+- * Lock out other writers and update the count.
+- * Acts like a normal spin_lock/unlock.
+- * Don't need preempt_disable() because that is in the spin_lock already.
++/**
++ * write_seqlock() - start a seqlock_t write side critical section
++ * @sl: Pointer to seqlock_t
++ *
++ * write_seqlock opens a write side critical section for the given
++ * seqlock_t.  It also implicitly acquires the spinlock_t embedded inside
++ * that sequential lock. All seqlock_t write side sections are thus
++ * automatically serialized and non-preemptible.
++ *
++ * Context: if the seqlock_t read section, or other write side critical
++ * sections, can be invoked from hardirq or softirq contexts, use the
++ * _irqsave or _bh variants of this function instead.
+  */
+ static inline void write_seqlock(seqlock_t *sl)
+ {
+@@ -489,30 +577,66 @@ static inline void write_seqlock(seqlock_t *sl)
+ 	write_seqcount_begin(&sl->seqcount);
+ }
+ 
++/**
++ * write_sequnlock() - end a seqlock_t write side critical section
++ * @sl: Pointer to seqlock_t
++ *
++ * write_sequnlock closes the (serialized and non-preemptible) write side
++ * critical section of given seqlock_t.
++ */
+ static inline void write_sequnlock(seqlock_t *sl)
+ {
+ 	write_seqcount_end(&sl->seqcount);
+ 	spin_unlock(&sl->lock);
+ }
+ 
++/**
++ * write_seqlock_bh() - start a softirqs-disabled seqlock_t write section
++ * @sl: Pointer to seqlock_t
++ *
++ * _bh variant of write_seqlock(). Use only if the read side section, or
++ * other write side sections, can be invoked from softirq contexts.
++ */
+ static inline void write_seqlock_bh(seqlock_t *sl)
+ {
+ 	spin_lock_bh(&sl->lock);
+ 	write_seqcount_begin(&sl->seqcount);
+ }
+ 
++/**
++ * write_sequnlock_bh() - end a softirqs-disabled seqlock_t write section
++ * @sl: Pointer to seqlock_t
++ *
++ * write_sequnlock_bh closes the serialized, non-preemptible, and
++ * softirqs-disabled, seqlock_t write side critical section opened with
++ * write_seqlock_bh().
++ */
+ static inline void write_sequnlock_bh(seqlock_t *sl)
+ {
+ 	write_seqcount_end(&sl->seqcount);
+ 	spin_unlock_bh(&sl->lock);
+ }
+ 
++/**
++ * write_seqlock_irq() - start a non-interruptible seqlock_t write section
++ * @sl: Pointer to seqlock_t
++ *
++ * _irq variant of write_seqlock(). Use only if the read side section, or
++ * other write sections, can be invoked from hardirq contexts.
++ */
+ static inline void write_seqlock_irq(seqlock_t *sl)
+ {
+ 	spin_lock_irq(&sl->lock);
+ 	write_seqcount_begin(&sl->seqcount);
+ }
+ 
++/**
++ * write_sequnlock_irq() - end a non-interruptible seqlock_t write section
++ * @sl: Pointer to seqlock_t
++ *
++ * write_sequnlock_irq closes the serialized and non-interruptible
++ * seqlock_t write side section opened with write_seqlock_irq().
++ */
+ static inline void write_sequnlock_irq(seqlock_t *sl)
+ {
+ 	write_seqcount_end(&sl->seqcount);
+@@ -528,9 +652,28 @@ static inline unsigned long __write_seqlock_irqsave(seqlock_t *sl)
+ 	return flags;
+ }
+ 
++/**
++ * write_seqlock_irqsave() - start a non-interruptible seqlock_t write
++ *                           section
++ * @lock:  Pointer to seqlock_t
++ * @flags: Stack-allocated storage for saving caller's local interrupt
++ *         state, to be passed to write_sequnlock_irqrestore().
++ *
++ * _irqsave variant of write_seqlock(). Use it only if the read side
++ * section, or other write sections, can be invoked from hardirq context.
++ */
+ #define write_seqlock_irqsave(lock, flags)				\
+ 	do { flags = __write_seqlock_irqsave(lock); } while (0)
+ 
++/**
++ * write_sequnlock_irqrestore() - end non-interruptible seqlock_t write
++ *                                section
++ * @sl:    Pointer to seqlock_t
++ * @flags: Caller's saved interrupt state, from write_seqlock_irqsave()
++ *
++ * write_sequnlock_irqrestore closes the serialized and non-interruptible
++ * seqlock_t write section previously opened with write_seqlock_irqsave().
++ */
+ static inline void
+ write_sequnlock_irqrestore(seqlock_t *sl, unsigned long flags)
+ {
+@@ -538,36 +681,79 @@ write_sequnlock_irqrestore(seqlock_t *sl, unsigned long flags)
+ 	spin_unlock_irqrestore(&sl->lock, flags);
+ }
+ 
+-/*
+- * A locking reader exclusively locks out other writers and locking readers,
+- * but doesn't update the sequence number. Acts like a normal spin_lock/unlock.
+- * Don't need preempt_disable() because that is in the spin_lock already.
++/**
++ * read_seqlock_excl() - begin a seqlock_t locking reader section
++ * @sl: Pointer to seqlock_t
++ *
++ * read_seqlock_excl opens a seqlock_t locking reader critical section.  A
++ * locking reader exclusively locks out *both* other writers *and* other
++ * locking readers, but it does not update the embedded sequence number.
++ *
++ * Locking readers act like a normal spin_lock()/spin_unlock().
++ *
++ * Context: if the seqlock_t write section, *or other read sections*, can
++ * be invoked from hardirq or softirq contexts, use the _irqsave or _bh
++ * variant of this function instead.
++ *
++ * The opened read section must be closed with read_sequnlock_excl().
+  */
+ static inline void read_seqlock_excl(seqlock_t *sl)
+ {
+ 	spin_lock(&sl->lock);
+ }
+ 
++/**
++ * read_sequnlock_excl() - end a seqlock_t locking reader critical section
++ * @sl: Pointer to seqlock_t
++ */
+ static inline void read_sequnlock_excl(seqlock_t *sl)
+ {
+ 	spin_unlock(&sl->lock);
+ }
+ 
++/**
++ * read_seqlock_excl_bh() - start a seqlock_t locking reader section with
++ *			    softirqs disabled
++ * @sl: Pointer to seqlock_t
++ *
++ * _bh variant of read_seqlock_excl(). Use this variant only if the
++ * seqlock_t write side section, *or other read sections*, can be invoked
++ * from softirq contexts.
++ */
+ static inline void read_seqlock_excl_bh(seqlock_t *sl)
+ {
+ 	spin_lock_bh(&sl->lock);
+ }
+ 
++/**
++ * read_sequnlock_excl_bh() - stop a seqlock_t softirq-disabled locking
++ *			      reader section
++ * @sl: Pointer to seqlock_t
++ */
+ static inline void read_sequnlock_excl_bh(seqlock_t *sl)
+ {
+ 	spin_unlock_bh(&sl->lock);
+ }
+ 
++/**
++ * read_seqlock_excl_irq() - start a non-interruptible seqlock_t locking
++ *			     reader section
++ * @sl: Pointer to seqlock_t
++ *
++ * _irq variant of read_seqlock_excl(). Use this only if the seqlock_t
++ * write side section, *or other read sections*, can be invoked from a
++ * hardirq context.
++ */
+ static inline void read_seqlock_excl_irq(seqlock_t *sl)
+ {
+ 	spin_lock_irq(&sl->lock);
+ }
+ 
++/**
++ * read_sequnlock_excl_irq() - end an interrupts-disabled seqlock_t
++ *                             locking reader section
++ * @sl: Pointer to seqlock_t
++ */
+ static inline void read_sequnlock_excl_irq(seqlock_t *sl)
+ {
+ 	spin_unlock_irq(&sl->lock);
+@@ -581,9 +767,26 @@ static inline unsigned long __read_seqlock_excl_irqsave(seqlock_t *sl)
+ 	return flags;
+ }
+ 
++/**
++ * read_seqlock_excl_irqsave() - start a non-interruptible seqlock_t
++ *				 locking reader section
++ * @lock:  Pointer to seqlock_t
++ * @flags: Stack-allocated storage for saving caller's local interrupt
++ *         state, to be passed to read_sequnlock_excl_irqrestore().
++ *
++ * _irqsave variant of read_seqlock_excl(). Use this only if the seqlock_t
++ * write side section, *or other read sections*, can be invoked from a
++ * hardirq context.
++ */
+ #define read_seqlock_excl_irqsave(lock, flags)				\
+ 	do { flags = __read_seqlock_excl_irqsave(lock); } while (0)
+ 
++/**
++ * read_sequnlock_excl_irqrestore() - end non-interruptible seqlock_t
++ *				      locking reader section
++ * @sl:    Pointer to seqlock_t
++ * @flags: Caller saved interrupt state, from read_seqlock_excl_irqsave()
++ */
+ static inline void
+ read_sequnlock_excl_irqrestore(seqlock_t *sl, unsigned long flags)
+ {
+@@ -591,14 +794,35 @@ read_sequnlock_excl_irqrestore(seqlock_t *sl, unsigned long flags)
+ }
+ 
+ /**
+- * read_seqbegin_or_lock - begin a sequence number check or locking block
+- * @lock: sequence lock
+- * @seq : sequence number to be checked
+- *
+- * First try it once optimistically without taking the lock. If that fails,
+- * take the lock. The sequence number is also used as a marker for deciding
+- * whether to be a reader (even) or writer (odd).
+- * N.B. seq must be initialized to an even number to begin with.
++ * read_seqbegin_or_lock() - begin a seqlock_t lockless or locking reader
++ * @lock: Pointer to seqlock_t
++ * @seq : Marker and return parameter. If the passed value is even, the
++ * reader will become a *lockless* seqlock_t reader as in read_seqbegin().
++ * If the passed value is odd, the reader will become a *locking* reader
++ * as in read_seqlock_excl().  In the first call to this function, the
++ * caller *must* initialize and pass an even value to @seq; this way, a
++ * lockless read can be optimistically tried first.
++ *
++ * read_seqbegin_or_lock is an API designed to optimistically try a normal
++ * lockless seqlock_t read section first.  If an odd counter is found, the
++ * lockless read trial has failed, and the next read iteration transforms
++ * itself into a full seqlock_t locking reader.
++ *
++ * This is typically used to avoid seqlock_t lockless readers starvation
++ * (too much retry loops) in the case of a sharp spike in write side
++ * activity.
++ *
++ * Context: if the seqlock_t write section, *or other read sections*, can
++ * be invoked from hardirq or softirq contexts, use the _irqsave or _bh
++ * variant of this function instead.
++ *
++ * Check Documentation/locking/seqlock.rst for template example code.
++ *
++ * Return: the encountered sequence counter value, through the @seq
++ * parameter, which is overloaded as a return parameter. This returned
++ * value must be checked with need_seqretry(). If the read section need to
++ * be retried, this returned value must also be passed as the @seq
++ * parameter of the next read_seqbegin_or_lock() iteration.
+  */
+ static inline void read_seqbegin_or_lock(seqlock_t *lock, int *seq)
+ {
+@@ -608,17 +832,52 @@ static inline void read_seqbegin_or_lock(seqlock_t *lock, int *seq)
+ 		read_seqlock_excl(lock);
+ }
+ 
++/**
++ * need_seqretry() - validate seqlock_t "locking or lockless" read section
++ * @lock: Pointer to seqlock_t
++ * @seq: sequence count, from read_seqbegin_or_lock()
++ *
++ * Return: true if a read section retry is required, false otherwise
++ */
+ static inline int need_seqretry(seqlock_t *lock, int seq)
+ {
+ 	return !(seq & 1) && read_seqretry(lock, seq);
+ }
+ 
++/**
++ * done_seqretry() - end seqlock_t "locking or lockless" reader section
++ * @lock: Pointer to seqlock_t
++ * @seq: count, from read_seqbegin_or_lock()
++ *
++ * done_seqretry finishes the seqlock_t read side critical section started
++ * with read_seqbegin_or_lock() and validated by need_seqretry().
++ */
+ static inline void done_seqretry(seqlock_t *lock, int seq)
+ {
+ 	if (seq & 1)
+ 		read_sequnlock_excl(lock);
+ }
+ 
++/**
++ * read_seqbegin_or_lock_irqsave() - begin a seqlock_t lockless reader, or
++ *                                   a non-interruptible locking reader
++ * @lock: Pointer to seqlock_t
++ * @seq:  Marker and return parameter. Check read_seqbegin_or_lock().
++ *
++ * This is the _irqsave variant of read_seqbegin_or_lock(). Use it only if
++ * the seqlock_t write section, *or other read sections*, can be invoked
++ * from hardirq context.
++ *
++ * Note: Interrupts will be disabled only for "locking reader" mode.
++ *
++ * Return:
++ *
++ *   1. The saved local interrupts state in case of a locking reader, to
++ *      be passed to done_seqretry_irqrestore().
++ *
++ *   2. The encountered sequence counter value, returned through @seq
++ *      overloaded as a return parameter. Check read_seqbegin_or_lock().
++ */
+ static inline unsigned long
+ read_seqbegin_or_lock_irqsave(seqlock_t *lock, int *seq)
+ {
+@@ -632,6 +891,18 @@ read_seqbegin_or_lock_irqsave(seqlock_t *lock, int *seq)
+ 	return flags;
+ }
+ 
++/**
++ * done_seqretry_irqrestore() - end a seqlock_t lockless reader, or a
++ *				non-interruptible locking reader section
++ * @lock:  Pointer to seqlock_t
++ * @seq:   Count, from read_seqbegin_or_lock_irqsave()
++ * @flags: Caller's saved local interrupt state in case of a locking
++ *	   reader, also from read_seqbegin_or_lock_irqsave()
++ *
++ * This is the _irqrestore variant of done_seqretry(). The read section
++ * must've been opened with read_seqbegin_or_lock_irqsave(), and validated
++ * by need_seqretry().
++ */
+ static inline void
+ done_seqretry_irqrestore(seqlock_t *lock, int seq, unsigned long flags)
+ {
+-- 
+2.20.1
 
