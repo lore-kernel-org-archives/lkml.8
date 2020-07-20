@@ -2,419 +2,190 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BFFC433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BEBC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B3892073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PbnhUJkb"
+	by mail.kernel.org (Postfix) with ESMTP id 108102070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595263416;
+	bh=e5xVXAy2cdWAHADLimp4bA2m13nEpKLUopdokuZdIJc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ttVg7edzWDgz4BgzE+2tizB5KWGW9VAwjcA8f6jbe5UoAbZsp91umSTqc+Sg1Xk/c
+	 qjvebQFaCyU7gGlOkoYnrWCRYOZxTTzWlORooaYFGyr58XCvVAJzpNnjeZKA+AEk4t
+	 Nb/bkuH6UamLeB6cIyMwLBwaWLIuQc96LFRuiW4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbgGTPmD (ORCPT
+        id S1731718AbgGTQne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:42:03 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:14165 "EHLO m43-7.mailgun.net"
+        Mon, 20 Jul 2020 12:43:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729965AbgGTPlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:41:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595259712; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=8CLzcJHbBsfbAWL6g+uKa54bEkvfO270xTZtQNI44WY=; b=PbnhUJkbceEy3qQ3e0wnu1lFFcP7EcRdH4BNDjVzJ4iEvizzU+LfHf9NbinysIGYqzF3NEpg
- n7lMJDho3SG2c6Cp4B9s5rj94xe/6LUsrI/Co90k0OYp/VkuN2k5C5OeYnbYWbY2yfCJzmu0
- OiESi8b6mgQTXyzIb4uMJDsaxxs=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f15bb2ce3bee12510e0fccc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 15:41:32
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AE9D5C43391; Mon, 20 Jul 2020 15:41:29 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730006AbgGTPmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:42:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F9B6C433C9;
-        Mon, 20 Jul 2020 15:41:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7F9B6C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Eric Anholt <eric@anholt.net>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v10 08/13] drm/msm: Add a context pointer to the submitqueue
-Date:   Mon, 20 Jul 2020 09:40:42 -0600
-Message-Id: <20200720154047.3611092-9-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720154047.3611092-1-jcrouse@codeaurora.org>
-References: <20200720154047.3611092-1-jcrouse@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 271022064B;
+        Mon, 20 Jul 2020 15:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595259722;
+        bh=e5xVXAy2cdWAHADLimp4bA2m13nEpKLUopdokuZdIJc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eRsGxiupYn1VmGpYqqI7zzdfSBmLrN/n8Ha389RLLVWfnVLiq4oVIjKp/MkYatUwJ
+         YLhtanDrZkhHhSmhp0ivccDhRJ0ZMmtxxOb62BXsZCZk5/enXHLrkQuIqTmgZQXBop
+         cci6tpIz2KvSV+BSRgjEOgmGsjc+tDw76looVZck=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Kao <michael.kao@mediatek.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 56/86] Revert "thermal: mediatek: fix register index error"
+Date:   Mon, 20 Jul 2020 17:36:52 +0200
+Message-Id: <20200720152755.974347231@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
+References: <20200720152753.138974850@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each submitqueue is attached to a context. Add a pointer to the
-context to the submitqueue at create time and refcount it so
-that it stays around through the life of the queue.
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-GPU submissions can access the active context via the submitqueue
-instead of requiring it to be passed around from function to
-function.
+[ Upstream commit a8f62f183021be389561570ab5f8c701a5e70298 ]
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+This reverts commit eb9aecd90d1a39601e91cd08b90d5fee51d321a6
+
+The above patch is supposed to fix a register index error on mt2701. It
+is not clear if the problem solved is a hang or just an invalid value
+returned, my guess is the second. The patch introduces, though, a new
+hang on MT8173 device making them unusable. So, seems reasonable, revert
+the patch because introduces a worst issue.
+
+The reason I send a revert instead of trying to fix the issue for MT8173
+is because the information needed to fix the issue is in the datasheet
+and is not public. So I am not really able to fix it.
+
+Fixes the following bug when CONFIG_MTK_THERMAL is set on MT8173
+devices.
+
+[    2.222488] Unable to handle kernel paging request at virtual address ffff8000125f5001
+[    2.230421] Mem abort info:
+[    2.233207]   ESR = 0x96000021
+[    2.236261]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    2.241571]   SET = 0, FnV = 0
+[    2.244623]   EA = 0, S1PTW = 0
+[    2.247762] Data abort info:
+[    2.250640]   ISV = 0, ISS = 0x00000021
+[    2.254473]   CM = 0, WnR = 0
+[    2.257544] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000041850000
+[    2.264251] [ffff8000125f5001] pgd=000000013ffff003, pud=000000013fffe003, pmd=000000013fff9003, pte=006800001100b707
+[    2.274867] Internal error: Oops: 96000021 [#1] PREEMPT SMP
+[    2.280432] Modules linked in:
+[    2.283483] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc6+ #162
+[    2.289914] Hardware name: Google Elm (DT)
+[    2.294003] pstate: 20000005 (nzCv daif -PAN -UAO)
+[    2.298792] pc : mtk_read_temp+0xb8/0x1c8
+[    2.302793] lr : mtk_read_temp+0x7c/0x1c8
+[    2.306794] sp : ffff80001003b930
+[    2.310100] x29: ffff80001003b930 x28: 0000000000000000
+[    2.315404] x27: 0000000000000002 x26: ffff0000f9550b10
+[    2.320709] x25: ffff0000f9550a80 x24: 0000000000000090
+[    2.326014] x23: ffff80001003ba24 x22: 00000000610344c0
+[    2.331318] x21: 0000000000002710 x20: 00000000000001f4
+[    2.336622] x19: 0000000000030d40 x18: ffff800011742ec0
+[    2.341926] x17: 0000000000000001 x16: 0000000000000001
+[    2.347230] x15: ffffffffffffffff x14: ffffff0000000000
+[    2.352535] x13: ffffffffffffffff x12: 0000000000000028
+[    2.357839] x11: 0000000000000003 x10: ffff800011295ec8
+[    2.363143] x9 : 000000000000291b x8 : 0000000000000002
+[    2.368447] x7 : 00000000000000a8 x6 : 0000000000000004
+[    2.373751] x5 : 0000000000000000 x4 : ffff800011295cb0
+[    2.379055] x3 : 0000000000000002 x2 : ffff8000125f5001
+[    2.384359] x1 : 0000000000000001 x0 : ffff0000f9550a80
+[    2.389665] Call trace:
+[    2.392105]  mtk_read_temp+0xb8/0x1c8
+[    2.395760]  of_thermal_get_temp+0x2c/0x40
+[    2.399849]  thermal_zone_get_temp+0x78/0x160
+[    2.404198]  thermal_zone_device_update.part.0+0x3c/0x1f8
+[    2.409589]  thermal_zone_device_update+0x34/0x48
+[    2.414286]  of_thermal_set_mode+0x58/0x88
+[    2.418375]  thermal_zone_of_sensor_register+0x1a8/0x1d8
+[    2.423679]  devm_thermal_zone_of_sensor_register+0x64/0xb0
+[    2.429242]  mtk_thermal_probe+0x690/0x7d0
+[    2.433333]  platform_drv_probe+0x5c/0xb0
+[    2.437335]  really_probe+0xe4/0x448
+[    2.440901]  driver_probe_device+0xe8/0x140
+[    2.445077]  device_driver_attach+0x7c/0x88
+[    2.449252]  __driver_attach+0xac/0x178
+[    2.453082]  bus_for_each_dev+0x78/0xc8
+[    2.456909]  driver_attach+0x2c/0x38
+[    2.460476]  bus_add_driver+0x14c/0x230
+[    2.464304]  driver_register+0x6c/0x128
+[    2.468131]  __platform_driver_register+0x50/0x60
+[    2.472831]  mtk_thermal_driver_init+0x24/0x30
+[    2.477268]  do_one_initcall+0x50/0x298
+[    2.481098]  kernel_init_freeable+0x1ec/0x264
+[    2.485450]  kernel_init+0x1c/0x110
+[    2.488931]  ret_from_fork+0x10/0x1c
+[    2.492502] Code: f9401081 f9400402 b8a67821 8b010042 (b9400042)
+[    2.498599] ---[ end trace e43e3105ed27dc99 ]---
+[    2.503367] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+[    2.511020] SMP: stopping secondary CPUs
+[    2.514941] Kernel Offset: disabled
+[    2.518421] CPU features: 0x090002,25006005
+[    2.522595] Memory Limit: none
+[    2.525644] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]--
+
+Cc: Michael Kao <michael.kao@mediatek.com>
+Fixes: eb9aecd90d1a ("thermal: mediatek: fix register index error")
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200707103412.1010823-1-enric.balletbo@collabora.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/thermal/mtk_thermal.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c   | 12 +++++-------
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c   |  5 ++---
- drivers/gpu/drm/msm/adreno/adreno_gpu.c |  5 ++---
- drivers/gpu/drm/msm/adreno/adreno_gpu.h |  3 +--
- drivers/gpu/drm/msm/msm_drv.c           |  3 ++-
- drivers/gpu/drm/msm/msm_drv.h           |  8 ++++++++
- drivers/gpu/drm/msm/msm_gem.h           |  1 +
- drivers/gpu/drm/msm/msm_gem_submit.c    |  8 ++++----
- drivers/gpu/drm/msm/msm_gpu.c           |  9 ++++-----
- drivers/gpu/drm/msm/msm_gpu.h           |  7 +++----
- drivers/gpu/drm/msm/msm_submitqueue.c   |  8 +++++++-
- 11 files changed, 39 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index 9e63a190642c..eff2439ea57b 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -43,8 +43,7 @@ static void a5xx_flush(struct msm_gpu *gpu, struct msm_ringbuffer *ring)
- 		gpu_write(gpu, REG_A5XX_CP_RB_WPTR, wptr);
- }
+diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+index ea9558679634b..34169c32d4956 100644
+--- a/drivers/thermal/mtk_thermal.c
++++ b/drivers/thermal/mtk_thermal.c
+@@ -348,8 +348,7 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
+ 	u32 raw;
  
--static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--	struct msm_file_private *ctx)
-+static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit)
- {
- 	struct msm_drm_private *priv = gpu->dev->dev_private;
- 	struct msm_ringbuffer *ring = submit->ring;
-@@ -57,7 +56,7 @@ static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit
- 		case MSM_SUBMIT_CMD_IB_TARGET_BUF:
- 			break;
- 		case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
--			if (priv->lastctx == ctx)
-+			if (priv->lastctx == submit->queue->ctx)
- 				break;
- 			/* fall-thru */
- 		case MSM_SUBMIT_CMD_BUF:
-@@ -103,8 +102,7 @@ static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit
- 	msm_gpu_retire(gpu);
- }
+ 	for (i = 0; i < conf->bank_data[bank->id].num_sensors; i++) {
+-		raw = readl(mt->thermal_base +
+-			    conf->msr[conf->bank_data[bank->id].sensors[i]]);
++		raw = readl(mt->thermal_base + conf->msr[i]);
  
--static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--	struct msm_file_private *ctx)
-+static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
- {
- 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
- 	struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
-@@ -114,7 +112,7 @@ static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+ 		temp = raw_to_mcelsius(mt,
+ 				       conf->bank_data[bank->id].sensors[i],
+@@ -486,8 +485,7 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
  
- 	if (IS_ENABLED(CONFIG_DRM_MSM_GPU_SUDO) && submit->in_rb) {
- 		priv->lastctx = NULL;
--		a5xx_submit_in_rb(gpu, submit, ctx);
-+		a5xx_submit_in_rb(gpu, submit);
- 		return;
- 	}
+ 	for (i = 0; i < conf->bank_data[num].num_sensors; i++)
+ 		writel(conf->sensor_mux_values[conf->bank_data[num].sensors[i]],
+-		       mt->thermal_base +
+-		       conf->adcpnp[conf->bank_data[num].sensors[i]]);
++		       mt->thermal_base + conf->adcpnp[i]);
  
-@@ -148,7 +146,7 @@ static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 		case MSM_SUBMIT_CMD_IB_TARGET_BUF:
- 			break;
- 		case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
--			if (priv->lastctx == ctx)
-+			if (priv->lastctx == submit->queue->ctx)
- 				break;
- 			/* fall-thru */
- 		case MSM_SUBMIT_CMD_BUF:
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index c5a3e4d4c007..5eabb0109577 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -81,8 +81,7 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
- 	OUT_RING(ring, upper_32_bits(iova));
- }
- 
--static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--	struct msm_file_private *ctx)
-+static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
- {
- 	unsigned int index = submit->seqno % MSM_GPU_SUBMIT_STATS_COUNT;
- 	struct msm_drm_private *priv = gpu->dev->dev_private;
-@@ -115,7 +114,7 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 		case MSM_SUBMIT_CMD_IB_TARGET_BUF:
- 			break;
- 		case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
--			if (priv->lastctx == ctx)
-+			if (priv->lastctx == submit->queue->ctx)
- 				break;
- 			/* fall-thru */
- 		case MSM_SUBMIT_CMD_BUF:
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index e23641a5ec84..b38a8126541a 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -457,8 +457,7 @@ void adreno_recover(struct msm_gpu *gpu)
- 	}
- }
- 
--void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--		struct msm_file_private *ctx)
-+void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
- {
- 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
- 	struct msm_drm_private *priv = gpu->dev->dev_private;
-@@ -472,7 +471,7 @@ void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 			break;
- 		case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
- 			/* ignore if there has not been a ctx switch: */
--			if (priv->lastctx == ctx)
-+			if (priv->lastctx == submit->queue->ctx)
- 				break;
- 			/* fall-thru */
- 		case MSM_SUBMIT_CMD_BUF:
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-index 99bb468f5f24..0ae8b373c428 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-@@ -267,8 +267,7 @@ struct drm_gem_object *adreno_fw_create_bo(struct msm_gpu *gpu,
- 		const struct firmware *fw, u64 *iova);
- int adreno_hw_init(struct msm_gpu *gpu);
- void adreno_recover(struct msm_gpu *gpu);
--void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--		struct msm_file_private *ctx);
-+void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit);
- void adreno_flush(struct msm_gpu *gpu, struct msm_ringbuffer *ring);
- bool adreno_idle(struct msm_gpu *gpu, struct msm_ringbuffer *ring);
- #if defined(CONFIG_DEBUG_FS) || defined(CONFIG_DEV_COREDUMP)
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index ff379ed40469..556198d4ba5f 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -600,6 +600,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
- 	if (!ctx)
- 		return -ENOMEM;
- 
-+	kref_init(&ctx->ref);
- 	msm_submitqueue_init(dev, ctx);
- 
- 	ctx->aspace = priv->gpu ? priv->gpu->aspace : NULL;
-@@ -621,7 +622,7 @@ static int msm_open(struct drm_device *dev, struct drm_file *file)
- static void context_close(struct msm_file_private *ctx)
- {
- 	msm_submitqueue_close(ctx);
--	kfree(ctx);
-+	kref_put(&ctx->ref, msm_file_private_destroy);
- }
- 
- static void msm_postclose(struct drm_device *dev, struct drm_file *file)
-diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-index 2687f7a42c15..ab5f77261816 100644
---- a/drivers/gpu/drm/msm/msm_drv.h
-+++ b/drivers/gpu/drm/msm/msm_drv.h
-@@ -57,6 +57,7 @@ struct msm_file_private {
- 	struct list_head submitqueues;
- 	int queueid;
- 	struct msm_gem_address_space *aspace;
-+	struct kref ref;
- };
- 
- enum msm_mdp_plane_property {
-@@ -429,6 +430,13 @@ void msm_submitqueue_close(struct msm_file_private *ctx);
- 
- void msm_submitqueue_destroy(struct kref *kref);
- 
-+static inline void msm_file_private_destroy(struct kref *kref)
-+{
-+	struct msm_file_private *ctx = container_of(kref,
-+		struct msm_file_private, ref);
-+
-+	kfree(ctx);
-+}
- 
- #define DBG(fmt, ...) DRM_DEBUG_DRIVER(fmt"\n", ##__VA_ARGS__)
- #define VERB(fmt, ...) if (0) DRM_DEBUG_DRIVER(fmt"\n", ##__VA_ARGS__)
-diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
-index 972490b14ba5..9c573c4269cb 100644
---- a/drivers/gpu/drm/msm/msm_gem.h
-+++ b/drivers/gpu/drm/msm/msm_gem.h
-@@ -142,6 +142,7 @@ struct msm_gem_submit {
- 	bool valid;         /* true if no cmdstream patching needed */
- 	bool in_rb;         /* "sudo" mode, copy cmds into RB */
- 	struct msm_ringbuffer *ring;
-+	struct msm_file_private *ctx;
- 	unsigned int nr_cmds;
- 	unsigned int nr_bos;
- 	u32 ident;	   /* A "identifier" for the submit for logging */
-diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
-index 8cb9aa15ff90..aa5c60a7132d 100644
---- a/drivers/gpu/drm/msm/msm_gem_submit.c
-+++ b/drivers/gpu/drm/msm/msm_gem_submit.c
-@@ -27,7 +27,7 @@
- #define BO_PINNED   0x2000
- 
- static struct msm_gem_submit *submit_create(struct drm_device *dev,
--		struct msm_gpu *gpu, struct msm_gem_address_space *aspace,
-+		struct msm_gpu *gpu,
- 		struct msm_gpu_submitqueue *queue, uint32_t nr_bos,
- 		uint32_t nr_cmds)
- {
-@@ -43,7 +43,7 @@ static struct msm_gem_submit *submit_create(struct drm_device *dev,
- 		return NULL;
- 
- 	submit->dev = dev;
--	submit->aspace = aspace;
-+	submit->aspace = queue->ctx->aspace;
- 	submit->gpu = gpu;
- 	submit->fence = NULL;
- 	submit->cmd = (void *)&submit->bos[nr_bos];
-@@ -677,7 +677,7 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
- 		}
- 	}
- 
--	submit = submit_create(dev, gpu, ctx->aspace, queue, args->nr_bos,
-+	submit = submit_create(dev, gpu, queue, args->nr_bos,
- 		args->nr_cmds);
- 	if (!submit) {
- 		ret = -ENOMEM;
-@@ -785,7 +785,7 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
- 		}
- 	}
- 
--	msm_gpu_submit(gpu, submit, ctx);
-+	msm_gpu_submit(gpu, submit);
- 
- 	args->fence = submit->fence->seqno;
- 
-diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-index d5645472b25d..a1f3da6550e5 100644
---- a/drivers/gpu/drm/msm/msm_gpu.c
-+++ b/drivers/gpu/drm/msm/msm_gpu.c
-@@ -520,7 +520,7 @@ static void recover_worker(struct work_struct *work)
- 			struct msm_ringbuffer *ring = gpu->rb[i];
- 
- 			list_for_each_entry(submit, &ring->submits, node)
--				gpu->funcs->submit(gpu, submit, NULL);
-+				gpu->funcs->submit(gpu, submit);
- 		}
- 	}
- 
-@@ -747,8 +747,7 @@ void msm_gpu_retire(struct msm_gpu *gpu)
- }
- 
- /* add bo's to gpu's ring, and kick gpu: */
--void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--		struct msm_file_private *ctx)
-+void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
- {
- 	struct drm_device *dev = gpu->dev;
- 	struct msm_drm_private *priv = dev->dev_private;
-@@ -788,8 +787,8 @@ void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 			msm_gem_move_to_active(&msm_obj->base, gpu, false, submit->fence);
- 	}
- 
--	gpu->funcs->submit(gpu, submit, ctx);
--	priv->lastctx = ctx;
-+	gpu->funcs->submit(gpu, submit);
-+	priv->lastctx = submit->queue->ctx;
- 
- 	hangcheck_timer_reset(gpu);
- }
-diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-index 0db117a7339b..d496d488222c 100644
---- a/drivers/gpu/drm/msm/msm_gpu.h
-+++ b/drivers/gpu/drm/msm/msm_gpu.h
-@@ -44,8 +44,7 @@ struct msm_gpu_funcs {
- 	int (*hw_init)(struct msm_gpu *gpu);
- 	int (*pm_suspend)(struct msm_gpu *gpu);
- 	int (*pm_resume)(struct msm_gpu *gpu);
--	void (*submit)(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--			struct msm_file_private *ctx);
-+	void (*submit)(struct msm_gpu *gpu, struct msm_gem_submit *submit);
- 	void (*flush)(struct msm_gpu *gpu, struct msm_ringbuffer *ring);
- 	irqreturn_t (*irq)(struct msm_gpu *irq);
- 	struct msm_ringbuffer *(*active_ring)(struct msm_gpu *gpu);
-@@ -181,6 +180,7 @@ struct msm_gpu_submitqueue {
- 	u32 flags;
- 	u32 prio;
- 	int faults;
-+	struct msm_file_private *ctx;
- 	struct list_head node;
- 	struct kref ref;
- };
-@@ -280,8 +280,7 @@ int msm_gpu_perfcntr_sample(struct msm_gpu *gpu, uint32_t *activetime,
- 		uint32_t *totaltime, uint32_t ncntrs, uint32_t *cntrs);
- 
- void msm_gpu_retire(struct msm_gpu *gpu);
--void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--		struct msm_file_private *ctx);
-+void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit);
- 
- int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
- 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
-diff --git a/drivers/gpu/drm/msm/msm_submitqueue.c b/drivers/gpu/drm/msm/msm_submitqueue.c
-index a1d94be7883a..10f557225a3e 100644
---- a/drivers/gpu/drm/msm/msm_submitqueue.c
-+++ b/drivers/gpu/drm/msm/msm_submitqueue.c
-@@ -49,8 +49,10 @@ void msm_submitqueue_close(struct msm_file_private *ctx)
- 	 * No lock needed in close and there won't
- 	 * be any more user ioctls coming our way
- 	 */
--	list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node)
-+	list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node) {
-+		kref_put(&ctx->ref, msm_file_private_destroy);
- 		msm_submitqueue_put(entry);
-+	}
- }
- 
- int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
-@@ -81,6 +83,9 @@ int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
- 
- 	write_lock(&ctx->queuelock);
- 
-+	kref_get(&ctx->ref);
-+
-+	queue->ctx = ctx;
- 	queue->id = ctx->queueid++;
- 
- 	if (id)
-@@ -177,6 +182,7 @@ int msm_submitqueue_remove(struct msm_file_private *ctx, u32 id)
- 			list_del(&entry->node);
- 			write_unlock(&ctx->queuelock);
- 
-+			kref_put(&ctx->ref, msm_file_private_destroy);
- 			msm_submitqueue_put(entry);
- 			return 0;
- 		}
+ 	writel((1 << conf->bank_data[num].num_sensors) - 1,
+ 	       mt->thermal_base + TEMP_MONCTL0);
 -- 
 2.25.1
+
+
 
