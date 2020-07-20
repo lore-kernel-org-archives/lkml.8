@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D8DC35256
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC32C38153
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A573A208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC7322BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281270;
-	bh=ozEUmErTSZJj72mLvgyDkB+vFgOHpHwfbmsOzfNYKCo=;
+	s=default; t=1595281273;
+	bh=vaM/NckY/1bulk+3pEPHiNnLx88iOZqkYgq2IUR8Qtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wMo8BSVrkFpUtJn497cjjA9h1idJ/TMnjdk/QG0YmFwzIUJ59Fqr2aqzoqn2tRnRU
-	 ZVMqhx4PNwxrCdbfEzWc+jQNZ8PDdijVi02+dSFlK+/YsEKDbEtnOM7UR3gT//F8iD
-	 BEca2cptF6LZod5gaGIKpxJuN/8LPViboC/SYqo0=
+	b=L7VhO66TPW8R33jB5wbboOBMr4iowkyCEIqxoJx74l1HpAvletLsb4diBqA2NBvvl
+	 pPCrF/H69LHit1ZjV95gXZljA8Ui+4h1/qvbf4WfNk25rNR4HfD71TFVUidu3++3h0
+	 BxbE9pPw4BmHIcKwcnkMRBjqJfEzqc5IA7arKNI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgGTVlJ (ORCPT
+        id S1727903AbgGTVlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:41:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59576 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:41:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728347AbgGTVjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:40 -0400
+        id S1728533AbgGTVjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4519B22BEF;
-        Mon, 20 Jul 2020 21:39:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1358D22CAF;
+        Mon, 20 Jul 2020 21:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281180;
-        bh=ozEUmErTSZJj72mLvgyDkB+vFgOHpHwfbmsOzfNYKCo=;
+        s=default; t=1595281178;
+        bh=vaM/NckY/1bulk+3pEPHiNnLx88iOZqkYgq2IUR8Qtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kqoP3LSakgW961gQTjiWFa7ccQJpmudWk+Gh2h5yKF5owrW6TrqJ0zgTmwpPO2BdY
-         Z//gy6YgJjN2lT6sBlEkwGn0LFuuRTk5H7m9EspgOdDx5NleUWpkfcHR7nLF+QmVns
-         1zubgOmhWou9aqcFYL7HNgTZe6pZEak1U/FNLbAI=
+        b=TTS3L4lsPxPy+3Q6uh46s79q7NNrwsOYTxUgDund37/q4f43OVE0q/YGBajgQdJX/
+         5czt1yTm23TmzUctAP+zbwD5LRtqMob3ZiMB8wPTDnfrEbmED7pLLvn1dJe4NDlFoF
+         ep4cHgNWW39j07Q5FpX1s5jD8C/vI7VXQyJrkElM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evgeny Novikov <novikov@ispras.ru>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 6/9] usb: gadget: udc: gr_udc: fix memleak on error handling path in gr_ep_init()
-Date:   Mon, 20 Jul 2020 17:39:29 -0400
-Message-Id: <20200720213932.408089-6-sashal@kernel.org>
+Cc:     Leonid Ravich <Leonid.Ravich@emc.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 5/9] dmaengine: ioat setting ioat timeout as module parameter
+Date:   Mon, 20 Jul 2020 17:39:28 -0400
+Message-Id: <20200720213932.408089-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213932.408089-1-sashal@kernel.org>
 References: <20200720213932.408089-1-sashal@kernel.org>
@@ -59,42 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-[ Upstream commit c8f8529e2c4141afa2ebb487ad48e8a6ec3e8c99 ]
+[ Upstream commit 87730ccbddcb48478b1b88e88b14e73424130764 ]
 
-gr_ep_init() does not assign the allocated request anywhere if allocation
-of memory for the buffer fails. This is a memory leak fixed by the given
-patch.
+DMA transaction time to completion is a function of PCI bandwidth,
+transaction size and a queue depth.  So hard coded value for timeouts
+might be wrong for some scenarios.
 
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/20200701184816.29138-1-leonid.ravich@dell.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/gr_udc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/dma/ioat/dma.c | 12 ++++++++++++
+ drivers/dma/ioat/dma.h |  2 --
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
-index 9e246d2e55ca3..f2b165182b4be 100644
---- a/drivers/usb/gadget/udc/gr_udc.c
-+++ b/drivers/usb/gadget/udc/gr_udc.c
-@@ -2000,9 +2000,12 @@ static int gr_ep_init(struct gr_udc *dev, int num, int is_in, u32 maxplimit)
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index 1389f0582e29b..c5a45c57b8b8d 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -38,6 +38,18 @@
  
- 	if (num == 0) {
- 		_req = gr_alloc_request(&ep->ep, GFP_ATOMIC);
-+		if (!_req)
-+			return -ENOMEM;
+ #include "../dmaengine.h"
+ 
++int completion_timeout = 200;
++module_param(completion_timeout, int, 0644);
++MODULE_PARM_DESC(completion_timeout,
++		"set ioat completion timeout [msec] (default 200 [msec])");
++int idle_timeout = 2000;
++module_param(idle_timeout, int, 0644);
++MODULE_PARM_DESC(idle_timeout,
++		"set ioat idel timeout [msec] (default 2000 [msec])");
 +
- 		buf = devm_kzalloc(dev->dev, PAGE_SIZE, GFP_DMA | GFP_ATOMIC);
--		if (!_req || !buf) {
--			/* possible _req freed by gr_probe via gr_remove */
-+		if (!buf) {
-+			gr_free_request(&ep->ep, _req);
- 			return -ENOMEM;
- 		}
- 
++#define IDLE_TIMEOUT msecs_to_jiffies(idle_timeout)
++#define COMPLETION_TIMEOUT msecs_to_jiffies(completion_timeout)
++
+ static char *chanerr_str[] = {
+ 	"DMA Transfer Destination Address Error",
+ 	"Next Descriptor Address Error",
+diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
+index a9bc1a15b0d16..b0152288983bc 100644
+--- a/drivers/dma/ioat/dma.h
++++ b/drivers/dma/ioat/dma.h
+@@ -111,8 +111,6 @@ struct ioatdma_chan {
+ 	#define IOAT_RUN 5
+ 	#define IOAT_CHAN_ACTIVE 6
+ 	struct timer_list timer;
+-	#define COMPLETION_TIMEOUT msecs_to_jiffies(100)
+-	#define IDLE_TIMEOUT msecs_to_jiffies(2000)
+ 	#define RESET_DELAY msecs_to_jiffies(100)
+ 	struct ioatdma_device *ioat_dma;
+ 	dma_addr_t completion_dma;
 -- 
 2.25.1
 
