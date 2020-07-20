@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC0DC43470
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08449C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9FE1206F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7D9208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281540;
-	bh=nE+iPYVH7YUcPYLNkoCTd+IU2wP0RX1TQuOswIQft7U=;
+	s=default; t=1595281549;
+	bh=eejwkf5aLP13LBU3eN1eFu50Bc9f75o89K27gI+G6Oo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ug8woDUT1u/X+z1g5sMvpuNYOk7H36xfuZ1yyLjCN1Yxp3GMzsotnxK3lxEX0sEuT
-	 36y38Iqq7e+iocAIe2r6A4nETjC1oiZ7dffyHZN6fRfDifzjX2rlMmeIXKWU59yvvD
-	 rpreHWo9Z7gfG7ewudx5adT6h7As5isx3vPJX4mc=
+	b=WTlL6yBjiwBLkv8OmVxKwq/hHtwwcNWLV0eeX+sfX1pEAQbeWmmdGQHETj71vCii2
+	 99cyFkCocVd9Ksq73cJTyEFQk3svMW2MVlI3Z6ZIk9QiRE6S169kY0ruqE00Cagk0a
+	 PhvEJg9wWUcq3e8KBEofYNa+a69HAmSq2PZS0fSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgGTVpj (ORCPT
+        id S1728825AbgGTVps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:45:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55364 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:45:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727038AbgGTVha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:37:30 -0400
+        id S1726998AbgGTVh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:37:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0DFD20717;
-        Mon, 20 Jul 2020 21:37:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EE7022D08;
+        Mon, 20 Jul 2020 21:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281049;
-        bh=nE+iPYVH7YUcPYLNkoCTd+IU2wP0RX1TQuOswIQft7U=;
+        s=default; t=1595281047;
+        bh=eejwkf5aLP13LBU3eN1eFu50Bc9f75o89K27gI+G6Oo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GirtVvwb6StIReCdQNoYpkVuyTMivzjg4UrR2kjQuUk65t/1KDRqvmzVuFnxwWZ9D
-         de1umVlhnrIbSXGIbV/O30DKHaBPPeC5V4F0LUPi6VjFTNRcfMwLM4gKaa4XUfx8Dv
-         Fc6rW4gatW1PVQlo+Svaot9IxrpC9Co0+YH81Wco=
+        b=0D8U8EmxGuO40Qy0mZaiknZcdlAUCXro8BwQrn8XpUm8wJVB4fHptzm8L2p3rrhKS
+         WGp7oNIAdopMurE5Z+Jsoz23/YCVCNUrlh01ehpUP6FOX1VP6o0VEg9LXxNdUBVX9z
+         gbz+joY22vR6JavgSZUa3U+mZ4ZJ/uBRlVWNOjwA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Merlijn Wajer <merlijn@wizzup.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 11/40] Input: add `SW_MACHINE_COVER`
-Date:   Mon, 20 Jul 2020 17:36:46 -0400
-Message-Id: <20200720213715.406997-11-sashal@kernel.org>
+Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 09/40] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
+Date:   Mon, 20 Jul 2020 17:36:44 -0400
+Message-Id: <20200720213715.406997-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213715.406997-1-sashal@kernel.org>
 References: <20200720213715.406997-1-sashal@kernel.org>
@@ -61,52 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Merlijn Wajer <merlijn@wizzup.org>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit c463bb2a8f8d7d97aa414bf7714fc77e9d3b10df ]
+[ Upstream commit 5b78fac4b1ba731cf4177fdbc1e3a4661521bcd0 ]
 
-This event code represents the state of a removable cover of a device.
-Value 0 means that the cover is open or removed, value 1 means that the
-cover is closed.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Merlijn Wajer <merlijn@wizzup.org>
-Link: https://lore.kernel.org/r/20200612125402.18393-2-merlijn@wizzup.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/20200624064626.19855-1-dinghao.liu@zju.edu.cn
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mod_devicetable.h        | 2 +-
- include/uapi/linux/input-event-codes.h | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/dma/tegra210-adma.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index 0754b8d71262b..8a84f11bf1246 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -318,7 +318,7 @@ struct pcmcia_device_id {
- #define INPUT_DEVICE_ID_LED_MAX		0x0f
- #define INPUT_DEVICE_ID_SND_MAX		0x07
- #define INPUT_DEVICE_ID_FF_MAX		0x7f
--#define INPUT_DEVICE_ID_SW_MAX		0x0f
-+#define INPUT_DEVICE_ID_SW_MAX		0x10
- #define INPUT_DEVICE_ID_PROP_MAX	0x1f
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index db58d7e4f9fec..c5fa2ef74abc7 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -658,6 +658,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
  
- #define INPUT_DEVICE_ID_MATCH_BUS	1
-diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-index b6a835d378263..0c2e27d28e0ac 100644
---- a/include/uapi/linux/input-event-codes.h
-+++ b/include/uapi/linux/input-event-codes.h
-@@ -888,7 +888,8 @@
- #define SW_LINEIN_INSERT	0x0d  /* set = inserted */
- #define SW_MUTE_DEVICE		0x0e  /* set = device disabled */
- #define SW_PEN_INSERTED		0x0f  /* set = pen inserted */
--#define SW_MAX			0x0f
-+#define SW_MACHINE_COVER	0x10  /* set = cover closed */
-+#define SW_MAX			0x10
- #define SW_CNT			(SW_MAX+1)
+ 	ret = pm_runtime_get_sync(tdc2dev(tdc));
+ 	if (ret < 0) {
++		pm_runtime_put_noidle(tdc2dev(tdc));
+ 		free_irq(tdc->irq, tdc);
+ 		return ret;
+ 	}
+@@ -869,8 +870,10 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 	pm_runtime_enable(&pdev->dev);
  
- /*
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_noidle(&pdev->dev);
+ 		goto rpm_disable;
++	}
+ 
+ 	ret = tegra_adma_init(tdma);
+ 	if (ret)
 -- 
 2.25.1
 
