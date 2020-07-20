@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E51C433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA030C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A051F22BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E610206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260155;
-	bh=6QA7lOPVFm34R9uCn2TjEj6wifVTLqjsygFdGfQVirU=;
+	s=default; t=1595260157;
+	bh=Ii21Y4dB2dtPOuktMfoSercnM/W9406kERuSR4p265M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s5boDCh7iyS6Pk7gSpc6rrR/GRzv2ifzRRWFjkzSciuZSPNSeCmdgMpIubgJPiL/E
-	 924YmQubr4pdCKsP+4J1IZbdGHZRbg6BCHKVWGQLXvkwH1kIGc0Z8U1GLbfLVndZ55
-	 NC2/cV0wM+w2ks1vOjjsGHmrSJQvnld9jUcZKFU8=
+	b=PL0l4ayF8nER9EnxCH9oTucIPDXSUIFoR/TvDOTVFzRXbLYDL/i6mw7qKBXewoF/X
+	 KMfHp797aXNfj3K+my1NCdz1OJuUx76iRTi9AuRrEt4gn33w9zqTdS/4vVkbGj+eRE
+	 bU30fc0cuQuwwNXInyAfnprjH/vQFJXzkGCFqPyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730584AbgGTPtN (ORCPT
+        id S1730994AbgGTPtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:49:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45068 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:49:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730972AbgGTPtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:49:07 -0400
+        id S1729386AbgGTPtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:49:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C67A72065E;
-        Mon, 20 Jul 2020 15:49:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33B1C206E9;
+        Mon, 20 Jul 2020 15:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260147;
-        bh=6QA7lOPVFm34R9uCn2TjEj6wifVTLqjsygFdGfQVirU=;
+        s=default; t=1595260149;
+        bh=Ii21Y4dB2dtPOuktMfoSercnM/W9406kERuSR4p265M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LB9ABmgYhu26yBHG3XK6r0ax758l378YkGzhF1DKcVEKSrDfnXMjxllT2PJaAiuvZ
-         YFCO2ZZNrk+ohfKcDF7DHIWa2AJTuxUmEk9rbTbWsPxa42eG8o34yS+YK904PVHUd9
-         tFnlGoIXUXBJSGdr2o6pVkoavIs6Oz4kQHr+9ffM=
+        b=ZEbaydjhJyAuZUP1r2VgqgIYFSkx36RWvIJWxTbwTZm82RRcddvUKvStVYKhV8ak7
+         tJ5Mzd/lrJlmgrDduB/ZLPMbHV9VOryMxnmQAXu29xwMK/YKmDckwt7c71icb350DB
+         O6w2YYm3+mx9JyK4c9UAIECHTxl+kyorraezLbS8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.14 093/125] mtd: rawnand: oxnas: Release all devices in the _remove() path
-Date:   Mon, 20 Jul 2020 17:37:12 +0200
-Message-Id: <20200720152807.514422880@linuxfoundation.org>
+        stable@vger.kernel.org, Yariv <oigevald+kernel@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.14 094/125] HID: magicmouse: do not set up autorepeat
+Date:   Mon, 20 Jul 2020 17:37:13 +0200
+Message-Id: <20200720152807.562768192@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -58,39 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit 0a5f45e57e35d0840bedb816974ce2e63406cd8b upstream.
+commit 6363d2065cd399cf9d6dc9d08c437f8658831100 upstream.
 
-oxnans_nand_remove() should release all MTD devices and clean all NAND
-devices, not only the first one registered.
+Neither the trackpad, nor the mouse want input core to generate autorepeat
+events for their buttons, so let's reset the bit (as hid-input sets it for
+these devices based on the usage vendor code).
 
-Fixes: 668592492409 ("mtd: nand: Add OX820 NAND Support")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-39-miquel.raynal@bootlin.com
+Cc: stable@vger.kernel.org
+Reported-by: Yariv <oigevald+kernel@gmail.com>
+Tested-by: Yariv <oigevald+kernel@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/oxnas_nand.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/hid/hid-magicmouse.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/mtd/nand/oxnas_nand.c
-+++ b/drivers/mtd/nand/oxnas_nand.c
-@@ -184,9 +184,13 @@ err_clk_unprepare:
- static int oxnas_nand_remove(struct platform_device *pdev)
- {
- 	struct oxnas_nand_ctrl *oxnas = platform_get_drvdata(pdev);
-+	struct nand_chip *chip;
-+	int i;
+--- a/drivers/hid/hid-magicmouse.c
++++ b/drivers/hid/hid-magicmouse.c
+@@ -451,6 +451,12 @@ static int magicmouse_setup_input(struct
+ 		__set_bit(MSC_RAW, input->mscbit);
+ 	}
  
--	if (oxnas->chips[0])
--		nand_release(oxnas->chips[0]);
-+	for (i = 0; i < oxnas->nchips; i++) {
-+		chip = oxnas->chips[i];
-+		nand_release(chip);
-+	}
- 
- 	clk_disable_unprepare(oxnas->clk);
++	/*
++	 * hid-input may mark device as using autorepeat, but neither
++	 * the trackpad, nor the mouse actually want it.
++	 */
++	__clear_bit(EV_REP, input->evbit);
++
+ 	return 0;
+ }
  
 
 
