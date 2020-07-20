@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21505C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F335A2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD5422482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260077;
-	bh=PKbze4aIN2Tiq+hHX/fexUrT/75/AE9fmKBYSnkr+oY=;
+	s=default; t=1595260079;
+	bh=FGnwM50zHZ0mVmgqBARzn0ajromP7nURH69nQyHiNHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J8VaXlwPeIe+3Oin3IlPae/Hmt+HiEXhzK+QkafoH2ug9xmC2Ot5bsMayQcqHbInA
-	 COIR2RD1/5vlfFPANkUlVOnaJLCI8yJ3SvFTXeSZnUrhDhitRHN1k+DJe/1pD7mLB4
-	 zaFyHZ/q8gQI4ZBvYwAfzUhfOXDVojpM9occ+KCM=
+	b=xW806+41qCowK1JkvBEjsRKptX6NXsDQ7LJVabRybhIr0+mq8I+vCP/fCvft/N2Sc
+	 d808qTOGLLZcImSqIfggUWEs/yaEQKBhqwxcvAhVGRFzaDyhmXMEMLpGsjAVexLUSt
+	 eXkVxzWGNQTUS1v+NwCkxNonER2ZA77hug5r9ypQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730821AbgGTPrx (ORCPT
+        id S1730836AbgGTPr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:47:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43198 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:47:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730027AbgGTPru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:47:50 -0400
+        id S1730809AbgGTPrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:47:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E29942064B;
-        Mon, 20 Jul 2020 15:47:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 660212064B;
+        Mon, 20 Jul 2020 15:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260069;
-        bh=PKbze4aIN2Tiq+hHX/fexUrT/75/AE9fmKBYSnkr+oY=;
+        s=default; t=1595260074;
+        bh=FGnwM50zHZ0mVmgqBARzn0ajromP7nURH69nQyHiNHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cy1Q5APRfLp5HtpMrHMtYrUt4pb6nWipBV6+LP+VaXPplDK5xcE4ea90GodTS3wqO
-         /hTGof6LTkePJ+JU1dsUrvkgddnozcVFoWSQeYlUrSJSM8fQCQTYsrO/fWU55pQjFf
-         UAhOpum9gtgiy6+n9/yA0ox9426C9GEGFBtLwDVk=
+        b=w0+GHNJB86b3r6wFmYZiy/ZcLpEHB5iKWDzUUAUu4NtfQlOL21w8h1WrzIIlZ1rKE
+         bgdBritGTNP8P7UYnV1nKMfwcVIVPJhdx7p9uRzcGmCYJGcGDo/h4JhrzvUUyhdAbB
+         VeBX1W5KNLNshJZOIFPNkNKZvyHftyTPI8br4X3M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+0f4ecfe6a2c322c81728@syzkaller.appspotmail.com,
-        syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 096/125] ALSA: usb-audio: Fix race against the error recovery URB submission
-Date:   Mon, 20 Jul 2020 17:37:15 +0200
-Message-Id: <20200720152807.662368832@linuxfoundation.org>
+        stable@vger.kernel.org, Frank Mori Hess <fmh6jj@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Doug Anderson <dianders@chromium.org>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 4.14 098/125] usb: dwc2: Fix shutdown callback in platform
+Date:   Mon, 20 Jul 2020 17:37:17 +0200
+Message-Id: <20200720152807.750097320@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -61,90 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
 
-commit 9b7e5208a941e2e491a83eb5fa83d889e888fa2f upstream.
+commit 4fdf228cdf6925af45a2066d403821e0977bfddb upstream.
 
-USB MIDI driver has an error recovery mechanism to resubmit the URB in
-the delayed timer handler, and this may race with the standard start /
-stop operations.  Although both start and stop operations themselves
-don't race with each other due to the umidi->mutex protection, but
-this isn't applied to the timer handler.
+To avoid lot of interrupts from dwc2 core, which can be asserted in
+specific conditions need to disable interrupts on HW level instead of
+disable IRQs on Kernel level, because of IRQ can be shared between
+drivers.
 
-For fixing this potential race, the following changes are applied:
-
-- Since the timer handler can't use the mutex, we apply the
-  umidi->disc_lock protection at each input stream URB submission;
-  this also needs to change the GFP flag to GFP_ATOMIC
-- Add a check of the URB refcount and skip if already submitted
-- Move the timer cancel call at disconnection to the beginning of the
-  procedure; this assures the in-flight timer handler is gone properly
-  before killing all pending URBs
-
-Reported-by: syzbot+0f4ecfe6a2c322c81728@syzkaller.appspotmail.com
-Reported-by: syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200710160656.16819-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@vger.kernel.org
+Fixes: a40a00318c7fc ("usb: dwc2: add shutdown callback to platform variant")
+Tested-by: Frank Mori Hess <fmh6jj@gmail.com>
+Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
+Reviewed-by: Doug Anderson <dianders@chromium.org>
+Reviewed-by: Frank Mori Hess <fmh6jj@gmail.com>
+Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/midi.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/usb/dwc2/platform.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/sound/usb/midi.c
-+++ b/sound/usb/midi.c
-@@ -1477,6 +1477,8 @@ void snd_usbmidi_disconnect(struct list_
- 	spin_unlock_irq(&umidi->disc_lock);
- 	up_write(&umidi->disc_rwsem);
- 
-+	del_timer_sync(&umidi->error_timer);
-+
- 	for (i = 0; i < MIDI_MAX_ENDPOINTS; ++i) {
- 		struct snd_usb_midi_endpoint *ep = &umidi->endpoints[i];
- 		if (ep->out)
-@@ -1503,7 +1505,6 @@ void snd_usbmidi_disconnect(struct list_
- 			ep->in = NULL;
- 		}
- 	}
--	del_timer_sync(&umidi->error_timer);
- }
- EXPORT_SYMBOL(snd_usbmidi_disconnect);
- 
-@@ -2260,16 +2261,22 @@ void snd_usbmidi_input_stop(struct list_
- }
- EXPORT_SYMBOL(snd_usbmidi_input_stop);
- 
--static void snd_usbmidi_input_start_ep(struct snd_usb_midi_in_endpoint *ep)
-+static void snd_usbmidi_input_start_ep(struct snd_usb_midi *umidi,
-+				       struct snd_usb_midi_in_endpoint *ep)
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -338,7 +338,8 @@ static void dwc2_driver_shutdown(struct
  {
- 	unsigned int i;
-+	unsigned long flags;
+ 	struct dwc2_hsotg *hsotg = platform_get_drvdata(dev);
  
- 	if (!ep)
- 		return;
- 	for (i = 0; i < INPUT_URBS; ++i) {
- 		struct urb *urb = ep->urbs[i];
--		urb->dev = ep->umidi->dev;
--		snd_usbmidi_submit_urb(urb, GFP_KERNEL);
-+		spin_lock_irqsave(&umidi->disc_lock, flags);
-+		if (!atomic_read(&urb->use_count)) {
-+			urb->dev = ep->umidi->dev;
-+			snd_usbmidi_submit_urb(urb, GFP_ATOMIC);
-+		}
-+		spin_unlock_irqrestore(&umidi->disc_lock, flags);
- 	}
+-	disable_irq(hsotg->irq);
++	dwc2_disable_global_interrupts(hsotg);
++	synchronize_irq(hsotg->irq);
  }
  
-@@ -2285,7 +2292,7 @@ void snd_usbmidi_input_start(struct list
- 	if (umidi->input_running || !umidi->opened[1])
- 		return;
- 	for (i = 0; i < MIDI_MAX_ENDPOINTS; ++i)
--		snd_usbmidi_input_start_ep(umidi->endpoints[i].in);
-+		snd_usbmidi_input_start_ep(umidi, umidi->endpoints[i].in);
- 	umidi->input_running = 1;
- }
- EXPORT_SYMBOL(snd_usbmidi_input_start);
+ /**
 
 
