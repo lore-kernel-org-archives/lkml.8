@@ -2,111 +2,112 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C928DC433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C617FC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A952F22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260877;
-	bh=1cKTQYmZkIm0/I/HoQVjC5LCdmtRY4Nu99Fyz0W9AE4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JLVXkL4pLXQD/RGz00GwPsO6bEx7U0ZHX23hpdZRVN1yos1/XV7gbFy9Kh1d9f7Zb
-	 g38kPAa9+8U5tEVrCu3sIGlj5oU2KEWrIG00QXwvWjEhwp/lIjq7XFlafsakgfKSG7
-	 VK3oVIRcmQs+pY0DBheRCQLmeIi8psAIcfA/eylA=
+	by mail.kernel.org (Postfix) with ESMTP id 9E07B20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:01:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fWrhvXKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732505AbgGTQBQ (ORCPT
+        id S1732517AbgGTQBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Jul 2020 12:01:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732504AbgGTQBQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 12:01:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34492 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731099AbgGTQBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:01:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0858D20672;
-        Mon, 20 Jul 2020 16:01:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260871;
-        bh=1cKTQYmZkIm0/I/HoQVjC5LCdmtRY4Nu99Fyz0W9AE4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bhCN5WZGSXNAOxyb6NoBUscHya4+cs+FeyEj3W2C6nUd4rSbVnEEN8t56PxZfU1J+
-         6UyPlfqvf7gi+kicZs+Bc34raZKghDQSW5E+qrVFTQND2EL+9ZKQqTfRkT0wrrnZmv
-         ILxtrCYfn8QP2ja1GwRlMVmN7mE0HmJgBT4SR570=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 125/215] perf stat: Zero all the ena and run array slot stats for interval mode
-Date:   Mon, 20 Jul 2020 17:36:47 +0200
-Message-Id: <20200720152826.148267271@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
-References: <20200720152820.122442056@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BBD1C0619D2;
+        Mon, 20 Jul 2020 09:01:16 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id d7so91827plq.13;
+        Mon, 20 Jul 2020 09:01:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=blhYAOxQCphYO3jI+YeVotO7czKJYFL74Ds0qrEVcIc=;
+        b=fWrhvXKAg1kJChsxZ1jYIUSTKtg4gaaEQr5sl+NGPsKkCdDrgp83AO1GIKz4DuZGhE
+         KGH7Q8vahRQI/SxukHnIsj9ps1FiAhvX2ZafHZE3uW7fltcpqOsH2pV+vKQNCVgZFxND
+         cKFkJh9reCXNTEXlUVGy5DlKupLJNCDqefq2S5AF5yN2Cc5XZQpsRFigdijhyMpLltqy
+         y/fKQs4YYznv7ieD7x3qJUwRV0dBkU9EjUaUC45nrnyOjDePQ74zxkCOGIEEVvaI3rHk
+         ndrCU6p1a0DYlMWliEV5CVyVO/N0sSO7qzqMd/SKZbh4YwHiSYLKRU3klEEp4bSr20oG
+         DCRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=blhYAOxQCphYO3jI+YeVotO7czKJYFL74Ds0qrEVcIc=;
+        b=pzo4cY22iygPhhewLaWmPwxsR9tWZMV/2aDf9smxrV0wShSD8uTZs+2VgnpRVHDmJI
+         i73iUhmWrb++QRsOXkJ0LBDxIY3h8Ts+lJgNYJDLk7+08M5+ItunoA4VIQRrA42Rhrnn
+         5ZEya43tCaIxC5foLM+cL3jDm4Y1iP2/nAWmymyE0iaMw7d08KvmOrQfTJxRiyDZeW+L
+         yrX07l38EOlkqGtFqeYfDN6wxPL2cqkYOsGOnEzmqFPWeyaO9TZVLZl0vX8gaVY6Syw1
+         yw12fDWAlYfIonmOUyMFMtxPRTien4OnCEFDl8qM10r05H4JUsvEB+zZ59VgBqLobMJz
+         EMJg==
+X-Gm-Message-State: AOAM533lbQjQkwz9L04q80vrZ1/sMNp6AJpI7n4HW8DD/0iBfA0nv/35
+        HSIZo7bQyuAaXYyxL9xps1tlVr4wOLA=
+X-Google-Smtp-Source: ABdhPJykF07itmKHQRGZ+7zqDGPw/ug1gO4hOMWPJh1NTIHSGdsUBYkFE4J79KpNyZsOyW09xbvz6w==
+X-Received: by 2002:a17:90a:d30e:: with SMTP id p14mr45550pju.173.1595260875400;
+        Mon, 20 Jul 2020 09:01:15 -0700 (PDT)
+Received: from [192.168.219.16] (ip72-219-184-175.oc.oc.cox.net. [72.219.184.175])
+        by smtp.gmail.com with ESMTPSA id x23sm17040539pfn.4.2020.07.20.09.01.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2020 09:01:14 -0700 (PDT)
+Subject: Re: [PATCH net] net: bcmgenet: fix error returns in bcmgenet_probe()
+To:     Zhang Changzhong <zhangchangzhong@huawei.com>,
+        f.fainelli@gmail.com, davem@davemloft.net, kuba@kernel.org
+Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1595229523-9725-1-git-send-email-zhangchangzhong@huawei.com>
+From:   Doug Berger <opendmb@gmail.com>
+Message-ID: <08bdec5c-b62c-07b3-35c1-9dd15478de81@gmail.com>
+Date:   Mon, 20 Jul 2020 09:04:15 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1595229523-9725-1-git-send-email-zhangchangzhong@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+On 7/20/2020 12:18 AM, Zhang Changzhong wrote:
+> The driver forgets to call clk_disable_unprepare() in error path after
+> a success calling for clk_prepare_enable().
+> 
+> Fix to goto err_clk_disable if clk_prepare_enable() is successful.
+> 
+> Fixes: 99d55638d4b0 ("net: bcmgenet: enable NETIF_F_HIGHDMA flag")
+> Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+> ---
+>  drivers/net/ethernet/broadcom/genet/bcmgenet.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+> index 368e05b..903811e 100644
+> --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+> +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+> @@ -3988,7 +3988,7 @@ static int bcmgenet_probe(struct platform_device *pdev)
+>  	if (err)
+>  		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+>  	if (err)
+> -		goto err;
+> +		goto err_clk_disable;
+>  
+>  	/* Mii wait queue */
+>  	init_waitqueue_head(&priv->wq);
+> 
+Acked-by: Doug Berger <opendmb@gmail.com>
 
-commit 0e0bf1ea1147fcf74eab19c2d3c853cc3740a72f upstream.
-
-As the code comments in perf_stat_process_counter() say, we calculate
-counter's data every interval, and the display code shows ps->res_stats
-avg value. We need to zero the stats for interval mode.
-
-But the current code only zeros the res_stats[0], it doesn't zero the
-res_stats[1] and res_stats[2], which are for ena and run of counter.
-
-This patch zeros the whole res_stats[] for interval mode.
-
-Fixes: 51fd2df1e882 ("perf stat: Fix interval output values")
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200409070755.17261-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- tools/perf/util/stat.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -367,8 +367,10 @@ int perf_stat_process_counter(struct per
- 	 * interval mode, otherwise overall avg running
- 	 * averages will be shown for each interval.
- 	 */
--	if (config->interval)
--		init_stats(ps->res_stats);
-+	if (config->interval) {
-+		for (i = 0; i < 3; i++)
-+			init_stats(&ps->res_stats[i]);
-+	}
- 
- 	if (counter->per_pkg)
- 		zero_per_pkg(counter);
-
-
+Thanks!
