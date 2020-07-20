@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237CBC433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7CDC433FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F358A22482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9EA622482
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:24:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="s+GC1srp"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lKPSlfJc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgGTPYN (ORCPT
+        id S1728787AbgGTPYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:24:13 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:47730 "EHLO
+        Mon, 20 Jul 2020 11:24:14 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:47690 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbgGTPX4 (ORCPT
+        with ESMTP id S1726381AbgGTPX4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jul 2020 11:23:56 -0400
 Received: from prsriva-linux.hsd1.wa.comcast.net (c-24-19-135-168.hsd1.wa.comcast.net [24.19.135.168])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 524B820B490D;
-        Mon, 20 Jul 2020 08:23:55 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 524B820B490D
+        by linux.microsoft.com (Postfix) with ESMTPSA id 79E8E20B490C;
+        Mon, 20 Jul 2020 08:23:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 79E8E20B490C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1595258636;
-        bh=asT4nGwMz6U6W8sA54vi23OF8OW0nPD++mURmO//m58=;
+        s=default; t=1595258635;
+        bh=mSQYMuuqXVC7HaKHue2YtLNqVwqzyhXPL8A7QW+52SY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+GC1srpp/bzQrPV6KZeX3cvi3EjvRF00t6uql8sVg912lahoL13TXLYg/tilKPsb
-         aBT84XHH8KEERZti7nygmSPGpqNAW6I20bhnN+ktzemgnF4rpD44tfgBR3AxyTDH2F
-         X/VzPq7d1l9PGyZTK/ytjtCMO0OGxXXPJZrYjP3Y=
+        b=lKPSlfJcELwK8WxgPb4TUCDufyEkaaEGWEXzr+8NcMyJbYS5X1lzss38rMCk/96eH
+         vDj5jK9vbdYfU+I6wwT1cn5Ijsrx8Q/Eohz+Go1cythQgUfQuqyifjRr8wjVDbv5fu
+         vD7y6t1ls1mnLa6WUPeWc8kC67BwiSJ6AltRRNrw=
 From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
 To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
         prsriva@linux.microsoft.com, tusharsu@linux.microsoft.com,
         balajib@linux.microsoft.com, bauerman@linux.ibm.com,
         robh@kernel.org
-Subject: [PATCH V3 3/6] Update function do_get_kexec_buffer to use of_* functions, and reducing wrapper functions.
-Date:   Mon, 20 Jul 2020 08:23:39 -0700
-Message-Id: <20200720152342.337990-4-prsriva@linux.microsoft.com>
+Subject: [PATCH V3 2/6] Update remove_ima_buffer code to use functions from libfdt reducing wrappers functions.
+Date:   Mon, 20 Jul 2020 08:23:38 -0700
+Message-Id: <20200720152342.337990-3-prsriva@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720152342.337990-1-prsriva@linux.microsoft.com>
 References: <20200720152342.337990-1-prsriva@linux.microsoft.com>
@@ -66,35 +66,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
 ---
- security/integrity/ima/ima_kexec.c | 20 +++++---------------
- 1 file changed, 5 insertions(+), 15 deletions(-)
+ arch/powerpc/kexec/ima.c | 63 ++++++++++++++++------------------------
+ 1 file changed, 25 insertions(+), 38 deletions(-)
 
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index 2fe2d3bf7bda..e47982e9bb67 100644
---- a/security/integrity/ima/ima_kexec.c
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -15,31 +15,21 @@
+diff --git a/arch/powerpc/kexec/ima.c b/arch/powerpc/kexec/ima.c
+index 563313703756..a9e4e9f04273 100644
+--- a/arch/powerpc/kexec/ima.c
++++ b/arch/powerpc/kexec/ima.c
+@@ -12,40 +12,6 @@
+ #include <linux/memblock.h>
  #include <linux/libfdt.h>
- #include "ima.h"
  
 -static int get_addr_size_cells(int *addr_cells, int *size_cells)
-+static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
-+			       size_t *size)
- {
-+	int addr_cells, size_cells;
- 	struct device_node *root;
- 
- 	root = of_find_node_by_path("/");
- 	if (!root)
- 		return -EINVAL;
- 
+-{
+-	struct device_node *root;
+-
+-	root = of_find_node_by_path("/");
+-	if (!root)
+-		return -EINVAL;
+-
 -	*addr_cells = of_n_addr_cells(root);
 -	*size_cells = of_n_size_cells(root);
-+	addr_cells = of_n_addr_cells(root);
-+	size_cells = of_n_size_cells(root);
- 
- 	of_node_put(root);
- 
+-
+-	of_node_put(root);
+-
 -	return 0;
 -}
 -
@@ -107,8 +102,68 @@ index 2fe2d3bf7bda..e47982e9bb67 100644
 -	if (ret)
 -		return ret;
 -
- 	if (len < 4 * (addr_cells + size_cells))
- 		return -ENOENT;
+-	if (len < 4 * (addr_cells + size_cells))
+-		return -ENOENT;
+-
+-	*addr = of_read_number(prop, addr_cells);
+-	*size = of_read_number(prop + 4 * addr_cells, size_cells);
+-
+-	return 0;
+-}
+-
+ /**
+  * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
+  *
+@@ -54,7 +20,7 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
+  */
+ void remove_ima_buffer(void *fdt, int chosen_node)
+ {
+-	int ret, len;
++	int ret, len, addr_cells, size_cells;
+ 	unsigned long addr;
+ 	size_t size;
+ 	const void *prop;
+@@ -63,7 +29,22 @@ void remove_ima_buffer(void *fdt, int chosen_node)
+ 	if (!prop)
+ 		return;
+ 
+-	ret = do_get_kexec_buffer(prop, len, &addr, &size);
++	ret = fdt_address_cells(fdt, chosen_node);
++	if (ret < 0)
++		return;
++	addr_cells = ret;
++
++	ret = fdt_size_cells(fdt, chosen_node);
++	if (ret < 0)
++		return;
++	size_cells = ret;
++
++	if (len < 4 * (addr_cells + size_cells))
++		return;
++
++	addr = of_read_number(prop, addr_cells);
++	size = of_read_number(prop + 4 * addr_cells, size_cells);
++
+ 	fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer");
+ 	if (ret)
+ 		return;
+@@ -129,9 +110,15 @@ int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node)
+ 	if (!image->arch.ima_buffer_size)
+ 		return 0;
+ 
+-	ret = get_addr_size_cells(&addr_cells, &size_cells);
+-	if (ret)
++	ret = fdt_address_cells(fdt, chosen_node);
++	if (ret < 0)
++		return ret;
++	addr_cells = ret;
++
++	ret = fdt_size_cells(fdt, chosen_node);
++	if (ret < 0)
+ 		return ret;
++	size_cells = ret;
+ 
+ 	entry_size = 4 * (addr_cells + size_cells);
  
 -- 
 2.25.1
