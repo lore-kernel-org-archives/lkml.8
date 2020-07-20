@@ -2,101 +2,99 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2C0622B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595272893;
-	bh=/+ZsdyN9Kt65Sl2HXcikMSwV8Fxqvg5M4a2yOC/W9cw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AtRBNyjK/S5hCa3BCphURgek+ujI9825HNbzCVcsIIrN2cTbDT5hGP1fdpLmCeS/p
-	 iFtDDCoEEk19PkvKECm7hYaVbYMGJrTGcREw2oaY72/loThZXJDxpylh/kUotDXgR1
-	 LpAnEQJ8M6uYMXujFpr30/ecaH1Gi9YB1FmwV9e0=
+	by mail.kernel.org (Postfix) with ESMTP id 55A0720773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbgGTTVc (ORCPT
+        id S1729758AbgGTT1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:21:32 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38991 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728324AbgGTTVb (ORCPT
+        Mon, 20 Jul 2020 15:27:44 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:56067 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728947AbgGTT1o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:21:31 -0400
-Received: by mail-io1-f68.google.com with SMTP id z6so1312939iow.6;
-        Mon, 20 Jul 2020 12:21:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=d5LgybrNa/iLgJZG6ZBOwUOQyQWDmgRLoObd92GIzvA=;
-        b=YK3L2JbpML/WqIFYxw7PssD0UcYCKyLX0KEZ45vVRdgwbKho/cr6ait5JyIATkJ7Ek
-         8BOt1bQ41jSUDZtQxQ5cRZJeZAMjg8MAhiK5UvMd9Pm409tUrZInZ8Bp9BjTabW7dGkP
-         46UkhPGrHE7Yewx/1CfkN2PeYFm/l6BBZy3DD3tVBsuAkyIHebfW3xXK0LeHFTQm/Tmq
-         BtBjGhzUSVtdq8Nms7WbbZRnL34ImJEu47YoC/1DcJid1xMC3UvcI9SNj4Cdc0GhajU+
-         U0tuqEH8QbINfOhkXfeI/V0RsTSBD/DNUlZrsFnPoU3eQwXz+HIsutoYhqmCuE35XZ2H
-         7IRg==
-X-Gm-Message-State: AOAM532+vmaDTlTKcXzpQCf8S1s0/Dv+8CgG54BeYr98sOR0Qltb7BJG
-        dlpB2me11iu4mBgBgmc1Vg==
-X-Google-Smtp-Source: ABdhPJxMWUB8qi3fLkZnspl7ED1srlDCBz/8M9WgKY58AKDdWH0Iv7E6iDlegaD0OpqXALPh6nLhaQ==
-X-Received: by 2002:a5d:9c44:: with SMTP id 4mr24511126iof.15.1595272890498;
-        Mon, 20 Jul 2020 12:21:30 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y2sm9539756iox.22.2020.07.20.12.21.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 12:21:29 -0700 (PDT)
-Received: (nullmailer pid 2852474 invoked by uid 1000);
-        Mon, 20 Jul 2020 19:21:28 -0000
-Date:   Mon, 20 Jul 2020 13:21:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     vkoul@kernel.org, robh+dt@kernel.org, krzk@kernel.org,
-        p.zabel@pengutronix.de, f.fainelli@gmail.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        kishon@ti.com, jonas.gorski@gmail.com, alcooperx@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH v8 1/2] dt-bindings: phy: add bcm63xx-usbh bindings
-Message-ID: <20200720192128.GA2852419@bogus>
-References: <20200720131209.1236590-1-noltari@gmail.com>
- <20200720131209.1236590-2-noltari@gmail.com>
+        Mon, 20 Jul 2020 15:27:44 -0400
+Received: from mail-qv1-f53.google.com ([209.85.219.53]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M1aQN-1k05cT1wTb-0033fn; Mon, 20 Jul 2020 21:27:42 +0200
+Received: by mail-qv1-f53.google.com with SMTP id dm12so8106052qvb.9;
+        Mon, 20 Jul 2020 12:27:42 -0700 (PDT)
+X-Gm-Message-State: AOAM5326o2Kmv/oxnpZKng/ok6cRSR9F5b4asxIgIpHEUQvOLx90N6jV
+        lck2dkpUFI+1Q2ItPYC8J73vaWYEJmidjJsqhHU=
+X-Google-Smtp-Source: ABdhPJz4/GVi095uNagL1zwS7AisRzIt6vFPRcHiAqGZBWpvnfFu77t7jzve1fhi4YSFXXrmPSs1LFCvIBKpCGPSz7M=
+X-Received: by 2002:ad4:4c09:: with SMTP id bz9mr21965168qvb.210.1595273261190;
+ Mon, 20 Jul 2020 12:27:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200720131209.1236590-2-noltari@gmail.com>
+References: <20200720191845.20115-1-trix@redhat.com>
+In-Reply-To: <20200720191845.20115-1-trix@redhat.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 Jul 2020 21:27:25 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a15yTNgDrLWB4mhTJfjLjxjexbGg4Har4S1Q9uUfCBgFw@mail.gmail.com>
+Message-ID: <CAK8P3a15yTNgDrLWB4mhTJfjLjxjexbGg4Har4S1Q9uUfCBgFw@mail.gmail.com>
+Subject: Re: [PATCH] video: fbdev: pvr2fb: initialize variables
+To:     trix@redhat.com
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:nsRDEQzgnMxfu8R8icWTtUzZ7tQFJpe5cUoDit7hPxKKEHio1xg
+ IWqG5/dXU+Fe0/9F9wwZBpSg8SSuWBUGECk5IHcyTs6KPT1HJjIPdHBx7/OpJVYEIUxfpLG
+ drDSzse2c76cyspDPmJPV+B8E5/9Y5ojH2Rm/7BZL8QCiz1cAjhEtuzB3Xi2flM/Q7B2pKa
+ TDjY9OFzF1e688gbbdKhw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PALBvoTVKtI=:NJONmpnhtkwGHlJO+DY+zZ
+ FGcbDIq9tezIfthDFYSDNcH/9z4JgXviye4S3Nn52ExpxrRdQf8Bz4vt/npWbHDsjRHYARdqp
+ lUEqLZSSKwepfA91vVg/mijXZoZRmrBzGbdLSAr9I1L+++C6HZtytPVMOHTQWsgdTlvKVOCBm
+ fw980wm/6Bc12uvrSb9WTQLNvnG+uVyed2SngRWOKxnVBDI02nwTCl2no44motZb3s49tO++7
+ z223WB5YFqnPR2IUbmXSDV6sW+snMOPPN0+KXPdKCJRAqSdP5kWRwdpqWWYikAzcUaHwOFAM9
+ YZoA+jryCVzCj1NfAu+r9iKbVO3Sh2Y8JlAHSMrHJFQyBVjDAYJL0BFPdNdjqF1QrOdIKDn1r
+ cUb9/G7LsgWX8cwCPYEfANXyZWNn86WyZKcvWV7M2xErrdTkVV8I+eyKVSHNDVV83J8Wi3f1Z
+ Hm7HzgbMn9Z0QH2JSBZ3/EnJtPn/36CVQczdupZm8FOEID9uZkJ7PhGue0GqqcLJPIw65ph1x
+ olkS/URmBhlWHkCAHD8YyO/uOwrcWVtybf8djGseBThV2Oa9wjQudce1UbDqLAerrzqKJzcnA
+ 8MI32NrX2IqDs+vehs1JLXaRgdC7s3g5H/K7HSPqSV8cRj+Y00fETonUhwH6+qFkGwgsul6Tn
+ rdHhkS9FLm++VyRtslHinWRBEOlSbrACKUK58LK7+UDbkvIl700n377ZkGI1EvbAIQObSSHgJ
+ LutXWGulIMZIknh3mqWSUq/TEsHg4A4adWRFhwIO6vq3TU01SvW75Dd5At2wGixCJpcjDHiHr
+ AHxY2AkH7AbL04gF6IyKYZoLbNa+JLVzyIAfNQPn4lP2BE6/fi/kazxiyxRxvosSIP0mcOZ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 15:12:08 +0200, Álvaro Fernández Rojas wrote:
-> Document BCM63xx USBH PHY bindings.
-> 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  v8: no changes.
->  v7: introduce changes suggested by Rob:
->   - Move clock conditions to the main section.
->   - Set missing additionalProperties to false.
->  v6: introduce changes suggested by Rob:
->   - Add another if case to device tree binding for SoCs with just 1 clock.
->   - Ignored "additionalProperties: false" suggestion since it triggers a
->     warning. This has been reported, but I haven't received any answer yet.
->  v5: no changes.
->  v4: conditionally require 1/2 clocks and fix clock/reset values.
->  v3: no changes.
->  v2: phy-cells changed to 1.
-> 
->  .../bindings/phy/brcm,bcm63xx-usbh-phy.yaml   | 79 +++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
-> 
+On Mon, Jul 20, 2020 at 9:19 PM <trix@redhat.com> wrote:
+>
+> From: Tom Rix <trix@redhat.com>
+>
+> clang static analysis reports this repesentative error
+>
+> pvr2fb.c:1049:2: warning: 1st function call argument
+>   is an uninitialized value [core.CallAndMessage]
+>         if (*cable_arg)
+>         ^~~~~~~~~~~~~~~
+>
+> Problem is that cable_arg depends on the input loop to
+> set the cable_arg[0].  If it does not, then some random
+> value from the stack is used.
+>
+> A similar problem exists for output_arg.
+>
+> So initialize cable_arg and output_arg.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Adding a zero-initialization is almost never the correct way to
+deal with these warnings, so one has to be careful doing this.
+
+I checked this file, and your patch is absolutely correct here. ;-)
+
+> Signed-off-by: Tom Rix <trix@redhat.com>
+
+Acked-by: Arnd Bergmann <arnd@arndb.de>
