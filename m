@@ -2,105 +2,95 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31763C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF45FC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F34AF22B51
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595273515;
-	bh=bkBrfB1jkpHBom/xzf4N4YzJeQqGL33+njH20Eq8hy4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ksBd30V+7zn+IWZVxvatx2RtbI5MVp3FjSXXWmgCB7lLE835lB3H6bScTaIECuTGi
-	 jUPL7SCMI7NdjUw6ht6ipnu+g5U59utG2GEkc5FZlvw84XyetCkbnnCY4F1BPXZLRJ
-	 NmsXO7ecNfmtrznz+4S+g8ElKu06TZShqnBLyNu4=
+	by mail.kernel.org (Postfix) with ESMTP id 8EF71207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbgGTTbx (ORCPT
+        id S1730533AbgGTTfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:31:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgGTTbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:31:53 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D84C207DF;
-        Mon, 20 Jul 2020 19:31:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595273512;
-        bh=bkBrfB1jkpHBom/xzf4N4YzJeQqGL33+njH20Eq8hy4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZAXB66FLEnbI2/Dhx7bvUvkODcsV+RZghQFaETvcdwiB1KMBQB++GkvkU6ZnEDV41
-         g/xdM9/9epo8kvbHpV4/+wZy+EmH5v8xiHHQgK1kdb7qqk1yf8YLvA8cAZjCmxiiw4
-         Yob5ZLfAVOFJYETLaX3EF6VXYFlOiOh8rEF5W2j0=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E8E3140482; Mon, 20 Jul 2020 16:31:49 -0300 (-03)
-Date:   Mon, 20 Jul 2020 16:31:49 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Kajol Jain <kjain@linux.ibm.com>, ak@linux.intel.com,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, pc@us.ibm.com,
-        namhyung@kernel.org, yao.jin@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, maddy@linux.ibm.com,
-        ravi.bangoria@linux.ibm.com, anju@linux.vnet.ibm.com,
-        kan.liang@linux.intel.com, nasastry@in.ibm.com
-Subject: Re: [PATCH v4 0/5] powerpc/perf: Add json file support for hv_24x7
- core level events
-Message-ID: <20200720193149.GA3906670@kernel.org>
-References: <20200720070127.109234-1-kjain@linux.ibm.com>
- <20200720192133.GM760733@krava>
+        Mon, 20 Jul 2020 15:35:15 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38533 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgGTTfP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 15:35:15 -0400
+Received: by mail-pj1-f67.google.com with SMTP id k5so366087pjg.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 12:35:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FAwXDOVMSGZi/I7ZWIkACyNz/hh5wQgkUbg94T7/lP0=;
+        b=PDnPeP0/BwLwSgcaA4NPY4wSrsoIKvZomgDDv0ucZddjEFeMxbgrsznY9jl8HLAi2j
+         mdACbHZ71X1ngcDMVP1hvK3bjyZ9QcYuCSKl3u2uRQRCErOjeNwqSpoHq2J5Oaam0Ixl
+         t0sdExvW6FAi+51qkJH8Jzl7pbHG/D/lLOgMGfwOjB6CVp7xezhQh1zZYNBrXLxmGVsY
+         IjC/wOkpSWoVJ0+YU2/LkVoQ/CjFrhuhjPeif8HAzGTN3WdvP2BCpUU+Y8JpaH2rKc4/
+         mpwMjNrzqX5Y8fVW0BVQekLvnRBxU8Yt0mCh9hcQx1JE5FN5q3bRGWUDTfp6eTRc8lR5
+         Ei0g==
+X-Gm-Message-State: AOAM533fMDjh+mAD3AdWKZ2uQecuuda+Z2EKY+mNQNBUSMkc7R4+rPu9
+        mzz+9XuL1i8ChA3gzKmTW9M=
+X-Google-Smtp-Source: ABdhPJzdF+z//mhwQF07S3PExCuzsCXpZ0Kr+4nTeKZkNUDuKlHK2ZkqoHFZKnlhXhd+E6guqCWxDw==
+X-Received: by 2002:a17:90b:283:: with SMTP id az3mr992221pjb.38.1595273714639;
+        Mon, 20 Jul 2020 12:35:14 -0700 (PDT)
+Received: from ?IPv6:2601:647:4802:9070:81fd:84d6:3c38:f7ef? ([2601:647:4802:9070:81fd:84d6:3c38:f7ef])
+        by smtp.gmail.com with ESMTPSA id n15sm388993pjf.12.2020.07.20.12.35.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2020 12:35:13 -0700 (PDT)
+Subject: Re: [PATCH v15 7/9] nvmet-passthru: Add passthru code to process
+ commands
+To:     Christoph Hellwig <hch@lst.de>,
+        Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20200716203319.16022-1-logang@deltatee.com>
+ <20200716203319.16022-8-logang@deltatee.com> <20200720141606.GF4627@lst.de>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <e939dd43-9e7f-8ef0-162b-2a27f53e6e1a@grimberg.me>
+Date:   Mon, 20 Jul 2020 12:35:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720192133.GM760733@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200720141606.GF4627@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Jul 20, 2020 at 09:21:33PM +0200, Jiri Olsa escreveu:
-> On Mon, Jul 20, 2020 at 12:31:22PM +0530, Kajol Jain wrote:
-> > Patchset enhance current runtime parameter support. It introduces new
-> > fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
-> > used to specify perpkg events. 
-> > 
-> > The "PerCore" and "PerChip" specifies whether its core or chip events.
-> > Based on which we can decide which runtime parameter user want to
-> > access. Now character  '?' can refers different parameter based on user
-> > requirement.
-> > 
-> > Initially, every time we want to add new terms like chip, core, thread
-> > etc, we need to create corrsponding fields in pmu_events and event
-> > struct.
-> > This patchset adds an enum called 'aggr_mode_class' which store all these
-> > aggregation like perpkg/percore. It also adds new field 'AggregationMode'
-> > to capture these terms.
-> > Now, if user wants to add any new term, they just need to add it in
-> > the enum defined. I try to test it with  my current setup.
-> > 
-> > I also need to replace PerPkg field to AggregationMode in all the
-> > x86 uncore json files. It will great if Andi and team can test it
-> > and let me know if they have any concerns.
-> > 
-> > Changelog:
-> > v3 -> v4:
-> > - Include pmu-events.h header file in jevents.c and remove
-> >   redecalaration of enum aggr_mode_class as Suggested by Jiri.
-> > - Add Acked-by tag.
+
+>> Add passthru command handling capability for the NVMeOF target and
+>> export passthru APIs which are used to integrate passthru
+>> code with nvmet-core.
+>>
+>> The new file passthru.c handles passthru cmd parsing and execution.
+>> In the passthru mode, we create a block layer request from the nvmet
+>> request and map the data on to the block layer request.
+>>
+>> Admin commands and features are on a white list as there are a number
+>> of each that don't make too much sense with passthrough. We use a
+>> white list so that new commands can be considered before being blindly
+>> passed through. In both cases, vendor specific commands are always
+>> allowed.
+>>
+>> We also blacklist reservation IO commands as the underlying device
+>> cannot differentiate between multiple hosts behind a fabric.
 > 
-> looks good to me, but still missing reaction from people maintaining
-> intel's jsons
+> I'm still not so happy about having to look up the namespace and still
+> wonder if we should generalize the connect_q to a passthrough_q.  But
+> I guess we can do that later and then reduce some of the exports here..
 
-Yeah, since this is something trying to be generic enough to describe
-events from different arches, we should not double-fail into
-generalizing this :-\
-
-- Arnaldo
+That is a neat idea! should be easy to do (and we can then lose the host
+xarray stuff). I don't mind having it on a later patch, but it should be
+easy enough to do even before...
