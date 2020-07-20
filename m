@@ -2,99 +2,70 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F00DC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286B3C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 247F2206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261547;
-	bh=8uQoqT5zUgLztGzMfxjnNS5IaFdpCmc2jC0iDhz27EU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MZio0RW8RAanELuYf5r13bFjJ4Bri3ad95SXmIlG+w5HBLbvxkbJLRxi89IwvvZtY
-	 VNwfsFatQrlACnlt7uC8TKmbkBxmjbQEAU8BEwc7h6Nnz41OldFS0JJSIwY57UzruI
-	 FyD0sk5sndcpQkxXzcEXH57ZunMkNh+AtagXI9pE=
+	by mail.kernel.org (Postfix) with ESMTP id 0ADC622D07
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387950AbgGTQMZ (ORCPT
+        id S2387614AbgGTQMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:12:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387924AbgGTQMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:12:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C740C2064B;
-        Mon, 20 Jul 2020 16:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261542;
-        bh=8uQoqT5zUgLztGzMfxjnNS5IaFdpCmc2jC0iDhz27EU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jc6uy7upA056W7murEpSiF6fOxpYa3XCaZrk7h7iT04E38Lbbgf68r9nl2RpMyDdF
-         ZUZfU00fKkuKDSr2LWup2+Ao/Y/uvBp4Aa1IvkVFvQVK3D5Ktp0rLhi8nh3IrSKgrk
-         0dF8we0TFuPYDafln2YDdppplLyNQc2qy0aXgS/M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 154/244] ALSA: hda/realtek - change to suitable link model for ASUS platform
-Date:   Mon, 20 Jul 2020 17:37:05 +0200
-Message-Id: <20200720152833.177810351@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
-References: <20200720152825.863040590@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Jul 2020 12:12:39 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:45783 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S2387993AbgGTQMh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:12:37 -0400
+Received: (qmail 1236056 invoked by uid 1000); 20 Jul 2020 12:12:36 -0400
+Date:   Mon, 20 Jul 2020 12:12:36 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
+Message-ID: <20200720161236.GF1228057@rowland.harvard.edu>
+References: <20200717044427.68747-1-ebiggers@kernel.org>
+ <20200718014204.GN5369@dread.disaster.area>
+ <20200718140811.GA1179836@rowland.harvard.edu>
+ <20200720013320.GP5369@dread.disaster.area>
+ <20200720145211.GC1228057@rowland.harvard.edu>
+ <20200720153911.GX12769@casper.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720153911.GX12769@casper.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+On Mon, Jul 20, 2020 at 04:39:11PM +0100, Matthew Wilcox wrote:
+> Honestly, even the term "release semantics" trips me up _every_ time.
+> It's a barrier to understanding because I have to translate it into "Oh,
+> he means it's like an unlock".  Why can't you just say "unlock semantics"?
 
-commit ef9ddb9dc4f8b1da3b975918cd1fd98ec055b918 upstream.
+It's not as bad as all that; people do talk about acquiring and 
+releasing locks, and presumably you don't have any trouble understanding 
+those terms.  In fact this usage is quite common -- and I believe it's 
+where the names "acquire semantics" and "release semantics" came from 
+originally.
 
-ASUS platform couldn't need to use Headset Mode model.
-It changes to the suitable model.
-
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/d05bcff170784ec7bb35023407148161@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/pci/hda/patch_realtek.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7082,7 +7082,7 @@ static const struct hda_fixup alc269_fix
- 			{ }
- 		},
- 		.chained = true,
--		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
-+		.chain_id = ALC269_FIXUP_HEADSET_MIC
- 	},
- 	[ALC294_FIXUP_ASUS_HEADSET_MIC] = {
- 		.type = HDA_FIXUP_PINS,
-@@ -7091,7 +7091,7 @@ static const struct hda_fixup alc269_fix
- 			{ }
- 		},
- 		.chained = true,
--		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
-+		.chain_id = ALC269_FIXUP_HEADSET_MIC
- 	},
- 	[ALC294_FIXUP_ASUS_SPK] = {
- 		.type = HDA_FIXUP_VERBS,
-
-
+Alan Stern
