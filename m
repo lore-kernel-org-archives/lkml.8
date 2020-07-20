@@ -2,361 +2,188 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFA0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79371C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25A30207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43AC7207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:08:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lrH/bmlu"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="Op/V/+g1";
+	dkim=pass (1024-bit key) header.d=cisco.onmicrosoft.com header.i=@cisco.onmicrosoft.com header.b="zCG7KMAr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730369AbgGTRHm (ORCPT
+        id S1731438AbgGTRIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:07:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728827AbgGTRHl (ORCPT
+        Mon, 20 Jul 2020 13:08:34 -0400
+Received: from rcdn-iport-7.cisco.com ([173.37.86.78]:18567 "EHLO
+        rcdn-iport-7.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728735AbgGTRIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:07:41 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0846EC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:07:41 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x9so8952788plr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:07:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jo1u0t1Z+XulQer0FfuqSR8e9l8Wnppr5TvaFIdOOUM=;
-        b=lrH/bmlu4EnjL6X/zexZgtSAR3uwjakgXGyqh6ZIHCxn7oFRvL1vhWIak9iMtIdJbX
-         aXjIYMBO+1Jqibluj2+S4WsbxP0/PORYgYHikJOYHyclbokiiW3IFOnyeIlAce5MpZBy
-         GAvsbTDH1E84rXgEL2FWxuYZ2M6B9dOWsBPHX1ZyBZJN6ix4hvPMwIQ7VR8osyT06QoI
-         d7ZjJVsrBI0kKOPU4LAq5pUrbnaeKl9kVJZjeTlfu6dsOzjXE+1z+eoPwjtFeJVQB0RJ
-         gl0CO53dR6UYjzhEw1fTbRlb0m62lN+U7luhrXQzP6+3d303+O8HcomerCLMyLRifNW/
-         gHYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jo1u0t1Z+XulQer0FfuqSR8e9l8Wnppr5TvaFIdOOUM=;
-        b=kP884eUydEr8GeWLSGgiIbc/XT3XUJo/euYn5UPIL6PqgauLVSt30VBeRvE2ZS2OIk
-         dZG+X32xRcE0E2Ch7sVXxQikX0TgAQT3IAbru2vie/unET8f4VLn+gUmNrouuEa8WuJ0
-         TYa/Us+0QXyRTks1LDtJ3daosCB03u+xq5CssjocbLgNaczHwSgFcluFexBo+5Dgdxff
-         6aZNewNlfiGV7ZDxYYyl8KD0SkjCLTQ16iviJsLolo9pDhVXYRu9yyo1sgdoDzWV9yuQ
-         cqjHHNu4+S6H3bqN9tcyWvHq/Cra1zrUxtvGwQ8Zo8VUVRcqVHaCCXwldgQOFgzfTc9R
-         8IHA==
-X-Gm-Message-State: AOAM532YSKVAX3QAhbnvb5u2ULTE9uXJeZ7SKSDl0+FYCMH+Y8x1ZGFM
-        QhxSKDo7q7O+2+JtLANm6yIenQ==
-X-Google-Smtp-Source: ABdhPJzIaOWzwbSCzZ2SRSY55bN0p40qeeQU68bxxYEl2emFPpRrKJ8N8DnOj2WWz42ap52AKAI91Q==
-X-Received: by 2002:a17:902:eb54:: with SMTP id i20mr18422789pli.183.1595264860423;
-        Mon, 20 Jul 2020 10:07:40 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id i67sm17921815pfg.13.2020.07.20.10.07.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 10:07:39 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 11:07:37 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org, sibis@codearora.org,
-        tsoni@codeaurora.org, psodagud@codeaurora.org,
-        sidgup@codeaurora.org
-Subject: Re: [PATCH v8 4/5] remoteproc: Add inline coredump functionality
-Message-ID: <20200720170737.GC1113627@xps15>
-References: <1594938035-7327-1-git-send-email-rishabhb@codeaurora.org>
- <1594938035-7327-5-git-send-email-rishabhb@codeaurora.org>
+        Mon, 20 Jul 2020 13:08:31 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jul 2020 13:08:29 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=2398; q=dns/txt; s=iport;
+  t=1595264909; x=1596474509;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=VX3c/+Mxe9HMyKrf6gzXcvD3vCStJB5sHZuUnRwt/mk=;
+  b=Op/V/+g1IzbX7ZMEo9X8IJbH86i04l8NDIwQsNZPOICnjYirQQr7Om+A
+   y7LPHwYbUoBXxby+TvvAQaWMbZPmOB7/6lXRuGa6giqXpcq60AUSGx1m/
+   zHRUtRIlYcahWtG8hOCv7RS6bvMeYEltvNv0rVX29iAgHz+zVCvUaNHWX
+   w=;
+IronPort-PHdr: =?us-ascii?q?9a23=3A2k0rjhXisYcjptYXSkk1s2gacU3V8LGuZFwc94?=
+ =?us-ascii?q?YnhrRSc6+q45XlOgnF6O5wiEPSBNyHuf1BguvS9avnXD9I7ZWAtSUEd5pBH1?=
+ =?us-ascii?q?8AhN4NlgMtSMiCFQXgLfHsYiB7eaYKVFJs83yhd0QAHsH4ag7dp3Sz6XgZHR?=
+ =?us-ascii?q?CsfQZwL/7+T4jVicn/3uuu+prVNgNPgjf1Yb57IBis6wvLscxDiop5IaF3wR?=
+ =?us-ascii?q?zM8XY=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0CrBQCLzBVf/5FdJa1gHAEBAQEBAQc?=
+ =?us-ascii?q?BARIBAQQEAQFAgUqBUlEHgUcvLAqEKYNGA41LigKOXIJTA1ULAQEBDAEBLQI?=
+ =?us-ascii?q?EAQGETAIXgggCJDgTAgMBAQsBAQUBAQECAQYEbYVcDIVyAQEBAxIREQwBATc?=
+ =?us-ascii?q?BDwIBCBgCAiYCAgIfERUQAgQBDQUbB4MEgkwDLQEBoDcCgTmIYXaBMoMBAQE?=
+ =?us-ascii?q?FhQ0NC4IOCRR6KoJqg1WGM4IagTgcgk0+ghqCI4MWM4ItgUcBjXOCXzyiKE0?=
+ =?us-ascii?q?GBIJdlHOEcAMVCYJ6iT6TEC2RVI0EkXsCBAIEBQIOAQEFgWojgVdwUCoBc4F?=
+ =?us-ascii?q?LUBcCDY4eg3GKVnQ3AgYBBwEBAwl8jgIBgRABAQ?=
+X-IronPort-AV: E=Sophos;i="5.75,375,1589241600"; 
+   d="scan'208";a="790727111"
+Received: from rcdn-core-9.cisco.com ([173.37.93.145])
+  by rcdn-iport-7.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 20 Jul 2020 17:01:13 +0000
+Received: from XCH-ALN-001.cisco.com (xch-aln-001.cisco.com [173.36.7.11])
+        by rcdn-core-9.cisco.com (8.15.2/8.15.2) with ESMTPS id 06KH1DKp004879
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL);
+        Mon, 20 Jul 2020 17:01:13 GMT
+Received: from xhs-rtp-002.cisco.com (64.101.210.229) by XCH-ALN-001.cisco.com
+ (173.36.7.11) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 20 Jul
+ 2020 12:01:13 -0500
+Received: from xhs-aln-003.cisco.com (173.37.135.120) by xhs-rtp-002.cisco.com
+ (64.101.210.229) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 20 Jul
+ 2020 13:01:12 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (173.37.151.57)
+ by xhs-aln-003.cisco.com (173.37.135.120) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Mon, 20 Jul 2020 12:01:12 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jV4dDuK638lYiLJypWbKUOtbraHutmEw+NNQR1teB/OGahbMm+p0zwdSJ8Rcn9V1Emfw1g6jf8oIFywfLiPklnK49tEIFdcyAvERT8D9u7dRgm0NR6Xy7gxNOqMAXU5/r6YiyZzwcOSQU1SQCGqobzO1S5qjvuETFR2EKx/a8JrtD8whH29y0MGlO/PHx7HbiYtPQ+Xt0ExcNtCeMtABaaGbnQqZzfNwVAQ49fRs8bAE5kaApOy7CzmsAai8iKGRgN9Me5MsDgUFn6Ko1MqM+tjkDVpri2k+0eckPlBOHpXr2K3dbIrh0sECEXpaSLDM1IWAsPfEoerVqZUa51qHag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VX3c/+Mxe9HMyKrf6gzXcvD3vCStJB5sHZuUnRwt/mk=;
+ b=Zz/npAafgC8HqSHudTsDOmlErbUnr3q60/MR/UnU5fuGcYCBlPMHyLsO1LbvP+Bv5GrsbP+yvC+L+y0Vwr0upSG+PUS4Vt2l/zWRXHOJq1+ZdLwo+bFBk6jhjFdqYdZQ6Q/aPDDDNx+igiDZlOVLODRrFneFSpc8WVFXzmyqLN7YznbltndKue/7nuu/8AKgt5VCH4Dl4uXV0+KjWVgX2usHAcJaQ3HUWpSXfmkgx7Iwyf88jT81zvnEOCyVB31XR6TY6rv2oLni7SOS4WeURA7vg3RU+xmTjAjyrmqKhvCloLqdxsmD5wfQnniqHb4Ke2ZMEX67C5rS6sVviclV/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
+ dkim=pass header.d=cisco.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cisco.onmicrosoft.com;
+ s=selector2-cisco-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VX3c/+Mxe9HMyKrf6gzXcvD3vCStJB5sHZuUnRwt/mk=;
+ b=zCG7KMAry1RiEPGBywgtax2xRxEXpbv9A4duziRJ71QVSrn2fvRpwDBWYHWeqjrB/GHKFkgHryKv6H+T1HyvBX/D2qi22h6QozJM7Pa69hY+Le1jhmi/em4bUKButq0G/iBuav/UPsE1KL8kz7LkW+5NrNIrTGv4x75cOoshMO4=
+Received: from CY4PR1101MB2101.namprd11.prod.outlook.com
+ (2603:10b6:910:24::18) by CY4PR11MB1255.namprd11.prod.outlook.com
+ (2603:10b6:903:30::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18; Mon, 20 Jul
+ 2020 17:01:11 +0000
+Received: from CY4PR1101MB2101.namprd11.prod.outlook.com
+ ([fe80::6c4e:645e:fcf9:f766]) by CY4PR1101MB2101.namprd11.prod.outlook.com
+ ([fe80::6c4e:645e:fcf9:f766%11]) with mapi id 15.20.3195.025; Mon, 20 Jul
+ 2020 17:01:10 +0000
+From:   "Sriram Krishnan (srirakr2)" <srirakr2@cisco.com>
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Malcolm Bumgardner (mbumgard)" <mbumgard@cisco.com>,
+        "Umesha G M (ugm)" <ugm@cisco.com>,
+        "Niranjan M M (nimm)" <nimm@cisco.com>,
+        "Daniel Walker (danielwa)" <danielwa@cisco.com>
+Subject: Re: [PATCH v2] AF_PACKET doesnt strip VLAN information
+Thread-Topic: [PATCH v2] AF_PACKET doesnt strip VLAN information
+Thread-Index: AQHWXRxVWAaissRR4kW2xbRd/pNvc6kP2PgOgACm0ICAAJDsAA==
+Date:   Mon, 20 Jul 2020 17:01:09 +0000
+Message-ID: <EFC5EACE-753A-430E-84D5-E22C3F8C5106@cisco.com>
+References: <20200718091732.8761-1-srirakr2@cisco.com>
+ <CA+FuTSdfvctFD3AVMHzQV9efQERcKVE1TcYVD_T84eSgq9x4OA@mail.gmail.com>
+ <CY4PR1101MB21013DCD55B754E29AF4A838907B0@CY4PR1101MB2101.namprd11.prod.outlook.com>
+ <CAF=yD-+gCkPVkXwcH6KiKYGV77TvpZiDo=3YyXeuGFk=TR2dcw@mail.gmail.com>
+In-Reply-To: <CAF=yD-+gCkPVkXwcH6KiKYGV77TvpZiDo=3YyXeuGFk=TR2dcw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+user-agent: Microsoft-MacOutlook/16.39.20071300
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=cisco.com;
+x-originating-ip: [106.51.23.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f70b15a2-2605-4840-7b81-08d82cce8048
+x-ms-traffictypediagnostic: CY4PR11MB1255:
+x-ld-processed: 5ae1af62-9505-4097-a69a-c1553ef7840e,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR11MB1255772781983656C6915970907B0@CY4PR11MB1255.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MOLuYBEuNN5VrRJZld7vUGm91CvzcmSPyZKrwkEQDatT2orkVDba5GVuw0iveJpBfsd0+6kz9wBAivR+UtFOoP3Q6wTh6W8Ik+Nl1uY0VoVLvtOwDB/F0bJb+n2tbqn26Qb17uptYQtb92lNIokwjMVkNXF1yb2Y+N4KeWG2Enn/W3x6b4ZaDinr3sgfHQmfHn167eWdNS9ryBvGGYcg+oDWE/nJZ7ZgOcNjO6QZlbRMuKi7OZp9gOpv6ZJ8yVxuROXzUMPsVlL1fB5qinJ2vZGv6vy2plXVn0uyXw4gFopPADl/wLIuxiP5A/6OV0ETtNixf1Z2kn618z95z3cv+g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR1101MB2101.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(366004)(396003)(39860400002)(6486002)(4326008)(478600001)(91956017)(83380400001)(6512007)(2906002)(8936002)(54906003)(110136005)(36756003)(8676002)(5660300002)(64756008)(66446008)(66476007)(66556008)(66946007)(316002)(76116006)(107886003)(55236004)(186003)(26005)(33656002)(6506007)(53546011)(86362001)(2616005)(71200400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: TE1pElfmz6IaoRSJrEX72PoKPSQddai0YN2xIAD2Uj12ShCicVPdkwGzAc4FGi7Ck0p6SgaupqONZ9sG4c+NFYL2Vx0so0eqJNACgqE6AGJc+OraCXjZ70yG7XaGPiQZLpIEHYTm7QVg3TDosLH+xto8CkFTOQbawHX0uLR61dLzZzn1/hyzlGlz74Au5r3n4w1nrhV5QLpkVzeyMSSsYeK9xJwBL3U8iFH6fjEuZuJRwNHnKZxPzJd72xJPcMtLAo/UIEi88Bsvd5XpLSF+ENN/ii5ZTor2dGznp7yGACUa7FHfQS9DJscNvUA4lvk1zYY9ciooGjrDJDOPgk22FW22QpPrrWWNyLQFUmQ3WBhF7UXyQdFpG37+Y++6Hh3oU1kEG6QdgqkluBU4/NA0jCTcPWzMAR6FEO2xyc3sw3QZBEfR3Hec1RtryKFnbvXKN9VFifitK0ZKXA2qOiavfvfI7WnSNAgmpsIu/CpOqWA=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EF9E762792042549AB7B66B438024889@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594938035-7327-5-git-send-email-rishabhb@codeaurora.org>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR1101MB2101.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f70b15a2-2605-4840-7b81-08d82cce8048
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 17:01:09.8255
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: f5iLwI1PnTalode6cAsTuKOiMJB47c3WZsadnPql44kpooGHQTef9XBioePdHs5f4EpRMa7ljlGLklDsrwrOcg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1255
+X-OriginatorOrg: cisco.com
+X-Outbound-SMTP-Client: 173.36.7.11, xch-aln-001.cisco.com
+X-Outbound-Node: rcdn-core-9.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 03:20:34PM -0700, Rishabh Bhatnagar wrote:
-> The current coredump implementation uses vmalloc area to copy
-> all the segments. But this might put strain on low memory targets
-> as the firmware size sometimes is in tens of MBs. The situation
-> becomes worse if there are multiple remote processors undergoing
-> recovery at the same time. This patch adds inline coredump
-> functionality that avoids extra memory usage. This requires
-> recovery to be halted until data is read by userspace and free
-> function is called.
-> 
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> Tested-by: Sibi Sankar <sibis@codeaurora.org>
-
-Thanks for doing the modifications.
-
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
-> ---
->  drivers/remoteproc/remoteproc_coredump.c | 156 +++++++++++++++++++++++++++----
->  include/linux/remoteproc.h               |  16 ++++
->  2 files changed, 154 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_coredump.c b/drivers/remoteproc/remoteproc_coredump.c
-> index 390f563..bb15a29 100644
-> --- a/drivers/remoteproc/remoteproc_coredump.c
-> +++ b/drivers/remoteproc/remoteproc_coredump.c
-> @@ -5,6 +5,7 @@
->   * Copyright (c) 2020, The Linux Foundation. All rights reserved.
->   */
->  
-> +#include <linux/completion.h>
->  #include <linux/devcoredump.h>
->  #include <linux/device.h>
->  #include <linux/kernel.h>
-> @@ -12,6 +13,12 @@
->  #include "remoteproc_internal.h"
->  #include "remoteproc_elf_helpers.h"
->  
-> +struct rproc_coredump_state {
-> +	struct rproc *rproc;
-> +	void *header;
-> +	struct completion dump_done;
-> +};
-> +
->  /**
->   * rproc_coredump_cleanup() - clean up dump_segments list
->   * @rproc: the remote processor handle
-> @@ -115,12 +122,110 @@ int rproc_coredump_set_elf_info(struct rproc *rproc, u8 class, u16 machine)
->  }
->  EXPORT_SYMBOL(rproc_coredump_set_elf_info);
->  
-> +static void rproc_coredump_free(void *data)
-> +{
-> +	struct rproc_coredump_state *dump_state = data;
-> +
-> +	vfree(dump_state->header);
-> +	complete(&dump_state->dump_done);
-> +}
-> +
-> +static void *rproc_coredump_find_segment(loff_t user_offset,
-> +					 struct list_head *segments,
-> +					 size_t *data_left)
-> +{
-> +	struct rproc_dump_segment *segment;
-> +
-> +	list_for_each_entry(segment, segments, node) {
-> +		if (user_offset < segment->size) {
-> +			*data_left = segment->size - user_offset;
-> +			return segment;
-> +		}
-> +		user_offset -= segment->size;
-> +	}
-> +
-> +	*data_left = 0;
-> +	return NULL;
-> +}
-> +
-> +static void rproc_copy_segment(struct rproc *rproc, void *dest,
-> +			       struct rproc_dump_segment *segment,
-> +			       size_t offset, size_t size)
-> +{
-> +	void *ptr;
-> +
-> +	if (segment->dump) {
-> +		segment->dump(rproc, segment, dest, offset, size);
-> +	} else {
-> +		ptr = rproc_da_to_va(rproc, segment->da + offset, size);
-> +		if (!ptr) {
-> +			dev_err(&rproc->dev,
-> +				"invalid copy request for segment %pad with offset %zu and size %zu)\n",
-> +				&segment->da, offset, size);
-> +			memset(dest, 0xff, size);
-> +		} else {
-> +			memcpy(dest, ptr, size);
-> +		}
-> +	}
-> +}
-> +
-> +static ssize_t rproc_coredump_read(char *buffer, loff_t offset, size_t count,
-> +				   void *data, size_t header_sz)
-> +{
-> +	size_t seg_data, bytes_left = count;
-> +	ssize_t copy_sz;
-> +	struct rproc_dump_segment *seg;
-> +	struct rproc_coredump_state *dump_state = data;
-> +	struct rproc *rproc = dump_state->rproc;
-> +	void *elfcore = dump_state->header;
-> +
-> +	/* Copy the vmalloc'ed header first. */
-> +	if (offset < header_sz) {
-> +		copy_sz = memory_read_from_buffer(buffer, count, &offset,
-> +						  elfcore, header_sz);
-> +
-> +		return copy_sz;
-> +	}
-> +
-> +	/*
-> +	 * Find out the segment memory chunk to be copied based on offset.
-> +	 * Keep copying data until count bytes are read.
-> +	 */
-> +	while (bytes_left) {
-> +		seg = rproc_coredump_find_segment(offset - header_sz,
-> +						  &rproc->dump_segments,
-> +						  &seg_data);
-> +		/* EOF check */
-> +		if (!seg) {
-> +			dev_info(&rproc->dev, "Ramdump done, %lld bytes read",
-> +				 offset);
-> +			break;
-> +		}
-> +
-> +		copy_sz = min_t(size_t, bytes_left, seg_data);
-> +
-> +		rproc_copy_segment(rproc, buffer, seg, seg->size - seg_data,
-> +				   copy_sz);
-> +
-> +		offset += copy_sz;
-> +		buffer += copy_sz;
-> +		bytes_left -= copy_sz;
-> +	}
-> +
-> +	return count - bytes_left;
-> +}
-> +
->  /**
->   * rproc_coredump() - perform coredump
->   * @rproc:	rproc handle
->   *
->   * This function will generate an ELF header for the registered segments
-> - * and create a devcoredump device associated with rproc.
-> + * and create a devcoredump device associated with rproc. Based on the
-> + * coredump configuration this function will directly copy the segments
-> + * from device memory to userspace or copy segments from device memory to
-> + * a separate buffer, which can then be read by userspace.
-> + * The first approach avoids using extra vmalloc memory. But it will stall
-> + * recovery flow until dump is read by userspace.
->   */
->  void rproc_coredump(struct rproc *rproc)
->  {
-> @@ -130,11 +235,13 @@ void rproc_coredump(struct rproc *rproc)
->  	size_t data_size;
->  	size_t offset;
->  	void *data;
-> -	void *ptr;
->  	u8 class = rproc->elf_class;
->  	int phnum = 0;
-> +	struct rproc_coredump_state dump_state;
-> +	enum rproc_dump_mechanism dump_conf = rproc->dump_conf;
->  
-> -	if (list_empty(&rproc->dump_segments))
-> +	if (list_empty(&rproc->dump_segments) ||
-> +	    dump_conf == RPROC_COREDUMP_DISABLED)
->  		return;
->  
->  	if (class == ELFCLASSNONE) {
-> @@ -144,7 +251,14 @@ void rproc_coredump(struct rproc *rproc)
->  
->  	data_size = elf_size_of_hdr(class);
->  	list_for_each_entry(segment, &rproc->dump_segments, node) {
-> -		data_size += elf_size_of_phdr(class) + segment->size;
-> +		/*
-> +		 * For default configuration buffer includes headers & segments.
-> +		 * For inline dump buffer just includes headers as segments are
-> +		 * directly read from device memory.
-> +		 */
-> +		data_size += elf_size_of_phdr(class);
-> +		if (dump_conf == RPROC_COREDUMP_DEFAULT)
-> +			data_size += segment->size;
->  
->  		phnum++;
->  	}
-> @@ -183,23 +297,29 @@ void rproc_coredump(struct rproc *rproc)
->  		elf_phdr_set_p_flags(class, phdr, PF_R | PF_W | PF_X);
->  		elf_phdr_set_p_align(class, phdr, 0);
->  
-> -		if (segment->dump) {
-> -			segment->dump(rproc, segment, data + offset, 0, segment->size);
-> -		} else {
-> -			ptr = rproc_da_to_va(rproc, segment->da, segment->size);
-> -			if (!ptr) {
-> -				dev_err(&rproc->dev,
-> -					"invalid coredump segment (%pad, %zu)\n",
-> -					&segment->da, segment->size);
-> -				memset(data + offset, 0xff, segment->size);
-> -			} else {
-> -				memcpy(data + offset, ptr, segment->size);
-> -			}
-> -		}
-> +		if (dump_conf == RPROC_COREDUMP_DEFAULT)
-> +			rproc_copy_segment(rproc, data + offset, segment, 0,
-> +					   segment->size);
->  
->  		offset += elf_phdr_get_p_filesz(class, phdr);
->  		phdr += elf_size_of_phdr(class);
->  	}
-> +	if (dump_conf == RPROC_COREDUMP_DEFAULT) {
-> +		dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
-> +		return;
-> +	}
-> +
-> +	/* Initialize the dump state struct to be used by rproc_coredump_read */
-> +	dump_state.rproc = rproc;
-> +	dump_state.header = data;
-> +	init_completion(&dump_state.dump_done);
-> +
-> +	dev_coredumpm(&rproc->dev, NULL, &dump_state, data_size, GFP_KERNEL,
-> +		      rproc_coredump_read, rproc_coredump_free);
->  
-> -	dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
-> +	/*
-> +	 * Wait until the dump is read and free is called. Data is freed
-> +	 * by devcoredump framework automatically after 5 minutes.
-> +	 */
-> +	wait_for_completion(&dump_state.dump_done);
->  }
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index eb08139..38d037d 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -435,6 +435,20 @@ enum rproc_crash_type {
->  };
->  
->  /**
-> + * enum rproc_dump_mechanism - Coredump options for core
-> + * @RPROC_COREDUMP_DEFAULT:	Copy dump to separate buffer and carry on with
-> +				recovery
-> + * @RPROC_COREDUMP_INLINE:	Read segments directly from device memory. Stall
-> +				recovery until all segments are read
-> + * @RPROC_COREDUMP_DISABLED:	Don't perform any dump
-> + */
-> +enum rproc_dump_mechanism {
-> +	RPROC_COREDUMP_DEFAULT,
-> +	RPROC_COREDUMP_INLINE,
-> +	RPROC_COREDUMP_DISABLED,
-> +};
-> +
-> +/**
->   * struct rproc_dump_segment - segment info from ELF header
->   * @node:	list node related to the rproc segment list
->   * @da:		device address of the segment
-> @@ -466,6 +480,7 @@ struct rproc_dump_segment {
->   * @dev: virtual device for refcounting and common remoteproc behavior
->   * @power: refcount of users who need this rproc powered up
->   * @state: state of the device
-> + * @dump_conf: Currently selected coredump configuration
->   * @lock: lock which protects concurrent manipulations of the rproc
->   * @dbg_dir: debugfs directory of this rproc device
->   * @traces: list of trace buffers
-> @@ -499,6 +514,7 @@ struct rproc {
->  	struct device dev;
->  	atomic_t power;
->  	unsigned int state;
-> +	enum rproc_dump_mechanism dump_conf;
->  	struct mutex lock;
->  	struct dentry *dbg_dir;
->  	struct list_head traces;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+SSBoYXZlIG1vdmVkIHRoZSBjb2RlIHRvIHRoZSBkcml2ZXIgYW5kIHB1c2hlZCBhIG5ldyBwYXRj
+aCBkdWUgdG8gdGhlIGJlbG93IGhpZ2hsaWdodGVkIGlzc3Vlcy4NCg0KU3RlcGhlbiBILA0KUGxl
+YXNlIGxldCBtZSBrbm93IGlmIHlvdSBoYXZlIGFueSBjb25jZXJucyBsb2NhbGlzaW5nIHRoZSBj
+aGFuZ2VzIHRvIHRoZSBuZXR2c2MgZHJpdmVyLg0KDQoNClRoYW5rcywNClNyaXJhbQ0KDQrvu79P
+biAyMC8wNy8yMCwgNzoyMyBQTSwgIldpbGxlbSBkZSBCcnVpam4iIDx3aWxsZW1kZWJydWlqbi5r
+ZXJuZWxAZ21haWwuY29tPiB3cm90ZToNCg0KICAgIE9uIE1vbiwgSnVsIDIwLCAyMDIwIGF0IDEy
+OjI3IEFNIFNyaXJhbSBLcmlzaG5hbiAoc3JpcmFrcjIpDQogICAgPHNyaXJha3IyQGNpc2NvLmNv
+bT4gd3JvdGU6DQogICAgPg0KICAgID4gK1N0ZXBoZW4gSGVtbWluZ2VyDQogICAgPg0KICAgID4g
+SGkgV2lsbGVtLA0KICAgID4gVGhhbmtzIGZvciBsb29raW5nIGludG8gdGhlIGNvZGUsIEkgdW5k
+ZXJzdGFuZCB0aGF0IHRoaXMgaXMgbW9yZSBvZiBhIGdlbmVyaWMgcHJvYmxlbSB3aGVyZWluIG1h
+bnkgb2YgdGhlIGZpbHRlcmluZyBmdW5jdGlvbnMgYXNzdW1lIHRoZSB2bGFuIHRhZyB0byBiZSBp
+biB0aGUgc2tiIHJhdGhlciB0aGFuIGluIHRoZSBwYWNrZXQuIEhlbmNlIHdlIG1vdmVkIHRoZSBm
+aXggZnJvbSB0aGUgZHJpdmVyIHRvIHRoZSBjb21tb24gQUYgcGFja2V0IHRoYXQgb3VyIHNvbHV0
+aW9uIHVzZXMuDQogICAgPg0KICAgID4gSSByZWNhbGwgZnJvbSB0aGUgdjEgb2YgdGhlIHBhdGNo
+IHlvdSBoYWQgbWVudGlvbmVkIG90aGVyIGNvbW1vbiBhcmVhcyB3aGVyZSB0aGlzIGZpeCBtaWdo
+dCBiZSByZWxldmFudCAoc3VjaCBhcyB0YXAvdHVuKSwgYnV0IEknbSBhZnJhaWQgSSBjYW50IGNv
+bXByZWhlbnNpdmVseSB0ZXN0IHRob3NlIHBhdGNoZXMgb3V0LiBQbGVhc2UgbGV0IG1lIGtub3cg
+eW91ciB0aG91Z2h0cw0KDQogICAgUGxlYXNlIHVzZSBwbGFpbiB0ZXh0IHRvIHJlc3BvbmQuIEhU
+TUwgcmVwbGllcyBkbyBub3QgcmVhY2ggdGhlIGxpc3QuDQoNCiAgICBDYW4geW91IGJlIG1vcmUg
+cHJlY2lzZSBpbiB3aGljaCBvdGhlciBjb2RlIGJlc2lkZXMgdGhlIGh5cGVyLXYgZHJpdmVyDQog
+ICAgaXMgYWZmZWN0ZWQ/IERvIHlvdSBoYXZlIGFuIGV4YW1wbGU/DQoNCiAgICBUaGlzIGlzIGEg
+cmVzdWJtaXQgb2YgdGhlIG9yaWdpbmFsIHBhdGNoLiBNeSBwcmV2aW91cw0KICAgIHF1ZXN0aW9u
+cy9jb25jZXJucyByZW1haW4gdmFsaWQ6DQoNCiAgICAtIGlmIHRoZSBmdW5jdGlvbiBjYW4gbm93
+IGZhaWwsIGFsbCBjYWxsZXJzIG11c3QgYmUgdXBkYXRlZCB0byBkZXRlY3QNCiAgICBhbmQgaGFu
+ZGxlIHRoYXQNCg0KICAgIC0gYW55IHNvbHV0aW9uIHNob3VsZCBwcm9iYWJseSBhZGRyZXNzIGFs
+bCBpbnB1dHMgaW50byB0aGUgdHggcGF0aDoNCiAgICBwYWNrZXQgc29ja2V0cywgdHVudGFwLCB2
+aXJ0aW8tbmV0DQoNCiAgICAtIHRoaXMgb25seSBhZGRyZXNzZXMgcGFja2V0IHNvY2tldHMgd2l0
+aCBFVEhfUF9BTEwvRVRIX1BfTk9ORS4gTm90DQogICAgc29ja2V0cyB0aGF0IHNldCBFVEhfUF84
+MDIxUQ0KDQogICAgLSB3aGljaCBjb2RlIGluIHRoZSB0cmFuc21pdCBzdGFjayByZXF1aXJlcyB0
+aGUgdGFnIHRvIGJlIGluIHRoZSBza2IsDQogICAgYW5kIGRvZXMgdGhpcyBwcm9ibGVtIGFmdGVy
+IHRoaXMgcGF0Y2ggc3RpbGwgcGVyc2lzdCBmb3IgUS1pbi1RPw0KDQo=
