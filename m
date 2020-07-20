@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EB6C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C045BC433FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC4E22CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5192064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260277;
-	bh=NBQwnVG2olcGqnEIA36AveyXcFU/IXivw+KEN1ps4S0=;
+	s=default; t=1595260279;
+	bh=+xKl/IWddWdPuuKN9FO2RLO4rAgiVkoXAKfL4t8pdqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D9Q+gBeQZO1T+0azvfC/fIxGWDkc9OCH+2+mytZth1j6AC0YdeoTVYKzCSGxumGrz
-	 JSEvW6OgrxEjEsPdQbLN1k23bhnvhvxlRXeiXwIP3olBTWDlaKbG7N2eJcmbTh+vTq
-	 ZHop9vtL7vYsXh8ComM9gKf7Jy1u3eeruC32I/cI=
+	b=BGQsSSaXUqPhq6HnWo1GHlvSPO7rWPNvjH+6B1WUEwRpNPzfabOKr/AM6n9FAM8YB
+	 yqRC6/10WReq7CqcXAWj1r+SpABft7jMAgQI8TMButFj1rQME69w5dVgg4X8wwHO+J
+	 xJT1OKJuMD2WATPMPRLdpNuZWFo1HAzlg0llAEtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730915AbgGTPvQ (ORCPT
+        id S1731227AbgGTPvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:51:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48014 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:51:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729686AbgGTPvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:51:12 -0400
+        id S1731216AbgGTPvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:51:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D7842064B;
-        Mon, 20 Jul 2020 15:51:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1880D2064B;
+        Mon, 20 Jul 2020 15:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260271;
-        bh=NBQwnVG2olcGqnEIA36AveyXcFU/IXivw+KEN1ps4S0=;
+        s=default; t=1595260274;
+        bh=+xKl/IWddWdPuuKN9FO2RLO4rAgiVkoXAKfL4t8pdqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O1AG0IlVG3SlaocEWLsia/PQ7h38nyMto+tbZWKbDprJ8DfubUPF+ItCu7o83dS1P
-         GliuKfDK7U1yDdy0Npr+3xtpNKPiHk8Ujm7u/uJ//ksiJoeeI4cx7XqhjCJHPwPnJD
-         P+Oz9FDUxzEFIjGNB2XZyruJld3mKt3RFpyr3Ow0=
+        b=p2Kl+RjMCYNNhigUJT7982vLAPT1ABYriFOTkXUV+DRaqgoC50yBDj+GazthgirOo
+         339z2/BEJQFRinne6fruFg+vE2r+XOeg3Xg3O5Vl4aqQzT/8qu7PEVkegpZk5FjH1d
+         cy/jElZfPjlQRCZddGVQUqsSf2l/OAKzHy7k5ufw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 043/133] Revert "usb/ehci-platform: Set PM runtime as active on resume"
-Date:   Mon, 20 Jul 2020 17:36:30 +0200
-Message-Id: <20200720152805.805310184@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 044/133] net: sfp: add support for module quirks
+Date:   Mon, 20 Jul 2020 17:36:31 +0200
+Message-Id: <20200720152805.844576086@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -58,52 +62,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 71f660a1a74b2eae7896f18f31b68e9c4f4eaea3.
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Eugeniu Rosca writes:
+[ Upstream commit b34bb2cb5b62c7397c28fcc335e8047a687eada4 ]
 
-On Thu, Jul 09, 2020 at 09:00:23AM +0200, Eugeniu Rosca wrote:
->After integrating v4.14.186 commit 5410d158ca2a50 ("usb/ehci-platform:
->Set PM runtime as active on resume") into downstream v4.14.x, we started
->to consistently experience below panic [1] on every second s2ram of
->R-Car H3 Salvator-X Renesas reference board.
->
->After some investigations, we concluded the following:
-> - the issue does not exist in vanilla v5.8-rc4+
-> - [bisecting shows that] the panic on v4.14.186 is caused by the lack
->   of v5.6-rc1 commit 987351e1ea7772 ("phy: core: Add consumer device
->   link support"). Getting evidence for that is easy. Reverting
->   987351e1ea7772 in vanilla leads to a similar backtrace [2].
->
->Questions:
-> - Backporting 987351e1ea7772 ("phy: core: Add consumer device
->   link support") to v4.14.187 looks challenging enough, so probably not
->   worth it. Anybody to contradict this?
-> - Assuming no plans to backport the missing mainline commit to v4.14.x,
->   should the following three v4.14.186 commits be reverted on v4.14.x?
->   * baef809ea497a4 ("usb/ohci-platform: Fix a warning when hibernating")
->   * 9f33eff4958885 ("usb/xhci-plat: Set PM runtime as active on resume")
->   * 5410d158ca2a50 ("usb/ehci-platform: Set PM runtime as active on resume")
+Add support for applying module quirks to the list of supported
+ethtool link modes.
 
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ehci-platform.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/net/phy/sfp-bus.c | 54 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-index cbc45941a699d..8a45362155c5a 100644
---- a/drivers/usb/host/ehci-platform.c
-+++ b/drivers/usb/host/ehci-platform.c
-@@ -457,10 +457,6 @@ static int ehci_platform_resume(struct device *dev)
+diff --git a/drivers/net/phy/sfp-bus.c b/drivers/net/phy/sfp-bus.c
+index fef701bfad62e..bd3ea01bff0b8 100644
+--- a/drivers/net/phy/sfp-bus.c
++++ b/drivers/net/phy/sfp-bus.c
+@@ -8,6 +8,12 @@
  
- 	ehci_resume(hcd, priv->reset_on_resume);
+ #include "sfp.h"
  
--	pm_runtime_disable(dev);
--	pm_runtime_set_active(dev);
--	pm_runtime_enable(dev);
--
- 	if (priv->quirk_poll)
- 		quirk_poll_init(priv);
++struct sfp_quirk {
++	const char *vendor;
++	const char *part;
++	void (*modes)(const struct sfp_eeprom_id *id, unsigned long *modes);
++};
++
+ /**
+  * struct sfp_bus - internal representation of a sfp bus
+  */
+@@ -20,6 +26,7 @@ struct sfp_bus {
+ 	const struct sfp_socket_ops *socket_ops;
+ 	struct device *sfp_dev;
+ 	struct sfp *sfp;
++	const struct sfp_quirk *sfp_quirk;
+ 
+ 	const struct sfp_upstream_ops *upstream_ops;
+ 	void *upstream;
+@@ -30,6 +37,46 @@ struct sfp_bus {
+ 	bool started;
+ };
+ 
++static const struct sfp_quirk sfp_quirks[] = {
++};
++
++static size_t sfp_strlen(const char *str, size_t maxlen)
++{
++	size_t size, i;
++
++	/* Trailing characters should be filled with space chars */
++	for (i = 0, size = 0; i < maxlen; i++)
++		if (str[i] != ' ')
++			size = i + 1;
++
++	return size;
++}
++
++static bool sfp_match(const char *qs, const char *str, size_t len)
++{
++	if (!qs)
++		return true;
++	if (strlen(qs) != len)
++		return false;
++	return !strncmp(qs, str, len);
++}
++
++static const struct sfp_quirk *sfp_lookup_quirk(const struct sfp_eeprom_id *id)
++{
++	const struct sfp_quirk *q;
++	unsigned int i;
++	size_t vs, ps;
++
++	vs = sfp_strlen(id->base.vendor_name, ARRAY_SIZE(id->base.vendor_name));
++	ps = sfp_strlen(id->base.vendor_pn, ARRAY_SIZE(id->base.vendor_pn));
++
++	for (i = 0, q = sfp_quirks; i < ARRAY_SIZE(sfp_quirks); i++, q++)
++		if (sfp_match(q->vendor, id->base.vendor_name, vs) &&
++		    sfp_match(q->part, id->base.vendor_pn, ps))
++			return q;
++
++	return NULL;
++}
+ /**
+  * sfp_parse_port() - Parse the EEPROM base ID, setting the port type
+  * @bus: a pointer to the &struct sfp_bus structure for the sfp module
+@@ -233,6 +280,9 @@ void sfp_parse_support(struct sfp_bus *bus, const struct sfp_eeprom_id *id,
+ 			phylink_set(modes, 1000baseX_Full);
+ 	}
+ 
++	if (bus->sfp_quirk)
++		bus->sfp_quirk->modes(id, modes);
++
+ 	bitmap_or(support, support, modes, __ETHTOOL_LINK_MODE_MASK_NBITS);
+ 
+ 	phylink_set(support, Autoneg);
+@@ -556,6 +606,8 @@ int sfp_module_insert(struct sfp_bus *bus, const struct sfp_eeprom_id *id)
+ 	const struct sfp_upstream_ops *ops = sfp_get_upstream_ops(bus);
+ 	int ret = 0;
+ 
++	bus->sfp_quirk = sfp_lookup_quirk(id);
++
+ 	if (ops && ops->module_insert)
+ 		ret = ops->module_insert(bus->upstream, id);
+ 
+@@ -569,6 +621,8 @@ void sfp_module_remove(struct sfp_bus *bus)
+ 
+ 	if (ops && ops->module_remove)
+ 		ops->module_remove(bus->upstream);
++
++	bus->sfp_quirk = NULL;
+ }
+ EXPORT_SYMBOL_GPL(sfp_module_remove);
  
 -- 
 2.25.1
