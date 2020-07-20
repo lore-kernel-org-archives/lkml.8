@@ -2,179 +2,104 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0D7C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE0C208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:03:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="2Rf0bhhl"
+	by mail.kernel.org (Postfix) with ESMTP id 1A32220729
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 22:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgGTWDv (ORCPT
+        id S1726962AbgGTWFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 18:03:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgGTWDu (ORCPT
+        Mon, 20 Jul 2020 18:05:10 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:45770 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgGTWFK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 18:03:50 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB618C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 15:03:49 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t6so9338623plo.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 15:03:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=V0iCeeBn/xMelvFGdtIIBtJ/o5/aaD9RE8EBgqxRkgA=;
-        b=2Rf0bhhlUQW7lcvw2BhGFb24Z0q+GSPEmBcrloaWqV2XKjqi3MNXmxQGC2C8tvnGFi
-         he8Wj3PuX7wH5i/cNJGvzpgDM92WEGdNur1uzLGdkDdqKdr5r6Dn/1I5yBlDWtg/B+da
-         2Bl/oZzTrq+hE0MfDOIW9WTTy+Lc28h7nBLLoKCANLc1uurpH1ERqIKhvIDTma0T3lWs
-         aT1wk3zkmIZeWKWUPmC2aJJM69Dd/JBlj1DDpY1flwXdcKjZzxntUMtjAoaXM5iTJ9Hr
-         DlCRJGdLnxo6FVgGQTRDPqDvn1suDVewyuuW++NTDtBaaHzJhPGrNXsImeAGBJZOLeyG
-         gBZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=V0iCeeBn/xMelvFGdtIIBtJ/o5/aaD9RE8EBgqxRkgA=;
-        b=fYpaAquu16rViNPfFxiIMBO2kuBgNlyrsmzCuiTbDZ4f49gIEGMdTi/waWraVqVXs3
-         Iu2ZamqpspGbeZn63h2svcs39Anw/wtU7auFV6tJWnXOMyj9t/PZ3wSYQa8c2loAM9Im
-         J39sqEAa94q6JiL1/rkBcIQOFE5EsPhgIFGr1EkSQ7r5ZHSdYkbhP5UjGS9/CUb72Ebm
-         fqUXBf1GvgX6jWFZdFvWUqdop3AlnPT3h3m9ZTF/Rydq2hVG5xs1dskSKPvZWN+zd7Td
-         mFBr15+viqGmlcdeIP8Nj+J+zvbF7qffKCIas/ugvMI9uTAWZK1PPFmiXzDYuKhTHaeD
-         mEdw==
-X-Gm-Message-State: AOAM531pfKqCcdDL4vpMAT4Ju3hifyeaNYH6U1XLKvQMerds9v2y7Zl9
-        MJDocPFft3Ec0Da1gQCC6Asohg==
-X-Google-Smtp-Source: ABdhPJzewFnKnvI+s+d7y6HpfDRXSifUHEqqaaqW8XuhL1gMTKasYISMCGKsxfeBj/Z0shF+dZ/vdQ==
-X-Received: by 2002:a17:90a:3523:: with SMTP id q32mr1298324pjb.185.1595282627317;
-        Mon, 20 Jul 2020 15:03:47 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id j3sm17309851pfe.102.2020.07.20.15.03.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 15:03:47 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 15:03:38 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     "Sriram Krishnan (srirakr2)" <srirakr2@cisco.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "Malcolm Bumgardner (mbumgard)" <mbumgard@cisco.com>
-Subject: Re: [PATCH v2] AF_PACKET doesnt strip VLAN information
-Message-ID: <20200720150338.35e5e70e@hermes.lan>
-In-Reply-To: <CA+FuTScwyB_xo0q+ZfihnQCfyVYy_zibg7Kx-QYEVbnauykKDQ@mail.gmail.com>
-References: <20200718091732.8761-1-srirakr2@cisco.com>
-        <CA+FuTSdfvctFD3AVMHzQV9efQERcKVE1TcYVD_T84eSgq9x4OA@mail.gmail.com>
-        <CY4PR1101MB21013DCD55B754E29AF4A838907B0@CY4PR1101MB2101.namprd11.prod.outlook.com>
-        <CAF=yD-+gCkPVkXwcH6KiKYGV77TvpZiDo=3YyXeuGFk=TR2dcw@mail.gmail.com>
-        <20200720135650.1939665b@hermes.lan>
-        <CA+FuTScwyB_xo0q+ZfihnQCfyVYy_zibg7Kx-QYEVbnauykKDQ@mail.gmail.com>
+        Mon, 20 Jul 2020 18:05:10 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id BBF4F1C0BE2; Tue, 21 Jul 2020 00:05:07 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 00:05:06 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Lech Perczak <l.perczak@camlintechnologies.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Jann Horn <jannh@google.com>, Petr Mladek <pmladek@suse.com>,
+        Theodore Tso <tytso@mit.edu>,
+        John Ogness <john.ogness@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 4.19 130/133] printk: queue wake_up_klogd irq_work only
+ if per-CPU areas are ready
+Message-ID: <20200720220506.GB11552@amd>
+References: <20200720152803.732195882@linuxfoundation.org>
+ <20200720152810.011879475@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="wq9mPyueHGvFACwf"
+Content-Disposition: inline
+In-Reply-To: <20200720152810.011879475@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 17:22:49 -0400
-Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
 
-> On Mon, Jul 20, 2020 at 4:57 PM Stephen Hemminger
-> <stephen@networkplumber.org> wrote:
-> >
-> > On Mon, 20 Jul 2020 09:52:27 -0400
-> > Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
-> >  
-> > > On Mon, Jul 20, 2020 at 12:27 AM Sriram Krishnan (srirakr2)
-> > > <srirakr2@cisco.com> wrote:  
-> > > >
-> > > > +Stephen Hemminger
-> > > >
-> > > > Hi Willem,
-> > > > Thanks for looking into the code, I understand that this is more of a generic problem wherein many of the filtering functions assume the vlan tag to be in the skb rather than in the packet. Hence we moved the fix from the driver to the common AF packet that our solution uses.
-> > > >
-> > > > I recall from the v1 of the patch you had mentioned other common areas where this fix might be relevant (such as tap/tun), but I'm afraid I cant comprehensively test those patches out. Please let me know your thoughts  
-> > >
-> > > Please use plain text to respond. HTML replies do not reach the list.
-> > >
-> > > Can you be more precise in which other code besides the hyper-v driver
-> > > is affected? Do you have an example?
-> > >
-> > > This is a resubmit of the original patch. My previous
-> > > questions/concerns remain valid:
-> > >
-> > > - if the function can now fail, all callers must be updated to detect
-> > > and handle that
-> > >
-> > > - any solution should probably address all inputs into the tx path:
-> > > packet sockets, tuntap, virtio-net
-> > >
-> > > - this only addresses packet sockets with ETH_P_ALL/ETH_P_NONE. Not
-> > > sockets that set ETH_P_8021Q
-> > >
-> > > - which code in the transmit stack requires the tag to be in the skb,
-> > > and does this problem after this patch still persist for Q-in-Q?  
-> >
-> > It matters because the problem is generic, not just to the netvsc driver.
-> > For example, BPF programs and netfilter rules will see different packets
-> > when send is through AF_PACKET than they would see for sends from the
-> > kernel stack.
-> >
-> > Presenting uniform data to the lower layers makes sense.  
-> 
-> Are all forwarded and locally generated packets guaranteed to always
-> have VLAN information in the tag (so that this is indeed only an issue
-> with input from userspace, through tuntap, virtio and packet sockets)?
-> 
-> I guess the first might be assured due to this in __netif_receive_skb_core:
-> 
->         if (skb->protocol == cpu_to_be16(ETH_P_8021Q) ||
->             skb->protocol == cpu_to_be16(ETH_P_8021AD)) {
->                 skb = skb_vlan_untag(skb);
->                 if (unlikely(!skb))
->                         goto out;
->         }
-> 
-> and the second by this in vlan_dev_hard_start_xmit:
-> 
->         if (veth->h_vlan_proto != vlan->vlan_proto ||
->             vlan->flags & VLAN_FLAG_REORDER_HDR) {
->                 u16 vlan_tci;
->                 vlan_tci = vlan->vlan_id;
->                 vlan_tci |= vlan_dev_get_egress_qos_mask(dev, skb->priority);
->                 __vlan_hwaccel_put_tag(skb, vlan->vlan_proto, vlan_tci);
->         }
-> 
-> But I don't know this code very well, so that is based on a very
-> cursory glance only. Might well be missing other paths. (update: I
-> think pktgen is another example.)
-> 
-> Netfilter and BPF still need to handle tags in the packet for Q-in-Q,
-> right? So does this actually simplify their logic?
-> 
-> If the above holds and Q-in-Q is not a problem, then doing the same on
-> ingress from userspace may make sense. I don't know the kind of BPF
-> or netfilter programs what would be affected, and how.
-> 
-> Then it would be good to all those inputs at once to really plug the hole.
-> See also virtio_net_hdr_to_skb for another example of code that
-> applies to all of tuntap, virtio, pf_packet and uml.
+--wq9mPyueHGvFACwf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
 
-Older versions of Linux used to handle outer VLAN differentl
-based on what the driver supported. It was a mess.
-Some drivers and code paths would strip and put in meta-data, some
-would leave it in skb data. But in recent (like 5 yrs), the kernel
-has tried to be more uniform and only have vlan as skb tag.
-It looks like AF_PACKET was overlooked at that time.
+> From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+>=20
+> commit ab6f762f0f53162d41497708b33c9a3236d3609e upstream.
+>=20
+> printk_deferred(), similarly to printk_safe/printk_nmi, does not
+> immediately attempt to print a new message on the consoles, avoiding
+> calls into non-reentrant kernel paths, e.g. scheduler or timekeeping,
+> which potentially can deadlock the system.
+>=20
+> Those printk() flavors, instead, rely on per-CPU flush irq_work to print
+> messages from safer contexts.  For same reasons (recursive scheduler or
+> timekeeping calls) printk() uses per-CPU irq_work in order to wake up
+> user space syslog/kmsg readers.
+>=20
+> However, only printk_safe/printk_nmi do make sure that per-CPU areas
+> have been initialised and that it's safe to modify per-CPU irq_work.
+> This means that, for instance, should printk_deferred() be invoked "too
+> early", that is before per-CPU areas are initialised, printk_deferred()
+> will perform illegal per-CPU access.
+>=20
+> Lech Perczak [0] reports that after commit 1b710b1b10ef ("char/random:
+> silence a lockdep splat with printk()") user-space syslog/kmsg readers
+> are not able to read new kernel messages.
+
+Is this still needed in 4.19? 1b710b1b10ef was reverted in 4.19, so
+there should not be any user-visible problems...
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--wq9mPyueHGvFACwf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8WFRIACgkQMOfwapXb+vLKhgCfV9OfDawaGXAxOK460y5BjrhE
+G4YAn1xYwFJm2Kc0ESgqD4+gVnhnw1C/
+=H6fx
+-----END PGP SIGNATURE-----
+
+--wq9mPyueHGvFACwf--
