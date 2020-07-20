@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0F4C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C01FC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67E2520773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32AA220734
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263044;
-	bh=gXd2bKTIRZQ5dzukdoEGDoUqIIkGPJUwCwsJrvbTHhs=;
+	s=default; t=1595263051;
+	bh=cpgVMNO6qD+Vc+pGTb1tnjPrKfEipPJJmeP/wUORih8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uV2gB+EFYuxrl7RGsJtfzbFA1/EqHkHakcFuouKMoHUL+YpQCQl1ZI76gDLG10vbT
-	 lZhiHoEqa165XkVFUIfdtATzLnRB31cbCE0z8M5UDZ8DJvGAjfnBFQIXK3MN1wMTH+
-	 wYsOxiQFE3h/WlgiSb01xHYCxgjAcySpk+8kgIJ4=
+	b=U226LfshsgP9tRtwOrZvrgVgMQmdhpydXBpMoSt++0dpKBuE9aI0XblRqz+1VyKok
+	 fAjkb/aum7UJx5T7WfkDctUdNpDt3f53PvH9sM2C6qfzBfOmDGaw82hoVr9zKHe5xI
+	 wC042MEChF8GkTDmU5QiNOntHhmAS46TgF3PvB5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387596AbgGTQhW (ORCPT
+        id S1731272AbgGTQha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:37:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48826 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:37:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731272AbgGTPvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:51:45 -0400
+        id S1730956AbgGTPvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:51:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7D7D2065E;
-        Mon, 20 Jul 2020 15:51:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E14F2065E;
+        Mon, 20 Jul 2020 15:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260305;
-        bh=gXd2bKTIRZQ5dzukdoEGDoUqIIkGPJUwCwsJrvbTHhs=;
+        s=default; t=1595260291;
+        bh=cpgVMNO6qD+Vc+pGTb1tnjPrKfEipPJJmeP/wUORih8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pv9StjLXPBB/oE0QWFHDh8WXGYC9gS5Sz0LKHJD7hYrt7EjJ0PmVmn03hhfV9nJ9s
-         7p54TQWrJK3aU12XBKYtk1nwNawWpYZ3Brp8gE/9zbY5Pt1JgNgCMqaa/Hk1J20rUZ
-         EbmoE4qPV3HV/t8eatiQrQBj6YGUQelluQHeZYDY=
+        b=yvM6lEMBBuxeUsekVmLk52x3Xt98XSTIl3Qg0cKrnge/ACe12dDcKahSeMNr6vfln
+         2esqumYbETLSEMLt5a42HlWZLw8/us/n+ePNme/RA2bBF1MtDwCoR+3ZFpqGF3rR4R
+         lr9612WTQeg7E6EiwRZg26HMLt0AED27qVhG8HXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Emmanuel Pescosta <emmanuelpescosta099@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 054/133] ALSA: usb-audio: Add registration quirk for Kingston HyperX Cloud Alpha S
-Date:   Mon, 20 Jul 2020 17:36:41 +0200
-Message-Id: <20200720152806.325546278@linuxfoundation.org>
+        stable@vger.kernel.org, Dongjin Kim <tobetter@gmail.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Jun Li <lijun.kernel@gmail.com>, Tim <elatllat@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>, Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 050/133] doc: dt: bindings: usb: dwc3: Update entries for disabling SS instances in park mode
+Date:   Mon, 20 Jul 2020 17:36:37 +0200
+Message-Id: <20200720152806.132216990@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -60,35 +64,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emmanuel Pescosta <emmanuelpescosta099@gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit fd60e0683e8e9107e09cd2e4798f3e27e85d2705 ]
+[ Upstream commit 3d157c28d2289edf0439e8308e8de3a06acaaf0e ]
 
-Similar to the Kingston HyperX AMP, the Kingston HyperX Cloud
-Alpha S (0951:16d8) uses two interfaces, but only the second
-interface contains the capture stream. This patch delays the
-registration until the second interface appears.
+This patch updates the documentation with the information related
+to the quirks that needs to be added for disabling all SuperSpeed XHCI
+instances in park mode.
 
-Signed-off-by: Emmanuel Pescosta <emmanuelpescosta099@gmail.com>
-Link: https://lore.kernel.org/r/20200404153843.9288-1-emmanuelpescosta099@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: Dongjin Kim <tobetter@gmail.com>
+Cc: Jianxin Pan <jianxin.pan@amlogic.com>
+Cc: Thinh Nguyen <thinhn@synopsys.com>
+Cc: Jun Li <lijun.kernel@gmail.com>
+Reported-by: Tim <elatllat@gmail.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 79c3787ad8fd8..15d7d1e92245c 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1527,6 +1527,7 @@ struct registration_quirk {
- 
- static const struct registration_quirk registration_quirks[] = {
- 	REG_QUIRK_ENTRY(0x0951, 0x16d8, 2),	/* Kingston HyperX AMP */
-+	REG_QUIRK_ENTRY(0x0951, 0x16ed, 2),	/* Kingston HyperX Cloud Alpha S */
- 	{ 0 }					/* terminator */
- };
- 
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 3e4c38b806ac1..ae46c0ac9f118 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -68,6 +68,8 @@ Optional properties:
+ 			from P0 to P1/P2/P3 without delay.
+  - snps,dis-tx-ipgap-linecheck-quirk: when set, disable u2mac linestate check
+ 			during HS transmit.
++ - snps,parkmode-disable-ss-quirk: when set, all SuperSpeed bus instances in
++			park mode are disabled.
+  - snps,dis_metastability_quirk: when set, disable metastability workaround.
+ 			CAUTION: use only if you are absolutely sure of it.
+  - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
 -- 
 2.25.1
 
