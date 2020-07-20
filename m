@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69BAC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F99C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2E3022C9D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1BCD22BF5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281052;
-	bh=aDH47WXYmEoiCKBRtSqqp2kH1h4RsMqOn8BGWaxOkZc=;
+	s=default; t=1595281059;
+	bh=ngBgYryhRrbUSwezXCMKxVoZ+YtUstZLZkhj22QczNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ePJnk7ETxZ/gIX7/prud4tgr7SP2MqyYGgRIhmdsHX1e2Oi1jNXj1KYs+u+550ldc
-	 pcznQkZGLotNA7NWc58rXUx7k1VJgNVpkgACHwT8+HheLgsruT+UIFkPPgdulXUyjL
-	 DyFBcAqkTznP8uLcdceMrNDY64z+JG07H9zhBhbY=
+	b=dFZXCoLoDv60kZ7/3WOp6tAb/Z9W5b1k34Rw1DZOegfLzo0eXkEmEGTlIbNwQtPHc
+	 1F8qksUH75ZvMkKUFwn83+u25vFjVuc3quTxzLAE2v7vzoLWnpd9A/xOd8oMqhNutY
+	 NOGvH6Rpt2sTx5b3yDlNIFB/LqbbrSuMprk6LhZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgGTVhb (ORCPT
+        id S1727120AbgGTVhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:37:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55208 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbgGTVhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:37:23 -0400
+        id S1727048AbgGTVhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:37:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A914722BEF;
-        Mon, 20 Jul 2020 21:37:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 384D422BEF;
+        Mon, 20 Jul 2020 21:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281043;
-        bh=aDH47WXYmEoiCKBRtSqqp2kH1h4RsMqOn8BGWaxOkZc=;
+        s=default; t=1595281051;
+        bh=ngBgYryhRrbUSwezXCMKxVoZ+YtUstZLZkhj22QczNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rGTJPkjytxr6zjmp1387xvCN1CvTC9uHqw18iAjQSHzgGZnDQdPknHR7sHUyhURpr
-         HTyuCgBn/SWKEnBEaL0jaXfkxReyIpvptKzg4L5LeyPbggC1GSaMiKMN3Peul2WPE8
-         1Wj5N7v0zIXYFFoFdxShsUr+iHW3RC9fSeItpMaw=
+        b=0UjyQUPINUK+aTDE3YDe/9ALKCXvL7mp1Ld2eOthebLPphlCSaQUg0ocT188wh7Rn
+         1VXSKSog/8i6zjizbfx13q0XJJpEyxDswPIlX4POd7uQntOK1+73b2HYAcoHCLA2CR
+         WEDPycUNW52HuCFBtidAV2BKJjk+U8Ue+T4LqUG4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yu Kuai <yukuai3@huawei.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 06/40] dmaengine: ti: k3-udma: add missing put_device() call in of_xudma_dev_get()
-Date:   Mon, 20 Jul 2020 17:36:41 -0400
-Message-Id: <20200720213715.406997-6-sashal@kernel.org>
+Cc:     Merlijn Wajer <merlijn@wizzup.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 12/40] ARM: dts: n900: remove mmc1 card detect gpio
+Date:   Mon, 20 Jul 2020 17:36:47 -0400
+Message-Id: <20200720213715.406997-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213715.406997-1-sashal@kernel.org>
 References: <20200720213715.406997-1-sashal@kernel.org>
@@ -58,34 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Merlijn Wajer <merlijn@wizzup.org>
 
-[ Upstream commit 1438cde8fe9cb709b569f5829c4c892c0f3f15b3 ]
+[ Upstream commit ed3e98e919aaaa47e9d9f8a40c3f6f4a22577842 ]
 
-if of_find_device_by_node() succeed and platform_get_drvdata() failed,
-of_xudma_dev_get() will return without put_device(), which will leak
-the memory.
+Instead, expose the key via the input framework, as SW_MACHINE_COVER
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Link: https://lore.kernel.org/r/20200618130110.582543-1-yukuai3@huawei.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+The chip-detect GPIO is actually detecting if the cover is closed.
+Technically it's possible to use the SD card with open cover. The
+only downside is risk of battery falling out and user being able
+to physically remove the card.
+
+The behaviour of SD card not being available when the device is
+open is unexpected and creates more problems than it solves. There
+is a high chance, that more people accidentally break their rootfs
+by opening the case without physically removing the card.
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Merlijn Wajer <merlijn@wizzup.org>
+Link: https://lore.kernel.org/r/20200612125402.18393-3-merlijn@wizzup.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ti/k3-udma-private.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/omap3-n900.dts | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/ti/k3-udma-private.c b/drivers/dma/ti/k3-udma-private.c
-index 0b8f3dd6b1463..77e8e67d995b3 100644
---- a/drivers/dma/ti/k3-udma-private.c
-+++ b/drivers/dma/ti/k3-udma-private.c
-@@ -42,6 +42,7 @@ struct udma_dev *of_xudma_dev_get(struct device_node *np, const char *property)
- 	ud = platform_get_drvdata(pdev);
- 	if (!ud) {
- 		pr_debug("UDMA has not been probed\n");
-+		put_device(&pdev->dev);
- 		return ERR_PTR(-EPROBE_DEFER);
- 	}
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index 4089d97405c95..3dbcae3d60d28 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -105,6 +105,14 @@ proximity_sensor {
+ 			linux,code = <SW_FRONT_PROXIMITY>;
+ 			linux,can-disable;
+ 		};
++
++		machine_cover {
++			label = "Machine Cover";
++			gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
++			linux,input-type = <EV_SW>;
++			linux,code = <SW_MACHINE_COVER>;
++			linux,can-disable;
++		};
+ 	};
  
+ 	isp1707: isp1707 {
+@@ -819,10 +827,6 @@ &mmc1 {
+ 	pinctrl-0 = <&mmc1_pins>;
+ 	vmmc-supply = <&vmmc1>;
+ 	bus-width = <4>;
+-	/* For debugging, it is often good idea to remove this GPIO.
+-	   It means you can remove back cover (to reboot by removing
+-	   battery) and still use the MMC card. */
+-	cd-gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
+ };
+ 
+ /* most boards use vaux3, only some old versions use vmmc2 instead */
 -- 
 2.25.1
 
