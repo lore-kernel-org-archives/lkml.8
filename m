@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB673C433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAE1C433FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5C222D00
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E717D22CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgGTPEn (ORCPT
+        id S1729022AbgGTPEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:04:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64694 "EHLO
+        Mon, 20 Jul 2020 11:04:46 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34542 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726675AbgGTPEi (ORCPT
+        by vger.kernel.org with ESMTP id S1728855AbgGTPEl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:04:38 -0400
+        Mon, 20 Jul 2020 11:04:41 -0400
 Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KF4LK4171685;
-        Mon, 20 Jul 2020 11:04:37 -0400
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KF4LpS171690;
+        Mon, 20 Jul 2020 11:04:40 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d2m3arsb-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d2m3arw8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 11:04:36 -0400
+        Mon, 20 Jul 2020 11:04:39 -0400
 Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KF4RI7172033;
-        Mon, 20 Jul 2020 11:04:28 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d2m3armh-1
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KF4b0V172811;
+        Mon, 20 Jul 2020 11:04:37 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d2m3argj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 11:04:27 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KEk1x6006386;
-        Mon, 20 Jul 2020 15:04:15 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma04dal.us.ibm.com with ESMTP id 32d5dpm8vw-1
+        Mon, 20 Jul 2020 11:04:37 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KEjTlL007066;
+        Mon, 20 Jul 2020 15:04:04 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma01wdc.us.ibm.com with ESMTP id 32brq8j0h9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 15:04:15 +0000
+        Mon, 20 Jul 2020 15:04:04 +0000
 Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KF4BJo44695902
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KF3xKe29426120
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 15:04:11 GMT
+        Mon, 20 Jul 2020 15:03:59 GMT
 Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B690C6E04E;
-        Mon, 20 Jul 2020 15:04:11 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 186036E05B;
+        Mon, 20 Jul 2020 15:04:01 +0000 (GMT)
 Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8E23E6E054;
-        Mon, 20 Jul 2020 15:04:10 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id E47676E04C;
+        Mon, 20 Jul 2020 15:03:59 +0000 (GMT)
 Received: from cpe-172-100-175-116.stny.res.rr.com.com (unknown [9.85.188.6])
         by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Jul 2020 15:04:10 +0000 (GMT)
+        Mon, 20 Jul 2020 15:03:59 +0000 (GMT)
 From:   Tony Krowiak <akrowiak@linux.ibm.com>
 To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
@@ -62,9 +62,9 @@ Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
         mjrosato@linux.ibm.com, pasic@linux.ibm.com,
         alex.williamson@redhat.com, kwankhede@nvidia.com,
         fiuczy@linux.ibm.com, Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v9 15/15] s390/vfio-ap: handle probe/remove not due to host AP config changes
-Date:   Mon, 20 Jul 2020 11:03:44 -0400
-Message-Id: <20200720150344.24488-16-akrowiak@linux.ibm.com>
+Subject: [PATCH v9 07/15] s390/vfio-ap: sysfs attribute to display the guest's matrix
+Date:   Mon, 20 Jul 2020 11:03:36 -0400
+Message-Id: <20200720150344.24488-8-akrowiak@linux.ibm.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200720150344.24488-1-akrowiak@linux.ibm.com>
 References: <20200720150344.24488-1-akrowiak@linux.ibm.com>
@@ -83,186 +83,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AP queue devices are probed or removed for reasons other than changes
-to the host AP configuration. For example:
+The matrix of adapters and domains configured in a guest's CRYCB may
+differ from the matrix of adapters and domains assigned to the matrix mdev,
+so this patch introduces a sysfs attribute to display the matrix of a guest
+using the matrix mdev. For a matrix mdev denoted by $uuid, the crycb for a
+guest using the matrix mdev can be displayed as follows:
 
-* The state of an AP adapter can be dynamically changed from standby to
-  online via the SE or by execution of the SCLP Configure AP command. When
-  the state changes, each queue device associated with the card device
-  representing the adapter will get created and probed.
+   cat /sys/devices/vfio_ap/matrix/$uuid/guest_matrix
 
-* The state of an AP adapter can be dynamically changed from online to
-  standby via the SE or by execution of the SCLP Deconfigure AP command.
-  When the state changes, each queue device associated with the card device
-  representing the adapter will get removed.
-
-* Each queue device associated with a card device will get removed
-  when the type of the AP adapter represented by the card device
-  dynamically changes.
-
-* Each queue device associated with a card device will get removed
-  when the status of the queue represented by the queue device changes
-  from operating to check stop.
-
-* AP queue devices can be manually bound to or unbound from the vfio_ap
-  device driver by a root user via the sysfs bind/unbind attributes of the
-  driver.
-
-In response to a queue device probe or remove that is not the result of a
-change to the host's AP configuration, if a KVM guest is using the matrix
-mdev to which the APQN of the queue device is assigned, the vfio_ap device
-driver must respond accordingly. In an ideal world, the queue device being
-probed would be hot plugged into the guest. Likewise, the queue
-corresponding to the queue device being removed would
-be hot unplugged from the guest. Unfortunately, the AP architecture
-precludes plugging or unplugging individual queues, so let's handle
-the probe or remove of an AP queue device as follows:
-
-Handling Probe
---------------
-There are two requirements that must be met in order to give a
-guest access to the queue corresponding to the queue device being probed:
-
-* Each APQN derived from the APID of the queue device and the APQIs of the
-  domains already assigned to the guest's AP configuration must reference
-  a queue device bound to the vfio_ap device driver.
-
-* Each APQN derived from the APQI of the queue device and the APIDs of the
-  adapters assigned to the guest's AP configuration must reference a queue
-  device bound to the vfio_ap device driver.
-
-If the above conditions are met, the APQN will be assigned to the guest's
-AP configuration and the guest will be given access to the queue.
-
-Handling Remove
----------------
-Since the AP architecture precludes us from taking access to an individual
-queue from a guest, we are left with the choice of taking access away from
-either the adapter or the domain to which the queue is connected. Access to
-the adapter will be taken away because it is likely that most of the time,
-the remove callback will be invoked because the adapter state has
-transitioned from online to standby. In such a case, no queue connected
-to the adapter will be available to access.
+If a guest is not using the matrix mdev at the time the crycb is displayed,
+an error (ENODEV) will be returned.
 
 Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 ---
- drivers/s390/crypto/vfio_ap_ops.c | 84 +++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+ drivers/s390/crypto/vfio_ap_ops.c | 58 +++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
 diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index e6480f31a42b..b6a1e280991d 100644
+index efb229033f9e..30bf23734af6 100644
 --- a/drivers/s390/crypto/vfio_ap_ops.c
 +++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -1682,6 +1682,61 @@ static void vfio_ap_queue_link_mdev(struct vfio_ap_queue *q)
- 	}
+@@ -1119,6 +1119,63 @@ static ssize_t matrix_show(struct device *dev, struct device_attribute *attr,
  }
+ static DEVICE_ATTR_RO(matrix);
  
-+static bool vfio_ap_mdev_assign_shadow_apid(struct ap_matrix_mdev *matrix_mdev,
-+					    unsigned long apid)
++static ssize_t guest_matrix_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
 +{
-+	unsigned long apqi;
-+
-+	for_each_set_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm,
-+			     matrix_mdev->shadow_apcb.aqm_max + 1) {
-+		if (!vfio_ap_get_queue(AP_MKQID(apid, apqi)))
-+			return false;
-+	}
-+
-+	set_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
-+
-+	return true;
-+}
-+
-+static bool vfio_ap_mdev_assign_shadow_apqi(struct ap_matrix_mdev *matrix_mdev,
-+					    unsigned long apqi)
-+{
++	struct mdev_device *mdev = mdev_from_dev(dev);
++	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
++	char *bufpos = buf;
 +	unsigned long apid;
++	unsigned long apqi;
++	unsigned long apid1;
++	unsigned long apqi1;
++	unsigned long napm_bits = matrix_mdev->shadow_apcb.apm_max + 1;
++	unsigned long naqm_bits = matrix_mdev->shadow_apcb.aqm_max + 1;
++	int nchars = 0;
++	int n;
 +
-+	for_each_set_bit_inv(apid, matrix_mdev->shadow_apcb.apm,
-+			     matrix_mdev->shadow_apcb.apm_max + 1) {
-+		if (!vfio_ap_get_queue(AP_MKQID(apid, apqi)))
-+			return false;
++	if (!vfio_ap_mdev_has_crycb(matrix_mdev))
++		return -ENODEV;
++
++	apid1 = find_first_bit_inv(matrix_mdev->shadow_apcb.apm, napm_bits);
++	apqi1 = find_first_bit_inv(matrix_mdev->shadow_apcb.aqm, naqm_bits);
++
++	mutex_lock(&matrix_dev->lock);
++
++	if ((apid1 < napm_bits) && (apqi1 < naqm_bits)) {
++		for_each_set_bit_inv(apid, matrix_mdev->shadow_apcb.apm,
++				     napm_bits) {
++			for_each_set_bit_inv(apqi,
++					     matrix_mdev->shadow_apcb.aqm,
++					     naqm_bits) {
++				n = sprintf(bufpos, "%02lx.%04lx\n", apid,
++					    apqi);
++				bufpos += n;
++				nchars += n;
++			}
++		}
++	} else if (apid1 < napm_bits) {
++		for_each_set_bit_inv(apid, matrix_mdev->shadow_apcb.apm,
++				     napm_bits) {
++			n = sprintf(bufpos, "%02lx.\n", apid);
++			bufpos += n;
++			nchars += n;
++		}
++	} else if (apqi1 < naqm_bits) {
++		for_each_set_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm,
++				     naqm_bits) {
++			n = sprintf(bufpos, ".%04lx\n", apqi);
++			bufpos += n;
++			nchars += n;
++		}
 +	}
 +
-+	set_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm);
++	mutex_unlock(&matrix_dev->lock);
 +
-+	return true;
++	return nchars;
 +}
++static DEVICE_ATTR_RO(guest_matrix);
 +
-+static void vfio_ap_mdev_hot_plug_queue(struct vfio_ap_queue *q)
-+{
-+	bool commit = false;
-+	unsigned long apid = AP_QID_CARD(q->apqn);
-+	unsigned long apqi = AP_QID_QUEUE(q->apqn);
-+
-+	if ((q->matrix_mdev == NULL) || !vfio_ap_mdev_has_crycb(q->matrix_mdev))
-+		return;
-+
-+	if (!test_bit_inv(apid, q->matrix_mdev->matrix.apm) ||
-+	    !test_bit_inv(apqi, q->matrix_mdev->matrix.aqm))
-+		return;
-+
-+	if (!test_bit_inv(apid, q->matrix_mdev->shadow_apcb.apm))
-+		commit |= vfio_ap_mdev_assign_shadow_apid(q->matrix_mdev, apid);
-+
-+	if (!test_bit_inv(apqi, q->matrix_mdev->shadow_apcb.aqm))
-+		commit |= vfio_ap_mdev_assign_shadow_apqi(q->matrix_mdev, apqi);
-+
-+	if (commit)
-+		vfio_ap_mdev_commit_shadow_apcb(q->matrix_mdev);
-+}
-+
- int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
- {
- 	struct vfio_ap_queue *q;
-@@ -1695,11 +1750,35 @@ int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
- 	q->apqn = queue->qid;
- 	q->saved_isc = VFIO_AP_ISC_INVALID;
- 	vfio_ap_queue_link_mdev(q);
-+	/* Make sure we're not in the middle of an AP configuration change. */
-+	if (!(matrix_dev->flags & AP_MATRIX_CFG_CHG))
-+		vfio_ap_mdev_hot_plug_queue(q);
- 	mutex_unlock(&matrix_dev->lock);
+ static struct attribute *vfio_ap_mdev_attrs[] = {
+ 	&dev_attr_assign_adapter.attr,
+ 	&dev_attr_unassign_adapter.attr,
+@@ -1128,6 +1185,7 @@ static struct attribute *vfio_ap_mdev_attrs[] = {
+ 	&dev_attr_unassign_control_domain.attr,
+ 	&dev_attr_control_domains.attr,
+ 	&dev_attr_matrix.attr,
++	&dev_attr_guest_matrix.attr,
+ 	NULL,
+ };
  
- 	return 0;
- }
- 
-+void vfio_ap_mdev_hot_unplug_queue(struct vfio_ap_queue *q)
-+{
-+	unsigned long apid = AP_QID_CARD(q->apqn);
-+	unsigned long apqi = AP_QID_QUEUE(q->apqn);
-+
-+	if ((q->matrix_mdev == NULL) || !vfio_ap_mdev_has_crycb(q->matrix_mdev))
-+		return;
-+
-+	/*
-+	 * If the APQN is assigned to the guest, then let's
-+	 * go ahead and unplug the adapter since the
-+	 * architecture does not provide a means to unplug
-+	 * an individual queue.
-+	 */
-+	if (test_bit_inv(apid, q->matrix_mdev->shadow_apcb.apm) &&
-+	    test_bit_inv(apqi, q->matrix_mdev->shadow_apcb.aqm)) {
-+		if (vfio_ap_mdev_unassign_guest_apid(q->matrix_mdev, apid))
-+			vfio_ap_mdev_commit_shadow_apcb(q->matrix_mdev);
-+	}
-+}
-+
- void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
- {
- 	struct vfio_ap_queue *q;
-@@ -1707,6 +1786,11 @@ void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
- 
- 	mutex_lock(&matrix_dev->lock);
- 	q = dev_get_drvdata(&queue->ap_dev.device);
-+
-+	/* Make sure we're not in the middle of an AP configuration change. */
-+	if (!(matrix_dev->flags & AP_MATRIX_CFG_CHG))
-+		vfio_ap_mdev_hot_unplug_queue(q);
-+
- 	dev_set_drvdata(&queue->ap_dev.device, NULL);
- 	apid = AP_QID_CARD(q->apqn);
- 	apqi = AP_QID_QUEUE(q->apqn);
 -- 
 2.21.1
 
