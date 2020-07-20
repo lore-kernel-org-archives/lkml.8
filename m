@@ -2,127 +2,97 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D82C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13423C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFD1207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:29:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kJli9AY8"
+	by mail.kernel.org (Postfix) with ESMTP id E24EC207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:26:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbgGTE3h (ORCPT
+        id S1726003AbgGTE0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 00:29:37 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:50193 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbgGTE3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 00:29:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595219376; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Dpw1HGE3ZCaDA+GhNOQnpyNXQW1TL4kVVJ9x2AeOGN4=; b=kJli9AY8WF5NMcW887PjIAxrBkLK35o9FE4F7NmpLLmgVwxfN/r342pmaRjEGzPN+QVByeEV
- P9xMBy5iOzw8qL/7NhpO9ht9UM7JQw+uSmziD0mCllAyegdzVRcUAQpM8o9oisEK23SKFaUB
- BnQ9a7453YNNXbnTO7EYqXl2IFs=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
- 5f151d958423214e131269cd (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 04:29:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D6B40C433CB; Mon, 20 Jul 2020 04:29:08 +0000 (UTC)
-Received: from [192.168.1.12] (unknown [61.3.19.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BDC83C433C6;
-        Mon, 20 Jul 2020 04:29:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BDC83C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: media: venus: Add an optional power
- domain for perf voting
-To:     Rob Herring <robh@kernel.org>
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-References: <1594878139-3402-1-git-send-email-rnayak@codeaurora.org>
- <1594878139-3402-2-git-send-email-rnayak@codeaurora.org>
- <20200716195913.GA2744252@bogus>
- <cd368ea7-6ddc-004c-164d-dbbad8516853@codeaurora.org>
- <CAL_Jsq+RXcgTVwd_JC8YLYb1Ni29zFD9AxcNsmcpyrdefWq3Kw@mail.gmail.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <59502915-743e-6756-34e2-f409e61fc03b@codeaurora.org>
-Date:   Mon, 20 Jul 2020 09:59:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Mon, 20 Jul 2020 00:26:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14142 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725263AbgGTE0E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 00:26:04 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06K43MQ1008628;
+        Mon, 20 Jul 2020 00:25:42 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d2m2sm4j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 00:25:41 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06K45Gw7019752;
+        Mon, 20 Jul 2020 00:25:41 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d2m2sm3w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 00:25:41 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06K4Jwqx022224;
+        Mon, 20 Jul 2020 04:25:39 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma02fra.de.ibm.com with ESMTP id 32brq7t044-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 04:25:39 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06K4OLgj42729666
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 04:24:21 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1114BAE058;
+        Mon, 20 Jul 2020 04:24:21 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED8A7AE051;
+        Mon, 20 Jul 2020 04:24:18 +0000 (GMT)
+Received: from [9.199.36.102] (unknown [9.199.36.102])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jul 2020 04:24:18 +0000 (GMT)
+Subject: Re: [PATCH v2 2/3] powerpc/powernv/idle: save-restore DAWR0,DAWRX0
+ for P10
+To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
+References: <20200710052207.12003-1-psampat@linux.ibm.com>
+ <20200710052207.12003-3-psampat@linux.ibm.com>
+Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        mikey@neuling.org, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
+        pratik.r.sampat@gmail.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Message-ID: <c66e239e-6a21-6c3a-c3bd-bd5fb59952f8@linux.ibm.com>
+Date:   Mon, 20 Jul 2020 09:54:11 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+RXcgTVwd_JC8YLYb1Ni29zFD9AxcNsmcpyrdefWq3Kw@mail.gmail.com>
+In-Reply-To: <20200710052207.12003-3-psampat@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_01:2020-07-17,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ clxscore=1011 suspectscore=0 phishscore=0 spamscore=0 lowpriorityscore=0
+ mlxlogscore=697 bulkscore=0 priorityscore=1501 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007200029
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Pratik,
 
-On 7/18/2020 12:26 AM, Rob Herring wrote:
-> On Thu, Jul 16, 2020 at 11:52 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
->>
->>
->> On 7/17/2020 1:29 AM, Rob Herring wrote:
->>> On Thu, Jul 16, 2020 at 11:12:16AM +0530, Rajendra Nayak wrote:
->>>> Add an optional power domain which when specified can be used for
->>>> setting the performance state of Venus.
->>>
->>> The h/w suddenly grew a new power island/domain? Seems like an abuse of
->>> power-domains...
->>
->> The power-domain always existed, we have just managed to survive without
->> having venus support DVFS and have the domain always be at a high performance
->> level (set statically by boot code)
->> Now, if we care to do DVFS and support better PM on the SoC, its important
->> for the devices to manage this additional power domain (and dynamically
->> scale it)
->>
->> That said, if the name 'opp-pd' makes it look like a software construct,
->> like Bjorn mentioned, I am fine to give it a real name like 'cx-pd'
->> Does that sound good?
-> 
-> He suggested 'cx' as '-pd' would be redundant. I have no idea what
-> 'cx' means, but fine.
-> 
->> PS: Like I mentioned earlier [1], cx is a shared power island,
->> not a power island specific to this block, and definitely not a software
->> pm-domain construct.
-> 
-> Put this context/detail into your patches. Assume I don't remember
-> what happened last week.
+On 7/10/20 10:52 AM, Pratik Rajesh Sampat wrote:
+> Additional registers DAWR0, DAWRX0 may be lost on Power 10 for
+> stop levels < 4.
 
-Thanks Rob, will do when I re-post shortly.
+p10 has one more pair DAWR1/DAWRX1. Please include that as well.
 
-> 
-> Unfortunately, gmail seems to have no way to filter on unread mails in
-> reply to my replies and doesn't move the thread up in 'Sent' filter,
-> so older threads get lost.
-> 
-> Rob
-> 
->> [1] https://lore.kernel.org/patchwork/patch/1241077/
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Ravi
