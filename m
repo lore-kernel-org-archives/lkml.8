@@ -2,113 +2,95 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76708C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56E672073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fKkNvz+s";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5h+33h9a"
+	by mail.kernel.org (Postfix) with ESMTP id 571CE206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:31:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262701;
+	bh=FAokqGgeK6mWcP265Yn4T2/8YECIOHBdNrkvb9y7XbA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qQmMpLKxH544UHuDq+gYmR7bkUSwna2kR4MEaef1aH51kwh1Yqia9sVyeBSIs7Bp7
+	 K8lbZXhouZN0WU5Tw15duyxCTo2E9R5tRg5SS07PuKr47XMplB2F3nLhbhts/WYfWI
+	 SLMhpGohb241XCkEn1Bf2PUZ0/tbIZClia8XU6mQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388829AbgGTQb2 (ORCPT
+        id S2388823AbgGTQbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:31:28 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58998 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731437AbgGTP5T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:57:19 -0400
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595260637;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mpdDlH3EimGLSv4f750ktc+2OOIPAdppOAHvCqowA5Q=;
-        b=fKkNvz+sadq6MPtMrYCh1hy00dP2dOSzfdRQN7EFfsRTJkll8GG15efprHHbZHbujucspz
-        GrrBR8wSSY1IkWuuVUKvLiq7s6VTWcmcpECI0Lr0z0YgfkUPvmMgHfqwEpxZV1mA5SFe2/
-        x+bv7GZCzTUwybveKzvh9CV1eFaanAC5UVLD0ziL0ZBau7GlzpZaiWZARmQWaoy7CRFFyC
-        srNwxWbDPcgEtC4g3fos/GNmjaLPZjGYVUreGlcMG4o9z6mQsWlV/jUBFhkmEsNaXSbwXJ
-        Q4GVBCAT7ohlN2Keax5E6zkEMnWihieJdWOPv4dlx3LnQQN86yhTMWbkkgJu8Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595260637;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mpdDlH3EimGLSv4f750ktc+2OOIPAdppOAHvCqowA5Q=;
-        b=5h+33h9aI9H+JMNqGwWtY/kxX9VViJN4xQBCWUDdC+EEq5nuc6hhdknJAEfGXsKfSBKIMN
-        DCxM+f/3wIts5rBw==
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v4 22/24] userfaultfd: Use sequence counter with associated spinlock
-Date:   Mon, 20 Jul 2020 17:55:28 +0200
-Message-Id: <20200720155530.1173732-23-a.darwish@linutronix.de>
-In-Reply-To: <20200720155530.1173732-1-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200720155530.1173732-1-a.darwish@linutronix.de>
+        Mon, 20 Jul 2020 12:31:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731887AbgGTP5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:57:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5969620773;
+        Mon, 20 Jul 2020 15:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260636;
+        bh=FAokqGgeK6mWcP265Yn4T2/8YECIOHBdNrkvb9y7XbA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WvwyELylzVQwEXboB1uqC8TwZCn8+9S5HpubI7Q/BSewB7SVSFyrpQfcHIyGgabkn
+         EMmFjLmlqV6KgX730vnkehPsnzy/c0g7P3z+eZgEGPf9BjoL6N3me9mUf1eKG2s+d+
+         eEjSGf4Hn/War+iVbIXrFiZg36w6+6+Ox28/PYvg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Marshall Midden <marshallmidden@gmail.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 040/215] cifs: prevent truncation from long to int in wait_for_free_credits
+Date:   Mon, 20 Jul 2020 17:35:22 +0200
+Message-Id: <20200720152822.093089179@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+References: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A sequence counter write side critical section must be protected by some
-form of locking to serialize writers. A plain seqcount_t does not
-contain the information of which lock must be held when entering a write
-side critical section.
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-Use the new seqcount_spinlock_t data type, which allows to associate a
-spinlock with the sequence counter. This enables lockdep to verify that
-the spinlock used for writer serialization is held when the write side
-critical section is entered.
+[ Upstream commit 19e888678bac8c82206eb915eaf72741b2a2615c ]
 
-If lockdep is disabled this lock association is compiled out and has
-neither storage size nor runtime overhead.
+The wait_event_... defines evaluate to long so we should not assign it an int as this may truncate
+the value.
 
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Reported-by: Marshall Midden <marshallmidden@gmail.com>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/userfaultfd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/cifs/transport.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 52de29000c7e..26e8b23594fb 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -61,7 +61,7 @@ struct userfaultfd_ctx {
- 	/* waitqueue head for events */
- 	wait_queue_head_t event_wqh;
- 	/* a refile sequence protected by fault_pending_wqh lock */
--	struct seqcount refile_seq;
-+	seqcount_spinlock_t refile_seq;
- 	/* pseudo fd refcounting */
- 	refcount_t refcount;
- 	/* userfaultfd syscall flags */
-@@ -1998,7 +1998,7 @@ static void init_once_userfaultfd_ctx(void *mem)
- 	init_waitqueue_head(&ctx->fault_wqh);
- 	init_waitqueue_head(&ctx->event_wqh);
- 	init_waitqueue_head(&ctx->fd_wqh);
--	seqcount_init(&ctx->refile_seq);
-+	seqcount_spinlock_init(&ctx->refile_seq, &ctx->fault_pending_wqh.lock);
- }
- 
- SYSCALL_DEFINE1(userfaultfd, int, flags)
+diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
+index fe1552cc8a0a7..eafc49de4d7f7 100644
+--- a/fs/cifs/transport.c
++++ b/fs/cifs/transport.c
+@@ -528,7 +528,7 @@ wait_for_free_credits(struct TCP_Server_Info *server, const int num_credits,
+ 		      const int timeout, const int flags,
+ 		      unsigned int *instance)
+ {
+-	int rc;
++	long rc;
+ 	int *credits;
+ 	int optype;
+ 	long int t;
 -- 
-2.20.1
+2.25.1
+
+
 
