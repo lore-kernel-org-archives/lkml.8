@@ -2,172 +2,185 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC62C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF0E20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:28:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bp7rfRoX"
+	by mail.kernel.org (Postfix) with ESMTP id 750B120758
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:35:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595223312;
+	bh=Vs8eYQkx7kgl3E88JLPTiv3cFXNO6L0leozIhUM7bL8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NqUcvjP+59Quf5ojtM9LrL2I/3TwxfqFpQHZ3Ki+jFom4fxkRpSYP2wuHww6TSmwJ
+	 fK4wHzijvowf2QpwSON5k62YsLE3hob56VAkNpYbIfWe0cStHeV1j9j9iyRXginisT
+	 nGux6DjcTn2H7VW8feOppVkHnCUoAw9q8RxkY7D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgGTF2q (ORCPT
+        id S1726199AbgGTFfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 01:28:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725287AbgGTF2q (ORCPT
+        Mon, 20 Jul 2020 01:35:06 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:59389 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725287AbgGTFfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 01:28:46 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2632C0619D2;
-        Sun, 19 Jul 2020 22:28:45 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id t11so6863843qvk.1;
-        Sun, 19 Jul 2020 22:28:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/pPLWH2pAbx1o3stWmvU+LLBgaAPdK0/HVHPrqXWxZ0=;
-        b=bp7rfRoXx85Xod2uY1if/rc8is/p0z/2Lcg+IN+acZrGf5MJHtpV7P2HhgB7N6FXWg
-         wfcrm7i1CGitaXJJ80Ruc2JRtUxYqx+cf/WaQ+GfKi42RZR2+tPuRAu/yCD1v33K4/+Q
-         CUt/dLdvDR+UjdCW2pgdGNTwv0Z1ESzozDqBjiQAZJOUzxKrwGx9ZfteGd4ovMcf/jui
-         9MhShSBUrIm4vvXgGqyATyF4EFebd89G4c/rA3Jnnzqm9xh3oNB6RRsmnA4dFjwq4Cdr
-         hyGu3W5x5OSQQK6AwGRfZxLpn0Bb6nHFs20aObksYenaUW07EAaCJKAcEEJplbnBNfBy
-         /Emg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/pPLWH2pAbx1o3stWmvU+LLBgaAPdK0/HVHPrqXWxZ0=;
-        b=UAvLj1UYVXnOW8z+hS5F6ENw9iDJbMTdkn9srwDv1Wn+TMYJdufijnwntAyP87jyzj
-         ZkNnBvWZcM//n/xHekWIx+2Ixv7ZIpakRmfdoncgdfF8PrJKiqOPrtLmDrIH748RjWTc
-         hZDP5hpEwiA6d3QxSHypdzjR/BXD6XpqXHu/f+qqye/mQTZJr/9Naj6fpQuTKu1fC+s7
-         6PYZ6isQ9RdmBTvGhH29hwMRzU6UdajEST4QoonRwZ1k0sLg0qS6Q6wc7Qxa0B/uCL6k
-         qzNizizxKMBWB3ysZXiMFJIhInGFF7aybmlFT6+tWCQaMBgViYYhEy6Mm/mFqMn2q5qA
-         9c6A==
-X-Gm-Message-State: AOAM530iLH1Lo2HvPagSpy7z3eqGavyaOKVSbFxJNJ4apvHt/Fc8RYze
-        /z1CKuNhWVO28MSr3B9jX6AZTEHAwIYOrt1kGRE=
-X-Google-Smtp-Source: ABdhPJy0EA3lpXmrDf+zf1q3j2pxPWCxo+u84HKXJN1t0t/3YbTo9GGUPSdeJ9gRq+B645tvZsR4Y0n/iYequIQPjJw=
-X-Received: by 2002:a05:6214:8f4:: with SMTP id dr20mr19119695qvb.228.1595222924959;
- Sun, 19 Jul 2020 22:28:44 -0700 (PDT)
+        Mon, 20 Jul 2020 01:35:05 -0400
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 06K5Yf3B019300;
+        Mon, 20 Jul 2020 14:34:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 06K5Yf3B019300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1595223282;
+        bh=KfseE0rIwknFNrPnmK3Q/BxEuZPCQFuZlz7zWwsrho8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=flkRditPM6L1rRdZFHRdC2nzqIqqyk5PYUNc++vV0engYM43NhDxeS+8KZDEk9DFm
+         SOZLk8badgBe+JNjIJc1xgjcg+h8a2rcvfMRKxvyuq26F+T7ymj5RQt5BUV1So26Hp
+         4vsQ3Gx5oWP3JCWhA/gnO8sMiojQ3QQjVCdXwOiig5mXC4aSTHejE1EfwDWzJHDdLw
+         rAnOoE1pLuQJp32l4PngTIoJDwuLWw8Ok+pLqtLe9LKHdJhOpviji8Hs8GfkHPmyaS
+         no0lmUQBcMFRvg0tJCr6MI6Qe2ReLaikNXrAYJdQDvJ6POLU7nTXA8SMCwCGPpTlSA
+         b6HhmoV/K8DvA==
+X-Nifty-SrcIP: [209.85.221.175]
+Received: by mail-vk1-f175.google.com with SMTP id h190so3408366vkh.6;
+        Sun, 19 Jul 2020 22:34:41 -0700 (PDT)
+X-Gm-Message-State: AOAM530Loh8kqtQog5l8OvAc+g+sINe3twQJoZ06oh9ds51UH7fZrM1B
+        nv1YwXJDOXNNUdS/m0W7CDRp489WjiBBJbwz0YU=
+X-Google-Smtp-Source: ABdhPJz1qcPuKudWuH0GqkFKw3kE4TenvYbK9UusIqrwzz86YrHAWPyrltYv7PSIP7XzQ0Kq5wdJzFBKTcBVZFKHZak=
+X-Received: by 2002:a1f:2241:: with SMTP id i62mr8763711vki.26.1595223280657;
+ Sun, 19 Jul 2020 22:34:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200715214312.2266839-1-haoluo@google.com> <20200715214312.2266839-3-haoluo@google.com>
-In-Reply-To: <20200715214312.2266839-3-haoluo@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Sun, 19 Jul 2020 22:28:34 -0700
-Message-ID: <CAEf4BzYxWk9OmN0QhDrvE943YsYd2Opdkbt7NQTO9-YM6c4aGw@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next 2/2] selftests/bpf: Test __ksym externs with BTF
-To:     Hao Luo <haoluo@google.com>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin@isovalent.com>
+References: <20191123160444.11251-1-yamada.masahiro@socionext.com>
+ <20191123160444.11251-14-yamada.masahiro@socionext.com> <alpine.LNX.2.23.453.2007201132240.8@nippy.intranet>
+In-Reply-To: <alpine.LNX.2.23.453.2007201132240.8@nippy.intranet>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 20 Jul 2020 14:34:04 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATVDfHJG=+G6DqkR-vSyVhb8KmxcT0ae+ukdi_otthi8A@mail.gmail.com>
+Message-ID: <CAK7LNATVDfHJG=+G6DqkR-vSyVhb8KmxcT0ae+ukdi_otthi8A@mail.gmail.com>
+Subject: Re: [PATCH v2 13/16] scripts/kallsyms: move ignored symbol types to is_ignored_symbol()
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 2:46 PM Hao Luo <haoluo@google.com> wrote:
+On Mon, Jul 20, 2020 at 10:46 AM Finn Thain <fthain@telegraphics.com.au> wrote:
 >
-> Extend ksyms.c selftest to make sure BTF enables direct loads of ksyms.
+> On Sun, 24 Nov 2019, Masahiro Yamada wrote:
 >
-> Note that test is done against the kernel btf extended with kernel VARs.
+> > Collect the ignored patterns to is_ignored_symbol().
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 >
-> Signed-off-by: Hao Luo <haoluo@google.com>
-> ---
->  tools/testing/selftests/bpf/prog_tests/ksyms.c |  2 ++
->  tools/testing/selftests/bpf/progs/test_ksyms.c | 14 ++++++++++++++
->  2 files changed, 16 insertions(+)
+> This commit (887df76de67f5) caused a regression in my powerpc builds as it
+> causes symbol names to disappear from backtraces:
 >
-> diff --git a/tools/testing/selftests/bpf/prog_tests/ksyms.c b/tools/testing/selftests/bpf/prog_tests/ksyms.c
-> index e3d6777226a8..0e7f3bc3b0ae 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/ksyms.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/ksyms.c
-> @@ -65,6 +65,8 @@ void test_ksyms(void)
->               "got %llu, exp %llu\n", data->out__btf_size, btf_size);
->         CHECK(data->out__per_cpu_start != 0, "__per_cpu_start",
->               "got %llu, exp %llu\n", data->out__per_cpu_start, (__u64)0);
-> +       CHECK(data->out__rq_cpu != 0, "rq_cpu",
-> +             "got %llu, exp %llu\n", data->out__rq_cpu, (__u64)0);
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 0 at kernel/smp.c:433 _einittext+0x3f9e5120/0x3feb71b8
+> Modules linked in:
+> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc7-pmac-00055-g887df76de67f5 #18
+> NIP:  c00aef68 LR: c00af114 CTR: c001272c
+> REGS: c0705c40 TRAP: 0700   Not tainted  (5.4.0-rc7-pmac-00055-g887df76de67f5)
+> MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 42000044  XER: 00000000
 >
->  cleanup:
->         test_ksyms__destroy(skel);
-> diff --git a/tools/testing/selftests/bpf/progs/test_ksyms.c b/tools/testing/selftests/bpf/progs/test_ksyms.c
-> index 6c9cbb5a3bdf..e777603757e5 100644
-> --- a/tools/testing/selftests/bpf/progs/test_ksyms.c
-> +++ b/tools/testing/selftests/bpf/progs/test_ksyms.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /* Copyright (c) 2019 Facebook */
+> GPR00: 001f0100 c0705cf8 c06dc300 c070af1c c001258c 00000000 00000000 ef7fb5bc
+> GPR08: 08800000 00000100 00000001 00000100 42000044 00000000 c0709040 00000004
+> GPR16: 00000001 c06022b4 c058297c 00200002 ffff8cb9 00000000 c06d84a0 c0710000
+> GPR24: c0710000 00000000 00000000 c070af1c c070af1c 00000000 c001258c 00000000
+> NIP [c00aef68] _einittext+0x3f9e5120/0x3feb71b8
+> LR [c00af114] _einittext+0x3f9e52cc/0x3feb71b8
+> Call Trace:
+> [c0705cf8] [ef006320] 0xef006320 (unreliable)
+> [c0705d38] [c00af114] _einittext+0x3f9e52cc/0x3feb71b8
+> [c0705d48] [c00af158] _einittext+0x3f9e5310/0x3feb71b8
+> [c0705d68] [c0012768] _einittext+0x3f948920/0x3feb71b8
+> [c0705d78] [c0092c04] _einittext+0x3f9c8dbc/0x3feb71b8
+> [c0705d88] [c0092d18] _einittext+0x3f9c8ed0/0x3feb71b8
+> [c0705da8] [c0093a2c] _einittext+0x3f9c9be4/0x3feb71b8
+> [c0705de8] [c0580224] _einittext+0x3feb63dc/0x3feb71b8
+> [c0705e48] [c00382ec] _einittext+0x3f96e4a4/0x3feb71b8
+> [c0705e58] [c000d2a0] _einittext+0x3f943458/0x3feb71b8
+> [c0705e88] [c001353c] _einittext+0x3f9496f4/0x3feb71b8
+> --- interrupt: 901 at _einittext+0x3f941058/0x3feb71b8
+>     LR = _einittext+0x3f941058/0x3feb71b8
+> [c0705f50] [c06cc214] 0xc06cc214 (unreliable)
+> [c0705f60] [c057fa20] _einittext+0x3feb5bd8/0x3feb71b8
+> [c0705f70] [c005de48] _einittext+0x3f994000/0x3feb71b8
+> [c0705f90] [c005e050] _einittext+0x3f994208/0x3feb71b8
+> [c0705fa0] [c0004cc8] _einittext+0x3f93ae80/0x3feb71b8
+> [c0705fb0] [c069a36c] _einittext+0x3ffd0524/0x40000000
+> [c0705ff0] [00003500] 0x3500
+> Instruction dump:
+> 7c0803a6 7fa5eb78 7d808120 7ea6ab78 baa10014 38210040 4bfffbb0 7f64db78
+> 7f85e378 484b31b1 7c601b78 4bfffdf4 <0fe00000> 4bfffd60 9421ffe0 7c0802a6
+> ---[ end trace a06fef4788747c72 ]---
 >
-> +#include "vmlinux.h"
->  #include <stdbool.h>
->  #include <linux/bpf.h>
->  #include <bpf/bpf_helpers.h>
-> @@ -9,11 +10,13 @@ __u64 out__bpf_link_fops = -1;
->  __u64 out__bpf_link_fops1 = -1;
->  __u64 out__btf_size = -1;
->  __u64 out__per_cpu_start = -1;
-> +__u64 out__rq_cpu = -1;
 >
->  extern const void bpf_link_fops __ksym;
->  extern const void __start_BTF __ksym;
->  extern const void __stop_BTF __ksym;
->  extern const void __per_cpu_start __ksym;
-> +extern const void runqueues __ksym;
+> Prior to that (e.g. 97261e1e2240f), I get backtraces like this:
+>
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 0 at kernel/smp.c:433 smp_call_function_many+0x318/0x320
+> Modules linked in:
+> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc7-pmac-00054-g97261e1e2240f #20
+> NIP:  c00aef68 LR: c00af114 CTR: c001272c
+> REGS: c075dc40 TRAP: 0700   Not tainted  (5.4.0-rc7-pmac-00054-g97261e1e2240f)
+> MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 42000044  XER: 00000000
+>
+> GPR00: 001f0100 c075dcf8 c0733300 c0762f1c c001258c 00000000 00000000 ef7fb5bc
+> GPR08: 04800000 00000100 00000001 00000100 42000044 00000000 c0761040 00000004
+> GPR16: 00000001 c0658e58 c058297c 00200002 ffff8cb9 00000000 c072f4a0 c0760000
+> GPR24: c0760000 00000000 00000000 c0762f1c c0762f1c 00000000 c001258c 00000000
+> NIP [c00aef68] smp_call_function_many+0x318/0x320
+> LR [c00af114] smp_call_function+0x34/0x44
+> Call Trace:
+> [c075dcf8] [ef006320] 0xef006320 (unreliable)
+> [c075dd38] [c00af114] smp_call_function+0x34/0x44
+> [c075dd48] [c00af158] on_each_cpu+0x1c/0x4c
+> [c075dd68] [c0012768] tau_timeout_smp+0x3c/0x4c
+> [c075dd78] [c0092c04] call_timer_fn.isra.26+0x20/0x84
+> [c075dd88] [c0092d18] expire_timers+0xb0/0xc0
+> [c075dda8] [c0093a2c] run_timer_softirq+0xa4/0x1a4
+> [c075dde8] [c0580224] __do_softirq+0x11c/0x280
+> [c075de48] [c00382ec] irq_exit+0xc0/0xd4
+> [c075de58] [c000d2a0] timer_interrupt+0x154/0x260
+> [c075de88] [c001353c] ret_from_except+0x0/0x14
+> --- interrupt: 901 at arch_cpu_idle+0x24/0x78
+>     LR = arch_cpu_idle+0x24/0x78
+> [c075df50] [c0723214] 0xc0723214 (unreliable)
+> [c075df60] [c057fa20] default_idle_call+0x38/0x58
+> [c075df70] [c005de48] do_idle+0xd4/0x17c
+> [c075df90] [c005e054] cpu_startup_entry+0x24/0x28
+> [c075dfa0] [c0004cc8] rest_init+0xa8/0xbc
+> [c075dfb0] [c06f136c] start_kernel+0x40c/0x420
+> [c075dff0] [00003500] 0x3500
+> Instruction dump:
+> 7c0803a6 7fa5eb78 7d808120 7ea6ab78 baa10014 38210040 4bfffbb0 7f64db78
+> 7f85e378 484b31b1 7c601b78 4bfffdf4 <0fe00000> 4bfffd60 9421ffe0 7c0802a6
+> ---[ end trace 784c7f15ecd23941 ]---
+>
+> Has anyone else observed these problems (either the WARNING from
+> smp_call_function_many() or the missing symbol names)?
+>
+> What is the best way to fix this? Should I upgrade binutils?
 
-This should ideally look like a real global variable extern:
-
-extern const struct rq runqueues __ksym;
 
 
-But that's the case for non-per-cpu variables. You didn't seem to
-address per-CPU variables in this patch set. How did you intend to
-handle that? We should look at a possible BPF helper to access such
-variables as well and how the verifier will prevent direct memory
-accesses for such variables.
+I got a similar report before.
 
-We should have some BPF helper that accepts per-CPU PTR_TO_BTF_ID, and
-returns PTR_TO_BTF_ID, but adjusted to desired CPU. And verifier
-ideally would allow direct memory access on that resulting
-PTR_TO_BTF_ID, but not on per-CPU one. Not sure yet how this should
-look like, but the verifier probably needs to know that variable
-itself is per-cpu, no?
+I'd like to know whether or not
+this is the same issue as fixed by
+7883a14339299773b2ce08dcfd97c63c199a9289
 
->  /* non-existing symbol, weak, default to zero */
->  extern const void bpf_link_fops1 __ksym __weak;
->
-> @@ -29,4 +32,15 @@ int handler(const void *ctx)
->         return 0;
->  }
->
-> +SEC("tp_btf/sys_enter")
-> +int handler_tp_btf(const void *ctx)
-> +{
-> +       const struct rq *rq = &runqueues;
-> +
-> +       /* rq now points to the runqueue of cpu 0. */
-> +       out__rq_cpu = rq->cpu;
-> +
-> +       return 0;
-> +}
-> +
->  char _license[] SEC("license") = "GPL";
-> --
-> 2.27.0.389.gc38d7665816-goog
->
+
+Does your problem happen on the latest kernel?
+Which version of binutils are you using?
+
+
+-- 
+Best Regards
+Masahiro Yamada
