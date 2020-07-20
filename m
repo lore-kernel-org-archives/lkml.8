@@ -2,106 +2,130 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E598C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23074C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2614A2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D28532064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:06:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CTBxu60h"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="UDZSFH6O";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="cIBtaV7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbgGTED4 (ORCPT
+        id S1726135AbgGTEGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 00:03:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725263AbgGTED4 (ORCPT
+        Mon, 20 Jul 2020 00:06:07 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:31805 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgGTEGG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 00:03:56 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B379C0619D2;
-        Sun, 19 Jul 2020 21:03:56 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B97Pw6sbYz9sRW;
-        Mon, 20 Jul 2020 14:03:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595217833;
-        bh=OcY+Ne7vqBdLxjtQfG1gVX1Q4F+5772mkCwouUBaQZ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CTBxu60hNGJAbPCCy/hV+e51xBKhf698iS1sOhbF9n9//gKUw9Kmw/UCS7vWsD7Y4
-         3ix8hChWp7WlhNgaewECkLABV7YSI7+aY0LxY34wj/dBfO1bIGSMbTspUlqE60ZwJt
-         r7EfhWA76xnOMX19tHemU7eag8Are/HlPLpbxjMdR8FtZy9oTg/FX5nN12gtffY7c+
-         PAY7ncIqqn0RJ6Us8cYAIhOeBq50KQvmbJ9w43/y5qw/8+QsYK5aZNO+bCYug27tx3
-         CtUGjh/H9YQg1WY4xNUzw5Fj/qTDVDQdaayfIBqLG5QYzvfpi/vMnjKNJj8Mtmj6XN
-         szOdiJoXQzzow==
-Date:   Mon, 20 Jul 2020 14:03:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Uros Bizjak <ubizjak@gmail.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Crypto List <linux-crypto@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: linux-next: manual merge of the tip tree with the crypto tree
-Message-ID: <20200720140346.109a3006@canb.auug.org.au>
-In-Reply-To: <CAFULd4b9O+KJKwjQTB1PTuxMEDSDMov0rQaE85+9pfRrd02dKw@mail.gmail.com>
-References: <20200717144656.4bdbf81f@canb.auug.org.au>
-        <CAFULd4Ye2d-8BY7aY+_2tYwcXsfSCe3O6aJ4LF0KhvWTjVt0rA@mail.gmail.com>
-        <20200717064401.GB2504@gondor.apana.org.au>
-        <CAFULd4b9O+KJKwjQTB1PTuxMEDSDMov0rQaE85+9pfRrd02dKw@mail.gmail.com>
+        Mon, 20 Jul 2020 00:06:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1595217967; x=1626753967;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=h79+9Q7ofbczWg8SdL29z9wSn1IWeHZ/+baHaRhqp4k=;
+  b=UDZSFH6OecWoQzDpTCMkZTWgpbnrS/IHYZBx5Xsvvm0+1g2M/jFNeRD/
+   /y/cVxHTTwMtZKOQT62MdFqzPbgfmoPg0s6Vm3lv8/sq/R4Hw/SXTjVV6
+   v/tK3N5vlZps4Zncxlz8nCbIfkHUerpYcPeSu6prdfYOOBB8WWA/Q2C4+
+   0ucrp/VuSG9RUjHYIvooKCqUtV7+vrlTREPySZlBCk0KyKAMGIwkzuhIs
+   X72cZ2TA/6FK539P1QPha29aUzVnCWPjCjV/cHe0ceb8j1hfttZsBjMrJ
+   a7I3nxbuXvXrW6uFd0X7Z57n7y59re6c+wbzEVakEqVP0vcAW31U52s08
+   w==;
+IronPort-SDR: UhQB7twqGSGrTGFLv4AzOCnq5+1CRXvz42e0p6+eqn4Ezj6sfoqO4GGk2cBt/lwCuV5Fjki4t6
+ dFv94gSEM+Pinsducnca7+OMXQeJ27poiOWMVrruFn5z4jEsYqY+yCPA7s+SLAmWeUJsWkznvE
+ p9+qIexkX0tCB/Pp85V5WLBZcCizSzUZaJWfnQhAVp02HkTpC+WbcqAFmrnEyMKrJIkwz2ySPJ
+ p6c/WJB1hlAGDSOXkeBOk6QCpIxajhSli+1iMdBmlKYlrhLrAwkfWYA4FRdG0MPqO6lV9Ac4k0
+ 9+c=
+X-IronPort-AV: E=Sophos;i="5.75,373,1589212800"; 
+   d="scan'208";a="142979173"
+Received: from mail-mw2nam12lp2049.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.49])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Jul 2020 12:06:06 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZHI+wvd8buRGmkzkWjpmjBogTMJuUwllSv+ZgP1en7gki3ScvhgVEdKCQZXWbDQ8JxyNoEAs4WAMz7gk1lYXkDj6EmIdFF9UEiyYv49LSLPVDBUiZ+QmW9EuQwQQ6umb2AAIjSNDjPVu6CYfcjsnXEAqHuCFbsXL0g/iItOXwI3tBzha4eTzMzkFKt4IX9dDAiz16wR9blTGnYcxq51xwssZbd5sbtuUgxZl51xWBJbllknxHCEWtjS1LKhd97fgADQHsrq+TOpFyPf0CHhTdU+VFykvX6/SCZNwHyamYxsO10Xin0QWh88VTNUKj2VgQ4g0kbNu4TyZeFERLd2ItQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h79+9Q7ofbczWg8SdL29z9wSn1IWeHZ/+baHaRhqp4k=;
+ b=K+Hri2l7QkyLBkAkdhYUMTNYTym0XLI3KZLza9aUWjkJsB2f7xK/NbYR5EorqSG04sOUX9Y7lytzRt26pt7XvlU7A7btjtyjUmK4kDUL+65VmIaGD+sDWxXXecn9LOLLE0TabUcM2bZSfgqT8ohByGV4yCDeVYpa/8afNZtLs2d4Oue8EOJFNm7UQNty201fSnYIWmN0Gq2nLbklT73LDtE/84vvFBlrEEpIWkNOzae32DHL/E9sWPDa2mmdlvSomF92E/8PgzQYfmogx0VWBFqNhtE6jHyBMnCgG7f2OFvmlygYA6FkJdLNbi2sUXbz3u9/11IbTbPpZjWAs6jKAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h79+9Q7ofbczWg8SdL29z9wSn1IWeHZ/+baHaRhqp4k=;
+ b=cIBtaV7e+huBektu2PAg6fHlNWDKs2DVDlf33LEThiz4/32A4MqTBDdwx2ae7BAg1oWEBm637qtKbie3/G98M4G8ro/jLbXmNNUfJ1zgal5rur6GJSvmUBaZ+TJe36FoTG9eya4dJ6BVkHvAIC1OSjGvVW7pvlGhpIhNq+VdHGY=
+Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
+ by BYAPR04MB4967.namprd04.prod.outlook.com (2603:10b6:a03:4f::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Mon, 20 Jul
+ 2020 04:06:05 +0000
+Received: from BYAPR04MB4965.namprd04.prod.outlook.com
+ ([fe80::98a4:d2c9:58c5:dee4]) by BYAPR04MB4965.namprd04.prod.outlook.com
+ ([fe80::98a4:d2c9:58c5:dee4%5]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
+ 04:06:05 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Wang Long <w@laoqinren.net>,
+        "willy@infradead.org" <willy@infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] xarray: update document for error space returned by
+ xarray normal API
+Thread-Topic: [PATCH] xarray: update document for error space returned by
+ xarray normal API
+Thread-Index: AQHWXkn7BxezHRh6hEOAbDMWJCwrQw==
+Date:   Mon, 20 Jul 2020 04:06:05 +0000
+Message-ID: <BYAPR04MB4965B56CA2FC5FAA812EDED3867B0@BYAPR04MB4965.namprd04.prod.outlook.com>
+References: <1595217437-48158-1-git-send-email-w@laoqinren.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: laoqinren.net; dkim=none (message not signed)
+ header.d=none;laoqinren.net; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [199.255.45.62]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c057fd8b-e370-4ecb-8d97-08d82c62393c
+x-ms-traffictypediagnostic: BYAPR04MB4967:
+x-microsoft-antispam-prvs: <BYAPR04MB49679A75FC8B152BD8AFCC93867B0@BYAPR04MB4967.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:901;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: cJ2kf+pDgsgciwQE9GHpKyBokqUN1vienSy6PhiR2wI7WuCpqAZ2FtY23EmCMgtey2Zd7Cy/MOZSS+w6HpztEYo3h7uNFN/SWwxnTEKJtOrV92AiGVkdunM0N/sgtus5Nzcs/h+YSBiSTAoi0nhdklzE/bX4tULaPLDLoAp3q4GIYzJ4tMyGu7OZQDoNRBZvVTWbOlyGhHPHkVbLlWR1Y51P+za7jOXwo6pE01bHfVq/2Fi575FUyavEt/QdKyaBh1WTR7HamLVHxx2qJcVHn5umaODgTqPCmYYANi8h0OxIPGv7EDXiPqra07/92C2A3QOS5ufHcHP4mitn+M2l1zZijmDEmDAJzp3E2JaetsB+3wgL0xAv1aQo4d6TB6Xs
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(396003)(39860400002)(366004)(136003)(66946007)(76116006)(66476007)(66556008)(66446008)(64756008)(5660300002)(86362001)(52536014)(71200400001)(54906003)(316002)(2906002)(6506007)(7696005)(186003)(8936002)(33656002)(26005)(110136005)(9686003)(55016002)(4326008)(478600001)(53546011)(558084003)(8676002)(781001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: pMw+Edk9mSeN6RZ5dvIGYUh3lna7FR55OAl37lG/mdO8xlpJw5fvedf2Az/Vs8baz4YJ8H/OTggwj0VH72MEl9vFLBMNG/zxKlzqX9jv2FkA3c7ibFUb1aa98Yje7FNlxrq+j0O4i2oPxK3f/Ebjjmt+MGi3GBmb+IPiX4tcyKeVvhQRrW6iOXebm7VDmUnx3Y2V6TACE3uLlfXIV3mFcJXTOWcMJtezqrXAYROeWY/Osk27phfgrlT7ANikDCbOLZokbL2pMqAEOnxtfDZA2gRW+Ijtul/rpd4EwdNgB+StTj9wvsflz6Z1BHpZs8lC9M649nRHPZ/wQmLOWqxB1biZ6JT+S/EP0s3X5kLaBZul4fr2YNdPfU6/6Q+QTXDsVUeLNfHDQJW19Rg+VmdNmj8kr6LwTkvr94ebLEl+h06akx3Ma42dkiI8qADKu/YcX3AT591JVX4a9vVl010rqXdEA94GzEJKjeri7s4D9v4=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qJXKyrG4d4dA/22o/ihB5O8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB4965.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c057fd8b-e370-4ecb-8d97-08d82c62393c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 04:06:05.0302
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CkXbbrf/texO5+NcWyL/cmoFgXv1VnPbtrpXgYsRrlIICfvvGVKmKPBt1e64BBLotjFvukaWljTcA7pc8dQxdfi9TaF5r3zZ1b8nNGX4slU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4967
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qJXKyrG4d4dA/22o/ihB5O8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Uros,
-
-On Fri, 17 Jul 2020 09:31:18 +0200 Uros Bizjak <ubizjak@gmail.com> wrote:
->
-> Please find attached the incremental patch that puts back integer
-> parts of inst.h. This resolves the conflict with the tip tree.
-
-The tip tree change needs the XMM parts kept as well, sorry.
-
-So I ended up just removing the actual now unused crypto instruction
-macros.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/qJXKyrG4d4dA/22o/ihB5O8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8VF6IACgkQAVBC80lX
-0Gz6GQf+OKDf0YYb4uBRmcWB0VQx2DEFV1NAm1t1xR5m8NNS+PMR3EBdAWPueiTe
-enkl3448LXZiuKvqycKJz7AHqMu/fNPKQJrLnCS1d7NLj6UcTrNEaXrFHUym4D7/
-M1PEFlnRsDWkhmBM2/f93KJ8R2q543YQjT6HRswTn1vm3wTXPUuqxX2d0P9kClNg
-Vt4nYDrs0jXnQ/F9FcIeCz/hXV+cCrlLk5K8bwwnITO2bXBu91DED/TuEQfFel2B
-D8zrMaT0uf4KbaaQxVpkIdtN0IyvbGcbfdM+THHt/k/zK49LfilUBbEPYQLrc9n6
-lK8pEYAYZzuTyDNVjjXpeS83dzwWNw==
-=CZ+b
------END PGP SIGNATURE-----
-
---Sig_/qJXKyrG4d4dA/22o/ihB5O8--
+On 7/19/20 20:58, Wang Long wrote:=0A=
+> xa_is_error(xa_mk_internal(-4095)) and xa_is_error(xa_mk_internal(-1))=0A=
+> are all return true.=0A=
+=0A=
+'s/xa_is_error()/xa_is_err()/` ?=0A=
+=0A=
+=0A=
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
