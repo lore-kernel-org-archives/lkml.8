@@ -4,58 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07718C2BBCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C78C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFDBD22BF5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14CA022CB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281159;
-	bh=dVQ0hwlWWpDvG5Xm+0dZcSPdLlPaxjOtR+QNtoShlzE=;
+	s=default; t=1595281167;
+	bh=gsPJusJ2WJfAmoKVDrtfaIh+MKZOfkh8nvK442dShYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DJI1GH8ZJj2u3XryN5B9Dedm1HdLFykRailjAVmxYvjFNMb2EIz/A6ko4ps91a53g
-	 pBEebzFETDjQmugSxe9kv6qQJ5vlpA1ZYdBJOIZeZUIEraP0evXjFfD3regY1rJisC
-	 08IkQm476DdWVZOt/BUCTdcWgRUDmNovAR5ptjSU=
+	b=UXv3ONc84W3dGuBulToQU5BTKO8bjdlqqDKbh5nkWsvKNMCAvcIM8DU1uChzmMYiU
+	 Hafu/UC2gIqBWqaLm4b8jyYBH2z2wMxfNTOFu4UdfGV1qrcl6mxrZVuCfw/2ytIeuV
+	 PCfgxYB0tcDrSjmewXFYNgUOIDNGND7rcTgELp3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgGTVjS (ORCPT
+        id S1728455AbgGTVjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:39:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57566 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:39:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728242AbgGTViq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:46 -0400
+        id S1728291AbgGTVi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9352822D0B;
-        Mon, 20 Jul 2020 21:38:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9478D22CF7;
+        Mon, 20 Jul 2020 21:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281125;
-        bh=dVQ0hwlWWpDvG5Xm+0dZcSPdLlPaxjOtR+QNtoShlzE=;
+        s=default; t=1595281136;
+        bh=gsPJusJ2WJfAmoKVDrtfaIh+MKZOfkh8nvK442dShYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LzTVT6maV93tQpnPVIYn3zOM15RlZ+wBG3qzaiaoUehtBBhBJ2JecHfqkqrOxzJ3h
-         d3SRmzssA6ni+g7z82yaZrR8K+T7wX4oB09RWivzMD+TyzZN64RqOLMxs/7CGMLmav
-         5twBvSMXGMtIhm2Im3wtkJaOQ84xM0IMEvkSN0aU=
+        b=aKOsZgk3edSalwlWzRsyOARH9gLY0n/+hWbLW4AmUFZZXOY6dyEm/jWBZYQ7g9Y6e
+         gbZExbhgYi8FIonDRHwFTlg7WCSjJxdNxi4FIMca+mDrufIgpmT54TySmxb229NXJJ
+         v8bTFnxfgorHyAZR+eobF9Qyb5sou1Xna3znxqP8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Guo Ren <guoren@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-arch@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 31/34] asm-generic/mmiowb: Allow mmiowb_set_pending() when preemptible()
-Date:   Mon, 20 Jul 2020 17:38:04 -0400
-Message-Id: <20200720213807.407380-31-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Joao Moreno <mail@joaomoreno.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 04/19] HID: apple: Disable Fn-key key-re-mapping on clone keyboards
+Date:   Mon, 20 Jul 2020 17:38:35 -0400
+Message-Id: <20200720213851.407715-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
-References: <20200720213807.407380-1-sashal@kernel.org>
+In-Reply-To: <20200720213851.407715-1-sashal@kernel.org>
+References: <20200720213851.407715-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -65,83 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit bd024e82e4cd95c7f1a475a55f99871936c2b2db ]
+[ Upstream commit a5d81646fa294eed57786a9310b06ca48902adf8 ]
 
-Although mmiowb() is concerned only with serialising MMIO writes occuring
-in contexts where a spinlock is held, the call to mmiowb_set_pending()
-from the MMIO write accessors can occur in preemptible contexts, such
-as during driver probe() functions where ordering between CPUs is not
-usually a concern, assuming that the task migration path provides the
-necessary ordering guarantees.
+The Maxxter KB-BT-001 Bluetooth keyboard, which looks somewhat like the
+Apple Wireless Keyboard, is using the vendor and product IDs (05AC:0239)
+of the Apple Wireless Keyboard (2009 ANSI version) <sigh>.
 
-Unfortunately, the default implementation of mmiowb_set_pending() is not
-preempt-safe, as it makes use of a a per-cpu variable to track its
-internal state. This has been reported to generate the following splat
-on riscv:
+But its F1 - F10 keys are marked as sending F1 - F10, not the special
+functions hid-apple.c maps them too; and since its descriptors do not
+contain the HID_UP_CUSTOM | 0x0003 usage apple-hid looks for for the
+Fn-key, apple_setup_input() never gets called, so F1 - F6 are mapped
+to key-codes which have not been set in the keybit array causing them
+to not send any events at all.
 
- | BUG: using smp_processor_id() in preemptible [00000000] code: swapper/0/1
- | caller is regmap_mmio_write32le+0x1c/0x46
- | CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-hfu+ #1
- | Call Trace:
- |  walk_stackframe+0x0/0x7a
- |  dump_stack+0x6e/0x88
- |  regmap_mmio_write32le+0x18/0x46
- |  check_preemption_disabled+0xa4/0xaa
- |  regmap_mmio_write32le+0x18/0x46
- |  regmap_mmio_write+0x26/0x44
- |  regmap_write+0x28/0x48
- |  sifive_gpio_probe+0xc0/0x1da
+The lack of a usage code matching the Fn key in the clone is actually
+useful as this allows solving this problem in a generic way.
 
-Although it's possible to fix the driver in this case, other splats have
-been seen from other drivers, including the infamous 8250 UART, and so
-it's better to address this problem in the mmiowb core itself.
+This commits adds a fn_found flag and it adds a input_configured
+callback which checks if this flag is set once all usages have been
+mapped. If it is not set, then assume this is a clone and clear the
+quirks bitmap so that the hid-apple code does not add any special
+handling to this keyboard.
 
-Fix mmiowb_set_pending() by using the raw_cpu_ptr() to get at the mmiowb
-state and then only updating the 'mmiowb_pending' field if we are not
-preemptible (i.e. we have a non-zero nesting count).
+This fixes F1 - F6 not sending anything at all and F7 - F12 sending
+the wrong codes on the Maxxter KB-BT-001 Bluetooth keyboard and on
+similar clones.
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Guo Ren <guoren@kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Reported-by: Palmer Dabbelt <palmer@dabbelt.com>
-Reported-by: Emil Renner Berthing <kernel@esmil.dk>
-Tested-by: Emil Renner Berthing <kernel@esmil.dk>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Link: https://lore.kernel.org/r/20200716112816.7356-1-will@kernel.org
-Signed-off-by: Will Deacon <will@kernel.org>
+Cc: Joao Moreno <mail@joaomoreno.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/asm-generic/mmiowb.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/hid/hid-apple.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/include/asm-generic/mmiowb.h b/include/asm-generic/mmiowb.h
-index 9439ff037b2d1..5698fca3bf560 100644
---- a/include/asm-generic/mmiowb.h
-+++ b/include/asm-generic/mmiowb.h
-@@ -27,7 +27,7 @@
- #include <asm/smp.h>
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index 8ab8f2350bbcd..b58ab769aa7b3 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -57,6 +57,7 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
+ struct apple_sc {
+ 	unsigned long quirks;
+ 	unsigned int fn_on;
++	unsigned int fn_found;
+ 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
+ };
  
- DECLARE_PER_CPU(struct mmiowb_state, __mmiowb_state);
--#define __mmiowb_state()	this_cpu_ptr(&__mmiowb_state)
-+#define __mmiowb_state()	raw_cpu_ptr(&__mmiowb_state)
- #else
- #define __mmiowb_state()	arch_mmiowb_state()
- #endif	/* arch_mmiowb_state */
-@@ -35,7 +35,9 @@ DECLARE_PER_CPU(struct mmiowb_state, __mmiowb_state);
- static inline void mmiowb_set_pending(void)
+@@ -342,12 +343,15 @@ static int apple_input_mapping(struct hid_device *hdev, struct hid_input *hi,
+ 		struct hid_field *field, struct hid_usage *usage,
+ 		unsigned long **bit, int *max)
  {
- 	struct mmiowb_state *ms = __mmiowb_state();
--	ms->mmiowb_pending = ms->nesting_count;
++	struct apple_sc *asc = hid_get_drvdata(hdev);
 +
-+	if (likely(ms->nesting_count))
-+		ms->mmiowb_pending = ms->nesting_count;
+ 	if (usage->hid == (HID_UP_CUSTOM | 0x0003) ||
+ 			usage->hid == (HID_UP_MSVENDOR | 0x0003) ||
+ 			usage->hid == (HID_UP_HPVENDOR2 | 0x0003)) {
+ 		/* The fn key on Apple USB keyboards */
+ 		set_bit(EV_REP, hi->input->evbit);
+ 		hid_map_usage_clear(hi, usage, bit, max, EV_KEY, KEY_FN);
++		asc->fn_found = true;
+ 		apple_setup_input(hi->input);
+ 		return 1;
+ 	}
+@@ -374,6 +378,19 @@ static int apple_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+ 	return 0;
  }
  
- static inline void mmiowb_spin_lock(void)
++static int apple_input_configured(struct hid_device *hdev,
++		struct hid_input *hidinput)
++{
++	struct apple_sc *asc = hid_get_drvdata(hdev);
++
++	if ((asc->quirks & APPLE_HAS_FN) && !asc->fn_found) {
++		hid_info(hdev, "Fn key not found (Apple Wireless Keyboard clone?), disabling Fn key handling\n");
++		asc->quirks = 0;
++	}
++
++	return 0;
++}
++
+ static int apple_probe(struct hid_device *hdev,
+ 		const struct hid_device_id *id)
+ {
+@@ -588,6 +605,7 @@ static struct hid_driver apple_driver = {
+ 	.event = apple_event,
+ 	.input_mapping = apple_input_mapping,
+ 	.input_mapped = apple_input_mapped,
++	.input_configured = apple_input_configured,
+ };
+ module_hid_driver(apple_driver);
+ 
 -- 
 2.25.1
 
