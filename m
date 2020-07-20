@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D29C433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AA9C2D0E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 943CB20717
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA70F20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281210;
-	bh=eD4zAKWlWfvLrHL1FEoXL3TH2eqc9KqDLJjKPzym2uQ=;
+	s=default; t=1595281225;
+	bh=865njCewP8M4p+oAUnYBNowDxHKzvhfUobEhQ+ibhhU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z+wzr2Ou7daFyl/dxiOM4x15etC+Ig6PrTgU8jD17f4INNlUCV05z45t0icoPLJ5X
-	 1vrNhnWx90bXH4CeRrH+6dQ7dx6HRuTCDpNZtH0H+pu/tIwPlqF+LSqZ1qkBavrzGf
-	 2zcGfNblyC4FCqwyRyT5NJJmxX5zSUALZdByyeqA=
+	b=FhL25ksjO9tXarSsuBF/EHKLdvxDgmCP89sCH0nfWdhBNnXbJe4SrrrAOylpdixSQ
+	 +GYDuCMkCPB11EuWTtSKVKGcQOl03dmmUTyJzleYkxDQfBZrY2WCaS5k3eKy6+LW29
+	 GVNg3i/PMBP2ViA9KxoJfqnS06I8F7dyt5OEulII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgGTVkI (ORCPT
+        id S1727836AbgGTVkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:40:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59278 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:40:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728483AbgGTVjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:32 -0400
+        id S1727034AbgGTVjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AED9922CF7;
-        Mon, 20 Jul 2020 21:39:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6011E207FC;
+        Mon, 20 Jul 2020 21:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281171;
-        bh=eD4zAKWlWfvLrHL1FEoXL3TH2eqc9KqDLJjKPzym2uQ=;
+        s=default; t=1595281181;
+        bh=865njCewP8M4p+oAUnYBNowDxHKzvhfUobEhQ+ibhhU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TItpyXPII3ZKip6OZIsdVkAR5KBAKOMB+qs7CphCESLZNAOSQV+eiSeBM8ieSIS+W
-         bPuJzFYByn7KOmbRATHlE3Pfv9HCJav8GGaiA1M4jdNdQkzlczf3g69BkdhyGbXqKf
-         WRlujLNmDxbn8C6Rg/GToTeBagU3j7STMhX3Cju8=
+        b=Dv30kKQc9lWEFAhZ4OiISTmbSzXCkeD6gIKvqvoncEKCsCY/HkFra56PYm96IKjx7
+         T1CYGBLLe3EGMe9D360pcl/VijZQK8d9W8OzsdfJ542oxOk4EgDPsCMK0EJ9fvVRZl
+         +w7NfHcm8tw1iRHm8A15cUoMCHpA2nF7MaiefA6g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <kolga@netapp.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/13] SUNRPC reverting d03727b248d0 ("NFSv4 fix CLOSE not waiting for direct IO compeletion")
-Date:   Mon, 20 Jul 2020 17:39:14 -0400
-Message-Id: <20200720213914.407919-13-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 7/9] arm64: Use test_tsk_thread_flag() for checking TIF_SINGLESTEP
+Date:   Mon, 20 Jul 2020 17:39:30 -0400
+Message-Id: <20200720213932.408089-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213914.407919-1-sashal@kernel.org>
-References: <20200720213914.407919-1-sashal@kernel.org>
+In-Reply-To: <20200720213932.408089-1-sashal@kernel.org>
+References: <20200720213932.408089-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,88 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 65caafd0d2145d1dd02072c4ced540624daeab40 ]
+[ Upstream commit 5afc78551bf5d53279036e0bf63314e35631d79f ]
 
-Reverting commit d03727b248d0 "NFSv4 fix CLOSE not waiting for
-direct IO compeletion". This patch made it so that fput() by calling
-inode_dio_done() in nfs_file_release() would wait uninterruptably
-for any outstanding directIO to the file (but that wait on IO should
-be killable).
+Rather than open-code test_tsk_thread_flag() at each callsite, simply
+replace the couple of offenders with calls to test_tsk_thread_flag()
+directly.
 
-The problem the patch was also trying to address was REMOVE returning
-ERR_ACCESS because the file is still opened, is supposed to be resolved
-by server returning ERR_FILE_OPEN and not ERR_ACCESS.
-
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/direct.c | 13 ++++---------
- fs/nfs/file.c   |  1 -
- 2 files changed, 4 insertions(+), 10 deletions(-)
+ arch/arm64/kernel/debug-monitors.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 3cef33b0f7e08..e6ea4511c41ce 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -396,6 +396,8 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+index 9f1adca3c3461..589fbdcb54ca4 100644
+--- a/arch/arm64/kernel/debug-monitors.c
++++ b/arch/arm64/kernel/debug-monitors.c
+@@ -377,14 +377,14 @@ void user_rewind_single_step(struct task_struct *task)
+ 	 * If single step is active for this thread, then set SPSR.SS
+ 	 * to 1 to avoid returning to the active-pending state.
+ 	 */
+-	if (test_ti_thread_flag(task_thread_info(task), TIF_SINGLESTEP))
++	if (test_tsk_thread_flag(task, TIF_SINGLESTEP))
+ 		set_regs_spsr_ss(task_pt_regs(task));
+ }
+ NOKPROBE_SYMBOL(user_rewind_single_step);
+ 
+ void user_fastforward_single_step(struct task_struct *task)
  {
- 	struct inode *inode = dreq->inode;
- 
-+	inode_dio_end(inode);
-+
- 	if (dreq->iocb) {
- 		long res = (long) dreq->error;
- 		if (dreq->count != 0) {
-@@ -407,10 +409,7 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
- 
- 	complete(&dreq->completion);
- 
--	igrab(inode);
- 	nfs_direct_req_release(dreq);
--	inode_dio_end(inode);
--	iput(inode);
+-	if (test_ti_thread_flag(task_thread_info(task), TIF_SINGLESTEP))
++	if (test_tsk_thread_flag(task, TIF_SINGLESTEP))
+ 		clear_regs_spsr_ss(task_pt_regs(task));
  }
  
- static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
-@@ -540,10 +539,8 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		igrab(inode);
--		nfs_direct_req_release(dreq);
- 		inode_dio_end(inode);
--		iput(inode);
-+		nfs_direct_req_release(dreq);
- 		return result < 0 ? result : -EIO;
- 	}
- 
-@@ -960,10 +957,8 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		igrab(inode);
--		nfs_direct_req_release(dreq);
- 		inode_dio_end(inode);
--		iput(inode);
-+		nfs_direct_req_release(dreq);
- 		return result < 0 ? result : -EIO;
- 	}
- 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 7da2cea1e7a06..81cca49a83750 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -82,7 +82,6 @@ nfs_file_release(struct inode *inode, struct file *filp)
- 	dprintk("NFS: release(%pD2)\n", filp);
- 
- 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
--	inode_dio_wait(inode);
- 	nfs_file_clear_open_context(filp);
- 	return 0;
- }
 -- 
 2.25.1
 
