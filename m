@@ -2,52 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7486EC433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FFAC43458
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 524982070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F572070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262637;
-	bh=dS8/G+hfAJds4aB+AZ58jEHtC4unT+hW+QxSxGfpACM=;
+	s=default; t=1595262642;
+	bh=IReQaCQ1JzU9pd3WgkQG2WkZwI3+Cf/nWKg9g+Jb9Do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=puscY7Z/TNRVRbVIloJ44rybZ7IYE7/QAecNbuAqTyGAcveCKZYLISyB3HeXypCvZ
-	 qoYdomRTPLIlCo2jsDivXdpabRLpTtGs7uoedE3ZSY30xcD3pisT2nVMBnUF35NbhS
-	 quR2ytI85tJJHjpIk3SiRMIBfC0fgC+bQAoabJtU=
+	b=fQiIBnzd/WjJCrqQf4EQAJn/WSDB9XdJTna8GkypemykFwAjl6AXRu7tivBlC8Nie
+	 EtJpcCzwLymE++fqZpFOFnqfHtv6lnsXf9OIflhNTqsSh49UeRenBQF0D84p7o/yv+
+	 JSpThbXW3ftBZFPxlvVTw+Fob3DuVfAgYimFwRIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732362AbgGTQaf (ORCPT
+        id S1731975AbgGTP6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:30:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58582 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:58:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732000AbgGTP6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:58:23 -0400
+        id S1731964AbgGTP55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:57:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51AFE206E9;
-        Mon, 20 Jul 2020 15:58:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0D4E2065E;
+        Mon, 20 Jul 2020 15:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260702;
-        bh=dS8/G+hfAJds4aB+AZ58jEHtC4unT+hW+QxSxGfpACM=;
+        s=default; t=1595260676;
+        bh=IReQaCQ1JzU9pd3WgkQG2WkZwI3+Cf/nWKg9g+Jb9Do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kMEgGtqtvvTaBBmmhA67wOHWm+l9DQD+jC8U7bhKLMFIwWms2QMBnDNL75KQAlNUZ
-         azm8il6X+ivfJqQAaXK0hjMMDCFFalc7cXLFnVvZtjPrukwakF3mxQsbXC6m5G5vNa
-         I7/6unMknX/8wL8fOB9YYKH15CyI7zAXgO5Rr8GE=
+        b=v0hZNpYhqQKbHIBnF7bS1GvVtsy8xwKWfxXRD6XFgUBO08HPhkRoVAh9O3SEvvXm3
+         ufeiVW4KWWEHGbAAE4HEqSkrKvmM3NNhgVUbVHXIGSssyU1EfoTg/2pyMXWv0T1aJ3
+         H8sufYsJwWKDvjTn3mHqvpDv/XsZlpua5vQIX9xo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 035/215] thermal/drivers: imx: Fix missing of_node_put() at probe time
-Date:   Mon, 20 Jul 2020 17:35:17 +0200
-Message-Id: <20200720152821.853538696@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Andrew F. Davis" <afd@ti.com>, Stable@vger.kernel.org
+Subject: [PATCH 5.4 054/215] iio:health:afe4403 Fix timestamp alignment and prevent data leak.
+Date:   Mon, 20 Jul 2020 17:35:36 +0200
+Message-Id: <20200720152822.782068169@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -60,51 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-[ Upstream commit b45fd13be340e4ed0a2a9673ba299eb2a71ba829 ]
+commit 3f9c6d38797e9903937b007a341dad0c251765d6 upstream.
 
-After finishing using cpu node got from of_get_cpu_node(), of_node_put()
-needs to be called.
+One of a class of bugs pointed out by Lars in a recent review.
+iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
+to the size of the timestamp (8 bytes).  This is not guaranteed in
+this driver which uses a 32 byte array of smaller elements on the stack.
+As Lars also noted this anti pattern can involve a leak of data to
+userspace and that indeed can happen here.  We close both issues by
+moving to a suitable structure in the iio_priv() data with alignment
+explicitly requested.  This data is allocated with kzalloc so no
+data can leak appart from previous readings.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1585232945-23368-1-git-send-email-Anson.Huang@nxp.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: eec96d1e2d31 ("iio: health: Add driver for the TI AFE4403 heart monitor")
+Reported-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Andrew F. Davis <afd@ti.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/thermal/imx_thermal.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/iio/health/afe4403.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-index bb6754a5342c1..85511c1160b7f 100644
---- a/drivers/thermal/imx_thermal.c
-+++ b/drivers/thermal/imx_thermal.c
-@@ -656,7 +656,7 @@ MODULE_DEVICE_TABLE(of, of_imx_thermal_match);
- static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
- {
- 	struct device_node *np;
--	int ret;
-+	int ret = 0;
+--- a/drivers/iio/health/afe4403.c
++++ b/drivers/iio/health/afe4403.c
+@@ -63,6 +63,7 @@ static const struct reg_field afe4403_re
+  * @regulator: Pointer to the regulator for the IC
+  * @trig: IIO trigger for this device
+  * @irq: ADC_RDY line interrupt number
++ * @buffer: Used to construct data layout to push into IIO buffer.
+  */
+ struct afe4403_data {
+ 	struct device *dev;
+@@ -72,6 +73,8 @@ struct afe4403_data {
+ 	struct regulator *regulator;
+ 	struct iio_trigger *trig;
+ 	int irq;
++	/* Ensure suitable alignment for timestamp */
++	s32 buffer[8] __aligned(8);
+ };
  
- 	data->policy = cpufreq_cpu_get(0);
- 	if (!data->policy) {
-@@ -671,11 +671,12 @@ static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
- 		if (IS_ERR(data->cdev)) {
- 			ret = PTR_ERR(data->cdev);
- 			cpufreq_cpu_put(data->policy);
--			return ret;
- 		}
+ enum afe4403_chan_id {
+@@ -309,7 +312,6 @@ static irqreturn_t afe4403_trigger_handl
+ 	struct iio_dev *indio_dev = pf->indio_dev;
+ 	struct afe4403_data *afe = iio_priv(indio_dev);
+ 	int ret, bit, i = 0;
+-	s32 buffer[8];
+ 	u8 tx[4] = {AFE440X_CONTROL0, 0x0, 0x0, AFE440X_CONTROL0_READ};
+ 	u8 rx[3];
+ 
+@@ -326,9 +328,9 @@ static irqreturn_t afe4403_trigger_handl
+ 		if (ret)
+ 			goto err;
+ 
+-		buffer[i++] = (rx[0] << 16) |
+-				(rx[1] << 8) |
+-				(rx[2]);
++		afe->buffer[i++] = (rx[0] << 16) |
++				   (rx[1] << 8) |
++				   (rx[2]);
  	}
  
--	return 0;
-+	of_node_put(np);
-+
-+	return ret;
- }
+ 	/* Disable reading from the device */
+@@ -337,7 +339,8 @@ static irqreturn_t afe4403_trigger_handl
+ 	if (ret)
+ 		goto err;
  
- static void imx_thermal_unregister_legacy_cooling(struct imx_thermal_data *data)
--- 
-2.25.1
-
+-	iio_push_to_buffers_with_timestamp(indio_dev, buffer, pf->timestamp);
++	iio_push_to_buffers_with_timestamp(indio_dev, afe->buffer,
++					   pf->timestamp);
+ err:
+ 	iio_trigger_notify_done(indio_dev->trig);
+ 
 
 
