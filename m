@@ -2,52 +2,50 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C57C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4E5C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 474F32064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FAFD2065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260270;
-	bh=m4gtIDFXrWLQ8g7latXn3rvipiUVHNA2h9iCYgBpJ7I=;
+	s=default; t=1595260272;
+	bh=uYxb9P/P8dua0vjr/LUf8CIp6XXI6TswYw3wgxuE2qs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XWvPoI9dmYM2bzuj39d2BvODiLCbSorTG45zCmkUWONv3rNxQ+A+IcW87Q/hxUq/R
-	 1nMVDzcL4UrftUrXppzjweMHwYixKAfzJcY9WCQuqlJSZSMnBSWxokREpg51GI5MzL
-	 tER9jSmTiuv3+/iIa8GHptWSfoigvHyzipU94B7Q=
+	b=SM+hEIT/8uk+BBZyV1jKTWYfDO4bvhE+LrfcxARsW3gG4K3OGVnA8oY7pt70hoqgg
+	 dY04zxviezQLaOuxT+GV7pstvR7B38WLT7uhwQsKkYGCKZWMhyfTgWKgRjENIUCRiG
+	 SYAOQjRr+bqN1UHNQVCrrHXggBfr4LrWS3JRQaVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731202AbgGTPvJ (ORCPT
+        id S1731208AbgGTPvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:51:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47846 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:51:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729864AbgGTPvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:51:04 -0400
+        id S1731190AbgGTPvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:51:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A2052065E;
-        Mon, 20 Jul 2020 15:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E933F22BEF;
+        Mon, 20 Jul 2020 15:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260263;
-        bh=m4gtIDFXrWLQ8g7latXn3rvipiUVHNA2h9iCYgBpJ7I=;
+        s=default; t=1595260266;
+        bh=uYxb9P/P8dua0vjr/LUf8CIp6XXI6TswYw3wgxuE2qs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lk7Ql9Ry7zTvzc9BszaWlYGpD54ZEjzX+/GXekJ1y2+W+5gsov8flkfQ5gv1H/TpH
-         wQJ0mxQz+bMMrzGl+cAtM4RcDzRYBi2O2OHigdp+PLLzUowL4a1bN9RjiChsDC6kCJ
-         O/t6fXrAijJWueEBNIFhk+dGV9gWPZN5ULMzOvqs=
+        b=M7DH+agUF/+aciooAfq3ABvNqStZ6c086GZUsROwEGTayf0nCVcK4cuxJq0IGUXkR
+         V/O70sfl8T1wNq3LxzmE/Ej+flgNRVfK1F4ym3Kya/R0ExY4+RJ+Q0uM7JObVm3Xk3
+         CBiifevZCl++BbfydszgbwdiKY+fcDh96ghswwqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 032/133] iio: mma8452: Add missed iio_device_unregister() call in mma8452_probe()
-Date:   Mon, 20 Jul 2020 17:36:19 +0200
-Message-Id: <20200720152805.282492452@linuxfoundation.org>
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 041/133] Revert "usb/ohci-platform: Fix a warning when hibernating"
+Date:   Mon, 20 Jul 2020 17:36:28 +0200
+Message-Id: <20200720152805.704517976@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -60,41 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+This reverts commit c83258a757687ffccce37ed73dba56cc6d4b8a1b.
 
-commit d7369ae1f4d7cffa7574d15e1f787dcca184c49d upstream.
+Eugeniu Rosca writes:
 
-The function iio_device_register() was called in mma8452_probe().
-But the function iio_device_unregister() was not called after
-a call of the function mma8452_set_freefall_mode() failed.
-Thus add the missed function call for one error case.
+On Thu, Jul 09, 2020 at 09:00:23AM +0200, Eugeniu Rosca wrote:
+>After integrating v4.14.186 commit 5410d158ca2a50 ("usb/ehci-platform:
+>Set PM runtime as active on resume") into downstream v4.14.x, we started
+>to consistently experience below panic [1] on every second s2ram of
+>R-Car H3 Salvator-X Renesas reference board.
+>
+>After some investigations, we concluded the following:
+> - the issue does not exist in vanilla v5.8-rc4+
+> - [bisecting shows that] the panic on v4.14.186 is caused by the lack
+>   of v5.6-rc1 commit 987351e1ea7772 ("phy: core: Add consumer device
+>   link support"). Getting evidence for that is easy. Reverting
+>   987351e1ea7772 in vanilla leads to a similar backtrace [2].
+>
+>Questions:
+> - Backporting 987351e1ea7772 ("phy: core: Add consumer device
+>   link support") to v4.14.187 looks challenging enough, so probably not
+>   worth it. Anybody to contradict this?
+> - Assuming no plans to backport the missing mainline commit to v4.14.x,
+>   should the following three v4.14.186 commits be reverted on v4.14.x?
+>   * baef809ea497a4 ("usb/ohci-platform: Fix a warning when hibernating")
+>   * 9f33eff4958885 ("usb/xhci-plat: Set PM runtime as active on resume")
+>   * 5410d158ca2a50 ("usb/ehci-platform: Set PM runtime as active on resume")
 
-Fixes: 1a965d405fc6 ("drivers:iio:accel:mma8452: added cleanup provision in case of failure.")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/accel/mma8452.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/usb/host/ohci-platform.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -1651,10 +1651,13 @@ static int mma8452_probe(struct i2c_clie
+diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+index f40112c5920d1..65a1c3fdc88c6 100644
+--- a/drivers/usb/host/ohci-platform.c
++++ b/drivers/usb/host/ohci-platform.c
+@@ -301,11 +301,6 @@ static int ohci_platform_resume(struct device *dev)
+ 	}
  
- 	ret = mma8452_set_freefall_mode(data, false);
- 	if (ret < 0)
--		goto buffer_cleanup;
-+		goto unregister_device;
- 
+ 	ohci_resume(hcd, false);
+-
+-	pm_runtime_disable(dev);
+-	pm_runtime_set_active(dev);
+-	pm_runtime_enable(dev);
+-
  	return 0;
- 
-+unregister_device:
-+	iio_device_unregister(indio_dev);
-+
- buffer_cleanup:
- 	iio_triggered_buffer_cleanup(indio_dev);
- 
+ }
+ #endif /* CONFIG_PM_SLEEP */
+-- 
+2.25.1
+
 
 
