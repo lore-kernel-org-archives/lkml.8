@@ -2,81 +2,121 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0858C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9392070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:03:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595246601;
-	bh=G9Go/h/TN87jUJHBbkQ7/aM1p1Ah9QACNvcCV5mAehw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=g6v22/3lIqjpuxfKOhE9K6vzt6rEXgMKww2YpUY1EctoVtiGnJh3U+Q3+3T59c/BE
-	 B+pcQxQPrhW6mfuMamZqiChEUAajzkFj9IWfElkAdcZ3HC32fzNgdgVU0K+V39cztv
-	 Vk7SJWxcip2tacyyKLH8mJWsiRm8PNai3ydLVyU8=
+	by mail.kernel.org (Postfix) with ESMTP id BDB6E2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:03:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G99G9fsl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbgGTMDT (ORCPT
+        id S1728810AbgGTMDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:03:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728572AbgGTMDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 08:03:19 -0400
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B95E2070A
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 12:03:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595246598;
-        bh=G9Go/h/TN87jUJHBbkQ7/aM1p1Ah9QACNvcCV5mAehw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NW8s8qye5v+UBECClmFRA5LNt4VVJCRRnlo14fRyn45CMucG0DuHKylq1gtfM7anf
-         457Imq4UjfdFd9pRoK0fgSLgXgNEvzkSTd0fmyI9wfr1zKPGSPQOg/mQHPKEOeMvM4
-         xa0iAwY1MqCNr7CKYATdbmBZlL3QC2EcFJMWivSY=
-Received: by mail-lj1-f178.google.com with SMTP id q4so20001545lji.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 05:03:18 -0700 (PDT)
-X-Gm-Message-State: AOAM533bfF+7Zqi5QC+gYdSmDcsHetw3lNId1H6ROwqgzlp1lx/uY4+6
-        4QOq8h3P02pHzdSensaoAdxF1Yi5CXODq2ZUTPo=
-X-Google-Smtp-Source: ABdhPJw9rUEELsOQ4urbK5iR4R2KAP7EfM7/dGOeeJPzwwVPtxv4q34bpXByMXPMyskhaV72gYWJtePoHuNHjR9Ilx8=
-X-Received: by 2002:a2e:8684:: with SMTP id l4mr10714566lji.75.1595246596992;
- Mon, 20 Jul 2020 05:03:16 -0700 (PDT)
+        Mon, 20 Jul 2020 08:03:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728572AbgGTMDU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 08:03:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5661BC061794;
+        Mon, 20 Jul 2020 05:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=r6dsj8pxTqtn3NLeQXECCjoNOIjatp7b7gHsR16dalE=; b=G99G9fsltR8hD/EK9QDcnBEEz2
+        FQqtw0X4kXGCmPR/TyA6+POEoGYjCkwY3qg4zkV3LQxWPuj2J3tHRtw8RG31CXwcFesePGPczjqVE
+        HbLM9v8+iPBDhpNMKGDPYYzvG62Fwwva/zH1F73qlENXRTOrGIb2LkC6qdC+s0l8pxbJdlFri0hN/
+        52GP4VhKwqWIa0btJFBOdGMkIYyYdIo+RQq2FYBh5907sDhk7iPeP6ImcQ6PpdqcfiV4LUR7Sq2yD
+        vITnkccfjhiSEmnbEq27DdbpfKMsrREHZx2bpFeigQxYVriBjbcUF9zJ+aB+hTwNw8+5rbE0GqOWT
+        4o+bKLxA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxUVi-00029K-E0; Mon, 20 Jul 2020 12:03:10 +0000
+Date:   Mon, 20 Jul 2020 13:03:10 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Wang Long <w@laoqinren.net>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v1] xarray: update document for error space returned by
+ xarray normal API
+Message-ID: <20200720120310.GV12769@casper.infradead.org>
+References: <1595218658-53727-1-git-send-email-w@laoqinren.net>
 MIME-Version: 1.0
-References: <20200720100113.6481-1-wens@kernel.org> <20200720110610.GA4601@sirena.org.uk>
-In-Reply-To: <20200720110610.GA4601@sirena.org.uk>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Mon, 20 Jul 2020 20:03:06 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65zdCfOP-vGzrVXuzRyUC1ejG5CX=dfrh9MGTuV00VgPQ@mail.gmail.com>
-Message-ID: <CAGb2v65zdCfOP-vGzrVXuzRyUC1ejG5CX=dfrh9MGTuV00VgPQ@mail.gmail.com>
-Subject: Re: [PATCH v2] regulator: gpio: Honor regulator-boot-on property
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595218658-53727-1-git-send-email-w@laoqinren.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 7:06 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Mon, Jul 20, 2020 at 06:01:13PM +0800, Chen-Yu Tsai wrote:
->
-> > Also drop support for the undocumented enable-at-boot property. This
-> > property was not documented in the original commit introducing DT
-> > support, nor is it now, and there are no in-tree device trees that use
-> > this property.
->
-> There may still be out of tree users, an ABI is an ABI.
+On Mon, Jul 20, 2020 at 12:17:38PM +0800, Wang Long wrote:
+> In the current xarray code, the negative value -1 and -4095 represented
+> as an error.
+> 
+> xa_is_err(xa_mk_internal(-4095)) and xa_is_err(xa_mk_internal(-1))
+> are all return true.
+> 
+> This patch update the document.
 
-Ok. Should I add a comment stating this should not be used in new files?
-Or just leave it as it?
+There are actually three distinct problems here, but none of them are
+fixed by this patch.
 
-ChenYu
+The first is that there's no test-suite coverage for this.
+The second is that xa_is_err() is checking against -MAX_ERRNO instead of
+-1023.
+The third is that the documentation isn't clear enough because the line
+you're correcting is accurate.
+
+I don't think any of these three problems is terribly urgent to fix.
+The second is most important because it could lead to confusion between
+an xa_node that happens to be allocated at the top of memory and an
+error return, but I don't think there is ever a situation where we end
+up checking a node entry for being an error entry.  I may be wrong.
+
+The solution to the first problem probably looks like this:
+
++++ b/lib/test_xarray.c
+@@ -81,6 +81,11 @@ static void *xa_store_order(struct xarray *xa, unsigned long index,
+ 
+ static noinline void check_xa_err(struct xarray *xa)
+ {
++       XA_BUG_ON(xa, xa_is_err(xa_mk_internal(0)));
++       XA_BUG_ON(xa, !xa_is_err(xa_mk_internal(-1)));
++       XA_BUG_ON(xa, !xa_is_err(xa_mk_internal(-1023)));
++       XA_BUG_ON(xa, xa_is_err(xa_mk_internal(-1024)));
++
+        XA_BUG_ON(xa, xa_err(xa_store_index(xa, 0, GFP_NOWAIT)) != 0);
+        XA_BUG_ON(xa, xa_err(xa_erase(xa, 0)) != 0);
+ #ifndef __KERNEL__
+
+
+> Signed-off-by: Wang Long <w@laoqinren.net>
+> ---
+>  include/linux/xarray.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/xarray.h b/include/linux/xarray.h
+> index b4d70e7..0588fb9 100644
+> --- a/include/linux/xarray.h
+> +++ b/include/linux/xarray.h
+> @@ -36,7 +36,7 @@
+>   * 257: Zero entry
+>   *
+>   * Errors are also represented as internal entries, but use the negative
+> - * space (-4094 to -2).  They're never stored in the slots array; only
+> + * space (-4095 to -1).  They're never stored in the slots array; only
+>   * returned by the normal API.
+>   */
+>  
+> -- 
+> 1.8.3.1
+> 
+> 
+> 
+> 
