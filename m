@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB65C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E0DC28E85
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8206922CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8895F22BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281357;
-	bh=CNA2UcGDHuCk9lpCPB6VSEaq6G3lroCk8+yxTtXAEhs=;
+	s=default; t=1595281364;
+	bh=hyoWTlXaRJHz9u15BbwMpNHvU6B/qEq0Zc3o3cyjtOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o9ChIodiZvFAsNGQmqHhIjHpsXgAN5TdbjbnyHZjFzNcK2ZJzNbpAB0/gi9Azgj9H
-	 mnW4OhUvhlLO2es+zqfGwDaAAXYx2Mgg2Jl9YQcbRAqAR1nzfWkUoyrqyh05iir7jR
-	 z6U5VCX+12xhDoW+Pg5HULHwWLYYqUm/CPUebdds=
+	b=mjQ8SFagvoMZde0QXZoCwla28d8PolF9ewYmTqE6giDgdV5EbmOWKPmaUzV0zcgUh
+	 QQKdcTfUu7w0hes0yjMxKjzHDj4keo22k4gqj0qpgL7KpNw7vFhcTN+jcbmfyuqyMc
+	 iWYOg7UaMf4ACMA2+bDfiLGBiXRSZ+Ps2TNDYHCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgGTVmc (ORCPT
+        id S1728887AbgGTVmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:42:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57852 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:42:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728288AbgGTViz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:55 -0400
+        id S1728266AbgGTViu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63FDB22C7B;
-        Mon, 20 Jul 2020 21:38:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4605022CB3;
+        Mon, 20 Jul 2020 21:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281135;
-        bh=CNA2UcGDHuCk9lpCPB6VSEaq6G3lroCk8+yxTtXAEhs=;
+        s=default; t=1595281129;
+        bh=hyoWTlXaRJHz9u15BbwMpNHvU6B/qEq0Zc3o3cyjtOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jcv/UteGUAFK4F2qWqVUFNpr9YAG45FdSBza1nHWzT0vdrLQl7hqe2yqLqXw58Nhw
-         dR62/Ce24NdKSRWq+BpbJOUxgcB79u82UJ2Hl835XA70hEswyHnjraAvwX3rxzXEHQ
-         gVuy47EZ6bULqv97zD+J+Wo8ne0miS42XjTINWNE=
+        b=XlSdhg/BEh5G5sEuTfae3MCcynrZcNNYCl1Zy1Zeerqh7ydb+7wzQ0RZzeNAATw67
+         60wc1D7PMXXHHyVr/rqTcb/Wy17dgITPSg77sH4A1WpfLYLNXlhciynRAIZSkoVB48
+         mBmxpoBXDxc/HA5IM+AGfuFyYj9DYnAaD5V0GxIA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>,
-        Siarhei Vishniakou <svv@google.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 03/19] HID: steam: fixes race in handling device list.
-Date:   Mon, 20 Jul 2020 17:38:34 -0400
-Message-Id: <20200720213851.407715-3-sashal@kernel.org>
+Cc:     Olga Kornievskaia <kolga@netapp.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 34/34] SUNRPC reverting d03727b248d0 ("NFSv4 fix CLOSE not waiting for direct IO compeletion")
+Date:   Mon, 20 Jul 2020 17:38:07 -0400
+Message-Id: <20200720213807.407380-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213851.407715-1-sashal@kernel.org>
-References: <20200720213851.407715-1-sashal@kernel.org>
+In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
+References: <20200720213807.407380-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,57 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-[ Upstream commit 2d3f53a80e4eed078669853a178ed96d88f74143 ]
+[ Upstream commit 65caafd0d2145d1dd02072c4ced540624daeab40 ]
 
-Using uhid and KASAN this driver crashed because it was getting
-several connection events where it only expected one. Then the
-device was added several times to the static device list and it got
-corrupted.
+Reverting commit d03727b248d0 "NFSv4 fix CLOSE not waiting for
+direct IO compeletion". This patch made it so that fput() by calling
+inode_dio_done() in nfs_file_release() would wait uninterruptably
+for any outstanding directIO to the file (but that wait on IO should
+be killable).
 
-This patch checks if the device is already in the list before adding
-it.
+The problem the patch was also trying to address was REMOVE returning
+ERR_ACCESS because the file is still opened, is supposed to be resolved
+by server returning ERR_FILE_OPEN and not ERR_ACCESS.
 
-Signed-off-by: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
-Tested-by: Siarhei Vishniakou <svv@google.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-steam.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/nfs/direct.c | 13 ++++---------
+ fs/nfs/file.c   |  1 -
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hid/hid-steam.c b/drivers/hid/hid-steam.c
-index 6286204d4c560..a3b151b29bd71 100644
---- a/drivers/hid/hid-steam.c
-+++ b/drivers/hid/hid-steam.c
-@@ -526,7 +526,8 @@ static int steam_register(struct steam_device *steam)
- 			steam_battery_register(steam);
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 70cf8c5760c73..6b0bf4ebd8124 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -367,6 +367,8 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+ {
+ 	struct inode *inode = dreq->inode;
  
- 		mutex_lock(&steam_devices_lock);
--		list_add(&steam->list, &steam_devices);
-+		if (list_empty(&steam->list))
-+			list_add(&steam->list, &steam_devices);
- 		mutex_unlock(&steam_devices_lock);
++	inode_dio_end(inode);
++
+ 	if (dreq->iocb) {
+ 		long res = (long) dreq->error;
+ 		if (dreq->count != 0) {
+@@ -378,10 +380,7 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+ 
+ 	complete(&dreq->completion);
+ 
+-	igrab(inode);
+ 	nfs_direct_req_release(dreq);
+-	inode_dio_end(inode);
+-	iput(inode);
+ }
+ 
+ static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
+@@ -511,10 +510,8 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		igrab(inode);
+-		nfs_direct_req_release(dreq);
+ 		inode_dio_end(inode);
+-		iput(inode);
++		nfs_direct_req_release(dreq);
+ 		return result < 0 ? result : -EIO;
  	}
  
-@@ -552,7 +553,7 @@ static void steam_unregister(struct steam_device *steam)
- 		hid_info(steam->hdev, "Steam Controller '%s' disconnected",
- 				steam->serial_no);
- 		mutex_lock(&steam_devices_lock);
--		list_del(&steam->list);
-+		list_del_init(&steam->list);
- 		mutex_unlock(&steam_devices_lock);
- 		steam->serial_no[0] = 0;
+@@ -926,10 +923,8 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		igrab(inode);
+-		nfs_direct_req_release(dreq);
+ 		inode_dio_end(inode);
+-		iput(inode);
++		nfs_direct_req_release(dreq);
+ 		return result < 0 ? result : -EIO;
  	}
-@@ -738,6 +739,7 @@ static int steam_probe(struct hid_device *hdev,
- 	mutex_init(&steam->mutex);
- 	steam->quirks = id->driver_data;
- 	INIT_WORK(&steam->work_connect, steam_work_connect_cb);
-+	INIT_LIST_HEAD(&steam->list);
  
- 	steam->client_hdev = steam_create_client_hid(hdev);
- 	if (IS_ERR(steam->client_hdev)) {
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 7b31367532054..95dc90570786c 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -83,7 +83,6 @@ nfs_file_release(struct inode *inode, struct file *filp)
+ 	dprintk("NFS: release(%pD2)\n", filp);
+ 
+ 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
+-	inode_dio_wait(inode);
+ 	nfs_file_clear_open_context(filp);
+ 	return 0;
+ }
 -- 
 2.25.1
 
