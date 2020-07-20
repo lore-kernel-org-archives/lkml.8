@@ -2,51 +2,52 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF883C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A468AC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8112065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B76720734
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261498;
-	bh=xm9UZW9zAD+VA4H6R+EB34yC3IghtWXpFJKcdYMmkao=;
+	s=default; t=1595261500;
+	bh=GFr+mlrtKxpz0IzEPdW/LVs/ydHxwPDNZhkA3xjK2B8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PWwx21gFk8YeL2TRYTkt8GOVpb37Yubfuaxn8XCUt1sZuBUMs2DNb1YCoGgPBOu3Z
-	 TQyn069UJwq48oSPiHokYDF6YnNP9DNan7HGKb1kI9rn7MkIYOeY8R+367hI+BPn4/
-	 SBtUpgA0jq3QUrB6Erio0D1PADJmUfXodeKQZdm8=
+	b=dtwG/f7KXSM243X70hvdR9qnF9/i1bVf4Rc470i55tJATgX4XoBcWcexK+YklPxVQ
+	 E8LONKbTdJLmLL4FYUjQHV7S/XGogSzN3yW5GTpRXpX1EroBqACxSMPtjwdhpaaH3l
+	 LIOtbtrwv/B/a7Vv0t++Vs0VKHaEQ35bKTqmbzls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733283AbgGTQLh (ORCPT
+        id S2387824AbgGTQLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:11:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50600 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:11:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387810AbgGTQL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:11:29 -0400
+        id S1732830AbgGTQLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:11:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDF2C2176B;
-        Mon, 20 Jul 2020 16:11:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A74712065E;
+        Mon, 20 Jul 2020 16:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261489;
-        bh=xm9UZW9zAD+VA4H6R+EB34yC3IghtWXpFJKcdYMmkao=;
+        s=default; t=1595261492;
+        bh=GFr+mlrtKxpz0IzEPdW/LVs/ydHxwPDNZhkA3xjK2B8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=anCKpH0UN9GwxK4ntWlC2+TaocjjzIvamMupZcWlFzffV63CmWwz5XYDO9g0tCN9m
-         Ps50mbgT8XNVEi/nl520w/wFQ4zbM4/SegCBn56A+n/4m8SnJ+Xsr8Udayd6vrdZ5g
-         OYosOMT7jKewlhKdvWez8249aqENKjd4vNa341vk=
+        b=A+Y5Xk5sVLvC+WGMKiN7Dc6SPXJyktTCaCU/G3tJx39UH2lxJKySKvurNEeogDwdz
+         X8WxVP3pNmPGyQjQluTlamwq3gsyW6xHiV6Zn9x2y+nLSwAe7Wl8dOgCRjtZbZ6MmI
+         nVeIVLTE7mKFDUWHMOKBgsGGk6aCXPB6bFvJPzLY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Subject: [PATCH 5.7 134/244] mtd: rawnand: marvell: Fix the condition on a return code
-Date:   Mon, 20 Jul 2020 17:36:45 +0200
-Message-Id: <20200720152832.221673103@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 108/244] fuse: dont ignore errors from fuse_writepages_fill()
+Date:   Mon, 20 Jul 2020 17:36:19 +0200
+Message-Id: <20200720152830.966261311@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,51 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit c27075772d1f1c8aaf276db9943b35adda8a8b65 upstream.
+[ Upstream commit 7779b047a57f6824a43d0e1f70de2741b7426b9d ]
 
-In a previous fix, I changed the condition on which the timeout of an
-IRQ is reached from:
+fuse_writepages() ignores some errors taken from fuse_writepages_fill() I
+believe it is a bug: if .writepages is called with WB_SYNC_ALL it should
+either guarantee that all data was successfully saved or return error.
 
-    if (!ret)
-
-into:
-
-    if (ret && !pending)
-
-While having a non-zero return code is usual in the Linux kernel, here
-ret comes from a wait_for_completion_timeout() which returns 0 when
-the waiting period is too long.
-
-Hence, the revised condition should be:
-
-    if (!ret && !pending)
-
-The faulty patch did not produce any error because of the !pending
-condition so this change is finally purely cosmetic and does not
-change the actual driver behavior.
-
-Fixes: cafb56dd741e ("mtd: rawnand: marvell: prevent timeouts on a loaded machine")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Link: https://lore.kernel.org/linux-mtd/20200424164501.26719-2-miquel.raynal@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 26d614df1da9 ("fuse: Implement writepages callback")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/marvell_nand.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/fuse/file.c | 2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/mtd/nand/raw/marvell_nand.c
-+++ b/drivers/mtd/nand/raw/marvell_nand.c
-@@ -707,7 +707,7 @@ static int marvell_nfc_wait_op(struct na
- 	 * In case the interrupt was not served in the required time frame,
- 	 * check if the ISR was not served or if something went actually wrong.
- 	 */
--	if (ret && !pending) {
-+	if (!ret && !pending) {
- 		dev_err(nfc->dev, "Timeout waiting for RB signal\n");
- 		return -ETIMEDOUT;
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index e3afceecaa6b1..93763e844cd42 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -2148,10 +2148,8 @@ static int fuse_writepages(struct address_space *mapping,
+ 
+ 	err = write_cache_pages(mapping, wbc, fuse_writepages_fill, &data);
+ 	if (data.wpa) {
+-		/* Ignore errors if we can write at least one page */
+ 		WARN_ON(!data.wpa->ia.ap.num_pages);
+ 		fuse_writepages_send(&data);
+-		err = 0;
  	}
+ 	if (data.ff)
+ 		fuse_file_put(data.ff, false, false);
+-- 
+2.25.1
+
 
 
