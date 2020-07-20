@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6978CC2BBCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAE0C2BBD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CECC207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C186207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281394;
-	bh=T91JMT8+ATmHZgGTjTGeIrl+abx5KOHBjY+EUmJFlaQ=;
+	s=default; t=1595281397;
+	bh=91ffLANxLOwAuoNFDVOlxC77GKnLIuKMsFT1hDppkWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nKgZG5PNHxrfy9rREa1xU5rkdaSXlITnXs7xhTUPa1ItWRkI8hP7dDl/ZSbAWHWDs
-	 sPbfBuARHNBI/uT7BzofjwW/1xQSwbvpjIwXjYZI5GymY1ku5tDz7c/Ws54RFiYigb
-	 rgPhxz6XRP2ysnIfsNip/ShHF5wNIMuyBnHhbGME=
+	b=OLdnBPsmX5RBcTRGWsWE8HpTIQ6pBFICrz4hlhk+6qj987lOItETTHSuFaWNllhed
+	 66FnASj5znEiDbtVPK/otoc3H6aXhA3VVh9XWVp4KPIbPlVtg+IxHNbYO36QTt67y5
+	 n3ZUNHt2HoqmBAHoupRF/iK0m0/yXQ+A9cOWkmkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgGTVih (ORCPT
+        id S1728922AbgGTVnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:38:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56660 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:43:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728053AbgGTViP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:15 -0400
+        id S1728200AbgGTVih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56B46207FC;
-        Mon, 20 Jul 2020 21:38:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60D6D22CF7;
+        Mon, 20 Jul 2020 21:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281095;
-        bh=T91JMT8+ATmHZgGTjTGeIrl+abx5KOHBjY+EUmJFlaQ=;
+        s=default; t=1595281117;
+        bh=91ffLANxLOwAuoNFDVOlxC77GKnLIuKMsFT1hDppkWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gbc5sBQ7VQ5v745zter+nH6Hza4j2h3iHBLHnL5YSc1Ak0Q1iQDdllqoB6HDWQlqI
-         b0CipZpkqe/niZEAhsIk/UuT6p5n8+BHNVu27COjTeTLD4YbxxYJ/u8gqQafGzLwn6
-         NmrLUv5IjDuR1EiMzs7OmxBfutWgpXacP7U87InU=
+        b=ZTy8tUhqOoAXfvLrxFC9cAFwaQC5IgR/jilYvczXlrsvcdKp9WPqlHtPJPonzwqFu
+         3rGIT4QfxABl0zIFsgVFtIYPf0tKlmNj4U4YkNDNJYuNBZJFUDbMxquSPx+1ZcGQv/
+         IKjS14cmKNpidiIQ0WBoiuQ5RB7xAiwZx5c9UFRM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Merlijn Wajer <merlijn@wizzup.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 06/34] Input: add `SW_MACHINE_COVER`
-Date:   Mon, 20 Jul 2020 17:37:39 -0400
-Message-Id: <20200720213807.407380-6-sashal@kernel.org>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 24/34] platform/x86: ISST: Add new PCI device ids
+Date:   Mon, 20 Jul 2020 17:37:57 -0400
+Message-Id: <20200720213807.407380-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
 References: <20200720213807.407380-1-sashal@kernel.org>
@@ -61,52 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Merlijn Wajer <merlijn@wizzup.org>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-[ Upstream commit c463bb2a8f8d7d97aa414bf7714fc77e9d3b10df ]
+[ Upstream commit e1eea3f839f41368d7cb4eb2d872d5b288677e94 ]
 
-This event code represents the state of a removable cover of a device.
-Value 0 means that the cover is open or removed, value 1 means that the
-cover is closed.
+Added new PCI device ids for supporting mailbox and MMIO interface for
+Sapphire Rapids.
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Merlijn Wajer <merlijn@wizzup.org>
-Link: https://lore.kernel.org/r/20200612125402.18393-2-merlijn@wizzup.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mod_devicetable.h        | 2 +-
- include/uapi/linux/input-event-codes.h | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel_speed_select_if/isst_if_common.h   | 3 +++
+ drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c | 1 +
+ drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c     | 1 +
+ 3 files changed, 5 insertions(+)
 
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index 953d7ca01eb60..4c56404e53a76 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -318,7 +318,7 @@ struct pcmcia_device_id {
- #define INPUT_DEVICE_ID_LED_MAX		0x0f
- #define INPUT_DEVICE_ID_SND_MAX		0x07
- #define INPUT_DEVICE_ID_FF_MAX		0x7f
--#define INPUT_DEVICE_ID_SW_MAX		0x0f
-+#define INPUT_DEVICE_ID_SW_MAX		0x10
- #define INPUT_DEVICE_ID_PROP_MAX	0x1f
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
+index 1409a5bb55820..4f6f7f0761fc1 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
+@@ -13,6 +13,9 @@
+ #define INTEL_RAPL_PRIO_DEVID_0	0x3451
+ #define INTEL_CFG_MBOX_DEVID_0	0x3459
  
- #define INPUT_DEVICE_ID_MATCH_BUS	1
-diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-index 85387c76c24f3..472cd5bc55676 100644
---- a/include/uapi/linux/input-event-codes.h
-+++ b/include/uapi/linux/input-event-codes.h
-@@ -808,7 +808,8 @@
- #define SW_LINEIN_INSERT	0x0d  /* set = inserted */
- #define SW_MUTE_DEVICE		0x0e  /* set = device disabled */
- #define SW_PEN_INSERTED		0x0f  /* set = pen inserted */
--#define SW_MAX			0x0f
-+#define SW_MACHINE_COVER	0x10  /* set = cover closed */
-+#define SW_MAX			0x10
- #define SW_CNT			(SW_MAX+1)
- 
++#define INTEL_RAPL_PRIO_DEVID_1 0x3251
++#define INTEL_CFG_MBOX_DEVID_1  0x3259
++
  /*
+  * Validate maximum commands in a single request.
+  * This is enough to handle command to every core in one ioctl, or all
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
+index de4169d0796bd..9a055fd54053f 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
+@@ -148,6 +148,7 @@ static long isst_if_mbox_proc_cmd(u8 *cmd_ptr, int *write_only, int resume)
+ 
+ static const struct pci_device_id isst_if_mbox_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_CFG_MBOX_DEVID_0)},
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_CFG_MBOX_DEVID_1)},
+ 	{ 0 },
+ };
+ MODULE_DEVICE_TABLE(pci, isst_if_mbox_ids);
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
+index ad8c7c0df4d9a..e3778204b7a60 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
+@@ -72,6 +72,7 @@ static long isst_if_mmio_rd_wr(u8 *cmd_ptr, int *write_only, int resume)
+ 
+ static const struct pci_device_id isst_if_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_RAPL_PRIO_DEVID_0)},
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_RAPL_PRIO_DEVID_1)},
+ 	{ 0 },
+ };
+ MODULE_DEVICE_TABLE(pci, isst_if_ids);
 -- 
 2.25.1
 
