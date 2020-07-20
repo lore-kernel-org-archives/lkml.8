@@ -2,121 +2,152 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E25C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B038CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26FC822B51
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:44:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MqA1QBnc"
+	by mail.kernel.org (Postfix) with ESMTP id 9225B2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730252AbgGTSoU (ORCPT
+        id S1730355AbgGTSpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 14:44:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39200 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbgGTSoT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 14:44:19 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47556C061794;
-        Mon, 20 Jul 2020 11:44:19 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id y9so3387479oot.9;
-        Mon, 20 Jul 2020 11:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aCbgyprCpv5zpqintIcYum/YWgpLdnYdNsT160BVscU=;
-        b=MqA1QBncRXeHqrSw+D9BJYzKgHEiDmWtVKqX3bSjZgXmBmd6zpF4cQWCzZq10h0CA3
-         athEZ1vHT98oFgV1u5Xrq7SIUdYFFDJweUOqE/9dAedg5r1E+1wUR4GCgjrB96tcY/oW
-         eRPMgsTx93B4fM1CBPPt+BYnUy+SKpvnDZb84tQzPwV8RrB/O6GPq9FpLKtvGOAsM390
-         C7MWF2OlPkVQwDk7XXBKHOaIfJP+cSPOMetp2zdeIqSqvIGGFuwHmUWypGeLDGvbZ5XA
-         /LJYfKsKKQ3GagLFgzCqrfWNONB11jIfoxaDh7WFhi8q1GPz+bzP6N2POUhiM43D/SpJ
-         PZCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aCbgyprCpv5zpqintIcYum/YWgpLdnYdNsT160BVscU=;
-        b=LIrWcHEJSXZNux0yE+Og8ay3acuYUIOVCil8DnQqRZOpdUCDlO+ObAcPJwujkNR5FD
-         /BoZeS2otxmO2mEzizf5u/zM62Vpj1lCxIuAExWVIYfe4YE07HrY9uSIuonUTi4Mm3DP
-         /IFzaukDUxjhz1wICCgqUftlitj6NEVrmv7oQNAnIwA0zcWmUFhgnDeVoUxhlWTP2WIR
-         J6qBKaQGAKWfA04u+a2uyrog8gNxGKsBvdU4MjxW+FZNeBWcXngZW1L7XbRYQIic/ntn
-         QeXdG8LqELd1onZ5+AdEqfTlAbQlHfDck7WyRveJvoXXrWCjAaXEYBzre7oUj0q48iOM
-         sdtA==
-X-Gm-Message-State: AOAM530JHQ5TemDWKyvFoMH7pxny39GOsb4YY/0eiZWcZGykTMGt5OBp
-        ZzP9epea+Sg0+R/NziaOguzcOCGxepR2n8khmBO6zQ==
-X-Google-Smtp-Source: ABdhPJxxdpu7f6maFj8dhB9dVzclW3hoj40UmwmfiLyTPbY4FdQO2aoMX/tGthJiy4XqhpNjr1TPi/shKoe1NFr1EKE=
-X-Received: by 2002:a4a:b006:: with SMTP id f6mr20757376oon.13.1595270658680;
- Mon, 20 Jul 2020 11:44:18 -0700 (PDT)
+        Mon, 20 Jul 2020 14:45:31 -0400
+Received: from mga04.intel.com ([192.55.52.120]:44580 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729027AbgGTSpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 14:45:30 -0400
+IronPort-SDR: vXvXqmC98jNakaw+hx0yhYB0dX0vVRUJiNDwhdIKJrnF2pq+p00Hb571nzmewCJqFYUA3zcheC
+ 6ieiGweipztA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="147488360"
+X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
+   d="scan'208";a="147488360"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 11:45:29 -0700
+IronPort-SDR: 6y0+z5FCdr67qB+S3GoCrAC1V6JRCXFlZ69T8s7zVBxahrLjAvBdH0Sh/700l+jV+n2rx6p3K+
+ H4b6cRG4Y+JQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
+   d="scan'208";a="283607960"
+Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
+  by orsmga003.jf.intel.com with ESMTP; 20 Jul 2020 11:45:28 -0700
+Subject: Re: [PATCH] fpga: stratix10-soc: make FPGA task un-interruptible
+To:     mdf@kernel.org
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dinguyen@kernel.org, richard.gong@intel.com
+References: <1594138447-21488-1-git-send-email-richard.gong@linux.intel.com>
+From:   Richard Gong <richard.gong@linux.intel.com>
+Message-ID: <d678df9e-7f1d-8f50-e2c9-a734b60e6c9a@linux.intel.com>
+Date:   Mon, 20 Jul 2020 14:00:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200717222819.26198-1-nramas@linux.microsoft.com>
- <20200717222819.26198-5-nramas@linux.microsoft.com> <CAEjxPJ7xQtZToF4d2w_o8SXFKG9kPZaWTWTFqyC-7GwBWnQa0A@mail.gmail.com>
- <c0fbfcf3-ec36-872a-c389-b3fea214848c@linux.microsoft.com>
- <CAEjxPJ7VH18bEo6+U1GWrx=tHVGr=6XtF5_ygcfQYgdtZ74J+g@mail.gmail.com>
- <bea0cb52-2e13-fb14-b66c-b57287c23c3f@linux.microsoft.com>
- <CAEjxPJ6Rt7u3shLbxoPRHgr-D=CD9d_eXRB07A9qN7RmJwZAwA@mail.gmail.com>
- <CAEjxPJ6-jHha+CeqSdQ2O0bpyQe_9buj2ENZz6FNj6S87XSSfg@mail.gmail.com> <dccfc56b-c3ab-327e-19b2-7a70d15afe5b@linux.microsoft.com>
-In-Reply-To: <dccfc56b-c3ab-327e-19b2-7a70d15afe5b@linux.microsoft.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Mon, 20 Jul 2020 14:44:07 -0400
-Message-ID: <CAEjxPJ6_pxEh6HG9F3r=4B5ZgEpNPkgLHHfJp6ze=F1wKt4wCw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] LSM: Define SELinux function to measure security state
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1594138447-21488-1-git-send-email-richard.gong@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 2:27 PM Lakshmi Ramasubramanian
-<nramas@linux.microsoft.com> wrote:
->
-> On 7/20/20 10:49 AM, Stephen Smalley wrote:
->
-> >>>
-> >>> Looks like the template used is ima-ng which doesn't include the
-> >>> measured buffer. Please set template to "ima-buf" in the policy.
-> >>>
-> >>> For example,
-> >>> measure func=LSM_STATE template=ima-buf
-> >>
-> >> It seems like one shouldn't need to manually specify it if it is the
-> >> only template that yields a useful result for the LSM_STATE function?
-> >
-> > Actually, if we used ima-ng template for selinux-policy-hash, then
-> > instead of needing to hash the policy
-> > first and passing the hash to IMA, we could just pass the policy as
-> > the buffer and IMA would take care of the hashing, right?
->
-> That is correct.
->
-> The IMA hook I've added to measure LSM structures is a generic one that
-> can be used by any security module (SM). I feel it would be better to
-> not have policy or state or any such SM specific logic in IMA, but leave
-> that to the individual SM to handle.
->
-> What do you think?
 
-It is correct to remain security module agnostic.  However, I think
-you can remain LSM-neutral while still avoiding the double hashing of
-the policy here.  Can't you just pass in the policy itself as the
-buffer and let IMA hash it?  Then you can let the policy author decide
-on the template to be used (ima-buf versus ima-ng).  If you want to
-support the use of different templates for different "kinds" of LSM
-state (e.g. state versus policy) you could either provide two funcs
-(LSM_STATE, LSM_POLICY) or otherwise support selection based on some
-other attribute.
+Hi Moritz,
+
+Sorry for asking.
+
+When you get chance, can you review this FPGA patch?
+
+Regards,
+Richard
+
+
+On 7/7/20 11:14 AM, richard.gong@linux.intel.com wrote:
+> From: Richard Gong <richard.gong@intel.com>
+> 
+> When CTRL+C occurs during the process of FPGA reconfiguration, the FPGA
+> reconfiguration process stops and the user can't perform a new FPGA
+> reconfiguration properly.
+> 
+> Set FPGA complete task to be not interruptible so that the user can
+> properly perform FPGA reconfiguration after CTRL+C event.
+> 
+> Signed-off-by: Richard Gong <richard.gong@intel.com>
+> ---
+>   drivers/fpga/stratix10-soc.c | 23 +++--------------------
+>   1 file changed, 3 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
+> index 44b7c56..657a70c 100644
+> --- a/drivers/fpga/stratix10-soc.c
+> +++ b/drivers/fpga/stratix10-soc.c
+> @@ -196,17 +196,13 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
+>   	if (ret < 0)
+>   		goto init_done;
+>   
+> -	ret = wait_for_completion_interruptible_timeout(
+> +	ret = wait_for_completion_timeout(
+>   		&priv->status_return_completion, S10_RECONFIG_TIMEOUT);
+>   	if (!ret) {
+>   		dev_err(dev, "timeout waiting for RECONFIG_REQUEST\n");
+>   		ret = -ETIMEDOUT;
+>   		goto init_done;
+>   	}
+> -	if (ret < 0) {
+> -		dev_err(dev, "error (%d) waiting for RECONFIG_REQUEST\n", ret);
+> -		goto init_done;
+> -	}
+>   
+>   	ret = 0;
+>   	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
+> @@ -318,7 +314,7 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
+>   		 */
+>   		wait_status = 1; /* not timed out */
+>   		if (!priv->status)
+> -			wait_status = wait_for_completion_interruptible_timeout(
+> +			wait_status = wait_for_completion_timeout(
+>   				&priv->status_return_completion,
+>   				S10_BUFFER_TIMEOUT);
+>   
+> @@ -340,13 +336,6 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
+>   			ret = -ETIMEDOUT;
+>   			break;
+>   		}
+> -		if (wait_status < 0) {
+> -			ret = wait_status;
+> -			dev_err(dev,
+> -				"error (%d) waiting for svc layer buffers\n",
+> -				ret);
+> -			break;
+> -		}
+>   	}
+>   
+>   	if (!s10_free_buffers(mgr))
+> @@ -372,7 +361,7 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
+>   		if (ret < 0)
+>   			break;
+>   
+> -		ret = wait_for_completion_interruptible_timeout(
+> +		ret = wait_for_completion_timeout(
+>   			&priv->status_return_completion, timeout);
+>   		if (!ret) {
+>   			dev_err(dev,
+> @@ -380,12 +369,6 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
+>   			ret = -ETIMEDOUT;
+>   			break;
+>   		}
+> -		if (ret < 0) {
+> -			dev_err(dev,
+> -				"error (%d) waiting for RECONFIG_COMPLETED\n",
+> -				ret);
+> -			break;
+> -		}
+>   		/* Not error or timeout, so ret is # of jiffies until timeout */
+>   		timeout = ret;
+>   		ret = 0;
+> 
