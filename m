@@ -2,121 +2,83 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F186C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 599082250E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:11:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595211104;
-	bh=PgDcAq+4nyz4PbXB7ez/Cs907K+I0Hwh/nXW03+MYaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z+CE83RtbGCQP4HSMt92luE5i+aMlQNDt5x8g/ib0LYyDyXDOBSzUSsvDBPTZi/bO
-	 E8TETqLGktH8qyBbg95AnNlbcx02IURVVQYwJ+fcWFUcvmxHGdMEtLbygm+VkIVZ4P
-	 m6zLtgfG6ZY23qU2DzDd4nBcNu4+uFKgd3r17nss=
+	by mail.kernel.org (Postfix) with ESMTP id 9465C208B3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 02:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGTCLn (ORCPT
+        id S1726830AbgGTCHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 22:11:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53742 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbgGTCLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 22:11:42 -0400
-Received: from dragon (unknown [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15472208B3;
-        Mon, 20 Jul 2020 02:11:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595211101;
-        bh=PgDcAq+4nyz4PbXB7ez/Cs907K+I0Hwh/nXW03+MYaE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xYYOIPhjYHhrVPbinYr1Yu+dMXz1s1oqP1orozIz0nqL8+BlHf4G6rTrMRoHCqrfc
-         yG4A/mlQ25vMLDKLq6LssLNpRR+ieh7scg5n3dK6hVfNRIUzlZ6nTKBrVGfUVRAsEr
-         cn1ufSU/UGfA1eXN/Rqddi2dwmloZUaIMBK65mHA=
-Date:   Mon, 20 Jul 2020 10:11:26 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/3] ARM: dts: colibri-imx7: add usb dual-role switch
- capability
-Message-ID: <20200720021125.GC11560@dragon>
-References: <20200710132423.497230-1-philippe.schenker@toradex.com>
- <20200710132423.497230-3-philippe.schenker@toradex.com>
- <73240ab0-5069-40c5-4ade-7fcc2207dfaf@pengutronix.de>
- <c76c0fd056512a3f8e24bf06e7bb7e1650090609.camel@toradex.com>
- <7e6f8135-120f-0831-20ad-25648ea646b8@pengutronix.de>
- <83b230cef109e1a413ab1036c21ad763a1d127eb.camel@toradex.com>
+        Sun, 19 Jul 2020 22:07:19 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42042 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726225AbgGTCHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 22:07:19 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 559488765EB5FCFC14C9;
+        Mon, 20 Jul 2020 10:07:16 +0800 (CST)
+Received: from [127.0.0.1] (10.174.178.16) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Jul 2020
+ 10:07:01 +0800
+Subject: Re: [PATCH v2] scsi: scsi_transport_sas: add missing newline when
+ printing 'enable' by sysfs
+To:     Bart Van Assche <bvanassche@acm.org>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <john.garry@huawei.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <guohanjun@huawei.com>
+References: <1594975472-12486-1-git-send-email-wangxiongfeng2@huawei.com>
+ <88b08a41-55b2-ae5d-fbe5-24439429855f@acm.org>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <be74553e-24a1-5d2b-beb6-59cca1599450@huawei.com>
+Date:   Mon, 20 Jul 2020 10:07:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <83b230cef109e1a413ab1036c21ad763a1d127eb.camel@toradex.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <88b08a41-55b2-ae5d-fbe5-24439429855f@acm.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.178.16]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 08:20:34AM +0000, Philippe Schenker wrote:
-> On Tue, 2020-07-14 at 09:55 +0200, Ahmad Fatoum wrote:
-> > Hello Philippe,
-> > 
-> > On 7/13/20 1:53 PM, Philippe Schenker wrote:
-> > > On Mon, 2020-07-13 at 11:46 +0200, Ahmad Fatoum wrote:
-> > > > Hello Philippe,
-> > > > 
-> > > > > +	extcon_usbc_det: usbc_det {
-> > > > > +		compatible = "linux,extcon-usb-gpio";
-> > > > 
-> > > > According to 4602f3bff266 ("usb: common: add USB GPIO based
-> > > > connection
-> > > > detection driver"):
-> > > > "the old way using extcon to support USB Dual-Role switch is now
-> > > > deprecated
-> > > >  when use Type-B connector."
-> > > > 
-> > > > Have you considered using a compatible = "gpio-usb-b-connector"
-> > > > child
-> > > > node instead?
-> > > > 
-> > > > Cheers,
-> > > > Ahmad
-> > > 
-> > > Thanks for the Hint Ahmad,
-> > > 
-> > > I already tried and just now tried again but it doesn't work on our
-> > > hardware. Are you sure this works with chipidea driver?
-> > 
-> > I haven't, just wanted to point its existence out in case you didn't
-> > know.
-> > Seems we need to call of_platform_populate somewhere in the driver.
-> > Unsure what other changes are necessary.
-> 
-> Yep, thanks for that! It seems like that need to be really called as I
-> can't get a probe of the new usb connector driver. I quickly grepped
-> through code and saw that tegra USB driver is calling
-> of_platform_populate and they also use that gpio-usb-b-connector.
-> 
-> > 
-> > > Should this new usb-connector stuff work in general with every old
-> > > driver?
-> > 
-> > If the driver support isn't there yet, I think use of extcon is fine
-> > as is.
+Hi,
 
-Shouldn't we improve chipidea driver to get it work with gpio-usb-b-connector?
+On 2020/7/19 4:25, Bart Van Assche wrote:
+> On 2020-07-17 01:44, Xiongfeng Wang wrote:
+>> diff --git a/drivers/scsi/scsi_transport_sas.c b/drivers/scsi/scsi_transport_sas.c
+>> index 182fd25..e443dee 100644
+>> --- a/drivers/scsi/scsi_transport_sas.c
+>> +++ b/drivers/scsi/scsi_transport_sas.c
+>> @@ -563,7 +563,7 @@ static ssize_t do_sas_phy_enable(struct device *dev,
+>>  {
+>>  	struct sas_phy *phy = transport_class_to_phy(dev);
+>>  
+>> -	return snprintf(buf, 20, "%d", phy->enabled);
+>> +	return snprintf(buf, 20, "%d\n", phy->enabled);
+>>  }
+> 
+> For future sysfs show function patches, please use PAGE_SIZE as second
+> snprintf() argument or use sprintf() instead of snprintf() because in
+> this case it is clear that no output buffer overflow will happen. Using
 
-Shawn
+Thanks for your advice. I will follow it in the future patches.
+
+> any other size argument than PAGE_SIZE makes patches like the above
+> harder to verify than necessary. Anyway:
+> 
+> Reviewed-by: Bart van Assche <bvanassche@acm.org>
+
+Thanks,
+Xiongfeng
+
+> 
+
