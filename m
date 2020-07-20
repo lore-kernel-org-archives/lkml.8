@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E722AC433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C16C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6AD4206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D29A2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261654;
-	bh=roEMoMNz0vgPEnIen9IPPcMgNc5MvflC4Ou3IoPYch4=;
+	s=default; t=1595261657;
+	bh=4vriX5B70DVSBvzKafRh6krsUhLdhbdqiDlIJdAuMwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h83/WGt3IniRjAxji6cJGlCqfFWckCgNrMClosEkCR3vDCVzXgedIqyGAVA6ANAB/
-	 yR9CsXZPovf7ck4kYqjKaU4WjE0kPgsI0Aa1evvialqJSUp7nNC5k5B+RWXmMzYxZA
-	 DmTdShFGQzPCFIpwa/DjJhrHoJz2snVkLy1bhzCU=
+	b=RDeRfFpVxhLcA1yk3NYhaOz4UtLE1Mmq8AnhHu9J0gs44tRKL0SKEkJfpXY3XyOG+
+	 thNJD2bZExUlGy72dZfPNNn4zxgutftyu+/EYyYi6LndG0sltnzXAP2YVW2M3altKy
+	 i40Ezptgoam1pvl9WBo6s9lrNx//Yiy+zDxRN5Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388230AbgGTQON (ORCPT
+        id S2388238AbgGTQOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:14:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54242 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:14:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388197AbgGTQN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:13:59 -0400
+        id S2388229AbgGTQON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:14:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A16202065E;
-        Mon, 20 Jul 2020 16:13:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A5292064B;
+        Mon, 20 Jul 2020 16:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261639;
-        bh=roEMoMNz0vgPEnIen9IPPcMgNc5MvflC4Ou3IoPYch4=;
+        s=default; t=1595261653;
+        bh=4vriX5B70DVSBvzKafRh6krsUhLdhbdqiDlIJdAuMwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rAa+UbSHQkD/6Cu4WWKO9CLIicBO/F8psHxfttTNJ5YRHmcmMNQ6slpfBoMgyzLTy
-         pP5DFOEUg2Pmx3EWW/srK8dRjKwmPAbRFwF9oxWYPBev1+LtTVtxv9DO6pwdIsv5Jx
-         c0mFVhzuw+bUL24jc931zHlFd/VNtXvb+YKscHFM=
+        b=BzPh5nFq+3sPnII/OS/8y3oAW1ULWImMItjRkg0B9xPhLY2+Fwufv9yH87n9v4bDI
+         FzcDtbDG/e9x2q2nBTbJIFxrWcqx+reLHG1ACx6juoX85OfaraBpk1A7J9k7KIfAMi
+         9HwWLT+/s5FVu0U1un2N3m46Fi++y5LUdDLwRfXM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Wang <dave.wang@emc.com.tw>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.7 189/244] Input: elan_i2c - add more hardware ID for Lenovo laptops
-Date:   Mon, 20 Jul 2020 17:37:40 +0200
-Message-Id: <20200720152834.832782590@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.7 193/244] scsi: megaraid_sas: Remove undefined ENABLE_IRQ_POLL macro
+Date:   Mon, 20 Jul 2020 17:37:44 +0200
+Message-Id: <20200720152835.023086054@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,40 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Wang <dave.wang@emc.com.tw>
+From: Chandrakanth Patil <chandrakanth.patil@broadcom.com>
 
-commit a50ca29523b18baea548bdf5df9b4b923c2bb4f6 upstream.
+commit 07d3f04550023395bbf34b99ec7e00fc50d9859f upstream.
 
-This adds more hardware IDs for Elan touchpads found in various Lenovo
-laptops.
+As the ENABLE_IRQ_POLL macro is undefined, the check for ENABLE_IRQ_POLL
+macro in ISR will always be false. This leads to irq polling being
+non-functional.
 
-Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
-Link: https://lore.kernel.org/r/000201d5a8bd$9fead3f0$dfc07bd0$@emc.com.tw
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Remove ENABLE_IRQ_POLL check from ISR.
+
+Link: https://lore.kernel.org/r/20200715120153.20512-1-chandrakanth.patil@broadcom.com
+Fixes: a6ffd5bf6819 ("scsi: megaraid_sas: Call disable_irq from process IRQ")
+Cc: <stable@vger.kernel.org> # v5.3+
+Signed-off-by: Chandrakanth Patil <chandrakanth.patil@broadcom.com>
+Signed-off-by: Kashyap Desai <kashyap.desai@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/input/elan-i2c-ids.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/scsi/megaraid/megaraid_sas_fusion.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/include/linux/input/elan-i2c-ids.h
-+++ b/include/linux/input/elan-i2c-ids.h
-@@ -67,8 +67,15 @@ static const struct acpi_device_id elan_
- 	{ "ELAN062B", 0 },
- 	{ "ELAN062C", 0 },
- 	{ "ELAN062D", 0 },
-+	{ "ELAN062E", 0 }, /* Lenovo V340 Whiskey Lake U */
-+	{ "ELAN062F", 0 }, /* Lenovo V340 Comet Lake U */
- 	{ "ELAN0631", 0 },
- 	{ "ELAN0632", 0 },
-+	{ "ELAN0633", 0 }, /* Lenovo S145 */
-+	{ "ELAN0634", 0 }, /* Lenovo V340 Ice lake */
-+	{ "ELAN0635", 0 }, /* Lenovo V1415-IIL */
-+	{ "ELAN0636", 0 }, /* Lenovo V1415-Dali */
-+	{ "ELAN0637", 0 }, /* Lenovo V1415-IGLR */
- 	{ "ELAN1000", 0 },
- 	{ }
- };
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -3797,10 +3797,8 @@ static irqreturn_t megasas_isr_fusion(in
+ 	if (instance->mask_interrupts)
+ 		return IRQ_NONE;
+ 
+-#if defined(ENABLE_IRQ_POLL)
+ 	if (irq_context->irq_poll_scheduled)
+ 		return IRQ_HANDLED;
+-#endif
+ 
+ 	if (!instance->msix_vectors) {
+ 		mfiStatus = instance->instancet->clear_intr(instance);
 
 
