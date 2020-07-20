@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB75EC433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D482C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66D9B2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 509E12176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259901;
-	bh=oDCW72n+tBqlUxPcK9GKINASzwNcdmNvRubE7YDEEE8=;
+	s=default; t=1595259906;
+	bh=LJUl+vg1sUAgM3/aWo+82X5SN5T2AVXyXPOjZo5Upcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=izyih8omiMVa7VrEBjmXtqFFivsV30RxT1Qr7IV+Dr3RJEN+iCFe33y3J9h5euo7Q
-	 Y/t+qs2XkNQTp9WOWwxqXcrF+cIDzEX7DxNS1fyqMXZC6/VzHviShb1TcHKr2cMS1J
-	 zUz62LivBjmQMyMr/lGsZWYnld7Ju2vNgg1Ndjew=
+	b=tFg0hI4CGg/8wc9HrRDA1oD/4i26edgJY7l+XUdFBIpu8XKigguRR/Nqc3Ox1CGPt
+	 g/nlrKhgVL7M7zQ4tDbHBo9Fn67PsNp+cqrEg/4BaSKrwZ3C8/cy7UzDoWwjVdz+GR
+	 dcSglKsMWD0x70CW2bgClX2D9Pwt0Qq/J5dtcLFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730474AbgGTPo7 (ORCPT
+        id S1730478AbgGTPpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:44:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39064 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:45:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730465AbgGTPoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:44:55 -0400
+        id S1729621AbgGTPo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:44:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A2612065E;
-        Mon, 20 Jul 2020 15:44:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0A292064B;
+        Mon, 20 Jul 2020 15:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259894;
-        bh=oDCW72n+tBqlUxPcK9GKINASzwNcdmNvRubE7YDEEE8=;
+        s=default; t=1595259897;
+        bh=LJUl+vg1sUAgM3/aWo+82X5SN5T2AVXyXPOjZo5Upcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l4Q+kaRnCEM9UTOj9BM0Y032EpXpUgnrL7qOJKslIKQLBDoJhxMrB/3u1wSN9w42Z
-         MKq7i+i76w4J1Q19LsZSoo1fFYJUc2lH3HQPWOsakXvudMQBKsPo0bL71caylwEbwJ
-         Ky/W7DvYvUurPm+QllwMSHvGOV0a7xGC3ogJZ/yE=
+        b=fyTJkPJtmfFUa1FKXpKLBS1dGIkjN9nGjIFpTtXP+ZV0E/wNEl0VvZEuDy3uuBnQR
+         uFl3DwPEhungTyiYhOGm+Pgcuu+yqVJWQYY5uchefKajlqkkMYLybnpdJORswGxoTx
+         i96we0FDdUpun7J3NdB3zllsrAcqDlHUs6znopPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 032/125] KVM: x86: Inject #GP if guest attempts to toggle CR4.LA57 in 64-bit mode
-Date:   Mon, 20 Jul 2020 17:36:11 +0200
-Message-Id: <20200720152804.534985140@linuxfoundation.org>
+Subject: [PATCH 4.14 033/125] KVM: x86: Mark CR4.TSD as being possibly owned by the guest
+Date:   Mon, 20 Jul 2020 17:36:12 +0200
+Message-Id: <20200720152804.584712772@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -63,42 +62,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit d74fcfc1f0ff4b6c26ecef1f9e48d8089ab4eaac upstream.
+commit 7c83d096aed055a7763a03384f92115363448b71 upstream.
 
-Inject a #GP on MOV CR4 if CR4.LA57 is toggled in 64-bit mode, which is
-illegal per Intel's SDM:
+Mark CR4.TSD as being possibly owned by the guest as that is indeed the
+case on VMX.  Without TSD being tagged as possibly owned by the guest, a
+targeted read of CR4 to get TSD could observe a stale value.  This bug
+is benign in the current code base as the sole consumer of TSD is the
+emulator (for RDTSC) and the emulator always "reads" the entirety of CR4
+when grabbing bits.
 
-  CR4.LA57
-    57-bit linear addresses (bit 12 of CR4) ... blah blah blah ...
-    This bit cannot be modified in IA-32e mode.
+Add a build-time assertion in to ensure VMX doesn't hand over more CR4
+bits without also updating x86.
 
-Note, the pseudocode for MOV CR doesn't call out the fault condition,
-which is likely why the check was missed during initial development.
-This is arguably an SDM bug and will hopefully be fixed in future
-release of the SDM.
-
-Fixes: fd8cb433734ee ("KVM: MMU: Expose the LA57 feature to VM.")
+Fixes: 52ce3c21aec3 ("x86,kvm,vmx: Don't trap writes to CR4.TSD")
 Cc: stable@vger.kernel.org
-Reported-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200703021714.5549-1-sean.j.christopherson@intel.com>
+Message-Id: <20200703040422.31536-2-sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kvm/kvm_cache_regs.h |    2 +-
+ arch/x86/kvm/vmx.c            |    2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -806,6 +806,8 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, u
- 	if (is_long_mode(vcpu)) {
- 		if (!(cr4 & X86_CR4_PAE))
- 			return 1;
-+		if ((cr4 ^ old_cr4) & X86_CR4_LA57)
-+			return 1;
- 	} else if (is_paging(vcpu) && (cr4 & X86_CR4_PAE)
- 		   && ((cr4 ^ old_cr4) & pdptr_bits)
- 		   && !load_pdptrs(vcpu, vcpu->arch.walk_mmu,
+--- a/arch/x86/kvm/kvm_cache_regs.h
++++ b/arch/x86/kvm/kvm_cache_regs.h
+@@ -5,7 +5,7 @@
+ #define KVM_POSSIBLE_CR0_GUEST_BITS X86_CR0_TS
+ #define KVM_POSSIBLE_CR4_GUEST_BITS				  \
+ 	(X86_CR4_PVI | X86_CR4_DE | X86_CR4_PCE | X86_CR4_OSFXSR  \
+-	 | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_PGE)
++	 | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_PGE | X86_CR4_TSD)
+ 
+ static inline unsigned long kvm_register_read(struct kvm_vcpu *vcpu,
+ 					      enum kvm_reg reg)
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -5592,6 +5592,8 @@ static void vmx_set_constant_host_state(
+ 
+ static void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
+ {
++	BUILD_BUG_ON(KVM_CR4_GUEST_OWNED_BITS & ~KVM_POSSIBLE_CR4_GUEST_BITS);
++
+ 	vmx->vcpu.arch.cr4_guest_owned_bits = KVM_CR4_GUEST_OWNED_BITS;
+ 	if (enable_ept)
+ 		vmx->vcpu.arch.cr4_guest_owned_bits |= X86_CR4_PGE;
 
 
