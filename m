@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B125FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA45C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8981C20734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8760420734
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260618;
-	bh=EGhIgVIAG6evw4B0i/8BjerJYr4VaR5XyLTu0Dr1Er4=;
+	s=default; t=1595260624;
+	bh=kuI7McwKpSemTfEAuqoCig7IL4PBatzOwJOaPr1Li9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t/qbSk6QAmi30blRCcfrwbZOgv4QimejWel06/LqdqHFL6v7EVDsW5Vp7ria2HS8i
-	 IoFY92v05GrKGW6sGyPoGYV1UzhpIZlcb00UJ3UXTBBDOgs3BRiH1TrmeInfZw0HTk
-	 04icAH31eWz490kGI74NAJLVp9QW33wxh06+ZiN4=
+	b=WRix7OD/hF7Nm/r8JTJRXTSNnjBw46dH7twjMFc7midsBtmdfqyU9nEe320DSBPUQ
+	 DgGQAGciGOOJrNVunX5IiH5mKVaejdCAqRJU3rhvekAZIaFfGQ/jVcgRdZ1Q7hzC5V
+	 FzAwBzH3017zcWoSFQF6nxSfIoDr6+jRlqQOHGqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731397AbgGTP4z (ORCPT
+        id S1731860AbgGTP5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:56:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56394 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:57:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731825AbgGTP4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:56:44 -0400
+        id S1731835AbgGTP4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:56:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0A302065E;
-        Mon, 20 Jul 2020 15:56:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB37C22CF6;
+        Mon, 20 Jul 2020 15:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260604;
-        bh=EGhIgVIAG6evw4B0i/8BjerJYr4VaR5XyLTu0Dr1Er4=;
+        s=default; t=1595260610;
+        bh=kuI7McwKpSemTfEAuqoCig7IL4PBatzOwJOaPr1Li9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=at6Lua5ttpAMofbWGNHUA5uCLWRuauH83SNgBHlHQ7BEgCdC9NS5Qf0BC2mwRHjFW
-         Ol+EbisnIhAI495LcQiNUNIOw8PD4ItXEAHdA9ZLASArwVokQ6mOaMRVMfRGJG+hEo
-         rcp9iWMJqOSeGUlt04wytn/eiFOll/XO68+MngKM=
+        b=zIVbWbxgF1rsH6hjSt7XZe00IS665mGtMn9oN6G/k7V2iWmaGrD2zq5A0OdwioHfi
+         f6dIz8RtM2QKP7LW8VXpzJW+wMrbO5nkQokThBCUz36EZR81B0idMWwQnVccxsppqL
+         i0qqa7V1G5q6YuC+/nYWdJLA58sKXOZ5NcL+bRGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.4 028/215] arm64: arch_timer: Allow an workaround descriptor to disable compat vdso
-Date:   Mon, 20 Jul 2020 17:35:10 +0200
-Message-Id: <20200720152821.520281513@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Bogdanov <dbogdanov@marvell.com>,
+        Mark Starovoytov <mstarovoitov@marvell.com>,
+        Alexander Lobakin <alobakin@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 003/215] net: atlantic: fix ip dst and ipv6 address filters
+Date:   Mon, 20 Jul 2020 17:34:45 +0200
+Message-Id: <20200720152820.305220326@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -60,46 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Dmitry Bogdanov <dbogdanov@marvell.com>
 
-commit c1fbec4ac0d701f350a581941d35643d5a9cd184 upstream.
+commit a42e6aee7f47a8a68d09923c720fc8f605a04207 upstream.
 
-As we are about to disable the vdso for compat tasks in some circumstances,
-let's allow a workaround descriptor to express exactly that.
+This patch fixes ip dst and ipv6 address filters.
+There were 2 mistakes in the code, which led to the issue:
+* invalid register was used for ipv4 dst address;
+* incorrect write order of dwords for ipv6 addresses.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200706163802.1836732-3-maz@kernel.org
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Fixes: 23e7a718a49b ("net: aquantia: add rx-flow filter definitions")
+Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
+Signed-off-by: Mark Starovoytov <mstarovoitov@marvell.com>
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/include/asm/arch_timer.h  |    1 +
- drivers/clocksource/arm_arch_timer.c |    3 +++
- 2 files changed, 4 insertions(+)
 
---- a/arch/arm64/include/asm/arch_timer.h
-+++ b/arch/arm64/include/asm/arch_timer.h
-@@ -58,6 +58,7 @@ struct arch_timer_erratum_workaround {
- 	u64 (*read_cntvct_el0)(void);
- 	int (*set_next_event_phys)(unsigned long, struct clock_event_device *);
- 	int (*set_next_event_virt)(unsigned long, struct clock_event_device *);
-+	bool disable_compat_vdso;
- };
- 
- DECLARE_PER_CPU(const struct arch_timer_erratum_workaround *,
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -562,6 +562,9 @@ void arch_timer_enable_workaround(const
- 	if (wa->read_cntvct_el0) {
- 		clocksource_counter.archdata.clock_mode = VDSO_CLOCKMODE_NONE;
- 		vdso_default = VDSO_CLOCKMODE_NONE;
-+	} else if (wa->disable_compat_vdso && vdso_default != VDSO_CLOCKMODE_NONE) {
-+		vdso_default = VDSO_CLOCKMODE_ARCHTIMER_NOCOMPAT;
-+		clocksource_counter.archdata.clock_mode = vdso_default;
- 	}
+---
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh.c          |    4 ++--
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh_internal.h |    2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh.c
+@@ -1597,7 +1597,7 @@ void hw_atl_rpfl3l4_ipv6_src_addr_set(st
+ 	for (i = 0; i < 4; ++i)
+ 		aq_hw_write_reg(aq_hw,
+ 				HW_ATL_RPF_L3_SRCA_ADR(location + i),
+-				ipv6_src[i]);
++				ipv6_src[3 - i]);
  }
  
+ void hw_atl_rpfl3l4_ipv6_dest_addr_set(struct aq_hw_s *aq_hw, u8 location,
+@@ -1608,7 +1608,7 @@ void hw_atl_rpfl3l4_ipv6_dest_addr_set(s
+ 	for (i = 0; i < 4; ++i)
+ 		aq_hw_write_reg(aq_hw,
+ 				HW_ATL_RPF_L3_DSTA_ADR(location + i),
+-				ipv6_dest[i]);
++				ipv6_dest[3 - i]);
+ }
+ 
+ u32 hw_atl_sem_ram_get(struct aq_hw_s *self)
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh_internal.h
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh_internal.h
+@@ -2564,7 +2564,7 @@
+  */
+ 
+  /* Register address for bitfield pif_rpf_l3_da0_i[31:0] */
+-#define HW_ATL_RPF_L3_DSTA_ADR(location) (0x000053B0 + (location) * 0x4)
++#define HW_ATL_RPF_L3_DSTA_ADR(filter) (0x000053D0 + (filter) * 0x4)
+ /* Bitmask for bitfield l3_da0[1F:0] */
+ #define HW_ATL_RPF_L3_DSTA_MSK 0xFFFFFFFFu
+ /* Inverted bitmask for bitfield l3_da0[1F:0] */
 
 
