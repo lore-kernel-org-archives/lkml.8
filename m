@@ -2,77 +2,117 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C09A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857F4C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A68ED22482
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7330F2065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbgGTSeu (ORCPT
+        id S1730876AbgGTSfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 14:34:50 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45570 "EHLO vps0.lunn.ch"
+        Mon, 20 Jul 2020 14:35:17 -0400
+Received: from mga01.intel.com ([192.55.52.88]:45970 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbgGTSet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 14:34:49 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jxacc-0063zF-HV; Mon, 20 Jul 2020 20:34:42 +0200
-Date:   Mon, 20 Jul 2020 20:34:42 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexander Lobakin <alobakin@marvell.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        GR-everest-linux-l2@marvell.com,
-        QLogic-Storage-Upstream@marvell.com, netdev@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 02/16] qed, qede, qedf: convert link mode
- from u32 to ETHTOOL_LINK_MODE
-Message-ID: <20200720183442.GL1339445@lunn.ch>
-References: <20200720180815.107-1-alobakin@marvell.com>
- <20200720180815.107-3-alobakin@marvell.com>
+        id S1726506AbgGTSfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 14:35:16 -0400
+IronPort-SDR: wrdPvR2QQD5zVs+dlH2xBbA0Vt5zMGyPslee2clS8w7ZNH5VY12LfsWELbf08p7253hzgYUI2B
+ Mrr5waAIgsXQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="168130225"
+X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
+   d="scan'208";a="168130225"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 11:35:16 -0700
+IronPort-SDR: wK7wo3tDMannoMaWGv9oSkwguhLqP6DavKpuU2XXsLRCL8yJhaDeTIBrq75zM686eRl+HmbVUR
+ EPP//W3JMNMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
+   d="scan'208";a="309946010"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga004.fm.intel.com with ESMTP; 20 Jul 2020 11:35:16 -0700
+Date:   Mon, 20 Jul 2020 11:35:16 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC V2 04/17] x86/pks: Preserve the PKRS MSR on context
+ switch
+Message-ID: <20200720183515.GF478573@iweiny-DESK2.sc.intel.com>
+References: <20200717072056.73134-1-ira.weiny@intel.com>
+ <20200717072056.73134-5-ira.weiny@intel.com>
+ <20200717085954.GY10769@hirez.programming.kicks-ass.net>
+ <20200717223407.GS3008823@iweiny-DESK2.sc.intel.com>
+ <20200720091554.GN10769@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200720180815.107-3-alobakin@marvell.com>
+In-Reply-To: <20200720091554.GN10769@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 09:08:01PM +0300, Alexander Lobakin wrote:
-> Currently qed driver already ran out of 32 bits to store link modes,
-> and this doesn't allow to add and support more speeds.
-> Convert custom link mode to generic Ethtool bitmap and definitions
-> (convenient Phylink shorthands are used for elegance and readability).
-> This allowed us to drop all conversions/mappings between the driver
-> and Ethtool.
+On Mon, Jul 20, 2020 at 11:15:54AM +0200, Peter Zijlstra wrote:
+> On Fri, Jul 17, 2020 at 03:34:07PM -0700, Ira Weiny wrote:
+> > On Fri, Jul 17, 2020 at 10:59:54AM +0200, Peter Zijlstra wrote:
+> > > On Fri, Jul 17, 2020 at 12:20:43AM -0700, ira.weiny@intel.com wrote:
+> > > > +/*
+> > > > + * Write the PKey Register Supervisor.  This must be run with preemption
+> > > > + * disabled as it does not guarantee the atomicity of updating the pkrs_cache
+> > > > + * and MSR on its own.
+> > > > + */
+> > > > +void write_pkrs(u32 pkrs_val)
+> > > > +{
+> > > > +	this_cpu_write(pkrs_cache, pkrs_val);
+> > > > +	wrmsrl(MSR_IA32_PKRS, pkrs_val);
+> > > > +}
+> > > 
+> > > Should we write that like:
+> > > 
+> > > void write_pkrs(u32 pkr)
+> > > {
+> > > 	u32 *pkrs = get_cpu_ptr(pkrs_cache);
+> > > 	if (*pkrs != pkr) {
+> > > 		*pkrs = pkr;
+> > > 		wrmsrl(MSR_IA32_PKRS, pkr);
+> > > 	}
+> > > 	put_cpu_ptrpkrs_cache);
+> > > }
+> > > 
+> > > given that we fundamentally need to serialize againt schedule() here.
+> > 
+> > Yes.  That seems better.
+> > 
+> > That also means pks_sched_in() can be simplified to just
+> > 
+> > static inline void pks_sched_in(void)
+> > {
+> > 	write_pkrs(current->thread.saved_pkrs);
+> > }
+> > 
+> > Because of the built WRMSR avoidance.
+> > 
+> > However, pkrs_cache is static so I think I need to use {get,put}_cpu_var() here
+> > don't I?
 > 
-> This involves changes in qede and qedf as well, as they used definitions
-> from shared "qed_if.h".
-> 
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-> Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-> ---
->  drivers/net/ethernet/qlogic/qed/qed_main.c    | 288 ++++++++++--------
->  .../net/ethernet/qlogic/qede/qede_ethtool.c   | 200 ++++--------
->  drivers/scsi/qedf/qedf_main.c                 |  78 +++--
->  include/linux/qed/qed_if.h                    |  47 +--
->  4 files changed, 268 insertions(+), 345 deletions(-)
+> Or get_cpu_ptr(&pkrs_cache), sorry for the typo :-)
 
-Nice diffstat.
+Ah I see...  sorry, yes that will work.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+Done,
+Ira
