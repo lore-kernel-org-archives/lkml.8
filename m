@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB5BC433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F94C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44DB32176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF54206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261749;
-	bh=Uv5flyql7EogvRvn4rbLtyNvjWQ4u+X8dHYmaD+qbfA=;
+	s=default; t=1595261753;
+	bh=GTQrvfkHkrixypBA4qDS5vPkp36CgEG6atA3IEfLCA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hbRKJd/Wy2s5p9HSmRSnwVn4BXuHiPxsoHeDwzd0SqMIS8ULP89KEPwzqVy4EnE+o
-	 cSes6Sp8JJC3q/Fog8CGyb21NXvp4zA0cvZ0ZZduwSG6Ha7QlP1trsrZaopZkTA9+G
-	 C6TBl9KoHoeM/vPFpFSiCcc02Rf+6m8PbXUMWZaI=
+	b=fD3FAoFWnJVLlvxUo/lCehZDmqWtFJogpbqQDXTNpKeZq+KIrxnVNPBYUOFGFJoe1
+	 SBCLslGS75dxISbJjBMNRwTrxJRT8IUAYGN6pQGDB4BGdHWoPSHv+NkzOk/wnftEte
+	 2c2lPEJaqAeYFco6eJaRoIkN2xmiqKNJHAOZGvOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388460AbgGTQPr (ORCPT
+        id S2388467AbgGTQPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:15:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56726 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:15:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388452AbgGTQPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:15:45 -0400
+        id S2388461AbgGTQPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:15:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D96222064B;
-        Mon, 20 Jul 2020 16:15:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B01292064B;
+        Mon, 20 Jul 2020 16:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261744;
-        bh=Uv5flyql7EogvRvn4rbLtyNvjWQ4u+X8dHYmaD+qbfA=;
+        s=default; t=1595261747;
+        bh=GTQrvfkHkrixypBA4qDS5vPkp36CgEG6atA3IEfLCA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dyKTHbyK/6UrByCqx3a8OKN8KFoWZ0Fw3DTvXY7cgISH5Y6ChWEY97L0Nv7zJp3D9
-         HnEUq2aWiZvf6BWK5Av/vyIK0Z+ZVHTfMGcEvy9mofCfJZ7KD47/WOKkjBmMHYUZ3o
-         0zYMI7f+e2mp8due5owzC/967d2lYkUMy3mySXJc=
+        b=fI8T0mLnNTKyayoRozJtnBnTIEK9/C10wqGFxBOwZcCzPx555AyD8Lvz9vSMmSjy4
+         fhwNUzcKYweSPA8DWdFfqRmX7fX0ocnlYTX32r1cpxiGRl1ON4Tk+EpZ8htiTHeBIU
+         f7ptXX5bP6hDVQvTFwag3h59HvWvCRAQnrvXai60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josip Pavic <Josip.Pavic@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>,
+        stable@vger.kernel.org, hersen wu <hersenxs.wu@amd.com>,
+        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
         Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.7 226/244] drm/amd/display: handle failed allocation during stream construction
-Date:   Mon, 20 Jul 2020 17:38:17 +0200
-Message-Id: <20200720152836.603503000@linuxfoundation.org>
+Subject: [PATCH 5.7 227/244] drm/amd/display: OLED panel backlight adjust not work with external display connected
+Date:   Mon, 20 Jul 2020 17:38:18 +0200
+Message-Id: <20200720152836.649939898@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -61,79 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josip Pavic <Josip.Pavic@amd.com>
+From: hersen wu <hersenxs.wu@amd.com>
 
-commit be73e608ae2711dc8a1ab8b9549d9e348061b2ee upstream.
+commit b448d30b0c303d5454ea572b772d1ffae96bc6e7 upstream.
 
 [Why]
-Failing to allocate a transfer function during stream construction leads
-to a null pointer dereference
+amdgpu_dm->backlight_caps is for single eDP only. the caps are upddated
+for very connector. Real eDP caps will be overwritten by other external
+display. For OLED panel, caps->aux_support is set to 1 for OLED pnael.
+after external connected, caps+.aux_support is set to 0. This causes
+OLED backlight adjustment not work.
 
 [How]
-Handle the failed allocation by failing the stream construction
+within update_conector_ext_caps, backlight caps will be updated only for
+eDP connector.
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Josip Pavic <Josip.Pavic@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Signed-off-by: hersen wu <hersenxs.wu@amd.com>
+Reviewed-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
 Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_stream.c |   19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-@@ -56,7 +56,7 @@ void update_stream_signal(struct dc_stre
- 	}
- }
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -1804,6 +1804,7 @@ static void update_connector_ext_caps(st
+ 	struct amdgpu_display_manager *dm;
+ 	struct drm_connector *conn_base;
+ 	struct amdgpu_device *adev;
++	struct dc_link *link = NULL;
+ 	static const u8 pre_computed_values[] = {
+ 		50, 51, 52, 53, 55, 56, 57, 58, 59, 61, 62, 63, 65, 66, 68, 69,
+ 		71, 72, 74, 75, 77, 79, 81, 82, 84, 86, 88, 90, 92, 94, 96, 98};
+@@ -1811,6 +1812,10 @@ static void update_connector_ext_caps(st
+ 	if (!aconnector || !aconnector->dc_link)
+ 		return;
  
--static void dc_stream_construct(struct dc_stream_state *stream,
-+static bool dc_stream_construct(struct dc_stream_state *stream,
- 	struct dc_sink *dc_sink_data)
- {
- 	uint32_t i = 0;
-@@ -118,11 +118,17 @@ static void dc_stream_construct(struct d
- 	update_stream_signal(stream, dc_sink_data);
- 
- 	stream->out_transfer_func = dc_create_transfer_func();
-+	if (stream->out_transfer_func == NULL) {
-+		dc_sink_release(dc_sink_data);
-+		return false;
-+	}
- 	stream->out_transfer_func->type = TF_TYPE_BYPASS;
- 	stream->out_transfer_func->ctx = stream->ctx;
- 
- 	stream->stream_id = stream->ctx->dc_stream_id_count;
- 	stream->ctx->dc_stream_id_count++;
++	link = aconnector->dc_link;
++	if (link->connector_signal != SIGNAL_TYPE_EDP)
++		return;
 +
-+	return true;
- }
- 
- static void dc_stream_destruct(struct dc_stream_state *stream)
-@@ -164,13 +170,20 @@ struct dc_stream_state *dc_create_stream
- 
- 	stream = kzalloc(sizeof(struct dc_stream_state), GFP_KERNEL);
- 	if (stream == NULL)
--		return NULL;
-+		goto alloc_fail;
- 
--	dc_stream_construct(stream, sink);
-+	if (dc_stream_construct(stream, sink) == false)
-+		goto construct_fail;
- 
- 	kref_init(&stream->refcount);
- 
- 	return stream;
-+
-+construct_fail:
-+	kfree(stream);
-+
-+alloc_fail:
-+	return NULL;
- }
- 
- struct dc_stream_state *dc_copy_stream(const struct dc_stream_state *stream)
+ 	conn_base = &aconnector->base;
+ 	adev = conn_base->dev->dev_private;
+ 	dm = &adev->dm;
 
 
