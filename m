@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92ED9C2D0A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A673C2D0A8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D74522BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5135D22C9D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281184;
-	bh=7/bT1ObWFc0vmB+DUQCMp5JYvmyrsUL+aA9T/8le4Dg=;
+	s=default; t=1595281190;
+	bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FVdlE/pwXgcSiyqHpj06KaNLJVaARePpXEKcj88U1Sy5rYUSQJJwP/MbUXmcKzCOJ
-	 hlDcWNQRB5PVb0bpfb+0LeD88r0cukbNGbU+yhiix/dCYvnKPM0B62G8X/TOSyL3KT
-	 gs9yX+jTUBnBonKv4V/4ZOKf6GKWIfCjtyWd9D0w=
+	b=XYtZRd7T6b+GCVmPGIsu+lUQSU/1M/+UPFsAK1G5A67E8COk/TaKKC1lucXeP70TP
+	 zZKGS4PVJ+hWTeap66f0i8yG1hFv5q+eVMz11cl8QcI0QebDXCdQ5S8gBM0WSwgUHk
+	 UN0JS9x07tfGKee+f5z98nLhdDVJigMRQphnM79k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgGTVjm (ORCPT
+        id S1728573AbgGTVjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:39:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58304 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:39:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728355AbgGTVjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:09 -0400
+        id S1728391AbgGTVjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEE0B20717;
-        Mon, 20 Jul 2020 21:39:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E4F722CF7;
+        Mon, 20 Jul 2020 21:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281148;
-        bh=7/bT1ObWFc0vmB+DUQCMp5JYvmyrsUL+aA9T/8le4Dg=;
+        s=default; t=1595281151;
+        bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gmi1L+nSbQVNnM19knJqjOZqK22ZWhY5MeEV46U66x5vxHxi2nSBO5jz9q8CA8zQG
-         y9r/HYEndhmHPvJnzewx2fKrUhmpNclRQx5CSIZblBSHcUSkUHMGrNechjxWnbMdQI
-         YJV2YYomZ4uCipgkhk73d5TCiEI8mXANCVjZJGuY=
+        b=rH4yzy1O0XQ9lMJKN+65EnrxjxJ2gGKtiIZAn4WMR38YIDRB1WV5u864WYW+L2vD0
+         imBJH9LkJOVk6FOOx8/JaecNG15o2NDVILFdlcClAC8pyV+mMFdK1K+BdTfE6Tm7ET
+         kphsrzsnuCdGmL18BNNn2WF/mYqDPH+H9DB1Ocqg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chu Lin <linchuyuan@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 14/19] hwmon: (adm1275) Make sure we are reading enough data for different chips
-Date:   Mon, 20 Jul 2020 17:38:45 -0400
-Message-Id: <20200720213851.407715-14-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 17/19] x86: math-emu: Fix up 'cmp' insn for clang ias
+Date:   Mon, 20 Jul 2020 17:38:48 -0400
+Message-Id: <20200720213851.407715-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213851.407715-1-sashal@kernel.org>
 References: <20200720213851.407715-1-sashal@kernel.org>
@@ -59,67 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chu Lin <linchuyuan@google.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 6d1d41c075a1a54ba03370e268171fec20e06563 ]
+[ Upstream commit 81e96851ea32deb2c921c870eecabf335f598aeb ]
 
-Issue:
-When PEC is enabled, binding adm1272 to the adm1275 would
-fail due to PEC error. See below:
-adm1275: probe of xxxx failed with error -74
+The clang integrated assembler requires the 'cmp' instruction to
+have a length prefix here:
 
-Diagnosis:
-Per the datasheet of adm1272, adm1278, adm1293 and amd1294,
-PMON_CONFIG (0xd4) is 16bits wide. On the other hand,
-PMON_CONFIG (0xd4) for adm1275 is 8bits wide. The driver should not
-assume everything is 8bits wide and read only 8bits from it.
+arch/x86/math-emu/wm_sqrt.S:212:2: error: ambiguous instructions require an explicit suffix (could be 'cmpb', 'cmpw', or 'cmpl')
+ cmp $0xffffffff,-24(%ebp)
+ ^
 
-Solution:
-If it is adm1272, adm1278, adm1293 and adm1294, use i2c_read_word.
-Else, use i2c_read_byte
+Make this a 32-bit comparison, which it was clearly meant to be.
 
-Testing:
-Binding adm1272 to the driver.
-The change is only tested on adm1272.
-
-Signed-off-by: Chu Lin <linchuyuan@google.com>
-Link: https://lore.kernel.org/r/20200709040612.3977094-1-linchuyuan@google.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Link: https://lkml.kernel.org/r/20200527135352.1198078-1-arnd@arndb.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pmbus/adm1275.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/x86/math-emu/wm_sqrt.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-index 13600fa79e7f3..a19cf9052fc6d 100644
---- a/drivers/hwmon/pmbus/adm1275.c
-+++ b/drivers/hwmon/pmbus/adm1275.c
-@@ -364,6 +364,7 @@ MODULE_DEVICE_TABLE(i2c, adm1275_id);
- static int adm1275_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-+	s32 (*config_read_fn)(const struct i2c_client *client, u8 reg);
- 	u8 block_buffer[I2C_SMBUS_BLOCK_MAX + 1];
- 	int config, device_config;
- 	int ret;
-@@ -408,11 +409,16 @@ static int adm1275_probe(struct i2c_client *client,
- 			   "Device mismatch: Configured %s, detected %s\n",
- 			   id->name, mid->name);
+diff --git a/arch/x86/math-emu/wm_sqrt.S b/arch/x86/math-emu/wm_sqrt.S
+index f031c0e193565..515cdee90df72 100644
+--- a/arch/x86/math-emu/wm_sqrt.S
++++ b/arch/x86/math-emu/wm_sqrt.S
+@@ -209,7 +209,7 @@ sqrt_stage_2_finish:
  
--	config = i2c_smbus_read_byte_data(client, ADM1275_PMON_CONFIG);
-+	if (mid->driver_data == adm1272 || mid->driver_data == adm1278 ||
-+	    mid->driver_data == adm1293 || mid->driver_data == adm1294)
-+		config_read_fn = i2c_smbus_read_word_data;
-+	else
-+		config_read_fn = i2c_smbus_read_byte_data;
-+	config = config_read_fn(client, ADM1275_PMON_CONFIG);
- 	if (config < 0)
- 		return config;
- 
--	device_config = i2c_smbus_read_byte_data(client, ADM1275_DEVICE_CONFIG);
-+	device_config = config_read_fn(client, ADM1275_DEVICE_CONFIG);
- 	if (device_config < 0)
- 		return device_config;
+ #ifdef PARANOID
+ /* It should be possible to get here only if the arg is ffff....ffff */
+-	cmp	$0xffffffff,FPU_fsqrt_arg_1
++	cmpl	$0xffffffff,FPU_fsqrt_arg_1
+ 	jnz	sqrt_stage_2_error
+ #endif /* PARANOID */
  
 -- 
 2.25.1
