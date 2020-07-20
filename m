@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005E2C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF050C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D494E206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9334206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263259;
-	bh=fmeWhdhvaGBZT1EJ8XDeUQppJvMJz/VxtSuhIKoeQ58=;
+	s=default; t=1595263263;
+	bh=HiOwwL2PD7FMOr0KZzLMBCmQbQEHfWXdnGdrVeZt+Ic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bL/s0zpCXXbAUvOpmvXP85vjKFXwcTbbubK2Tm0bZ9udX6f8hW+HJ25B0si+gJ3T7
-	 LCxHQAOI0VojWHXBLIX1QnoL+blZjFpDqPkiTIbNwNAz43Q/a6JqyKJUJdhO73QwPc
-	 sxr7VuHJT5G/PzBg/fmQYpzyj8GpumEici6iaPLU=
+	b=jjWqmyMtK3pyig0K6J2tcd9nASXemADn0FGRpSQnRxAs04cJmrYYhl8vm2l4PScX1
+	 +huw4iXUMly+9Cosv6wnELE8N2XXD0Ud03okyotuqz1UKqHKlRHJfsJ8NOUdm1cPkO
+	 eTzc0Z9E23TdHGhfHhoxJaJlF83f45HGYgwiP7jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbgGTPqY (ORCPT
+        id S1729703AbgGTPqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:46:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41008 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:46:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730004AbgGTPqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:46:21 -0400
+        id S1730624AbgGTPqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:46:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3110A22BF3;
-        Mon, 20 Jul 2020 15:46:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1B3A206E9;
+        Mon, 20 Jul 2020 15:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259980;
-        bh=fmeWhdhvaGBZT1EJ8XDeUQppJvMJz/VxtSuhIKoeQ58=;
+        s=default; t=1595259972;
+        bh=HiOwwL2PD7FMOr0KZzLMBCmQbQEHfWXdnGdrVeZt+Ic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sfSONZa7+XLw/+6YLh7Txo39qeyDkF0JXEHwG6r1HaIzMGvyun+t8NzSzy2EgTCPp
-         2UctzHYC24EvDar41nsw1VP6F44tufkhEmWyhaKYqttieE2gvOTgiipZw4o35/b4WM
-         VE3r1jnTQ2nC57YDMOR6n/EPTq4J8kxnHml6jaU4=
+        b=eLIjisXL5utLz7idy2NoB6MpPZlx9eBU0ZI3q2mZpY+0frl+9/iIc6jIxwxhc+W1M
+         nfS/t+GvLkwrRVDhyoRiXrV3s+GRV4v5h/7MaqYjnN2FzRIjH6r/cFigjvVxvwbuIK
+         M05KwD4nEWLjIq4rvhAWE8JbXSPmESvEAwIRwQFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Alison Schofield <amsfield22@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Stable@vger.kernel.org
-Subject: [PATCH 4.14 063/125] iio:humidity:hdc100x Fix alignment and data leak issues
-Date:   Mon, 20 Jul 2020 17:36:42 +0200
-Message-Id: <20200720152806.068859819@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.14 029/125] KVM: arm64: Fix definition of PAGE_HYP_DEVICE
+Date:   Mon, 20 Jul 2020 17:36:08 +0200
+Message-Id: <20200720152804.386719090@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -62,69 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Will Deacon <will@kernel.org>
 
-commit ea5e7a7bb6205d24371373cd80325db1bc15eded upstream.
+commit 68cf617309b5f6f3a651165f49f20af1494753ae upstream.
 
-One of a class of bugs pointed out by Lars in a recent review.
-iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
-to the size of the timestamp (8 bytes).  This is not guaranteed in
-this driver which uses an array of smaller elements on the stack.
-As Lars also noted this anti pattern can involve a leak of data to
-userspace and that indeed can happen here.  We close both issues by
-moving to a suitable structure in the iio_priv() data.
-This data is allocated with kzalloc so no data can leak apart
-from previous readings.
+PAGE_HYP_DEVICE is intended to encode attribute bits for an EL2 stage-1
+pte mapping a device. Unfortunately, it includes PROT_DEVICE_nGnRE which
+encodes attributes for EL1 stage-1 mappings such as UXN and nG, which are
+RES0 for EL2, and DBM which is meaningless as TCR_EL2.HD is not set.
 
-Fixes: 16bf793f86b2 ("iio: humidity: hdc100x: add triggered buffer support for HDC100X")
-Reported-by: Lars-Peter Clausen <lars@metafoo.de>
-Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Cc: Alison Schofield <amsfield22@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: <Stable@vger.kernel.org>
+Fix the definition of PAGE_HYP_DEVICE so that it doesn't set RES0 bits
+at EL2.
+
+Acked-by: Marc Zyngier <maz@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200708162546.26176-1-will@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/humidity/hdc100x.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/pgtable-prot.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iio/humidity/hdc100x.c
-+++ b/drivers/iio/humidity/hdc100x.c
-@@ -46,6 +46,11 @@ struct hdc100x_data {
+--- a/arch/arm64/include/asm/pgtable-prot.h
++++ b/arch/arm64/include/asm/pgtable-prot.h
+@@ -65,7 +65,7 @@
+ #define PAGE_HYP		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
+ #define PAGE_HYP_EXEC		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
+ #define PAGE_HYP_RO		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY | PTE_HYP_XN)
+-#define PAGE_HYP_DEVICE		__pgprot(PROT_DEVICE_nGnRE | PTE_HYP)
++#define PAGE_HYP_DEVICE		__pgprot(_PROT_DEFAULT | PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_HYP | PTE_HYP_XN)
  
- 	/* integration time of the sensor */
- 	int adc_int_us[2];
-+	/* Ensure natural alignment of timestamp */
-+	struct {
-+		__be16 channels[2];
-+		s64 ts __aligned(8);
-+	} scan;
- };
- 
- /* integration time in us */
-@@ -327,7 +332,6 @@ static irqreturn_t hdc100x_trigger_handl
- 	struct i2c_client *client = data->client;
- 	int delay = data->adc_int_us[0] + data->adc_int_us[1];
- 	int ret;
--	s16 buf[8];  /* 2x s16 + padding + 8 byte timestamp */
- 
- 	/* dual read starts at temp register */
- 	mutex_lock(&data->lock);
-@@ -338,13 +342,13 @@ static irqreturn_t hdc100x_trigger_handl
- 	}
- 	usleep_range(delay, delay + 1000);
- 
--	ret = i2c_master_recv(client, (u8 *)buf, 4);
-+	ret = i2c_master_recv(client, (u8 *)data->scan.channels, 4);
- 	if (ret < 0) {
- 		dev_err(&client->dev, "cannot read sensor data\n");
- 		goto err;
- 	}
- 
--	iio_push_to_buffers_with_timestamp(indio_dev, buf,
-+	iio_push_to_buffers_with_timestamp(indio_dev, &data->scan,
- 					   iio_get_time_ns(indio_dev));
- err:
- 	mutex_unlock(&data->lock);
+ #define PAGE_S2			__pgprot(_PROT_DEFAULT | PTE_S2_MEMATTR(MT_S2_NORMAL) | PTE_S2_RDONLY)
+ #define PAGE_S2_DEVICE		__pgprot(_PROT_DEFAULT | PTE_S2_MEMATTR(MT_S2_DEVICE_nGnRE) | PTE_S2_RDONLY | PTE_UXN)
 
 
