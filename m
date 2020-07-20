@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32338C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1334CC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F17CC2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1DE2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261824;
-	bh=zp+/tj1wGk+aIdCWdyD/6BHJ9SueCc5DLykjfdOmZaY=;
+	s=default; t=1595261827;
+	bh=otZ1k39Vu2rM5BXn4wse+aedOsLu5Xtizzy+QgKoLqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L0RroNZTfqf5NPi9O108nLEDh/OH1ivFIadqK1lJka+anc8PGrRFmWKgFVuB0+fe4
-	 WIx8x7yHJTL6uo2xFrB6ttGKF4E8UYHX4DvtiqR+3pRvDDehukERet/JUn+TwlvxdA
-	 pPfVGaJ8KOJOclarF0Ba0FNrnVvhHIjgS2/MTNHg=
+	b=bRLKbO+MtQ8N/wg79Q1rf/pf7Yjd90piv+rL2jFEV3OJ3oBa5uMu8ptS5nhXjVUbu
+	 ZPj6bpA40Vp+1KDTJVR9Ok9NOiZZwdYRvmU078fnabCYsDyraR/iGcjx8ovC8j0L9K
+	 TLWX1AJZioDT0e4AMZTbkrVNzejMemZ+lnqSCfOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388631AbgGTQRC (ORCPT
+        id S2388601AbgGTQQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:17:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58248 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:16:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388613AbgGTQQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:16:54 -0400
+        id S2388586AbgGTQQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:16:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ACA22064B;
-        Mon, 20 Jul 2020 16:16:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ABD52064B;
+        Mon, 20 Jul 2020 16:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261813;
-        bh=zp+/tj1wGk+aIdCWdyD/6BHJ9SueCc5DLykjfdOmZaY=;
+        s=default; t=1595261805;
+        bh=otZ1k39Vu2rM5BXn4wse+aedOsLu5Xtizzy+QgKoLqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zUwXfDo5+hiZ+Qqh1zmVrLtnd0gmYL8ZtM1Nq9IMT07FeF6BVyF4XtC1JwyPcVG1k
-         cCaiOYQaik1kkH39SgcYSHqRw52OMtViqI9nxFIxm5TfWHZia2dnQrvXoBJiN/cxDQ
-         NLRSt45mPn/dNynyn6SVtxZHK9q8pp+FtHekIAtk=
+        b=H6hYjSPmAVviHS5IGjJCYe6q8CRgomoikZv1diyaTf06mty6Rp2Ty4Sf4hmCxWSna
+         qB2hr2ywwn71pBD/BzWD9Sf6gUrH64mhnYtasG3HMOKOiQLKfxf6rwV12loo3AMFou
+         qEL0gfoIBW2p4mjA+xTcvNgxVTPF6wn8Doifr+sM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Prathap Kumar Valsan <prathap.kumar.valsan@intel.com>,
-        Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.7 244/244] drm/i915/perf: Use GTT when saving/restoring engine GPR
-Date:   Mon, 20 Jul 2020 17:38:35 +0200
-Message-Id: <20200720152837.447723793@linuxfoundation.org>
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 5.7 241/244] gpio: pca953x: disable regmap locking for automatic address incrementing
+Date:   Mon, 20 Jul 2020 17:38:32 +0200
+Message-Id: <20200720152837.301779500@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -63,39 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit aee62e02c48bd62b9b07f5e297ecfc9aaa964937 upstream.
+commit ec3decd21380081e3b5de4ba8d85d90a95f201a0 upstream.
 
-MI_STORE_REGISTER_MEM and MI_LOAD_REGISTER_MEM need to know which
-translation to use when saving restoring the engine general purpose
-registers to and from the GT scratch. Since GT scratch is mapped to
-ggtt, we need to set an additional bit in the command to use GTT.
+It's a repetition of the commit aa58a21ae378
+  ("gpio: pca953x: disable regmap locking")
+which states the following:
 
-Fixes: daed3e44396d17 ("drm/i915/perf: implement active wait for noa configurations")
-Suggested-by: Prathap Kumar Valsan <prathap.kumar.valsan@intel.com>
-Signed-off-by: Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
-Reviewed-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200709224504.11345-1-chris@chris-wilson.co.uk
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-(cherry picked from commit e43ff99c8deda85234e6233e0f4af6cb09566a37)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+  This driver uses its own locking but regmap silently uses
+  a mutex for all operations too. Add the option to disable
+  locking to the regmap config struct.
+
+Fixes: bcf41dc480b1 ("gpio: pca953x: fix handling of automatic address incrementing")
+Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_perf.c |    1 +
+ drivers/gpio/gpio-pca953x.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/gpu/drm/i915/i915_perf.c
-+++ b/drivers/gpu/drm/i915/i915_perf.c
-@@ -1645,6 +1645,7 @@ static u32 *save_restore_register(struct
- 	u32 d;
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -399,6 +399,7 @@ static const struct regmap_config pca953
+ 	.writeable_reg = pca953x_writeable_register,
+ 	.volatile_reg = pca953x_volatile_register,
  
- 	cmd = save ? MI_STORE_REGISTER_MEM : MI_LOAD_REGISTER_MEM;
-+	cmd |= MI_SRM_LRM_GLOBAL_GTT;
- 	if (INTEL_GEN(stream->perf->i915) >= 8)
- 		cmd++;
- 
++	.disable_locking = true,
+ 	.cache_type = REGCACHE_RBTREE,
+ 	.max_register = 0x7f,
+ };
 
 
