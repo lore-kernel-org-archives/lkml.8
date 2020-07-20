@@ -2,144 +2,108 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C27C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE854C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E22AF20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F4820702
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:41:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZK7xQhCM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i6meoyrE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732133AbgGTRlG (ORCPT
+        id S1732744AbgGTRlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:41:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57698 "EHLO
+        Mon, 20 Jul 2020 13:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728876AbgGTRlF (ORCPT
+        with ESMTP id S1728876AbgGTRlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:41:05 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71F8C061794;
-        Mon, 20 Jul 2020 10:41:05 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id n24so12847671otr.13;
-        Mon, 20 Jul 2020 10:41:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mdh7aaQO3fTgP8bprJCk07MNirNdtGLOsGXoOk/ABZc=;
-        b=ZK7xQhCMjjUAUEzYRVR/d2z4PdrUMiWkEwlhkLAYriZTx873OuHzgZXk11s1mNWxZK
-         5n16AMmLp3lSI5G/IumA9/wCX3AEiP74GVIGt2MLXWVzJrcFDhhtZCZYRCcHHFBU0Pvr
-         hR4sHyHq2qJal5p/mk3Xm7GcY2bh5/QPWDkt42G4QXVdaljxIswo7tSQ1vShGJ1pMF6/
-         8CYoHfivClk17aaPK8IOzBfO7qoktBKHI0kZdHsZD5AnCzulYRCiXzGHhwkU7M/itC1t
-         ul6ohoB0Y3pcAyEW+3UMzibh7tFjPnrYRVt13+Xs+aUWO+S187fIiLVuY+Eo0KAEfdUY
-         oDQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mdh7aaQO3fTgP8bprJCk07MNirNdtGLOsGXoOk/ABZc=;
-        b=KTxZl91hMClanGcLi8WPM0wWOc77L02zI3ShY38Wz+N6/C99+ek0Ul25AY4D7Llnk+
-         hdEEzDPxBkqyc52k0nlJnXG6ks7nxKf2yJKug8Q3b2LAtGJECmOGkvnIHPnQtQ9n/6ps
-         SZbteuEvwBHlFnig1o9tBiNC0+3IBLaHx66KGENWzO1Qf6rJVB10dcG3Fx3R0mRxATp9
-         tp04kUFrwLggLmfAjnaBNI76mo8Zg9VMN1kGXAu25Tcbj8fq/zaHdmT6AxzKMqWVn0sR
-         NKsyGx/RoGob2G7BT2IqTDu2aoJa9W7Gc+s3e4auH8cuLQaPVscXprqDoY3zUHZR/y86
-         gSyg==
-X-Gm-Message-State: AOAM530EsrZ8XzRZsd9H3O8C2zcV8E2dHLW2Lt0P+YsF2VmWF9lnj+II
-        QYtFMBYQn8p3QD4ii7guWk7yBLF4v4h/jA9PlOqlAQ==
-X-Google-Smtp-Source: ABdhPJyNSsutBkqiXagUluHJ47Cw4MCx5LYPC9K6Vlp38BJaUiFviCgYEgVwcaMK8SD1/+1m0D7kyZXyoTFBvruGE6g=
-X-Received: by 2002:a05:6830:1db5:: with SMTP id z21mr21309304oti.162.1595266865020;
- Mon, 20 Jul 2020 10:41:05 -0700 (PDT)
+        Mon, 20 Jul 2020 13:41:19 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92A78C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:41:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AWNrwfzfBGodpnmjdycyfV82k00iHUEKY/clERDb8ag=; b=i6meoyrEOgmr3Zbfs6rF5k7Ue9
+        ktcjIfl+hIfW5HmIobzjzR4HViho7qTjOCfcQKhZAx78HpOtvS94OgqYDiUops2l3EFPaymdwCykM
+        iDYQCdBsk61MxhPTipYnj2Z3U/3Hla5sIFzKhgJWJnFrMrEQRUyNonQ0vd1xi1fxS527aSf75vgst
+        e5QhI5SxkpWziCw1AsECLt56XBFWJbsVm3EaeEHYcGb9ooClv/isOZFW3vTeEWN4Un9rL9eSBXtWA
+        jj/fewa7QmugfFOWUQfBj3kvuV5mGQUDpeVkJaJ8eLCwmJ/Nacyi89R1OkP0TJwNzu+qN9XmHqWRj
+        hT8u365w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxZmm-00076x-Fy; Mon, 20 Jul 2020 17:41:09 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 063133050F0;
+        Mon, 20 Jul 2020 19:41:04 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E49AB20D27A9D; Mon, 20 Jul 2020 19:41:03 +0200 (CEST)
+Date:   Mon, 20 Jul 2020 19:41:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH V6 07/14] perf/x86/intel: Generic support for hardware
+ TopDown metrics
+Message-ID: <20200720174103.GV10769@hirez.programming.kicks-ass.net>
+References: <20200717140554.22863-1-kan.liang@linux.intel.com>
+ <20200717140554.22863-8-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-References: <20200717222819.26198-1-nramas@linux.microsoft.com>
- <20200717222819.26198-5-nramas@linux.microsoft.com> <CAEjxPJ7xQtZToF4d2w_o8SXFKG9kPZaWTWTFqyC-7GwBWnQa0A@mail.gmail.com>
- <c0fbfcf3-ec36-872a-c389-b3fea214848c@linux.microsoft.com>
- <CAEjxPJ7VH18bEo6+U1GWrx=tHVGr=6XtF5_ygcfQYgdtZ74J+g@mail.gmail.com> <bea0cb52-2e13-fb14-b66c-b57287c23c3f@linux.microsoft.com>
-In-Reply-To: <bea0cb52-2e13-fb14-b66c-b57287c23c3f@linux.microsoft.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Mon, 20 Jul 2020 13:40:54 -0400
-Message-ID: <CAEjxPJ6Rt7u3shLbxoPRHgr-D=CD9d_eXRB07A9qN7RmJwZAwA@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] LSM: Define SELinux function to measure security state
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717140554.22863-8-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 1:34 PM Lakshmi Ramasubramanian
-<nramas@linux.microsoft.com> wrote:
->
-> On 7/20/20 10:06 AM, Stephen Smalley wrote:
->
-> >> The above will ensure the following sequence will be measured:
-> >>    #1 State A - Measured
-> >>    #2 Change from State A to State B - Measured
-> >>    #3 Change from State B back to State A - Since the measured data is
-> >> same as in #1, the change will be measured only if the event name is
-> >> different between #1 and #3
-> >
-> > Perhaps the timestamp / sequence number should be part of the hashed
-> > data instead of the event name?
->
-> If the timestamp/seqno is part of the hashed data, on every call to
-> measure IMA will add a new entry in the IMA log. This would fill up the
-> IMA log - even when there is no change in the measured data.
->
-> To avoid that I keep the last measurement in SELinux and measure only
-> when there is a change with the timestamp in the event name.
->
-> > I can see the appraiser wanting to know two things:
-> > 1) The current state of the system (e.g. is it enforcing, is the
-> > currently loaded policy the expected one?).
-> > 2) Has the system ever been in an unexpected state (e.g. was it
-> > temporarily switched to permissive or had an unexpected policy
-> > loaded?)
->
-> Yes - you are right.
-> The appraiser will have to look at the entire IMA log (and the
-> corresponding TPM PCR data) to know the above.
->
-> Time t0 => State of the system measured
-> Time tn => State changed and the new state measured
-> Time tm => State changed again and the new state measured.
->
-> Say, the measurement at "Time tn" was an illegal change, the appraiser
-> would know.
->
-> >
-> > I applied the patch series on top of the next-integrity branch, added
-> > measure func=LSM_STATE to ima-policy, and booted that kernel.  I get
-> > the following entries in ascii_runtime_measurements, but seemingly
-> > missing the final field:
-> >
-> > 10 8a09c48af4f8a817f59b495bd82971e096e2e367 ima-ng
-> > sha256:21c3d7b09b62b4d0b3ed15ba990f816b94808f90b76787bfae755c4b3a44cd24
-> > selinux-state
-> > 10 e610908931d70990a2855ddb33c16af2d82ce56a ima-ng
-> > sha256:c8898652afd5527ef4eaf8d85f5fee1d91fcccee34bc97f6e55b96746bedb318
-> > selinux-policy-hash
-> >
-> > Thus, I cannot verify. What am I missing?
-> >
->
-> Looks like the template used is ima-ng which doesn't include the
-> measured buffer. Please set template to "ima-buf" in the policy.
->
-> For example,
-> measure func=LSM_STATE template=ima-buf
+On Fri, Jul 17, 2020 at 07:05:47AM -0700, kan.liang@linux.intel.com wrote:
 
-It seems like one shouldn't need to manually specify it if it is the
-only template that yields a useful result for the LSM_STATE function?
+> For the event mapping, a special 0x00 event code is used, which is
+> reserved for fake events. The metric events start from umask 0x10.
+
+> +#define INTEL_PMC_IDX_METRIC_BASE		(INTEL_PMC_IDX_FIXED + 16)
+> +#define INTEL_PMC_IDX_TD_RETIRING		(INTEL_PMC_IDX_METRIC_BASE + 0)
+> +#define INTEL_PMC_IDX_TD_BAD_SPEC		(INTEL_PMC_IDX_METRIC_BASE + 1)
+> +#define INTEL_PMC_IDX_TD_FE_BOUND		(INTEL_PMC_IDX_METRIC_BASE + 2)
+> +#define INTEL_PMC_IDX_TD_BE_BOUND		(INTEL_PMC_IDX_METRIC_BASE + 3)
+
+So this is internal and we can change it around if/when needed, right?
+
+> +#define INTEL_PMC_IDX_METRIC_END		INTEL_PMC_IDX_TD_BE_BOUND
+> +#define INTEL_PMC_MSK_TOPDOWN			((0xfull << INTEL_PMC_IDX_METRIC_BASE) | \
+> +						INTEL_PMC_MSK_FIXED_SLOTS)
+> +
+> +/*
+> + * There is no event-code assigned to the TopDown events.
+> + *
+> + * For the slots event, use the pseudo code of the fixed counter 3.
+> + *
+> + * For the metric events, the pseudo event-code is 0x00.
+> + * The pseudo umask-code starts from 0x10.
+> + */
+> +#define INTEL_TD_SLOTS				0x0400	/* TOPDOWN.SLOTS */
+> +/* Level 1 metrics */
+> +#define INTEL_TD_METRIC_RETIRING		0x1000	/* Retiring metric */
+> +#define INTEL_TD_METRIC_BAD_SPEC		0x1100	/* Bad speculation metric */
+> +#define INTEL_TD_METRIC_FE_BOUND		0x1200	/* FE bound metric */
+> +#define INTEL_TD_METRIC_BE_BOUND		0x1300	/* BE bound metric */
+> +#define INTEL_TD_METRIC_MAX			INTEL_TD_METRIC_BE_BOUND
+> +#define INTEL_TD_METRIC_NUM			4
+
+But this is ABI, once we merge this, it's stuck.
+
+Also, per how Fixed2 is 0x0300, should not Fixed16 (aka
+METRICS_RETIRING) be 0x1100 ?
+
+But aside of that, are we sure the hardware will never grow a Fixed16?
+Or do we want to be paranoid and move the metrics events up in the
+pseudo event space?
