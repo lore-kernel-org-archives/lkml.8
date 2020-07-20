@@ -2,232 +2,136 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7211AC433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00B5C4345C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9C722CB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SCZnW8q5"
+	by mail.kernel.org (Postfix) with ESMTP id 9863322CB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595259706;
+	bh=TZEmcIX1EXVKYAg8WBJzDdxkWzjI9vRzdtHwccI3E2s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VzHv6fTlvZs6qTBFFfmr200LIWv5VXv5LEl3ko5YHbvxNo7qQ1UY8HUA+p+uyMLhy
+	 fW8FQwQ04cYEbUOPNMQlCrNFzc4kciMgkTuOCzxZ8f8L89LP0CPr0zwrJphiOWiwhS
+	 8d9SlycsVNPfkFVq64ibh0ASL6Cb/HD0U5j+mv/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbgGTPlm (ORCPT
+        id S1729258AbgGTPlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:41:42 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:31925 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729919AbgGTPlh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:41:37 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595259696; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=OYuqqUef1KwW3DsQkJI3pkFV+mJaMhN+unXY5vFLCwc=; b=SCZnW8q5AbVJLHO+fHS7FNZ/skR274L28sLnGKJmslOccglYp87qj6WrntK2XyuAJClln/Kp
- V8RaNXldrrqJ5xo6uCY/vh8Dl2+mCmx6r27poGZaEqfWCJ1PIEGv5fuVwLz8buiF63n5CW70
- urej+VezHdfMkOrW9XkcMXfe+EE=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
- 5f15bb2f5b75bcda606a1994 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 15:41:35
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D346EC43456; Mon, 20 Jul 2020 15:41:31 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 20 Jul 2020 11:41:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729910AbgGTPli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:41:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 355A9C43455;
-        Mon, 20 Jul 2020 15:41:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 355A9C43455
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v10 11/13] drm/msm: Add support for private address space instances
-Date:   Mon, 20 Jul 2020 09:40:45 -0600
-Message-Id: <20200720154047.3611092-12-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720154047.3611092-1-jcrouse@codeaurora.org>
-References: <20200720154047.3611092-1-jcrouse@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F6DF2176B;
+        Mon, 20 Jul 2020 15:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595259698;
+        bh=TZEmcIX1EXVKYAg8WBJzDdxkWzjI9vRzdtHwccI3E2s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Dqut6ecz0kthvWKbr8j7XQLkX8+LZFjNW8isyaskd1/r8tUGfUFnY5Dqxd+keHS6A
+         pcaZ6c+2bIl55ZlK+SZhpxT8LmoUmh+YQ17vr9CakkmUNX9H9ZXHUbe0dfgn2ej0Fo
+         EUFQYo1bYq7UFE9FGgQNnKR5vXRgFbqyhrEV8ANY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 48/86] net: dsa: bcm_sf2: Fix node reference count
+Date:   Mon, 20 Jul 2020 17:36:44 +0200
+Message-Id: <20200720152755.578273279@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
+References: <20200720152753.138974850@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for allocating private address space instances. Targets that
-support per-context pagetables should implement their own function to
-allocate private address spaces.
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-The default will return a pointer to the global address space.
+[ Upstream commit 8dbe4c5d5e40fe140221024f7b16bec9f310bf70 ]
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+of_find_node_by_name() will do an of_node_put() on the "from" argument.
+With CONFIG_OF_DYNAMIC enabled which checks for device_node reference
+counts, we would be getting a warning like this:
+
+[    6.347230] refcount_t: increment on 0; use-after-free.
+[    6.352498] WARNING: CPU: 3 PID: 77 at lib/refcount.c:156
+refcount_inc_checked+0x38/0x44
+[    6.360601] Modules linked in:
+[    6.363661] CPU: 3 PID: 77 Comm: kworker/3:1 Tainted: G        W
+5.4.46-gb78b3e9956e6 #13
+[    6.372546] Hardware name: BCM97278SV (DT)
+[    6.376649] Workqueue: events deferred_probe_work_func
+[    6.381796] pstate: 60000005 (nZCv daif -PAN -UAO)
+[    6.386595] pc : refcount_inc_checked+0x38/0x44
+[    6.391133] lr : refcount_inc_checked+0x38/0x44
+...
+[    6.478791] Call trace:
+[    6.481243]  refcount_inc_checked+0x38/0x44
+[    6.485433]  kobject_get+0x3c/0x4c
+[    6.488840]  of_node_get+0x24/0x34
+[    6.492247]  of_irq_find_parent+0x3c/0xe0
+[    6.496263]  of_irq_parse_one+0xe4/0x1d0
+[    6.500191]  irq_of_parse_and_map+0x44/0x84
+[    6.504381]  bcm_sf2_sw_probe+0x22c/0x844
+[    6.508397]  platform_drv_probe+0x58/0xa8
+[    6.512413]  really_probe+0x238/0x3fc
+[    6.516081]  driver_probe_device+0x11c/0x12c
+[    6.520358]  __device_attach_driver+0xa8/0x100
+[    6.524808]  bus_for_each_drv+0xb4/0xd0
+[    6.528650]  __device_attach+0xd0/0x164
+[    6.532493]  device_initial_probe+0x24/0x30
+[    6.536682]  bus_probe_device+0x38/0x98
+[    6.540524]  deferred_probe_work_func+0xa8/0xd4
+[    6.545061]  process_one_work+0x178/0x288
+[    6.549078]  process_scheduled_works+0x44/0x48
+[    6.553529]  worker_thread+0x218/0x270
+[    6.557285]  kthread+0xdc/0xe4
+[    6.560344]  ret_from_fork+0x10/0x18
+[    6.563925] ---[ end trace 68f65caf69bb152a ]---
+
+Fix this by adding a of_node_get() to increment the reference count
+prior to the call.
+
+Fixes: afa3b592953b ("net: dsa: bcm_sf2: Ensure correct sub-node is parsed")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/net/dsa/bcm_sf2.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- drivers/gpu/drm/msm/msm_drv.c     | 13 +++++++------
- drivers/gpu/drm/msm/msm_drv.h     |  5 +++++
- drivers/gpu/drm/msm/msm_gem_vma.c |  9 +++++++++
- drivers/gpu/drm/msm/msm_gpu.c     | 17 +++++++++++++++++
- drivers/gpu/drm/msm/msm_gpu.h     |  5 +++++
- 5 files changed, 43 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 556198d4ba5f..c0328abea52d 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -603,7 +603,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
- 	kref_init(&ctx->ref);
- 	msm_submitqueue_init(dev, ctx);
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index 796571fccba70..84def5819d2ec 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -1039,6 +1039,8 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+ 	spin_lock_init(&priv->indir_lock);
+ 	mutex_init(&priv->stats_mutex);
  
--	ctx->aspace = priv->gpu ? priv->gpu->aspace : NULL;
-+	ctx->aspace = msm_gpu_create_private_address_space(priv->gpu);
- 	file->driver_priv = ctx;
- 
- 	return 0;
-@@ -786,18 +786,19 @@ static int msm_ioctl_gem_cpu_fini(struct drm_device *dev, void *data,
- }
- 
- static int msm_ioctl_gem_info_iova(struct drm_device *dev,
--		struct drm_gem_object *obj, uint64_t *iova)
-+		struct drm_file *file, struct drm_gem_object *obj,
-+		uint64_t *iova)
- {
--	struct msm_drm_private *priv = dev->dev_private;
-+	struct msm_file_private *ctx = file->driver_priv;
- 
--	if (!priv->gpu)
-+	if (!ctx->aspace)
- 		return -EINVAL;
- 
- 	/*
- 	 * Don't pin the memory here - just get an address so that userspace can
- 	 * be productive
- 	 */
--	return msm_gem_get_iova(obj, priv->gpu->aspace, iova);
-+	return msm_gem_get_iova(obj, ctx->aspace, iova);
- }
- 
- static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
-@@ -836,7 +837,7 @@ static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
- 		args->value = msm_gem_mmap_offset(obj);
- 		break;
- 	case MSM_INFO_GET_IOVA:
--		ret = msm_ioctl_gem_info_iova(dev, obj, &args->value);
-+		ret = msm_ioctl_gem_info_iova(dev, file, obj, &args->value);
- 		break;
- 	case MSM_INFO_SET_NAME:
- 		/* length check should leave room for terminating null: */
-diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-index ab5f77261816..df400f9ec38c 100644
---- a/drivers/gpu/drm/msm/msm_drv.h
-+++ b/drivers/gpu/drm/msm/msm_drv.h
-@@ -250,6 +250,10 @@ int msm_gem_map_vma(struct msm_gem_address_space *aspace,
- void msm_gem_close_vma(struct msm_gem_address_space *aspace,
- 		struct msm_gem_vma *vma);
- 
-+
-+struct msm_gem_address_space *
-+msm_gem_address_space_get(struct msm_gem_address_space *aspace);
-+
- void msm_gem_address_space_put(struct msm_gem_address_space *aspace);
- 
- struct msm_gem_address_space *
-@@ -435,6 +439,7 @@ static inline void msm_file_private_destroy(struct kref *kref)
- 	struct msm_file_private *ctx = container_of(kref,
- 		struct msm_file_private, ref);
- 
-+	msm_gem_address_space_put(ctx->aspace);
- 	kfree(ctx);
- }
- 
-diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
-index 5f6a11211b64..29cc1305cf37 100644
---- a/drivers/gpu/drm/msm/msm_gem_vma.c
-+++ b/drivers/gpu/drm/msm/msm_gem_vma.c
-@@ -27,6 +27,15 @@ void msm_gem_address_space_put(struct msm_gem_address_space *aspace)
- 		kref_put(&aspace->kref, msm_gem_address_space_destroy);
- }
- 
-+struct msm_gem_address_space *
-+msm_gem_address_space_get(struct msm_gem_address_space *aspace)
-+{
-+	if (!IS_ERR_OR_NULL(aspace))
-+		kref_get(&aspace->kref);
-+
-+	return aspace;
-+}
-+
- /* Actually unmap memory for the vma */
- void msm_gem_purge_vma(struct msm_gem_address_space *aspace,
- 		struct msm_gem_vma *vma)
-diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-index a1f3da6550e5..aabbd7908ee5 100644
---- a/drivers/gpu/drm/msm/msm_gpu.c
-+++ b/drivers/gpu/drm/msm/msm_gpu.c
-@@ -823,6 +823,23 @@ static int get_clocks(struct platform_device *pdev, struct msm_gpu *gpu)
- 	return 0;
- }
- 
-+/* Return a new address space for a msm_drm_private instance */
-+struct msm_gem_address_space *
-+msm_gpu_create_private_address_space(struct msm_gpu *gpu)
-+{
-+	if (!gpu)
-+		return NULL;
-+
-+	/*
-+	 * If the target doesn't support private address spaces then return
-+	 * the global one
-+	 */
-+	if (!gpu->funcs->create_private_address_space)
-+		return msm_gem_address_space_get(gpu->aspace);
-+
-+	return gpu->funcs->create_private_address_space(gpu);
-+}
-+
- int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
- 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
- 		const char *name, struct msm_gpu_config *config)
-diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-index d496d488222c..d298657b4730 100644
---- a/drivers/gpu/drm/msm/msm_gpu.h
-+++ b/drivers/gpu/drm/msm/msm_gpu.h
-@@ -64,6 +64,8 @@ struct msm_gpu_funcs {
- 	void (*gpu_set_freq)(struct msm_gpu *gpu, struct dev_pm_opp *opp);
- 	struct msm_gem_address_space *(*create_address_space)
- 		(struct msm_gpu *gpu, struct platform_device *pdev);
-+	struct msm_gem_address_space *(*create_private_address_space)
-+		(struct msm_gpu *gpu);
- };
- 
- struct msm_gpu {
-@@ -286,6 +288,9 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
- 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
- 		const char *name, struct msm_gpu_config *config);
- 
-+struct msm_gem_address_space *
-+msm_gpu_create_private_address_space(struct msm_gpu *gpu);
-+
- void msm_gpu_cleanup(struct msm_gpu *gpu);
- 
- struct msm_gpu *adreno_load_gpu(struct drm_device *dev);
++	/* Balance of_node_put() done by of_find_node_by_name() */
++	of_node_get(dn);
+ 	ports = of_find_node_by_name(dn, "ports");
+ 	if (ports) {
+ 		bcm_sf2_identify_ports(priv, ports);
 -- 
 2.25.1
+
+
 
