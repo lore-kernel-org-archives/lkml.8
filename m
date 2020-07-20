@@ -2,159 +2,104 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBBEC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121B5C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 039FC22B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11D1207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 13:02:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="j7zb1wkI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgGTNBT (ORCPT
+        id S1728272AbgGTNCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:01:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43396 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728125AbgGTNBS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 09:01:18 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KD14Jx037254;
-        Mon, 20 Jul 2020 09:01:09 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5jyum5r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 09:01:08 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KD18u9037401;
-        Mon, 20 Jul 2020 09:01:08 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5jyuktg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 09:01:08 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KCudgv022695;
-        Mon, 20 Jul 2020 13:00:37 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma02fra.de.ibm.com with ESMTP id 32brq7tqs3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 13:00:37 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KCxJnF50462950
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 12:59:19 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 818964C050;
-        Mon, 20 Jul 2020 12:59:19 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 205854C040;
-        Mon, 20 Jul 2020 12:59:16 +0000 (GMT)
-Received: from [9.85.112.199] (unknown [9.85.112.199])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Jul 2020 12:59:15 +0000 (GMT)
-Subject: Re: [PATCH v4 03/12] powerpc/kexec_file: add helper functions for
- getting memory ranges
-From:   Hari Bathini <hbathini@linux.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Eric Biederman <ebiederm@xmission.com>
-References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com>
- <159524946347.20855.15784642736087777919.stgit@hbathini.in.ibm.com>
-Message-ID: <d6b0b134-f681-cc56-d0c1-dd581d518263@linux.ibm.com>
-Date:   Mon, 20 Jul 2020 18:29:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 20 Jul 2020 09:02:35 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:16962 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728001AbgGTNCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 09:02:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595250154; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=+8B2VUGhaduI3uJTC0qKLOS8vpqrG5yTlP23NYTVMv4=;
+ b=j7zb1wkI+3HWozG03MfGbLeeojpaAffmjJg8rF+Riyu3L/YTOOAAIw3VikBgfVpuuq/wdDps
+ MYHyx2aoOsZGtpqzuZKNFxQDfEM+t8raowU23Xl03uIy9OIwKJqBLZsdypoIpn9Iqn52Ywzw
+ 9s0ttZ1cRNXmDQeVHUe3vKzwKVo=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5f1594d00cb8533c3bcf5b0a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 12:57:52
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E6F32C433CB; Mon, 20 Jul 2020 12:57:51 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01AF3C433C6;
+        Mon, 20 Jul 2020 12:57:50 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <159524946347.20855.15784642736087777919.stgit@hbathini.in.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-20_07:2020-07-20,2020-07-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 priorityscore=1501 mlxscore=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 impostorscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007200086
+Date:   Mon, 20 Jul 2020 18:27:50 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     robdclark@gmail.com, sean@poorly.run,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH] drm/msm/dpu: dev_pm_opp_put_clkname() only when an
+ opp_table exists
+In-Reply-To: <1595247476-12968-1-git-send-email-rnayak@codeaurora.org>
+References: <1595247476-12968-1-git-send-email-rnayak@codeaurora.org>
+Message-ID: <d21e2fba7f1cb9bd61d6d3a6cc4feb8c@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 20/07/20 6:21 pm, Hari Bathini wrote:
-> In kexec case, the kernel to be loaded uses the same memory layout as
-> the running kernel. So, passing on the DT of the running kernel would
-> be good enough.
+On 2020-07-20 17:47, Rajendra Nayak wrote:
+> Its possible that dpu_bind() fails early enough before
+> dev_pm_opp_set_clkname() is called. In such cases, unconditionally
+> calling dev_pm_opp_put_clkname() in dpu_unbind() can result in
+> a crash. Put an additional check so that dev_pm_opp_put_clkname()
+> is called only when an opp_table exists.
 > 
-> But in case of kdump, different memory ranges are needed to manage
-> loading the kdump kernel, booting into it and exporting the elfcore
-> of the crashing kernel. The ranges are exclude memory ranges, usable
-> memory ranges, reserved memory ranges and crash memory ranges.
-> 
-> Exclude memory ranges specify the list of memory ranges to avoid while
-> loading kdump segments. Usable memory ranges list the memory ranges
-> that could be used for booting kdump kernel. Reserved memory ranges
-> list the memory regions for the loading kernel's reserve map. Crash
-> memory ranges list the memory ranges to be exported as the crashing
-> kernel's elfcore.
-> 
-> Add helper functions for setting up the above mentioned memory ranges.
-> This helpers facilitate in understanding the subsequent changes better
-> and make it easy to setup the different memory ranges listed above, as
-> and when appropriate.
-> 
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> Tested-by: Pingfan Liu <piliu@redhat.com>
+> Fixes: aa3950767d05 ("drm/msm/dpu: Use OPP API to set clk/perf state")
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 > ---
-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> v3 -> v4:
-> * Unchanged. Added Reviewed-by tag from Thiago.
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> index f2bbce4..843a1c1 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> @@ -1079,7 +1079,8 @@ static void dpu_unbind(struct device *dev,
+> struct device *master, void *data)
 > 
-> v2 -> v3:
-> * Unchanged. Added Acked-by & Tested-by tags from Dave & Pingfan.
+>  	if (dpu_kms->has_opp_table)
+>  		dev_pm_opp_of_remove_table(dev);
+> -	dev_pm_opp_put_clkname(dpu_kms->opp_table);
+> +	if (dpu_kms->opp_table)
+> +		dev_pm_opp_put_clkname(dpu_kms->opp_table);
+>  }
 > 
-> v1 -> v2:
-> * Introduced arch_kexec_locate_mem_hole() for override and dropped
->   weak arch_kexec_add_buffer().
-> * Dropped __weak identifier for arch overridable functions.
-> * Fixed the missing declaration for arch_kimage_file_post_load_cleanup()
->   reported by lkp. lkp report for reference:
->     - https://lore.kernel.org/patchwork/patch/1264418/
+>  static const struct component_ops dpu_ops = {
 
-Sorry, copy-paste error. The patch version changelog is as follows:
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-v3 -> v4:
-* Updated sort_memory_ranges() function to reuse sort() from lib/sort.c
-  and addressed other review comments from Thiago.
-
-v2 -> v3:
-* Unchanged. Added Tested-by tag from Pingfan.
-
-v1 -> v2:
-* Added an option to merge ranges while sorting to minimize reallocations
-  for memory ranges list.
-* Dropped within_crashkernel option for add_opal_mem_range() &
-  add_rtas_mem_range() as it is not really needed.
-
-
-Thanks
-Hari
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
