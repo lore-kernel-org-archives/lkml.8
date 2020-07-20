@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE2CC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7423DC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20B65206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E2220684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261702;
-	bh=zuW6AQG4hO/PzRjlLdbSaVt01/DW89kAI3BXdaI4o6Q=;
+	s=default; t=1595261705;
+	bh=jfhBl+FshSwPpKFBstLBcpw43dci/9aHGo71Qsm30m4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DmzsZml49fKCeoMNdfbR1UcmrsHUIsbJDT+ayt8PUXBSPIbuU36lGWOtZfm82qEhU
-	 gp6443cSUyem9SvYXxZqyRKHLeoc9orSV4gFi+mHlJqesF5dolrFwyp9qPQ7pPB9hQ
-	 yTNU+MevKDpLTX6Nd1GQa75aZQWknNVys44+ZU2g=
+	b=Jo9pxtvDmyZpDrKfYZKa5kz+fK+oBABfst+eRUSCEtQWuQ/egvpQT8GPcGAHm5CGN
+	 y/YQvG4W/z1ugFOCvb489R7TYzAXD00Zl1NuuYwj699qdFDw0y8QA9rrHBqVaqhQ2s
+	 2CKfGsWLsxeXio8xjaX2PZwysxWECsm2jGKu44Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388347AbgGTQPA (ORCPT
+        id S2388355AbgGTQPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:15:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55522 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:15:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388323AbgGTQOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:14:52 -0400
+        id S2388323AbgGTQPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:15:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D7A920684;
-        Mon, 20 Jul 2020 16:14:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 640A420684;
+        Mon, 20 Jul 2020 16:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261691;
-        bh=zuW6AQG4hO/PzRjlLdbSaVt01/DW89kAI3BXdaI4o6Q=;
+        s=default; t=1595261700;
+        bh=jfhBl+FshSwPpKFBstLBcpw43dci/9aHGo71Qsm30m4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KwwS89o1WCQQEy+bDzoRpC+Kvz1Wspk1Zn9yLjHu60Oesob8NhtHfH4zWXgv6QsEG
-         2yfi6V+S0JC5xgNF0Mvoc38EsgZGRsgrc+SPvq1Kka6nRNxq6XpCDL703MKPsS5eqK
-         Mnb52xfkOPRri1BelFzzjDI9RWJwjnTlkYoRttNc=
+        b=a4cAxz0qnPxVztIAFLjk9vR9zwBshDm0I8z6FCHoNx7rguclC9LcXALE8w2kVkokK
+         /xIYChzo9BTk9D1YmytHS+UCNcMjwR07fMSTv1SUW6eRC8Eb10QPIVf9aY2GIxxaG5
+         r9dM1LaBFm4QnBexG1OyuvgIiwzS3YvAYqTbGYb0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Safonov <0x7f454c46@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.7 177/244] serial: core: fix sysrq overhead regression
-Date:   Mon, 20 Jul 2020 17:37:28 +0200
-Message-Id: <20200720152834.258518246@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.7 180/244] ovl: relax WARN_ON() when decoding lower directory file handle
+Date:   Mon, 20 Jul 2020 17:37:31 +0200
+Message-Id: <20200720152834.405203482@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,269 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit 08d5470308ac3598e7709d08b8979ce6e9de8da2 upstream.
+commit 124c2de2c0aee96271e4ddab190083d8aa7aa71a upstream.
 
-Commit 8e20fc391711 ("serial_core: Move sysrq functions from header
-file") converted the inline sysrq helpers to exported functions which
-are now called for every received character, interrupt and break signal
-also on systems without CONFIG_MAGIC_SYSRQ_SERIAL instead of being
-optimised away by the compiler.
+Decoding a lower directory file handle to overlay path with cold
+inode/dentry cache may go as follows:
 
-Inlining these helpers again also avoids the function call overhead when
-CONFIG_MAGIC_SYSRQ_SERIAL is enabled (e.g. when the port is not used as
-a console).
+1. Decode real lower file handle to lower dir path
+2. Check if lower dir is indexed (was copied up)
+3. If indexed, get the upper dir path from index
+4. Lookup upper dir path in overlay
+5. If overlay path found, verify that overlay lower is the lower dir
+   from step 1
 
-Fixes: 8e20fc391711 ("serial_core: Move sysrq functions from header file")
-Cc: Dmitry Safonov <0x7f454c46@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Dmitry Safonov <0x7f454c46@gmail.com>
-Link: https://lore.kernel.org/r/20200610152232.16925-3-johan@kernel.org
+On failure to verify step 5 above, user will get an ESTALE error and a
+WARN_ON will be printed.
+
+A mismatch in step 5 could be a result of lower directory that was renamed
+while overlay was offline, after that lower directory has been copied up
+and indexed.
+
+This is a scripted reproducer based on xfstest overlay/052:
+
+  # Create lower subdir
+  create_dirs
+  create_test_files $lower/lowertestdir/subdir
+  mount_dirs
+  # Copy up lower dir and encode lower subdir file handle
+  touch $SCRATCH_MNT/lowertestdir
+  test_file_handles $SCRATCH_MNT/lowertestdir/subdir -p -o $tmp.fhandle
+  # Rename lower dir offline
+  unmount_dirs
+  mv $lower/lowertestdir $lower/lowertestdir.new/
+  mount_dirs
+  # Attempt to decode lower subdir file handle
+  test_file_handles $SCRATCH_MNT -p -i $tmp.fhandle
+
+Since this WARN_ON() can be triggered by user we need to relax it.
+
+Fixes: 4b91c30a5a19 ("ovl: lookup connected ancestor of dir in inode cache")
+Cc: <stable@vger.kernel.org> # v4.16+
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/serial_core.c |   99 -------------------------------------
- include/linux/serial_core.h      |  103 +++++++++++++++++++++++++++++++++++++--
- 2 files changed, 100 insertions(+), 102 deletions(-)
+ fs/overlayfs/export.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -41,8 +41,6 @@ static struct lock_class_key port_lock_k
+--- a/fs/overlayfs/export.c
++++ b/fs/overlayfs/export.c
+@@ -478,7 +478,7 @@ static struct dentry *ovl_lookup_real_in
+ 	if (IS_ERR_OR_NULL(this))
+ 		return this;
  
- #define HIGH_BITS_OFFSET	((sizeof(long)-sizeof(int))*8)
- 
--#define SYSRQ_TIMEOUT	(HZ * 5)
--
- static void uart_change_speed(struct tty_struct *tty, struct uart_state *state,
- 					struct ktermios *old_termios);
- static void uart_wait_until_sent(struct tty_struct *tty, int timeout);
-@@ -3175,7 +3173,7 @@ static DECLARE_WORK(sysrq_enable_work, u
-  *	Returns false if @ch is out of enabling sequence and should be
-  *	handled some other way, true if @ch was consumed.
-  */
--static bool uart_try_toggle_sysrq(struct uart_port *port, unsigned int ch)
-+bool uart_try_toggle_sysrq(struct uart_port *port, unsigned int ch)
- {
- 	int sysrq_toggle_seq_len = strlen(sysrq_toggle_seq);
- 
-@@ -3198,102 +3196,9 @@ static bool uart_try_toggle_sysrq(struct
- 	port->sysrq = 0;
- 	return true;
- }
--#else
--static inline bool uart_try_toggle_sysrq(struct uart_port *port, unsigned int ch)
--{
--	return false;
--}
-+EXPORT_SYMBOL_GPL(uart_try_toggle_sysrq);
- #endif
- 
--int uart_handle_sysrq_char(struct uart_port *port, unsigned int ch)
--{
--	if (!IS_ENABLED(CONFIG_MAGIC_SYSRQ_SERIAL))
--		return 0;
--
--	if (!port->has_sysrq || !port->sysrq)
--		return 0;
--
--	if (ch && time_before(jiffies, port->sysrq)) {
--		if (sysrq_mask()) {
--			handle_sysrq(ch);
--			port->sysrq = 0;
--			return 1;
--		}
--		if (uart_try_toggle_sysrq(port, ch))
--			return 1;
--	}
--	port->sysrq = 0;
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(uart_handle_sysrq_char);
--
--int uart_prepare_sysrq_char(struct uart_port *port, unsigned int ch)
--{
--	if (!IS_ENABLED(CONFIG_MAGIC_SYSRQ_SERIAL))
--		return 0;
--
--	if (!port->has_sysrq || !port->sysrq)
--		return 0;
--
--	if (ch && time_before(jiffies, port->sysrq)) {
--		if (sysrq_mask()) {
--			port->sysrq_ch = ch;
--			port->sysrq = 0;
--			return 1;
--		}
--		if (uart_try_toggle_sysrq(port, ch))
--			return 1;
--	}
--	port->sysrq = 0;
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(uart_prepare_sysrq_char);
--
--void uart_unlock_and_check_sysrq(struct uart_port *port, unsigned long irqflags)
--{
--	int sysrq_ch;
--
--	if (!port->has_sysrq) {
--		spin_unlock_irqrestore(&port->lock, irqflags);
--		return;
--	}
--
--	sysrq_ch = port->sysrq_ch;
--	port->sysrq_ch = 0;
--
--	spin_unlock_irqrestore(&port->lock, irqflags);
--
--	if (sysrq_ch)
--		handle_sysrq(sysrq_ch);
--}
--EXPORT_SYMBOL_GPL(uart_unlock_and_check_sysrq);
--
--/*
-- * We do the SysRQ and SAK checking like this...
-- */
--int uart_handle_break(struct uart_port *port)
--{
--	struct uart_state *state = port->state;
--
--	if (port->handle_break)
--		port->handle_break(port);
--
--	if (port->has_sysrq && uart_console(port)) {
--		if (!port->sysrq) {
--			port->sysrq = jiffies + SYSRQ_TIMEOUT;
--			return 1;
--		}
--		port->sysrq = 0;
--	}
--
--	if (port->flags & UPF_SAK)
--		do_SAK(state->port.tty);
--	return 0;
--}
--EXPORT_SYMBOL_GPL(uart_handle_break);
--
- EXPORT_SYMBOL(uart_write_wakeup);
- EXPORT_SYMBOL(uart_register_driver);
- EXPORT_SYMBOL(uart_unregister_driver);
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -460,11 +460,104 @@ extern void uart_handle_cts_change(struc
- extern void uart_insert_char(struct uart_port *port, unsigned int status,
- 		 unsigned int overrun, unsigned int ch, unsigned int flag);
- 
--extern int uart_handle_sysrq_char(struct uart_port *port, unsigned int ch);
--extern int uart_prepare_sysrq_char(struct uart_port *port, unsigned int ch);
--extern void uart_unlock_and_check_sysrq(struct uart_port *port,
--					unsigned long irqflags);
--extern int uart_handle_break(struct uart_port *port);
-+#ifdef CONFIG_MAGIC_SYSRQ_SERIAL
-+#define SYSRQ_TIMEOUT	(HZ * 5)
-+
-+bool uart_try_toggle_sysrq(struct uart_port *port, unsigned int ch);
-+
-+static inline int uart_handle_sysrq_char(struct uart_port *port, unsigned int ch)
-+{
-+	if (!port->has_sysrq || !port->sysrq)
-+		return 0;
-+
-+	if (ch && time_before(jiffies, port->sysrq)) {
-+		if (sysrq_mask()) {
-+			handle_sysrq(ch);
-+			port->sysrq = 0;
-+			return 1;
-+		}
-+		if (uart_try_toggle_sysrq(port, ch))
-+			return 1;
-+	}
-+	port->sysrq = 0;
-+
-+	return 0;
-+}
-+
-+static inline int uart_prepare_sysrq_char(struct uart_port *port, unsigned int ch)
-+{
-+	if (!port->has_sysrq || !port->sysrq)
-+		return 0;
-+
-+	if (ch && time_before(jiffies, port->sysrq)) {
-+		if (sysrq_mask()) {
-+			port->sysrq_ch = ch;
-+			port->sysrq = 0;
-+			return 1;
-+		}
-+		if (uart_try_toggle_sysrq(port, ch))
-+			return 1;
-+	}
-+	port->sysrq = 0;
-+
-+	return 0;
-+}
-+
-+static inline void uart_unlock_and_check_sysrq(struct uart_port *port, unsigned long irqflags)
-+{
-+	int sysrq_ch;
-+
-+	if (!port->has_sysrq) {
-+		spin_unlock_irqrestore(&port->lock, irqflags);
-+		return;
-+	}
-+
-+	sysrq_ch = port->sysrq_ch;
-+	port->sysrq_ch = 0;
-+
-+	spin_unlock_irqrestore(&port->lock, irqflags);
-+
-+	if (sysrq_ch)
-+		handle_sysrq(sysrq_ch);
-+}
-+#else	/* CONFIG_MAGIC_SYSRQ_SERIAL */
-+static inline int uart_handle_sysrq_char(struct uart_port *port, unsigned int ch)
-+{
-+	return 0;
-+}
-+static inline int uart_prepare_sysrq_char(struct uart_port *port, unsigned int ch)
-+{
-+	return 0;
-+}
-+static inline void uart_unlock_and_check_sysrq(struct uart_port *port, unsigned long irqflags)
-+{
-+	spin_unlock_irqrestore(&port->lock, irqflags);
-+}
-+#endif	/* CONFIG_MAGIC_SYSRQ_SERIAL */
-+
-+/*
-+ * We do the SysRQ and SAK checking like this...
-+ */
-+static inline int uart_handle_break(struct uart_port *port)
-+{
-+	struct uart_state *state = port->state;
-+
-+	if (port->handle_break)
-+		port->handle_break(port);
-+
-+#ifdef CONFIG_MAGIC_SYSRQ_SERIAL
-+	if (port->has_sysrq && uart_console(port)) {
-+		if (!port->sysrq) {
-+			port->sysrq = jiffies + SYSRQ_TIMEOUT;
-+			return 1;
-+		}
-+		port->sysrq = 0;
-+	}
-+#endif
-+	if (port->flags & UPF_SAK)
-+		do_SAK(state->port.tty);
-+	return 0;
-+}
- 
- /*
-  *	UART_ENABLE_MS - determine if port should enable modem status irqs
+-	if (WARN_ON(ovl_dentry_real_at(this, layer->idx) != real)) {
++	if (ovl_dentry_real_at(this, layer->idx) != real) {
+ 		dput(this);
+ 		this = ERR_PTR(-EIO);
+ 	}
 
 
