@@ -2,91 +2,158 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D295DC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C3EC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8762206E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:22:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595344945;
-	bh=duJ2HBhio/BkAyiZCAkWbkTUg4rjmwr+3L6EYBWx3/g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qt0GZBYNqyEPWgvGYkm2fdYkOTMf0iY6jkYKzR/Nlt2vbs2f5qhTk65LQgr7G3j6v
-	 9rp4ZOVLMUtOIC7eyf2JHAx8S27T/HVYB/nWIVlTXzdEAI/Ll6ygTq0dudDJmFWRA2
-	 JYy3Z0eJ+YOJ+y5GgWfIh1n28UJvmWp/7MbNjP10=
+	by mail.kernel.org (Postfix) with ESMTP id 51B1C206E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:22:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="RqlkE4zV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729732AbgGUPWY (ORCPT
+        id S1729986AbgGUPWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:22:24 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38292 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgGUPWY (ORCPT
+        Tue, 21 Jul 2020 11:22:31 -0400
+Received: from mail.efficios.com ([167.114.26.124]:48708 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgGUPW3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:22:24 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a14so6751561wra.5;
-        Tue, 21 Jul 2020 08:22:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=duJ2HBhio/BkAyiZCAkWbkTUg4rjmwr+3L6EYBWx3/g=;
-        b=GOcMiiDPMp52fhoN2T9EH0DL81eoeamGtI/kisf0QKbuFL5pIgXINcfHXzwc5q5xcp
-         O9Gv962HWVVWKVt55voGXYL+CBMtgadtLwJKDurzM/m7tXpp4lnKkGicFO7gKuQg1Fvj
-         O5/uNg6eECMop6nM4EtQjKDPvLBcc6+YAKbuk3mlQJlzQqB3V7tp1yUUbCm+JrX5JWC4
-         JWd+8TTzQRJf+pRuxuisgq0TKrV3mhJkEbUTkyzC1Cb5dWxYSdYCtNFdaqMRMPGFStYR
-         IJzIMGBvGQESI5f/wEpcSP2D2PKjF1Dpzn2EoZOHm0BPiebGce+thXk1AafB2EtUfz1h
-         ydoQ==
-X-Gm-Message-State: AOAM530183MXGlZ88vJRhUVbp6ZcpERxjYfGfk44AQ1+7cqxD/i7xmGf
-        6+5C6zJzaZAXQoLzAqrecoY=
-X-Google-Smtp-Source: ABdhPJz/1xAiJ9wZTaqakzlijULHHXKAbAgEhVJRgxG7DXGUCbLqBvTyMCdI0jGdy3XiUAvxfI8cTg==
-X-Received: by 2002:a5d:6681:: with SMTP id l1mr13710248wru.47.1595344941801;
-        Tue, 21 Jul 2020 08:22:21 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id 207sm4276409wme.13.2020.07.21.08.22.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 08:22:20 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 15:22:18 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-scsi@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [RFC 01/11] Drivers: hv: vmbus: Always use HV_HYP_PAGE_SIZE for
- gpadl
-Message-ID: <20200721152218.ozpk2b4ymfdocu4p@liuwe-devbox-debian-v2>
-References: <20200721014135.84140-1-boqun.feng@gmail.com>
- <20200721014135.84140-2-boqun.feng@gmail.com>
+        Tue, 21 Jul 2020 11:22:29 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id B74E72CC666;
+        Tue, 21 Jul 2020 11:22:28 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id upMwOGFpg_bC; Tue, 21 Jul 2020 11:22:28 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 5870B2CC665;
+        Tue, 21 Jul 2020 11:22:28 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 5870B2CC665
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1595344948;
+        bh=8uCfUfdQu4oiK+bNjIHkykJf9WIgaALv0rxaHjwJr0E=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=RqlkE4zVklECaxgeEECd1ul22p1CQT7ScOQBrY2/z5PANaX24xgz3b5ttCog1+uvi
+         87lYZRgkYGyBlftIRnErWHjpcLipK4MC/HJlE08bJovtVbKPiajoKGtCx3smOBtOZe
+         gmqRx/6ufGZy/xt3vJbp4rKPREWlvusJzUgA244/qb0TtUAeXv08r/tzVviS9oCASG
+         8xV2/jAxu71lpFnOTRWeH9fZSxLSopk8YPrXq3XcPaxSt/niiCJqtIEIXyFwfxm3R5
+         m1OOCxW2+aLYPclYCvGEqN7WdVBhv1b6TNXkE0Y2F0YKAHdybJmQc9gh/FcyHoLpx4
+         gHXfyvODcnJSg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id dO6tyL1LYrsh; Tue, 21 Jul 2020 11:22:28 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 481932CC991;
+        Tue, 21 Jul 2020 11:22:28 -0400 (EDT)
+Date:   Tue, 21 Jul 2020 11:22:28 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>
+Message-ID: <2141750915.22379.1595344948206.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200721151947.GD10769@hirez.programming.kicks-ass.net>
+References: <1594868476.6k5kvx8684.astroid@bobo.none> <1314561373.18530.1594993363050.JavaMail.zimbra@efficios.com> <1595213677.kxru89dqy2.astroid@bobo.none> <2055788870.20749.1595263590675.JavaMail.zimbra@efficios.com> <1595324577.x3bf55tpgu.astroid@bobo.none> <20200721150656.GN119549@hirez.programming.kicks-ass.net> <616209816.22376.1595344513051.JavaMail.zimbra@efficios.com> <20200721151947.GD10769@hirez.programming.kicks-ass.net>
+Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
+ membarrier_mm_sync_core_before_usermode
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721014135.84140-2-boqun.feng@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
+Thread-Topic: x86: use exit_lazy_tlb rather than membarrier_mm_sync_core_before_usermode
+Thread-Index: 3qMKvpn4CTaC/gUF9DBM4QQjSdBktA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 09:41:25AM +0800, Boqun Feng wrote:
-> Since the hypervisor always uses 4K as its page size, the size of PFNs
-> used for gpadl should be HV_HYP_PAGE_SIZE rather than PAGE_SIZE, so
-> adjust this accordingly as the preparation for supporting 16K/64K page
-> size guests.
+----- On Jul 21, 2020, at 11:19 AM, Peter Zijlstra peterz@infradead.org wrote:
 
-It may be worth calling out there is no change on x86 because
-HV_HYP_PAGE_SHIFT and PAGE_SHIFT are of the same value there.
+> On Tue, Jul 21, 2020 at 11:15:13AM -0400, Mathieu Desnoyers wrote:
+>> ----- On Jul 21, 2020, at 11:06 AM, Peter Zijlstra peterz@infradead.org wrote:
+>> 
+>> > On Tue, Jul 21, 2020 at 08:04:27PM +1000, Nicholas Piggin wrote:
+>> > 
+>> >> That being said, the x86 sync core gap that I imagined could be fixed
+>> >> by changing to rq->curr == rq->idle test does not actually exist because
+>> >> the global membarrier does not have a sync core option. So fixing the
+>> >> exit_lazy_tlb points that this series does *should* fix that. So
+>> >> PF_KTHREAD may be less problematic than I thought from implementation
+>> >> point of view, only semantics.
+>> > 
+>> > So I've been trying to figure out where that PF_KTHREAD comes from,
+>> > commit 227a4aadc75b ("sched/membarrier: Fix p->mm->membarrier_state racy
+>> > load") changed 'p->mm' to '!(p->flags & PF_KTHREAD)'.
+>> > 
+>> > So the first version:
+>> > 
+>> >  https://lkml.kernel.org/r/20190906031300.1647-5-mathieu.desnoyers@efficios.com
+>> > 
+>> > appears to unconditionally send the IPI and checks p->mm in the IPI
+>> > context, but then v2:
+>> > 
+>> >  https://lkml.kernel.org/r/20190908134909.12389-1-mathieu.desnoyers@efficios.com
+>> > 
+>> > has the current code. But I've been unable to find the reason the
+>> > 'p->mm' test changed into '!(p->flags & PF_KTHREAD)'.
+>> 
+>> Looking back at my inbox, it seems like you are the one who proposed to
+>> skip all kthreads:
+>> 
+>> https://lkml.kernel.org/r/20190904124333.GQ2332@hirez.programming.kicks-ass.net
+> 
+> I had a feeling it might've been me ;-) I just couldn't find the email.
+> 
+>> > The comment doesn't really help either; sure we have the whole lazy mm
+>> > thing, but that's ->active_mm, not ->mm.
+>> > 
+>> > Possibly it is because {,un}use_mm() do not have sufficient barriers to
+>> > make the remote p->mm test work? Or were we over-eager with the !p->mm
+>> > doesn't imply kthread 'cleanups' at the time?
+>> 
+>> The nice thing about adding back kthreads to the threads considered for
+>> membarrier
+>> IPI is that it has no observable effect on the user-space ABI. No pre-existing
+>> kthread
+>> rely on this, and we just provide an additional guarantee for future kthread
+>> implementations.
+>> 
+>> > Also, I just realized, I still have a fix for use_mm() now
+>> > kthread_use_mm() that seems to have been lost.
+>> 
+>> I suspect we need to at least document the memory barriers in kthread_use_mm and
+>> kthread_unuse_mm to state that they are required by membarrier if we want to
+>> ipi kthreads as well.
+> 
+> Right, so going by that email you found it was mostly a case of being
+> lazy, but yes, if we audit the kthread_{,un}use_mm() barriers and add
+> any other bits that might be needed, covering kthreads should be
+> possible.
+> 
+> No objections from me for making it so.
 
-Wei.
+I'm OK on making membarrier cover kthreads using mm as well, provided we
+audit kthread_{,un}use_mm() to make sure the proper barriers are in place
+after setting task->mm and before clearing it.
+
+Thanks,
+
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
