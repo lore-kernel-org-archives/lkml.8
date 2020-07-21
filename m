@@ -2,112 +2,100 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE52AC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFA8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC01E20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:33:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gVYAvDc6"
+	by mail.kernel.org (Postfix) with ESMTP id 9185520729
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731206AbgGUVdV (ORCPT
+        id S1731109AbgGUV2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:33:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731054AbgGUVdV (ORCPT
+        Tue, 21 Jul 2020 17:28:51 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31816 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726658AbgGUV2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:33:21 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC85EC061794;
-        Tue, 21 Jul 2020 14:33:20 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id d1so10827082plr.8;
-        Tue, 21 Jul 2020 14:33:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IPEybiNCuxG16IwnjZkyTnI2Sy+pMglvmwaDIAOCXDQ=;
-        b=gVYAvDc6+4klrU8P7Av0M6X7DVvVtxfywvP1ZsXCsYDfwpDx8DpLxCOWyni3xoqj+X
-         HvgoNr0vLS4kR7yz68TT49b3Ab/e8rXT4Gf0BEUYodAAfqlfwfoa4nTFFYNxGXC87IQx
-         2DNAwmKENj4JX3vjUlcYev0pO2xm0EEHnRP1w4gOREy0tgjQ2V5jPmSKouinOElTFzxQ
-         cDtWpCJOf7Mc0mbi56VQMoLYdEQ107Az9AY+Vtgu7YtVr5S8S1vJujvDrUagoh2UVu1l
-         RGtC2x3XIRXkZ3T+ZQxxjdjSUF5wQ/M/HL1uODPcUxLGJgZzZDWT3NgZGt24LEmXLXpf
-         weRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IPEybiNCuxG16IwnjZkyTnI2Sy+pMglvmwaDIAOCXDQ=;
-        b=MJPEMNbceShvB6WgPIutBMv09tH03xGq6xo909b6lRfZXYn/jg+vGQ+VfunA5dxa6V
-         3tUq4C07BI4LnLyWUQQxdiy6uP7qWCRUAXObsgyVum9RtYhKnYpgWmMN9dy7m5jhGNwk
-         7dl+Gu3wBLmnYIklaUq7L+tTF+BF8raeVBxNf0WPoQnamOZ8DKiEWy4+7WRE3XWCKz43
-         jCoUUQGvFp/WbisvN5wd68ParxHcXO+ki0ruwutRQ/BWDZ2V7hZzD7RtXY0DqLPpZAQ1
-         bSXZP6WD/NJt7+3kBtRYgEdcCHeaJV4NOD+XaYGJ/KD4Sq5ITl1w31ur3tY8sBFYmkt2
-         grEQ==
-X-Gm-Message-State: AOAM532bE5qnV3BtJduMMmdMQ3f5YSMJTW8s4VrxIE7LEbMU49AbT0kA
-        cxXYaqQjU9iaTJUvl+kHeCc=
-X-Google-Smtp-Source: ABdhPJwIXh9Yscbb9MZD7PeQLNXIVmQOtDemt/Dy5peJTGG6lp21zfwwdGniynlCs+ClwT5eXrH5Qw==
-X-Received: by 2002:a17:902:fe0d:: with SMTP id g13mr24548261plj.326.1595367200272;
-        Tue, 21 Jul 2020 14:33:20 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id q29sm21617224pfl.77.2020.07.21.14.33.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 14:33:19 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 14:33:17 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jiada Wang <jiada_wang@mentor.com>
-Cc:     nick@shmanahar.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, erosca@de.adit-jv.com,
-        Andrew_Gabbasov@mentor.com, digetx@gmail.com
-Subject: Re: [PATCH 1/1] Input: atmel_mxt_ts - only read messages in
- mxt_acquire_irq() when necessary
-Message-ID: <20200721213317.GK1665100@dtor-ws>
-References: <20200720073612.6252-1-jiada_wang@mentor.com>
+        Tue, 21 Jul 2020 17:28:50 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LL2wsa152507;
+        Tue, 21 Jul 2020 17:28:24 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1vv3xnm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 17:28:24 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LLA6KI024505;
+        Tue, 21 Jul 2020 21:28:22 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03fra.de.ibm.com with ESMTP id 32brq826kx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 21:28:22 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LLSJ7230146928
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jul 2020 21:28:19 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5257E11C050;
+        Tue, 21 Jul 2020 21:28:19 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA3AB11C052;
+        Tue, 21 Jul 2020 21:28:16 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.163.39.1])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 21 Jul 2020 21:28:16 +0000 (GMT)
+Date:   Tue, 21 Jul 2020 14:28:13 -0700
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, mpe@ellerman.id.au, paulus@samba.org,
+        sukadev@linux.ibm.com, bauerman@linux.ibm.com,
+        bharata@linux.ibm.com, Paul Mackerras <paulus@ozlabs.org>
+Subject: Re: [PATCH v2 1/2] KVM: PPC: Book3S HV: move kvmppc_svm_page_out up
+Message-ID: <20200721212813.GF7339@oc0525413822.ibm.com>
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <20200721104202.15727-1-ldufour@linux.ibm.com>
+ <20200721104202.15727-2-ldufour@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200720073612.6252-1-jiada_wang@mentor.com>
+In-Reply-To: <20200721104202.15727-2-ldufour@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_15:2020-07-21,2020-07-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ spamscore=0 bulkscore=0 impostorscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=871 malwarescore=0 clxscore=1011
+ adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007210135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiada,
+On Tue, Jul 21, 2020 at 12:42:01PM +0200, Laurent Dufour wrote:
+> kvmppc_svm_page_out() will need to be called by kvmppc_uvmem_drop_pages()
+> so move it upper in this file.
+> 
+> Furthermore it will be interesting to call this function when already
+> holding the kvm->arch.uvmem_lock, so prefix the original function with __
+> and remove the locking in it, and introduce a wrapper which call that
+> function with the lock held.
+> 
+> There is no functional change.
 
-On Mon, Jul 20, 2020 at 04:36:12PM +0900, Jiada Wang wrote:
-> +static int mxt_check_retrigen(struct mxt_data *data)
-> +{
-> +	struct i2c_client *client = data->client;
-> +	int error;
-> +	int val;
-> +
-> +	data->use_retrigen_workaround = false;
-> +
-> +	if (irq_get_trigger_type(data->irq) & IRQF_TRIGGER_LOW)
-> +		return 0;
+Reviewed-by: Ram Pai <linuxram@us.ibm.com>
 
-Do you think we could change this to:
+> 
+> Cc: Ram Pai <linuxram@us.ibm.com>
+> Cc: Bharata B Rao <bharata@linux.ibm.com>
+> Cc: Paul Mackerras <paulus@ozlabs.org>
+> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+> ---
 
-	irq_data = irq_get_irq_data(data->irq);
-	if (!irq_data) {
-		... invalid IRQ
-		retrun -EINVAL;
-	}
-
-	if (irqd_is_level_type(irq_data))
-		return 0;
-
-as we should not really be concerned about polarity (there could be an
-inverter between the controller and AP), but rather whether it is level
-or edge interrupt.
-
-Thanks.
-
--- 
-Dmitry
+RP
