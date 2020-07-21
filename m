@@ -2,180 +2,100 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2ADC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D387C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEEDB21702
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F7A2065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:05:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ieFDISEt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OthHJd4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbgGUMB4 (ORCPT
+        id S1728671AbgGUMFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:01:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59608 "EHLO
+        Tue, 21 Jul 2020 08:05:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729669AbgGUMBy (ORCPT
+        with ESMTP id S1726266AbgGUMFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:01:54 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5668C061794;
-        Tue, 21 Jul 2020 05:01:54 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id l63so11831149pge.12;
-        Tue, 21 Jul 2020 05:01:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rQMYS8GPViemdBCwGtXgr4XomnsVhh0epuBKtBNluTw=;
-        b=ieFDISEtqKig0OJ3+oN8MmNfZPBD0W3R0SYseKuWY3YgtLflbQc2UwdJ7TKXyMiFfT
-         gyrsiJMdwtF344KKFapMHfpyrRrSa/r5LfbNwm7eUcTP2i0nOhh65S/Q5D1r5JkSI4bg
-         BAw+hTw+kfEobtftxfp75uoz7pV8G/nbEVWrfeKILDy7GmcUNaIdzw2p7hl/rtlq4oN3
-         GHss13r8S6ppwgQpZNR+C1m284aqaTQRbRhl4YAG0dtPBq228kbdj2+GZkhEmwg44Ekq
-         S3ID3IHRogNFmYGh7fuyqhgkt+sbrqZka9rarcjIztCGyACDFEogueeUaz6urxvOjUIz
-         0mQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rQMYS8GPViemdBCwGtXgr4XomnsVhh0epuBKtBNluTw=;
-        b=dmXhQJnFlcpDD2CO3WWvpUg45X48Tw4KTI9nMbY86dS+hiuT9eAU3ARio3kbuxPiOg
-         CswxaWPPD7lLmnYhR5QTQfhn+j0al1Y4P/w6AUr0pJUIpULbl2CBKewFobgqLugkBkDa
-         hQqveDvSIJfW4hdGgR1J/F1Xivgbn/lgrrAXmjWYCV+lfNBVw9lprw4OPQUxjHpiszxF
-         UDTzMwMjVE1pI0JkP0bAuVSiYUvFCEC6ZaLywboX3oYCPpIQNvtzxbVsPR2M0dHLNuKq
-         E2vkG1kllVCXkmVHW4+XPOmNzOXD1JY6gaK8HAeKdVaGhv6kPVUC77WLGut71CsQEVHA
-         fTCA==
-X-Gm-Message-State: AOAM5303RfVOdYum+J82O8LKRcYH9ZKEWqngBWcgVWNQtXTDPDIKzzbo
-        eAEojiLG640isRJ8CEzWVNigHlbTUrGOQA==
-X-Google-Smtp-Source: ABdhPJxNCyVfc8q4w/LH0k+MowcjBh3B53gKTtD90t8/u39ARNw6bDi8jT5NeUOOdV19mrQpBjS8Aw==
-X-Received: by 2002:a63:be47:: with SMTP id g7mr22173727pgo.7.1595332914295;
-        Tue, 21 Jul 2020 05:01:54 -0700 (PDT)
-Received: from xiaomi.mioffice.cn ([209.9.72.214])
-        by smtp.gmail.com with ESMTPSA id t73sm20542041pfc.78.2020.07.21.05.01.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 05:01:53 -0700 (PDT)
-From:   Qiwu Huang <yanziily@gmail.com>
-To:     sre@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, jiangfei1@xiaomi.com,
-        Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: [PATCH v7 2/4] power: supply: core: add wireless charger adapter type property
-Date:   Tue, 21 Jul 2020 19:59:40 +0800
-Message-Id: <8a46e20d48d34f898b26cccfee562735894b08ae.1595332392.git.huangqiwu@xiaomi.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <cover.1595332392.git.huangqiwu@xiaomi.com>
-References: <cover.1595332392.git.huangqiwu@xiaomi.com>
+        Tue, 21 Jul 2020 08:05:41 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B928C061794;
+        Tue, 21 Jul 2020 05:05:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=GCuQhEEo8GEQbOaZxwL8t/Vh128zAUVl6nyPuwjgwzQ=; b=OthHJd4Bgck5c0QD7mGU1EWZmD
+        goOXq0I1zCXHkr6wJ0kB6UMQXXO4pm6v4scGHQaN7AeeV+w32z06HpnWiLO+TsEfQhBXh5R0oHfhX
+        9miu46C6dSnClAK3MApHDZ3VMElnGeh2OXiW3uH1ZBjjwreH62IY3cRuzYcjvgbHH2S2gbck1xbi4
+        iWt1cH74w2TiGwcXSrTfi+KMz9n+7GEchsbDBFbXS/096k27ycmHX1I6++xPb8SzHHUp9Z1/ASPIy
+        S61ANqf8wXP0FmuF83ifHEVFLhhWV+/Oo0W55RkxbSV/z/UX76ABJl5RHPkMC1mXqNf4GjpQd4+R3
+        aUa7UqUQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxr1Z-0001Eb-Vz; Tue, 21 Jul 2020 12:05:34 +0000
+Date:   Tue, 21 Jul 2020 13:05:33 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] mm/page_alloc: fix memalloc_nocma_{save/restore} APIs
+Message-ID: <20200721120533.GD15516@casper.infradead.org>
+References: <1595302129-23895-1-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595302129-23895-1-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiwu Huang <huangqiwu@xiaomi.com>
+On Tue, Jul 21, 2020 at 12:28:49PM +0900, js1304@gmail.com wrote:
+> +static inline unsigned int current_alloc_flags(gfp_t gfp_mask,
+> +					unsigned int alloc_flags)
+> +{
+> +#ifdef CONFIG_CMA
+> +	unsigned int pflags = current->flags;
+> +
+> +	if (!(pflags & PF_MEMALLOC_NOCMA) &&
+> +		gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
+> +		alloc_flags |= ALLOC_CMA;
 
-Reports what type of wireless adapter connection is
-currently active for the supply.
-for example it can show if ADAPTER_PD capable source is attached.
+Please don't indent by one tab when splitting a line because it looks like
+the second line and third line are part of the same block.  Either do
+this:
 
-Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
----
- Documentation/ABI/testing/sysfs-class-power | 28 +++++++++++++++++++++
- drivers/power/supply/power_supply_sysfs.c   |  1 +
- include/linux/power_supply.h                | 19 ++++++++++++++
- 3 files changed, 48 insertions(+)
+	if (!(pflags & PF_MEMALLOC_NOCMA) &&
+	    gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
+		alloc_flags |= ALLOC_CMA;
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index dd3773dcf16a..03ab449fae8a 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -729,3 +729,31 @@ Contact:	Fei Jiang <jiangfei1@xiaomi.com>
- 			3: QUICK_CHARGE_TURBE,
- 			4: QUICK_CHARGE_SUPER.
- 
-+===== Wireless Charger Properties =====
-+What:		/sys/class/power_supply/<supply_name>/tx_adapter
-+Date:		Jul 2020
-+Contact:	Fei Jiang <jiangfei1@xiaomi.com>
-+Description:
-+		Reports the type of wireless adapter connection is currently active for
-+		the supply, for example it can show if ADAPTER_PD capable source
-+		is attached. Expect common wireless adapter type, also increase by
-+		some vendor private adapter type(ex. ADAPTER_PD_40W).
-+
-+		Access: Read-Only
-+		Valid values:
-+			0: ADAPTER_NONE,
-+			1: ADAPTER_SDP,
-+			2: ADAPTER_DCP,
-+			3: ADAPTER_CDP,
-+			4: ADAPTER_OCP,
-+			5: ADAPTER_QC2,
-+			6: ADAPTER_QC3,
-+			7: ADAPTER_PD,
-+			8: ADAPTER_AUTH_FAILED,
-+			9: ADAPTER_PRIVATE_QC3,
-+			10: ADAPTER_PRIVATE_PD,
-+			11: ADAPTER_CAR_POWER,
-+			12: ADAPTER_PRIVATE_PD_40W,
-+			13: ADAPTER_VOICE_BOX,
-+			14: ADAPTER_PRIVATE_PD_50W.
-+
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index 9554d7907373..f2458e21d02b 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -207,6 +207,7 @@ static struct power_supply_attr power_supply_attrs[] = {
- 	POWER_SUPPLY_ATTR(MANUFACTURER),
- 	POWER_SUPPLY_ATTR(SERIAL_NUMBER),
- 	POWER_SUPPLY_ATTR(QUICK_CHARGE_TYPE),
-+	POWER_SUPPLY_ATTR(TX_ADAPTER),
- };
- 
- static struct attribute *
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index f35c661a2544..0bbdec1630a4 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -168,6 +168,7 @@ enum power_supply_property {
- 	POWER_SUPPLY_PROP_MANUFACTURER,
- 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
- 	POWER_SUPPLY_PROP_QUICK_CHARGE_TYPE,
-+	POWER_SUPPLY_PROP_TX_ADAPTER,
- };
- 
- enum power_supply_type {
-@@ -207,6 +208,24 @@ enum power_supply_quick_charge_type {
- 	QUICK_CHARGE_MAX,
- };
- 
-+enum power_supply_tx_adapter_type {
-+	ADAPTER_NONE = 0,			/* Nothing Attached */
-+	ADAPTER_SDP,				/* Standard Downstream Port */
-+	ADAPTER_CDP,				/* Charging Downstream Port */
-+	ADAPTER_DCP,				/* Dedicated Charging Port */
-+	ADAPTER_OCP,				/* Other Charging Port */
-+	ADAPTER_QC2,				/* Qualcomm Charge 2.0 */
-+	ADAPTER_QC3,				/* Qualcomm Charge 3.0 */
-+	ADAPTER_PD,				/* Power Delivery Port */
-+	ADAPTER_AUTH_FAILED,			/* Authenticated Failed Adapter */
-+	ADAPTER_PRIVATE_QC3,			/* Qualcomm Charge 3.0 with Private Protocol */
-+	ADAPTER_PRIVATE_PD,			/* PD Adapter with Private Protocol */
-+	ADAPTER_CAR_POWER,			/* Wireless Car Charger */
-+	ADAPTER_PRIVATE_PD_40W,			/* 40W PD Adapter with Private Protocol */
-+	ADAPTER_VOICE_BOX,			/* Voice Box which Support Wireless Charger */
-+	ADAPTER_PRIVATE_PD_50W,			/* 50W PD Adapter with Private Protocol */
-+};
-+
- enum power_supply_notifier_events {
- 	PSY_EVENT_PROP_CHANGED,
- };
--- 
-2.27.0
+or this:
+	if (!(pflags & PF_MEMALLOC_NOCMA) &&
+			gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
+		alloc_flags |= ALLOC_CMA;
+
+> @@ -4619,8 +4631,10 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+>  		wake_all_kswapds(order, gfp_mask, ac);
+>  
+>  	reserve_flags = __gfp_pfmemalloc_flags(gfp_mask);
+> -	if (reserve_flags)
+> +	if (reserve_flags) {
+>  		alloc_flags = reserve_flags;
+> +		alloc_flags = current_alloc_flags(gfp_mask, alloc_flags);
+> +	}
+
+Is this right?  Shouldn't you be passing reserve_flags to
+current_alloc_flags() here?  Also, there's no need to add { } here.
 
