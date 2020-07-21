@@ -2,298 +2,129 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94495C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60B7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A61A20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C082B20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:45:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="SOlbCWT4";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="Swkx8zvs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RJPk4UVm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbgGUOot (ORCPT
+        id S1729084AbgGUOp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:44:49 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:60492 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726522AbgGUOos (ORCPT
+        Tue, 21 Jul 2020 10:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbgGUOp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:44:48 -0400
-Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LEdr51001065;
-        Tue, 21 Jul 2020 10:44:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=casjpSSSWQa8F0tUjxkOK+Kj2EDuGX9LBCfJpRB3E54=;
- b=SOlbCWT4UuMeJN2s4rsiqP4CyElUSJx9+rPXfUP4PRKxeD+d/f5/8NRsnOX27E7cgicA
- Mamb024NDxLnH7OZzP79+ysnkdSBZv4aJtg0Z+td4JY/zn+Yozc/Kbyyyx4So7ofzcs7
- tb3jXXLGAQoRObDcpjIhpTSXtO3LrWVyAPF+haQyufqaiR/5PNBqP7OlIVnqqVHLUJUH
- YSI1Zfek0sUa3BSJCMQsblVyHKUT2cWrrUSBGmtXwsnqmJ1A7AFl16U2tkCyPijnje1R
- rB9HWPKL+Bln5U5e6xvWm7Q3AKyMftUHMibVS2k2PSlwlYbg/kR2y8oOx+0pg5cmylJ9 pA== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 32c1earhug-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 10:44:36 -0400
-Received: from pps.filterd (m0142693.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LEYxQi093980;
-        Tue, 21 Jul 2020 10:44:35 -0400
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2100.outbound.protection.outlook.com [104.47.55.100])
-        by mx0a-00154901.pphosted.com with ESMTP id 32e241rddu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jul 2020 10:44:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ovv4mbsbn+EUP/6E6sBBmnT1XYlKLL4+n5nfCbQ0EslBUgEuCBH5QxV4RBsScAGLEOchxN/sp/kyoXhikUTsAliYXF+x1tHhRRb4UWPup15Sx9eJcOyP8Zb+a768Jqtor+3NWa0fTMqpEkvUyP9wtyly8mjwUEJ/25FkzPOda6aIoyYu1+NQQKaj7cUIWWXT+DIj0w8Iv40BoWDS0oWBSOeamZVunQiM7vlBrdcYEnBbAUNTxecOupblX1VYn1BwUWyCDgla8IBiADOIpTbLbjeVqok9GR/WE86Ox0ytPOjD+3mm46HgzP5ncovrdsMcJfvtgwcX7Vy1rj7+2u6wRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=casjpSSSWQa8F0tUjxkOK+Kj2EDuGX9LBCfJpRB3E54=;
- b=RmdCgLOcWYua5fNjhwXUkbuBWmf9rJo71UYCdQjxClDtBwlEWtHEAfu7SmvpRHgxVG2jbJ7Zgg+ci64gW2uP9ogeK8GR/GFiUvTpnaPMgdu9eoyZjH8fZqGhkHuMUF3wb8g/fg4aKmlkxO6vaOml6Ta2O/wqgvI/yiW93egacbEzwFtQhvMjLh4N7CCMZSjGoNJG/YWjSbudRbjdeuya340+UNuKB8hqdhrUuzEwJnM8sCK+212YaWv81M5Drf5DNQyTH6bzJ/w9oW/v+b5L8ROL/ckadCV4n4LH7XBKL5ivHjk1/YeGiwKcEJIZmAWmwRQAlzqsw/2nwJdhu2XkcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
- s=selector1-Dell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=casjpSSSWQa8F0tUjxkOK+Kj2EDuGX9LBCfJpRB3E54=;
- b=Swkx8zvsIvCFIga9pfhPeNclhFqlYjnNIMOCGwxr32ac4pNxtOOo2mkyJ8mnRAODZDaxcKfZxYEmH+Ms/F43WpwJhvWkjAvb35l8PpiudLD40x44qgnaeoR5oOIZRaL2l/zZCQhN8RCqbA9LQnWRBQCbYKBlsdfXzRBgVUqhAzc=
-Received: from DM6PR19MB2636.namprd19.prod.outlook.com (2603:10b6:5:15f::15)
- by DM5PR1901MB2118.namprd19.prod.outlook.com (2603:10b6:4:9e::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.25; Tue, 21 Jul
- 2020 14:44:34 +0000
-Received: from DM6PR19MB2636.namprd19.prod.outlook.com
- ([fe80::f1c7:5bf4:a3b:ff40]) by DM6PR19MB2636.namprd19.prod.outlook.com
- ([fe80::f1c7:5bf4:a3b:ff40%6]) with mapi id 15.20.3195.022; Tue, 21 Jul 2020
- 14:44:34 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>
-CC:     Ashok Raj <ashok.raj@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Koba Ko <koba.ko@canonical.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: RE: [PATCH 1/1] iommu/vt-d: Skip TE disabling on quirky gfx dedicated
- iommu
-Thread-Topic: [PATCH 1/1] iommu/vt-d: Skip TE disabling on quirky gfx
- dedicated iommu
-Thread-Index: AQErn65qGPIxx4/vDRlqxKGcSijyaKpnmsGw
-Date:   Tue, 21 Jul 2020 14:44:33 +0000
-Message-ID: <DM6PR19MB2636D1CC549743E2113C0EAFFA780@DM6PR19MB2636.namprd19.prod.outlook.com>
-References: <20200721001713.24282-1-baolu.lu@linux.intel.com>
-In-Reply-To: <20200721001713.24282-1-baolu.lu@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-07-21T14:44:31.6369253Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=7bf55830-b9f2-46f1-86e0-ced279ba7c8c;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [76.251.167.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f50924a6-a02c-4048-e17a-08d82d84958a
-x-ms-traffictypediagnostic: DM5PR1901MB2118:
-x-microsoft-antispam-prvs: <DM5PR1901MB2118E2E16EFAB4900A97BAF5FA780@DM5PR1901MB2118.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VsdpanehVUVAoCvalWFTA8bcXZKhzMCUChlDKJQaaJq5cvluzflkMPv7PnlI5LJ4IkVYA+3SO3dFkmT0EzY3uolQWL8w0hDy8Ch25GKFhK1/8VVngLnAjy+G15pTFZVxh7h6zIDVlRq+GXKN+tCJeN+Vh9RcJjQbMs/oOwQ0HF61AJ8KXxw2fFZ6NhpFAHJ9ibpc7eH4BM/Dgulkb3y3FSEMe+Cl4f4+IbzcI71Pd4Ij3r1RedSrEmCIwnZsZwitT9yGlmtUKGKc3D/OOdrNSkcGcoyrGgWgswEviCI074rFXZI/DWmUzmS6G1uMrJWXPJHAHJYOU3pq3KYqDXz2DEPc0TNzFPnKVwdAUTj06PIOtzSJqrliD3CbJpax/4Qc+ul20Qzdh6bFoBZu9ZkoCA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR19MB2636.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(376002)(346002)(366004)(396003)(66556008)(86362001)(66476007)(66946007)(76116006)(71200400001)(9686003)(53546011)(6506007)(966005)(7696005)(478600001)(8676002)(8936002)(26005)(55016002)(64756008)(66446008)(83380400001)(186003)(4326008)(110136005)(5660300002)(316002)(786003)(52536014)(54906003)(33656002)(2906002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: SRmwm/UjfJ0aWryBn5yiNgywACLjxLxj5UzB157gEw1FF/Tughm79I8PD3mFtFo8rcKkAiXOkmBOjt787j4wIelnurfrnJTTGraqyjgi91fBrUTXggw1y7fxOt/ZW+wqIcTC98y78fbYypAyfUnYul6ZTRQyIjPSEkezrkfETSQbCZbbiMxWW3G0yvSW3abl+Yq7o7iE1JSVJwHPvGwcW2lkWztOyHBjBAlVI2Kid3BrV76zlTAqbP5FBU1n+kTE7OvYHTwBAhQusqK9KAyaF9Qi9IaYk5mnhlf6VeIm/ABSdZthFYA9IiErtIKstuMSfuIL0H+5dAi+3cbPTLRnJ5hFNQVHnhbayBOPOGdmbT92cM1cjU03+/CYLREOcWo4GskRYi5d2z2s08fR73fS8iRz5ty72W/FeuYG0q8OkHF26CS82lhSQG6NVxwwK6giobsFPehc3DK2nIIqSMx1CkWSgDc6LkEKQHFq+rYCreFn/531b5JfPxXvyb9GL5vy
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 21 Jul 2020 10:45:28 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A18F1C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:45:27 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id i80so11803507lfi.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:45:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0pAwByUR93Lcw7763OHJXsSvUvLTrNih6qhx4gjT+aM=;
+        b=RJPk4UVm3QG1OSNEE3CsSct0ln7CZy0uNFBtNkbOJqVixfV+ABWf25M4H+TnYcPfce
+         Ta+awLrH5yk/hEx+EREuJMfro+hKQpGe5CFLuXIivkB9MRt63Mgki6+ZSqsYmq60+KGR
+         saMyvxi2Hmz1v1xQI2GSgfDNxXTFo1iMzKVWjBJjRBqfCJ1CmI8KNgJBdaDfPJ2tuRhc
+         1B2BJWsw4BWQe4cDBiWCe26f3Sag/jnK6MVlPixWUeRZaxdJW6M9dd3rU+dU/oYLU+7I
+         NhW4hltGvXPB7wF1uCgYh08R3vYJ9kwAMy5b5J9dOBkBQSe9QqK7WkCSf+m3yniK49H9
+         NTuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0pAwByUR93Lcw7763OHJXsSvUvLTrNih6qhx4gjT+aM=;
+        b=OO2/HdQze7WuLxNvZxX7CulsKBQm4IV+MPkm3a+eTWGnyE2nkuwX9VHY/imZyZU4kB
+         nd7M8xhVVZga8e5rradhWJ31yv1xOVvlLXMuNvdYQbbQ01LiTkQKPLccly8R/nmBAFWZ
+         sHRzkX4+l6W3KTl3FW3OncLxfbfsyHlwK3SskO/m/0yNo4w3JYcBSrOuvOuRxTA9/Y/9
+         59Vzc6+hPRCUzEyBSS8S/iXTW1L/EA42mvyM0WAmbyAfPK5z+RC1xetvpvbkN7NGRL1D
+         vJ0rh6/5j46EpX35wZsgZ8gKdDnDkMR5b8k/X0n7Z/NDOIo5CoKmLCRxjugdoyRfwQiV
+         mDwg==
+X-Gm-Message-State: AOAM531sK/liFDJyVVzRzZgqix1NrSR6u5tbv7EUtaDwbEJ0qYpNykDW
+        jcNUPuunJ4ouniL2gOVi7cYRaHMsHleSY08DhFjUrA==
+X-Google-Smtp-Source: ABdhPJx+6QMWrXHBeyyEBoTcyZr8xV8VGVPYDS7ORai+toxRwj0nYcBfTYvA3wm86GBp4I6uRaZTjfvBKCYXxnSWba4=
+X-Received: by 2002:ac2:4183:: with SMTP id z3mr10668274lfh.3.1595342725776;
+ Tue, 21 Jul 2020 07:45:25 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR19MB2636.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f50924a6-a02c-4048-e17a-08d82d84958a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 14:44:33.9755
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 91vS9lzSEDsQ9980o9bjNVSKEYZ2nUycUFkWlLN0N4RsuuWU1OTzSoIX2KPAmme4jhD/dUzxq8HuKCN8lzbMIUUdsl7vX+yVCdHy4KKADiU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1901MB2118
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_09:2020-07-21,2020-07-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
- priorityscore=1501 bulkscore=0 suspectscore=0 clxscore=1011
- impostorscore=0 adultscore=0 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007210107
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 spamscore=0
- bulkscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007210107
+References: <2E04DD7753BE0E4ABABF0B664610AD6F2620CAF7@dggeml528-mbx.china.huawei.com>
+In-Reply-To: <2E04DD7753BE0E4ABABF0B664610AD6F2620CAF7@dggeml528-mbx.china.huawei.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Tue, 21 Jul 2020 07:45:14 -0700
+Message-ID: <CALvZod7xGNxJxTcJmo8mCVAgDkPdC5Pp12rhuBNsFsw-Yv=e+A@mail.gmail.com>
+Subject: Re: PROBLEM: cgroup cost too much memory when transfer small files to tmpfs
+To:     jingrui <jingrui@huawei.com>
+Cc:     "tj@kernel.org" <tj@kernel.org>, Lizefan <lizefan@huawei.com>,
+        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        caihaomin <caihaomin@huawei.com>,
+        "Weiwei (N)" <wick.wei@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: iommu <iommu-bounces@lists.linux-foundation.org> On Behalf Of Lu
-> Baolu
-> Sent: Monday, July 20, 2020 7:17 PM
-> To: Joerg Roedel
-> Cc: Ashok Raj; linux-kernel@vger.kernel.org; stable@vger.kernel.org; Koba
-> Ko; iommu@lists.linux-foundation.org
-> Subject: [PATCH 1/1] iommu/vt-d: Skip TE disabling on quirky gfx dedicate=
-d
-> iommu
->=20
-> The VT-d spec requires (10.4.4 Global Command Register, TE field) that:
->=20
-> Hardware implementations supporting DMA draining must drain any in-flight
-> DMA read/write requests queued within the Root-Complex before completing
-> the translation enable command and reflecting the status of the command
-> through the TES field in the Global Status register.
->=20
-> Unfortunately, some integrated graphic devices fail to do so after some
-> kind of power state transition. As the result, the system might stuck in
-> iommu_disable_translation(), waiting for the completion of TE transition.
->=20
-> This provides a quirk list for those devices and skips TE disabling if
-> the qurik hits.
->=20
-> Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=3D208363
-That one is for TGL.
-
-I think you also want to add this one for ICL:
-Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=3D206571
-
-> Tested-by: Koba Ko <koba.ko@canonical.com>
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+On Tue, Jul 21, 2020 at 4:20 AM jingrui <jingrui@huawei.com> wrote:
+>
+> Cc: Johannes Weiner <hannes@cmpxchg.org> ; Michal Hocko <mhocko@kernel.org>; Vladimir Davydov <vdavydov.dev@gmail.com>
+>
+> Thanks.
+>
 > ---
->  drivers/iommu/intel/dmar.c  |  1 +
->  drivers/iommu/intel/iommu.c | 27 +++++++++++++++++++++++++++
->  include/linux/dmar.h        |  1 +
->  include/linux/intel-iommu.h |  2 ++
->  4 files changed, 31 insertions(+)
->=20
-> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-> index 683b812c5c47..16f47041f1bf 100644
-> --- a/drivers/iommu/intel/dmar.c
-> +++ b/drivers/iommu/intel/dmar.c
-> @@ -1102,6 +1102,7 @@ static int alloc_iommu(struct dmar_drhd_unit *drhd)
->  	}
->=20
->  	drhd->iommu =3D iommu;
-> +	iommu->drhd =3D drhd;
->=20
->  	return 0;
->=20
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 98390a6d8113..11418b14cc3f 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -356,6 +356,7 @@ static int intel_iommu_strict;
->  static int intel_iommu_superpage =3D 1;
->  static int iommu_identity_mapping;
->  static int intel_no_bounce;
-> +static int iommu_skip_te_disable;
->=20
->  #define IDENTMAP_GFX		2
->  #define IDENTMAP_AZALIA		4
-> @@ -1633,6 +1634,10 @@ static void iommu_disable_translation(struct
-> intel_iommu *iommu)
->  	u32 sts;
->  	unsigned long flag;
->=20
-> +	if (iommu_skip_te_disable && iommu->drhd->gfx_dedicated &&
-> +	    (cap_read_drain(iommu->cap) || cap_write_drain(iommu->cap)))
-> +		return;
-> +
->  	raw_spin_lock_irqsave(&iommu->register_lock, flag);
->  	iommu->gcmd &=3D ~DMA_GCMD_TE;
->  	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
-> @@ -4043,6 +4048,7 @@ static void __init init_no_remapping_devices(void)
->=20
->  		/* This IOMMU has *only* gfx devices. Either bypass it or
->  		   set the gfx_mapped flag, as appropriate */
-> +		drhd->gfx_dedicated =3D 1;
->  		if (!dmar_map_gfx) {
->  			drhd->ignored =3D 1;
->  			for_each_active_dev_scope(drhd->devices,
-> @@ -6160,6 +6166,27 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,
-> 0x0044, quirk_calpella_no_shadow_g
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x0062,
-> quirk_calpella_no_shadow_gtt);
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x006a,
-> quirk_calpella_no_shadow_gtt);
->=20
-> +static void quirk_igfx_skip_te_disable(struct pci_dev *dev)
-> +{
-> +	unsigned short ver;
-> +
-> +	if (!IS_GFX_DEVICE(dev))
-> +		return;
-> +
-> +	ver =3D (dev->device >> 8) & 0xff;
-> +	if (ver !=3D 0x45 && ver !=3D 0x46 && ver !=3D 0x4c &&
-> +	    ver !=3D 0x4e && ver !=3D 0x8a && ver !=3D 0x98 &&
-> +	    ver !=3D 0x9a)
-> +		return;
-> +
-> +	if (risky_device(dev))
-> +		return;
-> +
-> +	pci_info(dev, "Skip IOMMU disabling for graphics\n");
-> +	iommu_skip_te_disable =3D 1;
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
-> quirk_igfx_skip_te_disable);
-> +
->  /* On Tylersburg chipsets, some BIOSes have been known to enable the
->     ISOCH DMAR unit for the Azalia sound device, but not give it any
->     TLB entries, which causes it to deadlock. Check for that.  We do
-> diff --git a/include/linux/dmar.h b/include/linux/dmar.h
-> index d7bf029df737..65565820328a 100644
-> --- a/include/linux/dmar.h
-> +++ b/include/linux/dmar.h
-> @@ -48,6 +48,7 @@ struct dmar_drhd_unit {
->  	u16	segment;		/* PCI domain		*/
->  	u8	ignored:1; 		/* ignore drhd		*/
->  	u8	include_all:1;
-> +	u8	gfx_dedicated:1;	/* graphic dedicated	*/
->  	struct intel_iommu *iommu;
->  };
->=20
-> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-> index bf6009a344f5..329629e1e9de 100644
-> --- a/include/linux/intel-iommu.h
-> +++ b/include/linux/intel-iommu.h
-> @@ -600,6 +600,8 @@ struct intel_iommu {
->  	struct iommu_device iommu;  /* IOMMU core code handle */
->  	int		node;
->  	u32		flags;      /* Software defined flags */
-> +
-> +	struct dmar_drhd_unit *drhd;
->  };
->=20
->  /* PCI domain-device relationship */
-> --
-> 2.17.1
->=20
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> PROBLEM: cgroup cost too much memory when transfer small files to tmpfs.
+>
+> keywords: cgroup PERCPU/memory cost too much.
+>
+> description:
+>
+> We send small files from node-A to node-B tmpfs /tmp directory using sftp. On
+> node-B the systemd configured with pam on like below.
+>
+> cat /etc/pam.d/password-auth | grep systemd
+> -session     optional      pam_systemd.so
+>
+> So when transfer a file, a systemd session is created, that means a cgroup is
+> created, then file saved at /tmp will associated with a cgroup object. After
+> file transferred, session and cgroup-dir will be removed, but the file in /tmp
+> still associated with the cgroup object.
 
+Is there a way for you to re-use the cgroup instead of creating and
+deleting cgroup for each individual file transfer session?
+
+> The PERCPU memory in cgroup/css object
+> cost a lot(about 0.5MB/per-cgroup-object) on 200/cpus machine.
+>
+> When lot of small files transferred to tmpfs, the cgroup/css object memory
+> cost become huge in this scenes to be used.
+>
+> systemd related issue: https://github.com/systemd/systemd/issues/16499
+>
+> kernel version: 4.19+
+>
+> Problem:
+>
+> 1. Do we have any idea to descrease cgroup memory cost in this case?
+> 2. When user remove cgroup directory, does it possible associated file memory to root cgroup?
+
+No, the memory remains associated with the cgroup and the cgroup
+becomes zombie on deletion.
+
+> 3. Can we provide an option that do not associate memory with cgroup in tmpfs?
+
+Only way, if you don't want to disable memcg, is to move the file
+receiver process to root cgroup.
