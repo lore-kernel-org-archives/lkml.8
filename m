@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B99C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344A1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B96C2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B8B207BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595366638;
-	bh=RNILwOin5kwW3Hlbc+oaU3qoHR9blyRxCdbK2sRyfIc=;
+	s=default; t=1595366642;
+	bh=ajSaAeF2n7h94VHdL4uWUGlYN0WyGAIis5MfUlWwmP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1J6x+sQyAwIgkFQ/ZcIn4aHs9dT+6peGySTZQhkhOJXv1RtlaP8UO/V12xjzTW8sv
-	 7LeZA9HPg24sPIUnSu0oXTsus6d7xaj/TfGSXFxEDa5R1H1C4K1o0CxBpNCdZ02Y0j
-	 nMclvPKjlLsOyZnI2PSa+1yuR1jbfe33mVoblqfU=
+	b=xVABpeM9TYM/m51xRvtm+mC36KZ2yT1uFO/N4GTHAsMsQJSea8CY84vR0FnuPqs0d
+	 wU69o+OTkfjgsPm5cf+YnmZMHkVWKE0FFiejbPVB14g3VQeRNPlqmgCN9vWX0s+BCh
+	 2hQro9cVKXhv/OxkQRcjM4JnUEArZQ0/A3CXvM8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731214AbgGUVX5 (ORCPT
+        id S1728944AbgGUVYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:23:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42520 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 17:24:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbgGUVX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:23:56 -0400
+        id S1731217AbgGUVX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 17:23:59 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A537A20717;
-        Tue, 21 Jul 2020 21:23:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0885F2072E;
+        Tue, 21 Jul 2020 21:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595366636;
-        bh=RNILwOin5kwW3Hlbc+oaU3qoHR9blyRxCdbK2sRyfIc=;
+        s=default; t=1595366639;
+        bh=ajSaAeF2n7h94VHdL4uWUGlYN0WyGAIis5MfUlWwmP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J7kCGblC8cZuPdD4jW786SouTiiPMt8Akmn0zfa4/ESdHATfBFQhvImdPulmPpyIi
-         3hFpj71dQxvi64Jag7Dor1SSZDgCcRj27Tm3ltCr+AlrHeAYLQbwzNczRqXt98465Q
-         k2O7ngX4G5ymMVjrEbz4gLiO7XEOpOHFEJBTeQBs=
+        b=H/ZR+ZcPViUCvb3a1csLlqWzupg0vM/RX6nw+mRD9UnE06WzyUUd39rGMR2e9lugH
+         fpiyGIlABT0VyKTaEGw1rJNdjs6JcH0JvUlwLFz30ZvrseTKLYJ7wsa6NTXDDK3F1w
+         QftBuXdBOb2nM0Pc7lvpSSCGlYDuSm8gqe4hMwDE=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Ricky Wu <ricky_wu@realtek.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -50,9 +50,9 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         Puranjay Mohan <puranjay12@gmail.com>,
         linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 1/5] misc: rtsx: Use pcie_capability_clear_and_set_word() for PCI_EXP_LNKCTL
-Date:   Tue, 21 Jul 2020 16:23:32 -0500
-Message-Id: <20200721212336.1159079-2-helgaas@kernel.org>
+Subject: [PATCH 2/5] misc: rtsx: Remove unused pcie_cap
+Date:   Tue, 21 Jul 2020 16:23:33 -0500
+Message-Id: <20200721212336.1159079-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200721212336.1159079-1-helgaas@kernel.org>
 References: <20200721212336.1159079-1-helgaas@kernel.org>
@@ -65,41 +65,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Instead of using the driver-specific rtsx_pci_write_config_byte() to update
-the PCIe Link Control Register, use pcie_capability_write_word() like the
-rest of the kernel does.  This makes it easier to maintain ASPM across the
-PCI core and drivers.
-
-No functional change intended.  I missed this when doing 3d1e7aa80d1c
-("misc: rtsx: Use pcie_capability_clear_and_set_word() for
-PCI_EXP_LNKCTL").
+There are no more uses of struct rtsx_pcr.pcie_cap.  Remove it.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/misc/cardreader/rtsx_pcr.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/misc/cardreader/rtsx_pcr.c | 1 -
+ include/linux/rtsx_pci.h           | 1 -
+ 2 files changed, 2 deletions(-)
 
 diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
-index 0d5928bc1b6d..6a4d6c8f4e71 100644
+index 6a4d6c8f4e71..169505165a52 100644
 --- a/drivers/misc/cardreader/rtsx_pcr.c
 +++ b/drivers/misc/cardreader/rtsx_pcr.c
-@@ -1231,6 +1231,7 @@ int rtsx_ms_power_off_card3v3(struct rtsx_pcr *pcr)
- 
- static int rtsx_pci_init_hw(struct rtsx_pcr *pcr)
- {
-+	struct pci_dev *pdev = pcr->pci;
+@@ -1234,7 +1234,6 @@ static int rtsx_pci_init_hw(struct rtsx_pcr *pcr)
+ 	struct pci_dev *pdev = pcr->pci;
  	int err;
  
- 	pcr->pcie_cap = pci_find_capability(pcr->pci, PCI_CAP_ID_EXP);
-@@ -1324,7 +1325,8 @@ static int rtsx_pci_init_hw(struct rtsx_pcr *pcr)
- 	rtsx_pci_init_ocp(pcr);
+-	pcr->pcie_cap = pci_find_capability(pcr->pci, PCI_CAP_ID_EXP);
+ 	rtsx_pci_writel(pcr, RTSX_HCBAR, pcr->host_cmds_addr);
  
- 	/* Enable clk_request_n to enable clock power management */
--	rtsx_pci_write_config_byte(pcr, pcr->pcie_cap + PCI_EXP_LNKCTL + 1, 1);
-+	pcie_capability_write_word(pdev, PCI_EXP_LNKCTL,
-+				   PCI_EXP_LNKCTL_CLKREQ_EN);
- 	/* Enter L1 when host tx idle */
- 	rtsx_pci_write_config_byte(pcr, 0x70F, 0x5B);
+ 	rtsx_pci_enable_bus_int(pcr);
+diff --git a/include/linux/rtsx_pci.h b/include/linux/rtsx_pci.h
+index e8780d4e4636..b1071c80fffc 100644
+--- a/include/linux/rtsx_pci.h
++++ b/include/linux/rtsx_pci.h
+@@ -1158,7 +1158,6 @@ struct rtsx_hw_param {
+ struct rtsx_pcr {
+ 	struct pci_dev			*pci;
+ 	unsigned int			id;
+-	int				pcie_cap;
+ 	struct rtsx_cr_option	option;
+ 	struct rtsx_hw_param hw_param;
  
 -- 
 2.25.1
