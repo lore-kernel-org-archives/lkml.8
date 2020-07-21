@@ -2,73 +2,182 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0E4C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B98C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAC382073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406932073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:18:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dZbyKZk2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbgGUQRP (ORCPT
+        id S1730114AbgGUQSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:17:15 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58809 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbgGUQRP (ORCPT
+        Tue, 21 Jul 2020 12:18:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729607AbgGUQSv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:17:15 -0400
-Received: from 1.general.ppisati.uk.vpn ([10.172.193.134] helo=canonical.com)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <paolo.pisati@canonical.com>)
-        id 1jxux4-0003gj-EU; Tue, 21 Jul 2020 16:17:10 +0000
-From:   Paolo Pisati <paolo.pisati@canonical.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Jian Yang <jianyang@google.com>
-Cc:     netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] selftest: txtimestamp: fix net ns entry logic
-Date:   Tue, 21 Jul 2020 18:17:10 +0200
-Message-Id: <20200721161710.80797-1-paolo.pisati@canonical.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CA+FuTSeN8SONXySGys8b2EtTqJmHDKw1XVoDte0vzUPg=yuH5g@mail.gmail.com>
-References: <CA+FuTSeN8SONXySGys8b2EtTqJmHDKw1XVoDte0vzUPg=yuH5g@mail.gmail.com>
+        Tue, 21 Jul 2020 12:18:51 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D2C7C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:18:51 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id h7so4021303qkk.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:18:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J4aW0UxvuQIduet3jIOxOj54MUkYDsbNIhpVvbjijkw=;
+        b=dZbyKZk2dBGB1hjMOMBTIT9aCXKW26+6koDX+2g0z9R04UYraQAHZhWcdihWn80tlu
+         bKkZrTGe2+ITwRCeOMCCm0KQfKp0/NZHlXVfyt1yTkfS35q52z69ZJdyHknNSPOUmYyT
+         A/YPAmfiXCqSWLsWBN+7eKZsZ4yRxzBFx95FM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J4aW0UxvuQIduet3jIOxOj54MUkYDsbNIhpVvbjijkw=;
+        b=INdSDCP5aS1L+tVVdDoSXd/ZEpIz/nuL/v75sDThE4iUqxjjDVrQ+DxaaF5vv91OAH
+         Pq5r2FaArVvNqU0WBQZgIG+SKqTci/q1WlNIwCtDM9JwXrX6SxOxcqAvV9Tf3wiDc7h7
+         yCTo6TN0mlX9qlM0G5WiYg8ItedVixXqNEaOGQvtjZwdpwbUCs8bb6AB0g6BS4ZmaFbT
+         CPEfkdXmxFs8NkZ3bLvphZzBq3Xk2EhE64HQtHLT3to+ckV0oIAs70dnTEZgAbPikQDc
+         tNUUswHhKguwHlT+ZLv25+RbHvrNFaZDwjqor5ZO+tjqpYmjVjg0s9bHUWKXjnZpVNnz
+         2NzA==
+X-Gm-Message-State: AOAM533gmJbDUEpvC/K/tspPavh13gwo3Jqm05Z4fnJEu2XBQVzEUsW9
+        3UjfuJxeId6PejusxErLzZq1z8Srbfw=
+X-Google-Smtp-Source: ABdhPJwfuM+CetBUQx4PU0pijeCWsxaxld0IKRP+bx5YatqPYizP28kGG483kGHpnrOdYFLgYXkJUg==
+X-Received: by 2002:ae9:ed8e:: with SMTP id c136mr27408428qkg.374.1595348329707;
+        Tue, 21 Jul 2020 09:18:49 -0700 (PDT)
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
+        by smtp.gmail.com with ESMTPSA id 184sm546802qkl.37.2020.07.21.09.18.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 09:18:48 -0700 (PDT)
+Received: by mail-yb1-f180.google.com with SMTP id a15so10259039ybs.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:18:48 -0700 (PDT)
+X-Received: by 2002:a25:9d86:: with SMTP id v6mr42999027ybp.452.1595348328068;
+ Tue, 21 Jul 2020 09:18:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200720172448.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
+ <159531115483.3847286.18280088484118119899@swboyd.mtv.corp.google.com> <159531527579.3847286.1254956818647049462@swboyd.mtv.corp.google.com>
+In-Reply-To: <159531527579.3847286.1254956818647049462@swboyd.mtv.corp.google.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 21 Jul 2020 09:18:35 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X=NDym3V31dQ8c341UwQm9pDybUCR8jFF1JR99XeVKVw@mail.gmail.com>
+Message-ID: <CAD=FV=X=NDym3V31dQ8c341UwQm9pDybUCR8jFF1JR99XeVKVw@mail.gmail.com>
+Subject: Re: [PATCH] i2c: i2c-qcom-geni: Fix DMA transfer race
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to 'man 8 ip-netns', if `ip netns identify` returns an empty string,
-there's no net namespace associated with current PID: fix the net ns entrance
-logic.
+Hi,
 
-Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
----
- tools/testing/selftests/net/txtimestamp.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Jul 21, 2020 at 12:08 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Stephen Boyd (2020-07-20 22:59:14)
+> >
+> > I worry that we also need a dmb() here to make sure the dma buffer is
+> > properly mapped before this write to the device is attempted. But it may
+> > only matter to be before the I2C_READ.
+> >
+>
+> I'm suggesting this patch instead where we make geni_se_setup_m_cmd()
+> use a writel() so that it has the proper barrier semantics to wait for
+> the other memory writes that happened in program order before this point
+> to complete before the device is kicked to do a read or a write.
 
-diff --git a/tools/testing/selftests/net/txtimestamp.sh b/tools/testing/selftests/net/txtimestamp.sh
-index eea6f5193693..31637769f59f 100755
---- a/tools/testing/selftests/net/txtimestamp.sh
-+++ b/tools/testing/selftests/net/txtimestamp.sh
-@@ -75,7 +75,7 @@ main() {
- 	fi
- }
- 
--if [[ "$(ip netns identify)" == "root" ]]; then
-+if [[ -z "$(ip netns identify)" ]]; then
- 	./in_netns.sh $0 $@
- else
- 	main $@
--- 
-2.27.0
+Are you saying that dma_map_single() isn't guaranteed to have a
+barrier or something?  I tried to do some searching and found a thread
+[1] where someone tried to add a barrierless variant of them.  To me
+that means that the current APIs have barriers.
 
+...or is there something else you're worried about?
+
+
+> ----8<----
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> index 18d1e4fd4cf3..7f130829bf01 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -367,7 +367,6 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>                 geni_se_select_mode(se, GENI_SE_FIFO);
+>
+>         writel_relaxed(len, se->base + SE_I2C_RX_TRANS_LEN);
+> -       geni_se_setup_m_cmd(se, I2C_READ, m_param);
+>
+>         if (dma_buf && geni_se_rx_dma_prep(se, dma_buf, len, &rx_dma)) {
+>                 geni_se_select_mode(se, GENI_SE_FIFO);
+> @@ -375,6 +374,8 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>                 dma_buf = NULL;
+>         }
+>
+> +       geni_se_setup_m_cmd(se, I2C_READ, m_param);
+
+I guess it's true that we only need the setup_m_cmd moved.
+
+
+> +
+>         time_left = wait_for_completion_timeout(&gi2c->done, XFER_TIMEOUT);
+>         if (!time_left)
+>                 geni_i2c_abort_xfer(gi2c);
+> @@ -408,7 +409,6 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>                 geni_se_select_mode(se, GENI_SE_FIFO);
+>
+>         writel_relaxed(len, se->base + SE_I2C_TX_TRANS_LEN);
+> -       geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
+>
+>         if (dma_buf && geni_se_tx_dma_prep(se, dma_buf, len, &tx_dma)) {
+>                 geni_se_select_mode(se, GENI_SE_FIFO);
+> @@ -416,6 +416,8 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>                 dma_buf = NULL;
+>         }
+>
+> +       geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
+> +
+
+True, it's probably safer to do the TX too even if I'm not seeing
+problems there.  Of course, I don't think I'm doing any large writes
+so probably never triggering this path anyway.
+
+
+>         if (!dma_buf) /* Get FIFO IRQ */
+>                 writel_relaxed(1, se->base + SE_GENI_TX_WATERMARK_REG);
+>
+> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+> index dd464943f717..1dc134e9eb36 100644
+> --- a/include/linux/qcom-geni-se.h
+> +++ b/include/linux/qcom-geni-se.h
+> @@ -262,7 +262,7 @@ static inline void geni_se_setup_m_cmd(struct geni_se *se, u32 cmd, u32 params)
+>         u32 m_cmd;
+>
+>         m_cmd = (cmd << M_OPCODE_SHFT) | (params & M_PARAMS_MSK);
+> -       writel_relaxed(m_cmd, se->base + SE_GENI_M_CMD0);
+> +       writel(m_cmd, se->base + SE_GENI_M_CMD0);
+
+I'll wait a little bit to see if you agree that the implicit barrier
+that's part of dma_map_single() gets rid of the need to change
+geni_se_setup_m_cmd().  If you agree then I'll send a v2 that moves
+just the setup_m_cmd and does TX in addition to RX.  I'll plan to keep
+accumulated tags unless someone says this is a bad idea.
+
+
+[1] https://lore.kernel.org/r/1264473346-32721-1-git-send-email-adharmap@codeaurora.org/
+
+-Doug
