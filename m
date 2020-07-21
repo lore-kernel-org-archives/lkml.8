@@ -2,136 +2,112 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F77C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B9AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D69332080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3762068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:17:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XFF51JIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgGUIQc (ORCPT
+        id S1728442AbgGUIRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:16:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49332 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725984AbgGUIQc (ORCPT
+        Tue, 21 Jul 2020 04:17:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbgGUIRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:16:32 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L82PW7010886;
-        Tue, 21 Jul 2020 04:16:08 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5k0qtw0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 04:16:08 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06L851h7021841;
-        Tue, 21 Jul 2020 04:16:08 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5k0qtuv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 04:16:07 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06L8G68f014775;
-        Tue, 21 Jul 2020 08:16:06 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 32brq81u9s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 08:16:05 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06L8G2VP27918632
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jul 2020 08:16:03 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CC96D4C050;
-        Tue, 21 Jul 2020 08:16:02 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7AEEE4C04A;
-        Tue, 21 Jul 2020 08:15:59 +0000 (GMT)
-Received: from [9.199.47.202] (unknown [9.199.47.202])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Jul 2020 08:15:59 +0000 (GMT)
-Subject: Re: [PATCH v4 09/10] powerpc/watchpoint: Return available watchpoints
- dynamically
-To:     Jordan Niethe <jniethe5@gmail.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org,
-        Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200717040958.70561-1-ravi.bangoria@linux.ibm.com>
- <20200717040958.70561-10-ravi.bangoria@linux.ibm.com>
- <CACzsE9r0acLUkV35mVxy1AEK_xObs0yz+fD6UdbNdc6uz=Buqw@mail.gmail.com>
- <ccfcf488-0ec9-1737-8368-a848de1d72d1@linux.ibm.com>
- <CACzsE9q5YtT_bXOpw9cri_UCxziW_FRbCpcViANaZwui0hjDqw@mail.gmail.com>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Message-ID: <a439dff1-2a61-8378-d510-af754ed746ec@linux.ibm.com>
-Date:   Tue, 21 Jul 2020 13:45:58 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 04:17:03 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD5C3C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:17:03 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id k6so15667931ili.6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:17:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=lbf3gjt9wqDFjZNQXE9vw5HIudL+elBicOycwkN2GWQ=;
+        b=XFF51JIKpCJq1ReUp9zCAKu5eFh/od9kuhZzToBLGCVAJP03KJDtp+XYG94ZblT9Qx
+         CK1ziEE1dRaLBZJpdIVZmzYtFMJsX8Er+cjl7hRDZc4T6nIlyprBCDOwjcXAcTbqrRRY
+         TkpQkYZ0IAlo6QOugguELOTIvjzuCdHFZvlUH98PBGDu0BuQOayPKjdMbQsQpAMkXWwH
+         ftEPHnuULTfDQp1m/gSu1mDKZ4HcI5zMUgfXJBbvRb4PoVSU479F5QDvhLbwfVHUfxkC
+         /BDHudbvF/sTWZbWI/LMibd+TEx9qgcWtP9DkMHRwheFYaOq6QuLw9gzpF/dFxiozk6E
+         DSOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=lbf3gjt9wqDFjZNQXE9vw5HIudL+elBicOycwkN2GWQ=;
+        b=SFH5HU6v2FO/V/LrLt2E5nsGLI2rO+pc2Mrt44r5W1PkajMGqvp3PuACSLGXwDJtKK
+         xG61Z5uUCFVF6+DNem7MYz52xJoBsubQqT6YgfwW6Iug1x1x8b7GCoG8iHVdnfOsJvQR
+         98sBw8GhHmAMT7agtvYf/TIJPD0Q2zODFHX/rkgSliK9voAlO/Dxxe1Gq3lMi/992J/t
+         L0/V1r1ogYsXP74IkUSvrGrVWwHxCEGNUPRHpLAIx4ZIj6RhHKqwi7RviyE+sFFHngc/
+         +lL94YSBwDGhLYt/sENnBZtrYczAm1JZt0DYhk7DvA0B+poKx7fhzZB4L4DN13oUFlU+
+         I2xg==
+X-Gm-Message-State: AOAM532T0eS48WNSF1SknYlKbPEPd0/aqFPJyqvpER4Xp5a3oES0Xy3G
+        F+H/naLDmGFkTL/CLujJgmS/tJx8AqQEVAfXDKs=
+X-Google-Smtp-Source: ABdhPJy41fKMsFaiIQf8bZrLrQpggA3qdNPyEUgnXi1lL9mCrffW343LgeB5Jc7iP2WqJ8RXh7Wl1a7PRlfDyuAG2y8=
+X-Received: by 2002:a92:290a:: with SMTP id l10mr28613347ilg.204.1595319423019;
+ Tue, 21 Jul 2020 01:17:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACzsE9q5YtT_bXOpw9cri_UCxziW_FRbCpcViANaZwui0hjDqw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 priorityscore=1501 mlxscore=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 impostorscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007210052
+References: <CA+icZUUGO0__SEZ7YvuQzfSdaWfTnCHW=73-3W4X=Vz51wHd+w@mail.gmail.com>
+ <CAHk-=wiR+uHUyp3=Nf1aiNjmg0ZekaQJupLRguFNZ=MreuGhfg@mail.gmail.com>
+In-Reply-To: <CAHk-=wiR+uHUyp3=Nf1aiNjmg0ZekaQJupLRguFNZ=MreuGhfg@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 21 Jul 2020 10:16:51 +0200
+Message-ID: <CA+icZUXRjrX+1NAZy4As_ficD4aHRAZWHRj5hrE+D6E5zEKXHw@mail.gmail.com>
+Subject: Re: Linux 5.8-rc6
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 20, 2020 at 10:48 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Sun, Jul 19, 2020 at 8:47 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > I wonder why there is a time gap between tagging v5.8-rc6 in [1]
+> > (first) and [2] (15-16mins later).
+> > Can you explain that?
+>
+> Usually I push to github and kernel.org at the same time.
+>
+> But every once in a while, my OTP token for kernel.org expires, and
+> then I have to get my OPT token generator and update it and push
+> again.
+>
+> So sometimes github ends up getting my pushes earlier, simply because
+> it doesn't have quite the same kind of strict security checks.
+>
 
->>>> @@ -46,7 +47,7 @@ struct arch_hw_breakpoint {
->>>>
->>>>    static inline int nr_wp_slots(void)
->>>>    {
->>>> -       return HBP_NUM_MAX;
->>>> +       return cpu_has_feature(CPU_FTR_DAWR1) ? HBP_NUM_TWO : HBP_NUM_ONE;
->>> So it'd be something like:
->>> +       return cpu_has_feature(CPU_FTR_DAWR1) ? HBP_NUM_MAX : 1;
->>> But thinking that there might be more slots added in the future, it
->>> may be better to make the number of slots a variable that is set
->>> during the init and then have this function return that.
->>
->> Not sure I follow. What do you mean by setting number of slots a
->> variable that is set during the init?
-> Sorry I was unclear there.
-> I was just looking and saw arm also has a variable number of hw breakpoints.
-> If we did something like how they handle it, it might look something like:
-> 
-> static int num_wp_slots __ro_after_init;
-> 
-> int nr_wp_slots(void) {
->      return num_wp_slots;
-> }
-> 
-> static int __init arch_hw_breakpoint_init(void) {
->      num_wp_slots = work out how many wp_slots
-> }
-> arch_initcall(arch_hw_breakpoint_init);
-> 
-> Then we wouldn't have to calculate everytime nr_wp_slots() is called.
-> In the future if more wp's are added nr_wp_slots() will get more complicated.
-> But just an idea, feel free to ignore.
+Hi Linus,
 
-Ok I got the idea. But ARM arch_hw_breakpoint_init() is much more complex
-compared to our nr_wp_slots(). I don't see any benefit by making our code
-like ARM.
+OK, I understand.
 
-Thanks for the idea though :)
-Ravi
+You happen to know if I can configure in my ~/.gitconfig to pull
+linux-git stuff from two repositories - check first git.kernel.org
+then GitHub.
+
+Some days ago GitHub had some maintenance issues and I was not able to pull.
+Means I trust more the security and integrity concept of git.kernel.org.
+
+To pull from GitHub - saved 15-16mins of my life-time - meant
+15-16mins go earlier to sleep - as said I started my build 01:02a.m.
+(German local-time).
+
+Thanks.
+
+Regards,
+- Sedat -
