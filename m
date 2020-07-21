@@ -2,192 +2,140 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44619C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D185C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1896720672
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB3C206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:13:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rvRvGId6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CnYKPb1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbgGUTMH (ORCPT
+        id S1730407AbgGUTNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:12:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42096 "EHLO
+        Tue, 21 Jul 2020 15:13:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgGUTME (ORCPT
+        with ESMTP id S1729171AbgGUTNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:12:04 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F398FC061794;
-        Tue, 21 Jul 2020 12:12:03 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id m16so10672738pls.5;
-        Tue, 21 Jul 2020 12:12:03 -0700 (PDT)
+        Tue, 21 Jul 2020 15:13:12 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3C4C0619DA
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:13:11 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y18so12266537lfh.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:13:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/Fdlp9DORPzdta4JRV0XH4gAQ0mHcGnc6TC0R5XXa18=;
-        b=rvRvGId6o5z5zQgFTJ8cxd6GIUCu5tjVu5+y03qaNt7WboTj/4FgC2xikj0SdA2vA8
-         Qc4+NtS0iaa1CLrkH6mUKP8a1o+mwCZmERr00mD0YfPpLTpd4lUSuWe+N05fffv9BAms
-         cCnxBok/YZAKUoojqFnu1jcaDnAn70t8wx2bH+zTS855oIHzapQDIZM3iM2BRBbo8taX
-         RqYohYeXQvX2+Ff6CkkQgt6oFuJnoNFefcodNzxM45dEVJgHvYg2njvhn1Sm8IulVrkQ
-         dihRpf6nchaVXkBxtWpz+mKjmgRKMinosegFLni1uIgOyrv1+IOsuGPRKpHJMF6sST9G
-         lDtQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G1+MBynaOaFc+TQGQ/+zLUDlbfNpuxAiueoXbqW+mHQ=;
+        b=CnYKPb1Xv2Oa9t8RxiLG8qh5LFd1tQ4x4f0WjwYFg0GeyKeD8WtsbrK0ptSPAvEwl2
+         p5N38bdjZsT11squqkQ1pPFLR9OGUwiDyFO1XbXZvTeA+Phru4E2ctuap9k6B7ovdktM
+         c1hj9ICibOXamyVTIL9p8vYpWBYTXMAm08B9cKvi34M8bs+ahrGlrDUCP/R2c1BueQFN
+         vDKbKpW7kZ9rqKt+fNxsj407lyPTEGwfMi3MMK8QZsqwyq6YDDGlB6I7vYjAl7jTwHsB
+         /AdU0ePREeL3IVkKswnAQ8Vc0ueP/mNPN2/leFB8tSv5ukqw0EhQ0veO+jKqLwnXzr6L
+         9ROg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/Fdlp9DORPzdta4JRV0XH4gAQ0mHcGnc6TC0R5XXa18=;
-        b=ROiki6k2KNcbTFkEN5mbvo2UJI31sBRyZ1nqviGLS+798vqlBnVnrWwCPMtZEL7c/q
-         Ul2iXQyoBEY094F8u55Hm7JIntZCAaSDpK4UK8gdG76pLv4F98PeAzUGIWqTo060Ld+E
-         K1I8+HnqDeGj7klD2ZsFhXeVeHlfWSQR2HvjHDaiPWZurc7XVFHNnoxVhoTtmbAM0QQN
-         sl1juHHo+ixAI7HyZbrP/XlU+Mq0x73+vnMgISZDwVUlYpfMfWwrNFiefp1rnGPOR5IZ
-         /oIPcP12d5XRFSte69BzSBJ+gDoG9RPoYWbtEAkuezAGn8irto3kDGGKKfRVhjPjByt2
-         C1xw==
-X-Gm-Message-State: AOAM530nfZjqOc+Q1kHsPLP6qHACOOYeEnQxbGaMmVqkgqwpgyJGu8w8
-        AfBtbtvQKzRotvi5f+rmelWFsimgfvY=
-X-Google-Smtp-Source: ABdhPJwf2idKN7yTZXi9tr+MvKcjpBbDm5w0uu5qCUbtEww9sbt+cjAsOH9nqwhU4SiEeF6QA0hf8w==
-X-Received: by 2002:a17:90a:2427:: with SMTP id h36mr6176260pje.229.1595358723288;
-        Tue, 21 Jul 2020 12:12:03 -0700 (PDT)
-Received: from ?IPv6:2409:4072:593:314e:d028:8959:a8a3:a7bc? ([2409:4072:593:314e:d028:8959:a8a3:a7bc])
-        by smtp.gmail.com with ESMTPSA id x7sm20602441pfp.96.2020.07.21.12.11.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 12:12:02 -0700 (PDT)
-Subject: Re: [PATCH 2/2] dt-bindings: iio: gyro: Add DT binding doc for
- ADXRS290
-To:     Rob Herring <robh@kernel.org>, Jonathan Cameron <jic23@kernel.org>
-Cc:     dragos.bogdan@analog.com, darius.berghe@analog.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20200715092821.14625-1-nish.malpani25@gmail.com>
- <20200720121633.7a9e5cd7@archlinux> <20200721024127.GA3429416@bogus>
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-Message-ID: <02a49136-8e1b-dff0-51d3-90c93a6e6c8d@gmail.com>
-Date:   Wed, 22 Jul 2020 00:41:55 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G1+MBynaOaFc+TQGQ/+zLUDlbfNpuxAiueoXbqW+mHQ=;
+        b=nwvHuSy92sEo5gSD7T9moevnozn92bfO5e8x3oU9zEcEHbh2ztfAvh8p7f/4eo4wEO
+         exmI+zsp9NwJ++VTBBcNWiOF9S+H1Q3j2S6fJObzGEskUYGj2IFcsp+MlTGTavyx5rO7
+         BtgX1t5kdAJ/LadoyCKyqlYd6idHC+ojSl7mzwqLexPdKpYJLzUdCaMMf60uG5FIX1G2
+         9OnendqUEx20t3FZ1a/Zq9ml9levQHxdkuh3yljTe0REOnQL1tpOjbYd7sS5UwZ34HAi
+         VsOr79nq7CTnSzleGvNnYmcGqozU5mZ65f10NhBhAf8SeqMBKJbEcW39aOk8OIuVJUfi
+         ytkg==
+X-Gm-Message-State: AOAM530fOq7wgCSj0fyBWZ8nCvGXfE1ZNrftdCOjeoCFMdWfk7eZZfnx
+        7riJvsFtHz3WpV5elWLagtskdqll+DQtysAQKG2n8A==
+X-Google-Smtp-Source: ABdhPJx4x3WE7/pXjDBRdRagnXwO29Oe/I8pts7edpG8D4QIOLnM3lnE0dfWuR25FRqWYY2Z3HPd7DX+8UxG3rCtJpQ=
+X-Received: by 2002:a19:e61a:: with SMTP id d26mr14162136lfh.96.1595358789794;
+ Tue, 21 Jul 2020 12:13:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200721024127.GA3429416@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <2E04DD7753BE0E4ABABF0B664610AD6F2620CAF7@dggeml528-mbx.china.huawei.com>
+ <20200721174126.GA271870@cmpxchg.org> <20200721184959.GA8266@carbon.DHCP.thefacebook.com>
+In-Reply-To: <20200721184959.GA8266@carbon.DHCP.thefacebook.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Tue, 21 Jul 2020 12:12:58 -0700
+Message-ID: <CALvZod6-sTBMzvo0ER+RkQ_OM7B4=PKUC-T9gXmQiB8mznunBg@mail.gmail.com>
+Subject: Re: PROBLEM: cgroup cost too much memory when transfer small files to tmpfs
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, jingrui <jingrui@huawei.com>,
+        "tj@kernel.org" <tj@kernel.org>, Lizefan <lizefan@huawei.com>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        caihaomin <caihaomin@huawei.com>,
+        "Weiwei (N)" <wick.wei@huawei.com>, guro@cmpxchg.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jonathon & Rob,
+On Tue, Jul 21, 2020 at 11:51 AM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Tue, Jul 21, 2020 at 01:41:26PM -0400, Johannes Weiner wrote:
+> > On Tue, Jul 21, 2020 at 11:19:52AM +0000, jingrui wrote:
+> > > Cc: Johannes Weiner <hannes@cmpxchg.org> ; Michal Hocko <mhocko@kernel.org>; Vladimir Davydov <vdavydov.dev@gmail.com>
+> > >
+> > > Thanks.
+> > >
+> > > ---
+> > > PROBLEM: cgroup cost too much memory when transfer small files to tmpfs.
+> > >
+> > > keywords: cgroup PERCPU/memory cost too much.
+> > >
+> > > description:
+> > >
+> > > We send small files from node-A to node-B tmpfs /tmp directory using sftp. On
+> > > node-B the systemd configured with pam on like below.
+> > >
+> > > cat /etc/pam.d/password-auth | grep systemd
+> > > -session     optional      pam_systemd.so
+> > >
+> > > So when transfer a file, a systemd session is created, that means a cgroup is
+> > > created, then file saved at /tmp will associated with a cgroup object. After
+> > > file transferred, session and cgroup-dir will be removed, but the file in /tmp
+> > > still associated with the cgroup object. The PERCPU memory in cgroup/css object
+> > > cost a lot(about 0.5MB/per-cgroup-object) on 200/cpus machine.
+> >
+> > CC Roman who had a patch series to free all this extended (percpu)
+> > memory upon cgroup deletion:
+> >
+> > https://lore.kernel.org/patchwork/cover/1050508/
+> >
+> > It looks like it never got merged for some reason.
+>
+> The mentioned patchset can make the problem less noticeable, but can't solve it completely.
+> It has never been merged, because the dying cgroup problem was mostly solved by other methods:
+> slab memory reparenting and various reclaim fixes. So there was no more reason to complicate
+> the code to release the memcg memory early.
+>
+> The overhead of creating and destroying a new memory cgroup for a transfer of a small
+> file will be noticeable anyway. So IMO the solution is to use a single cgroup for all
+> transfers. I don't know if systemd supports such mode out of the box, but it shouldn't
+> be hard to add it.
+>
+> But also I wonder if we need a special tmpfs mount option, something like "noaccount".
+> Not only for this specific case, but also for the case when tmpfs is extensively
+> shared between multiple cgroups or if it's used to pass some data from one cgroup
+> to another, or if we care about the performance more than about the accounting;
+> in other words for cases where the accounting makes more harm than good.
+>
 
-Thanks for the review. Comments inline...
+Internally we actually have an tmpfs mount option "memcg=" which
+charges all the memory of the tmpfs files on that mount to the given
+memcg and the motivation is the shared tmpfs files between multiple
+cgroups. One concrete use-case is the shared memory used for
+communication between the application and the user space network
+driver [1]. The "memcg=root" can be used as a "noaccount" option.
 
-On 21/07/20 8:11 am, Rob Herring wrote:
-> On Mon, Jul 20, 2020 at 12:16:33PM +0100, Jonathan Cameron wrote:
->> On Wed, 15 Jul 2020 14:58:21 +0530
->> Nishant Malpani <nish.malpani25@gmail.com> wrote:
->>
->>> Add devicetree binding document for ADXRS290, a dual-axis MEMS gyroscope.
->>>
->>> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
->>> ---
->>>   .../bindings/iio/gyroscope/adi,adxrs290.yaml  | 52 +++++++++++++++++++
->>>   MAINTAINERS                                   |  1 +
->>>   2 files changed, 53 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
->>> new file mode 100644
->>> index 000000000000..a997d945fdb0
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
->>> @@ -0,0 +1,52 @@
->>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>> +# Copyright 2020 Analog Devices Inc.
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/iio/gyroscope/adi,adxrs290.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Analog Devices ADXRS290 Dual-Axis MEMS Gyroscope
->>> +
->>> +maintainers:
->>> +  - Nishant Malpani <nish.malpani25@gmail.com>
->>> +
->>> +description: |
->>> +  Bindings for the Analog Devices ADXRS290 dual-axis MEMS gyroscope device.
->>> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADXRS290.pdf
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - adi,adxrs290
->>
->> I think we can use const here as only one item currently.
-> 
-> Yep. Really depends if you expect to add more.
-> 
-I'm not aware if we'll be adding more. For now, made it a 'const' in v2.
-
->>
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  spi-max-frequency:
->>> +    maximum: 5000000
->>> +
->>> +  spi-cpol: true
->>> +
->>> +  spi-cpha: true
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - spi-max-frequency
->>> +  - spi-cpol
->>> +  - spi-cpha
-> 
-> Add:
-> 
-> additionalProperties: false
-> 
-Okay. Acked in v2.
-
-Regards,
-Nishant Malpani
-
->>> +
->>> +examples:
->>> +  - |
->>> +    spi {
->>> +        #address-cells = <1>;
->>> +        #size-cells = <0>;
->>> +        gyro@0 {
->>> +                   compatible = "adi,adxrs290";
->>> +                   reg = <0>;
->>> +                   spi-max-frequency = <5000000>;
->>> +                   spi-cpol;
->>> +                   spi-cpha;
->>> +        };
->>> +    };
->>> +...
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index dd02cfc410e8..0bb8ac90fba1 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -1103,6 +1103,7 @@ M:	Nishant Malpani <nish.malpani25@gmail.com>
->>>   L:	linux-iio@vger.kernel.org
->>>   S:	Supported
->>>   F:	drivers/iio/gyro/adxrs290.c
->>> +F:	Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
->>>   
->>>   ANALOG DEVICES INC ASOC CODEC DRIVERS
->>>   M:	Lars-Peter Clausen <lars@metafoo.de>
->>
+[1] https://sosp19.rcs.uwaterloo.ca/slides/marty.pdf
