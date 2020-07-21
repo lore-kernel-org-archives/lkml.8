@@ -7,119 +7,157 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1A1C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14C3C43458
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1F720792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B33CF207CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:42:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sJc+wnQu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AO7GkYO/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730705AbgGUQmh (ORCPT
+        id S1730730AbgGUQmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:42:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46970 "EHLO
+        Tue, 21 Jul 2020 12:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730702AbgGUQmg (ORCPT
+        with ESMTP id S1730703AbgGUQmg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Jul 2020 12:42:36 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83419C0619DE
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:34 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id q15so3479289wmj.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:34 -0700 (PDT)
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A4DEC0619E0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:35 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z15so21825336wrl.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pFkpQlvxyH9m9yB35YYUzSgG662tMobXEVb8ZoPNfoU=;
-        b=sJc+wnQurbWJb00o0fdA4+jdNsgo8gZNOC8c4HTgdRTiy4vdVSQJL1Zc7GFRhwmxPo
-         Z57x4K+9dLUTah6uPq0WMNK4CYfBedF87wqf26/ku4UV6Bu3rs/wJhlPPktNYIfpFRh4
-         HYO79VT6F0v8WlzOlGYwCkSz73lERBDR2m5kY79eoD+tMhhnHwg4C8/aupr/nAIDWuzN
-         gEK4UvwwhAHA3GryANfPyATKeqgTdnkVzNdybiyjkVntEHGnIp0Wd2G470Xbs5dff0rP
-         n0PLiCr4ZGyp15GNIWxSkXA+EnFPuMzfdOQkq7e8a/J3JEifqXofDxe+3ywsnIjTP7r1
-         Xlpg==
+        bh=uWGcoDbdOCeXSfDJ7sgMSwsNsITB0wPLhyaeMZZYPL8=;
+        b=AO7GkYO/QQsdC0xfeZ3GEeVEaaNo4oCAOSqLpw/zWEIM1iU4vY1XjvExkH6B5Dxb7Q
+         i1I5VsxZM49xY4c8B1pTBUjceeX8JHT2iWZDWZ3bbQmnLplZx6cY1AMmJUXag7SNMTT6
+         XkNVU97d9RuUawfFky0h3mF6O+Vdnu/8nMAu7GYmVTPDx5b/XPQm2YKPvLNOqcZs7oCB
+         09GCfnWt/M032NtEpUih8zRz2SqH54FckHH/973upwKV98o1cZuz+kc+gQX+8N8qNWHC
+         Qj8KFYug1JGafwlD6ViLcmHup8wPnMp9I147H90/JC6IU1eI5qWuWWbmn5AjpoFKohdw
+         5Ngg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pFkpQlvxyH9m9yB35YYUzSgG662tMobXEVb8ZoPNfoU=;
-        b=Sb/UffmISOG5pbRE50fzijdtLUkMUCFVbERLjhXhTeAgCOTdGvxBFjMbuiehL2bwSH
-         VpmEzL5e1mj+hTXfVfq7c/0iWDfTNn3GngogzjMopSCl/JfHXO3zYsrIMzd1GC3jYPo0
-         bxK9E5s8F7R3vbsLC+ZX4yaxsJwgVkdzxtIJmD33Z402Uf9HnEKPlZGfflosgjcRhqog
-         ebABUjoTEK09cTyDunJZWYoFLfxLUOblCEFQ0WdcskLFrIXKb2n+aswLOyq4xQtpFHyJ
-         5sW/Vb8bWHZV9T8qk5Q8x9o9X2//gU/e774M2FnzAeYeW9eTZNng+NzWv+2+e84Zm/cc
-         AJRw==
-X-Gm-Message-State: AOAM53118/7sfAx/iidORWT252nR6FJCb9/kKmM8D+VvR8bm4Xj1N0EG
-        3D4es/7+oG2NBGBqOaeL4qEl9Q==
-X-Google-Smtp-Source: ABdhPJy1WDmEn1QrVB1dFbGylTGQByPmw8QD4sheyz5KhZ3Q75KO7eL1BVb6X0oQ8KJIjbQ+9b8vmg==
-X-Received: by 2002:a7b:c8c8:: with SMTP id f8mr5019468wml.142.1595349753304;
-        Tue, 21 Jul 2020 09:42:33 -0700 (PDT)
+        bh=uWGcoDbdOCeXSfDJ7sgMSwsNsITB0wPLhyaeMZZYPL8=;
+        b=EhRlYuD02UugqIObVxYD+E7BCrpnuxVNQ6679MRryQE0upRkuv1bvgOBiwD8i9P/XZ
+         BnAyts6UCdYsAE4+P0WOMsjcvny+vKQS+rH8kUOC8Dm56QKRpOO6HNeXMtnbwhbt9J0t
+         453hE0FF5eBGrxNrRbCGiOgZDuwVCAAQBTJ7aCDF5H0f79hORNlAvAflRg8/CLZRXo3n
+         dVgQbvCTLZv6ZBYrUVOVGvHJT2K+PR30kB1U38ePQk2J0xuMLeyuQdkWrDr5HCXg8O6d
+         8IlIOF0xsMvoc28/zjJJc5swdNMQMy3GPt6kftiFAx0UJB972/0h1V78wHtnFj2/xPMj
+         SBeQ==
+X-Gm-Message-State: AOAM531mv6gXUcRlC9p5FNQXqJwyiut/EUzVz2P3nQCH3gbRCb5wDsO4
+        yFFPMEMPEdGNqhFVV/4RynDioQ==
+X-Google-Smtp-Source: ABdhPJyK56jbkP7sZ+D1Eqs3NuLuowXuh4B7ZUXY980g6x4X71fDp1nF2xoPdBZea9tNyPRzAwhfgA==
+X-Received: by 2002:adf:97c1:: with SMTP id t1mr1259084wrb.294.1595349754215;
+        Tue, 21 Jul 2020 09:42:34 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.42.32
+        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.42.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:42:32 -0700 (PDT)
+        Tue, 21 Jul 2020 09:42:33 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>
-Subject: [PATCH 25/40] scsi: pm8001: pm80xx_hwi: Staticify 'pm80xx_pci_mem_copy' and 'mpi_set_phy_profile_req'
-Date:   Tue, 21 Jul 2020 17:41:33 +0100
-Message-Id: <20200721164148.2617584-26-lee.jones@linaro.org>
+        QLogic-Storage-Upstream@qlogic.com
+Subject: [PATCH 26/40] scsi: qla4xxx: ql4_os: Fix some kerneldoc parameter documentation issues
+Date:   Tue, 21 Jul 2020 17:41:34 +0100
+Message-Id: <20200721164148.2617584-27-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200721164148.2617584-1-lee.jones@linaro.org>
 References: <20200721164148.2617584-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are not invoked externally.
-
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/pm8001/pm80xx_hwi.c:69:6: warning: no previous prototype for ‘pm80xx_pci_mem_copy’ [-Wmissing-prototypes]
- 69 | void pm80xx_pci_mem_copy(struct pm8001_hba_info *pm8001_ha, u32 soffset,
- | ^~~~~~~~~~~~~~~~~~~
- drivers/scsi/pm8001/pm80xx_hwi.c:5016:6: warning: no previous prototype for ‘mpi_set_phy_profile_req’ [-Wmissing-prototypes]
- 5016 | void mpi_set_phy_profile_req(struct pm8001_hba_info *pm8001_ha,
- | ^~~~~~~~~~~~~~~~~~~~~~~
+ drivers/scsi/qla4xxx/ql4_os.c:4551: warning: Function parameter or member 't' not described in 'qla4xxx_timer'
+ drivers/scsi/qla4xxx/ql4_os.c:4551: warning: Excess function parameter 'ha' description in 'qla4xxx_timer'
+ drivers/scsi/qla4xxx/ql4_os.c:5312: warning: Function parameter or member 'work' not described in 'qla4xxx_do_dpc'
+ drivers/scsi/qla4xxx/ql4_os.c:5312: warning: Excess function parameter 'data' description in 'qla4xxx_do_dpc'
+ drivers/scsi/qla4xxx/ql4_os.c:8627: warning: Function parameter or member 'ent' not described in 'qla4xxx_probe_adapter'
+ drivers/scsi/qla4xxx/ql4_os.c:8627: warning: Excess function parameter 'pci_device_id' description in 'qla4xxx_probe_adapter'
+ drivers/scsi/qla4xxx/ql4_os.c:9008: warning: Function parameter or member 'pdev' not described in 'qla4xxx_remove_adapter'
+ drivers/scsi/qla4xxx/ql4_os.c:9008: warning: Excess function parameter 'pci_dev' description in 'qla4xxx_remove_adapter'
+ drivers/scsi/qla4xxx/ql4_os.c:9181: warning: Function parameter or member 'stgt' not described in 'qla4xxx_eh_wait_for_commands'
+ drivers/scsi/qla4xxx/ql4_os.c:9181: warning: Function parameter or member 'sdev' not described in 'qla4xxx_eh_wait_for_commands'
+ drivers/scsi/qla4xxx/ql4_os.c:9181: warning: Excess function parameter 't' description in 'qla4xxx_eh_wait_for_commands'
+ drivers/scsi/qla4xxx/ql4_os.c:9181: warning: Excess function parameter 'l' description in 'qla4xxx_eh_wait_for_commands'
+ drivers/scsi/qla4xxx/ql4_os.c:9646: warning: Function parameter or member 'pdev' not described in 'qla4xxx_pci_mmio_enabled'
 
-Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc: QLogic-Storage-Upstream@qlogic.com
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/pm8001/pm80xx_hwi.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/scsi/qla4xxx/ql4_os.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-index abcbd47162d64..b42f41d1ed49a 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -66,7 +66,7 @@ int pm80xx_bar4_shift(struct pm8001_hba_info *pm8001_ha, u32 shift_value)
- 	return 0;
- }
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index 2572f7aef8f88..bab87e47b238d 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -4545,7 +4545,7 @@ static void qla4xxx_check_relogin_flash_ddb(struct iscsi_cls_session *cls_sess)
  
--void pm80xx_pci_mem_copy(struct pm8001_hba_info  *pm8001_ha, u32 soffset,
-+static void pm80xx_pci_mem_copy(struct pm8001_hba_info  *pm8001_ha, u32 soffset,
- 				const void *destination,
- 				u32 dw_count, u32 bus_base_number)
+ /**
+  * qla4xxx_timer - checks every second for work to do.
+- * @ha: Pointer to host adapter structure.
++ * @t: Context to obtain pointer to host adapter structure.
+  **/
+ static void qla4xxx_timer(struct timer_list *t)
  {
-@@ -5013,8 +5013,9 @@ pm80xx_chip_isr(struct pm8001_hba_info *pm8001_ha, u8 vec)
- 	return IRQ_HANDLED;
- }
+@@ -5299,7 +5299,7 @@ static void qla4xxx_do_work(struct scsi_qla_host *ha)
  
--void mpi_set_phy_profile_req(struct pm8001_hba_info *pm8001_ha,
--	u32 operation, u32 phyid, u32 length, u32 *buf)
-+static void mpi_set_phy_profile_req(struct pm8001_hba_info *pm8001_ha,
-+				    u32 operation, u32 phyid,
-+				    u32 length, u32 *buf)
+ /**
+  * qla4xxx_do_dpc - dpc routine
+- * @data: in our case pointer to adapter structure
++ * @work: Context to obtain pointer to host adapter structure.
+  *
+  * This routine is a task that is schedule by the interrupt handler
+  * to perform the background processing for interrupts.  We put it
+@@ -8616,7 +8616,7 @@ static void qla4xxx_wait_login_resp_boot_tgt(struct scsi_qla_host *ha)
+ /**
+  * qla4xxx_probe_adapter - callback function to probe HBA
+  * @pdev: pointer to pci_dev structure
+- * @pci_device_id: pointer to pci_device entry
++ * @ent: pointer to pci_device entry
+  *
+  * This routine will probe for Qlogic 4xxx iSCSI host adapters.
+  * It returns zero if successful. It also initializes all data necessary for
+@@ -9002,7 +9002,7 @@ static void qla4xxx_destroy_fw_ddb_session(struct scsi_qla_host *ha)
+ }
+ /**
+  * qla4xxx_remove_adapter - callback function to remove adapter.
+- * @pci_dev: PCI device pointer
++ * @pdev: PCI device pointer
+  **/
+ static void qla4xxx_remove_adapter(struct pci_dev *pdev)
  {
- 	u32 tag , i, j = 0;
- 	int rc;
+@@ -9169,8 +9169,8 @@ static int qla4xxx_wait_for_hba_online(struct scsi_qla_host *ha)
+ /**
+  * qla4xxx_eh_wait_for_commands - wait for active cmds to finish.
+  * @ha: pointer to HBA
+- * @t: target id
+- * @l: lun id
++ * @stgt: pointer to SCSI target
++ * @sdev: pointer to SCSI device
+  *
+  * This function waits for all outstanding commands to a lun to complete. It
+  * returns 0 if all pending commands are returned and 1 otherwise.
+@@ -9640,6 +9640,7 @@ qla4xxx_pci_error_detected(struct pci_dev *pdev, pci_channel_state_t state)
+  * qla4xxx_pci_mmio_enabled() gets called if
+  * qla4xxx_pci_error_detected() returns PCI_ERS_RESULT_CAN_RECOVER
+  * and read/write to the device still works.
++ * @pdev: PCI device pointer
+  **/
+ static pci_ers_result_t
+ qla4xxx_pci_mmio_enabled(struct pci_dev *pdev)
 -- 
 2.25.1
 
