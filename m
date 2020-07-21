@@ -2,143 +2,197 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47FEC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51392C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 941EC207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:54:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595343245;
-	bh=LGjn1NQByMAtiMquXEdKNSg+VZngPld+GQLBIyWGQFA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=RQjmwzJZiDzPIrfdJ3Lm08gg0j1dy+7PRdb/mNURe50kTfrW/RaHJk8lKTZvkk5vy
-	 9PzISoZPVhpSLi3Z838fukitGtwGUHXZ6y2jHor60PbPgvNB3CVpECUWlxsWClqr/J
-	 UwUqVNb114nO98iq0OBbWBcllmsOuEb/9QNqhfIg=
+	by mail.kernel.org (Postfix) with ESMTP id 3165520717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:49:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KD4FngX4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgGUOyE (ORCPT
+        id S1729619AbgGUOtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:54:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42172 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbgGUOyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:54:04 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4B2A20717;
-        Tue, 21 Jul 2020 14:54:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595343243;
-        bh=LGjn1NQByMAtiMquXEdKNSg+VZngPld+GQLBIyWGQFA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gAurnN/EAgwhJYBOP3FVWZ8Q1zkaIbD9GyL/qucE1v0WOfPMfD1E/SruAJUQUtCD2
-         eKB082UD1rxcMa4I2M21vXYK/6rPiwMWBp72swxptXHA8FF2J5+wUiH2aOXG2E+mLf
-         +jHmuqyjPBGrCSjJIVSKSoqd/zQwOeif5EIzkaqQ=
-Date:   Tue, 21 Jul 2020 09:54:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ashok Raj <ashok.raj@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH] PCI/ATS: PASID and PRI are only enumerated in PF devices.
-Message-ID: <20200721145401.GA1117318@bjorn-Precision-5520>
+        Tue, 21 Jul 2020 10:49:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728281AbgGUOta (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 10:49:30 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CA05C061794;
+        Tue, 21 Jul 2020 07:49:30 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id q5so21479707wru.6;
+        Tue, 21 Jul 2020 07:49:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tmJZK001/V2lK3tLrXOkTuUrVg5YDb1X9LdCfTznS4E=;
+        b=KD4FngX40umpYE7WJpmpfwXCFpDayXsdH558DIo3i/jKe0hch/F5ib1knzMTvl6Dk5
+         RB+HrRJBkn70FQy4hGEJ0cHUi/osgkrcXB1Qz+t5kpt/M/hAZ+U0eX/2LTyjqFrz5kA0
+         aCp4rWTOJduPQ9B1SIm10iBX8j/yk5MNFC0Ti3mQYUmX+QbTiPmWzoxWlXWWHz1S5nZR
+         ADYisgS8PBcQV5oNGi/V8VzX/e9iOKs9wAwP/3yxsGQcr0arU0kE7T1GnBG0lrvEFXFg
+         CDBQynUjIQbPe1Sr8B16Zpnlnh8d940TDmOUBw5Xy8y9qx4RvpoDSVH2+1D0Px8uiiV4
+         KlTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tmJZK001/V2lK3tLrXOkTuUrVg5YDb1X9LdCfTznS4E=;
+        b=ef/3hxSfJgt5+nWsGLlYczqSNIfpDEzZv5i7SsFq9K54Pch15limwUsEIe4y3DkwkR
+         SIS45iTaOfAGPmMjfB/4qRsQuynQ4vbjXckItEWTW8F3gt/F8aUgTywyIJE0PHjgaFBY
+         DLH6xd3OG5YmmgtR6eNeR9s2H3w7A3sOG9ffIFxufXld5FP/vOEi2uvtd0CfxlUKX+PZ
+         b0O30k6NnOGoNoXtfdFYrdWpkmlfgTmoDoNXcQ5zp4peJEg4fQEcVHh/vk6+bjXLqjk5
+         OgR+Yahg5kC70u06CuYo8yRpl4KKdsYk1AE1SZkN646gEUf30mIicvgbyRZk1XtT9B60
+         oqDw==
+X-Gm-Message-State: AOAM531Gm82Scw8qKaTIrfn5pt02MPQv6pvKAi3cyNF+XM7Cd+akCY3v
+        xDBXC+RzVxgci0ghtVJ1F/0=
+X-Google-Smtp-Source: ABdhPJxnGaYpnKKfXKR6n4UrZFiLVCN6gfvXqo7XcH8fRSwVRrtRFRTIEO96Z/B02eWgF3fZmiOKPA==
+X-Received: by 2002:a05:6000:118c:: with SMTP id g12mr12799296wrx.212.1595342969105;
+        Tue, 21 Jul 2020 07:49:29 -0700 (PDT)
+Received: from localhost ([156.204.74.63])
+        by smtp.gmail.com with ESMTPSA id t14sm25759821wrv.14.2020.07.21.07.49.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 07:49:28 -0700 (PDT)
+From:   Abanoub Sameh <abanoubsameh8@gmail.com>
+X-Google-Original-From: Abanoub Sameh <abanoubsameh@protonmail.com>
+To:     andy.shevchenko@gmail.com
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Abanoub Sameh <abanoubsameh@protonmail.com>
+Subject: [PATCH] gpio: gpio-ich.c: changed every 'unsigned' to 'unsigned int'
+Date:   Tue, 21 Jul 2020 16:49:02 +0200
+Message-Id: <20200721144902.755796-1-abanoubsameh@protonmail.com>
+X-Mailer: git-send-email 2.28.0.rc0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595263380-209956-1-git-send-email-ashok.raj@intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 09:43:00AM -0700, Ashok Raj wrote:
-> PASID and PRI capabilities are only enumerated in PF devices. VF devices
-> do not enumerate these capabilites. IOMMU drivers also need to enumerate
-> them before enabling features in the IOMMU. Extending the same support as
-> PASID feature discovery (pci_pasid_features) for PRI.
-> 
-> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Changed 'unsigned' to 'unsigned int'.
+This makes the code more uniform, and compliant with the kernel coding style.
 
-Hi Ashok,
+Signed-off-by: Abanoub Sameh <abanoubsameh@protonmail.com>
+---
+ drivers/gpio/gpio-ich.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-When you update this for the 0-day implicit declaration thing, can you
-update the subject to say what the patch *does*, as opposed to what it
-is solving?  Also, no need for a period at the end.
+diff --git a/drivers/gpio/gpio-ich.c b/drivers/gpio/gpio-ich.c
+index 9960bb8b0f5b..de56c013a658 100644
+--- a/drivers/gpio/gpio-ich.c
++++ b/drivers/gpio/gpio-ich.c
+@@ -74,8 +74,8 @@ struct ichx_desc {
+ 	u32 use_sel_ignore[3];
+ 
+ 	/* Some chipsets have quirks, let these use their own request/get */
+-	int (*request)(struct gpio_chip *chip, unsigned offset);
+-	int (*get)(struct gpio_chip *chip, unsigned offset);
++	int (*request)(struct gpio_chip *chip, unsigned int offset);
++	int (*get)(struct gpio_chip *chip, unsigned int offset);
+ 
+ 	/*
+ 	 * Some chipsets don't let reading output values on GPIO_LVL register
+@@ -100,7 +100,7 @@ static int modparam_gpiobase = -1;	/* dynamic */
+ module_param_named(gpiobase, modparam_gpiobase, int, 0444);
+ MODULE_PARM_DESC(gpiobase, "The GPIO number base. -1 means dynamic, which is the default.");
+ 
+-static int ichx_write_bit(int reg, unsigned nr, int val, int verify)
++static int ichx_write_bit(int reg, unsigned int nr, int val, int verify)
+ {
+ 	unsigned long flags;
+ 	u32 data, tmp;
+@@ -132,7 +132,7 @@ static int ichx_write_bit(int reg, unsigned nr, int val, int verify)
+ 	return (verify && data != tmp) ? -EPERM : 0;
+ }
+ 
+-static int ichx_read_bit(int reg, unsigned nr)
++static int ichx_read_bit(int reg, unsigned int nr)
+ {
+ 	unsigned long flags;
+ 	u32 data;
+@@ -152,12 +152,12 @@ static int ichx_read_bit(int reg, unsigned nr)
+ 	return !!(data & BIT(bit));
+ }
+ 
+-static bool ichx_gpio_check_available(struct gpio_chip *gpio, unsigned nr)
++static bool ichx_gpio_check_available(struct gpio_chip *gpio, unsigned int nr)
+ {
+ 	return !!(ichx_priv.use_gpio & BIT(nr / 32));
+ }
+ 
+-static int ichx_gpio_get_direction(struct gpio_chip *gpio, unsigned nr)
++static int ichx_gpio_get_direction(struct gpio_chip *gpio, unsigned int nr)
+ {
+ 	if (ichx_read_bit(GPIO_IO_SEL, nr))
+ 		return GPIO_LINE_DIRECTION_IN;
+@@ -165,7 +165,7 @@ static int ichx_gpio_get_direction(struct gpio_chip *gpio, unsigned nr)
+ 	return GPIO_LINE_DIRECTION_OUT;
+ }
+ 
+-static int ichx_gpio_direction_input(struct gpio_chip *gpio, unsigned nr)
++static int ichx_gpio_direction_input(struct gpio_chip *gpio, unsigned int nr)
+ {
+ 	/*
+ 	 * Try setting pin as an input and verify it worked since many pins
+@@ -174,7 +174,7 @@ static int ichx_gpio_direction_input(struct gpio_chip *gpio, unsigned nr)
+ 	return ichx_write_bit(GPIO_IO_SEL, nr, 1, 1);
+ }
+ 
+-static int ichx_gpio_direction_output(struct gpio_chip *gpio, unsigned nr,
++static int ichx_gpio_direction_output(struct gpio_chip *gpio, unsigned int nr,
+ 					int val)
+ {
+ 	/* Disable blink hardware which is available for GPIOs from 0 to 31. */
+@@ -191,12 +191,12 @@ static int ichx_gpio_direction_output(struct gpio_chip *gpio, unsigned nr,
+ 	return ichx_write_bit(GPIO_IO_SEL, nr, 0, 1);
+ }
+ 
+-static int ichx_gpio_get(struct gpio_chip *chip, unsigned nr)
++static int ichx_gpio_get(struct gpio_chip *chip, unsigned int nr)
+ {
+ 	return ichx_read_bit(GPIO_LVL, nr);
+ }
+ 
+-static int ich6_gpio_get(struct gpio_chip *chip, unsigned nr)
++static int ich6_gpio_get(struct gpio_chip *chip, unsigned int nr)
+ {
+ 	unsigned long flags;
+ 	u32 data;
+@@ -223,7 +223,7 @@ static int ich6_gpio_get(struct gpio_chip *chip, unsigned nr)
+ 	}
+ }
+ 
+-static int ichx_gpio_request(struct gpio_chip *chip, unsigned nr)
++static int ichx_gpio_request(struct gpio_chip *chip, unsigned int nr)
+ {
+ 	if (!ichx_gpio_check_available(chip, nr))
+ 		return -ENXIO;
+@@ -240,7 +240,7 @@ static int ichx_gpio_request(struct gpio_chip *chip, unsigned nr)
+ 	return ichx_read_bit(GPIO_USE_SEL, nr) ? 0 : -ENODEV;
+ }
+ 
+-static int ich6_gpio_request(struct gpio_chip *chip, unsigned nr)
++static int ich6_gpio_request(struct gpio_chip *chip, unsigned int nr)
+ {
+ 	/*
+ 	 * Fixups for bits 16 and 17 are necessary on the Intel ICH6/3100
+@@ -254,7 +254,7 @@ static int ich6_gpio_request(struct gpio_chip *chip, unsigned nr)
+ 	return ichx_gpio_request(chip, nr);
+ }
+ 
+-static void ichx_gpio_set(struct gpio_chip *chip, unsigned nr, int val)
++static void ichx_gpio_set(struct gpio_chip *chip, unsigned int nr, int val)
+ {
+ 	ichx_write_bit(GPIO_LVL, nr, val, 0);
+ }
+-- 
+2.28.0.rc0
 
-Does this fix a regression?  Is it associated with a commit that we
-could add as a "Fixes:" tag so we know how far back to try to apply
-to stable kernels?
-
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> To: Joerg Roedel <joro@8bytes.com>
-> To: Lu Baolu <baolu.lu@intel.com>
-> Cc: stable@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: iommu@lists.linux-foundation.org
-> ---
->  drivers/iommu/intel/iommu.c |  2 +-
->  drivers/pci/ats.c           | 14 ++++++++++++++
->  include/linux/pci-ats.h     |  1 +
->  3 files changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index d759e7234e98..276452f5e6a7 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -2560,7 +2560,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
->  			}
->  
->  			if (info->ats_supported && ecap_prs(iommu->ecap) &&
-> -			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
-> +			    pci_pri_supported(pdev))
->  				info->pri_supported = 1;
->  		}
->  	}
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index b761c1f72f67..ffb4de8c5a77 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -461,6 +461,20 @@ int pci_pasid_features(struct pci_dev *pdev)
->  }
->  EXPORT_SYMBOL_GPL(pci_pasid_features);
->  
-> +/**
-> + * pci_pri_supported - Check if PRI is supported.
-> + * @pdev: PCI device structure
-> + *
-> + * Returns false when no PRI capability is present.
-> + * Returns true if PRI feature is supported and enabled
-> + */
-> +bool pci_pri_supported(struct pci_dev *pdev)
-> +{
-> +	/* VFs share the PF PRI configuration */
-> +	return !!(pci_physfn(pdev)->pri_cap);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_pri_supported);
-> +
->  #define PASID_NUMBER_SHIFT	8
->  #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
->  /**
-> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> index f75c307f346d..073d57292445 100644
-> --- a/include/linux/pci-ats.h
-> +++ b/include/linux/pci-ats.h
-> @@ -28,6 +28,7 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
->  void pci_disable_pri(struct pci_dev *pdev);
->  int pci_reset_pri(struct pci_dev *pdev);
->  int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-> +bool pci_pri_supported(struct pci_dev *pdev);
->  #endif /* CONFIG_PCI_PRI */
->  
->  #ifdef CONFIG_PCI_PASID
-> -- 
-> 2.7.4
-> 
