@@ -2,215 +2,168 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BAAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D151D20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:02:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595354576;
-	bh=Dygy/vHGWzC5DtQBeg15WLnaBrQsPb2nhQiwgIJIQDI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=X6ppIptbN26EWKqNxB8UgsCyOtT29TQHhSgVppqOqYqwJK6HVPt1FIVNoC6HsFqYP
-	 2/PhQCsZjm85BHgSBPmAla6qQdED7weFQ+oODC6qOBVIqdptSLkHHc7tNjc9HmwD4+
-	 bF8icHop4SqywwZO9Bt1lrgRFJUI+RuUXS0eA9L4=
+	by mail.kernel.org (Postfix) with ESMTP id B09732065E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:05:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StH7PKTx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgGUSCy (ORCPT
+        id S1730201AbgGUSFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 14:02:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbgGUSCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 14:02:51 -0400
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AA4A207DD
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 18:02:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595354569;
-        bh=Dygy/vHGWzC5DtQBeg15WLnaBrQsPb2nhQiwgIJIQDI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Od2RUw+UF6ebjPTwpvyC1x92aDK7AP/PUbQtK+ob7tapkyF8uOQQVDnC+clh2WUIZ
-         w//r1eSvZPWD0uh+6PEdE0+oGq2tZ+xsnmloDTHXzvyWOU1hD0dZllv6tThtm1j6Xb
-         pUTyjYvK8CzWQsleTZmHjagQivG0AB5kXjxcMNr4=
-Received: by mail-wm1-f49.google.com with SMTP id g10so2706167wmc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 11:02:49 -0700 (PDT)
-X-Gm-Message-State: AOAM532CNgl6L/pTCHQ3T2Ma6GrQg9FIk1Ji0rOERX6L+2CkQVw0NT++
-        d0fAEAAgeYDM/ioQz8A7dsQU3t5LWtKI7gn4mSpX/Q==
-X-Google-Smtp-Source: ABdhPJzt+CT6JPl1hYKeUo2s1F+qIzOeYfW3nI0LsqKaJj3HS4hPWNKHqhQgbEi85XJ7lHgJhP/FG3/k5J82SKC/yKE=
-X-Received: by 2002:a1c:56c3:: with SMTP id k186mr3982529wmb.21.1595354567554;
- Tue, 21 Jul 2020 11:02:47 -0700 (PDT)
+        Tue, 21 Jul 2020 14:05:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgGUSFP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 14:05:15 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B3D8C061794;
+        Tue, 21 Jul 2020 11:05:15 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 22so3712367wmg.1;
+        Tue, 21 Jul 2020 11:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zBtwd08yK3OHIPDVYk50q67F38cemjpWdPB2rQr1ufk=;
+        b=StH7PKTxsE6hz0AlLuM8eY1mjIkcAltY6rjSaj73QNCX/3aNdf94SCA+GjIytuNBjw
+         P3RqrjMKj0JnGRbtqzPJFx2O0yfLJdj765q9bTsCNN9mtxUBbg5PTbTJJIMydTdx8hVw
+         9IgGFYiDEIS8lB7Sg2qd8/whLU7v1KY8fF/AaW77XF8tBbzZPvL3A0q/OvCmlWjzNLkK
+         VYUZMe6Kcw2D+cO0Na04D7R+2m7qtcC9yDZNcN1awm2m8CTmmc9KZkqUk38mNTG42oHZ
+         jpGfAZVqGNxDanGqsgnlgUyYyZWesDtzT3e4ARdCSuOilEU+P3CXjfxxCKOjRCcbOQMI
+         iOwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=zBtwd08yK3OHIPDVYk50q67F38cemjpWdPB2rQr1ufk=;
+        b=OJIVKGPBMAdEYK6YmwhuhWa6sjEzwMcELMgqMhNZu2BKI3OaMnlQ48MYDjT2am0VRu
+         E/V23AYXouFYLGwSjgh9PblKtB9F+Hm0U3DkySek94V3eOIae7cdxH+NvrULxCMq4Xff
+         MDctq1DyXW5aLtlLUunedp4MTmL5pdkuatJDSXrYHFy2VE0Ssx/mfQB3l/RDR4dRUv1O
+         MbnQB+GwPIxfLtnXeU+UEafF1UdtRwHTzkdJNFjBo7SncCGexXkv2HVwww+XyVAsxiMI
+         I717GDZ3ECqMPJDc32tuN8oGbM8ln9qbvJgz0i7XIOxkFYq+zpwERkQrNLjOse30D5Lq
+         4qMw==
+X-Gm-Message-State: AOAM530qS5bTnZMj+6l73YeX7tOOasY1S4GNoXc8skMucAJyf/p0i9Og
+        gC95freeEWWSIh0GbU07nMI=
+X-Google-Smtp-Source: ABdhPJw8tknNjDKasozEa21mDAADuskKZiDCF1zaPOO+LGJ0xXpwzpPD2y7WMQuEqhk5w42Tsr7Jiw==
+X-Received: by 2002:a1c:96c5:: with SMTP id y188mr5231958wmd.71.1595354714111;
+        Tue, 21 Jul 2020 11:05:14 -0700 (PDT)
+Received: from [10.67.50.75] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id t3sm7296886wre.41.2020.07.21.11.05.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 11:05:13 -0700 (PDT)
+Subject: Re: [RFC 0/7] Add support to process rx packets in thread
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Rakesh Pillai <pillair@codeaurora.org>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvalo@codeaurora.org,
+        johannes@sipsolutions.net, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, dianders@chromium.org, evgreen@chromium.org
+References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
+ <20200721172514.GT1339445@lunn.ch>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <f6d93d76-9e59-c257-9318-31c71df28018@gmail.com>
+Date:   Tue, 21 Jul 2020 11:05:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <000000000000dee84305aaf72849@google.com>
-In-Reply-To: <000000000000dee84305aaf72849@google.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 21 Jul 2020 11:02:35 -0700
-X-Gmail-Original-Message-ID: <CALCETrV9heuzwiL9aFB3WrKMidyOuxjRyzAEM=R+p3vqxe6AVw@mail.gmail.com>
-Message-ID: <CALCETrV9heuzwiL9aFB3WrKMidyOuxjRyzAEM=R+p3vqxe6AVw@mail.gmail.com>
-Subject: Re: BUG: stack guard page was hit in pvclock_clocksource_read
-To:     syzbot <syzbot+33db977d6e575c4884b1@syzkaller.appspotmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Juergen Gross <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        syzkaller-bugs@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200721172514.GT1339445@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:43 AM syzbot
-<syzbot+33db977d6e575c4884b1@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    473309fb net: dp83640: fix SIOCSHWTSTAMP to update the str..
-> git tree:       net
-> console output: https://syzkaller.appspot.com/x/log.txt?x=175443e7100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=368e8612711aa2cc
-> dashboard link: https://syzkaller.appspot.com/bug?extid=33db977d6e575c4884b1
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
->
-> Unfortunately, I don't have any reproducer for this issue yet.
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+33db977d6e575c4884b1@syzkaller.appspotmail.com
->
-> BUG: stack guard page was hit at 00000000568268d5 (stack is 00000000fd6fd35d..00000000fd6d22ec)
-> kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 30079 Comm: syz-executor.0 Not tainted 5.8.0-rc4-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:pvclock_clocksource_read+0x21/0x510 arch/x86/kernel/pvclock.c:68
-> Code: 2e 0f 1f 84 00 00 00 00 00 48 ba 00 00 00 00 00 fc ff df 48 89 f8 41 57 48 c1 e8 03 41 56 41 55 41 54 4c 8d 67 03 55 4c 89 e1 <53> 48 c1 e9 03 48 89 fb 48 83 ec 58 0f b6 04 10 0f b6 14 11 48 89
-> RSP: 0018:ffffc90016598000 EFLAGS: 00010806
-> RAX: 1ffffffff17cec00 RBX: ffff8880ae620dc0 RCX: ffffffff8be76003
-> RDX: dffffc0000000000 RSI: 0000000000000001 RDI: ffffffff8be76000
-> RBP: ffff888059596380 R08: 0000000000000001 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff8be76003
-> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> FS:  00007f3e110c1700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffc90016597ff8 CR3: 000000005d14d000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  kvm_clock_read arch/x86/kernel/kvmclock.c:90 [inline]
->  kvm_sched_clock_read+0x14/0x40 arch/x86/kernel/kvmclock.c:102
->  paravirt_sched_clock arch/x86/include/asm/paravirt.h:22 [inline]
->  sched_clock+0x2a/0x40 arch/x86/kernel/tsc.c:252
->  sched_clock_cpu+0x18/0x1b0 kernel/sched/clock.c:371
->  irqtime_account_irq+0x63/0x280 kernel/sched/cputime.c:60
->  account_irq_enter_time include/linux/vtime.h:109 [inline]
->  irq_enter_rcu+0x61/0x140 kernel/softirq.c:356
->  sysvec_apic_timer_interrupt+0x13/0x120 arch/x86/kernel/apic/apic.c:1091
->  asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:587
-> RIP: 0010:__orc_find+0x9b/0xf0 arch/x86/kernel/unwind_orc.c:58
-> Code: d8 83 e0 07 83 c0 03 38 d0 7c 04 84 d2 75 48 48 63 03 48 01 d8 48 39 c1 73 b0 4c 8d 63 fc 49 39 ec 73 b3 4d 29 ee 49 c1 fe 02 <4b> 8d 04 76 48 8d 04 46 48 83 c4 10 5b 5d 41 5c 41 5d 41 5e 41 5f
-> RSP: 0018:ffffc90016598190 EFLAGS: 00000246
-> RAX: ffffffff84b1c69e RBX: ffffffff8ae8fef8 RCX: ffffffff84b1cb81
-> RDX: 0000000000000000 RSI: ffffffff8b5be90e RDI: ffffffff8ae8fef8
-> RBP: ffffffff8ae8fefc R08: ffffffff8b5be944 R09: ffffffff8b5be90e
-> R10: 000000000007201e R11: 00000000000c2499 R12: ffffffff8ae8fef8
-> R13: ffffffff8ae8fef8 R14: 0000000000000000 R15: dffffc0000000000
->  orc_find arch/x86/kernel/unwind_orc.c:172 [inline]
->  unwind_next_frame+0x342/0x1f90 arch/x86/kernel/unwind_orc.c:446
->  arch_stack_walk+0x81/0xf0 arch/x86/kernel/stacktrace.c:25
->  stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
->  save_stack+0x1b/0x40 mm/kasan/common.c:48
->  set_track mm/kasan/common.c:56 [inline]
->  __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
->  __kmalloc_reserve net/core/skbuff.c:142 [inline]
->  pskb_expand_head+0x15a/0x1040 net/core/skbuff.c:1627
->  netlink_trim+0x1ea/0x240 net/netlink/af_netlink.c:1285
->  netlink_broadcast_filtered+0x65/0xdc0 net/netlink/af_netlink.c:1490
->  netlink_broadcast net/netlink/af_netlink.c:1535 [inline]
->  nlmsg_multicast include/net/netlink.h:1020 [inline]
->  nlmsg_notify+0x90/0x250 net/netlink/af_netlink.c:2512
->  rtnl_notify net/core/rtnetlink.c:737 [inline]
->  rtmsg_ifinfo_send net/core/rtnetlink.c:3725 [inline]
->  rtmsg_ifinfo_event net/core/rtnetlink.c:3740 [inline]
->  rtmsg_ifinfo_event net/core/rtnetlink.c:3728 [inline]
->  rtnetlink_event+0x193/0x1d0 net/core/rtnetlink.c:5511
->  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
->  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
->  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
->  call_netdevice_notifiers net/core/dev.c:2053 [inline]
->  netdev_features_change net/core/dev.c:1443 [inline]
->  netdev_sync_lower_features net/core/dev.c:9056 [inline]
->  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
->  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
->  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
->  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
->  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
->  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
->  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
->  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
->  call_netdevice_notifiers net/core/dev.c:2053 [inline]
->  netdev_features_change net/core/dev.c:1443 [inline]
->  netdev_sync_lower_features net/core/dev.c:9056 [inline]
->  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
->  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
->  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
->  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
->  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
->  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
->  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
->  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
->  call_netdevice_notifiers net/core/dev.c:2053 [inline]
->  netdev_features_change net/core/dev.c:1443 [inline]
->  netdev_sync_lower_features net/core/dev.c:9056 [inline]
->  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
->  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
->  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
->  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
->  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
->  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
->  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
->  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
->  call_netdevice_notifiers net/core/dev.c:2053 [inline]
->  netdev_features_change net/core/dev.c:1443 [inline]
->  netdev_sync_lower_features net/core/dev.c:9056 [inline]
->  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
->  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
->  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
->  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
->  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
-> Lost 627 message(s)!
-> ---[ end trace 203af1b41d4d3a41 ]---
-> RIP: 0010:pvclock_clocksource_read+0x21/0x510 arch/x86/kernel/pvclock.c:68
-> Code: 2e 0f 1f 84 00 00 00 00 00 48 ba 00 00 00 00 00 fc ff df 48 89 f8 41 57 48 c1 e8 03 41 56 41 55 41 54 4c 8d 67 03 55 4c 89 e1 <53> 48 c1 e9 03 48 89 fb 48 83 ec 58 0f b6 04 10 0f b6 14 11 48 89
-> RSP: 0018:ffffc90016598000 EFLAGS: 00010806
-> RAX: 1ffffffff17cec00 RBX: ffff8880ae620dc0 RCX: ffffffff8be76003
-> RDX: dffffc0000000000 RSI: 0000000000000001 RDI: ffffffff8be76000
-> RBP: ffff888059596380 R08: 0000000000000001 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff8be76003
-> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> FS:  00007f3e110c1700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffc90016597ff8 CR3: 000000005d14d000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->
->
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On 7/21/20 10:25 AM, Andrew Lunn wrote:
+> On Tue, Jul 21, 2020 at 10:44:19PM +0530, Rakesh Pillai wrote:
+>> NAPI gets scheduled on the CPU core which got the
+>> interrupt. The linux scheduler cannot move it to a
+>> different core, even if the CPU on which NAPI is running
+>> is heavily loaded. This can lead to degraded wifi
+>> performance when running traffic at peak data rates.
+>>
+>> A thread on the other hand can be moved to different
+>> CPU cores, if the one on which its running is heavily
+>> loaded. During high incoming data traffic, this gives
+>> better performance, since the thread can be moved to a
+>> less loaded or sometimes even a more powerful CPU core
+>> to account for the required CPU performance in order
+>> to process the incoming packets.
+>>
+>> This patch series adds the support to use a high priority
+>> thread to process the incoming packets, as opposed to
+>> everything being done in NAPI context.
+> 
+> I don't see why this problem is limited to the ath10k driver. I expect
+> it applies to all drivers using NAPI. So shouldn't you be solving this
+> in the NAPI core? Allow a driver to request the NAPI core uses a
+> thread?
 
-#syz dup: BUG: stack guard page was hit in deref_stack_reg
+What's more, you should be able to configure interrupt affinity to steer
+RX processing onto a desired CPU core, is not that working for you somehow?
+-- 
+Florian
