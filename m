@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344A1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC1EC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06B8B207BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069202072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595366642;
-	bh=ajSaAeF2n7h94VHdL4uWUGlYN0WyGAIis5MfUlWwmP4=;
+	s=default; t=1595366649;
+	bh=N6nUiUUBnWNBviVXCib+HaFXYm7Gu9fCJgmKStm3FWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xVABpeM9TYM/m51xRvtm+mC36KZ2yT1uFO/N4GTHAsMsQJSea8CY84vR0FnuPqs0d
-	 wU69o+OTkfjgsPm5cf+YnmZMHkVWKE0FFiejbPVB14g3VQeRNPlqmgCN9vWX0s+BCh
-	 2hQro9cVKXhv/OxkQRcjM4JnUEArZQ0/A3CXvM8c=
+	b=Huwf8HMH9onEw4QrFhPD3Z45xWMTcDe7E91RCtHMIFmjomd4f+SEw9QQ0XZxi12Wt
+	 CcvXRv7p4a+rzBqznOhR8t4qEkgVfvMSecZBNKToNYzbYwGiBlxBA5BkP+Ldlw6YQo
+	 o8pmjCIJfv6aVkTkg8HpTOuIZJbZ/UMJEhhTC//s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbgGUVYB (ORCPT
+        id S1731275AbgGUVYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:24:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42650 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 17:24:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731217AbgGUVX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:23:59 -0400
+        id S1731234AbgGUVYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 17:24:04 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0885F2072E;
-        Tue, 21 Jul 2020 21:23:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F6BF20717;
+        Tue, 21 Jul 2020 21:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595366639;
-        bh=ajSaAeF2n7h94VHdL4uWUGlYN0WyGAIis5MfUlWwmP4=;
+        s=default; t=1595366643;
+        bh=N6nUiUUBnWNBviVXCib+HaFXYm7Gu9fCJgmKStm3FWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H/ZR+ZcPViUCvb3a1csLlqWzupg0vM/RX6nw+mRD9UnE06WzyUUd39rGMR2e9lugH
-         fpiyGIlABT0VyKTaEGw1rJNdjs6JcH0JvUlwLFz30ZvrseTKLYJ7wsa6NTXDDK3F1w
-         QftBuXdBOb2nM0Pc7lvpSSCGlYDuSm8gqe4hMwDE=
+        b=kAYBm0N83HY2B9McItfud5cXi0pY/NT0FoUP/FbWbY8/8311MZ1W5uw8nPiMyAK59
+         ByMUKymMbXQZjwKO9isXPjm73FN66ephXGk53ZH418VldZmzvWOVfvKDwdw1ZfrgIA
+         8LSTi+DAgJ8asp/g2t8fmAMAip+nOC8i+JICx9tg=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Ricky Wu <ricky_wu@realtek.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -50,9 +50,9 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         Puranjay Mohan <puranjay12@gmail.com>,
         linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2/5] misc: rtsx: Remove unused pcie_cap
-Date:   Tue, 21 Jul 2020 16:23:33 -0500
-Message-Id: <20200721212336.1159079-3-helgaas@kernel.org>
+Subject: [PATCH 4/5] misc: rtsx: Find L1 PM Substates capability instead of hard-coding
+Date:   Tue, 21 Jul 2020 16:23:35 -0500
+Message-Id: <20200721212336.1159079-5-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200721212336.1159079-1-helgaas@kernel.org>
 References: <20200721212336.1159079-1-helgaas@kernel.org>
@@ -65,38 +65,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-There are no more uses of struct rtsx_pcr.pcie_cap.  Remove it.
+Instead of hard-coding the location of the L1 PM Substates capability based
+on the Device ID, search for it in the extended capabilities list.  This
+works for any device, as long as it implements the L1 PM Substates
+capability correctly, so it doesn't require maintenance as new devices are
+added.  No functional change intended.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/misc/cardreader/rtsx_pcr.c | 1 -
- include/linux/rtsx_pci.h           | 1 -
- 2 files changed, 2 deletions(-)
+ drivers/misc/cardreader/rts5249.c | 12 ++++++------
+ drivers/misc/cardreader/rts5260.c |  7 ++++++-
+ drivers/misc/cardreader/rts5261.c |  7 ++++++-
+ include/linux/rtsx_pci.h          |  4 ----
+ 4 files changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
-index 6a4d6c8f4e71..169505165a52 100644
---- a/drivers/misc/cardreader/rtsx_pcr.c
-+++ b/drivers/misc/cardreader/rtsx_pcr.c
-@@ -1234,7 +1234,6 @@ static int rtsx_pci_init_hw(struct rtsx_pcr *pcr)
+diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
+index 665472d05993..1b8149e806c1 100644
+--- a/drivers/misc/cardreader/rts5249.c
++++ b/drivers/misc/cardreader/rts5249.c
+@@ -95,15 +95,15 @@ static void rtsx_base_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+ static void rts5249_init_from_cfg(struct rtsx_pcr *pcr)
+ {
  	struct pci_dev *pdev = pcr->pci;
- 	int err;
++	int l1ss;
+ 	struct rtsx_cr_option *option = &(pcr->option);
+ 	u32 lval;
  
--	pcr->pcie_cap = pci_find_capability(pcr->pci, PCI_CAP_ID_EXP);
- 	rtsx_pci_writel(pcr, RTSX_HCBAR, pcr->host_cmds_addr);
+-	if (CHK_PCI_PID(pcr, PID_524A))
+-		pci_read_config_dword(pdev,
+-			PCR_ASPM_SETTING_REG1, &lval);
+-	else
+-		pci_read_config_dword(pdev,
+-			PCR_ASPM_SETTING_REG2, &lval);
++	l1ss = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_L1SS);
++	if (!l1ss)
++		return;
++
++	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, &lval);
  
- 	rtsx_pci_enable_bus_int(pcr);
+ 	if (lval & ASPM_L1_1_EN_MASK)
+ 		rtsx_set_dev_flag(pcr, ASPM_L1_1_EN);
+diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
+index 0e806dd7ad08..ebf77643cc90 100644
+--- a/drivers/misc/cardreader/rts5260.c
++++ b/drivers/misc/cardreader/rts5260.c
+@@ -498,10 +498,15 @@ static void rts5260_pwr_saving_setting(struct rtsx_pcr *pcr)
+ static void rts5260_init_from_cfg(struct rtsx_pcr *pcr)
+ {
+ 	struct pci_dev *pdev = pcr->pci;
++	int l1ss;
+ 	struct rtsx_cr_option *option = &pcr->option;
+ 	u32 lval;
+ 
+-	pci_read_config_dword(pdev, PCR_ASPM_SETTING_5260, &lval);
++	l1ss = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_L1SS);
++	if (!l1ss)
++		return;
++
++	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, &lval);
+ 
+ 	if (lval & ASPM_L1_1_EN_MASK)
+ 		rtsx_set_dev_flag(pcr, ASPM_L1_1_EN);
+diff --git a/drivers/misc/cardreader/rts5261.c b/drivers/misc/cardreader/rts5261.c
+index 4f30637ee4ac..4b6e3fe4a007 100644
+--- a/drivers/misc/cardreader/rts5261.c
++++ b/drivers/misc/cardreader/rts5261.c
+@@ -413,10 +413,15 @@ static int rts5261_init_from_hw(struct rtsx_pcr *pcr)
+ static void rts5261_init_from_cfg(struct rtsx_pcr *pcr)
+ {
+ 	struct pci_dev *pdev = pcr->pci;
++	int l1ss;
+ 	u32 lval;
+ 	struct rtsx_cr_option *option = &pcr->option;
+ 
+-	pci_read_config_dword(pdev, PCR_ASPM_SETTING_REG1, &lval);
++	l1ss = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_L1SS);
++	if (!l1ss)
++		return;
++
++	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, &lval);
+ 
+ 	if (lval & ASPM_L1_1_EN_MASK)
+ 		rtsx_set_dev_flag(pcr, ASPM_L1_1_EN);
 diff --git a/include/linux/rtsx_pci.h b/include/linux/rtsx_pci.h
-index e8780d4e4636..b1071c80fffc 100644
+index 87eafba55749..f1e27b858972 100644
 --- a/include/linux/rtsx_pci.h
 +++ b/include/linux/rtsx_pci.h
-@@ -1158,7 +1158,6 @@ struct rtsx_hw_param {
- struct rtsx_pcr {
- 	struct pci_dev			*pci;
- 	unsigned int			id;
--	int				pcie_cap;
- 	struct rtsx_cr_option	option;
- 	struct rtsx_hw_param hw_param;
+@@ -1029,10 +1029,6 @@
+ #define   PHY_DIG1E_RX_EN_KEEP		0x0001
+ #define PHY_DUM_REG			0x1F
  
+-#define PCR_ASPM_SETTING_REG1		0x160
+-#define PCR_ASPM_SETTING_REG2		0x168
+-#define PCR_ASPM_SETTING_5260		0x178
+-
+ #define PCR_SETTING_REG1		0x724
+ #define PCR_SETTING_REG2		0x814
+ #define PCR_SETTING_REG3		0x747
 -- 
 2.25.1
 
