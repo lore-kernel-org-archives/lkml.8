@@ -2,266 +2,149 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD245C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE5F420684
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11750206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:07:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="SaAY7VXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgGUOF7 (ORCPT
+        id S1728502AbgGUOHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:05:59 -0400
-Received: from mga07.intel.com ([134.134.136.100]:54766 "EHLO mga07.intel.com"
+        Tue, 21 Jul 2020 10:07:22 -0400
+Received: from ozlabs.org ([203.11.71.1]:49901 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbgGUOF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:05:59 -0400
-IronPort-SDR: 3dA7yP9YbIjZw7GjqI8pFYzPP2aKViNv1SLuTznOaZO4PWbhV0gGGH7/vbLaa0f5caOx6GTAQr
- 5tx0MHYvtucA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="214787154"
-X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="214787154"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 07:05:57 -0700
-IronPort-SDR: 8eC/48voajuzROVfO2NOK66pG4guDxsheMjDphDg/76LVob2xD5c5l6/IaO8AbI2GfNKUfFGET
- 2NoRp/pIipow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="327881352"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 21 Jul 2020 07:05:57 -0700
-Received: from [10.254.76.99] (kliang2-mobl.ccr.corp.intel.com [10.254.76.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726120AbgGUOHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 10:07:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id DD12A580806;
-        Tue, 21 Jul 2020 07:05:56 -0700 (PDT)
-Subject: Re: [PATCH V6 07/14] perf/x86/intel: Generic support for hardware
- TopDown metrics
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-References: <20200717140554.22863-1-kan.liang@linux.intel.com>
- <20200717140554.22863-8-kan.liang@linux.intel.com>
- <20200721094327.GW10769@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <3a6b082e-7906-9df1-28b9-c7639127e8a7@linux.intel.com>
-Date:   Tue, 21 Jul 2020 10:05:55 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BB0ll6WTvz9sPB;
+        Wed, 22 Jul 2020 00:07:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1595340439;
+        bh=pEIZzV48lY9oMztWrQ5y0yoN1x11b53snuVDYzGP9yQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=SaAY7VXP+8gsFiGhyvEZfA+oRA9StiLhZfuy+2pKRVNobM60s5ZrvgssW4zf9X62a
+         MZVWmqNQd3ogXkhQzVYT2D6VyVqWKDqOTPUqeXt46kCvuhO/J2IMGdZCQAUUqN0SIL
+         4dfQwOKoWzFqHPbN+FBeidh2+nu4W84rUbGweXJpIruRz3B4B0YQrtTDgf479Rar/y
+         Viw/52UZYPrBmgsgdov8KvZxHChLO16wRqgypswzCaGIaVwaE290Pt0mbM8PutKM3/
+         Xb8erB7zonG4Bzma/IFDuaXKb0iPg7coE2wqu+/YiWJI8VuHLFsB4OK2ql0qU6+xD9
+         nx9GykCYcRn6A==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Cc:     mikey@neuling.org, apopple@linux.ibm.com,
+        Paul Mackerras <paulus@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: Re: [PATCH v4 05/10] powerpc/dt_cpu_ftrs: Add feature for 2nd DAWR
+In-Reply-To: <62daa2d1-4e11-dcc1-cb1d-805ee4a156e0@linux.ibm.com>
+References: <20200717040958.70561-1-ravi.bangoria@linux.ibm.com> <20200717040958.70561-6-ravi.bangoria@linux.ibm.com> <CACzsE9oE+OMnWEXvbZZbq35YzpSzCbBHWEJcjtCgkcq-YrABng@mail.gmail.com> <c34b1a66-2db6-c97a-1782-0d473c758502@linux.ibm.com> <87mu3trtri.fsf@mpe.ellerman.id.au> <62daa2d1-4e11-dcc1-cb1d-805ee4a156e0@linux.ibm.com>
+Date:   Wed, 22 Jul 2020 00:07:15 +1000
+Message-ID: <87d04prmgc.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20200721094327.GW10769@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ravi Bangoria <ravi.bangoria@linux.ibm.com> writes:
+> On 7/21/20 4:59 PM, Michael Ellerman wrote:
+>> Ravi Bangoria <ravi.bangoria@linux.ibm.com> writes:
+>>> On 7/17/20 11:14 AM, Jordan Niethe wrote:
+>>>> On Fri, Jul 17, 2020 at 2:10 PM Ravi Bangoria
+>>>> <ravi.bangoria@linux.ibm.com> wrote:
+>>>>>
+>>>>> Add new device-tree feature for 2nd DAWR. If this feature is present,
+>>>>> 2nd DAWR is supported, otherwise not.
+>>>>>
+>>>>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>>>>> ---
+>>>>>    arch/powerpc/include/asm/cputable.h | 7 +++++--
+>>>>>    arch/powerpc/kernel/dt_cpu_ftrs.c   | 7 +++++++
+>>>>>    2 files changed, 12 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
+>>>>> index e506d429b1af..3445c86e1f6f 100644
+>>>>> --- a/arch/powerpc/include/asm/cputable.h
+>>>>> +++ b/arch/powerpc/include/asm/cputable.h
+>>>>> @@ -214,6 +214,7 @@ static inline void cpu_feature_keys_init(void) { }
+>>>>>    #define CPU_FTR_P9_TLBIE_ERAT_BUG      LONG_ASM_CONST(0x0001000000000000)
+>>>>>    #define CPU_FTR_P9_RADIX_PREFETCH_BUG  LONG_ASM_CONST(0x0002000000000000)
+>>>>>    #define CPU_FTR_ARCH_31                        LONG_ASM_CONST(0x0004000000000000)
+>>>>> +#define CPU_FTR_DAWR1                  LONG_ASM_CONST(0x0008000000000000)
+>>>>>
+>>>>>    #ifndef __ASSEMBLY__
+>>>>>
+>>>>> @@ -497,14 +498,16 @@ static inline void cpu_feature_keys_init(void) { }
+>>>>>    #define CPU_FTRS_POSSIBLE      \
+>>>>>               (CPU_FTRS_POWER7 | CPU_FTRS_POWER8E | CPU_FTRS_POWER8 | \
+>>>>>                CPU_FTR_ALTIVEC_COMP | CPU_FTR_VSX_COMP | CPU_FTRS_POWER9 | \
+>>>>> -            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10)
+>>>>> +            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10 | \
+>>>>> +            CPU_FTR_DAWR1)
+>>>>>    #else
+>>>>>    #define CPU_FTRS_POSSIBLE      \
+>>>>>               (CPU_FTRS_PPC970 | CPU_FTRS_POWER5 | \
+>>>>>                CPU_FTRS_POWER6 | CPU_FTRS_POWER7 | CPU_FTRS_POWER8E | \
+>>>>>                CPU_FTRS_POWER8 | CPU_FTRS_CELL | CPU_FTRS_PA6T | \
+>>>>>                CPU_FTR_VSX_COMP | CPU_FTR_ALTIVEC_COMP | CPU_FTRS_POWER9 | \
+>>>>> -            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10)
+>>>>> +            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10 | \
+>>>>> +            CPU_FTR_DAWR1)
+>> 
+>>>> Instead of putting CPU_FTR_DAWR1 into CPU_FTRS_POSSIBLE should it go
+>>>> into CPU_FTRS_POWER10?
+>>>> Then it will be picked up by CPU_FTRS_POSSIBLE.
+>>>
+>>> I remember a discussion about this with Mikey and we decided to do it
+>>> this way. Obviously, the purpose is to make CPU_FTR_DAWR1 independent of
+>>> CPU_FTRS_POWER10 because DAWR1 is an optional feature in p10. I fear
+>>> including CPU_FTR_DAWR1 in CPU_FTRS_POWER10 can make it forcefully enabled
+>>> even when device-tree property is not present or pa-feature bit it not set,
+>>> because we do:
+>>>
+>>>         {       /* 3.1-compliant processor, i.e. Power10 "architected" mode */
+>>>                 .pvr_mask               = 0xffffffff,
+>>>                 .pvr_value              = 0x0f000006,
+>>>                 .cpu_name               = "POWER10 (architected)",
+>>>                 .cpu_features           = CPU_FTRS_POWER10,
+>> 
+>> The pa-features logic will turn it off if the feature bit is not set.
+>> 
+>> So you should be able to put it in CPU_FTRS_POWER10.
+>> 
+>> See for example CPU_FTR_NOEXECUTE.
+>
+> Ah ok. scan_features() clears the feature if the bit is not set in
+> pa-features. So it should work find for powervm. I'll verify the same
+> thing happens in case of baremetal where we use cpu-features not
+> pa-features. If it works in baremetal as well, will put it in
+> CPU_FTRS_POWER10.
+
+When we use DT CPU features we don't use CPU_FTRS_POWER10 at all.
+
+We construct a cpu_spec from scratch with just the base set of features:
+
+static struct cpu_spec __initdata base_cpu_spec = {
+	.cpu_name		= NULL,
+	.cpu_features		= CPU_FTRS_DT_CPU_BASE,
 
 
-On 7/21/2020 5:43 AM, Peter Zijlstra wrote:
-> On Fri, Jul 17, 2020 at 07:05:47AM -0700, kan.liang@linux.intel.com wrote:
->> @@ -1031,6 +1034,35 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
->>   	return unsched ? -EINVAL : 0;
->>   }
->>   
->> +static int add_nr_metric_event(struct cpu_hw_events *cpuc,
->> +			       struct perf_event *event,
->> +			       int *max_count, bool sibling)
->> +{
->> +	/* The TopDown metrics events cannot be shared. */
->> +	if (is_metric_event(event) &&
->> +	    (++cpuc->n_metric_event > INTEL_TD_METRIC_NUM)) {
->> +		cpuc->n_metric_event--;
->> +		return -EINVAL;
->> +	}
->> +
->> +	/*
->> +	 * Take the accepted metrics events into account for leader event.
->> +	 */
->> +	if (!sibling)
->> +		*max_count += cpuc->n_metric_event;
->> +	else if (is_metric_event(event))
->> +		(*max_count)++;
->> +
->> +	return 0;
->> +}
->> +
->> +static void del_nr_metric_event(struct cpu_hw_events *cpuc,
->> +				struct perf_event *event)
->> +{
->> +	if (is_metric_event(event))
->> +		cpuc->n_metric_event--;
->> +}
->> +
->>   /*
->>    * dogrp: true if must collect siblings events (group)
->>    * returns total number of events and error code
->> @@ -1066,6 +1098,10 @@ static int collect_events(struct cpu_hw_events *cpuc, struct perf_event *leader,
->>   		cpuc->pebs_output = is_pebs_pt(leader) + 1;
->>   	}
->>   
->> +	if (x86_pmu.intel_cap.perf_metrics &&
->> +	    add_nr_metric_event(cpuc, leader, &max_count, false))
->> +		return -EINVAL;
->> +
->>   	if (is_x86_event(leader)) {
->>   		if (n >= max_count)
->>   			return -EINVAL;
->> @@ -1082,6 +1118,10 @@ static int collect_events(struct cpu_hw_events *cpuc, struct perf_event *leader,
->>   		    event->state <= PERF_EVENT_STATE_OFF)
->>   			continue;
->>   
->> +		if (x86_pmu.intel_cap.perf_metrics &&
->> +		    add_nr_metric_event(cpuc, event, &max_count, true))
->> +			return -EINVAL;
->> +
->>   		if (n >= max_count)
->>   			return -EINVAL;
->>   
-> 
-> Something like so perhaps ?
-> 
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -1035,24 +1035,14 @@ int x86_schedule_events(struct cpu_hw_ev
->   }
->   
->   static int add_nr_metric_event(struct cpu_hw_events *cpuc,
-> -			       struct perf_event *event,
-> -			       int *max_count, bool sibling)
-> +			       struct perf_event *event)
->   {
-> -	/* The TopDown metrics events cannot be shared. */
-> -	if (is_metric_event(event) &&
-> -	    (++cpuc->n_metric_event > INTEL_TD_METRIC_NUM)) {
-> -		cpuc->n_metric_event--;
-> -		return -EINVAL;
-> +	if (is_metric_event(event)) {
-> +		if (cpuc->n_metric == INTEL_TD_METRIC_NUM)
-> +			return -EINVAL;
-> +		cpuc->n_metric++;
->   	}
->   
-> -	/*
-> -	 * Take the accepted metrics events into account for leader event.
-> -	 */
-> -	if (!sibling)
-> -		*max_count += cpuc->n_metric_event;
-> -	else if (is_metric_event(event))
-> -		(*max_count)++;
-> -
->   	return 0;
->   }
->   
-> @@ -1060,7 +1050,24 @@ static void del_nr_metric_event(struct c
->   				struct perf_event *event)
->   {
->   	if (is_metric_event(event))
-> -		cpuc->n_metric_event--;
-> +		cpuc->n_metric--;
-> +}
-> +
-> +static int collect_event(struct cpu_hw_events *cpuc, struct perf_event *event,
-> +			 int max_count, int n)
-> +{
-> +
-> +	if (x86_pmu.intel_cap.perf_metrics && add_nr_metric_event(cpuc, event))
-> +		return -EINVAL;
-> +
-> +	if (n >= max_count + cpuc->n_metric)
-> +		return -EINVAL;
-> +
-> +	cpuc->event_list[n] = event;
-> +	if (is_counter_pair(&event->hw))
-> +		cpuc->n_pair++;
-> +
-> +	return 0;
->   }
->   
->   /*
-> @@ -1098,37 +1105,20 @@ static int collect_events(struct cpu_hw_
->   		cpuc->pebs_output = is_pebs_pt(leader) + 1;
->   	}
->   
-> -	if (x86_pmu.intel_cap.perf_metrics &&
-> -	    add_nr_metric_event(cpuc, leader, &max_count, false))
-> +	if (is_x86_event(leader) && collect_event(cpuc, leader, max_count, n))
->   		return -EINVAL;
-> +	n++;
+And then individual features are enabled via the device tree flags.
 
-If a leader is not an x86 event, n will be mistakenly increased.
-But is it possible that a leader is not an x86 event here?
-
-Seems impossible for now. A SW event cannot be a leader for a mix group.
-We don't allow the core PMU and the perf_invalid_context PMU in the same 
-group.
-If so, I think it deserves a comment, in case the situation changes 
-later, e.g.,
-
-  +	if (is_x86_event(leader) && collect_event(cpuc, leader, max_count, n))
-   		return -EINVAL;
-  +	/*
-  +	 * Currently, for a x86 core event group, the leader must be a
-  +	 * x86 core event. A SW event cannot be a leader for a mix
-  +	 * group. We don't allow the core PMU and the perf_invalid_contex +	 
-* PMU in the same group.
-  +	 */
-  +	n++;
-
-
-Thanks,
-Kan
->   
-> -	if (is_x86_event(leader)) {
-> -		if (n >= max_count)
-> -			return -EINVAL;
-> -		cpuc->event_list[n] = leader;
-> -		n++;
-> -		if (is_counter_pair(&leader->hw))
-> -			cpuc->n_pair++;
-> -	}
->   	if (!dogrp)
->   		return n;
->   
->   	for_each_sibling_event(event, leader) {
-> -		if (!is_x86_event(event) ||
-> -		    event->state <= PERF_EVENT_STATE_OFF)
-> +		if (!is_x86_event(event) || event->state <= PERF_EVENT_STATE_OFF)
->   			continue;
->   
-> -		if (x86_pmu.intel_cap.perf_metrics &&
-> -		    add_nr_metric_event(cpuc, event, &max_count, true))
-> -			return -EINVAL;
-> -
-> -		if (n >= max_count)
-> +		if (collect_event(cpuc, event, max_count, n))
->   			return -EINVAL;
-> -
-> -		cpuc->event_list[n] = event;
->   		n++;
-> -		if (is_counter_pair(&event->hw))
-> -			cpuc->n_pair++;
->   	}
->   	return n;
->   }
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -313,7 +313,7 @@ struct cpu_hw_events {
->   	 * Perf Metrics
->   	 */
->   	/* number of accepted metrics events */
-> -	int				n_metric_event;
-> +	int				n_metric;
->   
->   	/*
->   	 * AMD specific bits
-> 
+cheers
