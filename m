@@ -2,170 +2,368 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C94C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123A1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3671C2065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A04B22068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:11:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="IZlQhe3F"
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="M5UNK1wb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgGUOKm (ORCPT
+        id S1728661AbgGUOLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgGUOKl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:10:41 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 093F0C0619DA
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:10:41 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b6so21335840wrs.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:10:40 -0700 (PDT)
+        Tue, 21 Jul 2020 10:11:25 -0400
+Received: from smtp1.axis.com ([195.60.68.17]:38703 "EHLO smtp1.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726412AbgGUOLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 10:11:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PrqNjY5C8lZXrufMgkVQOPFxI5PME47hT2UHcARcwyM=;
-        b=IZlQhe3FVtbZBKfLaWY13Pm+Wtvn3P6IeKtOWwcsuG0kbaxN6yuczoLsK5YHhmyhge
-         ODGy/6FA/ZBhxjBmiXQiP7bP1cK0qdjOn3x62ZvAqOLMqGxfBuOwa94B855ZLYMWuggM
-         aSswi3jPdPFhzvl1UiXQ7dmA1rOUeGC8LLnxQrgGYnY77pCMKr66amEBKEuErqUBP6HS
-         +EbzRnbyUbR6U1KjMqd/z96l0ajqZ6DnqpYNlF/uD0NVSJk1DGJZZwAC+m1/nhnsAeEE
-         x47FA1dnpXwykwl3b2CTfT5D8HLT3Nu2wfrSQv1MPgeNHNZA4oARtbFWxCtHLhcc58a3
-         7Pww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PrqNjY5C8lZXrufMgkVQOPFxI5PME47hT2UHcARcwyM=;
-        b=HPKPW8TCZsKQ2ts/rKFv+YBzFKVC3B1s5EJiZYQu3ZE9e+u0I2vpIIOMj85sUdBBe3
-         ljFh8Z6Sheo2978hhY/nmYV9DEHs8tPZu6t/JfW7x62M5cQrs1ins72w9b8WloGnIoy9
-         Df28Uc9gaEc6pRnJLGPfMdYPAKQEVf0Vq20E6kTjyKrL/+a6NKPf5HD71l4B3q9hf+8O
-         wq1CGROOqsseU175lQgGGM/A7SADUrsPxVkbJtcF+ZvA7ln1qyeMylbPSO0diIvHvvZO
-         s5Ev8/Bg+K1doOHbA/HfYQgeyhpOOZAVUscVi3X3QWVar2MR6Tkw9lEFOwT/UYkjlyNC
-         JQig==
-X-Gm-Message-State: AOAM533KYxxmpaXWOiL4rnHDIxo6lCk960os3iMPpeR/LRE0wX1cvBJE
-        hloMfvnTnO5tp6KinaX8DlhU0A==
-X-Google-Smtp-Source: ABdhPJxXULR+4pZj/VNU4eMwvCiFLjvcZy6EL2ajjvloyuhpb3jyVYjDjnloBEbWJf9Z9r3UIDePKw==
-X-Received: by 2002:adf:f98c:: with SMTP id f12mr2018160wrr.269.1595340639655;
-        Tue, 21 Jul 2020 07:10:39 -0700 (PDT)
-Received: from x1 (103.red-88-29-77.staticip.rima-tde.net. [88.29.77.103])
-        by smtp.gmail.com with ESMTPSA id u65sm3777394wmg.5.2020.07.21.07.10.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 07:10:38 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 16:10:34 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH v3] pinctrl: core: print gpio in pins debugfs file
-Message-ID: <20200721141034.GA2064533@x1>
-References: <20200721140233.2063475-1-drew@beagleboard.org>
+  d=axis.com; l=8960; q=dns/txt; s=axis-central1;
+  t=1595340682; x=1626876682;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TOYYPBavvt/Q4yO52CzIS5dWjGXXrosIPuNpI0GXQDI=;
+  b=M5UNK1wbqJGO7IpZ8La91T3bM69wNuUIUHBhe0s/kTajTUUagAiXKnuP
+   C9XI8z75h7Cu0Td5Wh+lw29r5LgaNT4vZ59qGBi7avPE5iDjJC7FaxqAO
+   +ugpELtckua8czbx6BUGS/+/CTUvXriz0dXn6aa9Qimi33g5KTC8IiqNM
+   wu+mLbblnyIQfxCqlLF2/fKvRKL62m2HDf2YoxycPvWHZefsJAkPukGFY
+   eRYh0ItHe9sFrCvKkRoVFnhGY9uBh+PadUdilTvtLXa8h42nrlKEeUIeF
+   /gYr6u3ZaFhgK7PQ41KdSprpKMu2MHO+u8sz2kDQHcJqWPGUtT42g3xrn
+   Q==;
+IronPort-SDR: SSWOXADTagX53bICgAuiJUB9wRJWsI4lgj3QUfkTBfGy0poHEhEs+gFhb7w1H6/PTNAcfXr2lo
+ ZhO69fLaGwkvDb71Wtd0JVZZXrB8kxz6A/sVFQ5Yy8AXARNPnxHjG641tFsRMoG0IC92/5F27C
+ /BgHPWu4W8jBD3UVpPOv950lE+/O+eL69CkZjQxtrJBSulyho3nEsHBmxAYz3+L9qGhGVudOQW
+ c3YVkNT9SxOv5f/hLozhMMpn/NyVCXcNjiZXm6dQhapPhfw00ByGapL2Wj6oPZi7XKFQoiPl9y
+ wD0=
+X-IronPort-AV: E=Sophos;i="5.75,379,1589234400"; 
+   d="scan'208";a="11073013"
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     <jbaron@akamai.com>, <rostedt@goodmis.org>, <mingo@redhat.com>
+CC:     <kernel@axis.com>, <corbet@lwn.net>,
+        <linux-kernel@vger.kernel.org>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
+Subject: [PATCH] dynamic debug: allow printing to trace event
+Date:   Tue, 21 Jul 2020 16:11:05 +0200
+Message-ID: <20200721141105.16034-1-vincent.whitchurch@axis.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721140233.2063475-1-drew@beagleboard.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 04:02:34PM +0200, Drew Fustini wrote:
-> If there is a gpio range mapping for the pin, then print out the gpio
-> chip and line index for the pin in the debugfs 'pins' file with the
-> format: "[gpiochip-label]:line-[index] "
-> 
-> For example, here is a section of 'pins' the PocketBeagle (AM3358):
-> /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
-> 
-> pin 25 (PIN25) gpio-32-63:line-25 44e10864 00000037 pinctrl-single 
-> pin 26 (PIN26) gpio-32-63:line-26 44e10868 00000037 pinctrl-single 
-> pin 27 (PIN27) gpio-32-63:line-27 44e1086c 00000037 pinctrl-single 
-> pin 28 (PIN28) NA 44e10870 00000036 pinctrl-single 
-> pin 29 (PIN29) NA 44e10874 00000006 pinctrl-single 
-> pin 30 (PIN30) gpio-32-63:line-28 44e10878 00000027 pinctrl-single 
-> pin 31 (PIN31) gpio-32-63:line-29 44e1087c 00000037 pinctrl-single 
-> pin 32 (PIN32) gpio-32-63:line-30 44e10880 00000037 pinctrl-single 
-> pin 33 (PIN33) gpio-32-63:line-31 44e10884 00000037 pinctrl-single 
-> pin 34 (PIN34) gpio-64-95:line-0 44e10888 00000037 pinctrl-single 
-> pin 35 (PIN35) gpio-64-95:line-1 44e1088c 00000037 pinctrl-single 
-> 
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Suggested-by: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> 
-> v3 changes:
-> - gpio column is now gpiochip label and line index
-> 
-> v2 changes:
-> - print 'NA' if pin does not have a GPIO number
-> - change gpio_num from unsigned to unsigned int per checkpatch
-> ---
->  drivers/pinctrl/core.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-> index 821242bb4b16..a23dc264cae7 100644
-> --- a/drivers/pinctrl/core.c
-> +++ b/drivers/pinctrl/core.c
-> @@ -27,6 +27,7 @@
->  #include <linux/pinctrl/machine.h>
->  
->  #ifdef CONFIG_GPIOLIB
-> +#include "../gpio/gpiolib.h"
->  #include <asm-generic/gpio.h>
->  #endif
->  
-> @@ -1601,6 +1602,9 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
->  	struct pinctrl_dev *pctldev = s->private;
->  	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
->  	unsigned i, pin;
-> +	struct pinctrl_gpio_range *range;
-> +	unsigned int gpio_num;
-> +	struct gpio_chip *chip;
->  
->  	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
->  
-> @@ -1618,6 +1622,23 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
->  
->  		seq_printf(s, "pin %d (%s) ", pin, desc->name);
->  
-> +#ifdef CONFIG_GPIOLIB
-> +		gpio_num = 0;
-> +		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
-> +			if ((pin >= range->pin_base) &&
-> +			    (pin < (range->pin_base + range->npins))) {
-> +				gpio_num = range->base + (pin - range->pin_base);
-> +				break;
-> +			}
-> +		}
-> +		chip = gpio_to_chip(gpio_num);
-> +		if (chip && chip->gpiodev && chip->gpiodev->base)
-> +			seq_printf(s, "%s:line-%u ", chip->label,
-> +				gpio_num - chip->gpiodev->base);
-> +		else
-> +			seq_puts(s, "NA ");
-> +#endif
-> +
->  		/* Driver-specific info per pin */
->  		if (ops->pin_dbg_show)
->  			ops->pin_dbg_show(pctldev, s, pin);
-> -- 
-> 2.25.1
-> 
+When debugging device drivers, I've found it very useful to be able to
+redirect existing pr_debug()/dev_dbg() prints to the trace buffer
+instead of dmesg.  Among the many advantages of the trace buffer is that
+it can be dynamically resized, allows these prints to combined with
+other trace events, and doesn't fill up system logs.
 
-Apologies - I should not have put the change log in the commit message.
-Please let me know if I should resubmit.
+Since dynamic debug already has hooks in these call sites, getting these
+prints into the ftrace buffer is straightforward if we have dynamic
+debug do it.
 
-thanks,
-drew
+Add an "x" flag to make the dynamic debug call site print to a new
+printk:dynamic trace event.  The trace event can be emitted instead of
+or in addition to the printk().  The print buffer is placed on the stack
+and is limited to a somewhat arbitrarily chosen 256 bytes; anything
+larger will be truncated.
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+---
+ .../admin-guide/dynamic-debug-howto.rst       |   1 +
+ include/linux/dynamic_debug.h                 |   7 +-
+ include/trace/events/printk.h                 |  16 +++
+ lib/dynamic_debug.c                           | 124 ++++++++++++++----
+ 4 files changed, 120 insertions(+), 28 deletions(-)
+
+diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+index 1012bd9305e9..b235327fbb53 100644
+--- a/Documentation/admin-guide/dynamic-debug-howto.rst
++++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+@@ -224,6 +224,7 @@ of the characters::
+ The flags are::
+ 
+   p    enables the pr_debug() callsite.
++  x    enables trace to the printk:dynamic event
+   f    Include the function name in the printed message
+   l    Include line number in the printed message
+   m    Include module name in the printed message
+diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
+index abcd5fde30eb..9dee405985c4 100644
+--- a/include/linux/dynamic_debug.h
++++ b/include/linux/dynamic_debug.h
+@@ -27,13 +27,16 @@ struct _ddebug {
+ 	 * writes commands to <debugfs>/dynamic_debug/control
+ 	 */
+ #define _DPRINTK_FLAGS_NONE	0
+-#define _DPRINTK_FLAGS_PRINT	(1<<0) /* printk() a message using the format */
++#define _DPRINTK_FLAGS_PRINTK	(1<<0) /* printk() a message using the format */
+ #define _DPRINTK_FLAGS_INCL_MODNAME	(1<<1)
+ #define _DPRINTK_FLAGS_INCL_FUNCNAME	(1<<2)
+ #define _DPRINTK_FLAGS_INCL_LINENO	(1<<3)
+ #define _DPRINTK_FLAGS_INCL_TID		(1<<4)
++#define _DPRINTK_FLAGS_TRACE		(1<<5)
++#define _DPRINTK_FLAGS_PRINT		(_DPRINTK_FLAGS_PRINTK | \
++					 _DPRINTK_FLAGS_TRACE)
+ #if defined DEBUG
+-#define _DPRINTK_FLAGS_DEFAULT _DPRINTK_FLAGS_PRINT
++#define _DPRINTK_FLAGS_DEFAULT _DPRINTK_FLAGS_PRINTK
+ #else
+ #define _DPRINTK_FLAGS_DEFAULT 0
+ #endif
+diff --git a/include/trace/events/printk.h b/include/trace/events/printk.h
+index 13d405b2fd8b..696d6e19a9b7 100644
+--- a/include/trace/events/printk.h
++++ b/include/trace/events/printk.h
+@@ -31,6 +31,22 @@ TRACE_EVENT(console,
+ 
+ 	TP_printk("%s", __get_str(msg))
+ );
++
++TRACE_EVENT(dynamic,
++	TP_PROTO(const char *message),
++
++	TP_ARGS(message),
++
++	TP_STRUCT__entry(
++		__string(message, message)
++	),
++
++	TP_fast_assign(
++		__assign_str(message, message);
++	),
++
++	TP_printk("%s", __get_str(message))
++);
+ #endif /* _TRACE_PRINTK_H */
+ 
+ /* This part must be outside protection */
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index 321437bbf87d..9f6d8867af7c 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -36,6 +36,7 @@
+ #include <linux/sched.h>
+ #include <linux/device.h>
+ #include <linux/netdevice.h>
++#include <trace/events/printk.h>
+ 
+ #include <rdma/ib_verbs.h>
+ 
+@@ -79,11 +80,12 @@ static inline const char *trim_prefix(const char *path)
+ }
+ 
+ static struct { unsigned flag:8; char opt_char; } opt_array[] = {
+-	{ _DPRINTK_FLAGS_PRINT, 'p' },
++	{ _DPRINTK_FLAGS_PRINTK, 'p' },
+ 	{ _DPRINTK_FLAGS_INCL_MODNAME, 'm' },
+ 	{ _DPRINTK_FLAGS_INCL_FUNCNAME, 'f' },
+ 	{ _DPRINTK_FLAGS_INCL_LINENO, 'l' },
+ 	{ _DPRINTK_FLAGS_INCL_TID, 't' },
++	{ _DPRINTK_FLAGS_TRACE, 'x' },
+ 	{ _DPRINTK_FLAGS_NONE, '_' },
+ };
+ 
+@@ -550,6 +552,65 @@ static char *dynamic_emit_prefix(const struct _ddebug *desc, char *buf)
+ 	return buf;
+ }
+ 
++static void dynamic_trace(const char *fmt, va_list args)
++{
++	char buf[256];
++	int len;
++
++	len = vscnprintf(buf, sizeof(buf), fmt, args);
++	if (!len)
++		return;
++
++	if (buf[len - 1] == '\n')
++		buf[len - 1] = '\0';
++
++	trace_dynamic(buf);
++}
++
++static void dynamic_printk(unsigned int flags, const char *fmt, ...)
++{
++	if (flags & _DPRINTK_FLAGS_TRACE) {
++		va_list args;
++
++		va_start(args, fmt);
++		/*
++		 * All callers include the KERN_DEBUG prefix to keep the
++		 * vprintk case simple; strip it out for tracing.
++		 */
++		dynamic_trace(fmt + strlen(KERN_DEBUG), args);
++		va_end(args);
++	}
++
++	if (flags & _DPRINTK_FLAGS_PRINTK) {
++		va_list args;
++
++		va_start(args, fmt);
++		vprintk(fmt, args);
++		va_end(args);
++	}
++}
++
++static void dynamic_dev_printk(unsigned int flags, const struct device *dev,
++			       const char *fmt, ...)
++{
++
++	if (flags & _DPRINTK_FLAGS_TRACE) {
++		va_list args;
++
++		va_start(args, fmt);
++		dynamic_trace(fmt, args);
++		va_end(args);
++	}
++
++	if (flags & _DPRINTK_FLAGS_PRINTK) {
++		va_list args;
++
++		va_start(args, fmt);
++		dev_vprintk_emit(LOGLEVEL_DEBUG, dev, fmt, args);
++		va_end(args);
++	}
++}
++
+ void __dynamic_pr_debug(struct _ddebug *descriptor, const char *fmt, ...)
+ {
+ 	va_list args;
+@@ -564,7 +625,8 @@ void __dynamic_pr_debug(struct _ddebug *descriptor, const char *fmt, ...)
+ 	vaf.fmt = fmt;
+ 	vaf.va = &args;
+ 
+-	printk(KERN_DEBUG "%s%pV", dynamic_emit_prefix(descriptor, buf), &vaf);
++	dynamic_printk(descriptor->flags, KERN_DEBUG "%s%pV",
++		       dynamic_emit_prefix(descriptor, buf), &vaf);
+ 
+ 	va_end(args);
+ }
+@@ -574,6 +636,7 @@ void __dynamic_dev_dbg(struct _ddebug *descriptor,
+ 		      const struct device *dev, const char *fmt, ...)
+ {
+ 	struct va_format vaf;
++	unsigned int flags;
+ 	va_list args;
+ 
+ 	BUG_ON(!descriptor);
+@@ -583,16 +646,18 @@ void __dynamic_dev_dbg(struct _ddebug *descriptor,
+ 
+ 	vaf.fmt = fmt;
+ 	vaf.va = &args;
++	flags = descriptor->flags;
+ 
+ 	if (!dev) {
+-		printk(KERN_DEBUG "(NULL device *): %pV", &vaf);
++		dynamic_printk(flags, KERN_DEBUG "(NULL device *): %pV",
++			      &vaf);
+ 	} else {
+ 		char buf[PREFIX_SIZE];
+ 
+-		dev_printk_emit(LOGLEVEL_DEBUG, dev, "%s%s %s: %pV",
+-				dynamic_emit_prefix(descriptor, buf),
+-				dev_driver_string(dev), dev_name(dev),
+-				&vaf);
++		dynamic_dev_printk(flags, dev, "%s%s %s: %pV",
++				   dynamic_emit_prefix(descriptor, buf),
++				   dev_driver_string(dev), dev_name(dev),
++				   &vaf);
+ 	}
+ 
+ 	va_end(args);
+@@ -605,6 +670,7 @@ void __dynamic_netdev_dbg(struct _ddebug *descriptor,
+ 			  const struct net_device *dev, const char *fmt, ...)
+ {
+ 	struct va_format vaf;
++	unsigned int flags;
+ 	va_list args;
+ 
+ 	BUG_ON(!descriptor);
+@@ -614,22 +680,24 @@ void __dynamic_netdev_dbg(struct _ddebug *descriptor,
+ 
+ 	vaf.fmt = fmt;
+ 	vaf.va = &args;
++	flags = descriptor->flags;
+ 
+ 	if (dev && dev->dev.parent) {
+ 		char buf[PREFIX_SIZE];
+ 
+-		dev_printk_emit(LOGLEVEL_DEBUG, dev->dev.parent,
+-				"%s%s %s %s%s: %pV",
+-				dynamic_emit_prefix(descriptor, buf),
+-				dev_driver_string(dev->dev.parent),
+-				dev_name(dev->dev.parent),
+-				netdev_name(dev), netdev_reg_state(dev),
+-				&vaf);
++		dynamic_dev_printk(flags, dev->dev.parent,
++				   "%s%s %s %s%s: %pV",
++				   dynamic_emit_prefix(descriptor, buf),
++				   dev_driver_string(dev->dev.parent),
++				   dev_name(dev->dev.parent),
++				   netdev_name(dev), netdev_reg_state(dev),
++				   &vaf);
+ 	} else if (dev) {
+-		printk(KERN_DEBUG "%s%s: %pV", netdev_name(dev),
+-		       netdev_reg_state(dev), &vaf);
++		dynamic_printk(flags, KERN_DEBUG "%s%s: %pV",
++			       netdev_name(dev), netdev_reg_state(dev), &vaf);
+ 	} else {
+-		printk(KERN_DEBUG "(NULL net_device): %pV", &vaf);
++		dynamic_printk(flags, KERN_DEBUG "(NULL net_device): %pV",
++			       &vaf);
+ 	}
+ 
+ 	va_end(args);
+@@ -644,27 +712,31 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
+ 			 const struct ib_device *ibdev, const char *fmt, ...)
+ {
+ 	struct va_format vaf;
++	unsigned int flags;
+ 	va_list args;
+ 
+ 	va_start(args, fmt);
+ 
+ 	vaf.fmt = fmt;
+ 	vaf.va = &args;
++	flags = descriptor->flags;
+ 
+ 	if (ibdev && ibdev->dev.parent) {
+ 		char buf[PREFIX_SIZE];
+ 
+-		dev_printk_emit(LOGLEVEL_DEBUG, ibdev->dev.parent,
+-				"%s%s %s %s: %pV",
+-				dynamic_emit_prefix(descriptor, buf),
+-				dev_driver_string(ibdev->dev.parent),
+-				dev_name(ibdev->dev.parent),
+-				dev_name(&ibdev->dev),
+-				&vaf);
++		dynamic_dev_printk(flags, ibdev->dev.parent,
++				   "%s%s %s %s: %pV",
++				   dynamic_emit_prefix(descriptor, buf),
++				   dev_driver_string(ibdev->dev.parent),
++				   dev_name(ibdev->dev.parent),
++				   dev_name(&ibdev->dev),
++				   &vaf);
+ 	} else if (ibdev) {
+-		printk(KERN_DEBUG "%s: %pV", dev_name(&ibdev->dev), &vaf);
++		dynamic_printk(flags, KERN_DEBUG "%s: %pV",
++			       dev_name(&ibdev->dev), &vaf);
+ 	} else {
+-		printk(KERN_DEBUG "(NULL ib_device): %pV", &vaf);
++		dynamic_printk(flags, KERN_DEBUG "(NULL ib_device): %pV",
++			       &vaf);
+ 	}
+ 
+ 	va_end(args);
+-- 
+2.25.1
+
