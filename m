@@ -2,128 +2,106 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A15E3C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44087C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78F33207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2387C206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:37:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvbZO6T4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MT9XwQvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgGUCiA (ORCPT
+        id S1728337AbgGUChh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:38:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55588 "EHLO
+        Mon, 20 Jul 2020 22:37:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgGUCh6 (ORCPT
+        with ESMTP id S1728117AbgGUChg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 22:37:58 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2D92C061794;
-        Mon, 20 Jul 2020 19:37:58 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id l6so17894188qkc.6;
-        Mon, 20 Jul 2020 19:37:58 -0700 (PDT)
+        Mon, 20 Jul 2020 22:37:36 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D18BC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 19:37:36 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id l6so9579933plt.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 19:37:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NWS6zbF9VWo5oMAvQTBUWggBuwxufh05HWBlDSCFVtY=;
-        b=lvbZO6T4S0JGTmIHngm7LcUDDSa7cYxUCD/N7eSe0bUJv9CdFNjPXhhBoqTZPHDm2G
-         Yod4c9r3tNdUZKWAR0wIjfUxWrKIS4FlBhq1adqROQ9WbF9gMJ3ZqBgFnuyZ6fSkCjG1
-         Uw99uZr155ulZEFn/20xJq4H2IVG5Ib4JPsgnakUPJiPqLvJNda9NHHAb2tNQBAlSe6l
-         p/pbm1/C5XMUmsaI8hqn69uppLen6jZrMKWQZbGqsLL6jfLH2RmnozMAC5fmiVO8uBjG
-         ukBg+OfAgtBvaQZ5IBveUACxNIVSMeDwFkl2z2ZgyQ2dpOpYHqdZb5qoVnRmaQ5acHmE
-         8E8Q==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TY8XfCON4S0JDepfGrFgWfYRJOwnBuFe9fcLJ+y+GUE=;
+        b=MT9XwQvk7j9jaVTNDu33PSB3paK7rMOToCBADL8lAhj8gfTegZZY0dRfXMdKpbwIsl
+         WT2qUkCmWI5WetdDngau1iznOVAqPUFe3M1Pbnsy34yKF3EDeLkJcL1uG1E1EZs5d1jr
+         6GJgb8m8HGh1IC//kNuLNntIXuRVewVb4EtGA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NWS6zbF9VWo5oMAvQTBUWggBuwxufh05HWBlDSCFVtY=;
-        b=YFLOM1o2K78pLptfRK/ahpRffofGP0UhlWp/BY1gtlhZsOpykc97743XVgu3Arpwih
-         3IL24LPddu3EDeHeW+UbkDsosaOi8LS937XQmbb1Vv6sqQvcM5BmL3jw/8yM7oTx05Ka
-         yfQkQmWXldfTKWyfnienTutv14fK0IOP3EPGeEAhIHBKeoGUWFdbOjD0+tU598mytN9f
-         z+pK+3XJFiiMaHAalxsAE4+oC5pQl00UDX+nMew0N7yamKMgogzzTF9zrz6hsL3c6Wq7
-         I9efb0tfxnphAsGO+MHmc3lQg7OEREYLHM8hPs7F8VF9dZoMZ9CuNxCQl3dMxBhQCc7K
-         CTSw==
-X-Gm-Message-State: AOAM531QiS0eSnLFMG/wnfF8k08dcaQy+yAh2LZZOiD+INkiqeOomtxF
-        8UtZTCfalHSoRwklj3+lgHTUx1i6aG2+BU7OWj0=
-X-Google-Smtp-Source: ABdhPJxKgcEN3NO4mCS8ShSobjtP7cd5qUzLj6nTuBVhG2NvdlUW5ewWYlMxI9s9TVnBnlaVeKdGCU5zYmXf3rChzPk=
-X-Received: by 2002:ae9:f002:: with SMTP id l2mr25752391qkg.437.1595299077929;
- Mon, 20 Jul 2020 19:37:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TY8XfCON4S0JDepfGrFgWfYRJOwnBuFe9fcLJ+y+GUE=;
+        b=fEaZvDVwMuDOi8bCUzdY0Zu+7r20cOrTK0awH2iDwPaCBJMdsZ5ETgnTHLzvKvkktv
+         E0QyLnmtmWvUxY6kN/L5tCJRaN1yrIa7m863kzXMGmduZc1RqAc68IvwM/lB/GM8iJtS
+         XdKzxadRSaQ12OGXUAKpKV5heTl15iAZGzw1Yk9zedZlZwYPfTgKjSJev4s7yKD6JTnn
+         qxNnZRJuOlzppGHHLTnBrw1XF1cl8xJJYlwAq3iRBx8Lz8B9neV01E66BnlYNMMwc7mR
+         OYPA7zVcd8ihl3qclN9wvTestCwULRavurqd4pNXSlFHLl8DZv7FoRmKgy6VaLQq8dei
+         15Rg==
+X-Gm-Message-State: AOAM530uuYNpoGhYaFGxg9T3+RwuSz1ASZLfw7qT+0ZijKkIDxh07c+Y
+        xJeqm6OvDI2ClF28O4gp/q5/vQ==
+X-Google-Smtp-Source: ABdhPJwifeShuy9aax97sR/LrIOKU8AKLyOW/DZJQT86QH8j0OfGEcNJxiqcAH9HAEPFwoFMNFLi9A==
+X-Received: by 2002:a17:902:547:: with SMTP id 65mr20764059plf.256.1595299055940;
+        Mon, 20 Jul 2020 19:37:35 -0700 (PDT)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:7220:84ff:fe09:41dc])
+        by smtp.gmail.com with ESMTPSA id z6sm17888266pfn.173.2020.07.20.19.37.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 19:37:35 -0700 (PDT)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Ian Molton <ian@mnementh.co.uk>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] Bluetooth: hci_serdev: Only unregister device if it was registered
+Date:   Tue, 21 Jul 2020 10:37:16 +0800
+Message-Id: <20200721103652.2.I8a2fdad30d42399fa5afc15d66b460d1738c3946@changeid>
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+In-Reply-To: <20200721103652.1.Idbc7eddf1f24f750a8bbcbc8e06743736ae3be31@changeid>
+References: <20200721103652.1.Idbc7eddf1f24f750a8bbcbc8e06743736ae3be31@changeid>
 MIME-Version: 1.0
-References: <20200715214312.2266839-1-haoluo@google.com> <20200715214312.2266839-3-haoluo@google.com>
- <CAEf4BzYxWk9OmN0QhDrvE943YsYd2Opdkbt7NQTO9-YM6c4aGw@mail.gmail.com> <CA+khW7i9wq0+2P_M46pEv-onGXL_=sW7xE=10CYeP_yjPh-Rpw@mail.gmail.com>
-In-Reply-To: <CA+khW7i9wq0+2P_M46pEv-onGXL_=sW7xE=10CYeP_yjPh-Rpw@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 20 Jul 2020 19:37:47 -0700
-Message-ID: <CAEf4BzY=6PH4YS8sX1SRFOj+6oQnfAk-f0P8+0XWMGMS+RJ0pw@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next 2/2] selftests/bpf: Test __ksym externs with BTF
-To:     Hao Luo <haoluo@google.com>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin@isovalent.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 1:28 PM Hao Luo <haoluo@google.com> wrote:
->
-> >
-> > This should ideally look like a real global variable extern:
-> >
-> > extern const struct rq runqueues __ksym;
-> >
-> >
-> > But that's the case for non-per-cpu variables. You didn't seem to
-> > address per-CPU variables in this patch set. How did you intend to
-> > handle that? We should look at a possible BPF helper to access such
-> > variables as well and how the verifier will prevent direct memory
-> > accesses for such variables.
-> >
-> > We should have some BPF helper that accepts per-CPU PTR_TO_BTF_ID, and
-> > returns PTR_TO_BTF_ID, but adjusted to desired CPU. And verifier
-> > ideally would allow direct memory access on that resulting
-> > PTR_TO_BTF_ID, but not on per-CPU one. Not sure yet how this should
-> > look like, but the verifier probably needs to know that variable
-> > itself is per-cpu, no?
-> >
->
-> Yes, that's what I was unclear about, so I don't have that part in
-> this patchset. But your explanation helped me organize my thoughts. :)
->
-> Actually, the verifier can tell whether a var is percpu from the
-> DATASEC, since we have encoded "percpu" DATASEC in btf. I think the
-> following should work:
->
-> We may introduce a new PTR_TO_BTF_VAR_ID. In ld_imm, libbpf replaces
-> ksyms with btf_id. The btf id points to a KIND_VAR. If the pointed VAR
-> is found in the "percpu" DATASEC, dst_reg is set to PTR_TO_BTF_VAR_ID;
-> otherwise, it will be a PTR_TO_BTF_ID. For PTR_TO_BTF_VAR_ID,
-> reg->btf_id is the id of the VAR. For PTR_TO_BTF_ID, reg->btf_id is
-> the id of the actual kernel type. The verifier would reject direct
-> memory access on PTR_TO_BTF_VAR_ID, but the new BPF helper can convert
-> a PTR_TO_BTF_VAR_ID to PTR_TO_BTF_ID.
+We should not call hci_unregister_dev if the device was not
+successfully registered.
 
-Sounds good to me as a plan, except that PTR_TO_BTF_VAR_ID is a
-misleading name. It's always a variable. The per-CPU part is crucial,
-though, so maybe something like PTR_TO_PERCPU_BTF_ID?
+Fixes: c34dc3bfa7642fd ("Bluetooth: hci_serdev: Introduce hci_uart_unregister_device()")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 
->
-> Hao
+---
+
+ drivers/bluetooth/hci_serdev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
+index 599855e4c57c13d..7b233312e723fb2 100644
+--- a/drivers/bluetooth/hci_serdev.c
++++ b/drivers/bluetooth/hci_serdev.c
+@@ -355,7 +355,8 @@ void hci_uart_unregister_device(struct hci_uart *hu)
+ 	struct hci_dev *hdev = hu->hdev;
+ 
+ 	clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+-	hci_unregister_dev(hdev);
++	if (test_bit(HCI_UART_REGISTERED, &hu->flags))
++		hci_unregister_dev(hdev);
+ 	hci_free_dev(hdev);
+ 
+ 	cancel_work_sync(&hu->write_work);
+-- 
+2.28.0.rc0.105.gf9edc3c819-goog
+
