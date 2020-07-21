@@ -2,131 +2,143 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57718C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 353312077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595373251;
-	bh=C7wzDzmy7tK7XLkxQA5wmAAt93j25OvbzqbVQTXvaCU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=GHxq/a8D7Yw60XSQiEOJrlady8a1PNUCGPvmFaLfJt6yFKBY7PDYCkPsCAvct55rR
-	 MUPXuwTC0oK7uQ+IJms/+CxFI1gTrLjsbakJY6L/M+vmKs3yZAwlUkcXiLdLjoNmN4
-	 3C4S3jgxX17wozIOQPm//dvetN0bi0PIlV8hQ9K8=
+	by mail.kernel.org (Postfix) with ESMTP id A9C5520709
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:14:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="tWan2osb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731234AbgGUXOK (ORCPT
+        id S1731438AbgGUXOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 19:14:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34654 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 19:14:48 -0400
+Received: from mx1.riseup.net ([198.252.153.129]:45742 "EHLO mx1.riseup.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgGUXOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 19:14:09 -0400
-Received: from embeddedor (unknown [201.162.241.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D318620709;
-        Tue, 21 Jul 2020 23:14:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595373249;
-        bh=C7wzDzmy7tK7XLkxQA5wmAAt93j25OvbzqbVQTXvaCU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=1hm/A+1EB2Q6ed0WBkxvJe0fG/v6fWwqzQFbmCew3uy+GAfGHA90IVtVwCKs3G+zs
-         q1DrWExNlJ0oTN/bOFK+km0f0sKShEh2sO5QsxkarI1Z8wWyROQUXSTz+HQ1vT29Xh
-         thZQpY19kvU8hsxKkrK4XLz4mnxr6DWGQ9cax7c4=
-Date:   Tue, 21 Jul 2020 18:19:46 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jean Delvare <jdelvare@suse.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH v2][next] i2c: busses: Use fallthrough pseudo-keyword
-Message-ID: <20200721231946.GA1705@embeddedor>
+        id S1726148AbgGUXOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 19:14:48 -0400
+Received: from bell.riseup.net (bell-pn.riseup.net [10.0.1.178])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "*.riseup.net", Issuer "Sectigo RSA Domain Validation Secure Server CA" (not verified))
+        by mx1.riseup.net (Postfix) with ESMTPS id 4BBDvW5l4BzDsyq;
+        Tue, 21 Jul 2020 16:14:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+        t=1595373287; bh=xTMTPC9hzFXTn074+lx+RG5xa8F+eokxN3Wm7v/sl5w=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=tWan2osbkTAhw60D6EEvW6y1Sia0ZrAnYPzzghqfAXoRNpVy9Cios+mIuALUru9lT
+         YSibRGi5JuuTzKlyGI0e/JZGpjoCYPBmxY3Mhs1cIWqMLAKlcSuldVRoJkHXv+3qKD
+         4kZ5LY1Dt0oaUt/6s58z/9bhgGVOfZM/iSV5G3AY=
+X-Riseup-User-ID: 5D3B783D35A34F52B7A96CE5A467C9284C412353663B0286B37FB04230C3A720
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+         by bell.riseup.net (Postfix) with ESMTPSA id 4BBDvV6VbhzJqp6;
+        Tue, 21 Jul 2020 16:14:46 -0700 (PDT)
+From:   Francisco Jerez <currojerez@riseup.net>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
+In-Reply-To: <babeff29a60d3fadb5515eaf57f7bb42a1c9c792.camel@linux.intel.com>
+References: <3955470.QvD6XneCf3@kreacher> <87r1tdiqpu.fsf@riseup.net> <CAJZ5v0jaRm-wv+ZKhOyGJrrKZAsTKc3sq2GYyv0uerTTe3gXbQ@mail.gmail.com> <87imeoihqs.fsf@riseup.net> <CAJZ5v0hhLWvbNA6w0yHtzKa5ANR9yF++u63dh8wWAgkhbtLXXA@mail.gmail.com> <875zanhty6.fsf@riseup.net> <CAJZ5v0g2U+1wD5rUQwJ4_x9sQyvGyGiBiLFs7MA-xdhRBX9zBQ@mail.gmail.com> <87mu3thiz5.fsf@riseup.net> <babeff29a60d3fadb5515eaf57f7bb42a1c9c792.camel@linux.intel.com>
+Date:   Tue, 21 Jul 2020 16:14:42 -0700
+Message-ID: <87h7u0h34t.fsf@riseup.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="==-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1].
+--==-=-=
+Content-Type: multipart/mixed; boundary="=-=-="
 
-[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Update URL. Use proper URL to Linux v5.7 documentation.
- - Add Jean's Reviewed-by tag.
+Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> writes:
 
- drivers/i2c/busses/i2c-amd8111.c | 2 +-
- drivers/i2c/busses/i2c-i801.c    | 8 ++++----
- drivers/i2c/busses/i2c-viapro.c  | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+> On Mon, 2020-07-20 at 16:20 -0700, Francisco Jerez wrote:
+>> "Rafael J. Wysocki" <rafael@kernel.org> writes:
+>>=20
+>> > On Fri, Jul 17, 2020 at 2:21 AM Francisco Jerez <
+>> > currojerez@riseup.net> wrote:
+>> > > "Rafael J. Wysocki" <rafael@kernel.org> writes:
+>> > >=20
+> {...]
+>
+>> > Overall, so far, I'm seeing a claim that the CPU subsystem can be
+>> > made
+>> > use less energy and do as much work as before (which is what
+>> > improving
+>> > the energy-efficiency means in general) if the maximum frequency of
+>> > CPUs is limited in a clever way.
+>> >=20
+>> > I'm failing to see what that clever way is, though.
+>> Hopefully the clarifications above help some.
+>
+> To simplify:
+>
+> Suppose I called a function numpy.multiply() to multiply two big arrays
+> and thread is a pegged to a CPU. Let's say it is causing CPU to
+> finish the job in 10ms and it is using a P-State of 0x20. But the same
+> job could have been done in 10ms even if it was using P-state of 0x16.
+> So we are not energy efficient. To really know where is the bottle neck
+> there are numbers of perf counters, may be cache was the issue, we
+> could rather raise the uncore frequency a little. A simple APRF,MPERF
+> counters are not enough.=20
 
-diff --git a/drivers/i2c/busses/i2c-amd8111.c b/drivers/i2c/busses/i2c-amd8111.c
-index 2b14fef5bf26..34862ad3423e 100644
---- a/drivers/i2c/busses/i2c-amd8111.c
-+++ b/drivers/i2c/busses/i2c-amd8111.c
-@@ -381,7 +381,7 @@ static s32 amd8111_access(struct i2c_adapter * adap, u16 addr,
- 			if (status)
- 				return status;
- 			len = min_t(u8, len, I2C_SMBUS_BLOCK_MAX);
--			/* fall through */
-+			fallthrough;
- 		case I2C_SMBUS_I2C_BLOCK_DATA:
- 			for (i = 0; i < len; i++) {
- 				status = amd_ec_read(smbus, AMD_SMB_DATA + i,
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index 1fc7ae77753d..638e7f7c66cc 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -1765,19 +1765,19 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	case PCI_DEVICE_ID_INTEL_WELLSBURG_SMBUS_MS1:
- 	case PCI_DEVICE_ID_INTEL_WELLSBURG_SMBUS_MS2:
- 		priv->features |= FEATURE_IDF;
--		/* fall through */
-+		fallthrough;
- 	default:
- 		priv->features |= FEATURE_BLOCK_PROC;
- 		priv->features |= FEATURE_I2C_BLOCK_READ;
- 		priv->features |= FEATURE_IRQ;
--		/* fall through */
-+		fallthrough;
- 	case PCI_DEVICE_ID_INTEL_82801DB_3:
- 		priv->features |= FEATURE_SMBUS_PEC;
- 		priv->features |= FEATURE_BLOCK_BUFFER;
--		/* fall through */
-+		fallthrough;
- 	case PCI_DEVICE_ID_INTEL_82801CA_3:
- 		priv->features |= FEATURE_HOST_NOTIFY;
--		/* fall through */
-+		fallthrough;
- 	case PCI_DEVICE_ID_INTEL_82801BA_2:
- 	case PCI_DEVICE_ID_INTEL_82801AB_3:
- 	case PCI_DEVICE_ID_INTEL_82801AA_3:
-diff --git a/drivers/i2c/busses/i2c-viapro.c b/drivers/i2c/busses/i2c-viapro.c
-index 05aa92a3fbe0..970ccdcbb889 100644
---- a/drivers/i2c/busses/i2c-viapro.c
-+++ b/drivers/i2c/busses/i2c-viapro.c
-@@ -228,7 +228,7 @@ static s32 vt596_access(struct i2c_adapter *adap, u16 addr,
- 			goto exit_unsupported;
- 		if (read_write == I2C_SMBUS_READ)
- 			outb_p(data->block[0], SMBHSTDAT0);
--		/* Fall through */
-+		fallthrough;
- 	case I2C_SMBUS_BLOCK_DATA:
- 		outb_p(command, SMBHSTCMD);
- 		if (read_write == I2C_SMBUS_WRITE) {
--- 
-2.27.0
+Yes, that's right, APERF and MPERF aren't sufficient to identify every
+kind of possible bottleneck, some visibility of the utilization of other
+subsystems is necessary in addition -- Like e.g the instrumentation
+introduced in my series to detect a GPU bottleneck.  A bottleneck
+condition in an IO device can be communicated to CPUFREQ by adjusting a
+PM QoS latency request (link [2] in my previous reply) that effectively
+gives the governor permission to rearrange CPU work arbitrarily within
+the specified time frame (which should be of the order of the natural
+latency of the IO device -- e.g. at least the rendering time of a frame
+for a GPU) in order to minimize energy usage.
 
+> or we characterize the workload at different P-states and set limits.
+> I think this is not you want to say for energy efficiency with your
+> changes.=20
+>
+> The way you are trying to improve "performance" is by caller (device
+> driver) to say how important my job at hand. Here device driver suppose
+> offload this calculations to some GPU and can wait up to 10 ms, you
+> want to tell CPU to be slow. But the p-state driver at a movement
+> observes that there is a chance of overshoot of latency, it will
+> immediately ask for higher P-state. So you want P-state limits based on
+> the latency requirements of the caller. Since caller has more knowledge
+> of latency requirement, this allows other devices sharing the power
+> budget to get more or less power, and improve overall energy efficiency
+> as the combined performance of system is improved.
+> Is this correct?
+
+Yes, pretty much.
+
+--=-=-=--
+
+--==-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEAREIAB0WIQST8OekYz69PM20/4aDmTidfVK/WwUCXxd24gAKCRCDmTidfVK/
+W4GXAPwIcPQpg2P5WEtcbZXe6xj58DHrm74yDbNuqQ97/+QnOQD9EinC1l0jSaqa
+oDWAREm4nOKPJuHFuljv0ghORZ+GI6I=
+=aUj6
+-----END PGP SIGNATURE-----
+--==-=-=--
