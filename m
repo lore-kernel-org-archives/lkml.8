@@ -2,217 +2,142 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B059AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 784ABC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B73120714
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:50:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ML2ie6HQ"
+	by mail.kernel.org (Postfix) with ESMTP id 5F57320792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgGUEum (ORCPT
+        id S1726959AbgGUExy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 00:50:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGUEul (ORCPT
+        Tue, 21 Jul 2020 00:53:54 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:51338 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgGUExy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 00:50:41 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D18E2C061794;
-        Mon, 20 Jul 2020 21:50:41 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id md7so1043869pjb.1;
-        Mon, 20 Jul 2020 21:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qrwxUxxJqLtX+URI9aE/ZP5XVdbCcJcGjmeWN225pNs=;
-        b=ML2ie6HQUDKfOMg0lAmV4QnPIwNzuIYgklfOml7Fz353dtm1tJZkiTbPt6LVllTsgF
-         kWH0zny7N1p1iTxUsGmmgtYX703/u5rR0kn2iNiFfrI76rbpQhHHZJDZASW9cDPCjc6/
-         3F1R18E3U7J4mzsu5VCcoWrFN9ekFtdNNxzKIlNngbtaeKVTcXH2vb8TSfoSvvHcsI5y
-         Z4Yr9UVp2hYj8mLUommLOt7sW6KL1p6A61JwK+f/g6q9nOulG6pAGwfNcBHeL0buN/5k
-         6zsjm38BvKdWGPxgS9CPYwBNRt/rKUxsAFrcPJfL0ImbnjI/Lj2mrHLsKjOwWbC7ojcG
-         xfHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qrwxUxxJqLtX+URI9aE/ZP5XVdbCcJcGjmeWN225pNs=;
-        b=jcxHL+L+KJdNVftdQ4Dp0gwP7G0O4pQt3OFjWAtdcMqh870dhtBn1mlx6LPXsnLYt4
-         EkibLPhD5MMi/SwcAAUn9JYtlzZdQOS2NsvJLaFSLJat11Yz45OxaB6BkNkIgmGgI20o
-         lfR6MfbEYrc7DGCx2VLT8NhjBSfgG0shHrciNtGzhEXEAQCNERZQ5cL4eBwJl6B5+NtG
-         F2IjQm9/byRpN4NnwZ/KNZvNwWz6dcdvFECetDYh9T3aLH0L752vfnQh+04vAqF0gMYf
-         GAZDx09yJiRYdoxKKDSfTtJAoQRFRWFvtbLXKrMayHUvvKhYoI8ojte2XJziaj5TsMiu
-         1DnQ==
-X-Gm-Message-State: AOAM533xN2CYqdZDeamtEaHsaZIgbW9EB5stmvMCYKmY6r8O/IEbbqP/
-        4fKsm+eUgsHy76tKQ/HmToc=
-X-Google-Smtp-Source: ABdhPJzTxhL2hp/Zmf+wZmE/56zcRIraZLPgtyR9kGJ71brJl1A2SiOTxC9p0WBJ8m4Z7iBrTnVCuA==
-X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr2771000pjb.181.1595307040086;
-        Mon, 20 Jul 2020 21:50:40 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.67])
-        by smtp.gmail.com with ESMTPSA id h1sm17002840pgn.41.2020.07.20.21.50.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 21:50:39 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>, kbuild-all@lists.01.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v2] media: cafe-driver: use generic power management
-Date:   Tue, 21 Jul 2020 10:17:45 +0530
-Message-Id: <20200721044744.26690-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <202007210444.LkUvoUpL%lkp@intel.com>
-References: <202007210444.LkUvoUpL%lkp@intel.com>
+        Tue, 21 Jul 2020 00:53:54 -0400
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 06L4rA1t017995
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Mon, 20 Jul 2020 21:53:11 -0700 (PDT)
+Received: from yow-pgortmak-d1.corp.ad.wrs.com (128.224.56.57) by
+ ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 20 Jul 2020 21:52:52 -0700
+Received: by yow-pgortmak-d1.corp.ad.wrs.com (Postfix, from userid 1000)        id
+ 538882E0451; Tue, 21 Jul 2020 00:52:52 -0400 (EDT)
+Date:   Tue, 21 Jul 2020 00:52:52 -0400
+From:   Paul Gortmaker <paul.gortmaker@windriver.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Oleg Nesterov <oleg@redhat.com>, Jiri Slaby <jirislaby@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        <christian@brauner.io>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Dave Jones <davej@codemonkey.org.uk>
+Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
+Message-ID: <20200721045251.GA28481@windriver.com>
+References: <2c8ef23c-43b4-39d4-8e84-92769c948da9@kernel.org>
+ <20200718171406.GB16791@redhat.com>
+ <20200718174448.4btbjcvp6wbbdgts@wittgenstein>
+ <badcb9d5-f628-2be1-7a72-902cf08010bd@kernel.org>
+ <20200720064326.GA6612@redhat.com>
+ <20200720082657.GC6612@redhat.com>
+ <20200720084106.GJ10769@hirez.programming.kicks-ass.net>
+ <20200720105924.GE43129@hirez.programming.kicks-ass.net>
+ <20200720140224.GD6612@redhat.com>
+ <20200720142105.GR10769@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200720142105.GR10769@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers using legacy PM have to manage PCI states and device's PM states
-themselves. They also need to take care of configuration registers.
+[Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917] On 20/07/2020 (Mon 16:21) Peter Zijlstra wrote:
 
-With improved and powerful support of generic PM, PCI Core takes care of
-above mentioned, device-independent, jobs.
+> On Mon, Jul 20, 2020 at 04:02:24PM +0200, Oleg Nesterov wrote:
+> > I have to admit, I do not understand the usage of prev_state in schedule(),
+> > it looks really, really subtle...
+> 
+> Right, so commit dbfb089d360 solved a problem where schedule() re-read
+> prev->state vs prev->on_rq = 0. That is, schedule()'s dequeue and
+> ttwu()'s enqueue disagreed over sched_contributes_to_load. and as a
+> result load-accounting went wobbly.
+> 
+> Now, looking at that commit again, I might've solved the problem twice
+> :-P
 
-This driver makes use of PCI helper functions like
-pci_save/restore_state() and pci_enable/disable_device() to do required
-operations. In generic mode, they are no longer needed.
+[...]
 
-Change function parameter in both .suspend() and .resume() to
-"struct device*" type.
+> That said, in a crossed email, I just proposed we could simplify all
+> this like so.. but now I need to go ask people to re-validate that
+> loadavg muck again :-/
 
-Compile-tested only.
+After a two hour "quick" sanity test I then gave it a full 7h run (which
+always seemed to break before dbfb089d360) and I didn't see any stuck
+load average with master from today + this change.
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- .../media/platform/marvell-ccic/cafe-driver.c | 31 +++++--------------
- .../media/platform/marvell-ccic/mcam-core.c   |  3 --
- .../media/platform/marvell-ccic/mcam-core.h   |  2 --
- 3 files changed, 7 insertions(+), 29 deletions(-)
+Paul.
 
-diff --git a/drivers/media/platform/marvell-ccic/cafe-driver.c b/drivers/media/platform/marvell-ccic/cafe-driver.c
-index 9a09a10a3631..58b9915ac7a4 100644
---- a/drivers/media/platform/marvell-ccic/cafe-driver.c
-+++ b/drivers/media/platform/marvell-ccic/cafe-driver.c
-@@ -604,44 +604,28 @@ static void cafe_pci_remove(struct pci_dev *pdev)
- }
- 
- 
--#ifdef CONFIG_PM
- /*
-  * Basic power management.
-  */
--static int cafe_pci_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused cafe_pci_suspend(struct device *dev)
- {
--	struct v4l2_device *v4l2_dev = dev_get_drvdata(&pdev->dev);
-+	struct v4l2_device *v4l2_dev = dev_get_drvdata(dev);
- 	struct cafe_camera *cam = to_cam(v4l2_dev);
--	int ret;
- 
--	ret = pci_save_state(pdev);
--	if (ret)
--		return ret;
- 	mccic_suspend(&cam->mcam);
--	pci_disable_device(pdev);
- 	return 0;
- }
- 
- 
--static int cafe_pci_resume(struct pci_dev *pdev)
-+static int __maybe_unused cafe_pci_resume(struct device *dev)
- {
--	struct v4l2_device *v4l2_dev = dev_get_drvdata(&pdev->dev);
-+	struct v4l2_device *v4l2_dev = dev_get_drvdata(dev);
- 	struct cafe_camera *cam = to_cam(v4l2_dev);
--	int ret = 0;
- 
--	pci_restore_state(pdev);
--	ret = pci_enable_device(pdev);
--
--	if (ret) {
--		cam_warn(cam, "Unable to re-enable device on resume!\n");
--		return ret;
--	}
- 	cafe_ctlr_init(&cam->mcam);
- 	return mccic_resume(&cam->mcam);
- }
- 
--#endif  /* CONFIG_PM */
--
- static const struct pci_device_id cafe_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL,
- 		     PCI_DEVICE_ID_MARVELL_88ALP01_CCIC) },
-@@ -650,15 +634,14 @@ static const struct pci_device_id cafe_ids[] = {
- 
- MODULE_DEVICE_TABLE(pci, cafe_ids);
- 
-+static SIMPLE_DEV_PM_OPS(cafe_pci_pm_ops, cafe_pci_suspend, cafe_pci_resume);
-+
- static struct pci_driver cafe_pci_driver = {
- 	.name = "cafe1000-ccic",
- 	.id_table = cafe_ids,
- 	.probe = cafe_pci_probe,
- 	.remove = cafe_pci_remove,
--#ifdef CONFIG_PM
--	.suspend = cafe_pci_suspend,
--	.resume = cafe_pci_resume,
--#endif
-+	.driver.pm = &cafe_pci_pm_ops,
- };
- 
- 
-diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
-index 09775b6624c6..d81d0c130e3c 100644
---- a/drivers/media/platform/marvell-ccic/mcam-core.c
-+++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-@@ -1967,8 +1967,6 @@ EXPORT_SYMBOL_GPL(mccic_shutdown);
- /*
-  * Power management
-  */
--#ifdef CONFIG_PM
--
- void mccic_suspend(struct mcam_camera *cam)
- {
- 	mutex_lock(&cam->s_mutex);
-@@ -2015,7 +2013,6 @@ int mccic_resume(struct mcam_camera *cam)
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(mccic_resume);
--#endif /* CONFIG_PM */
- 
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("Jonathan Corbet <corbet@lwn.net>");
-diff --git a/drivers/media/platform/marvell-ccic/mcam-core.h b/drivers/media/platform/marvell-ccic/mcam-core.h
-index 2e3a7567a76a..b55545822fd2 100644
---- a/drivers/media/platform/marvell-ccic/mcam-core.h
-+++ b/drivers/media/platform/marvell-ccic/mcam-core.h
-@@ -236,10 +236,8 @@ static inline void mcam_reg_set_bit(struct mcam_camera *cam,
- int mccic_register(struct mcam_camera *cam);
- int mccic_irq(struct mcam_camera *cam, unsigned int irqs);
- void mccic_shutdown(struct mcam_camera *cam);
--#ifdef CONFIG_PM
- void mccic_suspend(struct mcam_camera *cam);
- int mccic_resume(struct mcam_camera *cam);
--#endif
- 
- /*
-  * Register definitions for the m88alp01 camera interface.  Offsets in bytes
--- 
-2.27.0
+root@t5610:/home/paul/git/linux-head#
+[1]+  Done                    nohup tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 24 --duration 420 --configs TREE03 --trust-make > /tmp/kvm.sh.out 2>&1
+root@t5610:/home/paul/git/linux-head# cat /proc/version
+Linux version 5.8.0-rc6-00001-g5714ee50bb43-dirty (paul@t5610) (gcc (Ubuntu 9.3.0-10ubuntu2) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #3 SMP Mon Jul 20 12:30:33 EDT 2020
+root@t5610:/home/paul/git/linux-head# uptime
+ 00:49:18 up  7:41,  2 users,  load average: 0.01, 0.00, 0.63
+root@t5610:/home/paul/git/linux-head# 
 
+--
+
+> 
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index a2a244af9a53..437fc3b241f2 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -4193,9 +4193,6 @@ static void __sched notrace __schedule(bool preempt)
+>  	local_irq_disable();
+>  	rcu_note_context_switch(preempt);
+>  
+> -	/* See deactivate_task() below. */
+> -	prev_state = prev->state;
+> -
+>  	/*
+>  	 * Make sure that signal_pending_state()->signal_pending() below
+>  	 * can't be reordered with __set_current_state(TASK_INTERRUPTIBLE)
+> @@ -4223,7 +4220,8 @@ static void __sched notrace __schedule(bool preempt)
+>  	 * We must re-load prev->state in case ttwu_remote() changed it
+>  	 * before we acquired rq->lock.
+>  	 */
+> -	if (!preempt && prev_state && prev_state == prev->state) {
+> +	prev_state = prev->state;
+> +	if (!preempt && prev_state) {
+>  		if (signal_pending_state(prev_state, prev)) {
+>  			prev->state = TASK_RUNNING;
+>  		} else {
+> @@ -4237,10 +4235,12 @@ static void __sched notrace __schedule(bool preempt)
+>  
+>  			/*
+>  			 * __schedule()			ttwu()
+> -			 *   prev_state = prev->state;	  if (READ_ONCE(p->on_rq) && ...)
+> -			 *   LOCK rq->lock		    goto out;
+> -			 *   smp_mb__after_spinlock();	  smp_acquire__after_ctrl_dep();
+> -			 *   p->on_rq = 0;		  p->state = TASK_WAKING;
+> +			 *   if (prev_state)		  if (p->on_rq && ...)
+> +			 *     p->on_rq = 0;		    goto out;
+> +			 *				  smp_acquire__after_ctrl_dep();
+> +			 *				  p->state = TASK_WAKING
+> +			 *
+> +			 * Where __schedule() and ttwu() have matching control dependencies.
+>  			 *
+>  			 * After this, schedule() must not care about p->state any more.
+>  			 */
