@@ -2,110 +2,140 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC971C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBC5F206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:59:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6vVU9Xz"
+	by mail.kernel.org (Postfix) with ESMTP id 568862072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:59:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595296776;
+	bh=A2FDwNSyDpauYN840UREHbh62qgAGtvRaDcTfH064/w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VxJ5btS8lS5rIhoef1LeS5DdD9fSqoQJehK5B6nIrW7+7J3kfJQ7i7I9pNUIOP3fe
+	 g3lU00m+pAjKixlpHgUm5gkVqYGQnLaUNrWbYFyaLXbNnuuCcoXafKNntbhFxTjRtg
+	 7PkBAz41i3qQpu8ao99MsuPG86f3aKBLGTqhM5NQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgGUB7F (ORCPT
+        id S1728042AbgGUB7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 21:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGUB7F (ORCPT
+        Mon, 20 Jul 2020 21:59:34 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43740 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbgGUB7e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 21:59:05 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDC0C061794;
-        Mon, 20 Jul 2020 18:59:04 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a14so4739865wra.5;
-        Mon, 20 Jul 2020 18:59:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=3AdpinBar8jETyVImXGpH6Wr1zXFF6+rdd6Lks1U3Ns=;
-        b=f6vVU9Xz1UlzuOxQZDfXu2a7CCfo8aIjAPCHfuNfNivztTLOia8vPrpZ5OQQyBOyxw
-         rs5t8M5xfemApzlRRYMxXBmy/gEWNponh4jdmcFCAr9p0CsuoByqoZt1a/Tm4+DNUdpU
-         WBxTxejrV40DTEqmHBQQCs7SMqcwEq27bcMWds9zPbOj/Caqc26IBC3m0illBXPMzSSN
-         vMmSew/85P/nWeaODKWVbCB5ogopq/GB2BIXom8OeOF6hAzQUDiVLLunYyKC29sgLVhD
-         gf3HPYED8QhkzhZnOXQZ72vaoZlrb728aHS9yTVcqJ08+zmBxdTDNjKfRdIhgD6ubpHx
-         IA4Q==
+        Mon, 20 Jul 2020 21:59:34 -0400
+Received: by mail-io1-f65.google.com with SMTP id k23so19710424iom.10;
+        Mon, 20 Jul 2020 18:59:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=3AdpinBar8jETyVImXGpH6Wr1zXFF6+rdd6Lks1U3Ns=;
-        b=GaJ77pjiLdH89u4hOcmqtX9DLJwjm6D0TanVwM4xv0mD7SAiBSNEz5efoskWhCx4w+
-         Q6pR1udsKdSQV2LEcd0HKTIQM49YJOAxLmhxp/3PpqzLCttjfOQd2Mz65Q/0aVGKsI6T
-         mgkg2gkdPJE9fwhrU0WaSLnyZ+Ak5BwKnAPAYyzS8LjUCyikp0BGva3r1XTL5DMFIM+A
-         wFdXOO/bReErDTfhMWwZoH+9m0NpHKdWOfbFAaIBb1+0vFNRqtDeXK09pcnggtHsCzrK
-         1EdIfa4Giln9TlGGzv76mLqwTkii2JAVQlxXwVkDHiOBJc7FKso0/ewTUU2/Znzc4ql1
-         LjKg==
-X-Gm-Message-State: AOAM530OQDHjnbkMAvprZes/1rLcPo6Cjce/ksXwkp29cMKn7C1TvDJu
-        MWBn4gfPsrJrPh0MkHTbYiA=
-X-Google-Smtp-Source: ABdhPJwRJp23dSroRcW60lmsvBJ47busZ4vu3U0ShSeLjQlmLaitxIRTt3lM/mEufxbm8oBJdmFApg==
-X-Received: by 2002:adf:bb83:: with SMTP id q3mr11377722wrg.58.1595296742289;
-        Mon, 20 Jul 2020 18:59:02 -0700 (PDT)
-Received: from [172.16.20.20] ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id f15sm33997391wrx.91.2020.07.20.18.59.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jul 2020 18:59:01 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: [PATCH] arm64: dts: meson: fix mmc0 tuning error on Khadas VIM3
-From:   Christian Hewitt <christianshewitt@gmail.com>
-In-Reply-To: <7ha6ztakpp.fsf@baylibre.com>
-Date:   Tue, 21 Jul 2020 05:58:58 +0400
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E704137A-432C-41D8-9B33-9A96E2936ADD@gmail.com>
-References: <20200718054040.3996-1-christianshewitt@gmail.com>
- <7ha6ztakpp.fsf@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-X-Mailer: Apple Mail (2.3445.104.14)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wnc7YVfPETMY6OwZSSKyjxvpm6CL442HL8Evb64Bao0=;
+        b=ObDkZUCkUiIaGolGkqSsZKx1s5D0ohTz62PZZc+i+3bawVSOMebEEsJahX91MQgjxn
+         Lw7PdCN5bQlUXBYBvAxQpEqMSdZOtTbR5CNhnj1+ZXZbo5l42xj5Od+9zxKd0R3Mmp9y
+         RiJNsY4SzrVFPOOyjmoqIf3AThrrlG9XvsbnD/4EhpaFJ4evjbfd1c9Uo+9YVsBADCyh
+         e5lBAp7dIwqFjm4hcsUMHZdgJR+ImPC7onVQaj1bya0EMg4DkRiBCO2lHj43LfglzXHn
+         /ZBJPlbaYS4KT7LCHnYROP6jzVYYBBvxDXNPzgvdHGcI8jD3wE8ZYvpqNwiUE1LE0XX0
+         yDSA==
+X-Gm-Message-State: AOAM530dz9Th/EoAHozCdFh1sMTM5+exb38Ga6g+Hgb48wDPBZmYNBmd
+        yazyqVDWhxDhgsTp0o0oow==
+X-Google-Smtp-Source: ABdhPJy8KThvkeccvCI926AXDyWSugNKjKyrlGQkm9NW9P/FwLo9C9MOvQMwCMAcBFH6teHRisqXRg==
+X-Received: by 2002:a02:2401:: with SMTP id f1mr29054327jaa.66.1595296772813;
+        Mon, 20 Jul 2020 18:59:32 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p124sm9810465iod.32.2020.07.20.18.59.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 18:59:32 -0700 (PDT)
+Received: (nullmailer pid 3370741 invoked by uid 1000);
+        Tue, 21 Jul 2020 01:59:30 -0000
+Date:   Mon, 20 Jul 2020 19:59:30 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Matthew Hagan <mnhagan88@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Crispin <john@phrozen.org>,
+        Jonathan McDowell <noodles@earth.li>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
+ properties
+Message-ID: <20200721015930.GA3363310@bogus>
+References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
+ <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
+ <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200716223236.GA1314837@lunn.ch>
+ <c86c4da0-a740-55cc-33dd-7a91e36c7738@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c86c4da0-a740-55cc-33dd-7a91e36c7738@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 17, 2020 at 08:26:02PM +0100, Matthew Hagan wrote:
+> 
+> 
+> On 16/07/2020 23:32, Andrew Lunn wrote:
+> > On Thu, Jul 16, 2020 at 03:09:25PM -0700, Jakub Kicinski wrote:
+> >> On Mon, 13 Jul 2020 21:50:26 +0100 Matthew Hagan wrote:
+> >>> Add names and decriptions of additional PORT0_PAD_CTRL properties.
+> >>>
+> >>> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+> >>> ---
+> >>>  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
+> >>>  1 file changed, 8 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> >>> index ccbc6d89325d..3d34c4f2e891 100644
+> >>> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> >>> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> >>> @@ -13,6 +13,14 @@ Optional properties:
+> >>>  
+> >>>  - reset-gpios: GPIO to be used to reset the whole device
+> >>>  
+> >>> +Optional MAC configuration properties:
+> >>> +
+> >>> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
+> >>
+> >> Perhaps we can say a little more here?
+> >>
+> >>> +- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
+> >>> +				falling edge.
+> >>> +- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
+> >>> +				falling edge.
+> >>
+> >> These are not something that other vendors may implement and therefore
+> >> something we may want to make generic? Andrew?
+> > 
+> > I've never seen any other vendor implement this. Which to me makes me
+> > think this is a vendor extension, to Ciscos vendor extension of
+> > 1000BaseX.
+> > 
+> > Matthew, do you have a real use cases of these? I don't see a DT patch
+> > making use of them. And if you do, what is the PHY on the other end
+> > which also allows you to invert the clocks?
+> > 
+> The use case I am working on is the Cisco Meraki MX65 which requires bit
+> 18 set (qca,sgmii-txclk-falling-edge). On the other side is a BCM58625
+> SRAB with ports 4 and 5 in SGMII mode. There is no special polarity
+> configuration set on this side though I do have very limited info on
+> what is available. The settings I have replicate the vendor
+> configuration extracted from the device.
+> 
+> The qca,sgmii-rxclk-falling-edge option (bit 19) is commonly used
+> according to the device trees found in the OpenWrt, which is still using
+> the ar8216 driver. With a count through the ar8327-initvals I see bit 19
+> set on 18 of 22 devices using SGMII on MAC0.
 
-> On 21 Jul 2020, at 2:24 am, Kevin Hilman <khilman@baylibre.com> wrote:
->=20
-> Christian Hewitt <christianshewitt@gmail.com> writes:
->=20
->> Similar to other G12B devices using the W400 dtsi, I see reports of =
-mmc0
->> tuning errors on VIM3 after a few hours uptime:
->>=20
->> [12483.917391] mmc0: tuning execution failed: -5
->> [30535.551221] mmc0: tuning execution failed: -5
->> [35359.953671] mmc0: tuning execution failed: -5
->> [35561.875332] mmc0: tuning execution failed: -5
->> [61733.348709] mmc0: tuning execution failed: -5
->>=20
->> I do not see the same on VIM3L, so remove sd-uhs-sdr50 from the =
-common dtsi
->> to silence the error, then (re)add it to the VIM3L dts.
->>=20
->> Signed-off-by: Chrisitan Hewitt <christianshewitt@gmail.com>
->=20
-> Fixes?
->=20
-> Kevin
+Can't you identify the device and configure the setting based on that? 
+After all, MDIO devices are discoverable. Or there's no MDIO here?
 
-I=E2=80=99ll resend v2 with the fixes tag(s). Thanks.
-
-Christian=
+Rob
