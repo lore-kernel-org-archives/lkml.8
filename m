@@ -2,91 +2,180 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C36C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B07C433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A70EF20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48E42068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="bJZ16ap+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="JYF7CgUk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgGUORx (ORCPT
+        id S1728891AbgGUOSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:17:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbgGUORw (ORCPT
+        Tue, 21 Jul 2020 10:18:01 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:41522 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbgGUOSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:17:52 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8216CC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:17:52 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id lx13so21833836ejb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=92B9Cr8GU+Q5NgJRD18dkOQr+Iz15oRaXg+fWztZRyA=;
-        b=bJZ16ap+pQMf7ty/juukMn4SocAmm/ff1ygm7N0ZhctiTX7Ns9EKRvJFGiWSYr6Fae
-         MsLGWGopirywHezMYylNS3uCobm9k23Lu1ehcGBHC7UAgBWqRN2J7FceziM5zoLy3S5G
-         nffshkNWk9HRgb8P+dihyPwG9xY0ajeCk1dpQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=92B9Cr8GU+Q5NgJRD18dkOQr+Iz15oRaXg+fWztZRyA=;
-        b=hGmIstVhigfpHk6EmwAYaZTeIcnCvwVU1f2TY4CTbtKz4orttqsulhVRn4+2I2kEUC
-         ipgJ+MQS4KIq1DBcFxstb6uD34dMX8olGaoXJCA64LruVKTGd3r4ftlxUNM+uwe3yQ7r
-         ZSkrVuwM8TgpbyhPIfIbawZws2Adl/DIqcqzWgomaHS+HGDNH1eCFVE1WQ6VHZafYrmB
-         Xeived83Rtys6ZzyBU3G7ccDsnrIW7EJN7RL6clecEXB43j57UgfOUYsIj2g5xcSVPTY
-         0jZzEw5P4goIg1v3NRuEiy42k2Kj1DEehFR2HFqLQ7CAeI1bDo0ItWYo+QY9XCOk2VGf
-         Qc/Q==
-X-Gm-Message-State: AOAM5330hX7n/afY4bW5X1WDDY7jVAwMIiwvHojDrn07zHDW/crrQgiQ
-        kCo0PB+GyZ7X0H5RfYsjTbUW86sdlH+hQg==
-X-Google-Smtp-Source: ABdhPJyccHcLc9w0tbdjL2+q9etH/eT/z0pNkYnnAk8OzzAk4DWaXSVGwWP1HddfI+2gNfO3RmPNWg==
-X-Received: by 2002:a17:906:f907:: with SMTP id lc7mr20435966ejb.143.1595341070869;
-        Tue, 21 Jul 2020 07:17:50 -0700 (PDT)
-Received: from localhost ([2620:10d:c092:180::1:70f9])
-        by smtp.gmail.com with ESMTPSA id cw14sm17469727edb.88.2020.07.21.07.17.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 07:17:50 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 15:17:49 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
-Message-ID: <20200721141749.GA742741@chrisdown.name>
-References: <20200721063258.17140-1-mhocko@kernel.org>
+        Tue, 21 Jul 2020 10:18:01 -0400
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id CC7861FEB5;
+        Tue, 21 Jul 2020 14:17:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1595341080; bh=D0DW9zGWsTVh06Cmjv5mAPfrY20c/r0QK5RxrIUjHH8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JYF7CgUk4I+/NMzJfGochZ/0hyyhwBvkeprmNQE0+bvsJAxJgBt6FxK/o54cJhoWg
+         TwauTtBohj2frnRGq66nLy1CqB/XdV3WBt2oG4DaN30WF5k/MJVSVi7ifVh7onYMZ/
+         5egWjlzkyY54sVsgEfOTOAEwRELqajYizeGBOvMsOu1QPi44IUQo6PQVM8rQThkt5t
+         iewih0qNvFQ7KsF2OvjXsRsh1CSB/tAlIfYM34FV0mQWtvyjUUNsPbFKK5lzfbGkp4
+         KVTGCQVlwjwS0Z+fw++qTXdhSacJn+23DVd9lyIGKgfLuKXZfvNAFIGiayvl0fBeA1
+         +K9pO6R6vJFFQ==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/5] of_address: Add bus type match for pci ranges parser
+Date:   Tue, 21 Jul 2020 22:17:29 +0800
+Message-Id: <20200721141742.996350-2-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.28.0.rc1
+In-Reply-To: <20200721141742.996350-1-jiaxun.yang@flygoat.com>
+References: <20200721141742.996350-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200721063258.17140-1-mhocko@kernel.org>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I understand the pragmatic considerations here, but I'm quite concerned about 
-the maintainability and long-term ability to reason about a patch like this.  
-For example, how do we know when this patch is safe to remove? Also, what other 
-precedent does this set for us covering for poor userspace behaviour?
+So the parser can be used to parse range property of ISA bus.
 
-Speaking as a systemd maintainer, if udev could be doing something better on 
-these machines, we'd be more than receptive to help fix it. In general I am 
-against explicit watchdog tweaking here because a.) there's potential to mask 
-other problems, and b.) it seems like the kind of one-off trivia nobody is 
-going to remember exists when doing complex debugging in future.
+As they're all using PCI-like method of range property, there is no need
+start a new parser.
 
-Is there anything preventing this being remedied in udev, instead of the 
-kernel?
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+
+--
+v2: Drop useless check, fix some na for bus_addr
+	add define of of_range_parser_init according to
+	Rob's suggestion.
+---
+ drivers/of/address.c       | 27 +++++++++++++++------------
+ include/linux/of_address.h |  5 +++++
+ 2 files changed, 20 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 8eea3f6e29a4..7406636cea87 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -698,9 +698,10 @@ static int parser_init(struct of_pci_range_parser *parser,
+ 
+ 	parser->node = node;
+ 	parser->pna = of_n_addr_cells(node);
+-	parser->na = of_bus_n_addr_cells(node);
+-	parser->ns = of_bus_n_size_cells(node);
+ 	parser->dma = !strcmp(name, "dma-ranges");
++	parser->bus = of_match_bus(node);
++
++	parser->bus->count_cells(parser->node, &parser->na, &parser->ns);
+ 
+ 	parser->range = of_get_property(node, name, &rlen);
+ 	if (parser->range == NULL)
+@@ -732,6 +733,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ 	int na = parser->na;
+ 	int ns = parser->ns;
+ 	int np = parser->pna + na + ns;
++	int busflag_na = 0;
+ 
+ 	if (!range)
+ 		return NULL;
+@@ -739,12 +741,14 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ 	if (!parser->range || parser->range + np > parser->end)
+ 		return NULL;
+ 
+-	if (parser->na == 3)
+-		range->flags = of_bus_pci_get_flags(parser->range);
+-	else
+-		range->flags = 0;
++	range->flags = parser->bus->get_flags(parser->range);
++
++	/* PCI and ISA have a extra cell for resource flags */
++	if (strcmp(parser->bus->name, "pci") ||
++	    strcmp(parser->bus->name, "isa"))
++		busflag_na = 1;
+ 
+-	range->pci_addr = of_read_number(parser->range, na);
++	range->bus_addr = of_read_number(parser->range + busflag_na, na - busflag_na);
+ 
+ 	if (parser->dma)
+ 		range->cpu_addr = of_translate_dma_address(parser->node,
+@@ -759,11 +763,10 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ 	/* Now consume following elements while they are contiguous */
+ 	while (parser->range + np <= parser->end) {
+ 		u32 flags = 0;
+-		u64 pci_addr, cpu_addr, size;
++		u64 bus_addr, cpu_addr, size;
+ 
+-		if (parser->na == 3)
+-			flags = of_bus_pci_get_flags(parser->range);
+-		pci_addr = of_read_number(parser->range, na);
++		flags = parser->bus->get_flags(parser->range);
++		bus_addr = of_read_number(parser->range + busflag_na, na - busflag_na);
+ 		if (parser->dma)
+ 			cpu_addr = of_translate_dma_address(parser->node,
+ 					parser->range + na);
+@@ -774,7 +777,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ 
+ 		if (flags != range->flags)
+ 			break;
+-		if (pci_addr != range->pci_addr + range->size ||
++		if (bus_addr != range->bus_addr + range->size ||
+ 		    cpu_addr != range->cpu_addr + range->size)
+ 			break;
+ 
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 763022ed3456..3e8d6489cbf1 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -6,8 +6,11 @@
+ #include <linux/of.h>
+ #include <linux/io.h>
+ 
++struct of_bus;
++
+ struct of_pci_range_parser {
+ 	struct device_node *node;
++	struct of_bus *bus;
+ 	const __be32 *range;
+ 	const __be32 *end;
+ 	int na;
+@@ -53,6 +56,7 @@ extern const __be32 *of_get_address(struct device_node *dev, int index,
+ 
+ extern int of_pci_range_parser_init(struct of_pci_range_parser *parser,
+ 			struct device_node *node);
++#define of_range_parser_init of_pci_range_parser_init
+ extern int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
+ 			struct device_node *node);
+ extern struct of_pci_range *of_pci_range_parser_one(
+@@ -83,6 +87,7 @@ static inline int of_pci_range_parser_init(struct of_pci_range_parser *parser,
+ {
+ 	return -ENOSYS;
+ }
++#define of_range_parser_init of_pci_range_parser_init
+ 
+ static inline int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
+ 			struct device_node *node)
+-- 
+2.28.0.rc1
+
