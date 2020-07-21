@@ -4,165 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	FROM_LOCAL_NOVOWEL,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D308C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25854C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76C0C206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB77620729
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:48:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijxXAdSe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HuFuDos0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbgGUCqu (ORCPT
+        id S1726654AbgGUCsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:46:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56950 "EHLO
+        Mon, 20 Jul 2020 22:48:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgGUCqt (ORCPT
+        with ESMTP id S1726042AbgGUCsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 22:46:49 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82D92C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 19:46:49 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id q5so19648371wru.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 19:46:49 -0700 (PDT)
+        Mon, 20 Jul 2020 22:48:04 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42679C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 19:48:04 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k5so913526pjg.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 19:48:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=GJ2loNa/b2LseAPT1F7ZEHhALzMLY3E2X638XNCfUuw=;
-        b=ijxXAdSeHVBZU9hawq1Hem8w8thcNIt+hCxP2OEhbYPQUxo0MR4NdRJY+oy+f2vvc6
-         DAGH32YzUaPoXgQEBR+nR1oaIDeY6+oWDEldl4Sz9EBTWY4Fad4ZO8ywJJI7c5HWZJDK
-         hoWLj4D0irM/RtkJSlZ98T8v8imrn2Dz3BSw5gIWQBE/ImhD5mF11lsHDRrmSs4XRayS
-         G+4hX5e5/WKSvynWOUI71wo0SKrOX6t1erVEpMaqaPZiwzagPTpRyXE2KrQ+s9VmnNSV
-         i0HcsXcAILOtqHxOPkIFQYMls0WRVlAd1RAibLwWsXParar/UU26Olals568gMUpR4F8
-         iEfQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cksS06U1qnevoEJIlv+grV0Oemjc9a1w0y2kvjgWiuI=;
+        b=HuFuDos0EOAHqmklXCF6gWZVZJzosnL8X6CGvqcgM6Kqt0FAoBhM18o9itrl3wkJ9D
+         gfELwTrd2bcEv7VjAZVmMIIWXZQOh1WHsuk5R4BY1m+gd4sHfU41p72+wqttC/euBOku
+         w4Aq0LdhD98P7K3hM5FSwH5kDcPkvfiVGvlPo4Xr3FmhbrYzyCAPr4JZ4GdKYCg/DZEU
+         BII6Oj/0/CJh2B+PO2MUN/Bh+K8UVqhwykSnDRewsUDKAm+iBqRWKRxu5cn5nf1Tmame
+         MoAZZObOq1ucNhnSXD/cFC8bJ2LyWcHg9kt0MvlSvhvZJ87ct10JOnoa/eOg02L7K4bt
+         TGFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=GJ2loNa/b2LseAPT1F7ZEHhALzMLY3E2X638XNCfUuw=;
-        b=qpLmXLjfLq37ttY4UybdL6iTFKR2xJfVtdu3QbwikjaXJ0IazPEFGBU05u18pwjnZs
-         YXBNMaRJlLt9BQyxudkWonO7AoTqIQQHvQtYUBQAjY8RLMvvcG64kIIWKltaqkkhSylV
-         Yt9fkXO7tpQQKIhdbw7vC6CSRaaJX887l0D5FKDan/4qQ1PEPHKXcLjcMJbfOUQX3Ntm
-         a0Hl5Q8xUXK+C0ViNJ5Yhgv2Eto+hKe/kwaqpN1yFIONfxSkQjun9GeIwT/K4cEhT8s/
-         A33OmxGbEuLsn68ltr+Sx93ifsFaizcPNqjg7Wq8M+Xcr5oMnGNPUT2YQQtbLFqs/I4N
-         Gk3g==
-X-Gm-Message-State: AOAM531pws/2rfvM2EwK7d6gt42QMx0wdGRX1W/6IMnBwmUfLdK6OLaV
-        2njHUg69GXXJdcv3++OZKQ==
-X-Google-Smtp-Source: ABdhPJzxM6HnO5U7IAUr//uuD9OAnbgY6BtrL4lxgY55zxyPqr9uLztqQLlL4Zw1ft47OyC7v7FE5A==
-X-Received: by 2002:a5d:438c:: with SMTP id i12mr8893146wrq.210.1595299608116;
-        Mon, 20 Jul 2020 19:46:48 -0700 (PDT)
-Received: from [192.168.200.34] (ip5b436a54.dynamic.kabel-deutschland.de. [91.67.106.84])
-        by smtp.gmail.com with ESMTPSA id v12sm24225356wrs.2.2020.07.20.19.46.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 19:46:47 -0700 (PDT)
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH_2/5=5d_drm=3a_rockchip=3a_add_missing_regi?=
- =?UTF-8?B?c3RlcnMgZm9yIFJLMzE4OOOAkOivt+azqOaEj++8jOmCruS7tueUsWxpbnV4LXJv?=
- =?UTF-8?Q?ckchip-bounces+andy=2eyan=3drock-chips=2ecom=40lists=2einfradead?=
- =?UTF-8?B?Lm9yZ+S7o+WPkeOAkQ==?=
-To:     Andy Yan <andy.yan@rock-chips.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc:     David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200718200323.3559-1-knaerzche@gmail.com>
- <20200718200323.3559-3-knaerzche@gmail.com>
- <871ce1ac-2d5b-c0a2-60a6-6aba0f296c18@rock-chips.com>
- <12296860-d6ed-5135-7c4e-545362829051@gmail.com>
- <c53a4909-03ff-7477-fb71-1418cf97634b@rock-chips.com>
-From:   Alex Bee <knaerzche@gmail.com>
-Message-ID: <3a8f02db-93f3-1414-fea9-007dee55ec54@gmail.com>
-Date:   Tue, 21 Jul 2020 04:46:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cksS06U1qnevoEJIlv+grV0Oemjc9a1w0y2kvjgWiuI=;
+        b=l5pVoEEEQ5gHGOZs1xuGIUOu44JJk/46w9H+MXprnjrJwVVOVest0qen97Ar02Z9U7
+         pjPqxHjw2LEdq1mYsYorcwYofKS9x01aKwNqJuQxKmcM7ROXRgqkCtNLi52etJHUCK8o
+         HhBNkS5ngDfjDV2J5FSmIbR39sk5dxeVWmiOZcnARkkhOYLH1G+ES05mNQ7ksIOSQ4Qo
+         2AK4juPSd755tDIkm8hGpIxhsbN/6brt4DYkisrLwCm6YVchEEGr5eHEJDtyFwX42rNT
+         GzVly2QjnudpFRCN9IxsARje9c+KoFbA+HmuarhdcszT4eHo5Rcxi6nSTVqIJKWxoWIg
+         btdw==
+X-Gm-Message-State: AOAM5324LpdT+9JRThGtthHf+vKnOqqiUkyi4qJwGT+5z5elpA+notYh
+        H+DHR6IiOd8Pzagi/AGhwAU=
+X-Google-Smtp-Source: ABdhPJzEYBvW4gWqRIZtm8Q/iIG1zLRgwM7HyAYiumOOM4fHYbUEO6Z81UKPatzXGRlfXb10duvBtg==
+X-Received: by 2002:a17:90a:d684:: with SMTP id x4mr2375673pju.62.1595299683886;
+        Mon, 20 Jul 2020 19:48:03 -0700 (PDT)
+Received: from octofox.cadence.com ([2601:641:400:e00:19b7:f650:7bbe:a7fb])
+        by smtp.gmail.com with ESMTPSA id p9sm14336962pgc.77.2020.07.20.19.48.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 19:48:03 -0700 (PDT)
+From:   Max Filippov <jcmvbkbc@gmail.com>
+To:     linux-xtensa@linux-xtensa.org
+Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH] xtensa: fix closing endif comment
+Date:   Mon, 20 Jul 2020 19:47:51 -0700
+Message-Id: <20200721024751.1257-1-jcmvbkbc@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <c53a4909-03ff-7477-fb71-1418cf97634b@rock-chips.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Commit 8f74afa22d9b ("xtensa: switch to generic version of pte
+allocation") introduced the following build warning for xtensa
+  arch/xtensa/include/asm/pgalloc.h:67:8: warning: extra tokens at end of
+  #endif directive [-Wendif-labels]
+Fix #endif comment.
 
-Am 21.07.20 um 03:17 schrieb Andy Yan:
-> Hi Alex:
->
-> On 7/20/20 10:46 PM, Alex Bee wrote:
->> Hi Andy,
->>
->> Am 20.07.20 um 10:22 schrieb Andy Yan:
->>> Hi Alex:
->>>
->>> On 7/19/20 4:03 AM, Alex Bee wrote:
->>>> This patch adds dither_up, dsp_lut_en, data_blank and dsp_data_swap
->>>> registers to enable their respective functionality for RK3188's VOP.
->>>>
->>>> Signed-off-by: Alex Bee <knaerzche@gmail.com>
->>>> ---
->>>>   drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 4 ++++
->>>>   1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c 
->>>> b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
->>>> index b046910129fb..971a6bda7458 100644
->>>> --- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
->>>> +++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
->>>> @@ -512,6 +512,10 @@ static const struct vop_common rk3188_common = {
->>>>       .dither_down_en = VOP_REG(RK3188_DSP_CTRL0, 0x1, 11),
->>>>       .dither_down_mode = VOP_REG(RK3188_DSP_CTRL0, 0x1, 10),
->>>>       .dsp_blank = VOP_REG(RK3188_DSP_CTRL1, 0x3, 24),
->>>> +    .dither_up = VOP_REG(RK3188_DSP_CTRL0, 0x1, 9),
->>>> +    .dsp_lut_en = VOP_REG(RK3188_SYS_CTRL, 0x1, 28),
->>>> +    .data_blank = VOP_REG(RK3188_DSP_CTRL1, 0x1, 25),
->>>> +    .dsp_data_swap = VOP_REG(RK3188_DSP_CTRL1, 0x1f, 26),
->>>
->>>
->>>
->>> I can't find the definition of dsp_data_swap, or I missed something?
->>>
->> Note that .dsp_data_swap is not defined with that name in TRM (as it 
->> is not in RK3288/RK3328), since potentially more the one bit would 
->> have to be set for this (currently only RB_SWAP (0x2) is implemented 
->> in the VOP driver).
->>
->
-> I mean I didn't find the definition of dsp_data_swap  in struct 
-> vop_comm, I even search drm-misc-next tree.
->
-Sorry, misunderstanding. You're right: I had something which isn't 
-upstreamed/merged yet in my tree. I'll remove this reg in V2.
->
->> To be some kind of future proof (if BG_SWAP, RG_SWAP, DELTA_SWAP or 
->> DUMMY_SWAP ever get implemented) it should be aligned with what is 
->> defined for RK3288/RK3328 now to automatically benefit from that 
->> additions. And it would, since RK3288_DSP_CTRL0 BIT12, BIT13, BIT14, 
->> BIT15, BIT16 exactly matches with RK3188_DSP_CTRL1 BIT26, BIT27, 
->> BIT28, BIT29, BIT30.
->>
->> Current implementation sets BIT13 for RK3288 and with this patch 
->> BIT27 for RK3188 to enable RB_SWAP.
->>
->>>
->>>
->>>>   };
->>>>     static const struct vop_win_data rk3188_vop_win_data[] = {
->>>
->>>
->> Regards,
->>
->> Alex
->>
->>
->>
->
->
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Fixes: 8f74afa22d9b ("xtensa: switch to generic version of pte allocation")
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+---
+ arch/xtensa/include/asm/pgalloc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/xtensa/include/asm/pgalloc.h b/arch/xtensa/include/asm/pgalloc.h
+index 699a8fdf9005..d3a22da4d2c9 100644
+--- a/arch/xtensa/include/asm/pgalloc.h
++++ b/arch/xtensa/include/asm/pgalloc.h
+@@ -64,6 +64,6 @@ static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
+ }
+ 
+ #define pmd_pgtable(pmd) pmd_page(pmd)
+-#endif CONFIG_MMU
++#endif /* CONFIG_MMU */
+ 
+ #endif /* _XTENSA_PGALLOC_H */
+-- 
+2.20.1
+
