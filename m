@@ -2,201 +2,219 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21A8C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6298C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D51921702
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595317919;
-	bh=ntUEEOistZRYlYxAe/OIXCaUSHEuCFu4ON7rJM+hkDM=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=UYogAKi9YVBmp+FBThTzk8s7X/nmBJVRKH4yUzUxxQlldnb6bUegCuYTdEN3fSJJA
-	 PoCyOFVGITArWOUqBVzbLAa8/NZx/PBPR1Xy9FSsShmo8RvsD8lo9eP0jV/2iI5QND
-	 hnB8dXj8+9oDt/kCIdIJfaGFh40KzcfjbYVHistc=
+	by mail.kernel.org (Postfix) with ESMTP id 9B8C622BF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:52:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pqv9oNkm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgGUHv6 (ORCPT
+        id S1728219AbgGUHwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:51:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbgGUHv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 03:51:57 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8053208E4;
-        Tue, 21 Jul 2020 07:51:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595317916;
-        bh=ntUEEOistZRYlYxAe/OIXCaUSHEuCFu4ON7rJM+hkDM=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=ahfBN40/RRChtiBnraGchV29VjzxUmjgm7gXPJE6LxwkPV/0MSX52Z0R3Dd+1VC/E
-         jHCSkFjMNWoYL6l5gSteT2a4Ra2I53SVy2Aeut5GV1bOzcP2hodI9AwdkUbGmOwDK8
-         Kui264khcfiO8n50/aEyYT8suL4r9fC2Ll8DbvjU=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1594795010-9074-3-git-send-email-tdas@codeaurora.org>
-References: <1594795010-9074-1-git-send-email-tdas@codeaurora.org> <1594795010-9074-3-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v4 2/4] dt-bindings: clock: Add YAML schemas for LPASS clocks on SC7180
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Date:   Tue, 21 Jul 2020 00:51:56 -0700
-Message-ID: <159531791606.3847286.11896325263133276429@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        Tue, 21 Jul 2020 03:52:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728097AbgGUHwB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 03:52:01 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0457C0619D7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:51:59 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 140so755049lfi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:51:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=j9CTrGuuoHUlZAGWfnV64jcGILUKrabUBS1No8VUp1I=;
+        b=Pqv9oNkm+9Pyllwjqpce/RwRsaSGWGr+5lDHn44Yg8zbs2uz60bhclQNYbB+p1Hcjc
+         VQ1IgVfV0bRdqmrENvzzsrYv6a1kEqITdKiiCdBY91izlprm+tK/KiHxn/Kp9XJh+iUG
+         Vos3S2owafkRuZZTsRqGs0RjMXKcaUkZ2pCPEPdmnnWU4uzQzTk/NYhU00OO/yiCa+tL
+         Njtzj2G/F5xm0WX+Y7IJM3DvrfNYC4qfQjXMOj0lO/likqKukAyy7/WL126HeEUEX997
+         9Nx96Zu/Hlny6SS8VgLvOxQI2oyJRrUNpWyIus56AnoP+rYLNYanke4lrOnFZBAr/l4e
+         S8Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=j9CTrGuuoHUlZAGWfnV64jcGILUKrabUBS1No8VUp1I=;
+        b=jXhsm1PNKdfTz0GxmAkiWWz8OKd7NspLHmMF+5xtnIGg9qAzOp64Z7fOqWkv0wIjzm
+         FPSrKEzZQUa3LTXuNKuoh9J4nyv9vFrva4dyHPz0zLaa/Bb6FDwCzf5pNG+bGtNz+UvE
+         wqSFE/d9BKKIKiZAOgRNj5FrxvIbe0C9PZasyDOhhefCyUkaB2BlVx6nwcjauWRyzrDQ
+         uRNYQQc/mSs5m/+z50GOiueCEgodlgCaMhnmG8chtdKTasazE1TtTde3HuqxpHZ7OhdA
+         buzPMeYlwPHYeOIkdRJD++KoUWdY4oQTdJqSBKUWPtqwgTztlqby1Ko5b9jh+sqFbIIc
+         3bFQ==
+X-Gm-Message-State: AOAM531uCpdvv0fxyjBuManJ9fT2VHXBFJm6jvPLJAW053BVbzqGo1u/
+        z96SXYAx7GLfiIfrGuUPHO0I1Q==
+X-Google-Smtp-Source: ABdhPJwhwYi8BcbhhK+d0NPV7/Ock8IRaNVE45gU8A1BPsbDTrV6VzVsxLBZz5UDMstanyJRUsJ3Tg==
+X-Received: by 2002:a19:e204:: with SMTP id z4mr3654835lfg.121.1595317918217;
+        Tue, 21 Jul 2020 00:51:58 -0700 (PDT)
+Received: from localhost.localdomain ([195.24.90.54])
+        by smtp.gmail.com with ESMTPSA id d2sm4045334ljg.6.2020.07.21.00.50.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 00:51:57 -0700 (PDT)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Maheshwar Ajja <majja@codeaurora.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH v2 3/6] media: v4l2-ctrl: Add frame-skip std encoder control
+Date:   Tue, 21 Jul 2020 10:45:35 +0300
+Message-Id: <20200721074538.505-4-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200721074538.505-1-stanimir.varbanov@linaro.org>
+References: <20200721074538.505-1-stanimir.varbanov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2020-07-14 23:36:48)
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscor=
-ecc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.=
-yaml
-> new file mode 100644
-> index 0000000..41d0a6d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
-> @@ -0,0 +1,103 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/qcom,sc7180-lpasscorecc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm LPASS Core Clock Controller Binding for SC7180
-> +
-> +maintainers:
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm LPASS core clock control module which supports the clocks and
-> +  power domains on SC7180.
-> +
-> +  See also:
-> +  - dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,sc7180-lpasshm
-> +      - qcom,sc7180-lpasscorecc
-> +
-> +  clocks:
-> +    items:
-> +      - description: gcc_lpass_sway clock from GCC
+Adds encoders standard v4l2 control for frame-skip. The control
+is a copy of a custom encoder control so that other v4l2 encoder
+drivers can use it.
 
-Needs bi_tcxo description.
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+---
+ .../media/v4l/ext-ctrls-codec.rst             | 38 +++++++++++++++++++
+ drivers/media/v4l2-core/v4l2-ctrls.c          | 10 +++++
+ include/uapi/linux/v4l2-controls.h            |  6 +++
+ 3 files changed, 54 insertions(+)
 
-> +
-> +  clock-names:
-> +    items:
-> +      - const: iface
+diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+index b9d3f7ae6486..985e4c2d29bf 100644
+--- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
++++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+@@ -602,6 +602,40 @@ enum v4l2_mpeg_video_bitrate_mode -
+     Encoder will decide the appropriate quantization parameter and
+     bitrate to produce requested frame quality.
+ 
++
++``V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE (enum)``
++
++enum v4l2_mpeg_video_frame_skip_mode -
++    Indicates in what conditions the encoder should skip frames. If
++    encoding a frame would cause the encoded stream to be larger then a
++    chosen data limit then the frame will be skipped. Possible values
++    are:
++
++
++.. tabularcolumns:: |p{9.2cm}|p{8.3cm}|
++
++.. raw:: latex
++
++    \small
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - ``V4L2_MPEG_FRAME_SKIP_MODE_DISABLED``
++      - Frame skip mode is disabled.
++    * - ``V4L2_MPEG_FRAME_SKIP_MODE_LEVEL_LIMIT``
++      - Frame skip mode enabled and buffer limit is set by the chosen
++        level and is defined by the standard.
++    * - ``V4L2_MPEG_FRAME_SKIP_MODE_BUF_LIMIT``
++      - Frame skip mode enabled and buffer limit is set by the
++        :ref:`VBV (MPEG1/2/4) <v4l2-mpeg-video-vbv-size>` or
++        :ref:`CPB (H264) buffer size <v4l2-mpeg-video-h264-cpb-size>` control.
++
++.. raw:: latex
++
++    \normalsize
++
+ ``V4L2_CID_MPEG_VIDEO_TEMPORAL_DECIMATION (integer)``
+     For every captured frame, skip this many subsequent frames (default
+     0).
+@@ -1173,6 +1207,8 @@ enum v4l2_mpeg_video_h264_entropy_mode -
+     Quantization parameter for an B frame for MPEG4. Valid range: from 1
+     to 31.
+ 
++.. _v4l2-mpeg-video-vbv-size:
++
+ ``V4L2_CID_MPEG_VIDEO_VBV_SIZE (integer)``
+     The Video Buffer Verifier size in kilobytes, it is used as a
+     limitation of frame skip. The VBV is defined in the standard as a
+@@ -1210,6 +1246,8 @@ enum v4l2_mpeg_video_h264_entropy_mode -
+     Force a key frame for the next queued buffer. Applicable to
+     encoders. This is a general, codec-agnostic keyframe control.
+ 
++.. _v4l2-mpeg-video-h264-cpb-size:
++
+ ``V4L2_CID_MPEG_VIDEO_H264_CPB_SIZE (integer)``
+     The Coded Picture Buffer size in kilobytes, it is used as a
+     limitation of frame skip. The CPB is defined in the H264 standard as
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index bc00d02e411f..eb403858d325 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -591,6 +591,12 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+ 		"External",
+ 		NULL,
+ 	};
++	static const char * const mpeg_video_frame_skip[] = {
++		"Disabled",
++		"Level Limit",
++		"VBV/CPB Limit",
++		NULL,
++	};
+ 
+ 	switch (id) {
+ 	case V4L2_CID_MPEG_AUDIO_SAMPLING_FREQ:
+@@ -652,6 +658,8 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+ 		return flash_strobe_source;
+ 	case V4L2_CID_MPEG_VIDEO_HEADER_MODE:
+ 		return header_mode;
++	case V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE:
++		return mpeg_video_frame_skip;
+ 	case V4L2_CID_MPEG_VIDEO_MULTI_SLICE_MODE:
+ 		return multi_slice;
+ 	case V4L2_CID_MPEG_VIDEO_H264_ENTROPY_MODE:
+@@ -846,6 +854,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+ 	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:			return "H264 MB Level Rate Control";
+ 	case V4L2_CID_MPEG_VIDEO_HEADER_MODE:			return "Sequence Header Mode";
+ 	case V4L2_CID_MPEG_VIDEO_MAX_REF_PIC:			return "Max Number of Reference Pics";
++	case V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE:		return "Frame Skip Mode";
+ 	case V4L2_CID_MPEG_VIDEO_H263_I_FRAME_QP:		return "H263 I-Frame QP Value";
+ 	case V4L2_CID_MPEG_VIDEO_H263_P_FRAME_QP:		return "H263 P-Frame QP Value";
+ 	case V4L2_CID_MPEG_VIDEO_H263_B_FRAME_QP:		return "H263 B-Frame QP Value";
+@@ -1267,6 +1276,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+ 	case V4L2_CID_FLASH_LED_MODE:
+ 	case V4L2_CID_FLASH_STROBE_SOURCE:
+ 	case V4L2_CID_MPEG_VIDEO_HEADER_MODE:
++	case V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE:
+ 	case V4L2_CID_MPEG_VIDEO_MULTI_SLICE_MODE:
+ 	case V4L2_CID_MPEG_VIDEO_H264_ENTROPY_MODE:
+ 	case V4L2_CID_MPEG_VIDEO_H264_LEVEL:
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index 0f7e4388dcce..053827cda8e6 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -744,6 +744,12 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
+ #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
+ #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
+ #define V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY		(V4L2_CID_MPEG_BASE + 645)
++#define V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE		(V4L2_CID_MPEG_BASE + 646)
++enum v4l2_mpeg_video_frame_skip_mode {
++	V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_DISABLED	= 0,
++	V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_LEVEL_LIMIT	= 1,
++	V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_BUF_LIMIT	= 2,
++};
+ 
+ /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
+ #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
+-- 
+2.17.1
 
-Needs bi_tcxo
-
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  '#power-domain-cells':
-> +    const: 1
-> +
-> +  reg:
-> +    minItems: 1
-> +    items:
-> +      - description: lpass core cc register
-> +      - description: lpass audio cc register
-> +
-> +  reg-names:
-> +    items:
-> +      - const: lpass_core_cc
-> +      - const: lpass_audio_cc
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: qcom,sc7180-lpasshm
-> +then:
-> +  properties:
-> +    reg:
-> +      maxItems: 1
-> +
-> +else:
-> +  properties:
-> +    reg:
-> +      minItems: 2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - '#clock-cells'
-> +  - '#power-domain-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-> +    #include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
-> +    clock-controller@63000000 {
-> +      compatible =3D "qcom,sc7180-lpasshm";
-> +        reg =3D <0x63000000 0x28>;
-> +        clocks =3D <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
-> +        clock-names =3D "iface";
-> +        #clock-cells =3D <1>;
-> +        #power-domain-cells =3D <1>;
-> +    };
-> +
-> +  - |
-> +    clock-controller@62d00000 {
-> +        compatible =3D "qcom,sc7180-lpasscorecc";
-> +        reg =3D <0x62d00000 0x50000>,
-> +            <0x62780000 0x30000>;
-
-Tabbing looks wrong. Just use spaces?
-
-> +        reg-names =3D "lpass_core_cc", "lpass_audio_cc";
-> +        clocks =3D <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
-> +        clock-names =3D "iface";
-> +        power-domains =3D <&lpass_hm LPASS_CORE_HM_GDSCR>;
-> +        #clock-cells =3D <1>;
-> +        #power-domain-cells =3D <1>;
-> +    };
-> +...
-> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bin=
-dings/clock/qcom,gcc-sc7180.h
-> index 992b67b..bdf43adc 100644
-> --- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
-> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-> @@ -138,6 +138,7 @@
->  #define GCC_MSS_Q6_MEMNOC_AXI_CLK                              128
->  #define GCC_MSS_SNOC_AXI_CLK                                   129
->  #define GCC_SEC_CTRL_CLK_SRC                                   130
-> +#define GCC_LPASS_CFG_NOC_SWAY_CLK                             131
-> =20
->  /* GCC resets */
->  #define GCC_QUSB2PHY_PRIM_BCR                                  0
-
-This hunk should be in the next patch. Oh but then that patch should come
-before this one so the binding can use it. Either way, shouldn't be part
-of this patch.
