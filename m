@@ -2,42 +2,43 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65221C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B99C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3924B20729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B96C2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595366631;
-	bh=d91pGLQB2CXvVCmM9xXj6Dvn3IH9iEgDu/DKvgJpBFo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=qM21HrryzpeJmXl6eL4HD7B6aeGpPNyrNdErwIMWs2N5l0Z8FjF+esP1HVgm04h0Z
-	 +KHUaQcbQYNx49HfNqh65h8TyTgQ7v7tuxM1dgkhJ1LRoOllQ2afT+4HFSGnhpGR01
-	 anQ/pgMgSXPwktEahPkM2WntegYBpfauBJmFP7Zo=
+	s=default; t=1595366638;
+	bh=RNILwOin5kwW3Hlbc+oaU3qoHR9blyRxCdbK2sRyfIc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1J6x+sQyAwIgkFQ/ZcIn4aHs9dT+6peGySTZQhkhOJXv1RtlaP8UO/V12xjzTW8sv
+	 7LeZA9HPg24sPIUnSu0oXTsus6d7xaj/TfGSXFxEDa5R1H1C4K1o0CxBpNCdZ02Y0j
+	 nMclvPKjlLsOyZnI2PSa+1yuR1jbfe33mVoblqfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731162AbgGUVXu (ORCPT
+        id S1731214AbgGUVX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:23:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42326 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 17:23:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbgGUVXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:23:49 -0400
+        id S1728944AbgGUVX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 17:23:56 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9D5A20717;
-        Tue, 21 Jul 2020 21:23:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A537A20717;
+        Tue, 21 Jul 2020 21:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595366629;
-        bh=d91pGLQB2CXvVCmM9xXj6Dvn3IH9iEgDu/DKvgJpBFo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gU7VcWswDJWCFO/BstoE0v0SsBBgsPXGW5TuTJYa05QbTT1YJul2qIbgwrJC2NBa7
-         GKyHuL8ld516La4SR2fSJ3OoxLIN9Dz8RNPrji92JCssxfqP9izFcoZdOdn6Lhgdp9
-         SVURcFK9+Nmg5SrHmuEIEceQbt7vxVmS4AiUKbnE=
+        s=default; t=1595366636;
+        bh=RNILwOin5kwW3Hlbc+oaU3qoHR9blyRxCdbK2sRyfIc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=J7kCGblC8cZuPdD4jW786SouTiiPMt8Akmn0zfa4/ESdHATfBFQhvImdPulmPpyIi
+         3hFpj71dQxvi64Jag7Dor1SSZDgCcRj27Tm3ltCr+AlrHeAYLQbwzNczRqXt98465Q
+         k2O7ngX4G5ymMVjrEbz4gLiO7XEOpOHFEJBTeQBs=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Ricky Wu <ricky_wu@realtek.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -49,10 +50,12 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         Puranjay Mohan <puranjay12@gmail.com>,
         linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 0/5] minor rtsx cleanups
-Date:   Tue, 21 Jul 2020 16:23:31 -0500
-Message-Id: <20200721212336.1159079-1-helgaas@kernel.org>
+Subject: [PATCH 1/5] misc: rtsx: Use pcie_capability_clear_and_set_word() for PCI_EXP_LNKCTL
+Date:   Tue, 21 Jul 2020 16:23:32 -0500
+Message-Id: <20200721212336.1159079-2-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200721212336.1159079-1-helgaas@kernel.org>
+References: <20200721212336.1159079-1-helgaas@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,37 +65,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Clean up some needlessly device-specific stuff in the Realtek card reader
-drivers.
+Instead of using the driver-specific rtsx_pci_write_config_byte() to update
+the PCIe Link Control Register, use pcie_capability_write_word() like the
+rest of the kernel does.  This makes it easier to maintain ASPM across the
+PCI core and drivers.
 
-This implements some of my suggestions from
-https://lore.kernel.org/r/20200720220651.GA1035857@bjorn-Precision-5520
+No functional change intended.  I missed this when doing 3d1e7aa80d1c
+("misc: rtsx: Use pcie_capability_clear_and_set_word() for
+PCI_EXP_LNKCTL").
 
-This will conflict with Ricky's post here:
-https://lore.kernel.org/r/20200706070259.32565-1-ricky_wu@realtek.com
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/misc/cardreader/rtsx_pcr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-I'll be happy to update this on top of Ricky's patch after it's applied, or
-Ricky could pick up these patches and base his on top.
-
-Bjorn Helgaas (5):
-  misc: rtsx: Use pcie_capability_clear_and_set_word() for
-    PCI_EXP_LNKCTL
-  misc: rtsx: Remove unused pcie_cap
-  misc: rtsx: Remove rtsx_pci_read/write_config() wrappers
-  misc: rtsx: Find L1 PM Substates capability instead of hard-coding
-  misc: rtsx: Use standard PCI definitions
-
- drivers/misc/cardreader/rtl8411.c  |  8 +++++---
- drivers/misc/cardreader/rts5209.c  |  5 +++--
- drivers/misc/cardreader/rts5227.c  |  5 +++--
- drivers/misc/cardreader/rts5229.c  |  5 +++--
- drivers/misc/cardreader/rts5249.c  | 28 ++++++++++++++------------
- drivers/misc/cardreader/rts5260.c  | 23 +++++++++++++--------
- drivers/misc/cardreader/rts5261.c  | 32 +++++++++++++++++++-----------
- drivers/misc/cardreader/rtsx_pcr.c |  7 ++++---
- include/linux/rtsx_pci.h           | 22 --------------------
- 9 files changed, 68 insertions(+), 67 deletions(-)
-
+diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
+index 0d5928bc1b6d..6a4d6c8f4e71 100644
+--- a/drivers/misc/cardreader/rtsx_pcr.c
++++ b/drivers/misc/cardreader/rtsx_pcr.c
+@@ -1231,6 +1231,7 @@ int rtsx_ms_power_off_card3v3(struct rtsx_pcr *pcr)
+ 
+ static int rtsx_pci_init_hw(struct rtsx_pcr *pcr)
+ {
++	struct pci_dev *pdev = pcr->pci;
+ 	int err;
+ 
+ 	pcr->pcie_cap = pci_find_capability(pcr->pci, PCI_CAP_ID_EXP);
+@@ -1324,7 +1325,8 @@ static int rtsx_pci_init_hw(struct rtsx_pcr *pcr)
+ 	rtsx_pci_init_ocp(pcr);
+ 
+ 	/* Enable clk_request_n to enable clock power management */
+-	rtsx_pci_write_config_byte(pcr, pcr->pcie_cap + PCI_EXP_LNKCTL + 1, 1);
++	pcie_capability_write_word(pdev, PCI_EXP_LNKCTL,
++				   PCI_EXP_LNKCTL_CLKREQ_EN);
+ 	/* Enter L1 when host tx idle */
+ 	rtsx_pci_write_config_byte(pcr, 0x70F, 0x5B);
+ 
 -- 
 2.25.1
 
