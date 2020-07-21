@@ -2,131 +2,109 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C3FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA91FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D151D22BEF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889BF2080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:09:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7YTfmBR"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="IiepC+Fg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgGUIJ3 (ORCPT
+        id S1728683AbgGUIJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:09:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728109AbgGUIJ0 (ORCPT
+        Tue, 21 Jul 2020 04:09:35 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55692 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728109AbgGUIJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:09:26 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 680AAC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:09:26 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id v8so20453461iox.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:09:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=5uXIl0XLm92YFeb9hC7/nZPQwctVwAjVznJvDpfY4JA=;
-        b=Z7YTfmBRYzgiLjTyCve9aAjphgcb0+ObYh3oHepQRhMwZyFB++g2mWAGL0JDeTp8aD
-         InojmbW9YEjLNF5awNkn+TNBlQWw06mmCbOt9s+LjFM0RNt3fT+hFp2X/I6ylm22xF9J
-         25JA8OLozcUeYNPWqpbl3hLX0Em7Pl8QQfMmxFdVad27K9x8NVz3ukH7cpnFy38T7mLd
-         5B1eIDSKGHseIeNZ5hKP2Bec38ZEug+8Vg3JwNFtCajpVLXV/7KrqSjLxjsEVIhVgcEM
-         2Bmz2G4+KgMTvrvcugQB77fngUBurRfSGIhGROJzuwGf/TxNvvtxvuB7kfdiJUKQMcF0
-         C1/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=5uXIl0XLm92YFeb9hC7/nZPQwctVwAjVznJvDpfY4JA=;
-        b=XCUlRxfpQTA3En9rbvDQblkBXkxH45irGZki41RwHbWCXhz52FmnT4iEs5st7KekS5
-         SPJz8DYCoAwHrr11pTULh94nBYcb5dDE8R7U0jiXJLafojg3m+IH/fMpwp8PR0It/Oyg
-         LbDpu3GSVhXz0fh4VcuubYenn42qhSmctn0Amf62SMC6V0yItLbQGlZi7nSJbX91lO0R
-         h3fo5qBwdCOaJ5zDYJz1KQKHxIJ0jE5ZVo6qMNWy/D+7Ji9hUWdtpT6YNhTgOyFdq4Bo
-         SfTIWjQ9tg+cUDjg1mTR41b+KAmD8rZarX7KDeulWb4C2AIMRV9HC9KwI2THD0SHMroM
-         l+2w==
-X-Gm-Message-State: AOAM5317yAF2c+kUDJN3NjZwpYypIAXgYbAop0iUbrUyjDvLnvCJqR+8
-        n8du3uCMGn8QJTrjcWIJlfzOkI+XX/xx1iaJiN0=
-X-Google-Smtp-Source: ABdhPJwJjDDw1jCoNYRglUU8gaMF9Ud4ZDStHzoQsHFjXUSA/wEcBRRJj9GmbOlYntc0genQn+Hz+OBwFOZTCncaLHU=
-X-Received: by 2002:a02:ce9a:: with SMTP id y26mr31164481jaq.121.1595318965508;
- Tue, 21 Jul 2020 01:09:25 -0700 (PDT)
+        Tue, 21 Jul 2020 04:09:35 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L82pnM003649;
+        Tue, 21 Jul 2020 10:09:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=E2Wd2EJdD/kFe0rBJ1Ny0EHEbraKYutMjfWXFZHqZWw=;
+ b=IiepC+FgGdz9o3n6xitfN0Fi/9xgBbPDWvmW7ACnzM1xlDsWZQD8M4F6XUbsDEkskOLF
+ I22SF1LTUdKZbbUbbh6ffZCKZI//w9jSduqW6OAW1PGwIQJki/JUtMg98dXMFi1moy3J
+ AEMZ1b2o0VbHsyn0Jaa0N7niB4adOJ0tyvUqedZ0B7i1xKm627rldeugLMj+yMh91ggb
+ a7Yb/lWdAN1VQCI+HLSxaY9jEVBVuqao6L1PsR41tRidCE0MPedJi+IhcWC5AspJFesQ
+ 6bpyPJt+wDUhq95zCwRIPJapyzkJayRoVWhP2NiyBuirp0FL2DkBQwSPSvHMY6TlRt7Y 9g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32bsagvs4g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 10:09:23 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B6FDB10002A;
+        Tue, 21 Jul 2020 10:09:22 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A09902A4D85;
+        Tue, 21 Jul 2020 10:09:22 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 Jul
+ 2020 10:09:22 +0200
+Subject: Re: [PATCH v2 0/5] STM32 add usart nodes support
+To:     Erwan Le Ray <erwan.leray@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+References: <20200618130651.29836-1-erwan.leray@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <ff943604-19a8-3011-62f9-cc74f7fbab11@st.com>
+Date:   Tue, 21 Jul 2020 10:09:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200720204925.3654302-1-ndesaulniers@google.com>
-In-Reply-To: <20200720204925.3654302-1-ndesaulniers@google.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 21 Jul 2020 10:09:14 +0200
-Message-ID: <CA+icZUUzRM-pwVfAYMn-26cB-2SSvG_0jdh-aWHiuA+hFFFJ+Q@mail.gmail.com>
-Subject: Re: [PATCH v3 00/11] i386 Clang support
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200618130651.29836-1-erwan.leray@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 10:49 PM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> Resend of Brian's v2 with Acks from Peter and Linus collected, as well
-> as the final patch (mine) added. The commit of the final patch discusses
-> some of the architectural differences between GCC and Clang, and the
-> kernels tickling of this difference for i386, which necessitated these
-> patches.
->
-> Brian Gerst (10):
->   x86/percpu: Introduce size abstraction macros
->   x86/percpu: Clean up percpu_to_op()
->   x86/percpu: Clean up percpu_from_op()
->   x86/percpu: Clean up percpu_add_op()
->   x86/percpu: Remove "e" constraint from XADD
->   x86/percpu: Clean up percpu_add_return_op()
->   x86/percpu: Clean up percpu_xchg_op()
->   x86/percpu: Clean up percpu_cmpxchg_op()
->   x86/percpu: Clean up percpu_stable_op()
->   x86/percpu: Remove unused PER_CPU() macro
->
-> Nick Desaulniers (1):
->   x86: support i386 with Clang
->
->  arch/x86/include/asm/percpu.h  | 510 +++++++++++----------------------
->  arch/x86/include/asm/uaccess.h |   4 +-
->  2 files changed, 175 insertions(+), 339 deletions(-)
->
-> --
-> 2.28.0.rc0.105.gf9edc3c819-goog
->
+Hi Erwan
 
-Hi,
+On 6/18/20 3:06 PM, Erwan Le Ray wrote:
+> Add the support of uart instances available on STM32MP157 boards:
+> - usart3 on stm32mp157c-ev1, stm32mp157a-dk1, and stm32mp157c-dk2
+> - uart7 on stm32mp157a-dk1 and stm32mp157c-dk2
+> - usart2 on stm32mp157c-dk2
+> 
+> Erwan Le Ray (5):
+>    ARM: dts: stm32: add usart2, usart3 and uart7 pins in
+>      stm32mp15-pinctrl
+>    ARM: dts: stm32: add usart3 node to stm32mp15xx-dkx boards
+>    ARM: dts: stm32: add usart3 node to stm32mp157c-ev1
+>    ARM: dts: stm32: add uart7 support to stm32mp15xx-dkx boards
+>    ARM: dts: stm32: add usart2 node to stm32mp157c-dk2
+> 
+>   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 138 +++++++++++++++++++++++
+>   arch/arm/boot/dts/stm32mp157a-dk1.dts    |   2 +
+>   arch/arm/boot/dts/stm32mp157c-dk2.dts    |  11 ++
+>   arch/arm/boot/dts/stm32mp157c-ev1.dts    |  15 +++
+>   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi   |  17 +++
+>   5 files changed, 183 insertions(+)
+> 
 
-I have tested this patchset v3 on top of Linux v5.8-rc6 with a
-selfmade llvm-toolchain (snapshot version: v11+git-e05c7e400f3a plus
-cherry-picked 8b354cc8db41).
+With minor changes:
 
-This happened out of interest if this is in good shape together with
-my Debian AMD64 system.
-I checked my build-log and dmesg-output and it looks good.
+Series applied on stm32-next.
 
-Feel free to add my...
-
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-
-Thanks.
-
-Regards,
-- Sedat -
+Regards
+Alex
