@@ -2,92 +2,85 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D24EC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FC8C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5902720714
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:28:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Ai29aWaZ"
+	by mail.kernel.org (Postfix) with ESMTP id F019620674
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgGVI2r (ORCPT
+        id S1727883AbgGVIbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:28:47 -0400
-Received: from www.zeus03.de ([194.117.254.33]:57624 "EHLO mail.zeus03.de"
+        Wed, 22 Jul 2020 04:31:45 -0400
+Received: from mga04.intel.com ([192.55.52.120]:10111 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726161AbgGVI2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:28:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=266j9uSGuops7z9kBpXvluHoDZQ0
-        lpxa+TIc+bVOiu4=; b=Ai29aWaZRz7LOom1jLQTCBXiBMYO4Ygq+U3mK7pIcmUk
-        4z3eeqidKHGvc6Kxya+fDo4jVt9QrljB0FPJZgmUoZ1iJZFwXE6jDtiuYxsAa4dE
-        p2v4q45pImUdLZtgJgaaVLHq4FIItXmfjmbFddE2QO4j6vZL5ww/wGJHjzCpWLk=
-Received: (qmail 2973143 invoked from network); 22 Jul 2020 10:28:45 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Jul 2020 10:28:45 +0200
-X-UD-Smtp-Session: l3s3148p1@4BM7hwOr2NQgAwDPXwY8AL9PxqFiRnVq
-Date:   Wed, 22 Jul 2020 10:28:45 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     kishon@ti.com, vkoul@kernel.org, geert+renesas@glider.be,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] phy: renesas: rcar-gen3-usb2: exit if
- request_irq() failed
-Message-ID: <20200722082845.GB1030@ninjato>
-References: <1594986297-12434-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1594986297-12434-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rS8CxjVDS/+yyDmU"
-Content-Disposition: inline
-In-Reply-To: <1594986297-12434-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726147AbgGVIbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 04:31:45 -0400
+IronPort-SDR: 2n3+5PlxtgGS8qOKaq5R/rBx9WRv1Jw+yG/IsK+oJMTOArr/RzOUzFcn/hxvuAinKO/rmH3jcn
+ HwJcnVmjQK6g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="147787941"
+X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
+   d="scan'208";a="147787941"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 01:31:44 -0700
+IronPort-SDR: zMd+VLFpbMOrJmmWr/9BSElL1yk2Edq9WGb8p9IFUybiVaKfRysjU8cvlhfZYv/fzhlv65NTuv
+ mVVb800E6W5Q==
+X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
+   d="scan'208";a="432303114"
+Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 01:31:39 -0700
+From:   Bard Liao <yung-chuan.liao@linux.intel.com>
+To:     alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
+        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
+        bard.liao@intel.com
+Subject: [PATCH 00/13] soundwire: intel: add power management support
+Date:   Wed, 22 Jul 2020 04:37:10 +0800
+Message-Id: <20200721203723.18305-1-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series adds power management support for Intel soundwire links.
 
---rS8CxjVDS/+yyDmU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Bard Liao (1):
+  soundwire: intel: reinitialize IP+DSP in .prepare(), but only when
+    resuming
 
-On Fri, Jul 17, 2020 at 08:44:57PM +0900, Yoshihiro Shimoda wrote:
-> To avoid unexpected behaviors, it's better to exit if request_irq()
-> failed.
->=20
-> Suggested-by: Vinod Koul <vkoul@kernel.org>
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Pierre-Louis Bossart (10):
+  soundwire: intel: Add basic power management support
+  soundwire: intel: add pm_runtime support
+  soundwire: intel: reset pm_runtime status during system resume
+  soundwire: intel: fix race condition on system resume
+  soundwire: intel: call helper to reset Slave states on resume
+  soundwire: intel: pm_runtime idle scheduling
+  soundwire: intel: add CLK_STOP_TEARDOWN for pm_runtime suspend
+  soundwire: intel: add CLK_STOP_NOT_ALLOWED support
+  soundwire: intel_init: handle power rail dependencies for clock stop
+    mode
+  soundwire: intel: support clock_stop mode without quirks
 
-Makes sense to me.
+Rander Wang (2):
+  soundwire: intel: add CLK_STOP_BUS_RESET support
+  soundwire: intel: refine runtime pm for SDW_INTEL_CLK_STOP_BUS_RESET
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+ drivers/soundwire/cadence_master.h |   4 +
+ drivers/soundwire/intel.c          | 448 ++++++++++++++++++++++++++++-
+ drivers/soundwire/intel.h          |   2 +
+ drivers/soundwire/intel_init.c     |  19 +-
+ 4 files changed, 465 insertions(+), 8 deletions(-)
 
+-- 
+2.17.1
 
---rS8CxjVDS/+yyDmU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8X+L0ACgkQFA3kzBSg
-KbbciA//fMAool2PdEJqf3rxrNzqqzPYYgMjFQmxW46mh71RAsjEvlIKNcwHPUiH
-LcSTZt33k2Ef5kfE/ByxiHCzxZEncMtPqjjfsx5wsxU930K5Cm+uTR1hjOYHkjfC
-oedk1vKAhQJB02UtrlNa8ahdkJGvXM8BQ+vBqjxuyFpowfHmRuCB2bUepqFKbY3h
-PqfYurpytpIv+8LJHpnAgbzOKanzYPS3TcHZ99TCxSBK8c8sp/s0+P09qI5PNMn+
-RTJjfHEbUef8O6q06P+ag4BfRGQ0SY0GrZR32G3vKnT1SL2A02ZB85dxHJAYSu6h
-8zeKYDm9kpoayIQdHw3b+zcq+KMoBBwezrUbxnntiWTQK/2r741kOJ++RlU8fXqW
-fmCatT+S2MO/KPP3YeT6gJoKY0l8VhxIRPr57Jhbl4vKqBYRSwHrrOtvz8Ue4P01
-mhcawkYSjKJuFu6skzlQ06WfZYgy/HJGIpMmaMmjj8UzoEKwEih92NiL9mbe0AG6
-RMPflXX/RaH1HoeVlqYKnzCCGNc7UXRvxDi+SPPa0F+OwGTkNByfVPgCny+JogQw
-nwA9jXj8mppzEboYBz4ro3nx8DYVHA629o/dVsgMrz8j26PW1SKaE8SXm7q4aJJA
-heW3POM/i6ruHJ1HmxH9QFNYu7mLM8myz+Mf407ajWXxgzh9fQE=
-=7PRm
------END PGP SIGNATURE-----
-
---rS8CxjVDS/+yyDmU--
