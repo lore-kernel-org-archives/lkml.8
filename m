@@ -6,139 +6,169 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A6AC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDCBC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63EB220792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE6C22CBB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595338722;
-	bh=PPhPM53d2MTIxsJUXtD9BygOVv0SIF0J+lKGXm6IwUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E2qzCz0hE+ACyLu7D6ItiQ+Y2cfFGCjvAacix3lnQ1LghJToEY8ybEybDG2wyOQST
-	 QoZReVmnDU15wNz+LNCsq6L8s9SOoRsHxGdc+pDf6si7p+Cpq8LK2drjNZzzhuK2wi
-	 2RDObIV0vbFMoUEXHXR06dlWjFwph8bfSydlL4sE=
+	s=default; t=1595338788;
+	bh=fTNOXGIa7biqPv6Z2GuhWIBaCeoFIYX81BxPw11/p6Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PpUV5VV7oU9JVnjpQAtVmA8v/tS//wxcUFVsm192gnkzKwtU7hFyFiokvAd14mHJJ
+	 bwp5we7QzTM4vQOfOx1+b9WXpr1TkzhVIIFxJhxrKr3TIikrzgAV/erHikPA51UK6H
+	 puDbN+b1zdpadkm9XaUzZjuAihAd5lrtBoFBfPoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgGUNil (ORCPT
+        id S1728558AbgGUNjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:38:41 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35023 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727914AbgGUNik (ORCPT
+        Tue, 21 Jul 2020 09:39:47 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39551 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728477AbgGUNjr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:38:40 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 184so2938578wmb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:38:39 -0700 (PDT)
+        Tue, 21 Jul 2020 09:39:47 -0400
+Received: by mail-wr1-f67.google.com with SMTP id q5so21239288wru.6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:39:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=kwZF580by+7OaTNh1bwviGHgBVh2cx54v1+9OBPyRe8=;
-        b=MlAt0ubt8vPtG6y3MgONsX3YjBHo6dKJ/QuQYusEoVMcVhWr5pBwDFSAIU7vkbxf91
-         3AcwHw6QjLhkQeBlFYCQ9uk9EHKWzMeQtrtoRqKB2nqHZr0COvuJyWR5tEB8HlyOxHUs
-         BsjchuGfEbWoy1u/w4SpSjdqMOrx1guYUa7mAWV+FzbDjsaYgG1cFeq03LhunXPyaTmG
-         kYk2u9hBJZNmkk1gXiAY3+r1S7YRWJMG6BrXx0QfS+MptL2C3wJZdVGCLUvYOpsCR7kf
-         SY1nIDdhaRpZAKVUii9J3puNdsciIKf4owXY9xcLKE83n2onv2r7OeTn0IBkQVVITwVP
-         KrJg==
-X-Gm-Message-State: AOAM530m4Xbu+7JkPqtp6bOL2E2Z8xWHRIhj4MupxoAz3XueyObQiztt
-        +X6BMqE+MSZQkmSf5X69Cgo=
-X-Google-Smtp-Source: ABdhPJwDNWr5Q7HHQC1AeGgQy/c1wYdU4H/JDpbXbuKx7zxXnuoB9K1Z+KAUXnO2TD8diyFqifofSw==
-X-Received: by 2002:a1c:96c5:: with SMTP id y188mr4229905wmd.71.1595338718332;
-        Tue, 21 Jul 2020 06:38:38 -0700 (PDT)
-Received: from localhost (ip-37-188-169-187.eurotel.cz. [37.188.169.187])
-        by smtp.gmail.com with ESMTPSA id t3sm6298077wre.41.2020.07.21.06.38.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 06:38:37 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 15:38:35 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>
-Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
-Message-ID: <20200721133835.GL4061@dhcp22.suse.cz>
-References: <20200721112529.GJ4061@dhcp22.suse.cz>
- <664A07B6-DBCD-4520-84F1-241A4E7A339F@lca.pw>
- <20200721121752.GK4061@dhcp22.suse.cz>
- <20200721132343.GA4261@lca.pw>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+EynrwAgZ+BIcVK8jOHfPKfboNTbROApvtg8PYw4Yzk=;
+        b=aa5DXzi4KmKVOZWF8Eypoee/j7sBRa8UFBg2S/TwXg9Phk+m3ApW8eRyApoGfZ7GwP
+         J7SAU2g1TZjj1tkZvn9vA3KXeicBw/d+oR+PqKCDb2hdty0ava7lpno4ze/SmISCc0ny
+         LVlbKn8uOWP5ZrcUHkHz0otJ7pTowORnCRqbRIkg8BkanruXi+ypTqCD2s7qsi+Ybwmw
+         vSGkb/RKKXlQE4QQmHrzd+m4Trb9+2GB8XU7TcslN1w74JuJzJPl6IqgxCsnBgV719VE
+         qeXi6nD+qJsbIWybfq8rMHmtj8nsro5eVprmginq2BWUJl0SW6ZyNimllmsPtdzZmCzq
+         5TEQ==
+X-Gm-Message-State: AOAM530HmL+jFhNSGvX4Z4bIEOe58g7a+KiWaasAHKcEH9xJT3KatoQv
+        gfqIe9Nq//CXefOgug0pDqOoJaokkPVmtXk1/0Y=
+X-Google-Smtp-Source: ABdhPJxZ6BH20IUKsNG5HXoYCol9gZidHeeK/PC5GK5GkSDZFzeG1La7jzhU7vlR5gRrdfECzw0Rm2bZe/JXb03rE9U=
+X-Received: by 2002:adf:dfd0:: with SMTP id q16mr954300wrn.60.1595338785533;
+ Tue, 21 Jul 2020 06:39:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200721132343.GA4261@lca.pw>
+References: <20200718064826.9865-1-changbin.du@gmail.com>
+In-Reply-To: <20200718064826.9865-1-changbin.du@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 21 Jul 2020 22:39:34 +0900
+Message-ID: <CAM9d7ci_5J-NCo2o0-ALj85A79YFcs1BJCwcXBUY_p8VznmTMQ@mail.gmail.com>
+Subject: Re: [PATCH v7 00/18] perf: ftrace enhancement
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 21-07-20 09:23:44, Qian Cai wrote:
-> On Tue, Jul 21, 2020 at 02:17:52PM +0200, Michal Hocko wrote:
-> > On Tue 21-07-20 07:44:07, Qian Cai wrote:
-> > > 
-> > > 
-> > > > On Jul 21, 2020, at 7:25 AM, Michal Hocko <mhocko@kernel.org> wrote:
-> > > > 
-> > > > Are these really important? I believe I can dig that out from the bug
-> > > > report but I didn't really consider that important enough.
-> > > 
-> > > Please dig them out. We have also been running those things on
-> > > “large” powerpc as well and never saw such soft-lockups. Those
-> > > details may give us some clues about the actual problem.
-> > 
-> > I strongly suspect this is not really relevant but just FYI this is
-> > 16Node, 11.9TB with 1536CPUs system.
-> 
-> Okay, we are now talking about the HPC special case. Just brain-storming some
-> ideas here.
-> 
-> 
-> 1) What about increase the soft-lockup threshold early at boot and restore
-> afterwards? As far as I can tell, those soft-lockups are just a few bursts of
-> things and then cure itself after the booting.
+Hello,
 
-Is this really better option than silencing soft lockup from the code
-itself? What if the same access pattern happens later on?
+On Sat, Jul 18, 2020 at 3:48 PM Changbin Du <changbin.du@gmail.com> wrote:
+>
+> The perf has basic kernel ftrace support but lack support of most tracing
+> options. This serias is target to enhance the perf ftrace functionality so
+> that we can make full use of kernel ftrace with perf.
+>
+> In general, this serias be cataloged into two main changes:
+>   1) Improve usability of existing functions. For example, we don't need to type
+>      extra option to select the tracer.
+>   2) Add new options to support all other ftrace functions.
+>
+> Here is a glance of all ftrace functions with this serias:
+>
+> $ sudo perf ftrace -h
+>
+>  Usage: perf ftrace [<options>] [<command>]
+>     or: perf ftrace [<options>] -- <command> [<options>]
+>
+>     -a, --all-cpus        system-wide collection from all CPUs
+>     -C, --cpu <cpu>       list of cpus to monitor
+>     -D, --delay <n>       ms to wait before starting tracing after program start
+>     -F, --funcs           Show available functions to filter
+>     -G, --graph-funcs <func>
+>                           trace given functions using function_graph tracer
+>     -g, --nograph-funcs <func>
+>                           Set nograph filter on given functions
+>     -m, --buffer-size <size>
+>                           size of per cpu buffer
+>     -N, --notrace-funcs <func>
+>                           do not trace given functions
+>     -p, --pid <pid>       trace on existing process id
+>     -T, --trace-funcs <func>
+>                           trace given functions using function tracer
+>     -t, --tracer <tracer>
+>                           tracer to use: function or function_graph (This option is deprecated)
+>     -v, --verbose         be more verbose
+>         --func-opts <options>
+>                           function tracer options, available options: call-graph,irq-info
+>         --graph-opts <options>
+>                           graph tracer options, available options: nosleep-time,noirqs,verbose,thresh=<n>,depth=<n>
+>         --inherit         trace children processes
+>         --tid <tid>       trace on existing thread id (exclusive to --pid)
+>
+> v7:
+>   o add back '--tid <tid>'.
+> v6:
+>   o fix return value of read_tracing_file_to_stdout().
+>   o make __cmd_ftrace() shorter.
+>   o remove option '-t, --tid <tid>'.
+> v5:
+>   o trivial fixes.
+> v4:
+>   o add util/parse-sublevel-options.c
+>   O remove -D/--graph-depth
+> v3:
+>   o add --func-opts and --graph-opts to set tracer specific options.
+>   o support units as a suffix for option '-m/--buffer-size'.
+> v2:
+>   o patches for option '-u/--userstacktrace' and '--no-pager' are dropped.
+>   o update all related perf documentation.
+>   o rename some options. Now all funcgraph tracer options are prefixed with
+>     '--graph-', while all function tracer options are prefixed with '--func-'.
+>   o mark old options deprecated instead of removing them.
 
-> 2) Reading through the comments above page_waitqueue(), it said rare hash
-> collisions could happen, so sounds like in this HPC case, it is rather easy to
-> hit those hash collisons. Thus, need to deal with that instead?
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-As all of those seem to be the same class of process I suspect it is
-more likely that many processes are hitting the page fault on the same
-file page. E.g. a code/library.
+Thanks
+Namhyung
 
-> 3) The commit 62906027091f ("mm: add PageWaiters indicating tasks are waiting
-> for a page bit") mentioned that,
-> 
-> "Putting two bits in the same word opens the opportunity to remove the memory
-> barrier between clearing the lock bit and testing the waiters bit, after some
-> work on the arch primitives (e.g., ensuring memory operand widths match and
-> cover both bits)."
-> 
-> Do you happen to know if this only happen on powerpc?
-
-I have only seen this single instance on that machine. I do not think
-this is very much HW specific but ppc platform is likely more prone to
-that. Just think of the memory itself. Each memory block is notified via
-udev and ppc has very small memblocks (16M to 256M). X86 will use 2G
-blocks on large machines.
-
-> Also, probably need to
-> dig out if those memory barrier is still there that could be removed to speed
-> up things.
-
-I would be really suprised if memory barriers matter much. It sounds
-much more likely that there is the same underlying problem as
-11a19c7b099f. There are just too many waiters on the page. The commit
-prevents just the hard lockup part of the problem by dropping the lock
-and continuing after the bookmark. But, as mentioned in the changelog,
-cond_resched is not really an option because this path is called from
-atomic context as well. So !PREEMPT kernels are still in the same boat.
-
-I might have misunderstood something, of course, and would like to hear
-where is my thinking wrong.
--- 
-Michal Hocko
-SUSE Labs
+>
+>
+> Changbin Du (18):
+>   perf ftrace: select function/function_graph tracer automatically
+>   perf ftrace: add option '-F/--funcs' to list available functions
+>   perf ftrace: factor out function write_tracing_file_int()
+>   perf ftrace: add option '-m/--buffer-size' to set per-cpu buffer size
+>   perf ftrace: show trace column header
+>   perf ftrace: add option '--inherit' to trace children processes
+>   perf: util: add general function to parse sublevel options
+>   perf ftrace: add support for tracing option 'func_stack_trace'
+>   perf ftrace: add support for trace option sleep-time
+>   perf ftrace: add support for trace option funcgraph-irqs
+>   perf ftrace: add support for tracing option 'irq-info'
+>   perf ftrace: add option 'verbose' to show more info for graph tracer
+>   perf ftrace: add support for trace option tracing_thresh
+>   perf: ftrace: allow set graph depth by '--graph-opts'
+>   perf ftrace: add option -D/--delay to delay tracing
+>   perf ftrace: add option --tid to filter by thread id
+>   perf: ftrace: Add set_tracing_options() to set all trace options
+>   perf ftrace: add change log
+>
+>  tools/perf/Documentation/perf-config.txt |   5 -
+>  tools/perf/Documentation/perf-ftrace.txt |  36 +-
+>  tools/perf/builtin-ftrace.c              | 415 +++++++++++++++++++++--
+>  tools/perf/util/Build                    |   1 +
+>  tools/perf/util/debug.c                  |  61 +---
+>  tools/perf/util/parse-sublevel-options.c |  70 ++++
+>  tools/perf/util/parse-sublevel-options.h |  11 +
+>  7 files changed, 513 insertions(+), 86 deletions(-)
+>  create mode 100644 tools/perf/util/parse-sublevel-options.c
+>  create mode 100644 tools/perf/util/parse-sublevel-options.h
+>
+> --
+> 2.25.1
+>
