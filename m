@@ -2,89 +2,97 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3537EC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10D59208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595324054;
-	bh=wRyOkf5BPZx5EhcERYgIJKjB6OMOn8b6JxT3/6io1uU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vxYrZFeFlY13RhUAJNLPJ+bEh34BGwUr36465kODvhmfdKL8TmieHrPLACfCPMweN
-	 v7qXhnZ74frY0cpule/9YCkyq4BkuRRrH5ArPeUGy1CaBOj9UM1+BYInuWbUC9hZaA
-	 S4MDsOXIZmpEG01F7hZ+jVpDmpFthIL9jxfUQfTA=
+	by mail.kernel.org (Postfix) with ESMTP id 4320E2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:34:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgGUJeM (ORCPT
+        id S1727873AbgGUJev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:34:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52294 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 05:34:51 -0400
+Received: from 8bytes.org ([81.169.241.247]:58308 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgGUJeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:34:12 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725984AbgGUJev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 05:34:51 -0400
+Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 826942070A;
-        Tue, 21 Jul 2020 09:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595324052;
-        bh=wRyOkf5BPZx5EhcERYgIJKjB6OMOn8b6JxT3/6io1uU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VUwFh+akV6bxsDn1GyNoMZEn5p+yDLf684CgGe64T4TJEu3GBLxg5yF/U6lpq/WaL
-         GQLmWOpZNlWyaNxTNb5pzRNCM4xaf1PoLs8EXchYcY2Vf3N1gibdrtQ6s4beURmhaj
-         tFa6EcHUBwm2QtdO6rG3ewL86ougrM7mBa6nSOls=
-Date:   Tue, 21 Jul 2020 10:33:58 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: tas2770: Convert tas2770 binding to
- yaml
-Message-ID: <20200721093358.GA4845@sirena.org.uk>
-References: <20200720181202.31000-1-dmurphy@ti.com>
+        by theia.8bytes.org (Postfix) with ESMTPSA id 906BB1DB;
+        Tue, 21 Jul 2020 11:34:49 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Bob Haarman <inglorion@google.com>, hjl.tools@gmail.com,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: [PATCH] x86, vmlinux.lds: Page-Align end of ..page_aligned sections
+Date:   Tue, 21 Jul 2020 11:34:48 +0200
+Message-Id: <20200721093448.10417-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
-Content-Disposition: inline
-In-Reply-To: <20200720181202.31000-1-dmurphy@ti.com>
-X-Cookie: I'm also against BODY-SURFING!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Joerg Roedel <jroedel@suse.de>
 
---45Z9DzgjV8m4Oswq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Align the end of the .bss..page_aligned and .data..page_aligned section
+on page-size too. Otherwise the linker might place other objects on the
+page of the last ..page_aligned object. This is inconsistent with other
+objects in those sections, which all have their own page.
 
-On Mon, Jul 20, 2020 at 01:12:01PM -0500, Dan Murphy wrote:
-> Convert the tas2770 binding to yaml format.
-> Add in the reset-gpio to the binding as it is in the code but not
-> documented in the binding.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/kernel/vmlinux.lds.S     | 1 +
+ include/asm-generic/vmlinux.lds.h | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-What's new about this version?
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 3bfc8dd8a43d..9a03e5b23135 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -358,6 +358,7 @@ SECTIONS
+ 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {
+ 		__bss_start = .;
+ 		*(.bss..page_aligned)
++		. = ALIGN(PAGE_SIZE);
+ 		*(BSS_MAIN)
+ 		BSS_DECRYPTED
+ 		. = ALIGN(PAGE_SIZE);
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 3ceb4b7279ec..bd6302bd1d0f 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -360,7 +360,8 @@
+ 
+ #define PAGE_ALIGNED_DATA(page_align)					\
+ 	. = ALIGN(page_align);						\
+-	*(.data..page_aligned)
++	*(.data..page_aligned)						\
++	. = ALIGN(page_align);
+ 
+ #define READ_MOSTLY_DATA(align)						\
+ 	. = ALIGN(align);						\
+@@ -758,6 +759,7 @@
+ 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {				\
+ 		BSS_FIRST_SECTIONS					\
+ 		*(.bss..page_aligned)					\
++		. = ALIGN(PAGE_SIZE);					\
+ 		*(.dynbss)						\
+ 		*(BSS_MAIN)						\
+ 		*(COMMON)						\
+-- 
+2.27.0
 
---45Z9DzgjV8m4Oswq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8WtoYACgkQJNaLcl1U
-h9DBiwf/VkRD3CE9qEXZu/H6d/cKccK78cdx+xjg+aPRtBQUNd1d0VuGIfe0j6MQ
-Prpam9rnYKQkVwea4g84t9758PLwMQquSokeMUBhOEAF4a1opT33TKEZxIe9LR2V
-43HK6V5NZX/ybjlw3Oeos7OWvJmMfpACqL5C4ceQQ2phEPGpe3TuAKx2+o/Dnk0Y
-7EHHI+RqWZB82rpeOCngyKUWjxaetSBt+k9k8QxvP9ubgbQzXvn40rJt0VivIuna
-uBqdWKRTHHaev3IGr+cpBRRiH/TTZzZroQhVN7ydhYdtXsikuGBKg2/Xd9OJ+L/J
-3vTgCaWBlVkpMLU6PaREZwy7rvUS3g==
-=LJIg
------END PGP SIGNATURE-----
-
---45Z9DzgjV8m4Oswq--
