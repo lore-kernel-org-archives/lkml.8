@@ -2,92 +2,127 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680E5C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD33C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 421C32065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7C422482
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:18:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1Zq3e0dI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730399AbgGURRk (ORCPT
+        id S1730469AbgGURSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:17:40 -0400
-Received: from mga07.intel.com ([134.134.136.100]:10555 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729286AbgGURRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:17:39 -0400
-IronPort-SDR: TTKTiD8Ty3QSBBnkPynzNIf8DupNlcN7W5j+3dnNvSWhyXDmxGEnITs4cCfsOeX85wqxHDFp4M
- LSsXoZj4rC9Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="214839140"
+        Tue, 21 Jul 2020 13:18:16 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:65129 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729583AbgGURSP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 13:18:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1595351894; x=1626887894;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=qmXSt7D14ySY6HyhmSqPw8nvb2IeYDotRIoEDXfC9yk=;
+  b=1Zq3e0dIGz/+ZUjVHlx4VrPg/4AzJB89lf2L+f5sO1CjjovQgVKCKTK4
+   6QUTgrn/6i3xjD6bfySWVs/IIZ4st2yvE25DeTDXx6LCC3r9wYjwYX3Jj
+   hUSKPcta70R48gbw28HgxdI3L8Z+Ak6dNTNWMwiTQ3n+ltHK9SqDGQumJ
+   vrTeqONOxot/yHZu1cd2Bn/IEgJ1kDWfiMEfgy9IsOT8kOb0VdS/6T1N4
+   +ezmOdla7+0PpxTYcCrgn9FFf6J6wcoMWBcENgs2Ftzb4xV0zN7+Rbrif
+   WFmhFC26w44fRxtRiAzzc2attnbbwNzerBl5na98MV1AWjI5j3sVnabdF
+   Q==;
+IronPort-SDR: ke/FzcX5XDYZXmJmoP4GTJX8QRZ0WNSUwXovaCyIJ2Wcc6jKmmBvLciVdNUNBMoRYPdG8OeAQZ
+ ZlnS+Z7D8dZPf+qEllAMQEX3PHAeoPtAvSC3//rel6R8DwEjSxHAzByPkFGvscRt8EYuBPEjeK
+ 6HKQnr4J/782e1vgym8B4L67coZu+sSemYMt/UBjO+CMznml4nX30wOXQkUaMCxWgj4LLhVKL/
+ XWuR0XDJHPEQEZXD9OUAxusvAF0NF/sCyVJbueXAQKSZ4q8o/gpTeySBFHBh9jG7GRcz6R9iab
+ Ni0=
 X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="214839140"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 10:17:36 -0700
-IronPort-SDR: PRmyN7gp5wF41uVRnfVHJOfgingQ7F3tDTAjGVtjK7KHwH+C+64WU0/RcXp7UrW8eXBvcXHznz
- OpytWloy/2sA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="326434915"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.213.181.166]) ([10.213.181.166])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 Jul 2020 10:17:35 -0700
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
- support for the idxd driver
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     vkoul@kernel.org, megha.dey@intel.com, maz@kernel.org,
-        bhelgaas@google.com, rafael@kernel.org, tglx@linutronix.de,
-        hpa@zytor.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <20200721162858.GA2139881@kroah.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <754118ac-0c3f-c870-eb6e-f7bc24014cfc@intel.com>
-Date:   Tue, 21 Jul 2020 10:17:34 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+   d="scan'208";a="84812037"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Jul 2020 10:18:14 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 21 Jul 2020 10:18:13 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Tue, 21 Jul 2020 10:15:20 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <nicolas.ferre@microchip.com>, <claudiu.beznea@microchip.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <andrew@lunn.ch>,
+        <f.fainelli@gmail.com>, <robh+dt@kernel.org>,
+        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
+        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
+Subject: [PATCH net-next v2 2/7] dt-bindings: net: macb: use an MDIO node as a container for PHY nodes
+Date:   Tue, 21 Jul 2020 20:13:11 +0300
+Message-ID: <20200721171316.1427582-3-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
+References: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20200721162858.GA2139881@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The MACB driver embeds an MDIO bus controller and for this reason there
+was no need for an MDIO sub-node present to contain the PHY nodes. Adding
+MDIO devies directly under an Ethernet node is deprecated, so an MDIO node
+is included to contain of the PHY nodes (and other MDIO devices' nodes).
 
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+---
 
-On 7/21/2020 9:28 AM, Greg KH wrote:
-> On Tue, Jul 21, 2020 at 09:02:15AM -0700, Dave Jiang wrote:
->> v2:
-> 
-> "RFC" to me means "I don't really think this is mergable, so I'm
-> throwing it out there."  Which implies you know it needs more work
-> before others should review it as you are not comfortable with it :(
-> 
-> So, back-of-the-queue you go...
-> 
-> greg k-h
-> 
+Changes in v2:
+ - patch renamed from "macb: bindings doc: use an MDIO node as a
+   container for PHY nodes" to "dt-bindings: net: macb: use an MDIO
+   node as a container for PHY nodes" 
 
-Hi Greg! Yes this absolutely needs more work! I think it's in pretty good shape, 
-but it has reached the point where it needs the talented eyes of reviewers from 
-outside of Intel. I was really hoping to get feedback from folks like Jason 
-(Thanks Jason!!) and KVM and VFIO experts like Alex, Paolo, Eric, and Kirti.
+ Documentation/devicetree/bindings/net/macb.txt | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-I can understand that you are quite busy and can not necessarily provide a 
-detailed review at this phase. Would you prefer to be cc'd on code at this phase 
-in the future? Or, should we reserve putting you on the cc for times when we 
-know it's ready for merge?
+diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+index 0b61a90f1592..88d5199c2279 100644
+--- a/Documentation/devicetree/bindings/net/macb.txt
++++ b/Documentation/devicetree/bindings/net/macb.txt
+@@ -32,6 +32,11 @@ Required properties:
+ The MAC address will be determined using the optional properties
+ defined in ethernet.txt.
+ 
++Optional subnodes:
++- mdio : specifies the MDIO bus in the MACB, used as a container for PHY nodes or other
++  nodes of devices present on the MDIO bus. Please see ethernet-phy.yaml in the same
++  directory for more details.
++
+ Optional properties for PHY child node:
+ - reset-gpios : Should specify the gpio for phy reset
+ - magic-packet : If present, indicates that the hardware supports waking
+@@ -48,8 +53,12 @@ Examples:
+ 		local-mac-address = [3a 0e 03 04 05 06];
+ 		clock-names = "pclk", "hclk", "tx_clk";
+ 		clocks = <&clkc 30>, <&clkc 30>, <&clkc 13>;
+-		ethernet-phy@1 {
+-			reg = <0x1>;
+-			reset-gpios = <&pioE 6 1>;
++		mdio {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			ethernet-phy@1 {
++				reg = <0x1>;
++				reset-gpios = <&pioE 6 1>;
++			};
+ 		};
+ 	};
+-- 
+2.25.1
+
