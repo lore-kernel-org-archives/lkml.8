@@ -2,103 +2,121 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11895C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0F6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D58AD2080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595331655;
-	bh=KcPGx9QiMCmxNN2YSoGE/dQIrCs7akN/oOdzsJC69/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v8m5emqYZ4/8MiORs5U4KD2l8q5xDaWXEKTc8mBge1PIKgdWB7ZhPbFnfcP+7CGUb
-	 xqjtziaWWdFqtXVEaDl4RdaBGYNDSsN5Nn2F+KIUmQpy96pNvme5Z3BEMppO07Iq5n
-	 Whbn/0Byi0OwUt8PJtEzh9egp69Pc6tofzK4D5ds=
+	by mail.kernel.org (Postfix) with ESMTP id B50462073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:45:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p8kM4ZEM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbgGULky (ORCPT
+        id S1728595AbgGULp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:40:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728580AbgGULky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:40:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 300BF2073A;
-        Tue, 21 Jul 2020 11:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595331653;
-        bh=KcPGx9QiMCmxNN2YSoGE/dQIrCs7akN/oOdzsJC69/8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mj34L9PXujfgj94Dv1Bc0pSVSYyGAuYifoobe26I7vzlECi2pAFm4j3KlfcCohwAR
-         p2Xlcs9vVlaLLmXr5UwEacq0xvjx2j6aGix63EXm0A6cvXhD0RxBFXXcYjlXCn2LTW
-         iK482uy/vXnfjeC8Wz2I5jBNfUU4affwg+F5EH04=
-Date:   Tue, 21 Jul 2020 13:41:01 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>, od@zcrc.me,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] usb: common: usb-conn-gpio: Register optional
- charger
-Message-ID: <20200721114101.GA1761915@kroah.com>
-References: <20200621224807.882184-1-paul@crapouillou.net>
+        Tue, 21 Jul 2020 07:45:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbgGULp4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 07:45:56 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80479C061794;
+        Tue, 21 Jul 2020 04:45:56 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id q17so10591098pfu.8;
+        Tue, 21 Jul 2020 04:45:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y1sUu7IRkmKxX3OgEjjqPHVwVLT2AAnTvOPxWUsKTqw=;
+        b=p8kM4ZEM921Rnx31tg42y4gUgRIi8DEiGh63WwfBAvBEANt4B0hSXXbr36naNeLLy7
+         f8OxBDKpjtHsltH7llwMynl0WrSt/Z4jSa17m8ILL64tnTuyVc4GgDLPp7yCE2Pqckbm
+         xi+7kNfgrRFZxF1KBr8NL7NdQ6LaL7bD6fTasjweasf19+7B+4aNZ+9iL9NAJuX9TU7H
+         fiMYNDXF7lgaKpke1wTvS2tCk01Bn8YXNE+SRO3l1x1at4RZeO+lgRIb3/BQrnf504db
+         3vklBe3GciolaNzf33CJbBot3sUf68pML8vZ8vZGmPPGdXgN0FIKjDxn8tzRACmSQblG
+         9wpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y1sUu7IRkmKxX3OgEjjqPHVwVLT2AAnTvOPxWUsKTqw=;
+        b=S0ZJchY8H5NZjahjjP/eJ7WxRnysrbToTGHE8w6QuBTBMrR2lo2QRHXizADF8DwMD8
+         6TGkmOQz7QF628jl1u/jz8h6KNqzBiZ9lMEtLa7pnbrsMgxxXVZzgEeRAA3gQx+NQOvn
+         bOIjXgQPQzBuCTlvVbEZBeVhMxKmjlUS+bCCsDGUc0lpnYgBVlfW2RQclfmy1QKyPD+O
+         J3wuxdlpNbztO+1TmF+MiB7EEedatWLzTFWP4tRad57L6NDEcTU7kAX1G43Z8jAso8uD
+         6c3yXnCEvrBEk3/BRjzheTUBKzU1WGnfwFfZS4bFhDuRx30dQOUat8OE0poNXrQC2+Nk
+         iGIQ==
+X-Gm-Message-State: AOAM530QE4OVkkj3LZ6ELiHDupMLmaGx97hj8aWoouVu34Y4ndQzjLys
+        TSkuUxGDwv1keMZNs5qa2IA=
+X-Google-Smtp-Source: ABdhPJyqcuvHliiKiP5huvYK7V4CHNGgIwSfV8Uvy+9NY2jKwNZ6oZ+YCKezwhQDaTKxh/y5jSPh9g==
+X-Received: by 2002:a65:5201:: with SMTP id o1mr7897382pgp.404.1595331955911;
+        Tue, 21 Jul 2020 04:45:55 -0700 (PDT)
+Received: from xiaomi.mioffice.cn ([209.9.72.214])
+        by smtp.gmail.com with ESMTPSA id y24sm21233376pfp.217.2020.07.21.04.45.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 04:45:54 -0700 (PDT)
+From:   Qiwu Huang <yanziily@gmail.com>
+To:     sre@kernel.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, jiangfei1@xiaomi.com,
+        Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: [PATCH v6 0/4] add some power supply properties about wireless/wired charging
+Date:   Tue, 21 Jul 2020 19:43:49 +0800
+Message-ID: <cover.1595329640.git.huangqiwu@xiaomi.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200621224807.882184-1-paul@crapouillou.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200721114349.cY4aEwL5_63ceZ20p-eCfbGDNOCRfeEeHG2B5481ccY@z>
 
-On Mon, Jun 22, 2020 at 12:48:07AM +0200, Paul Cercueil wrote:
-> Register a power supply charger, if the Kconfig option
-> USB_CONN_GPIO_CHARGER is set, whose online state depends on whether
-> the USB role is set to device or not.
-> 
-> This is useful when the USB role is the only way to know if the device
-> is charging from USB. The API is the standard power supply charger API,
-> you get a /sys/class/power_supply/xxx/online node which tells you the
-> state of the charger.
-> 
-> The sole purpose of this is to give userspace applications a way to
-> know whether or not the charger is plugged.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/usb/common/Kconfig         | 11 +++++++
->  drivers/usb/common/usb-conn-gpio.c | 47 ++++++++++++++++++++++++++++++
->  2 files changed, 58 insertions(+)
-> 
-> diff --git a/drivers/usb/common/Kconfig b/drivers/usb/common/Kconfig
-> index d611477aae41..5405ae96c68f 100644
-> --- a/drivers/usb/common/Kconfig
-> +++ b/drivers/usb/common/Kconfig
-> @@ -49,3 +49,14 @@ config USB_CONN_GPIO
->  
->  	  To compile the driver as a module, choose M here: the module will
->  	  be called usb-conn-gpio.ko
-> +
-> +if USB_CONN_GPIO
-> +
-> +config USB_CONN_GPIO_CHARGER
-> +	bool "USB charger support"
-> +	select POWER_SUPPLY
-> +	help
-> +	  Register a charger with the power supply subsystem. This will allow
-> +	  userspace to know whether or not the device is charging from USB.
+From: Qiwu Huang <huangqiwu@xiaomi.com>
 
-Why make this an option at all?  Why wouldn't we always want this here?
+This patchset aims to provide power supply properties about wireless/wired charging.
+"quick_charge_type" reports different types of quick charge based on the charging power;
+"tx_adapter" shows" the type of wireless charging adapter;
+"signal_strength" shows the coupling level between TX and RX;
+"reverse_chg_mode" provides the interface of enabling/disabling wireless reverse charging.
 
-As this is a charger, exporting that information to userspace should
-probably always happen, right?
+Changes in v6
+ - Replace "phones" with "devices" suggested by GregKH
+ - Add permission statement for "reverse_chg_mode"
+ - Update description for "reverse_chg_mode" in ABI suggested by GregKH
+ - Update description for "PING phase" in ABI suggested by GregKH
 
-thanks,
+Changes in v5
+ - Add details in 0/X email
 
-greg k-h
+Changes in v4
+ - Exclude the patch of "power: supply: supply battery soc with decimal form"
+ - Fix some typo
+
+Changes in v3
+ - Add enumederated for quick charge type
+ - Add enumederated for tx adapter type
+ - Update the return type and description in ABI
+
+Changes in v2
+ - modify to capital letters for "power_supply_attrs"
+ - Update the return type and description in ABI
+
+Qiwu Huang (4):
+  power: supply: core: add quick charge type property
+  power: supply: core: add wireless charger adapter type property
+  power: supply: core: add wireless signal strength property
+  power: supply: core: property to control reverse charge
+
+ Documentation/ABI/testing/sysfs-class-power | 85 +++++++++++++++++++++
+ drivers/power/supply/power_supply_sysfs.c   |  4 +
+ include/linux/power_supply.h                | 31 ++++++++
+ 3 files changed, 120 insertions(+)
+
+-- 
+2.27.0
+
