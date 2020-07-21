@@ -2,191 +2,201 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8987BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21A8C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 673E3208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D51921702
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595317919;
+	bh=ntUEEOistZRYlYxAe/OIXCaUSHEuCFu4ON7rJM+hkDM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=UYogAKi9YVBmp+FBThTzk8s7X/nmBJVRKH4yUzUxxQlldnb6bUegCuYTdEN3fSJJA
+	 PoCyOFVGITArWOUqBVzbLAa8/NZx/PBPR1Xy9FSsShmo8RvsD8lo9eP0jV/2iI5QND
+	 hnB8dXj8+9oDt/kCIdIJfaGFh40KzcfjbYVHistc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgGUHvt (ORCPT
+        id S1728043AbgGUHv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:51:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45426 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726389AbgGUHvs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 03:51:48 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L72le6146267;
-        Tue, 21 Jul 2020 03:51:26 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32dn0xu58e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 03:51:26 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06L73TAS148956;
-        Tue, 21 Jul 2020 03:51:25 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32dn0xu57h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 03:51:25 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06L7okta007505;
-        Tue, 21 Jul 2020 07:51:23 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 32brq83m0g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 07:51:23 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06L7pK5058392634
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jul 2020 07:51:20 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6009E4C04A;
-        Tue, 21 Jul 2020 07:51:20 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E39D14C046;
-        Tue, 21 Jul 2020 07:51:16 +0000 (GMT)
-Received: from [9.199.47.202] (unknown [9.199.47.202])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Jul 2020 07:51:16 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH v4 05/10] powerpc/dt_cpu_ftrs: Add feature for 2nd DAWR
-To:     Jordan Niethe <jniethe5@gmail.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org,
-        apopple@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200717040958.70561-1-ravi.bangoria@linux.ibm.com>
- <20200717040958.70561-6-ravi.bangoria@linux.ibm.com>
- <CACzsE9oE+OMnWEXvbZZbq35YzpSzCbBHWEJcjtCgkcq-YrABng@mail.gmail.com>
-Message-ID: <c34b1a66-2db6-c97a-1782-0d473c758502@linux.ibm.com>
-Date:   Tue, 21 Jul 2020 13:21:16 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 03:51:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727837AbgGUHv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 03:51:57 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8053208E4;
+        Tue, 21 Jul 2020 07:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595317916;
+        bh=ntUEEOistZRYlYxAe/OIXCaUSHEuCFu4ON7rJM+hkDM=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=ahfBN40/RRChtiBnraGchV29VjzxUmjgm7gXPJE6LxwkPV/0MSX52Z0R3Dd+1VC/E
+         jHCSkFjMNWoYL6l5gSteT2a4Ra2I53SVy2Aeut5GV1bOzcP2hodI9AwdkUbGmOwDK8
+         Kui264khcfiO8n50/aEyYT8suL4r9fC2Ll8DbvjU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CACzsE9oE+OMnWEXvbZZbq35YzpSzCbBHWEJcjtCgkcq-YrABng@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- priorityscore=1501 adultscore=0 bulkscore=0 impostorscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007210048
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1594795010-9074-3-git-send-email-tdas@codeaurora.org>
+References: <1594795010-9074-1-git-send-email-tdas@codeaurora.org> <1594795010-9074-3-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v4 2/4] dt-bindings: clock: Add YAML schemas for LPASS clocks on SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Tue, 21 Jul 2020 00:51:56 -0700
+Message-ID: <159531791606.3847286.11896325263133276429@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Taniya Das (2020-07-14 23:36:48)
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscor=
+ecc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.=
+yaml
+> new file mode 100644
+> index 0000000..41d0a6d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
+> @@ -0,0 +1,103 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/qcom,sc7180-lpasscorecc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm LPASS Core Clock Controller Binding for SC7180
+> +
+> +maintainers:
+> +  - Taniya Das <tdas@codeaurora.org>
+> +
+> +description: |
+> +  Qualcomm LPASS core clock control module which supports the clocks and
+> +  power domains on SC7180.
+> +
+> +  See also:
+> +  - dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,sc7180-lpasshm
+> +      - qcom,sc7180-lpasscorecc
+> +
+> +  clocks:
+> +    items:
+> +      - description: gcc_lpass_sway clock from GCC
 
+Needs bi_tcxo description.
 
-On 7/17/20 11:14 AM, Jordan Niethe wrote:
-> On Fri, Jul 17, 2020 at 2:10 PM Ravi Bangoria
-> <ravi.bangoria@linux.ibm.com> wrote:
->>
->> Add new device-tree feature for 2nd DAWR. If this feature is present,
->> 2nd DAWR is supported, otherwise not.
->>
->> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
->> ---
->>   arch/powerpc/include/asm/cputable.h | 7 +++++--
->>   arch/powerpc/kernel/dt_cpu_ftrs.c   | 7 +++++++
->>   2 files changed, 12 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
->> index e506d429b1af..3445c86e1f6f 100644
->> --- a/arch/powerpc/include/asm/cputable.h
->> +++ b/arch/powerpc/include/asm/cputable.h
->> @@ -214,6 +214,7 @@ static inline void cpu_feature_keys_init(void) { }
->>   #define CPU_FTR_P9_TLBIE_ERAT_BUG      LONG_ASM_CONST(0x0001000000000000)
->>   #define CPU_FTR_P9_RADIX_PREFETCH_BUG  LONG_ASM_CONST(0x0002000000000000)
->>   #define CPU_FTR_ARCH_31                        LONG_ASM_CONST(0x0004000000000000)
->> +#define CPU_FTR_DAWR1                  LONG_ASM_CONST(0x0008000000000000)
->>
->>   #ifndef __ASSEMBLY__
->>
->> @@ -497,14 +498,16 @@ static inline void cpu_feature_keys_init(void) { }
->>   #define CPU_FTRS_POSSIBLE      \
->>              (CPU_FTRS_POWER7 | CPU_FTRS_POWER8E | CPU_FTRS_POWER8 | \
->>               CPU_FTR_ALTIVEC_COMP | CPU_FTR_VSX_COMP | CPU_FTRS_POWER9 | \
->> -            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10)
->> +            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10 | \
->> +            CPU_FTR_DAWR1)
->>   #else
->>   #define CPU_FTRS_POSSIBLE      \
->>              (CPU_FTRS_PPC970 | CPU_FTRS_POWER5 | \
->>               CPU_FTRS_POWER6 | CPU_FTRS_POWER7 | CPU_FTRS_POWER8E | \
->>               CPU_FTRS_POWER8 | CPU_FTRS_CELL | CPU_FTRS_PA6T | \
->>               CPU_FTR_VSX_COMP | CPU_FTR_ALTIVEC_COMP | CPU_FTRS_POWER9 | \
->> -            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10)
->> +            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10 | \
->> +            CPU_FTR_DAWR1)
-> Instead of putting CPU_FTR_DAWR1 into CPU_FTRS_POSSIBLE should it go
-> into CPU_FTRS_POWER10?
-> Then it will be picked up by CPU_FTRS_POSSIBLE.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: iface
 
-I remember a discussion about this with Mikey and we decided to do it
-this way. Obviously, the purpose is to make CPU_FTR_DAWR1 independent of
-CPU_FTRS_POWER10 because DAWR1 is an optional feature in p10. I fear
-including CPU_FTR_DAWR1 in CPU_FTRS_POWER10 can make it forcefully enabled
-even when device-tree property is not present or pa-feature bit it not set,
-because we do:
+Needs bi_tcxo
 
-       {       /* 3.1-compliant processor, i.e. Power10 "architected" mode */
-               .pvr_mask               = 0xffffffff,
-               .pvr_value              = 0x0f000006,
-               .cpu_name               = "POWER10 (architected)",
-               .cpu_features           = CPU_FTRS_POWER10,
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  '#power-domain-cells':
+> +    const: 1
+> +
+> +  reg:
+> +    minItems: 1
+> +    items:
+> +      - description: lpass core cc register
+> +      - description: lpass audio cc register
+> +
+> +  reg-names:
+> +    items:
+> +      - const: lpass_core_cc
+> +      - const: lpass_audio_cc
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        const: qcom,sc7180-lpasshm
+> +then:
+> +  properties:
+> +    reg:
+> +      maxItems: 1
+> +
+> +else:
+> +  properties:
+> +    reg:
+> +      minItems: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - '#clock-cells'
+> +  - '#power-domain-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+> +    #include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
+> +    clock-controller@63000000 {
+> +      compatible =3D "qcom,sc7180-lpasshm";
+> +        reg =3D <0x63000000 0x28>;
+> +        clocks =3D <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
+> +        clock-names =3D "iface";
+> +        #clock-cells =3D <1>;
+> +        #power-domain-cells =3D <1>;
+> +    };
+> +
+> +  - |
+> +    clock-controller@62d00000 {
+> +        compatible =3D "qcom,sc7180-lpasscorecc";
+> +        reg =3D <0x62d00000 0x50000>,
+> +            <0x62780000 0x30000>;
 
->>   #endif /* CONFIG_CPU_LITTLE_ENDIAN */
->>   #endif
->>   #else
->> diff --git a/arch/powerpc/kernel/dt_cpu_ftrs.c b/arch/powerpc/kernel/dt_cpu_ftrs.c
->> index ac650c233cd9..c78cd3596ec4 100644
->> --- a/arch/powerpc/kernel/dt_cpu_ftrs.c
->> +++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
->> @@ -574,6 +574,12 @@ static int __init feat_enable_mma(struct dt_cpu_feature *f)
->>          return 1;
->>   }
->>
->> +static int __init feat_enable_debug_facilities_v31(struct dt_cpu_feature *f)
->> +{
->> +       cur_cpu_spec->cpu_features |= CPU_FTR_DAWR1;
->> +       return 1;
->> +}
->> +
->>   struct dt_cpu_feature_match {
->>          const char *name;
->>          int (*enable)(struct dt_cpu_feature *f);
->> @@ -649,6 +655,7 @@ static struct dt_cpu_feature_match __initdata
->>          {"wait-v3", feat_enable, 0},
->>          {"prefix-instructions", feat_enable, 0},
->>          {"matrix-multiply-assist", feat_enable_mma, 0},
->> +       {"debug-facilities-v31", feat_enable_debug_facilities_v31, 0},
-> Since all feat_enable_debug_facilities_v31() does is set
-> CPU_FTR_DAWR1, if you just have:
-> {"debug-facilities-v31", feat_enable, CPU_FTR_DAWR1},
-> I think cpufeatures_process_feature() should set it in for you at this point:
->              if (m->enable(f)) {
->                  cur_cpu_spec->cpu_features |= m->cpu_ftr_bit_mask;
->                  break;
->              }
+Tabbing looks wrong. Just use spaces?
 
-Yes, that seems a better option.
+> +        reg-names =3D "lpass_core_cc", "lpass_audio_cc";
+> +        clocks =3D <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
+> +        clock-names =3D "iface";
+> +        power-domains =3D <&lpass_hm LPASS_CORE_HM_GDSCR>;
+> +        #clock-cells =3D <1>;
+> +        #power-domain-cells =3D <1>;
+> +    };
+> +...
+> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bin=
+dings/clock/qcom,gcc-sc7180.h
+> index 992b67b..bdf43adc 100644
+> --- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> @@ -138,6 +138,7 @@
+>  #define GCC_MSS_Q6_MEMNOC_AXI_CLK                              128
+>  #define GCC_MSS_SNOC_AXI_CLK                                   129
+>  #define GCC_SEC_CTRL_CLK_SRC                                   130
+> +#define GCC_LPASS_CFG_NOC_SWAY_CLK                             131
+> =20
+>  /* GCC resets */
+>  #define GCC_QUSB2PHY_PRIM_BCR                                  0
 
-Thanks,
-Ravi
+This hunk should be in the next patch. Oh but then that patch should come
+before this one so the binding can use it. Either way, shouldn't be part
+of this patch.
