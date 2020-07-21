@@ -2,156 +2,102 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A622C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FACC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C1312073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7F52073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgGUDwU (ORCPT
+        id S1728560AbgGUDyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:52:20 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:46685 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgGUDwS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 23:52:18 -0400
-Received: by mail-il1-f200.google.com with SMTP id o4so12572454ilo.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 20:52:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=//1p8HfVGvQ63J1J9WEB8MILBk71QonnSsQsub+Ky6o=;
-        b=EsKuC20bXK6WaHu5Jsg0Qlkxj1xYKIOAXfIL4ktB+Hu4QELcDEbDxXWShbPxbxt9iQ
-         KwnwluSuR4QDAJnutdbnVGvyXP5GxdaUvf3/wAHm6/0PvpDN4sgk1nxWikOVotf7Md1l
-         rq3tiMshJo+5ptpvyXHjh2sJFpaat/PVk90wopzAXXtDGZ4OrPzDJKzRKGrM+Kf/22AI
-         3KxkewSuJnQrl6d2plBfeQ29zHMeBCj3OrSLwxqKiCorfCWoMwFrjDP5IMEW1kZVejeH
-         ZDq8kFlv+YcvVoWDPLK5rIu0KWjGXdyJ9P2JxdxXoIDNviGoMSkcbpXFaZPPGyrc1p2j
-         xxnw==
-X-Gm-Message-State: AOAM5328DmNK2zRHbkvZfQgP2aDr5mVlkza9oRgSdyIzQz1PIUiBZmLg
-        DoprRStT7t3A65EMdr+pnQD1dmJ9NI936smKqXVD9Acej02m
-X-Google-Smtp-Source: ABdhPJzEFSCdm8+1j/Di/AVwzmfIChYAhmAPtjb9hDFjA/lIcP9uiaDUGNnRkpefNWx8Yo5Nqr8/lINsOolhutBIve9tbsurVL0L
+        Mon, 20 Jul 2020 23:54:05 -0400
+Received: from mga03.intel.com ([134.134.136.65]:24442 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726483AbgGUDyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 23:54:04 -0400
+IronPort-SDR: nZaCPd8Uys9EbKRujbQeiCESbY6cNdQ4/bPwaC6xNtS1Hdi4J7NRUdI0USFIMkZ6e6pwyhg9RN
+ iHH9kpzm1DwA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="150043514"
+X-IronPort-AV: E=Sophos;i="5.75,377,1589266800"; 
+   d="scan'208";a="150043514"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 20:54:04 -0700
+IronPort-SDR: yOJ44oLBxYqhbOO2G4tMrOH5k52SbcayThBBwCC9rYuwFWmz8zfcxbLv3yMJYzJvZG3EVnpdoC
+ PRb16iZ/4O6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,377,1589266800"; 
+   d="scan'208";a="487470240"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by fmsmga006.fm.intel.com with ESMTP; 20 Jul 2020 20:54:01 -0700
+Date:   Tue, 21 Jul 2020 11:50:54 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        trix@redhat.com, matthew.gerlach@linux.intel.com,
+        russell.h.weight@intel.com, lgoncalv@redhat.com, hao.wu@intel.com,
+        yilun.xu@intel.com
+Subject: Re: [PATCH v2 3/3] mfd: intel-m10-bmc: add Max10 BMC chip support
+   for Intel FPGA PAC
+Message-ID: <20200721035054.GA8895@yilunxu-OptiPlex-7050>
+References: <1594896174-18826-1-git-send-email-yilun.xu@intel.com>
+ <1594896174-18826-4-git-send-email-yilun.xu@intel.com>
+ <20200717181609.GB905@sirena.org.uk>
+ <20200721034713.GB17091@yilunxu-OptiPlex-7050>
 MIME-Version: 1.0
-X-Received: by 2002:a92:dac8:: with SMTP id o8mr26062670ilq.152.1595303537574;
- Mon, 20 Jul 2020 20:52:17 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 20:52:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000aa87f305aaeb8c8e@google.com>
-Subject: KASAN: slab-out-of-bounds Read in xfrm6_tunnel_alloc_spi
-From:   syzbot <syzbot+87b2b4484df1d40e7ece@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au, kuba@kernel.org,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, steffen.klassert@secunet.com,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721034713.GB17091@yilunxu-OptiPlex-7050>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Jul 21, 2020 at 11:47:13AM +0800, Xu Yilun wrote:
+> On Fri, Jul 17, 2020 at 07:16:09PM +0100, Mark Brown wrote:
+> > On Thu, Jul 16, 2020 at 06:42:54PM +0800, Xu Yilun wrote:
+> > 
+> > > +static const struct spi_device_id m10bmc_spi_id[] = {
+> > > +	{ "m10-n3000", M10_N3000 },
+> > > +	{ }
+> > > +};
+> > > +MODULE_DEVICE_TABLE(spi, m10bmc_spi_id);
+> > 
+> > > +static struct spi_driver intel_m10bmc_spi_driver = {
+> > > +	.driver = {
+> > > +		.name = "intel-m10-bmc",
+> > > +		.dev_groups = m10bmc_dev_groups,
+> > > +	},
+> > > +	.probe = intel_m10_bmc_spi_probe,
+> > > +	.id_table = m10bmc_spi_id,
+> > > +};
+> > 
+> > > +module_spi_driver(intel_m10bmc_spi_driver);
+> > 
+> > This device has no ACPI information - how will it be instantiated?
+> 
+> In our case, The m10-bmc is connected to the intel FPGA (PAC N3000),
+> which uses the Device Feature List (DFL) mechanism to enumerate features
+> (devices) on FPGA. Each feature in DFL has a feature_id. And for this
+> m10-n3000 feature (feature_id = 0xd), it contains a spi-altera & a
+> m10-n3000 chip. So the DFL subsystem would help enumerate the info.
 
-syzbot found the following issue on:
+And some DFL related infomation:
+  Documentation/fpga/dfl.rst
+  drivers/fpga/dfl*
 
-HEAD commit:    4c43049f Add linux-next specific files for 20200716
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10e7e9d7100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2c76d72659687242
-dashboard link: https://syzkaller.appspot.com/bug?extid=87b2b4484df1d40e7ece
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117f936f100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1074fc7f100000
+Thanks,
+Yilun
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+87b2b4484df1d40e7ece@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in __xfrm6_tunnel_alloc_spi net/ipv6/xfrm6_tunnel.c:124 [inline]
-BUG: KASAN: slab-out-of-bounds in xfrm6_tunnel_alloc_spi+0x779/0x8a0 net/ipv6/xfrm6_tunnel.c:174
-Read of size 4 at addr ffff88809a3fe000 by task syz-executor597/6834
-CPU: 1 PID: 6834 Comm: syz-executor597 Not tainted 5.8.0-rc5-next-20200716-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- __xfrm6_tunnel_alloc_spi net/ipv6/xfrm6_tunnel.c:124 [inline]
- xfrm6_tunnel_alloc_spi+0x779/0x8a0 net/ipv6/xfrm6_tunnel.c:174
- ipcomp6_tunnel_create net/ipv6/ipcomp6.c:84 [inline]
- ipcomp6_tunnel_attach net/ipv6/ipcomp6.c:124 [inline]
- ipcomp6_init_state net/ipv6/ipcomp6.c:159 [inline]
- ipcomp6_init_state+0x2af/0x700 net/ipv6/ipcomp6.c:139
- __xfrm_init_state+0x9a6/0x14b0 net/xfrm/xfrm_state.c:2498
- xfrm_init_state+0x1a/0x70 net/xfrm/xfrm_state.c:2525
- pfkey_msg2xfrm_state net/key/af_key.c:1291 [inline]
- pfkey_add+0x1a10/0x2b70 net/key/af_key.c:1508
- pfkey_process+0x66d/0x7a0 net/key/af_key.c:2834
- pfkey_sendmsg+0x42d/0x800 net/key/af_key.c:3673
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:671
- ____sys_sendmsg+0x331/0x810 net/socket.c:2362
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2416
- __sys_sendmmsg+0x195/0x480 net/socket.c:2506
- __do_sys_sendmmsg net/socket.c:2535 [inline]
- __se_sys_sendmmsg net/socket.c:2532 [inline]
- __x64_sys_sendmmsg+0x99/0x100 net/socket.c:2532
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x440409
-Code: Bad RIP value.
-RSP: 002b:00007ffea3e50018 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440409
-RDX: 0400000000000282 RSI: 0000000020000180 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401c10
-R13: 0000000000401ca0 R14: 0000000000000000 R15: 0000000000000000
-Allocated by task 6731:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
- slab_post_alloc_hook mm/slab.h:535 [inline]
- slab_alloc mm/slab.c:3312 [inline]
- kmem_cache_alloc+0x138/0x3a0 mm/slab.c:3482
- dup_fd+0x89/0xc90 fs/file.c:293
- copy_files kernel/fork.c:1459 [inline]
- copy_process+0x1dd0/0x6b70 kernel/fork.c:2064
- _do_fork+0xe8/0xb10 kernel/fork.c:2434
- __do_sys_clone+0xc8/0x110 kernel/fork.c:2551
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-The buggy address belongs to the object at ffff88809a3fe0c0
- which belongs to the cache files_cache of size 832
-The buggy address is located 192 bytes to the left of
- 832-byte region [ffff88809a3fe0c0, ffff88809a3fe400)
-The buggy address belongs to the page:
-page:000000007671797d refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88809a3fec00 pfn:0x9a3fe
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00027a5248 ffffea0002a3b648 ffff88821bc47600
-raw: ffff88809a3fec00 ffff88809a3fe0c0 0000000100000003 0000000000000000
-page dumped because: kasan: bad access detected
-Memory state around the buggy address:
- ffff88809a3fdf00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88809a3fdf80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88809a3fe000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                   ^
- ffff88809a3fe080: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
- ffff88809a3fe100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> 
+> Recently I added the platform data for slave information in spi-altera,
+> to support this use case.
+> 
+> Thanks,
+> Yilun
