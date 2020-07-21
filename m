@@ -2,109 +2,167 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B55C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE8D20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB522080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:29:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbgGUL3M (ORCPT
+        id S1729764AbgGUL3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:29:12 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:52022 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729568AbgGUL3L (ORCPT
+        Tue, 21 Jul 2020 07:29:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgGUL3H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:29:11 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id D56031C0BE5; Tue, 21 Jul 2020 13:29:08 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 13:29:08 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 041/133] Revert "usb/ohci-platform: Fix a warning
- when hibernating"
-Message-ID: <20200721112908.GA17950@duo.ucw.cz>
-References: <20200720152803.732195882@linuxfoundation.org>
- <20200720152805.704517976@linuxfoundation.org>
- <20200720210722.GA11552@amd>
- <20200721012943.GA406581@sasha-vm>
+        Tue, 21 Jul 2020 07:29:07 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0385EC061794;
+        Tue, 21 Jul 2020 04:29:07 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id C07BC29724F
+Subject: Re: [PATCH v2 4/4] platform/chrome: cros_ec_proto: Convert EC error
+ codes to Linux error codes
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+References: <20200720202243.180230-1-linux@roeck-us.net>
+ <20200720202243.180230-5-linux@roeck-us.net>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <401aec54-ff21-7e0f-85dc-e32435df2672@collabora.com>
+Date:   Tue, 21 Jul 2020 13:29:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
-Content-Disposition: inline
-In-Reply-To: <20200721012943.GA406581@sasha-vm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200720202243.180230-5-linux@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Guenter,
 
---k1lZvvs/B4yU6o8G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for work on this. Cc'ing Gwendal as he has a deep knowledge of the EC
+and their errors.
 
-Hi!
+On 20/7/20 22:22, Guenter Roeck wrote:
+> The EC reports a variety of error codes. Most of those, with the exception
+> of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
+> error code gets lost. In cros_ec_cmd_xfer_status(), convert all EC errors
+> to Linux error codes to report a more meaningful error to the caller to aid
+> debugging.
+> 
+> Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+> Cc: Prashant Malani <pmalani@chromium.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+> v2: No change
+> 
+> Notes:
+>     I would welcome feedback on the error code translations.
+>     Can we do better ?
+> 
+>     -ENOTSUPP is not a recommended error code, and checkpatch complains
+>     about it. It is used in existing code, so I did not change it, but it
+>     might be worthwhile exploring if we can find a better error code to
+>     report "version not supported". Possible candidates might be EPROTOTYPE,
+>     ENOPROTOOPT, EPROTONOSUPPORT, EPFNOSUPPORT, or EAFNOSUPPORT. I don't
+>     see a direct match, but NFS reports -EPROTONOSUPPORT for unsupported
+>     protocol versions.
+> 
+>  drivers/platform/chrome/cros_ec_proto.c | 37 +++++++++++++++++++------
+>  1 file changed, 29 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> index 3e745e0fe092..10aa9e483d35 100644
+> --- a/drivers/platform/chrome/cros_ec_proto.c
+> +++ b/drivers/platform/chrome/cros_ec_proto.c
+> @@ -543,6 +543,29 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+>  }
+>  EXPORT_SYMBOL(cros_ec_cmd_xfer);
+>  
+> +static const int cros_ec_error_map[] = {
+> +	[EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
+> +	[EC_RES_ERROR] = -EIO,
 
-> > > >After some investigations, we concluded the following:
-> > > > - the issue does not exist in vanilla v5.8-rc4+
-> > > > - [bisecting shows that] the panic on v4.14.186 is caused by the la=
-ck
-> > > >   of v5.6-rc1 commit 987351e1ea7772 ("phy: core: Add consumer device
-> > > >   link support"). Getting evidence for that is easy. Reverting
-> > > >   987351e1ea7772 in vanilla leads to a similar backtrace [2].
-> > > >
-> > > >Questions:
-> > > > - Backporting 987351e1ea7772 ("phy: core: Add consumer device
-> > > >   link support") to v4.14.187 looks challenging enough, so probably=
- not
-> > > >   worth it. Anybody to contradict this?
-> >=20
-> > I'm not sure about v4.14.187, but backport to v4.19 is quite simple
-> > (just ignore single non-existing file) and passes basic testing.
-> >=20
-> > Would that be better solution for 4.19 and newer?
->=20
-> If Eugeniu could confirm that doing so on 4.19+ works for him, sure.
+nit -EREMOTEIO? To make explicit that the error is "remote" from the host.
+Although -EIO seems to be more generic.
 
-He did:
+> +	[EC_RES_INVALID_PARAM] = -EINVAL,
+> +	[EC_RES_ACCESS_DENIED] = -EACCES,
+> +	[EC_RES_INVALID_RESPONSE] = -EPROTO,
+> +	[EC_RES_INVALID_VERSION] = -ENOTSUPP,
 
-Message-ID: <20200721065054.GA8290@lxhi-065.adit-jv.com>
-Technically yes. Backporting 987351e1ea7772 to v4.19.x avoids the panic.
-=2E..
-FWIW I confirm that:
-* setup [A] leads to the issue reported in [C]
-* setup [B] resolves the issue reported in [C]
++1 for EPROTONOSUPPORT to match with EC_RES_INVALID_VERSION
 
-[A] v4.19 + 16bdc04cc98 + 1cb3b0095c3 + 79112cc3c29f
-[B] v4.19 + 16bdc04cc98 + 1cb3b0095c3 + 79112cc3c29f + 987351e1ea7
-[C] https://lore.kernel.org/linux-usb/20200709070023.GA18414@lxhi-065.adit-=
-jv.com/
+> +	[EC_RES_INVALID_CHECKSUM] = -EBADMSG,
+> +	[EC_RES_IN_PROGRESS] = -EINPROGRESS,
+> +	[EC_RES_UNAVAILABLE] = -ENODATA,
+> +	[EC_RES_TIMEOUT] = -ETIMEDOUT,
+> +	[EC_RES_OVERFLOW] = -EOVERFLOW,
+> +	[EC_RES_INVALID_HEADER] = -EBADR,
+> +	[EC_RES_REQUEST_TRUNCATED] = -EBADR,
+> +	[EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
+> +	[EC_RES_BUS_ERROR] = -EFAULT,
+> +	[EC_RES_BUSY] = -EBUSY,
 
+Although the name matches, I'm wondering if we should use -EAGAIN instead as per
+EC documentation:
 
-Best regards,
-								Pavel
+  EC_RES_BUSY - Up but too busy. Should retry.
 
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+hmm, however, for the audio codec, for example, this seems to have a slightly
+different meaning and retry is not what we want, so let's do direct translation
+and stay with -EBUSY.
 
---k1lZvvs/B4yU6o8G
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXxbRhAAKCRAw5/Bqldv6
-8hJ+AKDAFdFixJDxmhT3TZraQIz6vlnJBwCgwNhXgRjEqVH5eG8Xi+xbJOfHHvY=
-=6niu
------END PGP SIGNATURE-----
-
---k1lZvvs/B4yU6o8G--
+> +	[EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
+> +	[EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
+> +	[EC_RES_INVALID_DATA_CRC] = -EBADMSG,
+> +	[EC_RES_DUP_UNAVAILABLE] = -ENODATA,
+> +};
+> +
+>  /**
+>   * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
+>   * @ec_dev: EC device.
+> @@ -555,8 +578,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer);
+>   *
+>   * Return:
+>   * >=0 - The number of bytes transferred
+> - * -ENOTSUPP - Operation not supported
+> - * -EPROTO - Protocol error
+> + * <0 - Linux error code
+>   */
+>  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+>  			    struct cros_ec_command *msg)
+> @@ -566,13 +588,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+>  	ret = cros_ec_cmd_xfer(ec_dev, msg);
+>  	if (ret < 0) {
+>  		dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
+> -	} else if (msg->result == EC_RES_INVALID_VERSION) {
+> -		dev_dbg(ec_dev->dev, "Command invalid version (err:%d)\n",
+> -			msg->result);
+> -		return -ENOTSUPP;
+>  	} else if (msg->result != EC_RES_SUCCESS) {
+> -		dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
+> -		return -EPROTO;
+> +		if (msg->result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[msg->result])
+> +			ret = cros_ec_error_map[msg->result];
+> +		else
+> +			ret = -EPROTO;
+> +		dev_dbg(ec_dev->dev, "Command result (err: %d [%d])\n", msg->result, ret);
+>  	}
+>  
+>  	return ret;
+> 
