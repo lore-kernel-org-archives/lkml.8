@@ -2,156 +2,456 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21E7C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBB2C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C715F20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85EC206E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:43:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbgGUMnl convert rfc822-to-8bit (ORCPT
+        id S1729932AbgGUMno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:43:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726904AbgGUMnk (ORCPT
+        Tue, 21 Jul 2020 08:43:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32646 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729431AbgGUMnl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:43:40 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6563FC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:43:40 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jxrcL-0006Dx-Re; Tue, 21 Jul 2020 14:43:33 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jxrcG-0005Rp-VR; Tue, 21 Jul 2020 14:43:28 +0200
-Message-ID: <58a3ebe2620008daeab826a8216b6b5ad672fc7c.camel@pengutronix.de>
-Subject: Re: [PATCH v7 2/5] drm/imx: Add initial support for DCSS on iMX8MQ
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Cc:     lukas@mntmn.com, agx@sigxcpu.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Date:   Tue, 21 Jul 2020 14:43:28 +0200
-In-Reply-To: <20200721102007.18368-3-laurentiu.palcu@oss.nxp.com>
-References: <20200721102007.18368-1-laurentiu.palcu@oss.nxp.com>
-         <20200721102007.18368-3-laurentiu.palcu@oss.nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 21 Jul 2020 08:43:41 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LCZXUs046401;
+        Tue, 21 Jul 2020 08:43:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d91v5j2u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 08:43:15 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06LCY5G5041677;
+        Tue, 21 Jul 2020 08:43:14 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d91v5j2a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 08:43:14 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LCfgGJ018999;
+        Tue, 21 Jul 2020 12:43:12 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 32brq83w58-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 12:43:12 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LCh9BD47906822
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jul 2020 12:43:09 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4AA0E4203F;
+        Tue, 21 Jul 2020 12:43:09 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B799142041;
+        Tue, 21 Jul 2020 12:43:06 +0000 (GMT)
+Received: from pratiks-thinkpad.ibmuc.com (unknown [9.79.210.59])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Jul 2020 12:43:06 +0000 (GMT)
+From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
+To:     rjw@rjwysocki.net, daniel.lezcano@linaro.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org, srivatsa@csail.mit.edu,
+        shuah@kernel.org, npiggin@gmail.com, ego@linux.vnet.ibm.com,
+        svaidy@linux.ibm.com, pratik.r.sampat@gmail.com,
+        psampat@linux.ibm.com, linux-pm@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH v3 2/2] selftest/cpuidle: Add support for cpuidle latency measurement
+Date:   Tue, 21 Jul 2020 18:13:00 +0530
+Message-Id: <20200721124300.65615-3-psampat@linux.ibm.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200721124300.65615-1-psampat@linux.ibm.com>
+References: <20200721124300.65615-1-psampat@linux.ibm.com>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_05:2020-07-21,2020-07-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 clxscore=1015
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007210087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurentiu,
+This patch adds support to trace IPI based and timer based wakeup
+latency from idle states
 
-On Tue, 2020-07-21 at 13:20 +0300, Laurentiu Palcu wrote:
-> From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> 
-> This adds initial support for iMX8MQ's Display Controller Subsystem (DCSS).
-> Some of its capabilities include:
->  * 4K@60fps;
->  * HDR10;
->  * one graphics and 2 video pipelines;
->  * on-the-fly decompression of compressed video and graphics;
-> 
-> The reference manual can be found here:
-> https://www.nxp.com/webapp/Download?colCode=IMX8MDQLQRM
-> 
-> The current patch adds only basic functionality: one primary plane for
-> graphics, linear, tiled and super-tiled buffers support (no graphics
-> decompression yet), no HDR10 and no video planes.
-> 
-> Video planes support and HDR10 will be added in subsequent patches once
-> per-plane de-gamma/CSC/gamma support is in.
-> 
-> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->  drivers/gpu/drm/imx/Kconfig            |   2 +
->  drivers/gpu/drm/imx/Makefile           |   1 +
->  drivers/gpu/drm/imx/dcss/Kconfig       |   9 +
->  drivers/gpu/drm/imx/dcss/Makefile      |   6 +
->  drivers/gpu/drm/imx/dcss/dcss-blkctl.c |  70 +++
->  drivers/gpu/drm/imx/dcss/dcss-crtc.c   | 219 +++++++
->  drivers/gpu/drm/imx/dcss/dcss-ctxld.c  | 424 +++++++++++++
->  drivers/gpu/drm/imx/dcss/dcss-dev.c    | 314 ++++++++++
->  drivers/gpu/drm/imx/dcss/dcss-dev.h    | 177 ++++++
->  drivers/gpu/drm/imx/dcss/dcss-dpr.c    | 562 +++++++++++++++++
->  drivers/gpu/drm/imx/dcss/dcss-drv.c    | 138 +++++
->  drivers/gpu/drm/imx/dcss/dcss-dtg.c    | 409 ++++++++++++
->  drivers/gpu/drm/imx/dcss/dcss-kms.c    | 177 ++++++
->  drivers/gpu/drm/imx/dcss/dcss-kms.h    |  43 ++
->  drivers/gpu/drm/imx/dcss/dcss-plane.c  | 405 ++++++++++++
->  drivers/gpu/drm/imx/dcss/dcss-scaler.c | 826 +++++++++++++++++++++++++
->  drivers/gpu/drm/imx/dcss/dcss-ss.c     | 180 ++++++
->  17 files changed, 3962 insertions(+)
->  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
->  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
-> 
-> diff --git a/drivers/gpu/drm/imx/Kconfig b/drivers/gpu/drm/imx/Kconfig
-> index 207bf7409dfb..6231048aa5aa 100644
-> --- a/drivers/gpu/drm/imx/Kconfig
-> +++ b/drivers/gpu/drm/imx/Kconfig
-> @@ -39,3 +39,5 @@ config DRM_IMX_HDMI
->  	depends on DRM_IMX
->  	help
->  	  Choose this if you want to use HDMI on i.MX6.
-> +
-> +source "drivers/gpu/drm/imx/dcss/Kconfig"
-> diff --git a/drivers/gpu/drm/imx/Makefile b/drivers/gpu/drm/imx/Makefile
-> index 21cdcc2faabc..b644deffe948 100644
-> --- a/drivers/gpu/drm/imx/Makefile
-> +++ b/drivers/gpu/drm/imx/Makefile
-> @@ -9,3 +9,4 @@ obj-$(CONFIG_DRM_IMX_TVE) += imx-tve.o
->  obj-$(CONFIG_DRM_IMX_LDB) += imx-ldb.o
->  
->  obj-$(CONFIG_DRM_IMX_HDMI) += dw_hdmi-imx.o
-> +obj-$(CONFIG_DRM_IMX_DCSS) += dcss/
-> diff --git a/drivers/gpu/drm/imx/dcss/Kconfig b/drivers/gpu/drm/imx/dcss/Kconfig
-> new file mode 100644
-> index 000000000000..988979bc22cc
-> --- /dev/null
-> +++ b/drivers/gpu/drm/imx/dcss/Kconfig
-> @@ -0,0 +1,9 @@
-> +config DRM_IMX_DCSS
-> +	tristate "i.MX8MQ DCSS"
-> +	select RESET_CONTROLLER
+Latches onto the test-cpuidle_latency kernel module using the debugfs
+interface to send IPIs or schedule a timer based event, which in-turn
+populates the debugfs with the latency measurements.
 
-Why does DCSS select RESET_CONTROLLER?
+Currently for the IPI and timer tests; first disable all idle states
+and then test for latency measurements incrementally enabling each state
 
-regards
-Philipp
+Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+---
+ tools/testing/selftests/Makefile           |   1 +
+ tools/testing/selftests/cpuidle/Makefile   |   6 +
+ tools/testing/selftests/cpuidle/cpuidle.sh | 310 +++++++++++++++++++++
+ tools/testing/selftests/cpuidle/settings   |   1 +
+ 4 files changed, 318 insertions(+)
+ create mode 100644 tools/testing/selftests/cpuidle/Makefile
+ create mode 100755 tools/testing/selftests/cpuidle/cpuidle.sh
+ create mode 100644 tools/testing/selftests/cpuidle/settings
+
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 1195bd85af38..ab6cf51f3518 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -7,6 +7,7 @@ TARGETS += capabilities
+ TARGETS += cgroup
+ TARGETS += clone3
+ TARGETS += cpufreq
++TARGETS += cpuidle
+ TARGETS += cpu-hotplug
+ TARGETS += drivers/dma-buf
+ TARGETS += efivarfs
+diff --git a/tools/testing/selftests/cpuidle/Makefile b/tools/testing/selftests/cpuidle/Makefile
+new file mode 100644
+index 000000000000..72fd5d2e974d
+--- /dev/null
++++ b/tools/testing/selftests/cpuidle/Makefile
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0
++all:
++
++TEST_PROGS := cpuidle.sh
++
++include ../lib.mk
+diff --git a/tools/testing/selftests/cpuidle/cpuidle.sh b/tools/testing/selftests/cpuidle/cpuidle.sh
+new file mode 100755
+index 000000000000..19cc24ccd4af
+--- /dev/null
++++ b/tools/testing/selftests/cpuidle/cpuidle.sh
+@@ -0,0 +1,310 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++
++LOG=cpuidle.log
++MODULE=/lib/modules/$(uname -r)/kernel/drivers/cpuidle/test-cpuidle_latency.ko
++
++# Kselftest framework requirement - SKIP code is 4.
++ksft_skip=4
++
++helpme()
++{
++	printf "Usage: $0 [-h] [-todg args]
++	[-h <help>]
++	[-m <location of the module>]
++	[-o <location of the output>]
++	\n"
++	exit 2
++}
++
++parse_arguments()
++{
++	while getopts ht:m:o: arg
++	do
++		case $arg in
++			h) # --help
++				helpme
++				;;
++			m) # --mod-file
++				MODULE=$OPTARG
++				;;
++			o) # output log files
++				LOG=$OPTARG
++				;;
++			\?)
++				helpme
++				;;
++		esac
++	done
++}
++
++ins_mod()
++{
++	if [ ! -f "$MODULE" ]; then
++		printf "$MODULE module does not exist. Exitting\n"
++		exit $ksft_skip
++	fi
++	# Check if the module is already loaded
++	grep "test_cpuidle_latency" /proc/modules
++	if [ $? == 0 ]; then
++		printf "Module: $MODULE already loaded\n\n"
++		return 0
++	fi
++	printf "Inserting $MODULE module\n\n"
++	insmod $MODULE
++	if [ $? != 0 ]; then
++		printf "Insmod $MODULE failed\n"
++		exit $ksft_skip
++	fi
++}
++
++compute_average()
++{
++	arr=("$@")
++	sum=0
++	size=${#arr[@]}
++	if [ $size == 0 ]; then
++		avg=0
++		return 1
++	fi
++	for i in "${arr[@]}"
++	do
++		sum=$((sum + i))
++	done
++	avg=$((sum/size))
++}
++
++# Disable all stop states
++disable_idle()
++{
++	for ((cpu=0; cpu<NUM_CPUS; cpu++))
++	do
++		local cpu_status=$(cpu_is_online $cpu)
++		if [ $cpu_status == 0 ]; then
++			continue
++		fi
++		for ((state=0; state<NUM_STATES; state++))
++		do
++			echo 1 > /sys/devices/system/cpu/cpu$cpu/cpuidle/state$state/disable
++		done
++	done
++}
++
++# Perform operation on each CPU for the given state
++# $1 - Operation: enable (0) / disable (1)
++# $2 - State to enable
++op_state()
++{
++	for ((cpu=0; cpu<NUM_CPUS; cpu++))
++	do
++		local cpu_status=$(cpu_is_online $cpu)
++		if [ $cpu_status == 0 ]; then
++			continue
++		fi
++		echo $1 > /sys/devices/system/cpu/cpu$cpu/cpuidle/state$2/disable
++	done
++}
++
++cpuidle_enable_state()
++{
++	state=$1
++	op_state 0 $state
++}
++
++cpuidle_disable_state()
++{
++	state=$1
++	op_state 1 $state
++}
++
++cpu_is_online()
++{
++	cpu=$1
++	status=$(cat /sys/devices/system/cpu/cpu$cpu/online)
++	echo $status
++}
++
++# Extract latency in microseconds and convert to nanoseconds
++extract_latency()
++{
++	for ((state=0; state<NUM_STATES; state++))
++	do
++		latency=$(($(cat /sys/devices/system/cpu/cpu0/cpuidle/state$state/latency) * 1000))
++		latency_arr+=($latency)
++	done
++}
++
++# Run the IPI test
++# $1 run for baseline - busy cpu or regular environment
++# $2 destination cpu
++ipi_test_once()
++{
++	dest_cpu=$2
++	if [ "$1" = "baseline" ]; then
++		# Keep the CPU busy
++		taskset -c $dest_cpu cat /dev/random > /dev/null &
++		task_pid=$!
++		# Wait for the workload to achieve 100% CPU usage
++		sleep 1
++	fi
++	taskset 0x1 echo $dest_cpu > /sys/kernel/debug/latency_test/ipi_cpu_dest
++	ipi_latency=$(cat /sys/kernel/debug/latency_test/ipi_latency_ns)
++	src_cpu=$(cat /sys/kernel/debug/latency_test/ipi_cpu_src)
++	if [ "$1" = "baseline" ]; then
++		kill $task_pid
++		wait $task_pid 2>/dev/null
++	fi
++}
++
++# Incrementally Enable idle states one by one and compute the latency
++run_ipi_tests()
++{
++	extract_latency
++	disable_idle
++	declare -a avg_arr
++	echo -e "--IPI Latency Test---" >> $LOG
++
++	echo -e "--Baseline IPI Latency measurement: CPU Busy--" >> $LOG
++	printf "%s %10s %12s\n" "SRC_CPU" "DEST_CPU" "IPI_Latency(ns)" >> $LOG
++	for ((cpu=0; cpu<NUM_CPUS; cpu++))
++	do
++		local cpu_status=$(cpu_is_online $cpu)
++		if [ $cpu_status == 0 ]; then
++			continue
++		fi
++		ipi_test_once "baseline" $cpu
++		printf "%-3s %10s %12s\n" $src_cpu $cpu $ipi_latency >> $LOG
++		avg_arr+=($ipi_latency)
++	done
++	compute_average "${avg_arr[@]}"
++	echo -e "Baseline Average IPI latency(ns): $avg" >> $LOG
++
++	for ((state=0; state<NUM_STATES; state++))
++	do
++		unset avg_arr
++		echo -e "---Enabling state: $state---" >> $LOG
++		cpuidle_enable_state $state
++		printf "%s %10s %12s\n" "SRC_CPU" "DEST_CPU" "IPI_Latency(ns)" >> $LOG
++		for ((cpu=0; cpu<NUM_CPUS; cpu++))
++		do
++			local cpu_status=$(cpu_is_online $cpu)
++			if [ $cpu_status == 0 ]; then
++				continue
++			fi
++			# Running IPI test and logging results
++			sleep 1
++			ipi_test_once "test" $cpu
++			printf "%-3s %10s %12s\n" $src_cpu $cpu $ipi_latency >> $LOG
++			avg_arr+=($ipi_latency)
++		done
++		compute_average "${avg_arr[@]}"
++		echo -e "Expected IPI latency(ns): ${latency_arr[$state]}" >> $LOG
++		echo -e "Observed Average IPI latency(ns): $avg" >> $LOG
++		cpuidle_disable_state $state
++	done
++}
++
++# Extract the residency in microseconds and convert to nanoseconds.
++# Add 100 ns so that the timer stays for a little longer than the residency
++extract_residency()
++{
++	for ((state=0; state<NUM_STATES; state++))
++	do
++		residency=$(($(cat /sys/devices/system/cpu/cpu0/cpuidle/state$state/residency) * 1000 + 200))
++		residency_arr+=($residency)
++	done
++}
++
++# Run the Timeout test
++# $1 run for baseline - busy cpu or regular environment
++# $2 destination cpu
++# $3 timeout
++timeout_test_once()
++{
++	dest_cpu=$2
++	if [ "$1" = "baseline" ]; then
++		# Keep the CPU busy
++		taskset -c $dest_cpu cat /dev/random > /dev/null &
++		task_pid=$!
++		# Wait for the workload to achieve 100% CPU usage
++		sleep 1
++	fi
++	taskset -c $dest_cpu echo $3 > /sys/kernel/debug/latency_test/timeout_expected_ns
++	# Wait for the result to populate
++	sleep 0.1
++	timeout_diff=$(cat /sys/kernel/debug/latency_test/timeout_diff_ns)
++	src_cpu=$(cat /sys/kernel/debug/latency_test/timeout_cpu_src)
++	if [ "$1" = "baseline" ]; then
++		kill $task_pid
++		wait $task_pid 2>/dev/null
++	fi
++}
++
++run_timeout_tests()
++{
++	extract_residency
++	disable_idle
++	declare -a avg_arr
++	echo -e "\n--Timeout Latency Test--" >> $LOG
++
++	echo -e "--Baseline Timeout Latency measurement: CPU Busy--" >> $LOG
++	printf "%s %10s %10s\n" "Wakeup_src" "Baseline_delay(ns)">> $LOG
++	for ((cpu=0; cpu<NUM_CPUS; cpu++))
++	do
++		local cpu_status=$(cpu_is_online $cpu)
++		if [ $cpu_status == 0 ]; then
++			continue
++		fi
++		timeout_test_once "baseline" $cpu ${residency_arr[0]}
++		printf "%-3s %13s\n" $src_cpu $timeout_diff >> $LOG
++		avg_arr+=($timeout_diff)
++	done
++	compute_average "${avg_arr[@]}"
++	echo -e "Baseline Average timeout diff(ns): $avg" >> $LOG
++
++	for ((state=0; state<NUM_STATES; state++))
++	do
++		unset avg_arr
++		echo -e "---Enabling state: $state---" >> $LOG
++		cpuidle_enable_state $state
++		printf "%s %10s %10s\n" "Wakeup_src" "Baseline_delay(ns)" "Delay(ns)" >> $LOG
++		for ((cpu=0; cpu<NUM_CPUS; cpu++))
++		do
++			local cpu_status=$(cpu_is_online $cpu)
++			if [ $cpu_status == 0 ]; then
++				continue
++			fi
++			timeout_test_once "test" $cpu ${residency_arr[$state]}
++			printf "%-3s %13s %18s\n" $src_cpu $baseline_timeout_diff $timeout_diff >> $LOG
++			avg_arr+=($timeout_diff)
++		done
++		compute_average "${avg_arr[@]}"
++		echo -e "Expected timeout(ns): ${residency_arr[$state]}" >> $LOG
++		echo -e "Observed Average timeout diff(ns): $avg" >> $LOG
++		cpuidle_disable_state $state
++	done
++}
++
++declare -a residency_arr
++declare -a latency_arr
++
++# Parse arguments
++parse_arguments $@
++
++rm -f $LOG
++touch $LOG
++NUM_CPUS=$(nproc --all)
++NUM_STATES=$(ls -1 /sys/devices/system/cpu/cpu0/cpuidle/ | wc -l)
++
++# Insert the module
++ins_mod $MODULE
++
++printf "Started IPI latency tests\n"
++run_ipi_tests
++
++printf "Started Timer latency tests\n"
++run_timeout_tests
++
++printf "Removing $MODULE module\n"
++printf "Output logged at: $LOG\n"
++rmmod $MODULE
+diff --git a/tools/testing/selftests/cpuidle/settings b/tools/testing/selftests/cpuidle/settings
+new file mode 100644
+index 000000000000..e7b9417537fb
+--- /dev/null
++++ b/tools/testing/selftests/cpuidle/settings
+@@ -0,0 +1 @@
++timeout=0
+-- 
+2.25.4
+
