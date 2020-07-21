@@ -2,121 +2,127 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48135C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B962C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27F7220729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE932077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:44:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xby1dlCg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L0n56T0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgGUKnC (ORCPT
+        id S1729187AbgGUKod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:43:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47366 "EHLO
+        Tue, 21 Jul 2020 06:44:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgGUKnC (ORCPT
+        with ESMTP id S1726884AbgGUKoc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:43:02 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C497C061794;
-        Tue, 21 Jul 2020 03:43:02 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id p26so3823160oos.7;
-        Tue, 21 Jul 2020 03:43:02 -0700 (PDT)
+        Tue, 21 Jul 2020 06:44:32 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70E03C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:44:32 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id q17so10524037pfu.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:44:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to:cc;
-        bh=UNz5YDIjnc+/glRNuHqLP+jGMzFk6rM7f2h+4Pejht4=;
-        b=Xby1dlCgO5JX0noqj11LnK4Oxsgm+3GSJtZ1+OzSg066w73HKhDIYFy3CNCKBe4eon
-         Fdmk1II2o4vk6Mfh+hljvFu7nTOXSm5tBc++qxH/py9XogId+6ektuh0vCefXX9O4JFd
-         tbGWrMILnn6GGvf7BaW1x8IZtK++ks+D85sSs0mt+w8f7WpV0pinvIzubvnDX/hqQcn2
-         CPwn4S4X6yAMhg1jdYEcCAHQdWrj0Zo5Wgh2S9A/+CJmraowsbazpKMqD2Og+3S4CTii
-         9JC5htBiy8Xkb7/8HsktWeWK73VS+LWeXNrIWvlw/aTvqb0MZSJRc2UmSItFJz+ADr7t
-         5kag==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8pM7diVPVUVJFnX3JjthYlLq7pi8+2tPknNxtkHGEeQ=;
+        b=L0n56T0u0TCfGUJhqs+tOv0+E29UAk68lxsMUas0btDkL7VxqLaMePegD1U5OC8nno
+         Ufk6lSh8gA3i20rKPPgGpr1btdFqGU+9E0bww5FML2mTRWsNs62RXKjQ41tcaiDh5zTV
+         UVmuBzuV0OdGni0S5W083vx/ir3+oauHfKFFc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=UNz5YDIjnc+/glRNuHqLP+jGMzFk6rM7f2h+4Pejht4=;
-        b=WYHvdOMMLAmomgFI8nwLlDwhLt0dhEJBz6dbJTQa7lPMWamVZpRV68XOQWztY8QA7I
-         oGqOaFkSe8DIAl9dxmBf068STarYyCmc0QdfZkgVE4+JN8x23+hgJPe+7wP0wS8xNSJY
-         5lCnuYMxKM368pHDl2QlvwmhWVWoFw5QsYsOcpC0OwpAv9BYksQsklyciLK+npKH3eFQ
-         sWuWFFx9ddLo/Wz7sEsibaXDQF/fARZOCrJl6U14sf6tWG8XDik1NCZCBG4l0z7zD27J
-         s57WNxmkM8hHCObZXuly1i7Osf/aDO3XnxzXTtgjiekJG+NM6wBh4J//jHKT4B0HQxic
-         V8mw==
-X-Gm-Message-State: AOAM532BIaWBV1YEiIrZFaNFM6CBQDAHyuRBcp0snJ6W1bx3sVU03xOO
-        AIxie6UFaTOLw0lpATjzMYDShU/Z38Yt6WEr0C4=
-X-Google-Smtp-Source: ABdhPJwhqkBe8my83KDOxmHPecoxD3Ck0cl0Tc48n+pLmU5s/77Gf1AvoY8UIftzZ6l+U+k1cb1DPwqN71FEf4GspBY=
-X-Received: by 2002:a4a:ba8b:: with SMTP id d11mr23500215oop.80.1595328181243;
- Tue, 21 Jul 2020 03:43:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8pM7diVPVUVJFnX3JjthYlLq7pi8+2tPknNxtkHGEeQ=;
+        b=uN9Y9HsGwkalkXjJaz90MfgBTu6SYvfNOj5u2KOYvt7zANS6ETGM6Jz0gF0MdxCyfs
+         9oF86j2FhErY4awyo47vU+xcH7z2OJD25vAZOSc4QoEUGNHXVQwmAhMdpsE4jwGgwgB1
+         c1wjXbUKMPzXw8ZunZaUEi/oZnspPM7QNMqKIpHRSLWT0p75qY4a/glr27I0YAxYt7zx
+         BfycyhIJNvSEokY5KWBiT8LgTYPAul1WZnCUC7FkymSB9jjooX7jy9jcPtDRbF+2P0YF
+         0hvGPfpO3xwuBLmFQyiJ1KcqlY3ZEhyWyHaRLAPQXMIUSumFqurP2TnNtdwjYGfZpCxy
+         dNZw==
+X-Gm-Message-State: AOAM533CXGfu9M7oQuzQ3gFAqTO1E0xHY3jzB0KAen79KljBWMtFOj/b
+        hLiVcD0KT4Zq6T5v4t8GAEmb06kwlc8BgQ==
+X-Google-Smtp-Source: ABdhPJzy2moU0arh3d1mHwle0rJ308kLKTkUSW99cDkJO2LHlDdkXjoTTq2PTxatNoI6fR9XCGpFeg==
+X-Received: by 2002:a63:69c6:: with SMTP id e189mr21665505pgc.170.1595328271521;
+        Tue, 21 Jul 2020 03:44:31 -0700 (PDT)
+Received: from localhost ([2401:fa00:1:10:de4a:3eff:fe7d:d39c])
+        by smtp.gmail.com with ESMTPSA id 129sm19419441pfv.161.2020.07.21.03.44.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 03:44:30 -0700 (PDT)
+From:   Cheng-Yi Chiang <cychiang@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mark Brown <broonie@kernel.org>, Taniya Das <tdas@codeaurora.org>,
+        Rohit kumar <rohitkr@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, dianders@chromium.org,
+        dgreid@chromium.org, tzungbi@chromium.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+Subject: [PATCH v2 0/2] Add documentation and machine driver for SC7180 sound card
+Date:   Tue, 21 Jul 2020 18:44:20 +0800
+Message-Id: <20200721104422.369368-1-cychiang@chromium.org>
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
 MIME-Version: 1.0
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Tue, 21 Jul 2020 12:42:50 +0200
-Message-ID: <CAKgNAkjyXcXZkEczRz2yvJRFBy2zAwTaNfyiSmskAFWN_3uY1g@mail.gmail.com>
-Subject: Mount API manual pages
-To:     David Howells <dhowells@redhat.com>
-Cc:     Petr Vorel <pvorel@suse.cz>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello David,
+Note:
+- The machine driver patch depends on LPASS patch series so it is not ready to be merged now.
+  ASoC: qcom: Add support for SC7180 lpass variant https://patchwork.kernel.org/cover/11650649/
+- The machine driver patch is made by the collaboration of
+  Cheng-Yi Chiang <cychiang@chromium.org>
+  Rohit kumar <rohitkr@codeaurora.org>
+  Ajit Pandey <ajitp@codeaurora.org>
+  But Ajit has left codeaurora.
 
-In October last year you sent some draft manual pages[1] for the new
-mount API (fsconfig(), fsmount(), fsopen(), fspick(), move_mount(),
-open_tree()).
+Changes from v1 to v2:
+- Ducumentation: Addressed all suggestions from Doug.
+- Machine driver:
+  - Fix comment style for license.
+  - Sort includes.
+  - Remove sc7180_snd_hw_params.
+  - Remove sc7180_dai_init and use aux device instead for headset jack registration.
+  - Statically define format for Primary MI2S.
+  - Atomic is not a concern because there is mutex in card to make sure
+    startup and shutdown happen sequentially.
+  - Fix missing return -EINVAL in startup.
+  - Use static sound card.
+  - Use devm_kzalloc to avoid kfree.
 
-I noted at the time that the mails were a bit confusing since several
-of the pages were sent twice, and to different lists. You said [2]
-that you'd resend in a more orderly fashion following any feedback
-that you got to those drafts. However, things stalled at that point.
+Thanks for the review!
 
-I'd like to restart this process, so that we actually get the pages
-into the man-pages set. (This is in part triggered by the
-mount_settr() manual page that Christian recently sent.)
+Ajit Pandey (1):
+  ASoC: qcom: sc7180: Add machine driver for sound card registration
 
-Would you be willing to do the following please:
+Cheng-Yi Chiang (1):
+  ASoC: qcom: dt-bindings: Add sc7180 machine bindings
 
-1. Review the pages that you already wrote to see what needs to be
-updated. (I did take a look at some of those pages a while back, and
-some pieces--I don't recall the details--were out of sync with the
-implementation.)
+ .../bindings/sound/qcom,sc7180.yaml           | 130 ++++++
+ sound/soc/qcom/Kconfig                        |  11 +
+ sound/soc/qcom/Makefile                       |   2 +
+ sound/soc/qcom/sc7180.c                       | 380 ++++++++++++++++++
+ 4 files changed, 523 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+ create mode 100644 sound/soc/qcom/sc7180.c
 
-2. Resend the pages, one patch per page.
-
-3. Please CC linux-man@, linux-api@, linux-kernel@, and the folk in CC
-on this message.
-
-Cheers,
-
-Michael
-
-[1]
-https://lore.kernel.org/linux-man/15449.1531263162@warthog.procyon.org.uk/
-[MANPAGE PATCH] Add manpages for move_mount(2) and open_tree(2)
-
-https://lore.kernel.org/linux-man/15519.1531263314@warthog.procyon.org.uk/
-[MANPAGE PATCH] Add manpage for fsinfo(2)
-
-https://lore.kernel.org/linux-man/15488.1531263249@warthog.procyon.org.uk/
-[MANPAGE PATCH] Add manpage for fsopen(2), fspick(2) and fsmount(2)
-
-etc.
-
-[2] https://lore.kernel.org/lkml/27446.1570738938@warthog.procyon.org.uk/
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+2.28.0.rc0.105.gf9edc3c819-goog
+
