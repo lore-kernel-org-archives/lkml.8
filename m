@@ -2,162 +2,189 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 356BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF78C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A087208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9A52073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:39:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="aomBaqjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729819AbgGULjf (ORCPT
+        id S1729841AbgGULj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:39:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4798 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729778AbgGULjb (ORCPT
+        Tue, 21 Jul 2020 07:39:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729629AbgGULjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:39:31 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LBVxeH047274;
-        Tue, 21 Jul 2020 07:39:23 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d91v3unm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 07:39:23 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06LBW1W7047352;
-        Tue, 21 Jul 2020 07:39:22 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d91v3un9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 07:39:22 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LBZQuS024073;
-        Tue, 21 Jul 2020 11:39:20 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 32brq7ktsu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 11:39:20 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LBdGss16056722
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jul 2020 11:39:16 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A45E4203F;
-        Tue, 21 Jul 2020 11:39:16 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6FE9D42045;
-        Tue, 21 Jul 2020 11:39:11 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.85.93.17])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Jul 2020 11:39:11 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michael Ellerman <michaele@au1.ibm.com>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Nick Piggin <npiggin@au1.ibm.com>,
-        Oliver OHalloran <oliveroh@au1.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@linux.ibm.com>,
-        Anton Blanchard <anton@au1.ibm.com>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: [PATCH v2 10/10] powerpc/smp: Implement cpu_to_coregroup_id
-Date:   Tue, 21 Jul 2020 17:08:14 +0530
-Message-Id: <20200721113814.32284-11-srikar@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
-References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_05:2020-07-21,2020-07-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- spamscore=0 priorityscore=1501 impostorscore=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 adultscore=0 suspectscore=0 clxscore=1015
- mlxlogscore=965 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007210077
+        Tue, 21 Jul 2020 07:39:55 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F557C0619D8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:39:55 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o2so2545348wmh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:39:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0J627pM80T7+XlutPkaKlOVr/z1gAAVKrENSM8VXItA=;
+        b=aomBaqjhstgNyLO0iG3oISEZgsZDk7I+CDVjJSDyjcwaHIcVOM0K5+HMK231PboQEK
+         A2/ll23OKsSMzr4PBzWM/DbQPDdAXv8woUbnirpcylvahf9sCXpntRikrd5FDy6LQZ2B
+         SmTb9NoSOXZFwQaGSGnrM85rIzJ/RYWvzWs9TqfX4QDozPArJJYYN0fR+XV8WYEazdak
+         fqfgAyk+tRfLhx++g8eDu4I6cSvQqVY7/E7HpFo2iRa2PN0jocZFSwPjXCv94ELTWkDr
+         ll6e0eO5qV6cSOnljZYyuajsWMjDhHTcfa6BE6Fz+nVCFLQK3gnfas6LdEJB9o1fiMwF
+         ZjAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0J627pM80T7+XlutPkaKlOVr/z1gAAVKrENSM8VXItA=;
+        b=mDCgq/akkuBAnxjuf+Nq1e0TrPBXQ8BtiNRoFCjEvcPH7sBtN+bXDz+jH+gl2XBUjy
+         ivhlCO4cF+BUYCtE3DXViGOgdEznrPj7TAEh/7c5rIZ6safXhjqGB1pzQy73fAZ0J9S1
+         L6sur0/IcsDoeZFaIw3HpBqPtDYi16MpW3lZ3/2amfC5NDbAjb3+huhrH1yZjj9aVCCC
+         8NMjyCnXwvV58nzkc3HjJz5ou/DSbkdRHEEg6InIw11YmXN0sGaGrJ/3blBwpAm+m+Yj
+         PBm5E2aUBv6/DV9YmMKaSZhaT+A6Kh5hS8y2Ze+CsXuxaeKLHqQxyUxIjscZyoaS4eGx
+         o5ag==
+X-Gm-Message-State: AOAM532zjMzgP3aiHORMC2ltX+fy/cvsb+RZ0meA2u10VAtIlUEqvqA5
+        hTGWqEDabOg/JChXIvY2RJ7fDDonFAVLZFpuaeiiEQ==
+X-Google-Smtp-Source: ABdhPJynaPKpbU6Sa4qfZHuvA4C6P4PN6EGPDdcoeLrQHPieARti1aWDcQP+/gphRMVoWP2V8oJ4kkwKrU/hwUWo/t4=
+X-Received: by 2002:a1c:2d91:: with SMTP id t139mr3589796wmt.3.1595331593814;
+ Tue, 21 Jul 2020 04:39:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200717075101.263332-1-anup.patel@wdc.com> <20200717075101.263332-5-anup.patel@wdc.com>
+ <CAOnJCULcffij3-d-TsQixj5TZdatBdUcC-y73L=W-+5h41ytKQ@mail.gmail.com>
+In-Reply-To: <CAOnJCULcffij3-d-TsQixj5TZdatBdUcC-y73L=W-+5h41ytKQ@mail.gmail.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 21 Jul 2020 17:09:41 +0530
+Message-ID: <CAAhSdy1cbKA9iwBPYMX5xaYFe_BxnB2Sm_ftHPPDq+96SeKbnA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] dt-bindings: timer: Add CLINT bindings
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Emil Renner Berhing <kernel@esmil.dk>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lookup the coregroup id from the associativity array.
+On Tue, Jul 21, 2020 at 6:45 AM Atish Patra <atishp@atishpatra.org> wrote:
+>
+> On Fri, Jul 17, 2020 at 12:52 AM Anup Patel <anup.patel@wdc.com> wrote:
+> >
+> > We add DT bindings documentation for CLINT device.
+> >
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> > Tested-by: Emil Renner Berhing <kernel@esmil.dk>
+> > ---
+> >  .../bindings/timer/sifive,clint.yaml          | 58 +++++++++++++++++++
+> >  1 file changed, 58 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+> > new file mode 100644
+> > index 000000000000..8ad115611860
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+> > @@ -0,0 +1,58 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/timer/sifive,clint.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: SiFive Core Local Interruptor
+> > +
+> > +maintainers:
+> > +  - Palmer Dabbelt <palmer@dabbelt.com>
+> > +  - Anup Patel <anup.patel@wdc.com>
+> > +
+> > +description:
+> > +  SiFive (and other RISC-V) SOCs include an implementation of the SiFive
+> > +  Core Local Interruptor (CLINT) for M-mode timer and M-mode inter-processor
+> > +  interrupts. It directly connects to the timer and inter-processor interrupt
+> > +  lines of various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local
+> > +  interrupt controller is the parent interrupt controller for CLINT device.
+> > +  The clock frequency of CLINT is specified via "timebase-frequency" DT
+> > +  property of "/cpus" DT node. The "timebase-frequency" DT property is
+> > +  described in Documentation/devicetree/bindings/riscv/cpus.yaml
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: sifive,clint0
+> > +      - const: sifive,fu540-c000-clint
+> > +
+> > +    description:
+> > +      Should be "sifive,<chip>-clint" and "sifive,clint<version>".
+> > +      Supported compatible strings are -
+> > +      "sifive,fu540-c000-clint" for the SiFive CLINT v0 as integrated
+> > +      onto the SiFive FU540 chip, and "sifive,clint0" for the SiFive
+> > +      CLINT v0 IP block with no chip integration tweaks.
+> > +      Please refer to sifive-blocks-ip-versioning.txt for details
+> > +
+>
+> As the DT binding suggests that the clint device should be named as "sifive,**",
+> I think we should change the DT property in kendryte dts as well.
 
-If unable to detect the coregroup id, fallback on the core id.
-This way, ensure sched_domain degenerates and an extra sched domain is
-not created.
+Okay, I will do it as a separate patch.
 
-Ideally this function should have been implemented in
-arch/powerpc/kernel/smp.c. However if its implemented in mm/numa.c, we
-don't need to find the primary domain again.
+>
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts-extended:
+> > +    minItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts-extended
+> > +
+> > +examples:
+> > +  - |
+> > +    clint@2000000 {
+> > +      compatible = "sifive,clint0", "sifive,fu540-c000-clint";
+> > +      interrupts-extended = <&cpu1intc 3 &cpu1intc 7
+> > +                             &cpu2intc 3 &cpu2intc 7
+> > +                             &cpu3intc 3 &cpu3intc 7
+> > +                             &cpu4intc 3 &cpu4intc 7>;
+> > +       reg = <0x2000000 0x4000000>;
+> > +    };
+> > +...
+> > --
+> > 2.25.1
+> >
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+>
+> Otherwise,
+>
+> Reviewed-by: Atish Patra <atish.patra@wdc.com>
+>
+> --
+> Regards,
+> Atish
 
-If the device-tree mentions more than one coregroup, then kernel
-implements only the last or the smallest coregroup, which currently
-corresponds to the penultimate domain in the device-tree.
-
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Cc: Michael Ellerman <michaele@au1.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Nick Piggin <npiggin@au1.ibm.com>
-Cc: Oliver OHalloran <oliveroh@au1.ibm.com>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Michael Neuling <mikey@linux.ibm.com>
-Cc: Anton Blanchard <anton@au1.ibm.com>
-Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Cc: Jordan Niethe <jniethe5@gmail.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
-Changelog v1 -> v2:
-powerpc/smp: Implement cpu_to_coregroup_id
-	Move coregroup_enabled before getting associativity (Gautham)
-
- arch/powerpc/mm/numa.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-index ef8aa580da21..ae57b68beaee 100644
---- a/arch/powerpc/mm/numa.c
-+++ b/arch/powerpc/mm/numa.c
-@@ -1218,6 +1218,26 @@ int find_and_online_cpu_nid(int cpu)
- 
- int cpu_to_coregroup_id(int cpu)
- {
-+	__be32 associativity[VPHN_ASSOC_BUFSIZE] = {0};
-+	int index;
-+
-+	if (cpu < 0 || cpu > nr_cpu_ids)
-+		return -1;
-+
-+	if (!coregroup_enabled)
-+		goto out;
-+
-+	if (!firmware_has_feature(FW_FEATURE_VPHN))
-+		goto out;
-+
-+	if (vphn_get_associativity(cpu, associativity))
-+		goto out;
-+
-+	index = of_read_number(associativity, 1);
-+	if (index > min_common_depth + 1)
-+		return of_read_number(&associativity[index - 1], 1);
-+
-+out:
- 	return cpu_to_core_id(cpu);
- }
- 
--- 
-2.17.1
-
+Regards,
+Anup
