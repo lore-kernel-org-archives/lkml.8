@@ -2,210 +2,173 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 094BCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFD7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAAF920714
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC4120792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:14:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ozzmk79V"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="shpVXeSI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbgGUJJd (ORCPT
+        id S1728310AbgGUJOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:09:33 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:43820 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725984AbgGUJJd (ORCPT
+        Tue, 21 Jul 2020 05:14:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbgGUJOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:09:33 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L96o3N027673;
-        Tue, 21 Jul 2020 11:09:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=3P6/CzI3nOMFBgAbJEh+SX9yJmO1KrFcTfM3aEnWuYw=;
- b=ozzmk79VdzsCLnZCUcx9GYPD52vFRITbbof6astgSHfxSf8gTuAmXiUuqy9W7sr+VLbB
- VuwC1+YIFSzLQ6lD8BGN6xiclI748KLvATyE5WFKWLwCOvA9vu2Y8YEpr/sSQVQ8wxyn
- wsrKJ6AsSsASzwmT8Fg8J3mXEbJ4x6l9Yg8/kX9Qn+/qTOz1R4fBNVGIdPqg+kmpJPo/
- PNOsBk9A773g60rmYIQ2oxdvwM6m/Wfp95oPOcaSXfBp6A7/Il908wNpSgDRZOC9T655
- uT6R3EVbXNENdb6PSFtHoMjAspspMVTjgx8QhWT5F8GLuWR/1LL3eqIXXFDXPVa9VttU CA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32bsagw303-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 11:09:24 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D6E2A100038;
-        Tue, 21 Jul 2020 11:09:23 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C10AB2A8D8F;
-        Tue, 21 Jul 2020 11:09:23 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 Jul
- 2020 11:09:23 +0200
-Subject: Re: [PATCH v2 2/2] ARM: dts: stm32: Enable MIPI DSI display support.
-To:     Adrian Pop <pop.adrian61@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Tue, 21 Jul 2020 05:14:22 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082F8C0619D8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:14:22 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id j18so2064957wmi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=E59bzjWg+c0MHaEx1BoDiS6FYfnfwzF0HRnaYqe7suo=;
+        b=shpVXeSITBS4EKpVLrwdRPEWjlOdVZI6BidG4XTDQW2+wUhpxQei7Cuxq6CAnmZCsU
+         S/XaADtHoPl0JNTWMqPJmyDNcqdqFQoX4dVjaxya+6vjdpsQrUUDNk1JN6qkztUdDqcb
+         UU866k5p6jMaXdiScY9oJhZZoqvCKO7jIf/88rqW6zragfQ16AfDocaKie1uU10/JLh4
+         4c5Vr8Ya6KJd/QZBZxVPOJO/qyaWggf4F497tvpmbOlG0f27ZUdJxnnb1rm5/39fEdxF
+         reN5whVwlaP3VIGiYNYmlENFVk/uplllFInFLw8FmPTVYwQGLHzQQPOlZv8buvlNcmuI
+         /DxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=E59bzjWg+c0MHaEx1BoDiS6FYfnfwzF0HRnaYqe7suo=;
+        b=hUh8nFQtWZd6Ms6QYMbVQk7blTRZ9kue5MK2B8HViprArgoVfEDevCusvUahTgY1uo
+         Y8ZT+T7ZWF75+94rzhC5Y+SksmcGkvqYXp/16Q+uh7tRo3SUj5OgYQjJWLQmQlXJ1wex
+         OER+xsxLCXYoHwUal+oOYKSav3SOvzvzlenIwTgesh2oGMMrkQjB28R5BJoAJtLV7RAE
+         Tq1FnH0IGfqEhrkS/a/RzMiK0gfHFhIhyggOc+bhJ0y3AwOehhcdZDtraujy8e2WZqcc
+         5Dk4OTDM5au8JrUZ8Bax5enIuNTzwKIcbUf6zM7VhCpBzKM0PEVevDiOVLR3zdM+kl8E
+         /a6A==
+X-Gm-Message-State: AOAM533PiknMcSzLQUI4moIAYM5EtsH1KBR/wwpg4XIBcYmTFCAl3eSh
+        BS5nlt3YGIWi7ZVb+/JFjkoU1A==
+X-Google-Smtp-Source: ABdhPJxBbU7EYiACWX6oiDhUp9tR7cuERyVtBjdHxSpkHaSwpStuHoOiCT3EbUH505j9OOrf0KN24A==
+X-Received: by 2002:a05:600c:282:: with SMTP id 2mr3402783wmk.168.1595322860725;
+        Tue, 21 Jul 2020 02:14:20 -0700 (PDT)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id m9sm2516472wml.45.2020.07.21.02.14.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 02:14:19 -0700 (PDT)
+References: <20200719141034.8403-1-christianshewitt@gmail.com> <20200719141034.8403-4-christianshewitt@gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200702172714.158786-1-pop.adrian61@gmail.com>
- <20200702172714.158786-2-pop.adrian61@gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <c9d8bfaa-9958-ad65-e59c-4f8a7ffdf208@st.com>
-Date:   Tue, 21 Jul 2020 11:09:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Dongjin Kim <tobetter@hardkernel.com>
+Subject: Re: [PATCH 3/3] arm64: dts: meson: add support for the ODROID-N2+
+In-reply-to: <20200719141034.8403-4-christianshewitt@gmail.com>
+Date:   Tue, 21 Jul 2020 11:14:19 +0200
+Message-ID: <1jo8o98c2c.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20200702172714.158786-2-pop.adrian61@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian
 
-On 7/2/20 7:27 PM, Adrian Pop wrote:
-> STM32f769-disco features a 4" MIPI DSI display: add support for it.
-> On Cortex-M7 DMA can't use cached memory. For this reason I use a dedicated
-> memory pool for DMA with no-cache attribute which is located at the end of
->   RAM.
-> 
-> Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
+On Sun 19 Jul 2020 at 16:10, Christian Hewitt <christianshewitt@gmail.com> wrote:
+
+> HardKernel ODROID-N2+ uses an Amlogic S922X rev. C chip capable of higher
+> clock speeds than the original ODROID-N2. Hardkernel supports the big cpu
+> cluster at 2.4GHz and the little cpu cluster at 2.0GHz. Opp points and
+> regulator changess are from the HardKernel Linux kernel sources.
+>
+> Suggested-by: Dongjin Kim <tobetter@hardkernel.com>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
->   arch/arm/boot/dts/stm32f746.dtsi      | 34 +++++++++++++++++++
->   arch/arm/boot/dts/stm32f769-disco.dts | 49 +++++++++++++++++++++++++++
->   2 files changed, 83 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-> index 93c063796780..577a812ca01c 100644
-> --- a/arch/arm/boot/dts/stm32f746.dtsi
-> +++ b/arch/arm/boot/dts/stm32f746.dtsi
-> @@ -48,6 +48,19 @@ / {
->   	#address-cells = <1>;
->   	#size-cells = <1>;
->   
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
+>  arch/arm64/boot/dts/amlogic/Makefile          |  1 +
+>  .../dts/amlogic/meson-g12b-odroid-n2-plus.dts | 53 +++++++++++++++++++
+>  2 files changed, 54 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> index 5cac4d1d487d..6dc508b80133 100644
+> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-g12b-gtking-pro.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-a311d-khadas-vim3.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-s922x-khadas-vim3.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
+> +dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2-plus.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-ugoos-am6.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-kii-pro.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
+> new file mode 100644
+> index 000000000000..99e96be509f8
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
+> @@ -0,0 +1,53 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 BayLibre, SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + */
 > +
-> +		linux,dma {
-> +			compatible = "shared-dma-pool";
-> +			linux,dma-default;
-> +			no-map;
-> +			reg = <0xc0f00000 0x100000>;
+> +/dts-v1/;
+> +
+> +#include "meson-g12b-odroid-n2.dtsi"
+> +
+> +/ {
+> +	compatible = "hardkernel,odroid-n2-plus", "amlogic,s922x", "amlogic,g12b";
+> +	model = "Hardkernel ODROID-N2+";
+> +
+> +	vddcpu_a: regulator-vddcpu-a {
+> +		regulator-min-microvolt = <680000>;
+> +		regulator-max-microvolt = <1040000>;
+> +
+> +		pwms = <&pwm_ab 0 1500 0>;
+> +	};
+> +
+> +	vddcpu_b: regulator-vddcpu-b {
+> +		regulator-min-microvolt = <680000>;
+> +		regulator-max-microvolt = <1040000>;
+> +
+> +		pwms = <&pwm_AO_cd 1 1500 0>;
+> +	};
+> +
+> +	cpu_opp_table_0: opp-table-0 {
+> +		opp-1908000000 {
+> +			opp-hz = /bits/ 64 <1908000000>;
+> +			opp-microvolt = <1030000>;
+> +		};
+> +
+> +		opp-2016000000 {
+> +			opp-hz = /bits/ 64 <2016000000>;
+> +			opp-microvolt = <1040000>;
 > +		};
 > +	};
 > +
-
-Please check Rob's remark (make W=1). Furthermore this node should be 
-declared in board dts file is should depend on SDRAM size embedded on board.
-
->   	clocks {
->   		clk_hse: clk-hse {
->   			#clock-cells = <0>;
-> @@ -75,6 +88,27 @@ clk_i2s_ckin: clk-i2s-ckin {
->   	};
->   
->   	soc {
-> +		ltdc: display-controller@40016800 {
-> +			compatible = "st,stm32-ltdc";
-> +			reg = <0x40016800 0x200>;
-> +			interrupts = <88>, <89>;
-> +			resets = <&rcc STM32F7_APB2_RESET(LTDC)>;
-> +			clocks = <&rcc 1 CLK_LCD>;
-> +			clock-names = "lcd";
-> +			status = "disabled";
+> +	cpub_opp_table_1: opp-table-1 {
+> +		opp-2304000000 {
+> +			opp-hz = /bits/ 64 <2304000000>;
+> +			opp-microvolt = <1030000>;
 > +		};
 > +
-> +		dsi: dsi@40016c00 {
-> +			compatible = "st,stm32-dsi";
-> +			reg = <0x40016c00 0x800>;
-> +			interrupts = <98>;
-> +			clocks = <&rcc 1 CLK_F769_DSI>, <&clk_hse>;
-> +			clock-names = "pclk", "ref";
-> +			resets = <&rcc STM32F7_APB2_RESET(DSI)>;
-> +			reset-names = "apb";
-> +			status = "disabled";
-> +		};
-> +
-
-Nodes are ordered by address in soc dtsi file. Please follow it.
-
->   		timer2: timer@40000000 {
->   			compatible = "st,stm32-timer";
->   			reg = <0x40000000 0x400>;
-> diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
-> index 1626e00bb2cb..a9e81b49809c 100644
-> --- a/arch/arm/boot/dts/stm32f769-disco.dts
-> +++ b/arch/arm/boot/dts/stm32f769-disco.dts
-> @@ -153,3 +153,52 @@ &usbotg_hs {
->   	pinctrl-names = "default";
->   	status = "okay";
->   };
-> +
-> +&dsi {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	status = "okay";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +			dsi_in: endpoint {
-> +				remote-endpoint = <&ltdc_out_dsi>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +			dsi_out: endpoint {
-> +				remote-endpoint = <&dsi_in_panel>;
-> +			};
-> +		};
-> +
-> +	};
-> +
-> +	panel: panel {
-> +		compatible = "orisetech,otm8009a";
-> +		reg = <0>;
-> +		reset-gpios = <&gpioj 15 GPIO_ACTIVE_LOW>;
-> +		status = "okay";
-> +
-> +		port {
-> +			dsi_in_panel: endpoint {
-> +				remote-endpoint = <&dsi_out>;
-> +			};
+> +		opp-2400000000 {
+> +			opp-hz = /bits/ 64 <2400000000>;
+> +			opp-microvolt = <1040000>;
 > +		};
 > +	};
+
+Are this opp specific to the N2+ or S922x rev C ?
+If it is the latter, shouldn't these be in s922x-revC dtsi ?
+
 > +};
 > +
-> +&ltdc {
-> +	status = "okay";
-> +
-> +	port {
-> +		ltdc_out_dsi: endpoint {
-> +			remote-endpoint = <&dsi_in>;
-> +		};
-> +	};
-> +};
 
