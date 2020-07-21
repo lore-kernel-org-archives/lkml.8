@@ -2,105 +2,133 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4285C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65333C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB0E920792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:26:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZgGnhjHm"
+	by mail.kernel.org (Postfix) with ESMTP id 4E5EF20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:26:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgGUD0F (ORCPT
+        id S1728722AbgGUD0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:26:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbgGUD0E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 23:26:04 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A363DC061794;
-        Mon, 20 Jul 2020 20:26:04 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id x62so15161571qtd.3;
-        Mon, 20 Jul 2020 20:26:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZfnGMyKYW+BUBT0er2/ds3h94uyXvk6uP4Na6Sd7dqM=;
-        b=ZgGnhjHmN9X0QxRYGPySZ4XrjQkySTF9w/mrFp5Jk7IsNUf9wXbkQX5sm7kZvHwMyJ
-         rDjh48MTvZEJulXUuE01aw2X9O3/0RKmFi3utnGSKfE7HgZxCdrDDrkX8PiEd8MGLkQi
-         /ZWwi9cGHXPHwc/sGYv++lxmTLl67yHqgMXAGxKRfdIJHw4v3WaFrfGA/gU22FGrvK9u
-         u+ZHRsctgayQto7BA2cBIJzYbeWhaYCW17KWAwNYcB6dZcuh6YS+TSDPrxFH/H3Op8RC
-         sfYwe/9MnQBOv84jXL4ovN3PZ01lpO51UsehoapnyqmPd9zmWV1/dae2dlOznD9Rxl7P
-         ACUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZfnGMyKYW+BUBT0er2/ds3h94uyXvk6uP4Na6Sd7dqM=;
-        b=CJQHepA2do727/HQ/bI8yZV3ZRgO+MAtSq2a9sE6hfAy1e4YrPAcnGlvweTsx9twAk
-         YKvK60mj6gQ/xic7K0Sl4XDIfz8zLo3jcH9Q0cq2TpxWxxBeyeliOL6FGWwma6nTWtIE
-         UFGT8+DpI4e7OuvnZh8n2fC2CjTgdn5bBv1579I8R7K7DFJDR+5b6y+6csZjDY22PFUd
-         1V+sXoZhqziu/Nq8Zzwxo2B8Q5xJYyg6ANRLuLdo+8mlT/A0pHbLlKB6yREQWmHkTI17
-         YLICw+tEMXfWrIvvK8TdGdQbazEBaPifkTsAnXRF6ZJzxHiWFVUxFi0yD2T3re16bRif
-         DNdA==
-X-Gm-Message-State: AOAM5327CnY3sPlPDgYK8PiSpOUxrMWJ6pm9oFNn4cXEQxAVhQyT7j6/
-        x0pCBqXaFxdzNbTCIOiPerogCzLWqlzxMpUaS1ndbDnEu1A=
-X-Google-Smtp-Source: ABdhPJwVup9ahUCuS5au2cnPlERX94DercWol9ASY1FYi6G7v1dnlDbbscj8P67iA+0+6uZhE9IPB+eGbrY3Yloi9wc=
-X-Received: by 2002:ac8:2f7b:: with SMTP id k56mr27412775qta.239.1595301963949;
- Mon, 20 Jul 2020 20:26:03 -0700 (PDT)
+        Mon, 20 Jul 2020 23:26:45 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:38376 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726715AbgGUD0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 23:26:43 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A0D07E63F265E152B026;
+        Tue, 21 Jul 2020 11:26:39 +0800 (CST)
+Received: from [10.174.187.22] (10.174.187.22) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 21 Jul 2020 11:26:31 +0800
+Subject: Re: [PATCH 0/9] arm64: Stolen time support
+To:     Steven Price <steven.price@arm.com>
+References: <20190802145017.42543-1-steven.price@arm.com>
+CC:     <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        <linux-doc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Will Deacon <will@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <xiexiangyou@huawei.com>, <yebiaoxiang@huawei.com>,
+        "wanghaibin.wang@huawei.com >> Wanghaibin (D)" 
+        <wanghaibin.wang@huawei.com>
+From:   zhukeqian <zhukeqian1@huawei.com>
+Message-ID: <1611996b-1ec1-dee7-ed61-b3b9df23f138@huawei.com>
+Date:   Tue, 21 Jul 2020 11:26:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-References: <CAEQHRfAC9me4hGA+=+wcOpx+TAzqS723-kr_Y_Ej8dnWHp2fTw@mail.gmail.com>
- <bf3dff0c9e2d4affa7044a882317144b@AcuMS.aculab.com>
-In-Reply-To: <bf3dff0c9e2d4affa7044a882317144b@AcuMS.aculab.com>
-From:   lebon zhou <lebon.zhou@gmail.com>
-Date:   Tue, 21 Jul 2020 04:23:03 +0000
-Message-ID: <CAEQHRfAE5pNCXko_HOamH-ffLe9fzSxvAh-yOnJe7OcPkFkV4A@mail.gmail.com>
-Subject: [PATCH] Fix memory overwriting issue when copy an address to user space
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190802145017.42543-1-steven.price@arm.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.187.22]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 11:12 PM David Laight <David.Laight@aculab.com> wrote:
->
-> From: lebon zhou
-> > Sent: 20 July 2020 05:35
-> > To: davem@davemloft.net; kuba@kernel.org
-> > Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org
-> > Subject: [PATCH] Fix memory overwriting issue when copy an address to user space
-> >
-> > When application provided buffer size less than sockaddr_storage, then
-> > kernel will overwrite some memory area which may cause memory corruption,
-> > e.g.: in recvmsg case, let msg_name=malloc(8) and msg_namelen=8, then
-> > usually application can call recvmsg successful but actually application
-> > memory get corrupted.
->
-> Where?
-> The copy_to_user() uses the short length provided by the user.
-> There is even a comment saying that if the address is truncated
-> the length returned to the user is the full length.
->
-> Maybe the application is reusing the msg without re-initialising
-> it properly.
+Hi Steven,
 
-It is not related with copy_to_user(), it is about move_addr_to_user()
-implementation itself,
-there is comment /*After copying the data up to the limit the user
-specifies...*/, but the fact
-is when (ulen < klen), this function will copy more content to user
-buffer over than user
-specifies in @ulen, this will cause the user buffer to corrupt, this
-patch fixes this issue.
+On 2019/8/2 22:50, Steven Price wrote:
+> This series add support for paravirtualized time for arm64 guests and
+> KVM hosts following the specification in Arm's document DEN 0057A:
+> 
+> https://developer.arm.com/docs/den0057/a
+> 
+> It implements support for stolen time, allowing the guest to
+> identify time when it is forcibly not executing.
+> 
+> It doesn't implement support for Live Physical Time (LPT) as there are
+> some concerns about the overheads and approach in the above
+Do you plan to pick up LPT support? As there is demand of cross-frequency migration
+(from older platform to newer platform).
+
+I am not clear about the overheads and approach problem here, could you please
+give some detail information? Maybe we can work together to solve these concerns. :-)
+
+Thanks,
+Keqian
+> specification, and I expect an updated version of the specification to
+> be released soon with just the stolen time parts.
+> 
+> I previously posted a series including LPT (as well as stolen time):
+> https://lore.kernel.org/kvmarm/20181212150226.38051-1-steven.price@arm.com/
+> 
+> Patches 2, 5, 7 and 8 are cleanup patches and could be taken separately.
+> 
+> Christoffer Dall (1):
+>   KVM: arm/arm64: Factor out hypercall handling from PSCI code
+> 
+> Steven Price (8):
+>   KVM: arm64: Document PV-time interface
+>   KVM: arm64: Implement PV_FEATURES call
+>   KVM: arm64: Support stolen time reporting via shared structure
+>   KVM: Allow kvm_device_ops to be const
+>   KVM: arm64: Provide a PV_TIME device to user space
+>   arm/arm64: Provide a wrapper for SMCCC 1.1 calls
+>   arm/arm64: Make use of the SMCCC 1.1 wrapper
+>   arm64: Retrieve stolen time as paravirtualized guest
+> 
+>  Documentation/virtual/kvm/arm/pvtime.txt | 107 +++++++++++++
+>  arch/arm/kvm/Makefile                    |   2 +-
+>  arch/arm/kvm/handle_exit.c               |   2 +-
+>  arch/arm/mm/proc-v7-bugs.c               |  13 +-
+>  arch/arm64/include/asm/kvm_host.h        |  13 +-
+>  arch/arm64/include/asm/kvm_mmu.h         |   2 +
+>  arch/arm64/include/asm/pvclock-abi.h     |  20 +++
+>  arch/arm64/include/uapi/asm/kvm.h        |   6 +
+>  arch/arm64/kernel/Makefile               |   1 +
+>  arch/arm64/kernel/cpu_errata.c           |  80 ++++------
+>  arch/arm64/kernel/kvm.c                  | 155 ++++++++++++++++++
+>  arch/arm64/kvm/Kconfig                   |   1 +
+>  arch/arm64/kvm/Makefile                  |   2 +
+>  arch/arm64/kvm/handle_exit.c             |   4 +-
+>  include/kvm/arm_hypercalls.h             |  44 ++++++
+>  include/kvm/arm_psci.h                   |   2 +-
+>  include/linux/arm-smccc.h                |  58 +++++++
+>  include/linux/cpuhotplug.h               |   1 +
+>  include/linux/kvm_host.h                 |   4 +-
+>  include/linux/kvm_types.h                |   2 +
+>  include/uapi/linux/kvm.h                 |   2 +
+>  virt/kvm/arm/arm.c                       |  18 +++
+>  virt/kvm/arm/hypercalls.c                | 138 ++++++++++++++++
+>  virt/kvm/arm/mmu.c                       |  44 ++++++
+>  virt/kvm/arm/psci.c                      |  84 +---------
+>  virt/kvm/arm/pvtime.c                    | 190 +++++++++++++++++++++++
+>  virt/kvm/kvm_main.c                      |   6 +-
+>  27 files changed, 848 insertions(+), 153 deletions(-)
+>  create mode 100644 Documentation/virtual/kvm/arm/pvtime.txt
+>  create mode 100644 arch/arm64/include/asm/pvclock-abi.h
+>  create mode 100644 arch/arm64/kernel/kvm.c
+>  create mode 100644 include/kvm/arm_hypercalls.h
+>  create mode 100644 virt/kvm/arm/hypercalls.c
+>  create mode 100644 virt/kvm/arm/pvtime.c
+> 
