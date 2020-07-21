@@ -2,90 +2,172 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CFDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA95C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E63A206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD65206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:32:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FjGoLNE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgGUP2q (ORCPT
+        id S1729311AbgGUPb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:28:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726830AbgGUP2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:28:45 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F34620771;
-        Tue, 21 Jul 2020 15:28:44 +0000 (UTC)
-Date:   Tue, 21 Jul 2020 11:28:42 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: [ANNOUNCE] 5.4.52-rt31
-Message-ID: <20200721112842.3c2d6d09@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 21 Jul 2020 11:31:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728391AbgGUPb6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:31:58 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B65C0619DA
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:31:58 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id t18so16757599ilh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:31:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fHBXXvobeCMI6ndgKtMZ3erxdMcJPIdl8aMUBZkOTPQ=;
+        b=FjGoLNE3u7Lnj6Y4gzoT0kgYXHm5TPhi7odJEJ19IH/bXifIJkm9g9cRYI1n9gNuSu
+         q8PssjRLHeidmWFf4uLpcuAYGmRmaf89V572BB2JHkU1x19AUKNTC+k2xOn6qyRI9n0C
+         qmt5Am2rGnwheI/zqG93vJNWkUiYQqwIo0DFKcDPZrvGsrwwC0EEwGut5OC5+QkAoPOX
+         BI6Zfk31k5IlcnMFpxsqIjhd1aDaR8T90B0zI79dBIwKvQX13ndd1DCNVRjdlGQj0Vd+
+         vDdcbnaBPAIYK0k1jvm+zwdwTjBqn675UdeHBWGIZ+Ey9zJ+n2NfmxiGLL3ZMmSJdVeP
+         K3Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fHBXXvobeCMI6ndgKtMZ3erxdMcJPIdl8aMUBZkOTPQ=;
+        b=Tunt49qFUeZfC2U4dcblO/WfECH4OTDQijblOJgYtMpqVhM5NUokicsidVcmYwvhjD
+         zlK5j3s8c1Ov7lSudPXXVVic7e5M6EfCVHIC/g7W/xVAfDKoQRRIE9GswBr9EzQO4lJR
+         jq/zAeDGEyt5avvo9XKGhxC3i2v+9cLAFYCsJrXvkCks5kmD2E9+lK2PWvy/kgkp6JjI
+         x5fme0fM/1/0i4vrJu1jb7Lla5eirduvi1soiSoSRcBK62E7bB733/T++tZG0M+OYBGv
+         1sC78xP8YfTcBGQJ9/j9PB6AMonTyXLKA22AXiPSZOrDCklKUKw3Cn8Nxr45SzXfJoZA
+         kJTQ==
+X-Gm-Message-State: AOAM531y+jRAya1kM50HIyP/J08AfzAt6mn2yqo29LIJaVReLA0UwjTx
+        DtTs9BIRBRmlgCpMHhIzKe0tLA==
+X-Google-Smtp-Source: ABdhPJwAbVMoY1B6CkpkY+SnENst9lHtwiSu0YeTTONrlnZk8tl2yQygzkpN0KPaRXZ9cUJSYa4n6Q==
+X-Received: by 2002:a05:6e02:e05:: with SMTP id a5mr26782990ilk.92.1595345517510;
+        Tue, 21 Jul 2020 08:31:57 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id c3sm10507002ilj.31.2020.07.21.08.31.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 08:31:56 -0700 (PDT)
+Subject: Re: strace of io_uring events?
+To:     Andy Lutomirski <luto@kernel.org>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
+ <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net>
+ <20200715171130.GG12769@casper.infradead.org>
+ <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com>
+ <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
+ <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com>
+ <202007151511.2AA7718@keescook> <20200716131404.bnzsaarooumrp3kx@steredhat>
+ <202007160751.ED56C55@keescook>
+ <20200717080157.ezxapv7pscbqykhl@steredhat.lan>
+ <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <39a3378a-f8f3-6706-98c8-be7017e64ddb@kernel.dk>
+Date:   Tue, 21 Jul 2020 09:31:54 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/21/20 9:27 AM, Andy Lutomirski wrote:
+> On Fri, Jul 17, 2020 at 1:02 AM Stefano Garzarella <sgarzare@redhat.com> wrote:
+>>
+>> On Thu, Jul 16, 2020 at 08:12:35AM -0700, Kees Cook wrote:
+>>> On Thu, Jul 16, 2020 at 03:14:04PM +0200, Stefano Garzarella wrote:
+> 
+>>> access (IIUC) is possible without actually calling any of the io_uring
+>>> syscalls. Is that correct? A process would receive an fd (via SCM_RIGHTS,
+>>> pidfd_getfd, or soon seccomp addfd), and then call mmap() on it to gain
+>>> access to the SQ and CQ, and off it goes? (The only glitch I see is
+>>> waking up the worker thread?)
+>>
+>> It is true only if the io_uring istance is created with SQPOLL flag (not the
+>> default behaviour and it requires CAP_SYS_ADMIN). In this case the
+>> kthread is created and you can also set an higher idle time for it, so
+>> also the waking up syscall can be avoided.
+> 
+> I stared at the io_uring code for a while, and I'm wondering if we're
+> approaching this the wrong way. It seems to me that most of the
+> complications here come from the fact that io_uring SQEs don't clearly
+> belong to any particular security principle.  (We have struct creds,
+> but we don't really have a task or mm.)  But I'm also not convinced
+> that io_uring actually supports cross-mm submission except by accident
+> -- as it stands, unless a user is very careful to only submit SQEs
+> that don't use user pointers, the results will be unpredictable.
 
-Dear RT Folks,
+How so? 
 
-I'm pleased to announce the 5.4.52-rt31 stable release.
+> Perhaps we can get away with this:
+> 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 74bc4a04befa..92266f869174 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -7660,6 +7660,20 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int,
+> fd, u32, to_submit,
+>      if (!percpu_ref_tryget(&ctx->refs))
+>          goto out_fput;
+> 
+> +    if (unlikely(current->mm != ctx->sqo_mm)) {
+> +        /*
+> +         * The mm used to process SQEs will be current->mm or
+> +         * ctx->sqo_mm depending on which submission path is used.
+> +         * It's also unclear who is responsible for an SQE submitted
+> +         * out-of-process from a security and auditing perspective.
+> +         *
+> +         * Until a real usecase emerges and there are clear semantics
+> +         * for out-of-process submission, disallow it.
+> +         */
+> +        ret = -EACCES;
+> +        goto out;
+> +    }
+> +
+>      /*
+>       * For SQ polling, the thread will do all submissions and completions.
+>       * Just return the requested submit count, and wake the thread if
 
+That'll break postgres that already uses this, also see:
 
-This release is just an update to the new stable 5.4.52 version
-and no RT specific changes have been made.
+commit 73e08e711d9c1d79fae01daed4b0e1fee5f8a275
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Sun Jan 26 09:53:12 2020 -0700
 
-It did have some issues with merging of v5.4.48, which caused a
-conflict and required some updates to "sched: Move mmdrop to RCU on RT".
+    Revert "io_uring: only allow submit from owning task"
 
-v5.4.49 also had a conflict that required reverting "net: Add a mutex
-around devnet_rename_seq".
+So no, we can't do that.
 
-Due to these conflicts, this release took a little more time and
-testing.
-
-
-You can get this release via the git tree at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v5.4-rt
-  Head SHA1: ce24f034d80d0433977b8d7d3bbfcddcfe2b1d84
-
-
-Or to build 5.4.52-rt31 directly, the following patches should be applied:
-
-  http://www.kernel.org/pub/linux/kernel/v5.x/linux-5.4.tar.xz
-
-  http://www.kernel.org/pub/linux/kernel/v5.x/patch-5.4.52.xz
-
-  http://www.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.52-rt31.patch.xz
-
-
-
-
-Enjoy,
-
--- Steve
+-- 
+Jens Axboe
 
