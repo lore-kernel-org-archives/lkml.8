@@ -2,147 +2,118 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C969C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA3E20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B89E20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:22:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gkT0Q4ev"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BES0uEM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgGUNRM (ORCPT
+        id S1727097AbgGUNV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:17:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43098 "EHLO
+        Tue, 21 Jul 2020 09:21:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbgGUNRL (ORCPT
+        with ESMTP id S1726715AbgGUNV6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:17:11 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B9AC061794;
-        Tue, 21 Jul 2020 06:17:11 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id z17so15255076edr.9;
-        Tue, 21 Jul 2020 06:17:11 -0700 (PDT)
+        Tue, 21 Jul 2020 09:21:58 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E2FC061794;
+        Tue, 21 Jul 2020 06:21:58 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id o1so10266969plk.1;
+        Tue, 21 Jul 2020 06:21:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=89PH6o6sIsfZydCWux7gl3t6nRnroW7UX38O9xXW/Tc=;
-        b=gkT0Q4evUEUG1qzdb03CEAo035TdaBbMR3Ggj6LMf6MmrD5hHCJq59NDw0eZo7Nw2n
-         jALRBDkDRnsseeHSqLxXCMdrSq/7lwvhd/icW2a9svov5c+AxVNjqcyHLpdqFNu2+CON
-         dyT6QGn16cIVXGA1NkuufJsSClWLCLX2UftGbnBASrietd9750SKHbyXOmSqLTgyD5tO
-         CnXcP0UD7XWJzrShtmYB3zTB9fjf1HqtlZf/lZYwCMamcAlIZ+uS6HZ4UutQ2rc7tZn8
-         83HRRqWzs5Npzs1C+HPrhaGzfTbZSCJ26tJ1i6YSGAPkDInmpIv9Q+S6j5vYOlfu/man
-         6ihg==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=qvjV4zJ+ljsVrLYY5u3yPmLUInDJuCQrPmhPzG4KVUY=;
+        b=BES0uEM4PJ/rIG9EX4hZwteKAx1jygN3UQZXu+mgyPvmne9xny+k5O3BDJlgnUbw0/
+         V24eaycp4Rr7qztdthu/dtvL85ZhF3zSMjnWQiyIz/So7rllxGCV+OKgaulRQY0Mo9nx
+         eDiTOhJx6aDaYNrDh0jdqt8jQLe+uqyTS1ydmMNqdWS8zM+Fh40nHtN6dfbnvmmuo9nH
+         tGMIWFID1uQN0g/hUMa1ZES7vj3Obkky+87hRzY/ABponvu8Ch9aZc8PZ/1izFUtcL6P
+         CN5Hck8KUAQeWljihSI257+ber3n7SKOSPmz9P05ItNxz//WmFB7PZFUIHwFNjdjFNDg
+         Sy/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=89PH6o6sIsfZydCWux7gl3t6nRnroW7UX38O9xXW/Tc=;
-        b=hdCf0qaPW9Le7O4M7WAaZxk+U9FYgb3BeSlbmus7ttxlOQHPjAcqcLrMzjzCDVHDsb
-         6yQm0oll0lu3nLps82exyc+OSMF6/s94ua7ExlZd5/uIB0K4g72BeOdAa3oy8LFpesM1
-         G90CXnvjgRPfft5jnJG1G2HFXl7nhpDdz2sm9ITrgkVRyaN69vxZXTg1DiMqIN76ePtP
-         DdCGA0ImJa4LuIrN7gAvlfH75ulxWqL0N634yMzn8Kh4aVVRCSnglW3PPAsw1k1Jd+oI
-         /kKXJBr7/A9nnlwnHSZFTBqJURFKoCSsuBjxO+lrU3yhGH5/j/nd/o/Eakz3eSCwgEgo
-         9YRA==
-X-Gm-Message-State: AOAM5339bEO+RRpTwAyiT6KoibqPM7qSFKorxk/uesOst2Z9cQ+yNyCs
-        X1iIo7meF02JM3Yzy5tjpPA=
-X-Google-Smtp-Source: ABdhPJzvhQncAO+Ogod9ZMtj38UliZWx+k7N33PQxNY92gk2Ft9UZ6yacdP8guYr0aNVOvilu/EoYA==
-X-Received: by 2002:a50:cf43:: with SMTP id d3mr26993046edk.40.1595337430350;
-        Tue, 21 Jul 2020 06:17:10 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id g21sm17267771edu.2.2020.07.21.06.17.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 06:17:09 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 15:17:08 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 5.7 000/243] 5.7.10-rc2 review
-Message-ID: <20200721131708.GH44604@ulmo>
-References: <20200720191523.845282610@linuxfoundation.org>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=qvjV4zJ+ljsVrLYY5u3yPmLUInDJuCQrPmhPzG4KVUY=;
+        b=mKY2FPTSg+uzknbt4HnJEmcB5pyIv47gqo2/cAW7hJrCAjbbfHK5VGUzPkOMFGvK9p
+         547f5r5CeWAtuuz3MLA/lpfgW5ZavkFk5/GK862pb6zHqELTLkjkj1KPpOr3VrtH7Cph
+         l3cHOvq4FxH2mrna4PMIYUYE/MZjIfaync6HM/JMBw/4I6YX1s1qEyp1xdU8mTxkEmLM
+         vFiKZtndhgIKEMPb+c62eSs2WzLT6e3LIVs4yVbNcO8J6rjmS27Y2IP7oTlu3GGj8/f6
+         hjvKvaO3as0AoI/CvvvrsryzGIrIYta1WENJaBz7drIIMLmGoUDGA4ZXcx8J6BH1HifR
+         Y72g==
+X-Gm-Message-State: AOAM53150dOAWqpV9803q5wvLzOWEcoug724uhnw0Bm+b4eH9cYVPCS2
+        Ry6a58A0HwAFV2fc8af+Vmc=
+X-Google-Smtp-Source: ABdhPJyTYWQ8cQ3pZgDqPfuKNrJEv4+INxomhkf1hfiXMKffG62IYyX7/QBvttxJakTyM9dEubRXXw==
+X-Received: by 2002:a17:90a:2e85:: with SMTP id r5mr4842326pjd.232.1595337717533;
+        Tue, 21 Jul 2020 06:21:57 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s89sm3419637pjj.28.2020.07.21.06.21.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 Jul 2020 06:21:57 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 06:21:55 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH] csky: Fix build with upstream gcc
+Message-ID: <20200721132155.GA27649@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mYYhpFXgKVw71fwr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200720191523.845282610@linuxfoundation.org>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 21, 2020 at 01:23:14PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> Building a kernel for the CSKY architecture with CONFIG_FRAME_POINTER
+> set requires a gcc supporting the non-upstream '-mbacktrace' option.
+> Check for the '-mbacktrace' option before enabling CONFIG_FRAMEPOINTER
+> and fix building CSKY with an upstream gcc compiler.
+> 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
 
---mYYhpFXgKVw71fwr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
 
-On Mon, Jul 20, 2020 at 09:16:26PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.7.10 release.
-> There are 243 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Wed, 22 Jul 2020 19:14:36 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.10-=
-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
- linux-5.7.y
-> and the diffstat can be found below.
->=20
-> thanks,
->=20
-> greg k-h
-
-All tests passing for Tegra ...
-
-Test results for stable-v5.7:
-    11 builds:  11 pass, 0 fail
-    26 boots:   26 pass, 0 fail
-    56 tests:   56 pass, 0 fail
-
-Linux version:  5.7.10-rc2-g7d2e5723ce4a
-Boards tested:  tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
-
-Cheers,
-Thierry
-
---mYYhpFXgKVw71fwr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8W6tMACgkQ3SOs138+
-s6F21A/+OmjoI5u3XrXQaGIJYUcB0XPSU30JDeTdhaLVPnZyB9zbz9tQYGc97UU/
-QUHrKBPPqg9VEImgYK3xCb70uW2KGHSn9ug5Oyk33LccgrttQVdkviNoZBoIt5ZD
-K/jLAGXO1tHc2tbzQiV+bEeyB+/n+2HMOIpbdhKAeaXPUMUEAkMiS8djZlyiZYTw
-6b+2Y7Q93qKiswfwWswX3BJzPTEfR4ijQQSv5wEne6MztDrU5Q+CoQj9EKJRgKYD
-y1AX5w7OSiwysGK8c3CUmEf80cIKm+dQOabuiUUmrNKbfrqcg632t6Fj14Ihd4M8
-7vQZpmlMJko4088u2vU5HQk1eieJFVOp7vsgvtk1G/Dngx9BN8DzYkPw62Xp5kvk
-zgtpjNGB7jd31RJzLEfb7gA6F/xw6Zltgw72UNX4yzB0wDtsvNKrGCGTjyeTwJdm
-f/F23r3EjyFionvJrQY0uXlrB4jQhdkweI2r8LIfL2kn/yWKqHGeu3yuf1UQYccn
-EZuDYRIjvhu1NIOfjHPVSW9pNeLh5JZWY6sS+QR6vk47kYDtW5UnwgS8NQ3OkMqf
-BGKjpoyZdZHcnqdZNduX8hdMm707Jx0F6I+Tc8QDnhtitHg/5aNHu3uPR3CCZ0VK
-clcLflckiOMCD48VFiIN8IznbcBwa2Hbv2iYwOiYAFKGkudI6D4=
-=tCj0
------END PGP SIGNATURE-----
-
---mYYhpFXgKVw71fwr--
+> ---
+>  arch/csky/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
+> index bd31ab12f77d..1622e1c56026 100644
+> --- a/arch/csky/Kconfig
+> +++ b/arch/csky/Kconfig
+> @@ -8,7 +8,7 @@ config CSKY
+>  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+>  	select ARCH_USE_BUILTIN_BSWAP
+>  	select ARCH_USE_QUEUED_RWLOCKS if NR_CPUS>2
+> -	select ARCH_WANT_FRAME_POINTERS if !CPU_CK610
+> +	select ARCH_WANT_FRAME_POINTERS if (!CPU_CK610 && STACKTRACE_SUPPORT)
+>  	select COMMON_CLK
+>  	select CLKSRC_MMIO
+>  	select CSKY_MPINTC if CPU_CK860
+> @@ -125,7 +125,7 @@ config MMU
+>  	def_bool y
+>  
+>  config STACKTRACE_SUPPORT
+> -	def_bool y
+> +	def_bool $(success,echo 'int foo(void) { return 0; }' | $(CC) -mbacktrace -x c - -c -o /dev/null)
+>  
+>  config TIME_LOW_RES
+>  	def_bool y
+> -- 
+> 2.27.0
+> 
