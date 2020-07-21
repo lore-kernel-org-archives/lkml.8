@@ -2,129 +2,132 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60B7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EA4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C082B20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8503F20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:47:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RJPk4UVm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vWqVu2XR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbgGUOp2 (ORCPT
+        id S1729091AbgGUOrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:45:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbgGUOp2 (ORCPT
+        Tue, 21 Jul 2020 10:47:03 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:60848 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728127AbgGUOrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:45:28 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A18F1C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:45:27 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id i80so11803507lfi.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:45:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0pAwByUR93Lcw7763OHJXsSvUvLTrNih6qhx4gjT+aM=;
-        b=RJPk4UVm3QG1OSNEE3CsSct0ln7CZy0uNFBtNkbOJqVixfV+ABWf25M4H+TnYcPfce
-         Ta+awLrH5yk/hEx+EREuJMfro+hKQpGe5CFLuXIivkB9MRt63Mgki6+ZSqsYmq60+KGR
-         saMyvxi2Hmz1v1xQI2GSgfDNxXTFo1iMzKVWjBJjRBqfCJ1CmI8KNgJBdaDfPJ2tuRhc
-         1B2BJWsw4BWQe4cDBiWCe26f3Sag/jnK6MVlPixWUeRZaxdJW6M9dd3rU+dU/oYLU+7I
-         NhW4hltGvXPB7wF1uCgYh08R3vYJ9kwAMy5b5J9dOBkBQSe9QqK7WkCSf+m3yniK49H9
-         NTuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0pAwByUR93Lcw7763OHJXsSvUvLTrNih6qhx4gjT+aM=;
-        b=OO2/HdQze7WuLxNvZxX7CulsKBQm4IV+MPkm3a+eTWGnyE2nkuwX9VHY/imZyZU4kB
-         nd7M8xhVVZga8e5rradhWJ31yv1xOVvlLXMuNvdYQbbQ01LiTkQKPLccly8R/nmBAFWZ
-         sHRzkX4+l6W3KTl3FW3OncLxfbfsyHlwK3SskO/m/0yNo4w3JYcBSrOuvOuRxTA9/Y/9
-         59Vzc6+hPRCUzEyBSS8S/iXTW1L/EA42mvyM0WAmbyAfPK5z+RC1xetvpvbkN7NGRL1D
-         vJ0rh6/5j46EpX35wZsgZ8gKdDnDkMR5b8k/X0n7Z/NDOIo5CoKmLCRxjugdoyRfwQiV
-         mDwg==
-X-Gm-Message-State: AOAM531sK/liFDJyVVzRzZgqix1NrSR6u5tbv7EUtaDwbEJ0qYpNykDW
-        jcNUPuunJ4ouniL2gOVi7cYRaHMsHleSY08DhFjUrA==
-X-Google-Smtp-Source: ABdhPJx+6QMWrXHBeyyEBoTcyZr8xV8VGVPYDS7ORai+toxRwj0nYcBfTYvA3wm86GBp4I6uRaZTjfvBKCYXxnSWba4=
-X-Received: by 2002:ac2:4183:: with SMTP id z3mr10668274lfh.3.1595342725776;
- Tue, 21 Jul 2020 07:45:25 -0700 (PDT)
+        Tue, 21 Jul 2020 10:47:02 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LEkkHL029060;
+        Tue, 21 Jul 2020 09:46:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595342806;
+        bh=zXcjraNdieCat5ZM86lkn+6Gv+qgiFtvCPdxqpheW60=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=vWqVu2XR7OHXKWU2VjCmuyD6LeJezdVgH93He3QzJaYmwqaOTV6rHkemi8luf4oTQ
+         LXJ4fPMSi3+9E1x0RE6WyJ1R0RJgOeTqeFLkyhBa7vr1f2m6IocNNvu3+sg1cfSLgA
+         bfdGRZJca5VUUHzp0sP238KQyrm3foeSEnIqHgoA=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06LEkjRx113908
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 Jul 2020 09:46:45 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
+ Jul 2020 09:46:45 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 21 Jul 2020 09:46:45 -0500
+Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LEkg6d006260;
+        Tue, 21 Jul 2020 09:46:43 -0500
+Subject: Re: [PATCH for v5.9] ARM: mach-davinci: Replace HTTP links with HTTPS
+ ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        <bgolaszewski@baylibre.com>, <robh+dt@kernel.org>,
+        <linux@armlinux.org.uk>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200719102020.57779-1-grandmaster@al2klimov.de>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <10638fa7-6150-0960-9153-fd3a51debac3@ti.com>
+Date:   Tue, 21 Jul 2020 20:16:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <2E04DD7753BE0E4ABABF0B664610AD6F2620CAF7@dggeml528-mbx.china.huawei.com>
-In-Reply-To: <2E04DD7753BE0E4ABABF0B664610AD6F2620CAF7@dggeml528-mbx.china.huawei.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 21 Jul 2020 07:45:14 -0700
-Message-ID: <CALvZod7xGNxJxTcJmo8mCVAgDkPdC5Pp12rhuBNsFsw-Yv=e+A@mail.gmail.com>
-Subject: Re: PROBLEM: cgroup cost too much memory when transfer small files to tmpfs
-To:     jingrui <jingrui@huawei.com>
-Cc:     "tj@kernel.org" <tj@kernel.org>, Lizefan <lizefan@huawei.com>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        caihaomin <caihaomin@huawei.com>,
-        "Weiwei (N)" <wick.wei@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200719102020.57779-1-grandmaster@al2klimov.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 4:20 AM jingrui <jingrui@huawei.com> wrote:
->
-> Cc: Johannes Weiner <hannes@cmpxchg.org> ; Michal Hocko <mhocko@kernel.org>; Vladimir Davydov <vdavydov.dev@gmail.com>
->
-> Thanks.
->
-> ---
-> PROBLEM: cgroup cost too much memory when transfer small files to tmpfs.
->
-> keywords: cgroup PERCPU/memory cost too much.
->
-> description:
->
-> We send small files from node-A to node-B tmpfs /tmp directory using sftp. On
-> node-B the systemd configured with pam on like below.
->
-> cat /etc/pam.d/password-auth | grep systemd
-> -session     optional      pam_systemd.so
->
-> So when transfer a file, a systemd session is created, that means a cgroup is
-> created, then file saved at /tmp will associated with a cgroup object. After
-> file transferred, session and cgroup-dir will be removed, but the file in /tmp
-> still associated with the cgroup object.
+On 7/19/20 3:50 PM, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-Is there a way for you to re-use the cgroup instead of creating and
-deleting cgroup for each individual file transfer session?
+> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+> index f2e7609e5346..87c517d65f62 100644
+> --- a/arch/arm/boot/dts/da850-evm.dts
+> +++ b/arch/arm/boot/dts/da850-evm.dts
+> @@ -2,7 +2,7 @@
+>  /*
+>   * Device Tree for DA850 EVM board
+>   *
+> - * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
+>   */
+>  /dts-v1/;
+>  #include "da850.dtsi"
+> diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
+> index d028d38a44bf..5b0125f1265c 100644
+> --- a/arch/arm/mach-davinci/Kconfig
+> +++ b/arch/arm/mach-davinci/Kconfig
+> @@ -201,7 +201,7 @@ config MACH_MITYOMAPL138
+>  	help
+>  	  Say Y here to select the Critical Link MityDSP-L138/MityARM-1808
+>  	  System on Module.  Information on this SoM may be found at
+> -	  http://www.mitydsp.com
+> +	  https://www.mitydsp.com
+>  
+>  config MACH_OMAPL138_HAWKBOARD
+>  	bool "TI AM1808 / OMAPL-138 Hawkboard platform"
+> @@ -209,7 +209,7 @@ config MACH_OMAPL138_HAWKBOARD
+>  	help
+>  	  Say Y here to select the TI AM1808 / OMAPL-138 Hawkboard platform .
+>  	  Information of this board may be found at
+> -	  http://www.hawkboard.org/
+> +	  https://www.hawkboard.org/
 
-> The PERCPU memory in cgroup/css object
-> cost a lot(about 0.5MB/per-cgroup-object) on 200/cpus machine.
->
-> When lot of small files transferred to tmpfs, the cgroup/css object memory
-> cost become huge in this scenes to be used.
->
-> systemd related issue: https://github.com/systemd/systemd/issues/16499
->
-> kernel version: 4.19+
->
-> Problem:
->
-> 1. Do we have any idea to descrease cgroup memory cost in this case?
-> 2. When user remove cgroup directory, does it possible associated file memory to root cgroup?
+This now redirects to something irrelevant. So, dropped the URL
+altogether. Also, we use prefix "ARM: davinci: " in subject line.
 
-No, the memory remains associated with the cgroup and the cgroup
-becomes zombie on deletion.
+I made those changes locally and committed the patch. Will try to send
+for v5.9, but its getting quite late.
 
-> 3. Can we provide an option that do not associate memory with cgroup in tmpfs?
-
-Only way, if you don't want to disable memcg, is to move the file
-receiver process to root cgroup.
+Thanks,
+Sekhar
