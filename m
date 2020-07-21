@@ -2,119 +2,106 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D579C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9C7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD29F2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:56:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="fimQshPg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="K/5IJJUr"
+	by mail.kernel.org (Postfix) with ESMTP id D7D102073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:59:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595361563;
+	bh=gGb8g+UjwDX3j/bDtdfbUK7CDgRFPOiHWmMZoe62cyU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EyctqGOu87abo5ZecUBvQIQJYgblqWIwL9+YQseoYhUllFzsHyZWnzS6SjzjkkLX8
+	 mxHh0s4EZeYkc3Ojq3Mncoh6zqDTljwpaanUOtaimbD7cScz2SkOyv3Ytoqnp4WtDi
+	 CzkEsjdIL0qyJrgszebOD9VHinjiGtR2MAChqr0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731029AbgGUT4H (ORCPT
+        id S1730319AbgGUT7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:56:07 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:44937 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730664AbgGUT4H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:56:07 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 1D38EB24;
-        Tue, 21 Jul 2020 15:56:05 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 21 Jul 2020 15:56:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=AqPj1xBhDhu20FWDwJyJBEuqNaN
-        WXORj4eQ/tBPqOlo=; b=fimQshPgm3sthCqApa+djmcfCkLSFwHY7QblvbjAlcv
-        fPAeBpiKsqs0mi3QLh/mXmVgdoJGl9yF7GQdobNdc899gi75MM7QXJSWdeGAzP7s
-        pSqG/bclBObeMUkxz/dRBESdzacl39lEoopnuJpHNa6X9FXj5KSV36Yywu6LzFHw
-        3zpOiEbxa7VY7ly3+0eWQJu/UGasSNqBBg0G6xEinO3fsdd0gj2taDBAEmvjobeS
-        K5vsV8vy83764Ae5qR8ReCf/r3JLq6FCORMmJgZ/60QZzT4RIZEmQ0fN3oZb/CbS
-        N9buoYDtMl3zFfWbIKyZrEurHDEhE/bkHpvmbn4Yutg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=AqPj1x
-        BhDhu20FWDwJyJBEuqNaNWXORj4eQ/tBPqOlo=; b=K/5IJJUrbwW7dfc8maPE+b
-        At1jqzRMcstf7E7PyDytihqi9rgeeXyx3p0UJTKG3eIJTnB02AAm+JC3CkttZ1Nd
-        N5rkxvIOVIKX0sXbOw6Xl0dJ6Si2ntASsU/3OSsxiTrWjuz7m829nn7ktLAS9vJj
-        1vx11jy/npcDV7Jc2zUTA74XOI1Kmtnw2OEoJCMvdXazgipT2WxsWbJ/ij9/DyHu
-        FIVXQ2b1z72wtETwOJ6brF9P0Z/Q6A/Gve6m0KxtOEyKNilXxL0FjJn1JKD6gl/m
-        d08EhKLjB0eiZWiicGMDLi507bD9Gf4F9WbkBlx52akc8iLr8JJURQhViOaQIvjQ
-        ==
-X-ME-Sender: <xms:U0gXX1BbjEuZJLnXVBMnFHroxMl5BibM0qAtr6bkg7dMLo4sON80Vw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrgeejgddukecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnughrvghs
-    ucfhrhgvuhhnugcuoegrnhgurhgvshesrghnrghrrgiivghlrdguvgeqnecuggftrfgrth
-    htvghrnhepudekhfekleeugeevteehleffffejgeelueduleeffeeutdelffeujeffhfeu
-    ffdunecukfhppeeijedrudeitddrvddujedrvdehtdenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvshesrghnrghrrgiivghlrdgu
-    vg
-X-ME-Proxy: <xmx:U0gXXzjdghqmMlw7WediaYzLllFxn2LxGNJllOUpgDSuqZ-hxCZbKg>
-    <xmx:U0gXXwnZeFN_lhM63aiWn5O1_93UPi2dBowYmfp_xaeVgadEQpVMcg>
-    <xmx:U0gXX_zqoUSlbBlfwdJaX8O4ZT4TRWw2jROrdu-Ebqc34t548T75Xw>
-    <xmx:VEgXX0CFoh3getAHlxnjfGPVIDQ-t-68uLE8Ky6zUZaCy3MT4-sknx5BgGI>
-Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 655F930600B1;
-        Tue, 21 Jul 2020 15:56:03 -0400 (EDT)
-Date:   Tue, 21 Jul 2020 12:56:02 -0700
-From:   Andres Freund <andres@anarazel.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Kees Cook <keescook@chromium.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: strace of io_uring events?
-Message-ID: <20200721195602.qtncgzddl7y55b6l@alap3.anarazel.de>
-References: <20200716131404.bnzsaarooumrp3kx@steredhat>
- <202007160751.ED56C55@keescook>
- <20200717080157.ezxapv7pscbqykhl@steredhat.lan>
- <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
- <39a3378a-f8f3-6706-98c8-be7017e64ddb@kernel.dk>
- <CALCETrXAxFzuRB5EJZR7bbgfrEcNc=9_E7wwhPaZ3YGJ1=DZ0w@mail.gmail.com>
- <ba989463-c627-8af7-9234-4dc8ac4eea0e@kernel.dk>
- <CALCETrUvOuKZWiQeZhf9DXyjS4OQdyW+s1YMh+vwe605jBS3LQ@mail.gmail.com>
- <65ad6c17-37d0-da30-4121-43554ad8f51f@kernel.dk>
- <CALCETrV_tOziNJOp8xanmCU0yJEHcGQk0TBxeiK4U7AVewkgAw@mail.gmail.com>
+        Tue, 21 Jul 2020 15:59:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726892AbgGUT7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 15:59:22 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D424A2072E;
+        Tue, 21 Jul 2020 19:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595361562;
+        bh=gGb8g+UjwDX3j/bDtdfbUK7CDgRFPOiHWmMZoe62cyU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=laRS/bbq7IgIVRlG0PhI2fEtI/3uizRIhXywei56/svMY0xMUoaerbVaRbi7GQPgU
+         S9xMDWZqGlHaPe/Udeqw6g2IcEgKiRp+bFfKJZHZQn2izhkvmoq4icB0aCn9XyZ5Z9
+         z53z61S47BooFAMTBRAciOTaXN/8gAp6ml1ek8Zw=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C70C3404B1; Tue, 21 Jul 2020 16:59:19 -0300 (-03)
+Date:   Tue, 21 Jul 2020 16:59:19 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 03/15] tools/libperf: avoid counting of nonfilterable
+ fdarray fds
+Message-ID: <20200721195919.GH77866@kernel.org>
+References: <8d91c3a0-3db4-0a7a-ae13-299adb444bd6@linux.intel.com>
+ <b5ab0d2c-b742-0032-e8d3-c8e2eb423c42@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrV_tOziNJOp8xanmCU0yJEHcGQk0TBxeiK4U7AVewkgAw@mail.gmail.com>
+In-Reply-To: <b5ab0d2c-b742-0032-e8d3-c8e2eb423c42@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Em Fri, Jul 17, 2020 at 10:00:15AM +0300, Alexey Budankov escreveu:
+> 
+> Avoid counting of struct pollfd *entries objects with
+> fdarray_flag__nonfilterable flag by fdarray__filter().
+> Nonfilterable objects are still processed if requested
+> revents have been signaled for them.
 
-On 2020-07-21 12:44:09 -0700, Andy Lutomirski wrote:
-> Can you enlighten me?  I don't see any iov_iter_get_pages() calls or
-> equivalents.  If an IO is punted, how does the data end up in the
-> io_uring_enter() caller's mm?
+Thanks, applied.
 
-For operations needing that io_op_def.needs_mm is true. Which is checked
-by io_prep_async_work(), adding the current mm to req. On the wq side
-io_wq_switch_mm() uses that mm when executing the queue entry.
+- Arnaldo
+ 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/lib/api/fd/array.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
+> index 01b3b89f9797..5e6cb9debe37 100644
+> --- a/tools/lib/api/fd/array.c
+> +++ b/tools/lib/api/fd/array.c
+> @@ -109,7 +109,8 @@ int fdarray__filter(struct fdarray *fda, short revents,
+>  			continue;
+>  		}
+>  
+> -		++nr;
+> +		if (!(fda->priv[fd].flags & fdarray_flag__nonfilterable))
+> +			++nr;
+>  	}
+>  
+>  	return nr;
+> -- 
+> 2.24.1
+> 
+> 
 
-Greetings,
+-- 
 
-Andres Freund
+- Arnaldo
