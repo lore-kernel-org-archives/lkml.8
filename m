@@ -2,166 +2,270 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D422C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D68FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 489A42080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B642073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:34:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZtvX1XL/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgGUM1j (ORCPT
+        id S1728166AbgGUMeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:27:39 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:42816 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727025AbgGUM1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:27:39 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 19ABA1480FECEBDBDB13;
-        Tue, 21 Jul 2020 20:27:26 +0800 (CST)
-Received: from DGGEMM422-HUB.china.huawei.com (10.1.198.39) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Tue, 21 Jul 2020 20:27:25 +0800
-Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.195]) by
- dggemm422-hub.china.huawei.com ([10.1.198.39]) with mapi id 14.03.0487.000;
- Tue, 21 Jul 2020 20:27:17 +0800
-From:   "liwei (CM)" <liwei213@huawei.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-CC:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        fengbaopeng <fengbaopeng2@hisilicon.com>,
-        "nsaenzjulienne@suse.de" <nsaenzjulienne@suse.de>,
-        "steve.capper@arm.com" <steve.capper@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        sujunfei <sujunfei2@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        "Yaobaofeng (Yaobaofeng)" <yaobaofeng@huawei.com>
-Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRDSF0gYXJtNjQ6IG1tOiBmcmVlIHVudXNl?=
- =?utf-8?B?ZCBtZW1tYXAgZm9yIHNwYXJzZSBtZW1vcnkgbW9kZWwgdGhhdCBkZWZpbmUg?=
- =?utf-8?Q?VMEMMAP?=
-Thread-Topic: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIGFybTY0OiBtbTogZnJlZSB1bnVzZWQgbWVtbWFw?=
- =?utf-8?Q?_for_sparse_memory_model_that_define_VMEMMAP?=
-Thread-Index: AQHWVMrtO0CAKNNn+U+1wOV2mLLlGKj8wE6AgACJU9CAAV82gIASsSBA///IkQCAAOew8A==
-Date:   Tue, 21 Jul 2020 12:27:16 +0000
-Message-ID: <1699CE87DE933F49876AD744B5DC140F2312BA84@dggemm526-mbx.china.huawei.com>
-References: <20200708015555.14946-1-liwei213@huawei.com>
- <B926444035E5E2439431908E3842AFD255E7A1@DGGEMI525-MBS.china.huawei.com>
- <1699CE87DE933F49876AD744B5DC140F230F8396@DGGEMM506-MBS.china.huawei.com>
- <B926444035E5E2439431908E3842AFD256289A@DGGEMI525-MBS.china.huawei.com>
- <1699CE87DE933F49876AD744B5DC140F2312A02B@dggemm526-mbx.china.huawei.com>
- <20200721063524.GC802087@linux.ibm.com>
-In-Reply-To: <20200721063524.GC802087@linux.ibm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.144.77.141]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 21 Jul 2020 08:34:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726904AbgGUMeT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 08:34:19 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC322C061794;
+        Tue, 21 Jul 2020 05:34:19 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id g67so11880881pgc.8;
+        Tue, 21 Jul 2020 05:34:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9vT+ryoFOyN/388ib3S7OpMgYYcknWATF+35KGtV21o=;
+        b=ZtvX1XL/SkA8UNSdRcB3f0x+Rls0qmqEKuSTAfTAy5km/1rJn3jjjplyp5pUSVUkR+
+         8Vi0IxKYShw0yQR/rnoS7FL5trXX9MxIZiIr1a83hjR7DL40dmNeb4F2NijKQ5pf/UeG
+         9ZnzT8V8AX7AZsZbPGmYPOu8ry0rMCtFSPp5azhoxkB2jHbs38lZMWUwM9EODYLRuaA9
+         fQzSaAvqopVELjN46xwgw1B5hhhfriyXZ07D40VhUoZFs/JzPgvhBqG30f4Cxovo041h
+         HjGl5nsGIBhOCf1ThBGR7lQatupjm4zxsH0tUdbC4x6qP/Sf5t5rPiKGtoWTC/ZUb8Qt
+         Uumg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9vT+ryoFOyN/388ib3S7OpMgYYcknWATF+35KGtV21o=;
+        b=a5f/1ZC+1gmkL2LXeLwasgBfsghK3XEHAkSusm62Ob090BLs90sNIbuubYJFr18E/Y
+         n/GOpXg3PQkpd5Y8hm464PEpbrSPRm+9oL9AP0CE9hc3nVwNjAn6d4zEOOXQYDTCdYSl
+         ctHtEyfhsw+EONDZhcWQyPzNwT5ShGcDDJzl8Ou7HvHtCXsiPfo6s+z5pS0ErEPevc7T
+         F1jeMnp8MBYWYkXzv/gZmtgov0pKETbjFFFxv1Yxjy2Y1U3iRIyMRuYnt7F9TdxOMj03
+         ys9A2KGOmi1ELsPYXXCO0JBGqhKZTNH24u7Cu526awcgui1jL8QZzNLkKMlWukiXRZ8H
+         PqRg==
+X-Gm-Message-State: AOAM532TzknuUkNXjSPiQXLiYHEGi2cHy6oY75X7YoCCevfO0d83yR4h
+        HMVLvzGDfmT9zypbRpHgcLo=
+X-Google-Smtp-Source: ABdhPJxcl0WN5ZhDqD4cKYQdyXsYpozM13cNwLYDulzs8b0p8enF59LgE5wfjKSNcwiZlpQ9Bjd8jQ==
+X-Received: by 2002:a63:f806:: with SMTP id n6mr22169429pgh.346.1595334859251;
+        Tue, 21 Jul 2020 05:34:19 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.67])
+        by smtp.gmail.com with ESMTPSA id h9sm20293586pfk.155.2020.07.21.05.34.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 05:34:18 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH v1] crypto: ccp: sp-pci: use generic power management
+Date:   Tue, 21 Jul 2020 18:01:47 +0530
+Message-Id: <20200721123146.81710-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCi0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCuWPkeS7tuS6ujogTWlrZSBSYXBvcG9ydCBbbWFp
-bHRvOnJwcHRAbGludXguaWJtLmNvbV0gDQrlj5HpgIHml7bpl7Q6IDIwMjDlubQ35pyIMjHml6Ug
-MTQ6MzUNCuaUtuS7tuS6ujogbGl3ZWkgKENNKSA8bGl3ZWkyMTNAaHVhd2VpLmNvbT4NCuaKhOmA
-gTogU29uZyBCYW8gSHVhIChCYXJyeSBTb25nKSA8c29uZy5iYW8uaHVhQGhpc2lsaWNvbi5jb20+
-OyBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbEBrZXJuZWwub3JnOyBmZW5nYmFvcGVuZyA8
-ZmVuZ2Jhb3BlbmcyQGhpc2lsaWNvbi5jb20+OyBuc2FlbnpqdWxpZW5uZUBzdXNlLmRlOyBzdGV2
-ZS5jYXBwZXJAYXJtLmNvbTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBzdWp1bmZlaSA8c3VqdW5mZWkyQGhpc2lsaWNv
-bi5jb20+OyBYaWFxaW5nIChBKSA8c2FiZXJsaWx5LnhpYUBoaXNpbGljb24uY29tPjsgWWFvYmFv
-ZmVuZyAoWWFvYmFvZmVuZykgPHlhb2Jhb2ZlbmdAaHVhd2VpLmNvbT4NCuS4u+mimDogUmU6IOet
-lOWkjTogW1BBVENIXSBhcm02NDogbW06IGZyZWUgdW51c2VkIG1lbW1hcCBmb3Igc3BhcnNlIG1l
-bW9yeSBtb2RlbCB0aGF0IGRlZmluZSBWTUVNTUFQDQoNCkhpLA0KDQpPbiBUdWUsIEp1bCAyMSwg
-MjAyMCBhdCAwMTo1NjozM0FNICswMDAwLCBsaXdlaSAoQ00pIHdyb3RlOg0KPiBIaSwgYWxsDQo+
-IA0KPiBJJ20gc29ycnkgdG8gYm90aGVyIHlvdSwgYnV0IHN0aWxsIHZlcnkgaG9wZSB5b3UgY2Fu
-IGdpdmUgY29tbWVudHMgb3Igc3VnZ2VzdGlvbnMgdG8gdGhpcyBwYXRjaCwgdGhhbmsgeW91IHZl
-cnkgbXVjaC4NCiANCkkgY2Fubm90IGZpbmQgeW91ciBwYXRjaCBuZWl0aGVyIGluIEluYm94IG5v
-ciBpbiB0aGUgcHVibGljIGFyY2hpdmVzLg0KQ2FuIHlvdSByZXNlbmQgaXQgcGxlYXNlPw0KDQpI
-aSwgTWlrZQ0KDQpJIHJlc2VuZCB0aGUgcGF0Y2gsIGlmIHlvdSBzZWUgcGxlYXNlIGdpdmUgYWR2
-aWNlLCB0aGFua3MhDQoNCg0KDQo+IC0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCj4g5Y+R5Lu25Lq6
-OiBTb25nIEJhbyBIdWEgKEJhcnJ5IFNvbmcpDQo+IOWPkemAgeaXtumXtDogMjAyMOW5tDfmnIg5
-5pelIDIwOjI3DQo+IOaUtuS7tuS6ujogbGl3ZWkgKENNKSA8bGl3ZWkyMTNAaHVhd2VpLmNvbT47
-IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOyANCj4gd2lsbEBrZXJuZWwub3JnDQo+IOaKhOmAgTog
-ZmVuZ2Jhb3BlbmcgPGZlbmdiYW9wZW5nMkBoaXNpbGljb24uY29tPjsgbnNhZW56anVsaWVubmVA
-c3VzZS5kZTsgDQo+IHN0ZXZlLmNhcHBlckBhcm0uY29tOyBycHB0QGxpbnV4LmlibS5jb207IA0K
-PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmc7IA0KPiBzdWp1bmZlaSA8c3VqdW5mZWkyQGhpc2lsaWNvbi5jb20+OyBYaWFx
-aW5nIChBKSANCj4gPHNhYmVybGlseS54aWFAaGlzaWxpY29uLmNvbT47IFlhb2Jhb2ZlbmcgKFlh
-b2Jhb2ZlbmcpIA0KPiA8eWFvYmFvZmVuZ0BodWF3ZWkuY29tPg0KPiDkuLvpopg6IFJFOiBbUEFU
-Q0hdIGFybTY0OiBtbTogZnJlZSB1bnVzZWQgbWVtbWFwIGZvciBzcGFyc2UgbWVtb3J5IG1vZGVs
-IA0KPiB0aGF0IGRlZmluZSBWTUVNTUFQDQo+IA0KPiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBsaXdlaSAoQ00pDQo+ID4gU2VudDogV2VkbmVzZGF5LCBK
-dWx5IDgsIDIwMjAgNzo1MiBQTQ0KPiA+IFRvOiBTb25nIEJhbyBIdWEgKEJhcnJ5IFNvbmcpIDxz
-b25nLmJhby5odWFAaGlzaWxpY29uLmNvbT47IA0KPiA+IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29t
-OyB3aWxsQGtlcm5lbC5vcmcNCj4gPiBDYzogZmVuZ2Jhb3BlbmcgPGZlbmdiYW9wZW5nMkBoaXNp
-bGljb24uY29tPjsgDQo+ID4gbnNhZW56anVsaWVubmVAc3VzZS5kZTsgc3RldmUuY2FwcGVyQGFy
-bS5jb207IHJwcHRAbGludXguaWJtLmNvbTsgDQo+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyANCj4gPiBzdWp1bmZl
-aSA8c3VqdW5mZWkyQGhpc2lsaWNvbi5jb20+OyBYaWFxaW5nIChBKSANCj4gPiA8c2FiZXJsaWx5
-LnhpYUBoaXNpbGljb24uY29tPjsgWWFvYmFvZmVuZyAoWWFvYmFvZmVuZykgDQo+ID4gPHlhb2Jh
-b2ZlbmdAaHVhd2VpLmNvbT4NCj4gPiBTdWJqZWN0OiDnrZTlpI06IFtQQVRDSF0gYXJtNjQ6IG1t
-OiBmcmVlIHVudXNlZCBtZW1tYXAgZm9yIHNwYXJzZSBtZW1vcnkgDQo+ID4gbW9kZWwgdGhhdCBk
-ZWZpbmUgVk1FTU1BUA0KPiA+IA0KPiA+IEhpLCBiYW9odWENCj4gPiANCj4gPiBUaGFuayB5b3Ug
-Zm9yIHlvdXIgYXR0ZW50aW9uLg0KPiA+IA0KPiA+IEluIG15IHVuZGVyc3RhbmRpbmcgb2YgdGhl
-IE1FTU9SWV9IT1RQTFVHIHRoaXMgcGF0Y2ggaGFzIG5vIGVmZmVjdCBvbiBpdC4NCj4gPiBUaGUg
-cmVhc29uIGlzIHRoYXQgaW4gc3BhcnNlX2FkZF9vbmVfc2VjdGlvbigpIHRoZSBtZW1vcnkgdGhh
-dCANCj4gPiBtZW1tYXAgbmVlZHMgZnJvbSBTbGFiIGlmIGtlcm5lbCBzdGFydCBjb21wbGV0ZWTv
-vIx0aGlzIG1lbW9yeSBoYXMgDQo+ID4gbm90aGluZyB0byBkbyB3aXRoIG1lbWJsb2NrIGFsbG9j
-LyBmcmVlIG1lbW9yeSBpbiB0aGUgcHJvY2VzcyBvZiBrZXJuZWwgc3RhcnQuDQo+ID4gDQo+ID4g
-WW91IG1heSBoYXZlIGEgbG9vayB2bWVtbWFwX2FsbG9jX2Jsb2NrICgpIHRoaXMgZnVuY3Rpb24u
-DQo+ID4gDQo+ID4gSWYgSSBkb24ndCB1bmRlcnN0YW5kIHJpZ2h0IHdlbGNvbWUgcG9pbnRlZCBv
-dXQgaW4gYSB0aW1lbHkgbWFubmVyLg0KPiANCj4gQXQgdGhlIGZpcnN0IGdsYW5jZSBvZiB0aGlz
-IHBhdGNoLCBJIHN1c3BlY3QgdGhhdCB0aGlzIGJvb3RtZW0gbWF5IGJlIHVzZWQgYnkgaG90LWFk
-ZGVkIG1lbW9yeS4NCj4gSWYgeW91IGNvbmZpcm0gdGhpcyB3b24ndCBoYXBwZW4sIHBsZWFzZSBp
-Z25vcmUgbXkgbm9pc2UuDQo+IA0KPiBCVFcsIG5leHQgdGltZSwgYmVhciBpbiBtaW5kIHRoYXQg
-dG9wLXBvc3QgaXMgbm90IGEgZ29vZCB3YXkgdG8gcmVwbHkgDQo+IG1haWwgOi0pDQo+IA0KPiA+
-IA0KPiA+IFRoYW5rcyENCj4gPiANCj4gPiANCj4gPiAtLS0tLemCruS7tuWOn+S7ti0tLS0tDQo+
-ID4g5Y+R5Lu25Lq6OiBTb25nIEJhbyBIdWEgKEJhcnJ5IFNvbmcpDQo+ID4g5Y+R6YCB5pe26Ze0
-OiAyMDIw5bm0N+aciDjml6UgMTU6MTkNCj4gPiDmlLbku7bkuro6IGxpd2VpIChDTSkgPGxpd2Vp
-MjEzQGh1YXdlaS5jb20+OyBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgDQo+ID4gd2lsbEBrZXJu
-ZWwub3JnDQo+ID4g5oqE6YCBOiBmZW5nYmFvcGVuZyA8ZmVuZ2Jhb3BlbmcyQGhpc2lsaWNvbi5j
-b20+OyANCj4gPiBuc2FlbnpqdWxpZW5uZUBzdXNlLmRlOyBzdGV2ZS5jYXBwZXJAYXJtLmNvbTsg
-cnBwdEBsaW51eC5pYm0uY29tOyANCj4gPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IA0KPiA+IHN1anVuZmVpIDxzdWp1
-bmZlaTJAaGlzaWxpY29uLmNvbT4NCj4gPiDkuLvpopg6IFJFOiBbUEFUQ0hdIGFybTY0OiBtbTog
-ZnJlZSB1bnVzZWQgbWVtbWFwIGZvciBzcGFyc2UgbWVtb3J5IA0KPiA+IG1vZGVsIHRoYXQgZGVm
-aW5lIFZNRU1NQVANCj4gPiANCj4gPiANCj4gPiANCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tDQo+ID4gPiBGcm9tOiBsaXdlaSAoQ00pDQo+ID4gPiBTZW50OiBXZWRuZXNkYXksIEp1
-bHkgOCwgMjAyMCAxOjU2IFBNDQo+ID4gPiBUbzogY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdp
-bGxAa2VybmVsLm9yZw0KPiA+ID4gQ2M6IGxpd2VpIChDTSkgPGxpd2VpMjEzQGh1YXdlaS5jb20+
-OyBmZW5nYmFvcGVuZyANCj4gPiA+IDxmZW5nYmFvcGVuZzJAaGlzaWxpY29uLmNvbT47IG5zYWVu
-emp1bGllbm5lQHN1c2UuZGU7IA0KPiA+ID4gc3RldmUuY2FwcGVyQGFybS5jb207IHJwcHRAbGlu
-dXguaWJtLmNvbTsgU29uZyBCYW8gSHVhIChCYXJyeSANCj4gPiA+IFNvbmcpIDxzb25nLmJhby5o
-dWFAaGlzaWxpY29uLmNvbT47IA0KPiA+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnOw0KPiA+ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgc3VqdW5mZWkgPHN1
-anVuZmVpMkBoaXNpbGljb24uY29tPg0KPiA+ID4gU3ViamVjdDogW1BBVENIXSBhcm02NDogbW06
-IGZyZWUgdW51c2VkIG1lbW1hcCBmb3Igc3BhcnNlIG1lbW9yeQ0KPiA+IG1vZGVsDQo+ID4gPiB0
-aGF0IGRlZmluZSBWTUVNTUFQDQo+ID4gPg0KPiA+ID4gRm9yIHRoZSBtZW1vcnkgaG9sZSwgc3Bh
-cnNlIG1lbW9yeSBtb2RlbCB0aGF0IGRlZmluZQ0KPiA+IFNQQVJTRU1FTV9WTUVNTUFQDQo+ID4g
-PiBkbyBub3QgZnJlZSB0aGUgcmVzZXJ2ZWQgbWVtb3J5IGZvciB0aGUgcGFnZSBtYXAsIHRoaXMg
-cGF0Y2ggZG8gaXQuDQo+ID4gDQo+ID4gSGVsbG8gV2VpLA0KPiA+IEp1c3QgY3VyaW91cyBpZiB0
-aGlzIHBhdGNoIGJyZWFrcyBNRU1PUllfSE9UUExVRz8NCj4gPiANCj4gPiA+DQo+ID4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBXZWkgTGkgPGxpd2VpMjEzQGh1YXdlaS5jb20+DQo+ID4gPiBTaWduZWQtb2Zm
-LWJ5OiBDaGVuIEZlbmcgPHB1Y2suY2hlbkBoaXNpbGljb24uY29tPg0KPiA+ID4gU2lnbmVkLW9m
-Zi1ieTogWGlhIFFpbmcgPHNhYmVybGlseS54aWFAaGlzaWxpY29uLmNvbT4NCj4gPiA+IC0tLQ0K
-PiA+ID4gIGFyY2gvYXJtNjQvbW0vaW5pdC5jIHwgODENCj4gPiA+ICsrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0NCj4gPiA+ICAxIGZpbGUgY2hhbmdl
-ZCwgNzEgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQo+ID4gPg0KPiA+ID4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtNjQvbW0vaW5pdC5jIGIvYXJjaC9hcm02NC9tbS9pbml0LmMgaW5kZXgg
-DQo+ID4gPiAxZTkzY2ZjN2M0N2EuLmQxYjU2YjQ3ZDViYSAxMDA2NDQNCj4gPiA+IC0tLSBhL2Fy
-Y2gvYXJtNjQvbW0vaW5pdC5jDQo+ID4gPiArKysgYi9hcmNoL2FybTY0L21tL2luaXQuYw0KPiA+
-ID4gQEAgLTQ0MSw3ICs0NDEsNDggQEAgdm9pZCBfX2luaXQgYm9vdG1lbV9pbml0KHZvaWQpDQo+
-ID4gPiAgCW1lbWJsb2NrX2R1bXBfYWxsKCk7DQo+ID4gPiAgfQ0KPiA+ID4NCj4gPiANCj4gPiBU
-aGFua3MNCj4gPiBCYXJyeQ0KPiANCg0KLS0NClNpbmNlcmVseSB5b3VycywNCk1pa2UuDQo=
+Drivers using legacy power management .suspen()/.resume() callbacks
+have to manage PCI states and device's PM states themselves. They also
+need to take care of standard configuration registers.
+
+Switch to generic power management framework using a single
+"struct dev_pm_ops" variable to take the unnecessary load from the driver.
+This also avoids the need for the driver to directly call most of the PCI
+helper functions and device power state control functions as through
+the generic framework, PCI Core takes care of the necessary operations,
+and drivers are required to do only device-specific jobs.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/crypto/ccp/ccp-dev.c     |  8 +++-----
+ drivers/crypto/ccp/sp-dev.c      |  6 ++----
+ drivers/crypto/ccp/sp-dev.h      |  6 +++---
+ drivers/crypto/ccp/sp-pci.c      | 17 ++++++-----------
+ drivers/crypto/ccp/sp-platform.c |  2 +-
+ 5 files changed, 15 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/crypto/ccp/ccp-dev.c b/drivers/crypto/ccp/ccp-dev.c
+index 19ac509ed76e..8ae26d3cffff 100644
+--- a/drivers/crypto/ccp/ccp-dev.c
++++ b/drivers/crypto/ccp/ccp-dev.c
+@@ -531,8 +531,7 @@ int ccp_trng_read(struct hwrng *rng, void *data, size_t max, bool wait)
+ 	return len;
+ }
+ 
+-#ifdef CONFIG_PM
+-bool ccp_queues_suspended(struct ccp_device *ccp)
++bool __maybe_unused ccp_queues_suspended(struct ccp_device *ccp)
+ {
+ 	unsigned int suspended = 0;
+ 	unsigned long flags;
+@@ -549,7 +548,7 @@ bool ccp_queues_suspended(struct ccp_device *ccp)
+ 	return ccp->cmd_q_count == suspended;
+ }
+ 
+-int ccp_dev_suspend(struct sp_device *sp, pm_message_t state)
++int __maybe_unused ccp_dev_suspend(struct sp_device *sp)
+ {
+ 	struct ccp_device *ccp = sp->ccp_data;
+ 	unsigned long flags;
+@@ -577,7 +576,7 @@ int ccp_dev_suspend(struct sp_device *sp, pm_message_t state)
+ 	return 0;
+ }
+ 
+-int ccp_dev_resume(struct sp_device *sp)
++int __maybe_unused ccp_dev_resume(struct sp_device *sp)
+ {
+ 	struct ccp_device *ccp = sp->ccp_data;
+ 	unsigned long flags;
+@@ -601,7 +600,6 @@ int ccp_dev_resume(struct sp_device *sp)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ int ccp_dev_init(struct sp_device *sp)
+ {
+diff --git a/drivers/crypto/ccp/sp-dev.c b/drivers/crypto/ccp/sp-dev.c
+index ce42675d3274..6284a15e5047 100644
+--- a/drivers/crypto/ccp/sp-dev.c
++++ b/drivers/crypto/ccp/sp-dev.c
+@@ -211,13 +211,12 @@ void sp_destroy(struct sp_device *sp)
+ 	sp_del_device(sp);
+ }
+ 
+-#ifdef CONFIG_PM
+-int sp_suspend(struct sp_device *sp, pm_message_t state)
++int sp_suspend(struct sp_device *sp)
+ {
+ 	int ret;
+ 
+ 	if (sp->dev_vdata->ccp_vdata) {
+-		ret = ccp_dev_suspend(sp, state);
++		ret = ccp_dev_suspend(sp);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -237,7 +236,6 @@ int sp_resume(struct sp_device *sp)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ struct sp_device *sp_get_psp_master_device(void)
+ {
+diff --git a/drivers/crypto/ccp/sp-dev.h b/drivers/crypto/ccp/sp-dev.h
+index f913f1494af9..0218d0670eee 100644
+--- a/drivers/crypto/ccp/sp-dev.h
++++ b/drivers/crypto/ccp/sp-dev.h
+@@ -119,7 +119,7 @@ int sp_init(struct sp_device *sp);
+ void sp_destroy(struct sp_device *sp);
+ struct sp_device *sp_get_master(void);
+ 
+-int sp_suspend(struct sp_device *sp, pm_message_t state);
++int sp_suspend(struct sp_device *sp);
+ int sp_resume(struct sp_device *sp);
+ int sp_request_ccp_irq(struct sp_device *sp, irq_handler_t handler,
+ 		       const char *name, void *data);
+@@ -134,7 +134,7 @@ struct sp_device *sp_get_psp_master_device(void);
+ int ccp_dev_init(struct sp_device *sp);
+ void ccp_dev_destroy(struct sp_device *sp);
+ 
+-int ccp_dev_suspend(struct sp_device *sp, pm_message_t state);
++int ccp_dev_suspend(struct sp_device *sp);
+ int ccp_dev_resume(struct sp_device *sp);
+ 
+ #else	/* !CONFIG_CRYPTO_DEV_SP_CCP */
+@@ -145,7 +145,7 @@ static inline int ccp_dev_init(struct sp_device *sp)
+ }
+ static inline void ccp_dev_destroy(struct sp_device *sp) { }
+ 
+-static inline int ccp_dev_suspend(struct sp_device *sp, pm_message_t state)
++static inline int ccp_dev_suspend(struct sp_device *sp)
+ {
+ 	return 0;
+ }
+diff --git a/drivers/crypto/ccp/sp-pci.c b/drivers/crypto/ccp/sp-pci.c
+index cb6cb47053f4..f471dbaef1fb 100644
+--- a/drivers/crypto/ccp/sp-pci.c
++++ b/drivers/crypto/ccp/sp-pci.c
+@@ -252,23 +252,19 @@ static void sp_pci_remove(struct pci_dev *pdev)
+ 	sp_free_irqs(sp);
+ }
+ 
+-#ifdef CONFIG_PM
+-static int sp_pci_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused sp_pci_suspend(struct device *dev)
+ {
+-	struct device *dev = &pdev->dev;
+ 	struct sp_device *sp = dev_get_drvdata(dev);
+ 
+-	return sp_suspend(sp, state);
++	return sp_suspend(sp);
+ }
+ 
+-static int sp_pci_resume(struct pci_dev *pdev)
++static int __maybe_unused sp_pci_resume(struct device *dev)
+ {
+-	struct device *dev = &pdev->dev;
+ 	struct sp_device *sp = dev_get_drvdata(dev);
+ 
+ 	return sp_resume(sp);
+ }
+-#endif
+ 
+ #ifdef CONFIG_CRYPTO_DEV_SP_PSP
+ static const struct sev_vdata sevv1 = {
+@@ -365,15 +361,14 @@ static const struct pci_device_id sp_pci_table[] = {
+ };
+ MODULE_DEVICE_TABLE(pci, sp_pci_table);
+ 
++static SIMPLE_DEV_PM_OPS(sp_pci_pm_ops, sp_pci_suspend, sp_pci_resume);
++
+ static struct pci_driver sp_pci_driver = {
+ 	.name = "ccp",
+ 	.id_table = sp_pci_table,
+ 	.probe = sp_pci_probe,
+ 	.remove = sp_pci_remove,
+-#ifdef CONFIG_PM
+-	.suspend = sp_pci_suspend,
+-	.resume = sp_pci_resume,
+-#endif
++	.driver.pm = &sp_pci_pm_ops,
+ };
+ 
+ int sp_pci_init(void)
+diff --git a/drivers/crypto/ccp/sp-platform.c b/drivers/crypto/ccp/sp-platform.c
+index 831aac1393a2..9dba52fbee99 100644
+--- a/drivers/crypto/ccp/sp-platform.c
++++ b/drivers/crypto/ccp/sp-platform.c
+@@ -207,7 +207,7 @@ static int sp_platform_suspend(struct platform_device *pdev,
+ 	struct device *dev = &pdev->dev;
+ 	struct sp_device *sp = dev_get_drvdata(dev);
+ 
+-	return sp_suspend(sp, state);
++	return sp_suspend(sp);
+ }
+ 
+ static int sp_platform_resume(struct platform_device *pdev)
+-- 
+2.27.0
+
