@@ -2,223 +2,206 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A808EC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B38C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EA3E207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:27:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JnOQyrPO"
+	by mail.kernel.org (Postfix) with ESMTP id 5CA71207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:27:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595291257;
+	bh=c6SZiY+whgjX+KRRviicz0UCk9I8GfA5MfRpG2BBP94=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UYr3OyrPTwYaR0F5pKJmHs8qCCn89pvpIyvfIFGt9u5mPmD/gMSKFr7WOuM4NLTb6
+	 q2/a2Rn+3clCGuhyfnrU6Da1+zdo48eeVRfkev+NI3cJNFhCcc0nbkbL4uqE/0Y8PU
+	 SAevZ7nsz3y3rBiBc5VhAtcXjkyQ1wHezRMFn/VA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgGUA1u (ORCPT
+        id S1728139AbgGUA1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 20:27:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbgGUA1t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 20:27:49 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8549DC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 17:27:49 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id o1so9477792plk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 17:27:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eHMkd52N9iG/J38uCcPxIkcFupcNU7Z95N/n272nES4=;
-        b=JnOQyrPOjp8U4Qxp718M6F2K1vYere++W78PpAQmkQTjjRuiCwTiRymUuMbyYp8x3z
-         f0lOJ02SfXfK1BSYjBAUwcEG649O6miSZpI5TntWAIUUdpDilgvyXInWpT2hX/gKKQ29
-         mRHbaGiBWO0Vwu70hG5X939xB2ivtYqIrdmIvo5uvx/+p90r8djVEwYGQH9lgJPC+Pp6
-         fvS2jH8Mr3AGjtLPifJQLqmc6Qz86vN+uNXi77ECVDk6RuCCSJH9oCZ3vvCZgnHw+9uR
-         rvDUJZmxAQTmYvHNO/gpNQzBYGuyszoYrOz+0cHubEDJLMFB6ZSm502ZRtDDjSO4DPbW
-         R4Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eHMkd52N9iG/J38uCcPxIkcFupcNU7Z95N/n272nES4=;
-        b=Nns9sFgaYCPE65uXD5OKzc0zVkopykyP1RVQ+IjMUNFuUNJbwSK9qUVVaF/s84ct5C
-         kVNR21Ddj3I2X9cfCvFOGB7vNiETxg4NMJMUFI3R0r4wZMp94zbtvPmavVl7QYfmiB3T
-         MHA7OO90cxAcZtiV248EZaNxncr+j2QUmhL+p9+Q398FAdhVGRG+47kDnmxfT5UUNRUY
-         KbtAi2lViEPO2B3/yy/gQ1eKNU9G5bGGTtCFlbGVeKq+Fywp/eAWOeBTQKUBfsrYELIY
-         MiRcm5uIZK3Pz2VuP21DtUk4fP69jWvty3Srj/h4yZAb7gQ1HLWkb329ud8KHNHx7fIK
-         94RA==
-X-Gm-Message-State: AOAM533GPYDDTTRZlVqyc01bQczXBcrkdxu++rAAb2lqNdudVP1U9LhB
-        Jg+2E6fo/O/3e+xiPNLXQ0m2ZA==
-X-Google-Smtp-Source: ABdhPJwMiVGdCJ/oTtHkqhLZ2OV8CS78/nFJcz+Jp2i9jIjwcpykNtgN/M4+Do/9zXTgCj7tEums/g==
-X-Received: by 2002:a17:902:8d8b:: with SMTP id v11mr4583554plo.316.1595291268175;
-        Mon, 20 Jul 2020 17:27:48 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:a6ae:11ff:fe11:4abb])
-        by smtp.gmail.com with ESMTPSA id s89sm768445pjj.28.2020.07.20.17.27.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 17:27:47 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 17:27:44 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        Jian Cai <jiancai@google.com>, Bill Wendling <morbo@google.com>
-Subject: Re: [PATCH] Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang cross
- compilation
-Message-ID: <20200721002744.c5a4dj5t2hfac25o@google.com>
-References: <20200720181237.3015826-1-maskray@google.com>
- <20200720181646.GA6160@ubuntu-n2-xlarge-x86>
- <CAKwvOd=tF7j-mTHMKvvmRkxjFZ-a2ah2+4zLY527WtebZzum8Q@mail.gmail.com>
+        Mon, 20 Jul 2020 20:27:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727119AbgGUA1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 20:27:35 -0400
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ACB82080D;
+        Tue, 21 Jul 2020 00:27:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595291255;
+        bh=c6SZiY+whgjX+KRRviicz0UCk9I8GfA5MfRpG2BBP94=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=h25Ur3YjDXsIffNXZbUEBviwLUlanTRFbhwbcg8s+C+yYrfFTYIWsit+7qQSc+V8s
+         8O1o15xWRghSS3gfayQfZmw7lGcP6klqpEGdE6Jl4feXp8b0tUvfLKezUjoZEAcstW
+         D8t7q8kYE+tLgxEgh745NuSPqBpOJ99ojzMEhBuA=
+Received: by mail-ot1-f50.google.com with SMTP id 72so13757859otc.3;
+        Mon, 20 Jul 2020 17:27:35 -0700 (PDT)
+X-Gm-Message-State: AOAM533IcDoMSj7MN3QdD7Br4oeEdjzymF5zSDoRS/20KGj4eReK0Dfk
+        BHhecWyOt1xOHekWBeBQVoelk0nCDNSRK0Bfzg==
+X-Google-Smtp-Source: ABdhPJy1WG7lsLgsUdYuKa9S5Q9mvAiX/mi4NprNl1cvMY0HgadPJ9FKGMIqdUm5qCrPvLhnJyKu659d9wOYC469eCU=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr20951382otb.107.1595291254348;
+ Mon, 20 Jul 2020 17:27:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=tF7j-mTHMKvvmRkxjFZ-a2ah2+4zLY527WtebZzum8Q@mail.gmail.com>
+References: <20200720074249.596364-1-jiaxun.yang@flygoat.com> <20200720074249.596364-3-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200720074249.596364-3-jiaxun.yang@flygoat.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 20 Jul 2020 18:27:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLOVwgFGm82EA+rs2Skjv_=xuuW1V_Asnu2yHHqdy6CvA@mail.gmail.com>
+Message-ID: <CAL_JsqLOVwgFGm82EA+rs2Skjv_=xuuW1V_Asnu2yHHqdy6CvA@mail.gmail.com>
+Subject: Re: [PATCH 2/5] MIPS: Loongson64: Process ISA Node in DeviceTree
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-20, Nick Desaulniers wrote:
->On Mon, Jul 20, 2020 at 11:16 AM Nathan Chancellor
-><natechancellor@gmail.com> wrote:
->>
->> On Mon, Jul 20, 2020 at 11:12:22AM -0700, Fangrui Song wrote:
->> > When CROSS_COMPILE is set (e.g. aarch64-linux-gnu-), if
->> > $(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-,
->> > GCC_TOOLCHAIN_DIR will be set to /usr/bin/.  --prefix= will be set to
->> > /usr/bin/ and Clang as of 11 will search for both
->> > $(prefix)aarch64-linux-gnu-$needle and $(prefix)$needle.
->> >
->> > GCC searchs for $(prefix)aarch64-linux-gnu/$version/$needle,
->> > $(prefix)aarch64-linux-gnu/$needle and $(prefix)$needle. In practice,
->> > $(prefix)aarch64-linux-gnu/$needle rarely contains executables.
->> >
->> > To better model how GCC's -B/--prefix takes in effect in practice, newer
->> > Clang only searches for $(prefix)$needle and for example it will find
+On Mon, Jul 20, 2020 at 1:54 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 >
->"newer Clang" requires the reader to recall that "Clang as of 11" was
->the previous frame of reference. I think it would be clearer to:
->1. call of clang-12 as having a difference in behavior.
->2. explicitly link to the commit, ie:
->Link: https://github.com/llvm/llvm-project/commit/3452a0d8c17f7166f479706b293caf6ac76ffd90
+> Previously, we're hardcoding resserved ISA I/O Space in code, now
+> we're processing reverved I/O via DeviceTree directly. Using the ranges
+> property to determine the size and address of reserved I/O space.
 >
->> > /usr/bin/as instead of /usr/bin/aarch64-linux-gnu-as.
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  arch/mips/loongson64/init.c | 85 ++++++++++++++++++++++++++-----------
+>  1 file changed, 60 insertions(+), 25 deletions(-)
 >
->That's a common source of pain (for example, when cross compiling
->without having the proper cross binutils installed, it's common to get
->spooky errors about unsupported configs or host binutils not
->recognizing flags specific to cross building).
+> diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
+> index 59ddadace83f..028d7b324ec2 100644
+> --- a/arch/mips/loongson64/init.c
+> +++ b/arch/mips/loongson64/init.c
+> @@ -7,6 +7,8 @@
+>  #include <linux/irqchip.h>
+>  #include <linux/logic_pio.h>
+>  #include <linux/memblock.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+>  #include <asm/bootinfo.h>
+>  #include <asm/traps.h>
+>  #include <asm/smp-ops.h>
+> @@ -63,41 +65,74 @@ void __init prom_free_prom_memory(void)
+>  {
+>  }
 >
->/usr/bin/as: unrecognized option '-EL'
+> -static __init void reserve_pio_range(void)
+> +static int __init add_legacy_isa_io(struct fwnode_handle *fwnode, phys_addr_t addr,
+> +                            resource_size_t    size)
+>  {
+> +       int ret = 0;
+>         struct logic_pio_hwaddr *range;
+> +       unsigned long vaddr;
 >
->being the most common.  So in that case, I'm actually very happy with
->the llvm change if it solves that particularly common pain point.
+>         range = kzalloc(sizeof(*range), GFP_ATOMIC);
+>         if (!range)
+> -               return;
+> +               return -ENOMEM;
 >
->> >
->> > Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
->> > (/usr/bin/aarch64-linux-gnu-) so that newer Clang can find the
->> > appropriate cross compiling GNU as (when -no-integrated-as is in
->> > effect).
->> >
->> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
->> > Signed-off-by: Fangrui Song <maskray@google.com>
->> > Link: https://github.com/ClangBuiltLinux/linux/issues/1099
->>
->> Sorry that I did not pay attention before but this needs
->>
->> Cc: stable@vger.kernel.org
+> -       range->fwnode = &of_root->fwnode;
+> -       range->size = MMIO_LOWER_RESERVED;
+> -       range->hw_start = LOONGSON_PCIIO_BASE;
+> +       range->fwnode = fwnode;
+> +       range->size = size;
+> +       range->hw_start = addr;
+>         range->flags = LOGIC_PIO_CPU_MMIO;
 >
->Agreed.  This change to llvm will blow up all of our CI jobs that
->cross compile if not backported to stable.
+> -       if (logic_pio_register_range(range)) {
+> -               pr_err("Failed to reserve PIO range for legacy ISA\n");
+> -               goto free_range;
+> +       ret = logic_pio_register_range(range);
+> +       if (ret) {
+> +               kfree(range);
+> +               return ret;
+> +       }
+> +
+> +       /* Legacy ISA must placed at the start of PCI_IOBASE */
+> +       if (range->io_start != 0) {
+> +               logic_pio_unregister_range(range);
+> +               kfree(range);
+> +               return -EINVAL;
+>         }
+>
+> -       if (WARN(range->io_start != 0,
+> -                       "Reserved PIO range does not start from 0\n"))
+> -               goto unregister;
+> -
+> -       /*
+> -        * i8259 would access I/O space, so mapping must be done here.
+> -        * Please remove it when all drivers can be managed by logic_pio.
+> -        */
+> -       ioremap_page_range(PCI_IOBASE, PCI_IOBASE + MMIO_LOWER_RESERVED,
+> -                               LOONGSON_PCIIO_BASE,
+> -                               pgprot_device(PAGE_KERNEL));
+> -
+> -       return;
+> -unregister:
+> -       logic_pio_unregister_range(range);
+> -free_range:
+> -       kfree(range);
+> +       vaddr = PCI_IOBASE + range->io_start;
+> +
+> +       ioremap_page_range(vaddr, vaddr + size, addr, pgprot_device(PAGE_KERNEL));
+> +
+> +       return 0;
+> +}
+> +
+> +static __init void reserve_pio_range(void)
+> +{
+> +       struct device_node *np;
+> +
+> +       for_each_node_by_name(np, "isa") {
+> +               struct of_pci_range range;
+> +               struct of_pci_range_parser parser;
 
-Thanks. I did not know this.
+Use of_range, of_range_parser instead of PCI variant.
 
->>
->> in the body so that it gets automatically backported into all of our
->> stable branches. I am not sure if Masahiro is okay with adding that
->> after the fact or if he will want a v2.
->>
->> I am fine with having my signed-off-by on the patch but I did not really
->> do much :) I am fine with having that downgraded to
+> +
+> +               pr_info("ISA Bridge: %pOF\n", np);
+> +
+> +               if (of_pci_range_parser_init(&parser, np)) {
+> +                       pr_info("Failed to parse resources.\n");
+> +                       break;
+> +               }
+> +
+> +               for_each_of_pci_range(&parser, &range) {
+
+for_each_of_range()
+
+We need to add a define for of_range_parser_init too.
+
+> +                       switch (range.flags & IORESOURCE_TYPE_BITS) {
+> +                       case IORESOURCE_IO:
+> +                               pr_info(" IO 0x%016llx..0x%016llx\n",
+> +                                       range.cpu_addr,
+> +                                       range.cpu_addr + range.size - 1);
+> +                               if (add_legacy_isa_io(&np->fwnode, range.cpu_addr, range.size))
+> +                                       pr_warn("Failed to reserve legacy IO in Logic PIO\n");
+> +                               break;
+> +                       case IORESOURCE_MEM:
+> +                               pr_info(" MEM 0x%016llx..0x%016llx\n",
+> +                                       range.cpu_addr,
+> +                                       range.cpu_addr + range.size - 1);
+> +                               break;
+> +                       }
+> +               }
+> +       }
+>  }
 >
->Not a big deal, but there's only really two cases I can think of where
->it's appropriate to attach someone else's "SOB" to a patch:
->1. It's their patch that you're resending on their behalf, possibly as
->part of a larger series.
->2. You're a maintainer, and...well I guess that's also case 1 above.
+>  void __init arch_init_irq(void)
+> --
+> 2.28.0.rc1
 >
->Reported-by is more appropriate, and you can include the tags
->collected from this thread.  Please ping me internally for help
->sending a v2, if needed.
-
-Nathan's draft patch on
-https://github.com/ClangBuiltLinux/linux/issues/1099 actually works.
-I removed the slash. The words are my own. Since Nathan explicitly
-requested a downgrade of his tag, I'll do that for V2.
-
-I'll do that anyway because I need to fix a typo in the description:
-
-$(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-
-$(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-elfedit
-
->>
->> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
->> Tested-by: Nathan Chancellor <natechancellor@gmail.com>
->
->I tested with this llvm pre- and post-
->https://github.com/llvm/llvm-project/commit/3452a0d8c17f7166f479706b293caf6ac76ffd90.
->I also tested downstream Android kernel builds with
->3452a0d8c17f7166f479706b293caf6ac76ffd90. Builds that don't make use
->of CROSS_COMPILE (native host targets) are obviously unaffected.  We
->might see this issue pop up a few more times internally if the patch
->isn't picked up by stable, or if those downstream kernel trees don't
->rebase on stable kernel trees as often as they refresh their
->toolchain.
->
->Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-
-Thanks for offerring proofreading service! I'm working on the
-description...
-
->>
->> if people find it odd.
->>
->> Thanks for sending this along!
->>
->> Cheers,
->> Nathan
->>
->> > ---
->> >  Makefile | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/Makefile b/Makefile
->> > index 0b5f8538bde5..3ac83e375b61 100644
->> > --- a/Makefile
->> > +++ b/Makefile
->> > @@ -567,7 +567,7 @@ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
->> >  ifneq ($(CROSS_COMPILE),)
->> >  CLANG_FLAGS  += --target=$(notdir $(CROSS_COMPILE:%-=%))
->> >  GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
->> > -CLANG_FLAGS  += --prefix=$(GCC_TOOLCHAIN_DIR)
->> > +CLANG_FLAGS  += --prefix=$(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
->> >  GCC_TOOLCHAIN        := $(realpath $(GCC_TOOLCHAIN_DIR)/..)
->> >  endif
->> >  ifneq ($(GCC_TOOLCHAIN),)
->> > --
->> > 2.28.0.rc0.105.gf9edc3c819-goog
->> >
->>
->> --
->
->-- 
->Thanks,
->~Nick Desaulniers
