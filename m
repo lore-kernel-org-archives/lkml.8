@@ -2,61 +2,76 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB096C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A39C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDE3120792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC4C2064C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:40:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dQ0GU478"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbgGUQkU (ORCPT
+        id S1729955AbgGUQki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:40:20 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:40142 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727058AbgGUQkU (ORCPT
+        Tue, 21 Jul 2020 12:40:38 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47476 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728127AbgGUQkh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:40:20 -0400
-Received: from [78.134.114.177] (port=56136 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jxvJP-00075K-2R; Tue, 21 Jul 2020 18:40:15 +0200
-Subject: Re: [PATCH v2 4/4] dt-bindings: clk: versaclock5: convert to yaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-clk@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        Adam Ford <aford173@gmail.com>
-References: <20200708074035.31595-1-luca@lucaceresoli.net>
- <20200708074035.31595-4-luca@lucaceresoli.net>
- <20200714031109.GA1210492@bogus>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <3862d1f3-ada7-7af4-2f98-8874413e5252@lucaceresoli.net>
-Date:   Tue, 21 Jul 2020 18:40:15 +0200
+        Tue, 21 Jul 2020 12:40:37 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LGeY1G007122;
+        Tue, 21 Jul 2020 11:40:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595349634;
+        bh=/eWIZiT9XrKPExqrtdoAjWkZM5HC4IrH8rHoLYS97yU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dQ0GU478dbIU8wptojg4ymDv20hcvdwhowYka4hGCclz/Zj5XUfpVC7KPJ1lPxg45
+         XGmfIaaXbQ+tqefdoH0Kigh/mbWsiUzl93LRdZvy4BPKpAGqRC4R6tQ3sJpYcS6jPU
+         bIYNBAuOh9qG534n0KoLUtewBbyoJE/C/6Ipl9zs=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LGeXXS047591;
+        Tue, 21 Jul 2020 11:40:33 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
+ Jul 2020 11:40:33 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 21 Jul 2020 11:40:33 -0500
+Received: from [10.250.34.248] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LGeX4R041637;
+        Tue, 21 Jul 2020 11:40:33 -0500
+Subject: Re: [PATCH v4 3/6] dt-bindings: remoteproc: Add common TI SCI rproc
+ bindings
+To:     Rob Herring <robh+dt@kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200717234800.9423-1-s-anna@ti.com>
+ <20200717234800.9423-4-s-anna@ti.com>
+ <CAL_JsqLnPQNZ7KhqfPwiMCJESYrD9_UN2gwc_hj9=WOJM8NQQw@mail.gmail.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <647642d5-5021-363f-c9c9-3714a826436c@ti.com>
+Date:   Tue, 21 Jul 2020 11:40:33 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200714031109.GA1210492@bogus>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAL_JsqLnPQNZ7KhqfPwiMCJESYrD9_UN2gwc_hj9=WOJM8NQQw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,259 +79,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Rob,
 
-On 14/07/20 05:11, Rob Herring wrote:
-> On Wed, Jul 08, 2020 at 09:40:35AM +0200, Luca Ceresoli wrote:
->> Convert to yaml the VersaClock bindings document. The mapping between
->> clock specifier and physical pins cannot be described formally in yaml
->> schema, then keep it verbatim in the description field.
+On 7/21/20 10:53 AM, Rob Herring wrote:
+> On Fri, Jul 17, 2020 at 5:48 PM Suman Anna <s-anna@ti.com> wrote:
 >>
->> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>> Add a bindings document that lists the common TI SCI properties
+>> used by the K3 R5F and DSP remoteproc devices.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
 >> ---
->>  .../bindings/clock/idt,versaclock5.txt        | 125 --------------
->>  .../bindings/clock/idt,versaclock5.yaml       | 160 ++++++++++++++++++
->>  MAINTAINERS                                   |   1 +
->>  3 files changed, 161 insertions(+), 125 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/clock/idt,versaclock5.txt
->>  create mode 100644 Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+>> v4: Addressed both of Rob's review comments on ti,sci-proc-ids property
+>> v3: https://patchwork.kernel.org/patch/11602317/
 >>
->> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
->> deleted file mode 100644
->> index 9656d4cf221c..000000000000
->> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
->> +++ /dev/null
->> @@ -1,125 +0,0 @@
->> -Binding for IDT VersaClock 5,6 programmable i2c clock generators.
->> -
->> -The IDT VersaClock 5 and VersaClock 6 are programmable i2c clock
->> -generators providing from 3 to 12 output clocks.
->> -
->> -==I2C device node==
->> -
->> -Required properties:
->> -- compatible:	shall be one of
->> -		"idt,5p49v5923"
->> -		"idt,5p49v5925"
->> -		"idt,5p49v5933"
->> -		"idt,5p49v5935"
->> -		"idt,5p49v6901"
->> -		"idt,5p49v6965"
->> -- reg:		i2c device address, shall be 0x68 or 0x6a.
->> -- #clock-cells:	from common clock binding; shall be set to 1.
->> -- clocks:	from common clock binding; list of parent clock handles,
->> -		- 5p49v5923 and
->> -		  5p49v5925 and
->> -		  5p49v6901: (required) either or both of XTAL or CLKIN
->> -					reference clock.
->> -		- 5p49v5933 and
->> -		- 5p49v5935: (optional) property not present (internal
->> -					Xtal used) or CLKIN reference
->> -					clock.
->> -- clock-names:	from common clock binding; clock input names, can be
->> -		- 5p49v5923 and
->> -		  5p49v5925 and
->> -		  5p49v6901: (required) either or both of "xin", "clkin".
->> -		- 5p49v5933 and
->> -		- 5p49v5935: (optional) property not present or "clkin".
->> -
->> -For all output ports, a corresponding, optional child node named OUT1,
->> -OUT2, etc. can represent a each output, and the node can be used to
->> -specify the following:
->> -
->> -- idt,mode: can be one of the following:
->> -                 - VC5_LVPECL
->> -                 - VC5_CMOS
->> -                 - VC5_HCSL33
->> -                 - VC5_LVDS
->> -                 - VC5_CMOS2
->> -                 - VC5_CMOSD
->> -                 - VC5_HCSL25
->> -
->> -- idt,voltage-microvolts:  can be one of the following
->> -                 - 1800000
->> -                 - 2500000
->> -                 - 3300000
->> --  idt,slew-percent: Percent of normal, can be one of
->> -                 - 80
->> -                 - 85
->> -                 - 90
->> -                 - 100
->> -
->> -==Mapping between clock specifier and physical pins==
->> -
->> -When referencing the provided clock in the DT using phandle and
->> -clock specifier, the following mapping applies:
->> -
->> -5P49V5923:
->> -	0 -- OUT0_SEL_I2CB
->> -	1 -- OUT1
->> -	2 -- OUT2
->> -
->> -5P49V5933:
->> -	0 -- OUT0_SEL_I2CB
->> -	1 -- OUT1
->> -	2 -- OUT4
->> -
->> -5P49V5925 and
->> -5P49V5935:
->> -	0 -- OUT0_SEL_I2CB
->> -	1 -- OUT1
->> -	2 -- OUT2
->> -	3 -- OUT3
->> -	4 -- OUT4
->> -
->> -5P49V6901:
->> -	0 -- OUT0_SEL_I2CB
->> -	1 -- OUT1
->> -	2 -- OUT2
->> -	3 -- OUT3
->> -	4 -- OUT4
->> -
->> -==Example==
->> -
->> -/* 25MHz reference crystal */
->> -ref25: ref25m {
->> -	compatible = "fixed-clock";
->> -	#clock-cells = <0>;
->> -	clock-frequency = <25000000>;
->> -};
->> -
->> -i2c-master-node {
->> -
->> -	/* IDT 5P49V5923 i2c clock generator */
->> -	vc5: clock-generator@6a {
->> -		compatible = "idt,5p49v5923";
->> -		reg = <0x6a>;
->> -		#clock-cells = <1>;
->> -
->> -		/* Connect XIN input to 25MHz reference */
->> -		clocks = <&ref25m>;
->> -		clock-names = "xin";
->> -
->> -		OUT1 {
->> -			idt,mode = <VC5_CMOS>;
->> -			idt,voltage-microvolts = <1800000>;
->> -			idt,slew-percent = <80>;
->> -		};
->> -		OUT2 {
->> -			...
->> -		};
->> -		...
->> -	};
->> -};
->> -
->> -/* Consumer referencing the 5P49V5923 pin OUT1 */
->> -consumer {
->> -	...
->> -	clocks = <&vc5 1>;
->> -	...
->> -}
->> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+>>   .../bindings/remoteproc/ti,k3-sci-proc.yaml   | 48 +++++++++++++++++++
+>>   1 file changed, 48 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
 >> new file mode 100644
->> index 000000000000..4bdfd6187b48
+>> index 000000000000..0dca2ffdbc48
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
->> @@ -0,0 +1,160 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+>> @@ -0,0 +1,48 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
 >> +%YAML 1.2
 >> +---
->> +$id: http://devicetree.org/schemas/clock/idt,versaclock5.yaml#
+>> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-sci-proc.yaml#
 >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 >> +
->> +title: Binding for IDT VersaClock 5 and 6 programmable I2C clock generators
->> +
->> +description: |
->> +  The IDT VersaClock 5 and VersaClock 6 are programmable I2C
->> +  clock generators providing from 3 to 12 output clocks.
->> +
->> +  When referencing the provided clock in the DT using phandle and clock
->> +  specifier, the following mapping applies:
->> +
->> +  - 5P49V5923:
->> +    0 -- OUT0_SEL_I2CB
->> +    1 -- OUT1
->> +    2 -- OUT2
->> +
->> +  - 5P49V5933:
->> +    0 -- OUT0_SEL_I2CB
->> +    1 -- OUT1
->> +    2 -- OUT4
->> +
->> +  - other parts:
->> +    0 -- OUT0_SEL_I2CB
->> +    1 -- OUT1
->> +    2 -- OUT2
->> +    3 -- OUT3
->> +    4 -- OUT4
+>> +title: Common TI K3 remote processor device bindings
 >> +
 >> +maintainers:
->> +  - Luca Ceresoli <luca@lucaceresoli.net>
+>> +  - Suman Anna <s-anna@ti.com>
+>> +
+>> +description: |
+>> +  The TI K3 family of SoCs usually have one or more remote processor sub-systems
+>> +  like the dual-core R5F sub-system or a C66x or C71x DSP processor subsystem.
+>> +  The device management of these remote processors is managed by a dedicated
+>> +  System Processor, and the communication with that processor is managed through
+>> +  the TI-SCI protocol.
+>> +
+>> +  Each remote processor device node should define a common set of properties
+>> +  that allows the System Processor firmware to perform the device management
+>> +  such as powering the IPs, asserting/deasserting the resets for each of these
+>> +  processors.
 >> +
 >> +properties:
->> +  compatible:
->> +    enum:
->> +      - idt,5p49v5923
->> +      - idt,5p49v5925
->> +      - idt,5p49v5933
->> +      - idt,5p49v5935
->> +      - idt,5p49v6901
->> +      - idt,5p49v6965
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description: I2C device address, shall be 0x68 or 0x6a.
-> 
-> Can be a schema:
-> 
-> enum: [ 0x68, 0x6a ]
-> 
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +patternProperties:
->> +  "^OUT[1-4]$":
->> +    type: object
+>> +  ti,sci:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
 >> +    description:
->> +      Description of one of the outputs (OUT1..OUT4). See "Clock1 Output
->> +      Configuration" in the Versaclock 5/6/6E Family Register Description
->> +      and Programming Guide.
->> +    properties:
->> +      idt,mode:
->> +        description:
->> +          The output drive mode. Values defined in dt-bindings/clk/versaclock.h
->> +        enum:
->> +          - VC5_LVPECL
+>> +      Should be a phandle to the TI-SCI System Controller node
+>> +
+>> +  ti,sci-dev-id:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Should contain the TI-SCI device id corresponding to the remote processor
+>> +      core. Please refer to the corresponding System Controller documentation
+>> +      for valid values.
 > 
-> This is defining a string. Can't use defines here.
-> 
->> +          - VC5_CMOS
->> +          - VC5_HCSL33
->> +          - VC5_LVDS
->> +          - VC5_CMOS2
->> +          - VC5_CMOSD
->> +          - VC5_HCSL25
->> +      idt,voltage-microvolts:
->> +        description: The output drive voltage.
->> +        $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> Standard unit suffixes have a type already, so drop.
+> These also apply on Lokesh's series converting ti,sci-int[ra]
+> bindings. Please rework to use for both.
 
-After better studying json schema, v3 is coming with this change, but...
+OK.
 
 > 
->> +        enum: [ 1800000, 2500000, 3300000 ]
->> +      idt,slew-percent:
->> +        description: The Slew rate control for CMOS single-ended.
->> +        $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> Here too.
+>> +
+>> +  ti,sci-proc-ids:
+>> +    description: Should contain a single tuple of <proc_id host_id>.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +    items:
+>> +      - description: TI-SCI processor id for the remote processor device
+>> +      - description: TI-SCI host id to which processor control ownership
+>> +                     should be transferred to
 
-...not this one. It doesn't look like "percent" or similar is a standard
-unit, and reading [0] confirms that. Should it be added?
+This property is not required for the ti,sci-int[ra].
 
-[0]
-https://github.com/robherring/dt-schema/blob/master/schemas/property-units.yaml
+I can plan to move this to a common location like 
+Documentation/devicetree/bindings/arm/keystone/ and let the individual 
+bindings define the required properties. Does that sound ok to you?
 
-Thanks.
--- 
-Luca
+regards
+Suman
+
+>> +
+>> +required:
+>> +  - ti,sci
+>> +  - ti,sci-dev-id
+>> +  - ti,sci-proc-ids
+>> --
+>> 2.26.0
+>>
+
