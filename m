@@ -2,118 +2,155 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8E7C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD0BC20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6AE20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgGUKYU (ORCPT
+        id S1729224AbgGUKYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:24:20 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25354 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727907AbgGUKYT (ORCPT
+        Tue, 21 Jul 2020 06:24:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45756 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727907AbgGUKYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:24:19 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LA2T06154812;
-        Tue, 21 Jul 2020 06:24:18 -0400
+        Tue, 21 Jul 2020 06:24:44 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LA22Zb003546;
+        Tue, 21 Jul 2020 06:24:21 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32dn0xyh73-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5k0uev4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 06:24:17 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06LA3HTU158332;
-        Tue, 21 Jul 2020 06:24:17 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32dn0xyh6d-1
+        Tue, 21 Jul 2020 06:24:21 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06LA2Lpp005577;
+        Tue, 21 Jul 2020 06:24:20 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5k0ueun-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 06:24:17 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LAJr7r022195;
-        Tue, 21 Jul 2020 10:24:15 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma02fra.de.ibm.com with ESMTP id 32brq7uuay-1
+        Tue, 21 Jul 2020 06:24:20 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LAJvdk027292;
+        Tue, 21 Jul 2020 10:24:18 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma05fra.de.ibm.com with ESMTP id 32brq81wj3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 10:24:14 +0000
+        Tue, 21 Jul 2020 10:24:18 +0000
 Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LAOCMB60031000
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LAOGwo30081470
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jul 2020 10:24:12 GMT
+        Tue, 21 Jul 2020 10:24:16 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B142C4204D;
-        Tue, 21 Jul 2020 10:24:12 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 6AA7B4204F;
+        Tue, 21 Jul 2020 10:24:16 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8CD1742045;
-        Tue, 21 Jul 2020 10:24:11 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.205.118])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 21 Jul 2020 10:24:11 +0000 (GMT)
-Date:   Tue, 21 Jul 2020 13:24:09 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Max Filippov <jcmvbkbc@gmail.com>
-Cc:     linux-xtensa@linux-xtensa.org, Chris Zankel <chris@zankel.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xtensa: fix closing endif comment
-Message-ID: <20200721102042.GD802087@linux.ibm.com>
-References: <20200721024751.1257-1-jcmvbkbc@gmail.com>
+        by IMSVA (Postfix) with ESMTP id BCAB04203F;
+        Tue, 21 Jul 2020 10:24:14 +0000 (GMT)
+Received: from [9.79.210.59] (unknown [9.79.210.59])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Jul 2020 10:24:14 +0000 (GMT)
+Subject: Re: [PATCH v3 1/3] powerpc/powernv/idle: Replace CPU features checks
+ with PVR checks
+To:     Nicholas Piggin <npiggin@gmail.com>, benh@kernel.crashing.org,
+        ego@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mikey@neuling.org,
+        mpe@ellerman.id.au, paulus@samba.org, pratik.r.sampat@gmail.com,
+        svaidy@linux.ibm.com
+References: <20200717185306.60607-1-psampat@linux.ibm.com>
+ <20200717185306.60607-2-psampat@linux.ibm.com>
+ <1595203067.oropk0x5c8.astroid@bobo.none>
+From:   Pratik Sampat <psampat@linux.ibm.com>
+Message-ID: <8f3485a0-6c5a-91bd-dee7-2075b3392fa5@linux.ibm.com>
+Date:   Tue, 21 Jul 2020 15:54:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721024751.1257-1-jcmvbkbc@gmail.com>
+In-Reply-To: <1595203067.oropk0x5c8.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- priorityscore=1501 adultscore=0 bulkscore=0 impostorscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 suspectscore=1 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007210066
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 suspectscore=0 priorityscore=1501 mlxscore=0 clxscore=1015
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007210066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 07:47:51PM -0700, Max Filippov wrote:
-> Commit 8f74afa22d9b ("xtensa: switch to generic version of pte
-> allocation") introduced the following build warning for xtensa
->   arch/xtensa/include/asm/pgalloc.h:67:8: warning: extra tokens at end of
->   #endif directive [-Wendif-labels]
-> Fix #endif comment.
 
-Oops :)
 
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Fixes: 8f74afa22d9b ("xtensa: switch to generic version of pte allocation")
-> Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+On 20/07/20 5:30 am, Nicholas Piggin wrote:
+> Excerpts from Pratik Rajesh Sampat's message of July 18, 2020 4:53 am:
+>> As the idle framework's architecture is incomplete, hence instead of
+>> checking for just the processor type advertised in the device tree CPU
+>> features; check for the Processor Version Register (PVR) so that finer
+>> granularity can be leveraged while making processor checks.
+>>
+>> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+>> ---
+>>   arch/powerpc/platforms/powernv/idle.c | 14 +++++++-------
+>>   1 file changed, 7 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+>> index 2dd467383a88..f62904f70fc6 100644
+>> --- a/arch/powerpc/platforms/powernv/idle.c
+>> +++ b/arch/powerpc/platforms/powernv/idle.c
+>> @@ -92,7 +92,7 @@ static int pnv_save_sprs_for_deep_states(void)
+>>   		if (rc != 0)
+>>   			return rc;
+>>   
+>> -		if (cpu_has_feature(CPU_FTR_ARCH_300)) {
+>> +		if (pvr_version_is(PVR_POWER9)) {
+>>   			rc = opal_slw_set_reg(pir, P9_STOP_SPR_MSR, msr_val);
+>>   			if (rc)
+>>   				return rc;
+>> @@ -116,7 +116,7 @@ static int pnv_save_sprs_for_deep_states(void)
+>>   				return rc;
+>>   
+>>   			/* Only p8 needs to set extra HID regiters */
+>> -			if (!cpu_has_feature(CPU_FTR_ARCH_300)) {
+>> +			if (!pvr_version_is(PVR_POWER9)) {
+>>   
+>>   				rc = opal_slw_set_reg(pir, SPRN_HID1, hid1_val);
+>>   				if (rc != 0)
+> What I think you should do is keep using CPU_FTR_ARCH_300 for this stuff
+> which is written for power9 and we know is running on power9, because
+> that's a faster test (static branch and does not have to read PVR. And
+> then...
+>
+>> @@ -1205,7 +1205,7 @@ static void __init pnv_probe_idle_states(void)
+>>   		return;
+>>   	}
+>>   
+>> -	if (cpu_has_feature(CPU_FTR_ARCH_300))
+>> +	if (pvr_version_is(PVR_POWER9))
+>>   		pnv_power9_idle_init();
+>>   
+>>   	for (i = 0; i < nr_pnv_idle_states; i++)
+> Here is where you would put the version check. Once we have code that
+> can also handle P10 (either by testing CPU_FTR_ARCH_31, or by adding
+> an entirely new power10 idle function), then you can add the P10 version
+> check here.
 
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+Sure, it makes sense to make this check on the top level function and
+retain CPU_FTR_ARCH_300 lower in the calls for speed.
+I'll make that change.
 
-> ---
->  arch/xtensa/include/asm/pgalloc.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/xtensa/include/asm/pgalloc.h b/arch/xtensa/include/asm/pgalloc.h
-> index 699a8fdf9005..d3a22da4d2c9 100644
-> --- a/arch/xtensa/include/asm/pgalloc.h
-> +++ b/arch/xtensa/include/asm/pgalloc.h
-> @@ -64,6 +64,6 @@ static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
->  }
->  
->  #define pmd_pgtable(pmd) pmd_page(pmd)
-> -#endif CONFIG_MMU
-> +#endif /* CONFIG_MMU */
->  
->  #endif /* _XTENSA_PGALLOC_H */
-> -- 
-> 2.20.1
-> 
+Thanks
+Pratik
 
--- 
-Sincerely yours,
-Mike.
+> Thanks,
+> Nick
+>
+
