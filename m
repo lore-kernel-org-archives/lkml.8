@@ -2,82 +2,90 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC14C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CFDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D838206E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E63A206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbgGUP1n (ORCPT
+        id S1729714AbgGUP2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:27:43 -0400
-Received: from mga03.intel.com ([134.134.136.65]:26547 "EHLO mga03.intel.com"
+        Tue, 21 Jul 2020 11:28:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726830AbgGUP1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:27:43 -0400
-IronPort-SDR: fokch5A8MiLp8qwwB+/oyksFB0yUUUMWhs+Ci4X/nkzPDzbRsZa2Mj40SiZHuYvlW0WtmMYNRT
- 4jotY6LYi2CQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="150132751"
-X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="150132751"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 08:27:42 -0700
-IronPort-SDR: m9Yv3szcNnwqnBWnMd6YPHjbliYFF5XJkiXvnqC85+KMTFwgkgyG6ChCE/R2uNGy3aLyySdAzB
- PtjfD4EwWf9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="392383055"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 21 Jul 2020 08:27:38 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 21 Jul 2020 18:27:37 +0300
-Date:   Tue, 21 Jul 2020 18:27:37 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-Message-ID: <20200721152737.GS5180@lahna.fi.intel.com>
-References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
- <20200716235440.GA675421@bjorn-Precision-5520>
- <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
- <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
- <20200721122247.GI5180@lahna.fi.intel.com>
- <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
+        id S1726830AbgGUP2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:28:45 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F34620771;
+        Tue, 21 Jul 2020 15:28:44 +0000 (UTC)
+Date:   Tue, 21 Jul 2020 11:28:42 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Subject: [ANNOUNCE] 5.4.52-rt31
+Message-ID: <20200721112842.3c2d6d09@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 11:01:55AM -0400, Lyude Paul wrote:
-> Sure thing. Also, feel free to let me know if you'd like access to one of the
-> systems we saw breaking with this patch - I'm fairly sure I've got one of them
-> locally at my apartment and don't mind setting up AMT/KVM/SSH
 
-Probably no need for remote access (thanks for the offer, though). I
-attached a test patch to the bug report:
+Dear RT Folks,
 
-  https://bugzilla.kernel.org/show_bug.cgi?id=208597
+I'm pleased to announce the 5.4.52-rt31 stable release.
 
-that tries to work it around (based on the ->pm_cap == 0). I wonder if
-anyone would have time to try it out.
+
+This release is just an update to the new stable 5.4.52 version
+and no RT specific changes have been made.
+
+It did have some issues with merging of v5.4.48, which caused a
+conflict and required some updates to "sched: Move mmdrop to RCU on RT".
+
+v5.4.49 also had a conflict that required reverting "net: Add a mutex
+around devnet_rename_seq".
+
+Due to these conflicts, this release took a little more time and
+testing.
+
+
+You can get this release via the git tree at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v5.4-rt
+  Head SHA1: ce24f034d80d0433977b8d7d3bbfcddcfe2b1d84
+
+
+Or to build 5.4.52-rt31 directly, the following patches should be applied:
+
+  http://www.kernel.org/pub/linux/kernel/v5.x/linux-5.4.tar.xz
+
+  http://www.kernel.org/pub/linux/kernel/v5.x/patch-5.4.52.xz
+
+  http://www.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.52-rt31.patch.xz
+
+
+
+
+Enjoy,
+
+-- Steve
+
