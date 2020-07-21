@@ -2,197 +2,119 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F033C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 004912073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9042F2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:44:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vHj4iN6V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0nX/psB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731359AbgGUWoK (ORCPT
+        id S1731374AbgGUWox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 18:44:10 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39932 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728893AbgGUWoK (ORCPT
+        Tue, 21 Jul 2020 18:44:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728025AbgGUWox (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 18:44:10 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LMi57v102668;
-        Tue, 21 Jul 2020 17:44:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595371445;
-        bh=o5pfuOZQ3v8bqEF5rP8SfpEUPbWc47QiCm/8pv3TAyE=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=vHj4iN6ViSlXKMm/c8wbLFymdX0NvGMIN5Jr3YL1BjqHK7w7jjnAD9DsAges+dtUi
-         IzkyB2YDAnQzCjzxjH5hIBa5ETJK6K+58RApTwxs0f2+BFkxt32VyPcoMhGgSuL8rr
-         S6X4xBE0vYoc0iYQeCBGvSYvubw7OnNwXvfGsXjw=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06LMi5g5067639
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Jul 2020 17:44:05 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
- Jul 2020 17:44:04 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 21 Jul 2020 17:44:05 -0500
-Received: from [10.250.34.248] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LMi45V028193;
-        Tue, 21 Jul 2020 17:44:04 -0500
-Subject: Re: [PATCH v4 3/6] dt-bindings: remoteproc: Add common TI SCI rproc
- bindings
-From:   Suman Anna <s-anna@ti.com>
-To:     Rob Herring <robh+dt@kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200717234800.9423-1-s-anna@ti.com>
- <20200717234800.9423-4-s-anna@ti.com>
- <CAL_JsqLnPQNZ7KhqfPwiMCJESYrD9_UN2gwc_hj9=WOJM8NQQw@mail.gmail.com>
- <647642d5-5021-363f-c9c9-3714a826436c@ti.com>
-Message-ID: <deead680-9699-9de5-84af-059c31a4bbd4@ti.com>
-Date:   Tue, 21 Jul 2020 17:44:04 -0500
+        Tue, 21 Jul 2020 18:44:53 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15421C061794;
+        Tue, 21 Jul 2020 15:44:53 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 9so137449wmj.5;
+        Tue, 21 Jul 2020 15:44:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6DknE5QGxTHlZ/zp1raxupBLAZHTzYnP+IplONM/HMs=;
+        b=e0nX/psBq57qpJS8FX982l4jvCTI4Bhmbhexi6MOgLdcmnQB38SYWG9Hpk9nuD+aFT
+         BkLk0pBBg98pYPUuGEYHc3Bl42Q/vNdsvjSIqDHI57fVeZa5r38zkNdSa1bUILAAQtF2
+         Zd3b65laObYxgBghHuq3y5/KFYFcdc3Gftmf4z1kYvUmWyOx3Lg1z9QJ2cG8AjTyLikk
+         X483CJyhc2B3rq5i47ar/0uRKrel5xghYIAoOKQfMYaVmeUWY4ox0/vaFDJ58A+2wOPo
+         qDc4KFft/HoH54/oJcL605WxE9pcsdgsECiPv/h3RN/0kOF1ACx0x4jCXL8ep6PTZ+lp
+         7h/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6DknE5QGxTHlZ/zp1raxupBLAZHTzYnP+IplONM/HMs=;
+        b=hszHsqWNWF5KM0ZOlm4hJlRPRW21sCs1i1aTtRAFvWQbOadtEFm36R0s5Ns6crb8O4
+         0NTXExrIB8ZFKGnBVxpB/L3mwaNuowWFu+sLBBxRnm0UHtwpmFZY9BcxPDQB9qOFTBbQ
+         rUuXSsYo06cehP8RtOfxuanzc3Xx0+9nn8nHxS/dym82Okhblf3sL+/5Ea6CQlumq4Mb
+         H21B7H84KHKlaI3LL6KAG8rOXK/nmz15/edG6rNjbTzbKIpKP9RlsHKjtT0KBW1Z8mvs
+         tcOis7+rwK9a0OgYAAnIQNxRZweBllacV5ZrsUl21fv9jW0/9Xv2OGDZWHuj5olG5T7v
+         0LYQ==
+X-Gm-Message-State: AOAM532JyNt8WtWb3BDaLk3/pp7MTZEaB0FHk8TSix3fxPdxaQrxAhBp
+        PZcDxKHpE9i5KSpJl8CxYTfqKAPlC8U=
+X-Google-Smtp-Source: ABdhPJxoFLjAttL0FPOz9LEBmCq1IlL6eshCp+cMXmdZngfGahGuhZDZJJvN3RpuFddJCaZW8JER1g==
+X-Received: by 2002:a1c:9a06:: with SMTP id c6mr5560010wme.23.1595371491277;
+        Tue, 21 Jul 2020 15:44:51 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.122.158])
+        by smtp.gmail.com with ESMTPSA id u17sm39203455wrp.70.2020.07.21.15.44.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 15:44:50 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] spi: mediatek: add spi support for mt8192 IC
+To:     Leilk Liu <leilk.liu@mediatek.com>, Mark Brown <broonie@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+References: <20200721122436.31544-1-leilk.liu@mediatek.com>
+ <20200721122436.31544-2-leilk.liu@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <27e48721-5e54-6947-cd8f-669f4da34c4d@gmail.com>
+Date:   Wed, 22 Jul 2020 00:44:49 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <647642d5-5021-363f-c9c9-3714a826436c@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200721122436.31544-2-leilk.liu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
 
-On 7/21/20 11:40 AM, Suman Anna wrote:
-> Hi Rob,
-> 
-> On 7/21/20 10:53 AM, Rob Herring wrote:
->> On Fri, Jul 17, 2020 at 5:48 PM Suman Anna <s-anna@ti.com> wrote:
->>>
->>> Add a bindings document that lists the common TI SCI properties
->>> used by the K3 R5F and DSP remoteproc devices.
->>>
->>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>> ---
->>> v4: Addressed both of Rob's review comments on ti,sci-proc-ids property
->>> v3: https://patchwork.kernel.org/patch/11602317/
->>>
->>>   .../bindings/remoteproc/ti,k3-sci-proc.yaml   | 48 +++++++++++++++++++
->>>   1 file changed, 48 insertions(+)
->>>   create mode 100644 
->>> Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml 
->>> b/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
->>> new file mode 100644
->>> index 000000000000..0dca2ffdbc48
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
->>> @@ -0,0 +1,48 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-sci-proc.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Common TI K3 remote processor device bindings
->>> +
->>> +maintainers:
->>> +  - Suman Anna <s-anna@ti.com>
->>> +
->>> +description: |
->>> +  The TI K3 family of SoCs usually have one or more remote processor 
->>> sub-systems
->>> +  like the dual-core R5F sub-system or a C66x or C71x DSP processor 
->>> subsystem.
->>> +  The device management of these remote processors is managed by a 
->>> dedicated
->>> +  System Processor, and the communication with that processor is 
->>> managed through
->>> +  the TI-SCI protocol.
->>> +
->>> +  Each remote processor device node should define a common set of 
->>> properties
->>> +  that allows the System Processor firmware to perform the device 
->>> management
->>> +  such as powering the IPs, asserting/deasserting the resets for 
->>> each of these
->>> +  processors.
->>> +
->>> +properties:
->>> +  ti,sci:
->>> +    $ref: /schemas/types.yaml#/definitions/phandle
->>> +    description:
->>> +      Should be a phandle to the TI-SCI System Controller node
->>> +
->>> +  ti,sci-dev-id:
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    description: |
->>> +      Should contain the TI-SCI device id corresponding to the 
->>> remote processor
->>> +      core. Please refer to the corresponding System Controller 
->>> documentation
->>> +      for valid values.
->>
->> These also apply on Lokesh's series converting ti,sci-int[ra]
->> bindings. Please rework to use for both.
-> 
-> OK.
 
-OK, I have reworked for this and posted it [1] as part of v5 of this series.
+On 21/07/2020 14:24, Leilk Liu wrote:
+> From: "leilk.liu" <leilk.liu@mediatek.com>
+> 
+> This patch add spi support for mt8192 IC.
+> 
+> Signed-off-by: leilk.liu <leilk.liu@mediatek.com>
+> ---
+>   drivers/spi/spi-mt65xx.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+> index 6783e12c40c2..3d0d69fe0c69 100644
+> --- a/drivers/spi/spi-mt65xx.c
+> +++ b/drivers/spi/spi-mt65xx.c
+> @@ -170,6 +170,9 @@ static const struct of_device_id mtk_spi_of_match[] = {
+>   	{ .compatible = "mediatek,mt8183-spi",
+>   		.data = (void *)&mt8183_compat,
+>   	},
+> +	{ .compatible = "mediatek,mt8192-spi",
+> +		.data = (void *)&mt6765_compat,
+> +	},
 
-regards
-Suman
+That's not needed. We will use the fallback compatible which is 
+"mediatek,mt6765-spi" which will take the correct DT data. If in the future we 
+realize that mt8192 has a difference in the HW we can add the compatible. 
+Otherwise with the binding description we should be fine
 
-[1] https://patchwork.kernel.org/patch/11676821/
-
+>   	{}
+>   };
+>   MODULE_DEVICE_TABLE(of, mtk_spi_of_match);
 > 
->>
->>> +
->>> +  ti,sci-proc-ids:
->>> +    description: Should contain a single tuple of <proc_id host_id>.
->>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->>> +    items:
->>> +      - description: TI-SCI processor id for the remote processor 
->>> device
->>> +      - description: TI-SCI host id to which processor control 
->>> ownership
->>> +                     should be transferred to
-> 
-> This property is not required for the ti,sci-int[ra].
-> 
-> I can plan to move this to a common location like 
-> Documentation/devicetree/bindings/arm/keystone/ and let the individual 
-> bindings define the required properties. Does that sound ok to you?
-> 
-> regards
-> Suman
-> 
->>> +
->>> +required:
->>> +  - ti,sci
->>> +  - ti,sci-dev-id
->>> +  - ti,sci-proc-ids
->>> -- 
->>> 2.26.0
->>>
-> 
-
