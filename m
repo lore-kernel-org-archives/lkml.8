@@ -2,144 +2,156 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A9BC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E876CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE6C22BF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:14:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="HuJlAATZ"
+	by mail.kernel.org (Postfix) with ESMTP id C602E22482
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595315710;
+	bh=M9u0UwvQ1U8jy95haXD8j/US5/GshtxZT8EktVlMBMA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IY65/OOGKsV0fIFYwEYi6+Z4cxSeUrAjgCWn8TXFFviU0TC116LM2fP5hvtfRev5r
+	 RCM3EdW8zfjo3swUqWzlnkFPX0IyIlj5a6APL/4/qewiw4FxSMXLqMEfrUHTBBJNAo
+	 GG/9N7KnzQND4e1B78j/BzKjir9UFQMJspkyOXko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbgGUHOK (ORCPT
+        id S1728590AbgGUHPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:14:10 -0400
-Received: from bgl-iport-3.cisco.com ([72.163.197.27]:21915 "EHLO
-        bgl-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728432AbgGUHOJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 03:14:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=3137; q=dns/txt; s=iport;
-  t=1595315647; x=1596525247;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zvf42wHQKUkFFzF2QiNY4mJG+Y+dLfDpC7azn8w5zUQ=;
-  b=HuJlAATZ0UHS7gaSbwOrpjkVN4p6xU0yXl/F0B4KF6+aivsS6TH4D3JW
-   lDAqBQzfntaAHFRktyKdglhlVGJBlH3G7llEjxmF8F1LymdULY1Z2kt2+
-   vCJ5zYhChU6LbptkkG5IeRtGM/2pIXGkJOTX/qcM20mDB1QAcgM/gEOYO
-   4=;
-X-IronPort-AV: E=Sophos;i="5.75,378,1589241600"; 
-   d="scan'208";a="126254313"
-Received: from vla196-nat.cisco.com (HELO bgl-core-1.cisco.com) ([72.163.197.24])
-  by bgl-iport-3.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 21 Jul 2020 07:14:04 +0000
-Received: from SRIRAKR2-M-R0A8.cisco.com ([10.65.71.4])
-        by bgl-core-1.cisco.com (8.15.2/8.15.2) with ESMTP id 06L7E4SD014427;
-        Tue, 21 Jul 2020 07:14:04 GMT
-From:   Sriram Krishnan <srirakr2@cisco.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Cc:     mbumgard@cisco.com, ugm@cisco.com, nimm@cisco.com,
-        xe-linux-external@cisco.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] hv_netvsc: add support for vlans in AF_PACKET mode
-Date:   Tue, 21 Jul 2020 12:44:03 +0530
-Message-Id: <20200721071404.70230-1-srirakr2@cisco.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 21 Jul 2020 03:15:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726933AbgGUHPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 03:15:09 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FED621702;
+        Tue, 21 Jul 2020 07:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595315708;
+        bh=M9u0UwvQ1U8jy95haXD8j/US5/GshtxZT8EktVlMBMA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U/Mqcqyp/W3piPJQiCG2iuw/TsYI/zq+KO/gmcZ4rcO1LQHlyQW1AfD+AWdnM9P03
+         qglwBmoGXXcBl9bzH7s37dVStFcoLQjGIxKI/MrRzyUT+Ns4NjkTmH4BFRoDQgmsuT
+         7MNULnOF/REu4Ax05iFt1nvIyL2ihM2WcsMWXIdY=
+Date:   Tue, 21 Jul 2020 12:45:04 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: Re: linux-next: manual merge of the dmaengine tree with the phy-next
+ tree
+Message-ID: <20200721071504.GK12965@vkoul-mobl>
+References: <20200721161701.64b4245e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.65.71.4, [10.65.71.4]
-X-Outbound-Node: bgl-core-1.cisco.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721161701.64b4245e@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vlan tagged packets are getting dropped when used with DPDK that uses
-the AF_PACKET interface on a hyperV guest.
+Hi Stephen,
 
-The packet layer uses the tpacket interface to communicate the vlans
-information to the upper layers. On Rx path, these drivers can read the
-vlan info from the tpacket header but on the Tx path, this information
-is still within the packet frame and requires the paravirtual drivers to
-push this back into the NDIS header which is then used by the host OS to
-form the packet.
+On 21-07-20, 16:17, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the dmaengine tree got a conflict in:
+> 
+>   MAINTAINERS
+> 
+> between commit:
+> 
+>   4a33bea00314 ("phy: zynqmp: Add PHY driver for the Xilinx ZynqMP Gigabit Transceiver")
+> 
+> from the phy-next tree and commit:
+> 
+>   ef9303fdf46f ("dt: bindings: dma: xilinx: dpdma: DT bindings for Xilinx DPDMA")
+> 
+> from the dmaengine tree.
 
-This transition from the packet frame to NDIS header is currently missing
-hence causing the host OS to drop the all vlan tagged packets sent by
-the drivers that use AF_PACKET (ETH_P_ALL) such as DPDK.
+Thanks the fix looks okay.
 
-Here is an overview of the changes in the vlan header in the packet path:
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc MAINTAINERS
+> index 495e4247cbb0,1ba09904354f..000000000000
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@@ -11432,20 -11364,14 +11434,13 @@@ L:	linux-arm-kernel@lists.infradead.or
+>   S:	Supported
+>   F:	drivers/usb/gadget/udc/atmel_usba_udc.*
+>   
+>  -MICROSEMI ETHERNET SWITCH DRIVER
+>  -M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
+>  -M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+>  -L:	netdev@vger.kernel.org
+>  +MICROCHIP WILC1000 WIFI DRIVER
+>  +M:	Ajay Singh <ajay.kathat@microchip.com>
+>  +M:	Claudiu Beznea <claudiu.beznea@microchip.com>
+>  +L:	linux-wireless@vger.kernel.org
+>   S:	Supported
+>  -F:	drivers/net/ethernet/mscc/
+>  -F:	include/soc/mscc/ocelot*
+>  +F:	drivers/net/wireless/microchip/wilc1000/
+>   
+> - MICROCHIP XDMA DRIVER
+> - M:	Ludovic Desroches <ludovic.desroches@microchip.com>
+> - L:	linux-arm-kernel@lists.infradead.org
+> - L:	dmaengine@vger.kernel.org
+> - S:	Supported
+> - F:	drivers/dma/at_xdmac.c
+> - 
+>   MICROSEMI MIPS SOCS
+>   M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
+>   M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+> @@@ -18990,15 -18847,15 +18985,24 @@@ F:	Documentation/devicetree/bindings/me
+>   F:	drivers/media/platform/xilinx/
+>   F:	include/uapi/linux/xilinx-v4l2-controls.h
+>   
+>  +XILINX ZYNQMP PSGTR PHY DRIVER
+>  +M:	Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+>  +M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>  +L:	linux-kernel@vger.kernel.org
+>  +S:	Supported
+>  +T:	git https://github.com/Xilinx/linux-xlnx.git
+>  +F:	Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+>  +F:	drivers/phy/xilinx/phy-zynqmp.c
+>  +
+> + XILINX ZYNQMP DPDMA DRIVER
+> + M:	Hyun Kwon <hyun.kwon@xilinx.com>
+> + M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> + L:	dmaengine@vger.kernel.org
+> + S:	Supported
+> + F:	Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+> + F:	drivers/dma/xilinx/xilinx_dpdma.c
+> + F:	include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+> + 
+>   XILLYBUS DRIVER
+>   M:	Eli Billauer <eli.billauer@gmail.com>
+>   L:	linux-kernel@vger.kernel.org
 
-The RX path (userspace handles everything):
-  1. RX VLAN packet is stripped by HOST OS and placed in NDIS header
-  2. Guest Kernel RX hv_netvsc packets and moves VLAN info from NDIS
-     header into kernel SKB
-  3. Kernel shares packets with user space application with PACKET_MMAP.
-     The SKB VLAN info is copied to tpacket layer and indication set
-     TP_STATUS_VLAN_VALID.
-  4. The user space application will re-insert the VLAN info into the frame.
 
-The TX path:
-  1. The user space application has the VLAN info in the frame.
-  2. Guest kernel gets packets from the application with PACKET_MMAP.
-  3. The kernel later sends the frame to the hv_netvsc driver. The only way
-     to send VLANs is when the SKB is setup & the VLAN is is stripped from the
-     frame.
-  4. TX VLAN is re-inserted by HOST OS based on the NDIS header. If it sees
-     a VLAN in the frame the packet is dropped.
 
-Cc: xe-linux-external@cisco.com
-Cc: Sriram Krishnan <srirakr2@cisco.com>
-Signed-off-by: Sriram Krishnan <srirakr2@cisco.com>
----
- drivers/net/hyperv/netvsc_drv.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 6267f706e8ee..55cf80ed40ae 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -605,6 +605,29 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
- 		*hash_info = hash;
- 	}
- 
-+	/* When using AF_PACKET we need to drop VLAN header from
-+	 * the frame and update the SKB to allow the HOST OS
-+	 * to transmit the 802.1Q packet
-+	 */
-+	if (skb->protocol == htons(ETH_P_8021Q)) {
-+		u16 vlan_tci = 0;
-+		skb_reset_mac_header(skb);
-+		if (eth_type_vlan(eth_hdr(skb)->h_proto)) {
-+			int pop_err;
-+			pop_err = __skb_vlan_pop(skb, &vlan_tci);
-+			if (likely(pop_err == 0)) {
-+				__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vlan_tci);
-+				/* Update the NDIS header pkt lengths */
-+				packet->total_data_buflen -= VLAN_HLEN;
-+				rndis_msg->msg_len = packet->total_data_buflen;
-+				rndis_msg->msg.pkt.data_len = packet->total_data_buflen;
-+			} else {
-+				netdev_err(net, "Pop vlan err %x\n", pop_err);
-+				goto drop;
-+			}
-+		}
-+	}
-+
- 	if (skb_vlan_tag_present(skb)) {
- 		struct ndis_pkt_8021q_info *vlan;
- 
 -- 
-2.24.0
-
+~Vinod
