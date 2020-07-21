@@ -2,136 +2,113 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0E2C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4F9C433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA176208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB007208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:02:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OaqRnCNB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n4Wkp7kF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgGUGB5 (ORCPT
+        id S1728487AbgGUGCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:01:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60578 "EHLO
+        Tue, 21 Jul 2020 02:02:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgGUGBy (ORCPT
+        with ESMTP id S1728448AbgGUGCG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:01:54 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5183C061794;
-        Mon, 20 Jul 2020 23:01:53 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id q17so10202920pfu.8;
-        Mon, 20 Jul 2020 23:01:53 -0700 (PDT)
+        Tue, 21 Jul 2020 02:02:06 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63D1BC0619D8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 23:02:06 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id b11so8589715lfe.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 23:02:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=v31UIEz3Dwtg5YacEjDmu57JbCXcygtQk9X1DgLN9BA=;
-        b=OaqRnCNBbaOyf6gKkUaUpNXTA920VOonVO9JKbyrCKb9JnM6mbk6Y8rVHsiqJXI9cI
-         4sNjlLANtDOBE4DarnVTpgB6vomXFgz/yRLodo3ehYAto4yEqnL3/zQyEJ3zZ1YnYHD5
-         ZNfDulMhozXwCKDGmpdqbp7lSbMUGQPj8yVd31g+yOCxgKphbaPcXx8jnl7CalACOj3n
-         TCsfgOXDQSHV2KH3bnttaE54z86au0lpHiX8dfD+FwinHnzc/fh5vWuJq7BA74AL+7ta
-         7NXhmU7CNLrdsRUmZSMtFbycQl4vWlnCaf8unfV5lSwuL/MMOJ2Mkj7RPCWIHZNKnzLX
-         sFkw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=my59yREAno2VQTQHnPXurOEKaB8ry8pumgPVSYznLUI=;
+        b=n4Wkp7kFOj4iLJpP6r5SwB/qPrN12j5OeQuZbk0acAZfjK2hSrnY5oVJscJUPJZjD3
+         3Tvi5Ib/nIudBxUDjzrTXkkSIr59b33qw6AqttrRaU1314ITKvd/1FtQuM/5vKaW0A+a
+         PydSNvajtDmUqYoIqdhaT7f4RF6xalnRHweH8EiAQO0pKeOZ07SNaZwFOtlBa9fP73VM
+         I4SbOpTQZF2mL623gjrHR8g1xHJHhidB/LdHYH0AexCQbQwR/+So1zmjx6IzHTdt6o48
+         YzKD7k26mYLcUxYGMVuyYavPyJpwUSkvTdvD/fxuRGJ0N+AhylZL7eBHTZv7ZGwXd8Pw
+         sgnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=v31UIEz3Dwtg5YacEjDmu57JbCXcygtQk9X1DgLN9BA=;
-        b=bGRHTjE03HJ2TgGFAbkMH1rpBwqndRYtVkQWaM6G1AYqac1JWBiK3BtF48LGOP0W3t
-         vDF00kRaJy1AbJx+ON49okpc+2z9J89Sjk0803UetQayS8vGMjtPmJDQvwRrUzDVUuEb
-         /aUM797U1qC3qo9ChrsmqTVvBCKVc2sn2itpISail4suBw8owPyfMtK0peF3IZjdPeMs
-         X6HbIjPmHDnbYq6eaTsZjDv/M0zs8B0hIKuFzp0GryxkVZ2y1uYauKJLreLjVP1c4XyP
-         V5R1J4DFYa/tNpsXjbWFu9pE/fjBjuIYcMi5IsgTKC39KBGqXNwMMRRSauJCWch0xd7l
-         b7gw==
-X-Gm-Message-State: AOAM533XWJ23iaoxSFtQLZO839a6dD8GrjUuoXpldsc5NoYYH8Q7MfhJ
-        8swBrC5z/7DXN/6Ai2Mmu87eZCOIGWw+bA==
-X-Google-Smtp-Source: ABdhPJwTYSkbKwOevB5V24tO9MuY1cErnW4rjdcoHJGWyUrcHI3aa4abdanfOIWD8LkKChzhPBWP2w==
-X-Received: by 2002:a63:1c61:: with SMTP id c33mr21269575pgm.350.1595311313373;
-        Mon, 20 Jul 2020 23:01:53 -0700 (PDT)
-Received: from xiaomi.mioffice.cn ([209.9.72.214])
-        by smtp.gmail.com with ESMTPSA id 129sm18368833pfv.161.2020.07.20.23.01.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 23:01:52 -0700 (PDT)
-From:   Qiwu Huang <yanziily@gmail.com>
-To:     sre@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, jiangfei1@xiaomi.com,
-        Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: [PATCH v5 3/4] power: supply: core: add wireless signal strength property
-Date:   Tue, 21 Jul 2020 13:59:36 +0800
-Message-Id: <b383d79629d0afca00838fcbaad4458e383d7262.1595301250.git.huangqiwu@xiaomi.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <cover.1595301250.git.huangqiwu@xiaomi.com>
-References: <cover.1595301250.git.huangqiwu@xiaomi.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=my59yREAno2VQTQHnPXurOEKaB8ry8pumgPVSYznLUI=;
+        b=M23e+fUMkMT2dyATGpP2TYr45NL2SzxOs8tzRWyYUkVzCaWsoIPai9czh6ul71Jniy
+         g18P0ZjCHOBmuoH/N8AWO6qN0y28Cxx9v1b97hc9wl9URbBLgZ3xqDaMY4arcq06Cq0N
+         R8yHaUkElY8lOQe2R9wqBlCq4tcbnsha1hfu1c+L80/R1veOQiqmyqJwfGg7KCeNpQrl
+         Wgy65L85rc60uAYgM2FOfUrmPnslDJ23J6XA7iVBkv5soeb4cjVPnG8+8/OnlqQJNa8j
+         lsMVMrHfpq1Wq04AFg86vbifIeWCeph0Zi1NICt96HQ+4U01rvYhsdcziL0SJcO59W2m
+         vHfg==
+X-Gm-Message-State: AOAM531mMhGwXmkwGgOAR+DE/VfbN+vN/4ua+k02RNDGxeebrscItoEQ
+        O3dk14Ki5/DP/4Cd25Hpm7VErd3Km1J4OSADHdp+uw==
+X-Google-Smtp-Source: ABdhPJwvgCTehztyDX3Ii5ZlkS2X5xVAaX40gTTrRR53FMNAybYJMQOf2Mixr3o03K0dYP0cmjuKZJsCxtWu/EWeh40=
+X-Received: by 2002:ac2:5325:: with SMTP id f5mr12579460lfh.6.1595311324713;
+ Mon, 20 Jul 2020 23:02:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200716022817.30439-1-ansuelsmth@gmail.com> <20200716022817.30439-2-ansuelsmth@gmail.com>
+ <CAP245DUqvTYENmaxG3rjUn1XrzrmvdFmKG_vaef2BxKL6jY+Rg@mail.gmail.com>
+ <159528817752.3847286.2725374997908705208@swboyd.mtv.corp.google.com> <CAP245DXqiEZLoVa-jfLx0tYRwrtK0sp+ZX6P_yTf4C9vetg3RA@mail.gmail.com>
+In-Reply-To: <CAP245DXqiEZLoVa-jfLx0tYRwrtK0sp+ZX6P_yTf4C9vetg3RA@mail.gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 21 Jul 2020 11:31:53 +0530
+Message-ID: <CAP245DUZTT4dFAzpN3Uv1-y2DKHriXZ9jH3t7V1qxf7sNH8yYw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] ipq806x: gcc: add support for child probe
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiwu Huang <huangqiwu@xiaomi.com>
+On Tue, Jul 21, 2020 at 11:27 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+>
+>
+> On Tue, 21 Jul, 2020, 05:06 Stephen Boyd, <sboyd@kernel.org> wrote:
+>>
+>> Quoting Amit Kucheria (2020-07-20 02:41:44)
+>> > On Thu, Jul 16, 2020 at 7:58 AM Ansuel Smith <ansuelsmth@gmail.com> wrote:
+>> > >
+>> > > Add support for child probing needed for tsens driver that share the
+>> > > seme regs of gcc for this platform.
+>> >
+>> > Typo: same
+>> >
+>>
+>> Otherwise reviewed-by? Because I can throw this into the clk tree with
+>> the typo fixed.
+>
+>
+> Yes, the rest of the series need work imo, but this patch looks ok to populate the child nodes in OF.
+>
+> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-reports wireless signal strength.
-The value show degree of coupling between tx and rx.
+Replied earlier from a phone, which resulted in HTML email. Resending.
 
-Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
----
- Documentation/ABI/testing/sysfs-class-power | 10 ++++++++++
- drivers/power/supply/power_supply_sysfs.c   |  1 +
- include/linux/power_supply.h                |  1 +
- 3 files changed, 12 insertions(+)
+The rest of the series need work imo, but this patch looks ok to
+populate the child nodes in OF.
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index 03ab449fae8a..75ec7de2fe78 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -757,3 +757,13 @@ Description:
- 			13: ADAPTER_VOICE_BOX,
- 			14: ADAPTER_PRIVATE_PD_50W.
- 
-+What:		/sys/class/power_supply/<supply_name>/signal_strength
-+Date:		Jul 2020
-+Contact:	Fei Jiang <jiangfei1@xiaomi.com>
-+Description:
-+		In PING phase, RX transmits a signal strength packet as the first
-+		communication packet to instruct the base to keep power signal on.
-+		The value reports wireless signal strength and show degree of coupling.
-+
-+		Access: Read-Only
-+		Valid values: 0 - 100
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index f2458e21d02b..e420a453095e 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -208,6 +208,7 @@ static struct power_supply_attr power_supply_attrs[] = {
- 	POWER_SUPPLY_ATTR(SERIAL_NUMBER),
- 	POWER_SUPPLY_ATTR(QUICK_CHARGE_TYPE),
- 	POWER_SUPPLY_ATTR(TX_ADAPTER),
-+	POWER_SUPPLY_ATTR(SIGNAL_STRENGTH),
- };
- 
- static struct attribute *
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 0bbdec1630a4..346c6c9c0737 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -169,6 +169,7 @@ enum power_supply_property {
- 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
- 	POWER_SUPPLY_PROP_QUICK_CHARGE_TYPE,
- 	POWER_SUPPLY_PROP_TX_ADAPTER,
-+	POWER_SUPPLY_PROP_SIGNAL_STRENGTH,
- };
- 
- enum power_supply_type {
--- 
-2.27.0
-
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
