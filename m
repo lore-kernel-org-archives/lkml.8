@@ -2,116 +2,137 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497E6C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25592C433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD5C20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36BC20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="0zguSQRp"
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="oZ3BrUtm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730895AbgGURmb (ORCPT
+        id S1730916AbgGURmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:42:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56364 "EHLO
+        Tue, 21 Jul 2020 13:42:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730868AbgGURmY (ORCPT
+        with ESMTP id S1730868AbgGURmf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:42:24 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E43C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:42:24 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id d27so16797909qtg.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:42:23 -0700 (PDT)
+        Tue, 21 Jul 2020 13:42:35 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7872CC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:42:35 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id s189so12258498pgc.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:42:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=iXpIXavlE/ZwGIdQyg7+BwcjDDLZaRfVGWyFGkObed4=;
-        b=0zguSQRpifWOIMc3Wxbvdk6Bwwn9eip+C034+tkTuBiaMTd1zFjdRoq+3omx245Aa4
-         DZQGmwSGRpqWcyMnsjpDTupp7W5/t7+i65WcuXWio/xYmvM2eFB5Gs0/xWXYIa0nNvnp
-         Z+kFKIXI/Twm0g0qpTVJcdRYzmdtv4LO+2463GownoC4rx5Wz05xJ0t5s0YL9Ibdqury
-         jIAzJ0f7OdzeN7hMBcGhP25hDNUuULtxA07UfeyertHuveci290NT2L0Falns7sr1XN0
-         82pwykAKX3K75CZfB+/1uJ4E2Cf3ywWAfZNDPzzqoKiTM6V4aHDgbcyTwASq7WP5g/cV
-         1P4w==
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=E4KZgwVTI5aMyqyLhFG3oLM6lp0QMlQ+v/7xrQ4lxDs=;
+        b=oZ3BrUtmP+vLY3N3slRcKIuQ7yd0ZvpzWXZDGA+txT2uXl3KtRkQlZPRYpMbmi0nDm
+         gnT49lqnyjoTGBDP4UE1OYnWpllTkB0baayRG9MWBNY0yCXj6rJJuhW6pUtw47yJuh7a
+         jpRAvlP4Lb45W2/c/Ltk/q1+fTOpnqu+UbhjpVaH64FNUgsKqQPvKT1KpQSsOabJTKz2
+         89puFcMefNK36uviukBAAf2brQGgMcj2NvPx84gCPJZqt+afp6j5JNdzBylBzMe15xNq
+         fM2tN2jRjr6WMGttsZTUQMQfz3XBcBzAr+Jq3AHnLJQp2IpCOPIAECew14TlNXeDoqor
+         h80g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=iXpIXavlE/ZwGIdQyg7+BwcjDDLZaRfVGWyFGkObed4=;
-        b=arYn5pT9SIW+d+jWmp6n1VyN0tkxxHymlHSHy5MzAClQOu7JgI+m3UcOeQ9a+V8Acj
-         kylTxyndMzqycY5TZ7c189DU1Z6Y6pNibKU7ei1CP2ih0hU+dDGkwXyc/j9CVZ+Zu5KY
-         QCX09vBtBpO6LfIqv5jedWh9oOc9EM4437VJNM7B+hZAnB+HG2FOekQNaD43IIN/iJIP
-         GK9v7K7fe+nFuIUH9JcWYA9fdidxzxI+cs7Q25EY6LSfVBPDP+RA3BHvcjpim7KQAj5B
-         cRz64xtzp/nlLj1JgJE4/w+UxtZ6u4fYDIvQHC7KiDaaZKTLyWhlU2Gf2exqTp+v1Ou4
-         07Nw==
-X-Gm-Message-State: AOAM533dYfKb4iVN3jDmwWv8YvAwpkYY64F8yWGjyA4zMxrvpEwkMhMw
-        uHpph/Br7PG40y5g6czjkAD8qw==
-X-Google-Smtp-Source: ABdhPJyoj9zwU/wa5AiYfBYxHfCaabKUXrxqETrJfjZQJpm9id3e3cDafQAZKwFg0G5lJSi4FiBY6Q==
-X-Received: by 2002:ac8:4f13:: with SMTP id b19mr30642157qte.146.1595353343267;
-        Tue, 21 Jul 2020 10:42:23 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:4399])
-        by smtp.gmail.com with ESMTPSA id r35sm22987577qtb.11.2020.07.21.10.42.22
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=E4KZgwVTI5aMyqyLhFG3oLM6lp0QMlQ+v/7xrQ4lxDs=;
+        b=EMdI0I8L379F/BgltiMJGB4RcONFJyu+IuXQMLMSTObHmfpLx87BqB7tvhZ8V+iFEE
+         v7IPPecUt0j4gXh3gDGrEVLJxtY1WXE49oqRar+r1PfbimfWzNcHtJ6fmFbqHiR/6iwK
+         /+CPJC9kH0R5pBdAZxRdpMB9TL0FW3GWM6kMAclJD2aI93EOYpOlWk7oCmp3bmjAbHWw
+         gwWJlQtuRCTyUERm25xtqPwb8nXZ6YWJD0U3wXFh0Un63ocJ1zFVX9zNxgZfJs8gxHZg
+         vZgJ70OSoBTVZox52Y1dtwZb7U0Ij+z3QOnoGDpdntcxoue3J/he404WFi2NXEfQAd8o
+         SBUg==
+X-Gm-Message-State: AOAM531ubVr/nT9iV+1PV2pynNwF7aUISksFe/NT7HfI2JL7zJo0mPCL
+        2F209kTxGvmT/T82RPlCy/6Kgcczd8I=
+X-Google-Smtp-Source: ABdhPJyx0AqwTp4Ow6VK7fzRhEUxTwYv15VH55g7hiaH9UyQhijrz82/lwbSAZsX7VvxpESMScUMvQ==
+X-Received: by 2002:a63:5b05:: with SMTP id p5mr23096072pgb.143.1595353355016;
+        Tue, 21 Jul 2020 10:42:35 -0700 (PDT)
+Received: from localhost ([2406:7400:73:d7b6:d055:3e56:d1e4:ce99])
+        by smtp.gmail.com with ESMTPSA id q14sm18238201pgk.86.2020.07.21.10.42.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 10:42:22 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 13:41:26 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     jingrui <jingrui@huawei.com>
-Cc:     "tj@kernel.org" <tj@kernel.org>, Lizefan <lizefan@huawei.com>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        caihaomin <caihaomin@huawei.com>,
-        "Weiwei (N)" <wick.wei@huawei.com>, guro@cmpxchg.org
-Subject: Re: PROBLEM: cgroup cost too much memory when transfer small files
- to tmpfs
-Message-ID: <20200721174126.GA271870@cmpxchg.org>
-References: <2E04DD7753BE0E4ABABF0B664610AD6F2620CAF7@dggeml528-mbx.china.huawei.com>
+        Tue, 21 Jul 2020 10:42:33 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 23:12:29 +0530
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Vabhav Sharma (OSS)" <vabhav.sharma@oss.nxp.com>,
+        "bhuvanchandra.dv@toradex.com" <bhuvanchandra.dv@toradex.com>
+Subject: [PATCH v2] tty: serial: fsl_lpuart.c: prevent a bad shift operation
+Message-ID: <20200721174228.misj2mgqzcfz2lsj@pesu.pes.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kx56zhcajbwqldfb"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2E04DD7753BE0E4ABABF0B664610AD6F2620CAF7@dggeml528-mbx.china.huawei.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 11:19:52AM +0000, jingrui wrote:
-> Cc: Johannes Weiner <hannes@cmpxchg.org> ; Michal Hocko <mhocko@kernel.org>; Vladimir Davydov <vdavydov.dev@gmail.com>
-> 
-> Thanks.
-> 
-> ---
-> PROBLEM: cgroup cost too much memory when transfer small files to tmpfs.
-> 
-> keywords: cgroup PERCPU/memory cost too much.
-> 
-> description:
-> 
-> We send small files from node-A to node-B tmpfs /tmp directory using sftp. On
-> node-B the systemd configured with pam on like below.
-> 
-> cat /etc/pam.d/password-auth | grep systemd
-> -session     optional      pam_systemd.so
-> 
-> So when transfer a file, a systemd session is created, that means a cgroup is
-> created, then file saved at /tmp will associated with a cgroup object. After
-> file transferred, session and cgroup-dir will be removed, but the file in /tmp
-> still associated with the cgroup object. The PERCPU memory in cgroup/css object
-> cost a lot(about 0.5MB/per-cgroup-object) on 200/cpus machine.
 
-CC Roman who had a patch series to free all this extended (percpu)
-memory upon cgroup deletion:
+--kx56zhcajbwqldfb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://lore.kernel.org/patchwork/cover/1050508/
+prevent a bad shift operation by verifying that
+the argument to fls is non zero.
 
-It looks like it never got merged for some reason.
+Reported-by: "Vabhav Sharma (OSS)" <vabhav.sharma@oss.nxp.com>
+Signed-off-by: B K Karthik <bkkarthik@pesu.pes.edu>
+---
+v1 -> v2:
+	added Reported-by tag
+
+ drivers/tty/serial/fsl_lpuart.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuar=
+t.c
+index 7ca642249224..0cc64279cd2d 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -1168,7 +1168,8 @@ static inline int lpuart_start_rx_dma(struct lpuart_p=
+ort *sport)
+ 	 * 10ms at any baud rate.
+ 	 */
+ 	sport->rx_dma_rng_buf_len =3D (DMA_RX_TIMEOUT * baud /  bits / 1000) * 2;
+-	sport->rx_dma_rng_buf_len =3D (1 << (fls(sport->rx_dma_rng_buf_len) - 1));
++	if (sport->rx_dma_rng_buf_len !=3D 0)
++		sport->rx_dma_rng_buf_len =3D (1 << (fls(sport->rx_dma_rng_buf_len) - 1)=
+);
+ 	if (sport->rx_dma_rng_buf_len < 16)
+ 		sport->rx_dma_rng_buf_len =3D 16;
+=20
+--=20
+2.20.1
+
+
+--kx56zhcajbwqldfb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEEIF+jd5Z5uS7xKTfpQZdt+T1HgiEFAl8XKQQACgkQQZdt+T1H
+giFRLwv/dorzPs5nBpoVYe3F6rKkcsPcUgftu5wmWsXMH7qtEsdOHt8bJ5Wsmfht
+BCtAyys8u14LXfoKvk5pDCq1JKJpnqSV6gNV8Mn5VYdnYAuIRJkGDj8nZjNvPLSf
+iQvHeyRa3rDCbSYb/eAtlPnLUwdYn+/tUYPyCQHECv/2NS6/skACNWfHftb3brdk
+Hhqad3BP6Og7w3T9f5eJnpQoE0tSEdP6R/wEcNXjG3SLrH/3RSI5uWW5aYOxMESy
+RikMQ9cFZMuuzjPaCAGn5n94mVUlw6qvtCXYq+Jxo9xVoHbR9wwBTg0B26Lj3/zY
+pemiPjMKcjnyHUjwFFVLVG9JkXWFM/QfmhFJZWL+AAAv6U2lFfo/TEocuAbEoMC5
+UVxHWP1SbPw3frLwHZkwni8qr+Yyko+9zlwuyc8Tsc09PtXr9nWXQYF65yBgi2ZO
+ijZSU7go9xPFJ14+4UBvfPdPx7bKkzO/GFUu3M2ijP6geBk+6bS4EabnWMH/EiYa
+qFeQEn7D
+=RgO/
+-----END PGP SIGNATURE-----
+
+--kx56zhcajbwqldfb--
