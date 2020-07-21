@@ -2,181 +2,250 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190B6C433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB0EC433F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6901208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C2F520709
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:09:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dBQSG4n6"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v3kbdKO5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5ZhysItu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgGULJo (ORCPT
+        id S1729574AbgGULJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:09:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51600 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729794AbgGULJm (ORCPT
+        Tue, 21 Jul 2020 07:09:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729646AbgGULIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:09:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595329780;
+        Tue, 21 Jul 2020 07:08:44 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42A15C061794;
+        Tue, 21 Jul 2020 04:08:44 -0700 (PDT)
+Message-Id: <20200721110808.999191026@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595329722;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1LZAXnntkLhkcLOqby4Ic/aYn82wdCMM/OIUvTatqoM=;
-        b=dBQSG4n6EkEEky90BykmxS+77oBoYv+6gneF7KuwR1dPFSLkWT+CS0dhxGbCQ3rhIdFRx0
-        Oh6vzxsqw6EJU89DkJ00rO69O4XA+NvICS7y1TaeGkqpdApK1mDrsK3AXpXGvXrmMfKaLR
-        Nptq6QtwzDWTxFD7tmhXz4SptNfd2qI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-5iDd30yMNTuz4Sd4x5-MNA-1; Tue, 21 Jul 2020 07:09:36 -0400
-X-MC-Unique: 5iDd30yMNTuz4Sd4x5-MNA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 673A9100AA23;
-        Tue, 21 Jul 2020 11:09:33 +0000 (UTC)
-Received: from starship (unknown [10.35.206.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BEC5F1755E;
-        Tue, 21 Jul 2020 11:09:17 +0000 (UTC)
-Message-ID: <cef747910431d81524e455e6380df1c610d1884c.camel@redhat.com>
-Subject: Re: [PATCH 01/10] block: introduce blk_is_valid_logical_block_size
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
-        "open list:SCSI CDROM DRIVER" <linux-scsi@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Ajay Joshi <Ajay.Joshi@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "open list:SONY MEMORYSTICK SUBSYSTEM" <linux-mmc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Satya Tangirala <satyat@google.com>,
-        "open list:NETWORK BLOCK DEVICE (NBD)" <nbd@other.debian.org>,
-        Hou Tao <houtao1@huawei.com>, Jens Axboe <axboe@fb.com>,
-        "open list:VIRTIO CORE AND NET DRIVERS" 
-        <virtualization@lists.linux-foundation.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Alex Dubov <oakad@yahoo.com>
-Date:   Tue, 21 Jul 2020 14:09:16 +0300
-In-Reply-To: <CY4PR04MB37512BDEFD7B977FCD32A10AE7780@CY4PR04MB3751.namprd04.prod.outlook.com>
-References: <20200721105239.8270-1-mlevitsk@redhat.com>
-         <20200721105239.8270-2-mlevitsk@redhat.com>
-         <CY4PR04MB37512BDEFD7B977FCD32A10AE7780@CY4PR04MB3751.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=CzTMYZJ8u4jqJ98Hb7xf395PUKYKXs/C3yjBA+A3za8=;
+        b=v3kbdKO52bmQ52DyV4sT4V2NGxaLtMP74YyMZWeyLo/1WrzarmdjRumDCXad8hymUng1fq
+        KdtJCLG4w3pl7+j+/FzVCYkIA8NbnygjFIKMJkKnX1G94NQhsQb7os5rNxzszNlGWLIfMA
+        A6Po9FbUCVocA28vkxLI7wPnWwv+LAhAUQDbPe38mxCpaqqQlM/4q3l0z3nOev+fXzgESG
+        4D64fEApWu8uwEkWeW1D9Jiu2zglF86hujgv3yKtcMrqpiFV7KPN/BR8+/mc/7a/j+cMFf
+        lj+EMn3mwvHDArlIBB7lOtDRJM/VrTVLGCwM4sdyZFCp5vLCSwwuEpYcGGUlPA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595329722;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=CzTMYZJ8u4jqJ98Hb7xf395PUKYKXs/C3yjBA+A3za8=;
+        b=5ZhysItuKAEW3tz6fno7bTKfFwKLv7WHre6oEQm7aZb3B2lzuWYrhPkBbwKXpqDrVIrWPs
+        gc3E1bIaemzlDaAA==
+Date:   Tue, 21 Jul 2020 12:57:13 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: [patch V4 07/15] x86/entry: Consolidate 32/64 bit syscall entry
+References: <20200721105706.030914876@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-21 at 11:05 +0000, Damien Le Moal wrote:
-> On 2020/07/21 19:53, Maxim Levitsky wrote:
-> > Kernel block layer has never supported logical block
-> > sizes less that SECTOR_SIZE nor larger that PAGE_SIZE.
-> > 
-> > Some drivers have runtime configurable block size,
-> > so it makes sense to have common helper for that.
-> 
-> ...common helper to check the validity of the logical block size set by the driver.
-Agree, will fix.
-> 
-> ("for that" does not refer to a clear action)
-> 
-> > Signed-off-by: Maxim Levitsky  <mlevitsk@redhat.com>
-> > ---
-> >  block/blk-settings.c   | 18 ++++++++++++++++++
-> >  include/linux/blkdev.h |  1 +
-> >  2 files changed, 19 insertions(+)
-> > 
-> > diff --git a/block/blk-settings.c b/block/blk-settings.c
-> > index 9a2c23cd97007..3c4ef0d00c2bc 100644
-> > --- a/block/blk-settings.c
-> > +++ b/block/blk-settings.c
-> > @@ -311,6 +311,21 @@ void blk_queue_max_segment_size(struct request_queue *q, unsigned int max_size)
-> >  }
-> >  EXPORT_SYMBOL(blk_queue_max_segment_size);
-> >  
-> > +
-> > +/**
-> > + * blk_check_logical_block_size - check if logical block size is supported
-> > + * by the kernel
-> > + * @size:  the logical block size, in bytes
-> > + *
-> > + * Description:
-> > + *   This function checks if the block layers supports given block size
-> > + **/
-> > +bool blk_is_valid_logical_block_size(unsigned int size)
-> > +{
-> > +	return size >= SECTOR_SIZE && size <= PAGE_SIZE && !is_power_of_2(size);
-Note here a typo, made in last minute change which I didn't test.
-It should be without '!'
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Best regards,
-	Maxim Levitsky
+64bit and 32bit entry code have the same open coded syscall entry handling
+after the bitwidth specific bits.
 
-> > +}
-> > +EXPORT_SYMBOL(blk_is_valid_logical_block_size);
-> > +
-> >  /**
-> >   * blk_queue_logical_block_size - set logical block size for the queue
-> >   * @q:  the request queue for the device
-> > @@ -323,6 +338,8 @@ EXPORT_SYMBOL(blk_queue_max_segment_size);
-> >   **/
-> >  void blk_queue_logical_block_size(struct request_queue *q, unsigned int size)
-> >  {
-> > +	WARN_ON(!blk_is_valid_logical_block_size(size));
-> > +
-> >  	q->limits.logical_block_size = size;
-> >  
-> >  	if (q->limits.physical_block_size < size)
-> > @@ -330,6 +347,7 @@ void blk_queue_logical_block_size(struct request_queue *q, unsigned int size)
-> >  
-> >  	if (q->limits.io_min < q->limits.physical_block_size)
-> >  		q->limits.io_min = q->limits.physical_block_size;
-> > +
-> 
-> white line change.
-> 
-> >  }
-> >  EXPORT_SYMBOL(blk_queue_logical_block_size);
-> >  
-> > diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> > index 57241417ff2f8..2ed3151397e41 100644
-> > --- a/include/linux/blkdev.h
-> > +++ b/include/linux/blkdev.h
-> > @@ -1099,6 +1099,7 @@ extern void blk_queue_max_write_same_sectors(struct request_queue *q,
-> >  		unsigned int max_write_same_sectors);
-> >  extern void blk_queue_max_write_zeroes_sectors(struct request_queue *q,
-> >  		unsigned int max_write_same_sectors);
-> > +extern bool blk_is_valid_logical_block_size(unsigned int size);
-> >  extern void blk_queue_logical_block_size(struct request_queue *, unsigned int);
-> >  extern void blk_queue_max_zone_append_sectors(struct request_queue *q,
-> >  		unsigned int max_zone_append_sectors);
-> > 
-> 
-> 
+Move it to a helper function and share the code.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/entry/common.c |   93 +++++++++++++++++++++---------------------------
+ 1 file changed, 41 insertions(+), 52 deletions(-)
+
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -366,8 +366,7 @@ static void __syscall_return_slowpath(st
+ 	exit_to_user_mode();
+ }
+ 
+-#ifdef CONFIG_X86_64
+-__visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
++static noinstr long syscall_enter(struct pt_regs *regs, unsigned long nr)
+ {
+ 	struct thread_info *ti;
+ 
+@@ -379,6 +378,16 @@ static void __syscall_return_slowpath(st
+ 	if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY)
+ 		nr = syscall_trace_enter(regs);
+ 
++	instrumentation_end();
++	return nr;
++}
++
++#ifdef CONFIG_X86_64
++__visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
++{
++	nr = syscall_enter(regs, nr);
++
++	instrumentation_begin();
+ 	if (likely(nr < NR_syscalls)) {
+ 		nr = array_index_nospec(nr, NR_syscalls);
+ 		regs->ax = sys_call_table[nr](regs);
+@@ -390,64 +399,53 @@ static void __syscall_return_slowpath(st
+ 		regs->ax = x32_sys_call_table[nr](regs);
+ #endif
+ 	}
+-	__syscall_return_slowpath(regs);
+-
+ 	instrumentation_end();
+-	exit_to_user_mode();
++	syscall_return_slowpath(regs);
+ }
+ #endif
+ 
+ #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
++static __always_inline unsigned int syscall_32_enter(struct pt_regs *regs)
++{
++	if (IS_ENABLED(CONFIG_IA32_EMULATION))
++		current_thread_info()->status |= TS_COMPAT;
++	/*
++	 * Subtlety here: if ptrace pokes something larger than 2^32-1 into
++	 * orig_ax, the unsigned int return value truncates it.  This may
++	 * or may not be necessary, but it matches the old asm behavior.
++	 */
++	return syscall_enter(regs, (unsigned int)regs->orig_ax);
++}
++
+ /*
+- * Does a 32-bit syscall.  Called with IRQs on in CONTEXT_KERNEL.  Does
+- * all entry and exit work and returns with IRQs off.  This function is
+- * extremely hot in workloads that use it, and it's usually called from
+- * do_fast_syscall_32, so forcibly inline it to improve performance.
++ * Invoke a 32-bit syscall.  Called with IRQs on in CONTEXT_KERNEL.
+  */
+-static void do_syscall_32_irqs_on(struct pt_regs *regs)
++static __always_inline void do_syscall_32_irqs_on(struct pt_regs *regs,
++						  unsigned int nr)
+ {
+-	struct thread_info *ti = current_thread_info();
+-	unsigned int nr = (unsigned int)regs->orig_ax;
+-
+-#ifdef CONFIG_IA32_EMULATION
+-	ti->status |= TS_COMPAT;
+-#endif
+-
+-	if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY) {
+-		/*
+-		 * Subtlety here: if ptrace pokes something larger than
+-		 * 2^32-1 into orig_ax, this truncates it.  This may or
+-		 * may not be necessary, but it matches the old asm
+-		 * behavior.
+-		 */
+-		nr = syscall_trace_enter(regs);
+-	}
+-
+ 	if (likely(nr < IA32_NR_syscalls)) {
++		instrumentation_begin();
+ 		nr = array_index_nospec(nr, IA32_NR_syscalls);
+ 		regs->ax = ia32_sys_call_table[nr](regs);
++		instrumentation_end();
+ 	}
+-
+-	__syscall_return_slowpath(regs);
+ }
+ 
+ /* Handles int $0x80 */
+ __visible noinstr void do_int80_syscall_32(struct pt_regs *regs)
+ {
+-	enter_from_user_mode(regs);
+-	instrumentation_begin();
+-
+-	local_irq_enable();
+-	do_syscall_32_irqs_on(regs);
++	unsigned int nr = syscall_32_enter(regs);
+ 
+-	instrumentation_end();
+-	exit_to_user_mode();
++	do_syscall_32_irqs_on(regs, nr);
++	syscall_return_slowpath(regs);
+ }
+ 
+-static bool __do_fast_syscall_32(struct pt_regs *regs)
++static noinstr bool __do_fast_syscall_32(struct pt_regs *regs)
+ {
++	unsigned int nr	= syscall_32_enter(regs);
+ 	int res;
+ 
++	instrumentation_begin();
+ 	/* Fetch EBP from where the vDSO stashed it. */
+ 	if (IS_ENABLED(CONFIG_X86_64)) {
+ 		/*
+@@ -460,17 +458,18 @@ static bool __do_fast_syscall_32(struct
+ 		res = get_user(*(u32 *)&regs->bp,
+ 		       (u32 __user __force *)(unsigned long)(u32)regs->sp);
+ 	}
++	instrumentation_end();
+ 
+ 	if (res) {
+ 		/* User code screwed up. */
+ 		regs->ax = -EFAULT;
+-		local_irq_disable();
+-		__prepare_exit_to_usermode(regs);
++		syscall_return_slowpath(regs);
+ 		return false;
+ 	}
+ 
+ 	/* Now this is just like a normal syscall. */
+-	do_syscall_32_irqs_on(regs);
++	do_syscall_32_irqs_on(regs, nr);
++	syscall_return_slowpath(regs);
+ 	return true;
+ }
+ 
+@@ -483,7 +482,6 @@ static bool __do_fast_syscall_32(struct
+ 	 */
+ 	unsigned long landing_pad = (unsigned long)current->mm->context.vdso +
+ 					vdso_image_32.sym_int80_landing_pad;
+-	bool success;
+ 
+ 	/*
+ 	 * SYSENTER loses EIP, and even SYSCALL32 needs us to skip forward
+@@ -492,17 +490,8 @@ static bool __do_fast_syscall_32(struct
+ 	 */
+ 	regs->ip = landing_pad;
+ 
+-	enter_from_user_mode(regs);
+-	instrumentation_begin();
+-
+-	local_irq_enable();
+-	success = __do_fast_syscall_32(regs);
+-
+-	instrumentation_end();
+-	exit_to_user_mode();
+-
+-	/* If it failed, keep it simple: use IRET. */
+-	if (!success)
++	/* Invoke the syscall. If it failed, keep it simple: use IRET. */
++	if (!__do_fast_syscall_32(regs))
+ 		return 0;
+ 
+ #ifdef CONFIG_X86_64
 
 
