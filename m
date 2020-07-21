@@ -2,282 +2,196 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05243C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AB8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD40620717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A171020717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:55:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iVSGtGXm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbgGUIzD (ORCPT
+        id S1728981AbgGUIzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 21 Jul 2020 04:55:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgGUIzD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Jul 2020 04:55:03 -0400
-Received: from ms-10.1blu.de ([178.254.4.101]:45312 "EHLO ms-10.1blu.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgGUIzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:55:01 -0400
-Received: from [78.43.71.214] (helo=marius.fritz.box)
-        by ms-10.1blu.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <mail@mariuszachmann.de>)
-        id 1jxo36-0008GT-64; Tue, 21 Jul 2020 10:54:56 +0200
-From:   Marius Zachmann <mail@mariuszachmann.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Marius Zachmann <mail@mariuszachmann.de>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] hwmon: corsair-cpro: add reading pwm values
-Date:   Tue, 21 Jul 2020 10:54:47 +0200
-Message-Id: <20200721085447.23933-1-mail@mariuszachmann.de>
-X-Mailer: git-send-email 2.27.0
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C262C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:55:03 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f139so2047244wmf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:55:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4CTmtnmdZY9YRQRw2JoAj2R7ehpvx1UOd5wk1nRyAk4=;
+        b=iVSGtGXmRhf4JUrMrWhpMV7KvM5JVFkx1ir5uEYCIl+mRjDfai5NBGmIY/3/4BaItf
+         Df+M31NVTb61rKYwAglK2FlqsnF9uu/UwTwJPcJ54QyiGsKOI/86OpmYU8b7F8nZH7pK
+         DMbOFA+IG6PEPQpB2glBphC6o8gScfrV0fUW80SQMQLpnIsKw0Y3mjY2vHtGHDUp8LHv
+         DNoDMpOxTEX4jhpvro/YTATL9uDv5QKzo+U3VDzaQ03G56MBHn9HXQ0JuFI3Rp1FCURN
+         vVlFBV8qtc/eUMOaAiHTlicehnLniLpCP3Hw2JtdBRkQY2+h/tLlzXuFV92AY/GnIhfs
+         WGXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4CTmtnmdZY9YRQRw2JoAj2R7ehpvx1UOd5wk1nRyAk4=;
+        b=XOaqqr5gSIuiGp7Q321RU+jDjZigDc2of801g5Sk9fHZL2p5ssKjrfby62ZtAxeIXp
+         2dULA0G1UtJyJ/IaM2anzoiteehRf+g7mutJ8zCFbw8Ro8q7NAL3M+C8DUOsyoLo840c
+         pfUcVMtjIvyulgk8XFnLwJ7DCkxE3aUOsRvw9/JuJ7J/1LFdmR+NvDNYl21n+mlm+MsS
+         igv1J+Xt3WtmGAfKFzKXOVVd1xXGlK6l0s3wSOBPdM18ZfJvTlkz+AWWpRxv4jXkmm9d
+         5cRtbyP5lRC8nQZCVyBENI1nwd11UECr4iGzhs9zL4mWsWQLZHFp8omw6wHm2PrqJeCt
+         AUnA==
+X-Gm-Message-State: AOAM533sBQGJ4cLBZ0DkBL47t3EG+HLD8QTqqavpT1qlYFpX+BJD72bc
+        /mKC47ScLpu4NiE/8bwr5A2j/oNVnmlc4y55FsHy2dJC
+X-Google-Smtp-Source: ABdhPJyZqBx+5DxqL/B9eY3DTkJe+mB4GoZ8A1ocvar0p111bDPlN6UUFB9G2wacmGPdJi21kuc6Feck5gRaFsWuNmk=
+X-Received: by 2002:a1c:dd09:: with SMTP id u9mr3023317wmg.70.1595321701764;
+ Tue, 21 Jul 2020 01:55:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Con-Id: 241080
-X-Con-U: 0-mail
-X-Originating-IP: 78.43.71.214
+References: <20200708164936.9340-1-nsaenzjulienne@suse.de> <CAMi1Hd35tRM=cnmzwX=SDgu-OoXi1Xj+twFkoULaVZBbTpe6sw@mail.gmail.com>
+ <550b30a86c0785049d24c945e2c6628d491cee3a.camel@suse.de>
+In-Reply-To: <550b30a86c0785049d24c945e2c6628d491cee3a.camel@suse.de>
+From:   Amit Pundir <amit.pundir@linaro.org>
+Date:   Tue, 21 Jul 2020 14:24:25 +0530
+Message-ID: <CAMi1Hd2V2pJjP=USS4r-Z3vK-aq7_aBy-jcVNk1GvbdEQAuzWg@mail.gmail.com>
+Subject: Re: [PATCH] dma-pool: Do not allocate pool memory from CMA
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Rientjes <rientjes@google.com>,
+        linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
+        iommu@lists.linux-foundation.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the possibility for reading pwm values.
-These can not be read if the device is controlled via
-fan_target or a fan curve and will return an error in
-this case. Since an error is expected, this adds some
-rudimentary error handling.
+On Tue, 21 Jul 2020 at 14:09, Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> Hi Amit,
+>
+> On Tue, 2020-07-21 at 12:51 +0530, Amit Pundir wrote:
+> > On Wed, 8 Jul 2020 at 22:43, Nicolas Saenz Julienne
+> > <nsaenzjulienne@suse.de> wrote:
+> > > There is no guarantee to CMA's placement, so allocating a zone
+> > > specific
+> > > atomic pool from CMA might return memory from a completely
+> > > different
+> > > memory zone. So stop using it.
+> > >
+> > > Fixes: c84dc6e68a1d ("dma-pool: add additional coherent pools to
+> > > map to gfp mask")
+> >
+> > Hi Nicolas,
+> >
+> > I see a boot regression with this commit d9765e41d8e9 "dma-pool:
+> > Do not allocate pool memory from CMA" on my Xiaomi Poco F1
+> > (Qcom sdm845) phone running v5.8-rc6. I can't boot past the
+> > bootloader splash screen with this patch.
+> >
+> > Phone boots fine if I revert this patch. I carry only one out of tree
+> > dts patch https://lkml.org/lkml/2020/6/25/52. And since this is a
+> > stock
+> > phone, I don't have access to serial/dmesg logs until I boot to AOSP
+> > (adb) shell.
+> >
+> > Any thoughts as to what might be going wrong here? I'd be happy to
+> > help debug things. For what it's worth, I don't see this regression
+> > on
+> > other two sdm845 devices (db845c and Pixel 3) I tested on.
+>
+> Can you provide a boot log (even if without my patch) and the device-
+> tree files? It'd help a lot figuring things out.
 
-Changes:
-- add CTL_GET_FAN_PWM and use it via get_data
-- pwm returns -ENODATA if the device returns error 0x12
-- fan_target now returns -ENODATA when the driver is
-  started or a pwm value is set.
-- add ccp_get_errno to determine errno from device error.
-- get_data now has a parameter to determine whether
-  to read one or two bytes of data.
-- update documentation
-- fix missing surname in MAINTAINERS
+Thank you for the prompt reply Nicolas.
 
-Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
----
- Documentation/hwmon/corsair-cpro.rst |  7 ++-
- MAINTAINERS                          |  2 +-
- drivers/hwmon/corsair-cpro.c         | 64 +++++++++++++++++++---------
- 3 files changed, 48 insertions(+), 25 deletions(-)
+Here is the boot log with the reverted patch
+https://pastebin.ubuntu.com/p/BrhPf83nKF/
 
-diff --git a/Documentation/hwmon/corsair-cpro.rst b/Documentation/hwmon/corsair-cpro.rst
-index 78820156f07d..751f95476b57 100644
---- a/Documentation/hwmon/corsair-cpro.rst
-+++ b/Documentation/hwmon/corsair-cpro.rst
-@@ -35,8 +35,7 @@ fan[1-6]_input		Connected fan rpm.
- fan[1-6]_label		Shows fan type as detected by the device.
- fan[1-6]_target		Sets fan speed target rpm.
- 			When reading, it reports the last value if it was set by the driver.
--			Otherwise returns 0.
--pwm[1-6]		Sets the fan speed. Values from 0-255.
--			When reading, it reports the last value if it was set by the driver.
--			Otherwise returns 0.
-+			Otherwise returns an error.
-+pwm[1-6]		Sets the fan speed. Values from 0-255. Can only be read if pwm
-+			was set directly.
- ======================= =====================================================================
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 06607125b793..a93aefab91f1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4402,7 +4402,7 @@ F:	Documentation/hwmon/coretemp.rst
- F:	drivers/hwmon/coretemp.c
+Here is my phone's dts
+https://github.com/pundiramit/linux/commit/2a394c199deeaf4c91e0e008e8fba2a72f494d8c
 
- CORSAIR-CPRO HARDWARE MONITOR DRIVER
--M:	Marius  <mail@mariuszachmann.de>
-+M:	Marius Zachmann <mail@mariuszachmann.de>
- L:	linux-hwmon@vger.kernel.org
- S:	Maintained
- F:	drivers/hwmon/corsair-cpro.c
-diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
-index e8504267d0e8..591929ec217a 100644
---- a/drivers/hwmon/corsair-cpro.c
-+++ b/drivers/hwmon/corsair-cpro.c
-@@ -36,11 +36,12 @@
- 					 * send: byte 1 is channel, rest zero
- 					 * rcv:  returns temp for channel in centi-degree celsius
- 					 * in bytes 1 and 2
--					 * returns 17 in byte 0 if no sensor is connected
-+					 * returns 0x11 in byte 0 if no sensor is connected
- 					 */
- #define CTL_GET_VOLT		0x12	/*
- 					 * send: byte 1 is rail number: 0 = 12v, 1 = 5v, 2 = 3.3v
- 					 * rcv:  returns millivolt in bytes 1,2
-+					 * returns error 0x10 if request is invalid
- 					 */
- #define CTL_GET_FAN_CNCT	0x20	/*
- 					 * returns in bytes 1-6 for each fan:
-@@ -52,6 +53,12 @@
- 					 * send: byte 1 is channel, rest zero
- 					 * rcv:  returns rpm in bytes 1,2
- 					 */
-+#define CTL_GET_FAN_PWM		0x22	/*
-+					 * send: byte 1 is channel, rest zero
-+					 * rcv:  returns pwm in byte 1 if it was set
-+					 *	 returns error 0x12 if fan is controlled via
-+					 *	 fan_target or fan curve
-+					 */
- #define CTL_SET_FAN_FPWM	0x23	/*
- 					 * set fixed pwm
- 					 * send: byte 1 is fan number
-@@ -73,13 +80,31 @@ struct ccp_device {
- 	struct completion wait_input_report;
- 	struct mutex mutex; /* whenever buffer is used, lock before send_usb_cmd */
- 	u8 *buffer;
--	int pwm[6];
- 	int target[6];
- 	DECLARE_BITMAP(temp_cnct, NUM_TEMP_SENSORS);
- 	DECLARE_BITMAP(fan_cnct, NUM_FANS);
- 	char fan_label[6][LABEL_LENGTH];
- };
+And here is my kernel tree just in case
+https://github.com/pundiramit/linux/commits/beryllium-mainline
 
-+/* converts response error in buffer to errno */
-+static int ccp_get_errno(struct ccp_device *ccp)
-+{
-+	switch (ccp->buffer[0]) {
-+	case 0x00: /* success */
-+		return 0;
-+	case 0x01: /* called invalid command */
-+		return -EOPNOTSUPP;
-+	case 0x10: /* called GET_VOLT / GET_TMP with invalid arguments */
-+		return -EINVAL;
-+	case 0x11: /* requested temps of disconnected sensors */
-+	case 0x12: /* requested pwm of not pwm controlled channels */
-+		return -ENODATA;
-+	default:
-+		hid_dbg(ccp->hdev, "unknown device response error: %d", ccp->buffer[0]);
-+		return -EIO;
-+	}
-+}
-+
- /* send command, check for error in response, response in ccp->buffer */
- static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2, u8 byte3)
- {
-@@ -102,13 +127,7 @@ static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2,
- 	if (!t)
- 		return -ETIMEDOUT;
+Regards,
+Amit Pundir
 
--	/* first byte of response is error code */
--	if (ccp->buffer[0] != 0x00) {
--		hid_dbg(ccp->hdev, "device response error: %d", ccp->buffer[0]);
--		return -EIO;
--	}
--
--	return 0;
-+	return ccp_get_errno(ccp);
- }
 
- static int ccp_raw_event(struct hid_device *hdev, struct hid_report *report, u8 *data, int size)
-@@ -126,7 +145,7 @@ static int ccp_raw_event(struct hid_device *hdev, struct hid_report *report, u8
- }
-
- /* requests and returns single data values depending on channel */
--static int get_data(struct ccp_device *ccp, int command, int channel)
-+static int get_data(struct ccp_device *ccp, int command, int channel, bool two_byte_data)
- {
- 	int ret;
-
-@@ -136,7 +155,9 @@ static int get_data(struct ccp_device *ccp, int command, int channel)
- 	if (ret)
- 		goto out_unlock;
-
--	ret = (ccp->buffer[1] << 8) + ccp->buffer[2];
-+	ret = ccp->buffer[1];
-+	if (two_byte_data)
-+		ret = (ret << 8) + ccp->buffer[2];
-
- out_unlock:
- 	mutex_unlock(&ccp->mutex);
-@@ -150,14 +171,14 @@ static int set_pwm(struct ccp_device *ccp, int channel, long val)
- 	if (val < 0 || val > 255)
- 		return -EINVAL;
-
--	ccp->pwm[channel] = val;
--
- 	/* The Corsair Commander Pro uses values from 0-100 */
- 	val = DIV_ROUND_CLOSEST(val * 100, 255);
-
- 	mutex_lock(&ccp->mutex);
-
- 	ret = send_usb_cmd(ccp, CTL_SET_FAN_FPWM, channel, val, 0);
-+	if (!ret)
-+		ccp->target[channel] = -ENODATA;
-
- 	mutex_unlock(&ccp->mutex);
- 	return ret;
-@@ -171,7 +192,6 @@ static int set_target(struct ccp_device *ccp, int channel, long val)
- 	ccp->target[channel] = val;
-
- 	mutex_lock(&ccp->mutex);
--
- 	ret = send_usb_cmd(ccp, CTL_SET_FAN_TARGET, channel, val >> 8, val);
-
- 	mutex_unlock(&ccp->mutex);
-@@ -210,7 +230,7 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
- 	case hwmon_temp:
- 		switch (attr) {
- 		case hwmon_temp_input:
--			ret = get_data(ccp, CTL_GET_TMP, channel);
-+			ret = get_data(ccp, CTL_GET_TMP, channel, true);
- 			if (ret < 0)
- 				return ret;
- 			*val = ret * 10;
-@@ -222,7 +242,7 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
- 	case hwmon_fan:
- 		switch (attr) {
- 		case hwmon_fan_input:
--			ret = get_data(ccp, CTL_GET_FAN_RPM, channel);
-+			ret = get_data(ccp, CTL_GET_FAN_RPM, channel, true);
- 			if (ret < 0)
- 				return ret;
- 			*val = ret;
-@@ -230,6 +250,8 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
- 		case hwmon_fan_target:
- 			/* how to read target values from the device is unknown */
- 			/* driver returns last set value or 0			*/
-+			if (ccp->target[channel] < 0)
-+				return -ENODATA;
- 			*val = ccp->target[channel];
- 			return 0;
- 		default:
-@@ -239,9 +261,10 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
- 	case hwmon_pwm:
- 		switch (attr) {
- 		case hwmon_pwm_input:
--			/* how to read pwm values from the device is currently unknown */
--			/* driver returns last set value or 0		               */
--			*val = ccp->pwm[channel];
-+			ret = get_data(ccp, CTL_GET_FAN_PWM, channel, false);
-+			if (ret < 0)
-+				return ret;
-+			*val = DIV_ROUND_CLOSEST(ret * 255, 100);
- 			return 0;
- 		default:
- 			break;
-@@ -250,7 +273,7 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
- 	case hwmon_in:
- 		switch (attr) {
- 		case hwmon_in_input:
--			ret = get_data(ccp, CTL_GET_VOLT, channel);
-+			ret = get_data(ccp, CTL_GET_VOLT, channel, true);
- 			if (ret < 0)
- 				return ret;
- 			*val = ret;
-@@ -416,6 +439,7 @@ static int get_fan_cnct(struct ccp_device *ccp)
- 			continue;
-
- 		set_bit(channel, ccp->fan_cnct);
-+		ccp->target[channel] = -ENODATA;
-
- 		switch (mode) {
- 		case 1:
---
-2.27.0
+>
+> Regards,
+> Nicolas
+>
+> > Regards,
+> > Amit Pundir
+> >
+> > > Reported-by: Jeremy Linton <jeremy.linton@arm.com>
+> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > ---
+> > >
+> > > An more costly alternative would be adding an option to
+> > > dma_alloc_from_contiguous() so it fails when the allocation doesn't
+> > > fall
+> > > in a specific zone.
+> > >
+> > >  kernel/dma/pool.c | 11 ++---------
+> > >  1 file changed, 2 insertions(+), 9 deletions(-)
+> > >
+> > > diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+> > > index 8cfa01243ed2..4bc1c46ae6ef 100644
+> > > --- a/kernel/dma/pool.c
+> > > +++ b/kernel/dma/pool.c
+> > > @@ -6,7 +6,6 @@
+> > >  #include <linux/debugfs.h>
+> > >  #include <linux/dma-direct.h>
+> > >  #include <linux/dma-noncoherent.h>
+> > > -#include <linux/dma-contiguous.h>
+> > >  #include <linux/init.h>
+> > >  #include <linux/genalloc.h>
+> > >  #include <linux/set_memory.h>
+> > > @@ -69,12 +68,7 @@ static int atomic_pool_expand(struct gen_pool
+> > > *pool, size_t pool_size,
+> > >
+> > >         do {
+> > >                 pool_size = 1 << (PAGE_SHIFT + order);
+> > > -
+> > > -               if (dev_get_cma_area(NULL))
+> > > -                       page = dma_alloc_from_contiguous(NULL, 1 <<
+> > > order,
+> > > -                                                        order,
+> > > false);
+> > > -               else
+> > > -                       page = alloc_pages(gfp, order);
+> > > +               page = alloc_pages(gfp, order);
+> > >         } while (!page && order-- > 0);
+> > >         if (!page)
+> > >                 goto out;
+> > > @@ -118,8 +112,7 @@ static int atomic_pool_expand(struct gen_pool
+> > > *pool, size_t pool_size,
+> > >         dma_common_free_remap(addr, pool_size);
+> > >  #endif
+> > >  free_page: __maybe_unused
+> > > -       if (!dma_release_from_contiguous(NULL, page, 1 << order))
+> > > -               __free_pages(page, order);
+> > > +       __free_pages(page, order);
+> > >  out:
+> > >         return ret;
+> > >  }
+> > > --
+> > > 2.27.0
+> > >
+>
