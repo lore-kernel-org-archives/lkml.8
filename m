@@ -2,84 +2,102 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B47C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F830C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E40F22065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595375119;
-	bh=43Ks1BE66c2skOUrYRVoH9u+hQ/eis0KeY/m2/I51Ew=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=PNiZAi7Y83ZaZtebkAE6qmpC84sOtYBIAO7Wh5yrhcZJqO587lXaGBAWsQSSLduFL
-	 Gq6P4J9iP8t8WU119OgUm+DZ3nL8itpu+GT0NnVTPUgG1LKzHYVcSwK2poLFA0dVtA
-	 HIAWCLSr7y3ZmWcb41wj/BQDtU7MEIxmtEwCwerw=
+	by mail.kernel.org (Postfix) with ESMTP id E711E20771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731508AbgGUXpS (ORCPT
+        id S1731545AbgGUXqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 19:45:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51532 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 19:46:08 -0400
+Received: from mga12.intel.com ([192.55.52.136]:44145 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbgGUXpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 19:45:17 -0400
-Received: from embeddedor (unknown [201.162.241.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA62F20771;
-        Tue, 21 Jul 2020 23:32:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595374357;
-        bh=43Ks1BE66c2skOUrYRVoH9u+hQ/eis0KeY/m2/I51Ew=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Aqi0MTlKY71zsxajxX3+yKLjpZqGRjf8m6ELK6UvWd8PgdfH3tzB/5qRGu6Se2LVg
-         YHWIR23vBvdcQeElhKDUxSZjzjG59B57oDmzUJER/fE2SJWioiSOrgtCnJhBL8z1Ux
-         NtdW8FpDF0bxXLmhago7MSFymh1e7Ix7JWgiiYN0=
-Date:   Tue, 21 Jul 2020 18:38:14 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] i2c: designware: Use fallthrough pseudo-keyword
-Message-ID: <20200721233814.GA3058@embeddedor>
+        id S1731526AbgGUXqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 19:46:07 -0400
+IronPort-SDR: VioAt7F/yJYuhaE9p1OBpfrI3iGKWxaZaR41kXPOWwLYv1kBStMBv5Aa3jhhVPwpZ+25OpNvkf
+ 5zHSv30ERtew==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="129815369"
+X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
+   d="scan'208";a="129815369"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 16:46:06 -0700
+IronPort-SDR: 0xLtgHHJOzzRc95f2kjcdPpW6Ib8fQaUUy4cYYiK9FUL41OzMeYpNocbp6tYml5MSEvN77aelG
+ +X7Ab/L1y5Sg==
+X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
+   d="scan'208";a="362539378"
+Received: from krlloyd-mobl.amr.corp.intel.com (HELO [10.255.231.6]) ([10.255.231.6])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 16:46:05 -0700
+Subject: Re: [PATCH v2 9/9] ASoC: q6asm-dai: add support to copy callback
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        broonie@kernel.org
+Cc:     alsa-devel@alsa-project.org, ckeepax@opensource.cirrus.com,
+        tiwai@suse.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org
+References: <20200721165306.29082-1-srinivas.kandagatla@linaro.org>
+ <20200721165306.29082-10-srinivas.kandagatla@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <e3ad122c-d560-33f6-1bff-ea2b16fe47b5@linux.intel.com>
+Date:   Tue, 21 Jul 2020 14:54:41 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200721165306.29082-10-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1].
 
-[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/i2c/busses/i2c-designware-pcidrv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +static int q6asm_compr_copy(struct snd_soc_component *component,
+> +			    struct snd_compr_stream *stream, char __user *buf,
+> +			    size_t count)
+>   {
+>   	struct snd_compr_runtime *runtime = stream->runtime;
+>   	struct q6asm_dai_rtd *prtd = runtime->private_data;
+>   	unsigned long flags;
+> +	u32 wflags = 0;
+> +	int avail, bytes_in_flight = 0;
+> +	void *dstn;
+> +	size_t copy;
+> +	u32 app_pointer;
+> +	u32 bytes_received;
+> +
+> +	bytes_received = prtd->bytes_received;
+> +
+> +	/**
 
-diff --git a/drivers/i2c/busses/i2c-designware-pcidrv.c b/drivers/i2c/busses/i2c-designware-pcidrv.c
-index 8522134f9ea9..55c83a7a24f3 100644
---- a/drivers/i2c/busses/i2c-designware-pcidrv.c
-+++ b/drivers/i2c/busses/i2c-designware-pcidrv.c
-@@ -90,7 +90,7 @@ static int mfld_setup(struct pci_dev *pdev, struct dw_pci_controller *c)
- 	switch (pdev->device) {
- 	case 0x0817:
- 		dev->timings.bus_freq_hz = I2C_MAX_STANDARD_MODE_FREQ;
--		/* fall through */
-+		fallthrough;
- 	case 0x0818:
- 	case 0x0819:
- 		c->bus_num = pdev->device - 0x817 + 3;
--- 
-2.27.0
+/*
+
+> +	 * Make sure that next track data pointer is aligned at 32 bit boundary
+> +	 * This is a Mandatory requirement from DSP data buffers alignment
+> +	 */
+> +	if (prtd->next_track)
+> +		bytes_received = ALIGN(prtd->bytes_received, prtd->pcm_count);
+> +
+> +	app_pointer = bytes_received/prtd->pcm_size;
+> +	app_pointer = bytes_received -  (app_pointer * prtd->pcm_size);
+> +	dstn = prtd->dma_buffer.area + app_pointer;
+> +
+> +	if (count < prtd->pcm_size - app_pointer) {
+> +		if (copy_from_user(dstn, buf, count))
+> +			return -EFAULT;
+> +	} else {
+> +		copy = prtd->pcm_size - app_pointer;
+> +		if (copy_from_user(dstn, buf, copy))
+> +			return -EFAULT;
+> +		if (copy_from_user(prtd->dma_buffer.area, buf + copy,
+> +				   count - copy))
+> +			return -EFAULT;
+> +	}
 
