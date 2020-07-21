@@ -2,168 +2,119 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 035CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58BAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6382207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23E720684
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:20:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Xw7uJzgI"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="K9ojjUlg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgGUGRP (ORCPT
+        id S1726971AbgGUGUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:17:15 -0400
-Received: from ozlabs.org ([203.11.71.1]:33463 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725294AbgGUGRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:17:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9pKM2t9Kz9sPB;
-        Tue, 21 Jul 2020 16:17:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595312232;
-        bh=WZV4+iRfMoNQK9wg0RRfY4PHdeJb/n3hoO/d0GU546o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Xw7uJzgIArTiwFZ3/KtVCzAo4+8RWha7oFtD+JuM6HwS0APox65ODZhw9GwM20NT2
-         6noQKC+6Fw8fyCEsBktegcA51zIYk+HrtbTyNswEMKpQHDKkzvP+SNvSZcw3BsQPrc
-         1NLbiVN3LbV6qURnltHkUTyewCWqUy2WPcRwygduXLX6smi12qQdIGtmuUcNfYEoRw
-         +msUArYVxgTvyz8i+/X4xZuJw9AIA8ipyDZac4AGengfBEaH/Aolgb1knBgti6kaqU
-         n34GDSLpq0S3CRW3AGRerku01kIB3cMQZlaz/eq+8LxdVLV/BaMy94aMAhko2vEwXT
-         GnJLWgUk2aVmg==
-Date:   Tue, 21 Jul 2020 16:17:01 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: linux-next: manual merge of the dmaengine tree with the phy-next
- tree
-Message-ID: <20200721161701.64b4245e@canb.auug.org.au>
+        Tue, 21 Jul 2020 02:20:32 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:59785 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgGUGUc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 02:20:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1595312432; x=1626848432;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=xTxsgU7dP+dCO7BF1/koKl7ClH5PjAb03Z2Nm54qNPk=;
+  b=K9ojjUlgR+yfVPAN6uzwIxEmGELmsH2AisMkzAjo7kMGsqhpifQZb9To
+   WzcVLnehnsFpZHrqAxWUvj5j9icxjo+ozOGXzXgjCGEjgJlgoaMAlolD2
+   4+zmAsNoAR2raPpUG/uSsDrRQ4q1w4z7P7kCd7D+xI9yPfeVRQBiDISIG
+   M=;
+IronPort-SDR: qM4kReuBMpJU/qxBHDDloek6Ba7oKCi+kJw7S8tzaLhq/funls180ueZKCSkZUqV5/0/DBFmgw
+ Fz1OXn38iYvg==
+X-IronPort-AV: E=Sophos;i="5.75,377,1589241600"; 
+   d="scan'208";a="60238751"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 21 Jul 2020 06:20:29 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id 0949F284BB9;
+        Tue, 21 Jul 2020 06:20:26 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 21 Jul 2020 06:20:26 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.180) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 21 Jul 2020 06:20:17 +0000
+Subject: Re: [PATCH v5 04/18] nitro_enclaves: Init PCI device driver
+To:     Alexander Graf <graf@amazon.com>, <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "David Duncan" <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Karen Noel <knoel@redhat.com>,
+        "Martin Pohlack" <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200715194540.45532-1-andraprs@amazon.com>
+ <20200715194540.45532-5-andraprs@amazon.com>
+ <d2f717c1-895b-b947-7ec3-067e4f1dbf69@amazon.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <93c45468-d63c-2bc9-58d4-b7a6fa1dfad7@amazon.com>
+Date:   Tue, 21 Jul 2020 09:20:07 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/JiCKaOVGPzTJDq2Or+8rB07";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <d2f717c1-895b-b947-7ec3-067e4f1dbf69@amazon.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.160.180]
+X-ClientProxiedBy: EX13D30UWC003.ant.amazon.com (10.43.162.122) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/JiCKaOVGPzTJDq2Or+8rB07
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the dmaengine tree got a conflict in:
+On 20/07/2020 17:24, Alexander Graf wrote:
+>
+>
+> On 15.07.20 21:45, Andra Paraschiv wrote:
+>> The Nitro Enclaves PCI device is used by the kernel driver as a means of
+>> communication with the hypervisor on the host where the primary VM and
+>> the enclaves run. It handles requests with regard to enclave lifetime.
+>>
+>> Setup the PCI device driver and add support for MSI-X interrupts.
+>>
+>> Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
+>> Signed-off-by: Alexandru Ciobotaru <alcioa@amazon.com>
+>> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+>
+> Reviewed-by: Alexander Graf <graf@amazon.com>
 
-  MAINTAINERS
+Included the Rb, thanks for review.
 
-between commit:
+Andra
 
-  4a33bea00314 ("phy: zynqmp: Add PHY driver for the Xilinx ZynqMP Gigabit =
-Transceiver")
 
-from the phy-next tree and commit:
 
-  ef9303fdf46f ("dt: bindings: dma: xilinx: dpdma: DT bindings for Xilinx D=
-PDMA")
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
+ Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
+omania. Registration number J22/2621/2005.
 
-from the dmaengine tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc MAINTAINERS
-index 495e4247cbb0,1ba09904354f..000000000000
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@@ -11432,20 -11364,14 +11434,13 @@@ L:	linux-arm-kernel@lists.infradead.or
-  S:	Supported
-  F:	drivers/usb/gadget/udc/atmel_usba_udc.*
- =20
- -MICROSEMI ETHERNET SWITCH DRIVER
- -M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
- -M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
- -L:	netdev@vger.kernel.org
- +MICROCHIP WILC1000 WIFI DRIVER
- +M:	Ajay Singh <ajay.kathat@microchip.com>
- +M:	Claudiu Beznea <claudiu.beznea@microchip.com>
- +L:	linux-wireless@vger.kernel.org
-  S:	Supported
- -F:	drivers/net/ethernet/mscc/
- -F:	include/soc/mscc/ocelot*
- +F:	drivers/net/wireless/microchip/wilc1000/
- =20
-- MICROCHIP XDMA DRIVER
-- M:	Ludovic Desroches <ludovic.desroches@microchip.com>
-- L:	linux-arm-kernel@lists.infradead.org
-- L:	dmaengine@vger.kernel.org
-- S:	Supported
-- F:	drivers/dma/at_xdmac.c
--=20
-  MICROSEMI MIPS SOCS
-  M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
-  M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-@@@ -18990,15 -18847,15 +18985,24 @@@ F:	Documentation/devicetree/bindings/=
-me
-  F:	drivers/media/platform/xilinx/
-  F:	include/uapi/linux/xilinx-v4l2-controls.h
- =20
- +XILINX ZYNQMP PSGTR PHY DRIVER
- +M:	Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
- +M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
- +L:	linux-kernel@vger.kernel.org
- +S:	Supported
- +T:	git https://github.com/Xilinx/linux-xlnx.git
- +F:	Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
- +F:	drivers/phy/xilinx/phy-zynqmp.c
- +
-+ XILINX ZYNQMP DPDMA DRIVER
-+ M:	Hyun Kwon <hyun.kwon@xilinx.com>
-+ M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+ L:	dmaengine@vger.kernel.org
-+ S:	Supported
-+ F:	Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
-+ F:	drivers/dma/xilinx/xilinx_dpdma.c
-+ F:	include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
-+=20
-  XILLYBUS DRIVER
-  M:	Eli Billauer <eli.billauer@gmail.com>
-  L:	linux-kernel@vger.kernel.org
-
---Sig_/JiCKaOVGPzTJDq2Or+8rB07
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8WiF0ACgkQAVBC80lX
-0Gwj/Qf+MKcSU4OQfFBRgPufNkEFYoqsaXF7AuA6u8CqtM0rZHn7PNPg4l0ZctQk
-Ra0G76mVnHoPlog12gnGROwHn2dpjuyuknrYKg5fUJEH3J+o72emqexzhCrjm82I
-vDjrMBJ5M/ECwnmtj/2UY7dPSC1Dsw+YDzXuxSLlo4t7BJ0HzyglboByIwjgRfDw
-6cmqGUHQzdfxpGHmivInBgwa88eFHv7F6pdEKJoZjHmiWY7hlv0IfViH4qj6XuL1
-u2MdGKnkIVnkcDKLQvc0GuSlp74ZK6e8jQHFN5zqmEbzoHTYyP3hz0hGxbhjXBa+
-d7KV9iDAe6SX/QZ3Xhhrh2oRw/3t2g==
-=2GWy
------END PGP SIGNATURE-----
-
---Sig_/JiCKaOVGPzTJDq2Or+8rB07--
