@@ -2,194 +2,329 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A409BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F35A20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:39:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ATkzng+r"
+	by mail.kernel.org (Postfix) with ESMTP id 7EFDB207BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgGUSj0 (ORCPT
+        id S1730271AbgGUSqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 14:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36902 "EHLO
+        Tue, 21 Jul 2020 14:46:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbgGUSjY (ORCPT
+        with ESMTP id S1729171AbgGUSqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 14:39:24 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F66C0619DB
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 11:39:24 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id o13so12346494pgf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 11:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j123tjao84sCawAECklrlDQrmh9RZ45cJHgg6B+xpl0=;
-        b=ATkzng+r1uo35unLIfNtsPpb5eVV4wK+rzAbIw4RBkY1/0DgAAEui5Jqs4BStBgH7+
-         lLdXZheX+n0+7S3Wx5a4UurMmGWkaipPXonBn7uKIBM72y/0A+xK2fnwQMmaX+YMiL2k
-         B70pTM6kPUyYOx20xLI6eDr26aFfZ828JhTxLQeoLymNRlT2nedn3FFvgSFD9CzgFFJu
-         iAWiBImbxYoSu7O0tiBBYEZq8nPJHl1+oWySWoVzhwALjloG6vmu3DIrpPdXmChbmt8o
-         lxPzlKKdl0QN48RDg9WoqxhQZI/LSMVZKTNzZVwWrDyGBDDzghuKYDBJTbyTUdjtlZ++
-         Nw8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j123tjao84sCawAECklrlDQrmh9RZ45cJHgg6B+xpl0=;
-        b=PkvhFZucJxj4kfE0DWAgUQI0kySrkiLVqAwc+c7CZQ2z3IigZEPUnvDcUzP9yLhhjE
-         cDmwzydFSIsLJfHZLpWAM1oAnojTxeolrtKFBhqnCrjl5XvWxi8CLzsJRr3agtTpzMFU
-         96z4g79+5Lu9mY9liWsu5AF1FWS3wL2OOZWQYIqQCTOTYdnUpcRK7zGsQBwLuiRElt1r
-         kc+5d7I/c0uXOlRFuSIJedxt7erlLRR1JohlMUFm6b6nkQO3qi7qTppkn0lOfQU8gJdG
-         j6iBe6rf0qI7RM7XdqHg/kFI+wR1/dXvqVks7KxdMT+RJwvpZDX57NXXzScNjBKopZ4q
-         Gigg==
-X-Gm-Message-State: AOAM5325R7U2nnVgOORGRu/M4YVz0Ywi+b4tGgih/lIzo4WSVu2lVNQc
-        JujQKDa3SmS1tHOWr0YMYriZSUplaYfCRg==
-X-Google-Smtp-Source: ABdhPJyBnwfPCvzBusrVoqeAxNvrnuMvSEMtSfjfg2ovoTL09gpc8FDkjGYAUUauWvRkQD37SlD9ZQ==
-X-Received: by 2002:a63:f04d:: with SMTP id s13mr23251957pgj.100.1595356763477;
-        Tue, 21 Jul 2020 11:39:23 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id m19sm18875012pgd.13.2020.07.21.11.39.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 11:39:22 -0700 (PDT)
-Subject: Re: strace of io_uring events?
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Andres Freund <andres@anarazel.de>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Kees Cook <keescook@chromium.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
- <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net>
- <20200715171130.GG12769@casper.infradead.org>
- <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com>
- <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
- <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com>
- <202007151511.2AA7718@keescook> <20200716131404.bnzsaarooumrp3kx@steredhat>
- <202007160751.ED56C55@keescook>
- <20200717080157.ezxapv7pscbqykhl@steredhat.lan>
- <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
- <39a3378a-f8f3-6706-98c8-be7017e64ddb@kernel.dk>
- <CALCETrXAxFzuRB5EJZR7bbgfrEcNc=9_E7wwhPaZ3YGJ1=DZ0w@mail.gmail.com>
- <ba989463-c627-8af7-9234-4dc8ac4eea0e@kernel.dk>
- <CALCETrUvOuKZWiQeZhf9DXyjS4OQdyW+s1YMh+vwe605jBS3LQ@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <65ad6c17-37d0-da30-4121-43554ad8f51f@kernel.dk>
-Date:   Tue, 21 Jul 2020 12:39:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 14:46:23 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27D3BC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 11:46:23 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 2B8A4BC148;
+        Tue, 21 Jul 2020 18:46:19 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     abbotti@mev.co.uk, hsweeten@visionengravers.com,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] staging: comedi: amplc: Replace HTTP links with HTTPS ones
+Date:   Tue, 21 Jul 2020 20:46:13 +0200
+Message-Id: <20200721184613.67596-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <CALCETrUvOuKZWiQeZhf9DXyjS4OQdyW+s1YMh+vwe605jBS3LQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/21/20 11:44 AM, Andy Lutomirski wrote:
-> On Tue, Jul 21, 2020 at 10:30 AM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 7/21/20 11:23 AM, Andy Lutomirski wrote:
->>> On Tue, Jul 21, 2020 at 8:31 AM Jens Axboe <axboe@kernel.dk> wrote:
->>>>
->>>> On 7/21/20 9:27 AM, Andy Lutomirski wrote:
->>>>> On Fri, Jul 17, 2020 at 1:02 AM Stefano Garzarella <sgarzare@redhat.com> wrote:
->>>>>>
->>>>>> On Thu, Jul 16, 2020 at 08:12:35AM -0700, Kees Cook wrote:
->>>>>>> On Thu, Jul 16, 2020 at 03:14:04PM +0200, Stefano Garzarella wrote:
->>>>>
->>>>>>> access (IIUC) is possible without actually calling any of the io_uring
->>>>>>> syscalls. Is that correct? A process would receive an fd (via SCM_RIGHTS,
->>>>>>> pidfd_getfd, or soon seccomp addfd), and then call mmap() on it to gain
->>>>>>> access to the SQ and CQ, and off it goes? (The only glitch I see is
->>>>>>> waking up the worker thread?)
->>>>>>
->>>>>> It is true only if the io_uring istance is created with SQPOLL flag (not the
->>>>>> default behaviour and it requires CAP_SYS_ADMIN). In this case the
->>>>>> kthread is created and you can also set an higher idle time for it, so
->>>>>> also the waking up syscall can be avoided.
->>>>>
->>>>> I stared at the io_uring code for a while, and I'm wondering if we're
->>>>> approaching this the wrong way. It seems to me that most of the
->>>>> complications here come from the fact that io_uring SQEs don't clearly
->>>>> belong to any particular security principle.  (We have struct creds,
->>>>> but we don't really have a task or mm.)  But I'm also not convinced
->>>>> that io_uring actually supports cross-mm submission except by accident
->>>>> -- as it stands, unless a user is very careful to only submit SQEs
->>>>> that don't use user pointers, the results will be unpredictable.
->>>>
->>>> How so?
->>>
->>> Unless I've missed something, either current->mm or sqo_mm will be
->>> used depending on which thread ends up doing the IO.  (And there might
->>> be similar issues with threads.)  Having the user memory references
->>> end up somewhere that is an implementation detail seems suboptimal.
->>
->> current->mm is always used from the entering task - obviously if done
->> synchronously, but also if it needs to go async. The only exception is a
->> setup with SQPOLL, in which case ctx->sqo_mm is the task that set up the
->> ring. SQPOLL requires root privileges to setup, and there's no task
->> entering the io_uring at all necessarily. It'll just submit sqes with
->> the credentials that are registered with the ring.
-> 
-> Really?  I admit I haven't fully followed how the code works, but it
-> looks like anything that goes through the io_queue_async_work() path
-> will use sqo_mm, and can't most requests that end up blocking end up
-> there?  It looks like, even if SQPOLL is not set, the mm used will
-> depend on whether the request ends up blocking and thus getting queued
-> for later completion.
-> 
-> Or does some magic I missed make this a nonissue.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-No, you are wrong. The logic works as I described it.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
->> This is just one known use case, there may very well be others. Outside
->> of SQPOLL, which is special, I don't see a reason to restrict this.
->> Given that you may have a fuller understanding of it after the above
->> explanation, please clearly state what problem you're seeing that
->> warrants a change.
-> 
-> I see two fundamental issues:
-> 
-> 1. The above.  This may be less of an issue than it seems to me, but,
-> if you submit io from outside sqo_mm, the mm that ends up being used
-> depends on whether the IO is completed from io_uring_enter() or from
-> the workqueue.  For something like Postgres, I guess this is okay
-> because the memory is MAP_ANONYMOUS | MAP_SHARED and the pointers all
-> point the same place regardless.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-No that is incorrect. If you disregard SQPOLL, then the 'mm' is always
-who submitted it.
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-> 2. If you create an io_uring and io_uring_enter() it from a different
-> mm, it's unclear what seccomp is supposed to do.  (Or audit, for that
-> matter.)  Which task did the IO?  Which mm did the IO?  Whose sandbox
-> is supposed to be applied?
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
-Also doesn't seem like a problem, if you understand the 'mm' logic
-above. Unless SQPOLL is used, the entering tasks mm will be used.
-There's no mixing of tasks and mm outside of that.
+ If you apply the patch, please let me know.
 
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/staging/comedi/drivers/amplc_dio200.c        | 4 ++--
+ drivers/staging/comedi/drivers/amplc_dio200.h        | 2 +-
+ drivers/staging/comedi/drivers/amplc_dio200_common.c | 4 ++--
+ drivers/staging/comedi/drivers/amplc_dio200_pci.c    | 4 ++--
+ drivers/staging/comedi/drivers/amplc_pc236.c         | 4 ++--
+ drivers/staging/comedi/drivers/amplc_pc236.h         | 2 +-
+ drivers/staging/comedi/drivers/amplc_pc236_common.c  | 4 ++--
+ drivers/staging/comedi/drivers/amplc_pc263.c         | 4 ++--
+ drivers/staging/comedi/drivers/amplc_pci224.c        | 4 ++--
+ drivers/staging/comedi/drivers/amplc_pci230.c        | 2 +-
+ drivers/staging/comedi/drivers/amplc_pci236.c        | 4 ++--
+ drivers/staging/comedi/drivers/amplc_pci263.c        | 4 ++--
+ 12 files changed, 21 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/staging/comedi/drivers/amplc_dio200.c b/drivers/staging/comedi/drivers/amplc_dio200.c
+index 26e63d64ffc6..fa19c9e7c56b 100644
+--- a/drivers/staging/comedi/drivers/amplc_dio200.c
++++ b/drivers/staging/comedi/drivers/amplc_dio200.c
+@@ -4,7 +4,7 @@
+  *
+  * Driver for Amplicon PC212E, PC214E, PC215E, PC218E, PC272E.
+  *
+- * Copyright (C) 2005-2013 MEV Ltd. <http://www.mev.co.uk/>
++ * Copyright (C) 2005-2013 MEV Ltd. <https://www.mev.co.uk/>
+  *
+  * COMEDI - Linux Control and Measurement Device Interface
+  * Copyright (C) 1998,2000 David A. Schleef <ds@schleef.org>
+@@ -260,6 +260,6 @@ static struct comedi_driver amplc_dio200_driver = {
+ };
+ module_comedi_driver(amplc_dio200_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Amplicon 200 Series ISA DIO boards");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/amplc_dio200.h b/drivers/staging/comedi/drivers/amplc_dio200.h
+index 1d81393be6df..745baaf940ee 100644
+--- a/drivers/staging/comedi/drivers/amplc_dio200.h
++++ b/drivers/staging/comedi/drivers/amplc_dio200.h
+@@ -5,7 +5,7 @@
+  * Header for amplc_dio200.c, amplc_dio200_common.c and
+  * amplc_dio200_pci.c.
+  *
+- * Copyright (C) 2005-2013 MEV Ltd. <http://www.mev.co.uk/>
++ * Copyright (C) 2005-2013 MEV Ltd. <https://www.mev.co.uk/>
+  *
+  * COMEDI - Linux Control and Measurement Device Interface
+  * Copyright (C) 1998,2000 David A. Schleef <ds@schleef.org>
+diff --git a/drivers/staging/comedi/drivers/amplc_dio200_common.c b/drivers/staging/comedi/drivers/amplc_dio200_common.c
+index 0b2f04b02ebc..a3454130d5f8 100644
+--- a/drivers/staging/comedi/drivers/amplc_dio200_common.c
++++ b/drivers/staging/comedi/drivers/amplc_dio200_common.c
+@@ -4,7 +4,7 @@
+  *
+  * Common support code for "amplc_dio200" and "amplc_dio200_pci".
+  *
+- * Copyright (C) 2005-2013 MEV Ltd. <http://www.mev.co.uk/>
++ * Copyright (C) 2005-2013 MEV Ltd. <https://www.mev.co.uk/>
+  *
+  * COMEDI - Linux Control and Measurement Device Interface
+  * Copyright (C) 1998,2000 David A. Schleef <ds@schleef.org>
+@@ -853,6 +853,6 @@ static void __exit amplc_dio200_common_exit(void)
+ }
+ module_exit(amplc_dio200_common_exit);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi helper for amplc_dio200 and amplc_dio200_pci");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/amplc_dio200_pci.c b/drivers/staging/comedi/drivers/amplc_dio200_pci.c
+index 30d239731e0b..1bd7a42c8464 100644
+--- a/drivers/staging/comedi/drivers/amplc_dio200_pci.c
++++ b/drivers/staging/comedi/drivers/amplc_dio200_pci.c
+@@ -3,7 +3,7 @@
+  *
+  * Driver for Amplicon PCI215, PCI272, PCIe215, PCIe236, PCIe296.
+  *
+- * Copyright (C) 2005-2013 MEV Ltd. <http://www.mev.co.uk/>
++ * Copyright (C) 2005-2013 MEV Ltd. <https://www.mev.co.uk/>
+  *
+  * COMEDI - Linux Control and Measurement Device Interface
+  * Copyright (C) 1998,2000 David A. Schleef <ds@schleef.org>
+@@ -410,6 +410,6 @@ static struct pci_driver dio200_pci_pci_driver = {
+ };
+ module_comedi_pci_driver(dio200_pci_comedi_driver, dio200_pci_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Amplicon 200 Series PCI(e) DIO boards");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/amplc_pc236.c b/drivers/staging/comedi/drivers/amplc_pc236.c
+index b7dd15f5ec63..c377af1d5246 100644
+--- a/drivers/staging/comedi/drivers/amplc_pc236.c
++++ b/drivers/staging/comedi/drivers/amplc_pc236.c
+@@ -3,7 +3,7 @@
+  * comedi/drivers/amplc_pc236.c
+  * Driver for Amplicon PC36AT DIO boards.
+  *
+- * Copyright (C) 2002 MEV Ltd. <http://www.mev.co.uk/>
++ * Copyright (C) 2002 MEV Ltd. <https://www.mev.co.uk/>
+  *
+  * COMEDI - Linux Control and Measurement Device Interface
+  * Copyright (C) 2000 David A. Schleef <ds@schleef.org>
+@@ -71,6 +71,6 @@ static struct comedi_driver amplc_pc236_driver = {
+ 
+ module_comedi_driver(amplc_pc236_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Amplicon PC36AT DIO boards");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/amplc_pc236.h b/drivers/staging/comedi/drivers/amplc_pc236.h
+index 45e933ee8735..7e72729f7492 100644
+--- a/drivers/staging/comedi/drivers/amplc_pc236.h
++++ b/drivers/staging/comedi/drivers/amplc_pc236.h
+@@ -3,7 +3,7 @@
+  * comedi/drivers/amplc_pc236.h
+  * Header for "amplc_pc236", "amplc_pci236" and "amplc_pc236_common".
+  *
+- * Copyright (C) 2002-2014 MEV Ltd. <http://www.mev.co.uk/>
++ * Copyright (C) 2002-2014 MEV Ltd. <https://www.mev.co.uk/>
+  *
+  * COMEDI - Linux Control and Measurement Device Interface
+  * Copyright (C) 2000 David A. Schleef <ds@schleef.org>
+diff --git a/drivers/staging/comedi/drivers/amplc_pc236_common.c b/drivers/staging/comedi/drivers/amplc_pc236_common.c
+index 01b90e4eca8a..043752663188 100644
+--- a/drivers/staging/comedi/drivers/amplc_pc236_common.c
++++ b/drivers/staging/comedi/drivers/amplc_pc236_common.c
+@@ -3,7 +3,7 @@
+  * comedi/drivers/amplc_pc236_common.c
+  * Common support code for "amplc_pc236" and "amplc_pci236".
+  *
+- * Copyright (C) 2002-2014 MEV Ltd. <http://www.mev.co.uk/>
++ * Copyright (C) 2002-2014 MEV Ltd. <https://www.mev.co.uk/>
+  *
+  * COMEDI - Linux Control and Measurement Device Interface
+  * Copyright (C) 2000 David A. Schleef <ds@schleef.org>
+@@ -186,6 +186,6 @@ static void __exit amplc_pc236_common_exit(void)
+ }
+ module_exit(amplc_pc236_common_exit);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi helper for amplc_pc236 and amplc_pci236");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/amplc_pc263.c b/drivers/staging/comedi/drivers/amplc_pc263.c
+index 84c989f12faf..68da6098ee84 100644
+--- a/drivers/staging/comedi/drivers/amplc_pc263.c
++++ b/drivers/staging/comedi/drivers/amplc_pc263.c
+@@ -2,7 +2,7 @@
+ /*
+  * Driver for Amplicon PC263 relay board.
+  *
+- * Copyright (C) 2002 MEV Ltd. <http://www.mev.co.uk/>
++ * Copyright (C) 2002 MEV Ltd. <https://www.mev.co.uk/>
+  *
+  * COMEDI - Linux Control and Measurement Device Interface
+  * Copyright (C) 2000 David A. Schleef <ds@schleef.org>
+@@ -97,6 +97,6 @@ static struct comedi_driver amplc_pc263_driver = {
+ 
+ module_comedi_driver(amplc_pc263_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Amplicon PC263 relay board");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/amplc_pci224.c b/drivers/staging/comedi/drivers/amplc_pci224.c
+index 657b736ef46d..bcf6d61af863 100644
+--- a/drivers/staging/comedi/drivers/amplc_pci224.c
++++ b/drivers/staging/comedi/drivers/amplc_pci224.c
+@@ -3,7 +3,7 @@
+  * comedi/drivers/amplc_pci224.c
+  * Driver for Amplicon PCI224 and PCI234 AO boards.
+  *
+- * Copyright (C) 2005 MEV Ltd. <http://www.mev.co.uk/>
++ * Copyright (C) 2005 MEV Ltd. <https://www.mev.co.uk/>
+  *
+  * COMEDI - Linux Control and Measurement Device Interface
+  * Copyright (C) 1998,2000 David A. Schleef <ds@schleef.org>
+@@ -1138,6 +1138,6 @@ static struct pci_driver amplc_pci224_pci_driver = {
+ };
+ module_comedi_pci_driver(amplc_pci224_driver, amplc_pci224_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Amplicon PCI224 and PCI234 AO boards");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/amplc_pci230.c b/drivers/staging/comedi/drivers/amplc_pci230.c
+index f7e673121864..8911dc2bd2c6 100644
+--- a/drivers/staging/comedi/drivers/amplc_pci230.c
++++ b/drivers/staging/comedi/drivers/amplc_pci230.c
+@@ -2570,6 +2570,6 @@ static struct pci_driver amplc_pci230_pci_driver = {
+ };
+ module_comedi_pci_driver(amplc_pci230_driver, amplc_pci230_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Amplicon PCI230(+) and PCI260(+)");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/amplc_pci236.c b/drivers/staging/comedi/drivers/amplc_pci236.c
+index 86ea876a11be..e7f6fa4d101a 100644
+--- a/drivers/staging/comedi/drivers/amplc_pci236.c
++++ b/drivers/staging/comedi/drivers/amplc_pci236.c
+@@ -3,7 +3,7 @@
+  * comedi/drivers/amplc_pci236.c
+  * Driver for Amplicon PCI236 DIO boards.
+  *
+- * Copyright (C) 2002-2014 MEV Ltd. <http://www.mev.co.uk/>
++ * Copyright (C) 2002-2014 MEV Ltd. <https://www.mev.co.uk/>
+  *
+  * COMEDI - Linux Control and Measurement Device Interface
+  * Copyright (C) 2000 David A. Schleef <ds@schleef.org>
+@@ -139,6 +139,6 @@ static struct pci_driver amplc_pci236_pci_driver = {
+ 
+ module_comedi_pci_driver(amplc_pci236_driver, amplc_pci236_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Amplicon PCI236 DIO boards");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/amplc_pci263.c b/drivers/staging/comedi/drivers/amplc_pci263.c
+index c3efe14020a8..9217973f1141 100644
+--- a/drivers/staging/comedi/drivers/amplc_pci263.c
++++ b/drivers/staging/comedi/drivers/amplc_pci263.c
+@@ -2,7 +2,7 @@
+ /*
+  * Driver for Amplicon PCI263 relay board.
+  *
+- * Copyright (C) 2002 MEV Ltd. <http://www.mev.co.uk/>
++ * Copyright (C) 2002 MEV Ltd. <https://www.mev.co.uk/>
+  *
+  * COMEDI - Linux Control and Measurement Device Interface
+  * Copyright (C) 2000 David A. Schleef <ds@schleef.org>
+@@ -106,6 +106,6 @@ static struct pci_driver amplc_pci263_pci_driver = {
+ };
+ module_comedi_pci_driver(amplc_pci263_driver, amplc_pci263_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Amplicon PCI263 relay board");
+ MODULE_LICENSE("GPL");
 -- 
-Jens Axboe
+2.27.0
 
