@@ -3,122 +3,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1028CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B517C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCB1520717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F19EB20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:01:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbgGUSAX (ORCPT
+        id S1729758AbgGUSBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 14:00:23 -0400
-Received: from mga09.intel.com ([134.134.136.24]:29365 "EHLO mga09.intel.com"
+        Tue, 21 Jul 2020 14:01:41 -0400
+Received: from mga14.intel.com ([192.55.52.115]:38274 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbgGUSAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 14:00:21 -0400
-IronPort-SDR: 5QY5WCdYiNtGtkyg7Bg6gOqyPONksVYq+b4ioetY1Lte4vd3AxLDw/Ajq5IpXdbVIo9NuxjNL9
- qGuDMTdzRXjA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="151532424"
+        id S1726763AbgGUSBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 14:01:40 -0400
+IronPort-SDR: Mt9Ob7Eu820fSF1U5wsrv/CMNDOzfKJNHwTePWqjlfxtZViSdVqLPrtwOoAWVWmEywQZ8qTsMa
+ KZ/qTC+eq3fQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="149364673"
 X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="151532424"
+   d="scan'208";a="149364673"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 11:00:19 -0700
-IronPort-SDR: kSghhxgbuS19smyd22Tdxc6QQIG/3ciu7LvWnX5tU04uP38AfAGEXrM+cEVHdz5BGfz4qnkf2L
- RLvhd5Smg1Jg==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 11:01:39 -0700
+IronPort-SDR: qe5k1fK528+7itSbwwwS6IKZcJvdlZH1lFT8UQ253GQI2FZOjz37hTraZvX/V9KC4se8G7enQF
+ XJPuNvtJfimA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="326447027"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.213.181.166]) ([10.213.181.166])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 Jul 2020 11:00:17 -0700
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
- support for the idxd driver
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     vkoul@kernel.org, megha.dey@intel.com, maz@kernel.org,
-        bhelgaas@google.com, rafael@kernel.org, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, hpa@zytor.com, alex.williamson@redhat.com,
-        jacob.jun.pan@intel.com, ashok.raj@intel.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <20200721164527.GD2021248@mellanox.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <d0ab496e-8eb1-3365-8b2c-533cf95d6556@intel.com>
-Date:   Tue, 21 Jul 2020 11:00:16 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+   d="scan'208";a="362445458"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga001.jf.intel.com with ESMTP; 21 Jul 2020 11:01:35 -0700
+Date:   Tue, 21 Jul 2020 11:01:34 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across
+ exceptions
+Message-ID: <20200721180134.GB643353@iweiny-DESK2.sc.intel.com>
+References: <20200717072056.73134-1-ira.weiny@intel.com>
+ <20200717072056.73134-18-ira.weiny@intel.com>
+ <20200717093041.GF10769@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200721164527.GD2021248@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717093041.GF10769@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 17, 2020 at 11:30:41AM +0200, Peter Zijlstra wrote:
+> On Fri, Jul 17, 2020 at 12:20:56AM -0700, ira.weiny@intel.com wrote:
+> > +static void noinstr idt_save_pkrs(idtentry_state_t state)
+> 
+> noinstr goes in the same place you would normally put inline, that's
+> before the return type, not after it.
+>
 
+Sorry about that.  But that does not look to be consistent.
 
-On 7/21/2020 9:45 AM, Jason Gunthorpe wrote:
-> On Tue, Jul 21, 2020 at 09:02:15AM -0700, Dave Jiang wrote:
->> v2:
->> IMS (now dev-msi):
->> With recommendations from Jason/Thomas/Dan on making IMS more generic:
->> Pass a non-pci generic device(struct device) for IMS management instead of mdev
->> Remove all references to mdev and symbol_get/put
->> Remove all references to IMS in common code and replace with dev-msi
->> remove dynamic allocation of platform-msi interrupts: no groups,no new msi list or list helpers
->> Create a generic dev-msi domain with and without interrupt remapping enabled.
->> Introduce dev_msi_domain_alloc_irqs and dev_msi_domain_free_irqs apis
-> 
-> I didn't dig into the details of irq handling to really check this,
-> but the big picture of this is much more in line with what I would
-> expect for this kind of ability.
-> 
->> Link to previous discussions with Jason:
->> https://lore.kernel.org/lkml/57296ad1-20fe-caf2-b83f-46d823ca0b5f@intel.com/
->> The emulation part that can be moved to user space is very small due to the majority of the
->> emulations being control bits and need to reside in the kernel. We can revisit the necessity of
->> moving the small emulation part to userspace and required architectural changes at a later time.
-> 
-> The point here is that you already have a user space interface for
-> these queues that already has kernel support to twiddle the control
-> bits. Generally I'd expect extending that existing kernel code to do
-> the small bit more needed for mapping the queue through to PCI
-> emulation to be smaller than the 2kloc of new code here to put all the
-> emulation and support framework in the kernel, and exposes a lower
-> attack surface of kernel code to the guest.
-> 
->> The kernel can specify the requirements for these callback functions
->> (e.g., the driver is not expected to block, or not expected to take
->> a lock in the callback function).
-> 
-> I didn't notice any of this in the patch series? What is the calling
-> context for the platform_msi_ops ? I think I already mentioned that
-> ideally we'd need blocking/sleeping. The big selling point is that IMS
-> allows this data to move off-chip, which means accessing it is no
-> longer just an atomic write to some on-chip memory.
-> 
-> These details should be documented in the comment on top of
-> platform_msi_ops
-> 
-> I'm actually a little confused how idxd_ims_irq_mask() manages this -
-> I thought IRQ masking should be synchronous, shouldn't there at least be a
-> flushing read to ensure that new MSI's are stopped and any in flight
-> are flushed to the APIC?
+10:57:35 > git grep 'noinstr' arch/x86/entry/common.c
+...
+arch/x86/entry/common.c:idtentry_state_t noinstr idtentry_enter(struct pt_regs *regs)
+arch/x86/entry/common.c:void noinstr idtentry_exit(struct pt_regs *regs, idtentry_state_t state)
+arch/x86/entry/common.c:void noinstr idtentry_enter_user(struct pt_regs *regs)
+arch/x86/entry/common.c:void noinstr idtentry_exit_user(struct pt_regs *regs)
+...
 
-You are right Jason. It's missing a flushing read.
+Are the above 'wrong'?  Is it worth me sending a patch?
 
-> 
-> Jason
-> 
+I've changed my code,
+Ira
