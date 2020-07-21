@@ -2,322 +2,122 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB126C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765A8C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7CAC208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 512672073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:36:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ra1p4Van"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="JyhmLykP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbgGULgk (ORCPT
+        id S1729663AbgGULg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:36:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727103AbgGULgj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:36:39 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70DDFC0619D8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:36:39 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id c80so2496872wme.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:36:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yj1qnl1WLfnKvv1xFJMIVkm5J+E8pmta5ysPZcg545M=;
-        b=Ra1p4VangqmV7CM2mbg0ENHiGKAvqOGmm3QzHbwuXOK6VwYR47xfLyfWeo4Z9vQOKG
-         xNLUEYZ4KalALdotcQoLjc0oegPpaaIMiry4Npz1FVNm4E1sHQQ7RwqhFy+x89bkbaVN
-         1cIXj7j9IG5jR3Ki9Dshx719g4/0p3B0VXkOQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yj1qnl1WLfnKvv1xFJMIVkm5J+E8pmta5ysPZcg545M=;
-        b=SKbH4TYkfthBOH/e1ek7ikVCZtczmqBy3tsMMIJQxYEhdkVa/VN1eT0Qq3cjCIj7O/
-         2CWtiyLPKzyeNwJnGSij3Cay0OpAhBDxfUEkIvawYN3aZxmv7LDw1YDrnrL8Bl2h+ytp
-         7APOE+QryVvpI5/X4uMuKTWn5uSjITklBJpeN9+FNL5HbtIJOddOkgY3E1TQxn0aucjO
-         dMocYU2QS5XHbZvGT8nx/0g0bA7haWcuZnORWxNvM2/WkDMlJzXwhyNwhFdWNwLUNNOc
-         CL22sy9Ptg9Tg/39Q/0zP4oWLcRGfqFaZUHwznSsVlZg2B4RWWCU6ouibShZlz55+r9H
-         HmRQ==
-X-Gm-Message-State: AOAM533LTFSDHlqeYPxWetKeBdGsdIQtrgh6kZvZs2oe9boXCI7Y4+1C
-        EpjYsPWoS8slhz5GEDE+FkkKDz4lLlWFCsU+MEZ1XQ==
-X-Google-Smtp-Source: ABdhPJwh6lTkGfTci7wgoDwi1kHu85IEqFzskg/QiL2w0OvgAKxpMaamWsYAIfpujP6j1Keo8EsqOTDtjZZF3ildGPU=
-X-Received: by 2002:a1c:6246:: with SMTP id w67mr3574806wmb.42.1595331397735;
- Tue, 21 Jul 2020 04:36:37 -0700 (PDT)
+        Tue, 21 Jul 2020 07:36:57 -0400
+Received: from ozlabs.org ([203.11.71.1]:38021 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727106AbgGULg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 07:36:56 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9xQH045Xz9sSJ;
+        Tue, 21 Jul 2020 21:36:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1595331415;
+        bh=8cWqEZ7b8BkO4Lc0Yw9kRlVs08QZ7978e9X0CuvOH3I=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=JyhmLykPfuVbCmNgLwFSzcomuXhpdEJTpqJ7z3tXJaJxIOnZheJmHY0gNc6ljONpf
+         cWMncIFEKRaAuy9NXF8JOniiQPI/xhDLFO+9Ax0KCPFBLjqRf8NwaexBpxte9A0cuO
+         OXhqY7VsIdhf1+ipTE9Vg2FayfKkcH/5ln1pjPAdm8TudEONBAezMcRR7wxrmuryG4
+         dYAfSi4ZD+YZXmzfcgEPhyhpOGJWHWSv5Kfr+CCW9VTypwW9rTiGimSVyokaM+/onJ
+         3mYDfMsC8liIOPX0svCn03YVxiDz4aP/76avkJ8BrxbNWSNbcSdXkbp+RS2HdljEsj
+         F1BmP47NUh3kA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Cc:     mikey@neuling.org, apopple@linux.ibm.com,
+        Paul Mackerras <paulus@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: Re: [PATCH v4 09/10] powerpc/watchpoint: Return available watchpoints dynamically
+In-Reply-To: <ccfcf488-0ec9-1737-8368-a848de1d72d1@linux.ibm.com>
+References: <20200717040958.70561-1-ravi.bangoria@linux.ibm.com> <20200717040958.70561-10-ravi.bangoria@linux.ibm.com> <CACzsE9r0acLUkV35mVxy1AEK_xObs0yz+fD6UdbNdc6uz=Buqw@mail.gmail.com> <ccfcf488-0ec9-1737-8368-a848de1d72d1@linux.ibm.com>
+Date:   Tue, 21 Jul 2020 21:36:54 +1000
+Message-ID: <87k0yxrtex.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200717120207.3471030-1-cychiang@chromium.org>
- <20200717120207.3471030-2-cychiang@chromium.org> <CA+Px+wV211AhRVTecU7OS6uP2AQw7v7Gu5x41L4dgW3xR8mA-A@mail.gmail.com>
-In-Reply-To: <CA+Px+wV211AhRVTecU7OS6uP2AQw7v7Gu5x41L4dgW3xR8mA-A@mail.gmail.com>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Tue, 21 Jul 2020 19:36:10 +0800
-Message-ID: <CAFv8Nw+n9nQio7-3GS0sYrj58D9+Rpq39u4RTDJ0rVgvKtdj1A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ASoC: qcom: sc7180: Add machine driver for sound card registration
-To:     Tzung-Bi Shih <tzungbi@google.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Dylan Reid <dgreid@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        ALSA development <alsa-devel@alsa-project.org>,
-        Ajit Pandey <ajitp@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tzung-Bi,
-Thanks for the review!
-On Mon, Jul 20, 2020 at 10:47 AM Tzung-Bi Shih <tzungbi@google.com> wrote:
->
-> On Fri, Jul 17, 2020 at 8:02 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
-> > diff --git a/sound/soc/qcom/sc7180.c b/sound/soc/qcom/sc7180.c
-> > new file mode 100644
-> > index 000000000000..cbe6b487d432
-> > --- /dev/null
-> > +++ b/sound/soc/qcom/sc7180.c
-> > @@ -0,0 +1,410 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> > + *
-> > + * sc7180.c -- ALSA SoC Machine driver for SC7180
-> > + */
-> Use "//" for all lines (see https://lkml.org/lkml/2020/5/14/332).
->
+Ravi Bangoria <ravi.bangoria@linux.ibm.com> writes:
+> On 7/20/20 9:12 AM, Jordan Niethe wrote:
+>> On Fri, Jul 17, 2020 at 2:11 PM Ravi Bangoria
+>> <ravi.bangoria@linux.ibm.com> wrote:
+>>>
+>>> So far Book3S Powerpc supported only one watchpoint. Power10 is
+>>> introducing 2nd DAWR. Enable 2nd DAWR support for Power10.
+>>> Availability of 2nd DAWR will depend on CPU_FTR_DAWR1.
+>>>
+>>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>>> ---
+>>>   arch/powerpc/include/asm/cputable.h      | 4 +++-
+>>>   arch/powerpc/include/asm/hw_breakpoint.h | 5 +++--
+>>>   2 files changed, 6 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
+>>> index 3445c86e1f6f..36a0851a7a9b 100644
+>>> --- a/arch/powerpc/include/asm/cputable.h
+>>> +++ b/arch/powerpc/include/asm/cputable.h
+>>> @@ -633,7 +633,9 @@ enum {
+>>>    * Maximum number of hw breakpoint supported on powerpc. Number of
+>>>    * breakpoints supported by actual hw might be less than this.
+>>>    */
+>>> -#define HBP_NUM_MAX    1
+>>> +#define HBP_NUM_MAX    2
+>>> +#define HBP_NUM_ONE    1
+>>> +#define HBP_NUM_TWO    2
 
-Thanks for the pointer. Fixed in v2.
+>> I wonder if these defines are necessary - has it any advantage over
+>> just using the literal?
+>
+> No, not really. Initially I had something like:
+>
+> #define HBP_NUM_MAX    2
+> #define HBP_NUM_P8_P9  1
+> #define HBP_NUM_P10    2
+>
+> But then I thought it's also not right. So I made it _ONE and _TWO.
+> Now the function that decides nr watchpoints dynamically (nr_wp_slots)
+> is in different file, I thought to keep it like this so it would be
+> easier to figure out why _MAX is 2.
 
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/of_device.h>
-> > +#include <sound/core.h>
-> > +#include <sound/pcm.h>
-> > +#include <sound/pcm_params.h>
-> > +#include <sound/jack.h>
-> > +#include <sound/soc.h>
-> > +#include <uapi/linux/input-event-codes.h>
-> > +#include <dt-bindings/sound/sc7180-lpass.h>
-> > +#include "../codecs/rt5682.h"
-> > +#include "common.h"
-> > +#include "lpass.h"
-> Insert a blank line in between <...> and "..." and sort the list
-> alphabetically to make it less likely to conflict.
+I don't think it makes anything clearer.
 
-Fixed in v2.
+I had to stare at it thinking there was some sort of mapping or
+indirection going on, before I realised it's just literally the number
+of breakpoints.
 
->
-> > +static int sc7180_snd_hw_params(struct snd_pcm_substream *substream,
-> > +                               struct snd_pcm_hw_params *params)
-> > +{
-> Dummy function?  Or is it still work in progress?
->
-Removed in v2.
+So please just do:
 
-> > +       struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> > +       struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-> > +       int ret = 0;
-> > +
-> > +       switch (cpu_dai->id) {
-> > +       case MI2S_PRIMARY:
-> > +               break;
-> > +       case MI2S_SECONDARY:
-> > +               break;
-> > +       default:
-> > +               pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-> -EINVAL.
->
-Removed in v2.
-> > +static int sc7180_dai_init(struct snd_soc_pcm_runtime *rtd)
-> > +{
-> > +       struct snd_soc_component *component;
-> > +       struct snd_soc_card *card = rtd->card;
-> > +       struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-> > +       struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
-> > +       struct sc7180_snd_data *pdata = snd_soc_card_get_drvdata(card);
-> > +       struct snd_jack *jack;
-> > +       int rval;
-> > +
-> > +       if (!pdata->jack_setup) {
-> > +               rval = snd_soc_card_jack_new(
-> > +                               card, "Headset Jack",
-> > +                               SND_JACK_HEADSET |
-> > +                               SND_JACK_HEADPHONE |
-> > +                               SND_JACK_BTN_0 | SND_JACK_BTN_1 |
-> > +                               SND_JACK_BTN_2 | SND_JACK_BTN_3,
-> > +                               &pdata->jack, NULL, 0);
-> > +
-> > +               if (rval < 0) {
-> > +                       dev_err(card->dev, "Unable to add Headphone Jack\n");
-> > +                       return rval;
-> > +               }
-> > +
-> > +               jack = pdata->jack.jack;
-> > +
-> > +               snd_jack_set_key(jack, SND_JACK_BTN_0, KEY_PLAYPAUSE);
-> > +               snd_jack_set_key(jack, SND_JACK_BTN_1, KEY_VOICECOMMAND);
-> > +               snd_jack_set_key(jack, SND_JACK_BTN_2, KEY_VOLUMEUP);
-> > +               snd_jack_set_key(jack, SND_JACK_BTN_3, KEY_VOLUMEDOWN);
-> > +               pdata->jack_setup = true;
-> This block is something I don't expect to be in "dai_init" (i.e. there
-> is only 1 headset jack, why do we need to run the code for n times).
->
-Thanks for the suggestion. In v2 I am using aux device so this
-function is cleaned up to be specific to aux device for jack
-detection.
+static inline int nr_wp_slots(void)
+{
+       return cpu_has_feature(CPU_FTR_DAWR1) ? 2 : 1;
+}
 
-> > +       switch (cpu_dai->id) {
-> > +       case MI2S_PRIMARY:
-> > +               jack  = pdata->jack.jack;
-> > +               component = codec_dai->component;
-> > +
-> > +               jack->private_data = component;
-> > +               jack->private_free = sc7180_jack_free;
-> > +               rval = snd_soc_component_set_jack(component,
-> > +                                                 &pdata->jack, NULL);
-> > +               if (rval != 0 && rval != -EOPNOTSUPP) {
-> > +                       dev_warn(card->dev, "Failed to set jack: %d\n", rval);
-> > +                       return rval;
-> > +               }
-> > +               break;
-> > +       case MI2S_SECONDARY:
-> > +               break;
-> > +       default:
-> > +               pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-> -EINVAL.
->
-Removed in v2.
-> > +static int sc7180_snd_startup(struct snd_pcm_substream *substream)
-> > +{
-> > +       unsigned int codec_dai_fmt = SND_SOC_DAIFMT_CBS_CFS;
-> > +       struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> > +       struct snd_soc_card *card = rtd->card;
-> > +       struct sc7180_snd_data *data = snd_soc_card_get_drvdata(card);
-> > +       struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-> > +       struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
-> > +       int ret;
-> > +
-> > +       switch (cpu_dai->id) {
-> > +       case MI2S_PRIMARY:
-> > +               codec_dai_fmt |= SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_I2S;
-> If the format is fixed, could it put somewhere statically?
->
-Fixed in v2.
-> > +               if (++data->pri_mi2s_clk_count == 1) {
-> Don't it need to be atomic?
->
-soc_pcm_open and soc_pcm_close are protected by card->pcm_mutex so
-they will happen in sequence.
+If you think HBP_NUM_MAX needs explanation then do that with a comment,
+it can refer to nr_wp_slots() if that's helpful.
 
-> > +                       snd_soc_dai_set_sysclk(cpu_dai,
-> > +                                              LPASS_MCLK0,
-> > +                                              DEFAULT_MCLK_RATE,
-> > +                                              SNDRV_PCM_STREAM_PLAYBACK);
-> > +               }
-> > +               snd_soc_dai_set_fmt(codec_dai, codec_dai_fmt);
-> > +
-> > +               /* Configure PLL1 for codec */
-> > +               ret = snd_soc_dai_set_pll(codec_dai, 0, RT5682_PLL1_S_MCLK,
-> > +                                         DEFAULT_MCLK_RATE, RT5682_PLL1_FREQ);
-> > +               if (ret < 0) {
-> > +                       dev_err(rtd->dev, "can't set codec pll: %d\n", ret);
-> > +                       return ret;
-> > +               }
-> > +
-> > +               /* Configure sysclk for codec */
-> > +               ret = snd_soc_dai_set_sysclk(codec_dai, RT5682_SCLK_S_PLL1,
-> > +                                            RT5682_PLL1_FREQ,
-> > +                                            SND_SOC_CLOCK_IN);
-> > +               if (ret < 0)
-> > +                       dev_err(rtd->dev, "snd_soc_dai_set_sysclk err = %d\n",
-> > +                               ret);
-> > +
-> > +               break;
-> > +       case MI2S_SECONDARY:
-> > +               break;
-> > +       default:
-> > +               pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-> -EINVAL.
-Fixed in v2
->
-> > +static void  sc7180_snd_shutdown(struct snd_pcm_substream *substream)
-> > +{
-> > +       struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> > +       struct snd_soc_card *card = rtd->card;
-> > +       struct sc7180_snd_data *data = snd_soc_card_get_drvdata(card);
-> > +       struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-> > +
-> > +       switch (cpu_dai->id) {
-> > +       case MI2S_PRIMARY:
-> > +               if (--data->pri_mi2s_clk_count == 0) {
-> Atomic?
-ditto
->
-> > +                       snd_soc_dai_set_sysclk(cpu_dai,
-> > +                                              LPASS_MCLK0,
-> > +                                              0,
-> > +                                              SNDRV_PCM_STREAM_PLAYBACK);
-> > +               }
-> > +               break;
-> > +       case MI2S_SECONDARY:
-> > +               break;
-> > +       default:
-> > +               pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-> -EINVAL.
->
-not needed since this returns void
-> > +static int sc7180_snd_platform_probe(struct platform_device *pdev)
-> > +{
-> > +       struct snd_soc_card *card;
-> > +       struct sc7180_snd_data *data;
-> > +       struct device *dev = &pdev->dev;
-> > +       int ret;
-> > +
-> > +       card = kzalloc(sizeof(*card), GFP_KERNEL);
-> > +       if (!card)
-> > +               return -ENOMEM;
-> Looks like you don't need to allocate the card in runtime.  Also you
-> need to use the devm version if needed.
->
-Thanks for the great suggestion. In v2 I am using a static sound card.
-Also, use devm wherever possible to greatly simplify the code.
-
-> > +       /* Allocate the private data */
-> > +       data = kzalloc(sizeof(*data), GFP_KERNEL);
-> Use devm.
->
-Fixed in v2.
-> > +       card->dapm_widgets = sc7180_snd_widgets;
-> > +       card->num_dapm_widgets = ARRAY_SIZE(sc7180_snd_widgets);
-> Can the struct snd_soc_card allocate statically?
->
-Fixed in v2.
-> > +       sc7180_add_ops(card);
-> > +       ret = snd_soc_register_card(card);
-> devm.
->
->
-> I didn't dive into the logic too much.  Would need another round
-> review if any newer version.
-
-Thanks again.
+cheers
