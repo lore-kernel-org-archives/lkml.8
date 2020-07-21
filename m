@@ -2,149 +2,238 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A85DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 255412068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122832068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:05:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="KCcGQkn/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G2NWfIyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731092AbgGUVBt (ORCPT
+        id S1730857AbgGUVFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:01:49 -0400
-Received: from mail-dm6nam10on2056.outbound.protection.outlook.com ([40.107.93.56]:29697
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726686AbgGUVBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:01:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ET1yhNIwQyqU0V1gbOgKFxRQtTUQCaRjhsx18XB6Lx0dvyuRF82AR4sIo6MAn4WMAa3iHz7Ev6NBUJff/Datq6USSZRdTcOT7+hRcuzfGPxzUdwsUwktSlRBF8k5hpDZTu6RoDXn02TAwhrl4+Gpdle4/8zanWUW+82X2UvmQn3c24/SGyYCk8/ZtG/EQekrPG9XqkYhxXE3ALamunBqVChIiPnq/ErsDhDo350gClyBEMcq6njPthDhJtsjtYV2CVkFpRN4quaF9oHkdtoTzKlRJGGqAX3E0I0DMUCR/VCeehQWgHRHbFXq1mn9RNT4rNunYAc5KMDGyg7nEET7KQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+V8S/SNWLMv/0tjR4P09/Ica21Z5Q2Ox4tBDJPV0ZYQ=;
- b=iDMwMT3MMKr7wM+0RcOb0yFnm6W/ZCcwo3XohBqzJGOWVavpOJk/rhsRTdkRZv6uHemh0A1HnFba4sDOgdGzRnCeYOEvubXkvzMFKV6fYxI49x5ynkiobbjxEfZ7ap8GaLagHSGOrzNW0oA2FS7qjEP1pOLOzaWYCb1vHMQQSjupBgiXGEyB9OaRt4EFtZ3PFWec0e8GHm+NGx5mE8+X75elSpsJjNH2t0nbt/rCcWNMs0hXb5zuIGhNJPMvGr/PR8nwp3t5pAxCEErtUu2LwdXBRNHCIpzunouoX+QGkYFdllQgaL7IWZFocQUo+Ovdm/krLf6PIWAv99ABXxVCMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+V8S/SNWLMv/0tjR4P09/Ica21Z5Q2Ox4tBDJPV0ZYQ=;
- b=KCcGQkn/H6D0uJ4hYsIM3XminAXEDrzm3LdKzCjmxBSdCTqz89GEwDtV/HEvIa+lpsk0n75kf57AkUJ+FQqWwzUVhE10wDNq6AfFyCROZRDLmj1xORGPP4ifF8eyjUOezODoklvpt8iX/W6qQ9Xz2SD/TTc6lGFYyhg3UnvPkVk=
-Received: from BY5PR05MB7191.namprd05.prod.outlook.com (2603:10b6:a03:1d9::14)
- by SJ0PR05MB7472.namprd05.prod.outlook.com (2603:10b6:a03:285::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.14; Tue, 21 Jul
- 2020 21:01:44 +0000
-Received: from BY5PR05MB7191.namprd05.prod.outlook.com
- ([fe80::7d2f:b4c0:5bd9:f6af]) by BY5PR05MB7191.namprd05.prod.outlook.com
- ([fe80::7d2f:b4c0:5bd9:f6af%8]) with mapi id 15.20.3216.020; Tue, 21 Jul 2020
- 21:01:44 +0000
-From:   Mike Stunes <mstunes@vmware.com>
-To:     Joerg Roedel <joro@8bytes.org>
-CC:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH v4 51/75] x86/sev-es: Handle MMIO events
-Thread-Topic: [PATCH v4 51/75] x86/sev-es: Handle MMIO events
-Thread-Index: AQHWWdfdDTzyqLev5U6Jd/iJZ+m0yKkSkJaA
-Date:   Tue, 21 Jul 2020 21:01:44 +0000
-Message-ID: <40D5C698-1ED2-4CCE-9C1D-07620A021A6A@vmware.com>
-References: <20200714120917.11253-1-joro@8bytes.org>
- <20200714120917.11253-52-joro@8bytes.org>
-In-Reply-To: <20200714120917.11253-52-joro@8bytes.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.80.23.2.2)
-authentication-results: 8bytes.org; dkim=none (message not signed)
- header.d=none;8bytes.org; dmarc=none action=none header.from=vmware.com;
-x-originating-ip: [2601:600:9e7f:eac1:44f1:7528:2d31:aa97]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 66fd10c8-cf30-48d2-0b5b-08d82db9462c
-x-ms-traffictypediagnostic: SJ0PR05MB7472:
-x-microsoft-antispam-prvs: <SJ0PR05MB74723E72C230523B1DED2A45C8780@SJ0PR05MB7472.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: v2GAPcSZkUSE2SLB+fvUUllRQXatIApzFturWsmYqnHhcLtouSC4k+PIA73CWYQWoQdxceV8x3DQjfOUi6bkg4YkovElZPNtBsLP0rhwRhkVJ0xUM8j8G2/jhkhjSlplFMTDyO3rfANfxGuG40ukLNaVbHN4ozVOcW2TFwu7fHpgt22k2umlrFzdQDl0Yzf/FHunVTgaS1dWKllyQ6ov2XPE3OUsU2zoi7NzYuL4bByU2wYVBtPWte+f/+4Q3/VuRzwIKSQSlKqDSa2hNCLwqLTLbKGSG5op+0rlUrQSpA0PhXR30Oxj4BlAcCedtAP7Fd58rCKCI2SA754StbDySg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR05MB7191.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(346002)(366004)(396003)(39860400002)(6506007)(53546011)(186003)(4326008)(7416002)(2616005)(6486002)(8936002)(6512007)(66476007)(33656002)(478600001)(54906003)(76116006)(316002)(86362001)(5660300002)(2906002)(66446008)(64756008)(66556008)(66946007)(6916009)(71200400001)(8676002)(36756003)(83380400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: d/aW2nUxMcOBiuVRKWyUtd2kod2IZ+VzKZlLf3yQsMGfuP53dU4OiRgTqEON2wh6nd1P9R9lAO5i5/KlG77JDuefNt6Qr0rj4qXz64PUefm2fDtN5OuxPRMXkMS4/auBbKmccdclqhW2B0UujRUB3nOeuG327Leng7Ptl6soFTvXZBYIires8Tnag80pLleCXaVUdmGa8WvuayH1rKTe76yL4O/cHMht359m4Rt95mEGVSYMf3XcTxDcWIFzexaD4K2dtfuzMXp2lgMtmTGZJLdRvKkC3hYdQRg6cH8EztOUsAZdgy9Iu3agwb+a5hJzw0W6hsuqraKkyh/hxZiWfCrkpvmVN142L1aNVeloEUCd9ucDLehqggmslC+izDqXED8p9kQ8dfNuQqvpzFEC5LJQ4u4YA/+49miFVl6tZRUUgzpOYh/8pXOX2F+pt6U97oQysUFJwQU5204U5fuUKeYcN3T++TLnb+ZKbXX6kmUwOk7c60Eeh7iqF4TQZARaWJqqLA1lrWTcz1co/h9KvIlb58yoodfVFRD688kgF9wk7mj8WlrNO7iIE51uEyRO
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FF0E2EA999EC494A816392FBDBBA1035@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 21 Jul 2020 17:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728606AbgGUVFA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 17:05:00 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B512C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:05:00 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id b77so5063vsd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:05:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jJhbzVDa9nePxgAcv9hRGTSaFk2PPisZtuGmQbqXq4M=;
+        b=G2NWfIyUsyvk7iqL8Y7G25VX3J5N1E5bZULjMHl9k6T+YkX8MSsjLfVSTNpw2Sl+Uo
+         pMFA/3oH9PDppJbYTdVpPInv0V/MNW9w2iTGnWfnlyxIoH6x4b5KjFdpFDWwXK6TC0h/
+         4qpnv+b2YuXE1frsbcWunmMf/5SVUx1/zTeTY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jJhbzVDa9nePxgAcv9hRGTSaFk2PPisZtuGmQbqXq4M=;
+        b=NeYDqahrdEwODSDYvgYxW4ClBp4xxFc3sBHuLNLshzGb9qbW60lwRX4RBDimZra9y+
+         XbbdwdcT3a7Ih7c8P48zRtoh/fQpSvXOuYMu/NjTHRr1U2NS9PV10TltX/shdbmown3Z
+         jNr1n9R+X6Kr5aFAS/e8XCJVmsF7bwI69TrOxveG1VL2ZSEAfewqzF9o5FraU/MQtpzh
+         DKCgfDkg0tNywwP8WLN1QJRaF/B0GxxXfcugJkt+FI0n5k+bL7PQnrCiPOlpg67T0cpu
+         6Ay4NmLLV1IK6oSNS/TwZ70nj45EajWiF4UIo0a9cetXfrYOCfd9dlKrL6iU/XmwCNP9
+         r+xw==
+X-Gm-Message-State: AOAM533Swa3ZaJJ5NXIo11AEaw4Mjk0agtk9sx30x9CE1HQx0BqrgTs5
+        BULRdGnIE5GMTaqXGC2ns9Y7LmSsV+g=
+X-Google-Smtp-Source: ABdhPJw7icDnh2L9/OzczH0Did+8umEMSKvMskM4IpdDeMiaL5hwNdvKN5+3R3UDjy9HEzvNXex+2w==
+X-Received: by 2002:a67:6c84:: with SMTP id h126mr20530999vsc.181.1595365498824;
+        Tue, 21 Jul 2020 14:04:58 -0700 (PDT)
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com. [209.85.221.177])
+        by smtp.gmail.com with ESMTPSA id d3sm3534814vko.51.2020.07.21.14.04.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 14:04:57 -0700 (PDT)
+Received: by mail-vk1-f177.google.com with SMTP id m21so74541vkp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:04:57 -0700 (PDT)
+X-Received: by 2002:a1f:4e81:: with SMTP id c123mr12718651vkb.100.1595365497257;
+ Tue, 21 Jul 2020 14:04:57 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR05MB7191.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66fd10c8-cf30-48d2-0b5b-08d82db9462c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 21:01:44.0624
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BIa5w+c9eUC0JD04fYKB0qF83gLmT8ENpKnGaStamfuvLXGQ5eAeBxsjoS/K2Bbp1gRg5YSyIXTMpxi/rHc6Rw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR05MB7472
+References: <20200716151943.2167652-1-daniel.thompson@linaro.org>
+ <20200716151943.2167652-3-daniel.thompson@linaro.org> <CAD=FV=UDVjwy5=OiDCrMbn8o9N5GGMiG8JnL0j+9fy3m5Vf4Eg@mail.gmail.com>
+ <20200720080759.tyq4rq4qxmkwdk2g@holly.lan>
+In-Reply-To: <20200720080759.tyq4rq4qxmkwdk2g@holly.lan>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 21 Jul 2020 14:04:45 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WotJFiMe+tXtov2bEy2avH+=u5mi=gYM4U3_2DUGvO6g@mail.gmail.com>
+Message-ID: <CAD=FV=WotJFiMe+tXtov2bEy2avH+=u5mi=gYM4U3_2DUGvO6g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] kgdb: Use the kprobe blocklist to limit single stepping
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        LKML <linux-kernel@vger.kernel.org>,
+        Patch Tracking <patches@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSm9lcmcsDQoNClRoYW5rcyBmb3IgdGhlIG5ldyBwYXRjaC1zZXQhDQoNCj4gT24gSnVsIDE0
-LCAyMDIwLCBhdCA1OjA4IEFNLCBKb2VyZyBSb2VkZWwgPGpvcm9AOGJ5dGVzLm9yZz4gd3JvdGU6
-DQo+IA0KPiBGcm9tOiBUb20gTGVuZGFja3kgPHRob21hcy5sZW5kYWNreUBhbWQuY29tPg0KPiAN
-Cj4gQWRkIGhhbmRsZXIgZm9yIFZDIGV4Y2VwdGlvbnMgY2F1c2VkIGJ5IE1NSU8gaW50ZXJjZXB0
-cy4gVGhlc2UNCj4gaW50ZXJjZXB0cyBjb21lIGFsb25nIGFzIG5lc3RlZCBwYWdlIGZhdWx0cyBv
-biBwYWdlcyB3aXRoIHJlc2VydmVkDQo+IGJpdHMgc2V0Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
-VG9tIExlbmRhY2t5IDx0aG9tYXMubGVuZGFja3lAYW1kLmNvbT4NCj4gWyBqcm9lZGVsQHN1c2Uu
-ZGU6IEFkYXB0IHRvIFZDIGhhbmRsaW5nIGZyYW1ld29yayBdDQo+IENvLWRldmVsb3BlZC1ieTog
-Sm9lcmcgUm9lZGVsIDxqcm9lZGVsQHN1c2UuZGU+DQo+IFNpZ25lZC1vZmYtYnk6IEpvZXJnIFJv
-ZWRlbCA8anJvZWRlbEBzdXNlLmRlPg0KPiANCj4gPHNuaXA+DQoNCknigJltIHJ1bm5pbmcgaW50
-byBhbiBNTUlPLXJlbGF0ZWQgYnVnIHdoZW4gSSB0cnkgdGVzdGluZyB0aGlzIG9uIG91ciBoeXBl
-cnZpc29yLg0KDQpEdXJpbmcgYm9vdCwgcHJvYmVfcm9tcyAoYXJjaC94ODYva2VybmVsL3Byb2Jl
-X3JvbXMuYykgdXNlcyByb21jaGVja3N1bSBvdmVyIHRoZSB2aWRlbyBST00gYW5kIGV4dGVuc2lv
-biBST00gcmVnaW9ucy4gSW4gbXkgdGVzdCBWTSwgdGhlIHZpZGVvIFJPTSByb21jaGVja3N1bSBz
-dGFydHMgYXQgdmlydHVhbCBhZGRyZXNzIDB4ZmZmZjg4ODAwMDBjMDAwMCBhbmQgaGFzIGxlbmd0
-aCA2NTUzNi4gQnV0LCBhdCBhZGRyZXNzIDB4ZmZmZjg4ODAwMDBjNDAwMCwgd2Ugc3dpdGNoIGZy
-b20gYmVpbmcgdmlkZW8tUk9NLWJhY2tlZCB0byBiZWluZyB1bmJhY2tlZCBieSBhbnl0aGluZy4N
-Cg0KV2l0aCBTRVYtRVMgZW5hYmxlZCwgb3VyIHBsYXRmb3JtIGhhbmRsZXMgcmVhZHMgYW5kIHdy
-aXRlcyB0byB1bmJhY2tlZCBtZW1vcnkgYnkgdHJlYXRpbmcgdGhlbSBhcyBNTUlPLiBTbywgdGhl
-IHJlYWQgZnJvbSAweGZmZmY4ODgwMDAwYzQwMDAgY2F1c2VzIGEgI1ZDLCB3aGljaCBpcyBoYW5k
-bGVkIGJ5IGRvX2Vhcmx5X2V4Y2VwdGlvbi4NCg0KSW4gaGFuZGxpbmcgdGhlICNWQywgdmNfc2xv
-d192aXJ0X3RvX3BoeXMgZmFpbHMgZm9yIHRoYXQgYWRkcmVzcy4gTXkgdW5kZXJzdGFuZGluZyBp
-cyB0aGF0IHRoZSAjVkMgaGFuZGxlciBzaG91bGQgdGhlbiBhZGQgYW4gZW50cnkgdG8gdGhlIHBh
-Z2UgdGFibGVzIGFuZCByZXRyeSB0aGUgZmF1bHRpbmcgYWNjZXNzLiBTb21laG93LCB0aGF0IGlz
-buKAmXQgaGFwcGVuaW5nLiBGcm9tIHRoZSBoeXBlcnZpc29yIHNpZGUsIGl0IGxvb2tzIGxpa2Ug
-dGhlIGd1ZXN0IGlzIGxvb3Bpbmcgc29tZWhvdy4gKEkgdGhpbmsgdGhlIFZDUFUgaXMgbW9zdGx5
-IHVuaGFsdGVkIGFuZCBtYWtpbmcgcHJvZ3Jlc3MsIGJ1dCB0aGUgZ3Vlc3QgbmV2ZXIgZ2V0cyBw
-YXN0IHRoYXQgcm9tY2hlY2tzdW0uKSBUaGUgZ3Vlc3QgbmV2ZXIgYWN0dWFsbHkgbWFrZXMgYW4g
-TU1JTyB2bWdleGl0IGZvciB0aGF0IGFkZHJlc3MuDQoNCklmIEkgcmVtb3ZlIHRoZSBjYWxsIHRv
-IHByb2JlX3JvbXMgZnJvbSBzZXR1cF9hcmNoLCBvciByZW1vdmUgdGhlIGNhbGxzIHRvIHJvbWNo
-ZWNrc3VtIGZyb20gcHJvYmVfcm9tcywgdGhpcyBrZXJuZWwgYm9vdHMgbm9ybWFsbHkuDQoNClBs
-ZWFzZSBsZXQgbWUga25vdyBvZiBvdGhlciB0ZXN0cyBJIHNob3VsZCBydW4gb3IgZGF0YSB0aGF0
-IEkgY2FuIGNvbGxlY3QuIFRoYW5rcyENCg0KTWlrZQ==
+Hi,
+
+On Mon, Jul 20, 2020 at 1:08 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Fri, Jul 17, 2020 at 03:39:51PM -0700, Doug Anderson wrote:
+> > Hi,
+> >
+> > On Thu, Jul 16, 2020 at 8:20 AM Daniel Thompson
+> > <daniel.thompson@linaro.org> wrote:
+> > >
+> > > If we are running in a part of the kernel that dislikes breakpoint
+> > > debugging then it is very unlikely to be safe to single step. Add
+> > > some safety rails to prevent stepping through anything on the kprobe
+> > > blocklist.
+> > >
+> > > As part of this kdb_ss() will no longer set the DOING_SS flags when it
+> > > requests a step. This is safe because this flag is already redundant,
+> > > returning KDB_CMD_SS is all that is needed to request a step (and this
+> > > saves us from having to unset the flag if the safety check fails).
+> > >
+> > > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > > ---
+> > >  include/linux/kgdb.h        |  1 +
+> > >  kernel/debug/debug_core.c   | 13 +++++++++++++
+> > >  kernel/debug/gdbstub.c      | 10 +++++++++-
+> > >  kernel/debug/kdb/kdb_bp.c   |  8 ++------
+> > >  kernel/debug/kdb/kdb_main.c | 10 ++++++++--
+> > >  5 files changed, 33 insertions(+), 9 deletions(-)
+> > >
+> > > diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+> > > index 7caba4604edc..aefe823998cb 100644
+> > > --- a/include/linux/kgdb.h
+> > > +++ b/include/linux/kgdb.h
+> > > @@ -214,6 +214,7 @@ extern void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc);
+> > >
+> > >  /* Optional functions. */
+> > >  extern int kgdb_validate_break_address(unsigned long addr);
+> > > +extern int kgdb_validate_single_step_address(unsigned long addr);
+> > >  extern int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt);
+> > >  extern int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt);
+> > >
+> > > diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+> > > index 133a361578dc..4b59bcc90c5d 100644
+> > > --- a/kernel/debug/debug_core.c
+> > > +++ b/kernel/debug/debug_core.c
+> > > @@ -208,6 +208,19 @@ int __weak kgdb_validate_break_address(unsigned long addr)
+> > >         return err;
+> > >  }
+> > >
+> > > +int __weak kgdb_validate_single_step_address(unsigned long addr)
+> > > +{
+> > > +       /*
+> > > +        * Disallow stepping when we are executing code that is marked
+> > > +        * as unsuitable for breakpointing... stepping won't be safe
+> > > +        * either!
+> > > +        */
+> > > +       if (kgdb_within_blocklist(addr))
+> > > +               return -EINVAL;
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > >  unsigned long __weak kgdb_arch_pc(int exception, struct pt_regs *regs)
+> > >  {
+> > >         return instruction_pointer(regs);
+> > > diff --git a/kernel/debug/gdbstub.c b/kernel/debug/gdbstub.c
+> > > index 61774aec46b4..f1c88007cc2b 100644
+> > > --- a/kernel/debug/gdbstub.c
+> > > +++ b/kernel/debug/gdbstub.c
+> > > @@ -1041,8 +1041,16 @@ int gdb_serial_stub(struct kgdb_state *ks)
+> > >                         if (tmp == 0)
+> > >                                 break;
+> > >                         /* Fall through - on tmp < 0 */
+> > > -               case 'c': /* Continue packet */
+> > >                 case 's': /* Single step packet */
+> > > +                       error = kgdb_validate_single_step_address(
+> > > +                                       kgdb_arch_pc(ks->ex_vector,
+> > > +                                                    ks->linux_regs));
+> >
+> > I'm a little confused.  Isn't this like saying "if
+> > (i_am_standing_in_acid) dont_step_into_acid"?
+>
+> I describe it more as:
+>
+>     if (we_know_there_is_acid_nearby)
+>         dont_step_forward
+>
+> It is possible we are currently stepping in acid but it is also possible
+> (and reasonably likely) that we haven't stepped in it yet but will do so
+> soon.
+>
+>
+> > Specifically you're checking the _current_ PC to see if it's in the
+> > blocklist, right?  ...but you've already (effectively) dropped into
+> > the debugger at that location, so if it really was a problem wouldn't
+> > we already be in trouble?
+>
+> The basic use case is where someone is stepping and we reach a PC that
+> would be blocked for a breakpoint. This will typically be due (although
+> I think it does generalize) to a function call and the safety rail will
+> be reached after we have jumped to the blocked function but before we
+> actually execute any instructions within it.
+>
+> Or putting it another way, there is no reason to worry if we start
+> somewhere "safe" and start stepping towards something on the blocklist.
+> We won't melt our shoes!
+
+I guess I still don't totally get it.  So let's say we have:
+
+void dont_trace_this(...)
+{
+  thing_not_to_trace_1();
+  thing_not_to_trace_2();
+  don_t_trace = this;
+}
+NOKPROBE_SYMBOL(dont_trace_this);
+
+void trace_me()
+{
+  sing();
+  dance();
+  dont_trace_this();
+  party();
+}
+
+So presumably the dont_trace_this() function is marked as
+NOKPROBE_SYMBOL because it's called by the kprobe handling code or by
+kgdb, right?  So if we had a breakpoint there then we'd just have
+infinite recursion.  Thus we want to prevent putting breakpoints
+anywhere in this function.  Even though dont_trace_this() is also
+called from the trace_me() function it doesn't matter--we still can't
+put breakpoints in it because it would cause problems with the
+debugger.
+
+Now, I guess the question is: why exactly do we need to prevent single
+stepping in dont_trace_this().  In the case above where
+dont_trace_this() is called from trace_me() it would actually be OK to
+single step it, right?  ...unless this is on a CPU that doesn't have a
+"single step mode" and has to implement stepping by breakpoints, of
+course.
+
+...but maybe I'm confused and there is a reason that we shouldn't
+allow single stepping into dont_trace_this() when called from
+trace_me().  If that is the case, I'm wondering why it's OK to step
+and stop on the first instruction of the function but it's not OK to
+step and stop through the other instructions in the function.
+
+-Doug
