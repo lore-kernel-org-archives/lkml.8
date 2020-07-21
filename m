@@ -2,153 +2,102 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F454C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79675C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7160B2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 515CA206E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595344422;
-	bh=cJveZYxoa7dAdPqQanvrZZl4c8wbkUcvWDgkCaEe+Os=;
+	s=default; t=1595344475;
+	bh=EC70+klebLS+syijFaXMg0/XUwOgroRzpIFSyx0/eAk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pOZhyecxvNMLS/Cssaibnh7/yrgT66I5b9VwmNeU6YJPaXF3NhzrqGP9EPHyrOhkz
-	 f5Q0XZijcL1U95sL++JpXnMTrsvZrPdgGVQrUTPCQe7aa8AdqUMG2P0mMGtBCAgWCh
-	 WMtGiY+zO+cL+Q89UDg2DmhvddVlJLpnDQOzGPxg=
+	b=WWhTOyMzjDJhp+mEKTM428VaPS9FKxJ7BsvfTdPC8MRS0YrXVBJx4hB1p/XOCbIE3
+	 oo10oe8Da+NG7kKmoiHYBRDQUoGKbA90cv79K4lvOBXyYmqqZebjq5qlqjOnc2SySi
+	 8TJoGyDt5kLYDGwPrfT9PE9kVof3PlinCHrQpBLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbgGUPNl (ORCPT
+        id S1729847AbgGUPOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729831AbgGUPNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:13:40 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 813372073A;
-        Tue, 21 Jul 2020 15:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595344419;
-        bh=cJveZYxoa7dAdPqQanvrZZl4c8wbkUcvWDgkCaEe+Os=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M34Xz+Pc5nQE/Ho21lGgohVu/PtpmhfIr6dhTZlnCUrQoHmKtmo1NkhpCjDpGTh0x
-         2065SHB4LCKQdIDH8xIeOacFUdrI/qxpE8EdHWbydd9PFpDvMl+oACZkyT0cpWVOXK
-         /lJOtx6+K9HNOzF9XLvLJ6cTh5/LUH7/vlhh/6SE=
-Received: by mail-oi1-f171.google.com with SMTP id e4so17514498oib.1;
-        Tue, 21 Jul 2020 08:13:39 -0700 (PDT)
-X-Gm-Message-State: AOAM531dzzPPnkvAKg3IIPvMfNJrQj/zp9gbek7NBqcfVSViGixK4EZG
-        VNILZp7cd3KJGd59ue65mkc9d+Tumew7tYAhAA==
-X-Google-Smtp-Source: ABdhPJx5usOUbuBPfOhR/huG6DuDsg8mCHNfxMXgiZDEHvwhavGmrHIBAxM6qwppEevA9KhIyFvg6dUqdvZHyzegRBI=
-X-Received: by 2002:aca:bb82:: with SMTP id l124mr3483290oif.106.1595344418842;
- Tue, 21 Jul 2020 08:13:38 -0700 (PDT)
+        Tue, 21 Jul 2020 11:14:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728089AbgGUPOd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:14:33 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13634C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:14:33 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f5so24468156ljj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:14:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UJ2oiatPJQaDkSAS79bD6RyNLxzOHISiSh/NEV751ag=;
+        b=NrTtagrMMk3FxqlaHdZNgbKdUc8Vh/avD14adDz7BB+LEJ2DXgeu7STJKNQgPO9iT+
+         vSjLYZPFhle+9JLlHdTV3Skc3JPIoW16dsZg/nAYIi5sPJWRptJVp8QKGoW5L8byXqHe
+         KmCEJht0AbHbpA8JTAsGOB5DlCkMZzJPxMHII=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UJ2oiatPJQaDkSAS79bD6RyNLxzOHISiSh/NEV751ag=;
+        b=Icoe0daVYc5yXWkQ4AEQ5esST4CoQbA3ibbs2aeWD5Mif6yy/mmdzW1ZeQfcrHuaxp
+         WFoblXuKZL08+SET188HhDGEBzn/a7spVbEetQQlK2KjW3/ZrZWmj3p9yLzJdqzqEKBd
+         XxtwCF6rC6q7gCH/V1dIWr6R2sq9rRYpveJf3g+AIZ+WF6hYJCFUaP3WNhQIRvGe9NR6
+         SyqNqhbr8f5Vku4sjkYNoOvasgvbDwdgMA/bQ6CGDpJn0YSXHzt6LM/D+Uc9uAeaCG+Q
+         UsLYxGzyNZA++aFHsN/cnhheiklS3Ml8RfWuILr2n+IuYCLMV8EWSKYiMH9BGSZpim+W
+         XheQ==
+X-Gm-Message-State: AOAM531lNXg2vh8a8M0WudHeAaNL7prBbm4GBYH1j6hkqzdizJbJogyi
+        k9c9XCJxX4twDIuSQ76FEeWEeWpLQAU=
+X-Google-Smtp-Source: ABdhPJySzstn5hqME2i2Ih9Ly4JjtlYnLEIYLSuNw9Od3JGrJ32RLDawgChAB4U3TWdV3+MDve5ODg==
+X-Received: by 2002:a2e:8216:: with SMTP id w22mr13436738ljg.2.1595344471264;
+        Tue, 21 Jul 2020 08:14:31 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id b18sm2390120lfp.36.2020.07.21.08.14.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 08:14:30 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id q6so3465395ljp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:14:30 -0700 (PDT)
+X-Received: by 2002:a2e:9b42:: with SMTP id o2mr12417087ljj.102.1595344469962;
+ Tue, 21 Jul 2020 08:14:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200622075956.171058-1-bjorn.andersson@linaro.org> <20200622075956.171058-2-bjorn.andersson@linaro.org>
-In-Reply-To: <20200622075956.171058-2-bjorn.andersson@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 21 Jul 2020 09:13:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKW+R=rygii7N69o28h5780qx645RhPXGQZ4jw3kHadhw@mail.gmail.com>
-Message-ID: <CAL_JsqKW+R=rygii7N69o28h5780qx645RhPXGQZ4jw3kHadhw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: hwlock: qcom: Migrate binding to YAML
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>
+References: <CA+icZUUGO0__SEZ7YvuQzfSdaWfTnCHW=73-3W4X=Vz51wHd+w@mail.gmail.com>
+ <CAHk-=wiR+uHUyp3=Nf1aiNjmg0ZekaQJupLRguFNZ=MreuGhfg@mail.gmail.com> <CA+icZUXRjrX+1NAZy4As_ficD4aHRAZWHRj5hrE+D6E5zEKXHw@mail.gmail.com>
+In-Reply-To: <CA+icZUXRjrX+1NAZy4As_ficD4aHRAZWHRj5hrE+D6E5zEKXHw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 21 Jul 2020 08:14:14 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgaTO-TNHimPtsBYWk7VMdL3rqdn=Uzom3f=Bs1CKw3kw@mail.gmail.com>
+Message-ID: <CAHk-=wgaTO-TNHimPtsBYWk7VMdL3rqdn=Uzom3f=Bs1CKw3kw@mail.gmail.com>
+Subject: Re: Linux 5.8-rc6
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 1:59 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+On Tue, Jul 21, 2020 at 1:17 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
 >
-> Migrate the Qualcomm TCSR mutex binding to YAML to allow validation.
->
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->
-> Changes since v1:
-> - Actually remove the old binding doc
->
->  .../bindings/hwlock/qcom-hwspinlock.txt       | 39 --------------
->  .../bindings/hwlock/qcom-hwspinlock.yaml      | 51 +++++++++++++++++++
->  2 files changed, 51 insertions(+), 39 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
->  create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
+> You happen to know if I can configure in my ~/.gitconfig to pull
+> linux-git stuff from two repositories - check first git.kernel.org
+> then GitHub.
 
-[...]
+Just script it. IOW, do
 
-> diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-> new file mode 100644
-> index 000000000000..71e63b52edd5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hwlock/qcom-hwspinlock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Hardware Mutex Block
-> +
-> +maintainers:
-> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
-> +
-> +description:
-> +  The hardware block provides mutexes utilized between different processors on
-> +  the SoC as part of the communication protocol used by these processors.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,sfpb-mutex
-> +      - qcom,tcsr-mutex
-> +
-> +  '#hwlock-cells':
-> +    const: 1
-> +
-> +  syscon:
-> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +    description:
-> +      Should be a triple of phandle referencing the TCSR mutex syscon, offset
-> +      of first mutex within the syscon and stride between each mutex.
-> +
-> +required:
-> +  - compatible
-> +  - '#hwlock-cells'
-> +  - syscon
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +        tcsr_mutex_block: syscon@fd484000 {
-> +                compatible = "syscon";
+   git pull ..kernel.org..
+   git pull ...github..
 
-'syscon' alone now generates warnings. Can you drop this node or add a
-specific compatible.
+and if you _want_ to, you can just create an alias for that in your
+.gitconfig so that you can do it with one "git update" command or
+whatever.
 
-> +                reg = <0xfd484000 0x2000>;
-> +        };
-> +
-> +        hwlock {
-> +                compatible = "qcom,tcsr-mutex";
-> +                syscon = <&tcsr_mutex_block 0 0x80>;
-> +
-> +                #hwlock-cells = <1>;
-> +        };
-> +...
-> --
-> 2.26.2
->
+But normally, they are both updated at pretty much the same time.
+
+             Linus
