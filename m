@@ -2,88 +2,208 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BB1C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D979EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A97B12068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:30:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595352615;
-	bh=ivHskNM+Pzn/uxKF3bGeiO3eYOoZTUBmqmoPTc51p0s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LWoOIJI1h79X5+XhDxXI7hgPpYo7pTLfidcsFuTia2HOYcbc1aUIvZ7OlH7I/achM
-	 ImPkbW4H0Eyuwrv16jKUNkQm704T1sm7XFXbeLzJX82SjYM+wHm0yX06NXdieJyVTv
-	 HO+r+GbmeuSW2xlodPhnY82Od1PQXa6WRkOSImX4=
+	by mail.kernel.org (Postfix) with ESMTP id B1F322065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:30:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="PSAZpj+5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbgGURaO (ORCPT
+        id S1730307AbgGURay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbgGURaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:30:14 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB5472065D;
-        Tue, 21 Jul 2020 17:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595352613;
-        bh=ivHskNM+Pzn/uxKF3bGeiO3eYOoZTUBmqmoPTc51p0s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pYc8ac+q5DvNUo0IZN5t0WjWeadKhYBtcqiWnRgr3rIqYq14n+dJ8yB0GD/EqKqDP
-         3kapzZ5xXdIoT3LlYByRzbHb9BDBKnLJiAdcJyRGNY2FiNhp9jGbZf2pRnICkCaMX4
-         fhHIo+4jv0opfsN2LLSRc5cpTrYMMqOtDGxzyMno=
-Date:   Tue, 21 Jul 2020 23:00:09 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     jonas.gorski@gmail.com, kishon@ti.com, robh+dt@kernel.org,
-        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        p.zabel@pengutronix.de, krzk@kernel.org,
-        gregkh@linuxfoundation.org, alcooperx@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 0/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
-Message-ID: <20200721173009.GO12965@vkoul-mobl>
-References: <20200720131209.1236590-1-noltari@gmail.com>
+        Tue, 21 Jul 2020 13:30:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730021AbgGURaw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 13:30:52 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2E65C0619DB
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:30:51 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id p1so10565798pls.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FNQIJCVAC3yI/wr26dwokn0jJTFgNgY2vwaGhgZ5gaY=;
+        b=PSAZpj+5RJKFTM7bx8Q/4LWFVdRFzFHHoTUfuS9SVVQCJ8H3AkyqANKbqBw6iOkMaj
+         AmxER0sxZkxc7lGfntuLZTSSGZLcOHEKrfY0eZBrDuCSJi1XeSyiqUnaPmESbnGP27Sm
+         fkMtFal2/RwqCcu4OrvPI/yJWTy94/H+qDzIRCU15+w0St2mG0/1qKVpqqAKzph1ZSLV
+         pB0g2bIIiKQLnR2hu7gKtcVTwvrV+264yvuhXKOf21aQWVm3T/hEBYOjslzS5DTvwEZf
+         QoF/7WPN/MkfRRlp78IC4Iln5eRqXgAq0K+HaIALve3ZS6EKjl6VX+kKWb1B6I37Owxw
+         OR+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FNQIJCVAC3yI/wr26dwokn0jJTFgNgY2vwaGhgZ5gaY=;
+        b=lCrHi/CC/Vp+WRq4YOYPSPpKu76Pg5VJjDWr+cJincsXC1YfWvQDwTvVk8vmguQIE+
+         NeuSCV80mLxecNDbDuiTX8tiAO5kHUxUQurNUk5L64qLPGwcIvs//5AkbBx7IS+VrPHS
+         fjzOQ7/7apxI4QPIEI56k+NDrE6kk0ybqdk/jl7TEzEFaDk0pGyHfuvW0PPG60KAh18v
+         04x178lb7PIwQbF/RlubF3gHtZrXhWVHtrvoe7ePdeK6pAGLpnQL5tviMCEQrMR5StMb
+         wTGb752NRk7mIkUATa6Jk1wn0VcENtCQOe6zT00eE00DynRGC+lBE24797Byx6R2N38I
+         Vqkw==
+X-Gm-Message-State: AOAM532gpcMDK9d5qwbu3TbLY/6NeNn3LpAIZ4QtumoswxxMVWNPbPkM
+        TUW12lT0p7jSN/tmMdX+g87+2w==
+X-Google-Smtp-Source: ABdhPJzcj29KWKlxnYEdr/MPQipQ5RFeCFmVu/mUj60wPEXGtRzZ9kj+sYYx3h55pyqc99w7Oo33QA==
+X-Received: by 2002:a17:902:7d8b:: with SMTP id a11mr22926231plm.72.1595352651200;
+        Tue, 21 Jul 2020 10:30:51 -0700 (PDT)
+Received: from ?IPv6:2600:380:7525:2b73:480a:82a8:5615:8a89? ([2600:380:7525:2b73:480a:82a8:5615:8a89])
+        by smtp.gmail.com with ESMTPSA id c23sm20894196pfo.32.2020.07.21.10.30.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 10:30:50 -0700 (PDT)
+Subject: Re: strace of io_uring events?
+To:     Andy Lutomirski <luto@kernel.org>,
+        Andres Freund <andres@anarazel.de>
+Cc:     Stefano Garzarella <sgarzare@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Kees Cook <keescook@chromium.org>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
+ <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net>
+ <20200715171130.GG12769@casper.infradead.org>
+ <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com>
+ <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
+ <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com>
+ <202007151511.2AA7718@keescook> <20200716131404.bnzsaarooumrp3kx@steredhat>
+ <202007160751.ED56C55@keescook>
+ <20200717080157.ezxapv7pscbqykhl@steredhat.lan>
+ <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
+ <39a3378a-f8f3-6706-98c8-be7017e64ddb@kernel.dk>
+ <CALCETrXAxFzuRB5EJZR7bbgfrEcNc=9_E7wwhPaZ3YGJ1=DZ0w@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ba989463-c627-8af7-9234-4dc8ac4eea0e@kernel.dk>
+Date:   Tue, 21 Jul 2020 11:30:44 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200720131209.1236590-1-noltari@gmail.com>
+In-Reply-To: <CALCETrXAxFzuRB5EJZR7bbgfrEcNc=9_E7wwhPaZ3YGJ1=DZ0w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-07-20, 15:12, Álvaro Fernández Rojas wrote:
-> Add BCM63xx USBH PHY driver for BMIPS.
+On 7/21/20 11:23 AM, Andy Lutomirski wrote:
+> On Tue, Jul 21, 2020 at 8:31 AM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> On 7/21/20 9:27 AM, Andy Lutomirski wrote:
+>>> On Fri, Jul 17, 2020 at 1:02 AM Stefano Garzarella <sgarzare@redhat.com> wrote:
+>>>>
+>>>> On Thu, Jul 16, 2020 at 08:12:35AM -0700, Kees Cook wrote:
+>>>>> On Thu, Jul 16, 2020 at 03:14:04PM +0200, Stefano Garzarella wrote:
+>>>
+>>>>> access (IIUC) is possible without actually calling any of the io_uring
+>>>>> syscalls. Is that correct? A process would receive an fd (via SCM_RIGHTS,
+>>>>> pidfd_getfd, or soon seccomp addfd), and then call mmap() on it to gain
+>>>>> access to the SQ and CQ, and off it goes? (The only glitch I see is
+>>>>> waking up the worker thread?)
+>>>>
+>>>> It is true only if the io_uring istance is created with SQPOLL flag (not the
+>>>> default behaviour and it requires CAP_SYS_ADMIN). In this case the
+>>>> kthread is created and you can also set an higher idle time for it, so
+>>>> also the waking up syscall can be avoided.
+>>>
+>>> I stared at the io_uring code for a while, and I'm wondering if we're
+>>> approaching this the wrong way. It seems to me that most of the
+>>> complications here come from the fact that io_uring SQEs don't clearly
+>>> belong to any particular security principle.  (We have struct creds,
+>>> but we don't really have a task or mm.)  But I'm also not convinced
+>>> that io_uring actually supports cross-mm submission except by accident
+>>> -- as it stands, unless a user is very careful to only submit SQEs
+>>> that don't use user pointers, the results will be unpredictable.
+>>
+>> How so?
 > 
-> v8: readd Simon as author and remove his email address from the source code.
-> v7: remove Simon from authors and introduce changes suggested by Rob:
->   - Move clock conditions to the main section.
->   - Set missing additionalProperties to false.
-> v6: introduce changes suggested by Rob and Vinod:
->  - Remove BMIPS_GENERIC default from kconfig.
->  - Print registered message as debug.
->  - Add another if case to device tree binding for SoCs with just 1 clock.
->  - Ignored "additionalProperties: false" suggestion since it triggers a
->   warning. This has been reported, but I haven't received any answer yet.
-> v5: use devm_reset_control_get_exclusive.
-> v4: fix dt-bindings documentation and improve device mode config.
-> v3: introduce changes suggested by Florian:
->  - Add support for device mode.
-> v2: introduce changes suggested by Florian:
->  - phy-cells changed to 1.
->  - Drop OF dependency (use device_get_match_data).
->  - Drop __initconst from variant tables.
->  - Use devm_clk_get_optional.
+> Unless I've missed something, either current->mm or sqo_mm will be
+> used depending on which thread ends up doing the IO.  (And there might
+> be similar issues with threads.)  Having the user memory references
+> end up somewhere that is an implementation detail seems suboptimal.
 
-Applied, thanks
+current->mm is always used from the entering task - obviously if done
+synchronously, but also if it needs to go async. The only exception is a
+setup with SQPOLL, in which case ctx->sqo_mm is the task that set up the
+ring. SQPOLL requires root privileges to setup, and there's no task
+entering the io_uring at all necessarily. It'll just submit sqes with
+the credentials that are registered with the ring.
+
+>>> Perhaps we can get away with this:
+>>>
+>>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>>> index 74bc4a04befa..92266f869174 100644
+>>> --- a/fs/io_uring.c
+>>> +++ b/fs/io_uring.c
+>>> @@ -7660,6 +7660,20 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int,
+>>> fd, u32, to_submit,
+>>>      if (!percpu_ref_tryget(&ctx->refs))
+>>>          goto out_fput;
+>>>
+>>> +    if (unlikely(current->mm != ctx->sqo_mm)) {
+>>> +        /*
+>>> +         * The mm used to process SQEs will be current->mm or
+>>> +         * ctx->sqo_mm depending on which submission path is used.
+>>> +         * It's also unclear who is responsible for an SQE submitted
+>>> +         * out-of-process from a security and auditing perspective.
+>>> +         *
+>>> +         * Until a real usecase emerges and there are clear semantics
+>>> +         * for out-of-process submission, disallow it.
+>>> +         */
+>>> +        ret = -EACCES;
+>>> +        goto out;
+>>> +    }
+>>> +
+>>>      /*
+>>>       * For SQ polling, the thread will do all submissions and completions.
+>>>       * Just return the requested submit count, and wake the thread if
+>>
+>> That'll break postgres that already uses this, also see:
+>>
+>> commit 73e08e711d9c1d79fae01daed4b0e1fee5f8a275
+>> Author: Jens Axboe <axboe@kernel.dk>
+>> Date:   Sun Jan 26 09:53:12 2020 -0700
+>>
+>>     Revert "io_uring: only allow submit from owning task"
+>>
+>> So no, we can't do that.
+>>
+> 
+> Yikes, I missed that.
+> 
+> Andres, how final is your Postgres branch?  I'm wondering if we could
+> get away with requiring a special flag when creating an io_uring to
+> indicate that you intend to submit IO from outside the creating mm.
+> 
+> Even if we can't make this change, we could plausibly get away with
+> tying seccomp-style filtering to sqo_mm.  IOW we'd look up a
+> hypothetical sqo_mm->io_uring_filters to filter SQEs even when
+> submitted from a different mm.
+
+This is just one known use case, there may very well be others. Outside
+of SQPOLL, which is special, I don't see a reason to restrict this.
+Given that you may have a fuller understanding of it after the above
+explanation, please clearly state what problem you're seeing that
+warrants a change.
 
 -- 
-~Vinod
+Jens Axboe
+
