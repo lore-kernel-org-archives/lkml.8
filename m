@@ -2,80 +2,77 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA113C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 387B7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC73206F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:20:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="leGPhWIG"
+	by mail.kernel.org (Postfix) with ESMTP id 1778320717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595359292;
+	bh=uvcuFv0R6bqByYEk1y2UFO10PzRWHHXQclqrGDwva6Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=r2EunrfD+qMicerByom6aDpNSiciBqu9X2W5cP8sPF5YooEPu6tlVdsKk7m8bQcym
+	 V/wj+vSvYK7M2ecFYg7WvU6iTDGFaIYFlna0LsDtq795o85+oy51/IVkoC1CqVrKsh
+	 Tz9ZIxoYwd37yc0X3Dz8qlD/wUvUKDKyBF+AnuaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730389AbgGUTUK (ORCPT
+        id S1730684AbgGUTVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:20:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgGUTUJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:20:09 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A427DC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:20:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VhiQA6qev8PWeov/hSb1BErF1Q8azhYHkTiZfTrt8pE=; b=leGPhWIGaMSDBw2JNEVNvsOkGe
-        nB4QK89Tr1IHLRgdVJ0wqikAmCEA5yXVgWKMmx8I0vK9X24cnML/gjmaXgtgNUQw9384WjA+4Or4h
-        L4QMRYGhbMOr7Py2ejR+ezbA2lavO5T9rTwQercFCsNThT42ZvqWOjB4cTgpvcd+IWrwUwmRVIzSp
-        4KDxwcAXQdml67PpXqT1S9QFE0qf8GT102f9l41tcsqiHzCOrdJNMkY63yeU9YE+XPElWceyPm8P5
-        gYP/DbdqUSzpGDw81M8Me7V0l5Ff1Re5WvepqvidwOceJOyaArpUSrzapEY/V0CArMQAwXZKCmF7V
-        Hhbq9C3A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxxo3-0008Ve-02; Tue, 21 Jul 2020 19:20:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 21 Jul 2020 15:21:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730250AbgGUTVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 15:21:30 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8A385304D28;
-        Tue, 21 Jul 2020 21:20:02 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 76F4C20140AC3; Tue, 21 Jul 2020 21:20:02 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 21:20:02 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     kan.liang@linux.intel.com, acme@redhat.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH V6 09/14] perf/x86/intel: Support TopDown metrics on Ice
- Lake
-Message-ID: <20200721192002.GI10769@hirez.programming.kicks-ass.net>
-References: <20200717140554.22863-1-kan.liang@linux.intel.com>
- <20200717140554.22863-10-kan.liang@linux.intel.com>
- <20200721124042.GX10769@hirez.programming.kicks-ass.net>
- <20200721173859.GG1180481@tassilo.jf.intel.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F3B1206F2;
+        Tue, 21 Jul 2020 19:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595359289;
+        bh=uvcuFv0R6bqByYEk1y2UFO10PzRWHHXQclqrGDwva6Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=t7QKyQb8s6wv3ahZjUOMbWYGDUR3vmzeNZrTzR5ncfMPPccXMI0Ij9jPtgbZbnV78
+         1T93wL1AeCGIZG8zN3KHjcoJ3HZMiGNyGyZgq+7LGuAVVh64iru1o+VYnASx+jYyIu
+         aFHGOelzKORJ61nNURYKYwZHH/Bx0uW2vn6M3OLc=
+Date:   Tue, 21 Jul 2020 12:21:27 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Chi Song <Song.Chi@microsoft.com>
+Cc:     Stephen Hemminger <stephen@networkplumber.org>,
+        David Miller <davem@davemloft.net>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 net-next] net: hyperv: Add attributes to show TX
+ indirection table
+Message-ID: <20200721122127.3ce422f3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <PS1P15301MB028211A9D09DA5601EBEBEA298780@PS1P15301MB0282.APCP153.PROD.OUTLOOK.COM>
+References: <PS1P15301MB028211A9D09DA5601EBEBEA298780@PS1P15301MB0282.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721173859.GG1180481@tassilo.jf.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:38:59AM -0700, Andi Kleen wrote:
-> > Also, that for_each_set_bit() loop, trying to find the events to
-> > update...
-> > 
-> > Can't we, instead, make the SLOTS update advance 5 running counters in
-> > cpuc and feed the events off of that?
+On Tue, 21 Jul 2020 04:58:59 +0000 Chi Song wrote:
+> An imbalanced TX indirection table causes netvsc to have low
+> performance. This table is created and managed during runtime. To help
+> better diagnose performance issues caused by imbalanced tables, add
+> device attributes to show the content of TX indirection tables.
 > 
-> The original patches implemented this through a perf transaction and a
-> cache.  I think what you're suggesting is similar to the old cache.
+> Signed-off-by: Chi Song <chisong@microsoft.com>
 
-I can't remember :-) Anyway, the TXN_READ thing Kan pointed out should
-work fine, I just missed it when reading through the code.
+Sorry for waiting until v6 but sysfs feel like a very strange place to
+expose this. Especially under the netdev, not the bus device.
+
+This looks like device specific state, perhaps ethtool -d is a more
+appropriate place?
