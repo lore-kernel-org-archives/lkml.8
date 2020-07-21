@@ -2,147 +2,132 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81195C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8B5C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ACD5206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595360665;
-	bh=yPfilvL6mGVNKu4G5eZH+Fbv+tqaNwo2jtx+LBmp5J0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZEm8VSQ7C6zIGW8ShK4a+FMXtcMYOA0X9yc2bCK8flBls8fVj6SMdAglkUwC4wBvx
-	 MBMOvV79qOzeaSPPVly2im7hZEuQxKRhqs+ytqNBcO0S1X3KKMSXzLNokFjHQfTO1r
-	 bnKdj3xNErHiTwchtpss8yC5V+G7HmxDE/CUwfWg=
+	by mail.kernel.org (Postfix) with ESMTP id A320D207BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:44:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730923AbgGUToY (ORCPT
+        id S1730957AbgGUTo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:44:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40006 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 15:44:27 -0400
+Received: from mga05.intel.com ([192.55.52.43]:59805 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730250AbgGUToX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:44:23 -0400
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4FB92080D
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 19:44:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595360663;
-        bh=yPfilvL6mGVNKu4G5eZH+Fbv+tqaNwo2jtx+LBmp5J0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KwzGcRpD0itKg0elf04EU6Oet5+2W9gZSnYnUHHJhY5sFC9BzbR/l8N+zNJvwL7G9
-         1byOwK2vqVpBBB5i1ODabqUF2Xgcw3lEH2rSDuvBVprM6jujs+O5RoWzpFceFBVys3
-         KhLyQgYB68npWx282EjdgNIISX/ODldTOEOO1fn8=
-Received: by mail-wm1-f47.google.com with SMTP id 184so4047207wmb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:44:22 -0700 (PDT)
-X-Gm-Message-State: AOAM5304MBnI3dqgQ4DfGEInhxqgveo0a/rnedTAIE7/IzikYXfoJSIi
-        VLzSVhQVN4hENkt2hG5E8XlY54Ar1b6IwwxmYeYr4g==
-X-Google-Smtp-Source: ABdhPJw17BzEe5azYA+G4/JxAb6UdbQxxlTI739YKvoUcxWWDft8P6Wi1/wrS8f8s5b9/n3cemOCX6FTz80Rm9LPqxE=
-X-Received: by 2002:a1c:e4d4:: with SMTP id b203mr5760719wmh.49.1595360661232;
- Tue, 21 Jul 2020 12:44:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
- <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net> <20200715171130.GG12769@casper.infradead.org>
- <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com> <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
- <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com> <202007151511.2AA7718@keescook>
- <20200716131404.bnzsaarooumrp3kx@steredhat> <202007160751.ED56C55@keescook>
- <20200717080157.ezxapv7pscbqykhl@steredhat.lan> <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
- <39a3378a-f8f3-6706-98c8-be7017e64ddb@kernel.dk> <CALCETrXAxFzuRB5EJZR7bbgfrEcNc=9_E7wwhPaZ3YGJ1=DZ0w@mail.gmail.com>
- <ba989463-c627-8af7-9234-4dc8ac4eea0e@kernel.dk> <CALCETrUvOuKZWiQeZhf9DXyjS4OQdyW+s1YMh+vwe605jBS3LQ@mail.gmail.com>
- <65ad6c17-37d0-da30-4121-43554ad8f51f@kernel.dk>
-In-Reply-To: <65ad6c17-37d0-da30-4121-43554ad8f51f@kernel.dk>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 21 Jul 2020 12:44:09 -0700
-X-Gmail-Original-Message-ID: <CALCETrV_tOziNJOp8xanmCU0yJEHcGQk0TBxeiK4U7AVewkgAw@mail.gmail.com>
-Message-ID: <CALCETrV_tOziNJOp8xanmCU0yJEHcGQk0TBxeiK4U7AVewkgAw@mail.gmail.com>
-Subject: Re: strace of io_uring events?
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Kees Cook <keescook@chromium.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1730250AbgGUTo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 15:44:26 -0400
+IronPort-SDR: Et36MVXSNo2Pe1PHqxR9folC2OW/3NbidXbOwz4MjQHIIz35t98+C67eSbAvmPDJSDacy/cdh8
+ JjZGsB50KdtA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="235084359"
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="235084359"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 12:44:25 -0700
+IronPort-SDR: LjU3Q2bNdiXBdGUjRgtcumpVhVHG2+Pn7mZ69Avb09AwR1PnNjOrmsKAOqmHOHlZ1Mqyk+jSut
+ x0SwjbM3tfCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="327980667"
+Received: from otc-nc-03.jf.intel.com ([10.54.39.25])
+  by orsmga007.jf.intel.com with ESMTP; 21 Jul 2020 12:44:24 -0700
+From:   Ashok Raj <ashok.raj@intel.com>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Ashok Raj <ashok.raj@intel.com>, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [PATCH] PCI/ATS: PASID and PRI are only enumerated in PF devices.
+Date:   Tue, 21 Jul 2020 12:44:20 -0700
+Message-Id: <1595360660-213129-1-git-send-email-ashok.raj@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 11:39 AM Jens Axboe <axboe@kernel.dk> wrote:
->
-> On 7/21/20 11:44 AM, Andy Lutomirski wrote:
-> > On Tue, Jul 21, 2020 at 10:30 AM Jens Axboe <axboe@kernel.dk> wrote:
-> >>
-> >> On 7/21/20 11:23 AM, Andy Lutomirski wrote:
-> >>> On Tue, Jul 21, 2020 at 8:31 AM Jens Axboe <axboe@kernel.dk> wrote:
-> >>>>
-> >>>> On 7/21/20 9:27 AM, Andy Lutomirski wrote:
-> >>>>> On Fri, Jul 17, 2020 at 1:02 AM Stefano Garzarella <sgarzare@redhat.com> wrote:
-> >>>>>>
-> >>>>>> On Thu, Jul 16, 2020 at 08:12:35AM -0700, Kees Cook wrote:
-> >>>>>>> On Thu, Jul 16, 2020 at 03:14:04PM +0200, Stefano Garzarella wrote:
-> >>>>>
-> >>>>>>> access (IIUC) is possible without actually calling any of the io_uring
-> >>>>>>> syscalls. Is that correct? A process would receive an fd (via SCM_RIGHTS,
-> >>>>>>> pidfd_getfd, or soon seccomp addfd), and then call mmap() on it to gain
-> >>>>>>> access to the SQ and CQ, and off it goes? (The only glitch I see is
-> >>>>>>> waking up the worker thread?)
-> >>>>>>
-> >>>>>> It is true only if the io_uring istance is created with SQPOLL flag (not the
-> >>>>>> default behaviour and it requires CAP_SYS_ADMIN). In this case the
-> >>>>>> kthread is created and you can also set an higher idle time for it, so
-> >>>>>> also the waking up syscall can be avoided.
-> >>>>>
-> >>>>> I stared at the io_uring code for a while, and I'm wondering if we're
-> >>>>> approaching this the wrong way. It seems to me that most of the
-> >>>>> complications here come from the fact that io_uring SQEs don't clearly
-> >>>>> belong to any particular security principle.  (We have struct creds,
-> >>>>> but we don't really have a task or mm.)  But I'm also not convinced
-> >>>>> that io_uring actually supports cross-mm submission except by accident
-> >>>>> -- as it stands, unless a user is very careful to only submit SQEs
-> >>>>> that don't use user pointers, the results will be unpredictable.
-> >>>>
-> >>>> How so?
-> >>>
-> >>> Unless I've missed something, either current->mm or sqo_mm will be
-> >>> used depending on which thread ends up doing the IO.  (And there might
-> >>> be similar issues with threads.)  Having the user memory references
-> >>> end up somewhere that is an implementation detail seems suboptimal.
-> >>
-> >> current->mm is always used from the entering task - obviously if done
-> >> synchronously, but also if it needs to go async. The only exception is a
-> >> setup with SQPOLL, in which case ctx->sqo_mm is the task that set up the
-> >> ring. SQPOLL requires root privileges to setup, and there's no task
-> >> entering the io_uring at all necessarily. It'll just submit sqes with
-> >> the credentials that are registered with the ring.
-> >
-> > Really?  I admit I haven't fully followed how the code works, but it
-> > looks like anything that goes through the io_queue_async_work() path
-> > will use sqo_mm, and can't most requests that end up blocking end up
-> > there?  It looks like, even if SQPOLL is not set, the mm used will
-> > depend on whether the request ends up blocking and thus getting queued
-> > for later completion.
-> >
-> > Or does some magic I missed make this a nonissue.
->
-> No, you are wrong. The logic works as I described it.
+PASID and PRI capabilities are only enumerated in PF devices. VF devices
+do not enumerate these capabilites. IOMMU drivers also need to enumerate
+them before enabling features in the IOMMU. Extending the same support as
+PASID feature discovery (pci_pasid_features) for PRI.
 
-Can you enlighten me?  I don't see any iov_iter_get_pages() calls or
-equivalents.  If an IO is punted, how does the data end up in the
-io_uring_enter() caller's mm?
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+
+v2: Fixed build failure from lkp when CONFIG_PRI=n
+    Almost all the PRI functions were called only when CONFIG_PASID is
+    set. Except the new pci_pri_supported().
+
+To: Bjorn Helgaas <bhelgaas@google.com>
+To: Joerg Roedel <joro@8bytes.com>
+To: Lu Baolu <baolu.lu@intel.com>
+Cc: stable@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: iommu@lists.linux-foundation.org
+---
+ drivers/iommu/intel/iommu.c |  2 +-
+ drivers/pci/ats.c           | 14 ++++++++++++++
+ include/linux/pci-ats.h     |  4 ++++
+ 3 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index d759e7234e98..276452f5e6a7 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -2560,7 +2560,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
+ 			}
+ 
+ 			if (info->ats_supported && ecap_prs(iommu->ecap) &&
+-			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
++			    pci_pri_supported(pdev))
+ 				info->pri_supported = 1;
+ 		}
+ 	}
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index b761c1f72f67..ffb4de8c5a77 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -461,6 +461,20 @@ int pci_pasid_features(struct pci_dev *pdev)
+ }
+ EXPORT_SYMBOL_GPL(pci_pasid_features);
+ 
++/**
++ * pci_pri_supported - Check if PRI is supported.
++ * @pdev: PCI device structure
++ *
++ * Returns false when no PRI capability is present.
++ * Returns true if PRI feature is supported and enabled
++ */
++bool pci_pri_supported(struct pci_dev *pdev)
++{
++	/* VFs share the PF PRI configuration */
++	return !!(pci_physfn(pdev)->pri_cap);
++}
++EXPORT_SYMBOL_GPL(pci_pri_supported);
++
+ #define PASID_NUMBER_SHIFT	8
+ #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
+ /**
+diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+index f75c307f346d..fc989295daf3 100644
+--- a/include/linux/pci-ats.h
++++ b/include/linux/pci-ats.h
+@@ -28,6 +28,10 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
+ void pci_disable_pri(struct pci_dev *pdev);
+ int pci_reset_pri(struct pci_dev *pdev);
+ int pci_prg_resp_pasid_required(struct pci_dev *pdev);
++bool pci_pri_supported(struct pci_dev *pdev);
++#else
++bool pci_pri_supported(struct pci_dev *pdev)
++{ return false; }
+ #endif /* CONFIG_PCI_PRI */
+ 
+ #ifdef CONFIG_PCI_PASID
+-- 
+2.7.4
+
