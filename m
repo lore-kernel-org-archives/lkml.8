@@ -2,151 +2,369 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8591CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7429BC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C79A20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F07720720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="hsWZwjsr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fFG5PRY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731492AbgGUXsP (ORCPT
+        id S1731460AbgGUXr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 19:48:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56870 "EHLO
+        Tue, 21 Jul 2020 19:47:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgGUXsN (ORCPT
+        with ESMTP id S1726652AbgGUXr6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 19:48:13 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 286F9C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 16:48:13 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k1so197500pjt.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 16:48:13 -0700 (PDT)
+        Tue, 21 Jul 2020 19:47:58 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F644C0619DB
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 16:47:58 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id o1so76152plk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 16:47:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mDc030Vht0H+5kxn8kLZcM0RglBvmobnh33JIp70Q9A=;
-        b=hsWZwjsrrb6MHnGlDjXciuMZQ0nzpaGX0XqqotTf6FxppNdslwj80bOHq4XiVr8B4N
-         SCpSNd4Uu+fKdrj6GAgEnicqXWWEP9PCWq23ucc9/tt2akFpRFgjuE9SeU+cCHODPhj8
-         maVEeY1DOS1y5XfHe5sHYmNqjl4RoWUBn7w7lB8TeTWwtt4QeijAeuGNPjcLeBnjV19B
-         SmugmuJ8ByDeMpqvSyeew7HlPpyj9My215QEtBoF9dt3tORKxn+X2oVXdd2uNIyHmd9b
-         VDJVMDJNscIIFoT2kCXV0OaSjuh8jGAbeGFch/4XoFGO9VWRYU5PdpQ3sp+SqpvXySKf
-         YI/A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P8jfqipHg8xCvouYGi00rOrAGKM9opA5Rjxx779qc+s=;
+        b=fFG5PRY0cB4tbk6kPXy91xMbHYmXRdyH1E45ZduBhJ3IqTdU2/Fk2Pjtdlkv6WsnOa
+         8sLl9aBqoFUS26OeqN/bVZAWBUs3eqxzpYHR0r1lBPn3uA1ps2Q6vnIGw/xQ2W1AsPa/
+         v5Mqa6I4sZ3S/49LGuyWTFE8N4N4wwIE5OWieVkrUK3X9Y+a4kL+EpJCJFvF42+HMAyi
+         ePUF0AwVazAr38a9yyvc67fxgSxAsPBpo5Z0UXQNdWGcdkEXOKaRhPK3NzLMBZwzstQR
+         UN88QtMJi5uhXyKBhm34HM4HdcU89O9yq9aZ1u6BoKsOXTIQrcZDEg79tiz7KHlWqoL5
+         fngQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=mDc030Vht0H+5kxn8kLZcM0RglBvmobnh33JIp70Q9A=;
-        b=aBS0MpQVgIYww82zJId50cm4b8R+hiBCEGoh/Byl23tQG26j9UpS+eMkPtBCNHeH6q
-         NUVV3dSo7xdZrdpfSJT+F1LGZHHhnwITJYaxvL19NqRkcwSj5zu/nS7M+ELLeqh7/Kto
-         R6aSQ2AfNs7BM7q4mk7PRz4rYvHfNLHSetbzqN0E8k8mhI5SLgWSlrprDiRgzKuEWxmV
-         lZ3fJ2C2WMfB/3354zwAZSw6S5aszFeQ+IZy+NsPv0dChy739iwR3leHmz/RJzDKoxOD
-         XPmSTbwHmnG52OSOGl8dSAANMKg0cD/Jskubg4f7nNXsmOQ+HPlugzhP8/85D1KLoxN9
-         FTmg==
-X-Gm-Message-State: AOAM531r5vAwCrgUuRJdksq6X2lbdZGYKvuA9cGGeSFtk663EcQDqUSA
-        fbywZLoQZsADh0XYFXa07lFH7w==
-X-Google-Smtp-Source: ABdhPJz7GQOPhPQo7WdQAVqmRGBn/kBHYhew0a/7KykfyZ8e5DBJEpqbOEQfucs+jTILpvC6kcl9RQ==
-X-Received: by 2002:a17:90a:cc03:: with SMTP id b3mr6637665pju.80.1595375292546;
-        Tue, 21 Jul 2020 16:48:12 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id i66sm20870634pfc.12.2020.07.21.16.48.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 16:48:11 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 16:48:11 -0700 (PDT)
-X-Google-Original-Date: Tue, 21 Jul 2020 16:48:10 PDT (-0700)
-Subject:     Re: [PATCH v5 1/4] riscv: Move kernel mapping to vmalloc zone
-In-Reply-To: <6fbea8347bdb8434d91cf3ec2b95b134bd66cfe3.camel@kernel.crashing.org>
-CC:     alex@ghiti.fr, mpe@ellerman.id.au, paulus@samba.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, Anup Patel <Anup.Patel@wdc.com>,
-        Atish Patra <Atish.Patra@wdc.com>, zong.li@sifive.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-mm@kvack.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     benh@kernel.crashing.org
-Message-ID: <mhng-cd9a74ea-2edf-47e4-aade-b090f1a069f1@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P8jfqipHg8xCvouYGi00rOrAGKM9opA5Rjxx779qc+s=;
+        b=Du6pWfqe/LAobTL0M6W3S/cjd98/OjWrKspwxbzAPXlP5eSI4YK3Uqg55uyJoGnWKn
+         RhB0yqbMG6ySD69PEIg3IJXs2osvsk3QLf/GIYhK9SFhqJLxO7Eg1BOIsHB7H8a9kgI6
+         9EFagH6v5W0fAQcTYP9MoTlhdUrIJd3Qm04rn4bmXHWVQ3JeELMZ4BTyvnZHeH1sY36w
+         QPodsw+rQubhWKZFIxtsNOpu82iRN4MGGSLGGJBYoYbArcjgaibyMG9I0vgvTKWTFYeM
+         b2d9y/eUlAj0d377UT4+aN0juapPLqW07m2iA426J6MHHbJTEX3djAXpSuhOjSdao7iQ
+         6phQ==
+X-Gm-Message-State: AOAM533hqtzF79PDCrzq+YWsxQ83YnkEwt9QS4bT5thUACi0delEd0LU
+        BMFyWQlQU4HtjMoI39aYC496qUbARkqono2ga1nMdw==
+X-Google-Smtp-Source: ABdhPJzGdRQVlsE/dq3sUZwCkVy2NGc382IMiqCnCA4xIcUB+e+JEakLV96qQ67x9GiGnxGprnKKHP15C5QrLILD2lg=
+X-Received: by 2002:a17:90b:1296:: with SMTP id fw22mr7284832pjb.20.1595375276893;
+ Tue, 21 Jul 2020 16:47:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200720224418.200495-1-vitor@massaru.org> <202007211150.73CF60A9@keescook>
+ <CADQ6JjUm10vPcSO5Wto=BjfM7dtdQZ924d0x-C6kxQKKZJr=qQ@mail.gmail.com>
+In-Reply-To: <CADQ6JjUm10vPcSO5Wto=BjfM7dtdQZ924d0x-C6kxQKKZJr=qQ@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 21 Jul 2020 16:47:44 -0700
+Message-ID: <CAFd5g468HLqzTVX7cOeHnWWBBmTMKcKPEURSgwiDC-8Hcq_vuw@mail.gmail.com>
+Subject: Re: [PATCH v3] lib: overflow_kunit: add KUnit test conversion of check_*_overflow
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Gow <davidgow@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jul 2020 16:12:58 PDT (-0700), benh@kernel.crashing.org wrote:
-> On Tue, 2020-07-21 at 12:05 -0700, Palmer Dabbelt wrote:
->>
->> * We waste vmalloc space on 32-bit systems, where there isn't a lot of it.
->> * On 64-bit systems the VA space around the kernel is precious because it's the
->>   only place we can place text (modules, BPF, whatever).
+On Tue, Jul 21, 2020 at 12:38 PM Vitor Massaru Iha <vitor@massaru.org> wrote:
 >
-> Why ? Branch distance limits ? You can't use trampolines ?
-
-Nothing fundamental, it's just that we don't have a large code model in the C
-compiler.  As a result all the global symbols are resolved as 32-bit
-PC-relative accesses.  We could fix this with a fast large code model, but then
-the kernel would need to relax global symbol references in modules and we don't
-even do that for the simple code models we have now.  FWIW, some of the
-proposed large code models are essentially just split-PLT/GOT and therefor
-don't require relaxation, but at that point we're essentially PIC until we
-have more that 2GiB of kernel text -- and even then, we keep all the
-performance issues.
-
->>  If we start putting
->>   the kernel in the vmalloc space then we either have to pre-allocate a bunch
->>   of space around it (essentially making it a fixed mapping anyway) or it
->>   becomes likely that we won't be able to find space for modules as they're
->>   loaded into running systems.
+> On Tue, Jul 21, 2020 at 3:55 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Mon, Jul 20, 2020 at 07:44:18PM -0300, Vitor Massaru Iha wrote:
+> > > This adds the conversion of the runtime tests of check_*_overflow functions,
+> > > from `lib/test_overflow.c`to KUnit tests.
+> > >
+> > > The log similar to the one seen in dmesg running test_overflow.c can be
+> > > seen in `test.log`.
+> > >
+> > > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> > > Tested-by: David Gow <davidgow@google.com>
+> > > ---
+> > > v2:
+> > >   * moved lib/test_overflow.c to lib/overflow-test.c;
+> > >     * back to original license;
+> > >     * fixed style code;
+> > >     * keeps __initconst and added _refdata on overflow_test_cases variable;
+> > >     * keeps macros intact making asserts with the variable err;
+> > >     * removed duplicate test_s8_overflow();
+> > >   * fixed typos on commit message;
+> > >
+> > > v3:
+> > >   * changed filename to overflow_kunit.c;
+> > >   * replace _refdata by _inidata;
+> >
+> > It looks like this still needs to be _refdata (says the test bot)
 >
-> I dislike the kernel being in the vmalloc space (see my other email)
-> but I don't understand the specific issue with modules.
-
-Essentially what's above, the modules smell the same as the rest of the
-kernel's code and therefor have a similar set of restrictions.  If we build PIC
-modules and have the PLT entries do GOT loads (as do our shared libraries) then
-we could break this restriction, but that comes with some performance
-implications.  Like I said in the other email, I'm less worried about the
-instruction side of things so maybe that's the right way to go.
-
->> * Relying on a relocatable kernel for sv48 support introduces a fairly large
->>   performance hit.
+> I replaced it because you said `Erm, __refdata? This seems like it
+> should be __initdata.` in v2.
 >
-> Out of curiosity why would relocatable kernels introduce a significant
-> hit ? Where about do you see the overhead coming from ?
-
-Our PIC codegen, probably better addressed by my other email and above.
-
+> >
+> > > -static int __init test_ ## t ## _overflow(void) {                    \
+> > > +static int __init test_ ## t ## _overflow(struct kunit *test) {      \
+> >
+> > style nit: it seems like "test" isn't a great variable name. Why not
+> > make this "kunit" or "context" or something more specific?
 >
->> Roughly, my proposal would be to:
->>
->> * Leave the 32-bit memory map alone.  On 32-bit systems we can load modules
->>   anywhere and we only have one VA width, so we're not really solving any
->>   problems with these changes.
->> * Staticly allocate a 2GiB portion of the VA space for all our text, as its own
->>   region.  We'd link/relocate the kernel here instead of around PAGE_OFFSET,
->>   which would decouple the kernel from the physical memory layout of the system.
->>   This would have the side effect of sorting out a bunch of bootloader headaches
->>   that we currently have.
->> * Sort out how to maintain a linear map as the canonical hole moves around
->>   between the VA widths without adding a bunch of overhead to the virt2phys and
->>   friends.  This is probably going to be the trickiest part, but I think if we
->>   just change the page table code to essentially lie about VAs when an sv39
->>   system runs an sv48+sv39 kernel we could make it work -- there'd be some
->>   logical complexity involved, but it would remain fast.
->>
->> This doesn't solve the problem of virtually relocatable kernels, but it does
->> let us decouple that from the sv48 stuff.  It also lets us stop relying on a
->> fixed physical address the kernel is loaded into, which is another thing I
->> don't like.
->>
->> I know this may be a more complicated approach, but there aren't any sv48
->> systems around right now so I just don't see the rush to support them,
->> particularly when there's a cost to what already exists (for those who haven't
->> been watching, so far all the sv48 patch sets have imposed a significant
->> performance penalty on all systems).
+> I tried to follow the pattern I saw in other KUnit tests.
+
+Yep, that's the pattern that pretty much all other KUnit tests follow.
+Maybe you are right and maybe we should change that convention. Still,
+this is consistent with what we do now.
+
+> >
+> > >       int err = 0;                                                    \
+> > >       unsigned i;                                                     \
+> > >                                                                       \
+> > > @@ -256,6 +253,7 @@ static int __init test_ ## t ## _overflow(void) {                 \
+> > >               ARRAY_SIZE(t ## _tests));                               \
+> > >       for (i = 0; i < ARRAY_SIZE(t ## _tests); ++i)                   \
+> > >               err |= do_test_ ## t(&t ## _tests[i]);                  \
+> > > +     KUNIT_EXPECT_FALSE(test, err);                                  \
+> > >       return err;                                                     \
+> > >  }
+> >
+> > Also, if the caller is being made "void", probably this can be made void
+> > too?
+> >
+> > And if that's happening, maybe just plumb the EXPECT into the
+> > do_test_... call instead?
+>
+> I did something similar in v1, but you said:
+> "Only callers of the do_test_*() would need to be changed. I think all of
+> these macros just need the pr_warn/KUNIT_FAIL changes, and the function
+> prototypes updated to include struct kunit *test."
+>
+> >
+> > >
+> > > @@ -270,25 +268,25 @@ DEFINE_TEST_FUNC(u64, "%llu");
+> > >  DEFINE_TEST_FUNC(s64, "%lld");
+> > >  #endif
+> > >
+> > > -static int __init test_overflow_calculation(void)
+> > > +static void __init overflow_calculation_test(struct kunit *test)
+> > >  {
+> > >       int err = 0;
+> > >
+> > > -     err |= test_u8_overflow();
+> > > -     err |= test_s8_overflow();
+> > > -     err |= test_u16_overflow();
+> > > -     err |= test_s16_overflow();
+> > > -     err |= test_u32_overflow();
+> > > -     err |= test_s32_overflow();
+> > > +     err |= test_u8_overflow(test);
+> > > +     err |= test_s8_overflow(test);
+> > > +     err |= test_u16_overflow(test);
+> > > +     err |= test_s16_overflow(test);
+> > > +     err |= test_u32_overflow(test);
+> > > +     err |= test_s32_overflow(test);
+> > >  #if BITS_PER_LONG == 64
+> > > -     err |= test_u64_overflow();
+> > > -     err |= test_s64_overflow();
+> > > +     err |= test_u64_overflow(test);
+> > > +     err |= test_s64_overflow(test);
+> > >  #endif
+> > >
+> > > -     return err;
+> > > +     KUNIT_EXPECT_FALSE(test, err);
+> >
+> > This seems redundant (the tests were already tested)?
+>
+> Yep, I just tried to do something you said in v1:
+>
+> "I think it might be nice to keep the "err" vars around for a final report
+> line (maybe per test)? (It would keep the diff churn way lower, too...)"
+>
+> > >  }
+> > >
+> > > -static int __init test_overflow_shift(void)
+> > > +static void __init overflow_shift_test(struct kunit *test)
+> > >  {
+> > >       int err = 0;
+> > >
+> > > @@ -313,9 +311,9 @@ static int __init test_overflow_shift(void)
+> > >                       pr_warn("got %llu\n", (u64)__d);                \
+> > >               __failed = 1;                                           \
+> > >       }                                                               \
+> > > -     if (!__failed)                                                  \
+> > > -             pr_info("ok: (%s)(%s << %s) == %s\n", #t, #a, #s,       \
+> > > -                     of ? "overflow" : #expect);                     \
+> > > +     KUNIT_EXPECT_FALSE_MSG(test, __failed,                          \
+> > > +                            "ok: (%s)(%s << %s) == %s\n", #t, #a, #s,\
+> > > +                            of ? "overflow" : #expect);              \
+> > >       __failed;                                                       \
+> > >  })
+> > >
+> > > @@ -479,7 +477,7 @@ static int __init test_overflow_shift(void)
+> > >       err |= TEST_ONE_SHIFT(0, 31, s32, 0, false);
+> > >       err |= TEST_ONE_SHIFT(0, 63, s64, 0, false);
+> > >
+> > > -     return err;
+> > > +     KUNIT_EXPECT_FALSE(test, err);
+> > >  }
+> > >
+> > >  /*
+> > > @@ -499,7 +497,7 @@ static int __init test_overflow_shift(void)
+> > >  #define TEST_SIZE            (5 * 4096)
+> > >
+> > >  #define DEFINE_TEST_ALLOC(func, free_func, want_arg, want_gfp, want_node)\
+> > > -static int __init test_ ## func (void *arg)                          \
+> > > +static int __init test_ ## func (struct kunit *test, void *arg)              \
+> > >  {                                                                    \
+> > >       volatile size_t a = TEST_SIZE;                                  \
+> > >       volatile size_t b = (SIZE_MAX / TEST_SIZE) + 1;                 \
+> > > @@ -507,19 +505,15 @@ static int __init test_ ## func (void *arg)                             \
+> > >                                                                       \
+> > >       /* Tiny allocation test. */                                     \
+> > >       ptr = alloc ## want_arg ## want_gfp ## want_node (func, arg, 1);\
+> > > -     if (!ptr) {                                                     \
+> > > -             pr_warn(#func " failed regular allocation?!\n");        \
+> > > -             return 1;                                               \
+> > > -     }                                                               \
+> > > +     KUNIT_ASSERT_NOT_ERR_OR_NULL_MSG(test, ptr,                     \
+> > > +                     #func " failed regular allocation?!\n");        \
+> > >       free ## want_arg (free_func, arg, ptr);                         \
+> > >                                                                       \
+> > >       /* Wrapped allocation test. */                                  \
+> > >       ptr = alloc ## want_arg ## want_gfp ## want_node (func, arg,    \
+> > >                                                         a * b);       \
+> > > -     if (!ptr) {                                                     \
+> > > -             pr_warn(#func " unexpectedly failed bad wrapping?!\n"); \
+> > > -             return 1;                                               \
+> > > -     }                                                               \
+> > > +     KUNIT_ASSERT_NOT_ERR_OR_NULL_MSG(test, ptr,                     \
+> > > +                     #func " unexpectedly failed bad wrapping?!\n"); \
+> > >       free ## want_arg (free_func, arg, ptr);                         \
+> > >                                                                       \
+> > >       /* Saturated allocation test. */                                \
+> > > @@ -555,7 +549,7 @@ DEFINE_TEST_ALLOC(kvzalloc_node, kvfree,     0, 1, 1);
+> > >  DEFINE_TEST_ALLOC(devm_kmalloc,  devm_kfree, 1, 1, 0);
+> > >  DEFINE_TEST_ALLOC(devm_kzalloc,  devm_kfree, 1, 1, 0);
+> > >
+> > > -static int __init test_overflow_allocation(void)
+> > > +static void __init overflow_allocation_test(struct kunit *test)
+> > >  {
+> > >       const char device_name[] = "overflow-test";
+> > >       struct device *dev;
+> > > @@ -563,52 +557,40 @@ static int __init test_overflow_allocation(void)
+> > >
+> > >       /* Create dummy device for devm_kmalloc()-family tests. */
+> > >       dev = root_device_register(device_name);
+> > > -     if (IS_ERR(dev)) {
+> > > -             pr_warn("Cannot register test device\n");
+> > > -             return 1;
+> > > -     }
+> > > -
+> > > -     err |= test_kmalloc(NULL);
+> > > -     err |= test_kmalloc_node(NULL);
+> > > -     err |= test_kzalloc(NULL);
+> > > -     err |= test_kzalloc_node(NULL);
+> > > -     err |= test_kvmalloc(NULL);
+> > > -     err |= test_kvmalloc_node(NULL);
+> > > -     err |= test_kvzalloc(NULL);
+> > > -     err |= test_kvzalloc_node(NULL);
+> > > -     err |= test_vmalloc(NULL);
+> > > -     err |= test_vmalloc_node(NULL);
+> > > -     err |= test_vzalloc(NULL);
+> > > -     err |= test_vzalloc_node(NULL);
+> > > -     err |= test_devm_kmalloc(dev);
+> > > -     err |= test_devm_kzalloc(dev);
+> > > +     KUNIT_ASSERT_FALSE_MSG(test, IS_ERR(dev), "Cannot register test device\n");
+> > > +
+> > > +     err |= test_kmalloc(test, NULL);
+> > > +     err |= test_kmalloc_node(test, NULL);
+> > > +     err |= test_kzalloc(test, NULL);
+> > > +     err |= test_kzalloc_node(test, NULL);
+> > > +     err |= test_kvmalloc(test, NULL);
+> > > +     err |= test_kvmalloc_node(test, NULL);
+> > > +     err |= test_kvzalloc(test, NULL);
+> > > +     err |= test_kvzalloc_node(test, NULL);
+> > > +     err |= test_vmalloc(test, NULL);
+> > > +     err |= test_vmalloc_node(test, NULL);
+> > > +     err |= test_vzalloc(test, NULL);
+> > > +     err |= test_vzalloc_node(test, NULL);
+> > > +     err |= test_devm_kmalloc(test, dev);
+> > > +     err |= test_devm_kzalloc(test, dev);
+> > >
+> > >       device_unregister(dev);
+> > >
+> > > -     return err;
+> > > +     KUNIT_EXPECT_FALSE(test, err);
+> > >  }
+> > >
+> > > -static int __init test_module_init(void)
+> > > -{
+> > > -     int err = 0;
+> > > -
+> > > -     err |= test_overflow_calculation();
+> > > -     err |= test_overflow_shift();
+> > > -     err |= test_overflow_allocation();
+> > > -
+> > > -     if (err) {
+> > > -             pr_warn("FAIL!\n");
+> > > -             err = -EINVAL;
+> > > -     } else {
+> > > -             pr_info("all tests passed\n");
+> > > -     }
+> >
+> > The reason for older feedback on leaving "err" as it was, was to make
+> > sure it was easy for a human to see if everything passed or not. If
+> > KUnit provides a summary of all the tests at the end, then I don't need
+> > to preserve that here (in which case "err" can go away). However, if
+> > that summary does not exist for KUnit yet, then I'd like to keep the
+> > summary that is being removed here.
+>
+> Kunit shows the result this way:
+>
+> [16:24:44] ======== [PASSED] overflow ========
+> [16:24:44] [PASSED] overflow_calculation_test
+> [16:24:44] [PASSED] overflow_shift_test
+> [16:24:44] [PASSED] overflow_allocation_test
+> [16:24:44] ============================================================
+>
+> >
+> > > +static struct kunit_case __initdata overflow_test_cases[] = {
+> > > +     KUNIT_CASE(overflow_calculation_test),
+> > > +     KUNIT_CASE(overflow_shift_test),
+> > > +     KUNIT_CASE(overflow_allocation_test),
+> > > +     {}
+> > > +};
+> > >
+> > > -     return err;
+> > > -}
+> > > +static struct kunit_suite __initdata overflow_test_suite = {
+> > > +     .name = "overflow",
+> > > +     .test_cases = overflow_test_cases,
+> > > +};
+> > >
+> > > -static void __exit test_module_exit(void)
+> > > -{ }
+> > > +kunit_test_suites(&overflow_test_suite);
+> > >
+> > > -module_init(test_module_init);
+> > > -module_exit(test_module_exit);
+> > >  MODULE_LICENSE("Dual MIT/GPL");
+> > >
+> > > base-commit: c63d2dd7e134ebddce4745c51f9572b3f0d92b26
+> > > --
+> > > 2.26.2
+> > >
+> >
+> > --
+> > Kees Cook
+>
+> In this version I tried to leave as few changes as possible.
+> It seemed to me that it would be better to leave a smaller diff.
+>
+> Thanks for the review!
