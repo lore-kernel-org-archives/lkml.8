@@ -2,140 +2,103 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9741EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5680020771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:44:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595324646;
-	bh=dRBqRpPHLqQ+YiVHyYwy7/iduBS4RS42lBSIgjREvkc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=ZpLeuPf7x/SJlJzvDe8Wjy5oDmrvMBeEmYwVWKRbDd+4MV6JI3f2ee55i1LE76byB
-	 MCNnbZNHQqXbZw10TdqKQHy2NYcsSwV1mEJp306rWlH8vZ3EmQGEM6xAkvmUm0vv/l
-	 wJlIAdHja8QaA7r9AbbrZ7i3GiNlWw8cXXg2zK5Y=
+	by mail.kernel.org (Postfix) with ESMTP id 7191720771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:44:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pKahYClp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgGUJoF (ORCPT
+        id S1728674AbgGUJo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:44:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38260 "EHLO
+        Tue, 21 Jul 2020 05:44:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGUJoE (ORCPT
+        with ESMTP id S1725984AbgGUJo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:44:04 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 661B6C061794;
-        Tue, 21 Jul 2020 02:44:04 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id q6so2346748ljp.4;
-        Tue, 21 Jul 2020 02:44:04 -0700 (PDT)
+        Tue, 21 Jul 2020 05:44:57 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23749C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:44:57 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c80so2171573wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:44:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=4B4uTKaYVVIs2NUU7WSS3PrxtkG5yE1ho1vSzkWNNJY=;
-        b=pdJRleq1eaXiymciRCaJyMpEjyPf0ED+Y0ls4trEfLYY1pCXRP0dEAYl7GKpTZrGN5
-         4GCC1/QU/PadIe17M5/f5otVVm34IdsMKlFm0E53OJ7M/CMFib65tcxSgVcwPbY669Tq
-         8ffyI9mQksGVgB9Mh2FJGtMdH0DRHXCI6GQGp3JL3k+bOa5AKg+Ww3F7MPO4prHB+Jl2
-         Gy/ZBuJKzVJ2p6EVq/HKKEKesmnzGdFI5P4H7gfxBOMgydhnzEFXTglpA5n/nhtz+V81
-         cZSZl1i31a2GiehcPueTGiGw+nYK7dUYaXhwXVWH83GmBnPWKRNoxtayXR2kQrU60a0w
-         vXsw==
+        d=google.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oay/q/Jq6u5HCNMFK6qus7veTfF7oH0EkEyRRbWbBuo=;
+        b=pKahYClpT7rbPBcaiNecELPYrFpNr1sOL/KBnAvFlQ/TUhvOxhwaV1ieuOvT9p1us4
+         7pAMGHA/F5puU5alUBQzKCc28k+Z7+mKr70H2brQsauG36WtQ6blvcQgr3ZF1Dr6dJaS
+         NL9Gt6qiOUhFlbqwCHXnO0ZA2YCc5HCN5QvsQ1TrMrhwSb8hvm+Wwew6xBo0PTh1NWvE
+         zM7e0VS6eULENmw536jEVb8MBPO5pzsXLmYGcyVGyt6wLUAOk9SdqPLtQfySwLojPCT1
+         RxEs3sxrFuQdRj/H1OeiHeUP39Z3NLk78zuf6JvG/zOh96HuCYNOv3II/OKGccw/SIin
+         tgEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=4B4uTKaYVVIs2NUU7WSS3PrxtkG5yE1ho1vSzkWNNJY=;
-        b=uZFeVN/WTEr6f7t7z0YJvXzvANQFZgIS0hwc9F0EPF1oat082YUBowKF7JjTPMK9zU
-         smcMC/tsG4HQ8ju06Yuc1VXRSgsEkdp2pLlCFnznN/q43Fb0WIhuaeOt6zDGcwCmBMEm
-         tt0Wobv3v/QOpgzzMcUKJ2UR/93oo0Hw9bjS5XuFY0Vq6Ah2e3ONEFif681AHhXIU/8V
-         IP0NpeafpFG9NULQvCQpU0X+ijlA2VZtbdaC7hv3jfNKlJOle1b1r4FnvMBGPlob3AMR
-         TLo3TXp9Hu099Ea8hRgNA71JeDCeksFUKBc3MzbwTqNRmfZVmajsxvbdDZ1+Lm9mVgfu
-         xE0A==
-X-Gm-Message-State: AOAM5306UMv/DUUBnf54K896/tFmtiNGDhKJHxfRE4S75FTGyMAYPoV2
-        4pHcD3c8WMgDWKv1qeFCzaHCfj4aqMTgLA==
-X-Google-Smtp-Source: ABdhPJzhA3jW9y1U/VHRqB2+TAhq8vBgv7fDywrgkTgJmnvYz3ND+eXb6bTGt9vwJhd+hEJYMucSKQ==
-X-Received: by 2002:a2e:8597:: with SMTP id b23mr11438006lji.338.1595324642702;
-        Tue, 21 Jul 2020 02:44:02 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id r22sm4192790ljc.25.2020.07.21.02.44.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 Jul 2020 02:44:02 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "linux-arm-kernel\@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Ben Dooks <ben@simtec.co.uk>
-Subject: Re: [PATCH v2 1/8] usb: dwc2: gadget: Make use of GINTMSK2
-In-Reply-To: <566f2d65-1b5a-ed2a-f33f-516b66be2624@synopsys.com>
-References: <20200715093209.3165641-1-lee.jones@linaro.org> <20200715093209.3165641-2-lee.jones@linaro.org> <566f2d65-1b5a-ed2a-f33f-516b66be2624@synopsys.com>
-Date:   Tue, 21 Jul 2020 12:43:57 +0300
-Message-ID: <87blk9p5ia.fsf@kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oay/q/Jq6u5HCNMFK6qus7veTfF7oH0EkEyRRbWbBuo=;
+        b=aPOwbjQpLutJqyKmgi3Bd5/jrao2ySysgrjC9M3R8wE65ExMtDEgKaTPiSmUMChQ0V
+         1RwoX+r187mjNeZwWj2l2g4Mpvqpe2xx336FZ5ilCNU7AFwQB7zHhCXegDBieBbs0Z5b
+         SQnOFazZA5L9kPi9tPhxhdVXEiwnvLBOVSDEydyW2/FfYy9KKe0fO6iS3JmGY6FKM5pG
+         XKhPB6sI7xwO68EyZAT7SGOK/HVD0uL7kgUX0OVNlCjbkVuxZzB20KgCRsMME7a15aO8
+         0WEOeu7Gv/MSJXgmamKpqwr3DoGudUqkiMNsa5dhBaBebD6iKSgRdRbAJp8mMLX9kbkB
+         /gzw==
+X-Gm-Message-State: AOAM533VlS6GUecoSurC66xgX1fmlHMYcAaqtm+42v6W/WL0yk+k0j8o
+        VHQPyR4PEfCgT1duk4485e+dvA==
+X-Google-Smtp-Source: ABdhPJxngyOwJYmlqV/5VQl0CDeLGpyMwcxXJSKOOd8cTePn/msAa3i6Sezc+NNalflZifuYHyrtpQ==
+X-Received: by 2002:a7b:c090:: with SMTP id r16mr3007999wmh.143.1595324695605;
+        Tue, 21 Jul 2020 02:44:55 -0700 (PDT)
+Received: from localhost ([2a01:4b00:8523:2d03:cd93:4ca4:af31:19e5])
+        by smtp.gmail.com with ESMTPSA id t3sm5442414wre.41.2020.07.21.02.44.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 02:44:54 -0700 (PDT)
+From:   David Brazdil <dbrazdil@google.com>
+To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, android-kvm@google.com,
+        kernel-team@android.com, David Brazdil <dbrazdil@google.com>
+Subject: [PATCH 0/2] Unify non-VHE ASLR features behind CONFIG_RANDOMIZE_BASE
+Date:   Tue, 21 Jul 2020 10:44:43 +0100
+Message-Id: <20200721094445.82184-1-dbrazdil@google.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+There is currently no way to disable nVHE ASLR, e.g. for debugging, so the
+first patch in this series makes it conditional on RANDOMIZE_BASE, same as
+KASLR. Note that the 'nokaslr' command line flag has no effect here.
 
-Minas Harutyunyan <Minas.Harutyunyan@synopsys.com> writes:
+Second patch unifies the HARDEN_EL2_VECTORS errate for A57 and A72 behind
+the same Kconfig for simplicity. Happy to make it just depend on
+RANDOMIZE_BASE if having an option to keep randomization on but hardenning
+off is preferred.
 
-> On 7/15/2020 1:32 PM, Lee Jones wrote:
->> The value obtained from GINTSTS2 should be masked with the GINTMSK2
->> value.  Looks like this has been broken since
->> dwc2_gadget_wkup_alert_handler() was added back in 2018.
->>=20
->> Also fixes the following W=3D1 warning:
->>=20
->>   drivers/usb/dwc2/gadget.c: In function =E2=80=98dwc2_gadget_wkup_alert=
-_handler=E2=80=99:
->>   drivers/usb/dwc2/gadget.c:259:6: warning: variable =E2=80=98gintmsk2=
-=E2=80=99 set but not used [-Wunused-but-set-variable]
->>   259 | u32 gintmsk2;
->>   | ^~~~~~~~
->>=20
->> Cc: Minas Harutyunyan <hminas@synopsys.com>
->> Cc: Ben Dooks <ben@simtec.co.uk>
->> Fixes: 187c5298a1229 ("usb: dwc2: gadget: Add handler for WkupAlert inte=
-rrupt")
->> Signed-off-by: Lee Jones <lee.jones@linaro.org>
->
-> Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+David Brazdil (2):
+  KVM: arm64: Make nVHE ASLR conditional on RANDOMIZE_BASE
+  KVM: arm64: Substitute RANDOMIZE_BASE for HARDEN_EL2_VECTORS
 
-Should I apply the entire series or only 1/8?
+ arch/arm64/Kconfig             | 16 ----------------
+ arch/arm64/include/asm/mmu.h   |  6 ++----
+ arch/arm64/kernel/cpu_errata.c |  4 ++--
+ arch/arm64/kvm/Kconfig         |  2 +-
+ arch/arm64/kvm/va_layout.c     |  2 +-
+ 5 files changed, 6 insertions(+), 24 deletions(-)
 
-=2D-=20
-balbi
+-- 
+2.27.0
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8WuN0ACgkQzL64meEa
-mQacAQ//a/P5SYnBnlVVnSmY6/+H5xaTyA0frND1g+cvwxNLc8oWt8WK97bow8mn
-gHNkRsPUfur72sCbsHhbOczv7Kc2ea3d+0KJNTv0idAgr8zUG0we/lYewX7+YCDc
-x911DeDk19uqC84Xbt9LmC9iBJbqPA+IlzckS2CwunqNws57n01+/p+txsNOEwXc
-EfCJBfEljT+W8u+yoeAu2FDdL3etFHZuIEE/aSLYC5qTqtM8dnUcoci0NDb3J+If
-uhJ0U0E8S9u3D8vGaL78cZHvMCvY6C4NLj+CdwkTFIGh3wx0uYSyOGnvrd2mlupS
-UV0oUqJj6vqDZ0MjpUYpAYd9tqSiucigXy13vId9QOSgTGsVKYNHevUlUOLq8lYC
-q29fZ4qNprDyKdc/JRuzkqanRqVfP7+HArMOXajAbCb1Qbk+qoYp12LuDs4yFWBW
-cBe1/yy9ItxJAjp7oMBiuMsjWdn/Di7mf3HMt5fTti0jNptDq1BPGsksUudJ656I
-OewK0YelUC6ptvxRfE4YwI7MUoG5EciU9tonBpFGkU2euzs6VrIpIF9haDIKEuC8
-8eafrA9+yamuhElBP0xix/Bbif/Lk6oxK6yXVIwdB5qCNEgHRPjLzDEQykO1QBwp
-BMykpU5UXXpdqYD9kuT3k/hHTLq8GeO2o3bHVWoWZTvw7ZumzMk=
-=1ehQ
------END PGP SIGNATURE-----
---=-=-=--
