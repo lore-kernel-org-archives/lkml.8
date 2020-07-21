@@ -2,205 +2,115 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88762C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E58320717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 651B820717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:54:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RjCfYNg5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgGUGwq (ORCPT
+        id S1728420AbgGUGyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:52:46 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:35387 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgGUGwq (ORCPT
+        Tue, 21 Jul 2020 02:54:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgGUGyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:52:46 -0400
-Received: by mail-yb1-f196.google.com with SMTP id f5so9556726ybq.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 23:52:45 -0700 (PDT)
+        Tue, 21 Jul 2020 02:54:15 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45BB6C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 23:54:15 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x8so9832050plm.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 23:54:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TKKm6YpP+t24KaEGvVnFezAziarJpY1n41mTUUnSIuw=;
+        b=RjCfYNg5BpAkXqtvjcR5YuEy8jfQvxW70xmJB+s/q3CR0CGy9KTZJYZK3slKSTwTcm
+         QbdKoOUZwWV9AN/qtDWCPIq0T82/eMwG8eXroGgaBWZwihGDGwLu9phylx5dvKxiK4gy
+         HkQ/0o2K2XYOIJOQ6usvrWtrpVBGgdHSLTaSU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2oX2c45gXD89+TOpPTsbkrsdgAsnkvRsdX4GY6xWWaE=;
-        b=eMlq2ukRpex8eJ1pDOwPlPxYBwBPVl5iA+gsq32NLbYIjOwbu4Pnm08fqIMNUrK7qz
-         e4wkSKuEZUHLAiL6RCF6FVu7VbBUtigNpDdeDuaD+KaHV5KkGslIxknwrTmfxayfZoOT
-         DgQiKm+9/YbndyZQDyQ1tKHnhXxI9NqWkdmHICJjYlRdj4YHK7DNyL8gbXljNc6hjtp/
-         kc88s5eRniqQy5ZDhLZo7ZFqtgHkKun0iWRPmMePZd0UegbXzrQ9Di6phFIUc21Mtatn
-         cJ9wDYg5tX0DK6OtnBi+/QOgos8EOxy7xRQh9OVB6vqTOvqqlLEnH70XXv2CBBrQKNMS
-         M2IQ==
-X-Gm-Message-State: AOAM5310KYr1d//9suDuzhjX7Brhw3x6ClsoG4T+YOtN7wYXVDA/a6jF
-        AXytpGUB0mLYQuVJ+z/e9ODnLczZC/XWD1hSVKdNuQ==
-X-Google-Smtp-Source: ABdhPJz5Or1fZOKRFi+qwSdKPGxc8tke4gXRClp9E9Bc/nNz52u2RoDmwD/CeIAFAY2fx8+A0cc6ZyGNP9e1yWa040w=
-X-Received: by 2002:a25:2d6f:: with SMTP id s47mr37532124ybe.1.1595314364717;
- Mon, 20 Jul 2020 23:52:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TKKm6YpP+t24KaEGvVnFezAziarJpY1n41mTUUnSIuw=;
+        b=hvoiUG0sJTxvrAWJHi6qpab8CDLhIco/otdojwqpDOVtoGU7Jsryo1sFc4jvDoAXev
+         hjsgL+VFMcJgU2YF6hkwE12iPQtm/5zzRbxDyGlph8wYy11F5ZfoVIVCuVQIlgy+X8/m
+         TY2M09LZfXGEqKgPRMFARp1R5qR7WcVoPdx/YU95PR2Gj/BmgEMPp+9IppqkOSq+2VOA
+         FDOKZNAY/2kngtt5WHSkQJP0r7gd88FFeiF++zDL9qth+qlALCdb8LYM+I3h6uDJTiQl
+         JU72eHhXXdfdi54L1rmz/sut4Gg0/HT9sfnhz/4abga13i6W1LetThpLhCzIASSJ80U4
+         gSBQ==
+X-Gm-Message-State: AOAM533fqRgsQa579j2VL8Dvnx1d9sQ3hG7KwSq+U0mXDn0vjF3/QIn6
+        PcfL1Mm1KMbUp7sLs3bxg/eBiA==
+X-Google-Smtp-Source: ABdhPJxf/4wfg5dkyjKB7Wv7+FGC8zy3o9YXav5MSyWU17Oxl1U207xGU6H+adFOa89+NBJmWZyBCg==
+X-Received: by 2002:a17:90a:e48:: with SMTP id p8mr3246698pja.210.1595314454687;
+        Mon, 20 Jul 2020 23:54:14 -0700 (PDT)
+Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:f693:9fff:fef4:a8fc])
+        by smtp.gmail.com with ESMTPSA id o42sm1902825pje.10.2020.07.20.23.54.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 23:54:14 -0700 (PDT)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     linux-input@vger.kernel.org
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-kernel@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>
+Subject: [PATCH] HID: quirks: add NOGET quirk for Logitech GROUP
+Date:   Tue, 21 Jul 2020 14:54:09 +0800
+Message-Id: <20200721065409.1508737-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
 MIME-Version: 1.0
-References: <0d7d0c38-5b67-1793-47d7-b8a7714838ee@arm.com> <mhng-2f6b1241-9ab3-47a2-bc23-789d59a3fd8f@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-2f6b1241-9ab3-47a2-bc23-789d59a3fd8f@palmerdabbelt-glaptop1>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Tue, 21 Jul 2020 08:52:33 +0200
-Message-ID: <CANBLGczm4+5=gMVYTNH_f4gcEggn4uPOOn13=-n82R6rFoJzhw@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Select ARCH_HAS_DEBUG_VM_PGTABLE
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        maochenxi@eswin.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jul 2020 at 06:04, Palmer Dabbelt <palmer@dabbelt.com> wrote:
->
-> On Tue, 14 Jul 2020 20:20:54 PDT (-0700), anshuman.khandual@arm.com wrote:
-> >
-> >
-> > On 07/15/2020 02:56 AM, Emil Renner Berthing wrote:
-> >> This allows the pgtable tests to be built.
-> >>
-> >> Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-> >> ---
-> >>
-> >> The tests seem to succeed both in Qemu and on the HiFive Unleashed
-> >>
-> >> Both with and without the recent additions in
-> >> https://lore.kernel.org/linux-riscv/1594610587-4172-1-git-send-email-anshuman.khandual@arm.com/
-> >
-> > That's great, thanks for testing.
->
-> Actually, looking at this I'm not sure it actually helps us any.  This changes
-> the behavior of two functions.  Pulling out the relevant sections, I see:
->
-> unsigned int __sw_hweight32(unsigned int w)
-> {
-> #ifdef CONFIG_ARCH_HAS_FAST_MULTIPLIER
->         w -= (w >> 1) & 0x55555555;
->         w =  (w & 0x33333333) + ((w >> 2) & 0x33333333);
->         w =  (w + (w >> 4)) & 0x0f0f0f0f;
->         return (w * 0x01010101) >> 24;
-> #else
->         unsigned int res = w - ((w >> 1) & 0x55555555);
->         res = (res & 0x33333333) + ((res >> 2) & 0x33333333);
->         res = (res + (res >> 4)) & 0x0F0F0F0F;
->         res = res + (res >> 8);
->         return (res + (res >> 16)) & 0x000000FF;
-> #endif
-> }
->
-> and
->
-> unsigned long memchr_inv(unsigned long value64)
-> {
-> #if defined(CONFIG_ARCH_HAS_FAST_MULTIPLIER) && BITS_PER_LONG == 64
->         value64 *= 0x0101010101010101ULL;
-> #elif defined(CONFIG_ARCH_HAS_FAST_MULTIPLIER)
->         value64 *= 0x01010101;
->         value64 |= value64 << 32;
-> #else
->         value64 |= value64 << 8;
->         value64 |= value64 << 16;
->         value64 |= value64 << 32;
-> #endif
->         return value64;
-> }
->
-> GCC optimizer the multiplication out of the first one:
->
-> __sw_hweight32:
->         li      a4,1431654400
->         srliw   a5,a0,1
->         addi    a4,a4,1365
->         and     a5,a5,a4
->         subw    a0,a0,a5
->         li      a5,858992640
->         srliw   a4,a0,2
->         addi    a5,a5,819
->         and     a0,a5,a0
->         and     a5,a5,a4
->         addw    a5,a0,a5
->         srliw   a0,a5,4
->         addw    a0,a0,a5
->         li      a5,252645376
->         addi    a5,a5,-241
->         and     a5,a5,a0
->         srliw   a0,a5,8
->         addw    a5,a0,a5
->         srliw   a0,a5,16
->         addw    a0,a0,a5
->         andi    a0,a0,0xff
->         ret
->
-> __sw_hweight32:
->         li      a5,1431654400
->         srliw   a4,a0,1
->         addi    a5,a5,1365
->         and     a5,a5,a4
->         subw    a0,a0,a5
->         li      a5,858992640
->         srliw   a4,a0,2
->         addi    a5,a5,819
->         and     a0,a5,a0
->         and     a5,a5,a4
->         addw    a5,a0,a5
->         srliw   a0,a5,4
->         addw    a5,a0,a5
->         li      a0,252645376
->         addi    a0,a0,-241
->         and     a5,a0,a5
->         slliw   a0,a5,8
->         addw    a0,a0,a5
->         slliw   a5,a0,16
->         addw    a0,a0,a5
->         srliw   a0,a0,24
->         ret
->
-> so that doesn't matter.  The second one is really a wash:
->
-> memchr_inv:
->         ld      a5,.LC0
->         mul     a0,a0,a5
->         ret
-> .rodata
-> .LC0:
->         .dword  72340172838076673
->
-> vs
->
-> memchr_inv:
->         slli    a5,a0,8
->         or      a5,a5,a0
->         slli    a0,a5,16
->         or      a0,a0,a5
->         slli    a5,a0,32
->         or      a0,a5,a0
->         ret
->
-> It's unlikely that load ends up relaxed, so it's going to be two instructions.
-> That means we have 4 cycles to forward the load and multiply, for a cache hit.
-> IIRC the multiplier on the existing hardware isn't that fast -- GCC lists it as
-> imul as 10 cycles, but I remember it being more like 5 so that might just be an
-> architecture-inaccurate tuning in the generic pipeline model.  This is out of
-> the inner loop, so it's probably not all that important anyway.  The result
-> isn't used for a while so on a bigger machine it's probably worth picking the
-> smaller code path, but it seems like a very small thing to optimize for either
-> way.
->
-> I'm actually a bit surprised about this.  Do you have benchmarks that indicate
-> ARCH_HAS_FAST_MULTIPLIER is actually faster?  Otherwise I guess I'm going to
-> reject this, as it's really more
-> ARCH_HAS_FAST_MULTIPLIER_AND_FAST_LARGE_CONSTANTS than just
-> ARCH_HAS_FAST_MULTIPLIER.
+Add HID_QUIRK_NOGET for Logitech GROUP device.
 
-Hi Palmer,
+Logitech GROUP is a compound with camera and audio.
+When the HID interface in an audio device is requested to get
+specific report id, all following control transfers are stalled
+and never be restored back.
 
-I think you meant this reply for
-https://lore.kernel.org/linux-riscv/c5d82526-233a-15d5-90df-ca0c25a53639@eswin.com/T/#t
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=203419
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+---
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-/Emil
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 2615bf17a50c..cfb75b4cb724 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -758,6 +758,7 @@
+ #define USB_DEVICE_ID_LOGITECH_G27_WHEEL	0xc29b
+ #define USB_DEVICE_ID_LOGITECH_WII_WHEEL	0xc29c
+ #define USB_DEVICE_ID_LOGITECH_ELITE_KBD	0xc30a
++#define USB_DEVICE_ID_LOGITECH_GROUP_AUDIO	0x0882
+ #define USB_DEVICE_ID_S510_RECEIVER	0xc50c
+ #define USB_DEVICE_ID_S510_RECEIVER_2	0xc517
+ #define USB_DEVICE_ID_LOGITECH_CORDLESS_DESKTOP_LX500	0xc512
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index ad1a61929548..da9763e60091 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -177,6 +177,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP_LTD2, USB_DEVICE_ID_SMARTJOY_DUAL_PLUS), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_GROUP_AUDIO), HID_QUIRK_NOGET },
+ 
+ 	{ 0 }
+ };
+-- 
+2.28.0.rc0.105.gf9edc3c819-goog
+
