@@ -2,116 +2,217 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6E7C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A179BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47EDD2080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:33:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0xmZDOq"
+	by mail.kernel.org (Postfix) with ESMTP id 7EDBA20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595302413;
+	bh=9HI1pUn9jONTwhdZhN5qt8fCBBfsHz1Gxdf3NregWQs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0V8BdNlDincdMDCaFBRHLgzgV/PBTz0htj7Umf7uB9/4odE+6BWinNoWwEQJff9jv
+	 KYIrBZ83biU1OZ5QXEX0J6PXYq7yTB2I0dlSfHVhkkHTRwHR1zE76SHuNym/AodFIS
+	 sjYdOHIhxyGIPK6J3c0DzVxJD1ZgRRttYseTj2rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbgGUDdg (ORCPT
+        id S1728312AbgGUDdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:33:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgGUDdf (ORCPT
+        Mon, 20 Jul 2020 23:33:32 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39676 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbgGUDdb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 23:33:35 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19119C061794;
-        Mon, 20 Jul 2020 20:33:35 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id u8so8703547qvj.12;
-        Mon, 20 Jul 2020 20:33:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cLD63HVz7cMknBL4wWGEVVq5fT472O42ahxwzC+ygv8=;
-        b=N0xmZDOqHUb4jVCuhhRlxsAawQPNEPouqOJF666NlI5J9shQVxg6EIlorfO7ROp0qj
-         +5Un5Mkb2rPtuN83IBOozQn8rvDWAxjrxBA4diI1gJO7RxkozJuft6dwTe6NcQnewzK7
-         VaqKn0Q4Lx9lDxu+LeIrK0ozQA5cj2Fo5OHYMTyjc1r11gr7ucHVB+ooOhsuzMJRL0F9
-         aNOre2/3TcBeHKbL1wlfCFfHThc76jPki/cXTjniK+IZ0ht5aCHqqFf3a2n1fkJI+FgR
-         seLq86CShgp68h22vbzIDmUhml7V6MlU1mPXGa4McU3t2iT8AKhI0Ja5wJKvsgqN8bh4
-         8Jug==
+        Mon, 20 Jul 2020 23:33:31 -0400
+Received: by mail-io1-f67.google.com with SMTP id z6so2391892iow.6;
+        Mon, 20 Jul 2020 20:33:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cLD63HVz7cMknBL4wWGEVVq5fT472O42ahxwzC+ygv8=;
-        b=CfZflGoO2zDTUt8j/p6zHpHd/tzIwEdFxhbNAl859STslYlW3iSA+1BV1QkBmHHVnw
-         1OAyxVOdr2gY6r0I6L1nQo23Jm6kwgbR9AYpEr69dpIV1qUeYYMdYzJWcotFj2SSM5je
-         cGUX+UiknL/kYuw1ghep4msetGFSvOSVFoip8H2HAi538teFRHaCfBGYMe0GvtnmfLzn
-         R2VcK+FCCKY4GxywxLg7eBQfvwWbLKyfXNZ3RjpYf7RmJHQwhLOAk20cou9aaLRAXJBu
-         Ahaz2AwXnEhz7GQixPFcr7WNJ/7935UCk0vJE99gS8f64LLbKi6dV48SNhiQPRvVNq8Q
-         kmxg==
-X-Gm-Message-State: AOAM531vsvYIeXRP9YUCQlakDM76+jXb6MBglBEVG5vQQttV8l44d95S
-        J5EYBFE3pyBmzImydU0AHkoCxd15rAufHKfxnMg=
-X-Google-Smtp-Source: ABdhPJwtURi/POzxLcVWiStZdyZxxmIbAnE33dRmIQI8XYzmQzbfylxBKwPnoJcte3kMI579qVquVMZKWd7pkAmJb7E=
-X-Received: by 2002:ad4:4732:: with SMTP id l18mr23948292qvz.208.1595302414313;
- Mon, 20 Jul 2020 20:33:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FIsq5aS0lflR5eoGS5qg3+rJGrp+o2lfnvyRp1tDhhA=;
+        b=ELs0jonetSEQpe74Bb1hdst8HjmiOlsJkH9XNwtyZjshzN0cZjVgkiUpMYgaB2s+pS
+         SIzms5j9UmijKOB+b2jSYSNqM8Jwnvhx0O23tOmb0gtrEN8jqCsLrzH/k610M4OR0Rnt
+         I9YaWFLdkUtww9L9fM7HzUBJh6QHxM9QIR7EwTKqaq5lFN2Rhf6oHP0beoASMwUVUtxZ
+         k5WLe+QR0i8+Pu437zY6a3N3xjM2Q+VViCWw3mvoDZ4r1O/fiCFrw/iIWvT8u6onM4DZ
+         TK0Y6xil0SOvRhZTYro/mK+Gtik3Osjel2WFmQ9Pdli/iQsA1XWLyDaw94zi/V55i1K8
+         Bt+g==
+X-Gm-Message-State: AOAM531IY9DM0PEDeiszV+Hk8D+h0QCqGVRivM0pVzU947KudPPrM8Di
+        sDQhc9uJCt89+6xmqHo0IA==
+X-Google-Smtp-Source: ABdhPJxLzxwkSBFgFvKAURG7gHM0n9OP8gTt/FOr/k7nGl4P1U3thGEkKqvgI5H750H/QtxdXFHIqw==
+X-Received: by 2002:a05:6602:2d12:: with SMTP id c18mr25892320iow.13.1595302410706;
+        Mon, 20 Jul 2020 20:33:30 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id g1sm9885914ilk.51.2020.07.20.20.33.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 20:33:29 -0700 (PDT)
+Received: (nullmailer pid 3502407 invoked by uid 1000);
+        Tue, 21 Jul 2020 03:33:28 -0000
+Date:   Mon, 20 Jul 2020 21:33:28 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: display: panel: Add bindings for Tianma
+ nt36672a panel
+Message-ID: <20200721033328.GA3492972@bogus>
+References: <20200716153858.526-1-sumit.semwal@linaro.org>
+ <20200716153858.526-2-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-References: <1595220978-9890-1-git-send-email-iamjoonsoo.kim@lge.com> <20200720162313.1381e1ec82daa6a92ae4cda7@linux-foundation.org>
-In-Reply-To: <20200720162313.1381e1ec82daa6a92ae4cda7@linux-foundation.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Tue, 21 Jul 2020 12:33:23 +0900
-Message-ID: <CAAmzW4MMSrzkfX9oGfSfmwxY1ejWWTAMLc7KR8yuniru563n3Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] mm/page_alloc: fix non cma alloc context
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716153858.526-2-sumit.semwal@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 7=EC=9B=94 21=EC=9D=BC (=ED=99=94) =EC=98=A4=EC=A0=84 8:23, A=
-ndrew Morton <akpm@linux-foundation.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
->
-> On Mon, 20 Jul 2020 13:56:15 +0900 js1304@gmail.com wrote:
->
-> > Currently, preventing cma area in page allocation is implemented by usi=
-ng
-> > current_gfp_context(). However, there are two problems of this
-> > implementation.
-> >
-> > First, this doesn't work for allocation fastpath. In the fastpath,
-> > original gfp_mask is used since current_gfp_context() is introduced in
-> > order to control reclaim and it is on slowpath.
-> > Second, clearing __GFP_MOVABLE has a side effect to exclude the memory
-> > on the ZONE_MOVABLE for allocation target.
-> >
-> > To fix these problems, this patch changes the implementation to exclude
-> > cma area in page allocation. Main point of this change is using the
-> > alloc_flags. alloc_flags is mainly used to control allocation so it fit=
-s
-> > for excluding cma area in allocation.
-> >
-> > Fixes: d7fefcc8de91 (mm/cma: add PF flag to force non cma alloc)
-> > Cc: <stable@vger.kernel.org>
->
-> This patch is against linux-next (or -mm) and has a lot of issues
-> applying to mainline.  If we indeed wish to backport it to -stable, it
-> should be against mainline, please.
+On Thu, Jul 16, 2020 at 09:08:57PM +0530, Sumit Semwal wrote:
+> The nt36672a panel from Tianma is a FHD+ panel with a resolution of 1080x2246
+> and 6.18 inches size. It is found in some of the Poco F1 phones.
+> 
+> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+> ---
+>  .../display/panel/tianma,nt36672a.yaml        | 110 ++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
+> new file mode 100644
+> index 000000000000..3c583ca926ee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
+> @@ -0,0 +1,110 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/tianma,nt36672a.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Tianma model NT36672A DSI Panel display driver
+> +
+> +maintainers:
+> +  - Sumit Semwal <sumit.semwal@linaro.org>
+> +
+> +description: |
+> +  The nt36672a panel from Tianma is a FHD+ LCD display panel with a resolution
+> +  of 1080x2246. It is a video mode DSI panel.
+> +
+> +allOf:
+> +  - $ref: panel-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: tianma,nt36672a
+> +
+> +  reg:
+> +    description: DSI virtual channel of the peripheral
+> +
+> +  reset-gpios:
+> +    description: phandle of gpio for reset line - This should be 8mA, gpio
+> +      can be configured using mux, pinctrl, pinctrl-names (active high)
+> +
+> +  vddio-supply:
+> +    description: phandle of the regulator that provides the supply voltage
+> +      Power IC supply
+> +
+> +  vddpos-supply:
+> +    description: phandle of the positive boost supply regulator
+> +
+> +  vddneg-supply:
+> +    description: phandle of the negative boost supply regulator
+> +
+> +  pinctrl-names:
+> +    description: Pinctrl for panel active and suspend
+> +
+> +  pinctrl-0:
+> +    description: Active pinctrls
+> +
+> +  pinctrl-1:
+> +    description: Suspend pinctrls
 
-I sent a revised patch against the mainline a minute ago. Subject and commi=
-t
-description is updated.
+I think the pinctrl should go in the DSI controller node, not the 
+display unless it is settings for 'reset-gpios'.
 
-Thanks.
+> +
+> +  ports:
+> +    type: object
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description: DSI input port driven by master DSI
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +        required:
+> +          - reg
+
+For a single port, you can do just 'port' (without ports node).
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - vddi0-supply
+> +  - vddpos-supply
+> +  - vddneg-supply
+> +  - reset-gpios
+> +  - pinctrl-names
+> +  - pinctrl-0
+> +  - pinctrl-1
+> +  - ports
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |+
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    dsi0 {
+
+dsi {
+
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      panel@0 {
+> +        compatible = "tianma,nt36672a";
+> +        reg = <0>;
+> +        vddi0-supply = <&vreg_l14a_1p88>;
+> +        vddpos-supply = <&lab>;
+> +        vddneg-supply = <&ibb>;
+> +
+> +        reset-gpios = <&tlmm 6 GPIO_ACTIVE_HIGH>;
+> +
+> +        pinctrl-names = "panel_active", "panel_suspend";
+> +        pinctrl-0 = <&sde_dsi_active>;
+> +        pinctrl-1 = <&sde_dsi_suspend>;
+> +
+> +        ports {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          port@0 {
+> +            reg = <0>;
+> +            tianma_nt36672a_in_0: endpoint {
+> +              remote-endpoint = <&dsi0_out>;
+> +            };
+> +          };
+> +        };
+> +      };
+> +    };
+> +
+> +...
+> -- 
+> 2.27.0
+> 
