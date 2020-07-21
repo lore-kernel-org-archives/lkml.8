@@ -2,186 +2,135 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3084C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96190C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4942073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:14:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VAmfbwNx"
+	by mail.kernel.org (Postfix) with ESMTP id 78F6C20771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgGUKOT (ORCPT
+        id S1729185AbgGUKOc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:14:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728542AbgGUKOT (ORCPT
+        Tue, 21 Jul 2020 06:14:32 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:42449 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729124AbgGUKOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:14:19 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE913C0619D8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:14:18 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id k7so10092060vso.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:14:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kJbvVyFR0zBM0W6pL7x2QodtQCSEVZFmvI/ayR1jEiM=;
-        b=VAmfbwNx78HIjPOEY6KPwT+mitpscRmnbWMT3CHqSw5yTZL+oY7yh1aS+7zl15UKOf
-         hYvauov0RMX0l2WhE3gCtcFyWMDCf9JHBxMCQ54sBOcxHElrSoLpx6lnB0MKgEfN50QB
-         DjCbz4ioWW8wjyp9X7TJqbbAXKXQJi+ko7sV/sYPP27USFe5aEnzDUEFOJ3Vg7edA+rX
-         4rYen/NwBLgAVpbFuxp45tldd3YakoXMgEjkHAcke5HBXrdgP5+1ZtoQhwKJ3iFP8l5c
-         HOCne9nProItLZy3P3d8a0zjfrEzSO3xONe3xlqC6a3aw1RnlDauBOfAz4TJeDr8c3Ik
-         i/fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kJbvVyFR0zBM0W6pL7x2QodtQCSEVZFmvI/ayR1jEiM=;
-        b=TRvu8av6RuQMo3VjSdMf1FHzrp6PmMJdx/YVmh6ynS4saKUK7VzEPyZ4jNC4ahQiia
-         6C+tMvvMnQ6/xG0NFOErCtjXc1T258Ggvcg578+JDEa3yQkXGJo3q/QUwA43QlS6XSCj
-         EcuHHY5xZFrHAmdumRS3R7RlqAUM2YSrpNKG81Gs6ZTAxKHa6jgNwBQv7mWT5YSEF7n0
-         bl8KLXBDcJrmTpI9JiNL9BuH18WeRn+RgaCUnQ99rBdms+Fat+l+F/0wJ3R3CHQOHQV2
-         80Jt5FYaWY7cDgYrbADjhQPW56DbCkn1CzfVk8sboFc9WruokmyHwM+fi3n5akMBME5v
-         yC5A==
-X-Gm-Message-State: AOAM533CiThdYIw0/cUCqHwNf4e50NjP7ttdx7Sf7yS2FweXY+lYiMeP
-        nfa91DyUBo8nepWQZbLCJNKYPMLm1LvzWn6F6D802g==
-X-Google-Smtp-Source: ABdhPJybBxh7oPQBEUeVlR1/9qabatxAAH5T/waGnwu/y7utpbXUUDr92LbJRzWXF+u1dwzjq/Z2zRIO+9n8TCY0q5o=
-X-Received: by 2002:a67:2d0e:: with SMTP id t14mr17738559vst.22.1595326457883;
- Tue, 21 Jul 2020 03:14:17 -0700 (PDT)
+        Tue, 21 Jul 2020 06:14:25 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-138-nfvRhVVmO1WenzQxH6ebBA-1; Tue, 21 Jul 2020 11:14:21 +0100
+X-MC-Unique: nfvRhVVmO1WenzQxH6ebBA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 21 Jul 2020 11:14:20 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 21 Jul 2020 11:14:20 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+        "linux-decnet-user@lists.sourceforge.net" 
+        <linux-decnet-user@lists.sourceforge.net>,
+        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "mptcp@lists.01.org" <mptcp@lists.01.org>,
+        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
+Subject: RE: [PATCH 03/24] net: add a new sockptr_t type
+Thread-Topic: [PATCH 03/24] net: add a new sockptr_t type
+Thread-Index: AQHWXznVP/p0ivee+U2FmRNemPQri6kRzhiA
+Date:   Tue, 21 Jul 2020 10:14:20 +0000
+Message-ID: <6727969f2f6e467fa2d43f9773cefa27@AcuMS.aculab.com>
+References: <20200720124737.118617-1-hch@lst.de>
+ <20200720124737.118617-4-hch@lst.de>
+In-Reply-To: <20200720124737.118617-4-hch@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20200720152753.138974850@linuxfoundation.org>
-In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 21 Jul 2020 15:44:06 +0530
-Message-ID: <CA+G9fYvp9z0ugV7hb0dr+B_GEX7QK_T2QJ2hyDvwnAcq05arjw@mail.gmail.com>
-Subject: Re: [PATCH 4.9 00/86] 4.9.231-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 at 21:12, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.231 release.
-> There are 86 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 22 Jul 2020 15:27:31 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.231-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+From: Christoph Hellwig
+> Sent: 20 July 2020 13:47
+> 
+> Add a uptr_t type that can hold a pointer to either a user or kernel
+> memory region, and simply helpers to copy to and from it.  For
+> architectures like x86 that have non-overlapping user and kernel
+> address space it just is a union and uses a TASK_SIZE check to
+> select the proper copy routine.  For architectures with overlapping
+> address spaces a flag to indicate the address space is used instead.
+> 
+...
+> +#else /* CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE */
+> +typedef struct {
+> +	union {
+> +		void		*kernel;
+> +		void __user	*user;
+> +	};
+> +	bool		is_kernel : 1;
+> +} sockptr_t;
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+If you need to do that you might as well make it a struct
+where either the kernel or user address is defined.
+Far safer for all architectures.
 
-Summary
-------------------------------------------------------------------------
+Indeed you could add the length (to save passing an
+extra parameter through the layers).
 
-kernel: 4.9.231-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: 8c3f33eeb0cc6d2603144f45d841ed8f966dd728
-git describe: v4.9.230-87-g8c3f33eeb0cc
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.230-87-g8c3f33eeb0cc
+The system call code could even copy the code into a
+kernel buffer (setting both pointers).
+So that code that didn't need to access beyond the end
+of the implied buffer (most of it) could just access the
+kernel buffer.
 
-No regressions (compared to build v4.9.230)
+For getsockopt() you'd need some way of supressing the
+'default' copy back of the user buffer.
 
-No fixes (compared to build v4.9.230)
+This would also allow some of the sctp getsockopt to
+read (usually 4 bytes) from the 'user' buffer without
+the wrapper code always having to read in the entire
+user buffer.
 
-Ran 34431 total tests in the following environments and test suites.
+	David
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kselftest/net
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
