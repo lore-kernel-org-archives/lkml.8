@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0588C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC4DC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C80322068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AC42068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:07:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uOQX4Rem"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cykZt9SL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730560AbgGUTHC (ORCPT
+        id S1730588AbgGUTHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:07:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41232 "EHLO
+        Tue, 21 Jul 2020 15:07:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730257AbgGUTGr (ORCPT
+        with ESMTP id S1730297AbgGUTGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:06:47 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36BC7C0619DF
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:06:47 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f7so22241969wrw.1
+        Tue, 21 Jul 2020 15:06:48 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0838EC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:06:48 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 22so3870661wmg.1
         for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:06:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FT+2gDwi+eo+TtESsfWRD1fT3NbLCZL+Gr5RVIpvd9A=;
-        b=uOQX4RemIlR0j2HEHYAaSyo3IqUDYdlmOlxPQ8DlFtEKtOE53r7MP7XCcOEHMkMcHH
-         Ulh3ZeeY73gxeE74lSsmmWLXvrX0EeRl6W8bVRrphQEBYd9ce0TLQdQYffZ11LXNWCyi
-         VFMmDZlpQCtHTwnuCaH+oCq19pVS/bfFtW7MUVbnGLSqo0l/OFyN+0FoFP2gH9nbiN19
-         qGdb6mgA27UMGMGglxrim2z6f9en91J858w8rai7XZzzRTxZfHOTIJa2RPi0eB8Vt9d2
-         cCOeWcwe2ITKSyw/jnn8xkY/97eZXUktTy3hl0AqijRVwmbkgYecCtABCp6bO31rT5hF
-         LxHg==
+        bh=liOvMqJ23zZD+1Jnxjs/VNAD87FK/p7rypoysOK5cqw=;
+        b=cykZt9SLBOXQ0t4KCQOFymxUT+H6oX5W8y2T9eEEOPDEhHCHv5nRhT5EH8+U98zkP4
+         GyZAF5AkKIn4TZht24/Y8bejgoFVKMtegMVWppeeGzo0x0+3JlzUpi6QH9pQiBmRt/2S
+         AxnhMEV/b2QRNDOTcJBjs4nhjMMuBlQfczYvsHWs6+aODH91/MIX5WrgMvhQ3YYOtaOm
+         hKSjlDEPcOGY4qZOxtP7/j0MsP6m7vxaQCektmb1K+Od+NoQkbydLSlsUuf+NXSUeI2a
+         /XHdHtWWTqm/dlk9YAucOE69XRRbCwhaTjVI1x0wgItFFwukO32xwmfUESI6ZL+c4ZLW
+         b2aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=FT+2gDwi+eo+TtESsfWRD1fT3NbLCZL+Gr5RVIpvd9A=;
-        b=t5B85yFyenmT2c2lSZCNSHJ2ekApZ6D5KJj/axQ0mfNN7bFHg3iSK6P7wP4DBjSHW0
-         ZCuedEIFw97WsNbRFDSWKO6XTEN0Futw5NMZ6TKhF/0HLQd3ZB/hHZEedbBFGG2Lwcb/
-         QXpJPrLzwBL5xwTUUJgRsUuUgvDAjIseqqh4eExvAIyDp3X4XNhKUF8DOCU6Ge6QCLwA
-         WaqvJ8p0svyst3iYoZ9hePF/L6d2OjjlhfCmzVEBp21ow3GnPvPawZZCHlnjyWnkfxhB
-         EEnM3A4HsXMzGFpxuUiG5jaN8Qe0tr0Jhhdkb8GADud41MQ62dtbjveqqlOBQRtveqbR
-         TiVQ==
-X-Gm-Message-State: AOAM530vyFTmSUUIXJWkuqmFZY9ovDIXwe6+urHEwAzNyuWcRFGPFiQi
-        S/UZcTvZzY4btigOHMqjMF/NCw==
-X-Google-Smtp-Source: ABdhPJz58pWhTIJIjUQBlthHYEQooH2Rg4duKviDGhSiJw15kYwqUhlPOF/VCsElr8LdruZUhIeb/w==
-X-Received: by 2002:adf:e704:: with SMTP id c4mr345406wrm.81.1595358405986;
-        Tue, 21 Jul 2020 12:06:45 -0700 (PDT)
+        bh=liOvMqJ23zZD+1Jnxjs/VNAD87FK/p7rypoysOK5cqw=;
+        b=S8hd7hPRsprNoZ4cikM7iQK/jCwT+Uho51ydhDrHieD8fHvycIGcQA4tclKc5f9es0
+         mgXHh1NfALtb2bLZFXzXV17eXAgMmEcZ7edSd8ZxeT20jCJo5Dn+AuUID8w34meoqKlu
+         rK/By8yUsToj6gPiU8stso+BoPtERck6RSr0XyKX8GDmmhJzj0DHo5o5Xd3asRt3p14s
+         7TC9145MLMv1PLHzXjatYMWlLDVBqi9ELYEmDNEcmQipD4cGTHTSOjSXRoMxHJV2NCOS
+         3y4usOV8r5CgM/M5Pfo5e/kpf8+txQl/MD1Jw6g9x7k4lDP0oxWHmyna55hwmDcGHiJS
+         QfHA==
+X-Gm-Message-State: AOAM5304FFgHrrfesz+zICWA8h6Q5MH1Tfnk31GQYruxAFwah5N4m8pU
+        LR7BGEgDw72ErJeKTXqg2JY4Cg==
+X-Google-Smtp-Source: ABdhPJzVcmQOfucyIsbFTNaNbdEQpJ3na/D8aPC43ZWPeRQZNgJRL2BPgLO7XglJeWLBYKtYK3HPCA==
+X-Received: by 2002:a7b:c8c8:: with SMTP id f8mr5510705wml.142.1595358406758;
+        Tue, 21 Jul 2020 12:06:46 -0700 (PDT)
 Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id s14sm25794848wrv.24.2020.07.21.12.06.45
+        by smtp.googlemail.com with ESMTPSA id s14sm25794848wrv.24.2020.07.21.12.06.46
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Jul 2020 12:06:45 -0700 (PDT)
+        Tue, 21 Jul 2020 12:06:46 -0700 (PDT)
 From:   Corentin Labbe <clabbe@baylibre.com>
 To:     davem@davemloft.net, herbert@gondor.apana.org.au,
         mripard@kernel.org, wens@csie.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
         linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v4 04/17] crypto: sun8i-ss: fix a trivial typo
-Date:   Tue, 21 Jul 2020 19:06:18 +0000
-Message-Id: <1595358391-34525-5-git-send-email-clabbe@baylibre.com>
+Subject: [PATCH v4 05/17] crypto: sun8i-ss: Add more comment on some structures
+Date:   Tue, 21 Jul 2020 19:06:19 +0000
+Message-Id: <1595358391-34525-6-git-send-email-clabbe@baylibre.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595358391-34525-1-git-send-email-clabbe@baylibre.com>
 References: <1595358391-34525-1-git-send-email-clabbe@baylibre.com>
@@ -74,26 +74,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes a trivial typo.
+This patch adds some comment on structures used by sun8i-ss.
 
 Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
-index 377ea7acb54d..da71d8059019 100644
+index da71d8059019..1a66457f4a20 100644
 --- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
 +++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
-@@ -100,7 +100,7 @@ struct ss_clock {
-  * @alg_hash:	list of supported hashes. for each SS_ID_ this will give the
-  *              corresponding SS_ALG_XXX value
-  * @op_mode:	list of supported block modes
-- * @ss_clks!	list of clock needed by this variant
-+ * @ss_clks:	list of clock needed by this variant
+@@ -195,6 +195,8 @@ struct sun8i_cipher_req_ctx {
+  * @keylen:		len of the key
+  * @ss:			pointer to the private data of driver handling this TFM
+  * @fallback_tfm:	pointer to the fallback TFM
++ *
++ * enginectx must be the first element
   */
- struct ss_variant {
- 	char alg_cipher[SS_ID_CIPHER_MAX];
+ struct sun8i_cipher_tfm_ctx {
+ 	struct crypto_engine_ctx enginectx;
 -- 
 2.26.2
 
