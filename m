@@ -2,174 +2,222 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C79FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02369C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0206420729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:13:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HI4DG4Ol"
+	by mail.kernel.org (Postfix) with ESMTP id CF62820717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595369757;
+	bh=keTbomrf4zknktam/LM8fhy2QKlR/GqqXEwH7QR0xf0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qd8/yZqnaxaCUcpXwBM3dZz1RnhAjRQF4LvobEvd4sLeHnZda/19zBbPbEIo5/VNe
+	 OOWxb5fj1jzSDoSLM1LDzhqZBBHGUAkSKY+XnnPtztmWOM9lLjowTfa4NgapPwAPwO
+	 pWG9j0s5qk84VSa8HYoqyMvPJ0EzrlJQ4EUsAJrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbgGUWNu (ORCPT
+        id S1729039AbgGUWP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 18:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbgGUWNu (ORCPT
+        Tue, 21 Jul 2020 18:15:56 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:64746 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbgGUWP4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 18:13:50 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27D59C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 15:13:50 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id j10so364859qtq.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 15:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=kalVxG8ANnjjy1Dw3YQgCDZ3CtnSjchvQLTtFWwGZEI=;
-        b=HI4DG4OlYWFjQ61OejwTOZ7oTYLG7hjW1DsiY3koJJZ8BKbWFzFLCdDota/JQWSQMg
-         5RSHdXAyc62g8Z6RiwbcjsW1QsCnWfAYao7+sX3Tn6e1k56NU+qS10UmEcbR3WAnU/5c
-         lUVY9P0VC5T1cPJdjm48ChMbUwGlhqtikkZ2x9DCwLGte83hXvlC0PjNGk8zpVzIq5XY
-         mwm2cZfmcjMXuqOgY1ut0BXI3nV3HQwwRQr7l0D7uYqY/xB+h3aDVxTIICyRbOpmlyuy
-         P+LcjWw5Eo168umDZpGtAXcF7iHXSLgEmwUty7BPuqtntmRIPeXsLqWVvTg42iaQCjqW
-         ux/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=kalVxG8ANnjjy1Dw3YQgCDZ3CtnSjchvQLTtFWwGZEI=;
-        b=QZY1g2javA4KljoPxgsiijvFbAK5GizFACOcaT17UEzGShsMdZyZuaehe4QoYei7pc
-         Ge1qT3wKjX23BZK+RmYw07nQj1RGh0MkxsF2yT2MxDxH6D9aw8LQeyp9UDQFXazclHr3
-         YnSRDeSZ+qtngeeOLnHoC2fGWSSo4Hle4DWqtw/DPrvohGiu7kIQo+Ro9MSK8oqexz/G
-         NLb7Jp1PISGU4flgGpBrgt0Keylpmwt6Xc4nCU0AoKQkcHCyt0uEsYlVJs8krkxL7EB5
-         peeOI1VY3FM2PVATg2u/BDyZVe8NcCUbZr920o4HpR+Qu+D3LZzt5tGQ6ZIabHIkOFzP
-         LriQ==
-X-Gm-Message-State: AOAM531ePIJKm4DFk5zDYu5AIeXkxrgIXstoG5VhYZ3rW+btjt2aURNZ
-        TQFcE0Ue/ADMVOHi2/PET9zYe1JS
-X-Google-Smtp-Source: ABdhPJx0yMa8t58yf/qnLF46Y5HIlOeGBFaAKUODUY+XylBgXMuqyo16Q2hhte1VcrtBV2DZouIbCA==
-X-Received: by 2002:ac8:32b8:: with SMTP id z53mr31042917qta.273.1595369629394;
-        Tue, 21 Jul 2020 15:13:49 -0700 (PDT)
-Received: from LeoBras (179-125-153-225.dynamic.desktop.com.br. [179.125.153.225])
-        by smtp.gmail.com with ESMTPSA id g4sm22116489qtp.89.2020.07.21.15.13.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 15:13:48 -0700 (PDT)
-Message-ID: <0f4c2d84d0958e98e7ada53c25750fe548cadf0b.camel@gmail.com>
-Subject: Re: [PATCH v4 5/7] powerpc/iommu: Move iommu_table cleaning routine
- to iommu_table_clean
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Tue, 21 Jul 2020 19:13:42 -0300
-In-Reply-To: <51235292-a571-8792-c693-d0dc6faeb21c@ozlabs.ru>
-References: <20200716071658.467820-1-leobras.c@gmail.com>
-         <20200716071658.467820-6-leobras.c@gmail.com>
-         <51235292-a571-8792-c693-d0dc6faeb21c@ozlabs.ru>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 21 Jul 2020 18:15:56 -0400
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 06LMFG4v024349;
+        Wed, 22 Jul 2020 07:15:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 06LMFG4v024349
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1595369718;
+        bh=vR1Y8P9QQm4CTezIGezqaKkPlD5HSAJvtH4tLGcsSBI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Eac1OkjRpXczpVkoHps5q00SjaAGdrQ3pmDGHflV2eWLHwS9LUnXYJosQBVz0UOFJ
+         atSqHwrjAyEqKhhMCDEp8gwAke30wrqbqvvi4lNmMa7gumSCpmUVL/vLMchR8jjKyq
+         xbDGV9JH2i3/zqvStgXRklaXyKjGDbNGh3yQ9HK03urpCmxPAhwXQdZ4eou/4l+Esb
+         Vqij88PKHqQRSj9ZyeZiCqK8drr6KjJKQsZWrvfWZLE4cVET/n6SYbK9Va4ZDFNiP5
+         KCPX+0qwTVEPdYdDJVfO2+1vCzS/ra4OaFB36trWx5dGdyr6f2GQJDUL8eWZZzbjnY
+         RQ3dTkGUPMDYg==
+X-Nifty-SrcIP: [209.85.222.45]
+Received: by mail-ua1-f45.google.com with SMTP id o25so2610uar.1;
+        Tue, 21 Jul 2020 15:15:17 -0700 (PDT)
+X-Gm-Message-State: AOAM530IRbG3+lOvgD6rulQC2H99mTIThdfVnrbgoQQHaaNDc1HgkrWH
+        J/CFyn1P1aUdWOesoDNxGKsM+c88iGicZCAbpy4=
+X-Google-Smtp-Source: ABdhPJyfvusDeLSk02B9TNvScFemIglbaRo6s+sUXc0hUvfsW+NlwIYAiHd3h/00MalC6DXvqL7qEYtSs9IWJGdOHqk=
+X-Received: by 2002:ab0:48:: with SMTP id 66mr22845681uai.40.1595369716204;
+ Tue, 21 Jul 2020 15:15:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200721173125.1273884-1-maskray@google.com>
+In-Reply-To: <20200721173125.1273884-1-maskray@google.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 22 Jul 2020 07:14:39 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARjOjr2wSD_iM6yNSZpSGEWrkZZuWKCgCqOrYcA29+LBA@mail.gmail.com>
+Message-ID: <CAK7LNARjOjr2wSD_iM6yNSZpSGEWrkZZuWKCgCqOrYcA29+LBA@mail.gmail.com>
+Subject: Re: [PATCH v3] Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang cross compilation
+To:     Fangrui Song <maskray@google.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jian Cai <jiancai@google.com>,
+        Bill Wendling <morbo@google.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        stable <stable@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-21 at 14:59 +1000, Alexey Kardashevskiy wrote:
-> 
-> On 16/07/2020 17:16, Leonardo Bras wrote:
-> > Move the part of iommu_table_free() that does struct iommu_table cleaning
-> > into iommu_table_clean, so we can invoke it separately.
-> > 
-> > This new function is useful for cleaning struct iommu_table before
-> > initializing it again with a new DMA window, without having it freed and
-> > allocated again.
-> > 
-> > Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
-> > ---
-> >  arch/powerpc/kernel/iommu.c | 30 ++++++++++++++++++------------
-> >  1 file changed, 18 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
-> > index 9704f3f76e63..c3242253a4e7 100644
-> > --- a/arch/powerpc/kernel/iommu.c
-> > +++ b/arch/powerpc/kernel/iommu.c
-> > @@ -735,21 +735,10 @@ struct iommu_table *iommu_init_table(struct iommu_table *tbl, int nid,
-> >  	return tbl;
-> >  }
-> >  
-> > -static void iommu_table_free(struct kref *kref)
-> > +static void iommu_table_clean(struct iommu_table *tbl)
-> 
-> iommu_table_free() + iommu_init_table() + set_iommu_table_base() should
-> work too, why new helper?
-
-iommu_table_free() also frees the tbl, which would need allocate it
-again (new address) and to fill it up again, unnecessarily. 
-I think it's a better approach to only change what is needed.
-
-> There is also iommu_table_clear() which does a different thing so you
-> need a better name.
-
-I agree.
-I had not noticed this other function before sending the patchset. What
-would be a better name though? __iommu_table_free()? 
-
-> Second, iommu_table_free
-> use and it would be ok as we would only see this when hot-unplugging a
-> PE because we always kept the default window.
-> Btw you must be seeing these warnings now every time you create DDW with
-> these patches as at least the first page is reserved, do not you?
-
-It does not print a warning.
-I noticed other warnings, but not this one from iommu_table_free():
-/* verify that table contains no entries */
-if (!bitmap_empty(tbl->it_ma
-p, tbl->it_size))
-	pr_warn("%s: Unexpected TCEs\n", __func__);
-
-Before that, iommu_table_release_pages(tbl) is supposed to clear the 
-bitmap, so this only tests for a tce that is created in this short period.
-
-> Since we are replacing a table for a device which is still in the
-> system, we should not try messing with its DMA if it already has
-> mappings so the warning should become an error preventing DDW. It is
-> rather hard to trigger in practice but I could hack a driver to ask for
-> 32bit DMA mask first, map few pages and then ask for 64bit DMA mask, it
-> is not illegal, I think. So this needs a new helper - "bool
-> iommu_table_in_use(tbl)" - to use in enable_ddw(). Or I am overthinking
-> this?... Thanks,
-
-As of today, there seems to be nothing like that happening in the
-driver I am testing. 
-I spoke to Brian King on slack, and he mentioned that at the point DDW
-is created there should be no allocations in place.
-
-But I suppose some driver could try to do this.
-
-Maybe a better approach would be removing the mapping only if the
-default window is removed (at the end of enable_ddw, as an else to
-resetting the default DMA window), and having a way to add more
-mappings to those pools. But this last part doesn't look so simple, and
-it would be better to understand if it's necessary investing work in
-this.
-
-What do you think?
-
-Best regards,
+On Wed, Jul 22, 2020 at 2:31 AM 'Fangrui Song' via Clang Built Linux
+<clang-built-linux@googlegroups.com> wrote:
+>
+> When CROSS_COMPILE is set (e.g. aarch64-linux-gnu-), if
+> $(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-elfedit,
+> GCC_TOOLCHAIN_DIR will be set to /usr/bin/.  --prefix= will be set to
+> /usr/bin/ and Clang as of 11 will search for both
+> $(prefix)aarch64-linux-gnu-$needle and $(prefix)$needle.
+>
+> GCC searchs for $(prefix)aarch64-linux-gnu/$version/$needle,
+> $(prefix)aarch64-linux-gnu/$needle and $(prefix)$needle. In practice,
+> $(prefix)aarch64-linux-gnu/$needle rarely contains executables.
+>
+> To better model how GCC's -B/--prefix takes in effect in practice, newer
+> Clang (since
+> https://github.com/llvm/llvm-project/commit/3452a0d8c17f7166f479706b293caf6ac76ffd90)
+> only searches for $(prefix)$needle. Currently it will find /usr/bin/as
+> instead of /usr/bin/aarch64-linux-gnu-as.
+>
+> Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
+> (/usr/bin/aarch64-linux-gnu-) so that newer Clang can find the
+> appropriate cross compiling GNU as (when -no-integrated-as is in
+> effect).
+>
+> Cc: stable@vger.kernel.org
+> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> Signed-off-by: Fangrui Song <maskray@google.com>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1099
+> ---
+> Changes in v2:
+> * Updated description to add tags and the llvm-project commit link.
+> * Fixed a typo.
+>
+> Changes in v3:
+> * Add Cc: stable@vger.kernel.org
+> ---
+>  Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 0b5f8538bde5..3ac83e375b61 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -567,7 +567,7 @@ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
+>  ifneq ($(CROSS_COMPILE),)
+>  CLANG_FLAGS    += --target=$(notdir $(CROSS_COMPILE:%-=%))
+>  GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
+> -CLANG_FLAGS    += --prefix=$(GCC_TOOLCHAIN_DIR)
+> +CLANG_FLAGS    += --prefix=$(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
 
 
+
+CROSS_COMPILE may contain the directory path
+to the cross toolchains.
+
+
+For example, I use aarch64-linux-gnu-*
+installed in
+/home/masahiro/tools/aarch64-linaro-7.5/bin
+
+
+
+Basically, there are two ways to use it.
+
+[1]
+PATH=$PATH:/home/masahiro/tools/aarch64-linaro-7.5/bin
+CROSS_COMPILE=aarch64-linux-gnu-
+
+
+[2]
+Without setting PATH,
+CROSS_COMPILE=~/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-
+
+
+
+I usually do [2] (and so does intel's 0day bot).
+
+
+
+This patch works for the use-case [1]
+but if I do [2], --prefix is set to a strange path:
+
+--prefix=/home/masahiro/tools/aarch64-linaro-7.5/bin//home/masahiro/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-
+
+
+
+Interestingly, the build is still successful.
+Presumably Clang searches for more paths
+when $(prefix)$needle is not found ?
+
+
+
+I applied your patch and added -v option
+to see which assembler was internally invoked:
+
+ "/home/masahiro/tools/aarch64-linaro-7.5/lib/gcc/aarch64-linux-gnu/7.5.0/../../../../aarch64-linux-gnu/bin/as"
+-EL -I ./arch/arm64/include -I ./arch/arm64/include/generated -I
+./include -I ./arch/arm64/include/uapi -I
+./arch/arm64/include/generated/uapi -I ./include/uapi -I
+./include/generated/uapi -o kernel/smp.o /tmp/smp-2ec2c7.s
+
+
+Ok, it looks like Clang found an alternative path
+to the correct 'as'.
+
+
+
+
+But, to keep the original behavior for both [1] and [2],
+how about this?
+
+CLANG_FLAGS += --prefix=$(GCC_TOOLCHAIN_DIR)$(notdir $(CROSS_COMPILE))
+
+
+
+Then, I can get this:
+
+ "/home/masahiro/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-as"
+-EL -I ./arch/arm64/include -I ./arch/arm64/include/generated -I
+./include -I ./arch/arm64/include/uapi -I
+./arch/arm64/include/generated/uapi -I ./include/uapi -I
+./include/generated/uapi -o kernel/smp.o /tmp/smp-16d76f.s
+
+
+
+
+
+>  GCC_TOOLCHAIN  := $(realpath $(GCC_TOOLCHAIN_DIR)/..)
+>  endif
+>  ifneq ($(GCC_TOOLCHAIN),)
+> --
+> 2.28.0.rc0.105.gf9edc3c819-goog
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200721173125.1273884-1-maskray%40google.com.
+
+
+
+--
+Best Regards
+Masahiro Yamada
