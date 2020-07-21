@@ -2,416 +2,360 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C549DC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A2CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8552070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8562206E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:34:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ou5FVj28"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="e8hUWb4i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgGUO3z (ORCPT
+        id S1729151AbgGUOey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:29:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728600AbgGUO3y (ORCPT
+        Tue, 21 Jul 2020 10:34:54 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:38485 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726412AbgGUOey (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:29:54 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2999CC061794;
-        Tue, 21 Jul 2020 07:29:54 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t6so10342916plo.3;
-        Tue, 21 Jul 2020 07:29:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iYRfseGRxkJSGBtUZrlfdzVPtZz70c1cd/TpTdawABc=;
-        b=Ou5FVj28l09vBKNJZNt4QUXmA+4vLyTrzid6vPpuOiFc+adui65+VP3JRRjRVYHDo7
-         hSSr8r1sqqve1WHaDIvwW1ydEWCDTZRYF713dbR/n15CRRkyfXP8ycjLgAjPCcFoEHVd
-         wOjv8A5OgNTJzbwPXFGrTL2YlkOmi1h98zOY9cb8C/K53thbI4yao5nSkha5d5eyDW9v
-         d/kK6tnes3rcNeiEfEUINdNS6t6TAzAFc6qXEVCneCE5zQ/LOf6n6qYgjlFMmx2oPpZN
-         ANVdv4mqhhUFWoqf8co6usvf/C3CjTpdOZ1dr4rS7Kwe+Usy/M6JJeszH+o8BDtXXwz4
-         10Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iYRfseGRxkJSGBtUZrlfdzVPtZz70c1cd/TpTdawABc=;
-        b=ZJS/9rSjjIYPe+d3W5cyH5NONmNA9NYv7q9AjlyNYaYN4rcVv5BJDSoK9hJMdySoCB
-         PlRZAyVbvGlM3dlYOFCOZW+aEjKxm3e+vsGz6m3GcexCP8MfeZo7VwVhNON4iXXN2uMI
-         +cX2mAi2ecvDw0gmtDyga+GBDUYLoFZPsQX17bslu4gyyi/t6sxOl6zhQMothSZZy804
-         Kr3yPkqUNW0bhq7gd5K8NmPzYrrftpHBBW7PXmSRY3XbvuYUlpnZwBD3jY9gLXz6Iia5
-         tz3xOYZ3nqrDV2o0Aywar4CRqRDwybV3WY1Pgxn+jKQNwY7tTtjGAbG5Gtootf51ON6C
-         UrjA==
-X-Gm-Message-State: AOAM532NT0kYt3+8bqzrAulHpLNa8qtRb69OKQXKDEL5fK9MYEYurHJD
-        l9gnf0LYWCkWqApUGAz2DoA=
-X-Google-Smtp-Source: ABdhPJzqgWbje16rxCbMRkXzILc7Zzq9h1cQGSe9ZmJjCxeYFKDKk/oLlrn9Ss6vfhukJQdSHmBipQ==
-X-Received: by 2002:a17:902:8206:: with SMTP id x6mr23010963pln.328.1595341793513;
-        Tue, 21 Jul 2020 07:29:53 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.67])
-        by smtp.gmail.com with ESMTPSA id y80sm20252309pfb.165.2020.07.21.07.27.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 07:29:52 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v1] mptfusion: use generic power management
-Date:   Tue, 21 Jul 2020 19:54:24 +0530
-Message-Id: <20200721142423.304231-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 21 Jul 2020 10:34:54 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id xtM1jiUFuNPeYxtM2juv1X; Tue, 21 Jul 2020 16:34:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1595342091; bh=6Qtnztls4xJZ+XDHpXKeJbmq/uootRqXj8/8h/e0c2E=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=e8hUWb4iW1K2/8ubatJD3JkctDxOEkoroWE+9V9XIFKIW7mYI0mRPXMkWeZRGc/OL
+         0NtO4YLDBiuAT4oPEdCZMDvaGxe4sDOK+rDw9b23SNBJYg3whMDbRMOuNP1HgVuZ9C
+         sMoUZ2QPuIdq83NmsthmRjfXeWTLC6qH4fAh4D7xFPZcopgd/LUwKwC429Sp817LOM
+         zcQGLpEGdNBL+YTMtXD5jadDciPgheNVUusr31jhfZwUELnF2rp9KCj+1gfvY2algx
+         xoAliDpIaTPuHgeL5L/3BalyA9rzwxj+EWQs7vnR0KKYli3pcgJknScUustWfVZbvI
+         H112oremVkS3w==
+Subject: Re: [PATCH v4 0/6] media: v4l2: Add extended fmt and buffer ioctls
+To:     Helen Koike <helen.koike@collabora.com>, mchehab@kernel.org,
+        hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com,
+        sakari.ailus@iki.fi, linux-media@vger.kernel.org
+Cc:     tfiga@chromium.org, hiroh@chromium.org, nicolas@ndufresne.ca,
+        Brian.Starkey@arm.com, kernel@collabora.com,
+        boris.brezillon@collabora.com, narmstrong@baylibre.com,
+        linux-kernel@vger.kernel.org, frkoenig@chromium.org,
+        mjourdan@baylibre.com, stanimir.varbanov@linaro.org
+References: <20200717115435.2632623-1-helen.koike@collabora.com>
+ <f93e13c6-3415-388d-e401-10297ec6d66f@xs4all.nl>
+ <a69312fe-2e51-8010-d73e-6327a0354416@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <81c775c6-451f-8973-32cb-9e7a70034386@xs4all.nl>
+Date:   Tue, 21 Jul 2020 16:34:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <a69312fe-2e51-8010-d73e-6327a0354416@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfFxyenHF/dboZjIL41xfWNt7bAZOVEgGXTFfC5BOWxRwRGyZCyHDT1C4XP01iYTBai+QrEzx0XaQDa9GC9HfdJfnjIxsW5qTNUThpwPDKWGPNgmgzN8Y
+ 8y14yYn8blitxfVej4m4O3E7OojOUUkhM+o7Wi6uJBNAtGSTTLpDaJ+wEY59wux8oswuQDjiJgZ6WzFvcfRhZ/CqIiqjyMUaef9hvN/PSpwbr3t/dfpV7bh1
+ 9qm1c/4OjVxglwCVlyBPLTCOcdRtwpQ2Hutz0jxT2GyUDd6iYBWQzfybei0EZaXEoMDBEzVBzkkMBgNs1z4BDKLOKycF5/GhBXiSZgin/eSaytNuBbBxfOeY
+ OGh/5WE5Wkzl9wZr/xYPbr3+PnsyjuPLr7M0562DUrAIc9mHJId8k3HXA/rCZ6r257TAnO3NYtgPxXyBoIHIiYDusfZmB1DuFQzHDvd4fwJnuNpGJnyDlpnN
+ JuuJzhuKzZRHf3TP+drykYNgkIXTan86hVwZeA8csewWkdTfUFMdinRLa7WudFshci3T5awgPscfx0y47d6lsJhB9qd8q80+qUDoA+eCgYSzEeFOTpLomWil
+ NX6KseOy8e4QlCG6E0ADZTAxD/FdNAiN02OY2Y509uAqypxpErC4acWYfkPHU6nMgfaZcQI24fmsh6QyfTniP3eVsAUfK6VHqaW7N6oj7JiZYMPVsRtIIQ6n
+ wcOjRlzwJErH1k8eSY+fHD/reJVIJ/Y71mjtwoc6UXj32CXHHJjd1JZR5GzPmDLvtS5eml61dr9Ejy5gFT5gB5RGnuPgmBhnFHynRDHA2YEeuPQdjmyBODCS
+ u6/BhcgrgZ2sq5sa4aw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers using legacy power management .suspen()/.resume() callbacks
-have to manage PCI states and device's PM states themselves. They also
-need to take care of standard configuration registers.
+On 21/07/2020 16:23, Helen Koike wrote:
+> Hi,
+> 
+> On 7/21/20 7:24 AM, Hans Verkuil wrote:
+>> On 17/07/2020 13:54, Helen Koike wrote:
+>>> Hi,
+>>>
+>>> I'm sorry for taking too long to submit v4.
+>>>
+>>> It is not perfect, not all v4l2-compliance tests passes, but I'd like a review,
+>>> specially on the API and potential problems, so I can focus on improving implementation
+>>> and maybe drop the RFC tag for next version.
+>>>
+>>> Follow below what changed in v4 and some items I'd like to discuss:
+>>>
+>>>
+>>> * Ioctl to replace v4l2_pix_format
+>>> ---------------------------------------------------------------------------------
+>>> During last media summit, we agreed to create ioctls that replace the v4l2_pix_format
+>>> struct and leave the other structs in the v4l2_format union alone.
+>>> Thus I refactored the code to receive struct v4l2_ext_pix_format, and I renamed the
+>>> ioctls, so now we have:
+>>>
+>>> int ioctl(int fd, VIDIOC_G_EXT_FMT, struct v4l2_ext_pix_format *argp);
+>>> int ioctl(int fd, VIDIOC_S_EXT_FMT, struct v4l2_ext_pix_format *argp);
+>>> int ioctl(int fd, VIDIOC_TRY_EXT_FMT, struct v4l2_ext_pix_format *argp);
+>>>
+>>> The only valid types are V4L2_BUF_TYPE_VIDEO_CAPTURE and V4L2_BUF_TYPE_VIDEO_OUTPUT,
+>>> all the other types are invalid with this API.
+>>>
+>>>
+>>> * Modifiers
+>>> ---------------------------------------------------------------------------------
+>>> I understand that unifying DRM and V4L2 pixel formats is not possible, but I'd like
+>>> to unify the modifiers [1].
+>>>
+>>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/drm/drm_fourcc.h#n290
+>>>
+>>> Should we use the DRM modifiers directly in the V4L2 API?
+>>
+>> For now, yes. Most of the modifier work is done in DRM, it is only fairly recent
+>> that the media subsystem starts to have a need for it. So for now just use the drm
+>> header and prefixes.
+> 
+> ack
+> 
+>>
+>>> Or should we move this header to a common place and change the prefix? (which requires
+>>> us to sync with DRM community).
+>>> Or should we create a v4l2 header, defining V4L2_ prefixed macros mapping to DRM_
+>>> macros?
+>>>
+>>> For now, patch 1/6 includes drm/drm_fourcc.h and it is using DRM_FORMAT_MOD_*
+>>>
+>>> As discussed before, It would be nice to have documentation describing DRM fourcc
+>>> equivalents (I'm not sure if someone started this already), listing the number of
+>>> planes per format.
+>>>
+>>> We should also document which pixelformats are valid for the EXT_API, since multiplanar
+>>> and tile versions like V4L2_PIX_FMT_NV12MT_16X16 (which seems equivalent to
+>>> DRM_FORMAT_MOD_SAMSUNG_16_16_TILE, and could have a more generic name) should be
+>>> replaced by a modifier.
+>>>
+>>> Regarding flags [2] field in struct v4l2_pix_format_mplane [3]:
+>>> The only defined flag is V4L2_PIX_FMT_FLAG_PREMUL_ALPHA, and it is only used by vsp1 driver.
+>>> Which I believe could be replaced by a modifier, to avoid another field that changes
+>>> pixel formats, so I removed it from the EXT API (we can always add it back later with
+>>> the reserved fields).
+>>
+>> The colorspace series that Dafna is working on will add a V4L2_PIX_FMT_FLAG_SET_CSC
+>> flag, so this flags field will be needed.
+> 
+> This was because the CSC fields were defined in the API as read only (filled by the driver),
+> what if those fields in struct v4l2_ext_pix_format allows user to change the CSC fields,
+> and it will just fill the right one if it is not supported (similar to how other fields works
+> already).
+> Please, let me know if I'm missing something.
 
-Switch to generic power management framework using a single
-"struct dev_pm_ops" variable to take the unnecessary load from the driver.
-This also avoids the need for the driver to directly call most of the PCI
-helper functions and device power state control functions as through
-the generic framework, PCI Core takes care of the necessary operations,
-and drivers are required to do only device-specific jobs.
+Ah, that's true, I forgot about that.
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/message/fusion/mptbase.c  | 36 +++++++++++--------------------
- drivers/message/fusion/mptbase.h  |  7 +++---
- drivers/message/fusion/mptfc.c    |  5 +----
- drivers/message/fusion/mptsas.c   |  5 +----
- drivers/message/fusion/mptscsih.c | 36 +++++++++++++++----------------
- drivers/message/fusion/mptscsih.h |  7 +++---
- drivers/message/fusion/mptspi.c   | 26 +++++++++++++---------
- 7 files changed, 53 insertions(+), 69 deletions(-)
+> 
+>>
+>>>
+>>> [2] https://linuxtv.org/downloads/v4l-dvb-apis-new/userspace-api/v4l/pixfmt-reserved.html#format-flags
+>>> [3] https://linuxtv.org/downloads/v4l-dvb-apis-new/userspace-api/v4l/pixfmt-v4l2-mplane.html?highlight=v4l2_pix_format_mplane#c.v4l2_pix_format_mplane
+>>>
+>>> We also discussed to add a new ENUM_FMT_EXT ioctl to return all pixelformats + modifiers
+>>> combinations. I still didn't add it in this version, but I don't think it affects
+>>> what is in this RFC and it can be added later.
+>>>
+>>>
+>>> * Buffers/Plane offset
+>>> ---------------------------------------------------------------------------------
+>>>
+>>> My understanding is that inside a memory buffer we can have multiple planes in random
+>>> offsets.
+>>> I was comparing with the DRM API [4], where it can have the same dmabuf for multiple
+>>> planes in different offsets, and I started to think we could simplify our API, so
+>>> I took the liberty to do some more changes, please review struct v4l2_ext_plane in
+>>> this RFC.
+>>>
+>>> I removed the data_offset, since it is unused (See Laurent's RFC repurposing this
+>>> field [5]). And comparing to the DRM API, it seems to me we only need a single offset
+>>> field.
+>>>
+>>> We could also check about overlapping planes in a memory buffer, but this is complicated
+>>> if we use the same memory buffer with different v4l2_ext_buffer objects. We can also leave
+>>> to the driver to check situations that may cause HW errors.
+>>>
+>>> [4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/drm/drm_mode.h#n489
+>>> [5] https://patchwork.linuxtv.org/patch/29177/
+>>>
+>>>
+>>> * Multistream Channels
+>>> ---------------------------------------------------------------------------------
+>>> During last media summit, we discussed about adding a channel number to the API to
+>>> support multistreams. i.e, to have multiple queues through a single video node.
+>>>
+>>> Use cases:
+>>>
+>>>     - Blitters: can take multiple streams as input, which would require multiple OUTPUT queues.
+>>>
+>>>     As Nicolas was explaining me:
+>>>     "The blitters comes with a lot of variation between hardware. Most blitters at
+>>>     least support 3 frames buffer. 2 inputs and one output. The second input is usually
+>>>     optional, as the output buffer data is not always overwritten (e.g. SRC_OVER
+>>>     blend or 1 input). Some of them have additional solid color or pattern that can
+>>>     be used too. Advanced blitters will have composition feature, and may support more
+>>>     input buffers to reduce the added latency that would be normally done through cascading
+>>>     the operations. Note that each input can have different size and different cropping
+>>>     region. Many blitters can scale and render to a sub-region of the CAPTURE buffer."
+>>>
+>>>     - Multis-calers: can produce multiple streams, which would require multiple CAPTURE queues.
+>>>
+>>>     As Nicolas was explaining me:
+>>>     "This type of HW (or soft IP) is commonly found on HW used to produce internet
+>>>     streams for fragmented and scalable protocols (HLS, DASH).  Basically they are
+>>>     used to transform one stream into multiple sized streams prior from being encoded."
+>>>
+>>> Modeling as channels allows the API to have synchronized Start/Stop between queues,
+>>> and also avoid the complexity of using the Media API in a topology with multiple video
+>>> nodes, which complicates userspace.
+>>>
+>>> This requires adding a new channel id in ioctls for formats (G_FMT/S_FMT/TRY_FMT), and
+>>> also for buffers (QBUF/DBUF).
+>>> We also need a mechanism to enumerate channels and their properties.
+>>> Since we don't have a clear view how this would work, for now I'm leaving reserved bits
+>>> in the structs, so we can add them later.
+>>>
+>>>
+>>> * Timecode
+>>> ---------------------------------------------------------------------------------
+>>> During last media summit, we discussed to return the v4l2_timecode field to the API,
+>>> since Nicolas mentioned that, even if it is not used by any upstreamed driver, it
+>>> is used by out-of-tree drivers.
+>>>
+>>> I've been discussing with Nicolas about this, and we can avoid adding too many metadata
+>>> to the buffer struct by using the Read-Only Request API [6] for retrieving more information
+>>> when required, similar to HDR.
+>>>
+>>> The RO Request API has the ability to read a control using a request that has already
+>>> completed, the control value lives as long as the request object. If it's not read
+>>> (or if there was no request), the data is simply ignored/discard.
+>>>
+>>> Since no upstream driver uses the timecode field, there are no conversions that need
+>>> to be done.
+>>
+>> That's a reasonable solution.
+>>
+>>>
+>>> [6] https://patchwork.kernel.org/cover/11635927/
+>>>
+>>>
+>>> * Other changes (and some questions) in this version:
+>>> ---------------------------------------------------------------------------------
+>>> - Added reserved fields to struct
+>>>
+>>> - The only difference between previously proposed VIDIOC_EXT_EXPBUF and VIDIOC_EXPBUF,
+>>> was that with VIDIOC_EXT_EXPBUF we can export multiple planes at once. I think we
+>>> can add this later, so I removed it from this RFC to simplify it.
+>>>
+>>> - v4l2_buffer [7] has a memory field (enum v4l2_memory [8]). We kept this field in
+>>> struct v4l2_ext_buffer, buf I was wondering if this shouldn't be in struct v4l2_ext_plane
+>>> instead.
+>>
+>> This pops up every so often. The only use-case I can think of is when you return both
+>> video planes and metadata planes where the metadata might be MMAP and the video planes
+>> DMABUF. But it would add quite a bit of complexity, I suspect.
+> 
+> We could move it to struct v4l2_ext_plane to not limit the API, but for now, only allowing
+> a single memory type for all planes. So we don't need to extend the struct later if we see
+> a need for this. What do you think?
 
-diff --git a/drivers/message/fusion/mptbase.c b/drivers/message/fusion/mptbase.c
-index 5216487db4fb..13a839c855a1 100644
---- a/drivers/message/fusion/mptbase.c
-+++ b/drivers/message/fusion/mptbase.c
-@@ -2139,23 +2139,19 @@ mpt_detach(struct pci_dev *pdev)
- /**************************************************************************
-  * Power Management
-  */
--#ifdef CONFIG_PM
- /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
- /**
-  *	mpt_suspend - Fusion MPT base driver suspend routine.
-- *	@pdev: Pointer to pci_dev structure
-- *	@state: new state to enter
-+ *	@dev: Pointer to device structure
-  */
--int
--mpt_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused
-+mpt_suspend(struct device *dev)
- {
--	u32 device_state;
-+	struct pci_dev *pdev = to_pci_dev(dev);
- 	MPT_ADAPTER *ioc = pci_get_drvdata(pdev);
- 
--	device_state = pci_choose_state(pdev, state);
- 	printk(MYIOC_s_INFO_FMT "pci-suspend: pdev=0x%p, slot=%s, Entering "
--	    "operating state [D%d]\n", ioc->name, pdev, pci_name(pdev),
--	    device_state);
-+	    "suspend state\n", ioc->name, pdev, pci_name(pdev));
- 
- 	/* put ioc into READY_STATE */
- 	if (SendIocReset(ioc, MPI_FUNCTION_IOC_MESSAGE_UNIT_RESET, CAN_SLEEP)) {
-@@ -2174,21 +2170,18 @@ mpt_suspend(struct pci_dev *pdev, pm_message_t state)
- 	if (ioc->msi_enable)
- 		pci_disable_msi(ioc->pcidev);
- 	ioc->pci_irq = -1;
--	pci_save_state(pdev);
--	pci_disable_device(pdev);
--	pci_release_selected_regions(pdev, ioc->bars);
--	pci_set_power_state(pdev, device_state);
- 	return 0;
- }
- 
- /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
- /**
-  *	mpt_resume - Fusion MPT base driver resume routine.
-- *	@pdev: Pointer to pci_dev structure
-+ *	@dev: Pointer to device structure
-  */
--int
--mpt_resume(struct pci_dev *pdev)
-+static int __maybe_unused
-+mpt_resume(struct device *dev)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
- 	MPT_ADAPTER *ioc = pci_get_drvdata(pdev);
- 	u32 device_state = pdev->current_state;
- 	int recovery_state;
-@@ -2198,9 +2191,6 @@ mpt_resume(struct pci_dev *pdev)
- 	    "operating state [D%d]\n", ioc->name, pdev, pci_name(pdev),
- 	    device_state);
- 
--	pci_set_power_state(pdev, PCI_D0);
--	pci_enable_wake(pdev, PCI_D0, 0);
--	pci_restore_state(pdev);
- 	ioc->pcidev = pdev;
- 	err = mpt_mapresources(ioc);
- 	if (err)
-@@ -2256,7 +2246,9 @@ mpt_resume(struct pci_dev *pdev)
- 	return 0;
- 
- }
--#endif
-+
-+SIMPLE_DEV_PM_OPS(mpt_pm_ops, mpt_suspend, mpt_resume);
-+EXPORT_SYMBOL(mpt_pm_ops);
- 
- static int
- mpt_signal_reset(u8 index, MPT_ADAPTER *ioc, int reset_phase)
-@@ -8440,10 +8432,6 @@ mpt_iocstatus_info(MPT_ADAPTER *ioc, u32 ioc_status, MPT_FRAME_HDR *mf)
- /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
- EXPORT_SYMBOL(mpt_attach);
- EXPORT_SYMBOL(mpt_detach);
--#ifdef CONFIG_PM
--EXPORT_SYMBOL(mpt_resume);
--EXPORT_SYMBOL(mpt_suspend);
--#endif
- EXPORT_SYMBOL(ioc_list);
- EXPORT_SYMBOL(mpt_register);
- EXPORT_SYMBOL(mpt_deregister);
-diff --git a/drivers/message/fusion/mptbase.h b/drivers/message/fusion/mptbase.h
-index 813d46311f6a..b4ae350acd6c 100644
---- a/drivers/message/fusion/mptbase.h
-+++ b/drivers/message/fusion/mptbase.h
-@@ -909,10 +909,9 @@ typedef struct _x_config_parms {
-  */
- extern int	 mpt_attach(struct pci_dev *pdev, const struct pci_device_id *id);
- extern void	 mpt_detach(struct pci_dev *pdev);
--#ifdef CONFIG_PM
--extern int	 mpt_suspend(struct pci_dev *pdev, pm_message_t state);
--extern int	 mpt_resume(struct pci_dev *pdev);
--#endif
-+
-+extern const struct dev_pm_ops mpt_pm_ops;
-+
- extern u8	 mpt_register(MPT_CALLBACK cbfunc, MPT_DRIVER_CLASS dclass,
- 		char *func_name);
- extern void	 mpt_deregister(u8 cb_idx);
-diff --git a/drivers/message/fusion/mptfc.c b/drivers/message/fusion/mptfc.c
-index 4314a3352b96..5aae60bdd6c4 100644
---- a/drivers/message/fusion/mptfc.c
-+++ b/drivers/message/fusion/mptfc.c
-@@ -1357,10 +1357,7 @@ static struct pci_driver mptfc_driver = {
- 	.probe		= mptfc_probe,
- 	.remove		= mptfc_remove,
- 	.shutdown	= mptscsih_shutdown,
--#ifdef CONFIG_PM
--	.suspend	= mptscsih_suspend,
--	.resume		= mptscsih_resume,
--#endif
-+	.driver.pm	= &mptscsih_pm_ops,
- };
- 
- static int
-diff --git a/drivers/message/fusion/mptsas.c b/drivers/message/fusion/mptsas.c
-index 6a79cd0ebe2b..158b59336b8f 100644
---- a/drivers/message/fusion/mptsas.c
-+++ b/drivers/message/fusion/mptsas.c
-@@ -5376,10 +5376,7 @@ static struct pci_driver mptsas_driver = {
- 	.probe		= mptsas_probe,
- 	.remove		= mptsas_remove,
- 	.shutdown	= mptsas_shutdown,
--#ifdef CONFIG_PM
--	.suspend	= mptscsih_suspend,
--	.resume		= mptscsih_resume,
--#endif
-+	.driver.pm	= &mptscsih_pm_ops,
- };
- 
- static int __init
-diff --git a/drivers/message/fusion/mptscsih.c b/drivers/message/fusion/mptscsih.c
-index 1491561d2e5c..2861e51841da 100644
---- a/drivers/message/fusion/mptscsih.c
-+++ b/drivers/message/fusion/mptscsih.c
-@@ -113,10 +113,12 @@ mptscsih_taskmgmt_reply(MPT_ADAPTER *ioc, u8 type,
- 				SCSITaskMgmtReply_t *pScsiTmReply);
- void 		mptscsih_remove(struct pci_dev *);
- void 		mptscsih_shutdown(struct pci_dev *);
--#ifdef CONFIG_PM
--int 		mptscsih_suspend(struct pci_dev *pdev, pm_message_t state);
--int 		mptscsih_resume(struct pci_dev *pdev);
--#endif
-+
-+static int __maybe_unused
-+mptscsih_suspend(struct device *dev);
-+
-+static int __maybe_unused
-+mptscsih_resume(struct device *dev);
- 
- 
- /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-@@ -1215,22 +1217,21 @@ mptscsih_shutdown(struct pci_dev *pdev)
- {
- }
- 
--#ifdef CONFIG_PM
- /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
- /*
-  *	mptscsih_suspend - Fusion MPT scsi driver suspend routine.
-  *
-  *
-  */
--int
--mptscsih_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused
-+mptscsih_suspend(struct device *dev)
- {
--	MPT_ADAPTER 		*ioc = pci_get_drvdata(pdev);
-+	MPT_ADAPTER 		*ioc = dev_get_drvdata(dev);
- 
- 	scsi_block_requests(ioc->sh);
- 	flush_scheduled_work();
--	mptscsih_shutdown(pdev);
--	return mpt_suspend(pdev,state);
-+	mptscsih_shutdown(to_pci_dev(dev));
-+	return mpt_pm_ops.suspend(dev);
- }
- 
- /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-@@ -1239,18 +1240,19 @@ mptscsih_suspend(struct pci_dev *pdev, pm_message_t state)
-  *
-  *
-  */
--int
--mptscsih_resume(struct pci_dev *pdev)
-+static int __maybe_unused
-+mptscsih_resume(struct device *dev)
- {
--	MPT_ADAPTER 		*ioc = pci_get_drvdata(pdev);
-+	MPT_ADAPTER 		*ioc = dev_get_drvdata(dev);
- 	int rc;
- 
--	rc = mpt_resume(pdev);
-+	rc = mpt_pm_ops.resume(dev);
- 	scsi_unblock_requests(ioc->sh);
- 	return rc;
- }
- 
--#endif
-+SIMPLE_DEV_PM_OPS(mptscsih_pm_ops, mptscsih_suspend, mptscsih_resume);
-+EXPORT_SYMBOL(mptscsih_pm_ops);
- 
- /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
- /**
-@@ -3236,10 +3238,6 @@ EXPORT_SYMBOL(mptscsih_host_attrs);
- 
- EXPORT_SYMBOL(mptscsih_remove);
- EXPORT_SYMBOL(mptscsih_shutdown);
--#ifdef CONFIG_PM
--EXPORT_SYMBOL(mptscsih_suspend);
--EXPORT_SYMBOL(mptscsih_resume);
--#endif
- EXPORT_SYMBOL(mptscsih_show_info);
- EXPORT_SYMBOL(mptscsih_info);
- EXPORT_SYMBOL(mptscsih_qcmd);
-diff --git a/drivers/message/fusion/mptscsih.h b/drivers/message/fusion/mptscsih.h
-index 2baeefd9be7a..57ebb22977ee 100644
---- a/drivers/message/fusion/mptscsih.h
-+++ b/drivers/message/fusion/mptscsih.h
-@@ -107,10 +107,9 @@ typedef struct _internal_cmd {
- 
- extern void mptscsih_remove(struct pci_dev *);
- extern void mptscsih_shutdown(struct pci_dev *);
--#ifdef CONFIG_PM
--extern int mptscsih_suspend(struct pci_dev *pdev, pm_message_t state);
--extern int mptscsih_resume(struct pci_dev *pdev);
--#endif
-+
-+extern const struct dev_pm_ops mptscsih_pm_ops;
-+
- extern int mptscsih_show_info(struct seq_file *, struct Scsi_Host *);
- extern const char * mptscsih_info(struct Scsi_Host *SChost);
- extern int mptscsih_qcmd(struct scsi_cmnd *SCpnt);
-diff --git a/drivers/message/fusion/mptspi.c b/drivers/message/fusion/mptspi.c
-index eabc4de5816c..19994d5d034c 100644
---- a/drivers/message/fusion/mptspi.c
-+++ b/drivers/message/fusion/mptspi.c
-@@ -1321,23 +1321,30 @@ mptspi_ioc_reset(MPT_ADAPTER *ioc, int reset_phase)
- 	return rc;
- }
- 
--#ifdef CONFIG_PM
-+/*
-+ * spi module suspend handler
-+ */
-+static int __maybe_unused
-+mptspi_suspend(struct device *dev)
-+{
-+	return mptscsih_pm_ops.suspend(dev);
-+}
-+
- /*
-  * spi module resume handler
-  */
--static int
--mptspi_resume(struct pci_dev *pdev)
-+static int __maybe_unused
-+mptspi_resume(struct device *dev)
- {
--	MPT_ADAPTER 	*ioc = pci_get_drvdata(pdev);
-+	MPT_ADAPTER 	*ioc = dev_get_drvdata(dev);
- 	struct _MPT_SCSI_HOST *hd = shost_priv(ioc->sh);
- 	int rc;
- 
--	rc = mptscsih_resume(pdev);
-+	rc = mptscsih_pm_ops.resume(dev);
- 	mptspi_dv_renegotiate(hd);
- 
- 	return rc;
- }
--#endif
- 
- /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
- /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-@@ -1550,16 +1557,15 @@ static void mptspi_remove(struct pci_dev *pdev)
- 	mptscsih_remove(pdev);
- }
- 
-+static SIMPLE_DEV_PM_OPS(mptspi_pm_ops, mptspi_suspend, mptspi_resume);
-+
- static struct pci_driver mptspi_driver = {
- 	.name		= "mptspi",
- 	.id_table	= mptspi_pci_table,
- 	.probe		= mptspi_probe,
- 	.remove		= mptspi_remove,
- 	.shutdown	= mptscsih_shutdown,
--#ifdef CONFIG_PM
--	.suspend	= mptscsih_suspend,
--	.resume		= mptspi_resume,
--#endif
-+	.driver.pm	= &mptspi_pm_ops,
- };
- 
- /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
--- 
-2.27.0
+Go with that for now, yes.
+
+Regards,
+
+	Hans
+
+> 
+>>
+>>>
+>>> [7] https://linuxtv.org/downloads/v4l-dvb-apis-new/userspace-api/v4l/buffer.html?highlight=v4l2_buffer#c.v4l2_buffer
+>>> [8] https://linuxtv.org/downloads/v4l-dvb-apis-new/userspace-api/v4l/buffer.html?highlight=v4l2_memory#c.v4l2_memory
+>>>
+>>> - In struct v4l2_ext_pix_format, we have:
+>>>
+>>>         struct v4l2_plane_ext_pix_format plane_fmt[VIDEO_MAX_PLANES];
+>>>
+>>> The number of planes can be deducted from plane_fmt[i].sizeimage != 0, so I removed
+>>> the num_planes field. Please let me know if we can't use sizeimage for this.
+>>> In DRM, we know the number of planes from drm_mode_fb_cmd2 by the number of handle
+>>> args passed which are not 0.
+>>> This also avoids num_planes to be bigger then VIDEO_MAX_PLANES.
+>>
+>> I have no objection to this. You do probably need to add a note about there not
+>> being holes, e.g. plane_fmt[0].sizeimage is != 0, so is plane_fmt[2].sizeimage,
+>> but plane_fmt[1].sizeimage == 0. That's likely something you don't want.
+> 
+> ack
+> 
+> 
+> Regards,
+> Helen
+> 
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>>
+>>> - Added flags field to struct v4l2_ext_create_buffers
+>>>
+>>>
+>>> * Fixed bugs here and there
+>>> ---------------------------------------------------------------------------------
+>>> I fixed some bugs found with v4l2-compliance (not all of them yet),
+>>> through script v4l-utils/contrib/test/test-media.
+>>>
+>>> I adapted what Boris did for v4l-utils in previous version to this version:
+>>> https://gitlab.collabora.com/koike/v4l-utils/-/tree/ext-api/wip
+>>>
+>>> Boris' questions regarding DMABUF in last version still holds [9].
+>>>
+>>> [9] https://patchwork.linuxtv.org/project/linux-media/cover/20191008091119.7294-1-boris.brezillon@collabora.com/
+>>>
+>>>
+>>> Please, let me know your feedback,
+>>> Helen
+>>>
+>>>
+>>> Boris Brezillon (5):
+>>>   media: v4l2: Extend pixel formats to unify single/multi-planar
+>>>     handling (and more)
+>>>   media: videobuf2: Expose helpers to implement the _ext_fmt and
+>>>     _ext_buf hooks
+>>>   media: mediabus: Add helpers to convert a ext_pix format to/from a
+>>>     mbus_fmt
+>>>   media: vivid: Convert the capture and output drivers to
+>>>     EXT_FMT/EXT_BUF
+>>>   media: vimc: Implement the ext_fmt and ext_buf hooks
+>>>
+>>> Hans Verkuil (1):
+>>>   media: v4l2: Add extended buffer operations
+>>>
+>>>  .../media/common/videobuf2/videobuf2-core.c   |   2 +
+>>>  .../media/common/videobuf2/videobuf2-v4l2.c   | 549 +++++-----
+>>>  .../media/test-drivers/vimc/vimc-capture.c    |  61 +-
+>>>  drivers/media/test-drivers/vimc/vimc-common.c |   6 +-
+>>>  drivers/media/test-drivers/vimc/vimc-common.h |   2 +-
+>>>  drivers/media/test-drivers/vivid/vivid-core.c |  70 +-
+>>>  .../test-drivers/vivid/vivid-touch-cap.c      |  26 +-
+>>>  .../test-drivers/vivid/vivid-touch-cap.h      |   3 +-
+>>>  .../media/test-drivers/vivid/vivid-vid-cap.c  | 169 +---
+>>>  .../media/test-drivers/vivid/vivid-vid-cap.h  |  15 +-
+>>>  .../media/test-drivers/vivid/vivid-vid-out.c  | 193 ++--
+>>>  .../media/test-drivers/vivid/vivid-vid-out.h  |  15 +-
+>>>  drivers/media/v4l2-core/v4l2-dev.c            |  50 +-
+>>>  drivers/media/v4l2-core/v4l2-ioctl.c          | 934 ++++++++++++++++--
+>>>  include/media/v4l2-ioctl.h                    |  60 ++
+>>>  include/media/v4l2-mediabus.h                 |  42 +
+>>>  include/media/videobuf2-core.h                |   6 +-
+>>>  include/media/videobuf2-v4l2.h                |  21 +-
+>>>  include/uapi/linux/videodev2.h                | 144 +++
+>>>  19 files changed, 1650 insertions(+), 718 deletions(-)
+>>>
+>>
 
