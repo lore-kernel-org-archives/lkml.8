@@ -2,360 +2,504 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
+	CHARSET_FARAWAY_HEADER,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72855C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C02C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43870206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A049E2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:02:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xUvWGSeh"
+	dkim=pass (1024-bit key) header.d=tencent.com header.i=@tencent.com header.b="Wahxc+Hs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgGUOAA (ORCPT
+        id S1728356AbgGUOCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:00:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728578AbgGUN76 (ORCPT
+        Tue, 21 Jul 2020 10:02:49 -0400
+Received: from mail4.tencent.com ([183.57.53.109]:34753 "EHLO
+        mail4.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgGUOCs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:59:58 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBDFAC0619DB
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:59:58 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id h7so3424717qkk.7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:59:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B/ns5qRnWB+BBQRDL+fY5VzUrXMw4b6mfmFMfNKLujE=;
-        b=xUvWGSehcqbhR8LcbHbPbIg4fk7c2gLg/V0Q1aiUY70FgLi772EkoUhgZjvqXma3Ue
-         NmiWtv8DJcERQNuLdgKqZ1KV9eOqNPGvgZPLV+PAzUi/ZraJ0MpJv0CErxSirqBGiID+
-         nR4kodp2IcDwy5D7V1u6fxgOUT1a+c+19nJoGAYiotR/lxPNgjg0BvnWHRqTTALqB0It
-         Enyx+DPYjAxOR98a6EfaN6gKbYa9R+A8azmCeQHvLu9cz6aR4jtuzjgGotZuFfX4reSZ
-         G5YqK4vyjPFxQcNhABfDO5axfSxxjc3JYFcjMt1kViEwRaKLv1kjJlkXfZh8cv9hZqpx
-         Lz4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B/ns5qRnWB+BBQRDL+fY5VzUrXMw4b6mfmFMfNKLujE=;
-        b=t2ZnYwt9vg6L/9kECt80AE8ILufH76sc+Xg+9/yttaGmi37RWMxUqQg5ms3AUkksoO
-         hrcYhtd1obhl4td1X246KvH7z74Eg/BkAZxR96x9BrTpsUUiir+qZeDVgCdoV+0YjW/d
-         yibilaPQyLDHmq+dYHWliVvXIfyP3yccBEp6TYEh2625mWiR4WTGn8eyUDbSO2mhP8uq
-         3k1EkiEUg70FYg0sL8oaEduYScIQIuEi9XtE+9x+pkBKq2LrfJo3D6Tnek4Do/Y8Pfb/
-         MLr2AoPrmB3+F4p0ywNMZij9IFXEPK7r73orOJtdAENvAmx/1SzZv+LP0OiVZv7OnN3z
-         +baA==
-X-Gm-Message-State: AOAM530pVhizSmOuUldreWzsvomWD2UBc2S23zETf0YVicM/uV0SIush
-        c3ZWGEdhCP2tj6NT9L5Zxh9YWkqghCUqfUiSAZh4yw==
-X-Google-Smtp-Source: ABdhPJxSzeUqungT6SEMM+LCGp1piUGd6ekWWDyqtfp5VTWLBtTe5Wlp4yTUXNpJXhYUcESRdjjROIwiY2m2VRnfgCo=
-X-Received: by 2002:a37:bec6:: with SMTP id o189mr10049210qkf.303.1595339997679;
- Tue, 21 Jul 2020 06:59:57 -0700 (PDT)
+        Tue, 21 Jul 2020 10:02:48 -0400
+Received: from EX-SZ020.tencent.com (unknown [10.28.6.40])
+        by mail4.tencent.com (Postfix) with ESMTP id 4134872345;
+        Tue, 21 Jul 2020 22:02:28 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tencent.com;
+        s=s202002; t=1595340148;
+        bh=MULU+lptYUk80ILLHraaQCrpDddk2Am2y2TH3U20auc=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=Wahxc+HsU4EgJpq5OJBO8D31XMzayEOrx77OieWyEqu5cnIbLnPV2yUWC+ZUuzQT9
+         pnNFkb7bzYibnYNVEquq9sjP1sZucKd4WM1KDK+7XdvKF/vAHYHVgOwAnIpbgakSiy
+         gA6HtOUwSbVnHl3eUl+oEXw7FZxdF+Z4yhH2q3pU=
+Received: from EX-SZ007.tencent.com (10.28.6.31) by EX-SZ020.tencent.com
+ (10.28.6.40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 21 Jul
+ 2020 22:02:28 +0800
+Received: from EX-SZ012.tencent.com (10.28.6.36) by EX-SZ007.tencent.com
+ (10.28.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 21 Jul
+ 2020 22:02:27 +0800
+Received: from EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b]) by
+ EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b%3]) with mapi id
+ 15.01.1847.007; Tue, 21 Jul 2020 22:02:27 +0800
+From:   =?iso-2022-jp?B?YmVuYmppYW5nKBskQj5VSTcbKEIp?= 
+        <benbjiang@tencent.com>
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Tim Chen" <tim.c.chen@linux.intel.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pjt@google.com" <pjt@google.com>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "subhra.mazumdar@oracle.com" <subhra.mazumdar@oracle.com>,
+        "fweisbec@gmail.com" <fweisbec@gmail.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "kerrnel@google.com" <kerrnel@google.com>,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        "joel@joelfernandes.org" <joel@joelfernandes.org>,
+        "vineethrp@gmail.com" <vineethrp@gmail.com>,
+        "Chen Yu" <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [RFC PATCH 05/16] sched: Basic tracking of matching
+ tasks(Internet mail)
+Thread-Topic: [RFC PATCH 05/16] sched: Basic tracking of matching
+ tasks(Internet mail)
+Thread-Index: AQHWTyYaGKlAaqennU2IFgurg8DvGakRqrmA
+Date:   Tue, 21 Jul 2020 14:02:27 +0000
+Message-ID: <4CED2328-B487-49EB-988E-406CE5A4930F@tencent.com>
+References: <cover.1593530334.git.vpillai@digitalocean.com>
+ <2ae4e2f2d2b027d186365ce9d98abd6c430aaa0e.1593530334.git.vpillai@digitalocean.com>
+In-Reply-To: <2ae4e2f2d2b027d186365ce9d98abd6c430aaa0e.1593530334.git.vpillai@digitalocean.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [9.19.161.78]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <23D436FB49AFDC44A191A61152B47021@tencent.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1593699479-1445-3-git-send-email-grzegorz.jaszczyk@linaro.org>
- <f0d3f3224a1b8fa2be668dd2b8d9d84e@kernel.org> <CAMxfBF6A9702-rBOo0jHtfn4Ds1_G+nWG4O9-urNqU00dFXeww@mail.gmail.com>
- <12db6d22c12369b6d64f410aa2434b03@kernel.org> <CAMxfBF7pbH1LLE4fJnnCPnrqnQ-tdO+_xfoN1VerJcQ-ZyYM9Q@mail.gmail.com>
- <53d39d8fbd63c6638dbf0584c7016ee0@kernel.org> <CAMxfBF6Th+zKOmogA5phkh21tSUzutokCgU+pv0Eh-sDk=1Hbg@mail.gmail.com>
- <f11097c321b62e7f8ba904dc2907d4e0@kernel.org> <3501f3a6-0613-df1c-2c6d-5ac4610a226d@ti.com>
- <CAMxfBF6G5haTLp7+DqB5D6uHhTNfftk8SVMYpsh0VQGztJEm9w@mail.gmail.com>
- <87ft9qxqqk.wl-maz@kernel.org> <CAMxfBF6-d1uj2-E+3EPO2hysE06La_nrk+HSgmYvwgE82EanFw@mail.gmail.com>
- <0992af0ecec787a8453492ccdf063cbd@kernel.org>
-In-Reply-To: <0992af0ecec787a8453492ccdf063cbd@kernel.org>
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Date:   Tue, 21 Jul 2020 15:59:46 +0200
-Message-ID: <CAMxfBF5GtZDK7rQMEWw52W7dMY9DGfuski6guPkDSUQ51hapPA@mail.gmail.com>
-Subject: Re: [PATCHv3 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
- for PRUSS interrupts
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
-        "Mills, William" <wmills@ti.com>, "Andrew F . Davis" <afd@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Hi, perter
 
-Thank you again.
+> On Jul 1, 2020, at 5:32 AM, Vineeth Remanan Pillai <vpillai@digitalocean.=
+com> wrote:
+>=20
+> From: Peter Zijlstra <peterz@infradead.org>
+>=20
+> Introduce task_struct::core_cookie as an opaque identifier for core
+> scheduling. When enabled; core scheduling will only allow matching
+> task to be on the core; where idle matches everything.
+>=20
+> When task_struct::core_cookie is set (and core scheduling is enabled)
+> these tasks are indexed in a second RB-tree, first on cookie value
+> then on scheduling function, such that matching task selection always
+> finds the most elegible match.
+>=20
+> NOTE: *shudder* at the overhead...
+>=20
+> NOTE: *sigh*, a 3rd copy of the scheduling function; the alternative
+> is per class tracking of cookies and that just duplicates a lot of
+> stuff for no raisin (the 2nd copy lives in the rt-mutex PI code).
+>=20
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.com>
+> Signed-off-by: Julien Desfossez <jdesfossez@digitalocean.com>
+> ---
+> include/linux/sched.h |   8 ++-
+> kernel/sched/core.c   | 146 ++++++++++++++++++++++++++++++++++++++++++
+> kernel/sched/fair.c   |  46 -------------
+> kernel/sched/sched.h  |  55 ++++++++++++++++
+> 4 files changed, 208 insertions(+), 47 deletions(-)
+>=20
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 4418f5cb8324..3c8dcc5ff039 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -683,10 +683,16 @@ struct task_struct {
+> 	const struct sched_class	*sched_class;
+> 	struct sched_entity		se;
+> 	struct sched_rt_entity		rt;
+> +	struct sched_dl_entity		dl;
+> +
+> +#ifdef CONFIG_SCHED_CORE
+> +	struct rb_node			core_node;
+> +	unsigned long			core_cookie;
+> +#endif
+> +
+> #ifdef CONFIG_CGROUP_SCHED
+> 	struct task_group		*sched_task_group;
+> #endif
+> -	struct sched_dl_entity		dl;
+>=20
+> #ifdef CONFIG_UCLAMP_TASK
+> 	/* Clamp values requested for a scheduling entity */
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 4b81301e3f21..b21bcab20da6 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -77,6 +77,141 @@ int sysctl_sched_rt_runtime =3D 950000;
+>=20
+> DEFINE_STATIC_KEY_FALSE(__sched_core_enabled);
+>=20
+> +/* kernel prio, less is more */
+> +static inline int __task_prio(struct task_struct *p)
+> +{
+> +	if (p->sched_class =3D=3D &stop_sched_class) /* trumps deadline */
+> +		return -2;
+> +
+> +	if (rt_prio(p->prio)) /* includes deadline */
+> +		return p->prio; /* [-1, 99] */
+> +
+> +	if (p->sched_class =3D=3D &idle_sched_class)
+> +		return MAX_RT_PRIO + NICE_WIDTH; /* 140 */
 
-On Tue, 21 Jul 2020 at 12:10, Marc Zyngier <maz@kernel.org> wrote:
->
-> On 2020-07-21 10:27, Grzegorz Jaszczyk wrote:
-> > Hi Marc,
-> >
-> > First of all thank you very much for your review. I apologize in
-> > advance if the description below is too verbose or not detailed
-> > enough.
-> >
-> > On Fri, 17 Jul 2020 at 14:36, Marc Zyngier <maz@kernel.org> wrote:
-> >>
-> >> Suman, Grzegorz,
-> >>
-> >> On Wed, 15 Jul 2020 14:38:05 +0100,
-> >> Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org> wrote:
-> >> >
-> >> > Hi Marc,
-> >> >
-> >> > > On 7/8/20 5:47 AM, Marc Zyngier wrote:
-> >> > > > On 2020-07-08 08:04, Grzegorz Jaszczyk wrote:
-> >> > > >> On Sun, 5 Jul 2020 at 22:45, Marc Zyngier <maz@kernel.org> wrote:
-> >> > > >>>
-> >> > > >>> On 2020-07-05 14:26, Grzegorz Jaszczyk wrote:
-> >> > > >>> > On Sat, 4 Jul 2020 at 11:39, Marc Zyngier <maz@kernel.org> wrote:
-> >> > > >>> >>
-> >> > > >>> >> On 2020-07-03 15:28, Grzegorz Jaszczyk wrote:
-> >> > > >>>
-> >> > > >>> [...]
-> >> > > >>>
-> >> > > >>> >> It still begs the question: if the HW can support both edge and level
-> >> > > >>> >> triggered interrupts, why isn't the driver supporting this diversity?
-> >> > > >>> >> I appreciate that your HW may only have level interrupts so far, but
-> >> > > >>> >> what guarantees that this will forever be true? It would imply a
-> >> > > >>> >> change
-> >> > > >>> >> in the DT binding, which isn't desirable.
-> >> > > >>> >
-> >> > > >>> > Ok, I've got your point. I will try to come up with something later
-> >> > > >>> > on. Probably extending interrupt-cells by one and passing interrupt
-> >> > > >>> > type will be enough for now. Extending this driver to actually support
-> >> > > >>> > it can be handled later if needed. Hope it works for you.
-> >> > > >>>
-> >> > > >>> Writing a set_type callback to deal with this should be pretty easy.
-> >> > > >>> Don't delay doing the right thing.
-> >> > > >>
-> >> > > >> Ok.
-> >> > >
-> >> > > Sorry for the typo in my comment causing this confusion.
-> >> > >
-> >> > > The h/w actually doesn't support the edge-interrupts. Likewise, the
-> >> > > polarity is always high. The individual register bit descriptions
-> >> > > mention what the bit values 0 and 1 mean, but there is additional
-> >> > > description in the TRMs on all the SoCs that says
-> >> > > "always write 1 to the bits of this register" for PRUSS_INTC_SIPR(x) and
-> >> > > "always write 0 to the bits of this register" for PRUSS_INTC_SITR(x).
-> >> > > FWIW, these are also the reset values.
-> >> > >
-> >> > > Eg: AM335x TRM - https://www.ti.com/lit/pdf/spruh73
-> >> > > Please see Section 4.4.2.5 and the register descriptions in 4.5.3.49,
-> >> > > 4.5.3.51. Please also see Section 4.4.2.3 that explains the PRUSS INTC
-> >> > > methodology.
-> >> > >
-> >> > > >>
-> >> > > >>>
-> >> > > >>> [...]
-> >> > > >>>
-> >> > > >>> >> >> > +             hwirq = hipir & GENMASK(9, 0);
-> >> > > >>> >> >> > +             virq = irq_linear_revmap(intc->domain, hwirq);
-> >> > > >>> >> >>
-> >> > > >>> >> >> And this is where I worry. You seems to have a single irqdomain
-> >> > > >>> >> >> for all the muxes. Are you guaranteed that you will have no
-> >> > > >>> >> >> overlap between muxes? And please use irq_find_mapping(), as
-> >> > > >>> >> >> I have top-secret plans to kill irq_linear_revmap().
-> >> > > >>> >> >
-> >> > > >>> >> > Regarding irq_find_mapping - sure.
-> >> > > >>> >> >
-> >> > > >>> >> > Regarding irqdomains:
-> >> > > >>> >> > It is a single irqdomain since the hwirq (system event) can be
-> >> > > >>> mapped
-> >> > > >>> >> > to different irq_host (muxes). Patch #6
-> >> > > >>> >> > https://lkml.org/lkml/2020/7/2/616 implements and describes how
-> >> > > >>> input
-> >> > > >>> >> > events can be mapped to some output host interrupts through 2
-> >> > > >>> levels
-> >> > > >>> >> > of many-to-one mapping i.e. events to channel mapping and
-> >> > > >>> channels to
-> >> > > >>> >> > host interrupts. Mentioned implementation ensures that specific
-> >> > > >>> system
-> >> > > >>> >> > event (hwirq) can be mapped through PRUSS specific channel into a
-> >> > > >>> >> > single host interrupt.
-> >> > > >>> >>
-> >> > > >>> >> Patch #6 is a nightmare of its own, and I haven't fully groked it
-> >> > > >>> yet.
-> >> > > >>> >> Also, this driver seems to totally ignore the 2-level routing. Where
-> >> > > >>> >> is it set up? map/unmap in this driver do exactly *nothing*, so
-> >> > > >>> >> something somewhere must set it up.
-> >> > > >>> >
-> >> > > >>> > The map/unmap is updated in patch #6 and it deals with those 2-level
-> >> > > >>> > routing setup. Map is responsible for programming the Channel Map
-> >> > > >>> > Registers (CMRx) and Host-Interrupt Map Registers (HMRx) basing on
-> >> > > >>> > provided configuration from the one parsed in the xlate function.
-> >> > > >>> > Unmap undo whatever was done on the map. More details can be found in
-> >> > > >>> > patch #6.
-> >> > > >>> >
-> >> > > >>> > Maybe it would be better to squash patch #6 with this one so it would
-> >> > > >>> > be less confusing. What is your advice?
-> >> > > >>>
-> >> > > >>> So am I right in understanding that without patch #6, this driver does
-> >> > > >>> exactly nothing? If so, it has been a waste of review time.
-> >> > > >>>
-> >> > > >>> Please split patch #6 so that this driver does something useful
-> >> > > >>> for Linux, without any of the PRU interrupt routing stuff. I want
-> >> > > >>> to see a Linux-only driver that works and doesn't rely on any other
-> >> > > >>> exotic feature.
-> >> > > >>>
-> >> > > >>
-> >> > > >> Patch #6 provides PRU specific 2-level routing setup. This step is
-> >> > > >> required and it is part of the entire patch-set. Theoretically routing
-> >> > > >> setup could be done by other platform driver (not irq one) or e.g. by
-> >> > > >> PRU firmware. In such case this driver would be functional without
-> >> > > >> patch #6 but I do not think it would be proper.
-> >> > > >
-> >> > > > Then this whole driver is non-functional until the last patch that
-> >> > > > comes with the PRU-specific "value-add".
-> >> > >
-> >> > > It is all moot actually and the interrupts work only when the PRU
-> >> > > remoteproc/clients have invoked the irq_create_fwspec_mapping()
-> >> > > for all of the desired system events. It does not make much difference
-> >> > > if it was a separate patch or squashed in, patch #6 is a replacement for
-> >> > > the previous logic, and since it was complex, it was done in a separate
-> >> > > patch to better explain the usage (same reason on v1 and v2 as
-> >> > > well).
-> >>
-> >> It may make no difference to you, but it does for me, as I'm the lucky
-> >> idiot reviewing this code. So I am going to say it again: please keep
-> >> anything that only exists for the PRU subsystem benefit out of the
-> >> initial patches.
-> >>
-> >> I want to see something that works for Linux, and only for Linux. Once
-> >> we have that working, we'll see to add more stuff. But stop throwing
-> >> the PRU business into the early patches, as all you are achieving is
-> >> to delay the whole thing.
-> >>
-> >> > >
-> >> > > >
-> >> > > > [...]
-> >> > > >
-> >> > > >> I am open to any suggestion if there is a better way of handling
-> >> > > >> 2-level routing. I will also appreciate if you could elaborate about
-> >> > > >> issues that you see with patch #6.
-> >> > > >
-> >> > > > The two level routing has to be part of this (or another) irqchip
-> >> > > > driver (specially given that it appears to me like another set of
-> >> > > > crossbar). There should only be a *single* binding for all interrupts,
-> >> > > > including those targeting the PRU (you seem to have two).
-> >> > > >
-> >> > >
-> >> > > Yeah, there hasn't been a clean way of doing this. Our previous attempt
-> >> > > was to do this through custom exported functions so that the PRU
-> >> > > remoteproc driver can set these up correctly, but that was shot down and
-> >> > > this is the direction we are pointed to.
-> >> > >
-> >> > > We do want to leverage the "interrupts" property in the PRU user nodes
-> >> > > instead of inventing our own paradigm through a non-irqchip driver, and
-> >> > > at the same time, be able to configure this at the run time only when
-> >> > > that PRU driver is running, and remove the mappings once that driver is
-> >> > > removed allowing another PRU application/driver. We treat PRUs as an
-> >> > > exclusive resource, so everything needs to go along with an appropriate
-> >> > > client user.
-> >> >
-> >> > I will just add an explanation about interrupt binding. So actually
-> >> > there is one dt-binding defined in yaml (interrupt-cells = 1). The
-> >> > reason why you see xlate allowing to proceed with 1 or 3 parameters is
-> >> > because linux can change the PRU firmware at run-time (thorough linux
-> >> > remoteproc framework) and different firmware may require different
-> >> > kinds of interrupt mapping. Therefore during firmware load, the new
-> >> > mapping is created through irq_create_fwspec_mapping() and in this
-> >> > case 3 parameters are passed: system event, channel and host irq.
-> >> > Similarly the mapping is disposed during remoteproc stop by invoking
-> >> > irq_dispose_mapping. This allows to create new mapping, in the same
-> >> > way, for next firmware loaded through Linux remote-proc at runtime
-> >> > (depending on the needs of new remoteproc firmware).
-> >> >
-> >> > On the other hand dt-bindings defines interrupt-cells = 1, so when the
-> >> > interrupt is registered the xlate function (proceed with 1 parameter)
-> >> > checks if this event already has valid mapping - if yes we are fine,
-> >> > if not we return -EINVAL.
-> >>
-> >> It means that interrupts declared in DT get their two-level routing
-> >> via the kernel driver, while PRU interrupts get their routing via some
-> >> external blob that Linux is not in control of?
-> >
-> > Actually with the current approach all two-level routing goes through
-> > this linux driver. The interrupts that should be routed to PRU are
-> > described in remoteproc firmware resource table [1] and it is under
-> > Linux remoteproc driver control. In general, the resource table
-> > contains system resources that the remote processor requires before it
-> > should be powered on. We treat the interrupt mapping (described in the
-> > resource table, which is a dedicated elf section defined in [1]) as
-> > one of system resources that linux has to provide before we power on
-> > the PRU core. Therefore the remoteproce driver will parse the resource
-> > table and trigger irq_create_fwspec_mapping() after validating
-> > resource table content.
->
-> Validating the resource table says nothing of a potential conflict
-> with previous configured interrupts.
+return MAX_PRIO;=20
+May be simpler?
 
-Yes, that's why we introduced the logic in pruss_intc_irq_domain_xlate
-and pruss_intc_map triggered by irq_create_fwspec_mapping, which will
-check potential conflicts with previous configured interrupts. I
-understand that you do not like how it is done but I do not know how
-to do it in a different way so it will cover all caveats, please see
-below.
+> +
+> +	return MAX_RT_PRIO + MAX_NICE; /* 120, squash fair */
 
->
-> >
-> > [1] https://www.kernel.org/doc/Documentation/remoteproc.txt (Binary
-> > Firmware Structure)
-> >
-> >>
-> >> If so, this looks broken. What if you get a resource allocation
-> >> conflict because the kernel and the blob are stepping into each
-> >> other's toes? Why should an end-point client decide on the routing of
-> >> the interrupt?
-> >
-> > The code in the pruss_intc_map function checks if there are no
-> > allocation conflicts: e.g. if the sysevent is already assigned it will
-> > throw -EBUSY. Similarly when some channel was already assigned to
-> > host_irq and a different assignment is requested it will again throw
-> > -EBUSY.
->
-> But why should it? The allocation should take place based on constraints
-> (source, target, and as you mentioned below, priority). Instead, you
-> seem to be relying on static allocation coming from binary blobs,
-> standardized or not.
->
-> I claim that this static allocation is madness and should be eliminated.
-> Instead, the Linux driver should perform the routing based on allocation
-> requirements (the above constraints), and only fail if it cannot satisfy
-> these constraints.
+MAX_RT_PRIO(100) + MAX_NICE(19) Should be 119?  :)
 
-I am not sure if I understood. The allocation requirements are as
-you've described: source (system event), target (host interrupt) and
-priority (channel).
-E.g.:
-- routing system event 3 with priority (chanell) 2 to PRU core 0 will
-be described as bellow: (3, 2, 0) (0 corresponds to PRU0)
-- routing system event 10 with priority (chanell) 3 to PRU core 1: (10, 3, 1)
-- routing system event 15 with priority (5) to MCPU interrupt 0*: (15, 5, 2)
-* interrupts 2 through 9 (host_intr0 through host_intr7)
+Thx.
+Regards,
+Jiang
 
-I am not sure but you probably refer to changing it to loosely dynamic
-allocation but this will not work for any of them since:
-- different system event is just a different sources (e.g. some of
-them are tightly coupled with PRUSS industrial ethernet peripheral,
-other with PRUSS UART, other are general purpose ones and so on).
-- lower number channels have higher priority (10 different channels,
-each with different priority).
-- host interrupt 0 is for PRU core 0; host interrupt 1 is for PRU core
-1; host interrupts 2 through 9 are for main CPU.
+> +}
+> +
+> +/*
+> + * l(a,b)
+> + * le(a,b) :=3D !l(b,a)
+> + * g(a,b)  :=3D l(b,a)
+> + * ge(a,b) :=3D !l(a,b)
+> + */
+> +
+> +/* real prio, less is less */
+> +static inline bool prio_less(struct task_struct *a, struct task_struct *=
+b)
+> +{
+> +
+> +	int pa =3D __task_prio(a), pb =3D __task_prio(b);
+> +
+> +	if (-pa < -pb)
+> +		return true;
+> +
+> +	if (-pb < -pa)
+> +		return false;
+> +
+> +	if (pa =3D=3D -1) /* dl_prio() doesn't work because of stop_class above=
+ */
+> +		return !dl_time_before(a->dl.deadline, b->dl.deadline);
+> +
+> +	if (pa =3D=3D MAX_RT_PRIO + MAX_NICE)  { /* fair */
+> +		u64 vruntime =3D b->se.vruntime;
+> +
+> +		/*
+> +		 * Normalize the vruntime if tasks are in different cpus.
+> +		 */
+> +		if (task_cpu(a) !=3D task_cpu(b)) {
+> +			vruntime -=3D task_cfs_rq(b)->min_vruntime;
+> +			vruntime +=3D task_cfs_rq(a)->min_vruntime;
+> +		}
+> +
+> +		return !((s64)(a->se.vruntime - vruntime) <=3D 0);
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static inline bool __sched_core_less(struct task_struct *a, struct task_=
+struct *b)
+> +{
+> +	if (a->core_cookie < b->core_cookie)
+> +		return true;
+> +
+> +	if (a->core_cookie > b->core_cookie)
+> +		return false;
+> +
+> +	/* flip prio, so high prio is leftmost */
+> +	if (prio_less(b, a))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +static void sched_core_enqueue(struct rq *rq, struct task_struct *p)
+> +{
+> +	struct rb_node *parent, **node;
+> +	struct task_struct *node_task;
+> +
+> +	rq->core->core_task_seq++;
+> +
+> +	if (!p->core_cookie)
+> +		return;
+> +
+> +	node =3D &rq->core_tree.rb_node;
+> +	parent =3D *node;
+> +
+> +	while (*node) {
+> +		node_task =3D container_of(*node, struct task_struct, core_node);
+> +		parent =3D *node;
+> +
+> +		if (__sched_core_less(p, node_task))
+> +			node =3D &parent->rb_left;
+> +		else
+> +			node =3D &parent->rb_right;
+> +	}
+> +
+> +	rb_link_node(&p->core_node, parent, node);
+> +	rb_insert_color(&p->core_node, &rq->core_tree);
+> +}
+> +
+> +static void sched_core_dequeue(struct rq *rq, struct task_struct *p)
+> +{
+> +	rq->core->core_task_seq++;
+> +
+> +	if (!p->core_cookie)
+> +		return;
+> +
+> +	rb_erase(&p->core_node, &rq->core_tree);
+> +}
+> +
+> +/*
+> + * Find left-most (aka, highest priority) task matching @cookie.
+> + */
+> +static struct task_struct *sched_core_find(struct rq *rq, unsigned long =
+cookie)
+> +{
+> +	struct rb_node *node =3D rq->core_tree.rb_node;
+> +	struct task_struct *node_task, *match;
+> +
+> +	/*
+> +	 * The idle task always matches any cookie!
+> +	 */
+> +	match =3D idle_sched_class.pick_task(rq);
+> +
+> +	while (node) {
+> +		node_task =3D container_of(node, struct task_struct, core_node);
+> +
+> +		if (cookie < node_task->core_cookie) {
+> +			node =3D node->rb_left;
+> +		} else if (cookie > node_task->core_cookie) {
+> +			node =3D node->rb_right;
+> +		} else {
+> +			match =3D node_task;
+> +			node =3D node->rb_left;
+> +		}
+> +	}
+> +
+> +	return match;
+> +}
+> +
+> /*
+>  * The static-key + stop-machine variable are needed such that:
+>  *
+> @@ -135,6 +270,11 @@ void sched_core_put(void)
+> 	mutex_unlock(&sched_core_mutex);
+> }
+>=20
+> +#else /* !CONFIG_SCHED_CORE */
+> +
+> +static inline void sched_core_enqueue(struct rq *rq, struct task_struct =
+*p) { }
+> +static inline void sched_core_dequeue(struct rq *rq, struct task_struct =
+*p) { }
+> +
+> #endif /* CONFIG_SCHED_CORE */
+>=20
+> /*
+> @@ -1347,6 +1487,9 @@ static inline void init_uclamp(void) { }
+>=20
+> static inline void enqueue_task(struct rq *rq, struct task_struct *p, int=
+ flags)
+> {
+> +	if (sched_core_enabled(rq))
+> +		sched_core_enqueue(rq, p);
+> +
+> 	if (!(flags & ENQUEUE_NOCLOCK))
+> 		update_rq_clock(rq);
+>=20
+> @@ -1361,6 +1504,9 @@ static inline void enqueue_task(struct rq *rq, stru=
+ct task_struct *p, int flags)
+>=20
+> static inline void dequeue_task(struct rq *rq, struct task_struct *p, int=
+ flags)
+> {
+> +	if (sched_core_enabled(rq))
+> +		sched_core_dequeue(rq, p);
+> +
+> 	if (!(flags & DEQUEUE_NOCLOCK))
+> 		update_rq_clock(rq);
+>=20
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index e44a43b87975..ae17507533a0 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -260,33 +260,11 @@ const struct sched_class fair_sched_class;
+>  */
+>=20
+> #ifdef CONFIG_FAIR_GROUP_SCHED
+> -static inline struct task_struct *task_of(struct sched_entity *se)
+> -{
+> -	SCHED_WARN_ON(!entity_is_task(se));
+> -	return container_of(se, struct task_struct, se);
+> -}
+>=20
+> /* Walk up scheduling entities hierarchy */
+> #define for_each_sched_entity(se) \
+> 		for (; se; se =3D se->parent)
+>=20
+> -static inline struct cfs_rq *task_cfs_rq(struct task_struct *p)
+> -{
+> -	return p->se.cfs_rq;
+> -}
+> -
+> -/* runqueue on which this entity is (to be) queued */
+> -static inline struct cfs_rq *cfs_rq_of(struct sched_entity *se)
+> -{
+> -	return se->cfs_rq;
+> -}
+> -
+> -/* runqueue "owned" by this group */
+> -static inline struct cfs_rq *group_cfs_rq(struct sched_entity *grp)
+> -{
+> -	return grp->my_q;
+> -}
+> -
+> static inline void cfs_rq_tg_path(struct cfs_rq *cfs_rq, char *path, int =
+len)
+> {
+> 	if (!path)
+> @@ -447,33 +425,9 @@ find_matching_se(struct sched_entity **se, struct sc=
+hed_entity **pse)
+>=20
+> #else	/* !CONFIG_FAIR_GROUP_SCHED */
+>=20
+> -static inline struct task_struct *task_of(struct sched_entity *se)
+> -{
+> -	return container_of(se, struct task_struct, se);
+> -}
+> -
+> #define for_each_sched_entity(se) \
+> 		for (; se; se =3D NULL)
+>=20
+> -static inline struct cfs_rq *task_cfs_rq(struct task_struct *p)
+> -{
+> -	return &task_rq(p)->cfs;
+> -}
+> -
+> -static inline struct cfs_rq *cfs_rq_of(struct sched_entity *se)
+> -{
+> -	struct task_struct *p =3D task_of(se);
+> -	struct rq *rq =3D task_rq(p);
+> -
+> -	return &rq->cfs;
+> -}
+> -
+> -/* runqueue "owned" by this group */
+> -static inline struct cfs_rq *group_cfs_rq(struct sched_entity *grp)
+> -{
+> -	return NULL;
+> -}
+> -
+> static inline void cfs_rq_tg_path(struct cfs_rq *cfs_rq, char *path, int =
+len)
+> {
+> 	if (path)
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 66e586adee18..c85c5a4bc21f 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1033,6 +1033,10 @@ struct rq {
+> 	/* per rq */
+> 	struct rq		*core;
+> 	unsigned int		core_enabled;
+> +	struct rb_root		core_tree;
+> +
+> +	/* shared state */
+> +	unsigned int		core_task_seq;
+> #endif
+> };
+>=20
+> @@ -1112,6 +1116,57 @@ DECLARE_PER_CPU_SHARED_ALIGNED(struct rq, runqueue=
+s);
+> #define cpu_curr(cpu)		(cpu_rq(cpu)->curr)
+> #define raw_rq()		raw_cpu_ptr(&runqueues)
+>=20
+> +#ifdef CONFIG_FAIR_GROUP_SCHED
+> +static inline struct task_struct *task_of(struct sched_entity *se)
+> +{
+> +	SCHED_WARN_ON(!entity_is_task(se));
+> +	return container_of(se, struct task_struct, se);
+> +}
+> +
+> +static inline struct cfs_rq *task_cfs_rq(struct task_struct *p)
+> +{
+> +	return p->se.cfs_rq;
+> +}
+> +
+> +/* runqueue on which this entity is (to be) queued */
+> +static inline struct cfs_rq *cfs_rq_of(struct sched_entity *se)
+> +{
+> +	return se->cfs_rq;
+> +}
+> +
+> +/* runqueue "owned" by this group */
+> +static inline struct cfs_rq *group_cfs_rq(struct sched_entity *grp)
+> +{
+> +	return grp->my_q;
+> +}
+> +
+> +#else
+> +
+> +static inline struct task_struct *task_of(struct sched_entity *se)
+> +{
+> +	return container_of(se, struct task_struct, se);
+> +}
+> +
+> +static inline struct cfs_rq *task_cfs_rq(struct task_struct *p)
+> +{
+> +	return &task_rq(p)->cfs;
+> +}
+> +
+> +static inline struct cfs_rq *cfs_rq_of(struct sched_entity *se)
+> +{
+> +	struct task_struct *p =3D task_of(se);
+> +	struct rq *rq =3D task_rq(p);
+> +
+> +	return &rq->cfs;
+> +}
+> +
+> +/* runqueue "owned" by this group */
+> +static inline struct cfs_rq *group_cfs_rq(struct sched_entity *grp)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+> +
+> extern void update_rq_clock(struct rq *rq);
+>=20
+> static inline u64 __rq_clock_broken(struct rq *rq)
+> --=20
+> 2.17.1
+>=20
+>=20
 
-So the logic in patch #6 prevents mapping system events if it was
-already assigned to a different channel or target (host interrupt) and
-only fails if it cannot be satisfied. Moreover I do not see a way to
-relax the static description since picking different numbers for each
-individual: system event, channel and host interrupt will result with
-something unintentional and wrong.
-
-Sorry if I misunderstood you, if so could you please elaborate?
-
-Thank you,
-Grzegorz
