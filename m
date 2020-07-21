@@ -3,125 +3,143 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F5FC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D58C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C939C2077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:50:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UP7zCLnn"
+	by mail.kernel.org (Postfix) with ESMTP id 97E312073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:54:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595346854;
+	bh=7YwE6zmlolnXrIDvIovVwCoGjPItA6t4+svrJdYth50=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sd/FkBDGVzrh7rzERdqvcixBftJm+hAU72gh+Fzk8B5IfmJibmqfJQQfndqf/iMr2
+	 2H+LR5RSdSfTbRRZslynrpK3e2z5/S6h/aDGlvsXlIilZNKC0G3U3lqR3F6OTe/WQ2
+	 Uy4B78MWXP6STBegoDLsM56k4QlynEhma5AhbxRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730039AbgGUPu3 (ORCPT
+        id S1728850AbgGUPyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:50:29 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58709 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726029AbgGUPu2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:50:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595346627;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T1eqkdT+65WSXffQEgvHX8BA45HzVx3nhgyMOFl0KCM=;
-        b=UP7zCLnnpowVd6qJFEsLetQAX3K9eAXa2xNxOktoGGz4vv9a5TKhepCADUcl2fy3UIp3lp
-        P8Dr3wfQst4Vh5DpmCAjzxAbWGIn0TZn6ZBJSYTgUA3MCci96srkwom2LIXzfqDifh1/pL
-        QMfZ2UTEQtyEgqB6ynjpg6FQBXIUN/s=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-439-7uoDVYEiMIudxce89YgGvw-1; Tue, 21 Jul 2020 11:50:23 -0400
-X-MC-Unique: 7uoDVYEiMIudxce89YgGvw-1
-Received: by mail-qv1-f71.google.com with SMTP id u1so12606745qvu.18
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:50:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=T1eqkdT+65WSXffQEgvHX8BA45HzVx3nhgyMOFl0KCM=;
-        b=TQ7JiQw9gGmZscfqau25hVPP062xvD/Ea5980v2FXhJMlatXxkL+7abaFb0Wel54dv
-         FMKU6PdXlpkvTivz6L/vOfW0YMH0hIOSgcz7s3Y1V5W4R24lLlUxMFR0sWdB5ubQhyCq
-         khUuMEP/vLYV9/QwqyQD+g2aE28R1FuMzB8W1LhvVzF3eg+a03XdcocXlyjLXlB+BKP7
-         SyqdZPGODUOczNRzKGh7j3ijEGyEBZlE68JkE5VPcvVNOHLEpJkUqXVF/eerQ1aIjwME
-         5+eZsu3c6Po8+pMPxm8FrHcyZ6bJPy/DN0wScjP1SLpN6SAvF6gHDnzmh4t6Mgvl7zOU
-         SClw==
-X-Gm-Message-State: AOAM532CYQPJnWhK6p/CQE2XHXXChBH/DEWrXVGeL+th3LDG2KfYsRRm
-        M3vY7m5CZFAVhZJLYPgadc31L4JiNVoamip9uVxS1v0UZ5ykXcKjBYb+mAkKfjcWxxBP7L/kNXW
-        cevTV5KhSjgktqpkiZn5oqUnm
-X-Received: by 2002:aed:2f46:: with SMTP id l64mr29601840qtd.1.1595346622841;
-        Tue, 21 Jul 2020 08:50:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyRfxmS1vh9brmkhzM4t8kBfNgHEn/slIPecHCsCE4ib2gN5E/VVud9VW0vl+hQQ4YSUuRZ2Q==
-X-Received: by 2002:aed:2f46:: with SMTP id l64mr29601827qtd.1.1595346622609;
-        Tue, 21 Jul 2020 08:50:22 -0700 (PDT)
-Received: from Ruby.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
-        by smtp.gmail.com with ESMTPSA id m17sm202763qtm.92.2020.07.21.08.50.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 08:50:21 -0700 (PDT)
-Message-ID: <4e90a54c61e3ecb19802d7ea811c58a51ac457ed.camel@redhat.com>
-Subject: Re: [PATCH -next] drm/nouveau/kms/nvd9-: Fix file release memory
- leak
-From:   Lyude Paul <lyude@redhat.com>
-To:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Airlie <airlied@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Hulk Robot <hulkci@huawei.com>
-Date:   Tue, 21 Jul 2020 11:50:20 -0400
-In-Reply-To: <20200721151701.51412-1-weiyongjun1@huawei.com>
-References: <20200721151701.51412-1-weiyongjun1@huawei.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Tue, 21 Jul 2020 11:54:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbgGUPyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:54:12 -0400
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CEED2077D;
+        Tue, 21 Jul 2020 15:54:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595346851;
+        bh=7YwE6zmlolnXrIDvIovVwCoGjPItA6t4+svrJdYth50=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Iz3vmYbwKAknWwvSnAsWrx+kKYjVj+9BXEirJaOU0WEd69APuiYoNgOWkdVL4dehx
+         7LyjiRy/IEXxM5doRoqtBesB4/Z/bt+j6izRV6hpBBYQKSEEuwmO+kh1kQDES/PGm1
+         yOkFs0ipS/hmz7seHC1GeZSZuABUhnhMy+FXvy2E=
+Received: by mail-oo1-f43.google.com with SMTP id t6so4004575ooh.4;
+        Tue, 21 Jul 2020 08:54:11 -0700 (PDT)
+X-Gm-Message-State: AOAM533I39dDrjEbqyNVQTOxwhLaRjTIJaF/pn8RNGVbWyqpTZNnazFW
+        qAAdq1vEEPNFUSt68h53fxGmjBqQM67siU30xw==
+X-Google-Smtp-Source: ABdhPJxAzM/2DwnEuB4r4A7OI1g6uyx9kfxGkiJ8IopPkvBszfpb9C0ul1jz71QKkma5Db/cDeh3Y6zvX2E0GJ+/ELE=
+X-Received: by 2002:a4a:ae07:: with SMTP id z7mr24532077oom.25.1595346850730;
+ Tue, 21 Jul 2020 08:54:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200717234800.9423-1-s-anna@ti.com> <20200717234800.9423-4-s-anna@ti.com>
+In-Reply-To: <20200717234800.9423-4-s-anna@ti.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 21 Jul 2020 09:53:58 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLnPQNZ7KhqfPwiMCJESYrD9_UN2gwc_hj9=WOJM8NQQw@mail.gmail.com>
+Message-ID: <CAL_JsqLnPQNZ7KhqfPwiMCJESYrD9_UN2gwc_hj9=WOJM8NQQw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/6] dt-bindings: remoteproc: Add common TI SCI rproc bindings
+To:     Suman Anna <s-anna@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-
-Thanks!
-
-On Tue, 2020-07-21 at 15:17 +0000, Wei Yongjun wrote:
-> When using single_open() for opening, single_release() should be
-> used instead of seq_release(), otherwise there is a memory leak.
-> 
-> Fixes: 12885ecbfe62 ("drm/nouveau/kms/nvd9-: Add CRC support")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+On Fri, Jul 17, 2020 at 5:48 PM Suman Anna <s-anna@ti.com> wrote:
+>
+> Add a bindings document that lists the common TI SCI properties
+> used by the K3 R5F and DSP remoteproc devices.
+>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
 > ---
->  drivers/gpu/drm/nouveau/dispnv50/crc.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/dispnv50/crc.c
-> b/drivers/gpu/drm/nouveau/dispnv50/crc.c
-> index f17fb6d56757..4971a1042415 100644
-> --- a/drivers/gpu/drm/nouveau/dispnv50/crc.c
-> +++ b/drivers/gpu/drm/nouveau/dispnv50/crc.c
-> @@ -706,6 +706,7 @@ static const struct file_operations
-> nv50_crc_flip_threshold_fops = {
->  	.open = nv50_crc_debugfs_flip_threshold_open,
->  	.read = seq_read,
->  	.write = nv50_crc_debugfs_flip_threshold_set,
-> +	.release = single_release,
->  };
->  
->  int nv50_head_crc_late_register(struct nv50_head *head)
-> 
-> 
-> 
--- 
-Cheers,
-	Lyude Paul (she/her)
-	Software Engineer at Red Hat
+> v4: Addressed both of Rob's review comments on ti,sci-proc-ids property
+> v3: https://patchwork.kernel.org/patch/11602317/
+>
+>  .../bindings/remoteproc/ti,k3-sci-proc.yaml   | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+> new file mode 100644
+> index 000000000000..0dca2ffdbc48
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-sci-proc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Common TI K3 remote processor device bindings
+> +
+> +maintainers:
+> +  - Suman Anna <s-anna@ti.com>
+> +
+> +description: |
+> +  The TI K3 family of SoCs usually have one or more remote processor sub-systems
+> +  like the dual-core R5F sub-system or a C66x or C71x DSP processor subsystem.
+> +  The device management of these remote processors is managed by a dedicated
+> +  System Processor, and the communication with that processor is managed through
+> +  the TI-SCI protocol.
+> +
+> +  Each remote processor device node should define a common set of properties
+> +  that allows the System Processor firmware to perform the device management
+> +  such as powering the IPs, asserting/deasserting the resets for each of these
+> +  processors.
+> +
+> +properties:
+> +  ti,sci:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Should be a phandle to the TI-SCI System Controller node
+> +
+> +  ti,sci-dev-id:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Should contain the TI-SCI device id corresponding to the remote processor
+> +      core. Please refer to the corresponding System Controller documentation
+> +      for valid values.
 
+These also apply on Lokesh's series converting ti,sci-int[ra]
+bindings. Please rework to use for both.
+
+> +
+> +  ti,sci-proc-ids:
+> +    description: Should contain a single tuple of <proc_id host_id>.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    items:
+> +      - description: TI-SCI processor id for the remote processor device
+> +      - description: TI-SCI host id to which processor control ownership
+> +                     should be transferred to
+> +
+> +required:
+> +  - ti,sci
+> +  - ti,sci-dev-id
+> +  - ti,sci-proc-ids
+> --
+> 2.26.0
+>
