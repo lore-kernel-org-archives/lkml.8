@@ -2,127 +2,133 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EE1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5A9E20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8735E2077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:15:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgGULP1 (ORCPT
+        id S1729204AbgGULPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:15:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56050 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727043AbgGULP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:15:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 26D5EAD12;
-        Tue, 21 Jul 2020 11:15:32 +0000 (UTC)
-Message-ID: <011994f8a717a00dcd9ed7682a1ddeb421c2c43f.camel@suse.de>
-Subject: Re: [PATCH] dma-pool: Do not allocate pool memory from CMA
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Amit Pundir <amit.pundir@linaro.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Rientjes <rientjes@google.com>,
-        linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
-        iommu@lists.linux-foundation.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Tue, 21 Jul 2020 13:15:23 +0200
-In-Reply-To: <CAMi1Hd2V2pJjP=USS4r-Z3vK-aq7_aBy-jcVNk1GvbdEQAuzWg@mail.gmail.com>
-References: <20200708164936.9340-1-nsaenzjulienne@suse.de>
-         <CAMi1Hd35tRM=cnmzwX=SDgu-OoXi1Xj+twFkoULaVZBbTpe6sw@mail.gmail.com>
-         <550b30a86c0785049d24c945e2c6628d491cee3a.camel@suse.de>
-         <CAMi1Hd2V2pJjP=USS4r-Z3vK-aq7_aBy-jcVNk1GvbdEQAuzWg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Tue, 21 Jul 2020 07:15:43 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42624 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728159AbgGULPn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 07:15:43 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7B9DF283D14;
+        Tue, 21 Jul 2020 12:15:40 +0100 (BST)
+Date:   Tue, 21 Jul 2020 13:15:37 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Helen Koike <helen.koike@collabora.com>, Brian.Starkey@arm.com
+Cc:     mchehab@kernel.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, sakari.ailus@iki.fi,
+        linux-media@vger.kernel.org, tfiga@chromium.org,
+        hiroh@chromium.org, nicolas@ndufresne.ca, kernel@collabora.com,
+        narmstrong@baylibre.com, linux-kernel@vger.kernel.org,
+        frkoenig@chromium.org, mjourdan@baylibre.com,
+        stanimir.varbanov@linaro.org
+Subject: Re: [PATCH v4 0/6] media: v4l2: Add extended fmt and buffer ioctls
+Message-ID: <20200721131537.6ff83c71@collabora.com>
+In-Reply-To: <20200717115435.2632623-1-helen.koike@collabora.com>
+References: <20200717115435.2632623-1-helen.koike@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-21 at 14:24 +0530, Amit Pundir wrote:
-> On Tue, 21 Jul 2020 at 14:09, Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > Hi Amit,
-> > > Hi Nicolas,
-> > > 
-> > > I see a boot regression with this commit d9765e41d8e9 "dma-pool:
-> > > Do not allocate pool memory from CMA" on my Xiaomi Poco F1
-> > > (Qcom sdm845) phone running v5.8-rc6. I can't boot past the
-> > > bootloader splash screen with this patch.
-> > > 
-> > > Phone boots fine if I revert this patch. I carry only one out of
-> > > tree
-> > > dts patch https://lkml.org/lkml/2020/6/25/52. And since this is a
-> > > stock
-> > > phone, I don't have access to serial/dmesg logs until I boot to
-> > > AOSP
-> > > (adb) shell.
-> > > 
-> > > Any thoughts as to what might be going wrong here? I'd be happy
-> > > to
-> > > help debug things. For what it's worth, I don't see this
-> > > regression
-> > > on
-> > > other two sdm845 devices (db845c and Pixel 3) I tested on.
-> > 
-> > Can you provide a boot log (even if without my patch) and the
-> > device-
-> > tree files? It'd help a lot figuring things out.
-> 
-> Thank you for the prompt reply Nicolas.
-> 
-> Here is the boot log with the reverted patch
-> https://pastebin.ubuntu.com/p/BrhPf83nKF/
-> 
-> Here is my phone's dts
-> https://github.com/pundiramit/linux/commit/2a394c199deeaf4c91e0e008e8fba2a72f494d8c
+Hello Helen,
 
-I'm at loss at what could be failing here. Your device should be able
-to address the whole 8GB memory space, which AFAIK is the max available
-on that smartphone family. But maybe the device-tree is lying, who
-knows...
+Just a few drive-by comments.
 
-Can you try booting *without* my patch and this in the kernel command
-line: "cma=16M@0x100000000-0x200000000".
+On Fri, 17 Jul 2020 08:54:29 -0300
+Helen Koike <helen.koike@collabora.com> wrote:
 
-Regards,
-Nicolas
-
-And here is my kernel tree just in case
-> https://github.com/pundiramit/linux/commits/beryllium-mainline
+> Hi,
 > 
-> Regards,
-> Amit Pundir
+> I'm sorry for taking too long to submit v4.
+> 
+> It is not perfect, not all v4l2-compliance tests passes, but I'd like a review,
+> specially on the API and potential problems, so I can focus on improving implementation
+> and maybe drop the RFC tag for next version.
+> 
+> Follow below what changed in v4 and some items I'd like to discuss:
 > 
 > 
-> > Regards,
-> > Nicolas
-> > 
-> > > Regards,
-> > > Amit Pundir
-> > > 
-> > > > Reported-by: Jeremy Linton <jeremy.linton@arm.com>
-> > > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > > > ---
-> > > > 
-> > > > An more costly alternative would be adding an option to
-> > > > dma_alloc_from_contiguous() so it fails when the allocation
-> > > > doesn't
-> > > > fall
-> > > > in a specific zone.
-> > > > 
-> > > >  kernel/dma/pool.c | 11 ++---------
+> * Ioctl to replace v4l2_pix_format
+> ---------------------------------------------------------------------------------
+> During last media summit, we agreed to create ioctls that replace the v4l2_pix_format
+> struct and leave the other structs in the v4l2_format union alone.
+> Thus I refactored the code to receive struct v4l2_ext_pix_format, and I renamed the
+> ioctls, so now we have:
+> 
+> int ioctl(int fd, VIDIOC_G_EXT_FMT, struct v4l2_ext_pix_format *argp);
+
+Maybe use the EXT_PIX_FMT suffix here since the struct is really only
+about pixel formats.
+
+> int ioctl(int fd, VIDIOC_S_EXT_FMT, struct v4l2_ext_pix_format *argp);
+> int ioctl(int fd, VIDIOC_TRY_EXT_FMT, struct v4l2_ext_pix_format *argp);
+> 
+> The only valid types are V4L2_BUF_TYPE_VIDEO_CAPTURE and V4L2_BUF_TYPE_VIDEO_OUTPUT,
+> all the other types are invalid with this API.
+> 
+
+[...]
+
+> 
+> 
+> Boris Brezillon (5):
+>   media: v4l2: Extend pixel formats to unify single/multi-planar
+>     handling (and more)
+>   media: videobuf2: Expose helpers to implement the _ext_fmt and
+>     _ext_buf hooks
+>   media: mediabus: Add helpers to convert a ext_pix format to/from a
+>     mbus_fmt
+>   media: vivid: Convert the capture and output drivers to
+>     EXT_FMT/EXT_BUF
+>   media: vimc: Implement the ext_fmt and ext_buf hooks
+
+I think you should take ownership of these patches. The end result is
+likely to be completely different from what I initially posted, and
+you're the one doing the hard work here.
+
+> 
+> Hans Verkuil (1):
+>   media: v4l2: Add extended buffer operations
+> 
+>  .../media/common/videobuf2/videobuf2-core.c   |   2 +
+>  .../media/common/videobuf2/videobuf2-v4l2.c   | 549 +++++-----
+>  .../media/test-drivers/vimc/vimc-capture.c    |  61 +-
+>  drivers/media/test-drivers/vimc/vimc-common.c |   6 +-
+>  drivers/media/test-drivers/vimc/vimc-common.h |   2 +-
+>  drivers/media/test-drivers/vivid/vivid-core.c |  70 +-
+>  .../test-drivers/vivid/vivid-touch-cap.c      |  26 +-
+>  .../test-drivers/vivid/vivid-touch-cap.h      |   3 +-
+>  .../media/test-drivers/vivid/vivid-vid-cap.c  | 169 +---
+>  .../media/test-drivers/vivid/vivid-vid-cap.h  |  15 +-
+>  .../media/test-drivers/vivid/vivid-vid-out.c  | 193 ++--
+>  .../media/test-drivers/vivid/vivid-vid-out.h  |  15 +-
+>  drivers/media/v4l2-core/v4l2-dev.c            |  50 +-
+>  drivers/media/v4l2-core/v4l2-ioctl.c          | 934 ++++++++++++++++--
+>  include/media/v4l2-ioctl.h                    |  60 ++
+>  include/media/v4l2-mediabus.h                 |  42 +
+>  include/media/videobuf2-core.h                |   6 +-
+>  include/media/videobuf2-v4l2.h                |  21 +-
+>  include/uapi/linux/videodev2.h                | 144 +++
+>  19 files changed, 1650 insertions(+), 718 deletions(-)
+> 
 
