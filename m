@@ -2,132 +2,184 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3241C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BBBE2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:24:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y5gUTrSb"
+	by mail.kernel.org (Postfix) with ESMTP id 9B91A2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:26:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595355963;
+	bh=XCHqhNwEKPzxr9pqv8Y/e8kF7VXyNOpbMCyrkDsq5fQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DHCACAxCPMgdPEq2e2lTVHIO+gxb+pm6b7gLmoIjU5dQtzwURzm5EJzfFdSoj4nqM
+	 I4e8ef1JmEmfesi/9T5WqiwSk0fpj1yBW3y3HE1MTGLg2QCIGF/niahY5XWFU+bSJ/
+	 UgqaLvynwd8EeUzkEexQtaO387W8ZDqQp0OtS3Jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgGUSY1 (ORCPT
+        id S1729113AbgGUS0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 14:24:27 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58366 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726029AbgGUSYZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 14:24:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595355864;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ealMEOrHFYO0kZ1pKFx9efUp2/FF6Eq+swSNcBoDaSA=;
-        b=Y5gUTrSb7ROYKIDqYBCitJ3ygTc4RhrNj/HU9qtGrfpR4n4/PNehZq560WlD/7xPaGuM1K
-        DLyo60JjxtFlqbJHlEW610cDeCUgWMc0OhS7BpzAkPDRSAeTzN1kbhUl0Ls+Yup1WfFbdb
-        8DFAdLP9Rj4ukA0z1Pq/uLySqxdCEkY=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-214-aDYkg16tNCSsFs4GRW3Bbw-1; Tue, 21 Jul 2020 14:24:22 -0400
-X-MC-Unique: aDYkg16tNCSsFs4GRW3Bbw-1
-Received: by mail-qt1-f198.google.com with SMTP id u93so14888418qtd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 11:24:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=ealMEOrHFYO0kZ1pKFx9efUp2/FF6Eq+swSNcBoDaSA=;
-        b=SbmEDEfw0Gw9y4dBb7UJANt1slGDKYbP2urtrh+RLZhqBjh/lkyw7MadRxi7tUPFzm
-         fnvPKfgReRxMcE5XdKCtjx/iYr7PG5sRCU0tws2aM+c/s+HiH3Yqb/ESpyYDKZ+mXSnq
-         rAOWWnbgd37NKqNFd6ebKV7qDna7sYpBwQEiHd3fgDLQV+NpV3cN/D8XZa9enjZ6NtWk
-         5BSmd9w1vAqHUhbkooOqSXsAvUWLdQkdMLyh5F9Dl0jkbaZ6Ee82RPwpfC7pJZ2Mp0l5
-         w5gIIB8911lx0ImNQ1tSzEPYH85mi3R6NmUA6Uk1uwNuLTNZ0DeJw3WbuNMY1fPlKUOn
-         o13w==
-X-Gm-Message-State: AOAM5314MO+S7budJomNoT5pAqtDWRy+67Madf2Cr+lzWi4c0wC+pYF6
-        lPNhfr4tk2tcp2NcGWmgdxY/4I4MOWCOiF8xEUs/WpMu7cuiSLKDQTWJ3s8PoYwyEDOW0ETZFV4
-        n2sVgT18sD9Z9EPPJ3zQkWLGc
-X-Received: by 2002:ac8:c7:: with SMTP id d7mr30400205qtg.235.1595355861662;
-        Tue, 21 Jul 2020 11:24:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw5OPDtOL+vQse+EIZ+qb5SVhRfGv2p/Vv3U6BZWjtbTj7sJmsbB+3Na09bYDi+UjZ28Uz31A==
-X-Received: by 2002:ac8:c7:: with SMTP id d7mr30400169qtg.235.1595355861423;
-        Tue, 21 Jul 2020 11:24:21 -0700 (PDT)
-Received: from Ruby.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
-        by smtp.gmail.com with ESMTPSA id x12sm510481qta.67.2020.07.21.11.24.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 11:24:20 -0700 (PDT)
-Message-ID: <a80a591ce61b632503c9ed52adc7c40faad8b068.camel@redhat.com>
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-From:   Lyude Paul <lyude@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Sasha Levin <sashal@kernel.org>
-Date:   Tue, 21 Jul 2020 14:24:19 -0400
-In-Reply-To: <dc7a592219f58f9a5df7fa7135fa3fc87d9450f0.camel@redhat.com>
-References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
-         <20200716235440.GA675421@bjorn-Precision-5520>
-         <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
-         <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
-         <20200721122247.GI5180@lahna.fi.intel.com>
-         <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
-         <20200721152737.GS5180@lahna.fi.intel.com>
-         <dc7a592219f58f9a5df7fa7135fa3fc87d9450f0.camel@redhat.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Tue, 21 Jul 2020 14:26:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbgGUS0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 14:26:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52257206E9;
+        Tue, 21 Jul 2020 18:26:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595355960;
+        bh=XCHqhNwEKPzxr9pqv8Y/e8kF7VXyNOpbMCyrkDsq5fQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rqSz/L9j3iXdZfZJJZbB/tw82ZTCc+qYhAn7pACkK/ni8o9wqZ7hALYHSR8c59u7u
+         nkZLSx2oq0bzg6UJYpAJRJX5FYMx/4hTT76GupUJNqJl84Ee9bK3vJpbTz/XrX0swK
+         lI21ExJQmTSC4BY1eRlS49qOGsslnGsj+jfVrMak=
+Date:   Tue, 21 Jul 2020 20:26:08 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Hughes <hughsient@gmail.com>,
+        Alex Bazhaniuk <alex@eclypsium.com>
+Subject: Re: [PATCH] [PATCH] Firmware security information in SYSFS
+Message-ID: <20200721182608.GB2586085@kroah.com>
+References: <20200716223627.253936-1-daniel.gutson@eclypsium.com>
+ <20200717062841.GA3238569@kroah.com>
+ <CAK8P3a1yy7YyeJH5k40yAXb23y9siBnfuqixb76t3BK9Xh=uXQ@mail.gmail.com>
+ <CAFmMkTFLm9mw5-8Dj_7rhP2KBcLUoJ1WcQCJv5_k+QRsmJPxjg@mail.gmail.com>
+ <20200717145746.GB3008378@kroah.com>
+ <CAFmMkTEsm7CRBzEJSCjkhCT7NHvRUXzcgchExbnfFbwPjT0YFg@mail.gmail.com>
+ <20200721105256.GC1678476@kroah.com>
+ <CAFmMkTGtG6p48o9qSzYqQs8mJXiGAMw7b5wp2LLAmwcdhn2u4A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFmMkTGtG6p48o9qSzYqQs8mJXiGAMw7b5wp2LLAmwcdhn2u4A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-21 at 12:00 -0400, Lyude Paul wrote:
-> On Tue, 2020-07-21 at 18:27 +0300, Mika Westerberg wrote:
-> > On Tue, Jul 21, 2020 at 11:01:55AM -0400, Lyude Paul wrote:
-> > > Sure thing. Also, feel free to let me know if you'd like access to one
-> > > of
-> > > the
-> > > systems we saw breaking with this patch - I'm fairly sure I've got one
-> > > of
-> > > them
-> > > locally at my apartment and don't mind setting up AMT/KVM/SSH
-> > 
-> > Probably no need for remote access (thanks for the offer, though). I
-> > attached a test patch to the bug report:
-> > 
-> >   https://bugzilla.kernel.org/show_bug.cgi?id=208597
-> > 
-> > that tries to work it around (based on the ->pm_cap == 0). I wonder if
-> > anyone would have time to try it out.
+On Tue, Jul 21, 2020 at 01:27:27PM -0300, Daniel Gutson wrote:
+> On Tue, Jul 21, 2020 at 7:52 AM Greg Kroah-Hartman <
+> gregkh@linuxfoundation.org> wrote:
 > 
-> Will give it a shot today and let you know the result
-
-Ahh-actually, I thought the laptop I had locally could reproduce this bug but
-that doesn't appear to be the case whoops. Karol Herbst still has access to a
-machine that can test this though, so they'll likely get to trying the patch
-today or tommorrow
-
+> > On Mon, Jul 20, 2020 at 05:58:47PM -0300, Daniel Gutson wrote:
+> > > On Fri, Jul 17, 2020 at 11:57 AM Greg Kroah-Hartman <
+> > > gregkh@linuxfoundation.org> wrote:
+> > >
+> > > > On Fri, Jul 17, 2020 at 11:46:39AM -0300, Daniel Gutson wrote:
+> > > > > On Fri, Jul 17, 2020 at 11:41 AM Arnd Bergmann <arnd@arndb.de>
+> > wrote:
+> > > > >
+> > > > > > On Fri, Jul 17, 2020 at 8:28 AM Greg Kroah-Hartman
+> > > > > > <gregkh@linuxfoundation.org> wrote:
+> > > > > > >
+> > > > > > > On Thu, Jul 16, 2020 at 07:36:27PM -0300, Daniel Gutson wrote:
+> > > > > > > > +What:                /sys/kernel/firmware-security/bioswe
+> > > > > > >
+> > > > > > > Ick, I stopped reading right here.
+> > > > > > >
+> > > > > > > No, this is not where this belongs.
+> > > > > > >
+> > > > > > > We already have /sys/firmware/, right?  And firmware-specific
+> > > > > > > subdirectories below that.
+> > > > > > >
+> > > > > > > We also have /sys/devices/system/ and I think that would be a
+> > much
+> > > > > > > better place for this, as it is easier to work with a real
+> > 'struct
+> > > > > > > device' than a "raw" kobject any day.  Bonus is you get full
+> > support
+> > > > of
+> > > > > > > userspace libraries when you do that, unlike when dealing with
+> > > > kobjects.
+> > > > > > >
+> > > > > > > Also, this really is a _SPECIFIC_ type of firmware that supports
+> > > > these
+> > > > > > > features, right?  Why not call that out too?  This is not
+> > generic by
+> > > > any
+> > > > > > > means.
+> > > > > >
+> > > > > > As I suggested in my previous review, I wouldn't worry too much
+> > about
+> > > > > > the user interface at the start, but instead first work out how the
+> > > > > > hardware
+> > > > > > support fits in with the existing drivers and once that looks fine
+> > > > decide
+> > > > > > on how to export it to user space.
+> > > > > >
+> > > > > > I agree the  /sys/kernel/firmware-security/bioswe sounds like the
+> > wrong
+> > > > > > place, but I'm not sure if adding any other new directory in sysfs
+> > is
+> > > > > > much better. I think the most promising would be to have it on the
+> > > > > > sysfs directory for the device it refers to,
+> > > > >
+> > > > >
+> > > > > My idea is to have all the firmware security information together in
+> > the
+> > > > > same place; this information comes from many devices.
+> > > > > This initial patch involves the SPI Controller, and I don't want to
+> > add
+> > > > > more stuff until there
+> > > > > is a consensus.
+> > > > > So, do you have a suggestion where to put this information?
+> > > > > /sys/devices/system/firmware-security?
+> > > > > /sys/firmware/security?
+> > > > > other?
+> > > > >
+> > > > > Please advise.
+> > > >
+> > > > It's fun to focus on things like this, as it's the most visible part,
+> > > > but are you sure the "talk to the hardware" part is working properly?
+> > > >
+> > >
+> > > Yes.
+> > >
+> > >
+> > >
+> > > >
+> > > > If so, great, it should be a "class", as that way it is independent of
+> > > > any hardware type, right?  Classes show how devices talk to userspace
+> > in
+> > > > a common way (input, tty, led, block, etc.)  So why is this any
+> > > > different from that?
+> > > >
+> > >
+> > > Are you suggesting to create a new class, or use an existing one?
+> >
+> > Probably a new one, unless you can find an existing one that would fit?
+> >
 > 
--- 
-Cheers,
-	Lyude Paul (she/her)
-	Software Engineer at Red Hat
+> IIUC, Arnd Bergmann proposed that I create a class for each device driver
+> (in this case,
+> for the intel-spi, though I think the class would be spi-nor) and add
+> attributes to it.
+> In such a case, your proposal and his are different, mutually exclusive.
 
+Classes should be driver agnositic, and you should not have a single
+class per driver, as that is pretty pointless. 
+
+> For me it's easier and makes more sense to have a class for, say,
+> firmware-security (if I understood you correctly).
+
+I still think that's a horrible name, as that is not what you are
+describing here, but sure, a single class is good.
+
+thanks,
+
+greg k-h
