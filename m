@@ -4,120 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D878C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E780C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2CD820720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00FEE20720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YrfWTqvQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i8Qu/OYQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729930AbgGUQAq (ORCPT
+        id S1730029AbgGUQA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:00:46 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60223 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726892AbgGUQAq (ORCPT
+        Tue, 21 Jul 2020 12:00:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46852 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729989AbgGUQA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:00:46 -0400
+        Tue, 21 Jul 2020 12:00:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595347244;
+        s=mimecast20190719; t=1595347254;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eeKT2rOIxGNaO2zvUjaNxphvmuUrFZ8hkCC7PUINRIc=;
-        b=YrfWTqvQXyKjkuiWc6ZOydKWh69bj4wTlU/A4Chkn7nc7CRoKqpzjtzFBOlx55aoq2B20Y
-        QUCyknB4WE12+lbJ94cvrtHzhAwuQwV/59U8pKG/muUsiV51kWENi55Nzo7Hm1l3mIDNUI
-        c7McEd9wq0/0Ct0a2Xnx7BZiDyJSgi8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-268-xqQdX3AQN2uqd872ket1QQ-1; Tue, 21 Jul 2020 12:00:42 -0400
-X-MC-Unique: xqQdX3AQN2uqd872ket1QQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A00E780BCCC;
-        Tue, 21 Jul 2020 16:00:40 +0000 (UTC)
-Received: from w520.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0ECD76FECD;
-        Tue, 21 Jul 2020 16:00:36 +0000 (UTC)
-Date:   Tue, 21 Jul 2020 10:00:36 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Xiong Zhang <xiong.y.zhang@intel.com>,
-        Wayne Boyer <wayne.boyer@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Jun Nakajima <jun.nakajima@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Subject: Re: [PATCH] KVM: x86/mmu: Add capability to zap only sptes for the
- affected memslot
-Message-ID: <20200721100036.464d4440@w520.home>
-In-Reply-To: <20200721030319.GD20375@linux.intel.com>
-References: <20200703025047.13987-1-sean.j.christopherson@intel.com>
-        <51637a13-f23b-8b76-c93a-76346b4cc982@redhat.com>
-        <20200709211253.GW24919@linux.intel.com>
-        <49c7907a-3ab4-b5db-ccb4-190b990c8be3@redhat.com>
-        <20200710042922.GA24919@linux.intel.com>
-        <20200713122226.28188f93@x1.home>
-        <20200713190649.GE29725@linux.intel.com>
-        <20200721030319.GD20375@linux.intel.com>
+        bh=P0UrEz/GvXR1ZZ5iVqJP3qWd7bx+Q5rlrTYnl3WPpZ0=;
+        b=i8Qu/OYQZkaq1Irfx0chJjTxyFvUK0hIK32enmue9E2SVCq/O5k2JrNARdI/PTWxPxOmBk
+        JOwnJiINoMEWI+1OEJa2oppSvlf7XuwnA3aXmaWht5w3rbTitzc7KD/LQIUojHAfT18L5M
+        LL3+Sxodvt46qE5nDhzLHBGW/5ddrso=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-xePwqSnHOfGAqIlL_V92dQ-1; Tue, 21 Jul 2020 12:00:52 -0400
+X-MC-Unique: xePwqSnHOfGAqIlL_V92dQ-1
+Received: by mail-qk1-f200.google.com with SMTP id 13so14132912qks.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:00:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=P0UrEz/GvXR1ZZ5iVqJP3qWd7bx+Q5rlrTYnl3WPpZ0=;
+        b=KQb1H57dFhdeqTbCfnvRHmOUDKfC65kqA6mJUkriPUPAurKZky9TOQhKlJDLWsWvFL
+         dlVQe86FsTnCdshq2zJds7cU0Vnd/f36/eqQOeGHte6hecFDDxun8AgrXp+Yr594PFHV
+         M61ova6g/5/pHvvqZYCWNHmDHBkJ6bI0uIR/ZIDfLmOlBFio2YTQmaxoD2D66fbQMlc3
+         H7IfXglj/OTXj7v+zgDaWSEzO7/oqF2H9UG6y5jblXFsgof9FVXM2zVet+5F2Hpyx9/b
+         +cfxh3AkG0mI9KHGdojOjlFCM3J5Z99isOnGxJVESPatvtpKUY0N8qswA3+k2zxDQbRf
+         XpVg==
+X-Gm-Message-State: AOAM531Ap12klaIfHTgsm8bv7kkzyopua9/RrcpKqgEoWGcwWFWrzHVs
+        T+5ag76jepZ0eWHH41IVz9Q7CVvfxQcKMbejb+8eSn+Z9HwkwaUehd+sxADUnMBkFjOYUVa6cMa
+        15r3noZP6zXabMTAR8dAApZD/
+X-Received: by 2002:ae9:ef43:: with SMTP id d64mr12959437qkg.326.1595347252175;
+        Tue, 21 Jul 2020 09:00:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyinIbVabueGMXoafK8P3B2fbzczvS1OyYVVhBZSVm9JqHV5WA7XsG5FVGYoO3j+1QlROT9pw==
+X-Received: by 2002:ae9:ef43:: with SMTP id d64mr12959408qkg.326.1595347251931;
+        Tue, 21 Jul 2020 09:00:51 -0700 (PDT)
+Received: from Ruby.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
+        by smtp.gmail.com with ESMTPSA id x29sm21891103qtv.80.2020.07.21.09.00.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 09:00:51 -0700 (PDT)
+Message-ID: <dc7a592219f58f9a5df7fa7135fa3fc87d9450f0.camel@redhat.com>
+Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
+ without DLL Link Active train links in 100 ms"
+From:   Lyude Paul <lyude@redhat.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Sasha Levin <sashal@kernel.org>
+Date:   Tue, 21 Jul 2020 12:00:49 -0400
+In-Reply-To: <20200721152737.GS5180@lahna.fi.intel.com>
+References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
+         <20200716235440.GA675421@bjorn-Precision-5520>
+         <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
+         <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
+         <20200721122247.GI5180@lahna.fi.intel.com>
+         <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
+         <20200721152737.GS5180@lahna.fi.intel.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 20:03:19 -0700
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-
-> +Weijiang
+On Tue, 2020-07-21 at 18:27 +0300, Mika Westerberg wrote:
+> On Tue, Jul 21, 2020 at 11:01:55AM -0400, Lyude Paul wrote:
+> > Sure thing. Also, feel free to let me know if you'd like access to one of
+> > the
+> > systems we saw breaking with this patch - I'm fairly sure I've got one of
+> > them
+> > locally at my apartment and don't mind setting up AMT/KVM/SSH
 > 
-> On Mon, Jul 13, 2020 at 12:06:50PM -0700, Sean Christopherson wrote:
-> > The only ideas I have going forward are to:
-> > 
-> >   a) Reproduce the bug outside of your environment and find a resource that
-> >      can go through the painful bisection.  
+> Probably no need for remote access (thanks for the offer, though). I
+> attached a test patch to the bug report:
 > 
-> We're trying to reproduce the original issue in the hopes of biesecting, but
-> have not yet discovered the secret sauce.  A few questions:
+>   https://bugzilla.kernel.org/show_bug.cgi?id=208597
 > 
->   - Are there any known hardware requirements, e.g. specific flavor of GPU?
+> that tries to work it around (based on the ->pm_cap == 0). I wonder if
+> anyone would have time to try it out.
 
-I'm using an old GeForce GT635, I don't think there's anything special
-about this card.
+Will give it a shot today and let you know the result
 
->   - What's the average time to failure when running FurMark/PassMark?  E.g.
->     what's a reasonable time to wait before rebooting to rerun the tests (I
->     assume this is what you meant when you said you sometimes needed to
->     reboot to observe failure).
-
-The failure mode ranges from graphics glitches, ex. vectors drawn
-across a window during the test or stray lines when interacting with
-the Windows menu button, to graphics driver failures triggering an
-error dialog, usually from PassMark.  I usually start FurMark, run the
-stress test for ~10s, kill it, then run a PassMark benchmark.  If I
-don't observe any glitching during the run, I'll trigger the Windows
-menu a few times, then reboot and try again.  The graphics tests within
-PassMark are generally when the glitches are triggered, both 2D and 3D,
-sometimes it's sufficient to only run those tests rather than the full
-system benchmark.  That's largely the trouble with this bisect is that
-the test is very interactive and requires observation.  Sometimes when
-it fails it snowballs into worse and worse errors and there's high
-confidence that it's bad, but other times you'll be suspicious that
-something occurred and need to repeat the testing.  Thanks,
-
-Alex
+> 
+-- 
+Cheers,
+	Lyude Paul (she/her)
+	Software Engineer at Red Hat
 
