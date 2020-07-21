@@ -2,134 +2,265 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE080C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC56C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA3572073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B272073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:56:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GOrnW/Tx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GcQgWDbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgGUM4A (ORCPT
+        id S1727866AbgGUM4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:56:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60894 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726737AbgGUM4A (ORCPT
+        Tue, 21 Jul 2020 08:56:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbgGUM4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:56:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595336158;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gcyS8fcxtufsTHCFEHHMYCv8/G/j17I02uFKGiQeviM=;
-        b=GOrnW/TxaUuXMPXm4Bu/w3aW7jN/NJL7Z1RN7WRybzqiMibkGlQgLVY76BnidgESaGK4jW
-        8fPzWj7ppc2EUPBEQ1gjq+4G6G9LsWtvmcMVuTabhIFhLovWE7eipYzGPhM3NJyzrm9Vkt
-        NFNKLYXc31z5O3Ud/13nSQ7EPaJF6uU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-469-MY6qAbUXO7O16qVB19jUxQ-1; Tue, 21 Jul 2020 08:55:56 -0400
-X-MC-Unique: MY6qAbUXO7O16qVB19jUxQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ACA018014D7;
-        Tue, 21 Jul 2020 12:55:53 +0000 (UTC)
-Received: from fedora-32-enviroment (unknown [10.35.206.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 78F657B400;
-        Tue, 21 Jul 2020 12:55:38 +0000 (UTC)
-Message-ID: <155668af6420a6516ded0e9101e0a47401a928d9.camel@redhat.com>
-Subject: Re: [PATCH 09/10] block: scsi: sd: use
- blk_is_valid_logical_block_size
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
-        "open list:SCSI CDROM DRIVER" <linux-scsi@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Ajay Joshi <Ajay.Joshi@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "open list:SONY MEMORYSTICK SUBSYSTEM" <linux-mmc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Satya Tangirala <satyat@google.com>,
-        "open list:NETWORK BLOCK DEVICE (NBD)" <nbd@other.debian.org>,
-        Hou Tao <houtao1@huawei.com>, Jens Axboe <axboe@fb.com>,
-        "open list:VIRTIO CORE AND NET DRIVERS" 
-        <virtualization@lists.linux-foundation.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Alex Dubov <oakad@yahoo.com>
-Date:   Tue, 21 Jul 2020 15:55:37 +0300
-In-Reply-To: <CY4PR04MB375113B7D781BF2949FE5B33E7780@CY4PR04MB3751.namprd04.prod.outlook.com>
-References: <20200721105239.8270-1-mlevitsk@redhat.com>
-         <20200721105239.8270-10-mlevitsk@redhat.com>
-         <CY4PR04MB375113B7D781BF2949FE5B33E7780@CY4PR04MB3751.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Tue, 21 Jul 2020 08:56:33 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46059C061794;
+        Tue, 21 Jul 2020 05:56:33 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id v6so21240904iob.4;
+        Tue, 21 Jul 2020 05:56:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=O6bopuOOfAu1QyL2Kms3hUZ2O5zKxrgd6kI2Tv7qUhc=;
+        b=GcQgWDbM6MyNtrEXX/ohqqTCM+9gbcIToFUroFBDPwAbR/cZqLSjUC4IJBpwNy/tde
+         0BJF4i8T1nZEyz4hTI8J5bV2nOJ/d54bUytKUkUcvXq1jL6Aen/JUP6QLTx73syWU8ug
+         xKuFZaU15DV/RUeghKIa7aO9hAV278US/xBe+MF0Ywoyn/Lzxr6yj2mBIs9qrfVmKDTm
+         wbgGmJNXjsJ0+fHREHb8ZVXTodgUTZb3kTmrUbR5yehQszJ1stB+c6y8lBrkrqFQS3SS
+         LVrPwEhb0F5ppdF8A+oQ5qRyYVNATKk1qyOBMAKrp5ofjF/XbIR3YuRnCl8iZBmq8iiY
+         91cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=O6bopuOOfAu1QyL2Kms3hUZ2O5zKxrgd6kI2Tv7qUhc=;
+        b=F8jWfwRAuHII/oyQY9qaBr/iGqbqVBzoznjXrnfJoY1B8XnJTBXELqH0hpYlGDpbDc
+         l57Cc3WKWnJFiwne67epy9K5j8wsuB1uAGQ0geBGgDIGChL5G7fxfUs1e100u3594N+4
+         ZEUsmmDbPJ1p1rnXNoAfeTHxGFHVSXDASniu1AYKus64/El7qpTpSWYsmCiz8eL+ePE3
+         DZx7Mh5IhyAaYCrYKE62/fGRB/5iuNUV1F6vnWNz6xcUopLa1uiVYx3XIP5PJzsDafQM
+         URqnRwaodPTmGqyxRIY5+sta8Gg/QWgwd8jWkonZUF4Py3wX+mw10/Dil/+8DF2L5Z9a
+         Adag==
+X-Gm-Message-State: AOAM532fjFt10QWqQxCU30q9ioMwvHJGG3eCgUWxqa49OOMxGgTZ2Zm9
+        2Y0lwnlA3QVG97ktf7393aT5fEYlmPb4kbW26OM=
+X-Google-Smtp-Source: ABdhPJznWC3OQjMqlA5mkExmNk1wQAUH1ezUc/cEd6b70d11rwBl9XImmQTNINXeh7VQ2VjnKFPxDAX8V8eYpVp0QO8=
+X-Received: by 2002:a02:9109:: with SMTP id a9mr32686269jag.130.1595336192539;
+ Tue, 21 Jul 2020 05:56:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <broonie@kernel.org> <1590378062-7965-1-git-send-email-dillon.minfei@gmail.com>
+ <198ad79c-ab12-55f0-814f-afc454a7e8ef@st.com> <CAL9mu0L3ZF5+nh2ENzxnu0f6AAh1ygoWx1bEkS3WkJt8TN7C7Q@mail.gmail.com>
+ <d7986a59-1337-ca33-fed0-0b6af458dbbb@st.com>
+In-Reply-To: <d7986a59-1337-ca33-fed0-0b6af458dbbb@st.com>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Tue, 21 Jul 2020 20:55:55 +0800
+Message-ID: <CAL9mu0LyJ9RP4_m_43a-eCfEUp=1A2ZEQQLwZ2Xg4kzfsXruhA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/8] Enable ili9341 and l3gd20 on stm32f429-disco
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        thierry.reding@gmail.com, Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-21 at 11:25 +0000, Damien Le Moal wrote:
-> On 2020/07/21 19:55, Maxim Levitsky wrote:
-> > Use blk_is_valid_logical_block_size instead of hardcoded list
-> 
-> s/hardcoded list/hardcoded checks./
-Done, thanks!
+Hi, Alexandre,
 
-Best regards,
-	Maxim Levitsky
-> 
-> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > ---
-> >  drivers/scsi/sd.c | 5 +----
-> >  1 file changed, 1 insertion(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-> > index d90fefffe31b7..f012e7397b058 100644
-> > --- a/drivers/scsi/sd.c
-> > +++ b/drivers/scsi/sd.c
-> > @@ -2520,10 +2520,7 @@ sd_read_capacity(struct scsi_disk *sdkp,
-> > unsigned char *buffer)
-> >  			  "assuming 512.\n");
-> >  	}
-> >  
-> > -	if (sector_size != 512 &&
-> > -	    sector_size != 1024 &&
-> > -	    sector_size != 2048 &&
-> > -	    sector_size != 4096) {
-> > +	if (!blk_is_valid_logical_block_size(sector_size)) {
-> >  		sd_printk(KERN_NOTICE, sdkp, "Unsupported sector size
-> > %d.\n",
-> >  			  sector_size);
-> >  		/*
-> > 
-> 
-> With the commit message fixed, looks OK.
-> 
-> Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-> 
 
+On Tue, Jul 21, 2020 at 7:54 PM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
+>
+>
+>
+> On 7/21/20 12:39 PM, dillon min wrote:
+> > Hi Alexandre,
+> >
+> > On Tue, Jul 21, 2020 at 5:19 PM Alexandre Torgue
+> > <alexandre.torgue@st.com> wrote:
+> >>
+> >> Hi Dillon
+> >>
+> >> On 5/25/20 5:40 AM, dillon.minfei@gmail.com wrote:
+> >>> From: dillon min <dillon.minfei@gmail.com>
+> >>>
+> >>> V5's update based on Mark Brown's suggestion, use 'SPI_MASTER_MUST_RX=
+'
+> >>> for SPI_SIMPLEX_RX mode on stm32 spi controller.
+> >>>
+> >>> V5:
+> >>> 1 instead of add send dummy data out under SIMPLEX_RX mode,
+> >>>      add flags 'SPI_CONTROLLER_MUST_TX' for stm32 spi driver
+> >>> 2 bypass 'SPI_CONTROLLER_MUST_TX' and 'SPI_CONTROLLER_MUST_RX' under
+> >>> 'SPI_3WIRE' mode
+> >>>
+> >>
+> >> Concerning DT patches, they look goods for me. However I'll merge them
+> >> when drivers parts will be merged.
+> >>
+> >> regards
+> >> Alex
+> > This patchset status is :
+> > dts:
+> >      ARM: dts: stm32: Add dma config for spi5
+> >      ARM: dts: stm32: Add pin map for ltdc & spi5 on stm32f429-disco bo=
+ard
+> >      ARM: dts: stm32: enable ltdc binding with ili9341, gyro l3gd20 on
+> >        stm32429-disco board
+> >
+> > panel-bindings: Reviewed-by: Rob Herring=EF=BC=8C need more reviewing t=
+o merge
+> >      dt-bindings: display: panel: Add ilitek ili9341 panel bindings
+> >
+> > clk: Acked-by: Stephen Boyd , need more reviewing to merge
+> >      clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate,
+> >        fix duplicated ltdc clock register to 'clk_core' case ltdc's clo=
+ck
+> >          turn off by clk_disable_unused()
+> >
+> > drm-panel:  Reviewed-by: Linus Walleij . need more reviewing to merge
+> >      drm/panel: Add ilitek ili9341 panel driver
+> >
+> > spi-driver: Acked-by: Mark Brown =EF=BC=8Cmerged into mainline
+> >      spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32=
+f4
+> >      spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' c=
+an't
+> >        becoexit with 'SPI_3WIRE' mode
+> >
+> > For ili9341 drivers, it seems to need more time to review, or might be =
+dropped.
+> > since the drm maintainer might create a new interface to support
+> > DPI,DBI,DSI in one driver.
+> > Currently it's under discussion. I will rework the ili9341 driver after=
+ that.
+> >
+> > But, we can use the existing "drivers/gpu/drm/tiny/ili9341.c" driver to=
+ support
+> > ili9341 on stm32f429-disco board only using the spi bus. except the
+> > display refresh performance is not as good as the ltdc interface.
+> >
+> > I can submit a new patch just with dts changed this week for it, if you=
+ need.
+> >
+>
+>
+> Thanks for this status. I'm close to send my PR for v5.9. There is no
+> needs to have an intermediate version (Except you absolutely want it).
+>
+> Thanks
+> alex
+Ok, I prefer to use the ltdc interface to drive ili9341 either.
+
+Thanks,
+Dillon.
+>
+> > Thanks,
+> > Dillon.
+> >>
+> >>
+> >>
+> >>> V4:
+> >>> According to alexandre torgue's suggestion, combine ili9341 and
+> >>> l3gd20's modification on stm32f429-disco board to one patchset.
+> >>>
+> >>> Changes:
+> >>>
+> >>> ili9341:
+> >>>
+> >>> 1 update ili9341 panel driver according to Linus's suggestion
+> >>> 2 drop V1's No.5 patch, sumbit new changes for clk-stm32f4
+> >>> 3 merge l3gd20's change to this patchset
+> >>>
+> >>> V3:
+> >>> 1 merge original tiny/ili9341.c driver to panel/panel-ilitek-ili9341.=
+c
+> >>>     to support serial spi & parallel rgb interface in one driver.
+> >>> 2 update ilitek,ili9341.yaml dts binding documentation.
+> >>> 3 update stm32f429-disco dts binding
+> >>>
+> >>> V2:
+> >>> 1 verify ilitek,ili9341.yaml with make O=3D../linux-stm32
+> >>>     dt_binding_check
+> >>>     DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/display/panel=
+/
+> >>>     ilitek,ili9341.yaml
+> >>>
+> >>> V1:
+> >>> 1 add ili9341 drm panel driver
+> >>> 2 add ltdc, spi5 controller for stm32f429-disco
+> >>> 3 add ltdc, spi5 pin map for stm32f429-disco
+> >>> 4 add docs about ili9341
+> >>> 5 fix ltdc driver loading hang in clk set rate bug
+> >>>
+> >>>
+> >>> L3gd20:
+> >>> V3:
+> >>> 1 merge stm32f429-disco dtbs binding with ili9341 part
+> >>>
+> >>> V2:
+> >>> 1 insert blank line at stm32f420-disco.dts line 143
+> >>> 2 add more description for l3gd20 in commit message
+> >>>
+> >>> V1:
+> >>> 1 enable spi5 controller on stm32f429-disco (dts)
+> >>> 2 add spi5 pinmap for stm32f429-disco  (dts)
+> >>> 3 add SPI_SIMPLEX_RX, SPI_3WIRE_RX support for stm32f4
+> >>>
+> >>>
+> >>> dillon min (8):
+> >>>     ARM: dts: stm32: Add dma config for spi5
+> >>>     ARM: dts: stm32: Add pin map for ltdc & spi5 on stm32f429-disco b=
+oard
+> >>>     ARM: dts: stm32: enable ltdc binding with ili9341, gyro l3gd20 on
+> >>>       stm32429-disco board
+> >>>     dt-bindings: display: panel: Add ilitek ili9341 panel bindings
+> >>>     clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate,
+> >>>       fix duplicated ltdc clock register to 'clk_core' case ltdc's cl=
+ock
+> >>>         turn off by clk_disable_unused()
+> >>>     drm/panel: Add ilitek ili9341 panel driver
+> >>>     spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm3=
+2f4
+> >>>     spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' =
+can't
+> >>>       be     coexit with 'SPI_3WIRE' mode
+> >>>
+> >>>    .../bindings/display/panel/ilitek,ili9341.yaml     |   69 ++
+> >>>    arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |   67 +
+> >>>    arch/arm/boot/dts/stm32f429-disco.dts              |   48 +
+> >>>    arch/arm/boot/dts/stm32f429.dtsi                   |    3 +
+> >>>    drivers/clk/clk-stm32f4.c                          |    7 +-
+> >>>    drivers/gpu/drm/panel/Kconfig                      |   12 +
+> >>>    drivers/gpu/drm/panel/Makefile                     |    1 +
+> >>>    drivers/gpu/drm/panel/panel-ilitek-ili9341.c       | 1301 ++++++++=
+++++++++++++
+> >>>    drivers/spi/spi-stm32.c                            |   19 +-
+> >>>    drivers/spi/spi.c                                  |    3 +-
+> >>>    10 files changed, 1521 insertions(+), 9 deletions(-)
+> >>>    create mode 100644 Documentation/devicetree/bindings/display/panel=
+/ilitek,ili9341.yaml
+> >>>    create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> >>>
