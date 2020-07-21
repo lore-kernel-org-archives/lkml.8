@@ -2,195 +2,169 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC4EC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB2B320792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:15:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YcUfABZ+";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="LdgrahiG"
+	by mail.kernel.org (Postfix) with ESMTP id C93C4206F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729448AbgGULPz (ORCPT
+        id S1729433AbgGULLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:15:55 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:32630 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbgGULPz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:15:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1595330155; x=1626866155;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=Zx6Ii2KS8rsaZutsZNeQFW3MmzvXoX0RRsCGUgnINug=;
-  b=YcUfABZ+y4pmvAHymnqasOOcgC8Ml9JOPZc5cqBGRL5x7XmxBiX3Qufz
-   RJso5DOX44mGmZo4P4BlxXpeTDi5zLgx7ZcPO1/sxUbIP9HVNYHh4TvXw
-   N4z6frhx4st2K9Tlac+Pw/Nt2FmQl7zkDZXoyBLVhySa70sFU9nwgOPCl
-   2jUcJ/9C8/teLfWVLXznd7094Nq7D37vaHMc8+me2r2dyVst+miB9B+4P
-   8X5d62XmpiCdVqaKw/Aqq0fdA2+RNPvkAB+qlbC2rV67pZCa/GRR07Oxa
-   LKo1y/wOkkkmrQCl12Ry/eb+3J2vgQgMG4XniKELUWZ6NQs/ZgWxVq37q
-   g==;
-IronPort-SDR: Z7/KiS9Ox2HFjDsLLEjeiXJIly2FNDj9j6IPAK+YJKygL3U/bN22DK7Nx2U5WXkdeEYR3ZcOvF
- LAhRZcLbQWQ1n2vcHVs9qXj14AidpDdpF+2KeEFC6x7mayGvjaHcDNIgYHzb08Qvuii4DgqPOo
- NrspC0gYgEYjoaXaNmoh+geKaJ58If3UCIxR6Q/nN/8UAwQmOVcOnPQCezfpVR1cEUzKUtp33i
- /V+sB+Ma5jtD9AMQWoUc4Dfj26IGQ6KSw17DZRp+GJkH10zdcgl5YPDADWgBp5zXM8CnpPw/Nf
- AkM=
-X-IronPort-AV: E=Sophos;i="5.75,378,1589212800"; 
-   d="scan'208";a="144276373"
-Received: from mail-mw2nam10lp2100.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.100])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Jul 2020 19:15:52 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a6WFNB8MGHeaavQELzQE5Fypgbu0KG4f45hOrDv/QbVzZiPGHHZ9UdDs3lP9pn6iQoDeG5jcA7MVmgK1+y/ErsWInbRNXTIDoMIcFnYp0uY5SIBEiqMnzq325gFDNfrmocrXd8j/NY3tNWOac1pB6WgUDZwwGXre+mS+xZYVoJ/gqQA1hIbN4RiNBX40CsaxU++FJ2SReAnG75qnx0xZAgIgqlOqFtpi4oEixJ+p+/HxragDUHex6SqSVR/xuMOEm6g7lbE0n7ujxSDa3uQ+SWcAWfJUVQBKsIrnTKLFgnbOXdFTebMwCW5aZUsNq6jHE+p7NzwP363Im9SB0MIIlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VVZfXO9rM2yBDtJXvxSBOeJf3P2o9DP9XWZSD0j35wQ=;
- b=Pt3PbIyQdVn1WTAvlMwyC+4339I+A2scOF3wi/sreBNWM/vLURVAKWAf94GIB8yLObpGZFuIhKATR87wsYBGTcro26W3er3x8BoBmVlVL0T7h9sO+aRlwZ18IPTEW5YV6jewrPXQL3uWLvIE841oY67zTuE9iDCZhZRz3NppiJnwwL8XuHdH1zcnSGlzk9yBwcyH15R+JmU/Fef9BVrrPWrefTwj23p9vDc3owSIOT+QSB/P85iD9kKCg34Y3YLKRqdvQJNbnaYC+BI4upudOYz9YyE4ixdlUZtQmF1sShfWnriTRIHEuIYX+m1M5+ZWX/XEs7ZH74NSC7MpzgVDow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VVZfXO9rM2yBDtJXvxSBOeJf3P2o9DP9XWZSD0j35wQ=;
- b=LdgrahiGTqXLHcj7bUiTqleRjN7+gpiS6QRuggHMJ7gp47afuBwgR2z0a1E8+2fz/bTHMdThZG/4I7Omrn1WE/Mo9YbUk11WIqrdlN7JsFqWsYMGSSt6Ty1vsZwIZNIlzbY+ChiyuYC6uR7wsQ2NY8cV2egmGR7vBw5NctT2lOc=
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
- by CY4PR04MB0969.namprd04.prod.outlook.com (2603:10b6:910:55::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Tue, 21 Jul
- 2020 11:15:51 +0000
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::d9e5:135e:cfd9:4de0]) by CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::d9e5:135e:cfd9:4de0%7]) with mapi id 15.20.3195.025; Tue, 21 Jul 2020
- 11:15:51 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Maxim Levitsky <mlevitsk@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Keith Busch <kbusch@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
-        "open list:SCSI CDROM DRIVER" <linux-scsi@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Ajay Joshi <Ajay.Joshi@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "open list:SONY MEMORYSTICK SUBSYSTEM" <linux-mmc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Satya Tangirala <satyat@google.com>,
-        "open list:NETWORK BLOCK DEVICE (NBD)" <nbd@other.debian.org>,
-        Hou Tao <houtao1@huawei.com>, Jens Axboe <axboe@fb.com>,
-        "open list:VIRTIO CORE AND NET DRIVERS" 
-        <virtualization@lists.linux-foundation.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Alex Dubov <oakad@yahoo.com>
-Subject: Re: [PATCH 05/10] block: null: use blk_is_valid_logical_block_size
-Thread-Topic: [PATCH 05/10] block: null: use blk_is_valid_logical_block_size
-Thread-Index: AQHWX01Yw77hI9ihkECd8bf86hXuBg==
-Date:   Tue, 21 Jul 2020 11:15:51 +0000
-Message-ID: <CY4PR04MB3751882A6BDF7C073D6ECF88E7780@CY4PR04MB3751.namprd04.prod.outlook.com>
-References: <20200721105239.8270-1-mlevitsk@redhat.com>
- <20200721105239.8270-6-mlevitsk@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.182.57]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: afc79abe-6a75-4fc3-f163-08d82d676d79
-x-ms-traffictypediagnostic: CY4PR04MB0969:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR04MB09692931FB39FFDB52AF9B34E7780@CY4PR04MB0969.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kLnbJ8Ru8UyXyV2/SvIgpCeNGEjiTp1Xq88c70hXMv7sDWMu83psr4iuQIYYdIFtJQ4e3YJWhvgNMifD6HGoBSE5wrJ6mYsOv1oC/vfakuc4o6VDg6R+3dEenQcQCuDwPRjzibZsAJjbGiMw9RNjD7XaWbK86b32nGQ5Oj2KvfxUS9jW3T18wfD0A6IjB/F3nlJxPNA3OOrjcw1hIjgMZ2lA6HwL6iMIAL2ikv4wLNccP/DZOLAxmfpAmMh+A6Hwo8rARnM6QV/3sjr2QGcXYxtpiZ9MY6iaNanvs7X3bzgFeROg23XrtesivAX8ZpMDFP/ck8A5DMIC7KUlLgXCiw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(136003)(366004)(376002)(396003)(54906003)(316002)(110136005)(66476007)(9686003)(4326008)(186003)(26005)(71200400001)(76116006)(91956017)(66446008)(64756008)(66556008)(66946007)(52536014)(2906002)(6506007)(8676002)(55016002)(83380400001)(33656002)(5660300002)(478600001)(86362001)(7416002)(53546011)(8936002)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: GaPGQGDdib8G8c3JdLvgWdsUoaJDWQYPni9GIcbRnCR8j4rUxXimTFJiQd3irrRL9pBbbgt0KjR92LCzyKTaXJC3p+fQqIi0kB2T6nQ+KAcapiVwhxplBMf2xtpxs3ObAUnwc17OwciittGpPgW4XOFgUk91IBDKuzLGhEgI9H/2l+wHbHG/3zHm0e10XVR+l5nZ0iRccpLonEje7yiI7jg9/tsLaLCsxh4xc9mXFrwglI4jbjZVY32ENrJ5+HHRSQFquCybd82aLSgPlkmXfCryd5ZzkrQClYHsJ5oymllGOr52uOXf957r+/TLBmhxqYSbN68UIHQwEtXJyQxXvydm2dRegbBt8cxG2oPYlm2LkogUp6d0qTkfO1/x4GwDoS9eL8W9aigz1MG0EUKGkELxYozoTpw1Elj48MpnQIQWFH59V5szJYJ2Tf0dyzSS7VewD8hkzJz7rTc9q1h6LqetB6ViDy+dwy5ogNmQl+DVVslw/xmkkSZ7O7ZlKGbL
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 21 Jul 2020 07:11:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:3246 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbgGULLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 07:11:36 -0400
+IronPort-SDR: H5L8TR32KUrf10VKSNSTlfxE5Gg79xlwcFzNJ8JcGzIwIamFN4/X4tS7gNNeVwTV6+ONK+Bich
+ TUzyqRN9TiSQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="234959776"
+X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
+   d="scan'208";a="234959776"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 04:11:35 -0700
+IronPort-SDR: eklNAwX4xWa+9uK/DjjxV7jmUyfXgBiKZgwXNgmcV3R2Vlihi5bPxlI98Iu6ftHwdsVO90hK+z
+ PkhIDpZNjyMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
+   d="scan'208";a="310208520"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 21 Jul 2020 04:11:32 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+        id 0EE49FC; Tue, 21 Jul 2020 14:11:31 +0300 (EEST)
+Date:   Tue, 21 Jul 2020 14:11:31 +0300
+From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     syzbot <syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com,
+        Matthew Wilcox <willy@infradead.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        David Hildenbrand <david@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: kernel BUG at include/linux/swapops.h:LINE!
+Message-ID: <20200721111131.bo3g6qkcvbhpupon@black.fi.intel.com>
+References: <000000000000bc4fd705a6e090e2@google.com>
+ <0000000000004c38cd05aad1d13f@google.com>
+ <20200720165144.93189f7825bd28e234a42cb8@linux-foundation.org>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR04MB3751.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: afc79abe-6a75-4fc3-f163-08d82d676d79
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 11:15:51.2365
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +u7VYWbUdOY2dzOt08hBMUAqqwn0bPnpGlZFX6nFC3QNsmVRmhJrfSW6EUFmEHQli485XiQ3KH6d2WVF0sj3LQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB0969
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720165144.93189f7825bd28e234a42cb8@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/21 19:54, Maxim Levitsky wrote:=0A=
-> This slightly changes the behavier of the driver,=0A=
-=0A=
-s/behavier/behavior=0A=
-=0A=
-> when given invalid block size (non power of two, or below 512 bytes),=0A=
-> but shoudn't matter.=0A=
-> =0A=
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>=0A=
-> ---=0A=
->  drivers/block/null_blk_main.c | 6 +++---=0A=
->  1 file changed, 3 insertions(+), 3 deletions(-)=0A=
-> =0A=
-> diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.=
-c=0A=
-> index 87b31f9ca362e..e4df4b903b90b 100644=0A=
-> --- a/drivers/block/null_blk_main.c=0A=
-> +++ b/drivers/block/null_blk_main.c=0A=
-> @@ -1684,8 +1684,8 @@ static int null_init_tag_set(struct nullb *nullb, s=
-truct blk_mq_tag_set *set)=0A=
->  =0A=
->  static int null_validate_conf(struct nullb_device *dev)=0A=
->  {=0A=
-> -	dev->blocksize =3D round_down(dev->blocksize, 512);=0A=
-> -	dev->blocksize =3D clamp_t(unsigned int, dev->blocksize, 512, 4096);=0A=
-> +	if (!blk_is_valid_logical_block_size(dev->blocksize))=0A=
-> +		return -ENODEV;=0A=
->  =0A=
->  	if (dev->queue_mode =3D=3D NULL_Q_MQ && dev->use_per_node_hctx) {=0A=
->  		if (dev->submit_queues !=3D nr_online_nodes)=0A=
-> @@ -1865,7 +1865,7 @@ static int __init null_init(void)=0A=
->  	struct nullb *nullb;=0A=
->  	struct nullb_device *dev;=0A=
->  =0A=
-> -	if (g_bs > PAGE_SIZE) {=0A=
-> +	if (!blk_is_valid_logical_block_size(g_bs)) {=0A=
->  		pr_warn("invalid block size\n");=0A=
->  		pr_warn("defaults block size to %lu\n", PAGE_SIZE);=0A=
->  		g_bs =3D PAGE_SIZE;=0A=
-=0A=
-Not sure if this change is OK. Shouldn't the if here be kept as is and=0A=
-blk_is_valid_logical_block_size() called after it to check values lower tha=
-n 4K ?=0A=
-=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+On Mon, Jul 20, 2020 at 04:51:44PM -0700, Andrew Morton wrote:
+> On Sun, 19 Jul 2020 14:10:19 -0700 syzbot <syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com> wrote:
+> 
+> > syzbot has found a reproducer for the following issue on:
+> > 
+> > HEAD commit:    4c43049f Add linux-next specific files for 20200716
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=12c56087100000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=2c76d72659687242
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=c48f34012b06c4ac67dd
+> > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1344abeb100000
+> > 
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com
+> 
+> Thanks.
+> 
+> __handle_mm_fault
+>   ->pmd_migration_entry_wait
+>     ->migration_entry_to_page
+> 
+> stumbled onto an unlocked page.
+> 
+> I don't immediately see a cause.  Perhaps Matthew's "THP prep patches",
+> perhaps something else.
+> 
+> Is it possible to perform a bisection?
+
+Maybe it's related to the new lock_page_async()?
+
+> > ------------[ cut here ]------------
+> > kernel BUG at include/linux/swapops.h:197!
+> > invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+> > CPU: 1 PID: 19938 Comm: syz-executor.2 Not tainted 5.8.0-rc5-next-20200716-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > RIP: 0010:migration_entry_to_page include/linux/swapops.h:197 [inline]
+> > RIP: 0010:migration_entry_to_page include/linux/swapops.h:190 [inline]
+> > RIP: 0010:pmd_migration_entry_wait+0x493/0x520 mm/migrate.c:368
+> > Code: 4d 8d 66 ff e9 1f fe ff ff e8 b9 c4 be ff 49 8d 5f ff e9 58 fe ff ff e8 ab c4 be ff 4d 8d 66 ff e9 a9 fe ff ff e8 9d c4 be ff <0f> 0b e8 96 c4 be ff 0f 0b e8 8f c4 be ff 4c 8d 65 ff eb a7 48 89
+> > RSP: 0018:ffffc9001095fb70 EFLAGS: 00010293
+> > RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff81b56a24
+> > RDX: ffff888092022240 RSI: ffffffff81b56b43 RDI: 0000000000000001
+> > RBP: ffffea0008468080 R08: 0000000000000000 R09: ffffea0008468087
+> > R10: 0000000000000000 R11: 0000000000000000 R12: ffffea0008468080
+> > R13: ffff888015d2e0c0 R14: 0000000000000000 R15: 0000000000000000
+> > FS:  00007f55eb477700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 0000000020000080 CR3: 000000021ad87000 CR4: 00000000001526e0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >  __handle_mm_fault mm/memory.c:4349 [inline]
+> >  handle_mm_fault+0x23cf/0x45e0 mm/memory.c:4465
+> >  do_user_addr_fault+0x598/0xbf0 arch/x86/mm/fault.c:1294
+> >  handle_page_fault arch/x86/mm/fault.c:1351 [inline]
+> >  exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1404
+> >  asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:544
+> > RIP: 0010:copy_user_generic_unrolled+0x89/0xc0 arch/x86/lib/copy_user_64.S:91
+> > Code: 38 4c 89 47 20 4c 89 4f 28 4c 89 57 30 4c 89 5f 38 48 8d 76 40 48 8d 7f 40 ff c9 75 b6 89 d1 83 e2 07 c1 e9 03 74 12 4c 8b 06 <4c> 89 07 48 8d 76 08 48 8d 7f 08 ff c9 75 ee 21 d2 74 10 89 d1 8a
+> > RSP: 0018:ffffc9001095fe48 EFLAGS: 00010202
+> > RAX: 0000000000000001 RBX: 0000000020000080 RCX: 0000000000000001
+> > RDX: 0000000000000000 RSI: ffffc9001095fea8 RDI: 0000000020000080
+> > RBP: ffffc9001095fea8 R08: 0000000400000003 R09: ffffc9001095feaf
+> > R10: fffff5200212bfd5 R11: 0000000000000000 R12: 0000000000000008
+> > R13: 0000000020000088 R14: 00007ffffffff000 R15: 0000000000000000
+> >  copy_user_generic arch/x86/include/asm/uaccess_64.h:37 [inline]
+> >  raw_copy_to_user arch/x86/include/asm/uaccess_64.h:74 [inline]
+> >  _copy_to_user+0x11e/0x160 lib/usercopy.c:30
+> >  copy_to_user include/linux/uaccess.h:168 [inline]
+> >  do_pipe2+0x128/0x1b0 fs/pipe.c:1014
+> >  __do_sys_pipe fs/pipe.c:1035 [inline]
+> >  __se_sys_pipe fs/pipe.c:1033 [inline]
+> >  __x64_sys_pipe+0x2f/0x40 fs/pipe.c:1033
+> >  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > RIP: 0033:0x45c1d9
+> > Code: Bad RIP value.
+> > RSP: 002b:00007f55eb476c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000016
+> > RAX: ffffffffffffffda RBX: 0000000000022ac0 RCX: 000000000045c1d9
+> > RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000080
+> > RBP: 000000000078c070 R08: 0000000000000000 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078c04c
+> > R13: 00007ffcfc120ecf R14: 00007f55eb4779c0 R15: 000000000078c04c
+> > Modules linked in:
+> > ---[ end trace ea73d933d66ff0d4 ]---
+> > RIP: 0010:migration_entry_to_page include/linux/swapops.h:197 [inline]
+> > RIP: 0010:migration_entry_to_page include/linux/swapops.h:190 [inline]
+> > RIP: 0010:pmd_migration_entry_wait+0x493/0x520 mm/migrate.c:368
+> > Code: 4d 8d 66 ff e9 1f fe ff ff e8 b9 c4 be ff 49 8d 5f ff e9 58 fe ff ff e8 ab c4 be ff 4d 8d 66 ff e9 a9 fe ff ff e8 9d c4 be ff <0f> 0b e8 96 c4 be ff 0f 0b e8 8f c4 be ff 4c 8d 65 ff eb a7 48 89
+> > RSP: 0018:ffffc9001095fb70 EFLAGS: 00010293
+> > RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff81b56a24
+> > RDX: ffff888092022240 RSI: ffffffff81b56b43 RDI: 0000000000000001
+> > RBP: ffffea0008468080 R08: 0000000000000000 R09: ffffea0008468087
+> > R10: 0000000000000000 R11: 0000000000000000 R12: ffffea0008468080
+> > R13: ffff888015d2e0c0 R14: 0000000000000000 R15: 0000000000000000
+> > FS:  00007f55eb477700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 0000000020000080 CR3: 000000021ad87000 CR4: 00000000001526e0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > 
+
+-- 
+ Kirill A. Shutemov
