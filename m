@@ -2,198 +2,111 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7ABC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE0AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1653A20729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YOUL4cnK"
+	by mail.kernel.org (Postfix) with ESMTP id 93C532068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731235AbgGUVgI (ORCPT
+        id S1731194AbgGUViG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:36:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731137AbgGUVgH (ORCPT
+        Tue, 21 Jul 2020 17:38:06 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55580 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726658AbgGUViG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:36:07 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21993C0619DC
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:36:07 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mn17so60371pjb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:36:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QnFBaTSg1O0oHUaCso2bk1qAOV9FQ15i24q2Wj9c11M=;
-        b=YOUL4cnKo2x3TaJ+BAr/95ETT6x9gObK2WQYwFGJgK/9RUBdjb9MfbaMiHffHRHyKC
-         LGPxmxmDr3JtJgytD9mZPSCsbbH8QO2j0gNH8SXz+CGy6SykntBW6W3e46GhrYKLD/as
-         8vk+cPDlyjlX5x6BntZR1v6ykrBCcA+fBZIkA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QnFBaTSg1O0oHUaCso2bk1qAOV9FQ15i24q2Wj9c11M=;
-        b=fy3qVspL3+h6XhsCBfdzCsgGdwkXhhMTc1vqz5Zu4TePz81e8UO3oIfSvuvlZrzFcR
-         URajGFg9LURcMIwV/lbv2YcFEWpdlvthTxXHxx35pppNOp4c6GqF6RB1wJFarkVdG1vw
-         /lrfSyvJS7zjfF4rpOU456g29j8ROeNtSa28VxjWiPgx5MSI1CrytL9b6GUxEfLcAXyX
-         CNxKFxCSPJdojYlQOde6syM9QsQbWOt4X8GxyLAN4S48S8pQ9xRPXQVy0ToqKqKbhCM5
-         gUre9fFNgHNbdmNDziw3OmnYe1H1BXHp6H693X1G0ulsOiXZ20NngLMv0EuxL0PRQzDo
-         9nkA==
-X-Gm-Message-State: AOAM532Accky+aPuYKFIxUEXqhg7zOn2FIIzCOZICp80WRMIp/NmZEg2
-        gHT3O5WCqh7/HNkrs24yEJqRGw==
-X-Google-Smtp-Source: ABdhPJwTp73CGx2NZOG1F3slWn6h4XRPSmBMoPPr4bTFkCrHZLbZxCeKsBovc096clKCXXQIzGNjEA==
-X-Received: by 2002:a17:902:7c8b:: with SMTP id y11mr10339693pll.142.1595367366620;
-        Tue, 21 Jul 2020 14:36:06 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id b4sm21711441pfo.137.2020.07.21.14.36.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 14:36:05 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 14:36:04 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v2 1/3] usb: dwc3: core: Host wake up support from system
- suspend
-Message-ID: <20200721213604.GW3191083@google.com>
-References: <1594235417-23066-1-git-send-email-sanm@codeaurora.org>
- <1594235417-23066-2-git-send-email-sanm@codeaurora.org>
+        Tue, 21 Jul 2020 17:38:06 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LLXDjQ176851;
+        Tue, 21 Jul 2020 17:37:47 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1yabx0s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 17:37:47 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LLb3AG026274;
+        Tue, 21 Jul 2020 21:37:45 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03fra.de.ibm.com with ESMTP id 32brq826r5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 21:37:45 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LLbg3G64094472
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jul 2020 21:37:42 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4B93A4C044;
+        Tue, 21 Jul 2020 21:37:42 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6E2D84C040;
+        Tue, 21 Jul 2020 21:37:39 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.163.39.1])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 21 Jul 2020 21:37:39 +0000 (GMT)
+Date:   Tue, 21 Jul 2020 14:37:36 -0700
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, mpe@ellerman.id.au, paulus@samba.org,
+        sukadev@linux.ibm.com, bauerman@linux.ibm.com,
+        bharata@linux.ibm.com, Paul Mackerras <paulus@ozlabs.org>
+Subject: Re: [PATCH v2 2/2] KVM: PPC: Book3S HV: rework secure mem slot
+ dropping
+Message-ID: <20200721213736.GG7339@oc0525413822.ibm.com>
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <20200721104202.15727-1-ldufour@linux.ibm.com>
+ <20200721104202.15727-3-ldufour@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594235417-23066-2-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <20200721104202.15727-3-ldufour@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_15:2020-07-21,2020-07-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 bulkscore=0 adultscore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 mlxlogscore=328 phishscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007210138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sandeep,
-
-On Thu, Jul 09, 2020 at 12:40:15AM +0530, Sandeep Maheswaram wrote:
-> Avoiding phy powerdown in host mode so that it can be wake up by devices.
-> Added need_phy_for_wakeup flag to distinugush resume path and hs_phy_flags
-> to check connection status and set phy mode and  configure interrupts.
+On Tue, Jul 21, 2020 at 12:42:02PM +0200, Laurent Dufour wrote:
+> When a secure memslot is dropped, all the pages backed in the secure device
+> (aka really backed by secure memory by the Ultravisor) should be paged out
+> to a normal page. Previously, this was achieved by triggering the page
+> fault mechanism which is calling kvmppc_svm_page_out() on each pages.
 > 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  drivers/usb/dwc3/core.c | 47 ++++++++++++++++++++++++++++++++++++++++-------
->  drivers/usb/dwc3/core.h |  2 ++
->  2 files changed, 42 insertions(+), 7 deletions(-)
+> This can't work when hot unplugging a memory slot because the memory slot
+> is flagged as invalid and gfn_to_pfn() is then not trying to access the
+> page, so the page fault mechanism is not triggered.
 > 
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 25c686a7..eb7c225 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -31,12 +31,14 @@
->  #include <linux/usb/gadget.h>
->  #include <linux/usb/of.h>
->  #include <linux/usb/otg.h>
-> +#include <linux/usb/hcd.h>
->  
->  #include "core.h"
->  #include "gadget.h"
->  #include "io.h"
->  
->  #include "debug.h"
-> +#include "../host/xhci.h"
->  
->  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY	5000 /* ms */
->  
-> @@ -1627,10 +1629,36 @@ static int dwc3_core_init_for_resume(struct dwc3 *dwc)
->  	return ret;
->  }
->  
-> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
-> +{
-> +
-> +	int i, num_ports;
-> +	u32 reg;
-> +	struct usb_hcd	*hcd = platform_get_drvdata(dwc->xhci);
-> +	struct xhci_hcd	*xhci_hcd = hcd_to_xhci(hcd);
-> +
-> +	dwc->hs_phy_flags &= ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST_LS);
+> Since the final goal is to make a call to kvmppc_svm_page_out() it seems
+> simpler to directly calling it instead of triggering such a mechanism. This
+            ^^ call directly instead of triggering..
 
-Where is hs_phy_flags initialized? As far as I can tell it isn't, hence when
-dwc3_set_phy_speed_flags() is executed the first time it is 0 (from
-devm_kzalloc()), and after the '&=' it is still 0. The next time it will have
-whatever value it was set to in the below loop, which is then cleared by
-the '&='. It seems you could as well just write 'dwc->hs_phy_flags = 0',
-which is clearer, unless the field is used in some other way that isn't
-obvious to me.
+> way kvmppc_uvmem_drop_pages() can be called even when hot unplugging a
+> memslot.
+> 
+> Since kvmppc_uvmem_drop_pages() is already holding kvm->arch.uvmem_lock,
+> the call to __kvmppc_svm_page_out() is made.
+> As __kvmppc_svm_page_out needs the vma pointer to migrate the pages, the
+> VMA is fetched in a lazy way, to not trigger find_vma() all the time. In
+> addition, the mmap_sem is help in read mode during that time, not in write
+		          ^^ held
 
-> +
-> +	reg = readl(&xhci_hcd->cap_regs->hcs_params1);
-> +
-> +	num_ports = HCS_MAX_PORTS(reg);
-> +	for (i = 0; i < num_ports; i++) {
-> +		reg = readl(&xhci_hcd->op_regs->port_status_base + i * 0x04);
-> +		if (reg & PORT_PE) {
-> +			if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
-> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_HS;
-> +			else if (DEV_LOWSPEED(reg))
-> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_LS;
+> mode since the virual memory layout is not impacted, and
+> kvm->arch.uvmem_lock prevents concurrent operation on the secure device.
+> 
+> Cc: Ram Pai <linuxram@us.ibm.com>
 
-Is another entry for DEV_SUPERSPEED needed?
+Reviewed-by: Ram Pai <linuxram@us.ibm.com>
 
-> +		}
-> +	}
-> +	phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
-> +}
-> +
->  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
->  {
->  	unsigned long	flags;
->  	u32 reg;
-> +	struct usb_hcd  *hcd = platform_get_drvdata(dwc->xhci);
->  
->  	switch (dwc->current_dr_role) {
->  	case DWC3_GCTL_PRTCAP_DEVICE:
-> @@ -1643,9 +1671,12 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
->  		dwc3_core_exit(dwc);
->  		break;
->  	case DWC3_GCTL_PRTCAP_HOST:
-> +		dwc3_set_phy_speed_flags(dwc);
->  		if (!PMSG_IS_AUTO(msg)) {
-> -			dwc3_core_exit(dwc);
-> -			break;
-> +			if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
-> +				dwc->need_phy_for_wakeup = true;
-> +			else
-> +				dwc->need_phy_for_wakeup = false;
->  		}
->  
->  		/* Let controller to suspend HSPHY before PHY driver suspends */
-> @@ -1705,11 +1736,13 @@ static int dwc3_resume_common(struct dwc3 *dwc, pm_message_t msg)
->  		break;
->  	case DWC3_GCTL_PRTCAP_HOST:
->  		if (!PMSG_IS_AUTO(msg)) {
-> -			ret = dwc3_core_init_for_resume(dwc);
-> -			if (ret)
-> -				return ret;
-> -			dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
-> -			break;
-> +			if (!dwc->need_phy_for_wakeup) {
-> +				ret = dwc3_core_init_for_resume(dwc);
-
-Before this patch we had the combo dwc3_core_exit() / dwc3_core_init_for_resume(),
-now it is only dwc3_core_init_for_resume() for !dwc->need_phy_for_wakeup.
-Doesn't this cause trouble with enable counts, e.g. with clk_bulk_prepare_enable()
-being called in dwc3_core_init_for_resume(), without the corresponding
-clk_bulk_disable_unprepare() calls in dwc3_core_exit()?
+RP
