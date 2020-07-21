@@ -2,156 +2,507 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D94C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05CF020729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D7BC20729
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QNYey62l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U1LNenS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbgGUJ7V (ORCPT
+        id S1729113AbgGUJ7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:59:21 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36578 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726415AbgGUJ7V (ORCPT
+        Tue, 21 Jul 2020 05:59:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgGUJ73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:59:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595325559;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=HF1GMmSc5LpkBXsm5drusm1HosH0VBdWe82zxcCvGaI=;
-        b=QNYey62laMm+JlDMY7855qklERLnGLwD8k/PZ8hiKSdBAoqPxUl65fJ8QtF9EJQoMXz7H9
-        IEiO55xuNxR8BqNM+5ZYgtbbZoG8PifoOTyn40r53UKPisCZP18J9Out/AUFUPnB6h3ZUY
-        S2wflwVsgCbRnCGtRB03Tyjw2CDWIJ0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-349-Tkb4H9bWNmKQBOJLZlvMAw-1; Tue, 21 Jul 2020 05:59:15 -0400
-X-MC-Unique: Tkb4H9bWNmKQBOJLZlvMAw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A1401009444;
-        Tue, 21 Jul 2020 09:59:14 +0000 (UTC)
-Received: from [10.36.113.158] (ovpn-113-158.ams2.redhat.com [10.36.113.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9822E10013C1;
-        Tue, 21 Jul 2020 09:59:09 +0000 (UTC)
-Subject: Re: [PATCH v1 0/6] mm / virtio-mem: support ZONE_MOVABLE
-To:     linux-kernel@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>
-References: <20200630142639.22770-1-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <cbf39311-6992-84ee-725a-5c738f6afb9e@redhat.com>
-Date:   Tue, 21 Jul 2020 11:59:08 +0200
+        Tue, 21 Jul 2020 05:59:29 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECFC1C061794;
+        Tue, 21 Jul 2020 02:59:28 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z2so20618870wrp.2;
+        Tue, 21 Jul 2020 02:59:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=auzhEAh6hyvNX7w9Z/V0K/XEQ9JPAAZZtsNVziQZRYg=;
+        b=U1LNenS4lyuBWpNzmqCzKPn/+KhiqyvpnfaWVW6CifpqL8ZJ1LeQ0DGPRWAPSsOC5m
+         iLqxzMBPA5hjxUrWa0EP52fVisGz2vJ7rO2pdWaRg+6MMcKa2wC4Guq1tI33tn7yI7he
+         QvJbC+8uDbu1jeUYvwXkCDMw+toazCxIFb+b0w0Ywsi17DAOd7UXrv6OiU7677IURpw/
+         tvheqNNmpvPiZ1eJt637wvrN/sdyVqixu7CZxF0E/e/YD/KpR7LsmwByN0YpWkL/nGAC
+         BcJh6YTSoK+MLUBBkWec8/+1DDM+Td8SHuqGYV/hXadJuD5MRwuM2DjkGuNkVcPeGbhF
+         RKAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=auzhEAh6hyvNX7w9Z/V0K/XEQ9JPAAZZtsNVziQZRYg=;
+        b=k6EzuPyTExEhjKSMLlPfio6xUI/ckFOpIFOwDeo4cQqd5lH5x6bgWgETon1bNHpMqt
+         xsJTdaHsNvaXjvupM3FKe26m3iiZj10rQSWlq5UKpzvV7BGNIXiDtQCOkjsAPoPVFJhe
+         Cv/T44cyA2TR+5mlfuWom1Sw/kNnA2GdKih420Be6L1uxX4Ic7dA+pLZpvY7a/oMlweH
+         hM7uG6aic89DGkX2LGQbVYt7ttX+dZX2jUym8Aowjl344Ijpha36T1mUeDAJ7Jkkzn/p
+         KOF9VMVUlbM8xGvmFc9LV8Z334bR7hpdDpmrrgEQOR9PpvGJ0ZEJCP1gUZ3OV5EY5VqQ
+         aAMQ==
+X-Gm-Message-State: AOAM533X2b0wxMMdPLpOX1A4pVnJMTs0PSGJi2PztVqIdGxbVnuoeDjv
+        KEwh0skoBX4ewES16DYuYnvzRdVa
+X-Google-Smtp-Source: ABdhPJyzorw1N/0QePArm0/det6rXCQC8UW72UdPZIxvQHoTZyAVxwL5NPw71JdJBoVtpMWtUr8/yA==
+X-Received: by 2002:adf:f74f:: with SMTP id z15mr24424282wrp.233.1595325567165;
+        Tue, 21 Jul 2020 02:59:27 -0700 (PDT)
+Received: from ?IPv6:2001:a61:3adb:8201:9649:88f:51f8:6a21? ([2001:a61:3adb:8201:9649:88f:51f8:6a21])
+        by smtp.gmail.com with ESMTPSA id n14sm36272362wro.81.2020.07.21.02.59.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 02:59:26 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH] mount_setattr.2: New manual page documenting the
+ mount_setattr() system call
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+References: <20200714161415.3886463-1-christian.brauner@ubuntu.com>
+ <20200714161415.3886463-2-christian.brauner@ubuntu.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <450635a6-3bf4-4f5a-2eb2-9e477490483d@gmail.com>
+Date:   Tue, 21 Jul 2020 11:59:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200630142639.22770-1-david@redhat.com>
+In-Reply-To: <20200714161415.3886463-2-christian.brauner@ubuntu.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.06.20 16:26, David Hildenbrand wrote:
-> Currently, virtio-mem does not really support ZONE_MOVABLE. While it allows
-> to online fully plugged memory blocks to ZONE_MOVABLE, it does not allow
-> to online partially-plugged memory blocks to ZONE_MOVABLE and will never
-> consider such memory blocks when unplugging memory. This might be
-> surprising for users (especially, if onlining suddenly fails).
-> 
-> Let's support partially plugged memory blocks in ZONE_MOVABLE, allowing
-> partially plugged memory blocks to be online to ZONE_MOVABLE and also
-> unplugging from such memory blocks.
-> 
-> This is especially helpful for testing, but also paves the way for
-> virtio-mem optimizations, allowing more memory to get reliably unplugged.
-> 
-> Cleanup has_unmovable_pages() and set_migratetype_isolate(), providing
-> better documentation of how ZONE_MOVABLE interacts with different kind of
-> unmovable pages (memory offlining vs. alloc_contig_range()).
-> 
-> David Hildenbrand (6):
->   mm/page_alloc: tweak comments in has_unmovable_pages()
->   mm/page_isolation: don't dump_page(NULL) in set_migratetype_isolate()
->   mm/page_isolation: drop WARN_ON_ONCE() in set_migratetype_isolate()
->   mm/page_isolation: cleanup set_migratetype_isolate()
->   mm/page_alloc: restrict ZONE_MOVABLE optimization in
->     has_unmovable_pages() to memory offlining
->   virtio-mem: don't special-case ZONE_MOVABLE
-> 
->  drivers/virtio/virtio_mem.c | 47 +++++++------------------------------
->  mm/page_alloc.c             | 29 +++++++++--------------
->  mm/page_isolation.c         | 40 ++++++++++++++-----------------
->  3 files changed, 36 insertions(+), 80 deletions(-)
-> 
+Hello Christian,
 
+Thanks for writing this manual page. A few comments below.
 
-Gentle ping, patch #1-#5 should be easy to review.
+On 7/14/20 6:14 PM, Christian Brauner wrote:
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> ---
+>  man2/mount_setattr.2 | 296 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 296 insertions(+)
+>  create mode 100644 man2/mount_setattr.2
+> 
+> diff --git a/man2/mount_setattr.2 b/man2/mount_setattr.2
+> new file mode 100644
+> index 000000000..aae10525e
+> --- /dev/null
+> +++ b/man2/mount_setattr.2
+> @@ -0,0 +1,296 @@
+> +.\" Copyright (c) 2020 by Christian Brauner <christian.brauner@ubuntu.com>
+> +.\"
+> +.\" %%%LICENSE_START(VERBATIM)
+> +.\" Permission is granted to make and distribute verbatim copies of this
+> +.\" manual provided the copyright notice and this permission notice are
+> +.\" preserved on all copies.
+> +.\"
+> +.\" Permission is granted to copy and distribute modified versions of this
+> +.\" manual under the conditions for verbatim copying, provided that the
+> +.\" entire resulting derived work is distributed under the terms of a
+> +.\" permission notice identical to this one.
+> +.\"
+> +.\" Since the Linux kernel and libraries are constantly changing, this
+> +.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+> +.\" responsibility for errors or omissions, or for damages resulting from
+> +.\" the use of the information contained herein.  The author(s) may not
+> +.\" have taken the same level of care in the production of this manual,
+> +.\" which is licensed free of charge, as they might when working
+> +.\" professionally.
+> +.\"
+> +.\" Formatted or processed versions of this manual, if unaccompanied by
+> +.\" the source, must acknowledge the copyright and authors of this work.
+> +.\" %%%LICENSE_END
+> +.\"
+> +.TH MOUNT_SETATTR 2 2020-07-14 "Linux" "Linux Programmer's Manual"
+> +.SH NAME
+> +mount_setattr \- change mount options of a mount or mount tree
+> +.SH SYNOPSIS
+> +.nf
+> +.BI "int mount_setattr(int " dfd ", const char *" path ", unsigned int " flags ,
+> +.BI "                  struct mount_attr *" attr ", size_t " size );
+> +.fi
+> +.PP
+> +.IR Note :
+> +There is no glibc wrapper for this system call; see NOTES.
+> +.SH DESCRIPTION
+> +The
+> +.BR mount_setattr ()
+> +system call changes the mount properties of a mount or whole mount tree.
 
--- 
+You jump over a point between this sentence and the next. I suggest:
+
+s/of a mount or whole mount tree
+ /a mount or a whole mount tree whose location is specified
+  by the dirfd and path arguments/
+
+Seem okay?
+
+> +If
+> +.I path
+> +is a relative pathname, then it is interpreted relative to the directory
+> +referred to by the file descriptor
+> +.I dirfd
+> +(or the current working directory of the calling process, if
+> +.I dirfd
+> +is the special value
+> +.BR AT_FDCWD ).
+> +If
+> +.BR AT_EMPTY_PATH
+> +is specified in
+> +.I flags
+
+s/$/,/
+
+> +then the mount properties of the mount identified by
+> +.I dirfd
+> +are changed.
+> +.PP
+> +The
+> +.I flags
+> +argument can be used to alter the path resolution behavior. The supported
+> +values are:
+> +.TP
+> +.in +4n
+> +.B AT_EMPTY_PATH
+> +.in +4n
+> +The mount properties of the mount identified by
+> +.I dfd
+> +are changed.
+> +.TP
+> +.in +4n
+> +.B AT_RECURSIVE
+> +.in +4n
+> +Change the mount properties of the whole mount tree.
+> +.TP
+> +.in +4n
+> +.B AT_SYMLINK_NOFOLLOW
+> +.in +4n
+> +Don't follow trailing symlinks.
+> +.TP
+> +.in +4n
+> +.B AT_NO_AUTOMOUNT
+> +.in +4n
+> +Don't trigger automounts.
+> +.PP
+> +The
+> +.I attr
+> +argument of
+> +.BR mount_setattr ()
+> +is a structure of the following form:
+> +.PP
+> +.in +4n
+> +.EX
+> +struct mount_attr {
+> +    u64 attr_set;    /* Mount properties to set. */
+> +    u64 attr_clr;    /* Mount properties to clear. */
+> +    u32 propagation; /* Mount propagation type. */
+> +    u32 atime;       /* Access time settings. */
+> +};
+> +.EE
+> +.in
+> +.PP
+> +The
+> +.I attr_set
+> +and
+> +.I attr_clr
+> +members are used to specify the mount options that are supposed to be set or
+> +cleared for a given mount or mount tree. The following mount attributes can be
+> +specified in the
+> +.I attr_set
+> +and
+> +.I attr_clear
+> +fields:
+> +.TP
+> +.in +4n
+> +.B MOUNT_ATTR_RDONLY
+> +.in +4n
+> +If set in
+> +.I attr_set
+
+s/$/,/
+
+> +makes the mount read only and if set in
+
+s/makes/make/
+(and similar below)
+
+> +.I attr_clr
+> +removes the read only setting if set on the mount.
+
+s/removes/remove/
+(and similar below)
+
+> +.TP
+> +.in +4n
+> +.B MOUNT_ATTR_NOSUID
+> +.in +4n
+> +If set in
+> +.I attr_set
+
+s/$/,/
+
+> +makes the mount not honor set-user-ID and set-group-ID bits or file capabilities
+> +when executing programs
+> +and if set in
+> +.I attr_clr
+> +clears the set-user-ID, set-group-ID bits, file capability restriction if set on
+> +this mount.
+> +.TP
+> +.in +4n
+> +.B MOUNT_ATTR_NODEV
+> +.in +4n
+> +If set in
+> +.I attr_set
+
+s/$/,/
+
+> +prevents access to devices on this mount
+
+s/prevents/prevent/
+(and similar below)
+
+> +and if set in
+> +.I attr_clr
+> +removes the device access restriction if set on this mount.
+> +.TP
+> +.in +4n
+> +.B MOUNT_ATTR_NOEXEC
+> +.in +4n
+> +If set in
+> +.I attr_set
+> +prevents executing programs on this mount
+> +and if set in
+> +.I attr_clr
+> +removes the restriction to execute programs on this mount.
+> +.TP
+> +.in +4n
+> +.B MOUNT_ATTR_NODIRATIME
+> +.in +4n
+> +If set in
+> +.I attr_set
+> +prevents updating access time for directories on this mount
+> +and if set in
+> +.I attr_clr
+> +removes access time restriction for directories. Note that
+> +.I MOUNT_ATTR_NODIRATIME
+
+s/.I/.B/
+
+> +can be combined with other access time settings and is implied
+> +by the noatime setting. All other access time settins are mutually
+
+s/settins/settings/
+
+> +exclusive.
+> +.PP
+> +The
+> +.I propagation
+> +member is used to specify the propagation type of the mount or mount tree.
+> +The supported mount propagation settings are:
+> +.TP
+> +.in +4n
+> +.B MAKE_PROPAGATION_PRIVATE
+> +.in +4n
+> +Turn all mounts into private mounts. Mount and umount events do not propagate
+
+Since it may be one or many mounts, I suggest:
+
+s/Turn all mounts into private mounts
+ /Make the mount(s) private/
+
+And similar changes below.
+
+And: s/umount/unmount/
+
+> +into or out of this mount point.
+> +.TP
+> +.in +4n
+> +.B MAKE_PROPAGATION_SHARED
+
+These names seem rather verbose. Does the "MAKE_" prefix really add value?
+What about using just "PROPAGATION_SHARED" and so on?
+
+And then: is there a reason not to use the MS_ constants already used by
+mount(2): MS_SHARED, MS_PRIVATE, etc. I appreciate that those constants
+have "odd" values, dictated by the fact that the 'mountflags' argument
+of mount(2) is used for many other bits. But, is there harm in simply
+reusing the same values and names? (But see my note below before
+answering.)
+
+> +.in +4n
+> +Turn all mounts into shared mounts. Mount points share events with members of a
+> +peer group. Mount and unmount events immediately under this mount point
+> +will propagate to the other mount points that are members of the peer group.
+> +Propagation here means that the same mount or unmount will automatically occur
+> +under all of the other mount points in the peer group. Conversely, mount and
+> +unmount events that take place under peer mount points will propagate to this
+> +mount point.
+> +.TP
+> +.in +4n
+> +.B MAKE_PROPAGATION_DEPENDENT
+
+Okay -- maybe this is the answer to my question above.
+
+I applaud the move to change the problematic language. Is this name
+("DEPENDENT") your invention and/or is there an intent to to propagate this
+this language change into any existing parts of the API (e.g., MS_DEPENDENT
+as a synonym for MS_SLAVE)? I think it might be useful to add a sentence 
+along the lines of:
+
+"This flag is the equivalent of the (unfortunately named) mount(2) 
+MS_SLAVE flag."
+
+Just so that the reader can see the equivalence.
+
+> +.in +4n
+> +Turn all mounts into dependent mounts. Mount and unmount events propagate into
+> +this mount point from a shared  peer group. Mount and unmount events under this
+> +mount point do not propagate to any peer.
+> +.TP
+> +.in +4n
+> +.B MAKE_PROPAGATION_UNBINDABLE
+> +.in +4n
+
+Add: "Make the mount(s) unbindable."
+
+> +This is like a private mount, and in addition this mount can't be bind mounted.
+> +Attempts to bind mount this mount will fail.
+> +When a recursive bind mount is performed on a directory subtree, any bind
+> +mounts within the subtree are automatically pruned (i.e., not replicated) when
+> +replicating that subtree to produce the target subtree.
+> +.PP
+> +The
+> +.I atime
+> +member is used to specify the access time behavior on a mount or mount tree.
+
+Somewhere around here, I think it would be good to add a sentence or two to 
+explain why the 'atime' field exists in addition to the 'attr_set' and
+'attr_clr' fields.
+
+That said, looking at another mail in this discussion, is 'atime'
+going away?
+
+> +The supported access times settings are:
+> +.TP
+> +.in +4n
+> +.B MAKE_ATIME_RELATIVE
+> +.in +4n
+> +When a file on is accessed via this mount, update the file's last access time
+> +(atime) only if the current value of atime is less than or equal to the file's
+> +last modification time (mtime) or last status change time (ctime).
+> +.TP
+> +.in +4n
+> +.B MAKE_ATIME_NONE
+> +.in +4n
+> +Do not update access times for (all types of) files on this mount.
+> +.TP
+> +.in +4n
+> +.B MAKE_ATIME_STRICT
+> +.in +4n
+> +Always update the last access time (atime) when files are
+> +accessed on this mount.
+> +.PP
+> +The
+> +.I size
+> +argument that is supplied to
+> +.BR mount_setattr ()
+> +should be initialized to the size of this structure.
+> +(The existence of the
+> +.I size
+> +argument permits future extensions to the
+> +.IR mount_attr
+> +structure.)
+> +.SH RETURN VALUE
+> +On success,
+> +.BR mount_setattr ()
+> +zero is returned. On error, \-1 is returned and
+
+Wording problem...
+
+s/zero is returned/returns 0/
+
+> +.I errno
+> +is set to indicate the cause of the error.
+> +.SH ERRORS
+> +.TP
+> +.B EBADF
+> +.I dfd
+> +is not a valid file descriptor.
+> +.TP
+> +.B ENOENT
+> +A pathname was empty or had a nonexistent component.
+> +.TP
+> +.B EINVAL
+> +Unsupported value in
+> +.I flags
+> +.TP
+> +.B EINVAL
+> +Unsupported value was specified in the
+> +.I attr_set
+> +field of
+> +.IR mount_attr.
+
+s/.IR mount_attr./
+  .IR mount_attr ./
+
+(and the same at various places below)
+
+> +.TP
+> +.B EINVAL
+> +Unsupported value was specified in the
+> +.I attr_clr
+> +field of
+> +.IR mount_attr.
+> +.TP
+> +.B EINVAL
+> +Unsupported value was specified in the
+> +.I propagation
+> +field of
+> +.IR mount_attr.
+> +.TP
+> +.B EINVAL
+> +Unsupported value was specified in the
+> +.I atime
+> +field of
+> +.IR mount_attr.
+> +.TP
+> +.B EINVAL
+> +Caller tried to change the mount properties of a mount or mount tree
+> +in another mount namespace.
+> +.SH VERSIONS
+> +.BR mount_setattr ()
+> +first appeared in Linux ?.?.
+> +.\" commit ?
+> +.SH CONFORMING TO
+> +.BR mount_setattr ()
+> +is Linux specific.
+> +.SH NOTES
+> +Currently, there is no glibc wrapper for this system call; call it using
+> +.BR syscall (2).
+> +.SH SEE ALSO
+> +.BR mount (2),
+
+Add: mount_namespaces (7).
+
 Thanks,
 
-David / dhildenb
+Michael
 
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
