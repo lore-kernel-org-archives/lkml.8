@@ -2,260 +2,160 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B578C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152CCC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFCE2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03802073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:41:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="sR08FXN7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbgGULkR (ORCPT
+        id S1728580AbgGULlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:40:17 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3000 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727103AbgGULkQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:40:16 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LBYWf7153558;
-        Tue, 21 Jul 2020 07:40:07 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32dhps6wk3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 07:40:07 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06LBYZWX153972;
-        Tue, 21 Jul 2020 07:40:07 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32dhps6whn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 07:40:07 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LBZwDk031241;
-        Tue, 21 Jul 2020 11:40:04 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma02fra.de.ibm.com with ESMTP id 32brq7uwp7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 11:40:04 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LBcjW023396568
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jul 2020 11:38:45 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 03E8F42042;
-        Tue, 21 Jul 2020 11:38:45 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1DB734203F;
-        Tue, 21 Jul 2020 11:38:41 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.85.93.17])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Jul 2020 11:38:40 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michael Ellerman <michaele@au1.ibm.com>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Nick Piggin <npiggin@au1.ibm.com>,
-        Oliver OHalloran <oliveroh@au1.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@linux.ibm.com>,
-        Anton Blanchard <anton@au1.ibm.com>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: [PATCH v2 03/10] powerpc/smp: Move powerpc_topology above
-Date:   Tue, 21 Jul 2020 17:08:07 +0530
-Message-Id: <20200721113814.32284-4-srikar@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
-References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_05:2020-07-21,2020-07-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- spamscore=0 lowpriorityscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
- clxscore=1015 impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007210082
+        Tue, 21 Jul 2020 07:41:32 -0400
+Received: from mga05.intel.com ([192.55.52.43]:5680 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727103AbgGULlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 07:41:31 -0400
+IronPort-SDR: LFeodUKz/mg7n+RaBZhK6Ki0TabItj7aI3G9IYDBPe5nnweaLt3oWmGhihY4vHFqL7sOFe2YPw
+ 02WbQ2z8ghNg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="234963238"
+X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
+   d="scan'208";a="234963238"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 04:41:30 -0700
+IronPort-SDR: TxkpDLuKn1mRjpOxDk4sa/4rmD3EpO130GWtRXmaIRxuYCBAAyvflYiIyhptApujYZ6wopUuBm
+ IdWYZMLnOrfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
+   d="scan'208";a="301588655"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga002.jf.intel.com with ESMTP; 21 Jul 2020 04:41:30 -0700
+Received: from fmsmsx111.amr.corp.intel.com (10.18.116.5) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 21 Jul 2020 04:41:29 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx111.amr.corp.intel.com (10.18.116.5) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 21 Jul 2020 04:41:29 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.170)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Tue, 21 Jul 2020 04:41:29 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Up9QTmDcxF8/t9jYiIIkV/bddzUirOhM/3I95SMP9TE/tTsV21grb9ktN+cCLGG85bWJwVKjkM1HK+igJ5hihBP8/0el43TCK5lE2KgDuAMne0y6OLCSF0joZxOmIAlLqxtDynPzeK361Iq0xJV8/yUGG+TITOxvIOUjq59ENp60kbj6Brw0kseavbHmOohP1t6ss3AZuw9U/2lVOazjUKGfYScofcHFE6ZWJNriL2t2G20i5U8fetCCeFiWoVrca+aKDs1LiAta5NRh9bqbRZgkP+WF5Zqt/ghLE2lf72qp9oXSe4398fsH1G6iUdx0QPj1/Ofo2Qq8k7nwwAK9rg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HBai5RVIHKYcE2nHilB5YUNnhfAYOetzZg91O39R+hU=;
+ b=KNktaqv1QeOe3pxfotBwv2b9A4zVjvK0IGi4A5YYVdp/++PcrBgg+EPKsQwbk6KtC6ztL7kAYbi5QShDxnQy8CjJZT1hcQTMVBK8HIDQ4oMituytb5JC01l9h7O0qX7xtSCzheK1GDkq+FzHWmLQqgf5g2LBTNpPgNI+4wScMthw/dgcPVeFVr+4jAXCf2zl4KenEDg4r6OvmQIBV+LMhDGOH3cwv5QFfnXTp+Hs+5Lom416Xuus/pNoMfUAYhMojGMZPasSC2aphDkXvpKUZMlpYgrh0MfeqxqlN5fcWLN1azwzDkT2KJ0wsDqEhUNVwOyLLxxij0tuoFgz8rWkBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HBai5RVIHKYcE2nHilB5YUNnhfAYOetzZg91O39R+hU=;
+ b=sR08FXN7zKU/Kz7GK3SQJjtfbCTGsJaBGlS92wYRbkhTPK37yQ1nWn+M94arq6qWQvZN9mOPwtgK4ufL2Rj3uCMGjxzsjsvd4YFksXTBwm5yumPYUiLFhCBQbvukO4pNhfkX8lfao1jQOSgkYzTal7xWG5Xz/kUCoHe3vnNskDw=
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com (2603:10b6:5:13f::31)
+ by DM6PR11MB4628.namprd11.prod.outlook.com (2603:10b6:5:28f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.25; Tue, 21 Jul
+ 2020 11:41:28 +0000
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::c1c1:6930:f17d:a80a]) by DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::c1c1:6930:f17d:a80a%4]) with mapi id 15.20.3195.025; Tue, 21 Jul 2020
+ 11:41:28 +0000
+From:   "Wu, Hao" <hao.wu@intel.com>
+To:     "Xu, Yilun" <yilun.xu@intel.com>
+CC:     "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "trix@redhat.com" <trix@redhat.com>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Weight, Russell H" <russell.h.weight@intel.com>
+Subject: RE: [PATCH 2/2] fpga: dfl: create a dfl bus type to support DFL
+  devices
+Thread-Topic: [PATCH 2/2] fpga: dfl: create a dfl bus type to support DFL
+  devices
+Thread-Index: AQHWXzmp9uIumsmhBUK9nlK2uTc5gKkR25Ug
+Date:   Tue, 21 Jul 2020 11:41:27 +0000
+Message-ID: <DM6PR11MB381958D370FD3BF0173BBD5685780@DM6PR11MB3819.namprd11.prod.outlook.com>
+References: <1594791498-14495-1-git-send-email-yilun.xu@intel.com>
+ <1594791498-14495-3-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB38195AA712F8089090695CE5857C0@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <20200721083030.GG17091@yilunxu-OptiPlex-7050>
+In-Reply-To: <20200721083030.GG17091@yilunxu-OptiPlex-7050>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.102.204.38]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 71eaaa28-f545-4937-357b-08d82d6b0165
+x-ms-traffictypediagnostic: DM6PR11MB4628:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB4628D45CC69A94BC236E537D85780@DM6PR11MB4628.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: knWg+HC7/1Wcfr7eFqbYHpMUXHSkj7ks97FJLzdi829kFvCXaWOrXVaxqtPlHk7o4qboVJS4FiqyQvqjKABGJa/grZBi3sqRp76SQov7aNEy1Saa4LUifTC+VyssihNvLT+WyOKIGO1B9wmgNvn2RiqlNlJ2CdaSCyaNSOTjptDUQSTRUulNtYaYTMekUxPcAyJskb1Ca07/Xfds6nL6sb8PPHMH0T0PTN/3/lTZUUK/51+tEbsCXykCvnhE4ijKPvO6TD0a/tmQljOHIylftspIoVBvyiBo1db7GELrfjZ+9eP84lfFHiPyZv0UP0Sme+A4q2+d3/nBY9F+xbcFyg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3819.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(366004)(346002)(39860400002)(136003)(9686003)(186003)(26005)(316002)(6862004)(6636002)(7696005)(55016002)(33656002)(6506007)(4326008)(52536014)(64756008)(8676002)(2906002)(71200400001)(8936002)(54906003)(66476007)(4744005)(5660300002)(86362001)(76116006)(66446008)(66946007)(478600001)(66556008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: cwDoUbe37U7csCh5/IaBKd7rMbtR+kQIkHqWKcyHgZvkhy+S1KFxu9EWuB8xYC/T8jahh7qB3W27gS3imy3lGmqmlAvFB9IvqNz2vwLB5WHTylrelhyJ8UUKM2FfC5wKtYEPj20qDBZaVh3es7Sijcowv1o3cOmn/lRWEmmd7JBcep9Pe3f3NdY3lwj429sl0uHDGqt9k/zEH5sd5JJAy2QnHssWAgJQJ+iTnsNy5124Y13eT/pklaKhrDjBSSLaW29PjruwrBuHJbT4N57kFA8xgzDn6RfayGj7kfO5lca3fDR0AAsAb36JJtQot+OwReGu0LnpfNthiQchbDl6/CyzoIvUOtwUcVnVOcH0rQ0muZIUxCW38Vg/eQs5orj675QYay5E6AOJsOR7zQASgRlTFT+FNtTyyzHTnT9MsntXZWpf/aO3MF+0fLzCkj46aM9yIcA7L0G2tRYnEdN8OQAWgC7Fs1dHKF4yvG9w+lSl2XG2RKXiKcCZ569bKXHa
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3819.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71eaaa28-f545-4937-357b-08d82d6b0165
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 11:41:27.7507
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UluOILRf3FhzJzTCzSbFKH88YoEHjxWo+9x9ZPbUvAHi3A18Gl4RjCsTrlBInLh7VW6q/zbD1X9eMPTC2v9vmA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4628
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just moving the powerpc_topology description above.
-This will help in using functions in this file and avoid declarations.
+> > > +}
+> > > +
+> > > +dfl_dev->type =3D feature_dev_id_type(pdev);
+> > > +dfl_dev->feature_id =3D (unsigned long long)feature->id;
+> > > +
+> > > +dfl_dev->dev.parent  =3D &pdev->dev;
+> > > +dfl_dev->dev.bus     =3D &dfl_bus_type;
+> > > +dfl_dev->dev.release =3D release_dfl_dev;
+> > > +dev_set_name(&dfl_dev->dev, "%s.%d", dev_name(&pdev->dev),
+> > > +     feature->index);
+> >
+> > Or it's better to have a generic name for the device on the bus.
+>=20
+> mm.. It is good suggestion, we should have a unified name for dfl
+> devices.
+>=20
+> How about ("dfl.%d.%d", pdev->id, feature->index)
 
-No other functional changes
+It's quite difficult for people to use related information from these magic=
+=20
+numbers. They are not ids defined in the spec, so just dfl_dev.x with one
+unique id seems to be better. If you really need to expose some id
+information, maybe you can consider adding some standard sysfs entry
+to all dfl_dev, I think that will be easier for users. How do you think?
 
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Cc: Michael Ellerman <michaele@au1.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Nick Piggin <npiggin@au1.ibm.com>
-Cc: Oliver OHalloran <oliveroh@au1.ibm.com>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Michael Neuling <mikey@linux.ibm.com>
-Cc: Anton Blanchard <anton@au1.ibm.com>
-Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Cc: Jordan Niethe <jniethe5@gmail.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
- arch/powerpc/kernel/smp.c | 116 +++++++++++++++++++-------------------
- 1 file changed, 58 insertions(+), 58 deletions(-)
-
-diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index 0e0b118d9b6e..1ce95da00cb6 100644
---- a/arch/powerpc/kernel/smp.c
-+++ b/arch/powerpc/kernel/smp.c
-@@ -818,6 +818,64 @@ static int init_cpu_l1_cache_map(int cpu)
- 	return err;
- }
- 
-+static bool shared_caches;
-+
-+#ifdef CONFIG_SCHED_SMT
-+/* cpumask of CPUs with asymmetric SMT dependency */
-+static int powerpc_smt_flags(void)
-+{
-+	int flags = SD_SHARE_CPUCAPACITY | SD_SHARE_PKG_RESOURCES;
-+
-+	if (cpu_has_feature(CPU_FTR_ASYM_SMT)) {
-+		printk_once(KERN_INFO "Enabling Asymmetric SMT scheduling\n");
-+		flags |= SD_ASYM_PACKING;
-+	}
-+	return flags;
-+}
-+#endif
-+
-+/*
-+ * P9 has a slightly odd architecture where pairs of cores share an L2 cache.
-+ * This topology makes it *much* cheaper to migrate tasks between adjacent cores
-+ * since the migrated task remains cache hot. We want to take advantage of this
-+ * at the scheduler level so an extra topology level is required.
-+ */
-+static int powerpc_shared_cache_flags(void)
-+{
-+	return SD_SHARE_PKG_RESOURCES;
-+}
-+
-+/*
-+ * We can't just pass cpu_l2_cache_mask() directly because
-+ * returns a non-const pointer and the compiler barfs on that.
-+ */
-+static const struct cpumask *shared_cache_mask(int cpu)
-+{
-+	if (shared_caches)
-+		return cpu_l2_cache_mask(cpu);
-+
-+	if (has_big_cores)
-+		return cpu_smallcore_mask(cpu);
-+
-+	return per_cpu(cpu_sibling_map, cpu);
-+}
-+
-+#ifdef CONFIG_SCHED_SMT
-+static const struct cpumask *smallcore_smt_mask(int cpu)
-+{
-+	return cpu_smallcore_mask(cpu);
-+}
-+#endif
-+
-+static struct sched_domain_topology_level powerpc_topology[] = {
-+#ifdef CONFIG_SCHED_SMT
-+	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
-+#endif
-+	{ shared_cache_mask, powerpc_shared_cache_flags, SD_INIT_NAME(CACHE) },
-+	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
-+	{ NULL, },
-+};
-+
- static int init_big_cores(void)
- {
- 	int cpu;
-@@ -1249,8 +1307,6 @@ static void add_cpu_to_masks(int cpu)
- 			set_cpus_related(cpu, i, cpu_core_mask);
- }
- 
--static bool shared_caches;
--
- /* Activate a secondary processor. */
- void start_secondary(void *unused)
- {
-@@ -1314,62 +1370,6 @@ int setup_profiling_timer(unsigned int multiplier)
- 	return 0;
- }
- 
--#ifdef CONFIG_SCHED_SMT
--/* cpumask of CPUs with asymmetric SMT dependency */
--static int powerpc_smt_flags(void)
--{
--	int flags = SD_SHARE_CPUCAPACITY | SD_SHARE_PKG_RESOURCES;
--
--	if (cpu_has_feature(CPU_FTR_ASYM_SMT)) {
--		printk_once(KERN_INFO "Enabling Asymmetric SMT scheduling\n");
--		flags |= SD_ASYM_PACKING;
--	}
--	return flags;
--}
--#endif
--
--/*
-- * P9 has a slightly odd architecture where pairs of cores share an L2 cache.
-- * This topology makes it *much* cheaper to migrate tasks between adjacent cores
-- * since the migrated task remains cache hot. We want to take advantage of this
-- * at the scheduler level so an extra topology level is required.
-- */
--static int powerpc_shared_cache_flags(void)
--{
--	return SD_SHARE_PKG_RESOURCES;
--}
--
--/*
-- * We can't just pass cpu_l2_cache_mask() directly because
-- * returns a non-const pointer and the compiler barfs on that.
-- */
--static const struct cpumask *shared_cache_mask(int cpu)
--{
--	if (shared_caches)
--		return cpu_l2_cache_mask(cpu);
--
--	if (has_big_cores)
--		return cpu_smallcore_mask(cpu);
--
--	return per_cpu(cpu_sibling_map, cpu);
--}
--
--#ifdef CONFIG_SCHED_SMT
--static const struct cpumask *smallcore_smt_mask(int cpu)
--{
--	return cpu_smallcore_mask(cpu);
--}
--#endif
--
--static struct sched_domain_topology_level powerpc_topology[] = {
--#ifdef CONFIG_SCHED_SMT
--	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
--#endif
--	{ shared_cache_mask, powerpc_shared_cache_flags, SD_INIT_NAME(CACHE) },
--	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
--	{ NULL, },
--};
--
- void __init smp_cpus_done(unsigned int max_cpus)
- {
- 	/*
--- 
-2.17.1
-
+Thanks
+Hao
