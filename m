@@ -2,136 +2,110 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA9DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0971DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 852852176B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8D30208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:46:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="T2UjdX/a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgGUEmU (ORCPT
+        id S1726284AbgGUEqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 00:42:20 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:43138 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgGUEmT (ORCPT
+        Tue, 21 Jul 2020 00:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgGUEqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 00:42:19 -0400
-Received: by mail-io1-f72.google.com with SMTP id f13so12645738iok.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:42:19 -0700 (PDT)
+        Tue, 21 Jul 2020 00:46:07 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05D37C0619D6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:46:07 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id j19so11349148pgm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ZihfE8PdTkcmFog/NE9+3wOqDTSKN/yPTD5RUiTCo78=;
+        b=T2UjdX/aBACNNI7AsLQjD7SodT7yMVIiZtg+gM7ReuX0a9g3/anzmj5Sy0T7rk7aTL
+         TWJYwrxOPJ7WxwdJJ4Ez+FxDL++sED71D1PI+CaLd4FnofQovWaciZtcwQ07Ak9b+lCr
+         e6jjHDCkxPu/Awzud68wB04RT50d/YR9p6cUTD0uV3IVxvF0dVp0L+JDS4hbcs8gVtLK
+         uULi+DH4czQJlXGMesPcjetG+xIZZ2vl7/pK6qMquqOkqMNL+mu2W6QjGe70JjD0I97W
+         qu+ZEyZ1I3D3Zhqhi3Py/gK3lk6vTVeWNA7OR44LLWz5O3oYVe50gTHzT3mEDLvCELCl
+         9oFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Katev7es+Tw30gWBrxnYxlAA+IrkGIil3BdIjpNkBSU=;
-        b=pFUrFEWqhCPIa2veuVI/sKqkxhBqYGt+gwBK3BOGdOLOKDaHV71aI9Cxrg2O5QBWig
-         G2/80gJnT6fAxYWNbFmRYZA8JdZEnRVeAVFJeKgJ6563HUOay1cvIhYZ2LjyQRTOa/Vr
-         fbgsLG11y0G0nRdxgs0QYPPy0TspKQsaBZdFdpbXD+NWB+qOoPr8e4HaBCpnISVv1nCX
-         eqoIeO7Ck73XJafakEhiTZGdNAlaZeFOpXjwhH39Wfrj2Kk3gmOLdpyytJf8PyJbq66i
-         k1e2bWEkDVfLe/0IAniCBsGAMWPGYQWeeIgkQrKDdnxWDaq//3ttQTzEaHOUPWBDiUaD
-         BvpA==
-X-Gm-Message-State: AOAM5320KVzruQPoaAC9PCAnd06xDWNhUvZbq0nK1EPDTua2fD9MjxjU
-        QrIWV7/bR3+ALY3LZ7N4hVrBJdVm+1agV9cXZBehEjGb+XlL
-X-Google-Smtp-Source: ABdhPJydDec5HyAd8YK8qPZCatWKhDRmcka4pyOtp5HHtI1/2WGYR2OZL1BY2xNDRiWn0Q5TiM35nhvsqdF2VZjDIsc1ygpB+Xvh
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZihfE8PdTkcmFog/NE9+3wOqDTSKN/yPTD5RUiTCo78=;
+        b=BZRtheih79/sUML1SPAzCaWzl/+f5OQOf/MPKy9pcS0+usYN3/N9rYvj0nmglbk1UA
+         jg1Q8dUAaYRb/JjwsXC0FobN9LpT4cEMcG/9A+wJ0nxQexZJ9x3L/+SPQqDd6BwtqIRq
+         UlG3K8DBB318zCnoeRTnV4cWnME8suWPAw6ny4A4xNBoOnbCkSHjsss0ER5wTWU9Unnh
+         tqRg5EyAopT0s7CNqK0cuIaTcOzjhnJrBexJSilRjoWQAot47Hzlqh9/9BmP9c3A0yA5
+         kU+J8TL6guoOqwtgquGSLThqBMbHLPnIwLTG526J8qbd/7w+bTKWJqWRh76wnH+I878Q
+         0ewA==
+X-Gm-Message-State: AOAM531xcJ4j6CutFrov8DgRfEvPU86W96IB4uXpSHCp7PF4SV2I5uw0
+        YD1qKAvb6j7DBYHg3+gylk5tAA==
+X-Google-Smtp-Source: ABdhPJwm2qswv0JrvcxvuPN29Q+VgK3II5mFgk6NQFlyvIyjJF4VYRoa8ZwPvXLjjp84ys9bffTTLQ==
+X-Received: by 2002:aa7:9a92:: with SMTP id w18mr22555654pfi.233.1595306766376;
+        Mon, 20 Jul 2020 21:46:06 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id az13sm1270078pjb.34.2020.07.20.21.46.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 21:46:06 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 21:45:57 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Chi Song <Song.Chi@microsoft.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 net-next] net: hyperv: Add attributes to show TX
+ indirection table
+Message-ID: <20200720214557.0b711a3c@hermes.lan>
+In-Reply-To: <HK0P153MB0275B7FFBA43843CC7B1EABB98780@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
+References: <HK0P153MB0275B7FFBA43843CC7B1EABB98780@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-X-Received: by 2002:a92:4913:: with SMTP id w19mr24874586ila.185.1595306539009;
- Mon, 20 Jul 2020 21:42:19 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 21:42:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000090cd5905aaec3f2c@google.com>
-Subject: KASAN: stack-out-of-bounds Write in sys_imageblit
-From:   syzbot <syzbot+ba5bd977df7bb87862c4@syzkaller.appspotmail.com>
-To:     b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, 21 Jul 2020 03:50:00 +0000
+Chi Song <Song.Chi@microsoft.com> wrote:
 
-syzbot found the following issue on:
+> +static void netvsc_attrs_init(void)
+> +{
+> +	char buffer[4];
+> +	int i;
+> +
+> +	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++) {
+> +		sprintf(buffer, "%02u", i);
+> +		dev_attr_netvsc_dev_attrs[i].attr.name =
+> +			kstrdup(buffer, GFP_KERNEL);
+> +		dev_attr_netvsc_dev_attrs[i].attr.mode = 0444;
+> +		sysfs_attr_init(&dev_attr_netvsc_dev_attrs[i].attr);
+> +
+> +		dev_attr_netvsc_dev_attrs[i].show = tx_indirection_show;
+> +		dev_attr_netvsc_dev_attrs[i].store = NULL;
+> +		netvsc_dev_attrs[i] = &dev_attr_netvsc_dev_attrs[i].attr;
+> +	}
+> +	netvsc_dev_attrs[VRSS_SEND_TAB_SIZE] = NULL;
+You know that last line is unnecessary. The variable is static and 
+starts out as all zero.
 
-HEAD commit:    4fa640dc Merge tag 'vfio-v5.8-rc7' of git://github.com/awi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17ec2d58900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=575b381064b1cba2
-dashboard link: https://syzkaller.appspot.com/bug?extid=ba5bd977df7bb87862c4
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-userspace arch: i386
+Overall looks good.
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ba5bd977df7bb87862c4@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: stack-out-of-bounds in fast_imageblit drivers/video/fbdev/core/sysimgblt.c:229 [inline]
-BUG: KASAN: stack-out-of-bounds in sys_imageblit+0x117f/0x1290 drivers/video/fbdev/core/sysimgblt.c:275
-Write of size 4 at addr ffffc900097d7d90 by task syz-executor.1/11925
-
-CPU: 1 PID: 11925 Comm: syz-executor.1 Not tainted 5.8.0-rc6-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0x5/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- fast_imageblit drivers/video/fbdev/core/sysimgblt.c:229 [inline]
- sys_imageblit+0x117f/0x1290 drivers/video/fbdev/core/sysimgblt.c:275
- drm_fb_helper_sys_imageblit+0x1c/0x180 drivers/gpu/drm/drm_fb_helper.c:763
- bit_putcs_unaligned drivers/video/fbdev/core/bitblit.c:139 [inline]
- bit_putcs+0x6e1/0xd20 drivers/video/fbdev/core/bitblit.c:188
- fbcon_putcs+0x33c/0x3f0 drivers/video/fbdev/core/fbcon.c:1362
- do_update_region+0x399/0x630 drivers/tty/vt/vt.c:683
- invert_screen+0x1d4/0x600 drivers/tty/vt/vt.c:800
- highlight drivers/tty/vt/selection.c:57 [inline]
- clear_selection drivers/tty/vt/selection.c:84 [inline]
- clear_selection+0x55/0x70 drivers/tty/vt/selection.c:80
- vc_do_resize+0x1099/0x13f0 drivers/tty/vt/vt.c:1230
- fbcon_do_set_font+0x4ad/0x950 drivers/video/fbdev/core/fbcon.c:2609
- fbcon_set_font+0x767/0x8b0 drivers/video/fbdev/core/fbcon.c:2706
- con_font_set drivers/tty/vt/vt.c:4571 [inline]
- con_font_op+0xd25/0x1110 drivers/tty/vt/vt.c:4636
- vt_ioctl+0x1180/0x2670 drivers/tty/vt/vt_ioctl.c:928
- vt_compat_ioctl+0x168/0x6b0 drivers/tty/vt/vt_ioctl.c:1249
- tty_compat_ioctl+0x19c/0x410 drivers/tty/tty_io.c:2847
- __do_compat_sys_ioctl+0x1d3/0x230 fs/ioctl.c:847
- do_syscall_32_irqs_on+0x3f/0x60 arch/x86/entry/common.c:428
- __do_fast_syscall_32 arch/x86/entry/common.c:475 [inline]
- do_fast_syscall_32+0x7f/0x120 arch/x86/entry/common.c:503
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-RIP: 0023:0xf7f48569
-Code: Bad RIP value.
-RSP: 002b:00000000f5d430bc EFLAGS: 00000296 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000004b61
-RDX: 0000000020000080 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-
-Memory state around the buggy address:
- ffffc900097d7c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffffc900097d7d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffffc900097d7d80: 00 00 f1 f1 f1 f1 00 00 f3 f3 00 00 00 00 00 00
-                         ^
- ffffc900097d7e00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffffc900097d7e80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Acked-by: Stephen Hemminger <stephen@networkplumber.org>
