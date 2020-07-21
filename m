@@ -2,146 +2,124 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BD7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90C9420717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB0B2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VcGOSW/f"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gBCispH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgGUNOc (ORCPT
+        id S1727901AbgGUNKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:14:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42692 "EHLO
+        Tue, 21 Jul 2020 09:10:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbgGUNOc (ORCPT
+        with ESMTP id S1726719AbgGUNKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:14:32 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110D1C061794;
-        Tue, 21 Jul 2020 06:14:32 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id h28so15270813edz.0;
-        Tue, 21 Jul 2020 06:14:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qWyarVzCa1uuhNFbtCVqaJTCuBOJPZBJNhnssjGVZPc=;
-        b=VcGOSW/fVQheWp4zSKF0CH9c9pGwPElOO5vNEkueubww6PX8qQm5qE6RQ5Qi3IxVDJ
-         BF1lwAV93lDuEwF/mGoOzDbbLNNGugOkI/L6fLkYmfaaqFULFxyQT/e5s6Pu30Dsg4dw
-         Zr0d8hsTiel9IdrQ8Y3h9yv8GS8QYZu0XUWirFMzhiViZXOAmttiRazXko+YsfXr0OCP
-         xhBaZ8VagviEvCmwV8ASjEJOV1QVDCyoC3o+xnUK1UFhtJ91hyrDLElyoF5g0WemllIU
-         3jKKrzXO859m+bUZSKW+lkxKTDvsSS4K5hGy2UTQy5MfS6shEJ6y7qCVTJx5bqVyM31Y
-         IHCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qWyarVzCa1uuhNFbtCVqaJTCuBOJPZBJNhnssjGVZPc=;
-        b=qcrCd+zFzZPNwd24MMpoke0XSFDBEVNGGDLZP668zvNKGfdSQmseOA5S2T9QxloUjt
-         lZpOqgBZ0PG66suYfR+3eRGr8dNH7QmbRTMH8ux9lSUM4psOYsP/edOJRM0UHHQNhCc+
-         Lc0QlF56zzJ/rydb/liJHXe4pZ2eb8kgAaiAuqDJ+mhnGLnIXU/N8awEaNiTZHxqICGL
-         kugiMHk72+vM0C5zu8ZNFoC5scXQILasPa0hdV5pSKyV1nJ8N5eldNgfv5IBBuFJbohP
-         lQVkGU2EHZT9Zpfh5xKsYJhZm76SgvtJju8OhovwzH+MqSngCMRVku30ipSGxjQyAVXv
-         Bihg==
-X-Gm-Message-State: AOAM533+lrkCiQreCgK5S65QCKhRO31fX21irrsE73iQhQWp1SlXL24u
-        9Tnbeh1mOq+6vq15bBB7ly8=
-X-Google-Smtp-Source: ABdhPJz94pCzoy2F2sabQnicb3+XIiEJPWYWCa3OLQzgGFinaLv+4tVen5VRsBqajjPN/SYY9ovFkw==
-X-Received: by 2002:a05:6402:1bdd:: with SMTP id ch29mr25904929edb.134.1595337270831;
-        Tue, 21 Jul 2020 06:14:30 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id r19sm17162801edp.79.2020.07.21.06.14.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 06:14:29 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 15:14:28 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/133] 4.19.134-rc1 review
-Message-ID: <20200721131428.GE44604@ulmo>
-References: <20200720152803.732195882@linuxfoundation.org>
+        Tue, 21 Jul 2020 09:10:19 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8376C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:10:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bzG30uW1QQPXIbjKnRH60T7j2KtPqcKAnWW8zGBS+p4=; b=gBCispH2vUYT6jHwGHUaXqA38T
+        TMI2m2ybmBFqs6CytlGY81XoeXAgxE39spZ3vnYqqQLlPGVaM0nt7vpWtEjOTC1upvIdBN3+cTJlW
+        W06aJDt8/8od4+aOFddejW++uKTYQGECb2efV8ZEmahIWF6BFDTklg+4hKd7jCV4FUVoOHysARFNQ
+        wUuYkKNfO8An4LVy101So4sWQIzm6e+f59g7uu2oll47wk7p8qvt9WYlYvgOMTaXMrvZSLJtFNR5h
+        c4dMpMdpI66Vbi+rrUq31Wcab8bY41eAMjGk1roYgdaiI2fz7XTgr1FR2Wbwo6i4ixCyLnep36Ozt
+        s5q1zpgg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxs29-0001G7-29; Tue, 21 Jul 2020 13:10:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4632A301AC6;
+        Tue, 21 Jul 2020 15:10:11 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3363920FEE06D; Tue, 21 Jul 2020 15:10:11 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 15:10:11 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH V6 11/14] perf/x86/intel: Disable sample-read the slots
+ and metrics events
+Message-ID: <20200721131011.GY10769@hirez.programming.kicks-ass.net>
+References: <20200717140554.22863-1-kan.liang@linux.intel.com>
+ <20200717140554.22863-12-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="h56sxpGKRmy85csR"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <20200717140554.22863-12-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 17, 2020 at 07:05:51AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Users fail to sample-read the slots and metrics events, e.g.,
+> perf record -e '{slots, topdown-retiring}:S'.
+> 
+> When reading the metrics event, the fixed counter 3 (slots) has to be
+> reset, which impacts the sampling of the slots event.
+> 
+> Add a specific validate_group() support to reject the case and error out
+> for Ice Lake.
+> 
+> An alternative fix may unconditionally disable slots sampling, but it's
+> not a decent fix. Users may want to only sample the slot events
+> without the topdown metrics events.
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
---h56sxpGKRmy85csR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm confused by this; it doesn't make sense.
 
-On Mon, Jul 20, 2020 at 05:35:47PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.134 release.
-> There are 133 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Wed, 22 Jul 2020 15:27:31 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.13=
-4-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
- linux-4.19.y
-> and the diffstat can be found below.
->=20
-> thanks,
->=20
-> greg k-h
+Should not patch 7 have something like the below instead?
 
-All tests passing for Tegra ...
+Also, I think there is a bug when we create a group like this and then
+kill the leader, in that case the core code will 'promote' the sibling
+metric events to their own individual events, see perf_group_detach().
 
-Test results for stable-v4.19:
-    11 builds:  11 pass, 0 fail
-    22 boots:   22 pass, 0 fail
-    38 tests:   38 pass, 0 fail
+We need additional code to move those events into unrecoverable ERROR
+state. A new group_caps flag could indicate this promotion isn't
+allowed.
 
-Linux version:  4.19.134-rc1-g9d319b54cc24
-Boards tested:  tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers,
-Thierry
-
---h56sxpGKRmy85csR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8W6jQACgkQ3SOs138+
-s6HZuA//YJM+ABgzrc6euDLcUHvP7nC4HSBdh4Yrlv8L3MFMX4ubp95z1hdxG8b0
-fWGVrrwykQ6NKtiZdVzbj4DpbSQFw9ek3UJa/25cbAad9mKCup5EwbaQrzvGicvY
-Hj4TjhKiij+IOTkUdYzyyJ55nSO2+DB72Lvjb0857aD9OflZpNxQVbtgpn24Tr/X
-hqN1MoM+yTOHZnpddiBKVbMz6dPCH/0D3r173h8GliJJtxpCJaKOCfnyCgk85Y6f
-DOpbxs/Mycr1uxqJMf0hrz2Jh3Bk1T1azc+5+WLdxypNHAYXuIOATsyaw90fM9Sg
-q/ormpZHlWLacFocLMZk+o4uFLnKO7EX630dKc/E1fsWjdCOSaZZnV57p7HTTnvs
-+qUGdcf33AiHhweHE07ND3Pj1HAOLLtsElTgcn1spO0WmhYSF5ujrLXVqKUGV1DF
-A789Tw68o9AmYFWYXD/ROYjTanC7KOdhKz5gT+lASG6YQJViVK9bhbAuFPFTM/uj
-fjlDzrnJy56Sk6GNEYVG6Nfdy/IIzG8MSLzaIZP8xO6qOcQUqxl28DL1gTyWLodZ
-v8pWAS3MtOY7+qPpTvVAdFrp9nHvIalUbQjj5ZniQruJTCM3l9ETM5yijjpSo8bj
-Y3ooRR5Dp4GJ6QcZKUOFSImi/aT7+DSsOASLrHCifGpUxCpTMSA=
-=/sPq
------END PGP SIGNATURE-----
-
---h56sxpGKRmy85csR--
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3441,8 +3441,22 @@ static int intel_pmu_hw_config(struct pe
+ 	 * A flag PERF_X86_EVENT_TOPDOWN is applied for the case.
+ 	 */
+ 	if (x86_pmu.intel_cap.perf_metrics && is_topdown_event(event)) {
+-		if (is_metric_event(event) && is_sampling_event(event))
+-			return -EINVAL;
++
++		if (is_metric_event(event)) {
++			struct perf_event *leader = event->group_leader;
++
++			if (is_sampling_event(event))
++				return -EINVAL;
++
++			if (leader == event)
++				return -EINVAL;
++
++			if (!is_slots_event(leader))
++				return -EINVAL;
++
++			if (is_sampling_event(leader))
++				return -EINVAL;
++		}
+ 
+ 		if (!is_sampling_event(event)) {
+ 			if (event->attr.config1 != 0)
