@@ -2,163 +2,63 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F24C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D43121702
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03206208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgGUAo5 (ORCPT
+        id S1728296AbgGUApy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 20:44:57 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2647 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726127AbgGUAo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 20:44:56 -0400
-Received: from dggemi405-hub.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 64B9F1A9C7F0854BB155;
-        Tue, 21 Jul 2020 08:44:51 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.52]) by
- dggemi405-hub.china.huawei.com ([10.3.17.143]) with mapi id 14.03.0487.000;
- Tue, 21 Jul 2020 08:44:42 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>
-Subject: RE: [PATCH] iommu/arm-smmu-v3: remove the approach of MSI polling
- for CMD SYNC
-Thread-Topic: [PATCH] iommu/arm-smmu-v3: remove the approach of MSI polling
- for CMD SYNC
-Thread-Index: AQHWW8YiwSsIgpwKv0qM0ZdQNf6ByakK8iGAgACG1CCABb020A==
-Date:   Tue, 21 Jul 2020 00:44:41 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD259BC6B@DGGEMI525-MBS.china.huawei.com>
-References: <20200716230709.32820-1-song.bao.hua@hisilicon.com>
- <35b54698-bd43-a8fc-00db-94ee0dfc789f@arm.com> 
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.202.37]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Mon, 20 Jul 2020 20:45:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgGUApx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 20:45:53 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F970C061794;
+        Mon, 20 Jul 2020 17:45:53 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0489411E8EC15;
+        Mon, 20 Jul 2020 17:29:07 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 17:45:52 -0700 (PDT)
+Message-Id: <20200720.174552.1199692153657012436.davem@davemloft.net>
+To:     hch@lst.de
+Cc:     msalter@redhat.com, jacquiot.aurelien@gmail.com,
+        ley.foon.tan@intel.com, arnd@arndb.de, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] arch, net: remove the last csum_partial_copy()
+ leftovers
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200720113609.177259-1-hch@lst.de>
+References: <20200720113609.177259-1-hch@lst.de>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 Jul 2020 17:29:08 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU29uZyBCYW8gSHVhIChC
-YXJyeSBTb25nKQ0KPiBTZW50OiBGcmlkYXksIEp1bHkgMTcsIDIwMjAgOTowNiBQTQ0KPiBUbzog
-J1JvYmluIE11cnBoeScgPHJvYmluLm11cnBoeUBhcm0uY29tPjsgd2lsbEBrZXJuZWwub3JnOw0K
-PiBqb3JvQDhieXRlcy5vcmcNCj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IExp
-bnV4YXJtIDxsaW51eGFybUBodWF3ZWkuY29tPjsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnOyBpb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZzsNCj4gWmVuZ3Rh
-byAoQikgPHByaW1lLnplbmdAaGlzaWxpY29uLmNvbT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSF0g
-aW9tbXUvYXJtLXNtbXUtdjM6IHJlbW92ZSB0aGUgYXBwcm9hY2ggb2YgTVNJDQo+IHBvbGxpbmcg
-Zm9yIENNRCBTWU5DDQo+IA0KPiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
-Cj4gPiBGcm9tOiBSb2JpbiBNdXJwaHkgW21haWx0bzpyb2Jpbi5tdXJwaHlAYXJtLmNvbV0NCj4g
-PiBTZW50OiBGcmlkYXksIEp1bHkgMTcsIDIwMjAgODo1NSBQTQ0KPiA+IFRvOiBTb25nIEJhbyBI
-dWEgKEJhcnJ5IFNvbmcpIDxzb25nLmJhby5odWFAaGlzaWxpY29uLmNvbT47DQo+IHdpbGxAa2Vy
-bmVsLm9yZzsNCj4gPiBqb3JvQDhieXRlcy5vcmcNCj4gPiBDYzogbGludXgta2VybmVsQHZnZXIu
-a2VybmVsLm9yZzsgTGludXhhcm0gPGxpbnV4YXJtQGh1YXdlaS5jb20+Ow0KPiA+IGxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgaW9tbXVAbGlzdHMubGludXgtZm91bmRhdGlv
-bi5vcmc7DQo+ID4gWmVuZ3RhbyAoQikgPHByaW1lLnplbmdAaGlzaWxpY29uLmNvbT4NCj4gPiBT
-dWJqZWN0OiBSZTogW1BBVENIXSBpb21tdS9hcm0tc21tdS12MzogcmVtb3ZlIHRoZSBhcHByb2Fj
-aCBvZiBNU0kNCj4gPiBwb2xsaW5nIGZvciBDTUQgU1lOQw0KPiA+DQo+ID4gT24gMjAyMC0wNy0x
-NyAwMDowNywgQmFycnkgU29uZyB3cm90ZToNCj4gPiA+IEJlZm9yZSBjb21taXQgNTg3ZTZjMTBh
-N2NlICgiaW9tbXUvYXJtLXNtbXUtdjM6IFJlZHVjZSBjb250ZW50aW9uDQo+ID4gZHVyaW5nDQo+
-ID4gPiBjb21tYW5kLXF1ZXVlIGluc2VydGlvbiIpLCBtc2kgcG9sbGluZyBwZXJoYXBzIHBlcmZv
-cm1lZCBiZXR0ZXIgc2luY2UNCj4gPiA+IGl0IGNvdWxkIHJ1biBvdXRzaWRlIHRoZSBzcGluX2xv
-Y2tfaXJxc2F2ZSgpIHdoaWxlIHRoZSBjb2RlIHBvbGxpbmcgY29ucw0KPiA+ID4gcmVnIHdhcyBy
-dW5uaW5nIGluIHRoZSBsb2NrLg0KPiA+ID4NCj4gPiA+IEJ1dCBhZnRlciB0aGUgZ3JlYXQgcmVv
-cmdhbml6YXRpb24gb2Ygc21tdSBxdWV1ZSwgbmVpdGhlciBvZiB0aGVzZSB0d28NCj4gPiA+IHBv
-bGxpbmcgbWV0aG9kcyBhcmUgcnVubmluZyBpbiBhIHNwaW5sb2NrLiBBbmQgcmVhbCB0ZXN0cyBz
-aG93IHBvbGxpbmcNCj4gPiA+IGNvbnMgcmVnIHZpYSBzZXYgbWVhbnMgc21hbGxlciBsYXRlbmN5
-LiBJdCBpcyBwcm9iYWJseSBiZWNhdXNlIHBvbGxpbmcNCj4gPiA+IGJ5IG1zaSB3aWxsIGFzayBo
-YXJkd2FyZSB0byB3cml0ZSBtZW1vcnkgYnV0IHNldiBwb2xsaW5nIGRlcGVuZHMgb24gdGhlDQo+
-ID4gPiB1cGRhdGUgb2YgcmVnaXN0ZXIgb25seS4NCj4gPiA+DQo+ID4gPiBVc2luZyAxNiB0aHJl
-YWRzIHRvIHJ1biBuZXRwZXJmIG9uIGhuczMgMTAwRyBOSUMgd2l0aCBVRFAgcGFja2V0IHNpemUN
-Cj4gPiA+IGluIDMyNzY4Ynl0ZXMgYW5kIHNldCBpb21tdSB0byBzdHJpY3QsIFRYIHRocm91Z2hw
-dXQgY2FuIGltcHJvdmUgZnJvbQ0KPiA+ID4gMjUyMjcuNzRNYnBzIHRvIDI3MTQ1LjU5TWJwcyBi
-eSB0aGlzIHBhdGNoLiBJbiB0aGlzIGNhc2UsIFNNTVUgaXMNCj4gc3VwZXINCj4gPiA+IGJ1c3kg
-YXMgaG5zMyBzZW5kcyBtYXAvdW5tYXAgcmVxdWVzdHMgZXh0cmVtZWx5IGZyZXF1ZW50bHkuDQo+
-ID4NCj4gPiBIb3cgbWFueSBkaWZmZXJlbnQgc3lzdGVtcyBhbmQgU01NVSBpbXBsZW1lbnRhdGlv
-bnMgYXJlIHRob3NlIG51bWJlcnMNCj4gPiByZXByZXNlbnRhdGl2ZSBvZj8gR2l2ZW4gdGhhdCB3
-ZSBtYXkgaGF2ZSBjYXNlcyB3aGVyZSB0aGUgU01NVSBjYW4gdXNlDQo+ID4gTVNJcyBidXQgY2Fu
-J3QgdXNlIFNFViwgc28gd291bGQgaGF2ZSB0byBmYWxsIGJhY2sgdG8gaW5lZmZpY2llbnQNCj4g
-PiBidXN5LXBvbGxpbmcsIEknZCBiZSB3YXJ5IG9mIHJlbW92aW5nIHRoaXMgZW50aXJlbHkuIEFs
-bG93aW5nIHBhcnRpY3VsYXINCj4gPiBwbGF0Zm9ybXMgb3IgU01NVSBpbXBsZW1lbnRhdGlvbnMg
-dG8gc3VwcHJlc3MgTVNJIGZ1bmN0aW9uYWxpdHkgaWYgdGhleQ0KPiA+IGtub3cgZm9yIHN1cmUg
-aXQgbWFrZXMgc2Vuc2Ugc2VlbXMgbGlrZSBhIHNhZmVyIGJldC4NCj4gPg0KPiBIZWxsbyBSb2Jp
-biwNCj4gDQo+IFRoYW5rcyBmb3IgdGFraW5nIGEgbG9vay4gQWN0dWFsbHkgSSB3YXMgcmVhbGx5
-IHN0cnVnZ2xpbmcgd2l0aCB0aGUgZ29vZCB3YXkgdG8NCj4gbWFrZSBldmVyeSBwbGF0Zm9ybSBo
-YXBweS4NCj4gQW5kIEkgZG9uJ3QgaGF2ZSBvdGhlciBwbGF0Zm9ybXMgdG8gdGVzdCBhbmQgY2hl
-Y2sgaWYgdGhvc2UgcGxhdGZvcm1zIHJ1bg0KPiBiZXR0ZXIgYnkgc2V2IHBvbGxpbmcuIEV2ZW4g
-dHdvDQo+IHBsYXRmb3JtcyBoYXZlIGNvbXBsZXRlbHkgc2FtZSBTTU1VIGZlYXR1cmVzLCBpdCBp
-cyBzdGlsbCBwb3NzaWJsZSB0aGV5DQo+IGJlaGF2ZSBkaWZmZXJlbnRseS4NCj4gU28gSSBzaW1w
-bHkgc2VudCB0aGlzIHBhdGNoIHRvIGdldCB0aGUgZGlzY3Vzc2lvbiBzdGFydGVkIHRvIGdldCBv
-cGluaW9ucy4NCj4gDQo+IEF0IHRoZSBmaXJzdCBiZWdpbm5pbmcsIEkgd2FudGVkIHRvIGhhdmUg
-YSBtb2R1bGUgcGFyYW1ldGVyIGZvciB1c2VycyB0byBkZWNpZGUNCj4gaWYgbXNpIHBvbGxpbmcg
-c2hvdWxkIGJlIGRpc2FibGVkLg0KPiBCdXQgdGhlIG1vZHVsZSBwYXJhbWV0ZXIgbWlnaHQgYmUg
-dG90YWxseSBpZ25vcmVkIGJ5IGxpbnV4IGRpc3Ryby4NCj4gDQo+IC0tLSBhL2RyaXZlcnMvaW9t
-bXUvYXJtLXNtbXUtdjMuYw0KPiArKysgYi9kcml2ZXJzL2lvbW11L2FybS1zbW11LXYzLmMNCj4g
-QEAgLTQxOCw2ICs0MTgsMTEgQEAgbW9kdWxlX3BhcmFtX25hbWVkKGRpc2FibGVfYnlwYXNzLA0K
-PiBkaXNhYmxlX2J5cGFzcywgYm9vbCwgU19JUlVHTyk7ICBNT0RVTEVfUEFSTV9ERVNDKGRpc2Fi
-bGVfYnlwYXNzLA0KPiAgCSJEaXNhYmxlIGJ5cGFzcyBzdHJlYW1zIHN1Y2ggdGhhdCBpbmNvbWlu
-ZyB0cmFuc2FjdGlvbnMgZnJvbSBkZXZpY2VzDQo+IHRoYXQgYXJlIG5vdCBhdHRhY2hlZCB0byBh
-biBpb21tdSBkb21haW4gd2lsbCByZXBvcnQgYW4gYWJvcnQgYmFjayB0byB0aGUNCj4gZGV2aWNl
-IGFuZCB3aWxsIG5vdCBiZSBhbGxvd2VkIHRvIHBhc3MgdGhyb3VnaCB0aGUgU01NVS4iKTsNCj4g
-DQo+ICtzdGF0aWMgYm9vbCBkaXNhYmxlX21zaXBvbGxpbmcgPSAxOw0KPiArbW9kdWxlX3BhcmFt
-X25hbWVkKGRpc2FibGVfbXNpcG9sbGluZywgZGlzYWJsZV9tc2lwb2xsaW5nLCBib29sLA0KPiAr
-U19JUlVHTyk7IE1PRFVMRV9QQVJNX0RFU0MoZGlzYWJsZV9tc2lwb2xsaW5nLA0KPiArCSJEb24n
-dCB1c2UgTVNJIHRvIHBvbGwgdGhlIGNvbXBsZXRpb24gb2YgQ01EX1NZTkMgaWYgaXQgaXMgc2xv
-d2VyIHRoYW4NCj4gK1NFViIpOw0KPiArDQo+ICBlbnVtIHByaV9yZXNwIHsNCj4gIAlQUklfUkVT
-UF9ERU5ZID0gMCwNCj4gIAlQUklfUkVTUF9GQUlMID0gMSwNCj4gQEAgLTk5Miw3ICs5OTcsNyBA
-QCBzdGF0aWMgdm9pZCBhcm1fc21tdV9jbWRxX2J1aWxkX3N5bmNfY21kKHU2NA0KPiAqY21kLCBz
-dHJ1Y3QgYXJtX3NtbXVfZGV2aWNlICpzbW11LA0KPiAgCSAqIEJld2FyZSB0aGF0IEhpMTZ4eCBh
-ZGRzIGFuIGV4dHJhIDMyIGJpdHMgb2YgZ29vZG5lc3MgdG8gaXRzIE1TSQ0KPiAgCSAqIHBheWxv
-YWQsIHNvIHRoZSB3cml0ZSB3aWxsIHplcm8gdGhlIGVudGlyZSBjb21tYW5kIG9uIHRoYXQgcGxh
-dGZvcm0uDQo+ICAJICovDQo+IC0JaWYgKHNtbXUtPmZlYXR1cmVzICYgQVJNX1NNTVVfRkVBVF9N
-U0kgJiYNCj4gKwlpZiAoIWRpc2FibGVfbXNpcG9sbGluZyAmJiBzbW11LT5mZWF0dXJlcyAmIEFS
-TV9TTU1VX0ZFQVRfTVNJICYmDQo+ICAJICAgIHNtbXUtPmZlYXR1cmVzICYgQVJNX1NNTVVfRkVB
-VF9DT0hFUkVOQ1kpIHsNCj4gIAkJZW50LnN5bmMubXNpYWRkciA9IHEtPmJhc2VfZG1hICsgUV9J
-RFgoJnEtPmxscSwgcHJvZCkgKg0KPiAgCQkJCSAgIHEtPmVudF9kd29yZHMgKiA4Ow0KPiBAQCAt
-MTMzMiw3ICsxMzM3LDcgQEAgc3RhdGljIGludA0KPiBfX2FybV9zbW11X2NtZHFfcG9sbF91bnRp
-bF9jb25zdW1lZChzdHJ1Y3QgYXJtX3NtbXVfZGV2aWNlICpzbW11LA0KPiBzdGF0aWMgaW50IGFy
-bV9zbW11X2NtZHFfcG9sbF91bnRpbF9zeW5jKHN0cnVjdCBhcm1fc21tdV9kZXZpY2UgKnNtbXUs
-DQo+ICAJCQkJCSBzdHJ1Y3QgYXJtX3NtbXVfbGxfcXVldWUgKmxscSkNCj4gIHsNCj4gLQlpZiAo
-c21tdS0+ZmVhdHVyZXMgJiBBUk1fU01NVV9GRUFUX01TSSAmJg0KPiArCWlmICghZGlzYWJsZV9t
-c2lwb2xsaW5nICYmIHNtbXUtPmZlYXR1cmVzICYgQVJNX1NNTVVfRkVBVF9NU0kgJiYNCj4gIAkg
-ICAgc21tdS0+ZmVhdHVyZXMgJiBBUk1fU01NVV9GRUFUX0NPSEVSRU5DWSkNCj4gIAkJcmV0dXJu
-IF9fYXJtX3NtbXVfY21kcV9wb2xsX3VudGlsX21zaShzbW11LCBsbHEpOw0KPiANCj4gDQo+IEFu
-b3RoZXIgb3B0aW9uIGlzIHRoYXQgd2UgZG9uJ3QgdXNlIG1vZHVsZSBwYXJhbWV0ZXIsIGFsdGVy
-bmF0aXZlbHksIHdlIGNoZWNrDQo+IHRoZSB2ZW5kb3IvY2hpcCBJRCwNCj4gaWYgdGhlIGNoaXAg
-aGFzIGJldHRlciBwZXJmb3JtYW5jZSBvbiBzZXYgcG9sbGluZywgaXQgbWF5IHNldCBkaXNhYmxl
-X21zaXBvbGxpbmcNCj4gdG8gdHJ1ZS4NCj4gDQo+IFlvdSBhcmUgdmVyeSB3ZWxjb21lIHRvIGdp
-dmUgeW91ciBzdWdnZXN0aW9ucy4NCg0KQSBwb3NzaWJsZSB3YXkgdG8gZG8gc29tZSBjaGlwLXNw
-ZWNpZmljIGNvbmZpZ3VyYXRpb24gd291bGQgYmUgc2V0dGluZyBzbW11LT5vcHRpb25zIGFjY29y
-ZGluZyB0byBtb2RlbCBJRDoNCg0Kc3RhdGljIHZvaWQgYWNwaV9zbW11X2dldF9vcHRpb25zKHUz
-MiBtb2RlbCwgc3RydWN0IGFybV9zbW11X2RldmljZSAqc21tdSkNCnsNCglzd2l0Y2ggKG1vZGVs
-KSB7DQoJY2FzZSBBQ1BJX0lPUlRfU01NVV9WM19DQVZJVU1fQ045OVhYOg0KCQlzbW11LT5vcHRp
-b25zIHw9IEFSTV9TTU1VX09QVF9QQUdFMF9SRUdTX09OTFk7DQoJCWJyZWFrOw0KCWNhc2UgQUNQ
-SV9JT1JUX1NNTVVfVjNfSElTSUxJQ09OX0hJMTYxWDoNCgkJc21tdS0+b3B0aW9ucyB8PSBBUk1f
-U01NVV9PUFRfU0tJUF9QUkVGRVRDSDsNCgkJYnJlYWs7DQorCWNhc2UgQUNQSV9JT1JUX1NNTVVf
-VjNfSElTSUxJQ09OX0hJMTYyWDoNCisJCXNtbXUtPm9wdGlvbnMgfD0gQVJNX1NNTVVfT1BUX0RJ
-U0FCTEVfTVNJUE9MTDsNCisJCWJyZWFrOw0KCX0NCg0KCWRldl9ub3RpY2Uoc21tdS0+ZGV2LCAi
-b3B0aW9uIG1hc2sgMHgleFxuIiwgc21tdS0+b3B0aW9ucyk7DQp9DQoNCkkgZHVtcGVkIHRoZSBt
-b2RlbCBpZCwgYnV0IHVubHVja2lseSB0aGUgaWQgaXMganVzdCB6ZXJvLg0KDQojZGVmaW5lIEFD
-UElfSU9SVF9TTU1VX1YzX0dFTkVSSUMgICAgICAgICAgIDB4MDAwMDAwMDAJLyogR2VuZXJpYyBT
-TU1VdjMgKi8NCg0KUm9iaW4sIA0Kd291bGQgeW91IGxpa2UgdG8gdGhpbmsgYXBwbHlpbmcgZm9y
-IGEgbmV3IG1vZGVsIElEIGlzIGEgcmlnaHQgd2F5IHRvIHNldCB0aGlzIGNoaXAtc3BlY2lmaWMg
-b3B0aW9uPw0KDQpUaGFua3MNCkJhcnJ5DQo=
+From: Christoph Hellwig <hch@lst.de>
+Date: Mon, 20 Jul 2020 13:36:09 +0200
+
+> Most of the tree only uses and implements csum_partial_copy_nocheck,
+> but the c6x and lib/checksum.c implement a csum_partial_copy that
+> isn't used anywere except to define csum_partial_copy.  Get rid of
+> this pointless alias.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+I'll apply this to net-next, thanks.
