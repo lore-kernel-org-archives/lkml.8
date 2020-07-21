@@ -8,37 +8,37 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00597C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FCCC433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2C0320717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25E620717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Lzk6cshH"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pfje3ZGP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731314AbgGUVbi (ORCPT
+        id S1731333AbgGUVbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:31:38 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2251 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731263AbgGUVbe (ORCPT
+        Tue, 21 Jul 2020 17:31:43 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12490 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731293AbgGUVbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:31:34 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f175e3d0000>; Tue, 21 Jul 2020 14:29:33 -0700
+        Tue, 21 Jul 2020 17:31:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f175eaa0005>; Tue, 21 Jul 2020 14:31:22 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 21 Jul 2020 14:31:33 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 21 Jul 2020 14:31:35 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 21 Jul 2020 14:31:33 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Jul
- 2020 21:31:26 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 21 Jul 2020 21:31:25 +0000
+        by hqpgpgate101.nvidia.com on Tue, 21 Jul 2020 14:31:35 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Jul
+ 2020 21:31:25 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 21 Jul 2020 21:31:26 +0000
 Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f175ead0002>; Tue, 21 Jul 2020 14:31:25 -0700
+        id <B5f175ead0006>; Tue, 21 Jul 2020 14:31:26 -0700
 From:   Ralph Campbell <rcampbell@nvidia.com>
 To:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
         <nouveau@lists.freedesktop.org>, <kvm-ppc@vger.kernel.org>,
@@ -52,9 +52,9 @@ CC:     Jerome Glisse <jglisse@redhat.com>,
         "Ben Skeggs" <bskeggs@redhat.com>,
         Bharata B Rao <bharata@linux.ibm.com>,
         "Ralph Campbell" <rcampbell@nvidia.com>
-Subject: [PATCH v3 1/5] nouveau: fix storing invalid ptes
-Date:   Tue, 21 Jul 2020 14:31:15 -0700
-Message-ID: <20200721213119.32344-2-rcampbell@nvidia.com>
+Subject: [PATCH v3 5/5] mm/hmm/test: use the new migration invalidation
+Date:   Tue, 21 Jul 2020 14:31:19 -0700
+Message-ID: <20200721213119.32344-6-rcampbell@nvidia.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200721213119.32344-1-rcampbell@nvidia.com>
 References: <20200721213119.32344-1-rcampbell@nvidia.com>
@@ -63,87 +63,156 @@ X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595366973; bh=rz9ii3/rSLaotraZODv9PDOOFrnasJhkv9z9XY7GWhs=;
+        t=1595367082; bh=dV0F2IGIbSa3UBr9FPynu9ekSSnn2qKSM3AxyUbNMFQ=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Transfer-Encoding:Content-Type;
-        b=Lzk6cshHRX/BtFLrsq8xHfMA6HokZ777+MSJVvy+6Sta2onDtG3g4eA2pgGbItERn
-         jIAJxTUrh2YOzKRVMrPuOgLnVt5p4cA4CejLkZ0nLfYIEVLI7yJtFcztVe9S2oN9fx
-         pDG9d/3C+2/AvoZiwu1fjuHeQUAgU5EMxVxxv+SGN+OusoWOvaoNQLT08L1Ydb0shi
-         K8ODV7nxGzM7ASarEV9ZJ9/PGjRV6mjY0m2srCgsv0+CXDdLi3+hQCF4AahBzbQYlo
-         riUyUFlbET/CM79xRa9Y/tAWAxIqhm7F1UqmLVKam2/LsF7g9QSRsrGpD1WUomIjfQ
-         npdElPFnwaiFA==
+        b=pfje3ZGPKvbmEuIpiYR54C1oU2sba42jUTPeyo9lQu3WTQThk65+loh+eB+wSoEIh
+         N07/umNUYu7CbxQyOsKkfIkuQhuTXVARUPAXP+AmWW92zLGD8Yj3rc+yr2w6p3swkV
+         CWx4hst7sJBQwRB81WTcTZmo23MopnU8P+1kXcLN/yuD9FSrdZXgY806Mk3Z330tqb
+         YAUeJBuMz9nBMYsSk4hzsmTcWI+tJVwHt5mz/8+8z/c+oDor9rN4dcDuBZhdLA/F8+
+         wvOTagUh7sDm0G12wWTYCR1I9bHTmBGmrp+S/GtDZua+EN3PWrsUg3kQZVGsanCUNd
+         +iuPWhcB5EhCw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When migrating a range of system memory to device private memory, some
-of the pages in the address range may not be migrating. In this case,
-the non migrating pages won't have a new GPU MMU entry to store but
-the nvif_object_ioctl() NVIF_VMM_V0_PFNMAP method doesn't check the input
-and stores a bad valid GPU page table entry.
-Fix this by skipping the invalid input PTEs when updating the GPU page
-tables.
+Use the new MMU_NOTIFY_MIGRATE event to skip MMU invalidations of device
+private memory and handle the invalidation in the driver as part of
+migrating device private memory.
 
 Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ lib/test_hmm.c                         | 30 +++++++++++++++-----------
+ tools/testing/selftests/vm/hmm-tests.c | 18 ++++++++++++----
+ 2 files changed, 31 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c b/drivers/g=
-pu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c
-index ed37fddd063f..7eabe9fe0d2b 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c
-@@ -79,8 +79,12 @@ gp100_vmm_pgt_pfn(struct nvkm_vmm *vmm, struct nvkm_mmu_=
-pt *pt,
- 	dma_addr_t addr;
+diff --git a/lib/test_hmm.c b/lib/test_hmm.c
+index 74c6ee66ef15..9abc9ad3140f 100644
+--- a/lib/test_hmm.c
++++ b/lib/test_hmm.c
+@@ -214,6 +214,14 @@ static bool dmirror_interval_invalidate(struct mmu_int=
+erval_notifier *mni,
+ {
+ 	struct dmirror *dmirror =3D container_of(mni, struct dmirror, notifier);
 =20
- 	nvkm_kmap(pt->memory);
--	while (ptes--) {
-+	for (; ptes; ptes--, map->pfn++) {
- 		u64 data =3D 0;
++	/*
++	 * Ignore invalidation callbacks for device private pages since
++	 * the invalidation is handled as part of the migration process.
++	 */
++	if (range->event =3D=3D MMU_NOTIFY_MIGRATE &&
++	    range->migrate_pgmap_owner =3D=3D dmirror->mdevice)
++		return true;
 +
-+		if (!(*map->pfn & NVKM_VMM_PFN_V))
-+			continue;
-+
- 		if (!(*map->pfn & NVKM_VMM_PFN_W))
- 			data |=3D BIT_ULL(6); /* RO. */
-=20
-@@ -100,7 +104,6 @@ gp100_vmm_pgt_pfn(struct nvkm_vmm *vmm, struct nvkm_mmu=
-_pt *pt,
- 		}
-=20
- 		VMM_WO064(pt, vmm, ptei++ * 8, data);
--		map->pfn++;
- 	}
- 	nvkm_done(pt->memory);
+ 	if (mmu_notifier_range_blockable(range))
+ 		mutex_lock(&dmirror->mutex);
+ 	else if (!mutex_trylock(&dmirror->mutex))
+@@ -702,7 +710,7 @@ static int dmirror_migrate(struct dmirror *dmirror,
+ 		args.dst =3D dst_pfns;
+ 		args.start =3D addr;
+ 		args.end =3D next;
+-		args.pgmap_owner =3D NULL;
++		args.pgmap_owner =3D dmirror->mdevice;
+ 		args.flags =3D MIGRATE_VMA_SELECT_SYSTEM;
+ 		ret =3D migrate_vma_setup(&args);
+ 		if (ret)
+@@ -992,7 +1000,7 @@ static void dmirror_devmem_free(struct page *page)
  }
-@@ -310,9 +313,12 @@ gp100_vmm_pd0_pfn(struct nvkm_vmm *vmm, struct nvkm_mm=
-u_pt *pt,
- 	dma_addr_t addr;
 =20
- 	nvkm_kmap(pt->memory);
--	while (ptes--) {
-+	for (; ptes; ptes--, map->pfn++) {
- 		u64 data =3D 0;
+ static vm_fault_t dmirror_devmem_fault_alloc_and_copy(struct migrate_vma *=
+args,
+-						struct dmirror_device *mdevice)
++						      struct dmirror *dmirror)
+ {
+ 	const unsigned long *src =3D args->src;
+ 	unsigned long *dst =3D args->dst;
+@@ -1014,6 +1022,7 @@ static vm_fault_t dmirror_devmem_fault_alloc_and_copy=
+(struct migrate_vma *args,
+ 			continue;
 =20
-+		if (!(*map->pfn & NVKM_VMM_PFN_V))
-+			continue;
-+
- 		if (!(*map->pfn & NVKM_VMM_PFN_W))
- 			data |=3D BIT_ULL(6); /* RO. */
-=20
-@@ -332,7 +338,6 @@ gp100_vmm_pd0_pfn(struct nvkm_vmm *vmm, struct nvkm_mmu=
-_pt *pt,
- 		}
-=20
- 		VMM_WO064(pt, vmm, ptei++ * 16, data);
--		map->pfn++;
- 	}
- 	nvkm_done(pt->memory);
+ 		lock_page(dpage);
++		xa_erase(&dmirror->pt, addr >> PAGE_SHIFT);
+ 		copy_highpage(dpage, spage);
+ 		*dst =3D migrate_pfn(page_to_pfn(dpage)) | MIGRATE_PFN_LOCKED;
+ 		if (*src & MIGRATE_PFN_WRITE)
+@@ -1022,15 +1031,6 @@ static vm_fault_t dmirror_devmem_fault_alloc_and_cop=
+y(struct migrate_vma *args,
+ 	return 0;
  }
+=20
+-static void dmirror_devmem_fault_finalize_and_map(struct migrate_vma *args=
+,
+-						  struct dmirror *dmirror)
+-{
+-	/* Invalidate the device's page table mapping. */
+-	mutex_lock(&dmirror->mutex);
+-	dmirror_do_update(dmirror, args->start, args->end);
+-	mutex_unlock(&dmirror->mutex);
+-}
+-
+ static vm_fault_t dmirror_devmem_fault(struct vm_fault *vmf)
+ {
+ 	struct migrate_vma args;
+@@ -1060,11 +1060,15 @@ static vm_fault_t dmirror_devmem_fault(struct vm_fa=
+ult *vmf)
+ 	if (migrate_vma_setup(&args))
+ 		return VM_FAULT_SIGBUS;
+=20
+-	ret =3D dmirror_devmem_fault_alloc_and_copy(&args, dmirror->mdevice);
++	ret =3D dmirror_devmem_fault_alloc_and_copy(&args, dmirror);
+ 	if (ret)
+ 		return ret;
+ 	migrate_vma_pages(&args);
+-	dmirror_devmem_fault_finalize_and_map(&args, dmirror);
++	/*
++	 * No device finalize step is needed since
++	 * dmirror_devmem_fault_alloc_and_copy() will have already
++	 * invalidated the device page table.
++	 */
+ 	migrate_vma_finalize(&args);
+ 	return 0;
+ }
+diff --git a/tools/testing/selftests/vm/hmm-tests.c b/tools/testing/selftes=
+ts/vm/hmm-tests.c
+index b533dd08da1d..91d38a29956b 100644
+--- a/tools/testing/selftests/vm/hmm-tests.c
++++ b/tools/testing/selftests/vm/hmm-tests.c
+@@ -881,8 +881,9 @@ TEST_F(hmm, migrate)
+ }
+=20
+ /*
+- * Migrate anonymous memory to device private memory and fault it back to =
+system
+- * memory.
++ * Migrate anonymous memory to device private memory and fault some of it =
+back
++ * to system memory, then try migrating the resulting mix of system and de=
+vice
++ * private memory to the device.
+  */
+ TEST_F(hmm, migrate_fault)
+ {
+@@ -924,8 +925,17 @@ TEST_F(hmm, migrate_fault)
+ 	for (i =3D 0, ptr =3D buffer->mirror; i < size / sizeof(*ptr); ++i)
+ 		ASSERT_EQ(ptr[i], i);
+=20
+-	/* Fault pages back to system memory and check them. */
+-	for (i =3D 0, ptr =3D buffer->ptr; i < size / sizeof(*ptr); ++i)
++	/* Fault half the pages back to system memory and check them. */
++	for (i =3D 0, ptr =3D buffer->ptr; i < size / (2 * sizeof(*ptr)); ++i)
++		ASSERT_EQ(ptr[i], i);
++
++	/* Migrate memory to the device again. */
++	ret =3D hmm_dmirror_cmd(self->fd, HMM_DMIRROR_MIGRATE, buffer, npages);
++	ASSERT_EQ(ret, 0);
++	ASSERT_EQ(buffer->cpages, npages);
++
++	/* Check what the device read. */
++	for (i =3D 0, ptr =3D buffer->mirror; i < size / sizeof(*ptr); ++i)
+ 		ASSERT_EQ(ptr[i], i);
+=20
+ 	hmm_buffer_free(buffer);
 --=20
 2.20.1
 
