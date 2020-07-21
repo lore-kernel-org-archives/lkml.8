@@ -2,82 +2,82 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E42C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B816DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 710A020771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595374073;
-	bh=TpGye4OXRucMZOFEZvMVKT883+Bt6kZ+SrxTDUF+e7I=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=JNfbq52FwFw4TdPY9opfaifrdOvspkTd0Lgyb3p3zBaEt4nSS+QMZ+p1wCw4S7k7T
-	 E/r2q4vlIG3mxUZpkSY65BolJ2u3DZ7C4DNqCYJ+jVHt6kCE3Q2xku6W+t0uGeZlR7
-	 HK9f3Nt7Y9WOb8Y6edUwLz4GnFtn3lQnUfjcVCjw=
+	by mail.kernel.org (Postfix) with ESMTP id 9622F2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:29:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="atTdsPIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731417AbgGUX1w (ORCPT
+        id S1731380AbgGUX3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 19:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgGUX1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 19:27:52 -0400
-Received: from embeddedor (unknown [201.162.241.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96D7E2073A;
-        Tue, 21 Jul 2020 23:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595374071;
-        bh=TpGye4OXRucMZOFEZvMVKT883+Bt6kZ+SrxTDUF+e7I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DfYkeNBHQ0sJiJyC3VjBNiqfqxwOqUufJIH/i/hDWOy7Gr1P9Y6u7Rkr4ZG0jeLqJ
-         7u2xWpPlNAqEmj53IGiKlnYqNwc1IaT1a0c0CHftyOIvfjOY4s+9hs9XKnhQRzS1pN
-         HIGvyzInyvugKzRhpSJvMnbuBEZDtgTQbFdCjIxM=
-Date:   Tue, 21 Jul 2020 18:33:29 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jim Cromie <jim.cromie@gmail.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] i2c: scx200_acb: Use fallthrough pseudo-keyword
-Message-ID: <20200721233329.GA2718@embeddedor>
+        Tue, 21 Jul 2020 19:29:16 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45044 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgGUX3Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 19:29:16 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LNTFU2113697
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 18:29:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595374155;
+        bh=XTgVhSn9cvqVM8cziFcXaCIXMVCkPt/CZLpLP6PMMGY=;
+        h=From:To:CC:Subject:Date;
+        b=atTdsPIXkfmA1YxUSq63gTdVlgOYfkOhFL5mxjkVzU2ZG5htpvs5qt++UYyurx/ro
+         KxsexYJXUyTPPsintL1oSPz7azBM/C+I0DgRaN/TjLiTrjinqOfwgPOU8A7EJk7iX5
+         OqG+RWEMmiZlvOl/pWTQ7N10pAS4KbrxEBnb/Y6Q=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LNTFVC096878
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 18:29:15 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
+ Jul 2020 18:29:14 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 21 Jul 2020 18:29:15 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LNTDJa007619;
+        Tue, 21 Jul 2020 18:29:14 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH 0/3] phy: ti: gmii-sel: update to support multiport k3 devices
+Date:   Wed, 22 Jul 2020 02:29:10 +0300
+Message-ID: <20200721232913.4979-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1].
+Hi Kishon,
 
-[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+This series introduces support for multiport K3 CPSW devices like one, which
+can be found on J721E SoC (MAIN CPSW).
+The first two patches are preparation changes. The Patch 3 add support for
+retrieving number of ports and base registers offset from DT.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/i2c/busses/scx200_acb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Grygorii Strashko (3):
+  phy: ti: gmii-sel: move phy init in separate function
+  phy: ti: gmii-sel: use features mask during init
+  phy: ti: gmii-sel: retrieve ports number and base offset from dt
 
-diff --git a/drivers/i2c/busses/scx200_acb.c b/drivers/i2c/busses/scx200_acb.c
-index bd9afa383d12..7b42a18bd05c 100644
---- a/drivers/i2c/busses/scx200_acb.c
-+++ b/drivers/i2c/busses/scx200_acb.c
-@@ -151,7 +151,7 @@ static void scx200_acb_machine(struct scx200_acb_iface *iface, u8 status)
- 
- 	case state_repeat_start:
- 		outb(inb(ACBCTL1) | ACBCTL1_START, ACBCTL1);
--		/* fallthrough */
-+		fallthrough;
- 
- 	case state_quick:
- 		if (iface->address_byte & 1) {
+ drivers/phy/ti/phy-gmii-sel.c | 159 ++++++++++++++++++++--------------
+ 1 file changed, 96 insertions(+), 63 deletions(-)
+
 -- 
-2.27.0
+2.17.1
 
