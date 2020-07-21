@@ -2,577 +2,320 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F996C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3052C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F328E206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D28A20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:29:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHJfdxLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgGUN2g convert rfc822-to-8bit (ORCPT
+        id S1727898AbgGUN3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:28:36 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2654 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726014AbgGUN2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:28:35 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 41928FE39F6D5B54CDFE;
-        Tue, 21 Jul 2020 21:28:30 +0800 (CST)
-Received: from DGGEMM508-MBX.china.huawei.com ([169.254.2.193]) by
- DGGEMM403-HUB.china.huawei.com ([10.3.20.211]) with mapi id 14.03.0487.000;
- Tue, 21 Jul 2020 21:28:20 +0800
-From:   "Zhoujian (jay)" <jianjay.zhou@huawei.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "Maoming (maoming, Cloud Infrastructure Service Product Dept.)" 
-        <maoming.maoming@huawei.com>,
-        "Huangweidong (C)" <weidong.huang@huawei.com>,
-        Peter Xu <peterx@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: RE: [PATCH] vfio dma_map/unmap: optimized for hugetlbfs pages
-Thread-Topic: [PATCH] vfio dma_map/unmap: optimized for hugetlbfs pages
-Thread-Index: AQHWXm/2XBg1E1uuxEuF0Ts0dF5bR6kQjBuAgAF7pBA=
-Date:   Tue, 21 Jul 2020 13:28:20 +0000
-Message-ID: <B2D15215269B544CADD246097EACE7474BDEED27@dggemm508-mbx.china.huawei.com>
-References: <20200720082947.1770-1-jianjay.zhou@huawei.com>
- <20200720164603.3a622548@x1.home>
-In-Reply-To: <20200720164603.3a622548@x1.home>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.149.93]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 21 Jul 2020 09:29:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbgGUN27 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 09:28:59 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73818C061794;
+        Tue, 21 Jul 2020 06:28:59 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m9so10739133pfh.0;
+        Tue, 21 Jul 2020 06:28:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=zgqmIhx0YcKw4+C4bxLnSQpYZb5tzK0BJ+2edyxVkG4=;
+        b=BHJfdxLCSUra/VXuy/hCTVKZN4ot94rnRLHDvbl2EGc4gu/u4e4dIOUILTsKeE08bX
+         7afuY98QhuwWcR8U2qgd7u/47+HVMSL8YFAPsz8kOjh1f+5zxXKTVQOp1RPqrlHCw0yB
+         GDYS9BslZGaVzMMLoPkMXk5egpOCEzw3yWiT6Ovf+EmOTXQFxTDztLcECCsQLEU+hGkV
+         /vA/yuhMTPN/sXLJd9fI9zfkW9neQxs7fYeo8DFNkdlHgukmxTlLYdojrJsUudMw3+wN
+         p+6pmygSCGswYe+haw5odTz+0NCcmFhSc58g7to2pQyzKKBduoPRkIrNKZ/pf6y4D2wl
+         8maQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=zgqmIhx0YcKw4+C4bxLnSQpYZb5tzK0BJ+2edyxVkG4=;
+        b=GZ6r27+R12iwqMAHxi2ARV7OidhetyPyl5QmOATfQr2KJ/VUzuY/mCwx0pRAOpCHgZ
+         JwDXjrfaBEJfUVuTfmz97Ds0lyie+hYlVxyUXTHBduqVmr6B2mqmCy00E1eGEegyGcS/
+         mgglHdkKQZwXakicpoo2EET5tXRk/GDeFjFRAK23RZCTPt+O1LJ0Xwfe4d9/Ef/2dgvI
+         efeLy56CF6v1fyhoYx/9KyaJqLrOUq62jE2mz3bF7nf2TmD2NH8NqvhT3T/27xMBGCNc
+         qpwf/7KNg/BlFK6UBGuV81lK9wo7GW0ziMb8xXQwQBlqeYDV0D8cPZICu/lALiHYTqUg
+         knYw==
+X-Gm-Message-State: AOAM531Ypkep/NqXk6EPynULj58495yHEy1KVXHO6nim2kzrl7sVx5NB
+        Jzu2Rv8+o6rEQ+8Cwg3Gcro=
+X-Google-Smtp-Source: ABdhPJw1uZHI7Nkj6RkoZ1b4wY/jydz5WXahPIeTkp2KaKMclJwNu40cGa1ML0/q8saxHliAQ5L3YA==
+X-Received: by 2002:a62:1c8b:: with SMTP id c133mr25155694pfc.134.1595338138962;
+        Tue, 21 Jul 2020 06:28:58 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s6sm20671677pfd.20.2020.07.21.06.28.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 Jul 2020 06:28:58 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 06:28:56 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Marius Zachmann <mail@mariuszachmann.de>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: corsair-cpro: add reading pwm values
+Message-ID: <20200721132856.GA162181@roeck-us.net>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for taking a close look at the code, Alex.
-We'll check them one by one ASAP.
+On Tue, Jul 21, 2020 at 10:54:47AM +0200, Marius Zachmann wrote:
+> This adds the possibility for reading pwm values.
+> These can not be read if the device is controlled via
+> fan_target or a fan curve and will return an error in
+> this case. Since an error is expected, this adds some
+> rudimentary error handling.
+> 
+> Changes:
+> - add CTL_GET_FAN_PWM and use it via get_data
+> - pwm returns -ENODATA if the device returns error 0x12
+> - fan_target now returns -ENODATA when the driver is
+>   started or a pwm value is set.
+> - add ccp_get_errno to determine errno from device error.
+> - get_data now has a parameter to determine whether
+>   to read one or two bytes of data.
+> - update documentation
+> - fix missing surname in MAINTAINERS
+> 
+> Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
 
-> -----Original Message-----
-> From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> Sent: Tuesday, July 21, 2020 6:46 AM
-> To: Zhoujian (jay) <jianjay.zhou@huawei.com>
-> Cc: linux-kernel@vger.kernel.org; kvm@vger.kernel.org; cohuck@redhat.com;
-> Maoming (maoming, Cloud Infrastructure Service Product Dept.)
-> <maoming.maoming@huawei.com>; Huangweidong (C)
-> <weidong.huang@huawei.com>; Peter Xu <peterx@redhat.com>; Andrea
-> Arcangeli <aarcange@redhat.com>
-> Subject: Re: [PATCH] vfio dma_map/unmap: optimized for hugetlbfs pages
-> 
-> On Mon, 20 Jul 2020 16:29:47 +0800
-> Jay Zhou <jianjay.zhou@huawei.com> wrote:
-> 
-> > From: Ming Mao <maoming.maoming@huawei.com>
-> >
-> > Hi all,
-> > I'm working on starting lots of big size Virtual Machines(memory:
-> > >128GB) with VFIO-devices. And I encounter a problem that is the
-> > waiting time of starting all Virtual Machines is too long. I analyze
-> > the startup log and find that the time of pinning/unpinning pages
-> > could be reduced.
-> >
-> > In the original process, to make sure the pages are contiguous, we
-> > have to check all pages one by one. I think maybe we can use hugetlbfs
-> > pages which can skip this step.
-> > So I create a patch to do this.
-> > According to my test, the result of this patch is pretty well.
-> >
-> > Virtual Machine: 50G memory, 32 CPU, 1 VFIO-device, 1G hugetlbfs page
-> >         original   after optimization
-> > pin time   700ms          0.1ms
-> >
-> > I Suppose that:
-> > 1)the hugetlbfs page should not be split 2)PG_reserved is not relevant
-> > for hugetlbfs pages 3)we can delete the for loops and use some
-> > operations (such as atomic_add,page_ref_add) instead
-> >
-> > please correct me if I am wrong.
-> >
-> > Thanks.
-> >
-> > Signed-off-by: Ming Mao <maoming.maoming@huawei.com>
-> > ---
-> >  drivers/vfio/vfio_iommu_type1.c | 236 ++++++++++++++++++++++++++++++--
-> >  include/linux/vfio.h            |  20 +++
-> >  2 files changed, 246 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/vfio/vfio_iommu_type1.c
-> > b/drivers/vfio/vfio_iommu_type1.c index 5e556ac91..42e25752e 100644
-> > --- a/drivers/vfio/vfio_iommu_type1.c
-> > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > @@ -415,6 +415,46 @@ static int put_pfn(unsigned long pfn, int prot)
-> >  	return 0;
-> >  }
-> >
-> > +/*
-> > + * put pfns for a hugetlbfs page
-> > + * @start:the 4KB-page we start to put,can be any page in this
-> > +hugetlbfs page
-> > + * @npage:the number of 4KB-pages need to put
-> 
-> This code supports systems where PAGE_SIZE is not 4KB.
-> 
-> > + * @prot:IOMMU_READ/WRITE
-> > + */
-> > +static int hugetlb_put_pfn(unsigned long start, unsigned int npage,
-> > +int prot) {
-> > +	struct page *page = NULL;
-> > +	struct page *head = NULL;
-> 
-> Unnecessary initialization.
-> 
-> > +
-> > +	if (!npage || !pfn_valid(start))
-> > +		return 0;
-> > +
-> > +	page = pfn_to_page(start);
-> > +	if (!page || !PageHuge(page))
-> > +		return 0;
-> > +	head = compound_head(page);
-> > +	/*
-> > +	 * The last page should be in this hugetlbfs page.
-> > +	 * The number of putting pages should be equal to the number
-> > +	 * of getting pages.So the hugepage pinned refcount and the normal
-> > +	 * page refcount can not be smaller than npage.
-> > +	 */
-> > +	if ((head != compound_head(pfn_to_page(start + npage - 1)))
-> > +	    || (page_ref_count(head) < npage)
-> > +	    || (compound_pincount(page) < npage))
-> > +		return 0;
-> > +
-> > +	if ((prot & IOMMU_WRITE) && !PageDirty(page))
-> > +		set_page_dirty_lock(page);
-> > +
-> > +	atomic_sub(npage, compound_pincount_ptr(head));
-> > +	if (page_ref_sub_and_test(head, npage))
-> > +		__put_page(head);
-> > +
-> > +	mod_node_page_state(page_pgdat(head), NR_FOLL_PIN_RELEASED,
-> npage);
-> > +	return 1;
-> > +}
-> > +
-> >  static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct
-> *mm,
-> >  			    unsigned long vaddr, unsigned long *pfn,
-> >  			    bool write_fault)
-> > @@ -479,6 +519,90 @@ static int vaddr_get_pfn(struct mm_struct *mm,
-> unsigned long vaddr,
-> >  	return ret;
-> >  }
-> >
-> > +struct vfio_hupetlbpage_info vfio_hugetlbpage_info[HUGE_MAX_HSTATE] = {
-> > +	{vfio_hugetlbpage_2M, PMD_SIZE, ~((1ULL << HPAGE_PMD_SHIFT) - 1)},
-> > +	{vfio_hugetlbpage_1G, PUD_SIZE, ~((1ULL << HPAGE_PUD_SHIFT) - 1)},
-> 
-> Other architectures support more huge page sizes, also 0-day identified these
-> #defines don't exist when THP is not configured.  But why couldn't we figure out
-> all of these form the compound_order()?  order == shift, size = PAGE_SIZE <<
-> order.
-> 
-> > +};
-> > +
-> > +static bool is_hugetlbpage(unsigned long pfn, enum
-> > +vfio_hugetlbpage_type *type) {
-> > +	struct page *page = NULL;
-> 
-> Unnecessary initialization.
-> 
-> > +
-> > +	if (!pfn_valid(pfn) || !type)
-> > +		return false;
-> > +
-> > +	page = pfn_to_page(pfn);
-> > +	/* only check for hugetlbfs pages */
-> > +	if (!page || !PageHuge(page))
-> > +		return false;
-> > +
-> > +	switch (compound_order(compound_head(page))) {
-> > +	case PMD_ORDER:
-> > +		*type = vfio_hugetlbpage_2M;
-> > +		break;
-> > +	case PUD_ORDER:
-> > +		*type = vfio_hugetlbpage_1G;
-> > +		break;
-> > +	default:
-> > +		return false;
-> > +	}
-> > +
-> > +	return true;
-> > +}
-> > +
-> > +/* Is the addr in the last page in hugetlbfs pages? */ static bool
-> > +hugetlb_is_last_page(unsigned long addr, enum vfio_hugetlbpage_type
-> > +type) {
-> > +	unsigned int num = 0;
-> 
-> Unnecessary initialization, and in fact unnecessary variable altogether.
-> ie.
-> 
-> 	return hugetlb_get_resdual_pages(addr & ~(PAGE_SIZE - 1), type) == 1;
-> 
-> 
-> > +
-> > +	num = hugetlb_get_resdual_pages(addr & ~(PAGE_SIZE - 1), type);
-> 
-> residual?
-> 
-> > +
-> > +	if (num == 1)
-> > +		return true;
-> > +	else
-> > +		return false;
-> > +}
-> > +
-> > +static bool hugetlb_page_is_pinned(struct vfio_dma *dma,
-> > +				unsigned long start,
-> > +				unsigned long npages)
-> > +{
-> > +	struct vfio_pfn *vpfn = NULL;
-> 
-> Unnecessary initialization.
-> 
-> > +	struct rb_node *node = rb_first(&dma->pfn_list);
-> > +	unsigned long end = start + npages - 1;
-> > +
-> > +	for (; node; node = rb_next(node)) {
-> > +		vpfn = rb_entry(node, struct vfio_pfn, node);
-> > +
-> > +		if ((vpfn->pfn >= start) && (vpfn->pfn <= end))
-> > +			return true;
-> 
-> This function could be named better, it suggests the hugetlbfs page is pinned, but
-> really we're only looking for any pfn_list pinnings overlapping the pfn range.
-> 
-> > +	}
-> > +
-> > +	return false;
-> > +}
-> > +
-> > +static unsigned int hugetlb_get_contiguous_pages_num(struct vfio_dma
-> *dma,
-> > +						unsigned long pfn,
-> > +						unsigned long resdual_npage,
-> > +						unsigned long max_npage)
-> > +{
-> > +	unsigned int num = 0;
-> 
-> Unnecessary initialization
-> 
-> > +
-> > +	if (!dma)
-> > +		return 0;
-> > +
-> > +	num = resdual_npage < max_npage ? resdual_npage : max_npage;
-> 
-> min(resdual_npage, max_npage)
-> 
-> 
-> > +	/*
-> > +	 * If there is only one page, it is no need to optimize them.
-> 
-> s/no need/not necessary/
-> 
-> > +	 * Maybe some pages have been pinned and inserted into dma->pfn_list by
-> others.
-> > +	 * In this case, we just goto the slow path simply.
-> > +	 */
-> > +	if ((num < 2) || hugetlb_page_is_pinned(dma, pfn, num))
-> > +		return 0;
-> 
-> Why does having pinnings in the pfn_list disqualify it from hugetlbfs pinning?
-> 
-> Testing for the last page here is redundant to the pinning path, should it only be
-> done here?  Can num be zero?
-> 
-> Maybe better to return -errno for this and above zero conditions rather than
-> return a value that doesn't reflect the purpose of the function?
-> 
-> > +
-> > +	return num;
-> > +}
-> > +
-> >  /*
-> >   * Attempt to pin pages.  We really don't want to track all the pfns and
-> >   * the iommu can only map chunks of consecutive pfns anyway, so get
-> > the @@ -492,6 +616,7 @@ static long vfio_pin_pages_remote(struct vfio_dma
-> *dma, unsigned long vaddr,
-> >  	long ret, pinned = 0, lock_acct = 0;
-> >  	bool rsvd;
-> >  	dma_addr_t iova = vaddr - dma->vaddr + dma->iova;
-> > +	enum vfio_hugetlbpage_type type;
-> >
-> >  	/* This code path is only user initiated */
-> >  	if (!current->mm)
-> > @@ -521,6 +646,55 @@ static long vfio_pin_pages_remote(struct vfio_dma
-> *dma, unsigned long vaddr,
-> >  	if (unlikely(disable_hugepages))
-> >  		goto out;
-> >
-> > +	/*
-> > +	 * It is no need to get pages one by one for hugetlbfs pages.
-> 
-> s/no need/not necessary/
-> 
-> > +	 * 4KB-pages in hugetlbfs pages are contiguous.
-> > +	 * But if the vaddr is in the last 4KB-page, we just goto the slow path.
-> 
-> 
-> s/4KB-/PAGE_SIZE /
-> 
-> Please explain the significance of vaddr being in the last PAGE_SIZE page of a
-> hugetlbfs page.  Is it simply that we should take the slow path for mapping a
-> single page before the end of the hugetlbfs page?
-> Is this optimization worthwhile?  Isn't it more consistent to handle all mappings
-> over hugetlbfs pages the same?  Should we be operating on vaddr here for the
-> hugetlbfs page alignment or base_pfn?
-> 
-> > +	 */
-> > +	if (is_hugetlbpage(*pfn_base, &type) && !hugetlb_is_last_page(vaddr,
-> type)) {
-> > +		unsigned long hugetlb_resdual_npage = 0;
-> > +		unsigned long contiguous_npage = 0;
-> > +		struct page *head = NULL;
-> > +
-> > +		hugetlb_resdual_npage =
-> > +			hugetlb_get_resdual_pages((vaddr + PAGE_SIZE) & ~(PAGE_SIZE -
-> 1),
-> > +type);
-> 
-> ~(PAGE_SIZE - 1) is PAGE_MASK, but that whole operation looks like a
-> PAGE_ALIGN(vaddr)
-> 
-> This is trying to get the number of pages after this page to the end of the
-> hugetlbfs page, right?  Rather than the hugetlb_is_last_page() above, shouldn't
-> we have recorded the number of pages there and used math to get this value?
-> 
-> > +		/*
-> > +		 * Maybe the hugetlb_resdual_npage is invalid.
-> > +		 * For example, hugetlb_resdual_npage > (npage - 1) or
-> > +		 * some pages of this hugetlbfs page have been pinned.
-> > +		 */
-> > +		contiguous_npage = hugetlb_get_contiguous_pages_num(dma,
-> *pfn_base + 1,
-> > +						hugetlb_resdual_npage, npage - 1);
-> > +		if (!contiguous_npage)
-> > +			goto slow_path;
-> > +
-> > +		/*
-> > +		 * Unlike THP, the splitting should not happen for hugetlbfs pages.
-> > +		 * Since PG_reserved is not relevant for compound pages, and the pfn
-> of
-> > +		 * 4KB-page which in hugetlbfs pages is valid,
-> 
-> s/4KB/PAGE_SIZE/
-> 
-> > +		 * it is no need to check rsvd for hugetlbfs pages.
-> 
-> s/no need/not necessary/
-> 
-> > +		 */
-> > +		if (!dma->lock_cap &&
-> > +		    current->mm->locked_vm + lock_acct + contiguous_npage > limit)
-> {
-> > +			pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
-> > +				 __func__, limit << PAGE_SHIFT);
-> > +			ret = -ENOMEM;
-> > +			goto unpin_out;
-> > +		}
-> > +		/*
-> > +		 * We got a hugetlbfs page using vaddr_get_pfn alreadly.
-> > +		 * In this case,we do not need to alloc pages and we can finish all
-> > +		 * work by a single operation to the head page.
-> > +		 */
-> > +		lock_acct += contiguous_npage;
-> > +		head = compound_head(pfn_to_page(*pfn_base));
-> > +		atomic_add(contiguous_npage, compound_pincount_ptr(head));
-> > +		page_ref_add(head, contiguous_npage);
-> > +		mod_node_page_state(page_pgdat(head), NR_FOLL_PIN_ACQUIRED,
-> contiguous_npage);
-> > +		pinned += contiguous_npage;
-> > +		goto out;
-> 
-> I'm hoping Peter or Andrea understand this, but I think we still have pfn_base
-> pinned separately and I don't see that we've done an unpin anywhere, so are we
-> leaking the pin of the first page??
-> 
-> > +	}
-> > +slow_path:
-> >  	/* Lock all the consecutive pages from pfn_base */
-> >  	for (vaddr += PAGE_SIZE, iova += PAGE_SIZE; pinned < npage;
-> >  	     pinned++, vaddr += PAGE_SIZE, iova += PAGE_SIZE) { @@ -569,7
-> > +743,30 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma,
-> > dma_addr_t iova,  {
-> >  	long unlocked = 0, locked = 0;
-> >  	long i;
-> > +	enum vfio_hugetlbpage_type type;
-> > +
-> > +	if (is_hugetlbpage(pfn, &type)) {
-> > +		unsigned long hugetlb_resdual_npage = 0;
-> > +		unsigned long contiguous_npage = 0;
-> 
-> Unnecessary initialization...
-> 
-> >
-> > +		hugetlb_resdual_npage = hugetlb_get_resdual_pages(iova &
-> > +~(PAGE_SIZE - 1), type);
-> 
-> PAGE_MASK
-> 
-> Like above, is it pfn or iova that we should be using when looking at hugetlbfs
-> alignment?
-> 
-> > +		contiguous_npage = hugetlb_get_contiguous_pages_num(dma, pfn,
-> > +						hugetlb_resdual_npage, npage);
-> > +		/*
-> > +		 * There is not enough contiguous pages or this hugetlbfs page
-> > +		 * has been pinned.
-> > +		 * Let's try the slow path.
-> > +		 */
-> > +		if (!contiguous_npage)
-> > +			goto slow_path;
-> > +
-> > +		/* try the slow path if failed */
-> > +		if (hugetlb_put_pfn(pfn, contiguous_npage, dma->prot)) {
-> > +			unlocked = contiguous_npage;
-> > +			goto out;
-> > +		}
-> 
-> Should probably break the pin path into a separate get_pfn function for
-> symmetry.
-> 
-> 
-> > +	}
-> > +slow_path:
-> >  	for (i = 0; i < npage; i++, iova += PAGE_SIZE) {
-> >  		if (put_pfn(pfn++, dma->prot)) {
-> >  			unlocked++;
-> > @@ -578,6 +775,7 @@ static long vfio_unpin_pages_remote(struct vfio_dma
-> *dma, dma_addr_t iova,
-> >  		}
-> >  	}
-> >
-> > +out:
-> >  	if (do_accounting)
-> >  		vfio_lock_acct(dma, locked - unlocked, true);
-> >
-> > @@ -867,6 +1065,7 @@ static long vfio_unmap_unpin(struct vfio_iommu
-> *iommu, struct vfio_dma *dma,
-> >  	struct iommu_iotlb_gather iotlb_gather;
-> >  	int unmapped_region_cnt = 0;
-> >  	long unlocked = 0;
-> > +	enum vfio_hugetlbpage_type type;
-> >
-> >  	if (!dma->size)
-> >  		return 0;
-> > @@ -900,16 +1099,33 @@ static long vfio_unmap_unpin(struct vfio_iommu
-> *iommu, struct vfio_dma *dma,
-> >  			continue;
-> >  		}
-> >
-> > -		/*
-> > -		 * To optimize for fewer iommu_unmap() calls, each of which
-> > -		 * may require hardware cache flushing, try to find the
-> > -		 * largest contiguous physical memory chunk to unmap.
-> > -		 */
-> > -		for (len = PAGE_SIZE;
-> > -		     !domain->fgsp && iova + len < end; len += PAGE_SIZE) {
-> > -			next = iommu_iova_to_phys(domain->domain, iova + len);
-> > -			if (next != phys + len)
-> > -				break;
-> > +		if (is_hugetlbpage((phys >> PAGE_SHIFT), &type)
-> > +		    && (!domain->fgsp)) {
-> 
-> Reverse the order of these tests.
-> 
-> > +			unsigned long hugetlb_resdual_npage = 0;
-> > +			unsigned long contiguous_npage = 0;
-> 
-> 
-> Unnecessary...
-> 
-> > +			hugetlb_resdual_npage =
-> > +				hugetlb_get_resdual_pages(iova & ~(PAGE_SIZE - 1), type);
-> 
-> PAGE_MASK
-> 
-> > +			/*
-> > +			 * The number of contiguous page can not be larger than
-> dma->size
-> > +			 * which is the number of pages pinned.
-> > +			 */
-> > +			contiguous_npage = ((dma->size >> PAGE_SHIFT) >
-> hugetlb_resdual_npage) ?
-> > +				hugetlb_resdual_npage : (dma->size >> PAGE_SHIFT);
-> 
-> min()
-> 
-> > +
-> > +			len = contiguous_npage * PAGE_SIZE;
-> > +		} else {
-> > +			/*
-> > +			 * To optimize for fewer iommu_unmap() calls, each of which
-> > +			 * may require hardware cache flushing, try to find the
-> > +			 * largest contiguous physical memory chunk to unmap.
-> > +			 */
-> > +			for (len = PAGE_SIZE;
-> > +			     !domain->fgsp && iova + len < end; len += PAGE_SIZE) {
-> > +				next = iommu_iova_to_phys(domain->domain, iova + len);
-> > +				if (next != phys + len)
-> > +					break;
-> > +			}
-> >  		}
-> >
-> >  		/*
-> > diff --git a/include/linux/vfio.h b/include/linux/vfio.h index
-> > 38d3c6a8d..91ef2058f 100644
-> > --- a/include/linux/vfio.h
-> > +++ b/include/linux/vfio.h
-> > @@ -214,4 +214,24 @@ extern int vfio_virqfd_enable(void *opaque,
-> >  			      void *data, struct virqfd **pvirqfd, int fd);  extern void
-> > vfio_virqfd_disable(struct virqfd **pvirqfd);
-> >
-> > +enum vfio_hugetlbpage_type {
-> > +	vfio_hugetlbpage_2M,
-> > +	vfio_hugetlbpage_1G,
-> > +};
-> > +
-> > +struct vfio_hupetlbpage_info {
-> > +	enum vfio_hugetlbpage_type type;
-> 
-> The enum within the structure serves no purpose.
-> 
-> > +	unsigned long size;
-> > +	unsigned long mask;
-> > +};
-> > +
-> > +#define PMD_ORDER 9
-> > +#define PUD_ORDER 18
-> 
-> Architecture specific.
-> 
-> > +/*
-> > + * get the number of resdual 4KB-pages in a hugetlbfs page
-> > + * (including the page which pointed by this address)
-> 
-> s/4KB/PAGE_SIZE/
-> 
-> > + */
-> > +#define hugetlb_get_resdual_pages(address, type)				\
-> > +		((vfio_hugetlbpage_info[type].size				\
-> > +		- (address & ~vfio_hugetlbpage_info[type].mask)) >> PAGE_SHIFT)
-> >  #endif /* VFIO_H */
+Applied.
 
+Thanks,
+Guenter
+
+> ---
+>  Documentation/hwmon/corsair-cpro.rst |  7 ++-
+>  MAINTAINERS                          |  2 +-
+>  drivers/hwmon/corsair-cpro.c         | 64 +++++++++++++++++++---------
+>  3 files changed, 48 insertions(+), 25 deletions(-)
+> 
+> diff --git a/Documentation/hwmon/corsair-cpro.rst b/Documentation/hwmon/corsair-cpro.rst
+> index 78820156f07d..751f95476b57 100644
+> --- a/Documentation/hwmon/corsair-cpro.rst
+> +++ b/Documentation/hwmon/corsair-cpro.rst
+> @@ -35,8 +35,7 @@ fan[1-6]_input		Connected fan rpm.
+>  fan[1-6]_label		Shows fan type as detected by the device.
+>  fan[1-6]_target		Sets fan speed target rpm.
+>  			When reading, it reports the last value if it was set by the driver.
+> -			Otherwise returns 0.
+> -pwm[1-6]		Sets the fan speed. Values from 0-255.
+> -			When reading, it reports the last value if it was set by the driver.
+> -			Otherwise returns 0.
+> +			Otherwise returns an error.
+> +pwm[1-6]		Sets the fan speed. Values from 0-255. Can only be read if pwm
+> +			was set directly.
+>  ======================= =====================================================================
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 06607125b793..a93aefab91f1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4402,7 +4402,7 @@ F:	Documentation/hwmon/coretemp.rst
+>  F:	drivers/hwmon/coretemp.c
+> 
+>  CORSAIR-CPRO HARDWARE MONITOR DRIVER
+> -M:	Marius  <mail@mariuszachmann.de>
+> +M:	Marius Zachmann <mail@mariuszachmann.de>
+>  L:	linux-hwmon@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/hwmon/corsair-cpro.c
+> diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
+> index e8504267d0e8..591929ec217a 100644
+> --- a/drivers/hwmon/corsair-cpro.c
+> +++ b/drivers/hwmon/corsair-cpro.c
+> @@ -36,11 +36,12 @@
+>  					 * send: byte 1 is channel, rest zero
+>  					 * rcv:  returns temp for channel in centi-degree celsius
+>  					 * in bytes 1 and 2
+> -					 * returns 17 in byte 0 if no sensor is connected
+> +					 * returns 0x11 in byte 0 if no sensor is connected
+>  					 */
+>  #define CTL_GET_VOLT		0x12	/*
+>  					 * send: byte 1 is rail number: 0 = 12v, 1 = 5v, 2 = 3.3v
+>  					 * rcv:  returns millivolt in bytes 1,2
+> +					 * returns error 0x10 if request is invalid
+>  					 */
+>  #define CTL_GET_FAN_CNCT	0x20	/*
+>  					 * returns in bytes 1-6 for each fan:
+> @@ -52,6 +53,12 @@
+>  					 * send: byte 1 is channel, rest zero
+>  					 * rcv:  returns rpm in bytes 1,2
+>  					 */
+> +#define CTL_GET_FAN_PWM		0x22	/*
+> +					 * send: byte 1 is channel, rest zero
+> +					 * rcv:  returns pwm in byte 1 if it was set
+> +					 *	 returns error 0x12 if fan is controlled via
+> +					 *	 fan_target or fan curve
+> +					 */
+>  #define CTL_SET_FAN_FPWM	0x23	/*
+>  					 * set fixed pwm
+>  					 * send: byte 1 is fan number
+> @@ -73,13 +80,31 @@ struct ccp_device {
+>  	struct completion wait_input_report;
+>  	struct mutex mutex; /* whenever buffer is used, lock before send_usb_cmd */
+>  	u8 *buffer;
+> -	int pwm[6];
+>  	int target[6];
+>  	DECLARE_BITMAP(temp_cnct, NUM_TEMP_SENSORS);
+>  	DECLARE_BITMAP(fan_cnct, NUM_FANS);
+>  	char fan_label[6][LABEL_LENGTH];
+>  };
+> 
+> +/* converts response error in buffer to errno */
+> +static int ccp_get_errno(struct ccp_device *ccp)
+> +{
+> +	switch (ccp->buffer[0]) {
+> +	case 0x00: /* success */
+> +		return 0;
+> +	case 0x01: /* called invalid command */
+> +		return -EOPNOTSUPP;
+> +	case 0x10: /* called GET_VOLT / GET_TMP with invalid arguments */
+> +		return -EINVAL;
+> +	case 0x11: /* requested temps of disconnected sensors */
+> +	case 0x12: /* requested pwm of not pwm controlled channels */
+> +		return -ENODATA;
+> +	default:
+> +		hid_dbg(ccp->hdev, "unknown device response error: %d", ccp->buffer[0]);
+> +		return -EIO;
+> +	}
+> +}
+> +
+>  /* send command, check for error in response, response in ccp->buffer */
+>  static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2, u8 byte3)
+>  {
+> @@ -102,13 +127,7 @@ static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2,
+>  	if (!t)
+>  		return -ETIMEDOUT;
+> 
+> -	/* first byte of response is error code */
+> -	if (ccp->buffer[0] != 0x00) {
+> -		hid_dbg(ccp->hdev, "device response error: %d", ccp->buffer[0]);
+> -		return -EIO;
+> -	}
+> -
+> -	return 0;
+> +	return ccp_get_errno(ccp);
+>  }
+> 
+>  static int ccp_raw_event(struct hid_device *hdev, struct hid_report *report, u8 *data, int size)
+> @@ -126,7 +145,7 @@ static int ccp_raw_event(struct hid_device *hdev, struct hid_report *report, u8
+>  }
+> 
+>  /* requests and returns single data values depending on channel */
+> -static int get_data(struct ccp_device *ccp, int command, int channel)
+> +static int get_data(struct ccp_device *ccp, int command, int channel, bool two_byte_data)
+>  {
+>  	int ret;
+> 
+> @@ -136,7 +155,9 @@ static int get_data(struct ccp_device *ccp, int command, int channel)
+>  	if (ret)
+>  		goto out_unlock;
+> 
+> -	ret = (ccp->buffer[1] << 8) + ccp->buffer[2];
+> +	ret = ccp->buffer[1];
+> +	if (two_byte_data)
+> +		ret = (ret << 8) + ccp->buffer[2];
+> 
+>  out_unlock:
+>  	mutex_unlock(&ccp->mutex);
+> @@ -150,14 +171,14 @@ static int set_pwm(struct ccp_device *ccp, int channel, long val)
+>  	if (val < 0 || val > 255)
+>  		return -EINVAL;
+> 
+> -	ccp->pwm[channel] = val;
+> -
+>  	/* The Corsair Commander Pro uses values from 0-100 */
+>  	val = DIV_ROUND_CLOSEST(val * 100, 255);
+> 
+>  	mutex_lock(&ccp->mutex);
+> 
+>  	ret = send_usb_cmd(ccp, CTL_SET_FAN_FPWM, channel, val, 0);
+> +	if (!ret)
+> +		ccp->target[channel] = -ENODATA;
+> 
+>  	mutex_unlock(&ccp->mutex);
+>  	return ret;
+> @@ -171,7 +192,6 @@ static int set_target(struct ccp_device *ccp, int channel, long val)
+>  	ccp->target[channel] = val;
+> 
+>  	mutex_lock(&ccp->mutex);
+> -
+>  	ret = send_usb_cmd(ccp, CTL_SET_FAN_TARGET, channel, val >> 8, val);
+> 
+>  	mutex_unlock(&ccp->mutex);
+> @@ -210,7 +230,7 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
+>  	case hwmon_temp:
+>  		switch (attr) {
+>  		case hwmon_temp_input:
+> -			ret = get_data(ccp, CTL_GET_TMP, channel);
+> +			ret = get_data(ccp, CTL_GET_TMP, channel, true);
+>  			if (ret < 0)
+>  				return ret;
+>  			*val = ret * 10;
+> @@ -222,7 +242,7 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
+>  	case hwmon_fan:
+>  		switch (attr) {
+>  		case hwmon_fan_input:
+> -			ret = get_data(ccp, CTL_GET_FAN_RPM, channel);
+> +			ret = get_data(ccp, CTL_GET_FAN_RPM, channel, true);
+>  			if (ret < 0)
+>  				return ret;
+>  			*val = ret;
+> @@ -230,6 +250,8 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
+>  		case hwmon_fan_target:
+>  			/* how to read target values from the device is unknown */
+>  			/* driver returns last set value or 0			*/
+> +			if (ccp->target[channel] < 0)
+> +				return -ENODATA;
+>  			*val = ccp->target[channel];
+>  			return 0;
+>  		default:
+> @@ -239,9 +261,10 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
+>  	case hwmon_pwm:
+>  		switch (attr) {
+>  		case hwmon_pwm_input:
+> -			/* how to read pwm values from the device is currently unknown */
+> -			/* driver returns last set value or 0		               */
+> -			*val = ccp->pwm[channel];
+> +			ret = get_data(ccp, CTL_GET_FAN_PWM, channel, false);
+> +			if (ret < 0)
+> +				return ret;
+> +			*val = DIV_ROUND_CLOSEST(ret * 255, 100);
+>  			return 0;
+>  		default:
+>  			break;
+> @@ -250,7 +273,7 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
+>  	case hwmon_in:
+>  		switch (attr) {
+>  		case hwmon_in_input:
+> -			ret = get_data(ccp, CTL_GET_VOLT, channel);
+> +			ret = get_data(ccp, CTL_GET_VOLT, channel, true);
+>  			if (ret < 0)
+>  				return ret;
+>  			*val = ret;
+> @@ -416,6 +439,7 @@ static int get_fan_cnct(struct ccp_device *ccp)
+>  			continue;
+> 
+>  		set_bit(channel, ccp->fan_cnct);
+> +		ccp->target[channel] = -ENODATA;
+> 
+>  		switch (mode) {
+>  		case 1:
+> --
+> 2.27.0
