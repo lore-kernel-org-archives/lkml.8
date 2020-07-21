@@ -2,154 +2,148 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C17C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BB9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0AE92065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA78206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:58:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gNYVKog2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WUtLxzKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgGUK5Z (ORCPT
+        id S1729391AbgGUK6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:57:25 -0400
-Received: from ozlabs.org ([203.11.71.1]:49365 "EHLO ozlabs.org"
+        Tue, 21 Jul 2020 06:58:32 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:59825 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgGUK5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:57:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726089AbgGUK6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:58:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595329110; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=VU4DqtwT3aYjFZK+vCZ6Mf063e7LJok4TZ4IWKWCI9E=; b=WUtLxzKEh+ams80W1TeKdK5xsBY95hV5rD+ioWQ9hn1fePXA+2/acVTR+y/ChUrDy4NP2MZk
+ l+0zw2LR92fKc3JU0tn84l4oFx9Vn3hWv2jjhCjXMjD8M9bI2HwMI+GpXMUY+wruoKGWIPIJ
+ HbfGgxHoWYCh3yg9LBW9odm29/o=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n16.prod.us-east-1.postgun.com with SMTP id
+ 5f16ca501e603dbb4472bad2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 21 Jul 2020 10:58:24
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1E22AC43395; Tue, 21 Jul 2020 10:58:24 +0000 (UTC)
+Received: from [192.168.43.8] (unknown [106.213.150.157])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9wXY6qsFz9sRR;
-        Tue, 21 Jul 2020 20:57:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595329039;
-        bh=J+9zp2Z8DFT/0OYfTcuALdCOFIbrhWRfmGxBbTJkzp0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=gNYVKog2/PX2As5kgfmR9zlqyYmdGETbyxnMXbZp59G2wTyzutuD/JvDfHKh9zugz
-         f6XP3WnpHqd8dKmmceD3gKP2fZYRnP72Xc/YODUU+UUP3zVLeBInZ4Z3uGq+iCPJj6
-         Ty6g65pz08BOSulX6eHCVFFi1dYd1Il6NOgSYUZAqz1/268S2qhIWBdzG6zQP8lxyp
-         cSc+M+lToPIb1miRmIfmd6oI0dNBudVD5aXqhHLLSNYGtLUK2D38jNlzQSGnjyHZiE
-         KKLskb9UdCuRc/X/ohL+kc3riAaY6WuKk716tWaCy3E9Fd+Ji4HrXEYrb2yzZc3meQ
-         ORF+detWijXjA==
-Date:   Tue, 21 Jul 2020 20:57:16 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Roman Gushchin <guro@fb.com>
-Subject: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20200721205716.6dbaa56b@canb.auug.org.au>
+        (Authenticated sender: msavaliy)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7271BC433C6;
+        Tue, 21 Jul 2020 10:58:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7271BC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=msavaliy@codeaurora.org
+Subject: Re: [PATCH] i2c: i2c-qcom-geni: Fix DMA transfer race
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200720172448.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
+ <159531115483.3847286.18280088484118119899@swboyd.mtv.corp.google.com>
+ <159531527579.3847286.1254956818647049462@swboyd.mtv.corp.google.com>
+From:   "Mukesh, Savaliya" <msavaliy@codeaurora.org>
+Message-ID: <6d90f383-54d7-cee1-d064-dca51ce39e14@codeaurora.org>
+Date:   Tue, 21 Jul 2020 16:28:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/g2JfB=U//Fv2CxlRkdYiFBA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <159531527579.3847286.1254956818647049462@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/g2JfB=U//Fv2CxlRkdYiFBA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 7/21/2020 12:37 PM, Stephen Boyd wrote:
+> Quoting Stephen Boyd (2020-07-20 22:59:14)
+>> I worry that we also need a dmb() here to make sure the dma buffer is
+>> properly mapped before this write to the device is attempted. But it may
+>> only matter to be before the I2C_READ.
+>>
+> I'm suggesting this patch instead where we make geni_se_setup_m_cmd()
+> use a writel() so that it has the proper barrier semantics to wait for
+> the other memory writes that happened in program order before this point
+> to complete before the device is kicked to do a read or a write.
 
-After merging the akpm-current tree, today's linux-next build
-(sparc64 defconfig) failed like this:
+Not sure if the issue was because of the barrier, but fundamentally for 
+read operation, before FIFO data gets written by the DMA to memory,
 
-mm/hugetlb.c: In function 'free_gigantic_page':
-mm/hugetlb.c:1233:18: error: 'hugetlb_cma' undeclared (first use in this fu=
-nction); did you mean 'hugetlb_lock'?
-      cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order))
-                  ^~~~~~~~~~~
-                  hugetlb_lock
+buffer should be present. Hence the previous change from Doug seem to be 
+fine as well.
 
-Caused by commits
-
-  ee0889218f26 ("mm/hugetlb: avoid hardcoding while checking if cma is enab=
-led")
-  8729fda59982 ("mm-hugetlb-avoid-hardcoding-while-checking-if-cma-is-enabl=
-ed-fix")
-
-I have added this patch for today:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 21 Jul 2020 20:44:57 +1000
-Subject: [PATCH] mm/hugetlb: better checks before using hugetlb_cma
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- mm/hugetlb.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 4b560c7555e7..4645f1441d32 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1229,9 +1229,10 @@ static void free_gigantic_page(struct page *page, un=
-signed int order)
- 	 * If the page isn't allocated using the cma allocator,
- 	 * cma_release() returns false.
- 	 */
--	if (IS_ENABLED(CONFIG_CMA) &&
--	    cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order))
-+#ifdef CONFIG_CMA
-+	if (cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order))
- 		return;
-+#endif
-=20
- 	free_contig_range(page_to_pfn(page), 1 << order);
- }
-@@ -1242,7 +1243,8 @@ static struct page *alloc_gigantic_page(struct hstate=
- *h, gfp_t gfp_mask,
- {
- 	unsigned long nr_pages =3D 1UL << huge_page_order(h);
-=20
--	if (IS_ENABLED(CONFIG_CMA)) {
-+#ifdef CONFIG_CMA
-+	{
- 		struct page *page;
- 		int node;
-=20
-@@ -1256,6 +1258,7 @@ static struct page *alloc_gigantic_page(struct hstate=
- *h, gfp_t gfp_mask,
- 				return page;
- 		}
- 	}
-+#endif
-=20
- 	return alloc_contig_pages(nr_pages, gfp_mask, nid, nodemask);
- }
---=20
-2.27.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/g2JfB=U//Fv2CxlRkdYiFBA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8WygwACgkQAVBC80lX
-0GxK/wf+KlMYKrTpUnvzB6DZ4MLfZ/xNSWMW4ZlUM9olUIzPCnyHPqerCQ+QLjzV
-j01ATlqQ17209hRcHgPdiQC8lZnI6fvpRCdvz6GXGTuHfPK1AOwvRAP5dIRzAINU
-M6naCe1xNkYEknqtrTDflPB1Lg6srqR7e55MGB/GJ+rpckorrrO1ES2tOIbs2TrZ
-/9rY+8GGfiEIlEZVAEQ0XiXJsuN23xJllyxf4LwoqyRT8nChjrs/gq4fjnKDwZ4S
-hT3Yo5jLdyw0Vpcrbb+rVLSX5BM5jVBwRH9RwVPGwYsXIbGc5+SvbbPxdKf1pw+c
-Jc6tXP1YTExX6npbNMmnpMQS1Nwn7A==
-=oTU0
------END PGP SIGNATURE-----
-
---Sig_/g2JfB=U//Fv2CxlRkdYiFBA--
+> ----8<----
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> index 18d1e4fd4cf3..7f130829bf01 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -367,7 +367,6 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>   		geni_se_select_mode(se, GENI_SE_FIFO);
+>   
+>   	writel_relaxed(len, se->base + SE_I2C_RX_TRANS_LEN);
+> -	geni_se_setup_m_cmd(se, I2C_READ, m_param);
+>   
+>   	if (dma_buf && geni_se_rx_dma_prep(se, dma_buf, len, &rx_dma)) {
+>   		geni_se_select_mode(se, GENI_SE_FIFO);
+> @@ -375,6 +374,8 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>   		dma_buf = NULL;
+>   	}
+>   
+> +	geni_se_setup_m_cmd(se, I2C_READ, m_param);
+> +
+>   	time_left = wait_for_completion_timeout(&gi2c->done, XFER_TIMEOUT);
+>   	if (!time_left)
+>   		geni_i2c_abort_xfer(gi2c);
+> @@ -408,7 +409,6 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>   		geni_se_select_mode(se, GENI_SE_FIFO);
+>   
+>   	writel_relaxed(len, se->base + SE_I2C_TX_TRANS_LEN);
+> -	geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
+>   
+>   	if (dma_buf && geni_se_tx_dma_prep(se, dma_buf, len, &tx_dma)) {
+>   		geni_se_select_mode(se, GENI_SE_FIFO);
+> @@ -416,6 +416,8 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>   		dma_buf = NULL;
+>   	}
+>   
+> +	geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
+> +
+>   	if (!dma_buf) /* Get FIFO IRQ */
+>   		writel_relaxed(1, se->base + SE_GENI_TX_WATERMARK_REG);
+>   
+> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+> index dd464943f717..1dc134e9eb36 100644
+> --- a/include/linux/qcom-geni-se.h
+> +++ b/include/linux/qcom-geni-se.h
+> @@ -262,7 +262,7 @@ static inline void geni_se_setup_m_cmd(struct geni_se *se, u32 cmd, u32 params)
+>   	u32 m_cmd;
+>   
+>   	m_cmd = (cmd << M_OPCODE_SHFT) | (params & M_PARAMS_MSK);
+> -	writel_relaxed(m_cmd, se->base + SE_GENI_M_CMD0);
+> +	writel(m_cmd, se->base + SE_GENI_M_CMD0);
+>   }
+>   
+>   /**
