@@ -2,69 +2,132 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A5EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FCFC433F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9C020792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B3420702
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgGUDOB (ORCPT
+        id S1728629AbgGUDR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:14:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgGUDOB (ORCPT
+        Mon, 20 Jul 2020 23:17:29 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:34580 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728593AbgGUDR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 23:14:01 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FF08C061794;
-        Mon, 20 Jul 2020 20:14:01 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id BA4FB1260D092;
-        Mon, 20 Jul 2020 19:57:15 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 20:14:00 -0700 (PDT)
-Message-Id: <20200720.201400.1580393372170110087.davem@davemloft.net>
-To:     Song.Chi@microsoft.com
-Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, kuba@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 net-next] net: hyperv: Add attributes to show TX
- indirection table
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <HK0P153MB02751820DD4F8892DEFA13D098780@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
-References: <HK0P153MB02751820DD4F8892DEFA13D098780@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 Jul 2020 19:57:16 -0700 (PDT)
+        Mon, 20 Jul 2020 23:17:27 -0400
+Date:   Mon, 20 Jul 2020 23:17:26 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/10] dma-mapping: consolidate the NO_DMA definition in
+ kernel/dma/Kconfig
+Message-ID: <20200721031725.GO14669@brightrain.aerifal.cx>
+References: <20200714121856.955680-1-hch@lst.de>
+ <20200714121856.955680-9-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714121856.955680-9-hch@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chi Song <Song.Chi@microsoft.com>
-Date: Tue, 21 Jul 2020 02:37:42 +0000
+On Tue, Jul 14, 2020 at 02:18:54PM +0200, Christoph Hellwig wrote:
+> Have a single definition that architetures can select.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/m68k/Kconfig         | 4 +---
+>  arch/m68k/Kconfig.machine | 1 +
+>  arch/um/Kconfig           | 4 +---
+>  kernel/dma/Kconfig        | 3 +++
+>  4 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
+> index 6ad6cdac74b3dc..8e488369a7e55a 100644
+> --- a/arch/m68k/Kconfig
+> +++ b/arch/m68k/Kconfig
+> @@ -17,6 +17,7 @@ config M68K
+>  	select HAVE_COPY_THREAD_TLS
+>  	select GENERIC_IRQ_SHOW
+>  	select GENERIC_ATOMIC64
+> +	select NO_DMA if !MMU && !COLDFIRE
+>  	select HAVE_UID16
+>  	select VIRT_TO_BUS
+>  	select ARCH_HAVE_NMI_SAFE_CMPXCHG if RMW_INSNS
+> @@ -60,9 +61,6 @@ config TIME_LOW_RES
+>  config NO_IOPORT_MAP
+>  	def_bool y
+>  
+> -config NO_DMA
+> -	def_bool (MMU && SUN3) || (!MMU && !COLDFIRE)
+> -
+>  config ZONE_DMA
+>  	bool
+>  	default y
+> diff --git a/arch/m68k/Kconfig.machine b/arch/m68k/Kconfig.machine
+> index a82651d58af483..17e8c3a292d770 100644
+> --- a/arch/m68k/Kconfig.machine
+> +++ b/arch/m68k/Kconfig.machine
+> @@ -126,6 +126,7 @@ config SUN3
+>  	depends on MMU
+>  	depends on !MMU_MOTOROLA
+>  	select MMU_SUN3 if MMU
+> +	select NO_DMA
+>  	select M68020
+>  	help
+>  	  This option enables support for the Sun 3 series of workstations
+> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+> index 9318dc6d1a0cee..32c1d1945033ec 100644
+> --- a/arch/um/Kconfig
+> +++ b/arch/um/Kconfig
+> @@ -15,6 +15,7 @@ config UML
+>  	select HAVE_DEBUG_KMEMLEAK
+>  	select HAVE_DEBUG_BUGVERBOSE
+>  	select HAVE_COPY_THREAD_TLS
+> +	select NO_DMA
+>  	select GENERIC_IRQ_SHOW
+>  	select GENERIC_CPU_DEVICES
+>  	select GENERIC_CLOCKEVENTS
+> @@ -168,9 +169,6 @@ config MMAPPER
+>  	  This driver allows a host file to be used as emulated IO memory inside
+>  	  UML.
+>  
+> -config NO_DMA
+> -	def_bool y
+> -
+>  config PGTABLE_LEVELS
+>  	int
+>  	default 3 if 3_LEVEL_PGTABLES
+> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+> index 1da3f44f2565b4..57533d07676f4a 100644
+> --- a/kernel/dma/Kconfig
+> +++ b/kernel/dma/Kconfig
+> @@ -1,5 +1,8 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  
+> +config NO_DMA
+> +	bool
+> +
+>  config HAS_DMA
+>  	bool
+>  	depends on !NO_DMA
+> -- 
+> 2.26.2
 
-> +static ssize_t tx_indirection_show(struct device *dev,
-> +				   struct device_attribute *dev_attr, char *buf)
-> +{
-> +	struct net_device *ndev = to_net_dev(dev);
-> +	struct net_device_context *ndc = netdev_priv(ndev);
-> +	int index = dev_attr - dev_attr_netvsc_dev_attrs;
+This patch is outside the scope of what I can accept in arch/sh, and
+the subsequent patches in the series seem to depend on it. What would
+you like to do for its path upstream?
 
-Reverse christmas tree ordering for local variables please.
+I've now picked up everything else from this series that I can.
 
-> +static void netvsc_attrs_init(void)
-> +{
-> +	int i;
-> +	char buffer[4];
-
-Likewise.
+Rich
