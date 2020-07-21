@@ -2,67 +2,90 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CBAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED91C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB822065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E18520717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595352340;
+	bh=RKV0BW+9C8tbyA2otgwhYFbwcP7+9Ge72XqOAPbxQ8E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XomI4t/5fBkA0gDqe5PZh5S2FGvNu09rFDDNmFuW6RTGZKvec+CC8XXceODTj74r3
+	 nQmQGZa+jxU/WovowQraACR4XoFjuJxjKmMAqs6YdvCK/3O+3XVN5Cmhu2GFrdaHr5
+	 Ag07+5Kw9XZ+WrvqT6KYlcqSB9kl7a/6bjTY74pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbgGURZ3 (ORCPT
+        id S1730119AbgGURZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:25:29 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:47740 "EHLO vps0.lunn.ch"
+        Tue, 21 Jul 2020 13:25:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729107AbgGURZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:25:29 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jxw0w-006CkE-OX; Tue, 21 Jul 2020 19:25:14 +0200
-Date:   Tue, 21 Jul 2020 19:25:14 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvalo@codeaurora.org,
-        johannes@sipsolutions.net, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, dianders@chromium.org, evgreen@chromium.org
-Subject: Re: [RFC 0/7] Add support to process rx packets in thread
-Message-ID: <20200721172514.GT1339445@lunn.ch>
-References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
+        id S1728306AbgGURZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 13:25:37 -0400
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC18D2068F
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 17:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595352337;
+        bh=RKV0BW+9C8tbyA2otgwhYFbwcP7+9Ge72XqOAPbxQ8E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jAPq9v3BGHemfkujTIuG3ZqyDILVFZKDieQ9PnauZyxdybPri0Rk7zvR5TaW+x6lu
+         b9lQuEB76XCTQHcF0W10LhSheHFqSZHYw7sbNFwuh4YhROQorjgEmoqxLkTwzwB3/a
+         fhSXhZN+b1UnlENBla7DuCUmsj37/gLzp4m+2RvM=
+Received: by mail-wr1-f45.google.com with SMTP id b6so21956082wrs.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:25:36 -0700 (PDT)
+X-Gm-Message-State: AOAM532/L/9k2pFL7ORjDSHtMbjFz3pejQhevPhX4/p4lv+qhS/ySFl1
+        q8Yb3VYzSQVoa8esxZSI1NH8Q7Boe2r3ybzolHia/A==
+X-Google-Smtp-Source: ABdhPJxhK47OGKg5u9wulGLbiutPzOKjaFb1WaziXlqqFghfIN1JaY+AIUojD2fdQbL4Ey8ktxLwrw3b08ACtiFgUv8=
+X-Received: by 2002:adf:e482:: with SMTP id i2mr26959033wrm.75.1595352335661;
+ Tue, 21 Jul 2020 10:25:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
+References: <b754dad5-ee85-8a2f-f41a-8bdc56de42e8@kernel.dk>
+ <8987E376-6B13-4798-BDBA-616A457447CF@amacapital.net> <20200721070709.GB11432@lst.de>
+ <CALCETrXWZBXZuCeRYvYY8AWG51e_P3bOeNeqc8zXPLOTDTHY0g@mail.gmail.com> <20200721143412.GA8099@lst.de>
+In-Reply-To: <20200721143412.GA8099@lst.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 21 Jul 2020 10:25:24 -0700
+X-Gmail-Original-Message-ID: <CALCETrWMQpKe7jqw2t39yn4HgGhGTSEFGK6MPR4wPs=tBBhjbg@mail.gmail.com>
+Message-ID: <CALCETrWMQpKe7jqw2t39yn4HgGhGTSEFGK6MPR4wPs=tBBhjbg@mail.gmail.com>
+Subject: Re: io_uring vs in_compat_syscall()
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andy Lutomirski <luto@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, io-uring@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:44:19PM +0530, Rakesh Pillai wrote:
-> NAPI gets scheduled on the CPU core which got the
-> interrupt. The linux scheduler cannot move it to a
-> different core, even if the CPU on which NAPI is running
-> is heavily loaded. This can lead to degraded wifi
-> performance when running traffic at peak data rates.
-> 
-> A thread on the other hand can be moved to different
-> CPU cores, if the one on which its running is heavily
-> loaded. During high incoming data traffic, this gives
-> better performance, since the thread can be moved to a
-> less loaded or sometimes even a more powerful CPU core
-> to account for the required CPU performance in order
-> to process the incoming packets.
-> 
-> This patch series adds the support to use a high priority
-> thread to process the incoming packets, as opposed to
-> everything being done in NAPI context.
+On Tue, Jul 21, 2020 at 7:34 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Tue, Jul 21, 2020 at 07:31:02AM -0700, Andy Lutomirski wrote:
+> > > What do you mean with "properly wired up".  Do you really want to spread
+> > > ->compat_foo methods everywhere, including read and write?  I found
+> > > in_compat_syscall() a lot small and easier to maintain than all the
+> > > separate compat cruft.
+> >
+> > I was imagining using a flag.  Some of the net code uses
+> > MSG_CMSG_COMPAT for this purpose.
+>
+> Killing that nightmarish monster is what actually got me into looking
+> io_uring and starting this thread.
 
-I don't see why this problem is limited to the ath10k driver. I expect
-it applies to all drivers using NAPI. So shouldn't you be solving this
-in the NAPI core? Allow a driver to request the NAPI core uses a
-thread?
+I agree that MSG_CMSG_COMPAT is nasty, but I think the concept is
+sound -- rather than tracking whether we're compat by using a
+different function or a per-thread variable, actually explicitly
+tracking the mode seems sensible.
 
-	Andrew
+If we're going to play in_compat_syscall() games, let's please make
+io_uring_enter() return -EINVAL if in_compat_syscall() != ctx->compat.
+
+--Andy
