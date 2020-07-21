@@ -2,134 +2,102 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB965C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEBFC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8717020729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B4620729
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:14:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FBZxMoMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731074AbgGUVN7 (ORCPT
+        id S1731127AbgGUVOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:13:59 -0400
-Received: from mga01.intel.com ([192.55.52.88]:17248 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbgGUVN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:13:58 -0400
-IronPort-SDR: 0/8cvnYsacs+FpCbujs67hhvGkU/pXUo0cWOjaMlfcho5ZXMcEOjKqk4//ShNUIhxGyrbB8dld
- y9mMRFygdf8Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="168377249"
-X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
-   d="scan'208";a="168377249"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 14:13:58 -0700
-IronPort-SDR: jfP3vxj61yHJHjlo5BFoMGLMIGVER/KB9BFhTq7pwA32SEp1fHghBmm3qZzbILTAlgK6CnJ7wY
- 4vXaZlScbvfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
-   d="scan'208";a="270554953"
-Received: from otc-nc-03.jf.intel.com ([10.54.39.25])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Jul 2020 14:13:58 -0700
-From:   Ashok Raj <ashok.raj@intel.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     Ashok Raj <ashok.raj@intel.com>, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [PATCH] PCI/ATS: PASID and PRI are only enumerated in PF devices.
-Date:   Tue, 21 Jul 2020 14:13:45 -0700
-Message-Id: <1595366025-239046-1-git-send-email-ashok.raj@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 21 Jul 2020 17:14:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730304AbgGUVOs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 17:14:48 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B185DC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:14:48 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a24so43640pfc.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=Uk6YJuT856BNR4iZImXQR7yVi4i1mDik67FAAf4cPZQ=;
+        b=FBZxMoMsxylHjcUvAbhV6gmt7acj3lLOJeUs0rme23xuscRhD6htClpZIjUn8KUD9y
+         rQnb9qIfFNIqnf6DuMVaigHowzFvaponsCjdWoZRaXsEYhqFSEU6CZmj4b5nj0Asua/Q
+         J/PKIHwCeH6HyQauOGtDc0TAtt7ZHRN6I2KJ7bvrsiy98O1LmyQVnsaqV61SKlfD7Xgf
+         MmqjBgglGJ4Cv5dJF/cPTjvviKjfzviRlLx+q2yprJQgm0u520iCHvxend/i4bu311Oz
+         d5ZnFiNLg6SLyfXNhdHgIbm8VZQdscvTWj0zqsK5QKbuU8fJ22Z6mwET+015vmi0B4hL
+         5IOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Uk6YJuT856BNR4iZImXQR7yVi4i1mDik67FAAf4cPZQ=;
+        b=diuJhdm8Q6DamTIOVKa9NzTqXOvswkaPShDqZNgunC0jawPHb4NlpnxnoF8pWwZPjj
+         MgEHiQUs10wzrGF2aOyaqb9OswH2uFPAeV4SSuHk2ijBPAWfYieLxgfQrsJcJqgw4Nt8
+         uIv+PyXJGOtukSo+/DAEOlI9dYqYFqVSYKwvxcWxrU8YwkQEUkm4vYbhqvFbHBiakAI+
+         KjVP2RSoe8TdiFUwm108KCjhRWLKYHbTLxpMEHgZeeaLWqAz+CJtt9tUSRUilk7lT1TS
+         fjrVRoXZfmyafdi/b+0OQKEky8oBqqKpKRihauDc/C0fJ6RQ4U4JVuhEY8XOskZd3kLm
+         rd4w==
+X-Gm-Message-State: AOAM530qk7FL0BEsoqolYKZ1wnqVsQL54ADvipv28qco7x4Wbtv9eS0K
+        G+mS4ctt1ce3gIPF5ZADPpwz6g==
+X-Google-Smtp-Source: ABdhPJybylTdnd9qyJY0SEkfZfMZYm9qVAb/EXUZnxUlWpc4ybwM7APQ7Rfpu652uIRJWWkcFky5tg==
+X-Received: by 2002:a63:457:: with SMTP id 84mr24534756pge.219.1595366088049;
+        Tue, 21 Jul 2020 14:14:48 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id gv16sm4208949pjb.5.2020.07.21.14.14.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 14:14:47 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/2] arm64: dts: meson: add more SM1 soundcards
+Date:   Tue, 21 Jul 2020 14:14:43 -0700
+Message-Id: <159536607960.30777.2402620386587255771.b4-ty@baylibre.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200718072532.8427-1-christianshewitt@gmail.com>
+References: <20200718072532.8427-1-christianshewitt@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PASID and PRI capabilities are only enumerated in PF devices. VF devices
-do not enumerate these capabilites. IOMMU drivers also need to enumerate
-them before enabling features in the IOMMU. Extending the same support as
-PASID feature discovery (pci_pasid_features) for PRI.
+On Sat, 18 Jul 2020 07:25:30 +0000, Christian Hewitt wrote:
+> This series adds basic support for LPCM audio over HDMI interfaces
+> to the Khadas VIM3L (reusing the same config as the VIM3) and the
+> HardKernel ODROID-C4 devices. I'm sure support can be extended to
+> include other hardware but this gets the HDMI port working as a
+> minimum capability. I have personally tested with both devices.
+> 
+> Christian Hewitt (2):
+>   arm64: dts: meson: add audio playback to odroid-c4
+>   arm64: dts: meson: add audio playback to khadas-vim3l
+> 
+> [...]
 
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Applied, thanks!
 
-v2: Fixed build failure from lkp when CONFIG_PRI=n
-    Almost all the PRI functions were called only when CONFIG_PASID is
-    set. Except the new pci_pri_supported().
+[1/2] arm64: dts: meson: add audio playback to odroid-c4
+      commit: 725da67ce4d77540d4d6f7ecc3ac5a885a684716
+[2/2] arm64: dts: meson: add audio playback to khadas-vim3l
+      commit: b8b85d01be916a30c9863a5456c218d802e01d97
 
-    previous version sent in error because i missed dry-run before recompile
-    :-(
-
-To: Bjorn Helgaas <bhelgaas@google.com>
-To: Joerg Roedel <joro@8bytes.com>
-To: Lu Baolu <baolu.lu@intel.com>
-Cc: stable@vger.kernel.org
-Cc: linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: iommu@lists.linux-foundation.org
----
- drivers/iommu/intel/iommu.c |  2 +-
- drivers/pci/ats.c           | 13 +++++++++++++
- include/linux/pci-ats.h     |  4 ++++
- 3 files changed, 18 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index d759e7234e98..276452f5e6a7 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -2560,7 +2560,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
- 			}
- 
- 			if (info->ats_supported && ecap_prs(iommu->ecap) &&
--			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
-+			    pci_pri_supported(pdev))
- 				info->pri_supported = 1;
- 		}
- 	}
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index b761c1f72f67..2e6cf0c700f7 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -325,6 +325,19 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
- 
- 	return pdev->pasid_required;
- }
-+
-+/**
-+ * pci_pri_supported - Check if PRI is supported.
-+ * @pdev: PCI device structure
-+ *
-+ * Returns true if PRI capability is present, false otherwise.
-+ */
-+bool pci_pri_supported(struct pci_dev *pdev)
-+{
-+	/* VFs share the PF PRI configuration */
-+	return !!(pci_physfn(pdev)->pri_cap);
-+}
-+EXPORT_SYMBOL_GPL(pci_pri_supported);
- #endif /* CONFIG_PCI_PRI */
- 
- #ifdef CONFIG_PCI_PASID
-diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-index f75c307f346d..df54cd5b15db 100644
---- a/include/linux/pci-ats.h
-+++ b/include/linux/pci-ats.h
-@@ -28,6 +28,10 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
- void pci_disable_pri(struct pci_dev *pdev);
- int pci_reset_pri(struct pci_dev *pdev);
- int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-+bool pci_pri_supported(struct pci_dev *pdev);
-+#else
-+static inline bool pci_pri_supported(struct pci_dev *pdev)
-+{ return false; }
- #endif /* CONFIG_PCI_PRI */
- 
- #ifdef CONFIG_PCI_PASID
+Best regards,
 -- 
-2.7.4
-
+Kevin Hilman <khilman@baylibre.com>
