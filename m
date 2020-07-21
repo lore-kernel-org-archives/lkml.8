@@ -2,144 +2,65 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1C6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FBBC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0C5520717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:10:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsEuky7q"
+	by mail.kernel.org (Postfix) with ESMTP id D964E20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgGUNKz (ORCPT
+        id S1728398AbgGUNLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:10:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgGUNKz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:10:55 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8898C061794;
-        Tue, 21 Jul 2020 06:10:54 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id n26so21629655ejx.0;
-        Tue, 21 Jul 2020 06:10:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UspCEUKKntGVrAvJln8sV8cJn+MtvW60MDv5uJ278pY=;
-        b=IsEuky7qsWKxla86BSugpUsvVOg8tmt3M1HDn+Uc6Xvv09+aAShmYBOI3mP05HPaxa
-         4JsJp9K8AzMlIF9enlA7JHgyTozRUYYoK7M8HJLzz8GR6o+hc9DlLLuhkl0dMC3DVP9Y
-         pX3gIA6VD/nHVnaNWVibRYZdJ35Qdm/SHiEcLIMM8ZrhAxG0ibMmQO0pDQwGiH0lo+tc
-         IG3Gkn8h0IOEDtPlxN7L0CZ1r4M6uWtPO+N5Jv3b2LljLUq/WiLcJaD/i3JwJRk7ab3Z
-         7JoPD9ycseeieEcmyLUtSJkuBitAEMd5+AYBS6tQcs9GEHmPLqJNunlV93a/ewEcNKpS
-         RfWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UspCEUKKntGVrAvJln8sV8cJn+MtvW60MDv5uJ278pY=;
-        b=TXs8gwuaBNZeJYGmwfkjk8B9qyoysShQqJWHRWEFtEYiUSQ32txVrWr6XUTiAtQv0I
-         NMONghd3Lw+BVNE5BJNQ8nSdI3+jmOBDD9jVTBCmlzYPOxqc0f/uwlqS37RH7dBFmPOw
-         BWVYogFivUWCFCWtSgt5VGAnRlZbzm4rpTFCVO2Yi603H+OJfxw9xBP/1F3DZzbFf7M9
-         SGgxbyCrBdPwTMsZU4qY9GHv2II1Eae9w9/f4GUaSg2/AonL+qn8a/LdESqKI+kFDABD
-         wSJWc/unyfAFNaMoVVBepoZuvUowrjEVcCUYh75lKkDNmKnc2oF4H4ixyHQscyqNJtCn
-         5FZg==
-X-Gm-Message-State: AOAM530OQY5Q5QX0pUeqPey9UsdazVUepNr8nFFeBEUhrHm8mXSEtTin
-        UEa9yBV2FxoqjKA0OC3TK1g=
-X-Google-Smtp-Source: ABdhPJzcmF5L2aR3yjodBcFiE4f1TdBlzsDNXt6PtuYRZxeZtAC9eOAXkTNT1GQHOE8EE6OlgjjMnQ==
-X-Received: by 2002:a17:906:d963:: with SMTP id rp3mr24135477ejb.54.1595337053676;
-        Tue, 21 Jul 2020 06:10:53 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id q17sm16619830ejd.20.2020.07.21.06.10.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 06:10:52 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 15:10:51 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/86] 4.9.231-rc1 review
-Message-ID: <20200721131051.GB44604@ulmo>
-References: <20200720152753.138974850@linuxfoundation.org>
+        Tue, 21 Jul 2020 09:11:14 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56550 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727888AbgGUNLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 09:11:14 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 49D40BF5B11D494BE7B7;
+        Tue, 21 Jul 2020 21:11:11 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.103) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Jul 2020
+ 21:11:01 +0800
+Subject: Re: [PATCH] ARM: at91: pm: add missing put_device() call in
+ at91_pm_sram_init()
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
+        <ludovic.desroches@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>
+References: <20200604123301.3905837-1-yukuai3@huawei.com>
+ <20200702200915.GC6538@piout.net>
+ <01fd6279-524e-3cee-4c16-5b748a49d0f0@huawei.com>
+ <20200717225542.GZ3428@piout.net>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <0b50d5fe-44c7-1016-2d79-036001377c4f@huawei.com>
+Date:   Tue, 21 Jul 2020 21:11:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="aM3YZ0Iwxop3KEKx"
-Content-Disposition: inline
-In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <20200717225542.GZ3428@piout.net>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.103]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/7/18 6:55, Alexandre Belloni wrote:
 
---aM3YZ0Iwxop3KEKx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> A better fix would have been to also factorize imx_suspend_alloc_ocram,
+> imx6q_suspend_init, socfpga_setup_ocram_self_refresh and
+> at91_pm_sram_init as they were all copied from pm-imx6.c
+> 
+imx_suspend_alloc_ocram and imx6q_suspend_init are done areadly,
+socfpga_setup_ocram_self_refresh and at91_pm_sram_init still need to
+fix. Thanks for pointing out!
 
-On Mon, Jul 20, 2020 at 05:35:56PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.231 release.
-> There are 86 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Wed, 22 Jul 2020 15:27:31 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.231=
--rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
- linux-4.9.y
-> and the diffstat can be found below.
->=20
-> thanks,
->=20
-> greg k-h
+Yu Kuai
 
-All tests passing for Tegra ...
-
-Test results for stable-v4.9:
-    8 builds:   8 pass, 0 fail
-    16 boots:   16 pass, 0 fail
-    30 tests:   30 pass, 0 fail
-
-Linux version:  4.9.231-rc1-g8c3f33eeb0cc
-Boards tested:  tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers,
-Thierry
-
---aM3YZ0Iwxop3KEKx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8W6VsACgkQ3SOs138+
-s6EJnxAAnyshar2aayeddVUNnsWbYqvxeOqNzp6ukeoWExDBz7WVQNBa3mVf6yXN
-mAUvZaW2IR3k+xtjdaNk7f6ubaK3ec6GkfXssChc5PWic+eoVj+33JB6gmpmk8Yo
-N01+0woddAS6neXdaBYcwQliQmcduhx+x1Wwrvr6G7GuW8ELtBiipnMXXWuKo8ll
-KWueojmZncfd3Jy4bwTHb0ZDGS4H+GBYurM61ywiqceEZZ2opdjqV93n3AiMurdS
-Vg1umglEn0s859S+iZJ7rm5/aSMgVmvAp9UhbDs6XAIxCy7zNJb1g5s+Nb5acdI6
-FNylm39OHjqduQhkny/o5F+s80LMdo8LTjXdpvCxa3YEw5ZRzxrub7GOTn5KfdhR
-FJ9VV+aF6eChVUgeka/Aohf1J8+e+EYFW/pLMMi4EEszJB6RwVwCejAFJkitTsp+
-bGVtX4arOct+3Q5KUQrv1obbXzhMIu6ip9OT+OiPIRPEqrPy+E1QlgLBKHNdSPgN
-F3ZamUmCGqRuTYgXzXzmE/b5Smu85fRCUWz3lVSTabknWw2UfXyO2aJykIni5RsJ
-DpcaJG23h6DuaOpAM/LF3ensJBwGTXtYJQ84KT21dLO6oLIdk4iIHsurYAZmk9qc
-c2Xy4ELyHjNTZJj2sGzg+163ThH1VDaM86u8vBJ9KRfLCCiHL9A=
-=OJ4b
------END PGP SIGNATURE-----
-
---aM3YZ0Iwxop3KEKx--
