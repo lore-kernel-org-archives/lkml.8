@@ -2,127 +2,85 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,
-	DATE_IN_FUTURE_06_12,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFAAC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA920C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D71ED2080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A475F20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:42:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgGUGkW (ORCPT
+        id S1728268AbgGUGl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:40:22 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8339 "EHLO huawei.com"
+        Tue, 21 Jul 2020 02:41:59 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8340 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726053AbgGUGkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:40:21 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0EEF65FA3585A5ACFB01;
-        Tue, 21 Jul 2020 14:40:19 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Jul 2020
- 14:40:09 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>,
-        <yangyingliang@huawei.com>
-Subject: [PATCH] serial: 8250: fix null-ptr-deref in serial8250_start_tx()
-Date:   Tue, 21 Jul 2020 14:38:52 +0000
-Message-ID: <20200721143852.4058352-1-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        id S1726127AbgGUGl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 02:41:59 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2A8488869F8712D5EE36;
+        Tue, 21 Jul 2020 14:41:55 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 21 Jul 2020 14:41:46 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <minyard@acm.org>, <arnd@arndb.de>, <gregkh@linuxfoundation.org>
+CC:     <openipmi-developer@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <guohanjun@huawei.com>,
+        <joe@perches.com>, <wangxiongfeng2@huawei.com>
+Subject: [PATCH v2] ipmi/watchdog: add missing newlines when printing parameters by sysfs
+Date:   Tue, 21 Jul 2020 14:35:09 +0800
+Message-ID: <1595313309-43881-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.27]
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I got null-ptr-deref in serial8250_start_tx():
+When I cat some ipmi_watchdog parameters by sysfs, it displays as
+follows. It's better to add a newline for easy reading.
 
-[   78.114630] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[   78.123778] Mem abort info:
-[   78.126560]   ESR = 0x86000007
-[   78.129603]   EC = 0x21: IABT (current EL), IL = 32 bits
-[   78.134891]   SET = 0, FnV = 0
-[   78.137933]   EA = 0, S1PTW = 0
-[   78.141064] user pgtable: 64k pages, 48-bit VAs, pgdp=00000027d41a8600
-[   78.147562] [0000000000000000] pgd=00000027893f0003, p4d=00000027893f0003, pud=00000027893f0003, pmd=00000027c9a20003, pte=0000000000000000
-[   78.160029] Internal error: Oops: 86000007 [#1] SMP
-[   78.164886] Modules linked in: sunrpc vfat fat aes_ce_blk crypto_simd cryptd aes_ce_cipher crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce ses enclosure sg sbsa_gwdt ipmi_ssif spi_dw_mmio sch_fq_codel vhost_net tun vhost vhost_iotlb tap ip_tables ext4 mbcache jbd2 ahci hisi_sas_v3_hw libahci hisi_sas_main libsas hns3 scsi_transport_sas hclge libata megaraid_sas ipmi_si hnae3 ipmi_devintf ipmi_msghandler br_netfilter bridge stp llc nvme nvme_core xt_sctp sctp libcrc32c dm_mod nbd
-[   78.207383] CPU: 11 PID: 23258 Comm: null-ptr Not tainted 5.8.0-rc6+ #48
-[   78.214056] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V3.B210.01 03/12/2020
-[   78.222888] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
-[   78.228435] pc : 0x0
-[   78.230618] lr : serial8250_start_tx+0x160/0x260
-[   78.235215] sp : ffff800062eefb80
-[   78.238517] x29: ffff800062eefb80 x28: 0000000000000fff
-[   78.243807] x27: ffff800062eefd80 x26: ffff202fd83b3000
-[   78.249098] x25: ffff800062eefd80 x24: ffff202fd83b3000
-[   78.254388] x23: ffff002fc5e50be8 x22: 0000000000000002
-[   78.259679] x21: 0000000000000001 x20: 0000000000000000
-[   78.264969] x19: ffffa688827eecc8 x18: 0000000000000000
-[   78.270259] x17: 0000000000000000 x16: 0000000000000000
-[   78.275550] x15: ffffa68881bc67a8 x14: 00000000000002e6
-[   78.280841] x13: ffffa68881bc67a8 x12: 000000000000c539
-[   78.286131] x11: d37a6f4de9bd37a7 x10: ffffa68881cccff0
-[   78.291421] x9 : ffffa68881bc6000 x8 : ffffa688819daa88
-[   78.296711] x7 : ffffa688822a0f20 x6 : ffffa688819e0000
-[   78.302002] x5 : ffff800062eef9d0 x4 : ffffa68881e707a8
-[   78.307292] x3 : 0000000000000000 x2 : 0000000000000002
-[   78.312582] x1 : 0000000000000001 x0 : ffffa688827eecc8
-[   78.317873] Call trace:
-[   78.320312]  0x0
-[   78.322147]  __uart_start.isra.9+0x64/0x78
-[   78.326229]  uart_start+0xb8/0x1c8
-[   78.329620]  uart_flush_chars+0x24/0x30
-[   78.333442]  n_tty_receive_buf_common+0x7b0/0xc30
-[   78.338128]  n_tty_receive_buf+0x44/0x2c8
-[   78.342122]  tty_ioctl+0x348/0x11f8
-[   78.345599]  ksys_ioctl+0xd8/0xf8
-[   78.348903]  __arm64_sys_ioctl+0x2c/0xc8
-[   78.352812]  el0_svc_common.constprop.2+0x88/0x1b0
-[   78.357583]  do_el0_svc+0x44/0xd0
-[   78.360887]  el0_sync_handler+0x14c/0x1d0
-[   78.364880]  el0_sync+0x140/0x180
-[   78.368185] Code: bad PC value
+root@(none):/# cat /sys/module/ipmi_watchdog/parameters/action
+resetroot@(none):/# cat /sys/module/ipmi_watchdog/parameters/preaction
+pre_noneroot@(none):/# cat /sys/module/ipmi_watchdog/parameters/preop
+preop_noneroot@(none):/#
 
-SERIAL_PORT_DFNS is not defined on each arch, if it's not defined,
-serial8250_set_defaults() won't be called in serial8250_isa_init_ports(),
-so the p->serial_in pointer won't be initialized, and it leads a null-ptr-deref.
-Fix this problem by calling serial8250_set_defaults() after init uart port.
-
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 ---
- drivers/tty/serial/8250/8250_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/char/ipmi/ipmi_watchdog.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index fc118f649887..cae61d1ebec5 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -524,6 +524,7 @@ static void __init serial8250_isa_init_ports(void)
- 		 */
- 		up->mcr_mask = ~ALPHA_KLUDGE_MCR;
- 		up->mcr_force = ALPHA_KLUDGE_MCR;
-+		serial8250_set_defaults(up);
- 	}
+diff --git a/drivers/char/ipmi/ipmi_watchdog.c b/drivers/char/ipmi/ipmi_watchdog.c
+index 55986e1..f78156d 100644
+--- a/drivers/char/ipmi/ipmi_watchdog.c
++++ b/drivers/char/ipmi/ipmi_watchdog.c
+@@ -232,12 +232,17 @@ static int set_param_str(const char *val, const struct kernel_param *kp)
+ static int get_param_str(char *buffer, const struct kernel_param *kp)
+ {
+ 	action_fn fn = (action_fn) kp->arg;
+-	int       rv;
++	int rv, len;
  
- 	/* chain base port ops to support Remote Supervisor Adapter */
-@@ -547,7 +548,6 @@ static void __init serial8250_isa_init_ports(void)
- 		port->membase  = old_serial_port[i].iomem_base;
- 		port->iotype   = old_serial_port[i].io_type;
- 		port->regshift = old_serial_port[i].iomem_reg_shift;
--		serial8250_set_defaults(up);
+ 	rv = fn(NULL, buffer);
+ 	if (rv)
+ 		return rv;
+-	return strlen(buffer);
++
++	len = strlen(buffer);
++	buffer[len++] = '\n';
++	buffer[len] = 0;
++
++	return len;
+ }
  
- 		port->irqflags |= irqflag;
- 		if (serial8250_isa_config != NULL)
+ 
 -- 
-2.25.1
+1.7.12.4
 
