@@ -2,116 +2,136 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC55DC433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C41A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6BD207BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DB402065E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sGfz5+HA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sWaGYNFN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbgGUQor (ORCPT
+        id S1729666AbgGUQpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:44:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46812 "EHLO
+        Tue, 21 Jul 2020 12:45:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730454AbgGUQmD (ORCPT
+        with ESMTP id S1728750AbgGUQpj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:42:03 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D06FC0619DA
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:03 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 9so77176wmj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:02 -0700 (PDT)
+        Tue, 21 Jul 2020 12:45:39 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFEE3C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:45:38 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id e22so15759035edq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:45:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ALTYTDXKrPwk4EzSNXIMszQ+1kWk/MkRkisy15QSvZc=;
-        b=sGfz5+HAe5VqXXtiSLqK9gghUntA+0huTOuHyQEVt6VJ6vRnz7DUsc7t7WDEpDg94Y
-         Roxq3KI41Odj8qlq8h/tNgmMpXrRqnUbL0nC48bXCeXjL5E5U7uy41wYw9vM09rOzZL4
-         idlc/zgKG0mHuZK/oCP3jHa8qS35Gvpjo+ngTlREE7ckPLP/kPtLVWKzwlE8w/fPILtK
-         I92cqZMK29Jd/Apxq7T3EkmpZxTC7o2/MfZSD7S8AnD+dMK9lpd9fRTxko8iTf4iIbQr
-         c+CmzPR+CcEhBsG81AeJY+65DarsM7Pns94XOTglcjx9KiLIBRYF388Z24EOaisF6o1p
-         +Zrw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gDLw9Dcw3YPv5eg4D1cNA4KJREZ+5phRSHLKAVCSqo4=;
+        b=sWaGYNFNvLHfLnFqhWw6qD05fZJ3xzg9qHpo5WavC+HOa4H9WOO8R58q/QpUclGLry
+         9IL4j0cs6T2tzt1njgxmRIdcHQe5/HHEbENPKtlUivjjo0774Sk4dPYbx6pNd9sj+Hba
+         BGIPr7vGf3Wz1I0ZlD9HrORuybaANBJwq3p9No8LKz53+Z00y2Qe5yTAZzt4xK0KTD14
+         opOIvzeXklxODdltPMXE0N5/iPdGcCtOPo35S5qmc4oYuzfqMy8yKOjCCu2miu7Qw5xg
+         SL+vKrFM9D2pcb4rxS2e3UFTvCX3US6gxaITccHPkYUeoMaMFGays+1SH64jb+4HGZ6x
+         uO9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ALTYTDXKrPwk4EzSNXIMszQ+1kWk/MkRkisy15QSvZc=;
-        b=UFh6sCl9y1hSxR7td++OmXg56l+iGL1IUEMG3/JXw+gusqj/5ylJ+53SDDXpBwYDEi
-         LE5QfwBYkxgA28wHLUQbGLb9ZZnO+cZ0vuurzr9C9CWwdYDvrt7P471HINnvAL0KhE7T
-         sIYTf25VhNAP4nHQF1DtYVF4hBxTy+rE8zEAy2IKhQ3FEdwYQGDerhk2YdbIN+oru3pJ
-         eu4UoA1iOx4CehhgTSTG0Uf82ApbwoVz+Wsr9M7tkrBu2CtOOtn1b9l4o5v4WI1sBxHi
-         yy8+QagLEw+QUC87h06eD6AAEHBanx9cWpvAn5YyWgLJU4WbrGYxP//0Y9IBOS2NfNar
-         ea6g==
-X-Gm-Message-State: AOAM531rEk0eOZoJichxw43+jW20FCENkPrg3LHHmBXjXD7hRyMLyJI4
-        ZC0f7Bpb8zQI1r+aOb1AjN3tYw==
-X-Google-Smtp-Source: ABdhPJzwaE8mu8izokB3w7tSQkCr+/o7WmV0tRpSkzJtMeXoQnThNWs0fP4Amj4kaKXN/X2hL/VUsg==
-X-Received: by 2002:a1c:e209:: with SMTP id z9mr4856370wmg.153.1595349721855;
-        Tue, 21 Jul 2020 09:42:01 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.42.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:42:01 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Luben Tuikov <luben_tuikov@adaptec.com>
-Subject: [PATCH 06/40] scsi: aic94xx: aic94xx_dev: Fix a couple of kerneldoc formatting issues
-Date:   Tue, 21 Jul 2020 17:41:14 +0100
-Message-Id: <20200721164148.2617584-7-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200721164148.2617584-1-lee.jones@linaro.org>
-References: <20200721164148.2617584-1-lee.jones@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gDLw9Dcw3YPv5eg4D1cNA4KJREZ+5phRSHLKAVCSqo4=;
+        b=N/IxZiWktsoTf86K5Oa4xykcOHNUNWECfFlwvpSFpyvIjWs+7AeeqOhPP1IfxKS5KV
+         qCOUIGKRtjmYFuIlHhitMCkcjdH/of0FikJG8UcU0MCE4hnhcUORpdSnEnYvBHrIPC/A
+         bp/fYnSvidFzQtVl22xgyG62WyjQHK254uioStuCaHsqt3eKY+FR0/kDQ138hz5fLMlU
+         O1Y/S8jSlrA5R//HOpol2zh0krZJ7Juw4FN1jMWfsOly1p4jE78WLQvvnsrg7cL7kBhi
+         1/xqvUxjiaXBbPLotBwM/ArrmPP9dB1wX/2oiD7lgYlSOqzURdU+yjWAiv0fp9uvHlQk
+         Khnw==
+X-Gm-Message-State: AOAM530tSeryfJ1VVuLqxR2SF4DbW2zhfD7nBMwfkCGZgn3g4NpXGE3j
+        ikrsOoxwDqa7L4NXnqHyfFOlGdp9bdhiWqTni9A9vHtYL4w=
+X-Google-Smtp-Source: ABdhPJwFbdgTKwMQXCY5MUgVfRS3h4/ECO4sk0mNo2dLY8J6zu/iV27GdbWz0YHGFmXds1uVOpAILDeHMdcYDWpz4wY=
+X-Received: by 2002:aa7:d5cd:: with SMTP id d13mr27413638eds.370.1595349937400;
+ Tue, 21 Jul 2020 09:45:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200715214312.2266839-1-haoluo@google.com> <20200715214312.2266839-3-haoluo@google.com>
+ <CAEf4BzYxWk9OmN0QhDrvE943YsYd2Opdkbt7NQTO9-YM6c4aGw@mail.gmail.com>
+ <CA+khW7i9wq0+2P_M46pEv-onGXL_=sW7xE=10CYeP_yjPh-Rpw@mail.gmail.com> <CAEf4BzY=6PH4YS8sX1SRFOj+6oQnfAk-f0P8+0XWMGMS+RJ0pw@mail.gmail.com>
+In-Reply-To: <CAEf4BzY=6PH4YS8sX1SRFOj+6oQnfAk-f0P8+0XWMGMS+RJ0pw@mail.gmail.com>
+From:   Hao Luo <haoluo@google.com>
+Date:   Tue, 21 Jul 2020 09:45:26 -0700
+Message-ID: <CA+khW7j93gtB-e8x1-Fd9sTrOaHHD7suzVaBh9gPjnOJux+-AA@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next 2/2] selftests/bpf: Test __ksym externs with BTF
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin@isovalent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kerneldoc expects attributes/parameters to be in '@*.: ' format.
+Ack. Will have that in v2.
 
-Fixes the following W=1 kernel build warning(s):
+Hao
 
- drivers/scsi/aic94xx/aic94xx_dev.c:246: warning: Function parameter or member 'dev' not described in 'asd_init_sata_pm_port_ddb'
- drivers/scsi/aic94xx/aic94xx_dev.c:290: warning: Function parameter or member 'dev' not described in 'asd_init_sata_pm_ddb'
-
-Cc: Luben Tuikov <luben_tuikov@adaptec.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/scsi/aic94xx/aic94xx_dev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/aic94xx/aic94xx_dev.c b/drivers/scsi/aic94xx/aic94xx_dev.c
-index 604a5331f639b..73506a459bf86 100644
---- a/drivers/scsi/aic94xx/aic94xx_dev.c
-+++ b/drivers/scsi/aic94xx/aic94xx_dev.c
-@@ -236,7 +236,7 @@ static int asd_init_sata_pm_table_ddb(struct domain_device *dev)
- 
- /**
-  * asd_init_sata_pm_port_ddb -- SATA Port Multiplier Port
-- * dev: pointer to domain device
-+ * @dev: pointer to domain device
-  *
-  * For SATA Port Multiplier Ports we need to allocate one SATA Port
-  * Multiplier Port DDB and depending on whether the target on it
-@@ -281,7 +281,7 @@ static int asd_init_initiator_ddb(struct domain_device *dev)
- 
- /**
-  * asd_init_sata_pm_ddb -- SATA Port Multiplier
-- * dev: pointer to domain device
-+ * @dev: pointer to domain device
-  *
-  * For STP and direct-attached SATA Port Multipliers we need
-  * one target port DDB entry and one SATA PM table DDB entry.
--- 
-2.25.1
-
+On Mon, Jul 20, 2020 at 7:37 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Mon, Jul 20, 2020 at 1:28 PM Hao Luo <haoluo@google.com> wrote:
+> >
+> > >
+> > > This should ideally look like a real global variable extern:
+> > >
+> > > extern const struct rq runqueues __ksym;
+> > >
+> > >
+> > > But that's the case for non-per-cpu variables. You didn't seem to
+> > > address per-CPU variables in this patch set. How did you intend to
+> > > handle that? We should look at a possible BPF helper to access such
+> > > variables as well and how the verifier will prevent direct memory
+> > > accesses for such variables.
+> > >
+> > > We should have some BPF helper that accepts per-CPU PTR_TO_BTF_ID, and
+> > > returns PTR_TO_BTF_ID, but adjusted to desired CPU. And verifier
+> > > ideally would allow direct memory access on that resulting
+> > > PTR_TO_BTF_ID, but not on per-CPU one. Not sure yet how this should
+> > > look like, but the verifier probably needs to know that variable
+> > > itself is per-cpu, no?
+> > >
+> >
+> > Yes, that's what I was unclear about, so I don't have that part in
+> > this patchset. But your explanation helped me organize my thoughts. :)
+> >
+> > Actually, the verifier can tell whether a var is percpu from the
+> > DATASEC, since we have encoded "percpu" DATASEC in btf. I think the
+> > following should work:
+> >
+> > We may introduce a new PTR_TO_BTF_VAR_ID. In ld_imm, libbpf replaces
+> > ksyms with btf_id. The btf id points to a KIND_VAR. If the pointed VAR
+> > is found in the "percpu" DATASEC, dst_reg is set to PTR_TO_BTF_VAR_ID;
+> > otherwise, it will be a PTR_TO_BTF_ID. For PTR_TO_BTF_VAR_ID,
+> > reg->btf_id is the id of the VAR. For PTR_TO_BTF_ID, reg->btf_id is
+> > the id of the actual kernel type. The verifier would reject direct
+> > memory access on PTR_TO_BTF_VAR_ID, but the new BPF helper can convert
+> > a PTR_TO_BTF_VAR_ID to PTR_TO_BTF_ID.
+>
+> Sounds good to me as a plan, except that PTR_TO_BTF_VAR_ID is a
+> misleading name. It's always a variable. The per-CPU part is crucial,
+> though, so maybe something like PTR_TO_PERCPU_BTF_ID?
+>
+> >
+> > Hao
