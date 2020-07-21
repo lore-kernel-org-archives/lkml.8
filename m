@@ -2,146 +2,577 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E846C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F996C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D91820792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595338029;
-	bh=VMw8YE5x3FLHqpQGkH/mADRhXIT9v2v+BirY/MVEvvA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lr5Wfa9AYbF0GAM1NlL0YtXZL2kgmZxjSYwH4sQ1E1n1EE/yr2Yr8sTBHjpPMlY1j
-	 kUMYq+aW3A/G4c0LJravdAi02ifPV1jqoNH0HijJinJMJvYyMR+LRwW7uo8bZdF9RK
-	 xGYoMe8BFsTTgUKj00fBwTX1RrXLhGvEE7c9QJWQ=
+	by mail.kernel.org (Postfix) with ESMTP id F328E206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgGUN1I (ORCPT
+        id S1726982AbgGUN2g convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:27:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbgGUN1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:27:07 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DB0B206E9;
-        Tue, 21 Jul 2020 13:27:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595338026;
-        bh=VMw8YE5x3FLHqpQGkH/mADRhXIT9v2v+BirY/MVEvvA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BjmXkpeMj7JySjDEpkGsYN3u59UQW0/R5lAcuVxbLMI4lu8y3U3un1Zbis1T2oWpR
-         SDAVBuGUc9o5iTFEmzgnGXEtvuSA20k1ntorTYvIX7W9ctgzCgmlDQB2umeE1yFWS9
-         7dgDPUjCRPor0Brr/UVjFZG3Uvo6WPP2W2SEuaLY=
-Date:   Tue, 21 Jul 2020 22:27:01 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Guo Ren <guoren@kernel.org>
-Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anup Patel <anup@brainfault.org>, linux-csky@vger.kernel.org,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Zong Li <zong.li@sifive.com>,
-        Patrick =?UTF-8?B?U3TDpGhsaW4=?= <me@packi.ch>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Pekka Enberg <penberg@kernel.org>
-Subject: Re: [PATCH v3 6/7] riscv: Add KPROBES_ON_FTRACE supported
-Message-Id: <20200721222701.3074315f6a9f6c42c5963f40@kernel.org>
-In-Reply-To: <CAJF2gTSMUnHfv3GLj_TGT2dJkKq2zbEsnbPKREiq5i6PPjyTBg@mail.gmail.com>
-References: <1594683562-68149-1-git-send-email-guoren@kernel.org>
-        <1594683562-68149-7-git-send-email-guoren@kernel.org>
-        <20200714203757.512ce7fb5fa61a88b1dbb2f3@kernel.org>
-        <CAJF2gTSMUnHfv3GLj_TGT2dJkKq2zbEsnbPKREiq5i6PPjyTBg@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 21 Jul 2020 09:28:36 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2654 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726014AbgGUN2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 09:28:35 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 41928FE39F6D5B54CDFE;
+        Tue, 21 Jul 2020 21:28:30 +0800 (CST)
+Received: from DGGEMM508-MBX.china.huawei.com ([169.254.2.193]) by
+ DGGEMM403-HUB.china.huawei.com ([10.3.20.211]) with mapi id 14.03.0487.000;
+ Tue, 21 Jul 2020 21:28:20 +0800
+From:   "Zhoujian (jay)" <jianjay.zhou@huawei.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "Maoming (maoming, Cloud Infrastructure Service Product Dept.)" 
+        <maoming.maoming@huawei.com>,
+        "Huangweidong (C)" <weidong.huang@huawei.com>,
+        Peter Xu <peterx@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: RE: [PATCH] vfio dma_map/unmap: optimized for hugetlbfs pages
+Thread-Topic: [PATCH] vfio dma_map/unmap: optimized for hugetlbfs pages
+Thread-Index: AQHWXm/2XBg1E1uuxEuF0Ts0dF5bR6kQjBuAgAF7pBA=
+Date:   Tue, 21 Jul 2020 13:28:20 +0000
+Message-ID: <B2D15215269B544CADD246097EACE7474BDEED27@dggemm508-mbx.china.huawei.com>
+References: <20200720082947.1770-1-jianjay.zhou@huawei.com>
+ <20200720164603.3a622548@x1.home>
+In-Reply-To: <20200720164603.3a622548@x1.home>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.174.149.93]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020 00:24:54 +0800
-Guo Ren <guoren@kernel.org> wrote:
+Thanks for taking a close look at the code, Alex.
+We'll check them one by one ASAP.
 
-> Thx Masami,
+> -----Original Message-----
+> From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> Sent: Tuesday, July 21, 2020 6:46 AM
+> To: Zhoujian (jay) <jianjay.zhou@huawei.com>
+> Cc: linux-kernel@vger.kernel.org; kvm@vger.kernel.org; cohuck@redhat.com;
+> Maoming (maoming, Cloud Infrastructure Service Product Dept.)
+> <maoming.maoming@huawei.com>; Huangweidong (C)
+> <weidong.huang@huawei.com>; Peter Xu <peterx@redhat.com>; Andrea
+> Arcangeli <aarcange@redhat.com>
+> Subject: Re: [PATCH] vfio dma_map/unmap: optimized for hugetlbfs pages
 > 
-> On Tue, Jul 14, 2020 at 7:38 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >
-> > On Mon, 13 Jul 2020 23:39:21 +0000
-> > guoren@kernel.org wrote:
-> >
-> > > From: Guo Ren <guoren@linux.alibaba.com>
-> > >
-> > > This patch adds support for kprobes on ftrace call sites to avoids
-> > > much of the overhead with regular kprobes. Try it with simple
-> > > steps:
-> > >
-> > > 1. Get _do_fork ftrace call site.
-> > > Dump of assembler code for function _do_fork:
-> > >    0xffffffe00020af64 <+0>:     addi    sp,sp,-128
-> > >    0xffffffe00020af66 <+2>:     sd      s0,112(sp)
-> > >    0xffffffe00020af68 <+4>:     sd      ra,120(sp)
-> > >    0xffffffe00020af6a <+6>:     addi    s0,sp,128
-> > >    0xffffffe00020af6c <+8>:     sd      s1,104(sp)
-> > >    0xffffffe00020af6e <+10>:    sd      s2,96(sp)
-> > >    0xffffffe00020af70 <+12>:    sd      s3,88(sp)
-> > >    0xffffffe00020af72 <+14>:    sd      s4,80(sp)
-> > >    0xffffffe00020af74 <+16>:    sd      s5,72(sp)
-> > >    0xffffffe00020af76 <+18>:    sd      s6,64(sp)
-> > >    0xffffffe00020af78 <+20>:    sd      s7,56(sp)
-> > >    0xffffffe00020af7a <+22>:    mv      s4,a0
-> > >    0xffffffe00020af7c <+24>:    mv      a0,ra
-> > >    0xffffffe00020af7e <+26>:    nop   <<<<<<<< here!
-> > >    0xffffffe00020af82 <+30>:    nop
-> > >    0xffffffe00020af86 <+34>:    ld      s3,0(s4)
-> > >
-> > > 2. Set _do_fork+26 as the kprobe.
-> > >   echo 'p:myprobe _do_fork+26 dfd=%a0 filename=%a1 flags=%a2 mode=+4($stack)' > /sys/kernel/debug/tracing/kprobe_events
-> > >   echo 1 > /sys/kernel/debug/tracing/events/kprobes/enable
-> > >   cat /sys/kernel/debug/tracing/trace
-> > >   tracer: nop
-> > >
-> > >   entries-in-buffer/entries-written: 3/3   #P:1
-> > >
-> > >                                _-----=> irqs-off
-> > >                               / _----=> need-resched
-> > >                              | / _---=> hardirq/softirq
-> > >                              || / _--=> preempt-depth
-> > >                              ||| /     delay
-> > >             TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
-> > >                | |       |   ||||       |         |
-> > >               sh-87    [000] ....   551.557031: myprobe: (_do_fork+0x1a/0x2e6) dfd=0xffffffe00020af7e filename=0xffffffe00020b34e flags=0xffffffe00101e7c0 mode=0x20af86ffffffe0
-> > >
-> > >   cat /sys/kernel/debug/kprobes/list
-> > > ffffffe00020af7e  k  _do_fork+0x1a    [FTRACE]
-> > >                                        ^^^^^^
-> >
-> > Hmm, this seems fentry is not supported on RISC-V yet. But anyway,
-> > it will be useful for users (if they can find the offset).
+> On Mon, 20 Jul 2020 16:29:47 +0800
+> Jay Zhou <jianjay.zhou@huawei.com> wrote:
 > 
-> Seems only x86 & ⬆️90 use fentry，can you elaborate more about fentry's
-> benefit and how the user could set kprobe on ftrace call site without
-> disassemble?
+> > From: Ming Mao <maoming.maoming@huawei.com>
+> >
+> > Hi all,
+> > I'm working on starting lots of big size Virtual Machines(memory:
+> > >128GB) with VFIO-devices. And I encounter a problem that is the
+> > waiting time of starting all Virtual Machines is too long. I analyze
+> > the startup log and find that the time of pinning/unpinning pages
+> > could be reduced.
+> >
+> > In the original process, to make sure the pages are contiguous, we
+> > have to check all pages one by one. I think maybe we can use hugetlbfs
+> > pages which can skip this step.
+> > So I create a patch to do this.
+> > According to my test, the result of this patch is pretty well.
+> >
+> > Virtual Machine: 50G memory, 32 CPU, 1 VFIO-device, 1G hugetlbfs page
+> >         original   after optimization
+> > pin time   700ms          0.1ms
+> >
+> > I Suppose that:
+> > 1)the hugetlbfs page should not be split 2)PG_reserved is not relevant
+> > for hugetlbfs pages 3)we can delete the for loops and use some
+> > operations (such as atomic_add,page_ref_add) instead
+> >
+> > please correct me if I am wrong.
+> >
+> > Thanks.
+> >
+> > Signed-off-by: Ming Mao <maoming.maoming@huawei.com>
+> > ---
+> >  drivers/vfio/vfio_iommu_type1.c | 236 ++++++++++++++++++++++++++++++--
+> >  include/linux/vfio.h            |  20 +++
+> >  2 files changed, 246 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c
+> > b/drivers/vfio/vfio_iommu_type1.c index 5e556ac91..42e25752e 100644
+> > --- a/drivers/vfio/vfio_iommu_type1.c
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -415,6 +415,46 @@ static int put_pfn(unsigned long pfn, int prot)
+> >  	return 0;
+> >  }
+> >
+> > +/*
+> > + * put pfns for a hugetlbfs page
+> > + * @start:the 4KB-page we start to put,can be any page in this
+> > +hugetlbfs page
+> > + * @npage:the number of 4KB-pages need to put
+> 
+> This code supports systems where PAGE_SIZE is not 4KB.
+> 
+> > + * @prot:IOMMU_READ/WRITE
+> > + */
+> > +static int hugetlb_put_pfn(unsigned long start, unsigned int npage,
+> > +int prot) {
+> > +	struct page *page = NULL;
+> > +	struct page *head = NULL;
+> 
+> Unnecessary initialization.
+> 
+> > +
+> > +	if (!npage || !pfn_valid(start))
+> > +		return 0;
+> > +
+> > +	page = pfn_to_page(start);
+> > +	if (!page || !PageHuge(page))
+> > +		return 0;
+> > +	head = compound_head(page);
+> > +	/*
+> > +	 * The last page should be in this hugetlbfs page.
+> > +	 * The number of putting pages should be equal to the number
+> > +	 * of getting pages.So the hugepage pinned refcount and the normal
+> > +	 * page refcount can not be smaller than npage.
+> > +	 */
+> > +	if ((head != compound_head(pfn_to_page(start + npage - 1)))
+> > +	    || (page_ref_count(head) < npage)
+> > +	    || (compound_pincount(page) < npage))
+> > +		return 0;
+> > +
+> > +	if ((prot & IOMMU_WRITE) && !PageDirty(page))
+> > +		set_page_dirty_lock(page);
+> > +
+> > +	atomic_sub(npage, compound_pincount_ptr(head));
+> > +	if (page_ref_sub_and_test(head, npage))
+> > +		__put_page(head);
+> > +
+> > +	mod_node_page_state(page_pgdat(head), NR_FOLL_PIN_RELEASED,
+> npage);
+> > +	return 1;
+> > +}
+> > +
+> >  static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct
+> *mm,
+> >  			    unsigned long vaddr, unsigned long *pfn,
+> >  			    bool write_fault)
+> > @@ -479,6 +519,90 @@ static int vaddr_get_pfn(struct mm_struct *mm,
+> unsigned long vaddr,
+> >  	return ret;
+> >  }
+> >
+> > +struct vfio_hupetlbpage_info vfio_hugetlbpage_info[HUGE_MAX_HSTATE] = {
+> > +	{vfio_hugetlbpage_2M, PMD_SIZE, ~((1ULL << HPAGE_PMD_SHIFT) - 1)},
+> > +	{vfio_hugetlbpage_1G, PUD_SIZE, ~((1ULL << HPAGE_PUD_SHIFT) - 1)},
+> 
+> Other architectures support more huge page sizes, also 0-day identified these
+> #defines don't exist when THP is not configured.  But why couldn't we figure out
+> all of these form the compound_order()?  order == shift, size = PAGE_SIZE <<
+> order.
+> 
+> > +};
+> > +
+> > +static bool is_hugetlbpage(unsigned long pfn, enum
+> > +vfio_hugetlbpage_type *type) {
+> > +	struct page *page = NULL;
+> 
+> Unnecessary initialization.
+> 
+> > +
+> > +	if (!pfn_valid(pfn) || !type)
+> > +		return false;
+> > +
+> > +	page = pfn_to_page(pfn);
+> > +	/* only check for hugetlbfs pages */
+> > +	if (!page || !PageHuge(page))
+> > +		return false;
+> > +
+> > +	switch (compound_order(compound_head(page))) {
+> > +	case PMD_ORDER:
+> > +		*type = vfio_hugetlbpage_2M;
+> > +		break;
+> > +	case PUD_ORDER:
+> > +		*type = vfio_hugetlbpage_1G;
+> > +		break;
+> > +	default:
+> > +		return false;
+> > +	}
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +/* Is the addr in the last page in hugetlbfs pages? */ static bool
+> > +hugetlb_is_last_page(unsigned long addr, enum vfio_hugetlbpage_type
+> > +type) {
+> > +	unsigned int num = 0;
+> 
+> Unnecessary initialization, and in fact unnecessary variable altogether.
+> ie.
+> 
+> 	return hugetlb_get_resdual_pages(addr & ~(PAGE_SIZE - 1), type) == 1;
+> 
+> 
+> > +
+> > +	num = hugetlb_get_resdual_pages(addr & ~(PAGE_SIZE - 1), type);
+> 
+> residual?
+> 
+> > +
+> > +	if (num == 1)
+> > +		return true;
+> > +	else
+> > +		return false;
+> > +}
+> > +
+> > +static bool hugetlb_page_is_pinned(struct vfio_dma *dma,
+> > +				unsigned long start,
+> > +				unsigned long npages)
+> > +{
+> > +	struct vfio_pfn *vpfn = NULL;
+> 
+> Unnecessary initialization.
+> 
+> > +	struct rb_node *node = rb_first(&dma->pfn_list);
+> > +	unsigned long end = start + npages - 1;
+> > +
+> > +	for (; node; node = rb_next(node)) {
+> > +		vpfn = rb_entry(node, struct vfio_pfn, node);
+> > +
+> > +		if ((vpfn->pfn >= start) && (vpfn->pfn <= end))
+> > +			return true;
+> 
+> This function could be named better, it suggests the hugetlbfs page is pinned, but
+> really we're only looking for any pfn_list pinnings overlapping the pfn range.
+> 
+> > +	}
+> > +
+> > +	return false;
+> > +}
+> > +
+> > +static unsigned int hugetlb_get_contiguous_pages_num(struct vfio_dma
+> *dma,
+> > +						unsigned long pfn,
+> > +						unsigned long resdual_npage,
+> > +						unsigned long max_npage)
+> > +{
+> > +	unsigned int num = 0;
+> 
+> Unnecessary initialization
+> 
+> > +
+> > +	if (!dma)
+> > +		return 0;
+> > +
+> > +	num = resdual_npage < max_npage ? resdual_npage : max_npage;
+> 
+> min(resdual_npage, max_npage)
+> 
+> 
+> > +	/*
+> > +	 * If there is only one page, it is no need to optimize them.
+> 
+> s/no need/not necessary/
+> 
+> > +	 * Maybe some pages have been pinned and inserted into dma->pfn_list by
+> others.
+> > +	 * In this case, we just goto the slow path simply.
+> > +	 */
+> > +	if ((num < 2) || hugetlb_page_is_pinned(dma, pfn, num))
+> > +		return 0;
+> 
+> Why does having pinnings in the pfn_list disqualify it from hugetlbfs pinning?
+> 
+> Testing for the last page here is redundant to the pinning path, should it only be
+> done here?  Can num be zero?
+> 
+> Maybe better to return -errno for this and above zero conditions rather than
+> return a value that doesn't reflect the purpose of the function?
+> 
+> > +
+> > +	return num;
+> > +}
+> > +
+> >  /*
+> >   * Attempt to pin pages.  We really don't want to track all the pfns and
+> >   * the iommu can only map chunks of consecutive pfns anyway, so get
+> > the @@ -492,6 +616,7 @@ static long vfio_pin_pages_remote(struct vfio_dma
+> *dma, unsigned long vaddr,
+> >  	long ret, pinned = 0, lock_acct = 0;
+> >  	bool rsvd;
+> >  	dma_addr_t iova = vaddr - dma->vaddr + dma->iova;
+> > +	enum vfio_hugetlbpage_type type;
+> >
+> >  	/* This code path is only user initiated */
+> >  	if (!current->mm)
+> > @@ -521,6 +646,55 @@ static long vfio_pin_pages_remote(struct vfio_dma
+> *dma, unsigned long vaddr,
+> >  	if (unlikely(disable_hugepages))
+> >  		goto out;
+> >
+> > +	/*
+> > +	 * It is no need to get pages one by one for hugetlbfs pages.
+> 
+> s/no need/not necessary/
+> 
+> > +	 * 4KB-pages in hugetlbfs pages are contiguous.
+> > +	 * But if the vaddr is in the last 4KB-page, we just goto the slow path.
+> 
+> 
+> s/4KB-/PAGE_SIZE /
+> 
+> Please explain the significance of vaddr being in the last PAGE_SIZE page of a
+> hugetlbfs page.  Is it simply that we should take the slow path for mapping a
+> single page before the end of the hugetlbfs page?
+> Is this optimization worthwhile?  Isn't it more consistent to handle all mappings
+> over hugetlbfs pages the same?  Should we be operating on vaddr here for the
+> hugetlbfs page alignment or base_pfn?
+> 
+> > +	 */
+> > +	if (is_hugetlbpage(*pfn_base, &type) && !hugetlb_is_last_page(vaddr,
+> type)) {
+> > +		unsigned long hugetlb_resdual_npage = 0;
+> > +		unsigned long contiguous_npage = 0;
+> > +		struct page *head = NULL;
+> > +
+> > +		hugetlb_resdual_npage =
+> > +			hugetlb_get_resdual_pages((vaddr + PAGE_SIZE) & ~(PAGE_SIZE -
+> 1),
+> > +type);
+> 
+> ~(PAGE_SIZE - 1) is PAGE_MASK, but that whole operation looks like a
+> PAGE_ALIGN(vaddr)
+> 
+> This is trying to get the number of pages after this page to the end of the
+> hugetlbfs page, right?  Rather than the hugetlb_is_last_page() above, shouldn't
+> we have recorded the number of pages there and used math to get this value?
+> 
+> > +		/*
+> > +		 * Maybe the hugetlb_resdual_npage is invalid.
+> > +		 * For example, hugetlb_resdual_npage > (npage - 1) or
+> > +		 * some pages of this hugetlbfs page have been pinned.
+> > +		 */
+> > +		contiguous_npage = hugetlb_get_contiguous_pages_num(dma,
+> *pfn_base + 1,
+> > +						hugetlb_resdual_npage, npage - 1);
+> > +		if (!contiguous_npage)
+> > +			goto slow_path;
+> > +
+> > +		/*
+> > +		 * Unlike THP, the splitting should not happen for hugetlbfs pages.
+> > +		 * Since PG_reserved is not relevant for compound pages, and the pfn
+> of
+> > +		 * 4KB-page which in hugetlbfs pages is valid,
+> 
+> s/4KB/PAGE_SIZE/
+> 
+> > +		 * it is no need to check rsvd for hugetlbfs pages.
+> 
+> s/no need/not necessary/
+> 
+> > +		 */
+> > +		if (!dma->lock_cap &&
+> > +		    current->mm->locked_vm + lock_acct + contiguous_npage > limit)
+> {
+> > +			pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
+> > +				 __func__, limit << PAGE_SHIFT);
+> > +			ret = -ENOMEM;
+> > +			goto unpin_out;
+> > +		}
+> > +		/*
+> > +		 * We got a hugetlbfs page using vaddr_get_pfn alreadly.
+> > +		 * In this case,we do not need to alloc pages and we can finish all
+> > +		 * work by a single operation to the head page.
+> > +		 */
+> > +		lock_acct += contiguous_npage;
+> > +		head = compound_head(pfn_to_page(*pfn_base));
+> > +		atomic_add(contiguous_npage, compound_pincount_ptr(head));
+> > +		page_ref_add(head, contiguous_npage);
+> > +		mod_node_page_state(page_pgdat(head), NR_FOLL_PIN_ACQUIRED,
+> contiguous_npage);
+> > +		pinned += contiguous_npage;
+> > +		goto out;
+> 
+> I'm hoping Peter or Andrea understand this, but I think we still have pfn_base
+> pinned separately and I don't see that we've done an unpin anywhere, so are we
+> leaking the pin of the first page??
+> 
+> > +	}
+> > +slow_path:
+> >  	/* Lock all the consecutive pages from pfn_base */
+> >  	for (vaddr += PAGE_SIZE, iova += PAGE_SIZE; pinned < npage;
+> >  	     pinned++, vaddr += PAGE_SIZE, iova += PAGE_SIZE) { @@ -569,7
+> > +743,30 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma,
+> > dma_addr_t iova,  {
+> >  	long unlocked = 0, locked = 0;
+> >  	long i;
+> > +	enum vfio_hugetlbpage_type type;
+> > +
+> > +	if (is_hugetlbpage(pfn, &type)) {
+> > +		unsigned long hugetlb_resdual_npage = 0;
+> > +		unsigned long contiguous_npage = 0;
+> 
+> Unnecessary initialization...
+> 
+> >
+> > +		hugetlb_resdual_npage = hugetlb_get_resdual_pages(iova &
+> > +~(PAGE_SIZE - 1), type);
+> 
+> PAGE_MASK
+> 
+> Like above, is it pfn or iova that we should be using when looking at hugetlbfs
+> alignment?
+> 
+> > +		contiguous_npage = hugetlb_get_contiguous_pages_num(dma, pfn,
+> > +						hugetlb_resdual_npage, npage);
+> > +		/*
+> > +		 * There is not enough contiguous pages or this hugetlbfs page
+> > +		 * has been pinned.
+> > +		 * Let's try the slow path.
+> > +		 */
+> > +		if (!contiguous_npage)
+> > +			goto slow_path;
+> > +
+> > +		/* try the slow path if failed */
+> > +		if (hugetlb_put_pfn(pfn, contiguous_npage, dma->prot)) {
+> > +			unlocked = contiguous_npage;
+> > +			goto out;
+> > +		}
+> 
+> Should probably break the pin path into a separate get_pfn function for
+> symmetry.
+> 
+> 
+> > +	}
+> > +slow_path:
+> >  	for (i = 0; i < npage; i++, iova += PAGE_SIZE) {
+> >  		if (put_pfn(pfn++, dma->prot)) {
+> >  			unlocked++;
+> > @@ -578,6 +775,7 @@ static long vfio_unpin_pages_remote(struct vfio_dma
+> *dma, dma_addr_t iova,
+> >  		}
+> >  	}
+> >
+> > +out:
+> >  	if (do_accounting)
+> >  		vfio_lock_acct(dma, locked - unlocked, true);
+> >
+> > @@ -867,6 +1065,7 @@ static long vfio_unmap_unpin(struct vfio_iommu
+> *iommu, struct vfio_dma *dma,
+> >  	struct iommu_iotlb_gather iotlb_gather;
+> >  	int unmapped_region_cnt = 0;
+> >  	long unlocked = 0;
+> > +	enum vfio_hugetlbpage_type type;
+> >
+> >  	if (!dma->size)
+> >  		return 0;
+> > @@ -900,16 +1099,33 @@ static long vfio_unmap_unpin(struct vfio_iommu
+> *iommu, struct vfio_dma *dma,
+> >  			continue;
+> >  		}
+> >
+> > -		/*
+> > -		 * To optimize for fewer iommu_unmap() calls, each of which
+> > -		 * may require hardware cache flushing, try to find the
+> > -		 * largest contiguous physical memory chunk to unmap.
+> > -		 */
+> > -		for (len = PAGE_SIZE;
+> > -		     !domain->fgsp && iova + len < end; len += PAGE_SIZE) {
+> > -			next = iommu_iova_to_phys(domain->domain, iova + len);
+> > -			if (next != phys + len)
+> > -				break;
+> > +		if (is_hugetlbpage((phys >> PAGE_SHIFT), &type)
+> > +		    && (!domain->fgsp)) {
+> 
+> Reverse the order of these tests.
+> 
+> > +			unsigned long hugetlb_resdual_npage = 0;
+> > +			unsigned long contiguous_npage = 0;
+> 
+> 
+> Unnecessary...
+> 
+> > +			hugetlb_resdual_npage =
+> > +				hugetlb_get_resdual_pages(iova & ~(PAGE_SIZE - 1), type);
+> 
+> PAGE_MASK
+> 
+> > +			/*
+> > +			 * The number of contiguous page can not be larger than
+> dma->size
+> > +			 * which is the number of pages pinned.
+> > +			 */
+> > +			contiguous_npage = ((dma->size >> PAGE_SHIFT) >
+> hugetlb_resdual_npage) ?
+> > +				hugetlb_resdual_npage : (dma->size >> PAGE_SHIFT);
+> 
+> min()
+> 
+> > +
+> > +			len = contiguous_npage * PAGE_SIZE;
+> > +		} else {
+> > +			/*
+> > +			 * To optimize for fewer iommu_unmap() calls, each of which
+> > +			 * may require hardware cache flushing, try to find the
+> > +			 * largest contiguous physical memory chunk to unmap.
+> > +			 */
+> > +			for (len = PAGE_SIZE;
+> > +			     !domain->fgsp && iova + len < end; len += PAGE_SIZE) {
+> > +				next = iommu_iova_to_phys(domain->domain, iova + len);
+> > +				if (next != phys + len)
+> > +					break;
+> > +			}
+> >  		}
+> >
+> >  		/*
+> > diff --git a/include/linux/vfio.h b/include/linux/vfio.h index
+> > 38d3c6a8d..91ef2058f 100644
+> > --- a/include/linux/vfio.h
+> > +++ b/include/linux/vfio.h
+> > @@ -214,4 +214,24 @@ extern int vfio_virqfd_enable(void *opaque,
+> >  			      void *data, struct virqfd **pvirqfd, int fd);  extern void
+> > vfio_virqfd_disable(struct virqfd **pvirqfd);
+> >
+> > +enum vfio_hugetlbpage_type {
+> > +	vfio_hugetlbpage_2M,
+> > +	vfio_hugetlbpage_1G,
+> > +};
+> > +
+> > +struct vfio_hupetlbpage_info {
+> > +	enum vfio_hugetlbpage_type type;
+> 
+> The enum within the structure serves no purpose.
+> 
+> > +	unsigned long size;
+> > +	unsigned long mask;
+> > +};
+> > +
+> > +#define PMD_ORDER 9
+> > +#define PUD_ORDER 18
+> 
+> Architecture specific.
+> 
+> > +/*
+> > + * get the number of resdual 4KB-pages in a hugetlbfs page
+> > + * (including the page which pointed by this address)
+> 
+> s/4KB/PAGE_SIZE/
+> 
+> > + */
+> > +#define hugetlb_get_resdual_pages(address, type)				\
+> > +		((vfio_hugetlbpage_info[type].size				\
+> > +		- (address & ~vfio_hugetlbpage_info[type].mask)) >> PAGE_SHIFT)
+> >  #endif /* VFIO_H */
 
-On x86, the fentry replaces the mcount with just one call instruction, without
-saving any arguments. This means all probes which are puts on the address of
-target symbol, are automatically using ftrace. IOW, all probes on _do_fork+0
-will use ftrace. We don't need any disassembling.
-
-I think if RISC-V already support "-fpatchable-function-entry=2" option on
-GCC, you can easily enable it as same as arm64. See https://lkml.org/lkml/2019/6/18/648
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
