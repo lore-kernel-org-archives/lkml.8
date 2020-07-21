@@ -2,65 +2,87 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA28AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF30DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEA7720792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9981E20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgGUJJF (ORCPT
+        id S1728794AbgGUJJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:09:05 -0400
-Received: from 8bytes.org ([81.169.241.247]:58282 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgGUJJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:09:05 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 1B17B2C8; Tue, 21 Jul 2020 11:09:03 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 11:09:01 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>, hpa@zytor.com,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/idt: Make sure idt_table takes a whole page
-Message-ID: <20200721090901.GC620@8bytes.org>
-References: <0CEC6A66-FD50-4B6B-9521-A40E5B9DA10F@zytor.com>
- <7FB389D0-77D4-482E-8A21-8662DDB00268@amacapital.net>
- <0B7CF270-EC04-4907-821A-A01F24BEF156@zytor.com>
- <20200719023405.GA564835@rani.riverdale.lan>
- <87pn8rokjz.fsf@nanos.tec.linutronix.de>
- <20200720161112.GB620@8bytes.org>
- <87sgdmm8u4.fsf@nanos.tec.linutronix.de>
+        Tue, 21 Jul 2020 05:09:11 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7804 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725984AbgGUJJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 05:09:11 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A974C204CD9DEC23A132;
+        Tue, 21 Jul 2020 17:09:07 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Jul 2020
+ 17:08:57 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <kuba@kernel.org>,
+        <wangchen@cn.fujitsu.com>, <herbert@gondor.apana.org.au>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] net: udp: Fix wrong clean up for IS_UDPLITE macro
+Date:   Tue, 21 Jul 2020 17:11:44 +0800
+Message-ID: <1595322704-31548-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sgdmm8u4.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 06:48:03PM +0200, Thomas Gleixner wrote:
-> But with explicit sections which store only page aligned objects there
-> is an implicit guarantee that the object is alone in the page in which
-> it is placed. That works for all objects except the last one. That's
-> inconsistent.
-> 
-> By enforcing page sized objects for this section you might also wreckage
-> memory sanitizers, because your object is artificially larger than it
-> should be and out of bound access becomes legit.
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-Okay, valid points about the consistency and the memory sanitizers. I'll
-submit a patch for the linker scripts soon.
+We can't use IS_UDPLITE to replace udp_sk->pcflag when UDPLITE_RECV_CC is
+checked.
 
-Regards,
+Fixes: b2bf1e2659b1 ("[UDP]: Clean up for IS_UDPLITE macro")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ net/ipv4/udp.c | 2 +-
+ net/ipv6/udp.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-	Joerg
+diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+index 1b7ebbcae497..c7d61db1fb38 100644
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -2051,7 +2051,7 @@ static int udp_queue_rcv_one_skb(struct sock *sk, struct sk_buff *skb)
+ 	/*
+ 	 * 	UDP-Lite specific tests, ignored on UDP sockets
+ 	 */
+-	if ((is_udplite & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
++	if ((up->pcflag & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
+ 
+ 		/*
+ 		 * MIB statistics other than incrementing the error count are
+diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
+index 7d4151747340..1164dfe53bb3 100644
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -643,7 +643,7 @@ static int udpv6_queue_rcv_one_skb(struct sock *sk, struct sk_buff *skb)
+ 	/*
+ 	 * UDP-Lite specific tests, ignored on UDP sockets (see net/ipv4/udp.c).
+ 	 */
+-	if ((is_udplite & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
++	if ((up->pcflag & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
+ 
+ 		if (up->pcrlen == 0) {          /* full coverage was set  */
+ 			net_dbg_ratelimited("UDPLITE6: partial coverage %d while full coverage %d requested\n",
+-- 
+2.19.1
+
