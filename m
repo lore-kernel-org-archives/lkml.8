@@ -2,129 +2,141 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 748F0C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA2AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52F842080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F266C20709
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdhCNST6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="japsxIaY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgGUIjP (ORCPT
+        id S1728842AbgGUIjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:39:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56504 "EHLO
+        Tue, 21 Jul 2020 04:39:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGUIjP (ORCPT
+        with ESMTP id S1728418AbgGUIjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:39:15 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDC49C061794;
-        Tue, 21 Jul 2020 01:39:14 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t6so9960667plo.3;
-        Tue, 21 Jul 2020 01:39:14 -0700 (PDT)
+        Tue, 21 Jul 2020 04:39:41 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ED11C061794;
+        Tue, 21 Jul 2020 01:39:41 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id j10so15521033qtq.11;
+        Tue, 21 Jul 2020 01:39:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=387HRZ+9jaUMXWYZOGG4GYSuYH+7TCpe8TgEbgSoPoA=;
-        b=PdhCNST6yW+yOEGlBAAsWbK6y8RbUX/cHTtvIid2OPvGdHYQsoXcAFAK9idMFTwD8E
-         o7wXhkptF/3aj53CeugMPfh5Uije4DQwQs/cF4N2+ne/IDFxU7VtlXHzwzv6rkGQQhdg
-         gyDTGkb3654wYQj8hW1ZoLUjE+V8Qo7mi/M8rKmOa8aUzz1JbYH3owcMoj5yePy4LEFe
-         cmpEyFYN6n/ghcrIh8Ljraunrzs3FB2ohC2Dg246GK54iiYFCgkYvhP08V6shar6s+jC
-         FFZyAKe4xIduzCP+nMjGcLUTjtu3mdUdF3tLdicoXq9HQXYXvwzdgL1B9F7tyt8wGzVz
-         jvaQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pl7EZWmiDwJBT7lZl+dqeQwSQYq+gpMZJQPAX61Vc1k=;
+        b=japsxIaYfxBdMqncvjy5ilGa0f46e0ryCrw3nPjtP8bIcI3e6Cda4GMoR2yvJ9of4X
+         exN1AayGIZ2ZqEuJzgUO/h7w4c7FXIFPiZySVql8I3oVXAGTfXRaM70E4mQc0kT4m8l6
+         q7ZHk3dbYAb+fHPAN8/6n+6OldMzj/s9ikyxFbhwhK3yR/hbC6nS1AWDULLElQPYQRfk
+         LvakODx5M8I8gCRYdQ5xND272MzjvK7ALX4eSrg7tF1QkdPMVP7aqs77TkuxuMgBYqtt
+         GRNs2xMKToJ1xd5KjNYlTf6LQHJwW6uU2hPvkRZfifSBVoLxKJiRS1KRoHF+vV5mwgLA
+         ZkKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=387HRZ+9jaUMXWYZOGG4GYSuYH+7TCpe8TgEbgSoPoA=;
-        b=VEdhGmfCWGnVpBOvBVjsLidgOQigVr1vfu9YFfRuY2rO4v6zSQemSpahm+NKk41guF
-         Wj/arNSPGD2Kd8mSfCieDkbE/zH2/DFbSdxoNeLE6BDXn2YOqLYsB+U+nNegpCbvY2F6
-         dTekn1SeDCjfEyFVQ3H4/Ayv+1l6BiiYm5T/60NxaNT8ycmJGOiAgwwZgAaZ0sxioES2
-         WIa7PKoj/ZqBWGha3LUUeBXcQDQKUrGs1eJLBxnG4RSgZoaggUfertPc0PFOU8/ChtmJ
-         lHCreT0F8obWkj8a3vX7AHPmb69JH6DGH03fgVmCP2l7c3ew//A/Xv4su2J4V428ilDE
-         9xeQ==
-X-Gm-Message-State: AOAM531CZcKqOFeSvKu5iGS72cWnQrNbRnuXQuSGv3a3LqI/XvLtiHwe
-        8x8D87ASRy5l1KXDcNpdtMJrzwVrzfgB28W+CKM=
-X-Google-Smtp-Source: ABdhPJydcpftKpZYAiQbjJ7+lEzoRdy9iyqMAcDQW82mzg+Fc82H7IWzM38p6tCxSuKzbSofLTnzO0P1iQ+0pFDVmXI=
-X-Received: by 2002:a17:902:9a4b:: with SMTP id x11mr21471781plv.255.1595320754450;
- Tue, 21 Jul 2020 01:39:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pl7EZWmiDwJBT7lZl+dqeQwSQYq+gpMZJQPAX61Vc1k=;
+        b=eJnNYiVCh4TRvEZuXJtHgZ9NchBQJ1ifEhgIF3axbh5Dkqw0g7mgu06MioVssLBu2D
+         MZ+Xep7QHR2HtHqzTClnDC4sCAROsn3MkNnv1FW2UGewm3DTrAfa7nK5iBcYjwJJZWNC
+         ttkLW2f29mJQ2gyu5V6b08obMC8/MH/gOhnhqWLZUn/3jsajs7pwWEd/vcBU8Vrvwp5S
+         AbAHFcjnLq5Q2qdHXL+O/CeR5LYp8/nmyJ0UdkxP10UqezS7xpI2gSZDdbqYkVOpVaov
+         X3hBNQfbl66hVHsEQq7kMuO7sQzMRuX/ZuzNhEoup+vGR70o9FLvpk6Dkc4ndXhfBVZi
+         Vozg==
+X-Gm-Message-State: AOAM5300Z/LgVjMWG133t0S5c2IH5tkaZZ6916mcMpaGg48QW2V30uZt
+        0Q6WpyT768qftGrIIVAK+Hr++h9mmQ==
+X-Google-Smtp-Source: ABdhPJxe1Z/jmzC0J6uu0OyPwe0gihfRluX1lhIi7H0/BdRm6UJYVkGpYiWbPdzC7W9ZSvEqERmqag==
+X-Received: by 2002:ac8:191b:: with SMTP id t27mr28779822qtj.16.1595320780558;
+        Tue, 21 Jul 2020 01:39:40 -0700 (PDT)
+Received: from PWN (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
+        by smtp.gmail.com with ESMTPSA id z36sm22239254qtd.22.2020.07.21.01.39.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 01:39:40 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 04:39:38 -0400
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs@googlegroups.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v1] usbhid: Fix slab-out-of-bounds
+ write in hiddev_ioctl_usage()
+Message-ID: <20200721083938.GA8005@PWN>
+References: <20200718231218.170730-1-yepeilin.cs@gmail.com>
+ <20200720115400.GI2549@kadam>
+ <20200720121257.GJ2571@kadam>
+ <20200720191656.GA3366@PWN>
+ <20200721071637.GK2571@kadam>
 MIME-Version: 1.0
-References: <20200721080012.1329263-1-abanoubsameh@protonmail.com>
-In-Reply-To: <20200721080012.1329263-1-abanoubsameh@protonmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Jul 2020 11:38:57 +0300
-Message-ID: <CAHp75VdfSNp-u7fvRPNBGp8JAvHwiRjFa9CXn0iQQ4=dQyZprg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: fixed some coding style issues in the gpio files
-To:     Abanoub Sameh <abanoubsameh8@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abanoub Sameh <abanoubsameh@protonmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721071637.GK2571@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 11:01 AM Abanoub Sameh <abanoubsameh8@gmail.com> wrote:
+On Tue, Jul 21, 2020 at 10:16:37AM +0300, Dan Carpenter wrote:
+> For some reason the reply-to header on your email is bogus:
+> 
+> Reply-To: 20200720121257.GJ2571@kadam
+> 
+> "kadam" is a system on my home network.
 
-Thanks for the patch!
+Ah...I thought `Reply-To` and `In-Reply-To` are the same thing...Sorry
+for the beginner's mistake...
 
-> This patch adds the word int to unsigned in more than 600 locations,
-> (and changed one long int into int)
-> I recompiled the files except some that had no make rules,
-> and I can make another patch only for the files that did compile.
->
-> If you want, I can split it into smaller ones. I don't think that this patch
-> causes any problem, except maybe causing diff and patch to fail because
-> of the number of lines changed, so maybe if you have any patches that
-> need to be applied just apply them before you do that one.
->
-> if the word int was intentionally left out, a sed command can be
-> run, now that the code is more uniform, to change every instance of
-> unsigned int to unsigned, and if you want I can supply a patch for that.
->
-> I can also add more patches to fix the rest of the code style errors,
-> that are stand alone or apply after this one.
+> Yeah.  And in the caller it does:
+> 
+> drivers/hid/hid-core.c
+>    297          if (!parser->local.usage_index) /* Ignore padding fields */
+>    298                  return 0;
+>    299  
+>    300          usages = max_t(unsigned, parser->local.usage_index,
+>                 ^^^^^^^^^^^^^^
+>    301                                   parser->global.report_count);
+>    302  
+>    303          field = hid_register_field(report, usages, parser->global.report_count);
+>                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> So ->usages is always greater or equal to ->global.report_count.
+> 
+>    304          if (!field)
+>    305                  return 0;
+>    306  
+>    307          field->physical = hid_lookup_collection(parser, HID_COLLECTION_PHYSICAL);
+> 
+> > 
+> > Here, `values` equals to `global.report_count`. See how it is being
+> > called:
+> > 
+> > drivers/hid/hid-core.c:303:
+> > 
+> >         field = hid_register_field(report, usages, parser->global.report_count);
+> > 
+> > In hid_open_report(), `global.report_count` can be set by calling
+> > hid_parser_global().
+> > 
+> > However, the syzkaller reproducer made hid_open_report() to call
+> > hid_parser_main() __before__ `global.report_count` is properly set. It's
+> > zero. So hid_register_field() allocated `field` with `values` equals to
+> > zero - No room for value[] at all. I believe this caused the bug.
+> 
+> I don't know if zero is valid or not.  I suspect it is valid.  We have
+> no reason to think that it's invalid.
 
-'that is stand' or ?
+I see, I will stop guessing and wait for the maintainers' feedback.
 
-For drivers I'm maintaining, please split on per driver basis (I will
-show below which ones I have in mind).
-For the rest you have to include relevant maintainers / designated reviewers.
+Thank you,
 
-...
-
->  drivers/gpio/gpio-crystalcove.c | 10 +++---
->  drivers/gpio/gpio-ich.c         | 26 +++++++-------
->  drivers/gpio/gpio-intel-mid.c   | 22 ++++++------
->  drivers/gpio/gpio-ml-ioh.c      | 10 +++---
->  drivers/gpio/gpio-msic.c        | 22 ++++++------
->  drivers/gpio/gpio-pch.c         | 10 +++---
->  drivers/gpio/gpio-sch.c         | 22 ++++++------
-
-Above, please one patch per driver.
-
->  drivers/gpio/gpio-pca953x.c     | 12 +++----
->  drivers/gpio/gpio-dln2.c        | 28 +++++++--------
->  drivers/gpio/gpio-dwapb.c       |  6 ++--
-
-This I prefer to see the same way, but I'm not a maintainer, so let
-them speak up.
-
->  drivers/gpio/gpiolib-devres.c   | 16 ++++-----
->  drivers/gpio/gpiolib-legacy.c   |  6 ++--
->  drivers/gpio/gpiolib.c          | 26 +++++++-------
-
-These perhaps should go in a separate patch with gpiolib: prefix.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Peilin Ye
