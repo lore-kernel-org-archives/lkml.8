@@ -2,99 +2,131 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628ECC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57718C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4492920709
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 353312077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595373251;
+	bh=C7wzDzmy7tK7XLkxQA5wmAAt93j25OvbzqbVQTXvaCU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=GHxq/a8D7Yw60XSQiEOJrlady8a1PNUCGPvmFaLfJt6yFKBY7PDYCkPsCAvct55rR
+	 MUPXuwTC0oK7uQ+IJms/+CxFI1gTrLjsbakJY6L/M+vmKs3yZAwlUkcXiLdLjoNmN4
+	 3C4S3jgxX17wozIOQPm//dvetN0bi0PIlV8hQ9K8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731431AbgGUXNq (ORCPT
+        id S1731234AbgGUXOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 19:13:46 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:41692 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgGUXNp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 19:13:45 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 06LNCxrb017185
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 21 Jul 2020 18:13:05 -0500
-Message-ID: <6fbea8347bdb8434d91cf3ec2b95b134bd66cfe3.camel@kernel.crashing.org>
-Subject: Re: [PATCH v5 1/4] riscv: Move kernel mapping to vmalloc zone
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Palmer Dabbelt <palmer@dabbelt.com>, alex@ghiti.fr
-Cc:     mpe@ellerman.id.au, paulus@samba.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, Anup Patel <Anup.Patel@wdc.com>,
-        Atish Patra <Atish.Patra@wdc.com>, zong.li@sifive.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-mm@kvack.org
-Date:   Wed, 22 Jul 2020 09:12:58 +1000
-In-Reply-To: <mhng-08bff01a-ca15-4bbc-8454-2ca3e823fef8@palmerdabbelt-glaptop1>
-References: <mhng-08bff01a-ca15-4bbc-8454-2ca3e823fef8@palmerdabbelt-glaptop1>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 21 Jul 2020 19:14:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbgGUXOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 19:14:09 -0400
+Received: from embeddedor (unknown [201.162.241.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D318620709;
+        Tue, 21 Jul 2020 23:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595373249;
+        bh=C7wzDzmy7tK7XLkxQA5wmAAt93j25OvbzqbVQTXvaCU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=1hm/A+1EB2Q6ed0WBkxvJe0fG/v6fWwqzQFbmCew3uy+GAfGHA90IVtVwCKs3G+zs
+         q1DrWExNlJ0oTN/bOFK+km0f0sKShEh2sO5QsxkarI1Z8wWyROQUXSTz+HQ1vT29Xh
+         thZQpY19kvU8hsxKkrK4XLz4mnxr6DWGQ9cax7c4=
+Date:   Tue, 21 Jul 2020 18:19:46 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jean Delvare <jdelvare@suse.com>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH v2][next] i2c: busses: Use fallthrough pseudo-keyword
+Message-ID: <20200721231946.GA1705@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-21 at 12:05 -0700, Palmer Dabbelt wrote:
-> 
-> * We waste vmalloc space on 32-bit systems, where there isn't a lot of it.
-> * On 64-bit systems the VA space around the kernel is precious because it's the
->   only place we can place text (modules, BPF, whatever). 
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1].
 
-Why ? Branch distance limits ? You can't use trampolines ?
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
->  If we start putting
->   the kernel in the vmalloc space then we either have to pre-allocate a bunch
->   of space around it (essentially making it a fixed mapping anyway) or it
->   becomes likely that we won't be able to find space for modules as they're
->   loaded into running systems.
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Update URL. Use proper URL to Linux v5.7 documentation.
+ - Add Jean's Reviewed-by tag.
 
-I dislike the kernel being in the vmalloc space (see my other email)
-but I don't understand the specific issue with modules.
+ drivers/i2c/busses/i2c-amd8111.c | 2 +-
+ drivers/i2c/busses/i2c-i801.c    | 8 ++++----
+ drivers/i2c/busses/i2c-viapro.c  | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-> * Relying on a relocatable kernel for sv48 support introduces a fairly large
->   performance hit.
-
-Out of curiosity why would relocatable kernels introduce a significant
-hit ? Where about do you see the overhead coming from ?
-
-> Roughly, my proposal would be to:
-> 
-> * Leave the 32-bit memory map alone.  On 32-bit systems we can load modules
->   anywhere and we only have one VA width, so we're not really solving any
->   problems with these changes.
-> * Staticly allocate a 2GiB portion of the VA space for all our text, as its own
->   region.  We'd link/relocate the kernel here instead of around PAGE_OFFSET,
->   which would decouple the kernel from the physical memory layout of the system.
->   This would have the side effect of sorting out a bunch of bootloader headaches
->   that we currently have.
-> * Sort out how to maintain a linear map as the canonical hole moves around
->   between the VA widths without adding a bunch of overhead to the virt2phys and
->   friends.  This is probably going to be the trickiest part, but I think if we
->   just change the page table code to essentially lie about VAs when an sv39
->   system runs an sv48+sv39 kernel we could make it work -- there'd be some
->   logical complexity involved, but it would remain fast.
-> 
-> This doesn't solve the problem of virtually relocatable kernels, but it does
-> let us decouple that from the sv48 stuff.  It also lets us stop relying on a
-> fixed physical address the kernel is loaded into, which is another thing I
-> don't like.
-> 
-> I know this may be a more complicated approach, but there aren't any sv48
-> systems around right now so I just don't see the rush to support them,
-> particularly when there's a cost to what already exists (for those who haven't
-> been watching, so far all the sv48 patch sets have imposed a significant
-> performance penalty on all systems).
+diff --git a/drivers/i2c/busses/i2c-amd8111.c b/drivers/i2c/busses/i2c-amd8111.c
+index 2b14fef5bf26..34862ad3423e 100644
+--- a/drivers/i2c/busses/i2c-amd8111.c
++++ b/drivers/i2c/busses/i2c-amd8111.c
+@@ -381,7 +381,7 @@ static s32 amd8111_access(struct i2c_adapter * adap, u16 addr,
+ 			if (status)
+ 				return status;
+ 			len = min_t(u8, len, I2C_SMBUS_BLOCK_MAX);
+-			/* fall through */
++			fallthrough;
+ 		case I2C_SMBUS_I2C_BLOCK_DATA:
+ 			for (i = 0; i < len; i++) {
+ 				status = amd_ec_read(smbus, AMD_SMB_DATA + i,
+diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+index 1fc7ae77753d..638e7f7c66cc 100644
+--- a/drivers/i2c/busses/i2c-i801.c
++++ b/drivers/i2c/busses/i2c-i801.c
+@@ -1765,19 +1765,19 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	case PCI_DEVICE_ID_INTEL_WELLSBURG_SMBUS_MS1:
+ 	case PCI_DEVICE_ID_INTEL_WELLSBURG_SMBUS_MS2:
+ 		priv->features |= FEATURE_IDF;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		priv->features |= FEATURE_BLOCK_PROC;
+ 		priv->features |= FEATURE_I2C_BLOCK_READ;
+ 		priv->features |= FEATURE_IRQ;
+-		/* fall through */
++		fallthrough;
+ 	case PCI_DEVICE_ID_INTEL_82801DB_3:
+ 		priv->features |= FEATURE_SMBUS_PEC;
+ 		priv->features |= FEATURE_BLOCK_BUFFER;
+-		/* fall through */
++		fallthrough;
+ 	case PCI_DEVICE_ID_INTEL_82801CA_3:
+ 		priv->features |= FEATURE_HOST_NOTIFY;
+-		/* fall through */
++		fallthrough;
+ 	case PCI_DEVICE_ID_INTEL_82801BA_2:
+ 	case PCI_DEVICE_ID_INTEL_82801AB_3:
+ 	case PCI_DEVICE_ID_INTEL_82801AA_3:
+diff --git a/drivers/i2c/busses/i2c-viapro.c b/drivers/i2c/busses/i2c-viapro.c
+index 05aa92a3fbe0..970ccdcbb889 100644
+--- a/drivers/i2c/busses/i2c-viapro.c
++++ b/drivers/i2c/busses/i2c-viapro.c
+@@ -228,7 +228,7 @@ static s32 vt596_access(struct i2c_adapter *adap, u16 addr,
+ 			goto exit_unsupported;
+ 		if (read_write == I2C_SMBUS_READ)
+ 			outb_p(data->block[0], SMBHSTDAT0);
+-		/* Fall through */
++		fallthrough;
+ 	case I2C_SMBUS_BLOCK_DATA:
+ 		outb_p(command, SMBHSTCMD);
+ 		if (read_write == I2C_SMBUS_WRITE) {
+-- 
+2.27.0
 
