@@ -2,203 +2,106 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C476C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 535C1C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00F84206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B18A206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:52:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yZZ6QXaS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgGUNve (ORCPT
+        id S1728312AbgGUNwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:51:34 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:50911 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726120AbgGUNve (ORCPT
+        Tue, 21 Jul 2020 09:52:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726949AbgGUNwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:51:34 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0U3PtznR_1595339485;
-Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U3PtznR_1595339485)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Jul 2020 21:51:25 +0800
-Subject: Re: [PATCH v16 16/22] mm/mlock: reorder isolation sequence during
- munlock
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
- <1594429136-20002-17-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0Udcry01samXT54RkurNqFKnVmv-686ZFHF+iw4b+12T_A@mail.gmail.com>
- <6e37ee32-c6c5-fcc5-3cad-74f7ae41fb67@linux.alibaba.com>
- <CAKgT0Ue2i96gL=Tqx_wFmsBj_b1cnM1KQHh8b+oYr5iRg0Tcpw@mail.gmail.com>
- <7a931661-e096-29ee-d97d-8bf96ba6c972@linux.alibaba.com>
-Message-ID: <e7c9dda7-f222-5f05-9e02-4ea42c743999@linux.alibaba.com>
-Date:   Tue, 21 Jul 2020 21:51:24 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Tue, 21 Jul 2020 09:52:37 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54411C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:52:37 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id 88so11011566wrh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=a/xttlG5Xmu7Wk/M4tJwIHBfITlAjLmITWDdy7PgMM8=;
+        b=yZZ6QXaSmRA7KyXsnWq2IouBLSRUuYnLNl6nG/ze/pUjh+PeiAbgftj93TcMZLGIb1
+         XEbbqQ38j9OzsMbSOiDaoURO4nenUnOwAopy7wubW+1Bb9bnet96gvXNS++rJg4l/kVh
+         pslstSlN8mQHKviN1lk+5RRGKIOQks34LCm8QkLWAsv6duX0hUaqsm+uxFKawnCXn+42
+         WlSRI0FUu0TEbBmhbYTBg35MVInwjTL7GrCuJlqHsPxKZe0iS3/VViDta+jhjTtQVY67
+         NIdv/HZU2H1Q+vuE9+jzghSlMEtDB7YEHDzuJiprBaaM8pwqdIZGQmuNt3arjdH/tUz2
+         Jp2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=a/xttlG5Xmu7Wk/M4tJwIHBfITlAjLmITWDdy7PgMM8=;
+        b=IRZbg+12jPbqpFNs5BNGHzNMQHasQjkkDqlBJK8tqf3Qh1imT7eUIJBMc0fDjD8bXg
+         io0ufTp4F7qwdpPbu30HaDO3XhEuHyZ+p2GdA0WYD8KCdRo+ITTHGn8vnkxYOY6B2PBx
+         BQUYEGV7L8xkBHvubbbFGp6thVZRLRYCtu+ngG4QyIdPmcKA1K/axDdeE4Ux98kXfvDp
+         HPmuiFys/zGisuH+bAXLa30xXX4VZImJXK5WUyUSoW445GwTvc4+50fN+lKB0DEW/PvR
+         5XlldtuXdGZaC5nJ5yj7+txu3cf9eilu7dWyIJEMdwJx/heYbRjEM2tYWfLrvvCNq3s4
+         aCBw==
+X-Gm-Message-State: AOAM533DJVEti6rcBdDAgaHnsvPyo8VRF+fEvOKNFAby0mAY/ycePOS2
+        u5qoHI090PeNbRPPZcg5Oe9BQA==
+X-Google-Smtp-Source: ABdhPJx8QQ+edlbQkzaooVBvyxptignCQ9uQq5RqF/oWQQwrUwcKLUiSRqozu4UcoqmhYtAp2bsirQ==
+X-Received: by 2002:a5d:6702:: with SMTP id o2mr2026322wru.364.1595339556090;
+        Tue, 21 Jul 2020 06:52:36 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id 65sm3567880wmd.20.2020.07.21.06.52.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 06:52:35 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 14:52:33 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH 1/1] video: backlight: cr_bllcd: Remove unused variable
+ 'intensity'
+Message-ID: <20200721135233.53gmti745t66la5i@holly.lan>
+References: <20200721073919.925935-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <7a931661-e096-29ee-d97d-8bf96ba6c972@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200721073919.925935-1-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 21, 2020 at 08:39:19AM +0100, Lee Jones wrote:
+> Fixes the following kernel build warning:
+> 
+>  drivers/video/backlight/cr_bllcd.c: In function ‘cr_backlight_set_intensity’:
+>  drivers/video/backlight/cr_bllcd.c:62:6: warning: unused variable ‘intensity’ [-Wunused-variable]
+>  62 | int intensity = bd->props.brightness;
+>  | ^~~~~~~~~
+> 
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Fixes: 24d34617c24f ("backlight: cr_bllcd: Introduce gpio-backlight semantics")
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+
+I doubt you are awaiting this for a one line fixup... but just in case:
+
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
 
-在 2020/7/21 下午5:26, Alex Shi 写道:
-> 
-> 
-> 在 2020/7/21 上午2:51, Alexander Duyck 写道:
->>> Look into the __split_huge_page_tail, there is a tiny gap between tail page
->>> get PG_mlocked, and it is added into lru list.
->>> The TestClearPageLRU could blocked memcg changes of the page from stopping
->>> isolate_lru_page.
->> I get that there is a gap between the two in __split_huge_page_tail.
->> My concern is more the fact that you are pulling the bit testing
->> outside of the locked region when I don't think it needs to be. The
->> lock is being taken unconditionally, so why pull the testing out when
->> you could just do it inside the lock anyway? My worry is that you
->> might be addressing __split_huge_page_tail but in the process you
->> might be introducing a new race with something like
->> __pagevec_lru_add_fn.
-> 
-> Yes, the page maybe interfered by clear_page_mlock and add pages to wrong lru
-> list.
-> 
->>
->> If I am not mistaken the Mlocked flag can still be cleared regardless
->> of if the LRU bit is set or not. So you can still clear the LRU bit
->> before you pull the page out of the list, but it can be done after
->> clearing the Mlocked flag instead of before you have even taken the
->> LRU lock. In that way it would function more similar to how you
->> handled pagevec_lru_move_fn() as all this function is really doing is
->> moving the pages out of the unevictable list into one of the other LRU
->> lists anyway since the Mlocked flag was cleared.
->>
-> 
-> Without the lru bit guard, the page may be moved between memcgs, luckly,
-> lock_page would stop the mem_cgroup_move_account with BUSY state cost.
-> whole new change would like the following, I will testing/resend again.
-> 
-
-Hi Johannes,
-
-It looks like lock_page_memcg() could be used to replace lock_page(), which
-could change retry into spinlock wait. Would you like to give some comments?
-
-Thank
-Alex
-> Thanks!
-> Alex
-> 
-> @@ -182,7 +179,7 @@ static void __munlock_isolation_failed(struct page *page)
->  unsigned int munlock_vma_page(struct page *page)
->  {
->         int nr_pages;
-> -       pg_data_t *pgdat = page_pgdat(page);
-> +       struct lruvec *lruvec;
-> 
->         /* For try_to_munlock() and to serialize with page migration */
->         BUG_ON(!PageLocked(page));
-> @@ -190,11 +187,11 @@ unsigned int munlock_vma_page(struct page *page)
->         VM_BUG_ON_PAGE(PageTail(page), page);
-> 
->         /*
-> -        * Serialize with any parallel __split_huge_page_refcount() which
-> +        * Serialize split tail pages in __split_huge_page_tail() which
->          * might otherwise copy PageMlocked to part of the tail pages before
->          * we clear it in the head page. It also stabilizes hpage_nr_pages().
->          */
-> -       spin_lock_irq(&pgdat->lru_lock);
-> +       lruvec = lock_page_lruvec_irq(page);
-> 
->         if (!TestClearPageMlocked(page)) {
->                 /* Potentially, PTE-mapped THP: do not skip the rest PTEs */
-> @@ -205,15 +202,15 @@ unsigned int munlock_vma_page(struct page *page)
->         nr_pages = hpage_nr_pages(page);
->         __mod_zone_page_state(page_zone(page), NR_MLOCK, -nr_pages);
-> 
-> -       if (__munlock_isolate_lru_page(page, true)) {
-> -               spin_unlock_irq(&pgdat->lru_lock);
-> +       if (__munlock_isolate_lru_page(page, lruvec, true)) {
-> +               unlock_page_lruvec_irq(lruvec);
->                 __munlock_isolated_page(page);
->                 goto out;
->         }
->         __munlock_isolation_failed(page);
-> 
->  unlock_out:
-> -       spin_unlock_irq(&pgdat->lru_lock);
-> +       unlock_page_lruvec_irq(lruvec);
-> 
->  out:
->         return nr_pages - 1;
-> @@ -293,23 +290,27 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
->         int nr = pagevec_count(pvec);
->         int delta_munlocked = -nr;
->         struct pagevec pvec_putback;
-> +       struct lruvec *lruvec = NULL;
->         int pgrescued = 0;
-> 
->         pagevec_init(&pvec_putback);
-> 
->         /* Phase 1: page isolation */
-> -       spin_lock_irq(&zone->zone_pgdat->lru_lock);
->         for (i = 0; i < nr; i++) {
->                 struct page *page = pvec->pages[i];
-> 
-> +               /* block memcg change in mem_cgroup_move_account */
-> +               lock_page(page);
-> +               lruvec = relock_page_lruvec_irq(page, lruvec);
->                 if (TestClearPageMlocked(page)) {
->                         /*
->                          * We already have pin from follow_page_mask()
->                          * so we can spare the get_page() here.
->                          */
-> -                       if (__munlock_isolate_lru_page(page, false))
-> +                       if (__munlock_isolate_lru_page(page, lruvec, false)) {
-> +                               unlock_page(page);
->                                 continue;
-> -                       else
-> +                       } else
->                                 __munlock_isolation_failed(page);
->                 } else {
->                         delta_munlocked++;
-> @@ -321,11 +322,14 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
->                  * pin. We cannot do it under lru_lock however. If it's
->                  * the last pin, __page_cache_release() would deadlock.
->                  */
-> +               unlock_page(page);
->                 pagevec_add(&pvec_putback, pvec->pages[i]);
->                 pvec->pages[i] = NULL;
->         }
-> -       __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
-> -       spin_unlock_irq(&zone->zone_pgdat->lru_lock);
-> +       if (lruvec) {
-> +               __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
-> +               unlock_page_lruvec_irq(lruvec);
-> +       }
-> 
->         /* Now we can release pins of pages that we are not munlocking */
->         pagevec_release(&pvec_putback);
-> 
+Daniel.
