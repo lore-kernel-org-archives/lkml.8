@@ -2,63 +2,207 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A76C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D945C433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 633BE208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6409208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:04:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OI1GkTyW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbgGUAEf (ORCPT
+        id S1728162AbgGUAEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 20:04:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60152 "EHLO
+        Mon, 20 Jul 2020 20:04:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgGUAE2 (ORCPT
+        with ESMTP id S1726535AbgGUAEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 20:04:28 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37ECCC061794;
-        Mon, 20 Jul 2020 17:04:28 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A3E8B11E8EC0C;
-        Mon, 20 Jul 2020 16:47:42 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 17:04:26 -0700 (PDT)
-Message-Id: <20200720.170426.1912395025653130693.davem@davemloft.net>
-To:     zhangchangzhong@huawei.com
-Cc:     opendmb@gmail.com, f.fainelli@gmail.com, kuba@kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: bcmgenet: add missed clk_disable_unprepare in
- bcmgenet_probe
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1595237794-11530-1-git-send-email-zhangchangzhong@huawei.com>
-References: <1595237794-11530-1-git-send-email-zhangchangzhong@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 Jul 2020 16:47:42 -0700 (PDT)
+        Mon, 20 Jul 2020 20:04:42 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF16C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 17:04:42 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id t198so15806136oie.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 17:04:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xOY9CX+MZHC2V2Y5UgG6sQVWIz0SPS7mgtXJ/kyBZLQ=;
+        b=OI1GkTyWGwpZMaOMU8iZTFA5YLZeTO4J0Gi6nqF6lqBL8xCBBte3BfsQtK+anpB/UZ
+         WagIowBQjTb81OiMOAVj9dHWBzpmq1XzrYVi5LKy0cODqOLYm0NgkKgyxVD0ZNC5Wlf5
+         JfRr4uQ3/RTR4r/PU1cg2DbuaPGaos3ufKUlJYYkW+bDqbjuTedVYKYGILWMdD84AefQ
+         Ob1vx8oKp2oFepYfJS2UAmvnOVVQuq6wqAwDnXIjfQFza5V8BrrRC1xeV8aJNCYNG/zp
+         7BqyIfKubSLmw/3cB1q40v0c6kAairj9PAnDAJoMrAV2K5yLUdZIH0wBYVZYhJSki4aW
+         y9kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xOY9CX+MZHC2V2Y5UgG6sQVWIz0SPS7mgtXJ/kyBZLQ=;
+        b=qKGzYbGlSNs4ngz7/hz1z3iWaoPufIwebAKOI650mf4ZgWGJvCuTK6NJsDlIiSI0bX
+         GTWceAG6p2ZcJuLcauMGQ4VfLH9hlW9KKRopsYuXCbD5JVVbWUM9EldRgqUWJ5sB9XVI
+         Gry9CU2RXPaxcWOdZ0vOHJ+fhiFDv9auD9l2dzXKZlp62RNhiqgfXltQ2np9kbS42JK4
+         /2e1Z426JcE4Hrd2H9uI+bYI39NPD/5aR3ULzJ+Q+rKcvFOfxHYhygswTbmL4Q+7ePYF
+         OeZ7afewhvNHJ4o4N2UfC91QboiqR6ZoUgHzqUbXlD2nucrjfXt2Rd1vJ9i6VKApH7fA
+         kSdw==
+X-Gm-Message-State: AOAM532A+hzqfQPIr1cBhzrKPL4aYhH4WjAyCe1a0TSfjCY1HPeMC+6A
+        bglxyEdQTExKkMmlwu4QWTd6o0aQQx+V0nvC/myGyA==
+X-Google-Smtp-Source: ABdhPJyIw00yYkCMTNNebpkMhEf28WTWCiIulbWVh7SUKb/B3kYYrZ5+9kuSB5UUB54aX4xHfjaezDWAR76+kzAr4kc=
+X-Received: by 2002:aca:c4d5:: with SMTP id u204mr1225134oif.169.1595289881299;
+ Mon, 20 Jul 2020 17:04:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
+ <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
+ <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
+ <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
+In-Reply-To: <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 20 Jul 2020 17:04:29 -0700
+Message-ID: <CALAqxLWy7PuNeq7383x5naGSC05+otJjGC=dHuT2RUEehoe+=A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>, Jon Corbet <corbet@lwn.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Changzhong <zhangchangzhong@huawei.com>
-Date: Mon, 20 Jul 2020 17:36:34 +0800
+On Fri, Jul 17, 2020 at 5:01 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> Greg, John,
+>
+> we need some guidance here. See below.
+>
+> On Thu, Jul 16, 2020 at 4:38 PM Anson Huang <anson.huang@nxp.com> wrote:
+> > [Me]
+> > > On Wed, Jul 15, 2020 at 4:44 AM Anson Huang <anson.huang@nxp.com>
+>
+> > > > I tried to replace the subsys_initcall() with
+> > > > module_platform_driver(), but met issue about "
+> > > > register_syscore_ops(&mxc_gpio_syscore_ops);" which is called in
+> > > > gpio_mxc_init() function, this function should be called ONLY once,
+> > > > moving it to .probe function is NOT working, so we may need to keep the
+> > > > gpio_mxc_init(), that is another reason that we may need to keep
+> > > > subsys_initcall()?
+> > >
+> > > This looks a bit dangerous to keep like this while allowing this code to be used
+> > > from a module.
+> > >
+> > > What happens if you insmod and rmmod this a few times, really?
+> > > How is this tested?
+> > >
+> > > This is not really modularized if that isn't working, just that modprobing once
+> > > works isn't real modularization IMO, it seems more like a quick and dirty way
+> > > to get Androids GKI somewhat working with the module while not properly
+> > > making the module a module.
+> > >
+> > > You need input from the driver maintainers on how to handle this.
+> >
+> > As far as I know, some general/critical modules are NOT supporting rmmod, like
+> > clk, pinctrl, gpio etc., and I am NOT sure whether Android GKI need to support
+> > rmmod for these system-wide-used module, I will ask them for more detail about
+> > this.
+> >
+> > The requirement I received is to support loadable module, but so far no hard requirement
+> > to support module remove for gpio driver, so, is it OK to add it step by step, and this patch
+> > series ONLY to support module build and one time modprobe?
+>
+> While I am a big fan of the Android GKI initiative this needs to be aligned
+> with the Linux core maintainers, so let's ask Greg. I am also paging
+> John Stultz on this: he is close to this action.
+>
+> They both know the Android people very well.
+>
+> So there is a rationale like this going on: in order to achieve GKI goals
+> and have as much as possible of the Linux kernel stashed into loadable
+> kernel modules, it has been elevated to modus operandi amongst
+> the developers pushing this change that it is OK to pile up a load of
+> modules that cannot ever be unloaded.
+>
+> This is IIUC regardless of whether all consumers of the module are
+> actually gone: it would be OK to say make it impossible to rmmod
+> a clk driver even of zero clocks from that driver is in use. So it is not
+> dependency-graph problem, it is a "load once, never remove" approach.
+>
+> This rationale puts me as subsystem maintainer in an unpleasant spot:
+> it is really hard to tell case-to-case whether that change really is a
+> technical advantage for the kernel per se or whether it is done for the
+> greater ecosystem of Android.
+>
+> Often I would say it makes it possible to build a smaller kernel vmlinux
+> so OK that is an advantage. On the other hand I have an inkling that I
+> should be pushing developers to make sure that rmmod works.
+>
+> As a minimum requirement I would expect this to be marked by
+>
+> struct device_driver {
+>    (...)
+>     /* This module absolutely cannot be unbound */
+>    .suppress_bind_attrs = true;
+> };
+>
+> So that noone would be able to try to unbind this (could even be an
+> attack vector!)
+>
+> What is our broader reasoning when it comes to this? (I might have
+> missed some mail thread here.)
 
-> The driver forgets to call clk_disable_unprepare() in error path after
-> a success calling for clk_prepare_enable().
-> 
-> Fix to goto err_clk_disable if clk_prepare_enable() is successful.
-> 
-> Fixes: c80d36ff63a5 ("net: bcmgenet: Use devm_clk_get_optional() to get the clocks")
-> Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+Sorry for being a little late here, was out for a few days.
 
-Applied.
+So yea, wrt to some of the Android GKI related efforts I've been
+involved with, loading once and not unloading is fine for the usage
+model.
+
+I can understand it being a bit ugly compared to drivers with proper
+unloading support, and I think for most new driver submissions,
+maintainers can reasonably push to see proper unloading being
+implemented.
+
+But there are some pragmatic cases with low-level drivers (as you
+mentioned: clk, pinctrl, gpio, etc) where sorting out the unloading is
+particularly complicated, or there is some missing infrastructure, and
+in those cases being able to load a "permanent" module seems to me
+like a clear benefit.  After all, it seems a bit strange to enforce
+that drivers be unloadable when the same code was considered ok to be
+merged as a built-in.
+
+So I think there's a reasonable case for the preference order to be:
+"built-in" < "permanent module" < "unloadable module".
+
+And of course, it can be more complicated, as enabling a driver to be
+a module can have rippling effects on other code that may call into
+it. But I think maintainers have the best sense of how to draw the
+line there.
+
+thanks
+-john
