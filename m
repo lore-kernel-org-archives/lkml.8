@@ -2,140 +2,142 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9829C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6C0C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3EA62072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A49432072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:16:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="uU0K7gWF"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZnMB6Iyl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgGUCQ1 (ORCPT
+        id S1728347AbgGUCQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:16:27 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:11310 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725774AbgGUCQ0 (ORCPT
+        Mon, 20 Jul 2020 22:16:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgGUCQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 22:16:26 -0400
-X-UUID: a19c054b7fde42b58d6bb2b3cd59a97b-20200721
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=1bSgcMBsyM3c9aSUx6HgVWkvGxtBrg5PzcKspdBYPfE=;
-        b=uU0K7gWFecpXxjP8fs8a5jIXNn9ppUVyp+B6uKN62qUvJ0dRRftxxRmZqXu7i1sHHMUKv/k0GTiOXhvrx6LDDIf63aLx7DUfDNz+3AXiQqR3RVRpswopdwczSzcpnmOKVG+wCJogGwnu8umHFijHrLpU9qBDRcgvAxSvQI12HuU=;
-X-UUID: a19c054b7fde42b58d6bb2b3cd59a97b-20200721
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 300682285; Tue, 21 Jul 2020 10:16:22 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 21 Jul 2020 10:16:20 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 21 Jul 2020 10:16:21 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>
-CC:     <iommu@lists.linux-foundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Yong Wu <yong.wu@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Chao Hao <chao.hao@mediatek.com>
-Subject: [PATCH v2] iommu/mediatek: check 4GB mode by reading infracfg
-Date:   Tue, 21 Jul 2020 10:16:19 +0800
-Message-ID: <20200721021619.25575-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 20 Jul 2020 22:16:33 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7936DC061794;
+        Mon, 20 Jul 2020 19:16:33 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9hzg5GdJz9sSy;
+        Tue, 21 Jul 2020 12:16:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595297792;
+        bh=MQhPK7Of38NS8E7kuszvHDn+nGkfoaSvpuI3ArH4y9Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZnMB6Iyl47yKHcqQyhqk+mGM2pbKzrlLhiY3PO3kKliNhBdpYK1vSMeakAvg7nQzJ
+         SAuneqXJOdh+2rLEry9qVzYDn4u2qKozLhWyKPNZihA5zU4LAMDHBaCO63Lb9gsdOV
+         z5G7dqOHOnnscCZUtxGvWsf1Z19En0UNVLEot9ovjg0FewfbTvmpvmd7WDPf8EiftG
+         kmtVzv0RFHeCc1wajOH43vLfROKoMj2gHf9/V5M7ElmghWmyDZapBZo6Ry13LjVpc0
+         eTbg/k7ZQ4UNCyiQZUvLzcZ3yqOoTGw65L8ErAUEv6QjHZxzZ7Xce141GXR5dFLetN
+         Y/37dN0uOLgbA==
+Date:   Tue, 21 Jul 2020 12:16:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+Subject: linux-next: manual merge of the bpf-next tree with the net-next
+ tree
+Message-ID: <20200721121630.5c06c492@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; boundary="Sig_/AuQAVy0q=OC.ztWpD/zw4rg";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SW4gcHJldmlvdXMgZGlzY3Vzc2lvbiBbMV0gYW5kIFsyXSwgd2UgZm91bmQgdGhhdCBpdCBpcyBy
-aXNreSB0bw0KdXNlIG1heF9wZm4gb3IgdG90YWxyYW1fcGFnZXMgdG8gdGVsbCBpZiA0R0IgbW9k
-ZSBpcyBlbmFibGVkLg0KDQpDaGVjayA0R0IgbW9kZSBieSByZWFkaW5nIGluZnJhY2ZnIHJlZ2lz
-dGVyLCByZW1vdmUgdGhlIHVzYWdlDQpvZiB0aGUgdW4tZXhwb3J0ZWQgc3ltYm9sIG1heF9wZm4u
-DQoNClRoaXMgaXMgYSBzdGVwIHRvd2FyZHMgYnVpbGRpbmcgbXRrX2lvbW11IGFzIGEga2VybmVs
-IG1vZHVsZS4NCg0KQ2hhbmdlIHNpbmNlIHYxOg0KMS4gcmVtb3ZlIHRoZSBwaGFuZGxlIHVzYWdl
-LCBzZWFyY2ggZm9yIGluZnJhY2ZnIGluc3RlYWQgWzNdDQoyLiB1c2UgaW5mcmFjZmcgaW5zdGVh
-ZCBvZiBpbmZyYWNmZ19yZWdtYXANCjMuIG1vdmUgaW5mcmFjZmcgZGVmaW5pdGFpb25zIHRvIGxp
-bnV4L3NvYy9tZWRpYXRlay9pbmZyYWNmZy5oDQo0LiB1cGRhdGUgZW5hYmxlXzRHQiBvbmx5IHdo
-ZW4gaGFzXzRnYl9tb2RlDQoNClsxXSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAyMC82LzMvNzMz
-DQpbMl0gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMjAvNi80LzEzNg0KWzNdIGh0dHBzOi8vbGtt
-bC5vcmcvbGttbC8yMDIwLzcvMTUvMTE0Nw0KDQpDYzogTWlrZSBSYXBvcG9ydCA8cnBwdEBsaW51
-eC5pYm0uY29tPg0KQ2M6IERhdmlkIEhpbGRlbmJyYW5kIDxkYXZpZEByZWRoYXQuY29tPg0KQ2M6
-IFlvbmcgV3UgPHlvbmcud3VAbWVkaWF0ZWsuY29tPg0KQ2M6IFlpbmdqb2UgQ2hlbiA8eWluZ2pv
-ZS5jaGVuQG1lZGlhdGVrLmNvbT4NCkNjOiBDaHJpc3RvcGggSGVsbHdpZyA8aGNoQGxzdC5kZT4N
-CkNjOiBZb25nIFd1IDx5b25nLnd1QG1lZGlhdGVrLmNvbT4NCkNjOiBDaGFvIEhhbyA8Y2hhby5o
-YW9AbWVkaWF0ZWsuY29tPg0KQ2M6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQpDYzog
-TWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdtYWlsLmNvbT4NClNpZ25lZC1vZmYtYnk6
-IE1pbGVzIENoZW4gPG1pbGVzLmNoZW5AbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9pb21t
-dS9tdGtfaW9tbXUuYyAgICAgICAgICAgICB8IDI2ICsrKysrKysrKysrKysrKysrKysrKy0tLS0t
-DQogaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvaW5mcmFjZmcuaCB8ICAzICsrKw0KIDIgZmls
-ZXMgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMgYi9kcml2ZXJzL2lvbW11L210a19pb21tdS5j
-DQppbmRleCAyYmU5NmYxY2RiZDIuLjE2NzY1ZjUzMjg1MyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
-aW9tbXUvbXRrX2lvbW11LmMNCisrKyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMNCkBAIC0z
-LDcgKzMsNiBAQA0KICAqIENvcHlyaWdodCAoYykgMjAxNS0yMDE2IE1lZGlhVGVrIEluYy4NCiAg
-KiBBdXRob3I6IFlvbmcgV3UgPHlvbmcud3VAbWVkaWF0ZWsuY29tPg0KICAqLw0KLSNpbmNsdWRl
-IDxsaW51eC9tZW1ibG9jay5oPg0KICNpbmNsdWRlIDxsaW51eC9idWcuaD4NCiAjaW5jbHVkZSA8
-bGludXgvY2xrLmg+DQogI2luY2x1ZGUgPGxpbnV4L2NvbXBvbmVudC5oPg0KQEAgLTE1LDEzICsx
-NCwxNiBAQA0KICNpbmNsdWRlIDxsaW51eC9pb21tdS5oPg0KICNpbmNsdWRlIDxsaW51eC9pb3Bv
-bGwuaD4NCiAjaW5jbHVkZSA8bGludXgvbGlzdC5oPg0KKyNpbmNsdWRlIDxsaW51eC9tZmQvc3lz
-Y29uLmg+DQogI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4NCiAjaW5jbHVkZSA8bGludXgv
-b2ZfaW9tbXUuaD4NCiAjaW5jbHVkZSA8bGludXgvb2ZfaXJxLmg+DQogI2luY2x1ZGUgPGxpbnV4
-L29mX3BsYXRmb3JtLmg+DQogI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KKyNp
-bmNsdWRlIDxsaW51eC9yZWdtYXAuaD4NCiAjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KICNpbmNs
-dWRlIDxsaW51eC9zcGlubG9jay5oPg0KKyNpbmNsdWRlIDxsaW51eC9zb2MvbWVkaWF0ZWsvaW5m
-cmFjZmcuaD4NCiAjaW5jbHVkZSA8YXNtL2JhcnJpZXIuaD4NCiAjaW5jbHVkZSA8c29jL21lZGlh
-dGVrL3NtaS5oPg0KIA0KQEAgLTU5OSw4ICs2MDEsMTAgQEAgc3RhdGljIGludCBtdGtfaW9tbXVf
-cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiAJc3RydWN0IHJlc291cmNlICAg
-ICAgICAgKnJlczsNCiAJcmVzb3VyY2Vfc2l6ZV90CQlpb2FkZHI7DQogCXN0cnVjdCBjb21wb25l
-bnRfbWF0Y2ggICptYXRjaCA9IE5VTEw7DQorCXN0cnVjdCByZWdtYXAJCSppbmZyYWNmZzsNCiAJ
-dm9pZCAgICAgICAgICAgICAgICAgICAgKnByb3RlY3Q7DQogCWludCAgICAgICAgICAgICAgICAg
-ICAgIGksIGxhcmJfbnIsIHJldDsNCisJdTMyCQkJdmFsOw0KIA0KIAlkYXRhID0gZGV2bV9remFs
-bG9jKGRldiwgc2l6ZW9mKCpkYXRhKSwgR0ZQX0tFUk5FTCk7DQogCWlmICghZGF0YSkNCkBAIC02
-MTQsMTAgKzYxOCwyMiBAQCBzdGF0aWMgaW50IG10a19pb21tdV9wcm9iZShzdHJ1Y3QgcGxhdGZv
-cm1fZGV2aWNlICpwZGV2KQ0KIAkJcmV0dXJuIC1FTk9NRU07DQogCWRhdGEtPnByb3RlY3RfYmFz
-ZSA9IEFMSUdOKHZpcnRfdG9fcGh5cyhwcm90ZWN0KSwgTVRLX1BST1RFQ1RfUEFfQUxJR04pOw0K
-IA0KLQkvKiBXaGV0aGVyIHRoZSBjdXJyZW50IGRyYW0gaXMgb3ZlciA0R0IgKi8NCi0JZGF0YS0+
-ZW5hYmxlXzRHQiA9ICEhKG1heF9wZm4gPiAoQklUX1VMTCgzMikgPj4gUEFHRV9TSElGVCkpOw0K
-LQlpZiAoIWRhdGEtPnBsYXRfZGF0YS0+aGFzXzRnYl9tb2RlKQ0KLQkJZGF0YS0+ZW5hYmxlXzRH
-QiA9IGZhbHNlOw0KKwlkYXRhLT5lbmFibGVfNEdCID0gZmFsc2U7DQorCWlmIChkYXRhLT5wbGF0
-X2RhdGEtPmhhc180Z2JfbW9kZSkgew0KKwkJaW5mcmFjZmcgPSBzeXNjb25fcmVnbWFwX2xvb2t1
-cF9ieV9jb21wYXRpYmxlKA0KKwkJCQkibWVkaWF0ZWssbXQ4MTczLWluZnJhY2ZnIik7DQorCQlp
-ZiAoSVNfRVJSKGluZnJhY2ZnKSkgew0KKwkJCWluZnJhY2ZnID0gc3lzY29uX3JlZ21hcF9sb29r
-dXBfYnlfY29tcGF0aWJsZSgNCisJCQkJCSJtZWRpYXRlayxtdDI3MTItaW5mcmFjZmciKTsNCisJ
-CQlpZiAoSVNfRVJSKGluZnJhY2ZnKSkNCisJCQkJcmV0dXJuIFBUUl9FUlIoaW5mcmFjZmcpOw0K
-Kw0KKwkJfQ0KKwkJcmV0ID0gcmVnbWFwX3JlYWQoaW5mcmFjZmcsIFJFR19JTkZSQV9NSVNDLCAm
-dmFsKTsNCisJCWlmIChyZXQpDQorCQkJcmV0dXJuIHJldDsNCisJCWRhdGEtPmVuYWJsZV80R0Ig
-PSAhISh2YWwgJiBGX0REUl80R0JfU1VQUE9SVF9FTik7DQorCX0NCiANCiAJcmVzID0gcGxhdGZv
-cm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsNCiAJZGF0YS0+YmFzZSA9
-IGRldm1faW9yZW1hcF9yZXNvdXJjZShkZXYsIHJlcyk7DQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9s
-aW51eC9zb2MvbWVkaWF0ZWsvaW5mcmFjZmcuaCBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVr
-L2luZnJhY2ZnLmgNCmluZGV4IGZkMjVmMDE0ODU2Ni4uMjMzNDYzZDc4OWM2IDEwMDY0NA0KLS0t
-IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvaW5mcmFjZmcuaA0KKysrIGIvaW5jbHVkZS9s
-aW51eC9zb2MvbWVkaWF0ZWsvaW5mcmFjZmcuaA0KQEAgLTMyLDYgKzMyLDkgQEANCiAjZGVmaW5l
-IE1UNzYyMl9UT1BfQVhJX1BST1RfRU5fV0IJCShCSVQoMikgfCBCSVQoNikgfCBcDQogCQkJCQkJ
-IEJJVCg3KSB8IEJJVCg4KSkNCiANCisjZGVmaW5lIFJFR19JTkZSQV9NSVNDCQkJCTB4ZjAwDQor
-I2RlZmluZSBGX0REUl80R0JfU1VQUE9SVF9FTgkJCUJJVCgxMykNCisNCiBpbnQgbXRrX2luZnJh
-Y2ZnX3NldF9idXNfcHJvdGVjdGlvbihzdHJ1Y3QgcmVnbWFwICppbmZyYWNmZywgdTMyIG1hc2ss
-DQogCQlib29sIHJlZ191cGRhdGUpOw0KIGludCBtdGtfaW5mcmFjZmdfY2xlYXJfYnVzX3Byb3Rl
-Y3Rpb24oc3RydWN0IHJlZ21hcCAqaW5mcmFjZmcsIHUzMiBtYXNrLA0KLS0gDQoyLjE4LjANCg==
+--Sig_/AuQAVy0q=OC.ztWpD/zw4rg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
+
+Today's linux-next merge of the bpf-next tree got a conflict in:
+
+  include/net/xdp.h
+
+between commit:
+
+  2f0bc54ba9a8 ("xdp: introduce xdp_get_shared_info_from_{buff, frame} util=
+ity routines")
+
+from the net-next tree and commits:
+
+  9216477449f3 ("bpf: cpumap: Add the possibility to attach an eBPF program=
+ to cpumap")
+  28b1520ebf81 ("bpf: cpumap: Implement XDP_REDIRECT for eBPF programs atta=
+ched to map entries")
+
+from the bpf-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/net/xdp.h
+index d3005bef812f,5be0d4d65b94..000000000000
+--- a/include/net/xdp.h
++++ b/include/net/xdp.h
+@@@ -104,15 -98,12 +104,21 @@@ struct xdp_frame=20
+  	struct net_device *dev_rx; /* used by cpumap */
+  };
+ =20
+ +static inline struct skb_shared_info *
+ +xdp_get_shared_info_from_frame(struct xdp_frame *frame)
+ +{
+ +	void *data_hard_start =3D frame->data - frame->headroom - sizeof(*frame);
+ +
+ +	return (struct skb_shared_info *)(data_hard_start + frame->frame_sz -
+ +				SKB_DATA_ALIGN(sizeof(struct skb_shared_info)));
+ +}
+ +
++ struct xdp_cpumap_stats {
++ 	unsigned int redirect;
++ 	unsigned int pass;
++ 	unsigned int drop;
++ };
++=20
+  /* Clear kernel pointers in xdp_frame */
+  static inline void xdp_scrub_frame(struct xdp_frame *frame)
+  {
+
+--Sig_/AuQAVy0q=OC.ztWpD/zw4rg
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8WT/8ACgkQAVBC80lX
+0GxOXAf+J1KJ5i8wnn1+rkxAbVQ9INjgIUPb+TNOyxa85tHHyjgCiEehBsbscQoj
+42c2xq42+xI7Z+AJ7VQ0iZJaQlM8usG7d0SOvi+zynyEynycjOc4hYlxWnkNPhK+
+0hAidcIOwJsG6B0dRKlLDiQNDUAt4bX5p7hX+BohAEdKvHYYyPpAFr0WTeLe/NR8
+wS7d2Y8oexfg+QlHtRZ4fmhzbRqo8BwuZk5nIsd6Oha+mO5qr+3d/a/RRY0hAjna
+tUPAcDpfaHgEY50/832Y3RytnGY+GUWccHXdYO+vEUQKJmkzIL50J9uN9NUTAt08
+DR+eiHOItK73iq42vitUtAG0cAj2fQ==
+=xwir
+-----END PGP SIGNATURE-----
+
+--Sig_/AuQAVy0q=OC.ztWpD/zw4rg--
