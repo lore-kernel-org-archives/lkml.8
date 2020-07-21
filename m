@@ -2,94 +2,153 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8C1C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E37BC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7854D20729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D56320792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:00:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6q2gA4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgGUKAN (ORCPT
+        id S1729171AbgGUKAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:00:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
+        Tue, 21 Jul 2020 06:00:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729138AbgGUKAL (ORCPT
+        with ESMTP id S1729030AbgGUKAY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:00:11 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD869C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:00:10 -0700 (PDT)
-Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 2282A33E;
-        Tue, 21 Jul 2020 12:00:07 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Joerg Roedel <jroedel@suse.de>, joro@8bytes.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/3] x86/mm/64: Do not sync vmalloc/ioremap mappings
-Date:   Tue, 21 Jul 2020 11:59:52 +0200
-Message-Id: <20200721095953.6218-3-joro@8bytes.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200721095953.6218-1-joro@8bytes.org>
-References: <20200721095953.6218-1-joro@8bytes.org>
+        Tue, 21 Jul 2020 06:00:24 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43BECC061794;
+        Tue, 21 Jul 2020 03:00:24 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id c25so14635191otf.7;
+        Tue, 21 Jul 2020 03:00:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PBTTFW09d3uJCGdXFdf82CVoARDUgIcQiOObd5wi+hY=;
+        b=N6q2gA4vNplPC9DJhcWz5owtT5G62o1I0swh5lZ1W3C1Z2XFkPWtjzFLCEl1/3oTaD
+         EF/GxWBef9kMAWarvqggEXvsESVELNgvYWsalXBqjQrmjHmaPLK/t5OrTyoM9PolQnl4
+         jtVSdT1dg/q5YombUg6uYu/0wwjnMDhyIEPINvHObgolmWPzuQa2JbZIRpqCy32uTSK5
+         amxN6ycGasTf6gkPt8t40SMvwFIXkZedXlVXafklSCyr57Bc8+TQYJhymGakJUeIhI/g
+         HMwegWQUeGJdc5DVvnE6cGGf42JSSHoUUxjIiyncrxKU4QaXEaRXKXyvSpU9KKIgk1A9
+         4pVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PBTTFW09d3uJCGdXFdf82CVoARDUgIcQiOObd5wi+hY=;
+        b=Yr12pPNhaZmSFnfDCxV7TbNGgVG7i4PP/fZ8rCKmuiOWFDygw/CT6XHqXk9vPCl2qo
+         4QPamHqlKNoacpBugrGo675S3J3EC5wTtvG6cSEL+Yzpz6U3SWKLm3w/dNYuro8RxUKf
+         yInv+XhGaOg08hE+InVgOGulh++zbpBt2aR83VboDfTtkJ5z34iVP+wl9hYznITgmqsR
+         Dhoek/Siojp7SuYSW8QhdxhO40edvwcEwKQJZELsK1i/DLNwsRidMcS6bM5zsS+XSnBP
+         jMwg2vUbAi22KV5g39CHEx4qjLro2oHB9B2Q7wXbiy6Xe9LysL9qpulCQvPOC2SR9Vzr
+         +rdg==
+X-Gm-Message-State: AOAM530LSsUNRBheCy19xS8gnGBk3uCkEUAbquC/U22VGq09yxC+1oUJ
+        SRD0QNqVR7+BTu1iDGBKR9IL2ByG5uvHdvFiTXY=
+X-Google-Smtp-Source: ABdhPJxhGwQ6pCOaqOQatkxg1LzUkfpdQWM7Q2QSqfBJrI/D5KFrXdQ0dhr5ajFjpIXpJR5yHoS9mg1LLM2qQFb0Nc0=
+X-Received: by 2002:a9d:480d:: with SMTP id c13mr24350720otf.224.1595325623588;
+ Tue, 21 Jul 2020 03:00:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200630045708.14166-1-alexandru.ardelean@analog.com>
+ <20200630045708.14166-3-alexandru.ardelean@analog.com> <20200721094643.GA1598380@eriador.lumag.spb.ru>
+In-Reply-To: <20200721094643.GA1598380@eriador.lumag.spb.ru>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Tue, 21 Jul 2020 13:00:11 +0300
+Message-ID: <CA+U=DsqLAnXG0BZvXw5=_rUS_N-1qSs2Xxu7-x2qA2HH7pPyVA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/7] iio: core: wrap IIO device into an iio_dev_opaque object
+To:     Dmitry Baryshkov <dbaryshkov@gmail.com>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Tue, Jul 21, 2020 at 12:47 PM Dmitry Baryshkov <dbaryshkov@gmail.com> wrote:
+>
+> Hello,
+>
+> On Tue, Jun 30, 2020 at 07:57:03AM +0300, Alexandru Ardelean wrote:
+> > There are plenty of bad designs we want to discourage or not have to review
+> > manually usually about accessing private (marked as [INTERN]) fields of
+> > 'struct iio_dev'.
+> >
+> > Sometimes users copy drivers that are not always the best examples.
+> >
+> > A better idea is to hide those fields into the framework.
+> > For 'struct iio_dev' this is a 'struct iio_dev_opaque' which wraps a public
+> > 'struct iio_dev' object.
+> >
+> > In the next series, some fields will be moved to this new struct, each with
+> > it's own rework.
+>
+> [skipped]
+>
+> >
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  drivers/iio/industrialio-core.c | 19 +++++++++++++------
+> >  include/linux/iio/iio-opaque.h  | 17 +++++++++++++++++
+> >  include/linux/iio/iio.h         |  6 +++++-
+> >  3 files changed, 35 insertions(+), 7 deletions(-)
+> >  create mode 100644 include/linux/iio/iio-opaque.h
+> >
+> > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> > index 75661661aaba..33e2953cf021 100644
+> > --- a/drivers/iio/industrialio-core.c
+> > +++ b/drivers/iio/industrialio-core.c
+>
+> [skipped]
+>
+> > @@ -1506,11 +1510,14 @@ struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
+> >       /* ensure 32-byte alignment of whole construct ? */
+> >       alloc_size += IIO_ALIGN - 1;
+> >
+> > -     dev = kzalloc(alloc_size, GFP_KERNEL);
+> > -     if (!dev)
+> > +     iio_dev_opaque = kzalloc(alloc_size, GFP_KERNEL);
+> > +     if (!iio_dev_opaque)
+> >               return NULL;
+> >
+> > -     dev->dev.parent = parent;
+>
+> This chunk (together with 8cb631ccbb1952b6422917f2ed16f760d84a762e and
+> d3be83244c7dfe686d23f1c0bac75915587fc044) break devicetree bindings of
+> IIO clients. After these changes there are no links between devicetree
+> nodes and corresponding IIO channels. I'd kindly ask to restore this
+> dev->dev.parent assignment (which restores of node binding).
+>
 
-Remove the code to sync the vmalloc and ioremap ranges for x86-64. The
-page-table pages are all pre-allocated now so that synchronization is
-no longer necessary.
+Ack.
+Will send a fix.
+Thanks for catching this.
+Apologies for the breakage.
+It seems that I was tripping quite a bit with too many patchsets.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/include/asm/pgtable_64_types.h | 2 --
- arch/x86/mm/init_64.c                   | 5 -----
- 2 files changed, 7 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
-index 8f63efb2a2cc..52e5f5f2240d 100644
---- a/arch/x86/include/asm/pgtable_64_types.h
-+++ b/arch/x86/include/asm/pgtable_64_types.h
-@@ -159,6 +159,4 @@ extern unsigned int ptrs_per_p4d;
- 
- #define PGD_KERNEL_START	((PAGE_SIZE / 2) / sizeof(pgd_t))
- 
--#define ARCH_PAGE_TABLE_SYNC_MASK	(pgtable_l5_enabled() ?	PGTBL_PGD_MODIFIED : PGTBL_P4D_MODIFIED)
--
- #endif /* _ASM_X86_PGTABLE_64_DEFS_H */
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index e76bdb001460..e0cd2dfd333d 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -217,11 +217,6 @@ void sync_global_pgds(unsigned long start, unsigned long end)
- 		sync_global_pgds_l4(start, end);
- }
- 
--void arch_sync_kernel_mappings(unsigned long start, unsigned long end)
--{
--	sync_global_pgds(start, end);
--}
--
- /*
-  * NOTE: This function is marked __ref because it calls __init function
-  * (alloc_bootmem_pages). It's safe to do it ONLY when after_bootmem == 0.
--- 
-2.27.0
-
+> > +     dev = &iio_dev_opaque->indio_dev;
+> > +     dev->priv = (char *)iio_dev_opaque +
+> > +             ALIGN(sizeof(struct iio_dev_opaque), IIO_ALIGN);
+> > +
+> >       dev->dev.groups = dev->groups;
+> >       dev->dev.type = &iio_device_type;
+> >       dev->dev.bus = &iio_bus_type;
+>
+> --
+> With best wishes
+> Dmitry
