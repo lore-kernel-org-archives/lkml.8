@@ -2,154 +2,69 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0622AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A5EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D49A2206E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:12:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IL3gzcHT"
+	by mail.kernel.org (Postfix) with ESMTP id 9A9C020792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:14:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgGUDMr (ORCPT
+        id S1728555AbgGUDOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:12:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60922 "EHLO
+        Mon, 20 Jul 2020 23:14:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgGUDMr (ORCPT
+        with ESMTP id S1726016AbgGUDOB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 23:12:47 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B82C061794;
-        Mon, 20 Jul 2020 20:12:46 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id a15so4737164wrh.10;
-        Mon, 20 Jul 2020 20:12:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QmWkp+pLXRh/gXZUp7qiRhPmHHKd7eq2d0NWiyvOMkM=;
-        b=IL3gzcHT7td0H6RZ8vgJLxeW6j2TSaQkhrvkWv+Dvx5x0FwsrsXISZnCo2B4Vq817E
-         7P/qxL0w3YfNDJb8JSVe58a6qjZvxLMLx6G+MNtrjmwdKdiincxlg3Wl2UHIuxcH1Suj
-         LFb9fYu43S5GhRmzXAOnBeBpI86XYJCk3L5xXSFumVpyIqkAe1y5skECjTyPSfPMmcU1
-         U6qW2UlGMd+OHCHheq571mFMSGS9sUvTCYa6aMv5K9VAtiaAPzBZWQJmJumPLopTyUKr
-         Mv51vz43IZs2RdnafHeARbgZvugyLNiGuEk7zEjBs+T4u/r77DJbKUyqjvFyTKOkm2Mk
-         nLjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QmWkp+pLXRh/gXZUp7qiRhPmHHKd7eq2d0NWiyvOMkM=;
-        b=ltHKabegIjsDqPM6I0ezvxZIzcUZpanjqEzL5CQgtuWbbOskTBign62WqWXesZBi41
-         N5ZTnk2ksdPkIBem2wSqchvfIOZOeEpQsMQ/XKKVjJCi6NvtaONXUQFfNKXtxm5Jx2CR
-         JBzjAeJu89PIxrFC2aCIbTGef9NL9sOmFS2JAIJMNhw3haFHNCNSuYy4ZF5k90njz1gk
-         ECz9tDrfNjKQ0Aje/2uWO0c/M1QdYzUQHadIjxHbZmkSLNZfJs45GPOjIdPplYMjfYwu
-         MRKRhna41CiH5Ur3jT04RM5cFn0j2qeQkfGnnZe5zn0hxa3CdpBkxvdtbV9oMVMc7DtC
-         DC6Q==
-X-Gm-Message-State: AOAM532iqK9i/mfHhKR77Ls+GWFYDxQPF/rsoGPqkJ/D9DS7YTf6SMHW
-        YuG/XVIbBXVgglKMDMkDpbPh8X08tfhsUVRoltngWzEqtoZQpNZY
-X-Google-Smtp-Source: ABdhPJzT6sH02cjhcT6NreTADImut0tj7cBEsIStKDXcS4HLicMhEmtB5ONK2n7aerQQcVyOYCV1HjeGi/WsfObwVIY=
-X-Received: by 2002:adf:d0d0:: with SMTP id z16mr25917757wrh.95.1595301163893;
- Mon, 20 Jul 2020 20:12:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1595214246.git.huangqiwu@xiaomi.com> <20200720082100.GA720171@kroah.com>
-In-Reply-To: <20200720082100.GA720171@kroah.com>
-From:   ivan <yanziily@gmail.com>
-Date:   Tue, 21 Jul 2020 11:12:32 +0800
-Message-ID: <CAPtXDt39QMWE5jYeszBD8z9P_BHgwZ86wArpCEafC_Xx+hjKLQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] add some power supply properties about
- wireless/wired charging
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiangfei1@xiaomi.com,
-        Qiwu Huang <huangqiwu@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Jul 2020 23:14:01 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FF08C061794;
+        Mon, 20 Jul 2020 20:14:01 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id BA4FB1260D092;
+        Mon, 20 Jul 2020 19:57:15 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 20:14:00 -0700 (PDT)
+Message-Id: <20200720.201400.1580393372170110087.davem@davemloft.net>
+To:     Song.Chi@microsoft.com
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, kuba@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 net-next] net: hyperv: Add attributes to show TX
+ indirection table
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <HK0P153MB02751820DD4F8892DEFA13D098780@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
+References: <HK0P153MB02751820DD4F8892DEFA13D098780@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 Jul 2020 19:57:16 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg KH <gregkh@linuxfoundation.org> =E4=BA=8E2020=E5=B9=B47=E6=9C=8820=E6=
-=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=884:20=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Mon, Jul 20, 2020 at 01:47:13PM +0800, Qiwu Huang wrote:
-> > From: Qiwu Huang <huangqiwu@xiaomi.com>
-> >
-> > quick_charge_type reports quick charge type based on charging power.
-> > tx_adapter shows wireless charging adapter type.
-> > signal_strength shows degree of coupling between tx and rx when wireles=
-s charging.
-> > reverse_chg_mode supply interface to enable/disable wireless reverse ch=
-arging.
-> >
-> > Qiwu Huang (4):
-> >   power: supply: core: add quick charge type property
-> >   power: supply: core: add wireless charger adapter type property
-> >   power: supply: core: add wireless signal strength property
-> >   power: supply: core: property to control reverse charge
->
-> What changed from the previous versions of this series?  Normally you
-> either include that in the 0/X email, or in the individual patches.  I
-> don't see that in either place in this series :(
->
-> See the many examples of how this is done by looking at other patches on
-> the mailing lists and in the submitting patches documentation.
+From: Chi Song <Song.Chi@microsoft.com>
+Date: Tue, 21 Jul 2020 02:37:42 +0000
 
-Sorry =EF=BC=8CI will add it in new version
+> +static ssize_t tx_indirection_show(struct device *dev,
+> +				   struct device_attribute *dev_attr, char *buf)
+> +{
+> +	struct net_device *ndev = to_net_dev(dev);
+> +	struct net_device_context *ndc = netdev_priv(ndev);
+> +	int index = dev_attr - dev_attr_netvsc_dev_attrs;
 
-This patchset aims to provide power supply properties about
-wireless/wired charging.
- =E2=80=9Cquick_charge_type=E2=80=9D reports different types of quick charg=
-e based on
-the charging power;
- =E2=80=9Ctx_adapter=E2=80=9D shows the type of wireless charging adapter;.
- =E2=80=9Csignal_strength=E2=80=9D shows the coupling level between TX and =
-RX;.
- =E2=80=9Creverse_chg_mode=E2=80=9D provides the interface of enabling/disa=
-bling
-wireless reverse charging.
+Reverse christmas tree ordering for local variables please.
 
- Changes in v5
-  - Add details in 0/X email
+> +static void netvsc_attrs_init(void)
+> +{
+> +	int i;
+> +	char buffer[4];
 
- Changes in v4
-  - Exclude the patch of =E2=80=9Cpower: supply: supply battery soc with de=
-cimal form=E2=80=9D
-  - Fix some typo
-
- Changes in v3
-  - Add enumederated for quick charge type
-  - Add enumederated for tx adapter type
-  - Update the return type and description in ABI
-
- Changes in v2
-  - modify to capital letters for =E2=80=9Cpower_supply_attrs=E2=80=9D
-  - Update the return type and description in ABI
-
- Qiwu Huang (4):
-   power: supply: core: add quick charge type property
-   power: supply: core: add wireless charger adapter type property
-   power: supply: core: add wireless signal strength property
-   power: supply: core: property to control reverse charge
-
-  Documentation/ABI/testing/sysfs-class-power | 71 +++++++++++++++++++++
-  drivers/power/supply/power_supply_sysfs.c   |  4 ++
-  include/linux/power_supply.h                | 31 +++++++++
-  3 files changed, 106 insertions(+)
-
-
-> thanks,
->
-> greg k-h
-
-
-
---=20
-Thanks
-
-Qiwu
+Likewise.
