@@ -2,131 +2,128 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F80C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E97C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6A0E21702
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:25:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="FdaHrvVg"
+	by mail.kernel.org (Postfix) with ESMTP id 6FD7020771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:25:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbgGUQZK (ORCPT
+        id S1729161AbgGUQZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:25:10 -0400
-Received: from mail-eopbgr60066.outbound.protection.outlook.com ([40.107.6.66]:14978
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726919AbgGUQZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:25:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LFH0aWIQiXCqS8QMn4vZqrtavYjzm2UzMcgeZhpp6/QVzSHh+mQn+yu/YSl8VX+NstRP+Ojn+TMxq+kUC6t548mB8BjyYIr2OBUtWFYhRRMIphEGZNAYsLxW5H9KtcoddRwiUYwRNPWtzuzzw1W3rOOoC9JV72BCZFtoZuE8kvx86rTW7Z3XClXMcO06XwQQt2k5PtT/AvcHreXZLIIuXw5gS92KekLueA/5aLVlT3S/UF2vY01/58gamoY6VirxU2ePcheSzqDI5rp+fIsjV5qLf4muTfZ39uWtv60zm9BHpzvVzgvz8AN0Wj6u7v1b3zV89485N1x7C7rRaK0/PA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BxIUqmVcJjeucPujZ3oAX3sWhQPvniTvHgdFbarLwdY=;
- b=TEyiwujcblNEemy5oegVVtOe7W7UZYu4owL+NVuhgYMW3zjgMsX9RJYjTwBmucjTFldjS4jze6tRUc9I6yCmoEcF/wZlkK3fp4eUP94m4y52Xm+i4mLp28xOK6SuNb4R4GYiQK8tkduqLloZ3eugk3OGvGLqIVdiVSi1rVUo72HavabUyZ+d1fNk6ufCla0pPavc+nNYGg7VlP7HPTajEMPVbhQuh/Q88dL60HWgs1MgL/pSB4TnV/drSOEUeEZqwce2qdL/CnVsf8rCxvhTGr+rjsJOfCuUkiGWi+GVtzYFe7wpwdnh22AyThN7Ky4E5zxC1/e8HZ+iMQr7L/Odyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BxIUqmVcJjeucPujZ3oAX3sWhQPvniTvHgdFbarLwdY=;
- b=FdaHrvVgvZgWejETQzRG+5SsRx9886kN969sjeeagfrLLasLt5kq6x7cx4qItamiNBpy3FctAZsEc0HPI+pyomv4hXl+s3+UqDCP3zgrqIfBycSSCG0qBRgIsn4c8mfCQ7NCuJoOMMFp34erAX6sdp4Z0l033mxqIMNtXh5ehrY=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR0502MB3952.eurprd05.prod.outlook.com (2603:10a6:803:23::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Tue, 21 Jul
- 2020 16:25:05 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::252e:52c7:170b:35d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::252e:52c7:170b:35d%5]) with mapi id 15.20.3195.026; Tue, 21 Jul 2020
- 16:25:05 +0000
-Date:   Tue, 21 Jul 2020 13:25:01 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     vkoul@kernel.org, megha.dey@intel.com, maz@kernel.org,
-        bhelgaas@google.com, rafael@kernel.org, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, hpa@zytor.com, alex.williamson@redhat.com,
-        jacob.jun.pan@intel.com, ashok.raj@intel.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC v2 04/18] irq/dev-msi: Introduce APIs to
- allocate/free dev-msi interrupts
-Message-ID: <20200721162501.GC2021248@mellanox.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <159534736176.28840.5547007059232964457.stgit@djiang5-desk3.ch.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159534736176.28840.5547007059232964457.stgit@djiang5-desk3.ch.intel.com>
-X-ClientProxiedBy: MN2PR13CA0029.namprd13.prod.outlook.com
- (2603:10b6:208:160::42) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Tue, 21 Jul 2020 12:25:41 -0400
+Received: from mga06.intel.com ([134.134.136.31]:38912 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728180AbgGUQZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 12:25:40 -0400
+IronPort-SDR: zStfbMFIlpraalvVd4sJhSPU0HChG4ij78Ry+S5VUf2J6SjrMUj/9A3XOhRALQ8DONZK2pANlD
+ TCmFjU03gBLw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="211715778"
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="211715778"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 09:25:37 -0700
+IronPort-SDR: hryq/gywAQdtW3AZ3P9cFmuFkG1C1Uq9yicrFjyp1cWlHwY4DU4cxqNCrJ3fm8tqMsQ7pRxK4U
+ kpZFmQREgUKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="327920958"
+Received: from jacoraci-mobl.amr.corp.intel.com ([10.212.210.224])
+  by orsmga007.jf.intel.com with ESMTP; 21 Jul 2020 09:25:36 -0700
+Message-ID: <babeff29a60d3fadb5515eaf57f7bb42a1c9c792.camel@linux.intel.com>
+Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP
+ enabled
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Francisco Jerez <currojerez@riseup.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Doug Smythies <dsmythies@telus.net>
+Date:   Tue, 21 Jul 2020 09:25:36 -0700
+In-Reply-To: <87mu3thiz5.fsf@riseup.net>
+References: <3955470.QvD6XneCf3@kreacher> <87r1tdiqpu.fsf@riseup.net>
+         <CAJZ5v0jaRm-wv+ZKhOyGJrrKZAsTKc3sq2GYyv0uerTTe3gXbQ@mail.gmail.com>
+         <87imeoihqs.fsf@riseup.net>
+         <CAJZ5v0hhLWvbNA6w0yHtzKa5ANR9yF++u63dh8wWAgkhbtLXXA@mail.gmail.com>
+         <875zanhty6.fsf@riseup.net>
+         <CAJZ5v0g2U+1wD5rUQwJ4_x9sQyvGyGiBiLFs7MA-xdhRBX9zBQ@mail.gmail.com>
+         <87mu3thiz5.fsf@riseup.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR13CA0029.namprd13.prod.outlook.com (2603:10b6:208:160::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.15 via Frontend Transport; Tue, 21 Jul 2020 16:25:04 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@mellanox.com>)      id 1jxv4f-00DGaQ-GT; Tue, 21 Jul 2020 13:25:01 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 15196007-01a4-4df4-f3d3-08d82d92a02c
-X-MS-TrafficTypeDiagnostic: VI1PR0502MB3952:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0502MB3952B7996A24D99A1BEB8891CF780@VI1PR0502MB3952.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tvd7/H5c/IytsPIVME8EwHSiMLoAbjf2suVvYSgsrIgnMidYYTJoqcBAB/4EgORSUjtscraVTWy2EDkVTukggcFehxc828p1JsbGAsid+hf6I0dVMEOxSyQmjbWY4/WouiOR3EYkBhIgOZIhLh7vjMRLz1UzgYMGgTUcYzgoxy8cr8tM/JY0cnxHK0KtlFLzSHaWp5bsCLQbH35i9PtUZaQ7ZczSXyCC9EpUtqhRUKmspK3kyNuSlFmIG9CmOvVa8DIAhPpPkQHZeBq8sASfmI0o6D2+WEM4Tan/pcF3R4reTsVAcyc7aaisxZAIXcOY4NcV2Z9RBSHK4iiAPlr4mg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(366004)(396003)(376002)(39830400003)(36756003)(86362001)(5660300002)(2906002)(316002)(478600001)(66556008)(66476007)(26005)(426003)(33656002)(6916009)(186003)(8676002)(4326008)(7406005)(83380400001)(7416002)(2616005)(4744005)(9746002)(9786002)(8936002)(66946007)(1076003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: enjRqkU2/KEOmfS0ROVqzO0KNOcuClQIMccQKnBdV4ptmnV6E7illlW2Pu43JGQezIiJ5do/MwxxIKA05D6tYov5qm1MskkjR09pFJi3U+iO2MGCKytzI5IQPDaa4vnTFACO8dWBO4vk+b3JmG86sUHG9UDGxqMqT7CG+YwXwv1cWVlGQzjCAai+0xkAjW0/dsLlW/TTQWD9K221H8qjrMDasY44VHiM9Ibva3y/Bog6BP1FSmSUDRBeJOZdZfn156aaLFY/KZ6foEUGdMmlb70gi3w/TBWCaogbiI+w0ydGZ+3Rfm5hYlGqE0gljaEED6D+o2ZsRW7j/RUgBjlmn+layVgIbHrYrv9KuM7XjcBgL6Cj/oU+EeBAW73snjol4fidbN8R14vbAgu0kQn70iNo+MM1dPyXZdL+7+NWvBcuTKEhPAw7qj8yinG7oikYOHaFP92T2p0iybw7Xls1U8xlVfHnnOMv/TxImazZy/g=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15196007-01a4-4df4-f3d3-08d82d92a02c
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2020 16:25:05.0859
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WwFLbMYHvWy1dfO8Lt39VNdX8PiVBAlxyfsca9pDMeY7oklJQU2zKDi124nWKHWpyw7YeUXwVur4r9BaLTkh6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3952
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 09:02:41AM -0700, Dave Jiang wrote:
-> From: Megha Dey <megha.dey@intel.com>
+On Mon, 2020-07-20 at 16:20 -0700, Francisco Jerez wrote:
+> "Rafael J. Wysocki" <rafael@kernel.org> writes:
 > 
-> The dev-msi interrupts are to be allocated/freed only for custom devices,
-> not standard PCI-MSIX devices.
-> 
-> These interrupts are device-defined and they are distinct from the already
-> existing msi interrupts:
-> pci-msi: Standard PCI MSI/MSI-X setup format
-> platform-msi: Platform custom, but device-driver opaque MSI setup/control
-> arch-msi: fallback for devices not assigned to the generic PCI domain
-> dev-msi: device defined IRQ domain for ancillary devices. For e.g. DSA
-> portal devices use device specific IMS(Interrupt message store) interrupts.
-> 
-> dev-msi interrupts are represented by their own device-type. That means
-> dev->msi_list is never contended for different interrupt types. It
-> will either be all PCI-MSI or all device-defined.
+> > On Fri, Jul 17, 2020 at 2:21 AM Francisco Jerez <
+> > currojerez@riseup.net> wrote:
+> > > "Rafael J. Wysocki" <rafael@kernel.org> writes:
+> > > 
+{...]
 
-Not sure I follow this, where is the enforcement that only dev-msi or
-normal MSI is being used at one time on a single struct device?
+> > Overall, so far, I'm seeing a claim that the CPU subsystem can be
+> > made
+> > use less energy and do as much work as before (which is what
+> > improving
+> > the energy-efficiency means in general) if the maximum frequency of
+> > CPUs is limited in a clever way.
+> > 
+> > I'm failing to see what that clever way is, though.
+> Hopefully the clarifications above help some.
 
-Jason
+To simplify:
+
+Suppose I called a function numpy.multiply() to multiply two big arrays
+and thread is a pegged to a CPU. Let's say it is causing CPU to
+finish the job in 10ms and it is using a P-State of 0x20. But the same
+job could have been done in 10ms even if it was using P-state of 0x16.
+So we are not energy efficient. To really know where is the bottle neck
+there are numbers of perf counters, may be cache was the issue, we
+could rather raise the uncore frequency a little. A simple APRF,MPERF
+counters are not enough. or we characterize the workload at different
+P-states and set limits.
+I think this is not you want to say for energy efficiency with your
+changes. 
+
+The way you are trying to improve "performance" is by caller (device
+driver) to say how important my job at hand. Here device driver suppose
+offload this calculations to some GPU and can wait up to 10 ms, you
+want to tell CPU to be slow. But the p-state driver at a movement
+observes that there is a chance of overshoot of latency, it will
+immediately ask for higher P-state. So you want P-state limits based on
+the latency requirements of the caller. Since caller has more knowledge
+of latency requirement, this allows other devices sharing the power
+budget to get more or less power, and improve overall energy efficiency
+as the combined performance of system is improved.
+Is this correct?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
