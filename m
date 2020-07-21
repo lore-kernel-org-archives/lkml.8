@@ -2,106 +2,85 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9C7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C50C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7D102073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:59:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595361563;
-	bh=gGb8g+UjwDX3j/bDtdfbUK7CDgRFPOiHWmMZoe62cyU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EyctqGOu87abo5ZecUBvQIQJYgblqWIwL9+YQseoYhUllFzsHyZWnzS6SjzjkkLX8
-	 mxHh0s4EZeYkc3Ojq3Mncoh6zqDTljwpaanUOtaimbD7cScz2SkOyv3Ytoqnp4WtDi
-	 CzkEsjdIL0qyJrgszebOD9VHinjiGtR2MAChqr0k=
+	by mail.kernel.org (Postfix) with ESMTP id 0EE6520717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:05:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="thsjb4B5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TPXu8+kD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730319AbgGUT7W (ORCPT
+        id S1729215AbgGUUFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:59:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726892AbgGUT7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:59:22 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D424A2072E;
-        Tue, 21 Jul 2020 19:59:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595361562;
-        bh=gGb8g+UjwDX3j/bDtdfbUK7CDgRFPOiHWmMZoe62cyU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=laRS/bbq7IgIVRlG0PhI2fEtI/3uizRIhXywei56/svMY0xMUoaerbVaRbi7GQPgU
-         S9xMDWZqGlHaPe/Udeqw6g2IcEgKiRp+bFfKJZHZQn2izhkvmoq4icB0aCn9XyZ5Z9
-         z53z61S47BooFAMTBRAciOTaXN/8gAp6ml1ek8Zw=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C70C3404B1; Tue, 21 Jul 2020 16:59:19 -0300 (-03)
-Date:   Tue, 21 Jul 2020 16:59:19 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 03/15] tools/libperf: avoid counting of nonfilterable
- fdarray fds
-Message-ID: <20200721195919.GH77866@kernel.org>
-References: <8d91c3a0-3db4-0a7a-ae13-299adb444bd6@linux.intel.com>
- <b5ab0d2c-b742-0032-e8d3-c8e2eb423c42@linux.intel.com>
+        Tue, 21 Jul 2020 16:05:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgGUUFJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 16:05:09 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF03FC061794;
+        Tue, 21 Jul 2020 13:05:08 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595361906;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to; bh=Tab+FNZiwwNP0EHguZfXpFsbFXiXvqfpdyN14o3Ujn8=;
+        b=thsjb4B5bSS4NhKXt5vkHwGTf4GQi2O155pY3qlvPhfGr2cGUmUunylXN9BAQ+hFirIcyM
+        D01Zn+PGoC56T1tZSUv8pyBMawrd0Lrr8nIgYgH3utoyPrUJnPgANM95FNZi2ZnJ7cqTRg
+        VJTrgs08foJx6D2/OyyvBjl6Eg0Xu4EzmwUAFmeDb15OAuJjy2fTqkGE7px3lLDWCjR8sv
+        Tzpe/fDZjAO9l9xuvGuNc9oA82vy3qoOXKO29ZM8stiTUE6mwHqWKauvj8o9jMgavwwYo4
+        /VaXhe6tQozYDAyn+myZPy8YPiwRDW9AOvzXHIliA+fr5P+1a7x27JcPqQU6uQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595361906;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to; bh=Tab+FNZiwwNP0EHguZfXpFsbFXiXvqfpdyN14o3Ujn8=;
+        b=TPXu8+kDoC1npp9uDCVnk9DsF08rejx4fGRtl/K2RW6ycPurrwJkgzkF+VrXRKEH/gZkHa
+        KpCzq8tZ7qHIskDw==
+To:     Kees Cook <keescook@chromium.org>, Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Arnd Bergmann <arnd@arndb.de>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Bob Haarman <inglorion@google.com>, hjl.tools@gmail.com,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH] x86, vmlinux.lds: Page-Align end of ..page_aligned sections
+In-Reply-To: <202007211143.AC36D096@keescook>
+Date:   Tue, 21 Jul 2020 22:05:05 +0200
+Message-ID: <87r1t43a8e.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b5ab0d2c-b742-0032-e8d3-c8e2eb423c42@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jul 17, 2020 at 10:00:15AM +0300, Alexey Budankov escreveu:
-> 
-> Avoid counting of struct pollfd *entries objects with
-> fdarray_flag__nonfilterable flag by fdarray__filter().
-> Nonfilterable objects are still processed if requested
-> revents have been signaled for them.
+Kees,
 
-Thanks, applied.
+Kees Cook <keescook@chromium.org> writes:
+> On Tue, Jul 21, 2020 at 11:34:48AM +0200, Joerg Roedel wrote:
+>> From: Joerg Roedel <jroedel@suse.de>
+>> 
+>> Align the end of the .bss..page_aligned and .data..page_aligned section
+>> on page-size too. Otherwise the linker might place other objects on the
+>> page of the last ..page_aligned object. This is inconsistent with other
+>> objects in those sections, which all have their own page.
+>
+> What problem was actually encountered? (i.e. why is it a problem for the
+> other data to be in the page of the page-aligned data? shouldn't those
+> data have their own, separate, alignment hint?)
 
-- Arnaldo
- 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/lib/api/fd/array.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-> index 01b3b89f9797..5e6cb9debe37 100644
-> --- a/tools/lib/api/fd/array.c
-> +++ b/tools/lib/api/fd/array.c
-> @@ -109,7 +109,8 @@ int fdarray__filter(struct fdarray *fda, short revents,
->  			continue;
->  		}
->  
-> -		++nr;
-> +		if (!(fda->priv[fd].flags & fdarray_flag__nonfilterable))
-> +			++nr;
->  	}
->  
->  	return nr;
-> -- 
-> 2.24.1
-> 
-> 
+See: lore.kernel.org/r/87sgdmm8u4.fsf@nanos.tec.linutronix.de
 
--- 
+Thanks,
 
-- Arnaldo
+        tglx
