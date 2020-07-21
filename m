@@ -2,249 +2,128 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 323C2C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A33C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF469206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E2220709
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:02:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iwOnZaca"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a5qIpgFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgGUK7j (ORCPT
+        id S1729374AbgGULCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:59:39 -0400
-Received: from mail-db8eur05on2083.outbound.protection.outlook.com ([40.107.20.83]:23072
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726611AbgGUK7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:59:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LbLFE2Z4tRTqikyVUhBqikyq7ykklfEb7uJkOGB5vHYKg7KMZtVQCuGd8DRBgeehN4Qux3m0XtW2OtSMp2WIQR5/RWMsTjiCG5UGfeM52wLV475IvhGB4LL+dWdwnrf1ceko7kpYSEl20ajgxrubJk/xJeLMdj4JF9UFd4EOSGlVWj28eLkpHVrA2OAbGU3fSWiZVBemRXgZliQ08IFL4154nZGFSL+6+Tx1vILraYchcDE0VBorhFszHJyQwoksZuYUZ/t8U0Y6J3hVWlFxZ3GiyBfCmDQUWbp6fV5Lkb3GgewnutDykGsnIbEGemEG5evBNvbIVtMwEvu4XJdOCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xl5ijXLVCLXqq1DsMaHFBASTOUzrnJrx12/OosiibuQ=;
- b=dUZ+ZmyGiQHhSUmnVUNJEvVpNRZoKZs0eiRUKJC1/LZgUM5JX984X7X8f9dRBTeNrRT/c3pp9NghDVRveJAXF4h7lFIA3cUpsGePNNsnOC+ITnkyPqXH0UBzY3S5xoQWxf2Y926LA8XfrlKOGFmxltQ+hcMTu3id8pFMuAexSO4zv6dcJjz8+aT+0m9eJcKnMUZN6FrJi93JgnP7qw7jU4ouGT1QBHhmZzQsziQmD7r+c0mskqPIbk+8yTCrPhk430a86pboStzMr/weTZPQ8OBSZK0NxwS9za7djPWnyTY21BVMNwym2gT17AKq76iMvaFg0YRgdKtnt1Z9QxusKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xl5ijXLVCLXqq1DsMaHFBASTOUzrnJrx12/OosiibuQ=;
- b=iwOnZaca5AJ5i0jaT1MfLppbXqb6SbxmoCoLz8bT5jZ5T8vr7FGEiNX8Aq2/aLOOQAz5QeNlbDfGlkXoKqhEbaplQ+JHGGTAAa7r0V7m2LurGd3MGi/a1MKg4s7R3/BWa2Y0NWCsAir15KnoQ2LwReAMhgPtP8Xez1UjyJnYU7Q=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB5103.eurprd04.prod.outlook.com (2603:10a6:803:51::19)
- by VI1PR04MB3245.eurprd04.prod.outlook.com (2603:10a6:802:6::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Tue, 21 Jul
- 2020 10:59:33 +0000
-Received: from VI1PR04MB5103.eurprd04.prod.outlook.com
- ([fe80::596d:cc81:f48a:daf7]) by VI1PR04MB5103.eurprd04.prod.outlook.com
- ([fe80::596d:cc81:f48a:daf7%2]) with mapi id 15.20.3195.026; Tue, 21 Jul 2020
- 10:59:33 +0000
-From:   hongbo.wang@nxp.com
-To:     xiaoliang.yang_1@nxp.com, allan.nielsen@microchip.com,
-        po.liu@nxp.com, claudiu.manoil@nxp.com,
-        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
-        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
-        f.fainelli@gmail.com, vivien.didelot@gmail.com,
-        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
-        kuba@kernel.org, vinicius.gomes@intel.com,
-        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, linux-devel@linux.nxdi.nxp.com
-Cc:     "hongbo.wang" <hongbo.wang@nxp.com>
-Subject: [PATCH] net: dsa: Add protocol support for 802.1AD when adding or deleting vlan for dsa switch and port
-Date:   Tue, 21 Jul 2020 19:02:14 +0800
-Message-Id: <20200721110214.15268-1-hongbo.wang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SGAP274CA0024.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::36)
- To VI1PR04MB5103.eurprd04.prod.outlook.com (2603:10a6:803:51::19)
+        Tue, 21 Jul 2020 07:02:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39223 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726266AbgGULCd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 07:02:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595329351;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+Hd8mpjklFIL9BDw1lIZJpbTiG76n73CJj60X8HVXYI=;
+        b=a5qIpgFpG0In8MdPeKIxXfu5KEMnzytOx1gTEDjscY8etXwr+PbGzsfskSmD7NwxK+eYR0
+        q3YZ3F/iu7oYbGd5nAbHlzvn/vP6syP1ujxN/2SA8yMabihGmmEDDrJ+S89/k39WCCUnt0
+        VGBkdPdZ5ts00QfcuH2sT30HRMQv2/U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-225-HIHQZ2lqMGez3pIL7V5UNA-1; Tue, 21 Jul 2020 07:02:26 -0400
+X-MC-Unique: HIHQZ2lqMGez3pIL7V5UNA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8CD4058;
+        Tue, 21 Jul 2020 11:02:23 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0CC7D10021B3;
+        Tue, 21 Jul 2020 11:02:19 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CY4PR1101MB23267DC8D2B1232744A5D6DCE79B0@CY4PR1101MB2326.namprd11.prod.outlook.com>
+References: <CY4PR1101MB23267DC8D2B1232744A5D6DCE79B0@CY4PR1101MB2326.namprd11.prod.outlook.com> <20200612183450.4189588-1-keescook@chromium.org> <7be4d56b-0406-099b-e505-02e074c5173e@huawei.com> <202006142054.C00B3E9C9@keescook> <CY4PR1101MB23261B27ACF9D7FBC3969318E79C0@CY4PR1101MB2326.namprd11.prod.outlook.com> <202006151108.5B25D5A31@keescook>
+To:     "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc:     dhowells@redhat.com, Kees Cook <keescook@chromium.org>,
+        Xiaoming Ni <nixiaoming@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Windsor <dwindsor@gmail.com>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "paulmck@kernel.org" <paulmck@kernel.org>,
+        "shakeelb@google.com" <shakeelb@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        "alex.huangjianhui@huawei.com" <alex.huangjianhui@huawei.com>,
+        "dylix.dailei@huawei.com" <dylix.dailei@huawei.com>,
+        "chenzefeng2@huawei.com" <chenzefeng2@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] Convert nsproxy, groups, and creds to refcount_t
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from whb-OptiPlex-790.ap.freescale.net (119.31.174.73) by SGAP274CA0024.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Tue, 21 Jul 2020 10:59:25 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.73]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: cd9515db-0253-48e1-0ded-08d82d65266d
-X-MS-TrafficTypeDiagnostic: VI1PR04MB3245:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB3245EF5EA7D92EDCDD096AB6E1780@VI1PR04MB3245.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: O6Qc55u3MIsLB0yVIa3Z90MI1y5wkQdg4fuXAqi24t4ARmDMUO4JejW0otuXOS0OSUfX5OqVEnTtJQ7tOkhcpVO3xmWH/ivrc1vPBBXpJqXeP0RUxjHvBK0fWwqBVZndFrRy8HdiMGBCuvxBK9JGvCWUy3ATnLpJadShy7wyCd1VOBjpypj0f/uU1Bbg3aXLsk+CgfJDsiA0FPp0qnVb6TANyhzPfqnj2YIZea0qtIL8Tm+/aA/suBC7LpJSn9kHLuO+L6ED0wC5AfSxw0N21bf5yTwJ+izHUf89/w99DKpu1z15oANK9h3g6mzUOdGdqTlKAa4mYIhsfHMRXHMxF6RA2BbCwqZ36yt1HPATGBcklWY23wT6OEQUVGNMUse+
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5103.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(376002)(366004)(396003)(39860400002)(6666004)(6506007)(52116002)(2906002)(8676002)(5660300002)(66556008)(66476007)(186003)(6512007)(9686003)(16526019)(6486002)(8936002)(36756003)(26005)(83380400001)(66946007)(1076003)(956004)(478600001)(4326008)(2616005)(7416002)(316002)(86362001)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: e/fbNP+WU+aHCQd5m6O+TRR3uIeFEPE1wYoPp7zMwDV0mmrg0gvXDiIcar3oUNaUz8JrKB6vub5HApt1zOdKY3eBmtaPIpyNRkbJfyDxNQsYrG9WLl/Ulw20fa6UJ/mdavlvAZ2BaalPeVg79Eo/LB/W6Azcaf2Bl0sbzN1Ywq+p5Mucj78/4jEnEaoy9LxOIr/F1Ec68Ms4tZ7uG9rg9Rz/5rduX42cLuKN+Fzd3UFI6egsEFpylol2TwI/iChNVl79fXAl/GSbhumJp+NlFRwxAdSrXknP3AzIp4BzgYBvG8/9JKrt4PLlMbSMcX5mYiZd0VahJYFv1jaBw96I/baexp2hSCjfTvjc4DG8WN0ANJE5Aua6UlFgHV/5tFTvrv1Hw+NTgM5x6eIn8X4cKOIPIklihgaEjsekDOcUrgzfUL5nrcXTMAprbmfGtpvo3qHXfwD4CZ1vLSR+pt5ECjvVkoZsS1BKD5Zea65OLrE=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd9515db-0253-48e1-0ded-08d82d65266d
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5103.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2020 10:59:33.5361
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TmDS7xBpqFzc+31bI8caGSSb8Onq8nIys+rPtk+xt95v7AbNQvAnw2PDH7vhjiXgoAHAivAxcZInk9cNex2eDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3245
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <546056.1595329339.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 21 Jul 2020 12:02:19 +0100
+Message-ID: <546057.1595329339@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "hongbo.wang" <hongbo.wang@nxp.com>
+> https://github.com/ereshetova/linux-stable/commits/refcount_t_fs
 
-the following command will be supported:
-Add VLAN:
-    ip link add link swp1 name swp1.100 type vlan protocol 802.1ad id 100
-Delete VLAN:
-    ip link del link swp1 name swp1.100
+Looking at "fs, cachefiles: convert cachefiles_object.usage from atomic_t =
+to
+refcount_t", I see:
 
-when adding vlan, this patch only set protocol for user port,
-cpu port don't care it, so set parameter proto to 0 for cpu port.
+-	u =3D atomic_inc_return(&object->usage);
++	refcount_inc(&object->usage);
+	trace_cachefiles_ref(object, _object->cookie,
+-			     (enum cachefiles_obj_ref_trace)why, u);
++			     (enum cachefiles_obj_ref_trace)why, refcount_read(&object->usage)=
+);
+	return &object->fscache;
 
-Signed-off-by: hongbo.wang <hongbo.wang@nxp.com>
----
- include/net/switchdev.h | 1 +
- net/dsa/dsa_priv.h      | 4 ++--
- net/dsa/port.c          | 7 ++++---
- net/dsa/slave.c         | 9 +++++----
- net/dsa/tag_8021q.c     | 4 ++--
- 5 files changed, 14 insertions(+), 11 deletions(-)
+This change is *not* equivalent.  There's a reason I'm using
+atomic_inc_return() and not atomic_inc(),atomic_read().  Yes, the small wi=
+ndow
+*does* occasionally produce incorrect tracing, and, yes, when that happens=
+ it
+does make things confusing.
 
-diff --git a/include/net/switchdev.h b/include/net/switchdev.h
-index ff2246914301..7594ea82879f 100644
---- a/include/net/switchdev.h
-+++ b/include/net/switchdev.h
-@@ -97,6 +97,7 @@ struct switchdev_obj_port_vlan {
- 	u16 flags;
- 	u16 vid_begin;
- 	u16 vid_end;
-+	u16 proto;
- };
- 
- #define SWITCHDEV_OBJ_PORT_VLAN(OBJ) \
-diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
-index 1653e3377cb3..52685b9875e5 100644
---- a/net/dsa/dsa_priv.h
-+++ b/net/dsa/dsa_priv.h
-@@ -164,8 +164,8 @@ int dsa_port_vlan_add(struct dsa_port *dp,
- 		      struct switchdev_trans *trans);
- int dsa_port_vlan_del(struct dsa_port *dp,
- 		      const struct switchdev_obj_port_vlan *vlan);
--int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags);
--int dsa_port_vid_del(struct dsa_port *dp, u16 vid);
-+int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 proto, u16 flags);
-+int dsa_port_vid_del(struct dsa_port *dp, u16 vid, u16 proto);
- int dsa_port_link_register_of(struct dsa_port *dp);
- void dsa_port_link_unregister_of(struct dsa_port *dp);
- extern const struct phylink_mac_ops dsa_port_phylink_mac_ops;
-diff --git a/net/dsa/port.c b/net/dsa/port.c
-index e23ece229c7e..c07c6ee136a9 100644
---- a/net/dsa/port.c
-+++ b/net/dsa/port.c
-@@ -364,7 +364,6 @@ int dsa_port_fdb_del(struct dsa_port *dp, const unsigned char *addr,
- 		.port = dp->index,
- 		.addr = addr,
- 		.vid = vid,
--
- 	};
- 
- 	return dsa_port_notify(dp, DSA_NOTIFIER_FDB_DEL, &info);
-@@ -433,13 +432,14 @@ int dsa_port_vlan_del(struct dsa_port *dp,
- 	return dsa_port_notify(dp, DSA_NOTIFIER_VLAN_DEL, &info);
- }
- 
--int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags)
-+int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 proto, u16 flags)
- {
- 	struct switchdev_obj_port_vlan vlan = {
- 		.obj.id = SWITCHDEV_OBJ_ID_PORT_VLAN,
- 		.flags = flags,
- 		.vid_begin = vid,
- 		.vid_end = vid,
-+		.proto = proto,
- 	};
- 	struct switchdev_trans trans;
- 	int err;
-@@ -454,12 +454,13 @@ int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags)
- }
- EXPORT_SYMBOL(dsa_port_vid_add);
- 
--int dsa_port_vid_del(struct dsa_port *dp, u16 vid)
-+int dsa_port_vid_del(struct dsa_port *dp, u16 vid, u16 proto)
- {
- 	struct switchdev_obj_port_vlan vlan = {
- 		.obj.id = SWITCHDEV_OBJ_ID_PORT_VLAN,
- 		.vid_begin = vid,
- 		.vid_end = vid,
-+		.proto = proto,
- 	};
- 
- 	return dsa_port_vlan_del(dp, &vlan);
-diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-index 41d60eeefdbd..ba3984565f7e 100644
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -1252,11 +1252,11 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
- 			return -EBUSY;
- 	}
- 
--	ret = dsa_port_vid_add(dp, vid, 0);
-+	ret = dsa_port_vid_add(dp, vid, ntohs(proto), 0);
- 	if (ret)
- 		return ret;
- 
--	ret = dsa_port_vid_add(dp->cpu_dp, vid, 0);
-+	ret = dsa_port_vid_add(dp->cpu_dp, vid, 0, 0);
- 	if (ret)
- 		return ret;
- 
-@@ -1289,7 +1289,7 @@ static int dsa_slave_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
- 	/* Do not deprogram the CPU port as it may be shared with other user
- 	 * ports which can be members of this VLAN as well.
- 	 */
--	return dsa_port_vid_del(dp, vid);
-+	return dsa_port_vid_del(dp, vid, ntohs(proto));
- }
- 
- struct dsa_hw_port {
-@@ -1744,7 +1744,8 @@ int dsa_slave_create(struct dsa_port *port)
- 
- 	slave_dev->features = master->vlan_features | NETIF_F_HW_TC;
- 	if (ds->ops->port_vlan_add && ds->ops->port_vlan_del)
--		slave_dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER;
-+		slave_dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER |
-+				       NETIF_F_HW_VLAN_STAG_FILTER;
- 	slave_dev->hw_features |= NETIF_F_HW_TC;
- 	slave_dev->features |= NETIF_F_LLTX;
- 	slave_dev->ethtool_ops = &dsa_slave_ethtool_ops;
-diff --git a/net/dsa/tag_8021q.c b/net/dsa/tag_8021q.c
-index 780b2a15ac9b..848f85ed5c0f 100644
---- a/net/dsa/tag_8021q.c
-+++ b/net/dsa/tag_8021q.c
-@@ -152,9 +152,9 @@ static int dsa_8021q_vid_apply(struct dsa_switch *ds, int port, u16 vid,
- 	struct dsa_port *dp = dsa_to_port(ds, port);
- 
- 	if (enabled)
--		return dsa_port_vid_add(dp, vid, flags);
-+		return dsa_port_vid_add(dp, vid, 0, flags);
- 
--	return dsa_port_vid_del(dp, vid);
-+	return dsa_port_vid_del(dp, vid, 0);
- }
- 
- /* RX VLAN tagging (left) and TX VLAN tagging (right) setup shown for a single
--- 
-2.17.1
+-	u =3D atomic_dec_return(&object->usage);
+	trace_cachefiles_ref(object, _object->cookie,
+-			     (enum cachefiles_obj_ref_trace)why, u);
+-	ASSERTCMP(u, !=3D, -1);
+-	if (u =3D=3D 0) {
++			     (enum cachefiles_obj_ref_trace)why, refcount_read(&object->usage)=
+ - 1);
++	if (refcount_dec_and_test(&object->usage)) {
+
+This is also not equivalent.  Again, there's a reason I'm using
+atomic_dec_return() and not atomic_read(),atomic_dec_and_test().
+
+So, please drop the cachefiles/fscache patches or use refcount_inc_return(=
+)
+and refcount_dec_return().
+
+Another reason to please drop these patches is that they will cause my
+fscache-iter branch to bounce.  A lot of this code is deleted/heavily
+rewritten:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/=
+?h=3Dfscache-iter
+
+Thanks,
+David
 
