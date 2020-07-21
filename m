@@ -2,186 +2,102 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C88C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E84B6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E1720771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01A22065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:06:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbgGUMFq (ORCPT
+        id S1729851AbgGUMGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:05:46 -0400
-Received: from segapp02.wistron.com ([103.200.3.19]:51606 "EHLO
-        segapp01.wistron.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726266AbgGUMFp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:05:45 -0400
-X-Greylist: delayed 301 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jul 2020 08:05:44 EDT
-Received: from EXCHAPP01.whq.wistron (unverified [10.37.38.24]) by TWNHUMSW2.wistron.com
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Te07f5f89aec0a816701ee4@TWNHUMSW2.wistron.com>;
- Tue, 21 Jul 2020 20:00:41 +0800
-Received: from EXCHAPP01.whq.wistron (10.37.38.24) by EXCHAPP01.whq.wistron
- (10.37.38.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 21 Jul
- 2020 20:00:41 +0800
-Received: from gitserver.wistron.com (10.37.38.233) by EXCHAPP01.whq.wistron
- (10.37.38.24) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Tue, 21 Jul 2020 20:00:41 +0800
-From:   Jet Li <Jet.Le@ibm.com>
-To:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-CC:     Jet Li <Jet.Li@ibm.com>
-Subject: [PATCH linux dev-5.7 v1] ARM: dts: aspeed: rainier: Add I2c buses for nvme use
-Date:   Tue, 21 Jul 2020 20:00:31 +0800
-Message-ID: <20200721120031.27258-1-Jet.Le@ibm.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 Jul 2020 08:06:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:38418 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726919AbgGUMGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 08:06:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68636D6E;
+        Tue, 21 Jul 2020 05:06:50 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.3.181])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9AF633F66E;
+        Tue, 21 Jul 2020 05:06:47 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 13:06:41 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, kernel@collabora.com,
+        Matthew Wilcox <willy@infradead.org>,
+        Paul Gofman <gofmanp@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        will@kernel.org, catalin.marinas@arm.com
+Subject: Re: [PATCH v4 1/2] kernel: Implement selective syscall userspace
+ redirection
+Message-ID: <20200721120516.GA84703@C02TD0UTHF1T.local>
+References: <20200716193141.4068476-1-krisman@collabora.com>
+ <20200716193141.4068476-2-krisman@collabora.com>
+ <CALCETrWdCN5KsRUkrb8VoYGRBhy71P-MAHGWhuJ5y4Z3vByyvg@mail.gmail.com>
+ <87wo32j394.fsf@collabora.com>
+ <CALCETrUOe=a35rb-o44vLOSHmQ45EuommwoL2quowzw3h+J2gg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 3F6CD30736110E6CFCF9E7DF1BC98941578B327EDD47D86167E9D830534C39F12000:8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrUOe=a35rb-o44vLOSHmQ45EuommwoL2quowzw3h+J2gg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jet Li <Jet.Li@ibm.com>
+On Thu, Jul 16, 2020 at 09:48:50PM -0700, Andy Lutomirski wrote:
+> On Thu, Jul 16, 2020 at 7:15 PM Gabriel Krisman Bertazi
+> <krisman@collabora.com> wrote:
+> >
+> > Andy Lutomirski <luto@kernel.org> writes:
+> >
+> > > On Thu, Jul 16, 2020 at 12:31 PM Gabriel Krisman Bertazi
+> > > <krisman@collabora.com> wrote:
+> > >>
+> > >
+> > > This is quite nice.  I have a few comments, though:
+> > >
+> > > You mentioned rt_sigreturn().  Should this automatically exempt the
+> > > kernel-provided signal restorer on architectures (e.g. x86_32) that
+> > > provide one?
+> >
+> > That seems reasonable.  Not sure how easy it is to do it, though.
+> 
+> For better or for worse, it's currently straightforward because the code is:
+> 
+> __kernel_sigreturn:
+> .LSTART_sigreturn:
+>         popl %eax               /* XXX does this mean it needs unwind info? */
+>         movl $__NR_sigreturn, %eax
+>         SYSCALL_ENTER_KERNEL
+> 
+> and SYSCALL_ENTER_KERNEL is hardwired as int $0x80.  (The latter is
+> probably my fault, for better or for worse.)  So this would change to:
+> 
+> __vdso32_sigreturn_syscall:
+>   SYSCALL_ENTER_KERNEL
+> 
+> and vdso2c would wire up __vdso32_sigreturn_syscall.  Then there would
+> be something like:
+> 
+> bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs);
+> 
+> and that would be that.  Does anyone have an opinion as to whether
+> this is a good idea?  Modern glibc shouldn't be using this mechanism,
+> I think, but I won't swear to it.
 
-Adding pca9552 exposes the presence detect lines for the cards
-and tca9554 exposes the presence details for the cards.
+On arm64 sigreturn is always through the vdso, so IIUC we'd certainly
+need something like this. Otherwise it'd be the user's responsibility to
+register the vdso sigtramp range when making the prctl, and flip the
+selector in each signal handler, which sounds both painful and fragile.
 
-Signed-off-by: Jet Li <Jet.Li@ibm.com>
----
- arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 105 +++++++++++++++++++++++++++
- 1 file changed, 105 insertions(+)
-
-diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-index 1ae119a..76a7e82 100644
---- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-@@ -248,6 +248,21 @@
- 		compatible = "atmel,24c64";
- 		reg = <0x51>;
- 	};
-+
-+	tca9554@40 {
-+		compatible = "ti,tca9554";
-+		reg = <0x40>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		smbus0 {
-+			gpio-hog;
-+			gpios = <4 GPIO_ACTIVE_HIGH>;
-+			output-high;
-+			line-name = "smbus0";
-+		};
-+	};
-+
- };
- 
- &i2c1 {
-@@ -562,6 +577,96 @@
- 		compatible = "atmel,24c64";
- 		reg = <0x51>;
- 	};
-+
-+	pca1: pca9552@61 {
-+		compatible = "nxp,pca9552";
-+		reg = <0x61>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		gpio@0 {
-+			reg = <0>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@1 {
-+			reg = <1>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@2 {
-+			reg = <2>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@3 {
-+			reg = <3>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@4 {
-+			reg = <4>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@5 {
-+			reg = <5>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@6 {
-+			reg = <6>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@7 {
-+			reg = <7>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@8 {
-+			reg = <8>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@9 {
-+			reg = <9>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@10 {
-+			reg = <10>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@11 {
-+			reg = <11>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@12 {
-+			reg = <12>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@13 {
-+			reg = <13>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@14 {
-+			reg = <14>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@15 {
-+			reg = <15>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+	};
-+
- };
- 
- &i2c9 {
--- 
-1.8.3.1
-
+Mark.
