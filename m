@@ -2,135 +2,84 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA276C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF20C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3092080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32F52072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:20:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgGUFLh (ORCPT
+        id S1726749AbgGUFU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 01:11:37 -0400
-Received: from verein.lst.de ([213.95.11.211]:50517 "EHLO verein.lst.de"
+        Tue, 21 Jul 2020 01:20:26 -0400
+Received: from verein.lst.de ([213.95.11.211]:50550 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725294AbgGUFLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 01:11:37 -0400
+        id S1725774AbgGUFU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 01:20:26 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 22FFB6736F; Tue, 21 Jul 2020 07:11:35 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 07:11:34 +0200
+        id 849376736F; Tue, 21 Jul 2020 07:20:22 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 07:20:22 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Rich Felker <dalias@libc.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/10] dma-mapping: consolidate the NO_DMA definition
- in kernel/dma/Kconfig
-Message-ID: <20200721051134.GA9881@lst.de>
-References: <20200714121856.955680-1-hch@lst.de> <20200714121856.955680-9-hch@lst.de> <20200721031725.GO14669@brightrain.aerifal.cx>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Christoph Hellwig <hch@lst.de>, Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] syscalls: use uaccess_kernel in
+ addr_limit_user_check
+Message-ID: <20200721052022.GA10011@lst.de>
+References: <20200714105505.935079-1-hch@lst.de> <20200714105505.935079-2-hch@lst.de> <20200718013849.GA157764@roeck-us.net> <20200718094846.GA8593@lst.de> <20200720221046.GA86726@roeck-us.net> <20200721045834.GA9613@lst.de> <eb470677-b569-a6f0-e63b-60149b54863a@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200721031725.GO14669@brightrain.aerifal.cx>
+In-Reply-To: <eb470677-b569-a6f0-e63b-60149b54863a@roeck-us.net>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 11:17:26PM -0400, Rich Felker wrote:
-> On Tue, Jul 14, 2020 at 02:18:54PM +0200, Christoph Hellwig wrote:
-> > Have a single definition that architetures can select.
+On Mon, Jul 20, 2020 at 10:15:37PM -0700, Guenter Roeck wrote:
+> >> -       if (CHECK_DATA_CORRUPTION(uaccess_kernel(),
+> >> +       if (CHECK_DATA_CORRUPTION(!uaccess_kernel(),
+> >>
+> >> How does this work anywhere ?
 > > 
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  arch/m68k/Kconfig         | 4 +---
-> >  arch/m68k/Kconfig.machine | 1 +
-> >  arch/um/Kconfig           | 4 +---
-> >  kernel/dma/Kconfig        | 3 +++
-> >  4 files changed, 6 insertions(+), 6 deletions(-)
+> > No, that is the wrong check - we want to make sure the address
+> > space override doesn't leak to userspace.  The problem is that
+> > armnommu (and m68knommu, but that doesn't call the offending
+> > function) pretends to not have a kernel address space, which doesn't
+> > really work.  Here is the fix I sent out yesterday, which I should
+> > have Cc'ed you on, sorry:
 > > 
-> > diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-> > index 6ad6cdac74b3dc..8e488369a7e55a 100644
-> > --- a/arch/m68k/Kconfig
-> > +++ b/arch/m68k/Kconfig
-> > @@ -17,6 +17,7 @@ config M68K
-> >  	select HAVE_COPY_THREAD_TLS
-> >  	select GENERIC_IRQ_SHOW
-> >  	select GENERIC_ATOMIC64
-> > +	select NO_DMA if !MMU && !COLDFIRE
-> >  	select HAVE_UID16
-> >  	select VIRT_TO_BUS
-> >  	select ARCH_HAVE_NMI_SAFE_CMPXCHG if RMW_INSNS
-> > @@ -60,9 +61,6 @@ config TIME_LOW_RES
-> >  config NO_IOPORT_MAP
-> >  	def_bool y
-> >  
-> > -config NO_DMA
-> > -	def_bool (MMU && SUN3) || (!MMU && !COLDFIRE)
-> > -
-> >  config ZONE_DMA
-> >  	bool
-> >  	default y
-> > diff --git a/arch/m68k/Kconfig.machine b/arch/m68k/Kconfig.machine
-> > index a82651d58af483..17e8c3a292d770 100644
-> > --- a/arch/m68k/Kconfig.machine
-> > +++ b/arch/m68k/Kconfig.machine
-> > @@ -126,6 +126,7 @@ config SUN3
-> >  	depends on MMU
-> >  	depends on !MMU_MOTOROLA
-> >  	select MMU_SUN3 if MMU
-> > +	select NO_DMA
-> >  	select M68020
-> >  	help
-> >  	  This option enables support for the Sun 3 series of workstations
-> > diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-> > index 9318dc6d1a0cee..32c1d1945033ec 100644
-> > --- a/arch/um/Kconfig
-> > +++ b/arch/um/Kconfig
-> > @@ -15,6 +15,7 @@ config UML
-> >  	select HAVE_DEBUG_KMEMLEAK
-> >  	select HAVE_DEBUG_BUGVERBOSE
-> >  	select HAVE_COPY_THREAD_TLS
-> > +	select NO_DMA
-> >  	select GENERIC_IRQ_SHOW
-> >  	select GENERIC_CPU_DEVICES
-> >  	select GENERIC_CLOCKEVENTS
-> > @@ -168,9 +169,6 @@ config MMAPPER
-> >  	  This driver allows a host file to be used as emulated IO memory inside
-> >  	  UML.
-> >  
-> > -config NO_DMA
-> > -	def_bool y
-> > -
-> >  config PGTABLE_LEVELS
-> >  	int
-> >  	default 3 if 3_LEVEL_PGTABLES
-> > diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-> > index 1da3f44f2565b4..57533d07676f4a 100644
-> > --- a/kernel/dma/Kconfig
-> > +++ b/kernel/dma/Kconfig
-> > @@ -1,5 +1,8 @@
-> >  # SPDX-License-Identifier: GPL-2.0-only
-> >  
-> > +config NO_DMA
-> > +	bool
-> > +
-> >  config HAS_DMA
-> >  	bool
-> >  	depends on !NO_DMA
-> > -- 
-> > 2.26.2
 > 
-> This patch is outside the scope of what I can accept in arch/sh, and
-> the subsequent patches in the series seem to depend on it. What would
-> you like to do for its path upstream?
-> 
-> I've now picked up everything else from this series that I can.
+> The patch below makes sense, and it does work, but I still suspect
+> that something with your original patch is wrong, or at least suspicious.
+> Reason: My change above (Adding the "!") works for _all_ of my arm boot
+> tests. Or, in other words, it doesn't make a difference if true
+> or false is passed as first parameter of CHECK_DATA_CORRUPTION(), except
+> for nommu systems. Also, unless I am really missing something, your
+> original patch _does_ reverse the logic.
 
-As the dma-mapping maintainer:  please pick it.  I'd give you an
-ACK, but that looks kinda silly if I'm the author as well :)
+Well.  segment_eq is in current mainline used in two places:
+
+ 1) to implement uaccess_kernel
+ 2) in addr_limit_user_check to implement uaccess_kernel-like
+    semantics using a strange reverse notation
+
+I think the explanation for your observation is how addr_limit_user_check
+is called on arm.  The addr_limit_check_failed wrapper for it is called
+from assembly code, but only after already checking the addr_limit,
+basically duplicating the segment_eq check.  So for mmu builds it won't
+get called unless we leak the kernel address space override, which
+is a pretty fatal error and won't show up in your boot tests.  The
+only good way to test it is by explicit injecting it using the
+lkdtm module.
