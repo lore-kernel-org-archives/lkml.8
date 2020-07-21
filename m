@@ -2,268 +2,124 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0803DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED15CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB41E2065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D552065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:57:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ky0tE6Ci"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ss+c31OQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgGUCz3 (ORCPT
+        id S1727963AbgGUC5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:55:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28965 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725857AbgGUCz3 (ORCPT
+        Mon, 20 Jul 2020 22:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgGUC5Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 22:55:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595300126;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JXh/i4aInkeAl0NqfGmxtw190hhmzEouMf/Y9pA3nLk=;
-        b=Ky0tE6CiUhbj64GeoSwPVHddWL4AWdswiOPsf0tWCkw7ouPijdure6wU1GDVA33IlD/p7B
-        BpOehDTeAeDX8p0FTMK9UUlxVt90ACt10pouzrQLtMTTOwrbah9kpHi6E5+YYCM6w24Px8
-        WxDlMlI/B9ISAf9Sz9+k8zDJldcvcOI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-18-wZoNI2mWMjqrborKyHnwGQ-1; Mon, 20 Jul 2020 22:55:24 -0400
-X-MC-Unique: wZoNI2mWMjqrborKyHnwGQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B136E1005504;
-        Tue, 21 Jul 2020 02:55:23 +0000 (UTC)
-Received: from [10.72.13.146] (ovpn-13-146.pek2.redhat.com [10.72.13.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EC1F85D9CA;
-        Tue, 21 Jul 2020 02:55:17 +0000 (UTC)
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-To:     =?UTF-8?Q?Eugenio_P=c3=a9rez?= <eperezma@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com>
- <419cc689-adae-7ba4-fe22-577b3986688c@redhat.com>
- <CAJaqyWedEg9TBkH1MxGP1AecYHD-e-=ugJ6XUN+CWb=rQGf49g@mail.gmail.com>
- <0a83aa03-8e3c-1271-82f5-4c07931edea3@redhat.com>
- <CAJaqyWeqF-KjFnXDWXJ2M3Hw3eQeCEE2-7p1KMLmMetMTm22DQ@mail.gmail.com>
- <20200709133438-mutt-send-email-mst@kernel.org>
- <7dec8cc2-152c-83f4-aa45-8ef9c6aca56d@redhat.com>
- <CAJaqyWdLOH2EceTUduKYXCQUUNo1XQ1tLgjYHTBGhtdhBPHn_Q@mail.gmail.com>
- <20200710015615-mutt-send-email-mst@kernel.org>
- <CAJaqyWf1skGxrjuT9GLr6dtgd-433y-rCkbtStLHaAs2W2jYXA@mail.gmail.com>
- <20200720051410-mutt-send-email-mst@kernel.org>
- <d4e29f0451f7551ee3a408ecfa40de2de2b8aa75.camel@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <a7831eac-6db7-f932-85bc-bbd731a89335@redhat.com>
-Date:   Tue, 21 Jul 2020 10:55:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 22:57:25 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3F8DC061794;
+        Mon, 20 Jul 2020 19:57:24 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id w9so6005167ejc.8;
+        Mon, 20 Jul 2020 19:57:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k3JdCJR2g5rc0/sk91yNgBSkmWQJyhTVgrDHkUGVHjw=;
+        b=Ss+c31OQAohgVfaRucUoILyjm6J/RThUhKr6ofrstPJujUivtlfDotidMEUMZKHB+0
+         6Wd6QUhcvkfDapbavhErmJ80xEwYbu9YZytMwRbP3eIdEmtSgbBxJUO3oPmjUHf9Ni8f
+         27bk0w+qnBMTTEKloJighsCyGrB0kBIe/tJh8WlNOo5GaoaYyVSaMRJ2vt5Q8APzYigr
+         AXzCk+Y704447zXoZzuMh+A90Z5uB7ZVUSMz2YbKXDFDObY4VJkICExQraK7UJVYlCtj
+         OdyImGMjFLv1Vl5UrvH9yK0dRDbbO/IC2odAOVT4JoaadEul+SqJy2UkDNLexg7REcBO
+         GxWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k3JdCJR2g5rc0/sk91yNgBSkmWQJyhTVgrDHkUGVHjw=;
+        b=T70sxmGq6tgpYOpn/NRPRwfEvm2AtWVeJeSYUKRjLide9F6sFsKSQN6DE3cUkMgfVQ
+         xzFqFjYS1czz66WiD1/0lwvuNYduekWf324n3HtrIR7hTlt0OJ6n+CERQLT/YA0BAbGp
+         NDwoicXS2Q4vrZV0ykbOSElo9tOng5YY91Um1sAiT6hS2COegp8QDinM3OEDaf7itnQf
+         DcaQS2+jc4XEitOHuaGzN+eiB8k4GsGNxQwwdrFZldy3OzIuN3XHoGxHqa95KRU8pTJn
+         rzHd5lXnyj6s6aftpglGMDDa0uG8WDfgvy+e783CI3SCuGeuW70pW/YR4351KcRvhnpR
+         FnKA==
+X-Gm-Message-State: AOAM531W14eRiMuAKmzjJi7z4PpOD+uw5ImyDA1HtolikcPJ+NIjBWCx
+        YpyfnbjNUPsTcZ08kXYnrZ+KUiiEji8DrjBovOU=
+X-Google-Smtp-Source: ABdhPJxwgJlH0PXNzdQwqlPRE5KW+3uZUS5mN2weS9bw8M9k15h4pa+fCzhaVK9NIYfSd8sazWjt2MCDtc2a5bKHZ9o=
+X-Received: by 2002:a17:906:494a:: with SMTP id f10mr24210363ejt.428.1595300243613;
+ Mon, 20 Jul 2020 19:57:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d4e29f0451f7551ee3a408ecfa40de2de2b8aa75.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200707184125.15114-1-khsieh@codeaurora.org> <159527632812.1987609.6364896740387949838@swboyd.mtv.corp.google.com>
+ <91a8eef836c1939cb57942c6fdcf2772@codeaurora.org> <159528794676.3847286.1584696687662833591@swboyd.mtv.corp.google.com>
+In-Reply-To: <159528794676.3847286.1584696687662833591@swboyd.mtv.corp.google.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 20 Jul 2020 19:57:59 -0700
+Message-ID: <CAF6AEGs0+=tpOWtY0kUc=Vt7EdEEwQjEffMXxFtDo142gRYRhQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/dp: Add DP compliance tests on Snapdragon Chipsets
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     khsieh@codeaurora.org, Sean Paul <sean@poorly.run>,
+        Tanmay Shah <tanmay@codeaurora.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        aravindh@codeaurora.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 20, 2020 at 4:32 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting khsieh@codeaurora.org (2020-07-20 15:48:13)
+> > On 2020-07-20 13:18, Stephen Boyd wrote:
+> > > Quoting Kuogee Hsieh (2020-07-07 11:41:25)
+> > >>  drivers/gpu/drm/msm/dp/dp_power.c           |  32 +-
+> > >>  drivers/gpu/drm/msm/dp/dp_power.h           |   1 +
+> > >>  drivers/gpu/drm/msm/dp/dp_reg.h             |   1 +
+> > >>  17 files changed, 861 insertions(+), 424 deletions(-)
+> > >
+> > > It seems to spread various changes throughout the DP bits and only has
+> > > a
+> > > short description about what's changing. Given that the series above
+> > > isn't merged it would be better to get rid of this change and make the
+> > > changes in the patches that introduce these files.
+> > >
+> >
+> > Yes, the base DP driver is not yet merged as its still in reviews and
+> > has been for a while.
+> > While it is being reviewed, different developers are working on
+> > different aspects of DP such as base DP driver, DP compliance, audio etc
+> > to keep things going in parallel.
+> > To maintain the authorship of the different developers, we prefer having
+> > them as separate changes and not merge them.
+> > We can make all these changes as part of the same series if that shall
+> > help to keep things together but would prefer the changes themselves to
+> > be separate.
+> > Please consider this and let us know if that works.
+> >
+>
+> I'm not the maintainer here so it's not really up to me, but this is why
+> we have the Co-developed-by tag, to show that multiple people worked on
+> some patch. The patch is supposed to logically stand on its own
+> regardless of how many people worked on it. Authorship is a single
+> person but the Co-developed-by tag helps express that more than one
+> person is the actual author of the patch. Can you use that tag instead
+> and then squash this into the other DP patches?
 
-On 2020/7/20 下午7:16, Eugenio Pérez wrote:
-> On Mon, Jul 20, 2020 at 11:27 AM Michael S. Tsirkin <mst@redhat.com> wrote:
->> On Thu, Jul 16, 2020 at 07:16:27PM +0200, Eugenio Perez Martin wrote:
->>> On Fri, Jul 10, 2020 at 7:58 AM Michael S. Tsirkin <mst@redhat.com> wrote:
->>>> On Fri, Jul 10, 2020 at 07:39:26AM +0200, Eugenio Perez Martin wrote:
->>>>>>> How about playing with the batch size? Make it a mod parameter instead
->>>>>>> of the hard coded 64, and measure for all values 1 to 64 ...
->>>>>> Right, according to the test result, 64 seems to be too aggressive in
->>>>>> the case of TX.
->>>>>>
->>>>> Got it, thanks both!
->>>> In particular I wonder whether with batch size 1
->>>> we get same performance as without batching
->>>> (would indicate 64 is too aggressive)
->>>> or not (would indicate one of the code changes
->>>> affects performance in an unexpected way).
->>>>
->>>> --
->>>> MST
->>>>
->>> Hi!
->>>
->>> Varying batch_size as drivers/vhost/net.c:VHOST_NET_BATCH,
->> sorry this is not what I meant.
->>
->> I mean something like this:
->>
->>
->> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
->> index 0b509be8d7b1..b94680e5721d 100644
->> --- a/drivers/vhost/net.c
->> +++ b/drivers/vhost/net.c
->> @@ -1279,6 +1279,10 @@ static void handle_rx_net(struct vhost_work *work)
->>          handle_rx(net);
->>   }
->>
->> +MODULE_PARM_DESC(batch_num, "Number of batched descriptors. (offset from 64)");
->> +module_param(batch_num, int, 0644);
->> +static int batch_num = 0;
->> +
->>   static int vhost_net_open(struct inode *inode, struct file *f)
->>   {
->>          struct vhost_net *n;
->> @@ -1333,7 +1337,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
->>                  vhost_net_buf_init(&n->vqs[i].rxq);
->>          }
->>          vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
->> -                      UIO_MAXIOV + VHOST_NET_BATCH,
->> +                      UIO_MAXIOV + VHOST_NET_BATCH + batch_num,
->>                         VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT, true,
->>                         NULL);
->>
->>
->> then you can try tweaking batching and playing with mod parameter without
->> recompiling.
->>
->>
->> VHOST_NET_BATCH affects lots of other things.
->>
-> Ok, got it. Since they were aligned from the start, I thought it was a good idea to maintain them in-sync.
->
->>> and testing
->>> the pps as previous mail says. This means that we have either only
->>> vhost_net batching (in base testing, like previously to apply this
->>> patch) or both batching sizes the same.
->>>
->>> I've checked that vhost process (and pktgen) goes 100% cpu also.
->>>
->>> For tx: Batching decrements always the performance, in all cases. Not
->>> sure why bufapi made things better the last time.
->>>
->>> Batching makes improvements until 64 bufs, I see increments of pps but like 1%.
->>>
->>> For rx: Batching always improves performance. It seems that if we
->>> batch little, bufapi decreases performance, but beyond 64, bufapi is
->>> much better. The bufapi version keeps improving until I set a batching
->>> of 1024. So I guess it is super good to have a bunch of buffers to
->>> receive.
->>>
->>> Since with this test I cannot disable event_idx or things like that,
->>> what would be the next step for testing?
->>>
->>> Thanks!
->>>
->>> --
->>> Results:
->>> # Buf size: 1,16,32,64,128,256,512
->>>
->>> # Tx
->>> # ===
->>> # Base
->>> 2293304.308,3396057.769,3540860.615,3636056.077,3332950.846,3694276.154,3689820
->>> # Batch
->>> 2286723.857,3307191.643,3400346.571,3452527.786,3460766.857,3431042.5,3440722.286
->>> # Batch + Bufapi
->>> 2257970.769,3151268.385,3260150.538,3379383.846,3424028.846,3433384.308,3385635.231,3406554.538
->>>
->>> # Rx
->>> # ==
->>> # pktgen results (pps)
->>> 1223275,1668868,1728794,1769261,1808574,1837252,1846436
->>> 1456924,1797901,1831234,1868746,1877508,1931598,1936402
->>> 1368923,1719716,1794373,1865170,1884803,1916021,1975160
->>>
->>> # Testpmd pps results
->>> 1222698.143,1670604,1731040.6,1769218,1811206,1839308.75,1848478.75
->>> 1450140.5,1799985.75,1834089.75,1871290,1880005.5,1934147.25,1939034
->>> 1370621,1721858,1796287.75,1866618.5,1885466.5,1918670.75,1976173.5,1988760.75,1978316
->>>
->>> pktgen was run again for rx with 1024 and 2048 buf size, giving
->>> 1988760.75 and 1978316 pps. Testpmd goes the same way.
->> Don't really understand what does this data mean.
->> Which number of descs is batched for each run?
->>
-> Sorry, I should have explained better. I will expand here, but feel free to skip it since we are going to discard the
-> data anyway. Or to propose a better way to tell them.
->
-> Is a CSV with the values I've obtained, in pps, from pktgen and testpmd. This way is easy to plot them.
->
-> Maybe is easier as tables, if mail readers/gmail does not misalign them.
->
->>> # Tx
->>> # ===
-> Base: With the previous code, not integrating any patch. testpmd is txonly mode, tap interface is XDP_DROP everything.
-> We vary VHOST_NET_BATCH (1, 16, 32, ...). As Jason put in a previous mail:
->
-> TX: testpmd(txonly) -> virtio-user -> vhost_net -> XDP_DROP on TAP
->
->
->       1     |     16     |     32     |     64     |     128    |    256     |   512  |
-> 2293304.308| 3396057.769| 3540860.615| 3636056.077| 3332950.846| 3694276.154| 3689820|
->
-> If we add the batching part of the series, but not the bufapi:
->
->        1     |     16     |     32     |     64     |     128    |    256    |     512    |
-> 2286723.857 | 3307191.643| 3400346.571| 3452527.786| 3460766.857| 3431042.5 | 3440722.286|
->
-> And if we add the bufapi part, i.e., all the series:
->
->        1    |     16     |     32     |     64     |     128    |     256    |     512    |    1024
-> 2257970.769| 3151268.385| 3260150.538| 3379383.846| 3424028.846| 3433384.308| 3385635.231| 3406554.538
->
-> For easier treatment, all in the same table:
->
->       1      |     16      |     32      |      64     |     128     |    256      |   512      |    1024
-> ------------+-------------+-------------+-------------+-------------+-------------+------------+------------
-> 2293304.308 | 3396057.769 | 3540860.615 | 3636056.077 | 3332950.846 | 3694276.154 | 3689820    |
-> 2286723.857 | 3307191.643 | 3400346.571 | 3452527.786 | 3460766.857 | 3431042.5   | 3440722.286|
-> 2257970.769 | 3151268.385 | 3260150.538 | 3379383.846 | 3424028.846 | 3433384.308 | 3385635.231| 3406554.538
->   
->>> # Rx
->>> # ==
-> The rx tests are done with pktgen injecting packets in tap interface, and testpmd in rxonly forward mode. Again, each
-> column is a different value of VHOST_NET_BATCH, and each row is base, +batching, and +buf_api:
->
->>> # pktgen results (pps)
-> (Didn't record extreme cases like >512 bufs batching)
->
->     1   |   16   |   32   |   64   |   128  |  256   |   512
-> -------+--------+--------+--------+--------+--------+--------
-> 1223275| 1668868| 1728794| 1769261| 1808574| 1837252| 1846436
-> 1456924| 1797901| 1831234| 1868746| 1877508| 1931598| 1936402
-> 1368923| 1719716| 1794373| 1865170| 1884803| 1916021| 1975160
->
->>> # Testpmd pps results
->        1     |     16     |     32     |     64    |    128    |    256     |    512     |    1024    |   2048
-> ------------+------------+------------+-----------+-----------+------------+------------+------------+---------
-> 1222698.143 | 1670604    | 1731040.6  | 1769218   | 1811206   | 1839308.75 | 1848478.75 |
-> 1450140.5   | 1799985.75 | 1834089.75 | 1871290   | 1880005.5 | 1934147.25 | 1939034    |
-> 1370621     | 1721858    | 1796287.75 | 1866618.5 | 1885466.5 | 1918670.75 | 1976173.5  | 1988760.75 | 1978316
->
-> The last extreme cases (>512 bufs batched) were recorded just for the bufapi case.
->
-> Does that make sense now?
->
-> Thanks!
+The dpu mega-patches are hard enough to review already.. I'd really
+appreciated it if the dpu dev's sort out some way to squash later
+fixups into earlier patches
 
-
-I wonder why we saw huge difference between TX and RX pps. Have you used 
-samples/pktgen/XXX for doing the test? Maybe you can paste the perf 
-record result for the pktgen thread + vhost thread.
-
-Thanks
-
-
->
-
+BR,
+-R
