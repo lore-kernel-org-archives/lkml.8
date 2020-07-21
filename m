@@ -2,175 +2,211 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B63CC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2A6A2176B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 752222077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:50:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tNxrJ+Kl"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Zs/uCH9I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgGUDtE (ORCPT
+        id S1728696AbgGUDuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:49:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbgGUDtE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 23:49:04 -0400
-Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDCACC0619D5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 20:49:03 -0700 (PDT)
-Received: by mail-pj1-x1049.google.com with SMTP id g16so1264872pjz.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 20:49:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=QiCOPTdHtVnOLm15Y/Cz20pA21X9TMtA2pR2z4md9lo=;
-        b=tNxrJ+KllDNXwxWQ2HoyP2KxFE/BSEI/v7hxga99iGHXZK16YqgkA8pcbVj1dR9giu
-         C9HrKLiUgebouTwhY8JXIRWV80P++OU4qe/b/GOWUn3ACTXmsERsf10B7Z4uyMIA0CAC
-         /QAAR+vkMWE2FiYIdcW7Clyiz206mMm3UQjFANrBh1oXQKF0EwrDYnEv3mYnf/kwjDwE
-         KDvYmnKa6T7LeVonZtcqdFcRKb7PXlBV+7UUhyGjxDREMKGecAclR0AYXkguPw4jrDoB
-         rVBol/7DRB53X82zJ1zfOGA4R11UtKsM5Nx3fd4MbChLagkuXvVq/0msgJzSZ5zhwgYF
-         Ao+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=QiCOPTdHtVnOLm15Y/Cz20pA21X9TMtA2pR2z4md9lo=;
-        b=t1SId2k9PDu/oGbX1mP0UURYA6/ErfdB43meROf1DskAynAr7R4xWrkYPVqyVbVU3w
-         RwAC/Z5G25ukqbCXOeaTJnBm7kVQJXpqRRjAiWM3uvJdRIAb0L6+6AFMn16DJ77Yi0cL
-         MiTSa0kOpjDL70b04NFcSyrmZ5sbjNJ0oVzdiJaOmEYbE/09MUFlelAWj3xiRt6UQdM3
-         LSU113p1veZ08uYPFd+3SRUN9sKy68s36mR/692/nhdhXz3yJpJzUoW8bbJiU1oiv+/p
-         bqi7fA5QK7asEbvxXNXN3P6mVdH/W/svg9WMf2/1alyVv8pL0qotVSY4pHouaVc+ihix
-         KLnw==
-X-Gm-Message-State: AOAM530+zIBNesd0LmwoDPrJYsBxWYfU3efnbrqHOZVuEM9R9eEM+51B
-        bpI55xaqlI4FDVp3/6Atu4t/hk+cZlAjMOpz
-X-Google-Smtp-Source: ABdhPJxJoUCRL6gWg6LmKT6xovHFcxogZjFxn8JTOUkAXawpuLN2UVPWIOz/CCCKWeObinh+IyDQ0da0+i/ORVzj
-X-Received: by 2002:a17:90a:db48:: with SMTP id u8mr2383575pjx.169.1595303343349;
- Mon, 20 Jul 2020 20:49:03 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 03:49:00 +0000
-Message-Id: <20200721034900.2055889-1-linchuyuan@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
-Subject: [PATCH v3] hwmon: adm1272: Enable temperature sampling for adm1272 adm1278
-From:   Chu Lin <linchuyuan@google.com>
-To:     linux@roeck-us.net, jdelvare@suse.com
-Cc:     belgaied@google.com, jasonling@google.com, linchuyuan@google.com,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        zhongqil@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 20 Jul 2020 23:50:08 -0400
+Received: from mail-eopbgr1320137.outbound.protection.outlook.com ([40.107.132.137]:33056
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726389AbgGUDuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 23:50:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JFKhC8cKJgW4SZ40F7jsNj/QprOk3Ffp3csGQk4Pom7t83asqjaxUFPQeHwXrm6olTmcDeC5tVb9sFMFbyiRpzFh+HNNtKWKjbCHv9d4d+tzBU8nDxx4LEgSi/Ry9+85gKRKiS0ngkQnwusgGAbEpEqVCKQYVYLyGZ7LExXR9DlLCva/9YRYCFhiskoV7HAQRrxlXIpmm7qhtPhdV9khiqtj57By6n3Ay5b7bCasa7qZHKQ0iGf3OIPsoud/ZY/JGgICPCI4UfNum+7tX/Ug8tPufijOYThLiZBzP6yoJh4OksTXHhERcIyvYDPec58WcufQkLSGf4dNRmyvGIiEsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jukI3T1SdY7BD63o/7jL2tkXfaWvYnjmuXJh8IayEhk=;
+ b=Ft+X9ipzlRTzlwsGXSu87RRpD9fwlN2kNRGopzMXIz5NEdA9eW5CXT2VVgMFeRgZ8bhqdKWNhNZaGuI1ogMsfbt7pRjOJBxqDfW60Cmut0HEamGyVM2Ikp8TAewtFBbxqD0Q6hBvxnn54KT5/xvj53AHgKnIDCdYwtWR6cQytWXxJtr6YKsaeeGNkyvekJh9cB+8ns+bx6mUwHRK2i0yfoNBKDAfkfQFh65Lq+zHcVPB7M91TZ0uIQw+Ntd/a9tbkqggQi3dGhzMIA58+Yd8qUpRntqnihFho9VgOvuO/vIKPnH7jqtk5loy1ENQHKj14ClrgPWj9RQdCBi600CyYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jukI3T1SdY7BD63o/7jL2tkXfaWvYnjmuXJh8IayEhk=;
+ b=Zs/uCH9IBy9l1fvqM36yooySs2gpODrjAkii8Fs4K9z6zQXgQuUlUBl4L5uK55nV0mlf8ul9B5QpABLX9ahLJ+xdhbRRkzGHdWx8WGFdf63QJBgaIoXAuk1wFKT+CpMeVbJRpV/1SPtXgk0qBCLilJ0Oy3yHQpf6U3EXcAF/+sc=
+Received: from HK0P153MB0275.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::14)
+ by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (2603:1096:203:1a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.7; Tue, 21 Jul
+ 2020 03:50:01 +0000
+Received: from HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
+ ([fe80::b5ca:82a1:cb67:52e]) by HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
+ ([fe80::b5ca:82a1:cb67:52e%6]) with mapi id 15.20.3216.020; Tue, 21 Jul 2020
+ 03:50:01 +0000
+From:   Chi Song <Song.Chi@microsoft.com>
+To:     David Miller <davem@davemloft.net>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "kuba@kernel.org" <kuba@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 net-next] net: hyperv: Add attributes to show TX
+ indirection table
+Thread-Topic: [PATCH v5 net-next] net: hyperv: Add attributes to show TX
+ indirection table
+Thread-Index: AdZfEcPKGd7xulNnRpunpA+7DCPz/w==
+Date:   Tue, 21 Jul 2020 03:50:00 +0000
+Message-ID: <HK0P153MB0275B7FFBA43843CC7B1EABB98780@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-21T03:49:59Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=22e5ad65-f8db-4b06-8dee-ceac40c0f86e;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [2404:f801:8050:1:b1ce:4ac6:46d:28d5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 633fa444-b542-4431-c02a-08d82d29250e
+x-ms-traffictypediagnostic: HK0P153MB0148:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK0P153MB0148A4FBA108CF04213DF7C398780@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:1417;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9DTL0mUykFlI/Vj/kzavtYpIQlRWlqr4Lu+oAR3FYC1TG13vhu+2f2dD7zABoeSi874y25GbPOMEDZtNINUG20PW80Bq5PVV/70h2Rgc2Yo78z5nis2oOZFuVOTbHVSMtQOy4u2S6GHpphf+B8cKUiBRcq/PuYMWoXKD76VIKNdDrV0a8x5vCA+32nooy8DEzSzfIqSm6B4R2UTzWiPyn/4BxO9VZQa7Cb4XTb27Z5buW0HP+JiFklUfIGXFP0GXrw/SlDjSCgul8mZJr8t29veOX4nZIMnpFsQ7nmq/WPSSe/waL8dhDI2boFzjdm2iTvRoTu9iXjieiO8wh86SUg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0275.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(376002)(136003)(346002)(86362001)(33656002)(76116006)(82960400001)(83380400001)(52536014)(82950400001)(5660300002)(66946007)(66476007)(66556008)(64756008)(66446008)(9686003)(55016002)(10290500003)(7696005)(316002)(4326008)(8676002)(2906002)(186003)(54906003)(8990500004)(110136005)(6506007)(71200400001)(478600001)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: xmzDA8bWly9Z9V+6mkMh1oOj0FE4BKlJtbUy84UtfN+Emu1l2sX18mjXbEUx696NTwTjhw+t34I0QW8fZmk360xMletuHbbW6kyKyHQHINxL/M18ceg4sK56MO69LQHgwWzt2VpDyomw5APaVVBmKBwZuxAuTzLzmQTwkI7kxDrUy57HCNkGe/sZ9SdF/ZKNELyKNz9q7kjvusLhm/mdIakqQCGxC2hjgCvQ5zvR8Z8Li8NGLSO3Kzpu07pUOZYLPfZpFLScGMAUKXSAq+hrGJfaZDE+Y52KZDyVSHcIPPrR21PXHHqZprWxWEQ29A2xwro3tjh+i+3et8PUfJgjvSVv4JSlya7gWu007TdTgVGwlnn7X87+IBujOfJELaEmohp85GXsopYixoKavS9bn03TAYQ6jVwL4RuLvYJ0cqa7rnKo2FggdPEvwNYRUlouSHQOWRsg4P36H9ZQoV/YRv9jt802GcN6/HjgKuv2yYy9V2fjp1KzWOHfn2XKIsPNONuR18CpV0lpdWnqSNNNXgDrE6nb5Y+Ns1PNHE7NS1M=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 633fa444-b542-4431-c02a-08d82d29250e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 03:50:00.7160
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GIR9a5lUtX6/jy+hz5/zkDQdjLgjUIJz5WqJmtNgwObOQhWNp8g5nhTKNkSLqaSfv06mhL1MhyuTXI4F35BXXg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Problem:
-	adm1272 and adm1278 supports temperature sampling. The
-current way of enabling it requires the user manually unbind the device
-from the driver, flip the temperature sampling control bit and then bind
-the device back to the driver. It would be nice if we can control this in a
-better way by reading the dt.
+An imbalanced TX indirection table causes netvsc to have low
+performance. This table is created and managed during runtime. To help
+better diagnose performance issues caused by imbalanced tables, add
+device attributes to show the content of TX indirection tables.
 
-Solution:
-	Introducing device tree binding analog,temp1-enable. If the
-flag is set, flip the temp1_en control bit on probing.
-
-Testing:
-1). iotools smbus_write16 35 0x10 0xd4 0x0037 // disable the temp1_en
-2). recompile the dt to have  analog,temp1-enable set
-3). Probe the driver and make sure tempX shows up in hwmon
-
-Signed-off-by: Chu Lin <linchuyuan@google.com>
+Signed-off-by: Chi Song <chisong@microsoft.com>
 ---
-ChangeLog v1->v2:
- - Rename adm1272-adm1278-temp1-en to analog-temperature1-enable
+v4: use a separated group to organize tx_indirection better, change=20
+ location of attributes init/exit to netvsc_drv_init/exit
+v5: update variable orders.
 
-ChangeLog v2->v3:
- - Rename analog-temperature1-enable analog,temp1-enable
+ drivers/net/hyperv/netvsc_drv.c | 49 +++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
- drivers/hwmon/pmbus/adm1275.c | 36 +++++++++++++++++++++--------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-index 19317575d1c6..0482670281bd 100644
---- a/drivers/hwmon/pmbus/adm1275.c
-+++ b/drivers/hwmon/pmbus/adm1275.c
-@@ -475,6 +475,7 @@ static int adm1275_probe(struct i2c_client *client,
- 	const struct coefficients *coefficients;
- 	int vindex = -1, voindex = -1, cindex = -1, pindex = -1;
- 	int tindex = -1;
-+	bool temp1_en;
- 	u32 shunt;
- 
- 	if (!i2c_check_functionality(client->adapter,
-@@ -536,6 +537,9 @@ static int adm1275_probe(struct i2c_client *client,
- 	if (shunt == 0)
- 		return -EINVAL;
- 
-+	temp1_en = of_property_read_bool(client->dev.of_node, "analog,temp1-enable") &&
-+		(mid->driver_data == adm1272 || mid->driver_data == adm1278);
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_dr=
+v.c
+index 6267f706e8ee..a1e009edd37e 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -2370,6 +2370,51 @@ static int netvsc_unregister_vf(struct net_device *v=
+f_netdev)
+ 	return NOTIFY_OK;
+ }
+=20
++static struct device_attribute dev_attr_netvsc_dev_attrs[VRSS_SEND_TAB_SIZ=
+E];
++static struct attribute *netvsc_dev_attrs[VRSS_SEND_TAB_SIZE + 1];
 +
- 	data->id = mid->driver_data;
- 
- 	info = &data->info;
-@@ -614,16 +618,18 @@ static int adm1275_probe(struct i2c_client *client,
- 		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
- 			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
- 
-+		ret = config;
-+		/* Enable temp if it is instructed by dt (it is disabled by default) */
-+		if (temp1_en && !(config & ADM1278_TEMP1_EN))
-+			config |= ADM1278_TEMP1_EN;
- 		/* Enable VOUT if not enabled (it is disabled by default) */
--		if (!(config & ADM1278_VOUT_EN)) {
-+		if (!(config & ADM1278_VOUT_EN))
- 			config |= ADM1278_VOUT_EN;
--			ret = i2c_smbus_write_byte_data(client,
--							ADM1275_PMON_CONFIG,
--							config);
-+		if (ret != config) {
-+			ret = i2c_smbus_write_word_data(client, ADM1275_PMON_CONFIG, config);
- 			if (ret < 0) {
--				dev_err(&client->dev,
--					"Failed to enable VOUT monitoring\n");
--				return -ENODEV;
-+				dev_err(&client->dev, "Failed to enable config control bits");
-+				return ret;
- 			}
- 		}
- 
-@@ -685,16 +691,18 @@ static int adm1275_probe(struct i2c_client *client,
- 		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
- 			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
- 
-+		ret = config;
-+		/* Enable temp if it is instructed by dt (it is disabled by default) */
-+		if (temp1_en && !(config & ADM1278_TEMP1_EN))
-+			config |= ADM1278_TEMP1_EN;
- 		/* Enable VOUT if not enabled (it is disabled by default) */
--		if (!(config & ADM1278_VOUT_EN)) {
-+		if (!(config & ADM1278_VOUT_EN))
- 			config |= ADM1278_VOUT_EN;
--			ret = i2c_smbus_write_byte_data(client,
--							ADM1275_PMON_CONFIG,
--							config);
-+		if (ret != config) {
-+			ret = i2c_smbus_write_word_data(client, ADM1275_PMON_CONFIG, config);
- 			if (ret < 0) {
--				dev_err(&client->dev,
--					"Failed to enable VOUT monitoring\n");
--				return -ENODEV;
-+				dev_err(&client->dev, "Failed to enable config control bits");
-+				return ret;
- 			}
- 		}
- 
--- 
-2.28.0.rc0.105.gf9edc3c819-goog
-
++const struct attribute_group netvsc_dev_group =3D {
++	.name =3D "tx_indirection",
++	.attrs =3D netvsc_dev_attrs,
++};
++
++static ssize_t tx_indirection_show(struct device *dev,
++				   struct device_attribute *dev_attr, char *buf)
++{
++	int index =3D dev_attr - dev_attr_netvsc_dev_attrs;
++	struct net_device *ndev =3D to_net_dev(dev);
++	struct net_device_context *ndc =3D netdev_priv(ndev);
++
++	return sprintf(buf, "%u\n", ndc->tx_table[index]);
++}
++
++static void netvsc_attrs_init(void)
++{
++	char buffer[4];
++	int i;
++
++	for (i =3D 0; i < VRSS_SEND_TAB_SIZE; i++) {
++		sprintf(buffer, "%02u", i);
++		dev_attr_netvsc_dev_attrs[i].attr.name =3D
++			kstrdup(buffer, GFP_KERNEL);
++		dev_attr_netvsc_dev_attrs[i].attr.mode =3D 0444;
++		sysfs_attr_init(&dev_attr_netvsc_dev_attrs[i].attr);
++
++		dev_attr_netvsc_dev_attrs[i].show =3D tx_indirection_show;
++		dev_attr_netvsc_dev_attrs[i].store =3D NULL;
++		netvsc_dev_attrs[i] =3D &dev_attr_netvsc_dev_attrs[i].attr;
++	}
++	netvsc_dev_attrs[VRSS_SEND_TAB_SIZE] =3D NULL;
++}
++
++static void netvsc_attrs_exit(void)
++{
++	int i;
++
++	for (i =3D 0; i < VRSS_SEND_TAB_SIZE; i++)
++		kfree(dev_attr_netvsc_dev_attrs[i].attr.name);
++}
++
+ static int netvsc_probe(struct hv_device *dev,
+ 			const struct hv_vmbus_device_id *dev_id)
+ {
+@@ -2410,6 +2455,7 @@ static int netvsc_probe(struct hv_device *dev,
+=20
+ 	net->netdev_ops =3D &device_ops;
+ 	net->ethtool_ops =3D &ethtool_ops;
++	net->sysfs_groups[0] =3D &netvsc_dev_group;
+ 	SET_NETDEV_DEV(net, &dev->device);
+=20
+ 	/* We always need headroom for rndis header */
+@@ -2665,6 +2711,7 @@ static void __exit netvsc_drv_exit(void)
+ {
+ 	unregister_netdevice_notifier(&netvsc_netdev_notifier);
+ 	vmbus_driver_unregister(&netvsc_drv);
++	netvsc_attrs_exit();
+ }
+=20
+ static int __init netvsc_drv_init(void)
+@@ -2678,6 +2725,8 @@ static int __init netvsc_drv_init(void)
+ 	}
+ 	netvsc_ring_bytes =3D ring_size * PAGE_SIZE;
+=20
++	netvsc_attrs_init();
++
+ 	ret =3D vmbus_driver_register(&netvsc_drv);
+ 	if (ret)
+ 		return ret;
+--=20
+2.25.1
