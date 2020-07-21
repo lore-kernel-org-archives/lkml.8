@@ -2,169 +2,168 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41D5C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C420C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB05920792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7B522482
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:55:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="aa8+RFop"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbgGULzF (ORCPT
+        id S1729856AbgGULzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:55:05 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7810 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726266AbgGULzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:55:04 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DE71D5C1C5211E8B8AC4;
-        Tue, 21 Jul 2020 19:55:01 +0800 (CST)
-Received: from [127.0.0.1] (10.174.176.211) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Jul 2020
- 19:54:52 +0800
-Subject: Re: [PATCH] serial: 8250: fix null-ptr-deref in serial8250_start_tx()
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jslaby@suse.com>, Hanjun Guo <guohanjun@huawei.com>,
-        "Libin (Huawei)" <huawei.libin@huawei.com>
-References: <20200721143852.4058352-1-yangyingliang@huawei.com>
- <20200721104819.GA1678476@kroah.com>
-From:   Yang Yingliang <yangyingliang@huawei.com>
-Message-ID: <b0cbee3f-05cd-b15c-06db-68c223c9944c@huawei.com>
-Date:   Tue, 21 Jul 2020 19:54:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Jul 2020 07:55:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729706AbgGULzm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 07:55:42 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B76C0619D9
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:55:41 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id x9so23720799ljc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:55:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZVoINjtMGDezcJLO2Zg+Y+JYaakD+WyYlrSO3cxN39E=;
+        b=aa8+RFopvlFWXMkD7+eV+fIBRXzv4Pt8JGEJ+BqDGFG/TZB44jBsVKadLiKtcdiHUs
+         GjvioRKJDFK2KcgpW97MqhnlHEw5wGT2ZJr81d17irYkbtYW6hrYoaqc86vqEuV8bVHv
+         +0ll3jJCUvA5JGwtCDwRBYLNSwUeT11to9awVAssIUVG6T6jpsbIlKslyYevC6NaUOYq
+         zsUHn1oAvV+v21iA1LWrNBvpWQGugEoTI7qus5Yoy/tVf0gz2sNsgZ/jWS6Ua0/gAY4J
+         Z/gmVwA503RiPiefguw1iNJ4MYbmi5uhfDcMHDwLFBpt9HYD2G52+Ab+VxWjQSSUly0e
+         8oEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZVoINjtMGDezcJLO2Zg+Y+JYaakD+WyYlrSO3cxN39E=;
+        b=qxeAjuAB0Fq+RPfJFmO/AiPnT3BJIkQ9OWhX/u09qdiv7VIdOXdn+r5q3LUGCvPtz7
+         owCegDHmxztb0OYvE1sw6DpYw4mK7dsuc9m6ia8RAmwA4gup7RndkbNvp+ih8/hD9IFU
+         yu5Ay1V1NTYfUmNYzre1GNiP/aetn8dyMgm/ghh3qRofIevsyHy3sSmlEk2ZuRETZH9O
+         q2vjh9pz+glvvOEdqH3dcO79pZVw0OEofAP43ZsSznCVPpF7P5LYvay0wy1/7TqiTeg0
+         XaR9O0dJ/aHt79t4UKBGRs9FnwHMteS5L8wZFtgH1XsNYV5w9tiStaC+eb1VUJhpQIJ9
+         YMRA==
+X-Gm-Message-State: AOAM531/BR4EDjtQ9O26OIlckxXK9ZepUNhqMSEnIHRtKIV0o13BQWvO
+        pf9miVzkZSoZ0GIGg4+QNXVZsfqjnCcTm0lBG6Mr9MsCrvg=
+X-Google-Smtp-Source: ABdhPJweVCEg+lAlZfetbFPmgrzJZsHlsZaisRv/zVTnOsUHbVD1AwEcazd0D5dxzyF05L2c+g2C7U8SOV5JY9LHcn4=
+X-Received: by 2002:a2e:6f19:: with SMTP id k25mr13050134ljc.443.1595332539804;
+ Tue, 21 Jul 2020 04:55:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200721104819.GA1678476@kroah.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.174.176.211]
-X-CFilter-Loop: Reflected
+References: <20200721111007.hwwdveqxeqcry4wn@pesu.pes.edu> <0000000000001e30e105aaf1ce89@google.com>
+In-Reply-To: <0000000000001e30e105aaf1ce89@google.com>
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+Date:   Tue, 21 Jul 2020 17:25:28 +0530
+Message-ID: <CAAhDqq3uSnRMXE3Pn1PjLo+XKXruB7jqkJx70gCPd_=-HJD4Rw@mail.gmail.com>
+Subject: Re: WARNING in pvr2_i2c_core_done
+To:     syzbot <syzbot+e74a998ca8f1df9cc332@syzkaller.appspotmail.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Isely <isely@pobox.com>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/7/21 18:48, Greg KH wrote:
-> On Tue, Jul 21, 2020 at 02:38:52PM +0000, Yang Yingliang wrote:
->> I got null-ptr-deref in serial8250_start_tx():
->>
->> [   78.114630] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
->> [   78.123778] Mem abort info:
->> [   78.126560]   ESR = 0x86000007
->> [   78.129603]   EC = 0x21: IABT (current EL), IL = 32 bits
->> [   78.134891]   SET = 0, FnV = 0
->> [   78.137933]   EA = 0, S1PTW = 0
->> [   78.141064] user pgtable: 64k pages, 48-bit VAs, pgdp=00000027d41a8600
->> [   78.147562] [0000000000000000] pgd=00000027893f0003, p4d=00000027893f0003, pud=00000027893f0003, pmd=00000027c9a20003, pte=0000000000000000
->> [   78.160029] Internal error: Oops: 86000007 [#1] SMP
->> [   78.164886] Modules linked in: sunrpc vfat fat aes_ce_blk crypto_simd cryptd aes_ce_cipher crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce ses enclosure sg sbsa_gwdt ipmi_ssif spi_dw_mmio sch_fq_codel vhost_net tun vhost vhost_iotlb tap ip_tables ext4 mbcache jbd2 ahci hisi_sas_v3_hw libahci hisi_sas_main libsas hns3 scsi_transport_sas hclge libata megaraid_sas ipmi_si hnae3 ipmi_devintf ipmi_msghandler br_netfilter bridge stp llc nvme nvme_core xt_sctp sctp libcrc32c dm_mod nbd
->> [   78.207383] CPU: 11 PID: 23258 Comm: null-ptr Not tainted 5.8.0-rc6+ #48
->> [   78.214056] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V3.B210.01 03/12/2020
->> [   78.222888] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
->> [   78.228435] pc : 0x0
->> [   78.230618] lr : serial8250_start_tx+0x160/0x260
->> [   78.235215] sp : ffff800062eefb80
->> [   78.238517] x29: ffff800062eefb80 x28: 0000000000000fff
->> [   78.243807] x27: ffff800062eefd80 x26: ffff202fd83b3000
->> [   78.249098] x25: ffff800062eefd80 x24: ffff202fd83b3000
->> [   78.254388] x23: ffff002fc5e50be8 x22: 0000000000000002
->> [   78.259679] x21: 0000000000000001 x20: 0000000000000000
->> [   78.264969] x19: ffffa688827eecc8 x18: 0000000000000000
->> [   78.270259] x17: 0000000000000000 x16: 0000000000000000
->> [   78.275550] x15: ffffa68881bc67a8 x14: 00000000000002e6
->> [   78.280841] x13: ffffa68881bc67a8 x12: 000000000000c539
->> [   78.286131] x11: d37a6f4de9bd37a7 x10: ffffa68881cccff0
->> [   78.291421] x9 : ffffa68881bc6000 x8 : ffffa688819daa88
->> [   78.296711] x7 : ffffa688822a0f20 x6 : ffffa688819e0000
->> [   78.302002] x5 : ffff800062eef9d0 x4 : ffffa68881e707a8
->> [   78.307292] x3 : 0000000000000000 x2 : 0000000000000002
->> [   78.312582] x1 : 0000000000000001 x0 : ffffa688827eecc8
->> [   78.317873] Call trace:
->> [   78.320312]  0x0
->> [   78.322147]  __uart_start.isra.9+0x64/0x78
->> [   78.326229]  uart_start+0xb8/0x1c8
->> [   78.329620]  uart_flush_chars+0x24/0x30
->> [   78.333442]  n_tty_receive_buf_common+0x7b0/0xc30
->> [   78.338128]  n_tty_receive_buf+0x44/0x2c8
->> [   78.342122]  tty_ioctl+0x348/0x11f8
->> [   78.345599]  ksys_ioctl+0xd8/0xf8
->> [   78.348903]  __arm64_sys_ioctl+0x2c/0xc8
->> [   78.352812]  el0_svc_common.constprop.2+0x88/0x1b0
->> [   78.357583]  do_el0_svc+0x44/0xd0
->> [   78.360887]  el0_sync_handler+0x14c/0x1d0
->> [   78.364880]  el0_sync+0x140/0x180
->> [   78.368185] Code: bad PC value
->>
->> SERIAL_PORT_DFNS is not defined on each arch, if it's not defined,
->> serial8250_set_defaults() won't be called in serial8250_isa_init_ports(),
->> so the p->serial_in pointer won't be initialized, and it leads a null-ptr-deref.
->> Fix this problem by calling serial8250_set_defaults() after init uart port.
->>
->> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
->> ---
->>   drivers/tty/serial/8250/8250_core.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
-> Does this fix a specific commit, or has this issue always been present?
-> What has caused it to happen now that no one else has seen this?
-
-I think it's always been present on the arch that not defined 
-SERIAL_PORT_DFNS.
-
-I got this on arm64 and here is the C reproducer:
-
-// autogenerated by syzkaller (https://github.com/google/syzkaller)
-
-#define _GNU_SOURCE
-
-#include <endian.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/syscall.h>
-#include <sys/types.h>
-#include <unistd.h>
-
-#ifndef __NR_ioctl
-#define __NR_ioctl 29
-#endif
-#ifndef __NR_mmap
-#define __NR_mmap 222
-#endif
-#ifndef __NR_openat
-#define __NR_openat 56
-#endif
-
-uint64_t r[1] = {0xffffffffffffffff};
-
-int main(void)
-{
-     syscall(__NR_mmap, 0x20000000ul, 0x1000000ul, 3ul, 0x32ul, -1, 0);
-     intptr_t res = 0;
-     memcpy((void*)0x20000040, "/dev/ttyS3\000", 11);
-     res = syscall(__NR_openat, 0xffffffffffffff9cul, 0x20000040ul, 
-0x401ul, 0ul);
-     if (res != -1)
-         r[0] = res;
-     syscall(__NR_ioctl, r[0], 0x5412ul, 0x20000080ul);
-     return 0;
-}
-
-
-Thanks,
-
-Yang
-
+On Tue, Jul 21, 2020 at 4:50 PM syzbot
+<syzbot+e74a998ca8f1df9cc332@syzkaller.appspotmail.com> wrote:
 >
-> thanks,
+> Hello,
 >
-> greg k-h
-> .
+> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+> general protection fault in kernfs_find_ns
+>
+> pvrusb2: Invalid write control endpoint
+> pvrusb2: Invalid write control endpoint
+> pvrusb2: Invalid write control endpoint
+> pvrusb2: Invalid write control endpoint
+> pvrusb2: Invalid write control endpoint
+> pvrusb2: Invalid write control endpoint
+> general protection fault, probably for non-canonical address 0xdffffc000000000e: 0000 [#1] SMP KASAN
+> KASAN: null-ptr-deref in range [0x0000000000000070-0x0000000000000077]
 
+I'm guessing this has to do with kmem_cache_free() called by
+i2c_acpi_remove_space_handler()
+through acpi_ut_delete_generic_state() in drivers/acpi/osl.c:1708 ?
+
+> CPU: 0 PID: 78 Comm: pvrusb2-context Not tainted 5.7.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:kernfs_find_ns+0x31/0x370 fs/kernfs/dir.c:829
+> Code: 49 89 d6 41 55 41 54 55 48 89 fd 53 48 83 ec 08 e8 f4 61 af ff 48 8d 7d 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 1e 03 00 00 48 8d bd 98 00 00 00 48 8b 5d 70 48
+> RSP: 0018:ffff8881d4187938 EFLAGS: 00010202
+> RAX: dffffc0000000000 RBX: ffffffff863789c0 RCX: ffffffff85a79ba7
+> RDX: 000000000000000e RSI: ffffffff81901d1c RDI: 0000000000000070
+> RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff873ed1e7
+> R10: fffffbfff0e7da3c R11: 0000000000000001 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff863790e0
+> FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000557f2b45ae48 CR3: 00000001d2762000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  kernfs_find_and_get_ns+0x2f/0x60 fs/kernfs/dir.c:906
+>  kernfs_find_and_get include/linux/kernfs.h:548 [inline]
+>  sysfs_unmerge_group+0x5d/0x160 fs/sysfs/group.c:366
+>  dpm_sysfs_remove+0x62/0xb0 drivers/base/power/sysfs.c:790
+>  device_del+0x18b/0xd20 drivers/base/core.c:2834
+>  device_unregister+0x22/0xc0 drivers/base/core.c:2889
+>  i2c_unregister_device include/linux/err.h:41 [inline]
+>  i2c_client_dev_release+0x39/0x50 drivers/i2c/i2c-core-base.c:465
+>  device_release+0x71/0x200 drivers/base/core.c:1559
+>  kobject_cleanup lib/kobject.c:693 [inline]
+>  kobject_release lib/kobject.c:722 [inline]
+>  kref_put include/linux/kref.h:65 [inline]
+>  kobject_put+0x245/0x540 lib/kobject.c:739
+>  put_device drivers/base/core.c:2779 [inline]
+>  device_unregister+0x34/0xc0 drivers/base/core.c:2890
+>  i2c_unregister_device+0x38/0x40 include/linux/err.h:41
+>  v4l2_i2c_new_subdev_board+0x159/0x2c0 drivers/media/v4l2-core/v4l2-i2c.c:114
+>  v4l2_i2c_new_subdev+0xb8/0xf0 drivers/media/v4l2-core/v4l2-i2c.c:135
+>  pvr2_hdw_load_subdev drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2023 [inline]
+>  pvr2_hdw_load_modules drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2075 [inline]
+>  pvr2_hdw_setup_low drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2156 [inline]
+>  pvr2_hdw_setup drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2262 [inline]
+>  pvr2_hdw_initialize+0xc8d/0x3600 drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2339
+>  pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:109 [inline]
+>  pvr2_context_thread_func+0x250/0x850 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+>  kthread+0x392/0x470 kernel/kthread.c:291
+>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+> Modules linked in:
+> ---[ end trace 9af941b6bcb04b01 ]---
+> RIP: 0010:kernfs_find_ns+0x31/0x370 fs/kernfs/dir.c:829
+> Code: 49 89 d6 41 55 41 54 55 48 89 fd 53 48 83 ec 08 e8 f4 61 af ff 48 8d 7d 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 1e 03 00 00 48 8d bd 98 00 00 00 48 8b 5d 70 48
+> RSP: 0018:ffff8881d4187938 EFLAGS: 00010202
+> RAX: dffffc0000000000 RBX: ffffffff863789c0 RCX: ffffffff85a79ba7
+> RDX: 000000000000000e RSI: ffffffff81901d1c RDI: 0000000000000070
+> RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff873ed1e7
+> R10: fffffbfff0e7da3c R11: 0000000000000001 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff863790e0
+> FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000557f2b45ae48 CR3: 00000001d2762000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>
+>
+> Tested on:
+>
+> commit:         b791d1bd Merge tag 'locking-kcsan-2020-06-11' of git://git..
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16dfe440900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ccf1899337a6e343
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e74a998ca8f1df9cc332
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=117e281b100000
+>
