@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A32C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E2FC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D45E206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284FE206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:11:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TyepKXn7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BuARnLyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgGUMKz (ORCPT
+        id S1729669AbgGUMLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:10:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60992 "EHLO
+        Tue, 21 Jul 2020 08:11:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728714AbgGUMKy (ORCPT
+        with ESMTP id S1728692AbgGUMLA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:10:54 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B79AEC0619DA
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:10:54 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id l63so11841518pge.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:10:54 -0700 (PDT)
+        Tue, 21 Jul 2020 08:11:00 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DA24C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:11:00 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mn17so1481256pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:11:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bmoIA6JVwOy+6GP1zUPLm+Haa8V9hMBSF82Ea7A25DQ=;
-        b=TyepKXn7OaYUQtt4hFJbFIHF5h+u+fprOJj4OSkj62VZU3n8u0j9yYrT7NHtWxi/an
-         1b6b+9jU7D0O5dJMcoD2rqrFEj6sjq4HohRlHi1aWwa0ExNHUO6Az2x8gABX2q50szu/
-         ZxKtmbi++l+NcrXL+hJgpevYLiU+XRaZ6UD2IzAUwrWQg9q1I4XAONLFu92YCQHfqU/Q
-         dQ5tPt9ebLwtmoiVmPkO6qOOZKyJ7NpqggfM5bR/3nR8jSIxytunTjxLTpQCnIVdMlpr
-         9/bIAOd1nr6zAEsHFPnA7mnoQ64IyInDUaDo159KyWXHggP9Q/+yfjHhXGangDK7tsJh
-         MPug==
+        bh=jQ4rDDgYanuVEiD5VSyVtoHbMEWpqen32aI8GMWnA+0=;
+        b=BuARnLySFYXHobk+DJzYYbZapFac75rnp2cAzZUyk+Gi1xEuU1EKVS1Y1ft+eSIwcL
+         vUQ65Nj4hj0gbP6KuHvpVQ1/mKEqee4c+RYlKvvGEkqecq5lPOYvBC/pKxqWrs/xvNuX
+         ConaNJol+yJAMDTJi84K9crZw28bIZdQhev3sLhB3gqdVEqEs55lxbxIv8OArsnDnGfV
+         CCpC7mpvvk9RD+YSf+d/FvJn9J02mMZZ+jD96+Ckm7JLj1B7A4Q+80Q9XsJ0Ztb2vljT
+         r9PD1tKl8MrmBZAm8XG6xSQLyTNYFft4pqHRY1+16emo3h9Q8zs9U0cfGItOz/xXjY0v
+         cfHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=bmoIA6JVwOy+6GP1zUPLm+Haa8V9hMBSF82Ea7A25DQ=;
-        b=TvxJGCGZTv0sWmt4ITvk1R3zQAVx+LmAbSrnWipojCfv3w76IBuJ4Jzhm0BluuJu9H
-         9ZVatTO+kEgHpI5olxn2Ngb7JiTfGcf+pGi2dhffbr22sQCUp6uAJv8J8WEIYWAmsRiK
-         +4LcW1mkZCtsByR0KcHzIILRbY8oqlS2rvc5fuQCYGX3nd3byfLqrNcvbb+GsyqH7fKr
-         6hlPje/NrmfjyyU+Rn8xqUnQIPALtq2fkXiXGcRojNnIBwNTfzZ0XaM1kNimgLjUzE5/
-         OE9yUcYVYNdyy/Re8D7T2O36nF6wRj75TMukYow+FCZwJe0YhJA2fUruZMxMVK+OpxDn
-         0phQ==
-X-Gm-Message-State: AOAM533VIfa8yzPRfEy3KWPk3t7qRwCLJPyLo6oPbpwPHfeUULQIFKR2
-        qZuilCzLhMAdAW3A49ZB07lm0g==
-X-Google-Smtp-Source: ABdhPJx//Ilc8MIFF8alHzz3aukyRgaFhVVxqz29Ai3h7DB0QotUS2/ezSTlrD7mrAWkwoDkQznv6Q==
-X-Received: by 2002:aa7:9a07:: with SMTP id w7mr22724654pfj.251.1595333454186;
-        Tue, 21 Jul 2020 05:10:54 -0700 (PDT)
+        bh=jQ4rDDgYanuVEiD5VSyVtoHbMEWpqen32aI8GMWnA+0=;
+        b=XGT1+krfKLJ0zwtx30wrUHPEJhVDGBQoTD2BndZODwGXXP/YLYbCXTjzY570s0XK5n
+         GOcf/a6oEPD7CL56FOKV4BvZerRPkvvSUSnW4XMjLNyyGy3XRVQtNzxKLiPBSHblJGp8
+         b1HXCkDr+b8Ss3ClC37lctsMdL/1JRbKWumHXiwM38F8a+Pnph7E4Ijb0pYTM7arNrFw
+         NjncoH4UQQENPrj85iPQVoNr+cVwIAQPG7zY/9B70klmG58a4A1eiiBfNTQ2ovwAxIQO
+         7aN5GP0SAFvkdnstxKPT3Jh75FtT+oY9NPbKDcSKeOelsk5kYRw2oKWll3pfpMFN1nFL
+         sneg==
+X-Gm-Message-State: AOAM5310pCVH1ojx7Ya1/8o9tWiQarfPWMZaF7xUdLrZheNJeuhDaCs+
+        xxNe5ou1vURRZIkQP+TlIKlSlg==
+X-Google-Smtp-Source: ABdhPJwuz8QK1fPNOpZalpAeTbf4LEUS9VjUfrRfr1RCUAvdtOBgLm3oRTOaw/15VbGU7Sm1GM7DZg==
+X-Received: by 2002:a17:902:a9c8:: with SMTP id b8mr22299780plr.2.1595333459711;
+        Tue, 21 Jul 2020 05:10:59 -0700 (PDT)
 Received: from localhost.localdomain ([117.210.211.74])
-        by smtp.gmail.com with ESMTPSA id w9sm20601992pfq.178.2020.07.21.05.10.48
+        by smtp.gmail.com with ESMTPSA id w9sm20601992pfq.178.2020.07.21.05.10.54
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Jul 2020 05:10:53 -0700 (PDT)
+        Tue, 21 Jul 2020 05:10:58 -0700 (PDT)
 From:   Sumit Garg <sumit.garg@linaro.org>
 To:     gregkh@linuxfoundation.org, daniel.thompson@linaro.org,
         dianders@chromium.org, linux-serial@vger.kernel.org,
@@ -65,9 +65,9 @@ To:     gregkh@linuxfoundation.org, daniel.thompson@linaro.org,
 Cc:     jslaby@suse.com, linux@armlinux.org.uk, jason.wessel@windriver.com,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Sumit Garg <sumit.garg@linaro.org>
-Subject: [RFC 1/5] tty/sysrq: Make sysrq handler NMI aware
-Date:   Tue, 21 Jul 2020 17:40:09 +0530
-Message-Id: <1595333413-30052-2-git-send-email-sumit.garg@linaro.org>
+Subject: [RFC 2/5] serial: core: Add framework to allow NMI aware serial drivers
+Date:   Tue, 21 Jul 2020 17:40:10 +0530
+Message-Id: <1595333413-30052-3-git-send-email-sumit.garg@linaro.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
 References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
@@ -76,150 +76,267 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a future patch we will add support to the serial core to make it
-possible to trigger a magic sysrq from an NMI context. Prepare for this
-by marking some sysrq actions as NMI safe. Safe actions will be allowed
-to run from NMI context whilst that cannot run from an NMI will be queued
-as irq_work for later processing.
+Add NMI framework APIs in serial core which can be leveraged by serial
+drivers to have NMI driven serial transfers. These APIs are kept under
+CONFIG_CONSOLE_POLL as currently kgdb initializing uart in polling mode
+is the only known user to enable NMI driven serial port.
 
-A particular sysrq handler is only marked as NMI safe in case the handler
-isn't contending for any synchronization primitives as in NMI context
-they are expected to cause deadlocks. Note that the debug sysrq do not
-contend for any synchronization primitives. It does call kgdb_breakpoint()
-to provoke a trap but that trap handler should be NMI safe on
-architectures that implement an NMI.
+The general idea is to intercept RX characters in NMI context, if those
+are specific to magic sysrq then allow corresponding handler to run in
+NMI context. Otherwise defer all other RX and TX operations to IRQ work
+queue in order to run those in normal interrupt context.
+
+Also, since magic sysrq entry APIs will need to be invoked from NMI
+context, so make those APIs NMI safe via deferring NMI unsafe work to
+IRQ work queue.
 
 Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
- drivers/tty/sysrq.c       | 33 ++++++++++++++++++++++++++++++++-
- include/linux/sysrq.h     |  1 +
- kernel/debug/debug_core.c |  1 +
- 3 files changed, 34 insertions(+), 1 deletion(-)
+ drivers/tty/serial/serial_core.c | 120 ++++++++++++++++++++++++++++++++++++++-
+ include/linux/serial_core.h      |  67 ++++++++++++++++++++++
+ 2 files changed, 185 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index 7c95afa9..8017e33 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -50,6 +50,8 @@
- #include <linux/syscalls.h>
- #include <linux/of.h>
- #include <linux/rcupdate.h>
-+#include <linux/irq_work.h>
-+#include <linux/kfifo.h>
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index 57840cf..6342e90 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -3181,8 +3181,14 @@ static bool uart_try_toggle_sysrq(struct uart_port *port, unsigned int ch)
+ 		return true;
+ 	}
  
- #include <asm/ptrace.h>
- #include <asm/irq_regs.h>
-@@ -111,6 +113,7 @@ static const struct sysrq_key_op sysrq_loglevel_op = {
- 	.help_msg	= "loglevel(0-9)",
- 	.action_msg	= "Changing Loglevel",
- 	.enable_mask	= SYSRQ_ENABLE_LOG,
-+	.nmi_safe	= true,
- };
- 
- #ifdef CONFIG_VT
-@@ -157,6 +160,7 @@ static const struct sysrq_key_op sysrq_crash_op = {
- 	.help_msg	= "crash(c)",
- 	.action_msg	= "Trigger a crash",
- 	.enable_mask	= SYSRQ_ENABLE_DUMP,
-+	.nmi_safe	= true,
- };
- 
- static void sysrq_handle_reboot(int key)
-@@ -170,6 +174,7 @@ static const struct sysrq_key_op sysrq_reboot_op = {
- 	.help_msg	= "reboot(b)",
- 	.action_msg	= "Resetting",
- 	.enable_mask	= SYSRQ_ENABLE_BOOT,
-+	.nmi_safe	= true,
- };
- 
- const struct sysrq_key_op *__sysrq_reboot_op = &sysrq_reboot_op;
-@@ -217,6 +222,7 @@ static const struct sysrq_key_op sysrq_showlocks_op = {
- 	.handler	= sysrq_handle_showlocks,
- 	.help_msg	= "show-all-locks(d)",
- 	.action_msg	= "Show Locks Held",
-+	.nmi_safe	= true,
- };
- #else
- #define sysrq_showlocks_op (*(const struct sysrq_key_op *)NULL)
-@@ -289,6 +295,7 @@ static const struct sysrq_key_op sysrq_showregs_op = {
- 	.help_msg	= "show-registers(p)",
- 	.action_msg	= "Show Regs",
- 	.enable_mask	= SYSRQ_ENABLE_DUMP,
-+	.nmi_safe	= true,
- };
- 
- static void sysrq_handle_showstate(int key)
-@@ -326,6 +333,7 @@ static const struct sysrq_key_op sysrq_ftrace_dump_op = {
- 	.help_msg	= "dump-ftrace-buffer(z)",
- 	.action_msg	= "Dump ftrace buffer",
- 	.enable_mask	= SYSRQ_ENABLE_DUMP,
-+	.nmi_safe	= true,
- };
- #else
- #define sysrq_ftrace_dump_op (*(const struct sysrq_key_op *)NULL)
-@@ -538,6 +546,23 @@ static void __sysrq_put_key_op(int key, const struct sysrq_key_op *op_p)
-                 sysrq_key_table[i] = op_p;
++#ifdef CONFIG_CONSOLE_POLL
++	if (in_nmi())
++		irq_work_queue(&port->nmi_state.sysrq_toggle_work);
++	else
++		schedule_work(&sysrq_enable_work);
++#else
+ 	schedule_work(&sysrq_enable_work);
+-
++#endif
+ 	port->sysrq = 0;
+ 	return true;
  }
+@@ -3273,12 +3279,122 @@ int uart_handle_break(struct uart_port *port)
+ 		port->sysrq = 0;
+ 	}
  
-+#define SYSRQ_NMI_FIFO_SIZE	64
-+static DEFINE_KFIFO(sysrq_nmi_fifo, int, SYSRQ_NMI_FIFO_SIZE);
-+
-+static void sysrq_do_nmi_work(struct irq_work *work)
-+{
-+	const struct sysrq_key_op *op_p;
-+	int key;
-+
-+	while (kfifo_out(&sysrq_nmi_fifo, &key, 1)) {
-+		op_p = __sysrq_get_key_op(key);
-+		if (op_p)
-+			op_p->handler(key);
+-	if (port->flags & UPF_SAK)
++	if (port->flags & UPF_SAK) {
++#ifdef CONFIG_CONSOLE_POLL
++		if (in_nmi())
++			irq_work_queue(&port->nmi_state.sysrq_sak_work);
++		else
++			do_SAK(state->port.tty);
++#else
+ 		do_SAK(state->port.tty);
++#endif
 +	}
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(uart_handle_break);
+ 
++#ifdef CONFIG_CONSOLE_POLL
++int uart_nmi_handle_char(struct uart_port *port, unsigned int status,
++			 unsigned int overrun, unsigned int ch,
++			 unsigned int flag)
++{
++	struct uart_nmi_rx_data rx_data;
++
++	if (!in_nmi())
++		return 0;
++
++	rx_data.status = status;
++	rx_data.overrun = overrun;
++	rx_data.ch = ch;
++	rx_data.flag = flag;
++
++	if (!kfifo_in(&port->nmi_state.rx_fifo, &rx_data, 1))
++		++port->icount.buf_overrun;
++
++	return 1;
++}
++EXPORT_SYMBOL_GPL(uart_nmi_handle_char);
++
++static void uart_nmi_rx_work(struct irq_work *rx_work)
++{
++	struct uart_nmi_state *nmi_state =
++	    container_of(rx_work, struct uart_nmi_state, rx_work);
++	struct uart_port *port =
++	    container_of(nmi_state, struct uart_port, nmi_state);
++	struct uart_nmi_rx_data rx_data;
++
++	/*
++	 * In polling mode, serial device is initialized much prior to
++	 * TTY port becoming active. This scenario is especially useful
++	 * from debugging perspective such that magic sysrq or debugger
++	 * entry would still be possible even when TTY port isn't
++	 * active (consider a boot hang case or if a user hasn't opened
++	 * the serial port). So we discard any other RX data apart from
++	 * magic sysrq commands in case TTY port isn't active.
++	 */
++	if (!port->state || !tty_port_active(&port->state->port)) {
++		kfifo_reset(&nmi_state->rx_fifo);
++		return;
++	}
++
++	spin_lock(&port->lock);
++	while (kfifo_out(&nmi_state->rx_fifo, &rx_data, 1))
++		uart_insert_char(port, rx_data.status, rx_data.overrun,
++				 rx_data.ch, rx_data.flag);
++	spin_unlock(&port->lock);
++
++	tty_flip_buffer_push(&port->state->port);
 +}
 +
-+static DEFINE_IRQ_WORK(sysrq_nmi_work, sysrq_do_nmi_work);
++static void uart_nmi_tx_work(struct irq_work *tx_work)
++{
++	struct uart_nmi_state *nmi_state =
++	    container_of(tx_work, struct uart_nmi_state, tx_work);
++	struct uart_port *port =
++	    container_of(nmi_state, struct uart_port, nmi_state);
 +
- void __handle_sysrq(int key, bool check_mask)
- {
- 	const struct sysrq_key_op *op_p;
-@@ -568,7 +593,13 @@ void __handle_sysrq(int key, bool check_mask)
- 		if (!check_mask || sysrq_on_mask(op_p->enable_mask)) {
- 			pr_info("%s\n", op_p->action_msg);
- 			console_loglevel = orig_log_level;
--			op_p->handler(key);
++	spin_lock(&port->lock);
++	if (nmi_state->tx_irq_callback)
++		nmi_state->tx_irq_callback(port);
++	spin_unlock(&port->lock);
++}
 +
-+			if (in_nmi() && !op_p->nmi_safe) {
-+				kfifo_in(&sysrq_nmi_fifo, &key, 1);
-+				irq_work_queue(&sysrq_nmi_work);
-+			} else {
-+				op_p->handler(key);
-+			}
- 		} else {
- 			pr_info("This sysrq operation is disabled.\n");
- 			console_loglevel = orig_log_level;
-diff --git a/include/linux/sysrq.h b/include/linux/sysrq.h
-index 3a582ec..630b5b9 100644
---- a/include/linux/sysrq.h
-+++ b/include/linux/sysrq.h
-@@ -34,6 +34,7 @@ struct sysrq_key_op {
- 	const char * const help_msg;
- 	const char * const action_msg;
- 	const int enable_mask;
-+	const bool nmi_safe;
++static void uart_nmi_sak_work(struct irq_work *work)
++{
++	struct uart_nmi_state *nmi_state =
++	    container_of(work, struct uart_nmi_state, sysrq_sak_work);
++	struct uart_port *port =
++	    container_of(nmi_state, struct uart_port, nmi_state);
++
++	do_SAK(port->state->port.tty);
++}
++
++#ifdef CONFIG_MAGIC_SYSRQ_SERIAL
++static void uart_nmi_toggle_work(struct irq_work *work)
++{
++	schedule_work(&sysrq_enable_work);
++}
++#endif
++
++int uart_nmi_state_init(struct uart_port *port)
++{
++	int ret;
++
++	ret = kfifo_alloc(&port->nmi_state.rx_fifo, 256, GFP_KERNEL);
++	if (ret)
++		return ret;
++
++	init_irq_work(&port->nmi_state.rx_work, uart_nmi_rx_work);
++	init_irq_work(&port->nmi_state.tx_work, uart_nmi_tx_work);
++	init_irq_work(&port->nmi_state.sysrq_sak_work, uart_nmi_sak_work);
++#ifdef CONFIG_MAGIC_SYSRQ_SERIAL
++	init_irq_work(&port->nmi_state.sysrq_toggle_work, uart_nmi_toggle_work);
++#endif
++	return ret;
++}
++EXPORT_SYMBOL_GPL(uart_nmi_state_init);
++#endif
++
+ EXPORT_SYMBOL(uart_write_wakeup);
+ EXPORT_SYMBOL(uart_register_driver);
+ EXPORT_SYMBOL(uart_unregister_driver);
+diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+index 9fd550e..84487a9 100644
+--- a/include/linux/serial_core.h
++++ b/include/linux/serial_core.h
+@@ -18,6 +18,8 @@
+ #include <linux/tty.h>
+ #include <linux/mutex.h>
+ #include <linux/sysrq.h>
++#include <linux/irq_work.h>
++#include <linux/kfifo.h>
+ #include <uapi/linux/serial_core.h>
+ 
+ #ifdef CONFIG_SERIAL_CORE_CONSOLE
+@@ -103,6 +105,28 @@ struct uart_icount {
+ typedef unsigned int __bitwise upf_t;
+ typedef unsigned int __bitwise upstat_t;
+ 
++#ifdef CONFIG_CONSOLE_POLL
++struct uart_nmi_rx_data {
++	unsigned int		status;
++	unsigned int		overrun;
++	unsigned int		ch;
++	unsigned int		flag;
++};
++
++struct uart_nmi_state {
++	bool			active;
++
++	struct irq_work		tx_work;
++	void			(*tx_irq_callback)(struct uart_port *port);
++
++	struct irq_work		rx_work;
++	DECLARE_KFIFO_PTR(rx_fifo, struct uart_nmi_rx_data);
++
++	struct irq_work		sysrq_sak_work;
++	struct irq_work		sysrq_toggle_work;
++};
++#endif
++
+ struct uart_port {
+ 	spinlock_t		lock;			/* port lock */
+ 	unsigned long		iobase;			/* in/out[bwl] */
+@@ -255,6 +279,9 @@ struct uart_port {
+ 	struct gpio_desc	*rs485_term_gpio;	/* enable RS485 bus termination */
+ 	struct serial_iso7816   iso7816;
+ 	void			*private_data;		/* generic platform data pointer */
++#ifdef CONFIG_CONSOLE_POLL
++	struct uart_nmi_state	nmi_state;
++#endif
  };
  
- #ifdef CONFIG_MAGIC_SYSRQ
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 9e59347..2b51173 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -943,6 +943,7 @@ static const struct sysrq_key_op sysrq_dbg_op = {
- 	.handler	= sysrq_handle_dbg,
- 	.help_msg	= "debug(g)",
- 	.action_msg	= "DEBUG",
-+	.nmi_safe	= true,
- };
- #endif
+ static inline int serial_port_in(struct uart_port *up, int offset)
+@@ -475,4 +502,44 @@ extern int uart_handle_break(struct uart_port *port);
+ 					 !((cflag) & CLOCAL))
  
+ int uart_get_rs485_mode(struct uart_port *port);
++
++/*
++ * The following are helper functions for the NMI aware serial drivers.
++ * Currently NMI support is only enabled under polling mode.
++ */
++
++#ifdef CONFIG_CONSOLE_POLL
++int uart_nmi_state_init(struct uart_port *port);
++int uart_nmi_handle_char(struct uart_port *port, unsigned int status,
++			 unsigned int overrun, unsigned int ch,
++			 unsigned int flag);
++
++static inline bool uart_nmi_active(struct uart_port *port)
++{
++	return port->nmi_state.active;
++}
++
++static inline void uart_set_nmi_active(struct uart_port *port, bool val)
++{
++	port->nmi_state.active = val;
++}
++#else
++static inline int uart_nmi_handle_char(struct uart_port *port,
++				       unsigned int status,
++				       unsigned int overrun,
++				       unsigned int ch, unsigned int flag)
++{
++	return 0;
++}
++
++static inline bool uart_nmi_active(struct uart_port *port)
++{
++	return false;
++}
++
++static inline void uart_set_nmi_active(struct uart_port *port, bool val)
++{
++}
++#endif
++
+ #endif /* LINUX_SERIAL_CORE_H */
 -- 
 2.7.4
 
