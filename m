@@ -2,153 +2,78 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E37BC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DB1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D56320792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:00:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6q2gA4v"
+	by mail.kernel.org (Postfix) with ESMTP id 66B7F2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbgGUKAZ (ORCPT
+        id S1729082AbgGUKCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729030AbgGUKAY (ORCPT
+        Tue, 21 Jul 2020 06:02:32 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46285 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbgGUKCb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:00:24 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43BECC061794;
-        Tue, 21 Jul 2020 03:00:24 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id c25so14635191otf.7;
-        Tue, 21 Jul 2020 03:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PBTTFW09d3uJCGdXFdf82CVoARDUgIcQiOObd5wi+hY=;
-        b=N6q2gA4vNplPC9DJhcWz5owtT5G62o1I0swh5lZ1W3C1Z2XFkPWtjzFLCEl1/3oTaD
-         EF/GxWBef9kMAWarvqggEXvsESVELNgvYWsalXBqjQrmjHmaPLK/t5OrTyoM9PolQnl4
-         jtVSdT1dg/q5YombUg6uYu/0wwjnMDhyIEPINvHObgolmWPzuQa2JbZIRpqCy32uTSK5
-         amxN6ycGasTf6gkPt8t40SMvwFIXkZedXlVXafklSCyr57Bc8+TQYJhymGakJUeIhI/g
-         HMwegWQUeGJdc5DVvnE6cGGf42JSSHoUUxjIiyncrxKU4QaXEaRXKXyvSpU9KKIgk1A9
-         4pVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PBTTFW09d3uJCGdXFdf82CVoARDUgIcQiOObd5wi+hY=;
-        b=Yr12pPNhaZmSFnfDCxV7TbNGgVG7i4PP/fZ8rCKmuiOWFDygw/CT6XHqXk9vPCl2qo
-         4QPamHqlKNoacpBugrGo675S3J3EC5wTtvG6cSEL+Yzpz6U3SWKLm3w/dNYuro8RxUKf
-         yInv+XhGaOg08hE+InVgOGulh++zbpBt2aR83VboDfTtkJ5z34iVP+wl9hYznITgmqsR
-         Dhoek/Siojp7SuYSW8QhdxhO40edvwcEwKQJZELsK1i/DLNwsRidMcS6bM5zsS+XSnBP
-         jMwg2vUbAi22KV5g39CHEx4qjLro2oHB9B2Q7wXbiy6Xe9LysL9qpulCQvPOC2SR9Vzr
-         +rdg==
-X-Gm-Message-State: AOAM530LSsUNRBheCy19xS8gnGBk3uCkEUAbquC/U22VGq09yxC+1oUJ
-        SRD0QNqVR7+BTu1iDGBKR9IL2ByG5uvHdvFiTXY=
-X-Google-Smtp-Source: ABdhPJxhGwQ6pCOaqOQatkxg1LzUkfpdQWM7Q2QSqfBJrI/D5KFrXdQ0dhr5ajFjpIXpJR5yHoS9mg1LLM2qQFb0Nc0=
-X-Received: by 2002:a9d:480d:: with SMTP id c13mr24350720otf.224.1595325623588;
- Tue, 21 Jul 2020 03:00:23 -0700 (PDT)
+        Tue, 21 Jul 2020 06:02:31 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jxp6H-0000Kf-Mg; Tue, 21 Jul 2020 10:02:17 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+        xen-devel@lists.xenproject.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] x86/ioperm: initialize pointer bitmap with NULL rather than 0
+Date:   Tue, 21 Jul 2020 11:02:17 +0100
+Message-Id: <20200721100217.407975-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200630045708.14166-1-alexandru.ardelean@analog.com>
- <20200630045708.14166-3-alexandru.ardelean@analog.com> <20200721094643.GA1598380@eriador.lumag.spb.ru>
-In-Reply-To: <20200721094643.GA1598380@eriador.lumag.spb.ru>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Tue, 21 Jul 2020 13:00:11 +0300
-Message-ID: <CA+U=DsqLAnXG0BZvXw5=_rUS_N-1qSs2Xxu7-x2qA2HH7pPyVA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/7] iio: core: wrap IIO device into an iio_dev_opaque object
-To:     Dmitry Baryshkov <dbaryshkov@gmail.com>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 12:47 PM Dmitry Baryshkov <dbaryshkov@gmail.com> wrote:
->
-> Hello,
->
-> On Tue, Jun 30, 2020 at 07:57:03AM +0300, Alexandru Ardelean wrote:
-> > There are plenty of bad designs we want to discourage or not have to review
-> > manually usually about accessing private (marked as [INTERN]) fields of
-> > 'struct iio_dev'.
-> >
-> > Sometimes users copy drivers that are not always the best examples.
-> >
-> > A better idea is to hide those fields into the framework.
-> > For 'struct iio_dev' this is a 'struct iio_dev_opaque' which wraps a public
-> > 'struct iio_dev' object.
-> >
-> > In the next series, some fields will be moved to this new struct, each with
-> > it's own rework.
->
-> [skipped]
->
-> >
-> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> >  drivers/iio/industrialio-core.c | 19 +++++++++++++------
-> >  include/linux/iio/iio-opaque.h  | 17 +++++++++++++++++
-> >  include/linux/iio/iio.h         |  6 +++++-
-> >  3 files changed, 35 insertions(+), 7 deletions(-)
-> >  create mode 100644 include/linux/iio/iio-opaque.h
-> >
-> > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> > index 75661661aaba..33e2953cf021 100644
-> > --- a/drivers/iio/industrialio-core.c
-> > +++ b/drivers/iio/industrialio-core.c
->
-> [skipped]
->
-> > @@ -1506,11 +1510,14 @@ struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
-> >       /* ensure 32-byte alignment of whole construct ? */
-> >       alloc_size += IIO_ALIGN - 1;
-> >
-> > -     dev = kzalloc(alloc_size, GFP_KERNEL);
-> > -     if (!dev)
-> > +     iio_dev_opaque = kzalloc(alloc_size, GFP_KERNEL);
-> > +     if (!iio_dev_opaque)
-> >               return NULL;
-> >
-> > -     dev->dev.parent = parent;
->
-> This chunk (together with 8cb631ccbb1952b6422917f2ed16f760d84a762e and
-> d3be83244c7dfe686d23f1c0bac75915587fc044) break devicetree bindings of
-> IIO clients. After these changes there are no links between devicetree
-> nodes and corresponding IIO channels. I'd kindly ask to restore this
-> dev->dev.parent assignment (which restores of node binding).
->
+From: Colin Ian King <colin.king@canonical.com>
 
-Ack.
-Will send a fix.
-Thanks for catching this.
-Apologies for the breakage.
-It seems that I was tripping quite a bit with too many patchsets.
+The pointer bitmap is being initialized with a plain integer 0,
+fix this by initializing it with a NULL instead.
 
+Cleans up sparse warning:
+arch/x86/xen/enlighten_pv.c:876:27: warning: Using plain integer
+as NULL pointer
 
-> > +     dev = &iio_dev_opaque->indio_dev;
-> > +     dev->priv = (char *)iio_dev_opaque +
-> > +             ALIGN(sizeof(struct iio_dev_opaque), IIO_ALIGN);
-> > +
-> >       dev->dev.groups = dev->groups;
-> >       dev->dev.type = &iio_device_type;
-> >       dev->dev.bus = &iio_bus_type;
->
-> --
-> With best wishes
-> Dmitry
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ arch/x86/xen/enlighten_pv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index c46b9f2e732f..2aab43a13a8c 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -873,7 +873,7 @@ static void xen_load_sp0(unsigned long sp0)
+ static void xen_invalidate_io_bitmap(void)
+ {
+ 	struct physdev_set_iobitmap iobitmap = {
+-		.bitmap = 0,
++		.bitmap = NULL,
+ 		.nr_ports = 0,
+ 	};
+ 
+-- 
+2.27.0
+
