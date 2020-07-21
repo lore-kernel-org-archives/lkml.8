@@ -2,118 +2,177 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA65EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E61FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92E9D20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68ED2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:15:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kryo-se.20150623.gappssmtp.com header.i=@kryo-se.20150623.gappssmtp.com header.b="ntLBN0rv"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="A7AIoE75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgGUSPU (ORCPT
+        id S1729016AbgGUSPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 14:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgGUSPQ (ORCPT
+        Tue, 21 Jul 2020 14:15:54 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:39199 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbgGUSPw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 14:15:16 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B8CBC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 11:15:16 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id z6so4937688iow.6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 11:15:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kryo-se.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KVVjAkfV64YN+ezW1WM+0vgwvcTru6dPfbG6aGenKT0=;
-        b=ntLBN0rv0yoHIQrjDgVhIvFKkRwg+qM35RkR6fj4PRMEEJpltk9LVVY6yGguLoR0K9
-         2JOn5virYAQ8jtWOhvP2RJ7yXsZAzJJcnTrsi76cqMqIKle9CyAgzKrmJYhnl3W80Ofh
-         yTujC6GqoRvcPH9ZzX+O4EK/HMyYcBc0QW97+rL1HwLkqu05WgfyolB805OyY0zYTsJq
-         Wp499ujZ3q0VMxpwaHbNo9OrJrPqw/PG6abWAgdKIL/Ogscu5Or3BLU4z+UI58WkQSkd
-         twar/kG6hnVA9Bv3brUAEGqB9P2RC+AAC1Rs3gBwKuS7ps5TBRMdUoA3k5s82vjG4/cG
-         2stA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KVVjAkfV64YN+ezW1WM+0vgwvcTru6dPfbG6aGenKT0=;
-        b=TjVKkRZcmKZjwqOX24Rz/BzDWycL624fYLYn7+0r48rVHvMIfFd+1PSJxtlPxFgoCo
-         NRAjj5Jj1vEOFtyor252k9A55XRANY/8mLHJ6WLrmODpiMJoHq3kfy0yCsCXjJOnqbub
-         P0w2UGbZegI2vWxaJRkjGspTxh4DrueuCu682kTMIacY53+sd137Hn8D76HnCQ8uMRls
-         QRnsAglACIPc4gITp8yjfY+AejOFI6S5B16eDjT+PaTowO/wIzVkBdjGMn/R3QYeI4Gw
-         Mrv4KYE8iSZQP9W9FELXTrV/5SAZ03NE0XClCKkSdFOD88D5/o+d2NK8I34nyNm+in10
-         ZiSg==
-X-Gm-Message-State: AOAM533FdfBtWLCnIT08R3hMusK2eCWnYHkBq0tyoQc3vDfg34i+nr6F
-        hb1vXtILlCzbJoTXKEfJfNWYXw2aHaXCx2KFGFjnPg==
-X-Google-Smtp-Source: ABdhPJzGSU5xLvuoSn4Yd8vIZFCiJApcxv1zTfxLAkR3tvZgCVnsFrc4C6sc0qqNh4MJy2EEPxAQU7f2t+4VvayFU6A=
-X-Received: by 2002:a05:6602:148f:: with SMTP id a15mr29521465iow.26.1595355315409;
- Tue, 21 Jul 2020 11:15:15 -0700 (PDT)
+        Tue, 21 Jul 2020 14:15:52 -0400
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200721181549epoutp01a924f5ae78ef2d7cb561d3e2ee2d6ce2~j1zzq47e72264622646epoutp01k
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 18:15:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200721181549epoutp01a924f5ae78ef2d7cb561d3e2ee2d6ce2~j1zzq47e72264622646epoutp01k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1595355349;
+        bh=U5jquic9LwrfkMmVraEYVoI8yc4c392U5HFsrbKZFgU=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=A7AIoE759uE61TNdHf0DUyw84TZc8uHlNXjiuEsW/eT0Eer3kWLUOLSjQ5lR5Kai7
+         ZoBrYw9iHGJda4JmkfZIbsKjcjXv7xiayjzQxv8j5ZefvHZydmSbMubDqTEwdiejQO
+         ymy/yAuvEMtZauX3gcqMb+vjKBS58t5wR7/oBPmo=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20200721181548epcas5p4334786dda9ee3589e77d9f2c1381925e~j1zyj_GgB1133111331epcas5p4b;
+        Tue, 21 Jul 2020 18:15:48 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EF.C0.09475.4D0371F5; Wed, 22 Jul 2020 03:15:48 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200721181547epcas5p34f1d1e748c9018600a530dd354d36767~j1zxe1HBd0129501295epcas5p33;
+        Tue, 21 Jul 2020 18:15:47 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200721181547epsmtrp2f75ecdfa1f520db6f9bc92b4da497418~j1zxd65rW3150631506epsmtrp2O;
+        Tue, 21 Jul 2020 18:15:47 +0000 (GMT)
+X-AuditID: b6c32a4b-39fff70000002503-84-5f1730d4fcf0
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        23.BF.08303.3D0371F5; Wed, 22 Jul 2020 03:15:47 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200721181542epsmtip134cfbb551597f1ec7d7d0154c8b9a856~j1zsp07Up3207732077epsmtip1L;
+        Tue, 21 Jul 2020 18:15:41 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Avri Altman'" <Avri.Altman@wdc.com>, <daejun7.park@samsung.com>,
+        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <asutoshd@codeaurora.org>, <beanhuo@micron.com>,
+        <stanley.chu@mediatek.com>, <cang@codeaurora.org>,
+        <bvanassche@acm.org>, <tomas.winkler@intel.com>
+Cc:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "'Sang-yoon Oh'" <sangyoon.oh@samsung.com>,
+        "'Sung-Jun Park'" <sungjun07.park@samsung.com>,
+        "'yongmyung lee'" <ymhungry.lee@samsung.com>,
+        "'Jinyoung CHOI'" <j-young.choi@samsung.com>,
+        "'Adel Choi'" <adel.choi@samsung.com>,
+        "'BoRam Shin'" <boram.shin@samsung.com>
+In-Reply-To: <SN6PR04MB4640A85E665E20D709885E16FC7A0@SN6PR04MB4640.namprd04.prod.outlook.com>
+Subject: RE: [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support
+Date:   Tue, 21 Jul 2020 23:45:39 +0530
+Message-ID: <06b001d65f8a$f4a41d50$ddec57f0$@samsung.com>
 MIME-Version: 1.0
-References: <20200717185118.3640219-1-erik@kryo.se> <20200721072350.GC3634@localhost>
-In-Reply-To: <20200721072350.GC3634@localhost>
-From:   Erik Ekman <erik@kryo.se>
-Date:   Tue, 21 Jul 2020 20:15:04 +0200
-Message-ID: <CAGgu=sDBemKU4vzg5xWyWT-OoDuXrxXp2tkB5OOmNW6ncDjpow@mail.gmail.com>
-Subject: Re: [PATCH] USB: serial: qcserial: add EM7305 QDL product ID
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQNTAwbo7R95v2Jv+B+oDyvdEhuZkAJ3qsxbAnEXg30BU3sSHwDKp0vLpeDXqjA=
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDKsWRmVeSWpSXmKPExsWy7bCmpu4VA/F4g/8vhCw23n3FarG37QS7
+        xcufV9ksDj7sZLE4fPsdu8W0Dz+ZLT6tX8ZqsepBuEVv/1Y2i0U3tjFZXN41h82i+/oONovl
+        x/8xWUx4uYTFYunWm4wWndPXsFh86KmzWLRwN4uDkMflK94el/t6mTwW73nJ5DFh0QFGj5aT
+        +1k8vq/vYPP4+PQWi0ffllWMHp83yXm0H+hmCuCK4rJJSc3JLEst0rdL4Mo4cKSPpWA2d8W1
+        O7NZGhincHYxcnJICJhIrPg7gb2LkYtDSGA3o8SP4+tYIJxPjBJn2w6wg1QJCXxmlLjapwTT
+        sWnqbBaI+C5Giev7aiAa3jBKLF63kBkkwSagK7FjcRsbSEJEYAqTxL89y8F2MAtcYJKYfvsE
+        I0gVp0CsxKdF68A6hAW8JX6/ncEGYrMIqEpcfPaPFcTmFbCUeNK2jQnCFpQ4OfMJ2GpmAW2J
+        ZQtfM0OcpCDx8+kysHoRAT+JH5PuM0LUiEsc/dnDDLJYQqCdU+LL9aXsEA0uEst37GSDsIUl
+        Xh3fAhWXkvj8bi9QnAPIzpbo2WUMEa6RWDrvGAuEbS9x4MocFpASZgFNifW79CFW8Un0/n7C
+        BNHJK9HRJgRRrSrR/O4qVKe0xMTublYI20Ni8raZrBMYFWcheWwWksdmIXlgFsKyBYwsqxgl
+        UwuKc9NTi00LjPNSy/WKE3OLS/PS9ZLzczcxghOklvcOxkcPPugdYmTiYDzEKMHBrCTCq8Mo
+        Hi/Em5JYWZValB9fVJqTWnyIUZqDRUmcV+nHmTghgfTEktTs1NSC1CKYLBMHp1QD0zIpD3HD
+        30zV0vVhbd9WGgTzL3K9c/HZIlW+H6e2H/NjfLpkRdpc1p0pj3y8l0Td/ehx867RlCvnLRtu
+        fa/K2tYTdH8v75PIKP6sy325vvc1U55NNpuj8397yyXNVeq3nNdtyO9hPM3fVJbFMvdeVrpf
+        QGf2/rhth/1cDgjsyjn3PM9z811lhfDVyieraqQ2zDvtEf8gfLvzI49NKU5X3Q6p92rUxlfM
+        e7S7sn7ZK5sCXY97M9pyve+/DTjdq61p+Zztu+p0A6vk/3vfNZk0mCm3FiVZfDnsmDnfVcTl
+        U7rW+xfBnzctWLN9+5G3CZsu6x3zDjQVv3z38Ky/x54+tDSaekvcNPv3sxcHwg+47FdiKc5I
+        NNRiLipOBAAXZ/pd/wMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMIsWRmVeSWpSXmKPExsWy7bCSnO5lA/F4g4VbuSw23n3FarG37QS7
+        xcufV9ksDj7sZLE4fPsdu8W0Dz+ZLT6tX8ZqsepBuEVv/1Y2i0U3tjFZXN41h82i+/oONovl
+        x/8xWUx4uYTFYunWm4wWndPXsFh86KmzWLRwN4uDkMflK94el/t6mTwW73nJ5DFh0QFGj5aT
+        +1k8vq/vYPP4+PQWi0ffllWMHp83yXm0H+hmCuCK4rJJSc3JLEst0rdL4Mpo3NHOXvCeq2LH
+        xT9sDYwvOLoYOTkkBEwkNk2dzdLFyMUhJLCDUWLluwfsEAlpiesbJ0DZwhIr/z1nhyh6xSjx
+        vn8bG0iCTUBXYsfiNjaQhIjAAiaJt8eWgTnMAteYJD5P72eGaLnCJNF9/C9YC6dArMSnReuY
+        QWxhAW+J329ngMVZBFQlLj77xwpi8wpYSjxp28YEYQtKnJz5hAXEZhbQlnh68ymcvWzha2aI
+        +xQkfj5dBtYrIuAn8WPSfUaIGnGJoz97mCcwCs9CMmoWklGzkIyahaRlASPLKkbJ1ILi3PTc
+        YsMCo7zUcr3ixNzi0rx0veT83E2M4HjX0trBuGfVB71DjEwcjIcYJTiYlUR4dRjF44V4UxIr
+        q1KL8uOLSnNSiw8xSnOwKInzfp21ME5IID2xJDU7NbUgtQgmy8TBKdXAdPSRFLeqktFj4UPS
+        ukruGr0ZCp37g0+kMr+fdMbI6rzcupCM75UH573R2mJx/OBkl9o1SfdORT6Z/md5gI4vu9oc
+        26Uq2V/Dfvxojd4aYBHwsCL07H8jA7bMnszlwet/27ybc+bLAdkr/zas36r/+fw+ydkVmUJb
+        bvQFO+014V606wv7qc03b3DHhncuZy+68LU3e+uFvPsPE6KbE579WlH41vbOyeUqVk808y7e
+        yNj27AdXi/vZp3UiPS12Uecex3sa2aze6VZbPTvr0zxV5RIBJ/cQU62U+kdPYgp9hRdMs7tz
+        +5Kvz4mdzmwRzJkhn+yKN+aZuO9YFJC95seUCw/Kzd4YnP+kM2cvr0L6YiWW4oxEQy3mouJE
+        ANR+sPpmAwAA
+X-CMS-MailID: 20200721181547epcas5p34f1d1e748c9018600a530dd354d36767
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8
+References: <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p8>
+        <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
+        <077301d65b0d$24d79920$6e86cb60$@samsung.com>
+        <SN6PR04MB4640A5A8C71A51DB45968DAFFC7C0@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <SN6PR04MB4640A85E665E20D709885E16FC7A0@SN6PR04MB4640.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jul 2020 at 09:23, Johan Hovold <johan@kernel.org> wrote:
->
-> On Fri, Jul 17, 2020 at 08:51:18PM +0200, Erik Ekman wrote:
-> > When running qmi-firmware-update on the Sierra Wireless EM7305 in a Toshiba
-> > laptop, it changed product ID to 0x9062 when entering QDL mode:
+Hi Martin
+
+> -----Original Message-----
+> From: Avri Altman <Avri.Altman=40wdc.com>
+> Sent: 19 July 2020 12:05
+> To: Alim Akhtar <alim.akhtar=40samsung.com>; daejun7.park=40samsung.com;
+> jejb=40linux.ibm.com; martin.petersen=40oracle.com; asutoshd=40codeaurora=
+.org;
+> beanhuo=40micron.com; stanley.chu=40mediatek.com; cang=40codeaurora.org;
+> bvanassche=40acm.org; tomas.winkler=40intel.com
+> Cc: linux-scsi=40vger.kernel.org; linux-kernel=40vger.kernel.org; 'Sang-y=
+oon Oh'
+> <sangyoon.oh=40samsung.com>; 'Sung-Jun Park'
+> <sungjun07.park=40samsung.com>; 'yongmyung lee'
+> <ymhungry.lee=40samsung.com>; 'Jinyoung CHOI' <j-
+> young.choi=40samsung.com>; 'Adel Choi' <adel.choi=40samsung.com>; 'BoRam
+> Shin' <boram.shin=40samsung.com>
+> Subject: RE: =5BPATCH v6 0/5=5D scsi: ufs: Add Host Performance Booster S=
+upport
+>=20
+> Martin - Can we move forward with this one?
+>=20
+> Thanks,
+> Avri
+>=20
 > >
-> > usb 2-4: new high-speed USB device number 78 using xhci_hcd
-> > usb 2-4: New USB device found, idVendor=1199, idProduct=9062, bcdDevice= 0.00
-> > usb 2-4: New USB device strings: Mfr=1, Product=2, SerialNumber=0
-> > usb 2-4: Product: EM7305
-> > usb 2-4: Manufacturer: Sierra Wireless, Incorporated
+> > > > v5 -> v6
+> > > > Change base commit to b53293fa662e28ae0cdd40828dc641c09f133405
+> > > >
+> > > If no further comments, can this series have your Reviewed-by or
+> > > Acked-by tag, so that this can be taken for 5.9?
+> > > Thanks=21
+> > Hey, yes.  So sorry for this delay, I was away for few days.
+> > Yes - This series looks good to me.
 > >
-> > The upgrade could complete after running
-> >  # echo 1199 9062 > /sys/bus/usb-serial/drivers/qcserial/new_id
+This series needs your attention.
+
+Thanks,
+
+> > Thanks,
+> > Avri
 > >
-> > qcserial 2-4:1.0: Qualcomm USB modem converter detected
-> > usb 2-4: Qualcomm USB modem converter now attached to ttyUSB0
-> >
-> > Signed-off-by: Erik Ekman <erik@kryo.se>
->
-> Applied, thanks.
->
-> Would you mind posting the output of "usb-devices" (or "lsusb -v") for
-> this device for completeness?
->
-(resend as plain text)
+> > >
+> > > > v4 -> v5
+> > > > Delete unused macro define.
+> > >
 
-from usb-devices:
 
-T:  Bus=02 Lev=01 Prnt=01 Port=03 Cnt=03 Dev#= 30 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=1199 ProdID=9062 Rev=00.00
-S:  Manufacturer=Sierra Wireless, Incorporated
-S:  Product=EM7305
-C:  #Ifs= 1 Cfg#= 1 Atr=80 MxPwr=2mA
-I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-
-and with the driver it instead ends with:
-I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=qcserial
-as expected.
-
-Cheers
-/Erik
-
->
-> Johan
