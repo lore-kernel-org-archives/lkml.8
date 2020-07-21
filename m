@@ -2,85 +2,136 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5053C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB07C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6D220717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE152073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDNONVZQ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DnuBVmb4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731215AbgGUVbD (ORCPT
+        id S1731279AbgGUVbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:31:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730654AbgGUVbC (ORCPT
+        Tue, 21 Jul 2020 17:31:35 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16107 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730974AbgGUVbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:31:02 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 228DDC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:31:02 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id u12so142989lff.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:31:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=nu6TKgtV3qURpGjBvNFV6IMyJvIIBzCD7ImtPQ6thtU=;
-        b=QDNONVZQPw1ixumkJyQEWmNEfSatUjQbSQ8D3NJFNgq+4HuF65m2fLcvaplwjBJpVQ
-         N1Lj7refGZWfqX3ijDeM5tJLcbUmpr3Ji8MLMSnRESQsDP7TVka0LloXDC/EM2qCJ9/2
-         HC1zMTOCqiMFBCZR8obJXWrCNi/Lvtz7ZEHQRVUndSEgtNDT5KEEXVsS4ac6KcsyOIIh
-         qvTbX8FbMv24IXV/eP1THWQly1XhuIy0q9K0TnRvRKTMDmjZwIQwHODXJ4jjclzfoZir
-         RdDpUmZJKFSRiZJLABmGogt7dNQXnn+Y36jY8IWvB4Q6lqt3IshxFObp3i/H2RBQ0diI
-         yKcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=nu6TKgtV3qURpGjBvNFV6IMyJvIIBzCD7ImtPQ6thtU=;
-        b=XThp7DgWlws/lor7ArJrNzb87vS9ZeAQpkvh6uv60MwTauESdGB9uL8lQtE6L/KOA0
-         uwki+59LYEkd0riy2/Mp980Xw4zofWmUzLcQ2JB9HEYRFxbBXlP738R+zFIYHBb+bI2K
-         KrGkD1Rus4+uNUABCj+eljmIzJxIYhS/oWge3ukYTwENoBr4m2BAVpSo2o6o35wDg+BZ
-         FySZT1neh/tMhDbeuJEqoGVliS7ptEZFyPUgOeqzQ7IAHIJPmclH+H5IOCTVS7M8rpGL
-         bEn3Juc0hRzh1UyUtOZrrJ60Z51sIwgWJ+i84use32Cv2HGYuP85ejYYzS4oaG6OD7Il
-         ty8g==
-X-Gm-Message-State: AOAM5302s262s2FO7Qxv+KlgT9oUjsYQ7XKT5es0No3w7imdwot01Jd/
-        nTH+cA4ka41PG4WWJNE38/fELdr2kp3cJylqnw==
-X-Google-Smtp-Source: ABdhPJxRUPCn7QVQPYQTpZEek1QRa7tTIJXfeMRdTQvJRUNy18l0SEweV6EwNHaocu0MlgNLtXFzGREmss9Xlw9o/KQ=
-X-Received: by 2002:ac2:58d5:: with SMTP id u21mr4307530lfo.31.1595367060496;
- Tue, 21 Jul 2020 14:31:00 -0700 (PDT)
+        Tue, 21 Jul 2020 17:31:32 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f175e750002>; Tue, 21 Jul 2020 14:30:29 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 21 Jul 2020 14:31:31 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 21 Jul 2020 14:31:31 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Jul
+ 2020 21:31:25 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 21 Jul 2020 21:31:25 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f175ead0001>; Tue, 21 Jul 2020 14:31:25 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        <nouveau@lists.freedesktop.org>, <kvm-ppc@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "Ben Skeggs" <bskeggs@redhat.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        "Ralph Campbell" <rcampbell@nvidia.com>
+Subject: [PATCH v3 0/5] mm/migrate: avoid device private invalidations
+Date:   Tue, 21 Jul 2020 14:31:14 -0700
+Message-ID: <20200721213119.32344-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Date:   Wed, 22 Jul 2020 03:00:49 +0530
-Message-ID: <CAD=jOEYzbemo=WBev97q36578h5VA7jYVAdewgf5vKycGP1y+g@mail.gmail.com>
-Subject: Regarding bug in phantom.c
-To:     jirislaby@gmail.com, arnd@arndb.de
-Cc:     andrianov <andrianov@ispras.ru>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595367029; bh=S6TSnAaZe1yneC9qg+vali1aI4hicYt4hljXvpfEYPc=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=DnuBVmb4eDYGee/BzoLo3pnjgjneMSU/TSTsQmcQ9DAbiNQQpPFtY+zbjGwdGx2FF
+         wQ6Uie5n1usLkpeq4/h6ifVK6vhZghGtFt7gzWin8SCeBODjKeAvShGk2vXYxUCVOe
+         YPy7FXSBzYywTFkmYRzY/Mf2A+pRCCSw28133BMQTAYMJufABqRMzUNyGM+QA4MadI
+         3lrbbggcvIW9549w/6LetDLr5CS0Y/oxcvSS+Xw6f+zXsjvkvv7hn5hg4ry/LAzEst
+         lBF6Vstb7mTJefMpdEj61ilm2pL9jwuK6fgV8W22Nomolyn3Eh2Tuokdxb4C7/b5lL
+         1PhIiZU+SarUg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The goal for this series is to avoid device private memory TLB
+invalidations when migrating a range of addresses from system
+memory to device private memory and some of those pages have already
+been migrated. The approach taken is to introduce a new mmu notifier
+invalidation event type and use that in the device driver to skip
+invalidation callbacks from migrate_vma_setup(). The device driver is
+also then expected to handle device MMU invalidations as part of the
+migrate_vma_setup(), migrate_vma_pages(), migrate_vma_finalize() process.
+Note that this is opt-in. A device driver can simply invalidate its MMU
+in the mmu notifier callback and not handle MMU invalidations in the
+migration sequence.
 
-This is regarding a race-condition related bug found in phantom.c by
-the Linux Driver Verification Project.
+This series is based on Jason Gunthorpe's HMM tree (linux-5.8.0-rc4).
 
-dev->status is accessed in phantom_release with dev->open_lock and in
-phantom_isr() using dev->regs_lock therefore there can be a race
-between updating dev->status in phantom_release() and phantom_status()
-and reading it's value in phantom_isr().
-I don't think there is any particular lock protecting dev->status
-(like open_lock and regs_lock are for dev->opened and dev->oregs) and
-also not sure why exactly dev->status is updated in phantom_status()
-and just after that updated again in phantom_release().
-It will be great if you could look into this bug.
+Also, this replaces the need for the following two patches I sent:
+("mm: fix migrate_vma_setup() src_owner and normal pages")
+https://lore.kernel.org/linux-mm/20200622222008.9971-1-rcampbell@nvidia.com
+("nouveau: fix mixed normal and device private page migration")
+https://lore.kernel.org/lkml/20200622233854.10889-3-rcampbell@nvidia.com
 
-Thank you,
-Madhuparna
+Bharata Rao, let me know if I can add your reviewed-by back since
+I made a fair number of changes to this version of the series.
+
+Changes in v3:
+Changed the direction field "dir" to a "flags" field and renamed
+  src_owner to pgmap_owner.
+Fixed a locking issue in nouveau for the migration invalidation.
+Added a HMM selftest test case to exercise the HMM test driver
+  invalidation changes.
+Removed reviewed-by Bharata B Rao since this version is moderately
+  changed.
+
+Changes in v2:
+Rebase to Jason Gunthorpe's HMM tree.
+Added reviewed-by from Bharata B Rao.
+Rename the mmu_notifier_range::data field to migrate_pgmap_owner as
+  suggested by Jason Gunthorpe.
+
+Ralph Campbell (5):
+  nouveau: fix storing invalid ptes
+  mm/migrate: add a flags parameter to migrate_vma
+  mm/notifier: add migration invalidation type
+  nouveau/svm: use the new migration invalidation
+  mm/hmm/test: use the new migration invalidation
+
+ arch/powerpc/kvm/book3s_hv_uvmem.c            |  4 ++-
+ drivers/gpu/drm/nouveau/nouveau_dmem.c        | 19 ++++++++---
+ drivers/gpu/drm/nouveau/nouveau_svm.c         | 21 +++++-------
+ drivers/gpu/drm/nouveau/nouveau_svm.h         | 13 ++++++-
+ .../drm/nouveau/nvkm/subdev/mmu/vmmgp100.c    | 13 ++++---
+ include/linux/migrate.h                       | 16 ++++++---
+ include/linux/mmu_notifier.h                  |  7 ++++
+ lib/test_hmm.c                                | 34 +++++++++++--------
+ mm/migrate.c                                  | 14 ++++++--
+ tools/testing/selftests/vm/hmm-tests.c        | 18 +++++++---
+ 10 files changed, 112 insertions(+), 47 deletions(-)
+
+--=20
+2.20.1
+
