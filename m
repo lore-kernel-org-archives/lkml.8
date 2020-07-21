@@ -2,95 +2,82 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC12DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEB6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB3F222482
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:21:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oo0eXSGL"
+	by mail.kernel.org (Postfix) with ESMTP id A3A2422482
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbgGUMVa (ORCPT
+        id S1728492AbgGUMWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:21:30 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:41014 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbgGUMV3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:21:29 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LCLIdm066971;
-        Tue, 21 Jul 2020 07:21:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595334078;
-        bh=yQL5Tmkn/eZZMGfKuxJupf7ECdBCQmtXrTbqOCW8/Bk=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=oo0eXSGL7+Sf0+uGTStvD0B5ds14C2GYluTWyxFJjoRx29DaYENg/GLN0iybioK7Q
-         8YLwzNX7rLIfnJoljbP8Eirw1p++mOeapKBvKwo/U3MVCESSU/0NefiAn2usdFSA6j
-         r8wl83CSrd5wFXGUurEy8Y3PNxCFekmBSmkZCOhw=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06LCLIrh044350
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Jul 2020 07:21:18 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
- Jul 2020 07:21:17 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 21 Jul 2020 07:21:18 -0500
-Received: from [10.250.32.229] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LCLHKG087778;
-        Tue, 21 Jul 2020 07:21:17 -0500
-Subject: Re: [PATCH] leds: Replace HTTP links with HTTPS ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200713145115.35121-1-grandmaster@al2klimov.de>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <9df2b017-7d9e-02d1-5dab-bfc58c3f8d17@ti.com>
-Date:   Tue, 21 Jul 2020 07:21:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 08:22:52 -0400
+Received: from mga06.intel.com ([134.134.136.31]:13460 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726636AbgGUMWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 08:22:52 -0400
+IronPort-SDR: /c8enrNmOKbbW9rA96IbrAmTpKI2J0TcwEynLZ18hngTj6aJm8YfF1cESdCEojHgXLytCmyR5c
+ jnJIPXaNXfkw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="211662394"
+X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
+   d="scan'208";a="211662394"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 05:22:51 -0700
+IronPort-SDR: QRKBuOX3wimM7whHx8OuUjSdcYgNzpo16Eb3ifaPARH/EpOURaCxowV/BZ+z3RNd281xrN4eSQ
+ ZJF6b0Kq8vAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
+   d="scan'208";a="392335007"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 21 Jul 2020 05:22:47 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 21 Jul 2020 15:22:47 +0300
+Date:   Tue, 21 Jul 2020 15:22:47 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
+ without DLL Link Active train links in 100 ms"
+Message-ID: <20200721122247.GI5180@lahna.fi.intel.com>
+References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
+ <20200716235440.GA675421@bjorn-Precision-5520>
+ <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
+ <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200713145115.35121-1-grandmaster@al2klimov.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Hi,
 
-On 7/13/20 9:51 AM, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
->
-> Deterministic algorithm:
-> For each file:
->    If not .svg:
->      For each line:
->        If doesn't contain `\bxmlns\b`:
->          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->              If both the HTTP and HTTPS versions
->              return 200 OK and serve the same content:
->                Replace HTTP with HTTPS.
->
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+[Sorry for the delay, I was on vacation]
 
-Acked-by: Dan Murphy <dmurphy@ti.com>
+On Fri, Jul 17, 2020 at 01:32:10PM +0200, Karol Herbst wrote:
+> Filed at https://bugzilla.kernel.org/show_bug.cgi?id=208597
 
-Thanks for the update
+Thanks for reporting.
+
+I'll check your logs and try to figure if there is something we can do
+to make both nouveau and TBT working at the same time.
+
+> oddly enough I wasn't able to reproduce it on my XPS 9560, will ping
+> once something breaks.
