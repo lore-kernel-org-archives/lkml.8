@@ -2,383 +2,134 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3D6C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10903C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEE7720720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E23C920720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:49:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lpFuK9OA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730745AbgGUQrL (ORCPT
+        id S1729558AbgGUQtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:47:11 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:38494 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728732AbgGUQrG (ORCPT
+        Tue, 21 Jul 2020 12:49:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727778AbgGUQtG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:47:06 -0400
-Received: from [78.134.114.177] (port=54080 helo=melee.fritz.box)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jxvPy-0009Zq-NM; Tue, 21 Jul 2020 18:47:02 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-clk@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        Adam Ford <aford173@gmail.com>
-Subject: [PATCH v3 4/4] dt-bindings: clk: versaclock5: convert to yaml
-Date:   Tue, 21 Jul 2020 18:46:55 +0200
-Message-Id: <20200721164655.422-4-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200721164655.422-1-luca@lucaceresoli.net>
-References: <20200721164655.422-1-luca@lucaceresoli.net>
+        Tue, 21 Jul 2020 12:49:06 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03B21C0619DA
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:49:05 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q4so24894514lji.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:49:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Od+zTycOXgLO8KxOLxcSpm14nyLCP4jZwV8jGWRnKLg=;
+        b=lpFuK9OAa+wE2Ulyz7amAwN9pME8grhLmFBJmxuxYbgbyPwDqYiXKVlZRutm696IoP
+         CucdkfpNKHu1dC6W5osl2PoysYrfTz7tKtBYUJCzu/VlEh9Xe5pnjhL6A8Cwyk99gIy7
+         /fnpKlTDy7dEKz6P6+g8l78OCPsXrP6qVBwQWim0bZpWZ87T1RLAAGbdcvZAgGOdCF/e
+         ky3e+cJQeznHXmg0f781bisBn+BB/dgYXYmeLaQp/82EeSVX6mt9LJW/Ss77Xm4nEnwa
+         PZNKC7fb+OnbHqgP5oKOtxA45slZ5xFazzEC5V/m4kiZiIMelPi1u1zWTbpxfr2o5W9Q
+         JaGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Od+zTycOXgLO8KxOLxcSpm14nyLCP4jZwV8jGWRnKLg=;
+        b=nTBhanwO572bkio7IKgLawvFmiOWBJsjLKwGQiRh/M2mzntcXzZBCz7rWnE+oCL0Jl
+         +/8NXbEfT2cYALwd8KjyLfJztojVNFRwljVsX1LzbfEDkzMFdyrCf+tpYChvDi9azTFd
+         nYg2+QVY6HS2v0ZbhtT/M667AT5sE1eXGVWXt3ep72uUB991nEb2o2fX3IKh7BSe8Ux3
+         eY9R6j178iZQWt4kZ9wMWCoTvEJOKjx3J+fslHcJheCObqrePiVCWzHnKz0wBR1TGPSY
+         Yr/feyHJz2qpLx+No4fYFyJ8UJWpA5fJnKRsGCMJR48Ht8GuByHDavJydcCLHOP+uPXk
+         nepA==
+X-Gm-Message-State: AOAM530ieggHx4a8cudg84yrTP0H5FE3aRr4P/lwYjdmDkDokapds3tX
+        U+sWXaYxg/2JQ3QhaSzkhv2RUFonoaCHwCUZ6z+wqQ==
+X-Google-Smtp-Source: ABdhPJwYDlDFxMbND8/mrk/EvLJEg1yVZ7yDt8/GKj1m85S0l/2vvZs0Ab4E7ekx1j+8SWGe5O2g2dCiYC100eQoheU=
+X-Received: by 2002:a2e:8851:: with SMTP id z17mr13816631ljj.225.1595350143051;
+ Tue, 21 Jul 2020 09:49:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20200714120917.11253-1-joro@8bytes.org> <20200715092456.GE10769@hirez.programming.kicks-ass.net>
+ <20200715093426.GK16200@suse.de> <20200715095556.GI10769@hirez.programming.kicks-ass.net>
+ <20200715101034.GM16200@suse.de> <CAAYXXYxJf8sr6fvbZK=t6o_to4Ov_yvZ91Hf6ZqQ-_i-HKO2VA@mail.gmail.com>
+ <20200721124957.GD6132@suse.de>
+In-Reply-To: <20200721124957.GD6132@suse.de>
+From:   Erdem Aktas <erdemaktas@google.com>
+Date:   Tue, 21 Jul 2020 09:48:51 -0700
+Message-ID: <CAAYXXYwVV_g8pGL52W9vxkgdNxg1dNKq_OBsXKZ_QizdXiTx2g@mail.gmail.com>
+Subject: Re: [PATCH v4 00/75] x86: SEV-ES Guest Support
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert to yaml the VersaClock bindings document. The mapping between
-clock specifier and physical pins cannot be described formally in yaml
-schema, then keep it verbatim in the description field.
+Yes, I am using OVMF with SEV-ES (sev-es-v12 patches applied). I am
+running Ubuntu 18.04 distro. My grub target is x86_64-efi. I also
+tried installing the grub-efi-amd64 package. In all cases, the grub is
+running in 64bit but enters the startup_32 in 32 bit mode. I think
+there should be a 32bit #VC handler just something very similar in the
+OVMF patches to handle the cpuid when the CPU is still in 32bit mode.
+As it is now, it will be a huge problem to support different distro images.
+I wonder if I am the only one having this problem.
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+-Erdem
 
----
-
-Changes in v3:
- - schema syntax fixes: use enum to constrain reg, don't use defines as
-   enums, drop type for standard unit suffix, fix syntax for clock-names
-   property (all suggested by Rob Herring)
----
- .../bindings/clock/idt,versaclock5.txt        | 125 --------------
- .../bindings/clock/idt,versaclock5.yaml       | 154 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 3 files changed, 155 insertions(+), 125 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/idt,versaclock5.txt
- create mode 100644 Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
-
-diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-deleted file mode 100644
-index 9656d4cf221c..000000000000
---- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-+++ /dev/null
-@@ -1,125 +0,0 @@
--Binding for IDT VersaClock 5,6 programmable i2c clock generators.
--
--The IDT VersaClock 5 and VersaClock 6 are programmable i2c clock
--generators providing from 3 to 12 output clocks.
--
--==I2C device node==
--
--Required properties:
--- compatible:	shall be one of
--		"idt,5p49v5923"
--		"idt,5p49v5925"
--		"idt,5p49v5933"
--		"idt,5p49v5935"
--		"idt,5p49v6901"
--		"idt,5p49v6965"
--- reg:		i2c device address, shall be 0x68 or 0x6a.
--- #clock-cells:	from common clock binding; shall be set to 1.
--- clocks:	from common clock binding; list of parent clock handles,
--		- 5p49v5923 and
--		  5p49v5925 and
--		  5p49v6901: (required) either or both of XTAL or CLKIN
--					reference clock.
--		- 5p49v5933 and
--		- 5p49v5935: (optional) property not present (internal
--					Xtal used) or CLKIN reference
--					clock.
--- clock-names:	from common clock binding; clock input names, can be
--		- 5p49v5923 and
--		  5p49v5925 and
--		  5p49v6901: (required) either or both of "xin", "clkin".
--		- 5p49v5933 and
--		- 5p49v5935: (optional) property not present or "clkin".
--
--For all output ports, a corresponding, optional child node named OUT1,
--OUT2, etc. can represent a each output, and the node can be used to
--specify the following:
--
--- idt,mode: can be one of the following:
--                 - VC5_LVPECL
--                 - VC5_CMOS
--                 - VC5_HCSL33
--                 - VC5_LVDS
--                 - VC5_CMOS2
--                 - VC5_CMOSD
--                 - VC5_HCSL25
--
--- idt,voltage-microvolts:  can be one of the following
--                 - 1800000
--                 - 2500000
--                 - 3300000
---  idt,slew-percent: Percent of normal, can be one of
--                 - 80
--                 - 85
--                 - 90
--                 - 100
--
--==Mapping between clock specifier and physical pins==
--
--When referencing the provided clock in the DT using phandle and
--clock specifier, the following mapping applies:
--
--5P49V5923:
--	0 -- OUT0_SEL_I2CB
--	1 -- OUT1
--	2 -- OUT2
--
--5P49V5933:
--	0 -- OUT0_SEL_I2CB
--	1 -- OUT1
--	2 -- OUT4
--
--5P49V5925 and
--5P49V5935:
--	0 -- OUT0_SEL_I2CB
--	1 -- OUT1
--	2 -- OUT2
--	3 -- OUT3
--	4 -- OUT4
--
--5P49V6901:
--	0 -- OUT0_SEL_I2CB
--	1 -- OUT1
--	2 -- OUT2
--	3 -- OUT3
--	4 -- OUT4
--
--==Example==
--
--/* 25MHz reference crystal */
--ref25: ref25m {
--	compatible = "fixed-clock";
--	#clock-cells = <0>;
--	clock-frequency = <25000000>;
--};
--
--i2c-master-node {
--
--	/* IDT 5P49V5923 i2c clock generator */
--	vc5: clock-generator@6a {
--		compatible = "idt,5p49v5923";
--		reg = <0x6a>;
--		#clock-cells = <1>;
--
--		/* Connect XIN input to 25MHz reference */
--		clocks = <&ref25m>;
--		clock-names = "xin";
--
--		OUT1 {
--			idt,mode = <VC5_CMOS>;
--			idt,voltage-microvolts = <1800000>;
--			idt,slew-percent = <80>;
--		};
--		OUT2 {
--			...
--		};
--		...
--	};
--};
--
--/* Consumer referencing the 5P49V5923 pin OUT1 */
--consumer {
--	...
--	clocks = <&vc5 1>;
--	...
--}
-diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
-new file mode 100644
-index 000000000000..3d4e1685cc55
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
-@@ -0,0 +1,154 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/idt,versaclock5.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Binding for IDT VersaClock 5 and 6 programmable I2C clock generators
-+
-+description: |
-+  The IDT VersaClock 5 and VersaClock 6 are programmable I2C
-+  clock generators providing from 3 to 12 output clocks.
-+
-+  When referencing the provided clock in the DT using phandle and clock
-+  specifier, the following mapping applies:
-+
-+  - 5P49V5923:
-+    0 -- OUT0_SEL_I2CB
-+    1 -- OUT1
-+    2 -- OUT2
-+
-+  - 5P49V5933:
-+    0 -- OUT0_SEL_I2CB
-+    1 -- OUT1
-+    2 -- OUT4
-+
-+  - other parts:
-+    0 -- OUT0_SEL_I2CB
-+    1 -- OUT1
-+    2 -- OUT2
-+    3 -- OUT3
-+    4 -- OUT4
-+
-+maintainers:
-+  - Luca Ceresoli <luca@lucaceresoli.net>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - idt,5p49v5923
-+      - idt,5p49v5925
-+      - idt,5p49v5933
-+      - idt,5p49v5935
-+      - idt,5p49v6901
-+      - idt,5p49v6965
-+
-+  reg:
-+    description: I2C device address
-+    enum: [ 0x68, 0x6a ]
-+
-+  '#clock-cells':
-+    const: 1
-+
-+patternProperties:
-+  "^OUT[1-4]$":
-+    type: object
-+    description:
-+      Description of one of the outputs (OUT1..OUT4). See "Clock1 Output
-+      Configuration" in the Versaclock 5/6/6E Family Register Description
-+      and Programming Guide.
-+    properties:
-+      idt,mode:
-+        description:
-+          The output drive mode. Values defined in dt-bindings/clk/versaclock.h
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        minimum: 0
-+        maximum: 6
-+      idt,voltage-microvolt:
-+        description: The output drive voltage.
-+        enum: [ 1800000, 2500000, 3300000 ]
-+      idt,slew-percent:
-+        description: The Slew rate control for CMOS single-ended.
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        enum: [ 80, 85, 90, 100 ]
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#clock-cells'
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - idt,5p49v5933
-+            - idt,5p49v5935
-+    then:
-+      # Devices with builtin crystal + optional external input
-+      properties:
-+        clock-names:
-+          const: clkin
-+        clocks:
-+          maxItems: 1
-+    else:
-+      # Devices without builtin crystal
-+      properties:
-+        clock-names:
-+            minItems: 1
-+            maxItems: 2
-+            items:
-+              enum: [ xin, clkin ]
-+        clocks:
-+          minItems: 1
-+          maxItems: 2
-+      required:
-+        - clock-names
-+        - clocks
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clk/versaclock.h>
-+
-+    /* 25MHz reference crystal */
-+    ref25: ref25m {
-+        compatible = "fixed-clock";
-+        #clock-cells = <0>;
-+        clock-frequency = <25000000>;
-+    };
-+
-+    i2c@0 {
-+        reg = <0x0 0x100>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        /* IDT 5P49V5923 I2C clock generator */
-+        vc5: clock-generator@6a {
-+            compatible = "idt,5p49v5923";
-+            reg = <0x6a>;
-+            #clock-cells = <1>;
-+
-+            /* Connect XIN input to 25MHz reference */
-+            clocks = <&ref25m>;
-+            clock-names = "xin";
-+
-+            OUT1 {
-+                idt,drive-mode = <VC5_CMOSD>;
-+                idt,voltage-microvolts = <1800000>;
-+                idt,slew-percent = <80>;
-+            };
-+
-+            OUT4 {
-+                idt,drive-mode = <VC5_LVDS>;
-+            };
-+        };
-+    };
-+
-+    /* Consumer referencing the 5P49V5923 pin OUT1 */
-+    consumer {
-+        /* ... */
-+        clocks = <&vc5 1>;
-+        /* ... */
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8e323ffddea0..344564ae0134 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8327,6 +8327,7 @@ F:	drivers/input/misc/ideapad_slidebar.c
- IDT VersaClock 5 CLOCK DRIVER
- M:	Luca Ceresoli <luca@lucaceresoli.net>
- S:	Maintained
-+F:	Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
- F:	drivers/clk/clk-versaclock5.c
- 
- IEEE 802.15.4 SUBSYSTEM
--- 
-2.27.0
-
+On Tue, Jul 21, 2020 at 5:50 AM Joerg Roedel <jroedel@suse.de> wrote:
+>
+> Hi,
+>
+> On Mon, Jul 20, 2020 at 06:09:19PM -0700, Erdem Aktas wrote:
+> > It looks like there is an expectation that the bootloader will start
+> > from the 64bit entry point in header_64.S. With the current patch
+> > series, it will not boot up if the bootloader jumps to the startup_32
+> > entry, which might break some default distro images.
+> > What are supported bootloaders and configurations?
+> > I am using grub ( 2.02-2ubuntu8.15) and it fails to boot because of
+> > this reason. I am not a grub expert, so I would appreciate any
+> > pointers on this.
+>
+> This is right, the only supported boot path is via the 64bit EFI entry
+> point. The reason is that SEV-ES requires support in the firmware too,
+> and currently only OVMF is supported in that regard. The firmware needs
+> to setup the AP jump-table, for example.
+>
+> Other boot-paths have not been implemented. Booting via startup_32 would
+> require exception handling in the 32bit-part of the boot-strap code,
+> because verify_cpu is called there. Also an AMD specific MSR can't be
+> accessed there because this would #GP on non-AMD/SEV-ES machines and,
+> as I said, there is no way yet to handle them.
+>
+> How did you get into the startup_32 entry-point, do you have an SEV-ES
+> BIOS supporting this? If it is really needed it could be implemented at
+> a later point.
+>
+> Regards,
+>
+>         Joerg
+>
