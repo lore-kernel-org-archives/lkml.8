@@ -2,116 +2,90 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3645C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E91C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A172120674
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:49:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="W6ArY2zY"
+	by mail.kernel.org (Postfix) with ESMTP id AD6FF2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbgGUKtG (ORCPT
+        id S1729189AbgGUKuS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:49:06 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:35733 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727043AbgGUKtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:49:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595328545; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=hWSCkjwa6XTH8wbP9rLLbwZRQrSZSARhWd3jpGdV9Qs=; b=W6ArY2zY9uBILB+tpU3OXMgh4efGvksJKrcU47Dctn9epu3ErP9795X/ETcXTS3FvVTRK0qk
- kxBnvhJ0/T/3r2zgNHwNBjZtX0gy3dAMm88QvAynAF5nkVa6bIVxSBiHbODFbATWkMA15APl
- 9CeEY3OpuKdjX549Vfnoat1trmM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-east-1.postgun.com with SMTP id
- 5f16c805427cd557667500df (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 21 Jul 2020 10:48:37
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 42CD6C433A0; Tue, 21 Jul 2020 10:48:36 +0000 (UTC)
-Received: from [192.168.43.98] (unknown [157.48.50.75])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 20993C433CA;
-        Tue, 21 Jul 2020 10:48:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 20993C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH] i2c: i2c-qcom-geni: Fix DMA transfer race
-To:     Douglas Anderson <dianders@chromium.org>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
-        Wolfram Sang <wsa@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200720172448.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <fc39751a-c730-0181-6904-cca34ff0f62c@codeaurora.org>
-Date:   Tue, 21 Jul 2020 16:18:23 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 06:50:18 -0400
+Received: from mail.fireflyinternet.com ([77.68.26.236]:59897 "EHLO
+        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726266AbgGUKuS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:50:18 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 21883524-1500050 
+        for multiple; Tue, 21 Jul 2020 11:49:06 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200720172448.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200622100825.726200103@infradead.org>
+References: <20200622100122.477087977@infradead.org> <20200622100825.726200103@infradead.org>
+Subject: Re: [PATCH -v2 1/5] sched: Fix ttwu() race
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     linux-kernel@vger.kernel.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        paulmck@kernel.org, frederic@kernel.org, peterz@infradead.org,
+        torvalds@linux-foundation.org, hch@lst.de
+To:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+        tglx@linutronix.de
+Date:   Tue, 21 Jul 2020 11:49:05 +0100
+Message-ID: <159532854586.15672.5123219635720172265@build.alporthouse.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Peter Zijlstra (2020-06-22 11:01:23)
+> @@ -2378,6 +2385,9 @@ static inline bool ttwu_queue_cond(int c
+>  static bool ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags)
+>  {
+>         if (sched_feat(TTWU_QUEUE) && ttwu_queue_cond(cpu, wake_flags)) {
+> +               if (WARN_ON_ONCE(cpu == smp_processor_id()))
+> +                       return false;
+> +
+>                 sched_clock_cpu(cpu); /* Sync clocks across CPUs */
+>                 __ttwu_queue_wakelist(p, cpu, wake_flags);
+>                 return true;
 
-On 7/21/2020 5:54 AM, Douglas Anderson wrote:
-> When I have KASAN enabled on my kernel and I start stressing the
-> touchscreen my system tends to hang.  The touchscreen is one of the
-> only things that does a lot of big i2c transfers and ends up hitting
-> the DMA paths in the geni i2c driver.  It appears that KASAN adds
-> enough delay in my system to tickle a race condition in the DMA setup
-> code.
->
-> When the system hangs, I found that it was running the geni_i2c_irq()
-> over and over again.  It had these:
->
-> m_stat   = 0x04000080
-> rx_st    = 0x30000011
-> dm_tx_st = 0x00000000
-> dm_rx_st = 0x00000000
-> dma      = 0x00000001
->
-> Notably we're in DMA mode but are getting M_RX_IRQ_EN and
-> M_RX_FIFO_WATERMARK_EN over and over again.
->
-> Putting some traces in geni_i2c_rx_one_msg() showed that when we
-> failed we were getting to the start of geni_i2c_rx_one_msg() but were
-> never executing geni_se_rx_dma_prep().
->
-> I believe that the problem here is that we are writing the transfer
-> length and setting up the geni command before we run
-> geni_se_rx_dma_prep().  If a transfer makes it far enough before we do
-> that then we get into the state I have observed.  Let's change the
-> order, which seems to work fine.
->
-> Fixes: 37692de5d523 ("i2c: i2c-qcom-geni: Add bus driver for the Qualcomm GENI I2C controller")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+We've been hitting this warning frequently, but have never seen the
+rcu-torture-esque oops ourselves.
 
-Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+<4> [181.766705] RIP: 0010:ttwu_queue_wakelist+0xbc/0xd0
+<4> [181.766710] Code: 00 00 00 5b 5d 41 5c 41 5d c3 31 c0 5b 5d 41 5c 41 5d c3 31 c0 f6 c3 08 74 f2 48 c7 c2 00 ad 03 00 83 7c 11 40 01 77 e4 eb 80 <0f> 0b 31 c0 eb dc 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 bf 17
+<4> [181.766726] RSP: 0018:ffffc90000003e08 EFLAGS: 00010046
+<4> [181.766733] RAX: 0000000000000000 RBX: 00000000ffffffff RCX: ffff888276a00000
+<4> [181.766740] RDX: 000000000003ad00 RSI: ffffffff8232045b RDI: ffffffff8233103e
+<4> [181.766747] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000001
+<4> [181.766754] R10: 00000000d3fa25c3 R11: 0000000053712267 R12: ffff88825b912940
+<4> [181.766761] R13: 0000000000000000 R14: 0000000000000087 R15: 000000000003ad00
+<4> [181.766769] FS:  0000000000000000(0000) GS:ffff888276a00000(0000) knlGS:0000000000000000
+<4> [181.766777] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4> [181.766783] CR2: 000055b8245814e0 CR3: 0000000005610003 CR4: 00000000003606f0
+<4> [181.766790] Call Trace:
+<4> [181.766794]  <IRQ>
+<4> [181.766798]  try_to_wake_up+0x21b/0x690
+<4> [181.766805]  autoremove_wake_function+0xc/0x50
+<4> [181.766858]  __i915_sw_fence_complete+0x1ee/0x250 [i915]
+<4> [181.766912]  dma_i915_sw_fence_wake+0x2d/0x40 [i915]
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+We are seeing this on the ttwu_queue() path, so with p->on_cpu=0, and the
+warning is cleared up by
 
+-               if (WARN_ON_ONCE(cpu == smp_processor_id()))
++               if (WARN_ON_ONCE(p->on_cpu && cpu == smp_processor_id()))
+
+which would appear to restore the old behaviour for ttwu_queue() and
+seem to be consistent with the intent of this patch. Hopefully this
+helps identify the problem correctly.
+-Chris
