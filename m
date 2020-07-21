@@ -8,67 +8,68 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557B0C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBFFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 273612068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A68B2068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:34:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vsr+TdNU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gupm99RL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730663AbgGURd6 (ORCPT
+        id S1730699AbgGUReM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:33:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55046 "EHLO
+        Tue, 21 Jul 2020 13:34:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbgGURd5 (ORCPT
+        with ESMTP id S1727778AbgGUReL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:33:57 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E73C061794;
-        Tue, 21 Jul 2020 10:33:56 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id a6so2658083wmm.0;
-        Tue, 21 Jul 2020 10:33:56 -0700 (PDT)
+        Tue, 21 Jul 2020 13:34:11 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 992A8C061794;
+        Tue, 21 Jul 2020 10:34:11 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f18so3693812wml.3;
+        Tue, 21 Jul 2020 10:34:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1fNLo/wadJZNmxLnnX/W4eCh9vHie5mDS6cCJWKgX0Y=;
-        b=Vsr+TdNUWWVsI83sWTSh2LZ88dSdu5VzNk3o+kGiBAnZDiPeYUfwkGEDB7zJpv/wMq
-         a7RPvdElQuOlUpclYZqRmrKYP+wIJDE37JeOvH/VImMVLj5TWGg5Gr5sw0ZutuIL1syE
-         eaUCnFVO3w9X1VsDCa8iCU+M5oe0/JpCUvuAN1dJyev8J0IQBPNMf5JZ53OylvKOgNLP
-         8cqpCYpjhbyubzbTZ4XvKBykhna/Nv12WN6GQ0PORd0A9vCherRIDlAKkbR5r0F7cJdy
-         t9y1NIUUGA3AkGPGiJXnqQbmulRmxsmuCPDNvObPtv2odNauQU/eUYQYIvxK9wt3zGCx
-         m99Q==
+        bh=ZpUWukDFhtGhPRKH8gzzWKs4NX7XpEAqlrkDHOJNL5E=;
+        b=gupm99RL+sfpFHE2rVMbZ7I+is0nUqbfb77qLseT+n6CvMeE7JqA77KTirK4woDMT0
+         OiA7JW+Xo7V9zM30C0iHKJpq+nkS8ESHhQlFSXUz0ErHW9P9pjS6I4JFdbxhE23AUVlH
+         uZ9IGf3Bzen0ofUEO6Aibfg5TXZnOc9fFf0E8D5QGPLFB0O0/J8XcokFZuHzTqLISXp3
+         +hf6EQWzFvY+DSZwOT2x/XHvGRpEau2dsh6NPUOpn2FoZTrSfHzamgMbdkhYl6C1kBN5
+         vLcsIt1g2cmIWzHZR6N6RwhmWNKijpVbcNL9rUBemp4WIVAGaKU+VYtGQ4RbiEDAegLW
+         HyMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=1fNLo/wadJZNmxLnnX/W4eCh9vHie5mDS6cCJWKgX0Y=;
-        b=l47mZ2rPtXpYbu1olQ3vCEj4wzJlpCO00qT4Ozr/ac32U/2Ja/UDC39CJyFmTEOFmh
-         uRaSFPE25fFFJI9K1UYsGVfPqNLx44sBv0Y3ZAIxtAsamZw4AyaQ3Wpbtv2cstyeRA91
-         jpr/FMLeuvMTjiLFbKLe2rq7cQBVIVUkC3mSUfesai5FCzVzWbvleJSulJ5xi2N/HNov
-         prrPIXYLrEf/PU4+CAiSYboH303e4aik5EaPEigoxqpyOxnYWkOSg8t3S0FoYw7EvwEz
-         oyRuzuG/MCXqs93ydJ3wj80jz8L/u8boiSUx4oDhQQiQLWdGxb9TJQ8cL77KjPZXcbQt
-         u7/Q==
-X-Gm-Message-State: AOAM5319cxy1iR3Xt8IUsQyz26XAUvTc5O3XBL6JQ210OY3dtcdX1CqV
-        42E9PZL0SlVhI1xCRoqqN+x5APDL
-X-Google-Smtp-Source: ABdhPJzWDX1FkltDoJNwTBS0nq7JGbYZhy8cpqaU3vR+qybY6R+SYcH3/K+Vsk7lX76iRYJi2hnkFg==
-X-Received: by 2002:a1c:b007:: with SMTP id z7mr4753425wme.37.1595352835656;
-        Tue, 21 Jul 2020 10:33:55 -0700 (PDT)
+        bh=ZpUWukDFhtGhPRKH8gzzWKs4NX7XpEAqlrkDHOJNL5E=;
+        b=rc2e19iKCvzzEreeKk/ALkgxY7ocqraFdpX4UOw8AkN6cyUVwck2x/KH7+pUrAX26y
+         CnouOL2hSPY5LrkuFTgSVyLRi8zGrt2VnjKUQYcXomrgPwrwie8Um7AEN0KGkjsn31kg
+         2Ud0pxzelfT7deyEZ8xdFfExz3Tv3aYGyjfledNyd14R8Jri88oPxJUqnCGJOZ/KOT8N
+         al3la7OkHlItTy1XcL5DKeKxbI/ZsVEIjlkWQr81GtOvS1KPoCicTYezWDiIlLEdnn7z
+         tBsdP9ar5loxu5bo/NMYOmtPDtvwAj1NDWvK6Yo1ANA1iMNZwuzzMTf34yCi4ox+x0ZR
+         zK2g==
+X-Gm-Message-State: AOAM532uocoYZxaKKxhHa+Ynyc1B6tWuBo3din3UPngF5C7vPZlKP8Z/
+        5RYNr7ElSCV3a4Mx+lbQjt0=
+X-Google-Smtp-Source: ABdhPJycwVKCIFlp5/z/dbMBVSz9f38q1uNnYqv9MTORSDC9xlA9Dvm6tiWUmr+i9MSDB08yyvkErg==
+X-Received: by 2002:a1c:720e:: with SMTP id n14mr5342301wmc.144.1595352850335;
+        Tue, 21 Jul 2020 10:34:10 -0700 (PDT)
 Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id u84sm4380056wmg.7.2020.07.21.10.33.52
+        by smtp.googlemail.com with ESMTPSA id t3sm7184979wre.41.2020.07.21.10.34.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 10:33:54 -0700 (PDT)
-Subject: Re: [PATCH v2 4/7] usb: bdc: Adb shows offline after resuming from S2
+        Tue, 21 Jul 2020 10:34:08 -0700 (PDT)
+Subject: Re: [PATCH v2 5/7] usb: bdc: driver runs out of buffer descriptors on
+ large ADB transfers
 To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Sasi Kumar <sasi.kumar@broadcom.com>
 References: <20200721144326.7976-1-alcooperx@gmail.com>
- <20200721144326.7976-5-alcooperx@gmail.com>
+ <20200721144326.7976-6-alcooperx@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -124,12 +125,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <288342d0-4a6a-4780-855e-ae2844a9a0e5@gmail.com>
-Date:   Tue, 21 Jul 2020 10:33:50 -0700
+Message-ID: <1cf26dfc-977c-59d2-2401-6e55fd513f1b@gmail.com>
+Date:   Tue, 21 Jul 2020 10:34:06 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200721144326.7976-5-alcooperx@gmail.com>
+In-Reply-To: <20200721144326.7976-6-alcooperx@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -139,17 +140,13 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 7/21/20 7:43 AM, Al Cooper wrote:
-> On Android systems, After temporarily putting device to S2 by
-> short pressing the power button on the remote, the display turns
-> off. Then press the power button to turn the display back up. Adb
-> devices would show the devices is offline. It needs a physical
-> disconnect of the usb cable or power cycle to bring the device
-> back online. The device is operational otherwise.
-> 
-> The problem is that during S2 resume, the ADB gadget driver could
-> not link back with the BDC driver because the endpoint flags were
-> cleared. The fix is to clear the endpoint flags for the disconnect
-> case only and not for S2 exit.
+> Version v1.0.40 of the Android host ADB software increased maximum
+> transfer sizes from 256K to 1M. Since the STB ADB gadget driver
+> requests only 16K at a time, the BDC driver ran out of buffer
+> descriptors (BDs) if the queuing happens faster than the incoming
+> 16K transfers. This issue is fixed by doubling the number of BDs
+> that can be queued so that the entire 1M request can be queued
+> without running out of buffers.
 > 
 > Signed-off-by: Al Cooper <alcooperx@gmail.com>
 
