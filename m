@@ -2,305 +2,139 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9837C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313EDC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87115206E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AFBC20729
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:20:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="kdwkunAv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1IvOQ6YE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbgGUPTk (ORCPT
+        id S1729857AbgGUPT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:19:40 -0400
-Received: from mail-dm6nam11on2067.outbound.protection.outlook.com ([40.107.223.67]:51041
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726436AbgGUPTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:19:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eezoDraUw6s5s1pY0AL8NqYEI34IJuDipdJBr4C6OmxGQ4TNdufJXryZnWLMB/IX6R9uFf+6xDaayx4b+rf6KZ3gmGAOeKYVtREbQpM2VavBMgtUPN4Ly+fDnp0dqt/0VLISRKSY7NTQExiZCx85GvNmoVhi2hqqYLfVFujK9J9my5WdlqI7sibmFYaHKBYw1gaqCxVHXQtCWuBdIq3tVkORq0rXfOppkd9U1LFPB8uZGJO/RMc/nwtzCk/YoOklOm6/POUC2HVFbUIM8TNUXI9S8chcxIZf/MtQM90287UfJiAR2Euw8lg5W2FdDZ27J0ETMVBzwDnTWKPo7jgHfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3cDUlaYJxHrtdoWtmeonTnIZe6mgJD5Yu53PHyFBpaw=;
- b=f1DN/++v7EgFvqeSil7sFbJJtOP5tVB/zSUcGc6NumM4JZ3H44jbv6rYiH5G44+RNeqAiJsPOFnp3dewhUe34LFpVFF79NCZHymQepo4xMnyBDSQlFXJzQExwSnA9kmjjt9XR17csbkgcbp8UwP/WLSET2FSWeQypIOZkyOtA/twMmyrNHnY9x6cGiOosqiqoHVmqocOfzABB8CHBNe57vauFh+57B9hvgkLQo63MiHB5z7K2cu/yHMgezlNQhNPRLc29CgwP2//KMvZx2suM2mSpGzPLvRecXXGdCurJ1DeIW2UB6YO7wgo4JJs9m0I3qC1ttfgwruCJe2Ek8X/7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3cDUlaYJxHrtdoWtmeonTnIZe6mgJD5Yu53PHyFBpaw=;
- b=kdwkunAvDOhQjzSIL+qlwZ1i+gaz5XCyTcVlO71lKJvETn5wbK3zM7b2WDynmsfP+1le5pPq4f6o6Jzc40wEW5AzkwXJmNKLzzmPaKUIe7ytATA9gN9dh+SGOEYzmlyu12ZApWsiqfAdgp9NF5nHD0lOlv2/tc6J4WlBXUauDlA=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from CY4PR12MB1352.namprd12.prod.outlook.com (2603:10b6:903:3a::13)
- by CY4PR12MB1925.namprd12.prod.outlook.com (2603:10b6:903:120::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Tue, 21 Jul
- 2020 15:19:35 +0000
-Received: from CY4PR12MB1352.namprd12.prod.outlook.com
- ([fe80::9181:78bf:bf0:702b]) by CY4PR12MB1352.namprd12.prod.outlook.com
- ([fe80::9181:78bf:bf0:702b%5]) with mapi id 15.20.3216.020; Tue, 21 Jul 2020
- 15:19:35 +0000
-Subject: Re: [PATCH v1] crypto: ccp: sp-pci: use generic power management
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org
-References: <20200721123146.81710-1-vaibhavgupta40@gmail.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <7100976b-cf7c-c304-e2a6-660876e310af@amd.com>
-Date:   Tue, 21 Jul 2020 10:19:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200721123146.81710-1-vaibhavgupta40@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM5PR07CA0083.namprd07.prod.outlook.com
- (2603:10b6:4:ad::48) To CY4PR12MB1352.namprd12.prod.outlook.com
- (2603:10b6:903:3a::13)
+        Tue, 21 Jul 2020 11:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbgGUPT7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:19:59 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EA15C061794;
+        Tue, 21 Jul 2020 08:19:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UDgd79BY7gi8TqLDKkueThe0INr/de8/XZtWeBtTp4g=; b=1IvOQ6YEO1bgDDlBTYlRghsRlv
+        x6BMvXrA/+9IbLHFeVn36I4gukr3Bn0cCKAe98VNUIWChuL16bJjc/bd3hPXxAasHTAKthuU/Zi1L
+        A6hgB1abgU+vFB7TWrZ/bSs2B7H8p8oL09ta8vegyhRMyjcQXB2NF24/OxAecpjm5PhtPH9d3PR4X
+        8UhJ8Ag99fmvxPY0yXuOIz5+pu46/IdKlobtn7BI2JJUx27uO6IU0a6x+1Z133R8gYvanTD7wecUQ
+        ctczp/CH/WNRGibFW3GSKRLnVLScFDieEdSKBYR2C2N3yfCzMq4p8WGmHOzqQ5neJE9D6AZLrz0aK
+        mAmEF/5g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxu3Z-0001Uy-MG; Tue, 21 Jul 2020 15:19:49 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 76765301AC6;
+        Tue, 21 Jul 2020 17:19:47 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 691E220107F23; Tue, 21 Jul 2020 17:19:47 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 17:19:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
+ membarrier_mm_sync_core_before_usermode
+Message-ID: <20200721151947.GD10769@hirez.programming.kicks-ass.net>
+References: <1594868476.6k5kvx8684.astroid@bobo.none>
+ <20200716110038.GA119549@hirez.programming.kicks-ass.net>
+ <1594906688.ikv6r4gznx.astroid@bobo.none>
+ <1314561373.18530.1594993363050.JavaMail.zimbra@efficios.com>
+ <1595213677.kxru89dqy2.astroid@bobo.none>
+ <2055788870.20749.1595263590675.JavaMail.zimbra@efficios.com>
+ <1595324577.x3bf55tpgu.astroid@bobo.none>
+ <20200721150656.GN119549@hirez.programming.kicks-ass.net>
+ <616209816.22376.1595344513051.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.30.118] (165.204.77.1) by DM5PR07CA0083.namprd07.prod.outlook.com (2603:10b6:4:ad::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.19 via Frontend Transport; Tue, 21 Jul 2020 15:19:34 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 841e03b0-147b-4cd9-cc46-08d82d8979b0
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1925:
-X-Microsoft-Antispam-PRVS: <CY4PR12MB1925CD7462160E16F4EBB23DEC780@CY4PR12MB1925.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1728;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uxFu/FHxsmtBZRT5v+NFFkn/8V6u7i8v2Sfl5ZhgClj1zkQ9uMWdizGqtUnXT9Z2Izb8Ln7etrt5K6yol0ipFDrBM/s4Kfyd0p+dmpXVqDpPzwvAPJs5fjVspqvHGZ4q9HKLygxA++0drC+qC1O9UhRDqVLHtd02hAhnlQ12Fw6He+zibHMX2Mq9Czt5nXc3vuYOIA72zEjtp9dBlg8XtCZJBXaeVH1YYekuT3asMLLsURYjoPZupjDSdWHUOQr5tXjaVJU+xscnaU7eCQe+L1NiuArK2YBIo18YDEg7ytijfEV3DHwcdn6aNhI3BUVDG3pafk+Ci7P55Bb7eS4xAfFV0YDCRhv+exbfswaM12SD7GFDf7gUKbxiEXq1IL3TMtFIKXV4LqckbtR9BxAJzA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR12MB1352.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(366004)(39860400002)(136003)(346002)(2906002)(26005)(86362001)(4326008)(110136005)(66946007)(31686004)(6486002)(31696002)(66476007)(53546011)(66556008)(8676002)(956004)(83380400001)(2616005)(8936002)(52116002)(36756003)(478600001)(186003)(16526019)(316002)(5660300002)(7416002)(16576012)(41533002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: nWU3IGBsME3j1P0poFybCt4152r9C5YOMu3/IcqAKrcfvm+PxJhTK9yYfPo/TFqjCUrqD7Sf9P2+n3ViLXZukeN7nSzHpwxdGUOFaEJdaVQdLEZof7J7vpet6Cy28xuX130YeTP+uiIFoPtJ+tWEe1F/hqoriRXffR5AqPtbYxY6YvjwahQyZbqa7nasTiNHY1np0Tu8C4eqIqrEuUTRjuloDEA59S/iRgT2hDZpGEAB0TI7fVsbRihoWIJfgpEnGxyjZwYiOd0hbqPGwzumiYVLWTE24KbxAs3sBouSqr3XUiHrEnSuMlMtbAwMqKgiT7sly62VcyQp3gWjeG85zyroWOH6BkqR0K6n1zu5MmEnPOtvjN/U7de/0mt31QzItg0DiVT8SrhFsXP/2Qu15aCptxXYVJyZR2Zo9O2aX0NNYaqn36WdJYEwDUQlYh4HS3vv+F7K5dYkJTaRwieNLKCs6B8BFjS3anNvhG+PP78=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 841e03b0-147b-4cd9-cc46-08d82d8979b0
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR12MB1352.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2020 15:19:35.0873
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WYija3CZTpANk817et6Ikog8Dx/I/hC0TWtEwBBkRCZaxCm/AtAm47RjSLUwV9yEHYW8YOySHmR2N32atgc1pw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1925
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <616209816.22376.1595344513051.JavaMail.zimbra@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/21/20 7:31 AM, Vaibhav Gupta wrote:
-> Drivers using legacy power management .suspen()/.resume() callbacks
-> have to manage PCI states and device's PM states themselves. They also
-> need to take care of standard configuration registers.
+On Tue, Jul 21, 2020 at 11:15:13AM -0400, Mathieu Desnoyers wrote:
+> ----- On Jul 21, 2020, at 11:06 AM, Peter Zijlstra peterz@infradead.org wrote:
 > 
-> Switch to generic power management framework using a single
-> "struct dev_pm_ops" variable to take the unnecessary load from the driver.
-> This also avoids the need for the driver to directly call most of the PCI
-> helper functions and device power state control functions as through
-> the generic framework, PCI Core takes care of the necessary operations,
-> and drivers are required to do only device-specific jobs.
+> > On Tue, Jul 21, 2020 at 08:04:27PM +1000, Nicholas Piggin wrote:
+> > 
+> >> That being said, the x86 sync core gap that I imagined could be fixed
+> >> by changing to rq->curr == rq->idle test does not actually exist because
+> >> the global membarrier does not have a sync core option. So fixing the
+> >> exit_lazy_tlb points that this series does *should* fix that. So
+> >> PF_KTHREAD may be less problematic than I thought from implementation
+> >> point of view, only semantics.
+> > 
+> > So I've been trying to figure out where that PF_KTHREAD comes from,
+> > commit 227a4aadc75b ("sched/membarrier: Fix p->mm->membarrier_state racy
+> > load") changed 'p->mm' to '!(p->flags & PF_KTHREAD)'.
+> > 
+> > So the first version:
+> > 
+> >  https://lkml.kernel.org/r/20190906031300.1647-5-mathieu.desnoyers@efficios.com
+> > 
+> > appears to unconditionally send the IPI and checks p->mm in the IPI
+> > context, but then v2:
+> > 
+> >  https://lkml.kernel.org/r/20190908134909.12389-1-mathieu.desnoyers@efficios.com
+> > 
+> > has the current code. But I've been unable to find the reason the
+> > 'p->mm' test changed into '!(p->flags & PF_KTHREAD)'.
 > 
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> ---
->  drivers/crypto/ccp/ccp-dev.c     |  8 +++-----
->  drivers/crypto/ccp/sp-dev.c      |  6 ++----
->  drivers/crypto/ccp/sp-dev.h      |  6 +++---
->  drivers/crypto/ccp/sp-pci.c      | 17 ++++++-----------
->  drivers/crypto/ccp/sp-platform.c |  2 +-
->  5 files changed, 15 insertions(+), 24 deletions(-)
+> Looking back at my inbox, it seems like you are the one who proposed to
+> skip all kthreads: 
 > 
-> diff --git a/drivers/crypto/ccp/ccp-dev.c b/drivers/crypto/ccp/ccp-dev.c
-> index 19ac509ed76e..8ae26d3cffff 100644
-> --- a/drivers/crypto/ccp/ccp-dev.c
-> +++ b/drivers/crypto/ccp/ccp-dev.c
-> @@ -531,8 +531,7 @@ int ccp_trng_read(struct hwrng *rng, void *data, size_t max, bool wait)
->  	return len;
->  }
->  
-> -#ifdef CONFIG_PM
-> -bool ccp_queues_suspended(struct ccp_device *ccp)
-> +bool __maybe_unused ccp_queues_suspended(struct ccp_device *ccp)
+> https://lkml.kernel.org/r/20190904124333.GQ2332@hirez.programming.kicks-ass.net
 
-These aren't static functions, so is the __maybe_unused necessary?
+I had a feeling it might've been me ;-) I just couldn't find the email.
 
-(Same comment on the other non-static functions changed below)
-
->  {
->  	unsigned int suspended = 0;
->  	unsigned long flags;
-> @@ -549,7 +548,7 @@ bool ccp_queues_suspended(struct ccp_device *ccp)
->  	return ccp->cmd_q_count == suspended;
->  }
->  
-> -int ccp_dev_suspend(struct sp_device *sp, pm_message_t state)
-> +int __maybe_unused ccp_dev_suspend(struct sp_device *sp)
->  {
->  	struct ccp_device *ccp = sp->ccp_data;
->  	unsigned long flags;
-> @@ -577,7 +576,7 @@ int ccp_dev_suspend(struct sp_device *sp, pm_message_t state)
->  	return 0;
->  }
->  
-> -int ccp_dev_resume(struct sp_device *sp)
-> +int __maybe_unused ccp_dev_resume(struct sp_device *sp)
->  {
->  	struct ccp_device *ccp = sp->ccp_data;
->  	unsigned long flags;
-> @@ -601,7 +600,6 @@ int ccp_dev_resume(struct sp_device *sp)
->  
->  	return 0;
->  }
-> -#endif
->  
->  int ccp_dev_init(struct sp_device *sp)
->  {
-> diff --git a/drivers/crypto/ccp/sp-dev.c b/drivers/crypto/ccp/sp-dev.c
-> index ce42675d3274..6284a15e5047 100644
-> --- a/drivers/crypto/ccp/sp-dev.c
-> +++ b/drivers/crypto/ccp/sp-dev.c
-> @@ -211,13 +211,12 @@ void sp_destroy(struct sp_device *sp)
->  	sp_del_device(sp);
->  }
->  
-> -#ifdef CONFIG_PM
-> -int sp_suspend(struct sp_device *sp, pm_message_t state)
-> +int sp_suspend(struct sp_device *sp)
->  {
->  	int ret;
->  
->  	if (sp->dev_vdata->ccp_vdata) {
-> -		ret = ccp_dev_suspend(sp, state);
-> +		ret = ccp_dev_suspend(sp);
->  		if (ret)
->  			return ret;
->  	}
-> @@ -237,7 +236,6 @@ int sp_resume(struct sp_device *sp)
->  
->  	return 0;
->  }
-> -#endif
->  
->  struct sp_device *sp_get_psp_master_device(void)
->  {
-> diff --git a/drivers/crypto/ccp/sp-dev.h b/drivers/crypto/ccp/sp-dev.h
-> index f913f1494af9..0218d0670eee 100644
-> --- a/drivers/crypto/ccp/sp-dev.h
-> +++ b/drivers/crypto/ccp/sp-dev.h
-> @@ -119,7 +119,7 @@ int sp_init(struct sp_device *sp);
->  void sp_destroy(struct sp_device *sp);
->  struct sp_device *sp_get_master(void);
->  
-> -int sp_suspend(struct sp_device *sp, pm_message_t state);
-> +int sp_suspend(struct sp_device *sp);
->  int sp_resume(struct sp_device *sp);
->  int sp_request_ccp_irq(struct sp_device *sp, irq_handler_t handler,
->  		       const char *name, void *data);
-> @@ -134,7 +134,7 @@ struct sp_device *sp_get_psp_master_device(void);
->  int ccp_dev_init(struct sp_device *sp);
->  void ccp_dev_destroy(struct sp_device *sp);
->  
-> -int ccp_dev_suspend(struct sp_device *sp, pm_message_t state);
-> +int ccp_dev_suspend(struct sp_device *sp);
->  int ccp_dev_resume(struct sp_device *sp);
->  
->  #else	/* !CONFIG_CRYPTO_DEV_SP_CCP */
-> @@ -145,7 +145,7 @@ static inline int ccp_dev_init(struct sp_device *sp)
->  }
->  static inline void ccp_dev_destroy(struct sp_device *sp) { }
->  
-> -static inline int ccp_dev_suspend(struct sp_device *sp, pm_message_t state)
-> +static inline int ccp_dev_suspend(struct sp_device *sp)
->  {
->  	return 0;
->  }
-> diff --git a/drivers/crypto/ccp/sp-pci.c b/drivers/crypto/ccp/sp-pci.c
-> index cb6cb47053f4..f471dbaef1fb 100644
-> --- a/drivers/crypto/ccp/sp-pci.c
-> +++ b/drivers/crypto/ccp/sp-pci.c
-> @@ -252,23 +252,19 @@ static void sp_pci_remove(struct pci_dev *pdev)
->  	sp_free_irqs(sp);
->  }
->  
-> -#ifdef CONFIG_PM
-> -static int sp_pci_suspend(struct pci_dev *pdev, pm_message_t state)
-> +static int __maybe_unused sp_pci_suspend(struct device *dev)
->  {
-> -	struct device *dev = &pdev->dev;
->  	struct sp_device *sp = dev_get_drvdata(dev);
->  
-> -	return sp_suspend(sp, state);
-> +	return sp_suspend(sp);
->  }
->  
-> -static int sp_pci_resume(struct pci_dev *pdev)
-> +static int __maybe_unused sp_pci_resume(struct device *dev)
->  {
-> -	struct device *dev = &pdev->dev;
->  	struct sp_device *sp = dev_get_drvdata(dev);
->  
->  	return sp_resume(sp);
->  }
-> -#endif
->  
->  #ifdef CONFIG_CRYPTO_DEV_SP_PSP
->  static const struct sev_vdata sevv1 = {
-> @@ -365,15 +361,14 @@ static const struct pci_device_id sp_pci_table[] = {
->  };
->  MODULE_DEVICE_TABLE(pci, sp_pci_table);
->  
-> +static SIMPLE_DEV_PM_OPS(sp_pci_pm_ops, sp_pci_suspend, sp_pci_resume);
-> +
->  static struct pci_driver sp_pci_driver = {
->  	.name = "ccp",
->  	.id_table = sp_pci_table,
->  	.probe = sp_pci_probe,
->  	.remove = sp_pci_remove,
-> -#ifdef CONFIG_PM
-> -	.suspend = sp_pci_suspend,
-> -	.resume = sp_pci_resume,
-> -#endif
-> +	.driver.pm = &sp_pci_pm_ops,
->  };
->  
->  int sp_pci_init(void)
-> diff --git a/drivers/crypto/ccp/sp-platform.c b/drivers/crypto/ccp/sp-platform.c
-> index 831aac1393a2..9dba52fbee99 100644
-> --- a/drivers/crypto/ccp/sp-platform.c
-> +++ b/drivers/crypto/ccp/sp-platform.c
-
-This file use the same "#ifdef CONFIG_PM" to define the suspend and resume
-functions (see sp_platform_driver variable). Doesn't that need to be
-updated similar to sp-pci.c? Not sure how this compile tested successfully
-unless your kernel config didn't have CONFIG_PM defined?
-
-Thanks,
-Tom
-
-> @@ -207,7 +207,7 @@ static int sp_platform_suspend(struct platform_device *pdev,
->  	struct device *dev = &pdev->dev;
->  	struct sp_device *sp = dev_get_drvdata(dev);
->  
-> -	return sp_suspend(sp, state);
-> +	return sp_suspend(sp);
->  }
->  
->  static int sp_platform_resume(struct platform_device *pdev)
+> > The comment doesn't really help either; sure we have the whole lazy mm
+> > thing, but that's ->active_mm, not ->mm.
+> > 
+> > Possibly it is because {,un}use_mm() do not have sufficient barriers to
+> > make the remote p->mm test work? Or were we over-eager with the !p->mm
+> > doesn't imply kthread 'cleanups' at the time?
 > 
+> The nice thing about adding back kthreads to the threads considered for membarrier
+> IPI is that it has no observable effect on the user-space ABI. No pre-existing kthread
+> rely on this, and we just provide an additional guarantee for future kthread
+> implementations.
+> 
+> > Also, I just realized, I still have a fix for use_mm() now
+> > kthread_use_mm() that seems to have been lost.
+> 
+> I suspect we need to at least document the memory barriers in kthread_use_mm and
+> kthread_unuse_mm to state that they are required by membarrier if we want to
+> ipi kthreads as well.
+
+Right, so going by that email you found it was mostly a case of being
+lazy, but yes, if we audit the kthread_{,un}use_mm() barriers and add
+any other bits that might be needed, covering kthreads should be
+possible.
+
+No objections from me for making it so.
