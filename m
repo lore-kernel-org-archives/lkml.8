@@ -2,64 +2,64 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4E3C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C097EC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F15D3208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9895C20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:18:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqhSzg4Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oDDM7LtH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgGUESJ (ORCPT
+        id S1726666AbgGUESO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 00:18:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42672 "EHLO
+        Tue, 21 Jul 2020 00:18:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgGUESI (ORCPT
+        with ESMTP id S1725294AbgGUESN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 00:18:08 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9781EC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:18:08 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id m22so11320388pgv.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:18:08 -0700 (PDT)
+        Tue, 21 Jul 2020 00:18:13 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72467C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:18:13 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k71so937255pje.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:18:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QhRkRM1m4qgsAo9eZ39otcpFvlPpO24W7mp8anbogBw=;
-        b=bqhSzg4QOmAx8vDaoW+qgWApTlOrQm4qYUFBFPFk5eJ0mJKUnH+PBOy0rrPoVLuSvj
-         G5nYm2pK68MYqj6x+TCFJB+f5jSKEM8VQr4aztw9FuTmTF+mMsEgmg/KgI32RN54P7bo
-         Bn2WB2MaubV4PEisl9ole2vBWAje7/6zJzcOgvSaMXBVKWeu1m54/+zJ11AFQ9IAPZFj
-         91rrJTGVdFDuaP2F5FGqiWP3c4TtwHUsRxjZmJ/tHtgrRdyF4+P1bosWHGypJBEIDb/5
-         Aw3/2v/i3mKymhzPQPRC/tYJPoKK3JPXXYId/NMpEGilerA3j8tWesrhzp4XC8U4VWSl
-         qwfA==
+        bh=R2tHBpFD/zM6h4tVPj+IrVJrkSfg9TGKlPGPIT24nik=;
+        b=oDDM7LtHqXp5qpYiVH+FGIF7mIeFw9g/H9ceCsGbukvs6IZheFo4rGnwuTYqTjnOki
+         03STa3SP9VOwJNdHhCUbMJyOnZs0f8h96t7P+jyufj1kK3CMKp+TXeMtdz8WHmv0Gyq3
+         B9NO1IV9zbuiC7/6SbmNUx7cHgP4dY8qtcGruBUDT0+imgs8aJfPRZyeZH8j6tkhlbWk
+         AfElBlurX1Xx9rnLY8EdqmRmgyMSkZU7eNAfGSPIryTbgk+eFxgt3qdsZd7cbt+dKZIk
+         GfGZGMXncVsr8enfp9zxjyZOHzpxNRGmU0U7bo19wHRH9R/0JZdE8Lsr3lIie2QH+znF
+         YrFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QhRkRM1m4qgsAo9eZ39otcpFvlPpO24W7mp8anbogBw=;
-        b=kI2ytioTzo9Bgtb2Z4LPvjgaiHCtomzTZ8vcwpWucM8gNd7flqtO86VTXGCk7Vx9J6
-         j00EQ4nNI//xaxSlbTCvgqeHI8aNTPcs7EYP9NYdoU6TddEpWghU5GPY0Rumd8BEshVQ
-         TkLrPLXt4a4Ukxj9FaJMj7RuHecgqiYcerCQLF0m8UM7eVjdUktbooioMTc1QJPTCNFQ
-         G9bMiR9yxDRxJtQ3dclH4/Hedv/a+XtApa4IVGtxZCb4dpqoJVQGFMgNmv56kfV3rzD9
-         cCNn1FNEf9IuWTAy6bTp7qvG3UlawfVYp6AQjd5G5hr1BDOfU7duoDOLsE2jf1EXp0d6
-         G0+g==
-X-Gm-Message-State: AOAM530uRXLmC5uxSw502rm6B6DB3fiRwS8GlSObkaCiISMH0zK16zeT
-        zgnpHJHG3MGRE1BVApIV2sE=
-X-Google-Smtp-Source: ABdhPJx4iEq46mQUJiDEqXIx/wrx7qJP7HCND86/POVGHX0/iSnb09hQdnlfUa/C3gaz4EjedXYGBg==
-X-Received: by 2002:aa7:9a84:: with SMTP id w4mr21905832pfi.13.1595305088045;
-        Mon, 20 Jul 2020 21:18:08 -0700 (PDT)
+        bh=R2tHBpFD/zM6h4tVPj+IrVJrkSfg9TGKlPGPIT24nik=;
+        b=kRiiACSd7KkVWTzmqNAI7ZFFEV/A/hnlWRoaRhuedTDGSz89pA2B1UCCe8nnPCZN+5
+         2FWFvnsPVaytmU2Lv/G1xtpbVYp/f3UUxAnqdBZIhdm+XhUlQF1Bto+Q1vWU4AHWCteQ
+         nRa0hiKsfeobd3Wq9ohMOHxYVKXKBhNXlfX6hLRfioLcK3Hll1xIBOWomcv7gKIlo3SL
+         AAbLnDHn7ZpN5QTTVu2RjKEt+9WXZuNcMFXriABtDTh3Py8yAtTWzsNLnRboHNAfZvMD
+         EpsXutbr3CL4Pba9k0EeN3e+TZdaXr+NDZr9CFJhPdZ/kEP+BGrd2IAsiUyrGRjv9yxx
+         8ZUw==
+X-Gm-Message-State: AOAM531JBFCSDe4srXDVtaoAnhqipGZAPVWGNyR7cZlCuLW4maeziC1y
+        ZTg0etwPQknp4iY1E0kaTBg=
+X-Google-Smtp-Source: ABdhPJz6jDEXiIALuJdwmDFR6vbfWPQbyUI4QPMyQxgQaCt9p5wG5NHhrMHzWwsT8nvAm/+lHWNlWw==
+X-Received: by 2002:a17:90b:390e:: with SMTP id ob14mr2450924pjb.221.1595305092914;
+        Mon, 20 Jul 2020 21:18:12 -0700 (PDT)
 Received: from localhost.localdomain ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id e28sm18467270pfm.177.2020.07.20.21.18.04
+        by smtp.gmail.com with ESMTPSA id e28sm18467270pfm.177.2020.07.20.21.18.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 21:18:07 -0700 (PDT)
+        Mon, 20 Jul 2020 21:18:12 -0700 (PDT)
 From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 To:     Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
         James Morse <james.morse@arm.com>,
@@ -69,9 +69,9 @@ Cc:     suleiman@google.com, joelaf@google.com,
         linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         linux-kernel@vger.kernel.org,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: [RFC][PATCH 2/4] arm64: add guest pvstate support
-Date:   Tue, 21 Jul 2020 13:17:40 +0900
-Message-Id: <20200721041742.197354-3-sergey.senozhatsky@gmail.com>
+Subject: [RFC][PATCH 3/4] arm64: add host pvstate support
+Date:   Tue, 21 Jul 2020 13:17:41 +0900
+Message-Id: <20200721041742.197354-4-sergey.senozhatsky@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200721041742.197354-1-sergey.senozhatsky@gmail.com>
 References: <20200721041742.197354-1-sergey.senozhatsky@gmail.com>
@@ -82,240 +82,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PV-state is a per-CPU struct, which, for the time being,
-holds boolean `preempted' vCPU state. During the startup,
-given that host supports PV-state, each guest vCPU sends
-a pointer to its per-CPU variable to the host as a payload
-with the SMCC HV call, so that host can update vCPU state
-when it puts or loads vCPU.
+Add PV-state support bits to the host. Host uses the guest
+PV-state per-CPU pointers to update the VCPU state each time
+it kvm_arch_vcpu_load() or kvm_arch_vcpu_put() the VCPU, so
+that guest scheduler can become aware of the fact that not
+all VCPUs are always available. Currently guest scheduler
+on amr64 always assumes that all CPUs are available because
+vcpu_is_preempted() is not implemented on arm64.
 
-This has impact on the guest's scheduler - it does check
-the state of the vCPU it wants to run a task on:
-
-[..]
-  wake_up_process()
-   try_to_wake_up()
-    select_task_rq_fair()
-     available_idle_cpu()
-      vcpu_is_preempted()
-
-Some sched benchmarks data is available on the github page [0].
-
-[0] https://github.com/sergey-senozhatsky/arm64-vcpu_is_preempted
 Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 ---
- arch/arm64/include/asm/paravirt.h  |  15 ++++
- arch/arm64/kernel/Makefile         |   2 +-
- arch/arm64/kernel/paravirt-state.c | 117 +++++++++++++++++++++++++++++
- arch/arm64/kernel/paravirt.c       |   4 +-
- arch/arm64/kernel/time.c           |   1 +
- 5 files changed, 137 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm64/kernel/paravirt-state.c
+ arch/arm64/include/asm/kvm_host.h | 23 ++++++++++++
+ arch/arm64/kvm/Makefile           |  2 +-
+ arch/arm64/kvm/arm.c              |  4 +++
+ arch/arm64/kvm/hypercalls.c       | 11 ++++++
+ arch/arm64/kvm/pvstate.c          | 58 +++++++++++++++++++++++++++++++
+ 5 files changed, 97 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/kvm/pvstate.c
 
-diff --git a/arch/arm64/include/asm/paravirt.h b/arch/arm64/include/asm/paravirt.h
-index cf3a0fd7c1a7..1bf164b2041b 100644
---- a/arch/arm64/include/asm/paravirt.h
-+++ b/arch/arm64/include/asm/paravirt.h
-@@ -7,12 +7,22 @@ struct static_key;
- extern struct static_key paravirt_steal_enabled;
- extern struct static_key paravirt_steal_rq_enabled;
- 
-+struct pvstate_vcpu_info {
-+	bool	preempted;
-+	u8	reserved[63];
-+};
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index f6485c1b8c15..e6f325a4ba70 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -372,6 +372,12 @@ struct kvm_vcpu_arch {
+ 		u64 last_steal;
+ 		gpa_t base;
+ 	} steal;
 +
-+struct pv_state_ops {
-+	bool (*vcpu_is_preempted)(int cpu);
-+};
-+
- struct pv_time_ops {
- 	unsigned long long (*steal_clock)(int cpu);
++	/* PV state of the VCPU (e.g. vcpu_is_preempted()) */
++	struct {
++		gpa_t base;
++		struct gfn_to_hva_cache ghc;
++	} pv_state;
  };
  
- struct paravirt_patch_template {
- 	struct pv_time_ops time;
-+	struct pv_state_ops state;
- };
- 
- extern struct paravirt_patch_template pv_ops;
-@@ -22,10 +32,15 @@ static inline u64 paravirt_steal_clock(int cpu)
- 	return pv_ops.time.steal_clock(cpu);
+ /* Pointer to the vcpu's SVE FFR for sve_{save,load}_state() */
+@@ -556,6 +562,23 @@ static inline bool kvm_arm_is_pvtime_enabled(struct kvm_vcpu_arch *vcpu_arch)
+ 	return (vcpu_arch->steal.base != GPA_INVALID);
  }
  
-+bool native_vcpu_is_preempted(int cpu);
-+bool paravirt_vcpu_is_preempted(int cpu);
++int kvm_init_vcpu_state(struct kvm_vcpu *vcpu, gfn_t addr);
++int kvm_release_vcpu_state(struct kvm_vcpu *vcpu);
 +
-+int __init pv_state_init(void);
- int __init pv_time_init(void);
++static inline void kvm_arm_vcpu_state_init(struct kvm_vcpu_arch *vcpu_arch)
++{
++	vcpu_arch->pv_state.base = GPA_INVALID;
++	memset(&vcpu_arch->pv_state.ghc, 0x00, sizeof(struct gfn_to_hva_cache));
++}
++
++static inline bool
++kvm_arm_is_vcpu_state_enabled(struct kvm_vcpu_arch *vcpu_arch)
++{
++	return (vcpu_arch->pv_state.base != GPA_INVALID);
++}
++
++void kvm_update_vcpu_preempted(struct kvm_vcpu *vcpu, bool preempted);
++
+ void kvm_set_sei_esr(struct kvm_vcpu *vcpu, u64 syndrome);
  
- #else
+ struct kvm_vcpu *kvm_mpidr_to_vcpu(struct kvm *kvm, unsigned long mpidr);
+diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
+index 99977c1972cc..efc05ac0d781 100644
+--- a/arch/arm64/kvm/Makefile
++++ b/arch/arm64/kvm/Makefile
+@@ -12,7 +12,7 @@ obj-$(CONFIG_KVM) += hyp/
  
-+#define pv_state_init() do {} while (0)
- #define pv_time_init() do {} while (0)
+ kvm-y := $(KVM)/kvm_main.o $(KVM)/coalesced_mmio.o $(KVM)/eventfd.o \
+ 	 $(KVM)/vfio.o $(KVM)/irqchip.o \
+-	 arm.o mmu.o mmio.o psci.o perf.o hypercalls.o pvtime.o \
++	 arm.o mmu.o mmio.o psci.o perf.o hypercalls.o pvtime.o pvstate.o \
+ 	 inject_fault.o regmap.o va_layout.o hyp.o handle_exit.o \
+ 	 guest.o debug.o reset.o sys_regs.o \
+ 	 vgic-sys-reg-v3.o fpsimd.o pmu.o \
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 691d21e4c717..a1229e3b7117 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -265,6 +265,8 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
  
- #endif // CONFIG_PARAVIRT
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 5fb9b728459b..18974d5e798d 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -48,7 +48,7 @@ obj-$(CONFIG_ARMV8_DEPRECATED)		+= armv8_deprecated.o
- obj-$(CONFIG_ACPI)			+= acpi.o
- obj-$(CONFIG_ACPI_NUMA)			+= acpi_numa.o
- obj-$(CONFIG_ARM64_ACPI_PARKING_PROTOCOL)	+= acpi_parking_protocol.o
--obj-$(CONFIG_PARAVIRT)			+= paravirt.o
-+obj-$(CONFIG_PARAVIRT)			+= paravirt.o paravirt-state.o
- obj-$(CONFIG_RANDOMIZE_BASE)		+= kaslr.o
- obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
- obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
-diff --git a/arch/arm64/kernel/paravirt-state.c b/arch/arm64/kernel/paravirt-state.c
+ 	kvm_arm_pvtime_vcpu_init(&vcpu->arch);
+ 
++	kvm_arm_vcpu_state_init(&vcpu->arch);
++
+ 	vcpu->arch.hw_mmu = &vcpu->kvm->arch.mmu;
+ 
+ 	err = kvm_vgic_vcpu_init(vcpu);
+@@ -355,10 +357,12 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 
+ 	if (vcpu_has_ptrauth(vcpu))
+ 		vcpu_ptrauth_disable(vcpu);
++	kvm_update_vcpu_preempted(vcpu, false);
+ }
+ 
+ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+ {
++	kvm_update_vcpu_preempted(vcpu, true);
+ 	kvm_arch_vcpu_put_fp(vcpu);
+ 	if (has_vhe())
+ 		kvm_vcpu_put_sysregs_vhe(vcpu);
+diff --git a/arch/arm64/kvm/hypercalls.c b/arch/arm64/kvm/hypercalls.c
+index 550dfa3e53cd..3660552a8e02 100644
+--- a/arch/arm64/kvm/hypercalls.c
++++ b/arch/arm64/kvm/hypercalls.c
+@@ -52,6 +52,9 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
+ 		case ARM_SMCCC_HV_PV_TIME_FEATURES:
+ 			val = SMCCC_RET_SUCCESS;
+ 			break;
++		case ARM_SMCCC_HV_PV_STATE_FEATURES:
++			val = SMCCC_RET_SUCCESS;
++			break;
+ 		}
+ 		break;
+ 	case ARM_SMCCC_HV_PV_TIME_FEATURES:
+@@ -62,6 +65,14 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
+ 		if (gpa != GPA_INVALID)
+ 			val = gpa;
+ 		break;
++	case ARM_SMCCC_HV_PV_STATE_INIT:
++		if (kvm_init_vcpu_state(vcpu, smccc_get_arg1(vcpu)) == 0)
++			val = SMCCC_RET_SUCCESS;
++		break;
++	case ARM_SMCCC_HV_PV_STATE_RELEASE:
++		if (kvm_release_vcpu_state(vcpu) == 0)
++			val = SMCCC_RET_SUCCESS;
++		break;
+ 	default:
+ 		return kvm_psci_call(vcpu);
+ 	}
+diff --git a/arch/arm64/kvm/pvstate.c b/arch/arm64/kvm/pvstate.c
 new file mode 100644
-index 000000000000..4ae92a84c73d
+index 000000000000..3152555f3ed2
 --- /dev/null
-+++ b/arch/arm64/kernel/paravirt-state.c
-@@ -0,0 +1,117 @@
++++ b/arch/arm64/kvm/pvstate.c
+@@ -0,0 +1,58 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +
-+#define pr_fmt(fmt) "arm-pvstate: " fmt
-+
 +#include <linux/arm-smccc.h>
-+#include <linux/cpuhotplug.h>
-+#include <linux/export.h>
-+#include <linux/io.h>
-+#include <linux/jump_label.h>
-+#include <linux/printk.h>
-+#include <linux/psci.h>
-+#include <linux/reboot.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
++#include <linux/kvm_host.h>
 +
++#include <asm/kvm_mmu.h>
 +#include <asm/paravirt.h>
-+#include <asm/smp_plat.h>
 +
-+static DEFINE_PER_CPU(struct pvstate_vcpu_info, vcpus_states);
++#include <kvm/arm_hypercalls.h>
 +
-+bool native_vcpu_is_preempted(int cpu)
++int kvm_init_vcpu_state(struct kvm_vcpu *vcpu, gpa_t addr)
 +{
-+	return false;
-+}
-+
-+static bool pv_vcpu_is_preempted(int cpu)
-+{
-+	struct pvstate_vcpu_info *st;
-+
-+	st = &per_cpu(vcpus_states, cpu);
-+	return READ_ONCE(st->preempted);
-+}
-+
-+bool paravirt_vcpu_is_preempted(int cpu)
-+{
-+	return pv_ops.state.vcpu_is_preempted(cpu);
-+}
-+
-+static bool has_pvstate(void)
-+{
-+	struct arm_smccc_res res;
-+
-+	/* To detect the presence of PV time support we require SMCCC 1.1+ */
-+	if (arm_smccc_1_1_get_conduit() == SMCCC_CONDUIT_NONE)
-+		return false;
-+
-+	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
-+			     ARM_SMCCC_HV_PV_STATE_FEATURES,
-+			     &res);
-+
-+	if (res.a0 != SMCCC_RET_SUCCESS)
-+		return false;
-+	return true;
-+}
-+
-+static int __pvstate_cpu_hook(unsigned int cpu, int event)
-+{
-+	struct arm_smccc_res res;
-+	struct pvstate_vcpu_info *st;
-+
-+	st = &per_cpu(vcpus_states, cpu);
-+	arm_smccc_1_1_invoke(event, virt_to_phys(st), &res);
-+	if (res.a0 != SMCCC_RET_SUCCESS)
-+		return -EINVAL;
-+	return 0;
-+}
-+
-+static int pvstate_cpu_init(unsigned int cpu)
-+{
-+	int ret = __pvstate_cpu_hook(cpu, ARM_SMCCC_HV_PV_STATE_INIT);
-+
-+	if (ret)
-+		pr_warn("Unable to ARM_SMCCC_HV_PV_STATE_INIT\n");
-+	return ret;
-+}
-+
-+static int pvstate_cpu_release(unsigned int cpu)
-+{
-+	int ret = __pvstate_cpu_hook(cpu, ARM_SMCCC_HV_PV_STATE_RELEASE);
-+
-+	if (ret)
-+		pr_warn("Unable to ARM_SMCCC_HV_PV_STATE_RELEASE\n");
-+	return ret;
-+}
-+
-+static int pvstate_register_hooks(void)
-+{
-+	int ret;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_ARM_KVMPV_STARTING,
-+			"hypervisor/arm/pvstate:starting",
-+			pvstate_cpu_init,
-+			pvstate_cpu_release);
-+	if (ret < 0)
-+		pr_warn("Failed to register CPU hooks\n");
-+	return ret;
-+}
-+
-+static int __pvstate_init(void)
-+{
-+	return pvstate_register_hooks();
-+}
-+
-+int __init pv_state_init(void)
-+{
-+	int ret;
-+
-+	if (!has_pvstate())
++	if (kvm_arm_is_vcpu_state_enabled(&vcpu->arch))
 +		return 0;
 +
-+	ret = __pvstate_init();
-+	if (ret)
-+		return ret;
++	if (kvm_gfn_to_hva_cache_init(vcpu->kvm,
++				      &vcpu->arch.pv_state.ghc,
++				      addr,
++				      sizeof(struct pvstate_vcpu_info)))
++		return -EINVAL;
 +
-+	pv_ops.state.vcpu_is_preempted = pv_vcpu_is_preempted;
++	vcpu->arch.pv_state.base = addr;
 +	return 0;
 +}
-diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
-index 295d66490584..3fec7563ac27 100644
---- a/arch/arm64/kernel/paravirt.c
-+++ b/arch/arm64/kernel/paravirt.c
-@@ -26,7 +26,9 @@
- struct static_key paravirt_steal_enabled;
- struct static_key paravirt_steal_rq_enabled;
- 
--struct paravirt_patch_template pv_ops;
-+struct paravirt_patch_template pv_ops = {
-+	.state.vcpu_is_preempted = native_vcpu_is_preempted,
-+};
- EXPORT_SYMBOL_GPL(pv_ops);
- 
- struct pv_time_stolen_time_region {
-diff --git a/arch/arm64/kernel/time.c b/arch/arm64/kernel/time.c
-index eebbc8d7123e..50c55792f72b 100644
---- a/arch/arm64/kernel/time.c
-+++ b/arch/arm64/kernel/time.c
-@@ -68,4 +68,5 @@ void __init time_init(void)
- 	lpj_fine = arch_timer_rate / HZ;
- 
- 	pv_time_init();
-+	pv_state_init();
- }
++
++int kvm_release_vcpu_state(struct kvm_vcpu *vcpu)
++{
++	if (!kvm_arm_is_vcpu_state_enabled(&vcpu->arch))
++		return 0;
++
++	vcpu->arch.pv_state.base = GPA_INVALID;
++	return 0;
++}
++
++void kvm_update_vcpu_preempted(struct kvm_vcpu *vcpu, bool preempted)
++{
++	struct kvm *kvm = vcpu->kvm;
++	u64 idx;
++
++	if (!kvm_arm_is_vcpu_state_enabled(&vcpu->arch))
++		return;
++
++	/*
++	 * This function is called from atomic context, so we need to
++	 * disable page faults. kvm_write_guest_cached() will call
++	 * might_fault().
++	 */
++	pagefault_disable();
++	/*
++	 * Need to take the SRCU lock because kvm_write_guest_offset_cached()
++	 * calls kvm_memslots();
++	 */
++	idx = srcu_read_lock(&kvm->srcu);
++	kvm_write_guest_cached(kvm, &vcpu->arch.pv_state.ghc,
++			       &preempted, sizeof(bool));
++	srcu_read_unlock(&kvm->srcu, idx);
++	pagefault_enable();
++}
 -- 
 2.27.0
 
