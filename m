@@ -2,183 +2,108 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CCAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12034C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9C982072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB2D22072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgGUHng (ORCPT
+        id S1728068AbgGUHpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:43:36 -0400
-Received: from mga14.intel.com ([192.55.52.115]:33980 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726389AbgGUHng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 03:43:36 -0400
-IronPort-SDR: UpWHygMqV8zhPtp0k06S7xf+7hsyfy3VEtZ5pisOt+m7XdgZF2cymyvxgZyDuUN6Cxovj7ZMUa
- c4A7t5K1Ap5A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="149236145"
-X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
-   d="scan'208";a="149236145"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 00:43:35 -0700
-IronPort-SDR: iqbMeA+6tWKmX7+r07yBRC38+nVMDfTOrAw7ZGC1dsuLBwLN4eSTIAQbhKAEOhH3HDzntBS8dm
- Ja4IymKAbj1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
-   d="scan'208";a="431893396"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga004.jf.intel.com with ESMTP; 21 Jul 2020 00:43:33 -0700
-Date:   Tue, 21 Jul 2020 15:40:25 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     "Wu, Hao" <hao.wu@intel.com>
-Cc:     "mdf@kernel.org" <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "trix@redhat.com" <trix@redhat.com>,
-        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        "Weight, Russell H" <russell.h.weight@intel.com>
-Subject: Re: [PATCH 1/2] fpga: dfl: map feature mmio resources in their own
-  feature drivers
-Message-ID: <20200721074025.GF17091@yilunxu-OptiPlex-7050>
-References: <1594791498-14495-1-git-send-email-yilun.xu@intel.com>
- <1594791498-14495-2-git-send-email-yilun.xu@intel.com>
- <DM6PR11MB381928806B8E65BEEF66D07F857B0@DM6PR11MB3819.namprd11.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM6PR11MB381928806B8E65BEEF66D07F857B0@DM6PR11MB3819.namprd11.prod.outlook.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Tue, 21 Jul 2020 03:45:31 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:13786 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727916AbgGUHp3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 03:45:29 -0400
+Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
+  by alexa-out.qualcomm.com with ESMTP; 21 Jul 2020 00:45:28 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Jul 2020 00:45:26 -0700
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 21 Jul 2020 13:15:00 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 386A52BA8; Tue, 21 Jul 2020 13:14:59 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v9 0/2] ADD interconnect support for Qualcomm DWC3 driver
+Date:   Tue, 21 Jul 2020 13:14:47 +0530
+Message-Id: <1595317489-18432-1-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 05:09:35PM +0800, Wu, Hao wrote:
-> > Subject: [PATCH 1/2] fpga: dfl: map feature mmio resources in their own
-> > feature drivers
-> >
-> > This patch makes preparation for modularization of DFL sub feature
-> > drivers.
-> >
-> > Currently, if we need to support a new DFL sub feature, an entry should
-> > be added to fme/port_feature_drvs[] in dfl-fme/port-main.c. And we need
-> > to re-compile the whole DFL modules. That make the DFL drivers hard to be
-> > extended.
-> >
-> > Another consideration is that DFL may contain some IP blocks which are
-> > already supported by kernel, most of them are supported by platform
-> > device drivers. We could create platform devices for these IP blocks and
-> > get them supported by these drivers.
-> >
-> > An important issue is that platform device drivers usually requests mmio
-> > resources on probe. But now dfl mmio is mapped in dfl bus driver (e.g.
-> > dfl-pci) as a whole region. Then platform device drivers for sub features
-> > can't request their own mmio resources again. This is what the patch
-> > trying to resolve.
-> >
-> > This patch changes the DFL enumeration. DFL bus driver will unmap mmio
-> > resources after first step enumeration and pass enumeration info to DFL
-> > framework. Then DFL framework will map the mmio resources again, do 2nd
-> > step enumeration, and also unmap the mmio resources. In this way, sub
-> > feature drivers could then request their own mmio resources as needed.
-> >
-> > An exception is that mmio resource of FIU headers are still mapped in dfl
-> > bus driver. The FIU headers have some fundamental functions (sriov set,
-> > port enable/disable) needed for dfl bus devices and other sub features.
-> > They should not be unmapped as long as dfl bus device is alive.
-> >
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> > ---
-> >  drivers/fpga/dfl-pci.c |  21 ++++--
-> >  drivers/fpga/dfl.c     | 187 +++++++++++++++++++++++++++++++++++-----------
-> > ---
-> >  drivers/fpga/dfl.h     |   6 +-
-> >  3 files changed, 152 insertions(+), 62 deletions(-)
-> >
-> > diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
-> > index e220bec..22dc025 100644
-> > --- a/drivers/fpga/dfl-pci.c
-> > +++ b/drivers/fpga/dfl-pci.c
-> > @@ -39,6 +39,11 @@ static void __iomem *cci_pci_ioremap_bar(struct
-> > pci_dev *pcidev, int bar)
-> >  return pcim_iomap_table(pcidev)[bar];
-> >  }
-> >
-> > +static void cci_pci_iounmap_bars(struct pci_dev *pcidev, int mapped_bars)
-> > +{
-> > +pcim_iounmap_regions(pcidev, mapped_bars);
-> > +}
-> > +
-> >  static int cci_pci_alloc_irq(struct pci_dev *pcidev)
-> >  {
-> >  int ret, nvec = pci_msix_vec_count(pcidev);
-> > @@ -123,7 +128,7 @@ static int *cci_pci_create_irq_table(struct pci_dev
-> > *pcidev, unsigned int nvec)
-> >  static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
-> >  {
-> >  struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
-> > -int port_num, bar, i, nvec, ret = 0;
-> > +int port_num, bar, i, nvec, mapped_bars, ret = 0;
-> >  struct dfl_fpga_enum_info *info;
-> >  struct dfl_fpga_cdev *cdev;
-> >  resource_size_t start, len;
-> > @@ -163,6 +168,8 @@ static int cci_enumerate_feature_devs(struct pci_dev
-> > *pcidev)
-> >  goto irq_free_exit;
-> >  }
-> >
-> > +mapped_bars = BIT(0);
-> > +
-> >  /*
-> >   * PF device has FME and Ports/AFUs, and VF device only has one
-> >   * Port/AFU. Check them and add related "Device Feature List" info
-> > @@ -172,7 +179,7 @@ static int cci_enumerate_feature_devs(struct pci_dev
-> > *pcidev)
-> >  start = pci_resource_start(pcidev, 0);
-> >  len = pci_resource_len(pcidev, 0);
-> >
-> > -dfl_fpga_enum_info_add_dfl(info, start, len, base);
-> > +dfl_fpga_enum_info_add_dfl(info, start, len);
-> >
-> >  /*
-> >   * find more Device Feature Lists (e.g. Ports) per information
-> > @@ -200,22 +207,26 @@ static int cci_enumerate_feature_devs(struct
-> > pci_dev *pcidev)
-> >  if (!base)
-> >  continue;
-> >
-> > +mapped_bars |= BIT(bar);
-> > +
-> 
-> One more place,
-> 
-> As you removed base addr usage below, so ideally we don't need to map
-> more bars for port here? is my understanding correct?
+This path series aims to add interconnect support in
+dwc3-qcom driver on SDM845 and SC7180 SoCs.
 
-Exactly, thanks for the catching. This makes the code much simpler.
+Changes from v8 -> v9
+  > Addressed comments from Matthias.
 
-Thanks,
-Yilun
+Changes from v7 -> v8
+  > Only driver change is pending all other patches are merged so dropped
+    from the series.
+  > Removed the device_is_bound call and getting speed from device tree
+    and rearranged interconnect functions to avoid forward declarations.	
+  > Added patch to specify maximum speed for dwc3 DT node.
 
-> 
-> >  start = pci_resource_start(pcidev, bar) + offset;
-> >  len = pci_resource_len(pcidev, bar) - offset;
-> >
-> > -dfl_fpga_enum_info_add_dfl(info, start, len,
-> > -   base + offset);
-> > +dfl_fpga_enum_info_add_dfl(info, start, len);
-> 
-> Thanks
-> Hao
+Changes from v6 -> v7
+  > [PATCH 2/4] Fixed review comments from Matthias in DWC3 driver.
+  > Other patches remain unchanged.
+
+Changes from v5 -> v6
+  > [PATCH 1/4] Addressed comments from Rob.
+  > [PATCH 2/4] Fixed review comments from Matthias in DWC3 driver.
+  > [PATCH 3/4] Ignoring 80 char limit in defining interconnect paths.
+  > Added [PATCH 4/4] in this series. Adding interconnect nodes for SC7180.
+    Depends on patch https://patchwork.kernel.org/patch/11417989/.	
+
+Changes from v4 -> v5
+  > [PATCH 1/3] Added the interconnect properties in yaml. This patch depends
+    on series https://patchwork.kernel.org/cover/11372641/.
+  > [PATCH 2/3] Fixed review comments from Matthias in DWC3 driver.
+  > [PATCH 3/3] Modified as per the new interconnect nodes in sdm845. Depends
+    on series https://patchwork.kernel.org/cover/11372211/. 
+
+
+Changes from v3 -> v4
+  > Fixed review comments from Matthias
+  > [PATCH 1/3] and [PATCH 3/3] remains unchanged
+
+Changes from v2 -> v3
+  > Fixed review comments from Matthias and Manu
+  > changed the functions prefix from usb_* to dwc3_qcom_*
+
+Changes since V1:
+  > Comments by Georgi Djakov on "[PATCH 2/3]" addressed
+  > [PATCH 1/3] and [PATCH 3/3] remains unchanged
+
+Sandeep Maheswaram (2):
+  usb: dwc3: qcom: Add interconnect support in dwc3 driver
+  arm64: dts: qcom: sc7180: Add maximum speed property for DWC3 USB node
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi |   1 +
+ drivers/usb/dwc3/dwc3-qcom.c         | 127 ++++++++++++++++++++++++++++++++++-
+ 2 files changed, 126 insertions(+), 2 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
