@@ -2,96 +2,82 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F206C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856CBC433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4FF2077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:14:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xx89Zf9h"
+	by mail.kernel.org (Postfix) with ESMTP id 710952077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730285AbgGUQO0 (ORCPT
+        id S1730321AbgGUQOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:14:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46524 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727860AbgGUQOZ (ORCPT
+        Tue, 21 Jul 2020 12:14:45 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:57547 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1730090AbgGUQOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:14:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595348064;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=nU4GN8DzMVkB2B4BGU+FEKLwNEwIFvzsJZa/gMO7RWg=;
-        b=Xx89Zf9hSmeAYAfKdSdIFrHYwX2EGWouS4DwXRrowhusz4stSstJ48oM3Np+JJy0OxNjN2
-        NBtnwMaJt84D0DOWwW058VNpVofV/dKgFsIE9SIg1DCVXYMlKKot0g/9BV7IInU15V75BA
-        LN4lO2EfKMG9EG1o6PxEbaV0X4kv5DE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-223-xGPIJL10Pvahp9if4m2pyA-1; Tue, 21 Jul 2020 12:14:17 -0400
-X-MC-Unique: xGPIJL10Pvahp9if4m2pyA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2EFBD800469;
-        Tue, 21 Jul 2020 16:14:16 +0000 (UTC)
-Received: from jlaw-desktop.redhat.com (ovpn-114-255.rdu2.redhat.com [10.10.114.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D18958730C;
-        Tue, 21 Jul 2020 16:14:15 +0000 (UTC)
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] livepatch: Add compiler optimization disclaimer/docs
-Date:   Tue, 21 Jul 2020 12:14:05 -0400
-Message-Id: <20200721161407.26806-1-joe.lawrence@redhat.com>
+        Tue, 21 Jul 2020 12:14:45 -0400
+Received: (qmail 1279461 invoked by uid 1000); 21 Jul 2020 12:14:44 -0400
+Date:   Tue, 21 Jul 2020 12:14:44 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: kworker/0:3+pm hogging CPU
+Message-ID: <20200721161444.GE1272082@rowland.harvard.edu>
+References: <20200720151255.GE1228057@rowland.harvard.edu>
+ <20200720163355.GA4061@dhcp22.suse.cz>
+ <20200720173807.GJ1228057@rowland.harvard.edu>
+ <20200720174530.GB4061@dhcp22.suse.cz>
+ <20200720174812.GK1228057@rowland.harvard.edu>
+ <20200720181605.GC4061@dhcp22.suse.cz>
+ <20200720200243.GA1244989@rowland.harvard.edu>
+ <20200721055917.GD4061@dhcp22.suse.cz>
+ <20200721143325.GB1272082@rowland.harvard.edu>
+ <20200721160025.GP4061@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721160025.GP4061@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In light of [PATCH] Revert "kbuild: use -flive-patching when
-CONFIG_LIVEPATCH is enabled" [1], we should add some loud disclaimers
-and explanation of the impact compiler optimizations have on
-livepatching.
+On Tue, Jul 21, 2020 at 06:00:25PM +0200, Michal Hocko wrote:
+> On Tue 21-07-20 10:33:25, Alan Stern wrote:
+> [...]
+> 
+> Thanks a lot for your analysis. The laptop is slowly dying so this can
+> be related.
+> 
+> > So yes, this looks like a hardware design error.  Turning off 
+> > autosuspend by writing to the sysfs power/control file is probably the 
+> > best way to handle the problem.
+> 
+> I can use that workaround. But it seems that this also prevents me from
+> suspending the maching into RAM with
+> PM: Some devices failed to suspend, or early wake event detected
+> 
+> :/
+> 
+> If there is any workaround for that then I would be really happy but
+> considering the overal state of the machine I suspect this is not the
+> case.
 
-The first commit provides detailed explanations and examples.  The list
-was taken mostly from Miroslav's LPC talk a few years back.  This is a
-bit rough, so corrections and additional suggestions welcome.  Expanding
-upon the source-based patching approach would be helpful, too.
+As far as I know there is no workaround.
 
-The second commit adds a small README.rst file in the livepatch samples
-directory pointing the reader to the doc introduced in the first commit.
+Of course, you could build your own personal kernel with the 
+over-current test removed from the driver.  But keeping that up-to-date 
+would be a nuisance.
 
-I didn't touch the livepatch kselftests yet as I'm still unsure about
-how to best account for IPA here.  We could add the same README.rst
-disclaimer here, too, but perhaps we have a chance to do something more.
-Possibilities range from checking for renamed functions as part of their
-build, or the selftest scripts, or even adding something to the kernel
-API.  I think we'll have a better idea after reviewing the compiler
-considerations doc.
+> Thanks again for your great help!
 
-[1] https://lore.kernel.org/lkml/696262e997359666afa053fe7d1a9fb2bb373964.1595010490.git.jpoimboe@redhat.com/
+You're welcome.
 
-Joe Lawrence (2):
-  docs/livepatch: Add new compiler considerations doc
-  samples/livepatch: Add README.rst disclaimer
-
- .../livepatch/compiler-considerations.rst     | 220 ++++++++++++++++++
- Documentation/livepatch/index.rst             |   1 +
- Documentation/livepatch/livepatch.rst         |   7 +
- samples/livepatch/README.rst                  |  15 ++
- 4 files changed, 243 insertions(+)
- create mode 100644 Documentation/livepatch/compiler-considerations.rst
- create mode 100644 samples/livepatch/README.rst
-
--- 
-2.21.3
-
+Alan Stern
