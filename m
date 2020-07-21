@@ -2,138 +2,112 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778E0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E7CC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5302120771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 032A1207BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:36:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGNxulUt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPTyck6s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730287AbgGUShA (ORCPT
+        id S1730135AbgGUSgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 14:37:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36532 "EHLO
+        Tue, 21 Jul 2020 14:36:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbgGUSg7 (ORCPT
+        with ESMTP id S1726763AbgGUSgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 14:36:59 -0400
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7A22C061794;
-        Tue, 21 Jul 2020 11:36:58 -0700 (PDT)
-Received: by mail-io1-xd34.google.com with SMTP id z6so5009267iow.6;
-        Tue, 21 Jul 2020 11:36:58 -0700 (PDT)
+        Tue, 21 Jul 2020 14:36:37 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22CB2C061794;
+        Tue, 21 Jul 2020 11:36:37 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a24so11129605pfc.10;
+        Tue, 21 Jul 2020 11:36:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=DKoqtLlCZ3xb5WBePvpj1u1JNUm5TcuvXGpT5UK2G08=;
-        b=OGNxulUtSF4ynIewzetTCPyyWNFlPsCe/npBc9CT8DR+dc8tQKgB+dM+rrnpvXoDnE
-         tAKKO+yh/JDOdiRKRHmCjV3Q39ZDOOhUCo7ugO+S10btdbBXNVF0i6tLFrk3MEdc2xuv
-         L4S5PHK7EZFjh710wkrvs4I/7qx7H+/0EvGfSNLXx7IsOtlcvEplkKFtx9K8wieQA31F
-         aRQ0QITJHNeV72WeeVcCRdy4jYTWS4aovMQYVlv5Hwh24KwYjBug493ROJpaXi2IN5Hb
-         qc+3pSeZUR5+9uFQQsOTcYn8FWvhe6vFahthIufPxCPhaPbONEMAhhc7zmrWEF4LGs06
-         k+Rg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TFr1vDN4Hh+EBFaDQmE/0qvipCEGD4Tgyrl+Pql89Ug=;
+        b=MPTyck6s3+BLAH3P9iLxb4mUOWz7Yd55vHXrb13fb6toaKq16WYXT7zGtpLocw/wTR
+         AxmCKSaJPVTp7pilVti1TG0oDcJeCF0qiJMNclir0549HL9f6/wQkPA96zAYuYtDse8+
+         fA14Rm0dH+kXr11ADjdIU4tr9PVoMHtKNGC85nKBJbY1ito7KoyQOVhF53rBtTZFvI0R
+         EcQ4sh1JhCff36ptHzkVkpdE4kn/ZJ8XGBoWT9TKWcGx3I6lOT9BCP07sdKpZ12aG8nn
+         CAXFi6DStKtJlke2yP9V4JQzrxPS9wCgCSNKb5NURVhrSFddGK90Mc9xogBZct/JzeEl
+         kwAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding:content-language;
-        bh=DKoqtLlCZ3xb5WBePvpj1u1JNUm5TcuvXGpT5UK2G08=;
-        b=G5CiknatQwT/SIc4Xfh1hege6XirFpLgX7rh6LCcdkGP72yBD+q8hcw9TBKoykYEG7
-         TsiMDT3mldEutmixcnb5I8cEzeNF7NOCh3TeLB0SIQ9wdsFfCU2NVhG8MAMzDCNaD5UN
-         aFeCtj/6+3fXjQNoLefLqFgcVwN/s5pMeVlbcceHxzTStMy2Q8B6EvzCFbEfK6TTSQUF
-         ZXSVFnysSQetYDToMe/hyd/cUC6L+Og0MA+V+eZRUS7AIovCoTMIB3/NqR6+F55/Uu1g
-         5TQVfjuLn26V3ymOa+CIiy1df1UR+HKVkE5gejNNGfICn6xnTjs04j6LAa8Sq5AFXJoS
-         Q4ig==
-X-Gm-Message-State: AOAM533SJgWj4cCxV2ok8i/UF1Z8etk0Yr/P4Lnu9qhtuPQffbQn+r9T
-        jXqoDeWL0i81ajjwvdz/zuI=
-X-Google-Smtp-Source: ABdhPJyjm3x7B2weH8RJQpPYu2oZG841KdnHRI51EDjG4coHaalocFrLEryqkmen2USsZ0klb87UgA==
-X-Received: by 2002:a6b:b555:: with SMTP id e82mr28464431iof.56.1595356617867;
-        Tue, 21 Jul 2020 11:36:57 -0700 (PDT)
-Received: from hive64.slackware.lan (SEB-ai06-18-141.wcta.net. [64.110.18.141])
-        by smtp.gmail.com with ESMTPSA id u3sm10795893iol.41.2020.07.21.11.36.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 11:36:57 -0700 (PDT)
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lyude Paul <lyude@redhat.com>
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Sasha Levin <sashal@kernel.org>
-References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
- <20200716235440.GA675421@bjorn-Precision-5520>
- <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
- <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
- <20200721122247.GI5180@lahna.fi.intel.com>
- <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
- <20200721152737.GS5180@lahna.fi.intel.com>
-From:   Patrick Volkerding <volkerdi@gmail.com>
-Autocrypt: addr=volkerdi@gmail.com; prefer-encrypt=mutual; keydata=
- mQGiBD5dIFQRBADB31WinbXdaGk/8RNkpnZclu1w3Xmd5ItACDLB2FhOhArw35EAMOYzxI0g
- RtDNWN4pn9n74q4HbFzyRWElThWRtBTYLEpImzrk7HYVCjMxjw5A0fTr88aiHOth5aS0vPAo
- q+3TYn6JDSipf2bR03G2JVwgj3Iu066pX4naivNm8wCgldHGF3y9vT3UPYh3QFgEUlCalt0D
- /3n6NopRYy0hMN6BPu+NarXwv6NQ9g0GV5FNjEErigkrD/htqCyWAUl8zyCKKUFZZx4UGBRZ
- 5guCdNzwgYH3yn3aVMhJYQ6tcSlLsj3fJIz4LAZ3+rI77rbn7gHHdp7CSAuV+QHv3aNanUD/
- KGz5SPSvF4w+5qRM4PfPNT1hLMV8BACzxiyX7vzeE4ZxNYvcuCtv0mvEHl9yD66NFA35RvXa
- O0QiRVYeoUa5JOQZgwq+fIB0zgsEYDhXFkC1hM/QL4NccMRk8C09nFn4eiz4dAEnwKt4rLCJ
- KhkLl1DWTSoXHe/dOXaLnFyLzB1J8hEYmUvw3SwPt//wMqDiVBLeZfFcdLQwU2xhY2t3YXJl
- IExpbnV4IFByb2plY3QgPHNlY3VyaXR5QHNsYWNrd2FyZS5jb20+iF8EExECAB8ECwcDAgMV
- AgMDFgIBAh4BAheABQJQPlypBQlBo7MrAAoJEGpEY8BAECIzjOwAn3vptb6K1v2wLI9eVlnC
- dx4m1btpAJ9sFt4KwJrEdiO5wFC4xe9G4eZl4rkBDQQ+XSBVEAQA3VYlpPyRKdOKoM6t1SwN
- G0YgVFSvxy/eiratBf7misDBsJeH86Pf8H9OfVHOcqscLiC+iqvDgqeTUX9vASjlnvcoS/3H
- 5TDPlxiifIDggqd2euNtJ8+lyXRBV6yPsBIA6zki9cR4zphe48hKpSsDfj7uL5sfyc2UmKKb
- oSu3x7cAAwUD/1jmoLQs9bItbTosoy+5+Uzrl0ShRlv+iZV8RPzAMFuRJNxUJkUmmThowtXR
- aPKFI9AVd+pP44aAJ+zxCPtS2isiW20AxubJoBPpXcVatJWi4sG+TM5Z5VRoLg7tIDNVWsyH
- GXPAhIG2Y8Z1kyWwb4P8A/W2b1ZCqS7Fx4yEhTikiEwEGBECAAwFAlA+XL8FCUGjs2IACgkQ
- akRjwEAQIjMsbQCgk59KFTbTlZfJ6FoZjjEmK3/xGR4AniYT+EdSdvEyRtZYkqWzp1ayvO1b
-Message-ID: <d3253a47-09ff-8bc7-3ca1-a80bdc09d1c2@gmail.com>
-Date:   Tue, 21 Jul 2020 13:37:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TFr1vDN4Hh+EBFaDQmE/0qvipCEGD4Tgyrl+Pql89Ug=;
+        b=YI1vmCIgFm4GEAB7eFLyLdF9EFowmcUH44bqZ3khtWTH8PCTnD+vyVTpIsYEndYHof
+         MgHopYrqRJIYq/+wRaN9AL9Jtt157DiupPka62kEQHfC/7tTlKSdrcYRL7oE0p1vyCr6
+         Ol2Dl9zdxFAkbWCAkFUygutOwQmR12MQ/yplMIhKilx0gAKuxo98Wp0+7YRIE9JWtUYe
+         owvAqBdPZ7119gTMYc4v1zhxFucnujzWv5l0dMz6I+rrscX3X4TMqGpF+Q5WAvvM4GnI
+         vi2VVcLHmHriEocxICl65u4zA9KiV3OveqkVz3lM+6+FXA17o3OIl0NU3I8Am1AsvguO
+         NO3Q==
+X-Gm-Message-State: AOAM531l2ezN8++8lNEhv9dusGPDSJ9DnS98Wai5kzmVFL+lPpgXpGN/
+        cTeqlJOEFJxPgwWg26bSo+BeacN2QNyjYBbCF5s=
+X-Google-Smtp-Source: ABdhPJwqNx+Y8HNsjbn0fcHC8GbSSXvr8OC3ce1xceaIr2Dqfyf2nwoT/tiQ/2QaI/Z2DzpyaBHua2sXxuTFseyApSY=
+X-Received: by 2002:a63:a05f:: with SMTP id u31mr22997684pgn.4.1595356596716;
+ Tue, 21 Jul 2020 11:36:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200721152737.GS5180@lahna.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200720134839.71124-1-alexandru.ardelean@analog.com>
+In-Reply-To: <20200720134839.71124-1-alexandru.ardelean@analog.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 21 Jul 2020 21:36:19 +0300
+Message-ID: <CAHp75VfSRUYUaYaHgsr91H9DfV4WeObhzTB3r9UwdNx2tyW6Gg@mail.gmail.com>
+Subject: Re: [PATCH] iio: adxl372: change indentation for of_table
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/21/20 10:27 AM, Mika Westerberg wrote:
-> On Tue, Jul 21, 2020 at 11:01:55AM -0400, Lyude Paul wrote:
->> Sure thing. Also, feel free to let me know if you'd like access to one of the
->> systems we saw breaking with this patch - I'm fairly sure I've got one of them
->> locally at my apartment and don't mind setting up AMT/KVM/SSH
-> Probably no need for remote access (thanks for the offer, though). I
-> attached a test patch to the bug report:
+On Mon, Jul 20, 2020 at 4:49 PM Alexandru Ardelean
+<alexandru.ardelean@analog.com> wrote:
 >
->   https://bugzilla.kernel.org/show_bug.cgi?id=208597
+> The change is mostly stylistic. The table should be indented with tabs
+> instead of spaces.
 >
-> that tries to work it around (based on the ->pm_cap == 0). I wonder if
-> anyone would have time to try it out.
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  drivers/iio/accel/adxl372_spi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/iio/accel/adxl372_spi.c b/drivers/iio/accel/adxl372_spi.c
+> index 3ef7e3a4804e..7741890674c1 100644
+> --- a/drivers/iio/accel/adxl372_spi.c
+> +++ b/drivers/iio/accel/adxl372_spi.c
+> @@ -40,8 +40,8 @@ static const struct spi_device_id adxl372_spi_id[] = {
+>  MODULE_DEVICE_TABLE(spi, adxl372_spi_id);
+>
+>  static const struct of_device_id adxl372_of_match[] = {
+> -        { .compatible = "adi,adxl372" },
+> -        { },
+> +       { .compatible = "adi,adxl372" },
+> +       { },
+
+Please, drop useless and even bad in very rare cases comma at the
+terminator line.
+
+>  };
+>  MODULE_DEVICE_TABLE(of, adxl372_of_match);
+>
+> --
+> 2.17.1
+>
 
 
-Hi Mika,
-
-I can confirm that this patch applied to 5.4.52 fixes the issue with
-hybrid graphics on the Thinkpad X1 Extreme gen2.
-
-Thanks,
-
-Pat
-
+-- 
+With Best Regards,
+Andy Shevchenko
