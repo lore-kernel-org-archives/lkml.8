@@ -2,90 +2,123 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0C0C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D32B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A416220792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC92921702
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:01:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rJO2Y/1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbgGUL52 (ORCPT
+        id S1729285AbgGUMBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:57:28 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:53750 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbgGUL50 (ORCPT
+        Tue, 21 Jul 2020 08:01:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728288AbgGUMBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:57:26 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id C7F5C1C0BE8; Tue, 21 Jul 2020 13:57:24 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 13:57:24 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 00/58] 4.4.231-rc1 review
-Message-ID: <20200721115724.GB26436@amd>
-References: <20200720152747.127988571@linuxfoundation.org>
+        Tue, 21 Jul 2020 08:01:50 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22457C061794;
+        Tue, 21 Jul 2020 05:01:50 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id m16so10165855pls.5;
+        Tue, 21 Jul 2020 05:01:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YPUEFyO6GrJbWlArnra90agIJPKyOH5916N0ngmcw1Q=;
+        b=rJO2Y/1eWWCttoEkGBa785Q4kTRw4oId9KqBYRKb0XkkpuGqTbm4vrIrD9OkmbYgEn
+         gGZbpBO7fR/UcxdqPGDLi/WXOqObcOZGSjpyDHQyeZ7AXB0oJQ0moD0bie96BXMSWn4N
+         uXRCk5RM0uWU2hp/192q7Xry5iRi1rvuIatC/SdgprJ/7XNv6H7FRC3y6QA0ngcjY2lp
+         RCTdvRBIiGR0r2Q1Aho/vMUYYAbdibIGo22IJP9FJojKZN8MCjea+QZSuA73q2JS667e
+         TyIn33bdnaBX+ts00GM6R1GBy0b1BJtMNAPvwbxiWFb9BltYRReBDd7F3edlIKPBFMPJ
+         ozRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YPUEFyO6GrJbWlArnra90agIJPKyOH5916N0ngmcw1Q=;
+        b=XPKNnV22hlTcH4fkS3My6OxytSeGOdd5GRowoCtuhb1W+9cFNjoxCaDXkLxDOGZ5zR
+         uCMraYl0UsOuSgl/8sfJwnINTYTxrCuhPMgYZWt6jr0hljoaA3pNaveYRprtLN4T+ZFy
+         VhA50FkXbQLlN+HHB0omjdSTi2uzXQ/HKrLXOVMyM/qK8HUQZ9NM6eSq3k+mLG3fIX2y
+         54NEDTHtvWzUxk4XmWl+q3MPRUqaQR/iJiEVtIRSQcdzqgFB9dPvDZaXYzrQiWLdRET3
+         yLkDIgwI9qjGEb7tkJTYC//TqSktpO2TFChi5Sw/owmgwdy1PAmEyKp5+tGDcRWbLde/
+         oE1w==
+X-Gm-Message-State: AOAM530dczh5so1HhtMrMb0jUsGafI3qv8OKkM34H3xL/Uo1jPqomhYJ
+        Uw0uyMf4m8+9vJN8rJRk9+o=
+X-Google-Smtp-Source: ABdhPJwmxxvTnazWoYbXLSzoevnmccP0ZHKZmDl/1gTNZqx6JdSaphm9/9R/Cm5whNHa0Am13Lu5vQ==
+X-Received: by 2002:a17:90b:124c:: with SMTP id gx12mr4683672pjb.191.1595332909282;
+        Tue, 21 Jul 2020 05:01:49 -0700 (PDT)
+Received: from xiaomi.mioffice.cn ([209.9.72.214])
+        by smtp.gmail.com with ESMTPSA id t73sm20542041pfc.78.2020.07.21.05.01.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 05:01:48 -0700 (PDT)
+From:   Qiwu Huang <yanziily@gmail.com>
+To:     sre@kernel.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, jiangfei1@xiaomi.com,
+        Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: [PATCH v7 0/4] add some power supply properties about wireless/wired charging
+Date:   Tue, 21 Jul 2020 19:59:38 +0800
+Message-Id: <cover.1595332392.git.huangqiwu@xiaomi.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="QKdGvSO+nmPlgiQ/"
-Content-Disposition: inline
-In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Qiwu Huang <huangqiwu@xiaomi.com>
 
---QKdGvSO+nmPlgiQ/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patchset aims to provide power supply properties about wireless/wired charging.
+"quick_charge_type" reports different types of quick charge based on the charging power;
+"tx_adapter" shows" the type of wireless charging adapter;
+"signal_strength" shows the coupling level between TX and RX;
+"reverse_chg_mode" provides the interface of enabling/disabling wireless reverse charging.
 
-Hi!
+Changes in v7
+ - Fix PATCH version error in 0/X email
 
-> This is the start of the stable review cycle for the 4.4.231 release.
-> There are 58 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Wed, 22 Jul 2020 15:27:31 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.231=
--rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
- linux-4.4.y
-> and the diffstat can be found below.
+Changes in v6
+ - Replace "phones" with "devices" suggested by GregKH
+ - Add permission statement for "reverse_chg_mode"
+ - Update description for "reverse_chg_mode" in ABI suggested by GregKH
+ - Update description for "PING phase" in ABI suggested by GregKH
 
-This, too, seems to pass CIP project testing:
+Changes in v5
+ - Add details in 0/X email
 
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/pipelines/1=
-68665031
+Changes in v4
+ - Exclude the patch of "power: supply: supply battery soc with decimal form"
+ - Fix some typo
 
-Best regards,
-									Pavel
+Changes in v3
+ - Add enumederated for quick charge type
+ - Add enumederated for tx adapter type
+ - Update the return type and description in ABI
 
---QKdGvSO+nmPlgiQ/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes in v2
+ - modify to capital letters for "power_supply_attrs"
+ - Update the return type and description in ABI
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Qiwu Huang (4):
+  power: supply: core: add quick charge type property
+  power: supply: core: add wireless charger adapter type property
+  power: supply: core: add wireless signal strength property
+  power: supply: core: property to control reverse charge
 
-iEYEARECAAYFAl8W2CQACgkQMOfwapXb+vKxMACgkaDLXfcjWZ8XmSzM2m1wODMt
-wmMAnjA9lbg2t8tsafBFarIi9ur487ix
-=8HOL
------END PGP SIGNATURE-----
+ Documentation/ABI/testing/sysfs-class-power | 85 +++++++++++++++++++++
+ drivers/power/supply/power_supply_sysfs.c   |  4 +
+ include/linux/power_supply.h                | 31 ++++++++
+ 3 files changed, 120 insertions(+)
 
---QKdGvSO+nmPlgiQ/--
+-- 
+2.27.0
+
