@@ -2,131 +2,158 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E091C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC97AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C84D2065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96521206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="vl1y61ir"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qSfMSUQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbgGURNV (ORCPT
+        id S1730186AbgGURN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:13:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51798 "EHLO
+        Tue, 21 Jul 2020 13:13:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728922AbgGURNS (ORCPT
+        with ESMTP id S1728922AbgGURN0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:13:18 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6782FC0619DA
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:13:18 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id b92so1984839pjc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:13:18 -0700 (PDT)
+        Tue, 21 Jul 2020 13:13:26 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88393C061794;
+        Tue, 21 Jul 2020 10:13:26 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id m8so9654544qvk.7;
+        Tue, 21 Jul 2020 10:13:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=E/evRAxQv9wC1IBTfLSSH1C/LoK52iYqFAGcwxLVcvM=;
-        b=vl1y61irQ6IqN1iXXdBBp6aGkbn7nsuUYwWsR7kbkuwgM+AI+1GwgK6wq9n1UaibBl
-         OJ5u0HKV0wfUOMN2htBwMp1qN9FtsfT25h6sAvVnaSBIr9cP8CQSud5AJCotMd8z/jJj
-         MyEyBMjR53T9MlusrkP1o/y7UirwLkHXzi8NYTZ3FPynDj0UMZ2MJFNjMQeTsQy1q2yA
-         oz98dleZSAJJGjNe/XRok54J4wwlMZwzrfuAhqO4SXm0ugGbuF2o2iAa9i/uk+AHSsij
-         NdsPzWy0UpvxW6qdAif/byOa2sjP+y4WT7AymmvjC4hb5mgZJM16zb4yqRMzKidg+4Fp
-         WybA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZbVxqAmomsyhr+KEyYXdRet54/+siHxMMPFBRHCBS08=;
+        b=qSfMSUQJ6WOKHXfb5DjEHw/nGyKktRAx4kiJQxElRHQr7JrxnQ1k55a8eCxv2zv65G
+         gi7FoDOqHLECUyVllhxBYU6dyDEHKF6nNOUdK+p3K7mvrQzDLVrs6fiQfxMwh2mYaM/3
+         crgg0ElpbMgjPqzygn8RHPhdeWOU1Q8LSH2isbjB4ISibsZKPioFclPsXWcJbdoRwiU8
+         hSP4dbwmfHPPxD0xm4I5Hm6/41tMK1EXVkHKNH9gnP3goNxEG+SrNJlTYJ4Qu2vMVe1s
+         2v3JDCnB6TpVN2329tBqdlXAOSPflCvpfyC5+vhn1KIxkOyFQto2nlGvLhVyykpISLv9
+         tJRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=E/evRAxQv9wC1IBTfLSSH1C/LoK52iYqFAGcwxLVcvM=;
-        b=kBJxk2GpIPaQGZ3iAoGSa+QJYACPSsJcOS2ZufVITEWv0UAqLkmWCip70PLroCXVDy
-         nFTGQFIh0Mmha5M1EBSMWp7/epg5V+OCkrcoVF0mZ54PXT2s97HJ4Z8ymAiPlj5OSEJx
-         ZzcXfgG/blZNukFrCohVbuKJH321wRvcNBTD8ln9Kvz8Qt6mEAOcMnAYIJRl6OnxYCY4
-         +dbEyLI6DvdLHTAI9U59nc0Nv7iDqgHtgv6mlqglE3oS3RxCKTrmZ07j4zQOARc49pqW
-         YLu8TQAjY8Mutv1DRjD38bZCcDhCvjhF3ECPchmmw8Z3yriggDguNNTBHK4p4BK23N6J
-         weog==
-X-Gm-Message-State: AOAM532jF7uDhdVIAucu5xurdKM34mgaCrxzcRWrtdpo0H3WOpXG+qRj
-        hikZgoA5qs/B6OUzSygQhbI7vQ==
-X-Google-Smtp-Source: ABdhPJwdOFfbigDBGE8Fvtv0h2GqbL4mnhEqW8RFMW9+XZ5hgHXm4e5NPSNleXYpxdVALCWXwYVfyg==
-X-Received: by 2002:a17:902:8c86:: with SMTP id t6mr23782766plo.41.1595351597828;
-        Tue, 21 Jul 2020 10:13:17 -0700 (PDT)
-Received: from localhost ([2406:7400:73:d7b6:d055:3e56:d1e4:ce99])
-        by smtp.gmail.com with ESMTPSA id j3sm20361061pfe.102.2020.07.21.10.13.15
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZbVxqAmomsyhr+KEyYXdRet54/+siHxMMPFBRHCBS08=;
+        b=m7kON/awyOc6Olsi3KDskbnyF1swhSnw2+0rDTQ3ClemhP5urgnA4zu/EpxDDz/nxw
+         lNSZfGcrA04r4gH6XXMnt3RRgefVeGaUROMdc2K/hSitQyuKF9cUmbVD7w9IsMo4hX4k
+         w+hinAOykKctWGiklcFsTcQ3nrD3a7F0XoVbW4ZSVniP0aAVsw6g0a2Dom60/RsBD3zf
+         MK63fpOu1Hfz5oNavwayYGy4yJI6wiCFiXPpJTuCQcooTFNQFgO7HNyjB20ONLTUP7hm
+         mYbxpuu3akpV8Bq0J2T3T7ofSTLHiHgEi9ndvslu0TfQYtgAy4jNga6hXo49uXzzAdc9
+         fgog==
+X-Gm-Message-State: AOAM532jg3pvlTGvIqXTrLNWN69DYAQB5lcuKHUrF7zkWYzrah0e8EPo
+        T0qJjTrFTxUp8xGyPuW4XKk=
+X-Google-Smtp-Source: ABdhPJwAmHphVXWVxGd+7+rFL1JmGpNvGLd7pHr/P7IGmOsp2TKbd5OE9jgZNJcO8pPTI/vq4UXQnA==
+X-Received: by 2002:a05:6214:851:: with SMTP id dg17mr27965377qvb.235.1595351605715;
+        Tue, 21 Jul 2020 10:13:25 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id h124sm2938013qkd.84.2020.07.21.10.13.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 10:13:16 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 22:43:11 +0530
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] tty: serial: fsl_lpuart.c: prevent a bad shift operation
-Message-ID: <20200721171311.xlt256fq2qmw4e6p@pesu.pes.edu>
+        Tue, 21 Jul 2020 10:13:25 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 10:13:23 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Fangrui Song <maskray@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        stable@vger.kernel.org, Jian Cai <jiancai@google.com>,
+        Bill Wendling <morbo@google.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v2] Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang
+ cross compilation
+Message-ID: <20200721171323.GA3327914@ubuntu-n2-xlarge-x86>
+References: <20200721041940.4029552-1-maskray@google.com>
+ <20200721104035.GC1676612@kroah.com>
+ <CA+icZUW9JhZEEcXfL5bid7+M-Qtw22XzSm2x-JxW1bU15HJ6sA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pjqqqiiuizvpdnsc"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CA+icZUW9JhZEEcXfL5bid7+M-Qtw22XzSm2x-JxW1bU15HJ6sA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 21, 2020 at 04:52:56PM +0200, Sedat Dilek wrote:
+> On Tue, Jul 21, 2020 at 12:40 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Mon, Jul 20, 2020 at 09:19:38PM -0700, Fangrui Song wrote:
+> > > When CROSS_COMPILE is set (e.g. aarch64-linux-gnu-), if
+> > > $(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-elfedit,
+> > > GCC_TOOLCHAIN_DIR will be set to /usr/bin/.  --prefix= will be set to
+> > > /usr/bin/ and Clang as of 11 will search for both
+> > > $(prefix)aarch64-linux-gnu-$needle and $(prefix)$needle.
+> > >
+> > > GCC searchs for $(prefix)aarch64-linux-gnu/$version/$needle,
+> > > $(prefix)aarch64-linux-gnu/$needle and $(prefix)$needle. In practice,
+> > > $(prefix)aarch64-linux-gnu/$needle rarely contains executables.
+> > >
+> > > To better model how GCC's -B/--prefix takes in effect in practice, newer
+> > > Clang (since
+> > > https://github.com/llvm/llvm-project/commit/3452a0d8c17f7166f479706b293caf6ac76ffd90)
+> > > only searches for $(prefix)$needle. Currently it will find /usr/bin/as
+> > > instead of /usr/bin/aarch64-linux-gnu-as.
+> > >
+> > > Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
+> > > (/usr/bin/aarch64-linux-gnu-) so that newer Clang can find the
+> > > appropriate cross compiling GNU as (when -no-integrated-as is in
+> > > effect).
+> > >
+> > > Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > Signed-off-by: Fangrui Song <maskray@google.com>
+> > > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> > > Link: https://github.com/ClangBuiltLinux/linux/issues/1099
+> > > ---
+> > > Changes in v2:
+> > > * Updated description to add tags and the llvm-project commit link.
+> > > * Fixed a typo.
+> >
+> >
+> > <formletter>
+> >
+> > This is not the correct way to submit patches for inclusion in the
+> > stable kernel tree.  Please read:
+> >     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+> > for how to do this properly.
+> >
+> > </formletter>
+> >
+> 
+> Hi Fangrui,
+> 
+> your patch needs to be accepted first in Linus tree - among other
+> things to have a unique commit-id for inclusion into any affected
+> Linux-stable trees.
+> 
+> Regards,
+> - Sedat -
 
---pjqqqiiuizvpdnsc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You are not wrong but that is not what Greg's auto response is complaining
+about. It is that stable@vger.kernel.org was cc'd but there was no
 
-prevent a bad shift operation by verifying that
-sport->rx_dma_rng_buf_len is non zero.
+Cc: stable@vger.kernel.org
 
-Signed-off-by: B K Karthik <bkkarthik@pesu.pes.edu>
----
- drivers/tty/serial/fsl_lpuart.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+in the commit message, which is how patches get automatically picked up
+by Greg and Sasha once they hit Linus's tree.
 
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuar=
-t.c
-index 7ca642249224..0cc64279cd2d 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -1168,7 +1168,8 @@ static inline int lpuart_start_rx_dma(struct lpuart_p=
-ort *sport)
- 	 * 10ms at any baud rate.
- 	 */
- 	sport->rx_dma_rng_buf_len =3D (DMA_RX_TIMEOUT * baud /  bits / 1000) * 2;
--	sport->rx_dma_rng_buf_len =3D (1 << (fls(sport->rx_dma_rng_buf_len) - 1));
-+	if (sport->rx_dma_rng_buf_len !=3D 0)
-+		sport->rx_dma_rng_buf_len =3D (1 << (fls(sport->rx_dma_rng_buf_len) - 1)=
-);
- 	if (sport->rx_dma_rng_buf_len < 16)
- 		sport->rx_dma_rng_buf_len =3D 16;
-=20
---=20
-2.20.1
+That line should be added above my Reported-by tag. Fangrui, sorry for
+not being clear in my initial response :(
 
-
---pjqqqiiuizvpdnsc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAEBCgAdFiEEIF+jd5Z5uS7xKTfpQZdt+T1HgiEFAl8XIicACgkQQZdt+T1H
-giGZOgv+L8g4Jh6L37Ro8HsApiPYnD387kVOAC6akZXRFY/zZJiRUaG252xkBX2e
-3EJFeBipsM4mm/+z3ABf+53dsqXdD0BctquGN+vopi990RUtsGzIIL9fY9AIiO5f
-VWUl7HdJ12Sa3GzTWXs1BWnRJePAe6gOthS89dJSD63NttrOgflsKUtyybXRcLbf
-TJt2WyOJ6OTPRUVXkK6KLrkd622+ggfW48Rk3SSTkgJVDBBatAxPNIzTy8WQJm2K
-J5pGLOmh9qauLHtbzpM1WLwXFD2yIMwPeiztWNTnqKlV5bGbDEm9GWZqsWaBje3L
-2tK3y0ozsoZyGcat8O0Tc6zupwgpriDqS6Vkf9J3n0Ik/PkPwzkn9O5UOwnT3iJW
-V7BlOARoAMru8J3vlSESGbgk44z4V4Ob7cae4pl019F3EV8z6i9vexRs9e8Cq/zU
-4GLvLa/hvX9WqNPRZfuJYSWtflCjw8N9U5A8nlQeNWbouzy/2K2SN3aDf9cbLm3y
-a71rzsqk
-=7KTV
------END PGP SIGNATURE-----
-
---pjqqqiiuizvpdnsc--
+Cheers,
+Nathan
