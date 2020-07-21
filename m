@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63ACAC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA849C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4178320792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 962C4207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Egp5H4pu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s6AauQ8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbgGUQl5 (ORCPT
+        id S1730414AbgGUQmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:41:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46770 "EHLO
+        Tue, 21 Jul 2020 12:42:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728127AbgGUQlz (ORCPT
+        with ESMTP id S1730355AbgGUQl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:41:55 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F0BC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:41:55 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a14so7001895wra.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:41:55 -0700 (PDT)
+        Tue, 21 Jul 2020 12:41:57 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D9D7C0619DC
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:41:57 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a15so6911847wrh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:41:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GSRBp5WStd9Y481S5Og1e8mziqqocuxpn4+5CH6s/V4=;
-        b=Egp5H4pu2L6EzccLlHAMIwLTK50EpvvWcuSavl6dxS+o+rUQRPDp2XpTYnTjUS+KUi
-         uWcXXe2s/Ehz/WZYWK2zGL15XByi2KO1f61XaLxkMeIDIT6YezDvsqTSLn0cpcs0b5Eu
-         kvPRw32tr4a3i05MdWTSX7LKYf9m30098UCHy2q6dMk7VTOVwfgnXeBjXhBultigxuwp
-         JZo16vd/sGh2ag2xaKw/9nNAVBmihuOg6m+UxZsxeeN1B0T/jgcOA8YIh3thO5XR5/fu
-         khqpOmb/LS+svniR+y9VvCrP1z5dJnmhYAt49FVHboj+QnXVIAb28S4oHvg0xgmu1agu
-         Z2QA==
+        bh=QQB8TJQzsYjUZBwJPjslVDnhdOA5qUDUD1fBX7WXUPw=;
+        b=s6AauQ8n56Hd4FuksA+gkR8KcO9HBr/y6WUo10QyX3zvi4KAoo8+pZGmdak7ERDzuV
+         99OYlw2c0rBlQcpHR5AP7iL5o0uYUuAffpzjEfw7am78q86szC6f5DAuBHh4UWEVjoaO
+         hSAA3xaX/ctyBuWRAMXgf97VJQ9wjV5RUV+B5njvjm5ttZorOXk4ij2gxsK5T8JReCsW
+         twGHiGASNEmU9FKGC5yO3ToaNDbFNWjGipKnR3HXaUrMrP395Z+Zit3sOPKYSMfpO8Wo
+         3Jzy0Z+UVwiIFRyAyq5TfgPoW+nAPdnV3CLV27XK5GtLjCYXHJHegxTAkNfRibTaN0Pv
+         B86g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GSRBp5WStd9Y481S5Og1e8mziqqocuxpn4+5CH6s/V4=;
-        b=KyCpVdvJcFxOjLyAilpb0tCczbV2c50BRD/cxzs7WvHUW0xeuQb81oS7FD9I5QYNYt
-         XiFlVfjOjCouSq63gelcsNBMZAUPTndo09HRAkj1HfSmprIHlu/mUdiHFLdauAEt6bU+
-         OOE9WI1TOiY/Y9UrgCh7+uM1OQoH1dZlgHPxKzKlhfOMfhjnkKGZf95mz/wNXoWXDK1U
-         9j5tyz8869seMdgRPYcI7GewdBmUYloP3JYjqH/0HNgTRr2JticDx36gcJlCOtNiZP08
-         9Kt03Q3Ml8/UKRoYhzI9IniydmGPLrDQCD3KRj8lmbSCQL2fqDfofrmOiPYe1l6ojk4x
-         BJIA==
-X-Gm-Message-State: AOAM530a+c0zjFM3+fwy6i7BAfOgFjq2bDTRjuA8Mjvfp0Yb6KVj3tA+
-        sYEOITsSaMJ3U1qbL9p3W9X8PA==
-X-Google-Smtp-Source: ABdhPJwR9PfgqrQM6xiiXqEdTd0R303eL546jC1FrUf25+Zxk9wVW2r7JsLFudeclns7p1DZw05OZQ==
-X-Received: by 2002:a05:6000:10c4:: with SMTP id b4mr25734756wrx.50.1595349714031;
-        Tue, 21 Jul 2020 09:41:54 -0700 (PDT)
+        bh=QQB8TJQzsYjUZBwJPjslVDnhdOA5qUDUD1fBX7WXUPw=;
+        b=QUtAK31+YbfJA4SN142paMoibTuK48l+lM6ftqNbJ78MLUuo77rOQPAv2HpbIxn6z9
+         eMwu/RGWYolGZ3d98EneVQgViZYV7LYXU50+Cz7abSHdarw+cNdYu2MU2Em0qVBLnWHk
+         cw1hDiMbA7SimEVL6nAqRHwPPDjiBaYAnAVXIM707cesENH+bWLJS81yCf0OQiMAM2v0
+         KWAbse3HO3TTZJgssyoHlpSqzNYEyKx7EJydJrmwQkA6PyW/0Z5DjGihIh0jZtB670yG
+         OjGHlVzcVzZLdGVGGXW1A1CDPHxqC8eNp1GNWKDChlkCInNNvl5eW84LpDaw0KVx6+6v
+         HsZQ==
+X-Gm-Message-State: AOAM530kOWxJFbfqCMAQgIZYzn6f5xBKzSAJ1c6tMF97tUVZJEqzIALl
+        K62NGXIuS/YDQLpknQbrfQxoBg==
+X-Google-Smtp-Source: ABdhPJzqVFUhEYcBj5F93TGNUEsD1EfN6i9w06bfn1uhF2Sea76Z9iPfHB6hxsL5qavUoAFZVrY+jQ==
+X-Received: by 2002:adf:97c1:: with SMTP id t1mr1257176wrb.294.1595349716252;
+        Tue, 21 Jul 2020 09:41:56 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.41.53
+        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.41.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:41:53 -0700 (PDT)
+        Tue, 21 Jul 2020 09:41:55 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>, support@areca.com.tw,
-        kernel test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 01/40] scsi: arcmsr: arcmsr_hba: Remove statement with no effect
-Date:   Tue, 21 Jul 2020 17:41:09 +0100
-Message-Id: <20200721164148.2617584-2-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
+Subject: [PATCH 03/40] scsi: aacraid: sa: Add descriptions for missing parameters
+Date:   Tue, 21 Jul 2020 17:41:11 +0100
+Message-Id: <20200721164148.2617584-4-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200721164148.2617584-1-lee.jones@linaro.org>
 References: <20200721164148.2617584-1-lee.jones@linaro.org>
@@ -78,64 +78,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to LKP, commit [no upstream SHA yet] ("scsi: arcmsr: Remove
-some set but unused variables") can be furthered to remove the entire
-statement and not just the unused variable read into.
+Also clean-up some white space issues while we're here.
 
-Snipped LKP report:
+Fixes the following W=1 kernel build warning(s):
 
- config: x86_64-randconfig-m001-20200719
- compiler: gcc-9 (Debian 9.3.0-14) 9.3.0
+ drivers/scsi/aacraid/sa.c:147: warning: Function parameter or member 'p2' not described in 'sa_sync_cmd'
+ drivers/scsi/aacraid/sa.c:147: warning: Function parameter or member 'p3' not described in 'sa_sync_cmd'
+ drivers/scsi/aacraid/sa.c:147: warning: Function parameter or member 'p4' not described in 'sa_sync_cmd'
+ drivers/scsi/aacraid/sa.c:147: warning: Function parameter or member 'p5' not described in 'sa_sync_cmd'
+ drivers/scsi/aacraid/sa.c:147: warning: Function parameter or member 'p6' not described in 'sa_sync_cmd'
+ drivers/scsi/aacraid/sa.c:147: warning: Function parameter or member 'r1' not described in 'sa_sync_cmd'
+ drivers/scsi/aacraid/sa.c:147: warning: Function parameter or member 'r2' not described in 'sa_sync_cmd'
+ drivers/scsi/aacraid/sa.c:147: warning: Function parameter or member 'r3' not described in 'sa_sync_cmd'
+ drivers/scsi/aacraid/sa.c:147: warning: Function parameter or member 'r4' not described in 'sa_sync_cmd'
+ drivers/scsi/aacraid/sa.c:290: warning: Function parameter or member 'dev' not described in 'aac_sa_ioremap'
 
- New smatch warnings:
-  drivers/scsi/arcmsr/arcmsr_hba.c:1490 arcmsr_done4abort_postqueue() warn: statement has no effect 8
-  drivers/scsi/arcmsr/arcmsr_hba.c:2459 arcmsr_hbaD_postqueue_isr() warn: statement has no effect 8
-  drivers/scsi/arcmsr/arcmsr_hba.c:3526 arcmsr_hbaD_polling_ccbdone() warn: statement has no effect 8
-
- 1a4f550a09f89e Nick Cheng  2007-09-13  1401  static void arcmsr_done4abort_postqueue(struct AdapterControlBlock *acb)
- 1a4f550a09f89e Nick Cheng  2007-09-13  1402  {
- [...]
- 18bc435e0a1de2 Lee Jones   2020-07-13 @1490                             pmu->done_qbuffer[doneq_index & 0xFFF].addressHigh;
-                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- Delete this line.
- [...]
-
-Cc: support@areca.com.tw
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/arcmsr/arcmsr_hba.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/scsi/aacraid/sa.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/arcmsr/arcmsr_hba.c b/drivers/scsi/arcmsr/arcmsr_hba.c
-index 5feed135eb26c..23e9e12d588f6 100644
---- a/drivers/scsi/arcmsr/arcmsr_hba.c
-+++ b/drivers/scsi/arcmsr/arcmsr_hba.c
-@@ -1487,7 +1487,6 @@ static void arcmsr_done4abort_postqueue(struct AdapterControlBlock *acb)
- 					((toggle ^ 0x4000) + 1);
- 				doneq_index = pmu->doneq_index;
- 				spin_unlock_irqrestore(&acb->doneq_lock, flags);
--				pmu->done_qbuffer[doneq_index & 0xFFF].addressHigh;
- 				addressLow = pmu->done_qbuffer[doneq_index &
- 					0xFFF].addressLow;
- 				ccb_cdb_phy = (addressLow & 0xFFFFFFF0);
-@@ -2456,7 +2455,6 @@ static void arcmsr_hbaD_postqueue_isr(struct AdapterControlBlock *acb)
- 			pmu->doneq_index = index_stripped ? (index_stripped | toggle) :
- 				((toggle ^ 0x4000) + 1);
- 			doneq_index = pmu->doneq_index;
--			pmu->done_qbuffer[doneq_index & 0xFFF].addressHigh;
- 			addressLow = pmu->done_qbuffer[doneq_index &
- 				0xFFF].addressLow;
- 			ccb_cdb_phy = (addressLow & 0xFFFFFFF0);
-@@ -3523,7 +3521,6 @@ static int arcmsr_hbaD_polling_ccbdone(struct AdapterControlBlock *acb,
- 				((toggle ^ 0x4000) + 1);
- 		doneq_index = pmu->doneq_index;
- 		spin_unlock_irqrestore(&acb->doneq_lock, flags);
--		pmu->done_qbuffer[doneq_index & 0xFFF].addressHigh;
- 		flag_ccb = pmu->done_qbuffer[doneq_index & 0xFFF].addressLow;
- 		ccb_cdb_phy = (flag_ccb & 0xFFFFFFF0);
- 		if (acb->cdb_phyadd_hipart)
+diff --git a/drivers/scsi/aacraid/sa.c b/drivers/scsi/aacraid/sa.c
+index aa5d7638cade2..c9a1dad2f5636 100644
+--- a/drivers/scsi/aacraid/sa.c
++++ b/drivers/scsi/aacraid/sa.c
+@@ -135,13 +135,21 @@ static void aac_sa_notify_adapter(struct aac_dev *dev, u32 event)
+  *	@dev: Adapter
+  *	@command: Command to execute
+  *	@p1: first parameter
++ *	@p2: second parameter
++ *	@p3: third parameter
++ *	@p4: forth parameter
++ *	@p5: fifth parameter
++ *	@p6: sixth parameter
+  *	@ret: adapter status
++ *	@r1: first return value
++ *	@r2: second return value
++ *	@r3: third return value
++ *	@r4: forth return value
+  *
+- *	This routine will send a synchronous command to the adapter and wait 
++ *	This routine will send a synchronous command to the adapter and wait
+  *	for its	completion.
+  */
+-
+-static int sa_sync_cmd(struct aac_dev *dev, u32 command, 
++static int sa_sync_cmd(struct aac_dev *dev, u32 command,
+ 		u32 p1, u32 p2, u32 p3, u32 p4, u32 p5, u32 p6,
+ 		u32 *ret, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
+ {
+@@ -283,6 +291,7 @@ static int aac_sa_check_health(struct aac_dev *dev)
+ 
+ /**
+  *	aac_sa_ioremap
++ *	@dev: device to ioremap
+  *	@size: mapping resize request
+  *
+  */
+@@ -300,8 +309,8 @@ static int aac_sa_ioremap(struct aac_dev * dev, u32 size)
+  *	aac_sa_init	-	initialize an ARM based AAC card
+  *	@dev: device to configure
+  *
+- *	Allocate and set up resources for the ARM based AAC variants. The 
+- *	device_interface in the commregion will be allocated and linked 
++ *	Allocate and set up resources for the ARM based AAC variants. The
++ *	device_interface in the commregion will be allocated and linked
+  *	to the comm region.
+  */
+ 
 -- 
 2.25.1
 
