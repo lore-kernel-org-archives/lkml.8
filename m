@@ -2,200 +2,118 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03292C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9351CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8F92077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D3052077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgGUBoE (ORCPT
+        id S1728383AbgGUBn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 21:44:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725954AbgGUBoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 21:44:03 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE3042075B;
-        Tue, 21 Jul 2020 01:44:01 +0000 (UTC)
-Date:   Mon, 20 Jul 2020 21:44:00 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 01/24] Documentation: locking: Describe seqlock
- design and usage
-Message-ID: <20200720214400.5ec6a028@oasis.local.home>
-In-Reply-To: <20200720155530.1173732-2-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
-        <20200720155530.1173732-1-a.darwish@linutronix.de>
-        <20200720155530.1173732-2-a.darwish@linutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 20 Jul 2020 21:43:26 -0400
+Received: from m176150.mail.qiye.163.com ([59.111.176.150]:2101 "EHLO
+        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbgGUBnZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 21:43:25 -0400
+X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jul 2020 21:43:24 EDT
+Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
+        by m176150.mail.qiye.163.com (Hmail) with ESMTP id 083D01A2142;
+        Tue, 21 Jul 2020 09:33:03 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AE2AjQBfDVxlYNyBF9u*s4rp.1.1595295183020.Hmail.bernard@vivo.com>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Bernard Zhao <bernard@vivo.com>,
+        Hongbo Yao <yaohongbo@huawei.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com
+Subject: =?UTF-8?B?W1Jlc2VuZF1bUEFUQ0hdIGRybS9tc206IHVzZSBrdGhyZWFkX2NyZWF0ZV93b3JrZXIgaW5zdGVhZCBvZiBrdGhyZWFkX3J1bg==?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 14.29.82.33
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Received: from bernard@vivo.com( [14.29.82.33) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 21 Jul 2020 09:33:03 +0800 (GMT+08:00)
+From:   Bernard <bernard@vivo.com>
+Date:   Tue, 21 Jul 2020 09:33:03 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
+        oVCBIfWUFZSE8ZQh5CQ05OSU8eVkpOQk5JQk5KQ0hKT0tVEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
+        FZT0tIVUpKS0hKTFVKS0tZBg++
+X-HM-Sender-Digest: e1kMHhlZQQ8JDh5XWRIfHhUPWUFZRzo#SToRKjkdPy0DFyI1Ajk9Qg5R
+        CE8JC1VKVUpOQk5JQk5KQ0hOSENVMxYaEhdVGR4JFRoJHzsNEg0UVRgUFkVZV1kSC1lBWUpPVUlC
+        VUNJVUhIWVdZCAFZQU1OTk83Bg++
+X-HM-Tid: 0a736f00b0cd93b4kuws083d01a2142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 17:55:07 +0200
-"Ahmed S. Darwish" <a.darwish@linutronix.de> wrote:
-
-> +++ b/include/linux/seqlock.h
-> @@ -1,36 +1,15 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  #ifndef __LINUX_SEQLOCK_H
->  #define __LINUX_SEQLOCK_H
-> +
->  /*
-> - * Reader/writer consistent mechanism without starving writers. This type of
-> - * lock for data where the reader wants a consistent set of information
-> - * and is willing to retry if the information changes. There are two types
-> - * of readers:
-> - * 1. Sequence readers which never block a writer but they may have to retry
-> - *    if a writer is in progress by detecting change in sequence number.
-> - *    Writers do not wait for a sequence reader.
-> - * 2. Locking readers which will wait if a writer or another locking reader
-> - *    is in progress. A locking reader in progress will also block a writer
-> - *    from going forward. Unlike the regular rwlock, the read lock here is
-> - *    exclusive so that only one locking reader can get it.
-> + * seqcount_t / seqlock_t - a reader-writer consistency mechanism with
-> + * lockless readers (read-only retry loops), and no writer starvation.
->   *
-> - * This is not as cache friendly as brlock. Also, this may not work well
-> - * for data that contains pointers, because any writer could
-> - * invalidate a pointer that a reader was following.
-> + * See Documentation/locking/seqlock.rst
-
-I absolutely hate it when I see this.
-
-I much rather have the documentation next to the code. Because
-honestly, I trust that comments next to the code will get updated if
-the code changes much more likely than comments buried in the
-Documentation directory.
-
-It's also more likely that I wont even bother looking at the doc
-(because I wont trust it to be up to date) and just read the code and
-try to figure it out. Or look at how others have used it.
-
--- Steve
-
-
-
->   *
-> - * Expected non-blocking reader usage:
-> - * 	do {
-> - *	    seq = read_seqbegin(&foo);
-> - * 	...
-> - *      } while (read_seqretry(&foo, seq));
-> - *
-> - *
-> - * On non-SMP the spin locks disappear but the writer still needs
-> - * to increment the sequence variables because an interrupt routine could
-> - * change the state of the data.
-> - *
-> - * Based on x86_64 vsyscall gettimeofday 
-> - * by Keith Owens and Andrea Arcangeli
-> + * Copyrights:
-> + * - Based on x86_64 vsyscall gettimeofday: Keith Owens, Andrea Arcangeli
->   */
->  
->  #include <linux/spinlock.h>
-> @@ -41,8 +20,8 @@
->  #include <asm/processor.h>
->  
->  /*
-> - * The seqlock interface does not prescribe a precise sequence of read
-> - * begin/retry/end. For readers, typically there is a call to
-> + * The seqlock seqcount_t interface does not prescribe a precise sequence of
-> + * read begin/retry/end. For readers, typically there is a call to
->   * read_seqcount_begin() and read_seqcount_retry(), however, there are more
->   * esoteric cases which do not follow this pattern.
->   *
-> @@ -50,16 +29,30 @@
->   * via seqcount_t under KCSAN: upon beginning a seq-reader critical section,
->   * pessimistically mark the next KCSAN_SEQLOCK_REGION_MAX memory accesses as
->   * atomics; if there is a matching read_seqcount_retry() call, no following
-> - * memory operations are considered atomic. Usage of seqlocks via seqlock_t
-> - * interface is not affected.
-> + * memory operations are considered atomic. Usage of the seqlock_t interface
-> + * is not affected.
->   */
->  #define KCSAN_SEQLOCK_REGION_MAX 1000
->  
->  /*
-> - * Version using sequence counter only.
-> - * This can be used when code has its own mutex protecting the
-> - * updating starting before the write_seqcountbeqin() and ending
-> - * after the write_seqcount_end().
-> + * Sequence counters (seqcount_t)
-> + *
-> + * This is the raw counting mechanism, without any writer protection.
-> + *
-> + * Write side critical sections must be serialized and non-preemptible.
-> + *
-> + * If readers can be invoked from hardirq or softirq contexts,
-> + * interrupts or bottom halves must also be respectively disabled before
-> + * entering the write section.
-> + *
-> + * This mechanism can't be used if the protected data contains pointers,
-> + * as the writer can invalidate a pointer that a reader is following.
-> + *
-> + * If it's desired to automatically handle the sequence counter writer
-> + * serialization and non-preemptibility requirements, use a sequential
-> + * lock (seqlock_t) instead.
-> + *
-> + * See Documentation/locking/seqlock.rst
->   */
->  typedef struct seqcount {
->  	unsigned sequence;
-> @@ -398,10 +391,6 @@ static inline void raw_write_seqcount_latch(seqcount_t *s)
->         smp_wmb();      /* increment "sequence" before following stores */
->  }
->  
-> -/*
-> - * Sequence counter only version assumes that callers are using their
-> - * own mutexing.
-> - */
->  static inline void write_seqcount_begin_nested(seqcount_t *s, int subclass)
->  {
->  	raw_write_seqcount_begin(s);
-> @@ -434,15 +423,21 @@ static inline void write_seqcount_invalidate(seqcount_t *s)
->  	kcsan_nestable_atomic_end();
->  }
->  
-> +/*
-> + * Sequential locks (seqlock_t)
-> + *
-> + * Sequence counters with an embedded spinlock for writer serialization
-> + * and non-preemptibility.
-> + *
-> + * For more info, see:
-> + *    - Comments on top of seqcount_t
-> + *    - Documentation/locking/seqlock.rst
-> + */
->  typedef struct {
->  	struct seqcount seqcount;
->  	spinlock_t lock;
->  } seqlock_t;
->  
-> -/*
-> - * These macros triggered gcc-3.x compile-time problems.  We think these are
-> - * OK now.  Be cautious.
-> - */
->  #define __SEQLOCK_UNLOCKED(lockname)			\
->  	{						\
->  		.seqcount = SEQCNT_ZERO(lockname),	\
-
+VXNlIGt0aHJlYWRfY3JlYXRlX3dvcmtlciB0byBzaW1wbGlmeSB0aGUgY29kZSBhbmQgb3B0aW1p
+c2UKdGhlIG1hbmFnZXIgc3RydWN0OiBtc21fZHJtX3RocmVhZC4gV2l0aCB0aGlzIGNoYW5nZSwg
+d2UKY291bGQgcmVtb3ZlIHN0cnVjdCBlbGVtZW50IChzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRocmVh
+ZCAmCnN0cnVjdCBrdGhyZWFkX3dvcmtlciB3b3JrZXIpLCBpbnN0ZWFkLCB1c2Ugb25lIHBvaW50
+IChzdHJ1Y3QKa3RocmVhZF93b3JrZXIgKndvcmtlcikuCgpTaWduZWQtb2ZmLWJ5OiBCZXJuYXJk
+IFpoYW8gPGJlcm5hcmRAdml2by5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2Rw
+dTEvZHB1X2NydGMuYyB8ICAyICstCiBkcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9kcnYuYyAgICAg
+ICAgICAgIHwgMTggKysrKysrLS0tLS0tLS0tLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9k
+cnYuaCAgICAgICAgICAgIHwgIDMgKy0tCiAzIGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygr
+KSwgMTUgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNw
+L2RwdTEvZHB1X2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9jcnRj
+LmMKaW5kZXggZTE1YjQyYTc4MGUwLi5jOTU5Yzk1OTAyMWQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9jcnRjLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21z
+bS9kaXNwL2RwdTEvZHB1X2NydGMuYwpAQCAtMzk2LDcgKzM5Niw3IEBAIHN0YXRpYyB2b2lkIGRw
+dV9jcnRjX2ZyYW1lX2V2ZW50X2NiKHZvaWQgKmRhdGEsIHUzMiBldmVudCkKIAlmZXZlbnQtPmV2
+ZW50ID0gZXZlbnQ7CiAJZmV2ZW50LT5jcnRjID0gY3J0YzsKIAlmZXZlbnQtPnRzID0ga3RpbWVf
+Z2V0KCk7Ci0Ja3RocmVhZF9xdWV1ZV93b3JrKCZwcml2LT5ldmVudF90aHJlYWRbY3J0Y19pZF0u
+d29ya2VyLCAmZmV2ZW50LT53b3JrKTsKKwlrdGhyZWFkX3F1ZXVlX3dvcmsocHJpdi0+ZXZlbnRf
+dGhyZWFkW2NydGNfaWRdLndvcmtlciwgJmZldmVudC0+d29yayk7CiB9CiAKIHZvaWQgZHB1X2Ny
+dGNfY29tcGxldGVfY29tbWl0KHN0cnVjdCBkcm1fY3J0YyAqY3J0YykKZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9tc21fZHJ2
+LmMKaW5kZXggZjZjZTQwYmYzNjk5Li44MmU3OWI4MmE1OTQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9tc20vbXNtX2Rydi5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5j
+CkBAIC0yMzgsMTAgKzIzOCw4IEBAIHN0YXRpYyBpbnQgbXNtX2RybV91bmluaXQoc3RydWN0IGRl
+dmljZSAqZGV2KQogCiAJLyogY2xlYW4gdXAgZXZlbnQgd29ya2VyIHRocmVhZHMgKi8KIAlmb3Ig
+KGkgPSAwOyBpIDwgcHJpdi0+bnVtX2NydGNzOyBpKyspIHsKLQkJaWYgKHByaXYtPmV2ZW50X3Ro
+cmVhZFtpXS50aHJlYWQpIHsKLQkJCWt0aHJlYWRfZGVzdHJveV93b3JrZXIoJnByaXYtPmV2ZW50
+X3RocmVhZFtpXS53b3JrZXIpOwotCQkJcHJpdi0+ZXZlbnRfdGhyZWFkW2ldLnRocmVhZCA9IE5V
+TEw7Ci0JCX0KKwkJaWYgKHByaXYtPmV2ZW50X3RocmVhZFtpXS53b3JrZXIpCisJCQlrdGhyZWFk
+X2Rlc3Ryb3lfd29ya2VyKHByaXYtPmV2ZW50X3RocmVhZFtpXS53b3JrZXIpOwogCX0KIAogCW1z
+bV9nZW1fc2hyaW5rZXJfY2xlYW51cChkZGV2KTsKQEAgLTUwNCwxOSArNTAyLDE1IEBAIHN0YXRp
+YyBpbnQgbXNtX2RybV9pbml0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRybV9kcml2ZXIg
+KmRydikKIAlmb3IgKGkgPSAwOyBpIDwgcHJpdi0+bnVtX2NydGNzOyBpKyspIHsKIAkJLyogaW5p
+dGlhbGl6ZSBldmVudCB0aHJlYWQgKi8KIAkJcHJpdi0+ZXZlbnRfdGhyZWFkW2ldLmNydGNfaWQg
+PSBwcml2LT5jcnRjc1tpXS0+YmFzZS5pZDsKLQkJa3RocmVhZF9pbml0X3dvcmtlcigmcHJpdi0+
+ZXZlbnRfdGhyZWFkW2ldLndvcmtlcik7CiAJCXByaXYtPmV2ZW50X3RocmVhZFtpXS5kZXYgPSBk
+ZGV2OwotCQlwcml2LT5ldmVudF90aHJlYWRbaV0udGhyZWFkID0KLQkJCWt0aHJlYWRfcnVuKGt0
+aHJlYWRfd29ya2VyX2ZuLAotCQkJCSZwcml2LT5ldmVudF90aHJlYWRbaV0ud29ya2VyLAotCQkJ
+CSJjcnRjX2V2ZW50OiVkIiwgcHJpdi0+ZXZlbnRfdGhyZWFkW2ldLmNydGNfaWQpOwotCQlpZiAo
+SVNfRVJSKHByaXYtPmV2ZW50X3RocmVhZFtpXS50aHJlYWQpKSB7CisJCXByaXYtPmV2ZW50X3Ro
+cmVhZFtpXS53b3JrZXIgPSBrdGhyZWFkX2NyZWF0ZV93b3JrZXIoMCwKKwkJCSJjcnRjX2V2ZW50
+OiVkIiwgcHJpdi0+ZXZlbnRfdGhyZWFkW2ldLmNydGNfaWQpOworCQlpZiAoSVNfRVJSKHByaXYt
+PmV2ZW50X3RocmVhZFtpXS53b3JrZXIpKSB7CiAJCQlEUk1fREVWX0VSUk9SKGRldiwgImZhaWxl
+ZCB0byBjcmVhdGUgY3J0Y19ldmVudCBrdGhyZWFkXG4iKTsKLQkJCXByaXYtPmV2ZW50X3RocmVh
+ZFtpXS50aHJlYWQgPSBOVUxMOwogCQkJZ290byBlcnJfbXNtX3VuaW5pdDsKIAkJfQogCi0JCXJl
+dCA9IHNjaGVkX3NldHNjaGVkdWxlcihwcml2LT5ldmVudF90aHJlYWRbaV0udGhyZWFkLAorCQly
+ZXQgPSBzY2hlZF9zZXRzY2hlZHVsZXIocHJpdi0+ZXZlbnRfdGhyZWFkW2ldLndvcmtlci0+dGFz
+aywKIAkJCQkJIFNDSEVEX0ZJRk8sICZwYXJhbSk7CiAJCWlmIChyZXQpCiAJCQlkZXZfd2Fybihk
+ZXYsICJldmVudF90aHJlYWQgc2V0IHByaW9yaXR5IGZhaWxlZDolZFxuIiwKZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5oIGIvZHJpdmVycy9ncHUvZHJtL21zbS9tc21f
+ZHJ2LmgKaW5kZXggZTJkNmE2MDU2NDE4Li5kYWYyZjRlNTU0OGMgMTAwNjQ0Ci0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS9tc20vbXNtX2Rydi5oCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Ry
+di5oCkBAIC0xMjksOSArMTI5LDggQEAgc3RydWN0IG1zbV9kaXNwbGF5X2luZm8gewogLyogQ29t
+bWl0L0V2ZW50IHRocmVhZCBzcGVjaWZpYyBzdHJ1Y3R1cmUgKi8KIHN0cnVjdCBtc21fZHJtX3Ro
+cmVhZCB7CiAJc3RydWN0IGRybV9kZXZpY2UgKmRldjsKLQlzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRo
+cmVhZDsKIAl1bnNpZ25lZCBpbnQgY3J0Y19pZDsKLQlzdHJ1Y3Qga3RocmVhZF93b3JrZXIgd29y
+a2VyOworCXN0cnVjdCBrdGhyZWFkX3dvcmtlciAqd29ya2VyOwogfTsKIAogc3RydWN0IG1zbV9k
+cm1fcHJpdmF0ZSB7Ci0tIAoyLjE3LjEKCg0KDQo=
