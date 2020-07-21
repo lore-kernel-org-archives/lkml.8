@@ -2,121 +2,225 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9886C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6953C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86D4220729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5D22073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:05:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="EDTaFGVE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z+OWQYN4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729192AbgGUKEr (ORCPT
+        id S1729197AbgGUKFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:04:47 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:30678 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726919AbgGUKEq (ORCPT
+        Tue, 21 Jul 2020 06:05:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbgGUKFC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:04:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595325885; x=1626861885;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LOmnsw9iC3qsLnhUejBW18I+VfFv6IlLy/JZ85tkXDA=;
-  b=EDTaFGVEDgrugcOifNLihts2ri4uvwIj6/JueLgcpcBf6Ay+oOWEdTHf
-   roQO0oFXmspxs098et9uB6QhCTYBFra3Gar/O9cM2Tg46kX6H8DU4hu0y
-   M4rimjNvc10zDMbhik9P855dIhAa9VIAFl9S8Xm9fEm+XIPsCRYw3Lymz
-   7AW244oejjK2zYi/DLwIb+zYx5zmA+x/KnHtXSjlfRxA+6bKukzRLFnCq
-   ClDRamKtCFernY40yDNlgAQqQDCcxH4NJWrQjmQPvL6CfhufoFoYNtnUs
-   CoC/EvDi0pW3v5OBDNlJNZDgLzOQRct+jSdJ5IBdziv4AApWQv1/rWBNZ
-   w==;
-IronPort-SDR: zZyoZ/SxVwtSNGzApPWj4oo2HX57s/YMElnbCXevHIAwb0mOZ7KGvZM+NcXWJYCBv3tYndj691
- UJuNKSpiHSrNSNx3pJvZlLaJ2XtOI08XI1gMZlTjcZ9k4w8c7k3Qm9Il1e0wvbyykEdONMCh4I
- +VQDdP3gDJrH/4BFjhueZhVjoQteMFH2EiHC2PWwUSYWRuoQfdAsF7Nv/ipWrodkqVRm9EqnE7
- TsEUfX93/yfqq0XgbsTzHlzAtTNsc6INp68WJMMPKLVzYArDPHX4UUEKmHwZfewe+GYWcNpCjY
- HAo=
-X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
-   d="scan'208";a="80694890"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Jul 2020 03:04:45 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 21 Jul 2020 03:04:06 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 21 Jul 2020 03:03:40 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <nicolas.ferre@microchip.com>, <claudiu.beznea@microchip.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <andrew@lunn.ch>,
-        <f.fainelli@gmail.com>, <robh+dt@kernel.org>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
-Subject: [PATCH net-next 2/7] macb: bindings doc: use an MDIO node as a container for PHY nodes
-Date:   Tue, 21 Jul 2020 13:02:29 +0300
-Message-ID: <20200721100234.1302910-3-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200721100234.1302910-1-codrin.ciubotariu@microchip.com>
-References: <20200721100234.1302910-1-codrin.ciubotariu@microchip.com>
+        Tue, 21 Jul 2020 06:05:02 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F828C0619D8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:05:02 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id x13so10040686vsx.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:05:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DZxYe5F17/UOWPF6juw9B6bodvCKqZ8eb70Nj76RBOQ=;
+        b=Z+OWQYN4GeYyvQh2sT0ZPpBL9rs3ALi2SinMwePZUJrslKEg126Nubmsq0pckNPJkJ
+         G901hFrBh18W50WAQ7wbTkPUEskaxzXdqqitYbYHmwllRmm9wWjGDvhr4SxXZ31A2VNG
+         qXOJN0rKkrBwgpSSOnDqd+O9+kmIyAN/u6OYMkFM7HVc3+HgDusMcExpuGsvjHTeNkGm
+         FTMOrkkIIlmE7kC4X1D/BUxpUNlN8GS44fR8avHN4UlAzWr+yAxjna7vHvirKEwdF8CE
+         koEZivgJ0FhTM85zgQag+BWr+LQG2YYNEZlX9W1oXGDj8PA6WAtOF4VZzj1fKVyxgn7q
+         jYhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DZxYe5F17/UOWPF6juw9B6bodvCKqZ8eb70Nj76RBOQ=;
+        b=Ay5g16mUUZxXEM9Cqt+PkdFvcPr8MjEw6sjV7xn8wVWXW+6vPmkEjZr1VWdmVtRahy
+         tH6T/pq+7oa6nIbFpzY5GFV2xva81m6awXo8o77L3EovMe72x2yPLT+MsRcfBZlmSAr4
+         5mgVpkz5f9RWq7Jgkt+wv9kqHi0m2BpvALU7DFx++WYOU2zmnNoTOc+XOt32C2onCZH6
+         4taiRq6ArU7IRuX+5qYivUSbgA7h+Oza5yHMfq2ky3OhkOlmmLqeEJ9Wqfb0oF4Z7MPi
+         RdEXOQB7AaBtFOC85VuW8aTrSUNySzL3VWVp3JUDuYlXTvCwg41vYWhFp70Ki5rNoTJ5
+         REYg==
+X-Gm-Message-State: AOAM531ucXQmFLBKnNMVko/L4WxTPgV2gh4tQKXvGaM8Fqeu3rQNGedh
+        8pH+qksuanULmassHhEmzWrgKeDMRShJ9VDGnrik8Q==
+X-Google-Smtp-Source: ABdhPJx9BMPVcvTz2IGb981toraC3zQUry/Y/3hz9GX+NHDG8dzhVtgCtqeX3yjz6NdF+BoO/CeZXYPkUsG1ECTkRgg=
+X-Received: by 2002:a05:6102:14d:: with SMTP id a13mr19344739vsr.142.1595325901421;
+ Tue, 21 Jul 2020 03:05:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20200720152820.122442056@linuxfoundation.org>
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 21 Jul 2020 15:34:49 +0530
+Message-ID: <CA+G9fYt_HQbAVT8obg59CkOTpHh=gYyQdjcx8PeMdo2Ba-A+Dw@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/215] 5.4.53-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MACB driver embeds an MDIO bus controller and for this reason there
-was no need for an MDIO sub-node present to contain the PHY nodes. Adding
-MDIO devies directly under an Ethernet node is deprecated, so an MDIO node
-is included to contain of the PHY nodes (and other MDIO devices' nodes).
+On Mon, 20 Jul 2020 at 21:27, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.53 release.
+> There are 215 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 22 Jul 2020 15:27:31 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.53-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- Documentation/devicetree/bindings/net/macb.txt | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+Results from Linaro=E2=80=99s test farm.
+Regressions detected on arm and arm64 (Juno-r2)
 
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index 0b61a90f1592..88d5199c2279 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -32,6 +32,11 @@ Required properties:
- The MAC address will be determined using the optional properties
- defined in ethernet.txt.
- 
-+Optional subnodes:
-+- mdio : specifies the MDIO bus in the MACB, used as a container for PHY nodes or other
-+  nodes of devices present on the MDIO bus. Please see ethernet-phy.yaml in the same
-+  directory for more details.
-+
- Optional properties for PHY child node:
- - reset-gpios : Should specify the gpio for phy reset
- - magic-packet : If present, indicates that the hardware supports waking
-@@ -48,8 +53,12 @@ Examples:
- 		local-mac-address = [3a 0e 03 04 05 06];
- 		clock-names = "pclk", "hclk", "tx_clk";
- 		clocks = <&clkc 30>, <&clkc 30>, <&clkc 13>;
--		ethernet-phy@1 {
--			reg = <0x1>;
--			reset-gpios = <&pioE 6 1>;
-+		mdio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			ethernet-phy@1 {
-+				reg = <0x1>;
-+				reset-gpios = <&pioE 6 1>;
-+			};
- 		};
- 	};
--- 
-2.25.1
+perf test cases failed
+  perf:
+    * perf_record_test
+    * perf_report_test
+    * Track-with-sched_switch (ignore intermittent failure)
 
+Bad case:
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.002 MB perf-lava-test.data ]
+
+when it was pass it prints number of samples like below,
+Good case:
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.004 MB perf-lava-test.data (46 samples)=
+ ]
+
+steps to reproduce:
+# perf record -e cycles -o perf-lava-test.data ls -a  2>&1 | tee perf-recor=
+d.log
+
+Link to full test:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/build/v5.4.52-216=
+-g95f1079149bd/testrun/2969631/suite/perf/test/perf_record_test/log
+
+test case:
+https://github.com/Linaro/test-definitions/blob/master/automated/linux/perf=
+/perf.sh
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.4.53-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 95f1079149bd5596df492ff3dd12dacdd264e0ea
+git describe: v5.4.52-216-g95f1079149bd
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.52-216-g95f1079149bd
+
+Regressions (compared to build v5.4.52)
+------------------------------------------------------------------------
+  perf:
+    * perf_record_test
+    * perf_report_test
+    * Track-with-sched_switch (ignore intermittent failure)
+
+No fixes (compared to build v5.4.52)
+
+Ran 36089 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-containers-tests
+* ltp-controllers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-commands-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fs-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
