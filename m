@@ -2,173 +2,152 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDCBC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A22CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEE6C22CBB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:39:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595338788;
-	bh=fTNOXGIa7biqPv6Z2GuhWIBaCeoFIYX81BxPw11/p6Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PpUV5VV7oU9JVnjpQAtVmA8v/tS//wxcUFVsm192gnkzKwtU7hFyFiokvAd14mHJJ
-	 bwp5we7QzTM4vQOfOx1+b9WXpr1TkzhVIIFxJhxrKr3TIikrzgAV/erHikPA51UK6H
-	 puDbN+b1zdpadkm9XaUzZjuAihAd5lrtBoFBfPoY=
+	by mail.kernel.org (Postfix) with ESMTP id F26B520709
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:42:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="AjdHFjHa";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Tko895hB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbgGUNjr (ORCPT
+        id S1727942AbgGUNmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:39:47 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39551 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728477AbgGUNjr (ORCPT
+        Tue, 21 Jul 2020 09:42:04 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:41497 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgGUNmC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:39:47 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q5so21239288wru.6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:39:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+EynrwAgZ+BIcVK8jOHfPKfboNTbROApvtg8PYw4Yzk=;
-        b=aa5DXzi4KmKVOZWF8Eypoee/j7sBRa8UFBg2S/TwXg9Phk+m3ApW8eRyApoGfZ7GwP
-         J7SAU2g1TZjj1tkZvn9vA3KXeicBw/d+oR+PqKCDb2hdty0ava7lpno4ze/SmISCc0ny
-         LVlbKn8uOWP5ZrcUHkHz0otJ7pTowORnCRqbRIkg8BkanruXi+ypTqCD2s7qsi+Ybwmw
-         vSGkb/RKKXlQE4QQmHrzd+m4Trb9+2GB8XU7TcslN1w74JuJzJPl6IqgxCsnBgV719VE
-         qeXi6nD+qJsbIWybfq8rMHmtj8nsro5eVprmginq2BWUJl0SW6ZyNimllmsPtdzZmCzq
-         5TEQ==
-X-Gm-Message-State: AOAM530HmL+jFhNSGvX4Z4bIEOe58g7a+KiWaasAHKcEH9xJT3KatoQv
-        gfqIe9Nq//CXefOgug0pDqOoJaokkPVmtXk1/0Y=
-X-Google-Smtp-Source: ABdhPJxZ6BH20IUKsNG5HXoYCol9gZidHeeK/PC5GK5GkSDZFzeG1La7jzhU7vlR5gRrdfECzw0Rm2bZe/JXb03rE9U=
-X-Received: by 2002:adf:dfd0:: with SMTP id q16mr954300wrn.60.1595338785533;
- Tue, 21 Jul 2020 06:39:45 -0700 (PDT)
+        Tue, 21 Jul 2020 09:42:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1595338921; x=1626874921;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=XCIemFwHVUPk9JG5bOXVOGvcvPDUygaTIGU9mXoRy0Y=;
+  b=AjdHFjHammRZn5qBIvthl2OTyPz8x8aXgpsFqgQhTeHzoE5s5WGwzfvH
+   88w2FJs09lUlNCfACm50AVBi/BC+nw+xaNFqKjxk8q3c1eY/eHDCHhFxz
+   n51kPg4O+kx2WTOUHO4byqcDt2S4VVCVhdZi2wjGMSf9vg0nNYuMSA7iy
+   Orxe2ozJE9pj8r+I5ghTKHxYf+psqn/Li/5kphi3GADx3ct6OsHqEFTZq
+   o7XzRE/PzkZCAvRmk0omcDIOIyMOvW2iQQdAjzZ/IY75kUM6FrvHUOqjh
+   7BAEdPM/CBU9BOFSj9KgOEC0QyIgzEujWvd1t0j8NKrkqJyY6Txug8SD9
+   A==;
+IronPort-SDR: juEY9KOMHYTqd1L8AE3SJSZPZHu8tF69WAc1n80LeoSvMINcJvgGoIc4Ie1IFPcR4OZpQhM5gi
+ TMPBLsZriSMQ42MZq3y63/rRSZHb44ReCwfRJHYphbgtOgolOdjd5PsyZlh4u1xrbweetKyQ9h
+ 2xLsFZrA6OYpoHaPUh5pTO6B66N2qOkA40t06E33+qtbHzvqL+3lriNQOVz+DBnwpW1khl4JIn
+ SGPSASaACkCiByV7WudxHBZY3tD8l4DKBnqOVwxBmLfQuz1ekoa6HeGkDPOyel5V1ruGvYmtiN
+ kiA=
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="84770976"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Jul 2020 06:40:22 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 21 Jul 2020 06:39:42 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
+ Transport; Tue, 21 Jul 2020 06:39:44 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=feg/odc7n+9plk2n/OPuL1ATM5/BvDC2C0C/c6zSd3ACon8Iz8aMB/uHWeiJRGJx4DTmbB4VdwqxjNiWcpYWp/WhQBvLWF+iEPTxfT6M8eXALLY6BE3igMAwxywNMdYkOFd54byZUD7uPpziFGbNS5IHxyiQeCGJyRMz2HIIyq4hSGuCV2oimH6fn1DirC/5dv/4MOPfPDSYq57P1k+t87r/lvYIEKI/szv0HAOEEVHCoKROffa8mLldsRYsPc5wl+T9mf2ItpMyoRz3DpYVmMp1vBvqD3TA+Qn9vUKk6AUoBhlnAVryrgTRlFCthaKulijvd1dDzeCOhu2yqmB9fg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XCIemFwHVUPk9JG5bOXVOGvcvPDUygaTIGU9mXoRy0Y=;
+ b=MB/u/r95myqjaWdDhcdjPVb3p0GYbAM08Z+nEXbsqSp4tkwjdMQSpLQdrx39nSeoFGmdsHJAnytyWUFqaxmc+YOSDEihwTGxRMa9o3DeqQgzNPbErDpAV90+JiY5C+maDvIJXme9bmZUbv6zF3gpyyxWy/LK+B4qgDVNlFs2slu7aeyigVINu42f+KDO5MxkyGPLGCAGguFAwH0Ew6dWk4xlcS1zhekaKIW3xH3i2R86rjLTXo9zo7qiioG9dEoiQnix/Z5MNzUTz1a0UKs33JfqkGCX+veicRHSHUOFGUCndV9dTvyK6MhAMaW9f5Gi9Rp8Rt2JhlKUF3EMPHKhnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XCIemFwHVUPk9JG5bOXVOGvcvPDUygaTIGU9mXoRy0Y=;
+ b=Tko895hBi9/oWqDuWuyonZAFirGbDAIWyzqCJzKuNLuDUHRzSjgcfNXDp0It9ODCVEndoX8eC72lbOKIF3Qcz21/WLQ/sEmENBubNAy5h22Qlg7YmKU6MPFygGT1UybNU2FmzzsWkKZBMf56fEa0VIzJjUdVGrhBVQx8jsxJnwI=
+Received: from SN6PR11MB3504.namprd11.prod.outlook.com (2603:10b6:805:d0::17)
+ by SN6PR11MB3455.namprd11.prod.outlook.com (2603:10b6:805:bb::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Tue, 21 Jul
+ 2020 13:40:18 +0000
+Received: from SN6PR11MB3504.namprd11.prod.outlook.com
+ ([fe80::851c:67fc:a034:9ea0]) by SN6PR11MB3504.namprd11.prod.outlook.com
+ ([fe80::851c:67fc:a034:9ea0%4]) with mapi id 15.20.3195.025; Tue, 21 Jul 2020
+ 13:40:17 +0000
+From:   <Codrin.Ciubotariu@microchip.com>
+To:     <andrew@lunn.ch>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <Nicolas.Ferre@microchip.com>,
+        <Claudiu.Beznea@microchip.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <f.fainelli@gmail.com>, <robh+dt@kernel.org>,
+        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>
+Subject: Re: [PATCH net-next 3/7] net: macb: parse PHY nodes found under an
+ MDIO node
+Thread-Topic: [PATCH net-next 3/7] net: macb: parse PHY nodes found under an
+ MDIO node
+Thread-Index: AQHWX0Zyppx1UbfeIEWndPdIyI+OoqkSCXKAgAAA8AA=
+Date:   Tue, 21 Jul 2020 13:40:17 +0000
+Message-ID: <9a30d357-7fc0-13d3-bba3-c4d29c36cfc2@microchip.com>
+References: <20200721100234.1302910-1-codrin.ciubotariu@microchip.com>
+ <20200721100234.1302910-4-codrin.ciubotariu@microchip.com>
+ <20200721133655.GA1472201@lunn.ch>
+In-Reply-To: <20200721133655.GA1472201@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: lunn.ch; dkim=none (message not signed)
+ header.d=none;lunn.ch; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [84.232.220.208]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 94c7a5c6-08d7-496b-c94d-08d82d7b9b0d
+x-ms-traffictypediagnostic: SN6PR11MB3455:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR11MB34558A8FF6B8E37A00B0BEF9E7780@SN6PR11MB3455.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ooC+QCXBslLKQ2Z08AX5v/a8BLBBBss+kc5fP3EVtEF+YsgCU41cygass9NBlP0ux+nQxgdh3ULQAp4vsJvFls1U3rsQoXnpt7Ra/K4soFdffVJwgRhvs2NYnTFosLw+Y7SGQBjbvWcaxfwrwI5ZoEe8A2Yog47oXCczRBGWBHY1VFe69j6Y83uYOBxx6VtmVd6aOgecrI0cj5kLpDgnMvLvpqWI0KcnuqNFHEcEU1B579fg2K4jbMrLTnJBqam4LSSs/79hG/wTSAxEEj0ImLd9KkGhmJRe33frVNJ7bvGzoShbp2VWOIMsGeWWyDfDi5JBuIll1jIfv0o89XWgUSIVt3+DtvsPrhSV7O8fCkXdsuJqEXBuawJHW/e+laui
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3504.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(6512007)(4744005)(31686004)(498600001)(7416002)(6916009)(2906002)(5660300002)(2616005)(66946007)(54906003)(8676002)(8936002)(186003)(71200400001)(53546011)(6506007)(31696002)(107886003)(6486002)(86362001)(36756003)(26005)(66476007)(4326008)(64756008)(66556008)(66446008)(76116006)(91956017)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: /aVRVuptGea+ZiTOUCjyOv8O+d4woP0JI6VowX1sEZDpDNDFkI1UqT0Zr9VzzZv9KgxzgzMfYPwuBXpw3s5Xd05ce0ZpN9Fx2/upB8dvbot12sxUKVVh+zCRx+GkXltqyJsLTXO1rpK/ETS9frU9s1bUDLTXsVDXZVSBQXVKBClGl5pA+Gc6zvQgH9kXHAa/BPhryYYaSQLT+cxHejkvOF6XcgqvOGaTAjWTafHhPVC0ABJLAZfrFWZM8zgdLnVHOfV/KmfDhHJ2t3IwL+1GcIc5nwv6PsBpqgMAP0crHKkrRz30XK7iTmDTK++XgG0E96TkXqQRv3W7OZfPaxqmDsD6g6e1LHCtOs4kQZYgLsMB0/QIbzqsBF9C6Ppzfhp79dMTFiZ4baJlbe/y/EweuPZVlmAexJRfBf6/xuKVFDVQc3ON49wxNczX0Rwnm6LMUuVnoYEmzUamu0LPHGdHqNJ0VavWiV9XCyYvQ8cDA/05y/hPJ9arDP2/c44YLN+l
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CDF23F0B9857CE46A167DD6E2A487F0B@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200718064826.9865-1-changbin.du@gmail.com>
-In-Reply-To: <20200718064826.9865-1-changbin.du@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 21 Jul 2020 22:39:34 +0900
-Message-ID: <CAM9d7ci_5J-NCo2o0-ALj85A79YFcs1BJCwcXBUY_p8VznmTMQ@mail.gmail.com>
-Subject: Re: [PATCH v7 00/18] perf: ftrace enhancement
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3504.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94c7a5c6-08d7-496b-c94d-08d82d7b9b0d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 13:40:17.4246
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: P5flNyDmarQ8JrCGrqcg99h1d01SJiS3omqeS7MpW7hFPPV6jbCfKostZQY5FeT0NRYYA/NUPTPICT3oKE2dY1iip1Uds4xEfSE0eImwsEA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3455
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Sat, Jul 18, 2020 at 3:48 PM Changbin Du <changbin.du@gmail.com> wrote:
->
-> The perf has basic kernel ftrace support but lack support of most tracing
-> options. This serias is target to enhance the perf ftrace functionality so
-> that we can make full use of kernel ftrace with perf.
->
-> In general, this serias be cataloged into two main changes:
->   1) Improve usability of existing functions. For example, we don't need to type
->      extra option to select the tracer.
->   2) Add new options to support all other ftrace functions.
->
-> Here is a glance of all ftrace functions with this serias:
->
-> $ sudo perf ftrace -h
->
->  Usage: perf ftrace [<options>] [<command>]
->     or: perf ftrace [<options>] -- <command> [<options>]
->
->     -a, --all-cpus        system-wide collection from all CPUs
->     -C, --cpu <cpu>       list of cpus to monitor
->     -D, --delay <n>       ms to wait before starting tracing after program start
->     -F, --funcs           Show available functions to filter
->     -G, --graph-funcs <func>
->                           trace given functions using function_graph tracer
->     -g, --nograph-funcs <func>
->                           Set nograph filter on given functions
->     -m, --buffer-size <size>
->                           size of per cpu buffer
->     -N, --notrace-funcs <func>
->                           do not trace given functions
->     -p, --pid <pid>       trace on existing process id
->     -T, --trace-funcs <func>
->                           trace given functions using function tracer
->     -t, --tracer <tracer>
->                           tracer to use: function or function_graph (This option is deprecated)
->     -v, --verbose         be more verbose
->         --func-opts <options>
->                           function tracer options, available options: call-graph,irq-info
->         --graph-opts <options>
->                           graph tracer options, available options: nosleep-time,noirqs,verbose,thresh=<n>,depth=<n>
->         --inherit         trace children processes
->         --tid <tid>       trace on existing thread id (exclusive to --pid)
->
-> v7:
->   o add back '--tid <tid>'.
-> v6:
->   o fix return value of read_tracing_file_to_stdout().
->   o make __cmd_ftrace() shorter.
->   o remove option '-t, --tid <tid>'.
-> v5:
->   o trivial fixes.
-> v4:
->   o add util/parse-sublevel-options.c
->   O remove -D/--graph-depth
-> v3:
->   o add --func-opts and --graph-opts to set tracer specific options.
->   o support units as a suffix for option '-m/--buffer-size'.
-> v2:
->   o patches for option '-u/--userstacktrace' and '--no-pager' are dropped.
->   o update all related perf documentation.
->   o rename some options. Now all funcgraph tracer options are prefixed with
->     '--graph-', while all function tracer options are prefixed with '--func-'.
->   o mark old options deprecated instead of removing them.
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks
-Namhyung
-
->
->
-> Changbin Du (18):
->   perf ftrace: select function/function_graph tracer automatically
->   perf ftrace: add option '-F/--funcs' to list available functions
->   perf ftrace: factor out function write_tracing_file_int()
->   perf ftrace: add option '-m/--buffer-size' to set per-cpu buffer size
->   perf ftrace: show trace column header
->   perf ftrace: add option '--inherit' to trace children processes
->   perf: util: add general function to parse sublevel options
->   perf ftrace: add support for tracing option 'func_stack_trace'
->   perf ftrace: add support for trace option sleep-time
->   perf ftrace: add support for trace option funcgraph-irqs
->   perf ftrace: add support for tracing option 'irq-info'
->   perf ftrace: add option 'verbose' to show more info for graph tracer
->   perf ftrace: add support for trace option tracing_thresh
->   perf: ftrace: allow set graph depth by '--graph-opts'
->   perf ftrace: add option -D/--delay to delay tracing
->   perf ftrace: add option --tid to filter by thread id
->   perf: ftrace: Add set_tracing_options() to set all trace options
->   perf ftrace: add change log
->
->  tools/perf/Documentation/perf-config.txt |   5 -
->  tools/perf/Documentation/perf-ftrace.txt |  36 +-
->  tools/perf/builtin-ftrace.c              | 415 +++++++++++++++++++++--
->  tools/perf/util/Build                    |   1 +
->  tools/perf/util/debug.c                  |  61 +---
->  tools/perf/util/parse-sublevel-options.c |  70 ++++
->  tools/perf/util/parse-sublevel-options.h |  11 +
->  7 files changed, 513 insertions(+), 86 deletions(-)
->  create mode 100644 tools/perf/util/parse-sublevel-options.c
->  create mode 100644 tools/perf/util/parse-sublevel-options.h
->
-> --
-> 2.25.1
->
+T24gMjEuMDcuMjAyMCAxNjozNiwgQW5kcmV3IEx1bm4gd3JvdGU6DQo+IEVYVEVSTkFMIEVNQUlM
+OiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IGtub3cg
+dGhlIGNvbnRlbnQgaXMgc2FmZQ0KPiANCj4+IEBAIC03NTUsNyArNzY1LDYgQEAgc3RhdGljIGlu
+dCBtYWNiX21kaW9idXNfcmVnaXN0ZXIoc3RydWN0IG1hY2IgKmJwKQ0KPj4gICAgICAgICAgICAg
+ICAgICAgICAgICAgKiBkZWNyZW1lbnQgaXQgYmVmb3JlIHJldHVybmluZy4NCj4+ICAgICAgICAg
+ICAgICAgICAgICAgICAgICovDQo+PiAgICAgICAgICAgICAgICAgICAgICAgIG9mX25vZGVfcHV0
+KGNoaWxkKTsNCj4+IC0NCj4+ICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIG9mX21kaW9i
+dXNfcmVnaXN0ZXIoYnAtPm1paV9idXMsIG5wKTsNCj4+ICAgICAgICAgICAgICAgIH0NCj4gDQo+
+IFBsZWFzZSBhdm9pZCB3aGl0ZSBzcGFjZSBjaGFuZ2VzIGxpa2UgdGhpcy4NCg0KU29ycnkgYWJv
+dXQgdGhpcywgaXQgd2FzIG5vdCBpbnRlbmRlZC4gV2lsbCBmaXggaW4gdjIuIFRoYW5rcyENCg0K
+PiANCj4gT3RoZXJ3aXNlIHRoaXMgbG9va3MgTy5LLg0KPiANCj4gICAgICAgICBBbmRyZXcNCj4g
+DQoNCg==
