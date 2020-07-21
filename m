@@ -2,97 +2,104 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70A3C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A40A2077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 864F4206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595299452;
+	bh=ji8kJmI0QuEdXTUO5uw/maZUbaiD0o068HD7owC8Gvw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r9gBRpfyn9X9E34/PavaHFyj1VGc3btYjSwQX1Wsw2hrhLFG4oqV5gw+BjMzHf+hF
+	 MIy4JqDk9uDbKOAKKFUKxnnU57gnSFmm/zIiJozuL7ZMU7GmKD+wtBPIeRSifqkART
+	 p8L3noCagKsdkD0pXpIs26bPlZArAMyY3RrOkRBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbgGUCoE (ORCPT
+        id S1728541AbgGUCoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:44:04 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49746 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725862AbgGUCoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 22:44:03 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6FE68FAD4C1F2E7FF75C;
-        Tue, 21 Jul 2020 10:44:01 +0800 (CST)
-Received: from [10.57.101.250] (10.57.101.250) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 21 Jul 2020 10:43:59 +0800
-Subject: Re: [PATCH] ARM: dts: hisilicon: Align L2 cache-controller nodename
- with dtschema
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200626080637.4191-1-krzk@kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <5F16566F.1010807@hisilicon.com>
-Date:   Tue, 21 Jul 2020 10:43:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
+        Mon, 20 Jul 2020 22:44:11 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39653 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgGUCoK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 22:44:10 -0400
+Received: by mail-il1-f195.google.com with SMTP id k6so15132682ili.6;
+        Mon, 20 Jul 2020 19:44:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yYPmnd+SjKU1YCRkUXZXwvqzmgl3B+n3upmC6X8T2QQ=;
+        b=LBitO/vNYbbeflSEv8mvgvMX63UhjxF43UUQfh4T0RC6py4RxZZLuFQNGG/pPD8gHa
+         wVw+m+4qhhgmiAVNmvtXb8apOpkS07sepIKAXIyvJV05nFVWxLHqCrfWnUbZLjhUVfuP
+         b0sBfXO2xv+8t3bVh+5kD/+TO+eWs2s/U2IaFhg9722EtzVmngIUlv/Q2Y6Nat/oPwZS
+         HyIX0uvDFqNXYimxq//XmbyutSBrzXe1poDpVUNBTCbU0p0jLE/TkUM+Z1XM4Ri1qYbi
+         PDpJhvj9skydnUg1E3BbzV4/AwJmsD1BxJMegAWWfbT0WXz6jDgQX30Xm76hKzvLlpr2
+         +BDA==
+X-Gm-Message-State: AOAM53198PXO0prUJ1x2ntAa4nF0kI9jDbZKXsNJlQDy8v7Fe1CND+pu
+        qdAt76evEXmLHQPz3Dw5SQ==
+X-Google-Smtp-Source: ABdhPJwgDdwirEHxzZ01CrlLaV9MRJUwpXK9CrErS5iyCmm9bmSo7iTNiNXqf1p2Ybtsn39WCdI5Rg==
+X-Received: by 2002:a92:cacf:: with SMTP id m15mr25092442ilq.34.1595299449331;
+        Mon, 20 Jul 2020 19:44:09 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p84sm10227862ill.64.2020.07.20.19.44.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 19:44:08 -0700 (PDT)
+Received: (nullmailer pid 3435958 invoked by uid 1000);
+        Tue, 21 Jul 2020 02:44:04 -0000
+Date:   Mon, 20 Jul 2020 20:44:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Mark Brown <broonie@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Zhang Rui <rui.zhang@intel.com>, linux-spi@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-i2c@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-watchdog@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH 11/20] dt-bindings: i2c: renesas,i2c: Document r8a774e1
+ support
+Message-ID: <20200721024404.GA3435911@bogus>
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20200626080637.4191-1-krzk@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594811350-14066-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
-
-On 2020/6/26 16:06, Krzysztof Kozlowski wrote:
-> Fix dtschema validator warnings like:
->     l2-cache: $nodename:0: 'l2-cache' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+On Wed, 15 Jul 2020 12:09:01 +0100, Lad Prabhakar wrote:
+> Document i2c controller for RZ/G2H (R8A774E1) SoC, which is compatible
+> with R-Car Gen3 SoC family.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Thanks!
-Applied to the hisilicon arm32 dt tree.
-
-Best Regards,
-Wei
-
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > ---
->  arch/arm/boot/dts/hi3620.dtsi     | 2 +-
->  arch/arm/boot/dts/hisi-x5hd2.dtsi | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/i2c/renesas,i2c.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/arm/boot/dts/hi3620.dtsi b/arch/arm/boot/dts/hi3620.dtsi
-> index 9c207a690df5..f0af1bf2b4d8 100644
-> --- a/arch/arm/boot/dts/hi3620.dtsi
-> +++ b/arch/arm/boot/dts/hi3620.dtsi
-> @@ -71,7 +71,7 @@
->  		interrupt-parent = <&gic>;
->  		ranges = <0 0xfc000000 0x2000000>;
->  
-> -		L2: l2-cache {
-> +		L2: cache-controller {
->  			compatible = "arm,pl310-cache";
->  			reg = <0x100000 0x100000>;
->  			interrupts = <0 15 4>;
-> diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-> index 696e6982a688..3ee7967c202d 100644
-> --- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
-> +++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-> @@ -381,7 +381,7 @@
->  			interrupts = <1 13 0xf01>;
->  		};
->  
-> -		l2: l2-cache {
-> +		l2: cache-controller {
->  			compatible = "arm,pl310-cache";
->  			reg = <0x00a10000 0x100000>;
->  			interrupts = <0 15 4>;
-> 
+
+Acked-by: Rob Herring <robh@kernel.org>
