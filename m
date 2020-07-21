@@ -2,138 +2,82 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E077BC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC14C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE9F22077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:27:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595345271;
-	bh=dL7Jw9KmKIYfCmIThtzQuCIzVWDKDKywulNrdIg2buI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rOAJrhmjF9KJio1C1JBmNhzD+QgNEqgk6ekefSf9K2d6JvnN1Uu7EmbNGT32LQoin
-	 qTAr7jpftyrc19Fe+z9ngd7McMCaMKVlqhTA/x4EGjgzXxPf2c+clFdMGON582HDZF
-	 bV7f16cUHEIBW7mse4gKnB/A2tE820QYgZWaOBXY=
+	by mail.kernel.org (Postfix) with ESMTP id 8D838206E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729896AbgGUP1u (ORCPT
+        id S1728644AbgGUP1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:27:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56564 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 11:27:43 -0400
+Received: from mga03.intel.com ([134.134.136.65]:26547 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729045AbgGUP1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:27:49 -0400
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E153C22C9E
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 15:27:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595345269;
-        bh=dL7Jw9KmKIYfCmIThtzQuCIzVWDKDKywulNrdIg2buI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=j0qRLvgmYQ9iXUqJ4f4hiZXX+OC7ujiyWP5EZtQyEfF4iDeAt6CeXmdA0V1+otFGZ
-         ePL1Enpmwdgg1XrlRvW3NTB4VJCiZ1CoYTXOS46oM3P/dYP/h46vNrhyvd6fFuYtck
-         gxufNMXrr7yOktk0HDH9GFzFZXNYolk0wn50WmuA=
-Received: by mail-wr1-f41.google.com with SMTP id a14so6769004wra.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:27:48 -0700 (PDT)
-X-Gm-Message-State: AOAM532S9UMMzkBUH0Mj6m9nA6wUE+36N1lGHwquOugEW71ebBWYwsCA
-        IILKiMSsSoHAnEGy0gIYaS9viJYpwFg3R54ZcmISTg==
-X-Google-Smtp-Source: ABdhPJzs/y1/L+ekPbxoouGPVxU+hlgPxvyWi1Ma7ez4YIIKHie9EHhNDAWjrb2H6ZhhYQES2PRhXXKktTgN8DqKT1Y=
-X-Received: by 2002:a5d:5273:: with SMTP id l19mr17785233wrc.257.1595345267417;
- Tue, 21 Jul 2020 08:27:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
- <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net> <20200715171130.GG12769@casper.infradead.org>
- <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com> <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
- <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com> <202007151511.2AA7718@keescook>
- <20200716131404.bnzsaarooumrp3kx@steredhat> <202007160751.ED56C55@keescook> <20200717080157.ezxapv7pscbqykhl@steredhat.lan>
-In-Reply-To: <20200717080157.ezxapv7pscbqykhl@steredhat.lan>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 21 Jul 2020 08:27:34 -0700
-X-Gmail-Original-Message-ID: <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
-Message-ID: <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
-Subject: Re: strace of io_uring events?
-To:     Stefano Garzarella <sgarzare@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        id S1726830AbgGUP1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:27:43 -0400
+IronPort-SDR: fokch5A8MiLp8qwwB+/oyksFB0yUUUMWhs+Ci4X/nkzPDzbRsZa2Mj40SiZHuYvlW0WtmMYNRT
+ 4jotY6LYi2CQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="150132751"
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="150132751"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 08:27:42 -0700
+IronPort-SDR: m9Yv3szcNnwqnBWnMd6YPHjbliYFF5XJkiXvnqC85+KMTFwgkgyG6ChCE/R2uNGy3aLyySdAzB
+ PtjfD4EwWf9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="392383055"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 21 Jul 2020 08:27:38 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 21 Jul 2020 18:27:37 +0300
+Date:   Tue, 21 Jul 2020 18:27:37 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Patrick Volkerding <volkerdi@gmail.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
+ without DLL Link Active train links in 100 ms"
+Message-ID: <20200721152737.GS5180@lahna.fi.intel.com>
+References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
+ <20200716235440.GA675421@bjorn-Precision-5520>
+ <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
+ <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
+ <20200721122247.GI5180@lahna.fi.intel.com>
+ <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 1:02 AM Stefano Garzarella <sgarzare@redhat.com> wrote:
->
-> On Thu, Jul 16, 2020 at 08:12:35AM -0700, Kees Cook wrote:
-> > On Thu, Jul 16, 2020 at 03:14:04PM +0200, Stefano Garzarella wrote:
+On Tue, Jul 21, 2020 at 11:01:55AM -0400, Lyude Paul wrote:
+> Sure thing. Also, feel free to let me know if you'd like access to one of the
+> systems we saw breaking with this patch - I'm fairly sure I've got one of them
+> locally at my apartment and don't mind setting up AMT/KVM/SSH
 
-> > access (IIUC) is possible without actually calling any of the io_uring
-> > syscalls. Is that correct? A process would receive an fd (via SCM_RIGHTS,
-> > pidfd_getfd, or soon seccomp addfd), and then call mmap() on it to gain
-> > access to the SQ and CQ, and off it goes? (The only glitch I see is
-> > waking up the worker thread?)
->
-> It is true only if the io_uring istance is created with SQPOLL flag (not the
-> default behaviour and it requires CAP_SYS_ADMIN). In this case the
-> kthread is created and you can also set an higher idle time for it, so
-> also the waking up syscall can be avoided.
+Probably no need for remote access (thanks for the offer, though). I
+attached a test patch to the bug report:
 
-I stared at the io_uring code for a while, and I'm wondering if we're
-approaching this the wrong way. It seems to me that most of the
-complications here come from the fact that io_uring SQEs don't clearly
-belong to any particular security principle.  (We have struct creds,
-but we don't really have a task or mm.)  But I'm also not convinced
-that io_uring actually supports cross-mm submission except by accident
--- as it stands, unless a user is very careful to only submit SQEs
-that don't use user pointers, the results will be unpredictable.
-Perhaps we can get away with this:
+  https://bugzilla.kernel.org/show_bug.cgi?id=208597
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 74bc4a04befa..92266f869174 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7660,6 +7660,20 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int,
-fd, u32, to_submit,
-     if (!percpu_ref_tryget(&ctx->refs))
-         goto out_fput;
-
-+    if (unlikely(current->mm != ctx->sqo_mm)) {
-+        /*
-+         * The mm used to process SQEs will be current->mm or
-+         * ctx->sqo_mm depending on which submission path is used.
-+         * It's also unclear who is responsible for an SQE submitted
-+         * out-of-process from a security and auditing perspective.
-+         *
-+         * Until a real usecase emerges and there are clear semantics
-+         * for out-of-process submission, disallow it.
-+         */
-+        ret = -EACCES;
-+        goto out;
-+    }
-+
-     /*
-      * For SQ polling, the thread will do all submissions and completions.
-      * Just return the requested submit count, and wake the thread if
-
-If we can do that, then we could bind seccomp-like io_uring filters to
-an mm, and we get obvious semantics that ought to cover most of the
-bases.
-
-Jens, Christoph?
-
-Stefano, what's your intended usecase for your restriction patchset?
+that tries to work it around (based on the ->pm_cap == 0). I wonder if
+anyone would have time to try it out.
