@@ -2,368 +2,164 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A05C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3506BC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3179208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C5A208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:46:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="b7vx/dB2"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DuMGx+kL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbgGUAqc (ORCPT
+        id S1728308AbgGUAq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 20:46:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbgGUAqb (ORCPT
+        Mon, 20 Jul 2020 20:46:58 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:62084 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgGUAq5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 20:46:31 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC3CAC0619D4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 17:46:30 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o2so1191467wmh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 17:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=44yNBhwiU3BEjUQ51yMWQCzGqkuN8tsmGyt2ZoiB3Uc=;
-        b=b7vx/dB2exi7ZhQr7TmJKLOroglTIsXxQdPrU91lTf+OnjOnVOdlxL53nOQlFTqvsw
-         5ObkhtFZES39XWd7gFyXuAbAPPYYbK9ZrEUKbKUFGe4Tg+WUfCYuIA0wTvWcjql6N03S
-         0UfBKADD7f0sllkVMcYTXx8V06v6BF1WJJy3Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=44yNBhwiU3BEjUQ51yMWQCzGqkuN8tsmGyt2ZoiB3Uc=;
-        b=CgjNoVEdlre7DDKJ1ZSZuyf0gO9+s6Y99jHdKk/a3U6d395rPAdLfEXpMm0WsZz0vc
-         uc15jIA6syLo1p9tKDn3WSQATXv0/v7PVR8Om4kX1/zReh75NzhCm5eKpt8JZVr7sPRy
-         lMiJmggr3ZoPh6Xo1TDnwZuC2Fsacl5NxhUZ+jxWiuKIcd5AnNEtbQcYyE1Zf85/RUXS
-         J2E1kOTgyWqi7CGdNPbyyRZ4EgaewWLf+StYhmh1FQnxJlbqimNCzWRKdlHqA20duAFE
-         UQOtUBrbs5fJZK+DeDHBJo/ArQBoLfv3sGQ1cu7RAaZr6NuoE2tU2FDfHze1Rry3NYdC
-         mvCw==
-X-Gm-Message-State: AOAM5315TGwmDi7ebCyuFMsaBDsYS7xBGxQuckLz0YJ3vKW0ENrbrN9J
-        VzHYjmYEGMMkav8lW6UiLEYPSTSR9/IAxGT0ODA2
-X-Google-Smtp-Source: ABdhPJxjOobalSoq3+NXflThISad5/kXy/sW67PxY0qBDOSmO8FaYQUgEmu2DtCo9Hf0C79la7QXnTmdAhnDL1r1M58=
-X-Received: by 2002:a1c:7c19:: with SMTP id x25mr1542110wmc.176.1595292389306;
- Mon, 20 Jul 2020 17:46:29 -0700 (PDT)
+        Mon, 20 Jul 2020 20:46:57 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200721004653epoutp0177dd042b7e78e67520ca137b1618acde~jnf_BOdpj1766917669epoutp01E
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:46:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200721004653epoutp0177dd042b7e78e67520ca137b1618acde~jnf_BOdpj1766917669epoutp01E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1595292413;
+        bh=oLlrWB5JYm22Tmu2fEdzaAxhdJKYq6e1vefJZVTEOLw=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=DuMGx+kLszEydYe85zMHHAId+FWtlu3JKnnrvo9o8dGd1EW0rE0/0rbvCpuo8YQN7
+         lGOwZ5Q60HDWtpCTzpMm3kXIDZjQ717hGcQqPT+1Mx8+73Tqy9kZzJcEuu55kHFdrh
+         h3vqcLeb6jkOnGAIf2d6Lm52+yc6P5PsOVyfxrUk=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20200721004653epcas5p49d869db34ac55848b3ce7bc7d3f6b57a~jnf9uTXRV2360823608epcas5p4z;
+        Tue, 21 Jul 2020 00:46:53 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        74.C6.09475.DFA361F5; Tue, 21 Jul 2020 09:46:53 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200721004652epcas5p4d41ae387539d2fb0a160191bb819e22f~jnf8p4CgG2360823608epcas5p4y;
+        Tue, 21 Jul 2020 00:46:52 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200721004652epsmtrp24f88b71df0314de833a0632d6087d17f~jnf8pIzHK1274712747epsmtrp2P;
+        Tue, 21 Jul 2020 00:46:52 +0000 (GMT)
+X-AuditID: b6c32a4b-39fff70000002503-05-5f163afdcbff
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        ED.AD.08303.CFA361F5; Tue, 21 Jul 2020 09:46:52 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200721004649epsmtip15bf2629c2208ba3a3f05f208363521a7~jnf6LSetb0087300873epsmtip1J;
+        Tue, 21 Jul 2020 00:46:49 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Gustavo A. R. Silva'" <gustavoars@kernel.org>,
+        "'Kishon Vijay Abraham I'" <kishon@ti.com>,
+        "'Vinod Koul'" <vkoul@kernel.org>,
+        "'Seungwon Jeon'" <essuuj@gmail.com>,
+        "'Kiwoong Kim'" <kwmad.kim@samsung.com>
+Cc:     <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200720132718.GA13413@embeddedor>
+Subject: RE: [PATCH v2][next] phy: samsung-ufs: Fix IS_ERR argument
+Date:   Tue, 21 Jul 2020 06:16:47 +0530
+Message-ID: <042d01d65ef8$6c683f80$4538be80$@samsung.com>
 MIME-Version: 1.0
-References: <20200717075101.263332-1-anup.patel@wdc.com> <20200717075101.263332-2-anup.patel@wdc.com>
-In-Reply-To: <20200717075101.263332-2-anup.patel@wdc.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Mon, 20 Jul 2020 17:46:17 -0700
-Message-ID: <CAOnJCU+Y87SYUCczMU4=ryR0-L=e-mmO2TGXjPXANM0SpCi5vQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] RISC-V: Add mechanism to provide custom IPI operations
-To:     Anup Patel <anup.patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Emil Renner Berhing <kernel@esmil.dk>,
-        Anup Patel <anup@brainfault.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQKZ8YLttU7Tp6j0fXRMUQzsBrUhewDDhm+cp4PwvVA=
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKKsWRmVeSWpSXmKPExsWy7bCmuu5fK7F4g3l3RS2WX1jCZPHr4jRW
+        iwtPe9gsbm45ymJxedccNoudd04wO7B57Jx1l91j06pONo++LasYPY7f2M7k8XmTXABrFJdN
+        SmpOZllqkb5dAlfGpveH2ApaeSveb9rC1MD4lauLkZNDQsBE4umDp2xdjFwcQgK7GSV61nQw
+        QTifGCXOt7RBZT4zSjQemcoI03Khbw0riC0ksItR4mujMkTRG0aJmzdOsoMk2AR0JXYsBunm
+        5BARuMoo8eB/ShcjBwezgJLE1VNyIGFOAQOJV1NOMoHYwgLOEqvvvGQDKWERUJVYvd4cxOQV
+        sJRoX2QGUsErIChxcuYTFhCbWUBeYvvbOcwQ1yhI/Hy6jBVikZXEztd/mCBqxCWO/uxhBrlM
+        QmAqh8T3zU2sEA0uErd23oJ6RVji1fEt7BC2lMTnd3vBTpAQyJbo2WUMEa6RWDrvGAuEbS9x
+        4MocFohHNCXW79KHWMUn0fv7CRNEJ69ER5sQRLWqRPO7q1Cd0hITu7tZIUo8JJ7NNZjAqDgL
+        yV+zkPw1C8n9sxB2LWBkWcUomVpQnJueWmxaYJyXWq5XnJhbXJqXrpecn7uJEZxytLx3MD56
+        8EHvECMTB+MhRgkOZiUR3ok8wvFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeZV+nIkTEkhPLEnN
+        Tk0tSC2CyTJxcEo1MGn/cD3PuzXJa+NyiUlKETMK2ri2/9xz80zA1P4k5wChtNbbB+c47dm7
+        dt/KEPGVKb5cjd7HmB8HfOR5Ge2xe0XiwqhWhg7RS73+YZwHNuzqDeiUabf9YLt02cQuOxum
+        JaGVTyLS7vzfPEN53ZZ6wTPeip9eib2WeG/rpJj9r8Ozu0fu3Io3Saouy1tCWjcKTv9315Xn
+        rfWHk723BHlWWNv6neu7rHJQ5bJ9Sf/XD+mWuj0eMc+iRIVDvf6uutWoZ1bBybFfb7vblSbu
+        qXe+eX1NYFhdevJ+s9ivH1PrOs4aHm13eJ6y/uuyk6mnLEJSyj61Sk5klchdU+ymb31ji3ii
+        5MktLRps37R2+S7cpMRSnJFoqMVcVJwIAB7PGfioAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDLMWRmVeSWpSXmKPExsWy7bCSnO4fK7F4g9VH2C2WX1jCZPHr4jRW
+        iwtPe9gsbm45ymJxedccNoudd04wO7B57Jx1l91j06pONo++LasYPY7f2M7k8XmTXABrFJdN
+        SmpOZllqkb5dAlfGpveH2ApaeSveb9rC1MD4lauLkZNDQsBE4kLfGlYQW0hgB6PEx091EHFp
+        iesbJ7BD2MISK/89B7K5gGpeMUoc3jWdDSTBJqArsWNxGxtIQkTgJqPElBN3gCZxcDALKElc
+        PSUH0dDIKHHhfz8TSAOngIHEqyknwWxhAWeJ1XdesoHUswioSqxebw5i8gpYSrQvMgOp4BUQ
+        lDg58wkLiM0soCexfv0cRghbXmL72znMELcpSPx8ugzsfhEBK4mdr/8wQdSISxz92cM8gVF4
+        FpJRs5CMmoVk1CwkLQsYWVYxSqYWFOem5xYbFhjlpZbrFSfmFpfmpesl5+duYgRHkJbWDsY9
+        qz7oHWJk4mA8xCjBwawkwjuRRzheiDclsbIqtSg/vqg0J7X4EKM0B4uSOO/XWQvjhATSE0tS
+        s1NTC1KLYLJMHJxSDUyuZg7zvyXrJwhMf8S+2Hv9H4fSs39OpNdfYHEsrbZXeNqZ2bjnl63n
+        K76YyIz5C9oY/W/4sO9c/HTPmS9r75zPn+i1/wr3ztvxS95WTHt04ayzkalrqJGy3Y9Er/WB
+        jgdMI55dDVmYsuHZ6Ulh33R2uTEr64Qeb5+1hD9JtUaJecO0qNLjPMc3ee9TEd+93yn6eg9b
+        2K2ov2YXRU4dsp55MW3z52v76w1czt7hTjU9fzbE7PYyS96mCy8XzJ+reS8g5bLj9t9aUy50
+        1nVHxBQfFlKf/dhUfm+Q0Lmla7p7dW43Wwmy/D6++tD8RXdelYnNu7xm/jWmnukmNxw2Xbzo
+        aBkj4qn1Ol/87zb1a22nlFiKMxINtZiLihMBDKNp2w8DAAA=
+X-CMS-MailID: 20200721004652epcas5p4d41ae387539d2fb0a160191bb819e22f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200720132147epcas5p14aba715032bcda00fad2147cac8b354b
+References: <CGME20200720132147epcas5p14aba715032bcda00fad2147cac8b354b@epcas5p1.samsung.com>
+        <20200720132718.GA13413@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:52 AM Anup Patel <anup.patel@wdc.com> wrote:
->
-> We add mechanism to set custom IPI operations so that CLINT driver
-> from drivers directory can provide custom IPI operations.
->
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
-> ---
->  arch/riscv/include/asm/clint.h | 25 --------------------
->  arch/riscv/include/asm/smp.h   | 19 +++++++++++++++
->  arch/riscv/kernel/clint.c      | 23 ++++++++++++++++--
->  arch/riscv/kernel/sbi.c        | 14 +++++++++++
->  arch/riscv/kernel/smp.c        | 43 +++++++++++++++++++---------------
->  arch/riscv/kernel/smpboot.c    |  3 +--
->  6 files changed, 79 insertions(+), 48 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/clint.h b/arch/riscv/include/asm/clint.h
-> index a279b17a6aad..adaba98a7d6c 100644
-> --- a/arch/riscv/include/asm/clint.h
-> +++ b/arch/riscv/include/asm/clint.h
-> @@ -6,34 +6,9 @@
->  #include <linux/smp.h>
->
->  #ifdef CONFIG_RISCV_M_MODE
-> -extern u32 __iomem *clint_ipi_base;
-> -
->  void clint_init_boot_cpu(void);
-> -
-> -static inline void clint_send_ipi_single(unsigned long hartid)
-> -{
-> -       writel(1, clint_ipi_base + hartid);
-> -}
-> -
-> -static inline void clint_send_ipi_mask(const struct cpumask *mask)
-> -{
-> -       int cpu;
-> -
-> -       for_each_cpu(cpu, mask)
-> -               clint_send_ipi_single(cpuid_to_hartid_map(cpu));
-> -}
-> -
-> -static inline void clint_clear_ipi(unsigned long hartid)
-> -{
-> -       writel(0, clint_ipi_base + hartid);
-> -}
->  #else /* CONFIG_RISCV_M_MODE */
->  #define clint_init_boot_cpu()  do { } while (0)
-> -
-> -/* stubs to for code is only reachable under IS_ENABLED(CONFIG_RISCV_M_MODE): */
-> -void clint_send_ipi_single(unsigned long hartid);
-> -void clint_send_ipi_mask(const struct cpumask *hartid_mask);
-> -void clint_clear_ipi(unsigned long hartid);
->  #endif /* CONFIG_RISCV_M_MODE */
->
->  #endif /* _ASM_RISCV_CLINT_H */
-> diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
-> index 40bb1c15a731..68de78a8eba6 100644
-> --- a/arch/riscv/include/asm/smp.h
-> +++ b/arch/riscv/include/asm/smp.h
-> @@ -15,6 +15,11 @@
->  struct seq_file;
->  extern unsigned long boot_cpu_hartid;
->
-> +struct riscv_ipi_ops {
-> +       void (*ipi_inject)(const struct cpumask *target);
-> +       void (*ipi_clear)(void);
-> +};
-> +
->  #ifdef CONFIG_SMP
->  /*
->   * Mapping between linux logical cpu index and hartid.
-> @@ -40,6 +45,12 @@ void arch_send_call_function_single_ipi(int cpu);
->  int riscv_hartid_to_cpuid(int hartid);
->  void riscv_cpuid_to_hartid_mask(const struct cpumask *in, struct cpumask *out);
->
-> +/* Set custom IPI operations */
-> +void riscv_set_ipi_ops(struct riscv_ipi_ops *ops);
-> +
-> +/* Clear IPI for current CPU */
-> +void riscv_clear_ipi(void);
-> +
->  /*
->   * Obtains the hart ID of the currently executing task.  This relies on
->   * THREAD_INFO_IN_TASK, but we define that unconditionally.
-> @@ -78,6 +89,14 @@ static inline void riscv_cpuid_to_hartid_mask(const struct cpumask *in,
->         cpumask_set_cpu(boot_cpu_hartid, out);
->  }
->
-> +static inline void riscv_set_ipi_ops(struct riscv_ipi_ops *ops)
-> +{
-> +}
-> +
-> +static inline void riscv_clear_ipi(void)
-> +{
-> +}
-> +
->  #endif /* CONFIG_SMP */
->
->  #if defined(CONFIG_HOTPLUG_CPU) && (CONFIG_SMP)
-> diff --git a/arch/riscv/kernel/clint.c b/arch/riscv/kernel/clint.c
-> index 3647980d14c3..a9845ee023e2 100644
-> --- a/arch/riscv/kernel/clint.c
-> +++ b/arch/riscv/kernel/clint.c
-> @@ -5,11 +5,11 @@
->
->  #include <linux/io.h>
->  #include <linux/of_address.h>
-> +#include <linux/smp.h>
->  #include <linux/types.h>
->  #include <asm/clint.h>
->  #include <asm/csr.h>
->  #include <asm/timex.h>
-> -#include <asm/smp.h>
->
->  /*
->   * This is the layout used by the SiFive clint, which is also shared by the qemu
-> @@ -21,6 +21,24 @@
->
->  u32 __iomem *clint_ipi_base;
->
-> +static void clint_send_ipi(const struct cpumask *target)
-> +{
-> +       unsigned int cpu;
-> +
-> +       for_each_cpu(cpu, target)
-> +               writel(1, clint_ipi_base + cpuid_to_hartid_map(cpu));
-> +}
-> +
-> +static void clint_clear_ipi(void)
-> +{
-> +       writel(0, clint_ipi_base + cpuid_to_hartid_map(smp_processor_id()));
-> +}
-> +
-> +static struct riscv_ipi_ops clint_ipi_ops = {
-> +       .ipi_inject = clint_send_ipi,
-> +       .ipi_clear = clint_clear_ipi,
-> +};
-> +
->  void clint_init_boot_cpu(void)
->  {
->         struct device_node *np;
-> @@ -40,5 +58,6 @@ void clint_init_boot_cpu(void)
->         riscv_time_cmp = base + CLINT_TIME_CMP_OFF;
->         riscv_time_val = base + CLINT_TIME_VAL_OFF;
->
-> -       clint_clear_ipi(boot_cpu_hartid);
-> +       clint_clear_ipi();
-> +       riscv_set_ipi_ops(&clint_ipi_ops);
->  }
-> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-> index f383ef5672b2..226ccce0f9e0 100644
-> --- a/arch/riscv/kernel/sbi.c
-> +++ b/arch/riscv/kernel/sbi.c
-> @@ -547,6 +547,18 @@ static inline long sbi_get_firmware_version(void)
->         return __sbi_base_ecall(SBI_EXT_BASE_GET_IMP_VERSION);
->  }
->
-> +static void sbi_send_cpumask_ipi(const struct cpumask *target)
-> +{
-> +       struct cpumask hartid_mask;
-> +
-> +       riscv_cpuid_to_hartid_mask(target, &hartid_mask);
-> +
-> +       sbi_send_ipi(cpumask_bits(&hartid_mask));
-> +}
-> +
-> +static struct riscv_ipi_ops sbi_ipi_ops = {
-> +       .ipi_inject = sbi_send_cpumask_ipi
-> +};
->
->  int __init sbi_init(void)
->  {
-> @@ -587,5 +599,7 @@ int __init sbi_init(void)
->                 __sbi_rfence    = __sbi_rfence_v01;
->         }
->
-> +       riscv_set_ipi_ops(&sbi_ipi_ops);
-> +
->         return 0;
->  }
-> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-> index b1d4f452f843..8b85683ce203 100644
-> --- a/arch/riscv/kernel/smp.c
-> +++ b/arch/riscv/kernel/smp.c
-> @@ -84,9 +84,25 @@ static void ipi_stop(void)
->                 wait_for_interrupt();
->  }
->
-> +static struct riscv_ipi_ops *ipi_ops;
-> +
-> +void riscv_set_ipi_ops(struct riscv_ipi_ops *ops)
-> +{
-> +       ipi_ops = ops;
-> +}
-> +EXPORT_SYMBOL_GPL(riscv_set_ipi_ops);
-> +
-> +void riscv_clear_ipi(void)
-> +{
-> +       if (ipi_ops && ipi_ops->ipi_clear)
-> +               ipi_ops->ipi_clear();
-> +
-> +       csr_clear(CSR_IP, IE_SIE);
-> +}
-> +EXPORT_SYMBOL_GPL(riscv_clear_ipi);
-> +
->  static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
->  {
-> -       struct cpumask hartid_mask;
->         int cpu;
->
->         smp_mb__before_atomic();
-> @@ -94,33 +110,22 @@ static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
->                 set_bit(op, &ipi_data[cpu].bits);
->         smp_mb__after_atomic();
->
-> -       riscv_cpuid_to_hartid_mask(mask, &hartid_mask);
-> -       if (IS_ENABLED(CONFIG_RISCV_SBI))
-> -               sbi_send_ipi(cpumask_bits(&hartid_mask));
-> +       if (ipi_ops && ipi_ops->ipi_inject)
-> +               ipi_ops->ipi_inject(mask);
->         else
-> -               clint_send_ipi_mask(mask);
-> +               pr_warn("SMP: IPI inject method not available\n");
->  }
->
->  static void send_ipi_single(int cpu, enum ipi_message_type op)
->  {
-> -       int hartid = cpuid_to_hartid_map(cpu);
-> -
->         smp_mb__before_atomic();
->         set_bit(op, &ipi_data[cpu].bits);
->         smp_mb__after_atomic();
->
-> -       if (IS_ENABLED(CONFIG_RISCV_SBI))
-> -               sbi_send_ipi(cpumask_bits(cpumask_of(hartid)));
-> -       else
-> -               clint_send_ipi_single(hartid);
-> -}
-> -
-> -static inline void clear_ipi(void)
-> -{
-> -       if (IS_ENABLED(CONFIG_RISCV_SBI))
-> -               csr_clear(CSR_IP, IE_SIE);
-> +       if (ipi_ops && ipi_ops->ipi_inject)
-> +               ipi_ops->ipi_inject(cpumask_of(cpu));
->         else
-> -               clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
-> +               pr_warn("SMP: IPI inject method not available\n");
->  }
->
->  void handle_IPI(struct pt_regs *regs)
-> @@ -131,7 +136,7 @@ void handle_IPI(struct pt_regs *regs)
->
->         irq_enter();
->
-> -       clear_ipi();
-> +       riscv_clear_ipi();
->
->         while (true) {
->                 unsigned long ops;
-> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-> index 4e9922790f6e..5fe849791bf0 100644
-> --- a/arch/riscv/kernel/smpboot.c
-> +++ b/arch/riscv/kernel/smpboot.c
-> @@ -147,8 +147,7 @@ asmlinkage __visible void smp_callin(void)
->  {
->         struct mm_struct *mm = &init_mm;
->
-> -       if (!IS_ENABLED(CONFIG_RISCV_SBI))
-> -               clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
-> +       riscv_clear_ipi();
->
->         /* All kernel threads share the same mm context.  */
->         mmgrab(mm);
-> --
-> 2.25.1
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Hi Gustavo,
 
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
--- 
-Regards,
-Atish
+> -----Original Message-----
+> From: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Sent: 20 July 2020 18:57
+> To: Kishon Vijay Abraham I <kishon@ti.com>; Vinod Koul <vkoul@kernel.org>;
+> Seungwon Jeon <essuuj@gmail.com>; Alim Akhtar
+> <alim.akhtar@samsung.com>; Kiwoong Kim <kwmad.kim@samsung.com>
+> Cc: linux-kernel@vger.kernel.org; Gustavo A. R. Silva
+<gustavoars@kernel.org>
+> Subject: [PATCH v2][next] phy: samsung-ufs: Fix IS_ERR argument
+> 
+> Fix IS_ERR argument in samsung_ufs_phy_symbol_clk_init(). The proper
+> argument to be passed to IS_ERR() is phy->rx1_symbol_clk.
+> 
+> This bug was detected with the help of Coccinelle.
+> 
+> Fixes: bca21e930451 ("phy: samsung-ufs: add UFS PHY driver for samsung
+SoC")
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+
+> Changes in v2:
+>  - Update subject line and changelog text.
+> 
+>  drivers/phy/samsung/phy-samsung-ufs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/phy/samsung/phy-samsung-ufs.c
+> b/drivers/phy/samsung/phy-samsung-ufs.c
+> index 43ef77d1d96c..9832599a0283 100644
+> --- a/drivers/phy/samsung/phy-samsung-ufs.c
+> +++ b/drivers/phy/samsung/phy-samsung-ufs.c
+> @@ -147,7 +147,7 @@ static int samsung_ufs_phy_symbol_clk_init(struct
+> samsung_ufs_phy *phy)
+>  	}
+> 
+>  	phy->rx1_symbol_clk = devm_clk_get(phy->dev, "rx1_symbol_clk");
+> -	if (IS_ERR(phy->rx0_symbol_clk)) {
+> +	if (IS_ERR(phy->rx1_symbol_clk)) {
+>  		dev_err(phy->dev, "failed to get rx1_symbol_clk clock\n");
+>  		return PTR_ERR(phy->rx1_symbol_clk);
+>  	}
+> --
+> 2.27.0
+
+
