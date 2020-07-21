@@ -2,114 +2,272 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8288EC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D03EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6259622BF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 467A02080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:58:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="gc50MvHw"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="diD3DVsx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgGUA5L (ORCPT
+        id S1728022AbgGUA6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 20:57:11 -0400
-Received: from sonic307-16.consmr.mail.ne1.yahoo.com ([66.163.190.39]:42675
-        "EHLO sonic307-16.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728009AbgGUA5J (ORCPT
+        Mon, 20 Jul 2020 20:58:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgGUA6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 20:57:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1595293028; bh=0CHC+re3Lg12wtapqmZiuSmzuO0jp0HvYX3Xhxuru+I=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=gc50MvHwpsJUEN8yBYJ45+nt2gi0ECcAfnIrNDGl9elan6v+xnCWA7MzVC/ZWIUm9NzSodKMFQcd9acEFfazfcmzsIC7Lj1I5TG2LV1Q0hd9F9SW7Kx+SFKJNyW54RhyDz4fLTJpE6pO3hMU67wzIgvit2Bz86ubwxZBkxZvOmgtg6001IZNOdaDukMA8qgpvLpnTF13W6d6ufWrTcS/8xvc5SPgRiSS6ADAPJJ3cc4Ydhyrrb6wlh7nahh0Fvdvm9UVK6yyi6Ydw7R/cGleQPwPzK1FeWPimeOUL1+sovYmT556oyaOX4DTt3xgq3xJLYYJQntvhXsX7S2yOlK6Cg==
-X-YMail-OSG: zLYKgBQVM1khUVbN7dTBmXEbI8LpzzshYS7aWJJehT22feStu5gXyOH.W8D.aD8
- mfoehi0R5XlNvoS0cqJmHAZkBFe1Ai_REvgHb6e68itl2qAlX7SLVomThNKber1cMByvZTa8nuXT
- DpKcnQt5ZDj1F1wTkxJW7fPOiX8bhP_Qm8CtI2vAGl_OThlf98pJWB_YN1LBOy41NP5ZgsPjI1r_
- pRPLu4q5RJTsTzQWkOYw0SN0FezwKSMpEZboI9DG.Zi5KlGzmganQ09uvwyYAAd8p2W2g0wQFqtw
- 9b9E99Gi2iNiW7JwYb7gdMfmAubOF28RhZqUS3dr5nhU4dkaBNk805hMGsBoIQZL7hZnUPAyMbxB
- GKk5ZCFwVa0HzIi1mQGe8xE1vi4b3av9X0E8Qli97k8dky8KfabxaYh0XdLzxdB.4_.gWrbbaFS4
- M2jv5Ds_6bab1LYun_ZreWZW0mtY4A02mcpFLgO_rcbLKe6nIdklZG.Cx4uRTc4cEIKrPGeNNgp2
- M2bpU1F3bIYTcU8WWej4EB5mW3XP333H_XaPWnU1LL39DusL3a7zHzwiJA6ffqAqBJUigxsWwljv
- SETtZIQcgudD1kU21oOPRvyjRiEgK0vkGQuh_ai2yfQ7AKAIP._C42W_hEm7UkASTPAZo5UDnu6i
- SSuWY9ZF_1KUkNPkNZZss69S.KXBF9mCzD3jCkEsAjGRX.9JSoRahGxJHOaimSKSzGBA6zvU0OlQ
- enXybu4HKqsA4r3L0f1WZT4eAqGFPuRI._1w7k_YsnBinuYXKvKMkTm3moCAYlLqGNI1I6GGUzLG
- yx8hCu8Bdd6j9StIODgBKVvcRs8mSTep0xPaTrD9Y6tGP4MA5HM9m_Z0QuTgJiz9.H3.ll78OhEB
- .mPYAQmjd2cyCtNAA9.WJrnHlpjgffXZszPE8QqVfK7Dn7KWZXzKeW6qzP7kQt5BMUZbQlXcmGS4
- o8e2nbjU7eHYlGHyRa581gx16nx1iIHScpRlLI1eNUc_BzFPAEhvAInkExqWeZ45P8dKnxiw21Gi
- 1J0qD_UI870pQx89JiMUFJNWZg0guyNh2vmNswCEtvV8sxwDO_SF3jmAJJoEv8epvrlt7lwrwsdV
- 4zmwFQ9buw8nLhYcy9uL3Vkmc5FO2pZiGpBVsAGluf0t1vOY4skZjzVTCyN0igKx0D88iISOfafC
- DljfnWNPpnU_7fiPwhgdhlyeP6A7hX1jmopNpuaMxxyVaFJEUc7kSAPKIcR_ZGbVYAPU1Avbrw2k
- gVfzyefxu7nlWbbrxIhxwtip.dzop4cqu6p9RXJCXjtED7sa0pn55fv2HC8s7e6zHuCG6l1qatO2
- Ife0ZfVS8.QHHuKgbX.6CLs4_DwNcK93DXVrJNmjxhEZApBGDG4LrLld5tlqhEUlo.Mw891AvQFH
- QhqzvEUvtSqFyxYAI6Hj.xyc-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ne1.yahoo.com with HTTP; Tue, 21 Jul 2020 00:57:08 +0000
-Received: by smtp421.mail.ne1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 7f1506f069518a44952a27ea8fef8594;
-          Tue, 21 Jul 2020 00:57:04 +0000 (UTC)
-Subject: Re: [PATCH] Smack: fix use-after-free in smk_write_relabel_self()
-To:     Eric Biggers <ebiggers@kernel.org>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>
-Cc:     syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <0000000000000279c705a799ae31@google.com>
- <20200708201520.140376-1-ebiggers@kernel.org>
- <20200721003830.GC7464@sol.localdomain>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Message-ID: <4b7b9cbc-2c8d-0582-67f4-a8b095b78959@schaufler-ca.com>
-Date:   Mon, 20 Jul 2020 17:57:03 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 20:58:25 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA53C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 17:58:24 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id o18so19913828eje.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 17:58:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9b/dWUWcmQC3VAaa8Cg/JXLF0cqmH/Md5xiTM9HBxjQ=;
+        b=diD3DVsxMCkiIzevO0+JCae+FxhUk569wVXPS1cRfwY3pETJzf/3PLI2b9XoEyyDXw
+         Z6pIGGBxBMkmAlVBQm50HIbkZdAdYypcaSuf2iweirUt0+XxTecetCnlyXELdL4/FXQ6
+         ZtByrRngf2shBc+YkqWZXmfq/VNYmsdECRyVRYNOTFuP5ZbE7MWjafb2IOGH4lvfjWlY
+         0xwxrGDdqnFGd8YAt+vtLlH832ackygwFGBll/6y5Rd31R23/PkltkHtKhhl591wxg2I
+         mbBQ8L1UeYeUq4JBvECQc9/KD5MZQXx4FT2ZnxOf49iS7J0f2FjmwtZNPjp78WlmkSk/
+         +GCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9b/dWUWcmQC3VAaa8Cg/JXLF0cqmH/Md5xiTM9HBxjQ=;
+        b=gNFyaFWOa7kqJBKoxbm4UVj5WG1b283bSWAYeTPUQhJ7Sl5DZlJiViJR9GRdoclJGT
+         JWO87AJYBwH+Yr4TzyDCr1VwI70L7WRwcud8kWaiDs3Iay8LPpCmKRCUzjHmlzKfj4yt
+         mhAAalH++pePbhLJhcYWfNTKr0kv3sNIL2zbtIul96jWTERABZHkTtLziU7DGkc2azzF
+         N9DElFPD/Nj/YG5t56HlESMFRwfmfh4cmG3shUyKE+tIXKmU+hIEOmRLCNL+K76gKUBx
+         c46Gs7/yFEdmKzHM2fhZONNxRXa4ela0lMW4p+iIY2UzPvXVAZe8GeMM7zhL4Vj+hCfy
+         kjVQ==
+X-Gm-Message-State: AOAM533tq3iQzS2ZpmMflLTVP4IGoSvo8FzmlzyAxvjoiERNHfISBcuz
+        cs59EARk2Vt1FsrzUKKXGXyLGIZkJeJcuvQtDxgPOw==
+X-Google-Smtp-Source: ABdhPJzoQSfYVuoYj/q/5PLCGBYC0RqZLxVuTJwpzD7nytQF786FNvLF+fxJvZkRGx5IT+BM217aX8JbzPPX4acm0As=
+X-Received: by 2002:a17:906:cc0e:: with SMTP id ml14mr22733669ejb.432.1595293103436;
+ Mon, 20 Jul 2020 17:58:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200721003830.GC7464@sol.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Mailer: WebService/1.1.16271 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
+References: <159528284411.993790.11733759435137949717.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159528289856.993790.11787167534159675987.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <c825b5ee-ec03-7aa8-e380-6003f33fa113@infradead.org>
+In-Reply-To: <c825b5ee-ec03-7aa8-e380-6003f33fa113@infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 20 Jul 2020 17:58:12 -0700
+Message-ID: <CAPcyv4giEEAJiX5PSUy6KJSaNgvbmt6XVALmaD-J4p_FqQBY-w@mail.gmail.com>
+Subject: Re: [PATCH v3 10/11] PM, libnvdimm: Add runtime firmware activation support
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Pavel Machek <pavel@ucw.cz>, Ira Weiny <ira.weiny@intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/20/2020 5:38 PM, Eric Biggers wrote:
-> On Wed, Jul 08, 2020 at 01:15:20PM -0700, Eric Biggers wrote:
->> From: Eric Biggers <ebiggers@google.com>
->>
->> smk_write_relabel_self() frees memory from the task's credentials with
->> no locking, which can easily cause a use-after-free because multiple
->> tasks can share the same credentials structure.
->>
->> Fix this by using prepare_creds() and commit_creds() to correctly modify
->> the task's credentials.
->>
->> Reproducer for "BUG: KASAN: use-after-free in smk_write_relabel_self":
->>
->> 	#include <fcntl.h>
->> 	#include <pthread.h>
->> 	#include <unistd.h>
->>
->> 	static void *thrproc(void *arg)
->> 	{
->> 		int fd = open("/sys/fs/smackfs/relabel-self", O_WRONLY);
->> 		for (;;) write(fd, "foo", 3);
->> 	}
->>
->> 	int main()
->> 	{
->> 		pthread_t t;
->> 		pthread_create(&t, NULL, thrproc, NULL);
->> 		thrproc(NULL);
->> 	}
->>
->> Reported-by: syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com
->> Fixes: 38416e53936e ("Smack: limited capability for changing process label")
->> Cc: <stable@vger.kernel.org> # v4.4+
->> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> Ping.
+On Mon, Jul 20, 2020 at 5:02 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> Hi Dan,
+>
+> Documentation comments below:
+>
+> On 7/20/20 3:08 PM, Dan Williams wrote:
+> > Abstract platform specific mechanics for nvdimm firmware activation
+> > behind a handful of generic ops. At the bus level ->activate_state()
+> > indicates the unified state (idle, busy, armed) of all DIMMs on the bus,
+> > and ->capability() indicates the system state expectations for activate.
+> > At the DIMM level ->activate_state() indicates the per-DIMM state,
+> > ->activate_result() indicates the outcome of the last activation
+> > attempt, and ->arm() attempts to transition the DIMM from 'idle' to
+> > 'armed'.
+> >
+> > A new hibernate_quiet_exec() facility is added to support firmware
+> > activation in an OS defined system quiesce state. It leverages the fact
+> > that the hibernate-freeze state wants to assert that a memory
+> > hibernation snapshot can be taken. This is in contrast to a platform
+> > firmware defined quiesce state that may forcefully quiet the memory
+> > controller independent of whether an individual device-driver properly
+> > supports hibernate-freeze.
+> >
+> > The libnvdimm sysfs interface is extended to support detection of a
+> > firmware activate capability. The mechanism supports enumeration and
+> > triggering of firmware activate, optionally in the
+> > hibernate_quiet_exec() context.
+> >
+> > Cc: Pavel Machek <pavel@ucw.cz>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: Len Brown <len.brown@intel.com>
+> > Cc: Jonathan Corbet <corbet@lwn.net>
+> > Cc: Dave Jiang <dave.jiang@intel.com>
+> > Cc: Vishal Verma <vishal.l.verma@intel.com>
+> > [rafael: hibernate_quiet_exec() proposal]
+> > Co-developed-by: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-nvdimm         |    2
+> >  .../driver-api/nvdimm/firmware-activate.rst        |   86 ++++++++++++
+> >  drivers/nvdimm/core.c                              |  149 ++++++++++++++++++++
+> >  drivers/nvdimm/dimm_devs.c                         |  115 +++++++++++++++
+> >  drivers/nvdimm/nd-core.h                           |    1
+> >  include/linux/libnvdimm.h                          |   44 ++++++
+> >  include/linux/suspend.h                            |    6 +
+> >  kernel/power/hibernate.c                           |   97 +++++++++++++
+> >  8 files changed, 500 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-nvdimm
+> >  create mode 100644 Documentation/driver-api/nvdimm/firmware-activate.rst
+>
+>
+> > diff --git a/Documentation/driver-api/nvdimm/firmware-activate.rst b/Documentation/driver-api/nvdimm/firmware-activate.rst
+> > new file mode 100644
+> > index 000000000000..9eb98aa833c5
+> > --- /dev/null
+> > +++ b/Documentation/driver-api/nvdimm/firmware-activate.rst
+> > @@ -0,0 +1,86 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +==================================
+> > +NVDIMM Runtime Firmware Activation
+> > +==================================
+> > +
+> > +Some persistent memory devices run a firmware locally on the device /
+>
+>                                   run firmware
 
-I have queued your patch and will be pushing it for next shortly.
+That works too. I was going to say "run a firmware image", but "run
+firmware" is clearer.
 
+>
+> > +"DIMM" to perform tasks like media management, capacity provisioning,
+> > +and health monitoring. The process of updating that firmware typically
+> > +involves a reboot because it has implications for in-flight memory
+> > +transactions. However, reboots are disruptive and at least the Intel
+> > +persistent memory platform implementation, described by the Intel ACPI
+> > +DSM specification [1], has added support for activating firmware at
+>
+> that's an Intel spec?  just checking.
+
+Correct. It's a public specification of the ACPI methods that Intel
+platform BIOS or virtual-machine BIOS deploys to talk to NVDIMM
+devices.
+
+>
+> > +runtime.
+> > +
+> > +A native sysfs interface is implemented in libnvdimm to allow platform
+>
+>                                                                  platforms
+
+Ack.
+
+>
+> > +to advertise and control their local runtime firmware activation
+> > +capability.
+> > +
+> > +The libnvdimm bus object, ndbusX, implements an ndbusX/firmware/activate
+> > +attribute that shows the state of the firmware activation as one of 'idle',
+> > +'armed', 'overflow', and 'busy'.
+>
+>                         or
+
+Yup.
+
+>
+> > +
+> > +- idle:
+> > +  No devices are set / armed to activate firmware
+> > +
+> > +- armed:
+> > +  At least one device is armed
+> > +
+> > +- busy:
+> > +  In the busy state armed devices are in the process of transitioning
+> > +  back to idle and completing an activation cycle.
+> > +
+> > +- overflow:
+> > +  If the platform has a concept of incremental work needed to perform
+> > +  the activation it could be the case that too many DIMMs are armed for
+> > +  activation. In that scenario the potential for firmware activation to
+> > +  timeout is indicated by the 'overflow' state.
+> > +
+> > +The 'ndbusX/firmware/activate' property can be written with a value of
+> > +either 'live', or 'quiesce'. A value of 'quiesce' triggers the kernel to
+> > +run firmware activation from within the equivalent of the hibernation
+> > +'freeze' state where drivers and applications are notified to stop their
+> > +modifications of system memory. A value of 'live' attempts
+> > +firmware-activation without this hibernation cycle. The
+>
+>   no hyphen^^
+
+Agree.
+
+>
+> > +'ndbusX/firmware/activate' property will be elided completely if no
+> > +firmware activation capability is detected.
+> > +
+> > +Another property 'ndbusX/firmware/capability' indicates a value of
+> > +'live', or 'quiesce'. Where 'live' indicates that the firmware
+>
+> no comma. no period. So this:
+>
+> +'live' or 'quiesce', where
+
+Ok.
+
+>
+> > +does not require or inflict any quiesce period on the system to update
+> > +firmware. A capability value of 'quiesce' indicates that firmware does
+> > +expect and injects a quiet period for the memory controller, but 'live'
+> > +may still be written to 'ndbusX/firmware/activate' as an override to
+> > +assume the risk of racing firmware update with in-flight device and
+> > +application activity. The 'ndbusX/firmware/capability' property will be
+> > +elided completely if no firmware activation capability is detected.
+> > +
+> > +The libnvdimm memory-device / DIMM object, nmemX, implements
+> > +'nmemX/firmware/activate' and 'nmemX/firmware/result' attributes to
+> > +communicate the per-device firmware activation state. Similar to the
+> > +'ndbusX/firmware/activate' attribute, the 'nmemX/firmware/activate'
+> > +attribute indicates 'idle', 'armed', or 'busy'. The state transitions
+> > +from 'armed' to 'idle' when the system is prepared to activate firmware,
+> > +firmware staged + state set to armed, and 'ndbusX/firmware/activate' is
+> > +triggered. After that activation event the nmemX/firmware/result
+> > +attribute reflects the state of the last activation as one of:
+> > +
+> > +- none:
+> > +  No runtime activation triggered since the last time the device was reset
+> > +
+> > +- success:
+> > +  The last runtime activation completed successfully.
+> > +
+> > +- fail:
+> > +  The last runtime activation failed for device-specific reasons.
+> > +
+> > +- not_staged:
+> > +  The last runtime activation failed due to a sequencing error of the
+> > +  firmware image not being staged.
+> > +
+> > +- need_reset:
+> > +  Runtime firmware activation failed, but the firmware can still be
+> > +  activated via the legacy method of power-cycling the system.
+> > +
+> > +[1]: https://docs.pmem.io/persistent-memory/
+>
+>
+> thanks.
+> --
+> ~Randy
+
+Thanks Randy.
