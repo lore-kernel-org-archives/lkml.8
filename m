@@ -2,194 +2,181 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C091BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E557C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7732073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCE92073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:58:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lvPF60XY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fr3YLS21"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgGUM6F (ORCPT
+        id S1728071AbgGUM6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:58:05 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:36149 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726616AbgGUM6F (ORCPT
+        Tue, 21 Jul 2020 08:58:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbgGUM6J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:58:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595336283; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=zL4Vmv3VgfCA8IfWdHITcCzdfO+3oA2nyWU0ZMt5Q0A=;
- b=lvPF60XYJ0SmmDp55xnzlL8muUzN24O5fQvCpGOul3sHRPn5ijUjOL8FbeTqfYUhTebbZZ1D
- 7j3SWZZtOTYQfPfvFN1vriVY7W1Z7xmREhIdToAIjXDrmNtbQeJ/hS9yJxBRnByUNmSV38MH
- D3aOC3bbts7iHhZVoIraY/YK6lQ=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f16e64fcf983e60a8b3d3a1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 21 Jul 2020 12:57:51
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 03221C433A0; Tue, 21 Jul 2020 12:57:50 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kalyan_t)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DF31AC433C9;
-        Tue, 21 Jul 2020 12:57:49 +0000 (UTC)
+        Tue, 21 Jul 2020 08:58:09 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE348C061794;
+        Tue, 21 Jul 2020 05:58:08 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id b92so1628581pjc.4;
+        Tue, 21 Jul 2020 05:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t2vMm5MN6COcLP/AC1bsbI/E+zsl4wCZerr7TM2M9Bk=;
+        b=fr3YLS211Gmt5YGjeWiE/LFiFj6YG+zPEieeHXqHXdyDwVPBswzW476JH2GbekCA0R
+         33FjkoOaQp4eovrKc6t8q+SNSOXcarYBhQ2s4pjcBtcik7wavPC4bKVpTa1d7hfAG63z
+         tFn1Di3tXn1b4rJAGi6IhgCWb7RdDqAx6fGIeprwlcmTYkNlf0g1MsbZJ94oM1tXPGxW
+         Mx0WjzPy7O3iDsciWz+y6G2c+hKVMpa/8+9EjujtbBqjbZdMcXjNNlHcyZTxQAO0pmOd
+         0fghdSwtQzENvCQbBGW24iwpi4E5dQXaDbWla4QR6q8S5dAgw6WfMdetdCfIEF7vfICF
+         Q3sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t2vMm5MN6COcLP/AC1bsbI/E+zsl4wCZerr7TM2M9Bk=;
+        b=Uk3suFTfoLe4PpfuNuMzyOivoSsNgWdQx82eU8pzgLEXSXJLoqhU+JWuLECPl6ZLMK
+         njbT1ujsr72rEt1y9BZiysSzy/evIIXCDzJHyMzO8l4qDptcRzGQBuYj4iJqQ2EJyrQQ
+         J/1+yJW0ADKqbfRlybR4lHs/7SNQom4qVw2HXCs+L1KDhxDps4XvMmZaEGmwb81pbSh2
+         Cq05nXjYEMznNGK0+pHXjtfmZokeJt87thFGhIytEEeAKdGZFjdMPRYsLm9uwOASLblD
+         exsnTryEmfSDbmFazkNTfdrYIO1jmSUdK1TMlK3cJ1DOPIJlbtES0iSswUKM4jWH6mfZ
+         aBGA==
+X-Gm-Message-State: AOAM532/GmABetcIMKPP5T9vQ4DjGlpYO8rhbIZNjTkZhvGS7PqjcQzL
+        knj/D47NLcdVcHvs/EIp4hI=
+X-Google-Smtp-Source: ABdhPJzQEfoRb3UE4er+pdhXjNmen1E198JhpdeN0Yigv10qpv0/N5+ym6vRm0GCGdtjLMzAKyYNRA==
+X-Received: by 2002:a17:90b:3901:: with SMTP id ob1mr4531304pjb.168.1595336288282;
+        Tue, 21 Jul 2020 05:58:08 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.67])
+        by smtp.gmail.com with ESMTPSA id a2sm20573833pfg.120.2020.07.21.05.57.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 05:58:07 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+Subject: [PATCH v1] prism54: islpci_hotplug: use generic power management
+Date:   Tue, 21 Jul 2020 18:25:15 +0530
+Message-Id: <20200721125514.145607-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 21 Jul 2020 18:27:49 +0530
-From:   kalyan_t@codeaurora.org
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Zheng Bin <zhengbin13@huawei.com>, Sean Paul <sean@poorly.run>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Steev Klimaszewski <steev@gentoo.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [Freedreno] [PATCH] drm/msm/dpu: fix/enable 6bpc dither with
- split-lm
-In-Reply-To: <CAF6AEGuV7vTseh5KmCremhhfR1E4sAY1oPAwtCOCtYb1vx=A0g@mail.gmail.com>
-References: <20200715221955.3209856-1-robdclark@gmail.com>
- <92c9e9d08dfa014f1589186a68902de7@codeaurora.org>
- <CAF6AEGuV7vTseh5KmCremhhfR1E4sAY1oPAwtCOCtYb1vx=A0g@mail.gmail.com>
-Message-ID: <dbd08d83075ce6356a233f66b3001cc7@codeaurora.org>
-X-Sender: kalyan_t@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-20 20:53, Rob Clark wrote:
-> On Mon, Jul 20, 2020 at 5:53 AM <kalyan_t@codeaurora.org> wrote:
->> 
->> On 2020-07-16 03:49, Rob Clark wrote:
->> > From: Rob Clark <robdclark@chromium.org>
->> >
->> > If split-lm is used (for ex, on sdm845), we can have multiple ping-
->> > pongs, but only a single phys encoder.  We need to configure dithering
->> > on each of them.
->> >
->> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-      Reviewed-by: Kalyan Thota <kalyan_t@codeaurora.org>
->> > ---
->> >  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c   | 22 ++++++++++---------
->> >  .../gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c   |  3 +--
->> >  2 files changed, 13 insertions(+), 12 deletions(-)
->> >
->> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> > b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> > index 46df0ff75b85..9b98b63c77fb 100644
->> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> > @@ -212,14 +212,14 @@ static u32 dither_matrix[DITHER_MATRIX_SZ] = {
->> >       15, 7, 13, 5, 3, 11, 1, 9, 12, 4, 14, 6, 0, 8, 2, 10
->> >  };
->> >
->> > -static void _dpu_encoder_setup_dither(struct dpu_encoder_phys *phys)
->> > +static void _dpu_encoder_setup_dither(struct dpu_hw_pingpong *hw_pp,
->> > unsigned bpc)
->> >  {
->> >       struct dpu_hw_dither_cfg dither_cfg = { 0 };
->> >
->> > -     if (!phys->hw_pp || !phys->hw_pp->ops.setup_dither)
->> > +     if (!hw_pp->ops.setup_dither)
->> >               return;
->> >
->> > -     switch (phys->connector->display_info.bpc) {
->> > +     switch (bpc) {
->> >       case 6:
->> >               dither_cfg.c0_bitdepth = 6;
->> >               dither_cfg.c1_bitdepth = 6;
->> > @@ -228,14 +228,14 @@ static void _dpu_encoder_setup_dither(struct
->> > dpu_encoder_phys *phys)
->> >               dither_cfg.temporal_en = 0;
->> >               break;
->> >       default:
->> > -             phys->hw_pp->ops.setup_dither(phys->hw_pp, NULL);
->> > +             hw_pp->ops.setup_dither(hw_pp, NULL);
->> >               return;
->> >       }
->> >
->> >       memcpy(&dither_cfg.matrix, dither_matrix,
->> >                       sizeof(u32) * DITHER_MATRIX_SZ);
->> >
->> > -     phys->hw_pp->ops.setup_dither(phys->hw_pp, &dither_cfg);
->> > +     hw_pp->ops.setup_dither(hw_pp, &dither_cfg);
->> >  }
->> >
->> >  void dpu_encoder_helper_report_irq_timeout(struct dpu_encoder_phys
->> > *phys_enc,
->> > @@ -1132,11 +1132,13 @@ static void
->> > _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
->> >
->> >       _dpu_encoder_update_vsync_source(dpu_enc, &dpu_enc->disp_info);
->> >
->> > -     if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI) {
->> > -             for (i = 0; i < dpu_enc->num_phys_encs; i++) {
->> > -                     struct dpu_encoder_phys *phys = dpu_enc->phys_encs[i];
->> > -
->> > -                     _dpu_encoder_setup_dither(phys);
->> > +     if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI &&
->> > +                     !WARN_ON(dpu_enc->num_phys_encs == 0)) {
->> > +             unsigned bpc = dpu_enc->phys_encs[0]->connector->display_info.bpc;
->> > +             for (i = 0; i < MAX_CHANNELS_PER_ENC; i++) {
->> > +                     if (!dpu_enc->hw_pp[i])
->> > +                             continue;
->> > +                     _dpu_encoder_setup_dither(dpu_enc->hw_pp[i], bpc);
->> >               }
->> >       }
->> >  }
->> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
->> > b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
->> > index 7411ab6bf6af..bea4ab5c58c5 100644
->> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
->> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
->> > @@ -231,8 +231,7 @@ static void _setup_pingpong_ops(struct
->> > dpu_hw_pingpong *c,
->> >       c->ops.poll_timeout_wr_ptr = dpu_hw_pp_poll_timeout_wr_ptr;
->> >       c->ops.get_line_count = dpu_hw_pp_get_line_count;
->> >
->> > -     if (test_bit(DPU_PINGPONG_DITHER, &features) &&
->> > -             IS_SC7180_TARGET(c->hw.hwversion))
->> > +     if (test_bit(DPU_PINGPONG_DITHER, &features))
->> >               c->ops.setup_dither = dpu_hw_pp_setup_dither;
->> >  };
->> 
->> Change looks good to me
-> 
-> Does that count as a Reviewed-by?
-> 
-Sure i have added the tag.
+Drivers using legacy power management .suspen()/.resume() callbacks
+have to manage PCI states and device's PM states themselves. They also
+need to take care of standard configuration registers.
 
-> BR,
-> -R
-> 
->> 
->> - Kalyan
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+Switch to generic power management framework using a single
+"struct dev_pm_ops" variable to take the unnecessary load from the driver.
+This also avoids the need for the driver to directly call most of the PCI
+helper functions and device power state control functions as through
+the generic framework, PCI Core takes care of the necessary operations,
+and drivers are required to do only device-specific jobs.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ .../intersil/prism54/islpci_hotplug.c         | 34 ++++++-------------
+ 1 file changed, 11 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/net/wireless/intersil/prism54/islpci_hotplug.c b/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
+index 20291c0d962d..e8369befe100 100644
+--- a/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
++++ b/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
+@@ -63,16 +63,17 @@ MODULE_DEVICE_TABLE(pci, prism54_id_tbl);
+ 
+ static int prism54_probe(struct pci_dev *, const struct pci_device_id *);
+ static void prism54_remove(struct pci_dev *);
+-static int prism54_suspend(struct pci_dev *, pm_message_t state);
+-static int prism54_resume(struct pci_dev *);
++static int __maybe_unused prism54_suspend(struct device *);
++static int __maybe_unused prism54_resume(struct device *);
++
++static SIMPLE_DEV_PM_OPS(prism54_pm_ops, prism54_suspend, prism54_resume);
+ 
+ static struct pci_driver prism54_driver = {
+ 	.name = DRV_NAME,
+ 	.id_table = prism54_id_tbl,
+ 	.probe = prism54_probe,
+ 	.remove = prism54_remove,
+-	.suspend = prism54_suspend,
+-	.resume = prism54_resume,
++	.driver.pm = &prism54_pm_ops,
+ };
+ 
+ /******************************************************************************
+@@ -243,16 +244,13 @@ prism54_remove(struct pci_dev *pdev)
+ 	pci_disable_device(pdev);
+ }
+ 
+-static int
+-prism54_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused
++prism54_suspend(struct device *dev)
+ {
+-	struct net_device *ndev = pci_get_drvdata(pdev);
++	struct net_device *ndev = dev_get_drvdata(dev);
+ 	islpci_private *priv = ndev ? netdev_priv(ndev) : NULL;
+ 	BUG_ON(!priv);
+ 
+-
+-	pci_save_state(pdev);
+-
+ 	/* tell the device not to trigger interrupts for now... */
+ 	isl38xx_disable_interrupts(priv->device_base);
+ 
+@@ -266,26 +264,16 @@ prism54_suspend(struct pci_dev *pdev, pm_message_t state)
+ 	return 0;
+ }
+ 
+-static int
+-prism54_resume(struct pci_dev *pdev)
++static int __maybe_unused
++prism54_resume(struct device *dev)
+ {
+-	struct net_device *ndev = pci_get_drvdata(pdev);
++	struct net_device *ndev = dev_get_drvdata(dev);
+ 	islpci_private *priv = ndev ? netdev_priv(ndev) : NULL;
+-	int err;
+ 
+ 	BUG_ON(!priv);
+ 
+ 	printk(KERN_NOTICE "%s: got resume request\n", ndev->name);
+ 
+-	err = pci_enable_device(pdev);
+-	if (err) {
+-		printk(KERN_ERR "%s: pci_enable_device failed on resume\n",
+-		       ndev->name);
+-		return err;
+-	}
+-
+-	pci_restore_state(pdev);
+-
+ 	/* alright let's go into the PREBOOT state */
+ 	islpci_reset(priv, 1);
+ 
+-- 
+2.27.0
+
