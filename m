@@ -2,135 +2,142 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455AAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7E620702
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:20:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mu8Irwtk"
+	by mail.kernel.org (Postfix) with ESMTP id 39D46208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:20:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbgGULUT (ORCPT
+        id S1729589AbgGULUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:20:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729514AbgGULUS (ORCPT
+        Tue, 21 Jul 2020 07:20:07 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:33022 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729514AbgGULUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:20:18 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 977AEC061794;
-        Tue, 21 Jul 2020 04:20:18 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r12so20722571wrj.13;
-        Tue, 21 Jul 2020 04:20:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=cgE7yCvC2TsM3N9RxN0ivNvrTATSLMzpTj/dTB9AGDk=;
-        b=mu8Irwtky5HM+EiEeEeJR5ujsfvK+4dRAQRaaVcc7HsqkvVK5OdZ66y3jHwGTwX8Cu
-         zczEMY4FPKkfMJPyqoq/zEQTDqVrWHiKq35CWL+NseYxjRUXqM17lsfcA3S2fUbacz4F
-         paoMeJ2RbHu5MMFCr9bSA1dbKVqhP5CQFlBIRXxKK2DBfodI5dmWrdix02VwYwBLvq7Y
-         TftEIFzy6Oqpsf3KxqPjswQGUu4zx2fkccY9iW9azevcnJDENK3yYmxXnT8KmtHnkU+O
-         QAlb9uxvjbo6Lx3o/O/kQVN+N4n65xMKivLjHruWEFxL5BOP2ogapw3UZF/MG5dgU8Tv
-         2Uxw==
+        Tue, 21 Jul 2020 07:20:06 -0400
+Received: by mail-io1-f70.google.com with SMTP id a12so13239160ioo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:20:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=cgE7yCvC2TsM3N9RxN0ivNvrTATSLMzpTj/dTB9AGDk=;
-        b=qL82uYsPowA7MbjQOkjHd/3xRt/ye2bs5oF/qyJR1VGSv+NZrp0GsFynCGZCTmEfYV
-         tBkR/Z66Ju6yDnmt7m5vGhVJMTey/jxOvUrL9fujW5KHDfdTAJL9siniwcedgkqW2LUO
-         VcjJpG49NPPhNgqUwNA1lTCeV/J9Cts0Eftbd0p3WgIBD/WGSfpmNV2vKGQqr/Evd3Cd
-         ehtgrtNsKOYTcYKKvb0fhzJ8P0lvhbp6f9l8aNSlTqUQW74KzrRTfAm9A/VIpVnhF2b6
-         iZXA8W1QcGZNwrhnDBe+5itNG1OfSX+WSdnVcmcb/cZNHtm80YFfWw58m4cijYCD5VHj
-         En4g==
-X-Gm-Message-State: AOAM530aL0Xqk/xXVDL0Go1fUOljWH9Yz54I+oQMMWMW9u8rj46/lMJL
-        Fs95b8hF/Foph1VO01Vx6cY=
-X-Google-Smtp-Source: ABdhPJwmCaJOo8AdzQqS2eChCE+7XLE3Au1lXisG7/a/kYL/4vC9x9VNW5OotawEVy00sIUB49kphA==
-X-Received: by 2002:adf:de12:: with SMTP id b18mr28232045wrm.390.1595330417294;
-        Tue, 21 Jul 2020 04:20:17 -0700 (PDT)
-Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id c188sm3106579wma.22.2020.07.21.04.20.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 04:20:16 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 21:20:09 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v3 0/6] powerpc: queued spinlocks and rwlocks
-To:     Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Anton Blanchard <anton@ozlabs.org>,
-        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        Will Deacon <will@kernel.org>
-References: <20200706043540.1563616-1-npiggin@gmail.com>
-        <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
-        <1594101082.hfq9x5yact.astroid@bobo.none>
-        <20200708084106.GE597537@hirez.programming.kicks-ass.net>
-        <a9834278-25bf-90e9-10f2-cd10e5407ff6@redhat.com>
-        <20200709083113.GI597537@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200709083113.GI597537@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=PakZhdVRy00H5Jh4vTqRjEQYSnP47NKLSdT3K911Emg=;
+        b=JunPTgArJg5y7xfRc9c+tuGC0uephK3VS3TM3s7yC0VrJPpBofWv7GlkWwbfaQDPjF
+         cf+m0rRLH6jWqSSUFaxWlP0h/UIvmJGkbAa85dHk1mlrHJEEHvVr95I1D6trdZQciHH3
+         9tA6f2okHLBv9cJ5Qa1QcUIxQuE/1fvaH2c73YFTY91WI8KMenUskYibfvhZx8umwwcF
+         lCMMP3r0rtXtU5dESIMYr86VllLC//ds0CGb8V2pqOa2LPtaemZU0IVAVDjCGq20nUYL
+         T9z0TfFX7yv3lIh1UYuxk9h6o0TbK0kXebYi0kudjRS95K+Qok9MHgPmzvHhX7kKqixZ
+         zF5Q==
+X-Gm-Message-State: AOAM532r8ApF8Mk0L3wAoNHpYZX1UUJBc/EisR4s+O9PIHyDVyLeIpXV
+        2fzzrwQH77pna0uQF1hI4D3Q1wS2vkaZ2qQ2BMwwcZzyAACy
+X-Google-Smtp-Source: ABdhPJx3ptVWWJ4i6pIxXv/78PQF6oVLHXTz3Oh2F4h7h1aMKeQbb1QOTpZj/9jJfd/8b15zRVAz47qSc4jOmZlwHMb2VT1uRibs
 MIME-Version: 1.0
-Message-Id: <1595329799.y24rka8cv4.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a92:2802:: with SMTP id l2mr27644334ilf.169.1595330405476;
+ Tue, 21 Jul 2020 04:20:05 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 04:20:05 -0700
+In-Reply-To: <20200721111007.hwwdveqxeqcry4wn@pesu.pes.edu>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001e30e105aaf1ce89@google.com>
+Subject: Re: WARNING in pvr2_i2c_core_done
+From:   syzbot <syzbot+e74a998ca8f1df9cc332@syzkaller.appspotmail.com>
+To:     bkkarthik@pesu.pes.edu, dan.carpenter@oracle.com,
+        gregkh@linuxfoundation.org, isely@pobox.com,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, mchehab@kernel.org,
+        skhan@linuxfoundation.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Peter Zijlstra's message of July 9, 2020 6:31 pm:
-> On Wed, Jul 08, 2020 at 07:54:34PM -0400, Waiman Long wrote:
->> On 7/8/20 4:41 AM, Peter Zijlstra wrote:
->> > On Tue, Jul 07, 2020 at 03:57:06PM +1000, Nicholas Piggin wrote:
->> > > Yes, powerpc could certainly get more performance out of the slow
->> > > paths, and then there are a few parameters to tune.
->> > Can you clarify? The slow path is already in use on ARM64 which is wea=
-k,
->> > so I doubt there's superfluous serialization present. And Will spend a
->> > fair amount of time on making that thing guarantee forward progressm, =
-so
->> > there just isn't too much room to play.
->> >=20
->> > > We don't have a good alternate patching for function calls yet, but
->> > > that would be something to do for native vs pv.
->> > Going by your jump_label implementation, support for static_call shoul=
-d
->> > be fairly straight forward too, no?
->> >=20
->> >    https://lkml.kernel.org/r/20200624153024.794671356@infradead.org
->> >=20
->> Speaking of static_call, I am also looking forward to it. Do you have an
->> idea when that will be merged?
->=20
-> 0day had one crash on the last round, I think Steve send a fix for that
-> last night and I'll go look at it.
->=20
-> That said, the last posting got 0 feedback, so either everybody is
-> really happy with it, or not interested. So let us know in the thread,
-> with some review feedback.
->=20
-> Once I get through enough of the inbox to actually find the fix and test
-> it, I'll also update the thread, and maybe threaten to merge it if
-> everybody stays silent :-)
+Hello,
 
-I'd like to use it in powerpc. We have code now for example that patches=20
-a branch immediately at the top of memcpy which branches to a different=20
-version of the function. pv queued spinlock selection obviously, and
-there's a bunch of platform ops struct things that get filled in at boot=20
-time, etc.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+general protection fault in kernfs_find_ns
 
-So +1 here if you can get them through. I'm not 100% sure we can do
-it with existing toolchain and no ugly hacks, but there's no way to
-structure things that can get around that AFAIKS. We'd eventually
-use it though, I'd say.
+pvrusb2: Invalid write control endpoint
+pvrusb2: Invalid write control endpoint
+pvrusb2: Invalid write control endpoint
+pvrusb2: Invalid write control endpoint
+pvrusb2: Invalid write control endpoint
+pvrusb2: Invalid write control endpoint
+general protection fault, probably for non-canonical address 0xdffffc000000000e: 0000 [#1] SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000070-0x0000000000000077]
+CPU: 0 PID: 78 Comm: pvrusb2-context Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:kernfs_find_ns+0x31/0x370 fs/kernfs/dir.c:829
+Code: 49 89 d6 41 55 41 54 55 48 89 fd 53 48 83 ec 08 e8 f4 61 af ff 48 8d 7d 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 1e 03 00 00 48 8d bd 98 00 00 00 48 8b 5d 70 48
+RSP: 0018:ffff8881d4187938 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffffffff863789c0 RCX: ffffffff85a79ba7
+RDX: 000000000000000e RSI: ffffffff81901d1c RDI: 0000000000000070
+RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff873ed1e7
+R10: fffffbfff0e7da3c R11: 0000000000000001 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff863790e0
+FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000557f2b45ae48 CR3: 00000001d2762000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ kernfs_find_and_get_ns+0x2f/0x60 fs/kernfs/dir.c:906
+ kernfs_find_and_get include/linux/kernfs.h:548 [inline]
+ sysfs_unmerge_group+0x5d/0x160 fs/sysfs/group.c:366
+ dpm_sysfs_remove+0x62/0xb0 drivers/base/power/sysfs.c:790
+ device_del+0x18b/0xd20 drivers/base/core.c:2834
+ device_unregister+0x22/0xc0 drivers/base/core.c:2889
+ i2c_unregister_device include/linux/err.h:41 [inline]
+ i2c_client_dev_release+0x39/0x50 drivers/i2c/i2c-core-base.c:465
+ device_release+0x71/0x200 drivers/base/core.c:1559
+ kobject_cleanup lib/kobject.c:693 [inline]
+ kobject_release lib/kobject.c:722 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x245/0x540 lib/kobject.c:739
+ put_device drivers/base/core.c:2779 [inline]
+ device_unregister+0x34/0xc0 drivers/base/core.c:2890
+ i2c_unregister_device+0x38/0x40 include/linux/err.h:41
+ v4l2_i2c_new_subdev_board+0x159/0x2c0 drivers/media/v4l2-core/v4l2-i2c.c:114
+ v4l2_i2c_new_subdev+0xb8/0xf0 drivers/media/v4l2-core/v4l2-i2c.c:135
+ pvr2_hdw_load_subdev drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2023 [inline]
+ pvr2_hdw_load_modules drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2075 [inline]
+ pvr2_hdw_setup_low drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2156 [inline]
+ pvr2_hdw_setup drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2262 [inline]
+ pvr2_hdw_initialize+0xc8d/0x3600 drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2339
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:109 [inline]
+ pvr2_context_thread_func+0x250/0x850 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x392/0x470 kernel/kthread.c:291
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+Modules linked in:
+---[ end trace 9af941b6bcb04b01 ]---
+RIP: 0010:kernfs_find_ns+0x31/0x370 fs/kernfs/dir.c:829
+Code: 49 89 d6 41 55 41 54 55 48 89 fd 53 48 83 ec 08 e8 f4 61 af ff 48 8d 7d 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 1e 03 00 00 48 8d bd 98 00 00 00 48 8b 5d 70 48
+RSP: 0018:ffff8881d4187938 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffffffff863789c0 RCX: ffffffff85a79ba7
+RDX: 000000000000000e RSI: ffffffff81901d1c RDI: 0000000000000070
+RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff873ed1e7
+R10: fffffbfff0e7da3c R11: 0000000000000001 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff863790e0
+FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000557f2b45ae48 CR3: 00000001d2762000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-Thanks,
-Nick
+
+Tested on:
+
+commit:         b791d1bd Merge tag 'locking-kcsan-2020-06-11' of git://git..
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=16dfe440900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ccf1899337a6e343
+dashboard link: https://syzkaller.appspot.com/bug?extid=e74a998ca8f1df9cc332
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=117e281b100000
+
