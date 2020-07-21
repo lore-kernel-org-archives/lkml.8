@@ -2,149 +2,170 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 365FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C94C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11750206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3671C2065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:10:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="SaAY7VXP"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="IZlQhe3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgGUOHW (ORCPT
+        id S1728483AbgGUOKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:07:22 -0400
-Received: from ozlabs.org ([203.11.71.1]:49901 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbgGUOHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:07:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BB0ll6WTvz9sPB;
-        Wed, 22 Jul 2020 00:07:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1595340439;
-        bh=pEIZzV48lY9oMztWrQ5y0yoN1x11b53snuVDYzGP9yQ=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=SaAY7VXP+8gsFiGhyvEZfA+oRA9StiLhZfuy+2pKRVNobM60s5ZrvgssW4zf9X62a
-         MZVWmqNQd3ogXkhQzVYT2D6VyVqWKDqOTPUqeXt46kCvuhO/J2IMGdZCQAUUqN0SIL
-         4dfQwOKoWzFqHPbN+FBeidh2+nu4W84rUbGweXJpIruRz3B4B0YQrtTDgf479Rar/y
-         Viw/52UZYPrBmgsgdov8KvZxHChLO16wRqgypswzCaGIaVwaE290Pt0mbM8PutKM3/
-         Xb8erB7zonG4Bzma/IFDuaXKb0iPg7coE2wqu+/YiWJI8VuHLFsB4OK2ql0qU6+xD9
-         nx9GykCYcRn6A==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Cc:     mikey@neuling.org, apopple@linux.ibm.com,
-        Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH v4 05/10] powerpc/dt_cpu_ftrs: Add feature for 2nd DAWR
-In-Reply-To: <62daa2d1-4e11-dcc1-cb1d-805ee4a156e0@linux.ibm.com>
-References: <20200717040958.70561-1-ravi.bangoria@linux.ibm.com> <20200717040958.70561-6-ravi.bangoria@linux.ibm.com> <CACzsE9oE+OMnWEXvbZZbq35YzpSzCbBHWEJcjtCgkcq-YrABng@mail.gmail.com> <c34b1a66-2db6-c97a-1782-0d473c758502@linux.ibm.com> <87mu3trtri.fsf@mpe.ellerman.id.au> <62daa2d1-4e11-dcc1-cb1d-805ee4a156e0@linux.ibm.com>
-Date:   Wed, 22 Jul 2020 00:07:15 +1000
-Message-ID: <87d04prmgc.fsf@mpe.ellerman.id.au>
+        Tue, 21 Jul 2020 10:10:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgGUOKl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 10:10:41 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 093F0C0619DA
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:10:41 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id b6so21335840wrs.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PrqNjY5C8lZXrufMgkVQOPFxI5PME47hT2UHcARcwyM=;
+        b=IZlQhe3FVtbZBKfLaWY13Pm+Wtvn3P6IeKtOWwcsuG0kbaxN6yuczoLsK5YHhmyhge
+         ODGy/6FA/ZBhxjBmiXQiP7bP1cK0qdjOn3x62ZvAqOLMqGxfBuOwa94B855ZLYMWuggM
+         aSswi3jPdPFhzvl1UiXQ7dmA1rOUeGC8LLnxQrgGYnY77pCMKr66amEBKEuErqUBP6HS
+         +EbzRnbyUbR6U1KjMqd/z96l0ajqZ6DnqpYNlF/uD0NVSJk1DGJZZwAC+m1/nhnsAeEE
+         x47FA1dnpXwykwl3b2CTfT5D8HLT3Nu2wfrSQv1MPgeNHNZA4oARtbFWxCtHLhcc58a3
+         7Pww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PrqNjY5C8lZXrufMgkVQOPFxI5PME47hT2UHcARcwyM=;
+        b=HPKPW8TCZsKQ2ts/rKFv+YBzFKVC3B1s5EJiZYQu3ZE9e+u0I2vpIIOMj85sUdBBe3
+         ljFh8Z6Sheo2978hhY/nmYV9DEHs8tPZu6t/JfW7x62M5cQrs1ins72w9b8WloGnIoy9
+         Df28Uc9gaEc6pRnJLGPfMdYPAKQEVf0Vq20E6kTjyKrL/+a6NKPf5HD71l4B3q9hf+8O
+         wq1CGROOqsseU175lQgGGM/A7SADUrsPxVkbJtcF+ZvA7ln1qyeMylbPSO0diIvHvvZO
+         s5Ev8/Bg+K1doOHbA/HfYQgeyhpOOZAVUscVi3X3QWVar2MR6Tkw9lEFOwT/UYkjlyNC
+         JQig==
+X-Gm-Message-State: AOAM533KYxxmpaXWOiL4rnHDIxo6lCk960os3iMPpeR/LRE0wX1cvBJE
+        hloMfvnTnO5tp6KinaX8DlhU0A==
+X-Google-Smtp-Source: ABdhPJxXULR+4pZj/VNU4eMwvCiFLjvcZy6EL2ajjvloyuhpb3jyVYjDjnloBEbWJf9Z9r3UIDePKw==
+X-Received: by 2002:adf:f98c:: with SMTP id f12mr2018160wrr.269.1595340639655;
+        Tue, 21 Jul 2020 07:10:39 -0700 (PDT)
+Received: from x1 (103.red-88-29-77.staticip.rima-tde.net. [88.29.77.103])
+        by smtp.gmail.com with ESMTPSA id u65sm3777394wmg.5.2020.07.21.07.10.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 07:10:38 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 16:10:34 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH v3] pinctrl: core: print gpio in pins debugfs file
+Message-ID: <20200721141034.GA2064533@x1>
+References: <20200721140233.2063475-1-drew@beagleboard.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721140233.2063475-1-drew@beagleboard.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ravi Bangoria <ravi.bangoria@linux.ibm.com> writes:
-> On 7/21/20 4:59 PM, Michael Ellerman wrote:
->> Ravi Bangoria <ravi.bangoria@linux.ibm.com> writes:
->>> On 7/17/20 11:14 AM, Jordan Niethe wrote:
->>>> On Fri, Jul 17, 2020 at 2:10 PM Ravi Bangoria
->>>> <ravi.bangoria@linux.ibm.com> wrote:
->>>>>
->>>>> Add new device-tree feature for 2nd DAWR. If this feature is present,
->>>>> 2nd DAWR is supported, otherwise not.
->>>>>
->>>>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
->>>>> ---
->>>>>    arch/powerpc/include/asm/cputable.h | 7 +++++--
->>>>>    arch/powerpc/kernel/dt_cpu_ftrs.c   | 7 +++++++
->>>>>    2 files changed, 12 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
->>>>> index e506d429b1af..3445c86e1f6f 100644
->>>>> --- a/arch/powerpc/include/asm/cputable.h
->>>>> +++ b/arch/powerpc/include/asm/cputable.h
->>>>> @@ -214,6 +214,7 @@ static inline void cpu_feature_keys_init(void) { }
->>>>>    #define CPU_FTR_P9_TLBIE_ERAT_BUG      LONG_ASM_CONST(0x0001000000000000)
->>>>>    #define CPU_FTR_P9_RADIX_PREFETCH_BUG  LONG_ASM_CONST(0x0002000000000000)
->>>>>    #define CPU_FTR_ARCH_31                        LONG_ASM_CONST(0x0004000000000000)
->>>>> +#define CPU_FTR_DAWR1                  LONG_ASM_CONST(0x0008000000000000)
->>>>>
->>>>>    #ifndef __ASSEMBLY__
->>>>>
->>>>> @@ -497,14 +498,16 @@ static inline void cpu_feature_keys_init(void) { }
->>>>>    #define CPU_FTRS_POSSIBLE      \
->>>>>               (CPU_FTRS_POWER7 | CPU_FTRS_POWER8E | CPU_FTRS_POWER8 | \
->>>>>                CPU_FTR_ALTIVEC_COMP | CPU_FTR_VSX_COMP | CPU_FTRS_POWER9 | \
->>>>> -            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10)
->>>>> +            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10 | \
->>>>> +            CPU_FTR_DAWR1)
->>>>>    #else
->>>>>    #define CPU_FTRS_POSSIBLE      \
->>>>>               (CPU_FTRS_PPC970 | CPU_FTRS_POWER5 | \
->>>>>                CPU_FTRS_POWER6 | CPU_FTRS_POWER7 | CPU_FTRS_POWER8E | \
->>>>>                CPU_FTRS_POWER8 | CPU_FTRS_CELL | CPU_FTRS_PA6T | \
->>>>>                CPU_FTR_VSX_COMP | CPU_FTR_ALTIVEC_COMP | CPU_FTRS_POWER9 | \
->>>>> -            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10)
->>>>> +            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10 | \
->>>>> +            CPU_FTR_DAWR1)
->> 
->>>> Instead of putting CPU_FTR_DAWR1 into CPU_FTRS_POSSIBLE should it go
->>>> into CPU_FTRS_POWER10?
->>>> Then it will be picked up by CPU_FTRS_POSSIBLE.
->>>
->>> I remember a discussion about this with Mikey and we decided to do it
->>> this way. Obviously, the purpose is to make CPU_FTR_DAWR1 independent of
->>> CPU_FTRS_POWER10 because DAWR1 is an optional feature in p10. I fear
->>> including CPU_FTR_DAWR1 in CPU_FTRS_POWER10 can make it forcefully enabled
->>> even when device-tree property is not present or pa-feature bit it not set,
->>> because we do:
->>>
->>>         {       /* 3.1-compliant processor, i.e. Power10 "architected" mode */
->>>                 .pvr_mask               = 0xffffffff,
->>>                 .pvr_value              = 0x0f000006,
->>>                 .cpu_name               = "POWER10 (architected)",
->>>                 .cpu_features           = CPU_FTRS_POWER10,
->> 
->> The pa-features logic will turn it off if the feature bit is not set.
->> 
->> So you should be able to put it in CPU_FTRS_POWER10.
->> 
->> See for example CPU_FTR_NOEXECUTE.
->
-> Ah ok. scan_features() clears the feature if the bit is not set in
-> pa-features. So it should work find for powervm. I'll verify the same
-> thing happens in case of baremetal where we use cpu-features not
-> pa-features. If it works in baremetal as well, will put it in
-> CPU_FTRS_POWER10.
+On Tue, Jul 21, 2020 at 04:02:34PM +0200, Drew Fustini wrote:
+> If there is a gpio range mapping for the pin, then print out the gpio
+> chip and line index for the pin in the debugfs 'pins' file with the
+> format: "[gpiochip-label]:line-[index] "
+> 
+> For example, here is a section of 'pins' the PocketBeagle (AM3358):
+> /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
+> 
+> pin 25 (PIN25) gpio-32-63:line-25 44e10864 00000037 pinctrl-single 
+> pin 26 (PIN26) gpio-32-63:line-26 44e10868 00000037 pinctrl-single 
+> pin 27 (PIN27) gpio-32-63:line-27 44e1086c 00000037 pinctrl-single 
+> pin 28 (PIN28) NA 44e10870 00000036 pinctrl-single 
+> pin 29 (PIN29) NA 44e10874 00000006 pinctrl-single 
+> pin 30 (PIN30) gpio-32-63:line-28 44e10878 00000027 pinctrl-single 
+> pin 31 (PIN31) gpio-32-63:line-29 44e1087c 00000037 pinctrl-single 
+> pin 32 (PIN32) gpio-32-63:line-30 44e10880 00000037 pinctrl-single 
+> pin 33 (PIN33) gpio-32-63:line-31 44e10884 00000037 pinctrl-single 
+> pin 34 (PIN34) gpio-64-95:line-0 44e10888 00000037 pinctrl-single 
+> pin 35 (PIN35) gpio-64-95:line-1 44e1088c 00000037 pinctrl-single 
+> 
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Suggested-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> 
+> v3 changes:
+> - gpio column is now gpiochip label and line index
+> 
+> v2 changes:
+> - print 'NA' if pin does not have a GPIO number
+> - change gpio_num from unsigned to unsigned int per checkpatch
+> ---
+>  drivers/pinctrl/core.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+> index 821242bb4b16..a23dc264cae7 100644
+> --- a/drivers/pinctrl/core.c
+> +++ b/drivers/pinctrl/core.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/pinctrl/machine.h>
+>  
+>  #ifdef CONFIG_GPIOLIB
+> +#include "../gpio/gpiolib.h"
+>  #include <asm-generic/gpio.h>
+>  #endif
+>  
+> @@ -1601,6 +1602,9 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+>  	struct pinctrl_dev *pctldev = s->private;
+>  	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+>  	unsigned i, pin;
+> +	struct pinctrl_gpio_range *range;
+> +	unsigned int gpio_num;
+> +	struct gpio_chip *chip;
+>  
+>  	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
+>  
+> @@ -1618,6 +1622,23 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+>  
+>  		seq_printf(s, "pin %d (%s) ", pin, desc->name);
+>  
+> +#ifdef CONFIG_GPIOLIB
+> +		gpio_num = 0;
+> +		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
+> +			if ((pin >= range->pin_base) &&
+> +			    (pin < (range->pin_base + range->npins))) {
+> +				gpio_num = range->base + (pin - range->pin_base);
+> +				break;
+> +			}
+> +		}
+> +		chip = gpio_to_chip(gpio_num);
+> +		if (chip && chip->gpiodev && chip->gpiodev->base)
+> +			seq_printf(s, "%s:line-%u ", chip->label,
+> +				gpio_num - chip->gpiodev->base);
+> +		else
+> +			seq_puts(s, "NA ");
+> +#endif
+> +
+>  		/* Driver-specific info per pin */
+>  		if (ops->pin_dbg_show)
+>  			ops->pin_dbg_show(pctldev, s, pin);
+> -- 
+> 2.25.1
+> 
 
-When we use DT CPU features we don't use CPU_FTRS_POWER10 at all.
+Apologies - I should not have put the change log in the commit message.
+Please let me know if I should resubmit.
 
-We construct a cpu_spec from scratch with just the base set of features:
-
-static struct cpu_spec __initdata base_cpu_spec = {
-	.cpu_name		= NULL,
-	.cpu_features		= CPU_FTRS_DT_CPU_BASE,
-
-
-And then individual features are enabled via the device tree flags.
-
-cheers
+thanks,
+drew
