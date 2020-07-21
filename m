@@ -2,86 +2,121 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D970C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48135C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC96D22CBB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:42:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595328169;
-	bh=7MFx4mhho7ivMAssZqUvEbE0ZiOgK1QwP2jKmRMEoMo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MXAXrcj6kK4QZL8MTv7TMwBvvDaelb2j1eNEd1ebLYID3sATTCcjWHxAZgnTIxfxa
-	 57wfVLhJpC7GJE6N5dr9KsSESJG5kDb2ruVX1bSksrrVcUHEh4Fpw6xQsavCaZG84C
-	 nK4KI3nkU2LuL/n1oMocLBvuE9++Fieua6iNg0tE=
+	by mail.kernel.org (Postfix) with ESMTP id 27F7220729
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:43:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xby1dlCg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbgGUKms (ORCPT
+        id S1729332AbgGUKnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:42:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgGUKms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:42:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EA7F20714;
-        Tue, 21 Jul 2020 10:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595328167;
-        bh=7MFx4mhho7ivMAssZqUvEbE0ZiOgK1QwP2jKmRMEoMo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hi5RUoaZUaMESjiAVTddK8OkCtoFqxh6ztcLbv8pFEO8d/di+vHrBOUwejgQqO1X2
-         gxR0J+G8FBMjFHa92fSHrzCRoMGEIhXT3nKK4d1G5pKl69CNmCj1kxeqAtAfM1uzxo
-         nkWms0kiF+uBCtMCzDQeStWGRWL6Q4BcH/b7D56w=
-Date:   Tue, 21 Jul 2020 12:42:56 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.7 000/243] 5.7.10-rc2 review
-Message-ID: <20200721104256.GE1676612@kroah.com>
-References: <20200720191523.845282610@linuxfoundation.org>
- <8f328303-f1fa-e4b6-d6bb-a2817c7474f7@linuxfoundation.org>
+        Tue, 21 Jul 2020 06:43:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgGUKnC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:43:02 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C497C061794;
+        Tue, 21 Jul 2020 03:43:02 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id p26so3823160oos.7;
+        Tue, 21 Jul 2020 03:43:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to:cc;
+        bh=UNz5YDIjnc+/glRNuHqLP+jGMzFk6rM7f2h+4Pejht4=;
+        b=Xby1dlCgO5JX0noqj11LnK4Oxsgm+3GSJtZ1+OzSg066w73HKhDIYFy3CNCKBe4eon
+         Fdmk1II2o4vk6Mfh+hljvFu7nTOXSm5tBc++qxH/py9XogId+6ektuh0vCefXX9O4JFd
+         tbGWrMILnn6GGvf7BaW1x8IZtK++ks+D85sSs0mt+w8f7WpV0pinvIzubvnDX/hqQcn2
+         CPwn4S4X6yAMhg1jdYEcCAHQdWrj0Zo5Wgh2S9A/+CJmraowsbazpKMqD2Og+3S4CTii
+         9JC5htBiy8Xkb7/8HsktWeWK73VS+LWeXNrIWvlw/aTvqb0MZSJRc2UmSItFJz+ADr7t
+         5kag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=UNz5YDIjnc+/glRNuHqLP+jGMzFk6rM7f2h+4Pejht4=;
+        b=WYHvdOMMLAmomgFI8nwLlDwhLt0dhEJBz6dbJTQa7lPMWamVZpRV68XOQWztY8QA7I
+         oGqOaFkSe8DIAl9dxmBf068STarYyCmc0QdfZkgVE4+JN8x23+hgJPe+7wP0wS8xNSJY
+         5lCnuYMxKM368pHDl2QlvwmhWVWoFw5QsYsOcpC0OwpAv9BYksQsklyciLK+npKH3eFQ
+         sWuWFFx9ddLo/Wz7sEsibaXDQF/fARZOCrJl6U14sf6tWG8XDik1NCZCBG4l0z7zD27J
+         s57WNxmkM8hHCObZXuly1i7Osf/aDO3XnxzXTtgjiekJG+NM6wBh4J//jHKT4B0HQxic
+         V8mw==
+X-Gm-Message-State: AOAM532BIaWBV1YEiIrZFaNFM6CBQDAHyuRBcp0snJ6W1bx3sVU03xOO
+        AIxie6UFaTOLw0lpATjzMYDShU/Z38Yt6WEr0C4=
+X-Google-Smtp-Source: ABdhPJwhqkBe8my83KDOxmHPecoxD3Ck0cl0Tc48n+pLmU5s/77Gf1AvoY8UIftzZ6l+U+k1cb1DPwqN71FEf4GspBY=
+X-Received: by 2002:a4a:ba8b:: with SMTP id d11mr23500215oop.80.1595328181243;
+ Tue, 21 Jul 2020 03:43:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8f328303-f1fa-e4b6-d6bb-a2817c7474f7@linuxfoundation.org>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Tue, 21 Jul 2020 12:42:50 +0200
+Message-ID: <CAKgNAkjyXcXZkEczRz2yvJRFBy2zAwTaNfyiSmskAFWN_3uY1g@mail.gmail.com>
+Subject: Mount API manual pages
+To:     David Howells <dhowells@redhat.com>
+Cc:     Petr Vorel <pvorel@suse.cz>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 05:37:47PM -0600, Shuah Khan wrote:
-> On 7/20/20 1:16 PM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.7.10 release.
-> > There are 243 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Wed, 22 Jul 2020 19:14:36 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.10-rc2.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> 
-> Compiled and booted on my test system. No dmesg regressions.
+Hello David,
 
-Thanks for testing all of these and letting me know.
+In October last year you sent some draft manual pages[1] for the new
+mount API (fsconfig(), fsmount(), fsopen(), fspick(), move_mount(),
+open_tree()).
 
-greg k-h
+I noted at the time that the mails were a bit confusing since several
+of the pages were sent twice, and to different lists. You said [2]
+that you'd resend in a more orderly fashion following any feedback
+that you got to those drafts. However, things stalled at that point.
+
+I'd like to restart this process, so that we actually get the pages
+into the man-pages set. (This is in part triggered by the
+mount_settr() manual page that Christian recently sent.)
+
+Would you be willing to do the following please:
+
+1. Review the pages that you already wrote to see what needs to be
+updated. (I did take a look at some of those pages a while back, and
+some pieces--I don't recall the details--were out of sync with the
+implementation.)
+
+2. Resend the pages, one patch per page.
+
+3. Please CC linux-man@, linux-api@, linux-kernel@, and the folk in CC
+on this message.
+
+Cheers,
+
+Michael
+
+[1]
+https://lore.kernel.org/linux-man/15449.1531263162@warthog.procyon.org.uk/
+[MANPAGE PATCH] Add manpages for move_mount(2) and open_tree(2)
+
+https://lore.kernel.org/linux-man/15519.1531263314@warthog.procyon.org.uk/
+[MANPAGE PATCH] Add manpage for fsinfo(2)
+
+https://lore.kernel.org/linux-man/15488.1531263249@warthog.procyon.org.uk/
+[MANPAGE PATCH] Add manpage for fsopen(2), fspick(2) and fsmount(2)
+
+etc.
+
+[2] https://lore.kernel.org/lkml/27446.1570738938@warthog.procyon.org.uk/
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
