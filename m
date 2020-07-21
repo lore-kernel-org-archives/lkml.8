@@ -2,139 +2,184 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313EDC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D329EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AFBC20729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A895A2077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1IvOQ6YE"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="PShVHcuB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729857AbgGUPT7 (ORCPT
+        id S1729950AbgGUPUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:19:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34000 "EHLO
+        Tue, 21 Jul 2020 11:20:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbgGUPT7 (ORCPT
+        with ESMTP id S1729647AbgGUPUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:19:59 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EA15C061794;
-        Tue, 21 Jul 2020 08:19:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UDgd79BY7gi8TqLDKkueThe0INr/de8/XZtWeBtTp4g=; b=1IvOQ6YEO1bgDDlBTYlRghsRlv
-        x6BMvXrA/+9IbLHFeVn36I4gukr3Bn0cCKAe98VNUIWChuL16bJjc/bd3hPXxAasHTAKthuU/Zi1L
-        A6hgB1abgU+vFB7TWrZ/bSs2B7H8p8oL09ta8vegyhRMyjcQXB2NF24/OxAecpjm5PhtPH9d3PR4X
-        8UhJ8Ag99fmvxPY0yXuOIz5+pu46/IdKlobtn7BI2JJUx27uO6IU0a6x+1Z133R8gYvanTD7wecUQ
-        ctczp/CH/WNRGibFW3GSKRLnVLScFDieEdSKBYR2C2N3yfCzMq4p8WGmHOzqQ5neJE9D6AZLrz0aK
-        mAmEF/5g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxu3Z-0001Uy-MG; Tue, 21 Jul 2020 15:19:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 76765301AC6;
-        Tue, 21 Jul 2020 17:19:47 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 691E220107F23; Tue, 21 Jul 2020 17:19:47 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 17:19:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
- membarrier_mm_sync_core_before_usermode
-Message-ID: <20200721151947.GD10769@hirez.programming.kicks-ass.net>
-References: <1594868476.6k5kvx8684.astroid@bobo.none>
- <20200716110038.GA119549@hirez.programming.kicks-ass.net>
- <1594906688.ikv6r4gznx.astroid@bobo.none>
- <1314561373.18530.1594993363050.JavaMail.zimbra@efficios.com>
- <1595213677.kxru89dqy2.astroid@bobo.none>
- <2055788870.20749.1595263590675.JavaMail.zimbra@efficios.com>
- <1595324577.x3bf55tpgu.astroid@bobo.none>
- <20200721150656.GN119549@hirez.programming.kicks-ass.net>
- <616209816.22376.1595344513051.JavaMail.zimbra@efficios.com>
+        Tue, 21 Jul 2020 11:20:12 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE467C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:20:11 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a21so22010539ejj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:20:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CVY6ngE/wUOCAJ5ZXM4RxqaDGgVG+i4hISevEon3J24=;
+        b=PShVHcuB5n4LdkFuYUlDfgcU4l08VeViecqRx966bZmdDekCay/647wqbwHHKhJtOA
+         PIA/K7ogQS3s25r6G+G+VT8OM8fo1SCTSkTata49MSs/DVqOwyBLqZYY91Va/sy7huBS
+         SSp9ickzRl9a5mQOl1C0lxefP8AJ0CY33iNKW1PGZOmgNYsfdwkDCPXcMUzeAWnEpOLG
+         XkjAzSXGbgKXIWyZoUtUwOUtftpg8ywhv7PteOJ7SgJ5Qwxh+5UD+wOfs/FGZeqKlnCz
+         i+1e6Vu+HDvEMMw/8VMIwRZHMAxTnmrDjjdI3xrrIBk/sOCnnsicY19qC+eKF0bWxy1Y
+         5oZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CVY6ngE/wUOCAJ5ZXM4RxqaDGgVG+i4hISevEon3J24=;
+        b=uLSqfXHgKguvjSkON7SIF7V78Lqi5k2w4JSxc4/1JshJWjya/3BfWrMsmOgOZAnlMh
+         1qp1RIDxZUMHVooR95o8EenRfhtGl9reumrS+dlFMfooYg817YJInKJjmDX3KZwpltlm
+         Yexgcxl+WmXjx7cMH2OEWpWJnvJT9/DvhU8Q175cqy9zZH9gydWu9UVmf7xsuulY4kjp
+         84GzfniizRulTRMKjw1pqfnThAvkfNCcBEgbVuLGHA4lgtgcEJEsptGqKKBXW8nMp26P
+         cmWWgu7tERms6t8FivrDmRbYoWe8lXWAefszU7PmNE+fgV07XhkC13ASuhTYJzajk1E5
+         qNaw==
+X-Gm-Message-State: AOAM53182aXW26V/vkb0j0Zrja0SG3bL4vK2yBGvJ2OtQhHUnXolVrSz
+        jQC+2SBBeqhpKGEM10ef5sKNDCpPB5MnT3DyieXZ
+X-Google-Smtp-Source: ABdhPJyNzk5GLZaq6SyY71ytrhwHNZi9iL0vlh9sSlF2PECzAISmANF5Ujh2IweRLkFCRobwdafunNhRjthEJcQwAWk=
+X-Received: by 2002:a17:906:1a59:: with SMTP id j25mr24366780ejf.398.1595344810149;
+ Tue, 21 Jul 2020 08:20:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <616209816.22376.1595344513051.JavaMail.zimbra@efficios.com>
+References: <6effbbd4574407d6af21162e57d9102d5f8b02ed.1594664015.git.rgb@redhat.com>
+ <CAHC9VhSyq7yKQqwvHL5syU9+TFki6-__WfCrvqewbnU3xpND4Q@mail.gmail.com>
+ <20200714174353.ds7lj3iisy67t2zu@madcap2.tricolour.ca> <CAHC9VhQusQsdQc7EfdjdH5mp6qqqYVPHnG9nNhUhf3DS_cdWwA@mail.gmail.com>
+ <20200714210027.me2ieywjfcsf4v5r@madcap2.tricolour.ca>
+In-Reply-To: <20200714210027.me2ieywjfcsf4v5r@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 21 Jul 2020 11:19:59 -0400
+Message-ID: <CAHC9VhQgDGPutYxQawMPmezm1a+i1nXO5KSn9_7KPDZsRBJ4pw@mail.gmail.com>
+Subject: Re: [PATCH ghak84 v4] audit: purge audit_log_string from the
+ intra-kernel audit API
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     john.johansen@canonical.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Eric Paris <eparis@parisplace.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 11:15:13AM -0400, Mathieu Desnoyers wrote:
-> ----- On Jul 21, 2020, at 11:06 AM, Peter Zijlstra peterz@infradead.org wrote:
-> 
-> > On Tue, Jul 21, 2020 at 08:04:27PM +1000, Nicholas Piggin wrote:
-> > 
-> >> That being said, the x86 sync core gap that I imagined could be fixed
-> >> by changing to rq->curr == rq->idle test does not actually exist because
-> >> the global membarrier does not have a sync core option. So fixing the
-> >> exit_lazy_tlb points that this series does *should* fix that. So
-> >> PF_KTHREAD may be less problematic than I thought from implementation
-> >> point of view, only semantics.
-> > 
-> > So I've been trying to figure out where that PF_KTHREAD comes from,
-> > commit 227a4aadc75b ("sched/membarrier: Fix p->mm->membarrier_state racy
-> > load") changed 'p->mm' to '!(p->flags & PF_KTHREAD)'.
-> > 
-> > So the first version:
-> > 
-> >  https://lkml.kernel.org/r/20190906031300.1647-5-mathieu.desnoyers@efficios.com
-> > 
-> > appears to unconditionally send the IPI and checks p->mm in the IPI
-> > context, but then v2:
-> > 
-> >  https://lkml.kernel.org/r/20190908134909.12389-1-mathieu.desnoyers@efficios.com
-> > 
-> > has the current code. But I've been unable to find the reason the
-> > 'p->mm' test changed into '!(p->flags & PF_KTHREAD)'.
-> 
-> Looking back at my inbox, it seems like you are the one who proposed to
-> skip all kthreads: 
-> 
-> https://lkml.kernel.org/r/20190904124333.GQ2332@hirez.programming.kicks-ass.net
+On Tue, Jul 14, 2020 at 5:00 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-07-14 16:29, Paul Moore wrote:
+> > On Tue, Jul 14, 2020 at 1:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > On 2020-07-14 12:21, Paul Moore wrote:
+> > > > On Mon, Jul 13, 2020 at 3:52 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > >
+> > > > > audit_log_string() was inteded to be an internal audit function and
+> > > > > since there are only two internal uses, remove them.  Purge all external
+> > > > > uses of it by restructuring code to use an existing audit_log_format()
+> > > > > or using audit_log_format().
+> > > > >
+> > > > > Please see the upstream issue
+> > > > > https://github.com/linux-audit/audit-kernel/issues/84
+> > > > >
+> > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > > ---
+> > > > > Passes audit-testsuite.
+> > > > >
+> > > > > Changelog:
+> > > > > v4
+> > > > > - use double quotes in all replaced audit_log_string() calls
+> > > > >
+> > > > > v3
+> > > > > - fix two warning: non-void function does not return a value in all control paths
+> > > > >         Reported-by: kernel test robot <lkp@intel.com>
+> > > > >
+> > > > > v2
+> > > > > - restructure to piggyback on existing audit_log_format() calls, checking quoting needs for each.
+> > > > >
+> > > > > v1 Vlad Dronov
+> > > > > - https://github.com/nefigtut/audit-kernel/commit/dbbcba46335a002f44b05874153a85b9cc18aebf
+> > > > >
+> > > > >  include/linux/audit.h     |  5 -----
+> > > > >  kernel/audit.c            |  4 ++--
+> > > > >  security/apparmor/audit.c | 10 ++++------
+> > > > >  security/apparmor/file.c  | 25 +++++++------------------
+> > > > >  security/apparmor/ipc.c   | 46 +++++++++++++++++++++++-----------------------
+> > > > >  security/apparmor/net.c   | 14 ++++++++------
+> > > > >  security/lsm_audit.c      |  4 ++--
+> > > > >  7 files changed, 46 insertions(+), 62 deletions(-)
+> > > >
+> > > > Thanks for restoring the quotes, just one question below ...
+> > > >
+> > > > > diff --git a/security/apparmor/ipc.c b/security/apparmor/ipc.c
+> > > > > index 4ecedffbdd33..fe36d112aad9 100644
+> > > > > --- a/security/apparmor/ipc.c
+> > > > > +++ b/security/apparmor/ipc.c
+> > > > > @@ -20,25 +20,23 @@
+> > > > >
+> > > > >  /**
+> > > > >   * audit_ptrace_mask - convert mask to permission string
+> > > > > - * @buffer: buffer to write string to (NOT NULL)
+> > > > >   * @mask: permission mask to convert
+> > > > > + *
+> > > > > + * Returns: pointer to static string
+> > > > >   */
+> > > > > -static void audit_ptrace_mask(struct audit_buffer *ab, u32 mask)
+> > > > > +static const char *audit_ptrace_mask(u32 mask)
+> > > > >  {
+> > > > >         switch (mask) {
+> > > > >         case MAY_READ:
+> > > > > -               audit_log_string(ab, "read");
+> > > > > -               break;
+> > > > > +               return "read";
+> > > > >         case MAY_WRITE:
+> > > > > -               audit_log_string(ab, "trace");
+> > > > > -               break;
+> > > > > +               return "trace";
+> > > > >         case AA_MAY_BE_READ:
+> > > > > -               audit_log_string(ab, "readby");
+> > > > > -               break;
+> > > > > +               return "readby";
+> > > > >         case AA_MAY_BE_TRACED:
+> > > > > -               audit_log_string(ab, "tracedby");
+> > > > > -               break;
+> > > > > +               return "tracedby";
+> > > > >         }
+> > > > > +       return "";
+> > > >
+> > > > Are we okay with this returning an empty string ("") in this case?
+> > > > Should it be a question mark ("?")?
+> > > >
+> > > > My guess is that userspace parsing should be okay since it still has
+> > > > quotes, I'm just not sure if we wanted to use a question mark as we do
+> > > > in other cases where the field value is empty/unknown.
+> > >
+> > > Previously, it would have been an empty value, not even double quotes.
+> > > "?" might be an improvement.
+> >
+> > Did you want to fix that now in this patch, or leave it to later?  As
+> > I said above, I'm not too bothered by it with the quotes so either way
+> > is fine by me.
+>
+> I'd defer to Steve, otherwise I'd say leave it, since there wasn't
+> anything there before and this makes that more evident.
+>
+> > John, I'm assuming you are okay with this patch?
 
-I had a feeling it might've been me ;-) I just couldn't find the email.
+With no comments from John or Steve in the past week, I've gone ahead
+and merged the patch into audit/next.
 
-> > The comment doesn't really help either; sure we have the whole lazy mm
-> > thing, but that's ->active_mm, not ->mm.
-> > 
-> > Possibly it is because {,un}use_mm() do not have sufficient barriers to
-> > make the remote p->mm test work? Or were we over-eager with the !p->mm
-> > doesn't imply kthread 'cleanups' at the time?
-> 
-> The nice thing about adding back kthreads to the threads considered for membarrier
-> IPI is that it has no observable effect on the user-space ABI. No pre-existing kthread
-> rely on this, and we just provide an additional guarantee for future kthread
-> implementations.
-> 
-> > Also, I just realized, I still have a fix for use_mm() now
-> > kthread_use_mm() that seems to have been lost.
-> 
-> I suspect we need to at least document the memory barriers in kthread_use_mm and
-> kthread_unuse_mm to state that they are required by membarrier if we want to
-> ipi kthreads as well.
-
-Right, so going by that email you found it was mostly a case of being
-lazy, but yes, if we audit the kthread_{,un}use_mm() barriers and add
-any other bits that might be needed, covering kthreads should be
-possible.
-
-No objections from me for making it so.
+-- 
+paul moore
+www.paul-moore.com
