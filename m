@@ -2,89 +2,51 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D58BAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE10C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A23E720684
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:20:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="K9ojjUlg"
+	by mail.kernel.org (Postfix) with ESMTP id C1A1C207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:17:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgGUGUc (ORCPT
+        id S1728164AbgGUGR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:20:32 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:59785 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgGUGUc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:20:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1595312432; x=1626848432;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=xTxsgU7dP+dCO7BF1/koKl7ClH5PjAb03Z2Nm54qNPk=;
-  b=K9ojjUlgR+yfVPAN6uzwIxEmGELmsH2AisMkzAjo7kMGsqhpifQZb9To
-   WzcVLnehnsFpZHrqAxWUvj5j9icxjo+ozOGXzXgjCGEjgJlgoaMAlolD2
-   4+zmAsNoAR2raPpUG/uSsDrRQ4q1w4z7P7kCd7D+xI9yPfeVRQBiDISIG
-   M=;
-IronPort-SDR: qM4kReuBMpJU/qxBHDDloek6Ba7oKCi+kJw7S8tzaLhq/funls180ueZKCSkZUqV5/0/DBFmgw
- Fz1OXn38iYvg==
-X-IronPort-AV: E=Sophos;i="5.75,377,1589241600"; 
-   d="scan'208";a="60238751"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 21 Jul 2020 06:20:29 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id 0949F284BB9;
-        Tue, 21 Jul 2020 06:20:26 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 21 Jul 2020 06:20:26 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.180) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 21 Jul 2020 06:20:17 +0000
-Subject: Re: [PATCH v5 04/18] nitro_enclaves: Init PCI device driver
-To:     Alexander Graf <graf@amazon.com>, <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "David Duncan" <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Karen Noel <knoel@redhat.com>,
-        "Martin Pohlack" <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200715194540.45532-1-andraprs@amazon.com>
- <20200715194540.45532-5-andraprs@amazon.com>
- <d2f717c1-895b-b947-7ec3-067e4f1dbf69@amazon.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <93c45468-d63c-2bc9-58d4-b7a6fa1dfad7@amazon.com>
-Date:   Tue, 21 Jul 2020 09:20:07 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Tue, 21 Jul 2020 02:17:58 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8338 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725294AbgGUGR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 02:17:58 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CD319428CB13F7977094;
+        Tue, 21 Jul 2020 14:17:50 +0800 (CST)
+Received: from [127.0.0.1] (10.174.178.16) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Jul 2020
+ 14:17:40 +0800
+Subject: Re: [PATCH] ipmi/watchdog: add missing newlines when printing
+ parameters by sysfs
+To:     Joe Perches <joe@perches.com>, <minyard@acm.org>
+CC:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <openipmi-developer@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <guohanjun@huawei.com>
+References: <1595210605-27888-1-git-send-email-wangxiongfeng2@huawei.com>
+ <20200720195234.GC2952@minyard.net>
+ <908fcbf2-efbb-b3f4-0666-2da79fbe99c4@huawei.com>
+ <b38a439b2bdd1122805aa182da9a1802e673f53e.camel@perches.com>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <70f4a8b9-1410-a32d-dfaa-4cb5d3cade10@huawei.com>
+Date:   Tue, 21 Jul 2020 14:17:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <d2f717c1-895b-b947-7ec3-067e4f1dbf69@amazon.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.180]
-X-ClientProxiedBy: EX13D30UWC003.ant.amazon.com (10.43.162.122) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <b38a439b2bdd1122805aa182da9a1802e673f53e.camel@perches.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.178.16]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -92,29 +54,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 20/07/2020 17:24, Alexander Graf wrote:
->
->
-> On 15.07.20 21:45, Andra Paraschiv wrote:
->> The Nitro Enclaves PCI device is used by the kernel driver as a means of
->> communication with the hypervisor on the host where the primary VM and
->> the enclaves run. It handles requests with regard to enclave lifetime.
->>
->> Setup the PCI device driver and add support for MSI-X interrupts.
->>
->> Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
->> Signed-off-by: Alexandru Ciobotaru <alcioa@amazon.com>
->> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
->
-> Reviewed-by: Alexander Graf <graf@amazon.com>
+On 2020/7/21 10:00, Joe Perches wrote:
+> On Tue, 2020-07-21 at 09:20 +0800, Xiongfeng Wang wrote:
+>> On 2020/7/21 3:52, Corey Minyard wrote:
+>>> On Mon, Jul 20, 2020 at 10:03:25AM +0800, Xiongfeng Wang wrote:
+>>>> When I cat some ipmi_watchdog parameters by sysfs, it displays as
+>>>> follows. It's better to add a newline for easy reading.
+> []
+>>>> diff --git a/drivers/char/ipmi/ipmi_watchdog.c b/drivers/char/ipmi/ipmi_watchdog.c
+> []
+>>>> @@ -232,12 +232,16 @@ static int set_param_str(const char *val, const struct kernel_param *kp)
+>>>>  static int get_param_str(char *buffer, const struct kernel_param *kp)
+>>>>  {
+>>>>  	action_fn fn = (action_fn) kp->arg;
+>>>> -	int       rv;
+>>>> +	int rv, len;
+>>>>  
+>>>>  	rv = fn(NULL, buffer);
+>>>>  	if (rv)
+>>>>  		return rv;
+>>>> -	return strlen(buffer);
+>>>> +
+>>>> +	len = strlen(buffer);
+>>>> +	len += sprintf(buffer + len, "\n");
+>>>
+>>> sprintf is kind of overkill to stick a \n on the end of a line.  How
+>>> about:
+>>>
+>>> 	buffer[len++] = '\n';
+>>>
+>>> Since you are returning the length, you shouldn't need to nil terminate
+>>> the string.
+> 
+> You never quite know for sure so I suggest making
+> the string null terminated just in case.
+> 
+> i.e.:
+> 
+> 	buffer[len++] = '\n';
+> 	buffer[len] = 0;
+> 
 
-Included the Rb, thanks for review.
+Thanks for your advice. I will change it in the next version.
 
-Andra
+Thanks,
+Xiongfeng
 
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
- Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
-omania. Registration number J22/2621/2005.
+> 
+> 
+> .
+> 
 
