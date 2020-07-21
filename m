@@ -2,98 +2,130 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50D7C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B00C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84FAD20729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:53:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="R/6Pr5DC"
+	by mail.kernel.org (Postfix) with ESMTP id AA35720684
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgGUJxZ (ORCPT
+        id S1728974AbgGUJz1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:53:25 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1876 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726109AbgGUJxY (ORCPT
+        Tue, 21 Jul 2020 05:55:27 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:27301 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729027AbgGUJzZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:53:24 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L9hPV1013177;
-        Tue, 21 Jul 2020 11:53:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=icEBuIRIzSKP//8c/7EqBnZJg430yOMrOqQUZ4Zi+tI=;
- b=R/6Pr5DCIJWS44LbTl2KDBXcuGjkaJYwVCI/3XQSnNQMlrU023HQblkPg7zl8LfZY6Vf
- ioQwE/R8zrTIX+atGcNzWG6A0bZK2ZTJyLeEDcUpxSRgRhBmV3rDX2HpcnlUJh0r8PVk
- ljTZmvWt8L5ON673WOYoUHEfrJW8kRakRvK8NyJFcAncDh1xZxJa2hOjy1Ses8QKo9R2
- iF5c4BrbNGHhCHiOvbTAuOdbrIXB5QDFfK/VhHggit1X5ItZH5mLEZejDYb43sgjK69g
- dczFV6zUGt+fDlO0ZTpNcsK2/UDJvn14j8dM+fD+BHTqxGkFd+sEOrLlBaJK2N/wHJpz TQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32bsfpd300-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 11:53:02 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C6BD710003A;
-        Tue, 21 Jul 2020 11:53:01 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AC1A12AD9F8;
-        Tue, 21 Jul 2020 11:53:01 +0200 (CEST)
-Received: from localhost (10.75.127.48) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Jul 2020 11:53:01
- +0200
-From:   Christophe Kerello <christophe.kerello@st.com>
-To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <dan.carpenter@oracle.com>,
-        Christophe Kerello <christophe.kerello@st.com>
-Subject: [PATCH] mtd: rawnand: stm32_fmc2: fix a buffer overflow
-Date:   Tue, 21 Jul 2020 11:52:07 +0200
-Message-ID: <1595325127-32693-1-git-send-email-christophe.kerello@st.com>
-X-Mailer: git-send-email 1.9.1
+        Tue, 21 Jul 2020 05:55:25 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-262-05FU3YgoN0uQBLOw_0F_FQ-1; Tue, 21 Jul 2020 10:55:21 +0100
+X-MC-Unique: 05FU3YgoN0uQBLOw_0F_FQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 21 Jul 2020 10:55:20 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 21 Jul 2020 10:55:20 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Eric Biggers' <ebiggers@kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+        "linux-decnet-user@lists.sourceforge.net" 
+        <linux-decnet-user@lists.sourceforge.net>,
+        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "mptcp@lists.01.org" <mptcp@lists.01.org>,
+        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
+Subject: RE: [PATCH 03/24] net: add a new sockptr_t type
+Thread-Topic: [PATCH 03/24] net: add a new sockptr_t type
+Thread-Index: AQHWXrQmuUX3yUokMEqukKul+fTtiakRycQA
+Date:   Tue, 21 Jul 2020 09:55:20 +0000
+Message-ID: <9b7ae3245bad474db2a3889bc1c1a329@AcuMS.aculab.com>
+References: <20200720124737.118617-1-hch@lst.de>
+ <20200720124737.118617-4-hch@lst.de> <20200720163748.GA1292162@gmail.com>
+In-Reply-To: <20200720163748.GA1292162@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch solves following static checker warning:
-drivers/mtd/nand/raw/stm32_fmc2_nand.c:350 stm32_fmc2_nfc_select_chip()
-error: buffer overflow 'nfc->data_phys_addr' 2 <= 2
+From: Eric Biggers
+> Sent: 20 July 2020 17:38
+...
+> How does this not introduce a massive security hole when
+> CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE?
+> 
+> AFAICS, userspace can pass in a pointer >= TASK_SIZE,
+> and this code makes it be treated as a kernel pointer.
 
-The CS value can only be 0 or 1.
+One thought I've had is that on 64-bit architectures there
+is almost always some part of the KVA that can never be valid
+and is larger than the maximum size of a user VA.
 
-Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-Fixes: 2cd457f328c1 ("mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash controller driver")
----
- drivers/mtd/nand/raw/stm32_fmc2_nand.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If the user address is offset into this invalid area
+then it can always be distinguished from a kernel address.
 
-diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-index a4140af..74fecde 100644
---- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-+++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-@@ -1791,7 +1791,7 @@ static int stm32_fmc2_nfc_parse_child(struct stm32_fmc2_nfc *nfc,
- 			return ret;
- 		}
- 
--		if (cs > FMC2_MAX_CE) {
-+		if (cs >= FMC2_MAX_CE) {
- 			dev_err(nfc->dev, "invalid reg value: %d\n", cs);
- 			return -EINVAL;
- 		}
--- 
-1.9.1
+Indeed it may be worth considering offsetting kernel
+addresses as well.
+
+This forces code to use the correct accessors.
+
+It doesn't solve the problem for 32bit systems with
+CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE since
+they are likely to have all 32bit addresses available
+to both use and kernel.
+
+If you end up with a 'fat pointer' then it may be worth
+adding the length and making it a 'buffer descriptor'.
+This can then be passed by address and the reduced
+number of parameters will probably offset the cost
+of the extra indirection.
+
+The read/write functions could then take the 'buffer descriptor',
+offset and length as parameters.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
