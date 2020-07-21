@@ -2,127 +2,108 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FROM_LOCAL_NOVOWEL,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2350C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC86C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A96820729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:37:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+8EdCnY"
+	by mail.kernel.org (Postfix) with ESMTP id B11732070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:38:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgGUJh5 (ORCPT
+        id S1728538AbgGUJic convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:37:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgGUJh4 (ORCPT
+        Tue, 21 Jul 2020 05:38:32 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:38710 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728119AbgGUJi3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:37:56 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7808FC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:37:56 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id 8so733588pjj.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:37:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WYIe/jy5Dqr0y+oNjQbbwYu6KlJ30fL8Fok/qL9XnPk=;
-        b=n+8EdCnYpI9w4QjiWRKAVS54jZ1Ps1uRqRUyeMZnXiDcZEXJSAelRlHz0Ml+F1dB9w
-         fFBlVhu/3eQb2wXD3+96Bq2XlO0LoLyLpTLnOlg0yzKgsjkrjvtCmnVlbgvV+0ieLAZG
-         CCTT0VONfgMu7+hMbwOVSaEHRYGxzqLHap34kqpqy2TsGBDWt/1WQb9AlK7/MTXPg41D
-         8r44xA1GEWt/a0JFPXlZi4JR7h7DwAHMkFxofBpBZDDl15x0BlC/vPRcLCUmVnND6Tyc
-         sDWmNFj604AKKYHszuohS7nTxYkpwr9WcQkGONHCI4XCtw7bYnECs7HfoJIpf2kvKtlX
-         h0vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WYIe/jy5Dqr0y+oNjQbbwYu6KlJ30fL8Fok/qL9XnPk=;
-        b=H9LZFg8KYuEnrQ2LpmA29DmIvWJ8UI9jPqJNdRwlVZIDAz1C7tZzSYKKcsF651y8ZR
-         JeA5qC0b/ne4L3V1XKcU4WaaLAO0oxXGqflNxCC/uC4MideDwh4nLwiZJD/GtGPFvRKA
-         GnzMaOF+iTDwV5VESxWGzA2ewG0wmyOQYiiiBB86IqBx3lpiHUAyBSTheDAhKNQnwJ15
-         a3CfqUtf0fH1ryULuc8HH2FN5uHsPJ/maJF3kdIW0rQw54Hf+QP1vyoUu7OeaaVUY7Dc
-         tl+TILX/Vdfo6ToD4lJJdGxWhL9TQg0zFmosx/9mXmRHp59r2XUhYpPBVG23TUTPL98D
-         I+JQ==
-X-Gm-Message-State: AOAM533WfPc+C9W91v9/crSZ0VC4m6oC3fDj0ioBtHv80WSePacnYl/w
-        Iuy+sOQa6rvCDnGcnO1pfBc=
-X-Google-Smtp-Source: ABdhPJx3q2vePBy0C8LqpkO73icb5tIVTFbRJ/bGDIEVo3L/J0CavOVeYQJOv7m9OLf97F7tw0lBEw==
-X-Received: by 2002:a17:90b:30d7:: with SMTP id hi23mr2989543pjb.69.1595324275934;
-        Tue, 21 Jul 2020 02:37:55 -0700 (PDT)
-Received: from octofox.cadence.com ([2601:641:400:e00:19b7:f650:7bbe:a7fb])
-        by smtp.gmail.com with ESMTPSA id g8sm17653264pgr.70.2020.07.21.02.37.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 02:37:55 -0700 (PDT)
-From:   Max Filippov <jcmvbkbc@gmail.com>
-To:     linux-xtensa@linux-xtensa.org
-Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH v2] xtensa: add boot subdirectories targets to extra-y
-Date:   Tue, 21 Jul 2020 02:37:48 -0700
-Message-Id: <20200721093748.26627-1-jcmvbkbc@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 21 Jul 2020 05:38:29 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-217-o-9Oq5ZpNDO7uw1k_-mRfA-1; Tue, 21 Jul 2020 10:38:24 +0100
+X-MC-Unique: o-9Oq5ZpNDO7uw1k_-mRfA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 21 Jul 2020 10:38:23 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 21 Jul 2020 10:38:23 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+        "linux-decnet-user@lists.sourceforge.net" 
+        <linux-decnet-user@lists.sourceforge.net>,
+        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "mptcp@lists.01.org" <mptcp@lists.01.org>,
+        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
+Subject: RE: get rid of the address_space override in setsockopt
+Thread-Topic: get rid of the address_space override in setsockopt
+Thread-Index: AQHWXznU7Ce8ImOXV0WGgKrMes+hhakRxpwA
+Date:   Tue, 21 Jul 2020 09:38:23 +0000
+Message-ID: <60c52e31e9f240718fcda0dd5c2faeca@AcuMS.aculab.com>
+References: <20200720124737.118617-1-hch@lst.de>
+In-Reply-To: <20200720124737.118617-1-hch@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 8fe87a92f262 ("kbuild: always create directories of targets")
-exposed an issue in the xtensa makefiles that results in the following
-build error in a clean directory:
-  scripts/Makefile.build:374: arch/xtensa/boot/boot-elf/boot.lds] Error 1
-    arch/xtensa/boot/boot-elf/bootstrap.S:21: fatal error:
-    opening dependency file arch/xtensa/boot/boot-elf/.bootstrap.o.d:
-    No such file or directory
+From: Christoph Hellwig
+> Sent: 20 July 2020 13:47
+>
+> setsockopt is the last place in architecture-independ code that still
+> uses set_fs to force the uaccess routines to operate on kernel pointers.
+> 
+> This series adds a new sockptr_t type that can contained either a kernel
+> or user pointer, and which has accessors that do the right thing, and
+> then uses it for setsockopt, starting by refactoring some low-level
+> helpers and moving them over to it before finally doing the main
+> setsockopt method.
 
-Intermediate targets in arch/xtensa/boot/boot-elf don't get into
-'targets' and build directory is not created for them.
-Add boot.lds and bootstrap.o to extra-y in subdirectories of
-arch/xtensa/boot.
+Are you planning to make the equivalent change to getsockopt()?
+Having mismatched interfaces would be very strange.
 
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
----
-Changes v1->v2:
-- update boot-redboot/Makefile in the same manner as boot-elf/Makefile.
+	David
 
- arch/xtensa/boot/boot-elf/Makefile     | 1 +
- arch/xtensa/boot/boot-redboot/Makefile | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/arch/xtensa/boot/boot-elf/Makefile b/arch/xtensa/boot/boot-elf/Makefile
-index 12ae1e91cb75..ad341c0fff15 100644
---- a/arch/xtensa/boot/boot-elf/Makefile
-+++ b/arch/xtensa/boot/boot-elf/Makefile
-@@ -15,6 +15,7 @@ export CPPFLAGS_boot.lds += -P -C
- export KBUILD_AFLAGS += -mtext-section-literals
- 
- boot-y		:= bootstrap.o
-+extra-y		:= boot.lds $(boot-y)
- 
- OBJS		:= $(addprefix $(obj)/,$(boot-y))
- 
-diff --git a/arch/xtensa/boot/boot-redboot/Makefile b/arch/xtensa/boot/boot-redboot/Makefile
-index 8632473ad319..022a76a2282a 100644
---- a/arch/xtensa/boot/boot-redboot/Makefile
-+++ b/arch/xtensa/boot/boot-redboot/Makefile
-@@ -13,6 +13,7 @@ endif
- LD_ARGS	= -T $(srctree)/$(obj)/boot.ld
- 
- boot-y	:= bootstrap.o
-+extra-y	:= $(boot-y)
- 
- OBJS	:= $(addprefix $(obj)/,$(boot-y))
- LIBS	:= arch/xtensa/boot/lib/lib.a arch/xtensa/lib/lib.a
--- 
-2.20.1
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
