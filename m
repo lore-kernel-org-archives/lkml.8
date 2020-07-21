@@ -2,82 +2,96 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB597C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC8EE20720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F7F622C7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731060AbgGUVLV (ORCPT
+        id S1731106AbgGUVLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:11:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728606AbgGUVLV (ORCPT
+        Tue, 21 Jul 2020 17:11:39 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:44736 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728606AbgGUVLj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:11:21 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5D60C061794;
-        Tue, 21 Jul 2020 14:11:20 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxzXi-00HRBK-OX; Tue, 21 Jul 2020 21:11:18 +0000
-Date:   Tue, 21 Jul 2020 22:11:18 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
- of 0 as initial sum
-Message-ID: <20200721211118.GB2786714@ZenIV.linux.org.uk>
-References: <20200721202425.GA2786714@ZenIV.linux.org.uk>
- <20200721202549.4150745-1-viro@ZenIV.linux.org.uk>
- <20200721202549.4150745-4-viro@ZenIV.linux.org.uk>
- <CAHk-=wiYS3sHp9bvRn3KmkFKnK-Pb0ksL+-gRRHLK_ZjJqQf=w@mail.gmail.com>
- <CAHk-=wg4DXWjV0sHAk+5QGvkNqckJTBLLcse_U=AknqEf8r3pw@mail.gmail.com>
+        Tue, 21 Jul 2020 17:11:39 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 3B5AD1C0BD8; Tue, 21 Jul 2020 23:11:36 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 23:11:35 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, robh@kernel.org, marek.behun@nic.cz,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v31 06/12] leds: lp55xx: Add multicolor framework support
+ to lp55xx
+Message-ID: <20200721211135.GE5966@amd>
+References: <20200716182007.18389-1-dmurphy@ti.com>
+ <20200716182007.18389-7-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="PGNNI9BzQDUtgA2J"
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wg4DXWjV0sHAk+5QGvkNqckJTBLLcse_U=AknqEf8r3pw@mail.gmail.com>
+In-Reply-To: <20200716182007.18389-7-dmurphy@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 01:58:47PM -0700, Linus Torvalds wrote:
-> On Tue, Jul 21, 2020 at 1:55 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > This seems dangerous to me.
-> >
-> > Maybe some implementation depends on the fact that they actually do
-> > the csum 16 bits at a time, and never see an overflow in "int",
-> > because they keep folding things.
-> >
-> > You now break that assumption, and give it an initial value that the
-> > csum code itself would never generate, and wouldn't handle right.
-> >
-> > But I didn't check. Maybe we don't have anything that stupid in the kernel.
 
-I did.
+--PGNNI9BzQDUtgA2J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I take it back. The very first place I looked seemed to do exactly that.
-> 
-> See "do_csum()" in the kernel. It doesn't handle carry for any of the
-> usual cases, exactly because it knows it doesn't need to.
-> 
-> Ok, so do_csum() doesn't take that initial value, but it's very much
-> an example of the kind of algorithm I was thinking of: it does do
-> things 32 bits at a time and handles the carry bit in that inner loop,
-> but internally it knows that the val;ues are limited in other places,
-> and doesn't need to handle carry everywhere.
+Hi!
 
-Theoretically - sure.  I can post the full analysis of that stuff (starting
-with the proof that all instances of csum_partial() are OK in that respect,
-which takes care of the default instances, then instance-by-instance
-analysis of the rest); will need to collate the pieces, remove the actionable
-obscenities, etc., but I have done that analysis.  Made for rather unpleasant
-couple of weeks... ;-/
+> Add multicolor framework support for the lp55xx family.
+>=20
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+
+Applied 4,5,6 and 8,9.
+
+>  config LEDS_LP55XX_COMMON
+>  	tristate "Common Driver for TI/National LP5521/5523/55231/5562/8501"
+> -	depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || LEDS_LP8501
+> +	depends on LEDS_CLASS_MULTICOLOR || !LEDS_CLASS_MULTICOLOR
+> +	depends on OF
+>  	select FW_LOADER
+>  	select FW_LOADER_USER_HELPER
+
+But I have to ask: what does this do to userland interface once
+LEDS_CLASS_MULTICOLOR is enabled?
+
+Will users see some changes? Will they see some changes after dts
+parts are applied?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--PGNNI9BzQDUtgA2J
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8XWgcACgkQMOfwapXb+vJs8gCgjiyUjz1Qm40NgHKrj1ROiK6w
+piAAnibro4jCdEmW1PAfv4OLVl3T65wz
+=Hh5F
+-----END PGP SIGNATURE-----
+
+--PGNNI9BzQDUtgA2J--
