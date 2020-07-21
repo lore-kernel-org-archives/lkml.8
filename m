@@ -7,92 +7,67 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A226FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243C8C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73E4321702
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02EAF21702
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595291913;
-	bh=zn97BBCV9wx9Bl4hJt31tQNVSYEFVcKnoAZiJ8T9vTU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oTP8lwjVzJX4I+zE16s6WYo2lYblf7Om3sHjw++JNAY/HLhn+WhKs0UlESputL+sW
-	 UgAPsjcg05TksovK7EmItKBFvO07GzOWGvold7z93A5YxEIF7TKGr83Wyez+DBNg90
-	 CZrEcbfs+f/mbJZQxtuBfc/zXD/C2lsen+Rf+8Kc=
+	s=default; t=1595291944;
+	bh=mwZKvG+01y2ShgeBeoa9RMB1Bx/jUGES7yJ7dxJ92wQ=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=iij+M1JhCjWNKDypN12TJQGJxYsvYqk5bXlaXbYLDfMKkXE3rl0unm5rmO1nPew3L
+	 86mhdf571vnM0/obVvUwILCy6j9gg1+ykGHeNo4+WwTbhMDwmv+RzW7jY+TM/oa546
+	 auuye2kutN08SK1i9Ztmjy45yatVNuAjzA9T7Z5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgGUAic (ORCPT
+        id S1728230AbgGUAjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 20:38:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41158 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 20:39:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbgGUAic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 20:38:32 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        id S1728127AbgGUAjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 20:39:01 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CE54208E4;
-        Tue, 21 Jul 2020 00:38:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67535208E4;
+        Tue, 21 Jul 2020 00:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595291911;
-        bh=zn97BBCV9wx9Bl4hJt31tQNVSYEFVcKnoAZiJ8T9vTU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YBnM4rxbH77JMpzUSJ9gLUVH/pY8umGnO6vJB3TgtG0lc5NW1bKxZeSlPbFndFPqE
-         DCOaord2OirGTGgtWeCg9pIgjM3mgx3xj9xCEGMYkvf6KXBLhu9ZdGzt3lzlp7giF2
-         ELQ1JjYDNwufy6O10uEXUiIDfM5YfEE1EOabOqoE=
-Date:   Mon, 20 Jul 2020 17:38:30 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-security-module@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>
-Cc:     syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com
-Subject: Re: [PATCH] Smack: fix use-after-free in smk_write_relabel_self()
-Message-ID: <20200721003830.GC7464@sol.localdomain>
-References: <0000000000000279c705a799ae31@google.com>
- <20200708201520.140376-1-ebiggers@kernel.org>
+        s=default; t=1595291941;
+        bh=mwZKvG+01y2ShgeBeoa9RMB1Bx/jUGES7yJ7dxJ92wQ=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=VzsUSpUNum/ISB0NVT4N0zXSNrFlbwDylNiu0lA2s93tr3uqcQ9reMibtCaKNkOqg
+         0S4C+yydEFCUSUtef4oUTdneQZrA/vyxY04FZT2R50Qq5kfE52EWKVCFNCBv4dQwWQ
+         milHt6vZ9gz/gS07LquBtvkKgxIRtTbUzio3VqdA=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708201520.140376-1-ebiggers@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1594877570-9280-1-git-send-email-sivaprak@codeaurora.org>
+References: <1594877570-9280-1-git-send-email-sivaprak@codeaurora.org>
+Subject: Re: [PATCH] clk: qcom: ipq8074: Add correct index for PCIe clocks
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org
+Date:   Mon, 20 Jul 2020 17:39:00 -0700
+Message-ID: <159529194068.3847286.12937961081804827485@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 01:15:20PM -0700, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> smk_write_relabel_self() frees memory from the task's credentials with
-> no locking, which can easily cause a use-after-free because multiple
-> tasks can share the same credentials structure.
-> 
-> Fix this by using prepare_creds() and commit_creds() to correctly modify
-> the task's credentials.
-> 
-> Reproducer for "BUG: KASAN: use-after-free in smk_write_relabel_self":
-> 
-> 	#include <fcntl.h>
-> 	#include <pthread.h>
-> 	#include <unistd.h>
-> 
-> 	static void *thrproc(void *arg)
-> 	{
-> 		int fd = open("/sys/fs/smackfs/relabel-self", O_WRONLY);
-> 		for (;;) write(fd, "foo", 3);
-> 	}
-> 
-> 	int main()
-> 	{
-> 		pthread_t t;
-> 		pthread_create(&t, NULL, thrproc, NULL);
-> 		thrproc(NULL);
-> 	}
-> 
-> Reported-by: syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com
-> Fixes: 38416e53936e ("Smack: limited capability for changing process label")
-> Cc: <stable@vger.kernel.org> # v4.4+
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+Quoting Sivaprakash Murugesan (2020-07-15 22:32:50)
+> The PCIe clocks GCC_PCIE0_AXI_S_BRIDGE_CLK, GCC_PCIE0_RCHNG_CLK_SRC,
+> GCC_PCIE0_RCHNG_CLK are wrongly added to the gcc reset group.
+>=20
+> Move them to the gcc clock group.
+>=20
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
 
-Ping.
+Applied to clk-next
