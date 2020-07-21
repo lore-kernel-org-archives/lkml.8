@@ -2,86 +2,99 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E33C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA836C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCF202064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07A12064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:04:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yLLccylq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0vFJ01JM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgGUOEq (ORCPT
+        id S1728772AbgGUOE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50430 "EHLO
+        Tue, 21 Jul 2020 10:04:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbgGUOEq (ORCPT
+        with ESMTP id S1728426AbgGUOE4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:04:46 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4D0C0619DA
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:04:45 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id d17so24217038ljl.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UtktXB94UoE1zwpGw4L7DaOAMB9VthZKcyfMWewtchM=;
-        b=yLLccylqygcGxLogT7uDUU7Zoo5Gf+rgoWnJxkrvtrNuUUC2Rm99zffl7dgXLUcsxV
-         JUsR4Mi/ot+fvK33v6Uu9vN0B0j5hKnXMEescl1VOpltOAT9W+Gc7AkhEo0n8b2nQ3N9
-         d/+3tCKJOzeU0p9NOt2e8P3KvgBHGGWOMJu6pZa/vhd+Kz+Aay2PlVhVJ3TIu9jZxoPC
-         r0KQv2Q360/8fCEcxHhs7RkvZv/6qZQ6+getRlZ//wMfZEIDwVEjPXekSUXa5CcHoapM
-         VtDgPKHLENtTXQEZU/5R51RZaY8KybsI0FcI9GKc9mCGpjhucIPruaTfi5edb2oyHwpN
-         f/VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UtktXB94UoE1zwpGw4L7DaOAMB9VthZKcyfMWewtchM=;
-        b=LEMsD5vph3H5GUUCSJ6i1et4AxvMoLIDiGYav6ev1m5j9ZCAF4GkYaSMf6iATZdXJ3
-         Gc9aP5/wJQcz1T0rBWx9SI9lzqLnyzyZNe3cq7FCLxyiwKgz73Q5zSAS7u5P/c83B5NH
-         wGQEpkp6cwLSeEP0GImKGbHMm0lAV4ik4zI8r1HUF0K1J84Bo1a0QqF5NrgMopD2g8T7
-         aWyDgI9odldYiuB55NqKkI1FbgqYUAuvNOIIn8O98y/zPeNZS1fdqyRiY4LUecA13VEg
-         1Mxxio5K/CEs++UZM7pcU7HDXdM4GC0xCNVHST4e1Xq5C63T63Hb8iZT75QBy7K4pGNs
-         4YQw==
-X-Gm-Message-State: AOAM530WW2t1bTLXe5Hm0A8p4lh/irHs+34wjI+34omUBwF+/U7wQcHR
-        tZLpAaKNusPhRBeNcqtxC3daMcmQnN4tZfRH9fb7Pw==
-X-Google-Smtp-Source: ABdhPJypCfBIap1qfVyDPf9GKnF6IcierHr4eIXAb39wsTOTb1+XEiOppOE1PPcvOhD3UUXSdtIpISL/xoX/eMJE4Q8=
-X-Received: by 2002:a2e:8046:: with SMTP id p6mr13595138ljg.100.1595340284205;
- Tue, 21 Jul 2020 07:04:44 -0700 (PDT)
+        Tue, 21 Jul 2020 10:04:56 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED1DEC061794;
+        Tue, 21 Jul 2020 07:04:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=35SbtfWGz45hL6nU4tFXWLRurwYHBqmeuQ1Pfog9lBE=; b=0vFJ01JML6wAxqx0pgoErHwFWm
+        qgYuA1U50+QuNkCwa4AAwpV95tjuDr4qpsWJTXWQgdrh2sg3jeCzWLEri5cWOm0pdYjjBVdOLNkWU
+        W71JJO0GypwD9MgwhTFgGGTvtW87X5kKZ2pPqc998yJkhTfzsqXJtkOSk4v+XnDqeS+F3v5zQPWMM
+        kA9oc3/BmPxl+U81YAt+TcQrP8352Pt3dTI32jB+evjClILufPhW9gV0QEd/H/WroCoqIJh48OLPh
+        uxqV4uWPVIfETObbKHS8nHPPnfcWL/VKLoKXszfRorLG33+LEZ2LP9v3vtqV8s4btah6+p23tnc2R
+        ECB9q1WQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxssz-0007zy-LP; Tue, 21 Jul 2020 14:04:49 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3E0A6304D28;
+        Tue, 21 Jul 2020 16:04:48 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1603B20DCCA0B; Tue, 21 Jul 2020 16:04:48 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 16:04:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     paulmck@kernel.org, will@kernel.org, arnd@arndb.de,
+        mark.rutland@arm.com, dvyukov@google.com, glider@google.com,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH 2/8] objtool, kcsan: Add __tsan_read_write to uaccess
+ whitelist
+Message-ID: <20200721140448.GZ10769@hirez.programming.kicks-ass.net>
+References: <20200721103016.3287832-1-elver@google.com>
+ <20200721103016.3287832-3-elver@google.com>
 MIME-Version: 1.0
-References: <20200720154548.12453-1-paul@crapouillou.net>
-In-Reply-To: <20200720154548.12453-1-paul@crapouillou.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 21 Jul 2020 16:04:33 +0200
-Message-ID: <CACRpkdaqOFgjNkD0m0A3XTXYfh10YuAVYKxd-8cFk0WDsC0mZQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: ingenic,pinctrl: Support pinmux/pinconf nodes
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721103016.3287832-3-elver@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 5:45 PM Paul Cercueil <paul@crapouillou.net> wrote:
+On Tue, Jul 21, 2020 at 12:30:10PM +0200, Marco Elver wrote:
+> Adds the new __tsan_read_write compound instrumentation to objtool's
+> uaccess whitelist.
+> 
+> Signed-off-by: Marco Elver <elver@google.com>
 
-> Add YAML to describe the pinmux/pinconf sub-nodes of the pinctrl IP on
-> Ingenic SoCs.
->
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Patch applied.
-
-Yours,
-Linus Walleij
+> ---
+>  tools/objtool/check.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index 63d8b630c67a..38d82e705c93 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -528,6 +528,11 @@ static const char *uaccess_safe_builtin[] = {
+>  	"__tsan_write4",
+>  	"__tsan_write8",
+>  	"__tsan_write16",
+> +	"__tsan_read_write1",
+> +	"__tsan_read_write2",
+> +	"__tsan_read_write4",
+> +	"__tsan_read_write8",
+> +	"__tsan_read_write16",
+>  	"__tsan_atomic8_load",
+>  	"__tsan_atomic16_load",
+>  	"__tsan_atomic32_load",
+> -- 
+> 2.28.0.rc0.105.gf9edc3c819-goog
+> 
