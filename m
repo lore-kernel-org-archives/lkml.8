@@ -2,161 +2,176 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74629C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4064EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D80620792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:44:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595353463;
-	bh=gYTjerPTWBvpkmXJUEmFBruEPYyHY4CF/NS96p+Wb7M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A8/GRA2lDJS9b+2aRk2FYrK+tHV9wxW8qnb/0moqnElo9Q2ynhCh1eTgRhJ/1wFCi
-	 +sJHYoMJcL6o79IblAdQ0EkVThqtQEzvrQf17Hn/lzJwNfVkyaHdgArr5GBr8GWFHC
-	 21GYUtMHdwz/x4I8Z24wPZ/TZWqRsav8nSl0i2CA=
+	by mail.kernel.org (Postfix) with ESMTP id 1246E2065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:45:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e5r6rqWh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbgGURoW (ORCPT
+        id S1728847AbgGURpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:44:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726658AbgGURoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:44:20 -0400
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A8C422CA0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 17:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595353459;
-        bh=gYTjerPTWBvpkmXJUEmFBruEPYyHY4CF/NS96p+Wb7M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PleDaNYGo1smV+pCthyI/QWptt1yZVIBTtSkgWIiDfM8HeUn7OYOxsssqU4y3ZDEV
-         HZfVcvjzM0pJOhr4pa9zZ9OOJJwwT76i/Y3qIwx7lWHXX1q/ius9er4RI1Pv1jq7Fg
-         VBEK+pjhZCxweqT4ixFqP/SQa5eVUK1f43MA40js=
-Received: by mail-wm1-f49.google.com with SMTP id q15so3656347wmj.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:44:19 -0700 (PDT)
-X-Gm-Message-State: AOAM533JhIieq6XaXgAfdVZ3zAnw+YNOADnjA0aITzNeUtISZtpb+w13
-        /Pg7VIUIlodwKlY2F8ZyiXFKHd1tKAK1ffR0vHd9Bw==
-X-Google-Smtp-Source: ABdhPJzSQXCla1i91gwY9Qh3+Y68Zb9GDpPH8iLV1F2Pg9CpACcpFlI0Frb/clH/rRMHVn/nECoXMbwElZOZ/5GE7B8=
-X-Received: by 2002:a7b:c09a:: with SMTP id r26mr4941339wmh.176.1595353458123;
- Tue, 21 Jul 2020 10:44:18 -0700 (PDT)
+        Tue, 21 Jul 2020 13:45:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbgGURpn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 13:45:43 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A82AC061794;
+        Tue, 21 Jul 2020 10:45:43 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id o13so12282097pgf.0;
+        Tue, 21 Jul 2020 10:45:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kMWXOlhE34MA+0PIvAVKS1uhdD3FiDsb7PHPebuEoZY=;
+        b=e5r6rqWhkz1D+xEyJQ+A/wRC9svCFYIA/poy4ke6itdgG7CpS0i+mv2bzRmmpcwrKn
+         nt/o9IDu1lmc6TLvfdcgza3WVESfyQUimp6ZF/cND1ap8+9U7GNORYDzKz8aRCUatR17
+         mg/Q7qLa9lBeRaFlWykxJztwMpt2vbuWfT71ct9zgWfAUaHgsw7ySyZ0Kgn6R4yhfLCv
+         0GTg6QEjekW3YoD9W701yGgD9OQNwd+DRASQWzJKF1LODJ/KDMkplElD5z3SLm5ulEtg
+         Ey4Z8PvxOHZyyOIXLm5iZi2zVIKj2pCfMIoKiq6lXRKL3goC1d8wD1S5oT6SL8UnyHiL
+         O5Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kMWXOlhE34MA+0PIvAVKS1uhdD3FiDsb7PHPebuEoZY=;
+        b=GoJETSRVvW7NjxrIzmo/BqI5dGc/e4FB9Myldj3B1GkI509SnzkbwkjreLqF3GHGWD
+         WwSRGxPRqYq8J5nFyj35AvuPiT4rf+6eMENtCX2YjsVJ8pZUbAv1niDyUmN9tVu42QVC
+         M9ZI56GnxVOvlTc++J5nv8ISMKCt9SvboEHARnRsq95xbGSYt81BqNAdSCepSKzeRgWL
+         zkk+CgGrmBCdcBolbDuBprYytuHnnR7Ki94tTayPocgTqlaSkGkvCt+gpM9pUrzamhWs
+         PpxTR0tfcKgcMLgJ/2kaqh/yFv0y0BibSgXDanxxRkzoBB8YYq+rpFYOQd6T9iiUY8Ua
+         nZaw==
+X-Gm-Message-State: AOAM533aUrQZNVLxBzt6awVPgR8gYLHhmYULKT549ze4CzvcdYT2SLUh
+        IDzMkPijO5KxQCIb39nKMZg=
+X-Google-Smtp-Source: ABdhPJwz2bMFIRQptPzYyQJia13UKDt6ya0pa9DA7+/aArwfYhQqDG6+ZoqEvGe/O/cJZRst6Gm8Fw==
+X-Received: by 2002:a63:504a:: with SMTP id q10mr22964237pgl.377.1595353542619;
+        Tue, 21 Jul 2020 10:45:42 -0700 (PDT)
+Received: from gmail.com ([103.105.153.67])
+        by smtp.gmail.com with ESMTPSA id t188sm21859891pfc.198.2020.07.21.10.45.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 10:45:41 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 23:13:53 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org
+Subject: Re: [PATCH v1] crypto: ccp: sp-pci: use generic power management
+Message-ID: <20200721174353.GA398461@gmail.com>
+References: <20200721123146.81710-1-vaibhavgupta40@gmail.com>
+ <7100976b-cf7c-c304-e2a6-660876e310af@amd.com>
+ <20200721163056.GA396078@gmail.com>
+ <95db9ba2-ffbb-ca92-6a70-1ee401920eed@amd.com>
 MIME-Version: 1.0
-References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
- <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net> <20200715171130.GG12769@casper.infradead.org>
- <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com> <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
- <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com> <202007151511.2AA7718@keescook>
- <20200716131404.bnzsaarooumrp3kx@steredhat> <202007160751.ED56C55@keescook>
- <20200717080157.ezxapv7pscbqykhl@steredhat.lan> <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
- <39a3378a-f8f3-6706-98c8-be7017e64ddb@kernel.dk> <CALCETrXAxFzuRB5EJZR7bbgfrEcNc=9_E7wwhPaZ3YGJ1=DZ0w@mail.gmail.com>
- <ba989463-c627-8af7-9234-4dc8ac4eea0e@kernel.dk>
-In-Reply-To: <ba989463-c627-8af7-9234-4dc8ac4eea0e@kernel.dk>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 21 Jul 2020 10:44:06 -0700
-X-Gmail-Original-Message-ID: <CALCETrUvOuKZWiQeZhf9DXyjS4OQdyW+s1YMh+vwe605jBS3LQ@mail.gmail.com>
-Message-ID: <CALCETrUvOuKZWiQeZhf9DXyjS4OQdyW+s1YMh+vwe605jBS3LQ@mail.gmail.com>
-Subject: Re: strace of io_uring events?
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Kees Cook <keescook@chromium.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <95db9ba2-ffbb-ca92-6a70-1ee401920eed@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:30 AM Jens Axboe <axboe@kernel.dk> wrote:
->
-> On 7/21/20 11:23 AM, Andy Lutomirski wrote:
-> > On Tue, Jul 21, 2020 at 8:31 AM Jens Axboe <axboe@kernel.dk> wrote:
+On Tue, Jul 21, 2020 at 12:15:13PM -0500, Tom Lendacky wrote:
+> On 7/21/20 11:30 AM, Vaibhav Gupta wrote:
+> > On Tue, Jul 21, 2020 at 10:19:33AM -0500, Tom Lendacky wrote:
+> >> On 7/21/20 7:31 AM, Vaibhav Gupta wrote:
+> >>> +bool __maybe_unused ccp_queues_suspended(struct ccp_device *ccp)
 > >>
-> >> On 7/21/20 9:27 AM, Andy Lutomirski wrote:
-> >>> On Fri, Jul 17, 2020 at 1:02 AM Stefano Garzarella <sgarzare@redhat.com> wrote:
-> >>>>
-> >>>> On Thu, Jul 16, 2020 at 08:12:35AM -0700, Kees Cook wrote:
-> >>>>> On Thu, Jul 16, 2020 at 03:14:04PM +0200, Stefano Garzarella wrote:
-> >>>
-> >>>>> access (IIUC) is possible without actually calling any of the io_uring
-> >>>>> syscalls. Is that correct? A process would receive an fd (via SCM_RIGHTS,
-> >>>>> pidfd_getfd, or soon seccomp addfd), and then call mmap() on it to gain
-> >>>>> access to the SQ and CQ, and off it goes? (The only glitch I see is
-> >>>>> waking up the worker thread?)
-> >>>>
-> >>>> It is true only if the io_uring istance is created with SQPOLL flag (not the
-> >>>> default behaviour and it requires CAP_SYS_ADMIN). In this case the
-> >>>> kthread is created and you can also set an higher idle time for it, so
-> >>>> also the waking up syscall can be avoided.
-> >>>
-> >>> I stared at the io_uring code for a while, and I'm wondering if we're
-> >>> approaching this the wrong way. It seems to me that most of the
-> >>> complications here come from the fact that io_uring SQEs don't clearly
-> >>> belong to any particular security principle.  (We have struct creds,
-> >>> but we don't really have a task or mm.)  But I'm also not convinced
-> >>> that io_uring actually supports cross-mm submission except by accident
-> >>> -- as it stands, unless a user is very careful to only submit SQEs
-> >>> that don't use user pointers, the results will be unpredictable.
+> >> These aren't static functions, so is the __maybe_unused necessary?
 > >>
-> >> How so?
-> >
-> > Unless I've missed something, either current->mm or sqo_mm will be
-> > used depending on which thread ends up doing the IO.  (And there might
-> > be similar issues with threads.)  Having the user memory references
-> > end up somewhere that is an implementation detail seems suboptimal.
+> >> (Same comment on the other non-static functions changed below)
+> >>
+> >>>  {
+> >>> +	.driver.pm = &sp_pci_pm_ops,
+> >>>  };
+> >>>  
+> >>>  int sp_pci_init(void)
+> >>> diff --git a/drivers/crypto/ccp/sp-platform.c b/drivers/crypto/ccp/sp-platform.c
+> >>> index 831aac1393a2..9dba52fbee99 100644
+> >>> --- a/drivers/crypto/ccp/sp-platform.c
+> >>> +++ b/drivers/crypto/ccp/sp-platform.c
+> >>
+> >> This file use the same "#ifdef CONFIG_PM" to define the suspend and resume
+> >> functions (see sp_platform_driver variable). Doesn't that need to be
+> >> updated similar to sp-pci.c? Not sure how this compile tested successfully
+> >> unless your kernel config didn't have CONFIG_PM defined?
+> > I am not sure but my .config file has "CONFIG_PM=y"
+> 
+> Ok, my miss on that, you didn't update the sp_platform_suspend signature,
+> so no issue there.
+> 
+> > 
+> > The motive is update PM of sp-pci. Months ago, we decided to remove
+> > "#ifdef CONFIG_PM" container and mark the callbacks as __maybe_unused.
+> 
+> Is this being done only for struct pci_driver structures then? Or will
+> there be a follow on effort for struct platform_driver structures?
 >
-> current->mm is always used from the entering task - obviously if done
-> synchronously, but also if it needs to go async. The only exception is a
-> setup with SQPOLL, in which case ctx->sqo_mm is the task that set up the
-> ring. SQPOLL requires root privileges to setup, and there's no task
-> entering the io_uring at all necessarily. It'll just submit sqes with
-> the credentials that are registered with the ring.
+For now, I am updating all the PCI drivers supporting legacy callbacks for
+power management. It is part of my Linux Kernel Mentorsship Program project.
+I will talk to Bjorn about this for sure.
+> I can see the need for the __maybe_unused on the sp_pci_suspend() and
+> sp_pci_resume() functions since those are static functions that may cause
+> warnings depending on whether CONFIG_PM_SLEEP is defined or not.
+> 
+> The ccp_dev_suspend() and ccp_dev_resume() functions, though, are external
+> functions that I would think shouldn't require the __may_unused attribute
+> because the compiler wouldn't know if they are invoked or not within that
+> file (similar to how the sp_suspend() and sp_resume() weren't modified to
+> include the __maybe_unused attribute).
+Yes you are right. External functions should not require __maybe_unused. I got
+confused by the kbuild error in one of my previous patches.
+But those functions must have been static. I will have to dig out the mail to
+check it.
+> Can you try a compile test without
+> changing those functions and without CONFIG_PM=y and see if you run into
+> issues?
+Sure, I will run this and check if it throws any warning/error.
 
-Really?  I admit I haven't fully followed how the code works, but it
-looks like anything that goes through the io_queue_async_work() path
-will use sqo_mm, and can't most requests that end up blocking end up
-there?  It looks like, even if SQPOLL is not set, the mm used will
-depend on whether the request ends up blocking and thus getting queued
-for later completion.
-
-Or does some magic I missed make this a nonissue.
-
-
->
-> This is just one known use case, there may very well be others. Outside
-> of SQPOLL, which is special, I don't see a reason to restrict this.
-> Given that you may have a fuller understanding of it after the above
-> explanation, please clearly state what problem you're seeing that
-> warrants a change.
-
-I see two fundamental issues:
-
-1. The above.  This may be less of an issue than it seems to me, but,
-if you submit io from outside sqo_mm, the mm that ends up being used
-depends on whether the IO is completed from io_uring_enter() or from
-the workqueue.  For something like Postgres, I guess this is okay
-because the memory is MAP_ANONYMOUS | MAP_SHARED and the pointers all
-point the same place regardless.
-
-2. If you create an io_uring and io_uring_enter() it from a different
-mm, it's unclear what seccomp is supposed to do.  (Or audit, for that
-matter.)  Which task did the IO?  Which mm did the IO?  Whose sandbox
-is supposed to be applied?
-
---Andy
+Thanks a lot!
+--Vaibhav Gupta
+> 
+> Thanks,
+> Tom
+> 
+> > Hence, I did similar changes to all files on which sp-pci is dependent.
+> > 
+> > This caused change in function defintion and declaration of sp_suspend().
+> > 
+> > sp-pci is not depended upon sp-platform. sp-platform was modified only because
+> > it also invoked sp_suspend() which got modified.
+> > 
+> > Thus, I didn't made any other changes to sp-platofrm.
+> > 
+> > Thanks
+> > Vaibhav Gupta
+> >>
+> >> Thanks,
+> >> Tom
+> >>
+> >>> @@ -207,7 +207,7 @@ static int sp_platform_suspend(struct platform_device *pdev,
+> >>>  	struct device *dev = &pdev->dev;
+> >>>  	struct sp_device *sp = dev_get_drvdata(dev);
+> >>>  
+> >>> -	return sp_suspend(sp, state);
+> >>> +	return sp_suspend(sp);
+> >>>  }
+> >>>  
+> >>>  static int sp_platform_resume(struct platform_device *pdev)
+> >>>
