@@ -2,144 +2,101 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212A6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF14C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6DB820717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF22F20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:13:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGtdkH7C"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pLrzDAuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgGUNNQ (ORCPT
+        id S1728573AbgGUNN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:13:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42470 "EHLO
+        Tue, 21 Jul 2020 09:13:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbgGUNNQ (ORCPT
+        with ESMTP id S1726687AbgGUNN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:13:16 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1C58C061794;
-        Tue, 21 Jul 2020 06:13:15 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id rk21so21612045ejb.2;
-        Tue, 21 Jul 2020 06:13:15 -0700 (PDT)
+        Tue, 21 Jul 2020 09:13:56 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90888C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:13:56 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a15so6214202wrh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:13:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TK4oN2cWdMTgyUd064PFfx+ByIVM6HVNCIBkJO1QDYU=;
-        b=GGtdkH7CFoiTtcZg6A2xw52zsbShnN6+5G8w2skPz55TWayxfqPm8gzLcgRHvImYvM
-         zhs2qeltEZhLYa6Y/YTPfZnW6BnF6S5CMgDwRIkSG2folDqlIX/oLypIcQhEcwDnAe+w
-         B+o4iXNXHI9JumAYCSYDmI4tXC/K7cUb5xop7Z7GPhFQntqBanh16mSmc/OjsGpod7lH
-         FbBv4KLwhEmm3CXMrxlecpuK0YVYRAjDCPMlAeAxl5tAuuqPbzjrMv33fhwntbYFbqrp
-         ZU+ULMIvFiDnOP6+an5tWJQ92azjkWTa01jtNtZ14ee+3LdrA0VJepXVG1GyjvFXkpw5
-         OeRA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6cyLMOSBZeL+BpGOPZ4KnMd993F4LhWCmpRnBNnGfbE=;
+        b=pLrzDAuE9wXfoBg5tbB9EnQhEkgxhH8oujCWqkPZ7yPs1YY1iIAN3Htmby+FaeSNto
+         I0AsSJQSA14mKVeuZwpaosXjYyNdgjtE5Md2vtVDzF5SPMVyAKGYNQ4PIOHEG3MPgF6A
+         mZOW0+Bb5/X/p5NPn/GLaSwX82VnAeWXT8ZAGshNALVq1M3MvLoGZdddDwhJKJLFl+00
+         +i5Z5m8Zht+mRlzpG/0R25tzgs57MBR3QTMoD3UNlkFRi4PqhEkOMLhM2Mt5uL0O/ne2
+         M8FbFkGM0/NmhmKmCJwLFVHma6/oaFG80Y2XNLp4WcctcPX9+M7x/KrMfslAWLgEGoHR
+         RJ7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TK4oN2cWdMTgyUd064PFfx+ByIVM6HVNCIBkJO1QDYU=;
-        b=QhC9b/SmsuUgzUDsGefoIUn8QP5bkChv+x/XwnREBrXN5BCQOxwxGHpMpmavjNreGB
-         i5bgXXXTWRF9wtpGDmvtMSNgZwZicAiyPDgoAfJuBMQCqXsYXZyxK0YShtgveeetDb2a
-         iDwks0eEza2hVss0CpGIL5SUpg18R8xQAVbqVDGQQNjDcu0KlaHt8hevp+iIorN+QdPc
-         BO0qMLAVdH2MBoyzOSMGh5wdCjgCSWiigbh4trYykhNw+pJpXX1AoIBW6ock6Ivqogij
-         6fzuH9/cxWMqqk7WQDIK8UPt5XTHDczOgDdlk66QeW1ugLxcohpp1gftjI1ItQgCW0qm
-         2dsA==
-X-Gm-Message-State: AOAM5320mDme7j4cTff1vXxT4rWK4xpD1yLm0Igy+pojS51Ff4eXHoXN
-        sR6I4JLofYkI4d1DHE1x/0g=
-X-Google-Smtp-Source: ABdhPJwrZhZEkdLoXiZPe3jMVi/fPEC8GR1kDLFuvmQnZCfSs33o3aQjYYycY6lwO7UqZp17ScXYRg==
-X-Received: by 2002:a17:906:2318:: with SMTP id l24mr26632000eja.291.1595337194668;
-        Tue, 21 Jul 2020 06:13:14 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id yj16sm16919836ejb.122.2020.07.21.06.13.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 06:13:13 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 15:13:12 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 000/125] 4.14.189-rc1 review
-Message-ID: <20200721131312.GD44604@ulmo>
-References: <20200720152802.929969555@linuxfoundation.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6cyLMOSBZeL+BpGOPZ4KnMd993F4LhWCmpRnBNnGfbE=;
+        b=YDaZ4Xcd9AVjCqW/YVfcSceWcu5KGSmZJSKzRhlGb45J0F4n6hz0pRHMiu7uB/TDfX
+         Kzfh2t3nnxwadlEy5qfbqUsO5i3otcQS25joBbiVnZBmm4T9HblzQmcHPpQQOIWxlwoV
+         rXyTn2ZOTV40p9w5HpuhvBqDMqPHppUNokjs3BKd0wnZfTPs0RboTFRYSbs66op/apeT
+         3mOwBpcOj5Vmui+0Duq1swSDDBcma2B8re6PhIvy9dxUJrvtw95eXV+8abGW8Dvgcl/P
+         63Gl7KPzmA02kT4s8gMY+Xp5QunrObPgYz7GUkg1uuOEPfYoKqnuZ2P4z6lKc1EZTl9g
+         7O6A==
+X-Gm-Message-State: AOAM532ZbYyXTj0Lj7MB1fxtPy6ugU/mtJc+BYENtLnC+AqN8YfjwdMP
+        plvgollt41bMZDg+5Quys902bw==
+X-Google-Smtp-Source: ABdhPJxx0VQc6B7QNxyrz8xAMr6fQIOSIIeCGxhOqrMXIku3RHo9gn7vVbH1A4tXfP0uGL/ot16u8A==
+X-Received: by 2002:a5d:65cd:: with SMTP id e13mr28879567wrw.213.1595337235242;
+        Tue, 21 Jul 2020 06:13:55 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:c144:5385:c824:85ce? ([2a01:e34:ed2f:f020:c144:5385:c824:85ce])
+        by smtp.googlemail.com with ESMTPSA id m2sm3516167wmg.0.2020.07.21.06.13.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 06:13:54 -0700 (PDT)
+Subject: Re: [PATCH] thermal: ti-soc-thermal: Fix reversed condition in
+ ti_thermal_expose_sensor()
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200616091949.GA11940@mwanda>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <145478f0-3db1-4121-ad7c-78bc67a69c66@linaro.org>
+Date:   Tue, 21 Jul 2020 15:13:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yudcn1FV7Hsu/q59"
-Content-Disposition: inline
-In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <20200616091949.GA11940@mwanda>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 16/06/2020 11:19, Dan Carpenter wrote:
+> This condition is reversed and will cause breakage.
+> 
+> Fixes: 7440f518dad9 ("thermal/drivers/ti-soc-thermal: Avoid dereferencing ERR_PTR")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+ Applied.
 
---yudcn1FV7Hsu/q59
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 20, 2020 at 05:35:39PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.189 release.
-> There are 125 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Wed, 22 Jul 2020 15:27:31 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.18=
-9-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
- linux-4.14.y
-> and the diffstat can be found below.
->=20
-> thanks,
->=20
-> greg k-h
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-All tests passing for Tegra ...
-
-Test results for stable-v4.14:
-    8 builds:   8 pass, 0 fail
-    16 boots:   16 pass, 0 fail
-    30 tests:   30 pass, 0 fail
-
-Linux version:  4.14.189-rc1-g403ad3c8edab
-Boards tested:  tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers,
-Thierry
-
---yudcn1FV7Hsu/q59
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8W6egACgkQ3SOs138+
-s6FBlA/9GpgCTn2LlrvWw0fxjXryfAmA25H1TA7wyB+kf2dw/WGaF22ELFOQQPkV
-izXkyF3GxmncF7vUofYsGCiVONw7eOeu1zQkG7tUowwF5ObkZ6H8Za/Y1oH+RFlJ
-a2xaFy4iKC0AOFl+9FYMXz9+U1VeKarJHf37sAFJG57STo0OSsCKBUKITg4jCksO
-zYgwndKRnCu4De1V7Bs/xfh6LR0WSp1rAvrsl59ICdF124SL+lilqR1m6ShCKmzQ
-cbv/DyWRsTJGjTmkwggWTr7rOvKAUAp0ZheMYrtAHCFsFofP1jGeSzSj9kS1YIEE
-/p8LRAhjcfOzU/v9KhN1dIQSc5ekL/3DcLz1iOC0SP0wEpfoZVzNpKoPxWbiV+Dt
-ZAPCRhh8I28dMFmUq4XDr6o4t8pGG5AHD/YPajEbY4xUG/Jaaw4NRKcg2yXWAOwL
-G5yYdW7vhc0O/bimNrfcH8VrA8EqvRXT/rDjuxzKnRj0YvqeuIiMYMPDgnmza7Bg
-NJi9OHY1v2QAhH8W15+UShzgVz1gXOJiGew2mTxQp2SbLz6SdFBmj7m9pNocK8wC
-QPSWlOvVrjyQVd2VIlJxsnXSsN4kAyPDTYwePl8k9EcNNYyzXLeHqZvXG/wSKhI5
-uqe1QO3Y49mVJNq9eH/924T5DsUeNRABjcXFddyL7+CTlsz52/k=
-=7Bk2
------END PGP SIGNATURE-----
-
---yudcn1FV7Hsu/q59--
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
