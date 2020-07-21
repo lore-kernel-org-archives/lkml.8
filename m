@@ -2,124 +2,151 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0410C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 998502077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:51:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YdJR7nRo"
+	by mail.kernel.org (Postfix) with ESMTP id A795820792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:52:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595328770;
+	bh=tP/j9SYV2Wc096FLcNTJNBdxAa7a73U6cx63i0V4ty8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H4ctnmmnCMJ8CNkrTdj6QbgPA4X2SFv2mrzYt+ee6rx6+U/vKLADlOtFZ1JqTauyB
+	 xR72Jjd6xMfGDu1CMB6XaAZl1gMvBTf/f6yxLjDRb6V1GAmk+9llmG8hPMtpjY+fm8
+	 5t9jQQx6VAurv9y9l8CcITpxuyZ7V4ZTKSeYy60s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbgGUKvs (ORCPT
+        id S1728665AbgGUKwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:51:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51012 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726089AbgGUKvs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:51:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595328707;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=P6x8b72+BAW2ZS/XopVU/cZY9GZgo98jcuFZvHSf6+o=;
-        b=YdJR7nRowqhlkSwTfFkWMsN3V8JsLXyjjaQKfZi7TrA+uLSo9ClyDNPnx5CVW3w9UDWj1h
-        rgjc3Y1BKvSIb2Qr8Y2bek7YwQc0/pvCHOSx2I3vKKlah1hL5SVbDf/iDRkUPrX3O4mtQm
-        AkX4AXS/KJXCvFRQIO1CmhViLb9wz/U=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-279-3kATzk8WP9-LBuNkAQ1I5w-1; Tue, 21 Jul 2020 06:51:45 -0400
-X-MC-Unique: 3kATzk8WP9-LBuNkAQ1I5w-1
-Received: by mail-wm1-f72.google.com with SMTP id 65so848879wmd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:51:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=P6x8b72+BAW2ZS/XopVU/cZY9GZgo98jcuFZvHSf6+o=;
-        b=KSDEqNSHwkAfCmOHj54IsGWq5oZFgy1McmOSgG93jcQ4Si4hwGO3V7Km1YeiN8Y0ps
-         2Q3Eo8CqX2D6MSu2K+Alx3Uu5ly14weDQnbLlY1gX6f847YSWtYc09lAwK3hbzamQDOA
-         SXYY2jqyk5uZW15qgXPNONLHBrTRUs3FS0k4XCIjFXRg1wt0bCh67f/gOU0ITrJqv/eT
-         xn14sUwiWDOj1EsnA0z/DjXnccXyRF7wd7pEBYi9grdb5z66N2K4anjv5ELPFjqsqhp+
-         9biqOBBvuU2ee1u6mgs06i1its+I5aVQh67UURSM03kHmu//ZnA+CJAJC5zq/bbiQzlo
-         FydQ==
-X-Gm-Message-State: AOAM5301B6DxAzA3A5r5O1er8wjZsP7aGuh1j1u1SQSVdi0OS9JAJmXo
-        AKV8nCVRCzFpI3zA8pXO/BFXEhQfmxXHGj2jg3c6rgaiQjJ4RGyqtysanMgogSTGxPrvp/Z0BDC
-        kny9TaQN49qvRTzGr/TkMRxkU
-X-Received: by 2002:adf:dcd0:: with SMTP id x16mr25096957wrm.387.1595328704342;
-        Tue, 21 Jul 2020 03:51:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwQgZF+XCKusjoWPe1LCm/gSDD1TOc5ZvNM9iscgHiaS1vURkLDx0+jURLsYeYugXZ84y29ZA==
-X-Received: by 2002:adf:dcd0:: with SMTP id x16mr25096947wrm.387.1595328704168;
-        Tue, 21 Jul 2020 03:51:44 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id 65sm43820717wre.6.2020.07.21.03.51.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 03:51:43 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH 2/2] KVM: LAPIC: Set the TDCR settable bits
-In-Reply-To: <1595323468-4380-2-git-send-email-wanpengli@tencent.com>
-References: <1595323468-4380-1-git-send-email-wanpengli@tencent.com> <1595323468-4380-2-git-send-email-wanpengli@tencent.com>
-Date:   Tue, 21 Jul 2020 12:51:42 +0200
-Message-ID: <87lfjdp2dd.fsf@vitty.brq.redhat.com>
+        Tue, 21 Jul 2020 06:52:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbgGUKws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:52:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9187E2073A;
+        Tue, 21 Jul 2020 10:52:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595328768;
+        bh=tP/j9SYV2Wc096FLcNTJNBdxAa7a73U6cx63i0V4ty8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S4qfj7soch1wyIflz540mPLAPLtJYuO8SK3jkGX5d8cfohn9NypIIsxLTvlIV9/Lg
+         mKJt6wmfQzoHA0dd4UmP36gtZWE4h6n6gU8AlBp4M1v+Eo3Z6qD0RcHbNXdIDRssUw
+         wZWsV11dbBed35NXhsGXy9Lleq3eRK2u8dAwJ0yQ=
+Date:   Tue, 21 Jul 2020 12:52:56 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Hughes <hughsient@gmail.com>,
+        Alex Bazhaniuk <alex@eclypsium.com>
+Subject: Re: [PATCH] [PATCH] Firmware security information in SYSFS
+Message-ID: <20200721105256.GC1678476@kroah.com>
+References: <20200716223627.253936-1-daniel.gutson@eclypsium.com>
+ <20200717062841.GA3238569@kroah.com>
+ <CAK8P3a1yy7YyeJH5k40yAXb23y9siBnfuqixb76t3BK9Xh=uXQ@mail.gmail.com>
+ <CAFmMkTFLm9mw5-8Dj_7rhP2KBcLUoJ1WcQCJv5_k+QRsmJPxjg@mail.gmail.com>
+ <20200717145746.GB3008378@kroah.com>
+ <CAFmMkTEsm7CRBzEJSCjkhCT7NHvRUXzcgchExbnfFbwPjT0YFg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFmMkTEsm7CRBzEJSCjkhCT7NHvRUXzcgchExbnfFbwPjT0YFg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng Li <kernellwp@gmail.com> writes:
+On Mon, Jul 20, 2020 at 05:58:47PM -0300, Daniel Gutson wrote:
+> On Fri, Jul 17, 2020 at 11:57 AM Greg Kroah-Hartman <
+> gregkh@linuxfoundation.org> wrote:
+> 
+> > On Fri, Jul 17, 2020 at 11:46:39AM -0300, Daniel Gutson wrote:
+> > > On Fri, Jul 17, 2020 at 11:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > >
+> > > > On Fri, Jul 17, 2020 at 8:28 AM Greg Kroah-Hartman
+> > > > <gregkh@linuxfoundation.org> wrote:
+> > > > >
+> > > > > On Thu, Jul 16, 2020 at 07:36:27PM -0300, Daniel Gutson wrote:
+> > > > > > +What:                /sys/kernel/firmware-security/bioswe
+> > > > >
+> > > > > Ick, I stopped reading right here.
+> > > > >
+> > > > > No, this is not where this belongs.
+> > > > >
+> > > > > We already have /sys/firmware/, right?  And firmware-specific
+> > > > > subdirectories below that.
+> > > > >
+> > > > > We also have /sys/devices/system/ and I think that would be a much
+> > > > > better place for this, as it is easier to work with a real 'struct
+> > > > > device' than a "raw" kobject any day.  Bonus is you get full support
+> > of
+> > > > > userspace libraries when you do that, unlike when dealing with
+> > kobjects.
+> > > > >
+> > > > > Also, this really is a _SPECIFIC_ type of firmware that supports
+> > these
+> > > > > features, right?  Why not call that out too?  This is not generic by
+> > any
+> > > > > means.
+> > > >
+> > > > As I suggested in my previous review, I wouldn't worry too much about
+> > > > the user interface at the start, but instead first work out how the
+> > > > hardware
+> > > > support fits in with the existing drivers and once that looks fine
+> > decide
+> > > > on how to export it to user space.
+> > > >
+> > > > I agree the  /sys/kernel/firmware-security/bioswe sounds like the wrong
+> > > > place, but I'm not sure if adding any other new directory in sysfs is
+> > > > much better. I think the most promising would be to have it on the
+> > > > sysfs directory for the device it refers to,
+> > >
+> > >
+> > > My idea is to have all the firmware security information together in the
+> > > same place; this information comes from many devices.
+> > > This initial patch involves the SPI Controller, and I don't want to add
+> > > more stuff until there
+> > > is a consensus.
+> > > So, do you have a suggestion where to put this information?
+> > > /sys/devices/system/firmware-security?
+> > > /sys/firmware/security?
+> > > other?
+> > >
+> > > Please advise.
+> >
+> > It's fun to focus on things like this, as it's the most visible part,
+> > but are you sure the "talk to the hardware" part is working properly?
+> >
+> 
+> Yes.
+> 
+> 
+> 
+> >
+> > If so, great, it should be a "class", as that way it is independent of
+> > any hardware type, right?  Classes show how devices talk to userspace in
+> > a common way (input, tty, led, block, etc.)  So why is this any
+> > different from that?
+> >
+> 
+> Are you suggesting to create a new class, or use an existing one?
 
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> Only bits 0, 1, and 3 are settable, others are reserved for APIC_TDCR. 
-> Let's record the settable value in the virtual apic page.
->
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/lapic.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 4ce2ddd..8f7a14d 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -2068,7 +2068,7 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
->  	case APIC_TDCR: {
->  		uint32_t old_divisor = apic->divide_count;
->  
-> -		kvm_lapic_set_reg(apic, APIC_TDCR, val);
-> +		kvm_lapic_set_reg(apic, APIC_TDCR, val & 0xb);
->  		update_divide_count(apic);
->  		if (apic->divide_count != old_divisor &&
->  				apic->lapic_timer.period) {
+Probably a new one, unless you can find an existing one that would fit?
 
-AFAIU bit 2 should be 0 and other upper bits are reserved. Checking on
-bare hardware,
+thanks,
 
-# wrmsr 0x83e 0xb
-# rdmsr 0x83e
-b
-# wrmsr 0x83e 0xc
-wrmsr: CPU 0 cannot set MSR 0x0000083e to 0x000000000000000c
-# rdmsr 0x83e
-b
-
-Shouldn't we fail the write in case (val & ~0xb) ?
-
--- 
-Vitaly
-
+greg k-h
