@@ -2,112 +2,99 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4300C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3309C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C52A320717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B8920717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:33:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sgmLu1h6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730790AbgGUTbd (ORCPT
+        id S1730747AbgGUTdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:31:33 -0400
-Received: from mga18.intel.com ([134.134.136.126]:50213 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728577AbgGUTbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:31:32 -0400
-IronPort-SDR: +EMrKY7Pb8NyvywDOq0+Hh1u3s3ubdz3+qCDfoVgcUWlsawzrZh5EFTdi6dtBwhQCE/0IPOvZ0
- nvu73s6p9mwQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="137716888"
-X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="137716888"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 12:31:31 -0700
-IronPort-SDR: +NFDXtIG4y6K5jVpo9ZIo8zj5SALsFZBMQS3Hdm4SxhohYH+KB9rumnvBiOOr9zMU+04Zjy0Y2
- aSHx4UfruiSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="270530669"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Jul 2020 12:31:31 -0700
-Date:   Tue, 21 Jul 2020 12:31:30 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 6/7] KVM: x86: Use common definition for
- kvm_nested_vmexit tracepoint
-Message-ID: <20200721193130.GH22083@linux.intel.com>
-References: <20200718063854.16017-1-sean.j.christopherson@intel.com>
- <20200718063854.16017-7-sean.j.christopherson@intel.com>
- <87365mqgcg.fsf@vitty.brq.redhat.com>
- <20200721002717.GC20375@linux.intel.com>
- <87imehotp1.fsf@vitty.brq.redhat.com>
+        Tue, 21 Jul 2020 15:33:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45420 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728577AbgGUTdm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 15:33:42 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AF0AC061794;
+        Tue, 21 Jul 2020 12:33:42 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id t11so11182529pfq.11;
+        Tue, 21 Jul 2020 12:33:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oeEe2OI1v4iURMgOM2PIXNNcRebf0mnTL/T9bdHr1Vw=;
+        b=sgmLu1h6jyLPC5noDy2zDIALc6i80LcAePkHH28CTkoGCHncr87hpT+0KDv2ZD23gZ
+         NaxqhpXEgrCqK2eOlzg4J7yEkpQPeX1Pnw0h44RLz7+jmCgzR/i3iiMe5Uri3YsIv91T
+         mk8XC9gNF48S9H7NTUbrsLXSLdfIZoqO0+k96awz/EMWNQgJOHmXVgqUjJ4a99Iupe0K
+         wzdY3a67m/NneC28l3zuz1++gyCmMImO+ITB54MkNKuyXs3s9vYyxe51RMWx64yH0haf
+         Ut7mXUJr6PbmlNskZu5glTYouFG9yLrfF+Oa0X6RiX5h4eAC6n29uTEgSygHe56wv7oe
+         bZ/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oeEe2OI1v4iURMgOM2PIXNNcRebf0mnTL/T9bdHr1Vw=;
+        b=lLT4vuu+8ldzQoJeH60K3IH3B7LLQRcED1UO3t5eP+qHfovgPREKFuY7I+LXY6iSHA
+         JRWqD0fXbtRgZbVT5qz36Mvsy4oB+kqOrLv/KN846tYTDCQcdGGXsBEoIogsK05o75Wj
+         5D3/QIcs1Hg0HoIzNr6+KdrTFBf5/6ae9KPJcbj7sSCwxVP1NCr15NmI2Em1HXpydWmB
+         5OjqxFP/v+I4Xuv3S+Sjo3vt06gye19kZjMrjG9qGqPYurGCzCI9UZytKecS9qXCL0wa
+         w7hoZckKu69Ddz1mi/QaBIJ3TieKmZNAaGkVms2VZqdUWaTbmezXmYWxXkZIwF/75j6I
+         MPvA==
+X-Gm-Message-State: AOAM531eUuywEeB4YgFwE3Mi5ow+WNtHcD3Dul6jCri46sy5jEJUDjbS
+        OMYBt+RXBKi1EzuTwMvRsyUOXNVSLaO2hm8/5N81W/hP
+X-Google-Smtp-Source: ABdhPJz3S4liEiFToNrUgzlpJplq5k7rnbD11RnkZZOq2N+AY0BYuPDqU6G/pAXS80XtXY0HraeKnMqnDqlqTixBIsc=
+X-Received: by 2002:a62:7657:: with SMTP id r84mr24687152pfc.130.1595360021508;
+ Tue, 21 Jul 2020 12:33:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87imehotp1.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200721112409.220536-1-alexandru.ardelean@analog.com>
+In-Reply-To: <20200721112409.220536-1-alexandru.ardelean@analog.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 21 Jul 2020 22:33:24 +0300
+Message-ID: <CAHp75VfY_6pg=6atYwd=JcPd1MZqHZh5Dj_QYdQyS=5ENHL5aQ@mail.gmail.com>
+Subject: Re: [PATCH] iio: frequency: ad9523: convert rest of driver to device
+ managed functions
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Steve
+On Tue, Jul 21, 2020 at 2:27 PM Alexandru Ardelean
+<alexandru.ardelean@analog.com> wrote:
+>
+> The driver pretty much uses device managed functions. The only left-over is
+> the iio_device_register() function, which also requires an action-or-reset
+> hook to disable the regulator on the remove and error path.
+>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-Background: KVM has two tracepoints that effectively trace the same thing
-(VM-Exit vs. nested VM-Exit), but use completely different formatting and
-nomenclature for each of the existing tracepoints.  I want to add a common
-macro to create the tracepoints so that they capture the exact same info
-and report it with the exact same format.  But that means breaking the
-"ABI" for one of the tracepoints, e.g. trace-cmd barfs on the rename of
-exit_code to exit_reason.
+...
 
-Was there ever a verdict on whether or not tracepoints are considered ABI
-and thus must retain backwards compatibility?
 
-If not, what's the proper way to upstream changes to trace-cmd?
+> +       ret = devm_iio_device_register(&spi->dev, indio_dev);
+> +       if (ret == 0)
 
-Thanks!
+> +               dev_info(&spi->dev, "probed %s\n", indio_dev->name);
+>
+>         return ret;
 
-On Tue, Jul 21, 2020 at 03:59:06PM +0200, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> >> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> >> With so many lines removed I'm almost in love with the patch! However,
-> >> when testing on SVM (unrelated?) my trace log looks a bit ugly:
-> >> 
-> >>            <...>-315119 [010]  3733.092646: kvm_nested_vmexit:    CAN'T FIND FIELD "rip"<CANT FIND FIELD exit_code>vcpu 0 reason npf rip 0x400433 info1 0x0000000200000006 info2 0x0000000000641000 intr_info 0x00000000 error_code 0x00000000
-> >>            <...>-315119 [010]  3733.092655: kvm_nested_vmexit:    CAN'T FIND FIELD "rip"<CANT FIND FIELD exit_code>vcpu 0 reason npf rip 0x400433 info1 0x0000000100000014 info2 0x0000000000400000 intr_info 0x00000000 error_code 0x00000000
-> >> 
-> >> ...
-> >> 
-> >> but after staring at this for some time I still don't see where this
-> >> comes from :-( ... but reverting this commit helps:
-> >
-> > The CAN'T FIND FIELD blurb comes from tools/lib/traceevent/event-parse.c.
-> >
-> > I assume you are using tooling of some form to generate the trace, i.e. the
-> > issue doesn't show up in /sys/kernel/debug/tracing/trace.  If that's the
-> > case, this is more or less ABI breakage :-(
-> >  
-> 
-> Right you are,
-> 
-> the tool is called 'trace-cmd record -e kvm ...' / 'trace-cmd report'
-> but I always thought it's not any different from looking at
-> /sys/kernel/debug/tracing/trace directly. Apparently I was wrong. 'cat
-> /sys/kernel/debug/tracing/trace' seems to be OK, e.g.:
-> 
->  qemu-system-x86-20263 [006] .... 75982.292657: kvm_nested_vmexit: vcpu 0 reason hypercall rip 0x40122f info1 0x0000000000000000 info2 0x0000000000000000 intr_info 0x00000000 error_code 0x00000000
-> 
-> -- 
-> Vitaly
-> 
+Please, drop this useless spam (I agree here with Greg KH) and use simply
+return devm_iio_...(...);
+
+-- 
+With Best Regards,
+Andy Shevchenko
