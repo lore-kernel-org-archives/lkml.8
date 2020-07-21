@@ -2,177 +2,115 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BABC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A68ED2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786012073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:17:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="A7AIoE75"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LxjD0fjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgGUSPy (ORCPT
+        id S1729193AbgGUSRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 14:15:54 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:39199 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgGUSPw (ORCPT
+        Tue, 21 Jul 2020 14:17:11 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37058 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbgGUSRK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 14:15:52 -0400
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200721181549epoutp01a924f5ae78ef2d7cb561d3e2ee2d6ce2~j1zzq47e72264622646epoutp01k
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 18:15:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200721181549epoutp01a924f5ae78ef2d7cb561d3e2ee2d6ce2~j1zzq47e72264622646epoutp01k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1595355349;
-        bh=U5jquic9LwrfkMmVraEYVoI8yc4c392U5HFsrbKZFgU=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=A7AIoE759uE61TNdHf0DUyw84TZc8uHlNXjiuEsW/eT0Eer3kWLUOLSjQ5lR5Kai7
-         ZoBrYw9iHGJda4JmkfZIbsKjcjXv7xiayjzQxv8j5ZefvHZydmSbMubDqTEwdiejQO
-         ymy/yAuvEMtZauX3gcqMb+vjKBS58t5wR7/oBPmo=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20200721181548epcas5p4334786dda9ee3589e77d9f2c1381925e~j1zyj_GgB1133111331epcas5p4b;
-        Tue, 21 Jul 2020 18:15:48 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EF.C0.09475.4D0371F5; Wed, 22 Jul 2020 03:15:48 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200721181547epcas5p34f1d1e748c9018600a530dd354d36767~j1zxe1HBd0129501295epcas5p33;
-        Tue, 21 Jul 2020 18:15:47 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200721181547epsmtrp2f75ecdfa1f520db6f9bc92b4da497418~j1zxd65rW3150631506epsmtrp2O;
-        Tue, 21 Jul 2020 18:15:47 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff70000002503-84-5f1730d4fcf0
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        23.BF.08303.3D0371F5; Wed, 22 Jul 2020 03:15:47 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200721181542epsmtip134cfbb551597f1ec7d7d0154c8b9a856~j1zsp07Up3207732077epsmtip1L;
-        Tue, 21 Jul 2020 18:15:41 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Avri Altman'" <Avri.Altman@wdc.com>, <daejun7.park@samsung.com>,
-        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <asutoshd@codeaurora.org>, <beanhuo@micron.com>,
-        <stanley.chu@mediatek.com>, <cang@codeaurora.org>,
-        <bvanassche@acm.org>, <tomas.winkler@intel.com>
-Cc:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "'Sang-yoon Oh'" <sangyoon.oh@samsung.com>,
-        "'Sung-Jun Park'" <sungjun07.park@samsung.com>,
-        "'yongmyung lee'" <ymhungry.lee@samsung.com>,
-        "'Jinyoung CHOI'" <j-young.choi@samsung.com>,
-        "'Adel Choi'" <adel.choi@samsung.com>,
-        "'BoRam Shin'" <boram.shin@samsung.com>
-In-Reply-To: <SN6PR04MB4640A85E665E20D709885E16FC7A0@SN6PR04MB4640.namprd04.prod.outlook.com>
-Subject: RE: [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support
-Date:   Tue, 21 Jul 2020 23:45:39 +0530
-Message-ID: <06b001d65f8a$f4a41d50$ddec57f0$@samsung.com>
+        Tue, 21 Jul 2020 14:17:10 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LIGuxj057476;
+        Tue, 21 Jul 2020 13:16:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595355416;
+        bh=u7Atqj1QiHLMgnFA7rcMsvOHhKy09V10c26pBvoOBUw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=LxjD0fjIE8uPfmNGEgcRk8r/uRu4VVHGE4ajaEtf2m+IDQk+2nWa+fEnC58fHjYJ1
+         0FPJARcC/dSa0r5B6CZc/mQNPudSkGuYDXtCZ5XLbBUIXNdFe2HsPWasWPXF3M5zfd
+         bQ7iG6iBaxd0e6tzarFZM2Tm4QjXscuzxmbBz5H4=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06LIGulU123278
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 Jul 2020 13:16:56 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
+ Jul 2020 13:16:56 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 21 Jul 2020 13:16:56 -0500
+Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LIGrek080448;
+        Tue, 21 Jul 2020 13:16:54 -0500
+Subject: Re: [PATCH v2 1/8] arch: arm: mach-davinci: Fix trivial spelling
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+CC:     Jiri Kosina <trivial@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "moderated list:ARM SUB-ARCHITECTURES" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200715124839.252822-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200715124839.252822-2-kieran.bingham+renesas@ideasonboard.com>
+ <CAMpxmJXhRX1Gpxg2iqX2XXy67BhGrgrqchJb6OOoDz8POo0sgQ@mail.gmail.com>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <1966fea0-e43f-0936-f839-053f21c8ed90@ti.com>
+Date:   Tue, 21 Jul 2020 23:46:53 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQNTAwbo7R95v2Jv+B+oDyvdEhuZkAJ3qsxbAnEXg30BU3sSHwDKp0vLpeDXqjA=
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDKsWRmVeSWpSXmKPExsWy7bCmpu4VA/F4g/8vhCw23n3FarG37QS7
-        xcufV9ksDj7sZLE4fPsdu8W0Dz+ZLT6tX8ZqsepBuEVv/1Y2i0U3tjFZXN41h82i+/oONovl
-        x/8xWUx4uYTFYunWm4wWndPXsFh86KmzWLRwN4uDkMflK94el/t6mTwW73nJ5DFh0QFGj5aT
-        +1k8vq/vYPP4+PQWi0ffllWMHp83yXm0H+hmCuCK4rJJSc3JLEst0rdL4Mo4cKSPpWA2d8W1
-        O7NZGhincHYxcnJICJhIrPg7gb2LkYtDSGA3o8SP4+tYIJxPjBJn2w6wg1QJCXxmlLjapwTT
-        sWnqbBaI+C5Giev7aiAa3jBKLF63kBkkwSagK7FjcRsbSEJEYAqTxL89y8F2MAtcYJKYfvsE
-        I0gVp0CsxKdF68A6hAW8JX6/ncEGYrMIqEpcfPaPFcTmFbCUeNK2jQnCFpQ4OfMJ2GpmAW2J
-        ZQtfM0OcpCDx8+kysHoRAT+JH5PuM0LUiEsc/dnDDLJYQqCdU+LL9aXsEA0uEst37GSDsIUl
-        Xh3fAhWXkvj8bi9QnAPIzpbo2WUMEa6RWDrvGAuEbS9x4MocFpASZgFNifW79CFW8Un0/n7C
-        BNHJK9HRJgRRrSrR/O4qVKe0xMTublYI20Ni8raZrBMYFWcheWwWksdmIXlgFsKyBYwsqxgl
-        UwuKc9NTi00LjPNSy/WKE3OLS/PS9ZLzczcxghOklvcOxkcPPugdYmTiYDzEKMHBrCTCq8Mo
-        Hi/Em5JYWZValB9fVJqTWnyIUZqDRUmcV+nHmTghgfTEktTs1NSC1CKYLBMHp1QD0zIpD3HD
-        30zV0vVhbd9WGgTzL3K9c/HZIlW+H6e2H/NjfLpkRdpc1p0pj3y8l0Td/ehx867RlCvnLRtu
-        fa/K2tYTdH8v75PIKP6sy325vvc1U55NNpuj8397yyXNVeq3nNdtyO9hPM3fVJbFMvdeVrpf
-        QGf2/rhth/1cDgjsyjn3PM9z811lhfDVyieraqQ2zDvtEf8gfLvzI49NKU5X3Q6p92rUxlfM
-        e7S7sn7ZK5sCXY97M9pyve+/DTjdq61p+Zztu+p0A6vk/3vfNZk0mCm3FiVZfDnsmDnfVcTl
-        U7rW+xfBnzctWLN9+5G3CZsu6x3zDjQVv3z38Ky/x54+tDSaekvcNPv3sxcHwg+47FdiKc5I
-        NNRiLipOBAAXZ/pd/wMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMIsWRmVeSWpSXmKPExsWy7bCSnO5lA/F4g4VbuSw23n3FarG37QS7
-        xcufV9ksDj7sZLE4fPsdu8W0Dz+ZLT6tX8ZqsepBuEVv/1Y2i0U3tjFZXN41h82i+/oONovl
-        x/8xWUx4uYTFYunWm4wWndPXsFh86KmzWLRwN4uDkMflK94el/t6mTwW73nJ5DFh0QFGj5aT
-        +1k8vq/vYPP4+PQWi0ffllWMHp83yXm0H+hmCuCK4rJJSc3JLEst0rdL4Mpo3NHOXvCeq2LH
-        xT9sDYwvOLoYOTkkBEwkNk2dzdLFyMUhJLCDUWLluwfsEAlpiesbJ0DZwhIr/z1nhyh6xSjx
-        vn8bG0iCTUBXYsfiNjaQhIjAAiaJt8eWgTnMAteYJD5P72eGaLnCJNF9/C9YC6dArMSnReuY
-        QWxhAW+J329ngMVZBFQlLj77xwpi8wpYSjxp28YEYQtKnJz5hAXEZhbQlnh68ymcvWzha2aI
-        +xQkfj5dBtYrIuAn8WPSfUaIGnGJoz97mCcwCs9CMmoWklGzkIyahaRlASPLKkbJ1ILi3PTc
-        YsMCo7zUcr3ixNzi0rx0veT83E2M4HjX0trBuGfVB71DjEwcjIcYJTiYlUR4dRjF44V4UxIr
-        q1KL8uOLSnNSiw8xSnOwKInzfp21ME5IID2xJDU7NbUgtQgmy8TBKdXAdPSRFLeqktFj4UPS
-        ukruGr0ZCp37g0+kMr+fdMbI6rzcupCM75UH573R2mJx/OBkl9o1SfdORT6Z/md5gI4vu9oc
-        26Uq2V/Dfvxojd4aYBHwsCL07H8jA7bMnszlwet/27ybc+bLAdkr/zas36r/+fw+ydkVmUJb
-        bvQFO+014V606wv7qc03b3DHhncuZy+68LU3e+uFvPsPE6KbE579WlH41vbOyeUqVk808y7e
-        yNj27AdXi/vZp3UiPS12Uecex3sa2aze6VZbPTvr0zxV5RIBJ/cQU62U+kdPYgp9hRdMs7tz
-        +5Kvz4mdzmwRzJkhn+yKN+aZuO9YFJC95seUCw/Kzd4YnP+kM2cvr0L6YiWW4oxEQy3mouJE
-        ANR+sPpmAwAA
-X-CMS-MailID: 20200721181547epcas5p34f1d1e748c9018600a530dd354d36767
-X-Msg-Generator: CA
+In-Reply-To: <CAMpxmJXhRX1Gpxg2iqX2XXy67BhGrgrqchJb6OOoDz8POo0sgQ@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8
-References: <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p8>
-        <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
-        <077301d65b0d$24d79920$6e86cb60$@samsung.com>
-        <SN6PR04MB4640A5A8C71A51DB45968DAFFC7C0@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <SN6PR04MB4640A85E665E20D709885E16FC7A0@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin
+On 7/16/20 1:32 PM, Bartosz Golaszewski wrote:
+> On Wed, Jul 15, 2020 at 2:48 PM Kieran Bingham
+> <kieran.bingham+renesas@ideasonboard.com> wrote:
+>>
+>> The word 'descriptor' is misspelled throughout the tree.
+>>
+>> Fix it up accordingly:
+>>     decriptors -> descriptors
+>>
+>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>> ---
+>>  arch/arm/mach-davinci/board-da830-evm.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+>> index a273ab25c668..1076886938b6 100644
+>> --- a/arch/arm/mach-davinci/board-da830-evm.c
+>> +++ b/arch/arm/mach-davinci/board-da830-evm.c
+>> @@ -266,7 +266,7 @@ static struct mtd_partition da830_evm_nand_partitions[] = {
+>>         }
+>>  };
+>>
+>> -/* flash bbt decriptors */
+>> +/* flash bbt descriptors */
+>>  static uint8_t da830_evm_nand_bbt_pattern[] = { 'B', 'b', 't', '0' };
+>>  static uint8_t da830_evm_nand_mirror_pattern[] = { '1', 't', 'b', 'B' };
+>>
+>> --
+>> 2.25.1
+>>
+> 
+> Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-> -----Original Message-----
-> From: Avri Altman <Avri.Altman=40wdc.com>
-> Sent: 19 July 2020 12:05
-> To: Alim Akhtar <alim.akhtar=40samsung.com>; daejun7.park=40samsung.com;
-> jejb=40linux.ibm.com; martin.petersen=40oracle.com; asutoshd=40codeaurora=
-.org;
-> beanhuo=40micron.com; stanley.chu=40mediatek.com; cang=40codeaurora.org;
-> bvanassche=40acm.org; tomas.winkler=40intel.com
-> Cc: linux-scsi=40vger.kernel.org; linux-kernel=40vger.kernel.org; 'Sang-y=
-oon Oh'
-> <sangyoon.oh=40samsung.com>; 'Sung-Jun Park'
-> <sungjun07.park=40samsung.com>; 'yongmyung lee'
-> <ymhungry.lee=40samsung.com>; 'Jinyoung CHOI' <j-
-> young.choi=40samsung.com>; 'Adel Choi' <adel.choi=40samsung.com>; 'BoRam
-> Shin' <boram.shin=40samsung.com>
-> Subject: RE: =5BPATCH v6 0/5=5D scsi: ufs: Add Host Performance Booster S=
-upport
->=20
-> Martin - Can we move forward with this one?
->=20
-> Thanks,
-> Avri
->=20
-> >
-> > > > v5 -> v6
-> > > > Change base commit to b53293fa662e28ae0cdd40828dc641c09f133405
-> > > >
-> > > If no further comments, can this series have your Reviewed-by or
-> > > Acked-by tag, so that this can be taken for 5.9?
-> > > Thanks=21
-> > Hey, yes.  So sorry for this delay, I was away for few days.
-> > Yes - This series looks good to me.
-> >
-This series needs your attention.
+Fixed up subject prefix to "ARM: davinci: " for consistency, and applied.
 
 Thanks,
-
-> > Thanks,
-> > Avri
-> >
-> > >
-> > > > v4 -> v5
-> > > > Delete unused macro define.
-> > >
-
+Sekhar
 
