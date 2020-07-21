@@ -2,234 +2,222 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEF7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E12C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F931208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37919208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:04:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NPqWf5rM"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="EPr5X1Fa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgGUACW (ORCPT
+        id S1728105AbgGUAEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 20:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbgGUACV (ORCPT
+        Mon, 20 Jul 2020 20:04:15 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:53722 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgGUAEM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 20:02:21 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A609EC061794;
-        Mon, 20 Jul 2020 17:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=O8Y/+nsNJHbgYqWOOnWf55XQh5kSU6RsCQr/mG4GMiI=; b=NPqWf5rMuVq6zxbo0VR7p0NyfS
-        0nCJycXHEPlbEVuSy5pIrKWVQfChD3zPAHe6jQSOIyYQX2dymRXeJgs5N/tkeCC6k6TH0epLPMA9o
-        8iKHfDXIc9yb/cCqiMNVew1gy5257dc2wU4u8E3PoW9DI87TH2F+ZVHCUqIWbW2XtPWovP8pyZwDT
-        UxlfEHFzQ1stoGPJ1uL9PjCJg9M7SeNDeOFXqGP0TuvfCDgqNZzIcT3k//T7fqYVITtYWWTH3fVd3
-        fWlYkkVjUMhqr+76br50FiFucTEwIB0C15hK2q62P1qJTLUSQuGHukNCYgR2yUCmD8rnWRbu4SzqS
-        eJiCC6tQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxfjc-0004JH-TY; Tue, 21 Jul 2020 00:02:17 +0000
-Subject: Re: [PATCH v3 10/11] PM, libnvdimm: Add runtime firmware activation
- support
-To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
-Cc:     Pavel Machek <pavel@ucw.cz>, Ira Weiny <ira.weiny@intel.com>,
-        Len Brown <len.brown@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <159528284411.993790.11733759435137949717.stgit@dwillia2-desk3.amr.corp.intel.com>
- <159528289856.993790.11787167534159675987.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c825b5ee-ec03-7aa8-e380-6003f33fa113@infradead.org>
-Date:   Mon, 20 Jul 2020 17:02:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 20:04:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1595289851; x=1626825851;
+  h=date:from:to:cc:message-id:references:mime-version:
+   content-transfer-encoding:in-reply-to:subject;
+  bh=UsYCfB4vUXuGXUfz5NputLMtDzKXoyLRAcqjcS/oV1U=;
+  b=EPr5X1FakCSP6fTwJXDPetnCGx/ufkrJ1vh3jhtR4X9D30jTM0JUjcTn
+   C7qk/dcrnQBOoB+o0dsOj83R5D4UFv4dv8NcG345Yti99/gMqT+xJr3zV
+   dYR/aBZwjF8ci9z2lJ0/aX2TLwmcWhTeXGJhLYhS01xwl6eHxrioX4yJr
+   M=;
+IronPort-SDR: tZK50MAqoODz1iBYxa4vWL5exodTTwRmcIhymTRjjXO2FMSE1DvQe+l0hCyjOlwb8BWlXHn/1m
+ DLjLzCD/UXHg==
+X-IronPort-AV: E=Sophos;i="5.75,375,1589241600"; 
+   d="scan'208";a="53134259"
+Subject: Re: [PATCH v2 01/11] xen/manage: keep track of the on-going suspend mode
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-821c648d.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 21 Jul 2020 00:04:07 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-821c648d.us-east-1.amazon.com (Postfix) with ESMTPS id EECCBA1D1D;
+        Tue, 21 Jul 2020 00:04:00 +0000 (UTC)
+Received: from EX13D08UEE004.ant.amazon.com (10.43.62.182) by
+ EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 21 Jul 2020 00:03:48 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
+ EX13D08UEE004.ant.amazon.com (10.43.62.182) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 21 Jul 2020 00:03:48 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Tue, 21 Jul 2020 00:03:48 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id 16C9240844; Tue, 21 Jul 2020 00:03:48 +0000 (UTC)
+Date:   Tue, 21 Jul 2020 00:03:48 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <jgross@suse.com>,
+        <linux-pm@vger.kernel.org>, <linux-mm@kvack.org>,
+        <kamatam@amazon.com>, <sstabellini@kernel.org>,
+        <konrad.wilk@oracle.com>, <roger.pau@citrix.com>,
+        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
+        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
+        <eduval@amazon.com>, <sblbir@amazon.com>,
+        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <anchalag@amazon.com>
+Message-ID: <20200721000348.GA19610@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+References: <cover.1593665947.git.anchalag@amazon.com>
+ <20200702182136.GA3511@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <50298859-0d0e-6eb0-029b-30df2a4ecd63@oracle.com>
+ <20200715204943.GB17938@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <0ca3c501-e69a-d2c9-a24c-f83afd4bdb8c@oracle.com>
+ <20200717191009.GA3387@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <5464f384-d4b4-73f0-d39e-60ba9800d804@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <159528289856.993790.11787167534159675987.stgit@dwillia2-desk3.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5464f384-d4b4-73f0-d39e-60ba9800d804@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
-
-Documentation comments below:
-
-On 7/20/20 3:08 PM, Dan Williams wrote:
-> Abstract platform specific mechanics for nvdimm firmware activation
-> behind a handful of generic ops. At the bus level ->activate_state()
-> indicates the unified state (idle, busy, armed) of all DIMMs on the bus,
-> and ->capability() indicates the system state expectations for activate.
-> At the DIMM level ->activate_state() indicates the per-DIMM state,
-> ->activate_result() indicates the outcome of the last activation
-> attempt, and ->arm() attempts to transition the DIMM from 'idle' to
-> 'armed'.
+On Sat, Jul 18, 2020 at 09:47:04PM -0400, Boris Ostrovsky wrote:
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
 > 
-> A new hibernate_quiet_exec() facility is added to support firmware
-> activation in an OS defined system quiesce state. It leverages the fact
-> that the hibernate-freeze state wants to assert that a memory
-> hibernation snapshot can be taken. This is in contrast to a platform
-> firmware defined quiesce state that may forcefully quiet the memory
-> controller independent of whether an individual device-driver properly
-> supports hibernate-freeze.
 > 
-> The libnvdimm sysfs interface is extended to support detection of a
-> firmware activate capability. The mechanism supports enumeration and
-> triggering of firmware activate, optionally in the
-> hibernate_quiet_exec() context.
 > 
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> [rafael: hibernate_quiet_exec() proposal]
-> Co-developed-by: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-nvdimm         |    2 
->  .../driver-api/nvdimm/firmware-activate.rst        |   86 ++++++++++++
->  drivers/nvdimm/core.c                              |  149 ++++++++++++++++++++
->  drivers/nvdimm/dimm_devs.c                         |  115 +++++++++++++++
->  drivers/nvdimm/nd-core.h                           |    1 
->  include/linux/libnvdimm.h                          |   44 ++++++
->  include/linux/suspend.h                            |    6 +
->  kernel/power/hibernate.c                           |   97 +++++++++++++
->  8 files changed, 500 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-nvdimm
->  create mode 100644 Documentation/driver-api/nvdimm/firmware-activate.rst
+> (Roger, question for you at the very end)
+> 
+> On 7/17/20 3:10 PM, Anchal Agarwal wrote:
+> > On Wed, Jul 15, 2020 at 05:18:08PM -0400, Boris Ostrovsky wrote:
+> >> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> >>
+> >>
+> >>
+> >> On 7/15/20 4:49 PM, Anchal Agarwal wrote:
+> >>> On Mon, Jul 13, 2020 at 11:52:01AM -0400, Boris Ostrovsky wrote:
+> >>>> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> >>>>
+> >>>>
+> >>>>
+> >>>> On 7/2/20 2:21 PM, Anchal Agarwal wrote:
+> >>>>> +
+> >>>>> +bool xen_is_xen_suspend(void)
+> >>>> Weren't you going to call this pv suspend? (And also --- is this suspend
+> >>>> or hibernation? Your commit messages and cover letter talk about fixing
+> >>>> hibernation).
+> >>>>
+> >>>>
+> >>> This is for hibernation is for pvhvm/hvm/pv-on-hvm guests as you may call it.
+> >>> The method is just there to check if "xen suspend" is in progress.
+> >>> I do not see "xen_suspend" differentiating between pv or hvm
+> >>> domain until later in the code hence, I abstracted it to xen_is_xen_suspend.
+> >>
+> >> I meant "pv suspend" in the sense that this is paravirtual suspend, not
+> >> suspend for paravirtual guests. Just like pv drivers are for both pv and
+> >> hvm guests.
+> >>
+> >>
+> >> And then --- should it be pv suspend or pv hibernation?
+> >>
+> >>
+> > Ok so I think I am lot confused by this question. Here is what this
+> > function for, function xen_is_xen_suspend() just tells us whether
+> > the guest is in "SHUTDOWN_SUSPEND" state or not. This check is needed
+> > for correct invocation of syscore_ops callbacks registered for guest's
+> > hibernation and for xenbus to invoke respective callbacks[suspend/resume
+> > vs freeze/thaw/restore].
+> > Since "shutting_down" state is defined static and is not directly available
+> > to other parts of the code, the function solves the purpose.
+> >
+> > I am having hard time understanding why this should be called pv
+> > suspend/hibernation unless you are suggesting something else?
+> > Am I missing your point here?
+> 
+> 
+> 
+> I think I understand now what you are trying to say --- it's whether we
+> are going to use xen_suspend() routine, right? If that's the case then
+> sure, you can use "xen_suspend" term. (I'd probably still change
+> xen_is_xen_suspend() to is_xen_suspend())
+>
+I think so too. Will change it.
+> 
+> >>>>> +{
+> >>>>> +     return suspend_mode == XEN_SUSPEND;
+> >>>>> +}
+> >>>>> +
+> >>>> +static int xen_setup_pm_notifier(void)
+> >>>> +{
+> >>>> +     if (!xen_hvm_domain())
+> >>>> +             return -ENODEV;
+> >>>>
+> >>>> I forgot --- what did we decide about non-x86 (i.e. ARM)?
+> >>> It would be great to support that however, its  out of
+> >>> scope for this patch set.
+> >>> I’ll be happy to discuss it separately.
+> >>
+> >> I wasn't implying that this *should* work on ARM but rather whether this
+> >> will break ARM somehow (because xen_hvm_domain() is true there).
+> >>
+> >>
+> > Ok makes sense. TBH, I haven't tested this part of code on ARM and the series
+> > was only support x86 guests hibernation.
+> > Moreover, this notifier is there to distinguish between 2 PM
+> > events PM SUSPEND and PM hibernation. Now since we only care about PM
+> > HIBERNATION I may just remove this code and rely on "SHUTDOWN_SUSPEND" state.
+> > However, I may have to fix other patches in the series where this check may
+> > appear and cater it only for x86 right?
+> 
+> 
+> I don't know what would happen if ARM guest tries to handle hibernation
+> callbacks. The only ones that you are introducing are in block and net
+> fronts and that's arch-independent.
+> 
+> 
+> You do add a bunch of x86-specific code though (syscore ops), would
+> something similar be needed for ARM?
+> 
+> 
+I don't expect this to work out of the box on ARM. To start with something
+similar will be needed for ARM too.
+We may still want to keep the driver code as-is.
 
+I understand the concern here wrt ARM, however, currently the support is only
+proposed for x86 guests here and similar work could be carried out for ARM.
+Also, if regular hibernation works correctly on arm, then all is needed is to
+fix Xen side of things.
 
-> diff --git a/Documentation/driver-api/nvdimm/firmware-activate.rst b/Documentation/driver-api/nvdimm/firmware-activate.rst
-> new file mode 100644
-> index 000000000000..9eb98aa833c5
-> --- /dev/null
-> +++ b/Documentation/driver-api/nvdimm/firmware-activate.rst
-> @@ -0,0 +1,86 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +==================================
-> +NVDIMM Runtime Firmware Activation
-> +==================================
-> +
-> +Some persistent memory devices run a firmware locally on the device /
+I am not sure what could be done to achieve any assurances on arm side as far as
+this series is concerned.
+> >>>> And PVH dom0.
+> >>> That's another good use case to make it work with however, I still
+> >>> think that should be tested/worked upon separately as the feature itself
+> >>> (PVH Dom0) is very new.
+> >>
+> >> Same question here --- will this break PVH dom0?
+> >>
+> > I haven't tested it as a part of this series. Is that a blocker here?
+> 
+> 
+> I suspect dom0 will not do well now as far as hibernation goes, in which
+> case you are not breaking anything.
+> 
+> 
+> Roger?
+> 
+> 
+> -boris
 
-                                  run firmware
-
-> +"DIMM" to perform tasks like media management, capacity provisioning,
-> +and health monitoring. The process of updating that firmware typically
-> +involves a reboot because it has implications for in-flight memory
-> +transactions. However, reboots are disruptive and at least the Intel
-> +persistent memory platform implementation, described by the Intel ACPI
-> +DSM specification [1], has added support for activating firmware at
-
-that's an Intel spec?  just checking.
-
-> +runtime.
-> +
-> +A native sysfs interface is implemented in libnvdimm to allow platform
-
-                                                                 platforms
-
-> +to advertise and control their local runtime firmware activation
-> +capability.
-> +
-> +The libnvdimm bus object, ndbusX, implements an ndbusX/firmware/activate
-> +attribute that shows the state of the firmware activation as one of 'idle',
-> +'armed', 'overflow', and 'busy'.
-
-                        or
-
-> +
-> +- idle:
-> +  No devices are set / armed to activate firmware
-> +
-> +- armed:
-> +  At least one device is armed
-> +
-> +- busy:
-> +  In the busy state armed devices are in the process of transitioning
-> +  back to idle and completing an activation cycle.
-> +
-> +- overflow:
-> +  If the platform has a concept of incremental work needed to perform
-> +  the activation it could be the case that too many DIMMs are armed for
-> +  activation. In that scenario the potential for firmware activation to
-> +  timeout is indicated by the 'overflow' state.
-> +
-> +The 'ndbusX/firmware/activate' property can be written with a value of
-> +either 'live', or 'quiesce'. A value of 'quiesce' triggers the kernel to
-> +run firmware activation from within the equivalent of the hibernation
-> +'freeze' state where drivers and applications are notified to stop their
-> +modifications of system memory. A value of 'live' attempts
-> +firmware-activation without this hibernation cycle. The
-
-  no hyphen^^
-
-> +'ndbusX/firmware/activate' property will be elided completely if no
-> +firmware activation capability is detected.
-> +
-> +Another property 'ndbusX/firmware/capability' indicates a value of
-> +'live', or 'quiesce'. Where 'live' indicates that the firmware
-
-no comma. no period. So this:
-
-+'live' or 'quiesce', where
-
-> +does not require or inflict any quiesce period on the system to update
-> +firmware. A capability value of 'quiesce' indicates that firmware does
-> +expect and injects a quiet period for the memory controller, but 'live'
-> +may still be written to 'ndbusX/firmware/activate' as an override to
-> +assume the risk of racing firmware update with in-flight device and
-> +application activity. The 'ndbusX/firmware/capability' property will be
-> +elided completely if no firmware activation capability is detected.
-> +
-> +The libnvdimm memory-device / DIMM object, nmemX, implements
-> +'nmemX/firmware/activate' and 'nmemX/firmware/result' attributes to
-> +communicate the per-device firmware activation state. Similar to the
-> +'ndbusX/firmware/activate' attribute, the 'nmemX/firmware/activate'
-> +attribute indicates 'idle', 'armed', or 'busy'. The state transitions
-> +from 'armed' to 'idle' when the system is prepared to activate firmware,
-> +firmware staged + state set to armed, and 'ndbusX/firmware/activate' is
-> +triggered. After that activation event the nmemX/firmware/result
-> +attribute reflects the state of the last activation as one of:
-> +
-> +- none:
-> +  No runtime activation triggered since the last time the device was reset
-> +
-> +- success:
-> +  The last runtime activation completed successfully.
-> +
-> +- fail:
-> +  The last runtime activation failed for device-specific reasons.
-> +
-> +- not_staged:
-> +  The last runtime activation failed due to a sequencing error of the
-> +  firmware image not being staged.
-> +
-> +- need_reset:
-> +  Runtime firmware activation failed, but the firmware can still be
-> +  activated via the legacy method of power-cycling the system.
-> +
-> +[1]: https://docs.pmem.io/persistent-memory/
-
-
-thanks.
--- 
-~Randy
-
+Thanks,
+Anchal
+> 
+> 
+> 
