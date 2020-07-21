@@ -2,77 +2,44 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC4120792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:14:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="shpVXeSI"
+	by mail.kernel.org (Postfix) with ESMTP id 32D7620792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgGUJOX (ORCPT
+        id S1728601AbgGUJOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:14:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgGUJOW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:14:22 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082F8C0619D8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:14:22 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id j18so2064957wmi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:14:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=E59bzjWg+c0MHaEx1BoDiS6FYfnfwzF0HRnaYqe7suo=;
-        b=shpVXeSITBS4EKpVLrwdRPEWjlOdVZI6BidG4XTDQW2+wUhpxQei7Cuxq6CAnmZCsU
-         S/XaADtHoPl0JNTWMqPJmyDNcqdqFQoX4dVjaxya+6vjdpsQrUUDNk1JN6qkztUdDqcb
-         UU866k5p6jMaXdiScY9oJhZZoqvCKO7jIf/88rqW6zragfQ16AfDocaKie1uU10/JLh4
-         4c5Vr8Ya6KJd/QZBZxVPOJO/qyaWggf4F497tvpmbOlG0f27ZUdJxnnb1rm5/39fEdxF
-         reN5whVwlaP3VIGiYNYmlENFVk/uplllFInFLw8FmPTVYwQGLHzQQPOlZv8buvlNcmuI
-         /DxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=E59bzjWg+c0MHaEx1BoDiS6FYfnfwzF0HRnaYqe7suo=;
-        b=hUh8nFQtWZd6Ms6QYMbVQk7blTRZ9kue5MK2B8HViprArgoVfEDevCusvUahTgY1uo
-         Y8ZT+T7ZWF75+94rzhC5Y+SksmcGkvqYXp/16Q+uh7tRo3SUj5OgYQjJWLQmQlXJ1wex
-         OER+xsxLCXYoHwUal+oOYKSav3SOvzvzlenIwTgesh2oGMMrkQjB28R5BJoAJtLV7RAE
-         Tq1FnH0IGfqEhrkS/a/RzMiK0gfHFhIhyggOc+bhJ0y3AwOehhcdZDtraujy8e2WZqcc
-         5Dk4OTDM5au8JrUZ8Bax5enIuNTzwKIcbUf6zM7VhCpBzKM0PEVevDiOVLR3zdM+kl8E
-         /a6A==
-X-Gm-Message-State: AOAM533PiknMcSzLQUI4moIAYM5EtsH1KBR/wwpg4XIBcYmTFCAl3eSh
-        BS5nlt3YGIWi7ZVb+/JFjkoU1A==
-X-Google-Smtp-Source: ABdhPJxBbU7EYiACWX6oiDhUp9tR7cuERyVtBjdHxSpkHaSwpStuHoOiCT3EbUH505j9OOrf0KN24A==
-X-Received: by 2002:a05:600c:282:: with SMTP id 2mr3402783wmk.168.1595322860725;
-        Tue, 21 Jul 2020 02:14:20 -0700 (PDT)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id m9sm2516472wml.45.2020.07.21.02.14.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 02:14:19 -0700 (PDT)
-References: <20200719141034.8403-1-christianshewitt@gmail.com> <20200719141034.8403-4-christianshewitt@gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Christian Hewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Dongjin Kim <tobetter@hardkernel.com>
-Subject: Re: [PATCH 3/3] arm64: dts: meson: add support for the ODROID-N2+
-In-reply-to: <20200719141034.8403-4-christianshewitt@gmail.com>
-Date:   Tue, 21 Jul 2020 11:14:19 +0200
-Message-ID: <1jo8o98c2c.fsf@starbuckisacylon.baylibre.com>
+        Tue, 21 Jul 2020 05:14:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:60368 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbgGUJOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 05:14:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB2AA106F;
+        Tue, 21 Jul 2020 02:14:42 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 92B0F3F718;
+        Tue, 21 Jul 2020 02:14:41 -0700 (PDT)
+References: <20200717124017.GB6067@redhat.com> <2c8ef23c-43b4-39d4-8e84-92769c948da9@kernel.org> <20200718171406.GB16791@redhat.com> <20200718174448.4btbjcvp6wbbdgts@wittgenstein> <badcb9d5-f628-2be1-7a72-902cf08010bd@kernel.org> <20200720064326.GA6612@redhat.com> <20200720082657.GC6612@redhat.com> <20200720084106.GJ10769@hirez.programming.kicks-ass.net> <20200720105924.GE43129@hirez.programming.kicks-ass.net> <20200720140224.GD6612@redhat.com> <20200720142105.GR10769@hirez.programming.kicks-ass.net>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Jiri Slaby <jirislaby@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        christian@brauner.io, "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Dave Jones <davej@codemonkey.org.uk>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
+In-reply-to: <20200720142105.GR10769@hirez.programming.kicks-ass.net>
+Date:   Tue, 21 Jul 2020 10:14:36 +0100
+Message-ID: <jhjtuy1i60z.mognet@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,94 +48,93 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On Sun 19 Jul 2020 at 16:10, Christian Hewitt <christianshewitt@gmail.com> wrote:
-
-> HardKernel ODROID-N2+ uses an Amlogic S922X rev. C chip capable of higher
-> clock speeds than the original ODROID-N2. Hardkernel supports the big cpu
-> cluster at 2.4GHz and the little cpu cluster at 2.0GHz. Opp points and
-> regulator changess are from the HardKernel Linux kernel sources.
+On 20/07/20 15:21, Peter Zijlstra wrote:
+> On Mon, Jul 20, 2020 at 04:02:24PM +0200, Oleg Nesterov wrote:
+>> I have to admit, I do not understand the usage of prev_state in schedule(),
+>> it looks really, really subtle...
 >
-> Suggested-by: Dongjin Kim <tobetter@hardkernel.com>
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->  arch/arm64/boot/dts/amlogic/Makefile          |  1 +
->  .../dts/amlogic/meson-g12b-odroid-n2-plus.dts | 53 +++++++++++++++++++
->  2 files changed, 54 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
+> Right, so commit dbfb089d360 solved a problem where schedule() re-read
+> prev->state vs prev->on_rq = 0. That is, schedule()'s dequeue and
+> ttwu()'s enqueue disagreed over sched_contributes_to_load. and as a
+> result load-accounting went wobbly.
 >
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index 5cac4d1d487d..6dc508b80133 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-g12b-gtking-pro.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-a311d-khadas-vim3.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-s922x-khadas-vim3.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2-plus.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-ugoos-am6.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-kii-pro.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
-> new file mode 100644
-> index 000000000000..99e96be509f8
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
-> @@ -0,0 +1,53 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 BayLibre, SAS
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "meson-g12b-odroid-n2.dtsi"
-> +
-> +/ {
-> +	compatible = "hardkernel,odroid-n2-plus", "amlogic,s922x", "amlogic,g12b";
-> +	model = "Hardkernel ODROID-N2+";
-> +
-> +	vddcpu_a: regulator-vddcpu-a {
-> +		regulator-min-microvolt = <680000>;
-> +		regulator-max-microvolt = <1040000>;
-> +
-> +		pwms = <&pwm_ab 0 1500 0>;
-> +	};
-> +
-> +	vddcpu_b: regulator-vddcpu-b {
-> +		regulator-min-microvolt = <680000>;
-> +		regulator-max-microvolt = <1040000>;
-> +
-> +		pwms = <&pwm_AO_cd 1 1500 0>;
-> +	};
-> +
-> +	cpu_opp_table_0: opp-table-0 {
-> +		opp-1908000000 {
-> +			opp-hz = /bits/ 64 <1908000000>;
-> +			opp-microvolt = <1030000>;
-> +		};
-> +
-> +		opp-2016000000 {
-> +			opp-hz = /bits/ 64 <2016000000>;
-> +			opp-microvolt = <1040000>;
-> +		};
-> +	};
-> +
-> +	cpub_opp_table_1: opp-table-1 {
-> +		opp-2304000000 {
-> +			opp-hz = /bits/ 64 <2304000000>;
-> +			opp-microvolt = <1030000>;
-> +		};
-> +
-> +		opp-2400000000 {
-> +			opp-hz = /bits/ 64 <2400000000>;
-> +			opp-microvolt = <1040000>;
-> +		};
-> +	};
+> Now, looking at that commit again, I might've solved the problem twice
+> :-P
+>
+> So on the one hand, I provider ordering:
+>
+>       LOAD p->state		LOAD-ACQUIRE p->on_rq == 0
+>       MB
+>       STORE p->on_rq, 0	STORE p->state, TASK_WAKING
+>
+> such that ttwu() will only change p->state, after on_rq==0, which is
+> after loading p->state in schedule().
+>
+> At the same time, I also had schedule() set
+> p->sched_contributes_to_load once, and then consistently used that value
+> throughout, without ever looking at p->state again, which too makes it
+> much harder to mess load-avg up.
+>
+>
+> Now, the ordering in schedule(), relies on doing the p->state load
+> before:
+>
+>       spin_lock(rq->lock)
+>       smp_mb__after_spinlock();
+>
+> and doing a re-load check after, with the assumption that if the reload
+> is different, it will not block.
+>
+> That said, in a crossed email, I just proposed we could simplify all
+> this like so.. but now I need to go ask people to re-validate that
+> loadavg muck again :-/
+>
+>
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index a2a244af9a53..437fc3b241f2 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -4193,9 +4193,6 @@ static void __sched notrace __schedule(bool preempt)
+>       local_irq_disable();
+>       rcu_note_context_switch(preempt);
+>
+> -	/* See deactivate_task() below. */
+> -	prev_state = prev->state;
+> -
+>       /*
+>        * Make sure that signal_pending_state()->signal_pending() below
+>        * can't be reordered with __set_current_state(TASK_INTERRUPTIBLE)
+> @@ -4223,7 +4220,8 @@ static void __sched notrace __schedule(bool preempt)
+>        * We must re-load prev->state in case ttwu_remote() changed it
+>        * before we acquired rq->lock.
+>        */
+> -	if (!preempt && prev_state && prev_state == prev->state) {
+> +	prev_state = prev->state;
 
-Are this opp specific to the N2+ or S922x rev C ?
-If it is the latter, shouldn't these be in s922x-revC dtsi ?
+AFAICT the ttwu/schedule ordering dance + the "trick" of updating
+p->sched_contributes_to_load in __schedule() under rq lock ensures loadavg
+accounting won't go awry here. I'm still a bit low on coffee, but that does
+LGTM.
 
-> +};
-> +
 
+> +	if (!preempt && prev_state) {
+>               if (signal_pending_state(prev_state, prev)) {
+>                       prev->state = TASK_RUNNING;
+>               } else {
+> @@ -4237,10 +4235,12 @@ static void __sched notrace __schedule(bool preempt)
+>
+>                       /*
+>                        * __schedule()			ttwu()
+> -			 *   prev_state = prev->state;	  if (READ_ONCE(p->on_rq) && ...)
+> -			 *   LOCK rq->lock		    goto out;
+> -			 *   smp_mb__after_spinlock();	  smp_acquire__after_ctrl_dep();
+> -			 *   p->on_rq = 0;		  p->state = TASK_WAKING;
+> +			 *   if (prev_state)		  if (p->on_rq && ...)
+> +			 *     p->on_rq = 0;		    goto out;
+> +			 *				  smp_acquire__after_ctrl_dep();
+> +			 *				  p->state = TASK_WAKING
+> +			 *
+> +			 * Where __schedule() and ttwu() have matching control dependencies.
+>                        *
+>                        * After this, schedule() must not care about p->state any more.
+>                        */
