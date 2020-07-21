@@ -2,146 +2,130 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E34C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C753C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F56220792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:43:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pyZFNzQ/"
+	by mail.kernel.org (Postfix) with ESMTP id 1558F20720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730873AbgGUQnk (ORCPT
+        id S1730880AbgGUQnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:43:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730734AbgGUQml (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:42:41 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 053DFC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:41 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a15so6913713wrh.10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vXJJF1W9k1z7Na3pvzHdBZG9DscScXGROr0HjsmWObQ=;
-        b=pyZFNzQ/Dc37saZNTqKBcYtVTa5rv+/RJruM7hWu+W2SyhAPzEswAFuxeBTIEnJ2Un
-         QZeKxXn43difmwUNS7tGyNRyg96K37+sAIugIRGi04o0g2F5UpugvSvGKFZgTcC6BmPo
-         symCKm9w5GtHl8WmFboCRwXyLznDVgh5M7DAnt1jUZSQIjq6mZF5CF3+PtTyDtsxBnaC
-         n2PybB1JUxe807lhhh4R9uGuLggdrSzx/TtOGlpC4DOrju9L6UgOsCnBoN0OycRwwX5e
-         RLkYJ6KLz3pBkoYDZHbHrb8m00dfl/2VWIf1xnIBxcWEjDLkb2W8ppoMSt2Qxs22X2XG
-         LGdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vXJJF1W9k1z7Na3pvzHdBZG9DscScXGROr0HjsmWObQ=;
-        b=q07G+9oyyjxqmTrHEx6vySYbe3PCyHf+0naGvAzw6iRbE8m9G7OfDeG7mfqm17fYvQ
-         ouCZ7Vb4J7FVXIwcd/Pbw2Y8Y5p83zKAGmCaFsOSV9vWy6w2mloHWWldByPGCGgH4Ltc
-         hUo11oT5l2hn2Und7V0JfZDRvGQQuBeHF5EMqc3Y1nEqgYBn5sp8MfkK3aZNq3wlFY98
-         OR3G7wi7NApjPzQeOM2WmSoQeriyzWCQSJI7bAibkQ3AOBigYbqr2Ol3zd/OFbQfsIDc
-         pqE2H5oiUn3tL5KXZzjKkeG+VXimBB0hAxzlEMpCpnrZ5pbkDG4+AsJHHYN8thFIDsbD
-         NlfA==
-X-Gm-Message-State: AOAM5332i+PFmxG9S1t1CwRqftv6SgeCXhkiAnRXO83EPO19HJqXeFqx
-        ho06XNvhHETDGxkjILNh5u+jdw==
-X-Google-Smtp-Source: ABdhPJwIGFbiXIil3Vep+qPfyS242Z5ektcm5mpCelA5ULa/8ioavvgYS9xcq5sq4eD5XrvXvCqH1A==
-X-Received: by 2002:adf:e38b:: with SMTP id e11mr27053586wrm.65.1595349759735;
-        Tue, 21 Jul 2020 09:42:39 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.42.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:42:39 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>
-Subject: [PATCH 30/40] scsi: lpfc: lpfc_ct: Fix-up formatting/docrot where appropriate
-Date:   Tue, 21 Jul 2020 17:41:38 +0100
-Message-Id: <20200721164148.2617584-31-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200721164148.2617584-1-lee.jones@linaro.org>
-References: <20200721164148.2617584-1-lee.jones@linaro.org>
+        Tue, 21 Jul 2020 12:43:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730391AbgGUQno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 12:43:44 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA78C207BB;
+        Tue, 21 Jul 2020 16:43:43 +0000 (UTC)
+Date:   Tue, 21 Jul 2020 12:43:42 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tingwei Zhang <tingwei@codeaurora.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, tsoni@codeaurora.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mao Jinlong <jinlmao@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] tracing: add trace_export support for event trace
+Message-ID: <20200721124342.422ee784@oasis.local.home>
+In-Reply-To: <20200721123733.1a87568a@oasis.local.home>
+References: <20200720022117.9375-1-tingwei@codeaurora.org>
+        <20200720022117.9375-3-tingwei@codeaurora.org>
+        <20200721123733.1a87568a@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Other headers have been demoted as they are too far out of sync and
-ideally require effort from the authors.
+On Tue, 21 Jul 2020 12:37:33 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Fixes the following W=1 kernel build warning(s):
+> On Mon, 20 Jul 2020 10:21:15 +0800
+> Tingwei Zhang <tingwei@codeaurora.org> wrote:
+> 
+> > Only function traces can be exported to other destinations currently.
+> > This patch exports event trace as well.
+> > 
+> > Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+> > ---
+> >  kernel/trace/trace.c | 24 +++++++++++++-----------
+> >  1 file changed, 13 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index bb62269724d5..aef6330836e2 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -2697,17 +2697,6 @@ int tracepoint_printk_sysctl(struct ctl_table *table, int write,
+> >  	return ret;
+> >  }
+> >  
+> > -void trace_event_buffer_commit(struct trace_event_buffer *fbuffer)
+> > -{
+> > -	if (static_key_false(&tracepoint_printk_key.key))
+> > -		output_printk(fbuffer);
+> > -
+> > -	event_trigger_unlock_commit_regs(fbuffer->trace_file, fbuffer->buffer,
+> > -				    fbuffer->event, fbuffer->entry,
+> > -				    fbuffer->flags, fbuffer->pc, fbuffer->regs);
+> > -}
+> > -EXPORT_SYMBOL_GPL(trace_event_buffer_commit);
+> > -  
+> 
+> Please move the ftrace_exports routines up, instead of moving the
+> trace_event_buffer_commit() down. As it fits better where it is (next
+> to the other buffer_commit code).
+> 
+> -- Steve
+> 
+> 
+> >  /*
+> >   * Skip 3:
+> >   *
+> > @@ -2868,6 +2857,19 @@ int unregister_ftrace_export(struct
+> > trace_export *export) }
+> >  EXPORT_SYMBOL_GPL(unregister_ftrace_export);
+> >  
+> > +void trace_event_buffer_commit(struct trace_event_buffer *fbuffer)
+> > +{
+> > +	if (static_key_false(&tracepoint_printk_key.key))
+> > +		output_printk(fbuffer);
+> > +
+> > +	if (static_branch_unlikely(&ftrace_exports_enabled))
+> > +		ftrace_exports(fbuffer->event);
 
- drivers/scsi/lpfc/lpfc_ct.c:321: warning: Function parameter or member 'usr_flg' not described in 'lpfc_gen_req'
- drivers/scsi/lpfc/lpfc_ct.c:321: warning: Function parameter or member 'num_entry' not described in 'lpfc_gen_req'
- drivers/scsi/lpfc/lpfc_ct.c:321: warning: Function parameter or member 'tmo' not described in 'lpfc_gen_req'
- drivers/scsi/lpfc/lpfc_ct.c:321: warning: Function parameter or member 'retry' not described in 'lpfc_gen_req'
- drivers/scsi/lpfc/lpfc_ct.c:413: warning: Function parameter or member 'rsp_size' not described in 'lpfc_ct_cmd'
- drivers/scsi/lpfc/lpfc_ct.c:413: warning: Function parameter or member 'retry' not described in 'lpfc_ct_cmd'
- drivers/scsi/lpfc/lpfc_ct.c:3030: warning: Function parameter or member 'cmdcode' not described in 'lpfc_fdmi_cmd'
- drivers/scsi/lpfc/lpfc_ct.c:3030: warning: Function parameter or member 'new_mask' not described in 'lpfc_fdmi_cmd'
- drivers/scsi/lpfc/lpfc_ct.c:3272: warning: Function parameter or member 't' not described in 'lpfc_delayed_disc_tmo'
+I would also recommend making each static branch a separate variable.
+That way you could pick and choose what you want to enable. If you only
+want events, and functions are being traced, it will add a bit of
+overhead to handle the functions to just ignore them.
 
-Cc: James Smart <james.smart@broadcom.com>
-Cc: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/scsi/lpfc/lpfc_ct.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+That is:
 
-diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
-index 701f2405cf022..dd9f2bf54edd4 100644
---- a/drivers/scsi/lpfc/lpfc_ct.c
-+++ b/drivers/scsi/lpfc/lpfc_ct.c
-@@ -300,7 +300,7 @@ lpfc_ct_free_iocb(struct lpfc_hba *phba, struct lpfc_iocbq *ctiocb)
- 	return 0;
- }
- 
--/**
-+/*
-  * lpfc_gen_req - Build and issue a GEN_REQUEST command  to the SLI Layer
-  * @vport: pointer to a host virtual N_Port data structure.
-  * @bmp: Pointer to BPL for SLI command
-@@ -394,7 +394,7 @@ lpfc_gen_req(struct lpfc_vport *vport, struct lpfc_dmabuf *bmp,
- 	return 0;
- }
- 
--/**
-+/*
-  * lpfc_ct_cmd - Build and issue a CT command
-  * @vport: pointer to a host virtual N_Port data structure.
-  * @inmp: Pointer to data buffer for response data.
-@@ -3019,8 +3019,8 @@ int (*lpfc_fdmi_port_action[])
-  * lpfc_fdmi_cmd - Build and send a FDMI cmd to the specified NPort
-  * @vport: pointer to a host virtual N_Port data structure.
-  * @ndlp: ndlp to send FDMI cmd to (if NULL use FDMI_DID)
-- * cmdcode: FDMI command to send
-- * mask: Mask of HBA or PORT Attributes to send
-+ * @cmdcode: FDMI command to send
-+ * @new_mask: Mask of HBA or PORT Attributes to send
-  *
-  * Builds and sends a FDMI command using the CT subsystem.
-  */
-@@ -3262,7 +3262,7 @@ lpfc_fdmi_cmd(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
- 
- /**
-  * lpfc_delayed_disc_tmo - Timeout handler for delayed discovery timer.
-- * @ptr - Context object of the timer.
-+ * @t: Context object of the timer.
-  *
-  * This function set the WORKER_DELAYED_DISC_TMO flag and wake up
-  * the worker thread.
--- 
-2.25.1
+ ftrace_exports_enabled, trace_event_exports_enabled,
+ trace_marker_exports_enabled.
+
+-- Steve
+
+
+> > +	event_trigger_unlock_commit_regs(fbuffer->trace_file,
+> > fbuffer->buffer,
+> > +				    fbuffer->event, fbuffer->entry,
+> > +				    fbuffer->flags, fbuffer->pc,
+> > fbuffer->regs); +}
+> > +EXPORT_SYMBOL_GPL(trace_event_buffer_commit);
+> > +
+> >  void
+> >  trace_function(struct trace_array *tr,
+> >  	       unsigned long ip, unsigned long parent_ip, unsigned
+> > long flags,  
+> 
 
