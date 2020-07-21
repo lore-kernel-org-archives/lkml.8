@@ -2,86 +2,94 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3233BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98659C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 028B420717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:35:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vLLnf6t5"
+	by mail.kernel.org (Postfix) with ESMTP id 7467520717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbgGUMfz (ORCPT
+        id S1728751AbgGUMjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:35:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbgGUMfz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:35:55 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE92C061794;
-        Tue, 21 Jul 2020 05:35:55 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id b9so10209140plx.6;
-        Tue, 21 Jul 2020 05:35:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gCQik/w6NvDdgNRdHXsXwHB1wNmqYh2Zx4LCsjaGWiI=;
-        b=vLLnf6t5/T2tqBlgQAYehbNEpNHSpijVkc2zu4ZRcx6T+cMqS1wGL9f9IP4ap4t2fM
-         M06DIM+6dvXOmdBK0DXen4OMwV4f/OcLYpz6SvRPUTf49H4Y8e3bzAwJvkaudVxw13/v
-         SottDmIgB1aI6EoJY7Ms5Z5Je4IMhECiSBxiiwKOB7TXK3sbdnvIxYHaVkQZO/gIgrZ9
-         rgPUBBwsUqVPIer8GXRJ2zLe2OPjG2Mby4hY1ZjMmo2RYjNEBnhhB9wQqu6Rf1oUGgJ3
-         jEBTWGfAa9i6z1WhkRIVdxzal18h9RxddQb2K1+EVyq59E1eMRPmT/sRFIPr/e9hK9LH
-         gWhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gCQik/w6NvDdgNRdHXsXwHB1wNmqYh2Zx4LCsjaGWiI=;
-        b=TJF+iQrJeMoqogcymYAPr6tcJj1PczegZZcHBimyvArSeYBIGW6JuZjYU6FQl+NIR5
-         gr1ZduMsh1YCRMwum2ClDEiBSkcSCkJDIaIm/13+Gz2TVlgoO1rUrn2vCOhGMV9ehczC
-         tuq9TQ/GKZ9YQqerbyFuw+GQHafaJDGz9vaDoksGajnC4aSQhZjtTcTVso32AhEze8oF
-         pq7HxlYEZb5/bFZ/6SgBgZYPYdpk4W+0wBivxUEq2xlcybwyxZlxuE77AyPFTlCBdjb2
-         Pcs4y74SwotQL/M/XpXMlMzeAlzQlDP6e9tnrXkDWY8ZVt4bPAa/1uEHUhiS9O/l3zT/
-         rjjA==
-X-Gm-Message-State: AOAM532LCRcCX7wSENN9YRPrPBFaWvEOKwP5/eQhjbliOyvVEfw6xXz2
-        zLhFuxdtL0tsacpPEw430xU=
-X-Google-Smtp-Source: ABdhPJymd9DtK/2SkX4MtHN9+uSyoq9kDhMgE8/1XnEKsQ9TtAeeFWXz2uSNqVGGr3IdOKocLxm7zg==
-X-Received: by 2002:a17:90a:750:: with SMTP id s16mr4534280pje.218.1595334954155;
-        Tue, 21 Jul 2020 05:35:54 -0700 (PDT)
-Received: from gmail.com ([103.105.153.67])
-        by smtp.gmail.com with ESMTPSA id j13sm3180858pjz.8.2020.07.21.05.35.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 05:35:53 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 18:04:25 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v1] crypto: ccp: sp-pci: use generic power management
-Message-ID: <20200721123425.GA81853@gmail.com>
-References: <20200721123146.81710-1-vaibhavgupta40@gmail.com>
+        Tue, 21 Jul 2020 08:39:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49242 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727991AbgGUMjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 08:39:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 55666B182;
+        Tue, 21 Jul 2020 12:39:07 +0000 (UTC)
+Subject: Re: [PATCH] mm/page_alloc: fix memalloc_nocma_{save/restore} APIs
+To:     Matthew Wilcox <willy@infradead.org>, js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
+References: <1595302129-23895-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <20200721120533.GD15516@casper.infradead.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <4c484ce0-cfed-0c50-7a20-d1474ce9afee@suse.cz>
+Date:   Tue, 21 Jul 2020 14:38:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200721120533.GD15516@casper.infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200721123146.81710-1-vaibhavgupta40@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Patch is Compile-tested only.
+On 7/21/20 2:05 PM, Matthew Wilcox wrote:
+> On Tue, Jul 21, 2020 at 12:28:49PM +0900, js1304@gmail.com wrote:
+>> +static inline unsigned int current_alloc_flags(gfp_t gfp_mask,
+>> +					unsigned int alloc_flags)
+>> +{
+>> +#ifdef CONFIG_CMA
+>> +	unsigned int pflags = current->flags;
+>> +
+>> +	if (!(pflags & PF_MEMALLOC_NOCMA) &&
+>> +		gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
+>> +		alloc_flags |= ALLOC_CMA;
+> 
+> Please don't indent by one tab when splitting a line because it looks like
+> the second line and third line are part of the same block.  Either do
+> this:
+> 
+> 	if (!(pflags & PF_MEMALLOC_NOCMA) &&
+> 	    gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
+> 		alloc_flags |= ALLOC_CMA;
+> 
+> or this:
+> 	if (!(pflags & PF_MEMALLOC_NOCMA) &&
+> 			gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
+> 		alloc_flags |= ALLOC_CMA;
+
+Ah, good point.
+
+>> @@ -4619,8 +4631,10 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+>>  		wake_all_kswapds(order, gfp_mask, ac);
+>>  
+>>  	reserve_flags = __gfp_pfmemalloc_flags(gfp_mask);
+>> -	if (reserve_flags)
+>> +	if (reserve_flags) {
+>>  		alloc_flags = reserve_flags;
+>> +		alloc_flags = current_alloc_flags(gfp_mask, alloc_flags);
+>> +	}
+> 
+> Is this right?  Shouldn't you be passing reserve_flags to
+> current_alloc_flags() here?  Also, there's no need to add { } here.
+
+Note the "alloc_flags = reserve_flags;" line is not being deleted here. But if
+it was, your points would be true, and yeah it would be a bit more tidy.
