@@ -2,212 +2,136 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E54C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A7CC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D919120792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49AD920B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:22:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595312545;
+	bh=47dJEVMdxrfXF2oYeyAzojzZPGNAbJ4RDRe72YadUlk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t1ZnBrcGLE3vkjLVl6oHKR4O52Jxu4WawhFOZ5o9+A+ct0df1gPrNETJxDCqj3GSO
+	 g5jH0wiYw99yZRdv+LRhDnW/eE5Zuh4qQuq3eu1kZFAyTUYQyU3GbFp7WmDQXzeF1v
+	 DIlTTRNLeUGtPChpm0FCktpC7OxtAtJBD5uquO6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGUGXt (ORCPT
+        id S1727121AbgGUGWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:23:49 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:56478 "EHLO fornost.hmeau.com"
+        Tue, 21 Jul 2020 02:22:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725294AbgGUGXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:23:48 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jxlfs-0001TC-Be; Tue, 21 Jul 2020 16:22:49 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 21 Jul 2020 16:22:48 +1000
-Date:   Tue, 21 Jul 2020 16:22:48 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: [v3 PATCH RESEND] printk: Make linux/printk.h self-contained
-Message-ID: <20200721062248.GA18383@gondor.apana.org.au>
+        id S1726053AbgGUGWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 02:22:23 -0400
+Received: from localhost (p5486cdb1.dip0.t-ipconnect.de [84.134.205.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CB0E20792;
+        Tue, 21 Jul 2020 06:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595312543;
+        bh=47dJEVMdxrfXF2oYeyAzojzZPGNAbJ4RDRe72YadUlk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aFO1sfzyiSsQ1aRHew1Fs3t3HI9JCj0gnJYlQfk/Wn+lFIwh2wcj9fdH+Uf4agaTQ
+         oHaCrMb0N0PX0kMcmZoQu3HE3aEJxxd8pAinpjgDk+f0OYHP+pE+UPzSlTZQ+7FEWP
+         CWY0zTjGWsjW1KPmZOKcxbu5Z+ZJNG/oCu+weqRQ=
+Date:   Tue, 21 Jul 2020 08:22:17 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Alain Volmat <alain.volmat@st.com>, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH v2 3/4] dt-bindings: i2c-stm32: add SMBus Alert bindings
+Message-ID: <20200721062217.GA1044@kunai>
+References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
+ <1593070769-9106-4-git-send-email-alain.volmat@st.com>
+ <20200630194107.GA999@ninjato>
+ <20200714023048.GA1151665@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8t9RHnE3ZwKMSgU+"
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200714023048.GA1151665@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As it stands if you include printk.h by itself it will fail to
-compile because it requires definitions from ratelimit.h.  However,
-simply including ratelimit.h from printk.h does not work due to
-inclusion loops involving sched.h and kernel.h.
 
-This patch solves this by moving bits from ratelimit.h into a new
-header file which can then be included by printk.h without any
-worries about header loops.
+--8t9RHnE3ZwKMSgU+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The build bot then revealed some intriguing failures arising out
-of this patch.  On s390 there is an inclusion loop with asm/bug.h
-and linux/kernel.h that triggers a compile failure, because kernel.h
-will cause asm-generic/bug.h to be included before s390's own
-asm/bug.h has finished processing.  This has been fixed by not
-including kernel.h in arch/s390/include/asm/bug.h.
+Hi Rob,
 
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Acked-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
+> > > The I2C/SMBUS framework already provides a mechanism to enable SMBus-=
+Alert
+> > > by naming an IRQ line "smbus_alert". However, on stm32, the SMBus-Ale=
+rt is
+> > > part of the i2c IRQ. Using the smbus_alert naming here would lead to =
+having
+> > > 2 handlers (the handler of the driver and the smbus_alert handler
+> > > from I2C/SMBUS framework) on the unique i2c IRQ of the stm32. Meaning=
+ that
+> > > the smbus_alert handler would get called for all IRQ generated by the=
+ stm32
+> > > I2C controller.
+> > >=20
+> > > For that reason, the smbus_alert IRQ naming cannot be used and a dedi=
+cated
+> > > binding is introduced.
+> >=20
+> > What if we update the core to not register another irq handler if the
+> > "smbus_alert" and main irq are the same?
+> >=20
+> > I think it could work. However, while trying to make a proof-of-concept,
+> > I found that irq descriptions in the generic i2c binding document are
+> > probably mixed up. And before fixing that, I'd like to get HostNotify
+> > done first.
+>=20
+> Why does this even need to be in DT? Can't the driver just register that=
+=20
+> it supports SMBus alert or have some call to the core signaling an SMBus=
+=20
+> alert?=20
 
- arch/s390/include/asm/bug.h     |    2 -
- include/linux/printk.h          |    1 
- include/linux/ratelimit.h       |   36 ---------------------------------
- include/linux/ratelimit_types.h |   43 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 46 insertions(+), 36 deletions(-)
+If we emulate this SMBus behaviour with I2C, it means we apply
+additional restrictions. In this case, there is an address which can't
+be used anymore. Because there is another case of additional
+restrictions, I proposed the binding "smbus" which means this bus is not
+I2C but SMBus, so it is more restricted.
 
-diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
-index 7725f8006fdfb..0b25f28351edc 100644
---- a/arch/s390/include/asm/bug.h
-+++ b/arch/s390/include/asm/bug.h
-@@ -2,7 +2,7 @@
- #ifndef _ASM_S390_BUG_H
- #define _ASM_S390_BUG_H
- 
--#include <linux/kernel.h>
-+#include <linux/compiler.h>
- 
- #ifdef CONFIG_BUG
- 
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index fc8f03c545430..34c1a7be3e014 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -7,6 +7,7 @@
- #include <linux/kern_levels.h>
- #include <linux/linkage.h>
- #include <linux/cache.h>
-+#include <linux/ratelimit_types.h>
- 
- extern const char linux_banner[];
- extern const char linux_proc_banner[];
-diff --git a/include/linux/ratelimit.h b/include/linux/ratelimit.h
-index 8ddf79e9207a9..b17e0cd0a30cf 100644
---- a/include/linux/ratelimit.h
-+++ b/include/linux/ratelimit.h
-@@ -2,41 +2,10 @@
- #ifndef _LINUX_RATELIMIT_H
- #define _LINUX_RATELIMIT_H
- 
--#include <linux/param.h>
-+#include <linux/ratelimit_types.h>
- #include <linux/sched.h>
- #include <linux/spinlock.h>
- 
--#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
--#define DEFAULT_RATELIMIT_BURST		10
--
--/* issue num suppressed message on exit */
--#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
--
--struct ratelimit_state {
--	raw_spinlock_t	lock;		/* protect the state */
--
--	int		interval;
--	int		burst;
--	int		printed;
--	int		missed;
--	unsigned long	begin;
--	unsigned long	flags;
--};
--
--#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
--		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
--		.interval	= interval_init,			\
--		.burst		= burst_init,				\
--	}
--
--#define RATELIMIT_STATE_INIT_DISABLED					\
--	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
--
--#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
--									\
--	struct ratelimit_state name =					\
--		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
--
- static inline void ratelimit_state_init(struct ratelimit_state *rs,
- 					int interval, int burst)
- {
-@@ -73,9 +42,6 @@ ratelimit_set_flags(struct ratelimit_state *rs, unsigned long flags)
- 
- extern struct ratelimit_state printk_ratelimit_state;
- 
--extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
--#define __ratelimit(state) ___ratelimit(state, __func__)
--
- #ifdef CONFIG_PRINTK
- 
- #define WARN_ON_RATELIMIT(condition, state)	({		\
-diff --git a/include/linux/ratelimit_types.h b/include/linux/ratelimit_types.h
-new file mode 100644
-index 0000000000000..b676aa419eef8
---- /dev/null
-+++ b/include/linux/ratelimit_types.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_RATELIMIT_TYPES_H
-+#define _LINUX_RATELIMIT_TYPES_H
-+
-+#include <linux/bits.h>
-+#include <linux/param.h>
-+#include <linux/spinlock_types.h>
-+
-+#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
-+#define DEFAULT_RATELIMIT_BURST		10
-+
-+/* issue num suppressed message on exit */
-+#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
-+
-+struct ratelimit_state {
-+	raw_spinlock_t	lock;		/* protect the state */
-+
-+	int		interval;
-+	int		burst;
-+	int		printed;
-+	int		missed;
-+	unsigned long	begin;
-+	unsigned long	flags;
-+};
-+
-+#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
-+		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
-+		.interval	= interval_init,			\
-+		.burst		= burst_init,				\
-+	}
-+
-+#define RATELIMIT_STATE_INIT_DISABLED					\
-+	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
-+
-+#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
-+									\
-+	struct ratelimit_state name =					\
-+		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
-+
-+extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
-+#define __ratelimit(state) ___ratelimit(state, __func__)
-+
-+#endif /* _LINUX_RATELIMIT_TYPES_H */
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks,
+
+   Wolfram
+
+
+--8t9RHnE3ZwKMSgU+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8WiZIACgkQFA3kzBSg
+Kbagiw/8CFregwnGWfzJ8CixS6lpRM7jx77tfodUx9ozPR0J2bZ0XG7itMnirLQO
+VIMV2kRUkbaIO3Gfwr0WTM2HvL3Ej5lIJttqPPcm4ZxvYvPhX6eZEe7fYquFnnje
+7/uxFH+GgXqjRfWLVtSG4uwFg7WV70UEQ52E8lORH/PJEdYya/7ICWebcdIfTWhQ
+W+XV4pN08sYkPBUo775Fan2JxruVmISkr/dNRZztLT4PMpczhUf+BQMdOIyrmPO7
+Ix/pPt2inVZfZHzYrM53SXzdOritt6OhYG0xHrdwtTgg4mL2b/Ov1qJCYKDlGGBY
+T00o2ynEp8/IqIXHZ2huw3zplAMvVpxgPFjesoE4tNUwlGjaaGuWECfoFGmdJNJ1
+p2xiXrKLl+6Vlwg+NoDuqZwyL7NY1pEweyCkHjcYs58XrFCoHPbfsvhHcERIgytY
+N4QRmRjTI0D+WtyrNcoBbphl/RtSLAn59lP7SwuiLb9fslTQ34srGDPJXfFBageK
+i1bPBMYMnN3fWD1I29OzDZjPQZPYPzH0qVDKFIj5DLtEx9lM6aUOzKm6EQgduoWn
+rQ+wJX+vml0lfIXZ6jjKBv+JwKg9cvloJlqSlVwVPBLscgn0ptmw6jUuofXtETAg
+cBuIRLHb+u+rorqO89KpaxDXuI/ZFP/zNxC6/4el9FLFawCJ3ZY=
+=ORZA
+-----END PGP SIGNATURE-----
+
+--8t9RHnE3ZwKMSgU+--
