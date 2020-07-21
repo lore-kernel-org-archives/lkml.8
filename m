@@ -2,276 +2,86 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6BDC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2819C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 700272072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:12:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="c22E8E5H"
+	by mail.kernel.org (Postfix) with ESMTP id B2B3A2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595297561;
+	bh=lFWFB9acgBee4FwfIQIHackO8P12QCLUR+ZzZT1zeTE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mixlvqQaJ/zbLTPYvjvdLHPMUgdBYuD9QRGtDIFDHAn9CivZWfcOZSlkmZ/YY7F5g
+	 PbxqklpthCMs5/hLSdB65UF64ZTbVGHxeK8NR35ip8aJKyEoJkvVVunf12WK3mWUvI
+	 qPAmTUyARYp+uDUv6D1OUg4JsKLES9sS8TCSjzAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbgGUCMG (ORCPT
+        id S1728220AbgGUCMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:12:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgGUCMF (ORCPT
+        Mon, 20 Jul 2020 22:12:40 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:37361 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgGUCMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 22:12:05 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C580C061794;
-        Mon, 20 Jul 2020 19:12:05 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9htT5dGWz9sRN;
-        Tue, 21 Jul 2020 12:12:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595297522;
-        bh=UTMv+LohAVeywtSQA4FJ44hILUvS4URELTHwDgunZt8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=c22E8E5HIC4DH3WJUNji8RqUUvIiGX9ksWu8ovjnSMB4VhCsU2/r45p0JL8kim0RJ
-         slR+IIZuiuAlnT4DNRsx4thuOcy7L3V93ixcO2/BK1k251gE7S4fzRQPq75pMd35MV
-         SUZIbcy+5A3RHdOCostUc5p6VWXMGkBKMAxL4sk0h1Q1ftgTtOoTPymTW3enzg3Afn
-         dGXK0dIwa/Q5b2UMcyumF9oB4x0sYUNnrbHZYIrb39oXdcaHcf+uyDZGTaHEH1ttn0
-         x+GU/MtH+ozULaa7gSvtru+GNRia2OKzIbfmK0SI7TNIdJdbWO2z/vYFyLEWgvatJd
-         n7LQ2jW/TQsig==
-Date:   Tue, 21 Jul 2020 12:12:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Jakub Sitnicki <jakub@cloudflare.com>
-Subject: linux-next: manual merge of the bpf-next tree with the net-next
- tree
-Message-ID: <20200721121200.60ce87fb@canb.auug.org.au>
+        Mon, 20 Jul 2020 22:12:40 -0400
+Received: by mail-il1-f196.google.com with SMTP id r12so15097023ilh.4;
+        Mon, 20 Jul 2020 19:12:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=i0xPj1Ho5fgI9khsratqKQQfk1V9sIVhizjOEkVa748=;
+        b=cGhyjAWfGioRDqxPPsVTH1u/+cRblJQbUph+6nEGQk4qkGHWjfPgtpHmgIgVH4WCi4
+         qacPHI6YuOBT8U02VYORkqu0e3apOeZVdbJyYs7LBccLU7DR1gAxYtDXy6JArqpI6pvk
+         bH98c7K9ByHyEsJvgjqLqe+2XcsMnsIUeO90NTJV2NSElaC/NWCIoc1EtfToxDkU/UOT
+         NWoUzN8uDq1AjWKjqlI9T5STp0ik69ZCkcSxyHDmLL6IiQfYITKN1qo910hLHUnkbXof
+         hXPOCnHBaNCSSJCFKVD4QSBqpeQ9EtES0rA55HNu2h9Ufi+d7a/F5syOZ4Rcy+n+QUvY
+         Azpg==
+X-Gm-Message-State: AOAM532/OxFQZNwuH2lBYK3rdc9xsg9pr5mOFvUh8Z0ekirvL2JKEYnH
+        8fVX+2CPHpppXXYPQykeBw==
+X-Google-Smtp-Source: ABdhPJxc5qAtpL5dkkvN8ISGEBQRIsmkLgRH1g0yx9Vu3KumL5n3keb5UonNgQK+wNW9RJA4XJh0eQ==
+X-Received: by 2002:a92:bd0f:: with SMTP id c15mr24981493ile.95.1595297559165;
+        Mon, 20 Jul 2020 19:12:39 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id b2sm9841835ilf.0.2020.07.20.19.12.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 19:12:38 -0700 (PDT)
+Received: (nullmailer pid 3391247 invoked by uid 1000);
+        Tue, 21 Jul 2020 02:12:37 -0000
+Date:   Mon, 20 Jul 2020 20:12:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        linux-arm-kernel@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Argus Lin <argus.lin@mediatek.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: mediatek: add compatible for
+ MT6873/8192 pwrap
+Message-ID: <20200721021237.GA3391199@bogus>
+References: <1594720432-19586-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1594720432-19586-3-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/NmcyHySB4QEYmS7SkHXyhmQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594720432-19586-3-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/NmcyHySB4QEYmS7SkHXyhmQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, 14 Jul 2020 17:53:51 +0800, Hsin-Hsiung Wang wrote:
+> This adds dt-binding documentation of pwrap for Mediatek MT6873/8192
+> SoCs Platform.
+> 
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/soc/mediatek/pwrap.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Hi all,
-
-Today's linux-next merge of the bpf-next tree got a conflict in:
-
-  include/linux/filter.h
-
-between commit:
-
-  4d295e546115 ("net: simplify cBPF setsockopt compat handling")
-
-from the net-next tree and commits:
-
-  e9ddbb7707ff ("bpf: Introduce SK_LOOKUP program type with a dedicated att=
-ach point")
-  1559b4aa1db4 ("inet: Run SK_LOOKUP BPF program on socket lookup")
-  1122702f0267 ("inet6: Run SK_LOOKUP BPF program on socket lookup")
-
-from the bpf-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/filter.h
-index 4d049c8e1fbe,8252572db918..000000000000
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@@ -1276,6 -1278,151 +1276,153 @@@ struct bpf_sockopt_kern=20
-  	s32		retval;
-  };
- =20
-+ struct bpf_sk_lookup_kern {
-+ 	u16		family;
-+ 	u16		protocol;
-+ 	struct {
-+ 		__be32 saddr;
-+ 		__be32 daddr;
-+ 	} v4;
-+ 	struct {
-+ 		const struct in6_addr *saddr;
-+ 		const struct in6_addr *daddr;
-+ 	} v6;
-+ 	__be16		sport;
-+ 	u16		dport;
-+ 	struct sock	*selected_sk;
-+ 	bool		no_reuseport;
-+ };
-+=20
-+ extern struct static_key_false bpf_sk_lookup_enabled;
-+=20
-+ /* Runners for BPF_SK_LOOKUP programs to invoke on socket lookup.
-+  *
-+  * Allowed return values for a BPF SK_LOOKUP program are SK_PASS and
-+  * SK_DROP. Their meaning is as follows:
-+  *
-+  *  SK_PASS && ctx.selected_sk !=3D NULL: use selected_sk as lookup result
-+  *  SK_PASS && ctx.selected_sk =3D=3D NULL: continue to htable-based sock=
-et lookup
-+  *  SK_DROP                           : terminate lookup with -ECONNREFUS=
-ED
-+  *
-+  * This macro aggregates return values and selected sockets from
-+  * multiple BPF programs according to following rules in order:
-+  *
-+  *  1. If any program returned SK_PASS and a non-NULL ctx.selected_sk,
-+  *     macro result is SK_PASS and last ctx.selected_sk is used.
-+  *  2. If any program returned SK_DROP return value,
-+  *     macro result is SK_DROP.
-+  *  3. Otherwise result is SK_PASS and ctx.selected_sk is NULL.
-+  *
-+  * Caller must ensure that the prog array is non-NULL, and that the
-+  * array as well as the programs it contains remain valid.
-+  */
-+ #define BPF_PROG_SK_LOOKUP_RUN_ARRAY(array, ctx, func)			\
-+ 	({								\
-+ 		struct bpf_sk_lookup_kern *_ctx =3D &(ctx);		\
-+ 		struct bpf_prog_array_item *_item;			\
-+ 		struct sock *_selected_sk =3D NULL;			\
-+ 		bool _no_reuseport =3D false;				\
-+ 		struct bpf_prog *_prog;					\
-+ 		bool _all_pass =3D true;					\
-+ 		u32 _ret;						\
-+ 									\
-+ 		migrate_disable();					\
-+ 		_item =3D &(array)->items[0];				\
-+ 		while ((_prog =3D READ_ONCE(_item->prog))) {		\
-+ 			/* restore most recent selection */		\
-+ 			_ctx->selected_sk =3D _selected_sk;		\
-+ 			_ctx->no_reuseport =3D _no_reuseport;		\
-+ 									\
-+ 			_ret =3D func(_prog, _ctx);			\
-+ 			if (_ret =3D=3D SK_PASS && _ctx->selected_sk) {	\
-+ 				/* remember last non-NULL socket */	\
-+ 				_selected_sk =3D _ctx->selected_sk;	\
-+ 				_no_reuseport =3D _ctx->no_reuseport;	\
-+ 			} else if (_ret =3D=3D SK_DROP && _all_pass) {	\
-+ 				_all_pass =3D false;			\
-+ 			}						\
-+ 			_item++;					\
-+ 		}							\
-+ 		_ctx->selected_sk =3D _selected_sk;			\
-+ 		_ctx->no_reuseport =3D _no_reuseport;			\
-+ 		migrate_enable();					\
-+ 		_all_pass || _selected_sk ? SK_PASS : SK_DROP;		\
-+ 	 })
-+=20
-+ static inline bool bpf_sk_lookup_run_v4(struct net *net, int protocol,
-+ 					const __be32 saddr, const __be16 sport,
-+ 					const __be32 daddr, const u16 dport,
-+ 					struct sock **psk)
-+ {
-+ 	struct bpf_prog_array *run_array;
-+ 	struct sock *selected_sk =3D NULL;
-+ 	bool no_reuseport =3D false;
-+=20
-+ 	rcu_read_lock();
-+ 	run_array =3D rcu_dereference(net->bpf.run_array[NETNS_BPF_SK_LOOKUP]);
-+ 	if (run_array) {
-+ 		struct bpf_sk_lookup_kern ctx =3D {
-+ 			.family		=3D AF_INET,
-+ 			.protocol	=3D protocol,
-+ 			.v4.saddr	=3D saddr,
-+ 			.v4.daddr	=3D daddr,
-+ 			.sport		=3D sport,
-+ 			.dport		=3D dport,
-+ 		};
-+ 		u32 act;
-+=20
-+ 		act =3D BPF_PROG_SK_LOOKUP_RUN_ARRAY(run_array, ctx, BPF_PROG_RUN);
-+ 		if (act =3D=3D SK_PASS) {
-+ 			selected_sk =3D ctx.selected_sk;
-+ 			no_reuseport =3D ctx.no_reuseport;
-+ 		} else {
-+ 			selected_sk =3D ERR_PTR(-ECONNREFUSED);
-+ 		}
-+ 	}
-+ 	rcu_read_unlock();
-+ 	*psk =3D selected_sk;
-+ 	return no_reuseport;
-+ }
-+=20
-+ #if IS_ENABLED(CONFIG_IPV6)
-+ static inline bool bpf_sk_lookup_run_v6(struct net *net, int protocol,
-+ 					const struct in6_addr *saddr,
-+ 					const __be16 sport,
-+ 					const struct in6_addr *daddr,
-+ 					const u16 dport,
-+ 					struct sock **psk)
-+ {
-+ 	struct bpf_prog_array *run_array;
-+ 	struct sock *selected_sk =3D NULL;
-+ 	bool no_reuseport =3D false;
-+=20
-+ 	rcu_read_lock();
-+ 	run_array =3D rcu_dereference(net->bpf.run_array[NETNS_BPF_SK_LOOKUP]);
-+ 	if (run_array) {
-+ 		struct bpf_sk_lookup_kern ctx =3D {
-+ 			.family		=3D AF_INET6,
-+ 			.protocol	=3D protocol,
-+ 			.v6.saddr	=3D saddr,
-+ 			.v6.daddr	=3D daddr,
-+ 			.sport		=3D sport,
-+ 			.dport		=3D dport,
-+ 		};
-+ 		u32 act;
-+=20
-+ 		act =3D BPF_PROG_SK_LOOKUP_RUN_ARRAY(run_array, ctx, BPF_PROG_RUN);
-+ 		if (act =3D=3D SK_PASS) {
-+ 			selected_sk =3D ctx.selected_sk;
-+ 			no_reuseport =3D ctx.no_reuseport;
-+ 		} else {
-+ 			selected_sk =3D ERR_PTR(-ECONNREFUSED);
-+ 		}
-+ 	}
-+ 	rcu_read_unlock();
-+ 	*psk =3D selected_sk;
-+ 	return no_reuseport;
-+ }
-+ #endif /* IS_ENABLED(CONFIG_IPV6) */
-+=20
- +int copy_bpf_fprog_from_user(struct sock_fprog *dst, void __user *src, in=
-t len);
- +
-  #endif /* __LINUX_FILTER_H__ */
-
---Sig_/NmcyHySB4QEYmS7SkHXyhmQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8WTvAACgkQAVBC80lX
-0GxLMQf+OyuUUt2hCYprT08GHMUBVcfrGxq5KOJW20Y7QB2Ap9E/OT0Se0sfh+RJ
-L8vdkBbrnLNWkBnhT+n1ONOSYY7tsxdE2VYGGg1Eh1LQ+gayvdqOJ8n6OczeDLgY
-opdUtxhq0UZM8hltxtOGFP3ymXaAmEfdv2VEvLBLK8gbrsB7i7ZDifgPJISCNk/1
-hzu/9N0KWkadJxTdUuQBmsN2evi8I75j/YzLyymqXVQqHCVfA7XePoLih+WNeV0O
-0AxltZGJKv5H6gafEVPXJ3fMQ9i6ZUl3VfyvqrLMWddyhnxePzqv3UF3GH+Nx7u3
-9rI0ARYd6/6twZcVAfl/NO5FPVA1Xw==
-=QTH6
------END PGP SIGNATURE-----
-
---Sig_/NmcyHySB4QEYmS7SkHXyhmQ--
+Acked-by: Rob Herring <robh@kernel.org>
