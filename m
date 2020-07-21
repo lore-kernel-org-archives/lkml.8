@@ -8,51 +8,50 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B46C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD994C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00A1320729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFE020792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DYRw3X6V"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B8x5jYpZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgGUJ4Q (ORCPT
+        id S1729069AbgGUJ4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:56:16 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56716 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726188AbgGUJ4Q (ORCPT
+        Tue, 21 Jul 2020 05:56:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60456 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726188AbgGUJ4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:56:16 -0400
+        Tue, 21 Jul 2020 05:56:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595325374;
+        s=mimecast20190719; t=1595325402;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=ofm3jxbKadqTmcDOKEsUM6s/Ae3xeczEt8NqgjcDbIg=;
-        b=DYRw3X6VqQGl7les3Iq/+sruWG5bFfupdjmJuzqe4LsTLN9vgHS4qiCTzkqAfGLhves7ML
-        z2G9Z5f4ChWDdj9LwBAkn9xj0ezWzEhccxKotYajJh6KA5i5ZzpKL+3bqi3QdjtZkp5jDn
-        6aL/psOMyUqcMyIjamcAF6iUiHV+3sQ=
+        bh=quQ2Fkfs5BXiSSHey6hNsD/udoYDvtGL2OMs7QBigCU=;
+        b=B8x5jYpZHGghOJx+vri4xuZYfWdSyzqY9R9jHlHV1rV4BmZCBbcwTEd5KrsRbuDvnFiSzI
+        6P27mBTkoDB8Yj8s8D48lAFZAus+YsaE43D5qo8JoziLpsXEVdk1R06MqbmOth4OfloLS3
+        D4xOOMzAghf5AJQkE6xpqMU+Gx9Eizc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-6Er8iW4BNGm5IMByF5GpFA-1; Tue, 21 Jul 2020 05:56:12 -0400
-X-MC-Unique: 6Er8iW4BNGm5IMByF5GpFA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-265-f-0dxmrENISsj-0xjEjxMQ-1; Tue, 21 Jul 2020 05:56:38 -0400
+X-MC-Unique: f-0dxmrENISsj-0xjEjxMQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AB3091083E85;
-        Tue, 21 Jul 2020 09:56:11 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A664800471;
+        Tue, 21 Jul 2020 09:56:37 +0000 (UTC)
 Received: from [10.36.113.158] (ovpn-113-158.ams2.redhat.com [10.36.113.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 83C622B4DF;
-        Tue, 21 Jul 2020 09:56:10 +0000 (UTC)
-Subject: Re: [PATCH 2/5] mm/hugetlb.c: make is_hugetlb_entry_hwpoisoned return
- bool
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4894178541;
+        Tue, 21 Jul 2020 09:56:35 +0000 (UTC)
+Subject: Re: [PATCH 3/5] mm/hugetlb.c: Remove the unnecessary non_swap_entry()
 To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, mike.kravetz@oracle.com,
         akpm@linux-foundation.org
 References: <20200720062623.13135-1-bhe@redhat.com>
- <20200720062623.13135-3-bhe@redhat.com>
+ <20200720062623.13135-4-bhe@redhat.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -99,55 +98,56 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat GmbH
-Message-ID: <95e587fe-5811-45df-facd-ce1e32db5d48@redhat.com>
-Date:   Tue, 21 Jul 2020 11:56:09 +0200
+Message-ID: <83aeaeb8-560e-4777-6a64-7ca970de1638@redhat.com>
+Date:   Tue, 21 Jul 2020 11:56:34 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200720062623.13135-3-bhe@redhat.com>
+In-Reply-To: <20200720062623.13135-4-bhe@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 20.07.20 08:26, Baoquan He wrote:
-> Just like his neighbour is_hugetlb_entry_migration() has done.
+> The checking is_migration_entry() and is_hwpoison_entry() are stricter
+> than non_swap_entry(), means they have covered the conditional check
+> which non_swap_entry() is doing.
+> 
+> Hence remove the unnecessary non_swap_entry() in is_hugetlb_entry_migration()
+> and is_hugetlb_entry_hwpoisoned() to simplify code.
 > 
 > Signed-off-by: Baoquan He <bhe@redhat.com>
 > ---
->  mm/hugetlb.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  mm/hugetlb.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 191a585bb315..a58f976a9dd9 100644
+> index a58f976a9dd9..467894d8332a 100644
 > --- a/mm/hugetlb.c
 > +++ b/mm/hugetlb.c
-> @@ -3754,17 +3754,17 @@ bool is_hugetlb_entry_migration(pte_t pte)
->  		return false;
->  }
->  
-> -static int is_hugetlb_entry_hwpoisoned(pte_t pte)
-> +static bool is_hugetlb_entry_hwpoisoned(pte_t pte)
->  {
->  	swp_entry_t swp;
->  
+> @@ -3748,7 +3748,7 @@ bool is_hugetlb_entry_migration(pte_t pte)
 >  	if (huge_pte_none(pte) || pte_present(pte))
-> -		return 0;
-> +		return false;
+>  		return false;
 >  	swp = pte_to_swp_entry(pte);
->  	if (non_swap_entry(swp) && is_hwpoison_entry(swp))
-> -		return 1;
-> +		return true;
+> -	if (non_swap_entry(swp) && is_migration_entry(swp))
+> +	if (is_migration_entry(swp))
+>  		return true;
 >  	else
-> -		return 0;
-> +		return false;
->  }
->  
->  int copy_hugetlb_page_range(struct mm_struct *dst, struct mm_struct *src,
+>  		return false;
+> @@ -3761,7 +3761,7 @@ static bool is_hugetlb_entry_hwpoisoned(pte_t pte)
+>  	if (huge_pte_none(pte) || pte_present(pte))
+>  		return false;
+>  	swp = pte_to_swp_entry(pte);
+> -	if (non_swap_entry(swp) && is_hwpoison_entry(swp))
+> +	if (is_hwpoison_entry(swp))
+>  		return true;
+>  	else
+>  		return false;
 > 
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
