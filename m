@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855B1C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB727C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED5E2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF6C20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgGUIkf (ORCPT
+        id S1728178AbgGUIl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:40:35 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8343 "EHLO huawei.com"
+        Tue, 21 Jul 2020 04:41:58 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44118 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726673AbgGUIke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:40:34 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1339A8827B0523C5260B;
-        Tue, 21 Jul 2020 16:40:31 +0800 (CST)
+        id S1725984AbgGUIl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 04:41:58 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 639707B8D216B423070D;
+        Tue, 21 Jul 2020 16:41:54 +0800 (CST)
 Received: from ubuntu.network (10.175.138.68) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 21 Jul 2020 16:40:24 +0800
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 21 Jul 2020 16:41:45 +0800
 From:   Zheng Yongjun <zhengyongjun3@huawei.com>
 To:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>
 CC:     <linux-kernel@vger.kernel.org>,
         Zheng Yongjun <zhengyongjun3@huawei.com>
-Subject: [PATCH] tipc: remove set but not used variable 'no_warn'
-Date:   Tue, 21 Jul 2020 16:40:23 +0800
-Message-ID: <20200721084023.13402-1-zhengyongjun3@huawei.com>
+Subject: [PATCH] drivers: modules: remove set but not used variable 'no_warn'
+Date:   Tue, 21 Jul 2020 16:41:44 +0800
+Message-ID: <20200721084144.13545-1-zhengyongjun3@huawei.com>
 X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
