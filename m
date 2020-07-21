@@ -4,54 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D7FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B55C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBFE820702
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE8D20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:29:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbgGUL2q (ORCPT
+        id S1729784AbgGUL3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:28:46 -0400
-Received: from verein.lst.de ([213.95.11.211]:51721 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729719AbgGUL2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:28:46 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2BCBC68AFE; Tue, 21 Jul 2020 13:28:43 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 13:28:42 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Amit Pundir <amit.pundir@linaro.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Rientjes <rientjes@google.com>,
-        linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
-        iommu@lists.linux-foundation.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: Re: [PATCH] dma-pool: Do not allocate pool memory from CMA
-Message-ID: <20200721112842.GB27356@lst.de>
-References: <20200708164936.9340-1-nsaenzjulienne@suse.de> <CAMi1Hd35tRM=cnmzwX=SDgu-OoXi1Xj+twFkoULaVZBbTpe6sw@mail.gmail.com> <550b30a86c0785049d24c945e2c6628d491cee3a.camel@suse.de> <CAMi1Hd2V2pJjP=USS4r-Z3vK-aq7_aBy-jcVNk1GvbdEQAuzWg@mail.gmail.com> <011994f8a717a00dcd9ed7682a1ddeb421c2c43f.camel@suse.de>
+        Tue, 21 Jul 2020 07:29:12 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:52022 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729568AbgGUL3L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 07:29:11 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id D56031C0BE5; Tue, 21 Jul 2020 13:29:08 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 13:29:08 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 041/133] Revert "usb/ohci-platform: Fix a warning
+ when hibernating"
+Message-ID: <20200721112908.GA17950@duo.ucw.cz>
+References: <20200720152803.732195882@linuxfoundation.org>
+ <20200720152805.704517976@linuxfoundation.org>
+ <20200720210722.GA11552@amd>
+ <20200721012943.GA406581@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
 Content-Disposition: inline
-In-Reply-To: <011994f8a717a00dcd9ed7682a1ddeb421c2c43f.camel@suse.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200721012943.GA406581@sasha-vm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 01:15:23PM +0200, Nicolas Saenz Julienne wrote:
-> I'm at loss at what could be failing here. Your device should be able
-> to address the whole 8GB memory space, which AFAIK is the max available
-> on that smartphone family. But maybe the device-tree is lying, who
-> knows...
 
-Maybe we should give your patch to allocate from CMA but check the
-address a try?  (just because we can..)
+--k1lZvvs/B4yU6o8G
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > > >After some investigations, we concluded the following:
+> > > > - the issue does not exist in vanilla v5.8-rc4+
+> > > > - [bisecting shows that] the panic on v4.14.186 is caused by the la=
+ck
+> > > >   of v5.6-rc1 commit 987351e1ea7772 ("phy: core: Add consumer device
+> > > >   link support"). Getting evidence for that is easy. Reverting
+> > > >   987351e1ea7772 in vanilla leads to a similar backtrace [2].
+> > > >
+> > > >Questions:
+> > > > - Backporting 987351e1ea7772 ("phy: core: Add consumer device
+> > > >   link support") to v4.14.187 looks challenging enough, so probably=
+ not
+> > > >   worth it. Anybody to contradict this?
+> >=20
+> > I'm not sure about v4.14.187, but backport to v4.19 is quite simple
+> > (just ignore single non-existing file) and passes basic testing.
+> >=20
+> > Would that be better solution for 4.19 and newer?
+>=20
+> If Eugeniu could confirm that doing so on 4.19+ works for him, sure.
+
+He did:
+
+Message-ID: <20200721065054.GA8290@lxhi-065.adit-jv.com>
+Technically yes. Backporting 987351e1ea7772 to v4.19.x avoids the panic.
+=2E..
+FWIW I confirm that:
+* setup [A] leads to the issue reported in [C]
+* setup [B] resolves the issue reported in [C]
+
+[A] v4.19 + 16bdc04cc98 + 1cb3b0095c3 + 79112cc3c29f
+[B] v4.19 + 16bdc04cc98 + 1cb3b0095c3 + 79112cc3c29f + 987351e1ea7
+[C] https://lore.kernel.org/linux-usb/20200709070023.GA18414@lxhi-065.adit-=
+jv.com/
+
+
+Best regards,
+								Pavel
+
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--k1lZvvs/B4yU6o8G
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXxbRhAAKCRAw5/Bqldv6
+8hJ+AKDAFdFixJDxmhT3TZraQIz6vlnJBwCgwNhXgRjEqVH5eG8Xi+xbJOfHHvY=
+=6niu
+-----END PGP SIGNATURE-----
+
+--k1lZvvs/B4yU6o8G--
