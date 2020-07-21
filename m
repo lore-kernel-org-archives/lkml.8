@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BBFC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B507C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8566C2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB6D2080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:39:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgGULix (ORCPT
+        id S1728883AbgGULjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:38:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53544 "EHLO
+        Tue, 21 Jul 2020 07:39:07 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63654 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726755AbgGULiw (ORCPT
+        by vger.kernel.org with ESMTP id S1726266AbgGULjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:38:52 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LBVTZ8092234;
-        Tue, 21 Jul 2020 07:38:42 -0400
+        Tue, 21 Jul 2020 07:39:06 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LBX5Y7057997;
+        Tue, 21 Jul 2020 07:38:56 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32d9821w2k-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32dn0v8q5r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 07:38:42 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06LBVs63093550;
-        Tue, 21 Jul 2020 07:38:41 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32d9821w24-1
+        Tue, 21 Jul 2020 07:38:56 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06LBXEW1058621;
+        Tue, 21 Jul 2020 07:38:56 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32dn0v8q50-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 07:38:41 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LBZZBe024105;
-        Tue, 21 Jul 2020 11:38:39 GMT
+        Tue, 21 Jul 2020 07:38:55 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LBbSL5010313;
+        Tue, 21 Jul 2020 11:38:54 GMT
 Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 32brq7ktse-1
+        by ppma06fra.de.ibm.com with ESMTP id 32brbgsw14-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 11:38:39 +0000
+        Tue, 21 Jul 2020 11:38:54 +0000
 Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LBcZhl25100714
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LBcnwn15663398
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jul 2020 11:38:35 GMT
+        Tue, 21 Jul 2020 11:38:49 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 19D744203F;
-        Tue, 21 Jul 2020 11:38:35 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 6003F42042;
+        Tue, 21 Jul 2020 11:38:49 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F1A8642041;
-        Tue, 21 Jul 2020 11:38:29 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 6DAD44203F;
+        Tue, 21 Jul 2020 11:38:45 +0000 (GMT)
 Received: from srikart450.in.ibm.com (unknown [9.85.93.17])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Jul 2020 11:38:29 +0000 (GMT)
+        Tue, 21 Jul 2020 11:38:45 +0000 (GMT)
 From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 To:     Michael Ellerman <michaele@au1.ibm.com>
 Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
@@ -71,33 +71,28 @@ Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
         Gautham R Shenoy <ego@linux.vnet.ibm.com>,
         Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
         Jordan Niethe <jniethe5@gmail.com>
-Subject: [PATCH v2 01/10] powerpc/smp: Cache node for reuse
-Date:   Tue, 21 Jul 2020 17:08:05 +0530
-Message-Id: <20200721113814.32284-2-srikar@linux.vnet.ibm.com>
+Subject: [PATCH v2 04/10] powerpc/smp: Enable small core scheduling sooner
+Date:   Tue, 21 Jul 2020 17:08:08 +0530
+Message-Id: <20200721113814.32284-5-srikar@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
 References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-21_05:2020-07-21,2020-07-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- phishscore=0 impostorscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 mlxlogscore=999 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007210077
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 spamscore=0 priorityscore=1501 suspectscore=0
+ lowpriorityscore=0 clxscore=1015 bulkscore=0 phishscore=0 adultscore=0
+ mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007210082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While cpu_to_node is inline function with access to per_cpu variable.
-However when using repeatedly, it may be cleaner to cache it in a local
-variable.
-
-Also fix a build error in a some weird config.
-"error: _numa_cpu_lookup_table_ undeclared"
-
-No functional change
+Enable small core scheduling as soon as we detect that we are in a
+system that supports thread group. Doing so would avoid a redundant
+check.
 
 Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Cc: LKML <linux-kernel@vger.kernel.org>
@@ -113,56 +108,51 @@ Cc: Anton Blanchard <anton@au1.ibm.com>
 Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
 Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
 Cc: Jordan Niethe <jniethe5@gmail.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 ---
- arch/powerpc/kernel/smp.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+Changelog v1 -> v2:
+powerpc/smp: Enable small core scheduling sooner
+	Restored the previous info msg (Jordan)
+	Moved big core topology fixup to fixup_topology (Gautham)
+
+ arch/powerpc/kernel/smp.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
 diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index 73199470c265..680c0edcc59d 100644
+index 1ce95da00cb6..72f16dc0cb26 100644
 --- a/arch/powerpc/kernel/smp.c
 +++ b/arch/powerpc/kernel/smp.c
-@@ -843,7 +843,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+@@ -1370,6 +1370,16 @@ int setup_profiling_timer(unsigned int multiplier)
+ 	return 0;
+ }
  
- 	DBG("smp_prepare_cpus\n");
- 
--	/* 
-+	/*
- 	 * setup_cpu may need to be called on the boot cpu. We havent
- 	 * spun any cpus up but lets be paranoid.
- 	 */
-@@ -854,20 +854,24 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 	cpu_callin_map[boot_cpuid] = 1;
- 
- 	for_each_possible_cpu(cpu) {
-+		int node = cpu_to_node(cpu);
-+
- 		zalloc_cpumask_var_node(&per_cpu(cpu_sibling_map, cpu),
--					GFP_KERNEL, cpu_to_node(cpu));
-+					GFP_KERNEL, node);
- 		zalloc_cpumask_var_node(&per_cpu(cpu_l2_cache_map, cpu),
--					GFP_KERNEL, cpu_to_node(cpu));
-+					GFP_KERNEL, node);
- 		zalloc_cpumask_var_node(&per_cpu(cpu_core_map, cpu),
--					GFP_KERNEL, cpu_to_node(cpu));
-+					GFP_KERNEL, node);
-+#ifdef CONFIG_NEED_MULTIPLE_NODES
- 		/*
- 		 * numa_node_id() works after this.
- 		 */
- 		if (cpu_present(cpu)) {
--			set_cpu_numa_node(cpu, numa_cpu_lookup_table[cpu]);
--			set_cpu_numa_mem(cpu,
--				local_memory_node(numa_cpu_lookup_table[cpu]));
-+			node = numa_cpu_lookup_table[cpu];
-+			set_cpu_numa_node(cpu, node);
-+			set_cpu_numa_mem(cpu, local_memory_node(node));
- 		}
++static void fixup_topology(void)
++{
++#ifdef CONFIG_SCHED_SMT
++	if (has_big_cores) {
++		pr_info("Big cores detected but using small core scheduling\n");
++		powerpc_topology[0].mask = smallcore_smt_mask;
++	}
 +#endif
- 	}
++}
++
+ void __init smp_cpus_done(unsigned int max_cpus)
+ {
+ 	/*
+@@ -1383,12 +1393,7 @@ void __init smp_cpus_done(unsigned int max_cpus)
  
- 	/* Init the cpumasks so the boot CPU is related to itself */
+ 	dump_numa_cpu_topology();
+ 
+-#ifdef CONFIG_SCHED_SMT
+-	if (has_big_cores) {
+-		pr_info("Big cores detected but using small core scheduling\n");
+-		powerpc_topology[0].mask = smallcore_smt_mask;
+-	}
+-#endif
++	fixup_topology();
+ 	set_sched_topology(powerpc_topology);
+ }
+ 
 -- 
 2.17.1
 
