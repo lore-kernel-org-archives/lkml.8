@@ -2,136 +2,113 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8F0C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8ADF22CA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:20:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="OpPv5GBL"
+	by mail.kernel.org (Postfix) with ESMTP id 57DC920714
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbgGUKUn (ORCPT
+        id S1729258AbgGUK1F convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:20:43 -0400
-Received: from mail-eopbgr40077.outbound.protection.outlook.com ([40.107.4.77]:37968
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726089AbgGUKUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:20:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EEM7vk9BnzDEDu2wooOkVh6TCv75MQzkzUdmrCfVb96lh2OHjmwvzdNTM56824FJwHlXDJ+mRS6FGHoTE/Y1CtssfvyZubJMpDC+MInDXz/JsW/N1yJlXvifhUw/keGE2hw88cSmyIptmWKAkOjj8qeiXnO4nOkKxVO31sqmFiGHZz3+yrGhP0hVbLxPVYgbDulcWGw0cw9k95BYqYpU2e+Kwvhj1wwM5w6LYmBRhDdsNuGCUoyDENvV5LNIZKPvxjs19fmX/oUPHn6Fyuuan3g67pBIvrw5m55P/bSU0kVWHzlPtXGEzQCjpX161g+WFa/X5Ap4n8BLFDMCJlyrTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YmRfCO8DfQpqrXVtGTBUyw7wV25yp0MALyRAGwEitWw=;
- b=dD1vhHcaHl8IYv0wJnVUTTkPgNC8r/3AHgF9kPjWqdO9AGcMGAx2Ix5QWj/YluVDaIZEeOuEA+RyYKzR+YuseQGpLLAtv4vYdUDNUFhpqbjlmXSWnXE52+IWzyGAQyiUGX+jJhHVDfBWDLvICypgkKG3IfJY9AeUS2JueoHWhdljEZ0IrNy/ygTSuBQfTQoiehYx2e2ytm4dztChZmALFXE2Xv5yillUvz7eLGJx5h4ysqhIXTIAbuP/90CryHMA/jMStaTNXu0Ka1Vvf1YVUQA4PoNNWx+mMZyXrB3y84v/eYlrvfCPAlGs/9h6G9hjKdZxCooFkJw5EnN7cEUV5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YmRfCO8DfQpqrXVtGTBUyw7wV25yp0MALyRAGwEitWw=;
- b=OpPv5GBLLHy7JI19lIQ0SzyFonPJMkcjUaMeUXQtuo/tWbfWySdk3HrRG/fT1lXCEAdJ4rwCBFgPpbh4vV+24wnFrbjtH1X1G5iN+jSWjqqoC6XgfEUyW0t9lLos2dXWcBDPb5Lv6GP9xOT27rhdn46ZpJyyU4WgWiSu35g/hGw=
-Authentication-Results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none
- header.from=oss.nxp.com;
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27) by VI1PR04MB4398.eurprd04.prod.outlook.com
- (2603:10a6:803:69::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18; Tue, 21 Jul
- 2020 10:20:35 +0000
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::4c0:79dd:b734:9ea7]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::4c0:79dd:b734:9ea7%5]) with mapi id 15.20.3195.026; Tue, 21 Jul 2020
- 10:20:34 +0000
-From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     l.stach@pengutronix.de, lukas@mntmn.com, agx@sigxcpu.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, laurentiu.palcu@oss.nxp.com
-Subject: [PATCH v7 1/5] drm/imx: compile imx directory by default
-Date:   Tue, 21 Jul 2020 13:20:00 +0300
-Message-Id: <20200721102007.18368-2-laurentiu.palcu@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200721102007.18368-1-laurentiu.palcu@oss.nxp.com>
-References: <20200721102007.18368-1-laurentiu.palcu@oss.nxp.com>
-Content-Type: text/plain; charset="us-ascii"
-X-ClientProxiedBy: AM3PR07CA0138.eurprd07.prod.outlook.com
- (2603:10a6:207:8::24) To VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27)
+        Tue, 21 Jul 2020 06:27:05 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:57186 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728271AbgGUK1E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:27:04 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-165-VkETpnrTNNiCTn0jftGBVw-1; Tue, 21 Jul 2020 11:27:00 +0100
+X-MC-Unique: VkETpnrTNNiCTn0jftGBVw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 21 Jul 2020 11:26:58 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 21 Jul 2020 11:26:58 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+        "linux-decnet-user@lists.sourceforge.net" 
+        <linux-decnet-user@lists.sourceforge.net>,
+        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "mptcp@lists.01.org" <mptcp@lists.01.org>,
+        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
+Subject: RE: get rid of the address_space override in setsockopt
+Thread-Topic: get rid of the address_space override in setsockopt
+Thread-Index: AQHWXznU7Ce8ImOXV0WGgKrMes+hhakR08Lg
+Date:   Tue, 21 Jul 2020 10:26:58 +0000
+Message-ID: <ae6a743aaea3406596dbc89e332b6b3e@AcuMS.aculab.com>
+References: <20200720124737.118617-1-hch@lst.de>
+In-Reply-To: <20200720124737.118617-1-hch@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-141.ea.freescale.net (83.217.231.2) by AM3PR07CA0138.eurprd07.prod.outlook.com (2603:10a6:207:8::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.15 via Frontend Transport; Tue, 21 Jul 2020 10:20:33 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 91b8ba8b-af5e-41b4-48db-08d82d5fb485
-X-MS-TrafficTypeDiagnostic: VI1PR04MB4398:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB43987AA8823871FD975B8E45BE780@VI1PR04MB4398.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: V6jZlapkXtnhTEKecvFLW6FQy3curdE+70VnL1OCYzVPkvoPSkHXAlurdq1GVavUjBzQbWVct8WQFkYVZl5zZjtYHaTo4lDR5nbocwym2qAKsmam5WFopyIzadnkg8CbvTMNrk1WLMdU3MmJ6r/2CLRUEi41kn4gZ1CB+/SttinPwzci0etabcCMRXiiHmCljviTzslvGWBUdWWXtu9MfV9tT2N5alCjSl57y5/WQYk27GLPUlhRw3xcYTbRsawhp6a5ZYBgwdSdKjDQlbnL+85rsZTUWbRi1EInNIuy2/G4/AsupQl522AhXTKlbmQITcUTWcOZDCs5G3ikoVN39g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(39860400002)(366004)(136003)(478600001)(316002)(66946007)(16526019)(66556008)(66476007)(26005)(8676002)(44832011)(6666004)(7416002)(5660300002)(4326008)(1076003)(2616005)(956004)(6486002)(86362001)(52116002)(110136005)(2906002)(186003)(6506007)(83380400001)(6512007)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: lL7Vxj9rSdMp1rkKKTC0dVFN5qzHrG7SsVGkPuLMFEbgGxbBRDPgbMU6jymASAkAlXtpcu7Yi+vdrEgjs1QMukuSCqH9jdMTLso1KQKuXch6hV8iaXgSabTIyovcs3z51hXIen61gQRWFHTyhIAE4F/GN/kWLSWnO+fX3O9y5ZNJQSHJUBBXsKBXhT2AxMEVCcmaywFiZhIXbfvYVBE+nN2y5vf4gtQbHc07qbTyMX7xVksV9fYEeI1VW642kqIsl6HBK7HXeNAAs47ncBYrqnFfbDHTFtO75pqjIK5yQHzqa97P5UcjlMdPpwulzlN9v1F+3gUQpaF5iKHKUEsACOs808Ou8K4hH/9sTqiBsaLgZrDAdYHJzzZqqYDCRXM1H33kRp3dUr3Dp9mCrj2lK0c/VrBq0W9dlsXuH7J5p6niOdpbDzt38YGZ2l6iomx5Osu9MC0Mw8OtnKCl6k+1PpHU1cgnSYEHwtGtofzJH3A=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91b8ba8b-af5e-41b4-48db-08d82d5fb485
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2020 10:20:34.8830
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uBhY9OrzDR4pvxD3ktzg17dsoRy7wD2e0wYdfOSd6i9H3ljVaMjgwUD9/OgYxpoPHpuUSMRU9UAB9NBL39U6qw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4398
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+From: Christoph Hellwig
+> Sent: 20 July 2020 13:47
+> 
+> setsockopt is the last place in architecture-independ code that still
+> uses set_fs to force the uaccess routines to operate on kernel pointers.
+> 
+> This series adds a new sockptr_t type that can contained either a kernel
+> or user pointer, and which has accessors that do the right thing, and
+> then uses it for setsockopt, starting by refactoring some low-level
+> helpers and moving them over to it before finally doing the main
+> setsockopt method.
 
-Currently the drm/imx/ directory is compiled only if DRM_IMX is set. Adding a
-new IMX related IP in the same directory would need DRM_IMX to be set, which would
-bring in also IPUv3 core driver...
+Another 'gotcha' ...
 
-The current patch would allow adding new IPs in the imx/ directory without needing
-to set DRM_IMX.
+On an least some architectures (possibly only m68k) IIRC all structures
+are actually passed by reference.
+(This used to be true for sparc - but it may have changed in the
+last 30 years.)
 
-Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
----
- drivers/gpu/drm/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	David
+ 
 
-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index 2c0e5a7e5953..c4d12e756c63 100644
---- a/drivers/gpu/drm/Makefile
-+++ b/drivers/gpu/drm/Makefile
-@@ -100,7 +100,7 @@ obj-$(CONFIG_DRM_MSM) += msm/
- obj-$(CONFIG_DRM_TEGRA) += tegra/
- obj-$(CONFIG_DRM_STM) += stm/
- obj-$(CONFIG_DRM_STI) += sti/
--obj-$(CONFIG_DRM_IMX) += imx/
-+obj-y 			+= imx/
- obj-$(CONFIG_DRM_INGENIC) += ingenic/
- obj-$(CONFIG_DRM_MEDIATEK) += mediatek/
- obj-$(CONFIG_DRM_MESON)	+= meson/
--- 
-2.23.0
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
