@@ -5,71 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72524C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A68B2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF602065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:34:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gupm99RL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yuszitot"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730699AbgGUReM (ORCPT
+        id S1730755AbgGUReZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:34:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55082 "EHLO
+        Tue, 21 Jul 2020 13:34:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbgGUReL (ORCPT
+        with ESMTP id S1727778AbgGUReY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:34:11 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 992A8C061794;
-        Tue, 21 Jul 2020 10:34:11 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so3693812wml.3;
-        Tue, 21 Jul 2020 10:34:11 -0700 (PDT)
+        Tue, 21 Jul 2020 13:34:24 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7899C061794;
+        Tue, 21 Jul 2020 10:34:23 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o8so3616548wmh.4;
+        Tue, 21 Jul 2020 10:34:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZpUWukDFhtGhPRKH8gzzWKs4NX7XpEAqlrkDHOJNL5E=;
-        b=gupm99RL+sfpFHE2rVMbZ7I+is0nUqbfb77qLseT+n6CvMeE7JqA77KTirK4woDMT0
-         OiA7JW+Xo7V9zM30C0iHKJpq+nkS8ESHhQlFSXUz0ErHW9P9pjS6I4JFdbxhE23AUVlH
-         uZ9IGf3Bzen0ofUEO6Aibfg5TXZnOc9fFf0E8D5QGPLFB0O0/J8XcokFZuHzTqLISXp3
-         +hf6EQWzFvY+DSZwOT2x/XHvGRpEau2dsh6NPUOpn2FoZTrSfHzamgMbdkhYl6C1kBN5
-         vLcsIt1g2cmIWzHZR6N6RwhmWNKijpVbcNL9rUBemp4WIVAGaKU+VYtGQ4RbiEDAegLW
-         HyMw==
+        bh=x1tl5K5wM6OrtjqewSJyc3Iq9vdTwD20XP3PZbDWtFw=;
+        b=YuszitotVPtHrMor89OeOJTLqV5FnxAeOKgskAwW68YX0Kbv//rqKe/qNpfQyvtT36
+         rPbGTOESLTHfSyh30x1JmGSn41nE629edPi+oeIA2UjYz9ykoI6qPzxO5BCSKfNZVbt3
+         UoBAA1quo8n4NaXRKr7d++LNKNOMQvq3hnn0iFn/4t/4xB7YBKmxgOqHy4I3ih2TbHik
+         HU667bVn64qegYV0uwwqaPjaGxNPjCr5i1kNqpWLTj+7mlHXGC08G0TKlfsH7SdMCgVe
+         Nkk/Kiyj2Bp5Cm4cBAOLu9n2JXpHcWkeqTKwKDo5vaJKTS8NSDVUvItgIFbFJ+4Ywi0J
+         3IAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=ZpUWukDFhtGhPRKH8gzzWKs4NX7XpEAqlrkDHOJNL5E=;
-        b=rc2e19iKCvzzEreeKk/ALkgxY7ocqraFdpX4UOw8AkN6cyUVwck2x/KH7+pUrAX26y
-         CnouOL2hSPY5LrkuFTgSVyLRi8zGrt2VnjKUQYcXomrgPwrwie8Um7AEN0KGkjsn31kg
-         2Ud0pxzelfT7deyEZ8xdFfExz3Tv3aYGyjfledNyd14R8Jri88oPxJUqnCGJOZ/KOT8N
-         al3la7OkHlItTy1XcL5DKeKxbI/ZsVEIjlkWQr81GtOvS1KPoCicTYezWDiIlLEdnn7z
-         tBsdP9ar5loxu5bo/NMYOmtPDtvwAj1NDWvK6Yo1ANA1iMNZwuzzMTf34yCi4ox+x0ZR
-         zK2g==
-X-Gm-Message-State: AOAM532uocoYZxaKKxhHa+Ynyc1B6tWuBo3din3UPngF5C7vPZlKP8Z/
-        5RYNr7ElSCV3a4Mx+lbQjt0=
-X-Google-Smtp-Source: ABdhPJycwVKCIFlp5/z/dbMBVSz9f38q1uNnYqv9MTORSDC9xlA9Dvm6tiWUmr+i9MSDB08yyvkErg==
-X-Received: by 2002:a1c:720e:: with SMTP id n14mr5342301wmc.144.1595352850335;
-        Tue, 21 Jul 2020 10:34:10 -0700 (PDT)
+        bh=x1tl5K5wM6OrtjqewSJyc3Iq9vdTwD20XP3PZbDWtFw=;
+        b=QJq8jUhE6diOz8dbAlPqVIkQ5Ao+3PirgUEFLtHoBtvv17fdCQAu2heas23fxw4ayL
+         JN24672R/HPWCg4S21vSphPn+cWuFn7tzwDeHovl8pAh49bWmrUdzXC2wAyzUpAbwKn1
+         eqJoKnaR4UPG8T0AnTHauRxo0FBKWEbTaS2cFT5e6jjQI5zHjLbG+sF8+yXVl0JMPrwq
+         3fOCf0ihM15gXBP2iRoAS26aTVRy2NSS3h6IGO+SeOVVOET3JD/SK+ZAA+rI1AV78HA4
+         cvLUhNB25hCXgzyaPbCPIQYR9krTIOotlBWWTMnaLVvs0kETQyrHkGRciYs5kgnEVWzm
+         L5Hg==
+X-Gm-Message-State: AOAM532/VxFNLHUbDPCrjvdgDCdvzULZPaM+F7huLbo+13nMdRq5B9Cr
+        flHxcPm0SXZl5nTF4e433FI=
+X-Google-Smtp-Source: ABdhPJwpKocYjjUWgdE4PwmeJQLaSyzx3EmjQBjuhyvu37uVnkHL17oaBnEAVctfbZ9A36kuINHNxA==
+X-Received: by 2002:a1c:6609:: with SMTP id a9mr3521190wmc.14.1595352862588;
+        Tue, 21 Jul 2020 10:34:22 -0700 (PDT)
 Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id t3sm7184979wre.41.2020.07.21.10.34.07
+        by smtp.googlemail.com with ESMTPSA id e5sm22266636wrc.37.2020.07.21.10.34.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 10:34:08 -0700 (PDT)
-Subject: Re: [PATCH v2 5/7] usb: bdc: driver runs out of buffer descriptors on
- large ADB transfers
+        Tue, 21 Jul 2020 10:34:21 -0700 (PDT)
+Subject: Re: [PATCH v2 6/7] usb: bdc: Halt controller on suspend
 To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
+Cc:     Danesh Petigara <danesh.petigara@broadcom.com>,
+        devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Sasi Kumar <sasi.kumar@broadcom.com>
 References: <20200721144326.7976-1-alcooperx@gmail.com>
- <20200721144326.7976-6-alcooperx@gmail.com>
+ <20200721144326.7976-7-alcooperx@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -125,12 +125,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <1cf26dfc-977c-59d2-2401-6e55fd513f1b@gmail.com>
-Date:   Tue, 21 Jul 2020 10:34:06 -0700
+Message-ID: <b1a22324-65d2-24b8-6ff4-4c502ed8a4b7@gmail.com>
+Date:   Tue, 21 Jul 2020 10:34:18 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200721144326.7976-6-alcooperx@gmail.com>
+In-Reply-To: <20200721144326.7976-7-alcooperx@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -140,14 +140,18 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 7/21/20 7:43 AM, Al Cooper wrote:
-> Version v1.0.40 of the Android host ADB software increased maximum
-> transfer sizes from 256K to 1M. Since the STB ADB gadget driver
-> requests only 16K at a time, the BDC driver ran out of buffer
-> descriptors (BDs) if the queuing happens faster than the incoming
-> 16K transfers. This issue is fixed by doubling the number of BDs
-> that can be queued so that the entire 1M request can be queued
-> without running out of buffers.
+> From: Danesh Petigara <danesh.petigara@broadcom.com>
 > 
+> GISB bus error kernel panics have been observed during S2 transition
+> tests on the 7271t platform. The errors are a result of the BDC
+> interrupt handler trying to access BDC register space after the
+> system's suspend callbacks have completed.
+> 
+> Adding a suspend hook to the BDC driver that halts the controller before
+> S2 entry thus preventing unwanted access to the BDC register space during
+> this transition.
+> 
+> Signed-off-by: Danesh Petigara <danesh.petigara@broadcom.com>
 > Signed-off-by: Al Cooper <alcooperx@gmail.com>
 
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
