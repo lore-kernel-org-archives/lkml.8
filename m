@@ -2,142 +2,98 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C261BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F742C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D15320709
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:41:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E18YyFBS"
+	by mail.kernel.org (Postfix) with ESMTP id 3020A2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:42:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731154AbgGUVlY (ORCPT
+        id S1731239AbgGUVmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:41:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbgGUVlY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:41:24 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43C3AC061794;
-        Tue, 21 Jul 2020 14:41:24 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id l6so10815318plt.7;
-        Tue, 21 Jul 2020 14:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WM01wnLhf7dJUXo6TRfFaK2BruNuZ8X0QkexXwSL96Q=;
-        b=E18YyFBSkzKaV4jgaMLsVkJNcKYKBJI6lnUK6fjEdTwBE9YIO2fkD21QsoZvbmqn+Z
-         Z/nEyG/c3A2xG1kQKOiEn9MgOY99xRZMd9cCBfLocUcELDOsGXOFomdUdvydkNl2rmqv
-         EdiEsv02qQ7/6jKGN+xXcFbs2JrwfGcsTh+OUUojx2hjdkMl5VDkK63wtwgYd1KUgOHN
-         HpdeQmFN0BBribjsKIpr2daWvlQel9mp5UxzcdKqEApDBmSN04oAuFhZQpAzF+6bvcY/
-         flSLMyO7UaNPu4BWrTZ1R2KzJQROZVJgc5BwVojQYI+Swc0alwIthDBLgXpv5JWPt4C+
-         WAPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WM01wnLhf7dJUXo6TRfFaK2BruNuZ8X0QkexXwSL96Q=;
-        b=Ylb6lJp5B6rqOgGyF2WOs1MvmF1MSmwTazDkwow3/+5xWk/Hjr4IYbchYGu3dXPTDn
-         EEyZx860fWjjK9e9jnX+Xg2jPCpyWmXuof8pb34uQsV4sGQm5SUGW061B8D/z8Tm/L/q
-         KBaVgczMzzy8MAhMpIH2HMoYHa9AttubknZCXmDywCN3jb+hjv/+m4zm75g98e2SgH/T
-         B9IevLjHe/z3TyDAwJd9XraVTc7yxbuVXgTWC0LFUcmqHtjR00lou6Oou6taPwyXCMPx
-         +TX8ZUE0Bagj1O/YUJcZmImzxaPwuWZ6i5xLiwVk6QPAAZ3H2Vrq3tK+mcDiwrHzLrmj
-         cpKA==
-X-Gm-Message-State: AOAM530v1GuFnh6zZz9k2WUXansbTTZN64JiChusRcjOYo3wlvu/BxVr
-        PhYxpEGvwjdUU9GNLi8t5zkaGu7jeIavD2dYU50=
-X-Google-Smtp-Source: ABdhPJw8BeaR89GDAcCrABVZVM0ZLYfTCc2lCN6v71KacsCzeOwbZ4ObTbUTiKADMuvO8jyeKKij64QQvizEIkev+SI=
-X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr6728411pjb.181.1595367683740;
- Tue, 21 Jul 2020 14:41:23 -0700 (PDT)
+        Tue, 21 Jul 2020 17:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726555AbgGUVmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 17:42:36 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4231420709;
+        Tue, 21 Jul 2020 21:42:35 +0000 (UTC)
+Date:   Tue, 21 Jul 2020 17:42:33 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 6/7] KVM: x86: Use common definition for
+ kvm_nested_vmexit tracepoint
+Message-ID: <20200721174233.411fba7b@oasis.local.home>
+In-Reply-To: <20200721193130.GH22083@linux.intel.com>
+References: <20200718063854.16017-1-sean.j.christopherson@intel.com>
+        <20200718063854.16017-7-sean.j.christopherson@intel.com>
+        <87365mqgcg.fsf@vitty.brq.redhat.com>
+        <20200721002717.GC20375@linux.intel.com>
+        <87imehotp1.fsf@vitty.brq.redhat.com>
+        <20200721193130.GH22083@linux.intel.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200721203951.2159-1-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200721203951.2159-1-Sergey.Semin@baikalelectronics.ru>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 22 Jul 2020 00:41:07 +0300
-Message-ID: <CAHp75VccnfuevjDG1xX8Lz46yJDac7GnWPcxf0NiSo8dxe2MDg@mail.gmail.com>
-Subject: Re: [PATCH] spi: dw-dma: Fix Tx DMA channel working too fast
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Feng Tang <feng.tang@intel.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 11:39 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> It turns out having a Rx DMA channel serviced with higher priority than
-> a Tx DMA channel is not enough to provide a well balanced DMA-based SPI
-> transfer interface. There might still be moments when the Tx DMA channel
-> is occasionally handled faster than the Rx DMA channel. That in its turn
-> will eventually cause the SPI Rx FIFO overflow if SPI bus speed is high
-> enough to fill the SPI Rx FIFO in before it's cleared by the Rx DMA
-> channel. That's why having the DMA-based SPI Tx interface too optimized
-> is the errors prone, so the commit 0b2b66514fc9 ("spi: dw: Use DMA max
-> burst to set the request thresholds") though being perfectly normal from
-> the standard functionality point of view implicitly introduced the problem
-> described above. In order to fix that the Tx DMA activity is intentionally
-> slowed down by limiting the SPI Tx FIFO depth with a value twice bigger
-> than the Tx burst length calculated earlier by the
-> dw_spi_dma_maxburst_init() method.
+On Tue, 21 Jul 2020 12:31:30 -0700
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Thanks!
+> +Steve
+> 
+> Background: KVM has two tracepoints that effectively trace the same thing
+> (VM-Exit vs. nested VM-Exit), but use completely different formatting and
+> nomenclature for each of the existing tracepoints.  I want to add a common
+> macro to create the tracepoints so that they capture the exact same info
+> and report it with the exact same format.  But that means breaking the
+> "ABI" for one of the tracepoints, e.g. trace-cmd barfs on the rename of
+> exit_code to exit_reason.
 
-> Fixes: 0b2b66514fc9 ("spi: dw: Use DMA max burst to set the request thresholds")
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Feng Tang <feng.tang@intel.com>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> ---
->  drivers/spi/spi-dw-dma.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/spi/spi-dw-dma.c b/drivers/spi/spi-dw-dma.c
-> index 5986c520b196..bb390ff67d1d 100644
-> --- a/drivers/spi/spi-dw-dma.c
-> +++ b/drivers/spi/spi-dw-dma.c
-> @@ -372,8 +372,20 @@ static int dw_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
->  {
->         u16 imr = 0, dma_ctrl = 0;
->
-> +       /*
-> +        * Having a Rx DMA channel serviced with higher priority than a Tx DMA
-> +        * channel might not be enough to provide a well balanced DMA-based
-> +        * SPI transfer interface. There might still be moments when the Tx DMA
-> +        * channel is occasionally handled faster than the Rx DMA channel.
-> +        * That in its turn will eventually cause the SPI Rx FIFO overflow if
-> +        * SPI bus speed is high enough to fill the SPI Rx FIFO in before it's
-> +        * cleared by the Rx DMA channel. In order to fix the problem the Tx
-> +        * DMA activity is intentionally slowed down by limiting the SPI Tx
-> +        * FIFO depth with a value twice bigger than the Tx burst length
-> +        * calculated earlier by the dw_spi_dma_maxburst_init() method.
-> +        */
->         dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
-> -       dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - dws->txburst);
-> +       dw_writel(dws, DW_SPI_DMATDLR, dws->txburst);
->
->         if (xfer->tx_buf)
->                 dma_ctrl |= SPI_DMA_TDMAE;
-> --
-> 2.26.2
->
+Feel free to update it.
 
+> 
+> Was there ever a verdict on whether or not tracepoints are considered ABI
+> and thus must retain backwards compatibility?
+> 
+> If not, what's the proper way to upstream changes to trace-cmd?
+> 
 
--- 
-With Best Regards,
-Andy Shevchenko
+There's a kvm plugin in the libtraceevent code.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/traceevent/plugins/plugin_kvm.c
+
+This overrides how the events are read. In the callback handler
+(e.g. kvm_nested_vmexit_handle()), you can test if "rip" is there or
+not. If it is not, you can do something different. For example:
+
+	struct tep_format_field *field;
+
+	field = tep_find_any_field(event, "rip");
+	if (field) {
+		tep_print_num_field(s, "rip %llx ", event, "rip", record, 1)
+		[..]
+	} else {
+		/* do something new */
+	}
+
+You can test if fields exist and have the plugins do different things
+depending on the format of an event. This is what I do in case an event
+changes in the future.
+
+-- Steve
