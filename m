@@ -2,122 +2,181 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986CCC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A00EC433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3282068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595343037;
-	bh=aNdmG5FsTOEdRO5wwbpPC+77Y5ZHj9o0TCBNjVxmUPw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YIPS3W6XNBKOkHCa6naNgyuiD5Kz5WlGuyRAG0a3j1gCU8AMZWHl4bzXnC5TzBlwm
-	 kwJR3eaqCRB9gvvRT6/hE6RQlXdSt6cUhk2touhPo/f21+puFpd+eqJO05wpj+y7kt
-	 eX6zPAif8NnALDG7rEAkh+HKkmP0BWqyf1xvpQiw=
+	by mail.kernel.org (Postfix) with ESMTP id 7539F20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:50:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X7+S6hW6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729850AbgGUOug (ORCPT
+        id S1729914AbgGUOuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:50:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39806 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728454AbgGUOub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:50:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A26DF20717;
-        Tue, 21 Jul 2020 14:50:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595343031;
-        bh=aNdmG5FsTOEdRO5wwbpPC+77Y5ZHj9o0TCBNjVxmUPw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yR5hvNnshGR+m2ClD1DJ95m2CrjuK7W0TRv/SjhMfSMw0tyr/PrezegeeO/iRG97y
-         1NfwxzJqji3t3IJryAgNzFrpb4ZauAcgINuz8I49y0q87kK9j3BaFGDLKFVAgmb/OM
-         geWxEVkNEcIUYrfVuEqqve4OMa8JnvKDVG25w/gc=
-Date:   Tue, 21 Jul 2020 16:50:38 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     tglx@linutronix.de, linux-spdx@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] LICENSES: Replace HTTP links with HTTPS ones
-Message-ID: <20200721145038.GA1991774@kroah.com>
-References: <20200713084231.32496-1-grandmaster@al2klimov.de>
+        Tue, 21 Jul 2020 10:50:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728064AbgGUOun (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 10:50:43 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1101BC061794;
+        Tue, 21 Jul 2020 07:50:43 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a14so6642853wra.5;
+        Tue, 21 Jul 2020 07:50:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FtjYeahfsCoCJrIFHdJmpOZhvdKjfhqQhW/t+coglS4=;
+        b=X7+S6hW6US6cqheTHA43adQBscqeFGGNMkVYD4RYcEA2NdskJ0tJOUqHwc2N1OjC/m
+         FnMmBC5OUbkvtKjJoq7eGEEe76VPWNZfUWhGNM99mXLKqXcw1owp60Zhmgl9y8GLpqx4
+         JoQFEb0qQn2zZ8tWBNY/vUMs+vwqFIKYK8vcjnHDpeXS0VFFuEYKwB2/yhuPj2EME5q3
+         GPnaMBNlNps4iu4HDoXtfsPguw7aoDe6kSjtIT/Jx72uYN8n27FuwMGukekgC0yFOr7S
+         /6xlwn5ajp2kiQ6RuDDp8SGkLMPeBHfNZjACAaE2dgZsjkmXna896WuoYrqI8WSYu0lu
+         39xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FtjYeahfsCoCJrIFHdJmpOZhvdKjfhqQhW/t+coglS4=;
+        b=T6ByOFrU7PpvCEmiLaNnDtNjosgGhx1VqqTeG88HeR5QqYyhI5s1gOESOoh42BgZTr
+         UVUmFKcpbitVK1gavdaQS46Q+pw58ZJqkGmEAgUwgxdk5AqUZrZev848m7HywJAp+WG7
+         bIOWfAVgywp2dMkFdkalUQ+VEgFZTcw02vV9aqh/N3rJbqYpT14e6sRN4wkdo7rn9BoT
+         gZlq5vCVsnxKVdE/YhsFXPlaHNipl9xN/kzsAAfc2q5eYXpbfnVkY2rKHJM36O7TnyMS
+         Qif6LO11+DsQUFtqT8DfQZoR4K8SF1zxb4PDILlvnoAMGzxZ2gQ16UcVYaVhcZnuUbY9
+         ZgGA==
+X-Gm-Message-State: AOAM530PiuNliYA7PfRcXC3Gzj2/haNsYmcFZTtBWEGegz3TIrX8KyzE
+        VUvUh8XPEGNGfUzMcGcaXxc=
+X-Google-Smtp-Source: ABdhPJyFUeHKHbAaIHOvBoUkGx4gQOyjJrIgjh4of36BxdtWDNGTrLQq8uMp3JMd3QP9w0fHUjGWrQ==
+X-Received: by 2002:adf:94a1:: with SMTP id 30mr25844514wrr.37.1595343041778;
+        Tue, 21 Jul 2020 07:50:41 -0700 (PDT)
+Received: from localhost ([156.204.74.63])
+        by smtp.gmail.com with ESMTPSA id u16sm3680271wmn.11.2020.07.21.07.50.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 07:50:41 -0700 (PDT)
+From:   Abanoub Sameh <abanoubsameh8@gmail.com>
+X-Google-Original-From: Abanoub Sameh <abanoubsameh@protonmail.com>
+To:     andy.shevchenko@gmail.com
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Abanoub Sameh <abanoubsameh@protonmail.com>
+Subject: [PATCH 1/4] gpio: gpio-msic.c: changed every 'unsigned' to 'unsigned int'
+Date:   Tue, 21 Jul 2020 16:50:24 +0200
+Message-Id: <20200721145027.770268-1-abanoubsameh@protonmail.com>
+X-Mailer: git-send-email 2.28.0.rc0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713084231.32496-1-grandmaster@al2klimov.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 10:42:31AM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
-> 
->  If there are any URLs to be removed completely or at least not just HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
-> 
-> 
->  LICENSES/dual/Apache-2.0 | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/LICENSES/dual/Apache-2.0 b/LICENSES/dual/Apache-2.0
-> index 6e89ddeab187..fd71308fd2c3 100644
-> --- a/LICENSES/dual/Apache-2.0
-> +++ b/LICENSES/dual/Apache-2.0
-> @@ -15,7 +15,7 @@ Apache License
->  
->  Version 2.0, January 2004
->  
-> -http://www.apache.org/licenses/
-> +https://www.apache.org/licenses/
->  
->  TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
->  
-> -- 
-> 2.27.0
-> 
+Changed 'unsigned' to 'unsigned int'.
+This makes the code more uniform, and compliant with the kernel coding style.
 
-You can't change the text of a license that comes from elsewhere.  This
-file is fine as-is.
+Signed-off-by: Abanoub Sameh <abanoubsameh@protonmail.com>
+---
+ drivers/gpio/gpio-msic.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-thanks,
+diff --git a/drivers/gpio/gpio-msic.c b/drivers/gpio/gpio-msic.c
+index 7e3c96e4ab2c..ea5ff2c84a26 100644
+--- a/drivers/gpio/gpio-msic.c
++++ b/drivers/gpio/gpio-msic.c
+@@ -43,9 +43,9 @@ struct msic_gpio {
+ 	struct mutex		buslock;
+ 	struct gpio_chip	chip;
+ 	int			irq;
+-	unsigned		irq_base;
++	unsigned int		irq_base;
+ 	unsigned long		trig_change_mask;
+-	unsigned		trig_type;
++	unsigned int		trig_type;
+ };
+ 
+ /*
+@@ -58,7 +58,7 @@ struct msic_gpio {
+  * GPIO1HV0..GPIO1HV3: high voltage, bank 1, gpio_base + 20
+  */
+ 
+-static int msic_gpio_to_ireg(unsigned offset)
++static int msic_gpio_to_ireg(unsigned int offset)
+ {
+ 	if (offset >= MSIC_NUM_GPIO)
+ 		return -EINVAL;
+@@ -73,7 +73,7 @@ static int msic_gpio_to_ireg(unsigned offset)
+ 	return INTEL_MSIC_GPIO1HV0CTLI - offset + 20;
+ }
+ 
+-static int msic_gpio_to_oreg(unsigned offset)
++static int msic_gpio_to_oreg(unsigned int offset)
+ {
+ 	if (offset >= MSIC_NUM_GPIO)
+ 		return -EINVAL;
+@@ -88,7 +88,7 @@ static int msic_gpio_to_oreg(unsigned offset)
+ 	return INTEL_MSIC_GPIO1HV0CTLO - offset + 20;
+ }
+ 
+-static int msic_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
++static int msic_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	int reg;
+ 
+@@ -100,10 +100,10 @@ static int msic_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
+ }
+ 
+ static int msic_gpio_direction_output(struct gpio_chip *chip,
+-			unsigned offset, int value)
++			unsigned int offset, int value)
+ {
+ 	int reg;
+-	unsigned mask;
++	unsigned int mask;
+ 
+ 	value = (!!value) | MSIC_GPIO_DIR_OUT;
+ 	mask = MSIC_GPIO_DIR_MASK | MSIC_GPIO_DOUT_MASK;
+@@ -115,7 +115,7 @@ static int msic_gpio_direction_output(struct gpio_chip *chip,
+ 	return intel_msic_reg_update(reg, value, mask);
+ }
+ 
+-static int msic_gpio_get(struct gpio_chip *chip, unsigned offset)
++static int msic_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	u8 r;
+ 	int ret;
+@@ -132,7 +132,7 @@ static int msic_gpio_get(struct gpio_chip *chip, unsigned offset)
+ 	return !!(r & MSIC_GPIO_DIN_MASK);
+ }
+ 
+-static void msic_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
++static void msic_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+ {
+ 	int reg;
+ 
+@@ -148,7 +148,7 @@ static void msic_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+  * irq_desc->lock held. We can not access the scu bus here, so we
+  * store the change and update in the bus_sync_unlock() function below
+  */
+-static int msic_irq_type(struct irq_data *data, unsigned type)
++static int msic_irq_type(struct irq_data *data, unsigned int type)
+ {
+ 	struct msic_gpio *mg = irq_data_get_irq_chip_data(data);
+ 	u32 gpio = data->irq - mg->irq_base;
+@@ -163,7 +163,7 @@ static int msic_irq_type(struct irq_data *data, unsigned type)
+ 	return 0;
+ }
+ 
+-static int msic_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
++static int msic_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	struct msic_gpio *mg = gpiochip_get_data(chip);
+ 	return mg->irq_base + offset;
+-- 
+2.28.0.rc0
 
-greg k-h
