@@ -2,93 +2,94 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98338C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAF112073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:47:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RUDwy5R2"
+	by mail.kernel.org (Postfix) with ESMTP id 771622073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbgGULrI (ORCPT
+        id S1729046AbgGULsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:47:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726611AbgGULrI (ORCPT
+        Tue, 21 Jul 2020 07:48:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6952 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727772AbgGULsw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:47:08 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB438C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:47:07 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id q74so21062769iod.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:47:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IRq8ucCfmuFJvcTFkc3tS7Wj/uLZA8Spf3C0id9cxrY=;
-        b=RUDwy5R2+a5FcDCg5Cq7hkluN+M5R+bUbQi2wWTIXT/XzGtTdqGuKd7TkRNE6aS+yC
-         ibSbJ3fOYtsswQJmU0k2GbpqFSf3yFp1m2wLGDdPA7oJ8dukiXKrxBgj47D/ozvGCFKf
-         3ZXxHx1KYIAq8f4yp97OhZkSp9qfyD6cQ335kfeomWXnQnVTi9RLMhpSE6LhVm3PHbbY
-         lcc/Bws6wFqAfy8n4vYBWy4QGR+N7XKXprisTQJ5XllRn8f7TjZgR3ZN8gAW167n16rF
-         Ukai0FGxz8zAeBmXroqOjqeUfcxhGiTOxRZjW11MMB5kQlBa5CQ9g/C5UK0tc0A1a7W7
-         Hclw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IRq8ucCfmuFJvcTFkc3tS7Wj/uLZA8Spf3C0id9cxrY=;
-        b=UTO1hrruM7SWmq5jOyT/I3NIl5iLWhH8cmgw67vhJc0kZS/e3+F9WoLKOC9LihOi6d
-         cdlyLqUr9SZNW7mzhNFq14rMGTy/pHBXbEMGxKaplNbclqNTfGocYdaDu+IDuUDxPfen
-         vhkGFvkvAXyHYG9OH5xiET1mN0FFb/D10IwFQ7Ldb+sMVU8PLsMRfCAuMWfmDkmPjPsq
-         Cm7cLRevCbAdvKKGgI5HshfAQYTskDZN//USNP5mrDabqV5MTrLUDjf7g0ybURDHAR5L
-         wIdCSpHyWtb0Ht6MGFHeX9dhNwWaIxBnY6UeMBQEWz7VwCaZ64ZlTX9Dw4xmdkQwzb45
-         aDKA==
-X-Gm-Message-State: AOAM5302Y71TOi7PYL3Xby+peRdMmhwvNdQv78GmpR0NliL2zO0/cAhE
-        tgN31gwcOTfK210ApGcXn7twrcYjRfUzkmV+TxX7vA==
-X-Google-Smtp-Source: ABdhPJye8qmq76v2qG18buCf5XgXAaN7ZfKIQ217WAXoEp+aVmjEUDMteAbXQB+XN1Y95WqgmvGJC/9JsLyBwYAuZUM=
-X-Received: by 2002:a05:6638:11c1:: with SMTP id g1mr31491011jas.34.1595332027045;
- Tue, 21 Jul 2020 04:47:07 -0700 (PDT)
+        Tue, 21 Jul 2020 07:48:52 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LBYCnC027422;
+        Tue, 21 Jul 2020 07:48:49 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5pfp7r5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 07:48:49 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LBjEa0023592;
+        Tue, 21 Jul 2020 11:48:47 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 32dbmn0jxt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 11:48:47 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LBmjBX59703296
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jul 2020 11:48:45 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EFE1842049;
+        Tue, 21 Jul 2020 11:48:44 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E4334203F;
+        Tue, 21 Jul 2020 11:48:43 +0000 (GMT)
+Received: from naverao1-tp.ibmuc.com (unknown [9.102.1.141])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Jul 2020 11:48:43 +0000 (GMT)
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     <linux-doc@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/3] docs: kprobes: Update URLs and move under trace/
+Date:   Tue, 21 Jul 2020 17:18:19 +0530
+Message-Id: <cover.1595331824.git.naveen.n.rao@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <f2ca985f-7dbd-847a-1875-dd0e1044ef02@gmail.com>
- <CA+Px+wU1S1EqtW-yZH9z9aCF3ggSriBqy73SRYy8q61x0GkdQQ@mail.gmail.com> <846feea6-e2b6-3a0e-b05f-d70e898f9ea5@gmail.com>
-In-Reply-To: <846feea6-e2b6-3a0e-b05f-d70e898f9ea5@gmail.com>
-From:   Tzung-Bi Shih <tzungbi@google.com>
-Date:   Tue, 21 Jul 2020 19:46:56 +0800
-Message-ID: <CA+Px+wUhAHAx-qmAEWy_8Jy40NDTAHH-TNYtPtMfwocMHQ=AbA@mail.gmail.com>
-Subject: Re: Speaker pops with max98357a on rk3399-gru-kevin since v5.7
-To:     Alper Nebi Yasak <alpernebiyasak@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        ALSA development <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_05:2020-07-21,2020-07-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ mlxlogscore=855 suspectscore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0 spamscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007210077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 6:40 AM Alper Nebi Yasak
-<alpernebiyasak@gmail.com> wrote:
->
-> On 17/07/2020 05:27, Tzung-Bi Shih wrote:
-> > I am not convinced the pop comes from 128f825aeab7.
->
-> Maybe some pre-existing defect in rk3399_gru_sound got exposed by
-> 128f825aeab7 or the machine driver needs some changes to complement
-> that commit?
+This series updates some of the URLs in the kprobes document and moves 
+the same under trace/ directory.
 
-Hi, I got a rk3399-gru-kevin and can reproduce the issue.
+- Naveen
 
-Could you take a try on the proposed patch here
-https://patchwork.kernel.org/patch/11675533/ to see if it fixes?
+
+Naveen N. Rao (3):
+  docs: staging/kprobes.rst: Update some of the references
+  docs: staging/kprobes.rst: Move references to a separate appendix
+  docs: Move kprobes.rst from staging/ to trace/
+
+ Documentation/staging/index.rst              |  1 -
+ Documentation/trace/index.rst                |  1 +
+ Documentation/{staging => trace}/kprobes.rst | 16 +++++++++-------
+ 3 files changed, 10 insertions(+), 8 deletions(-)
+ rename Documentation/{staging => trace}/kprobes.rst (99%)
+
+
+base-commit: f33d4075e512274c0c6edcd7602da2cf1d5a0341
+-- 
+2.25.4
+
