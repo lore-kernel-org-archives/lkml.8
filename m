@@ -2,216 +2,277 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DE5C433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FE7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 483B120709
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B49E20709
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="WYipmML3";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="sIbDG+Y/"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fIGQl5+Y";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SEF+IdLV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729726AbgGULI7 (ORCPT
+        id S1729535AbgGULJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:08:59 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:28175 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729647AbgGULIq (ORCPT
+        Tue, 21 Jul 2020 07:09:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37522 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729684AbgGULIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:08:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1595329726; x=1626865726;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=GxkgTXW1uqE93KuW8wrEgu3CEhk1EzooCuCq2Z/dzeg=;
-  b=WYipmML3+zK1NSwxebmIUUBi78BuJYYVbSBF2jLWu+SPvQrJiFc4uCfp
-   KHiwrO0cc/ZJQBsYFNwyBFdBA2wpQ2r04P2X1k+YYbL6K7THH5JrQS3Pm
-   Nb2py1NjizpKTGdBIbvz1ImgsBioAcTCeDc3qupxIBg/z81dipHNArBzG
-   T4r66R1N/TMbrfGmQEeqr6wHqbiSL66xASWvmcCJYGYtMEqbJd5SVZyqg
-   X6ZY8bmmysaa30X+04yNfD+UlG+1MoQ7IHASFs4PWt6l5tZOhcKPHpd29
-   XJ2YwEnrxlEjUFj6YWFaAr8Kx4palnyVbzeMfBvbmpnMp4YZk6VOboHBQ
-   w==;
-IronPort-SDR: 69GzNWJsWctOH0+YFvs22U4d2Hz8gYY4R1q7VlGfChIjcF6cD9LYILKvxRhpF7BTnVejz9W6Ae
- 8W908C9a75qdIHRufsQfk86LxIjDPbn+0VZlvxKi3T4FTeCgORLRtpI39KbZsYKxTFMxsgTcVc
- xrqVpAO7Kx5qmAu0FVtLvh3GahuPW3tj/Y/XZ4YSgdZb/2o5GyI8TD/woGl6moTNMJK0hBXSBp
- aysgXICZBh7GS3BmMdISV+qd8nO8mFAslYq0cXJOsqPFwJFvwsxukTXisau8bNjpw0vnNWFVzy
- k0Y=
-X-IronPort-AV: E=Sophos;i="5.75,378,1589212800"; 
-   d="scan'208";a="143102529"
-Received: from mail-dm6nam12lp2174.outbound.protection.outlook.com (HELO NAM12-DM6-obe.outbound.protection.outlook.com) ([104.47.59.174])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Jul 2020 19:08:43 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BMlf0rr5MoFpOLOpCVhxsbHAmX5324IMQx87NsKnEHLf+P3JtZJavZzUSTF6X4dlPjstTXAyx7M5tg8CCQkiBWuTGsNo6o99/Swgh2xsMGl1q2GquaIFXibVH2fSe8yJCgdt8TsZ+Gk2OD7mKjO9zTYzEipPfCj5VFsMN2GEmN5LQtr3Ck6z8v3NxYLg/qzmDFFxEdI39VOP+EA7ObsRpZFzpaY/q5jPs1CIk+Iaf0FlYLzWyG6TXnDJ/ywtJWIC2zQZK3SCiStolVgAhuefcqzGwK1iDDE8tdKOlxSbdzok5ibuGJUnw/GGw/h8UzqCKwdlPBjs5nCn1N7GZCa1JA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z4v1I5m7OABcKfWLpv3al52trVS03+DKq6uRaF1Nohc=;
- b=cvRMS4mqilMady+vIsukTQERgPSqVA3+A/TR+xkah65jRfcxWc3wTRwZm/7Q7avFBWYRa5ko34QrtuDMKJW7trd3uh9TEEFKEKwKKf0Pwm/bNyFzSYdKycZhv3h9248SRogTNefMvMMhb5q+j6UbogmXG2Xm2fIV+AqM1tQQ2rCIm60U2cqrGzR40VSwLAgSJe8dv+3RBE+XeOiPCzqucIJki3QYXs0v5BYijojSHUJYXDmILVaQVssHTEk9bPMhvgio6PHwsKYjR7N3uaV4pDWQKSpvnv54QFRWtXsH+pe9I8AhTCWqqYQFQAs/kN5IWDQ2TQLAtDwvNeelrSlycA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z4v1I5m7OABcKfWLpv3al52trVS03+DKq6uRaF1Nohc=;
- b=sIbDG+Y/bMe2KGOaK8kaw8kW33dcXRnMfbRJ+ac+pi59Y2rP3FMm4X4uQMA3K0kb1iHj1YYEpeWU8s/nU6J20ggeRysgqDjgM3r13WOF02lVjF4khu4YMBzNX/c10Q4C1492kAExd6o3KOUGmF9pIF5xrB0wmi8vRA13L2GZcqs=
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
- by CY4PR04MB0422.namprd04.prod.outlook.com (2603:10b6:903:bd::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Tue, 21 Jul
- 2020 11:08:41 +0000
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::d9e5:135e:cfd9:4de0]) by CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::d9e5:135e:cfd9:4de0%7]) with mapi id 15.20.3195.025; Tue, 21 Jul 2020
- 11:08:41 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Maxim Levitsky <mlevitsk@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Keith Busch <kbusch@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
-        "open list:SCSI CDROM DRIVER" <linux-scsi@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Ajay Joshi <Ajay.Joshi@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "open list:SONY MEMORYSTICK SUBSYSTEM" <linux-mmc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Satya Tangirala <satyat@google.com>,
-        "open list:NETWORK BLOCK DEVICE (NBD)" <nbd@other.debian.org>,
-        Hou Tao <houtao1@huawei.com>, Jens Axboe <axboe@fb.com>,
-        "open list:VIRTIO CORE AND NET DRIVERS" 
-        <virtualization@lists.linux-foundation.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Alex Dubov <oakad@yahoo.com>
-Subject: Re: [PATCH 03/10] block: loop: use blk_is_valid_logical_block_size
-Thread-Topic: [PATCH 03/10] block: loop: use blk_is_valid_logical_block_size
-Thread-Index: AQHWX01LIw4xf3qcak+F7qOi/18XOA==
-Date:   Tue, 21 Jul 2020 11:08:40 +0000
-Message-ID: <CY4PR04MB375172789B9725F132B94216E7780@CY4PR04MB3751.namprd04.prod.outlook.com>
-References: <20200721105239.8270-1-mlevitsk@redhat.com>
- <20200721105239.8270-4-mlevitsk@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.182.57]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a9163c0e-ae63-4cb8-2841-08d82d666d0a
-x-ms-traffictypediagnostic: CY4PR04MB0422:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR04MB0422245941CD28F6B5CD6814E7780@CY4PR04MB0422.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 83pl7kM0JCnEywOtKelAGhwCie72ilBeWbJnQrwj2TZvQYY8AeqfO2OW0ujMnVvQuDTaOvpW2Gtl8KgR9MGk3uuoLu2Ud7+u0p1phzL+P1XTo5lllBVGlz3BKn3rocaIYcQoaH82HxAIgqyCutarBzMYJ1LGWdAYPqYm5h3VaTO2wxHeaVzlm7364dXQ+j51i63NVEfyKSbobRAnMoQg3+z7VSy7zohKn1rx01kSQViXcYgQKhjhEud1OV4UM8mxNOqZ0/YbP1hKyyNdZ3/v0XD7fdZa/DYSxqGXQp3LscZyF1+h2vSIL91/E6V7gphWBYnaGSird4FCSzrB8gBuTw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(110136005)(2906002)(8936002)(7416002)(498600001)(86362001)(7696005)(54906003)(55016002)(6506007)(26005)(53546011)(186003)(9686003)(4326008)(91956017)(52536014)(5660300002)(71200400001)(66446008)(66556008)(76116006)(83380400001)(64756008)(66476007)(33656002)(8676002)(66946007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 2xoQL2q/JObW6TZmyf/bgFbkH000F1lpmw1XCNVXEZXEEhAU51RCphoBmwcAsWl7iZxIWjRu9qkJwv0dIKIO8Ulz57rpYE43TAexR+7pu0XRlrXMX4LwAVTJaQLewTEWFZy3qt/Vz2uCOpqn+njjewMIGyKo1tUQUV7fccc3CNmCY9xmBGxLUBhWB89t24c1DDtYKzaFOvAHm5DJo0Ww+ema1VD1FvHQO5gtDiCLJWwlgb27Gca9Wi98AakpMtLkcUE0H1bvR3vqcEl1md/Kl08Zkn2BhpyDaiFrpHo3UREUDWu1FFfag9mfaOYlfa+PYbaCD1j+vocadE82eMRzArWdoGAkam6jXaELMOSuv+GOIEOWfqRZ4VNBg5az2DLuerqeSVOrkOkgmdvrHfHdHsE3aWdC8iz12E6yjx0+li5cyve+X4BPIeSDd5pkgad413FpG2X7pOo36V1j137WH1ErKAo+T5BnLoW5mDUe4zoEFzBWteaz/ANTc2W9A9wx
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 21 Jul 2020 07:08:53 -0400
+Message-Id: <20200721110809.639906321@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595329730;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=LW1oXcrimGaDAUblNGc1jRG45a34MbycV9GdwQtKRSY=;
+        b=fIGQl5+Ypmngp6JixGm/IX3dpkmJv4FzPyJ6BPuu7w2uIzWAZE1tWZ75XkfnlgYW1y/T60
+        w3j+/W/wD68d4O/rAcv4LudZJwaiXQLmALaUwOS0gRwfiXChwi1uekBLx0CsjKVEE24vd1
+        bOFkCpySGDDw83J9pNqLT7fK0XGoaT7IVbLbojina/WYZN4Mp759D0F4/4v/fJIYj2KwSm
+        tInXWkVVTq2kbYBzlMSd4LBsfWmlRjJlQl0WGoyY4bIYqAv8upsQmG46c8SV5hYZSqXzG/
+        WZgAt53ZvPzEMB0qYSrUkEs+fUvmv3fhJ5sgMB/3vlfEs3kpbforJqux2F6sGw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595329730;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=LW1oXcrimGaDAUblNGc1jRG45a34MbycV9GdwQtKRSY=;
+        b=SEF+IdLVDoORGRo8+VLYapnThF/6DIjYlSr6nkZFsnXjj2wEEH73ncdW2W+KisalQldjFf
+        luDT4h8FuCJpPrCA==
+Date:   Tue, 21 Jul 2020 12:57:19 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: [patch V4 13/15] x86/entry: Use generic interrupt entry/exit code
+References: <20200721105706.030914876@linutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR04MB3751.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9163c0e-ae63-4cb8-2841-08d82d666d0a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 11:08:40.9532
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Y2HEtUYBTXMrMgPO9H1FDdhJf8Bozws/9cnksKGUAyYDjx8KjxdfvY4+82NUgZZ97imWYQAsTTnZolBXxdVOeQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB0422
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/21 19:54, Maxim Levitsky wrote:=0A=
-> This allows to remove loop's own check for supported block size=0A=
-> =0A=
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>=0A=
-> ---=0A=
->  drivers/block/loop.c | 23 +++++------------------=0A=
->  1 file changed, 5 insertions(+), 18 deletions(-)=0A=
-> =0A=
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c=0A=
-> index 475e1a738560d..9984c8f824271 100644=0A=
-> --- a/drivers/block/loop.c=0A=
-> +++ b/drivers/block/loop.c=0A=
-> @@ -228,19 +228,6 @@ static void __loop_update_dio(struct loop_device *lo=
-, bool dio)=0A=
->  		blk_mq_unfreeze_queue(lo->lo_queue);=0A=
->  }=0A=
->  =0A=
-> -/**=0A=
-> - * loop_validate_block_size() - validates the passed in block size=0A=
-> - * @bsize: size to validate=0A=
-> - */=0A=
-> -static int=0A=
-> -loop_validate_block_size(unsigned short bsize)=0A=
-> -{=0A=
-> -	if (bsize < 512 || bsize > PAGE_SIZE || !is_power_of_2(bsize))=0A=
-> -		return -EINVAL;=0A=
-> -=0A=
-> -	return 0;=0A=
-> -}=0A=
-> -=0A=
->  /**=0A=
->   * loop_set_size() - sets device size and notifies userspace=0A=
->   * @lo: struct loop_device to set the size for=0A=
-> @@ -1119,9 +1106,10 @@ static int loop_configure(struct loop_device *lo, =
-fmode_t mode,=0A=
->  	}=0A=
->  =0A=
->  	if (config->block_size) {=0A=
-> -		error =3D loop_validate_block_size(config->block_size);=0A=
-> -		if (error)=0A=
-> +		if (!blk_is_valid_logical_block_size(config->block_size)) {=0A=
-> +			error =3D -EINVAL;=0A=
->  			goto out_unlock;=0A=
-> +		}=0A=
->  	}=0A=
->  =0A=
->  	error =3D loop_set_status_from_info(lo, &config->info);=0A=
-> @@ -1607,9 +1595,8 @@ static int loop_set_block_size(struct loop_device *=
-lo, unsigned long arg)=0A=
->  	if (lo->lo_state !=3D Lo_bound)=0A=
->  		return -ENXIO;=0A=
->  =0A=
-> -	err =3D loop_validate_block_size(arg);=0A=
-> -	if (err)=0A=
-> -		return err;=0A=
-> +	if (!blk_is_valid_logical_block_size(arg))=0A=
-> +		return -EINVAL;=0A=
->  =0A=
->  	if (lo->lo_queue->limits.logical_block_size =3D=3D arg)=0A=
->  		return 0;=0A=
-> =0A=
-=0A=
-Looks good to me.=0A=
-=0A=
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+Replace the x86 code with the generic variant. Use temporary defines for
+idtentry_* which will be cleaned up in the next step.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/entry/common.c         |  167 ----------------------------------------
+ arch/x86/include/asm/idtentry.h |   10 --
+ 2 files changed, 5 insertions(+), 172 deletions(-)
+
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -198,171 +198,6 @@ SYSCALL_DEFINE0(ni_syscall)
+ 	return -ENOSYS;
+ }
+ 
+-/**
+- * idtentry_enter - Handle state tracking on ordinary idtentries
+- * @regs:	Pointer to pt_regs of interrupted context
+- *
+- * Invokes:
+- *  - lockdep irqflag state tracking as low level ASM entry disabled
+- *    interrupts.
+- *
+- *  - Context tracking if the exception hit user mode.
+- *
+- *  - The hardirq tracer to keep the state consistent as low level ASM
+- *    entry disabled interrupts.
+- *
+- * As a precondition, this requires that the entry came from user mode,
+- * idle, or a kernel context in which RCU is watching.
+- *
+- * For kernel mode entries RCU handling is done conditional. If RCU is
+- * watching then the only RCU requirement is to check whether the tick has
+- * to be restarted. If RCU is not watching then rcu_irq_enter() has to be
+- * invoked on entry and rcu_irq_exit() on exit.
+- *
+- * Avoiding the rcu_irq_enter/exit() calls is an optimization but also
+- * solves the problem of kernel mode pagefaults which can schedule, which
+- * is not possible after invoking rcu_irq_enter() without undoing it.
+- *
+- * For user mode entries irqentry_enter_from_user_mode() must be invoked to
+- * establish the proper context for NOHZ_FULL. Otherwise scheduling on exit
+- * would not be possible.
+- *
+- * Returns: An opaque object that must be passed to idtentry_exit()
+- *
+- * The return value must be fed into the state argument of
+- * idtentry_exit().
+- */
+-idtentry_state_t noinstr idtentry_enter(struct pt_regs *regs)
+-{
+-	idtentry_state_t ret = {
+-		.exit_rcu = false,
+-	};
+-
+-	if (user_mode(regs)) {
+-		irqentry_enter_from_user_mode(regs);
+-		return ret;
+-	}
+-
+-	/*
+-	 * If this entry hit the idle task invoke rcu_irq_enter() whether
+-	 * RCU is watching or not.
+-	 *
+-	 * Interupts can nest when the first interrupt invokes softirq
+-	 * processing on return which enables interrupts.
+-	 *
+-	 * Scheduler ticks in the idle task can mark quiescent state and
+-	 * terminate a grace period, if and only if the timer interrupt is
+-	 * not nested into another interrupt.
+-	 *
+-	 * Checking for __rcu_is_watching() here would prevent the nesting
+-	 * interrupt to invoke rcu_irq_enter(). If that nested interrupt is
+-	 * the tick then rcu_flavor_sched_clock_irq() would wrongfully
+-	 * assume that it is the first interupt and eventually claim
+-	 * quiescient state and end grace periods prematurely.
+-	 *
+-	 * Unconditionally invoke rcu_irq_enter() so RCU state stays
+-	 * consistent.
+-	 *
+-	 * TINY_RCU does not support EQS, so let the compiler eliminate
+-	 * this part when enabled.
+-	 */
+-	if (!IS_ENABLED(CONFIG_TINY_RCU) && is_idle_task(current)) {
+-		/*
+-		 * If RCU is not watching then the same careful
+-		 * sequence vs. lockdep and tracing is required
+-		 * as in irqentry_enter_from_user_mode().
+-		 */
+-		lockdep_hardirqs_off(CALLER_ADDR0);
+-		rcu_irq_enter();
+-		instrumentation_begin();
+-		trace_hardirqs_off_finish();
+-		instrumentation_end();
+-
+-		ret.exit_rcu = true;
+-		return ret;
+-	}
+-
+-	/*
+-	 * If RCU is watching then RCU only wants to check whether it needs
+-	 * to restart the tick in NOHZ mode. rcu_irq_enter_check_tick()
+-	 * already contains a warning when RCU is not watching, so no point
+-	 * in having another one here.
+-	 */
+-	instrumentation_begin();
+-	rcu_irq_enter_check_tick();
+-	/* Use the combo lockdep/tracing function */
+-	trace_hardirqs_off();
+-	instrumentation_end();
+-
+-	return ret;
+-}
+-
+-static void idtentry_exit_cond_resched(struct pt_regs *regs, bool may_sched)
+-{
+-	if (may_sched && !preempt_count()) {
+-		/* Sanity check RCU and thread stack */
+-		rcu_irq_exit_check_preempt();
+-		if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
+-			WARN_ON_ONCE(!on_thread_stack());
+-		if (need_resched())
+-			preempt_schedule_irq();
+-	}
+-	/* Covers both tracing and lockdep */
+-	trace_hardirqs_on();
+-}
+-
+-/**
+- * idtentry_exit - Handle return from exception that used idtentry_enter()
+- * @regs:	Pointer to pt_regs (exception entry regs)
+- * @state:	Return value from matching call to idtentry_enter()
+- *
+- * Depending on the return target (kernel/user) this runs the necessary
+- * preemption and work checks if possible and reguired and returns to
+- * the caller with interrupts disabled and no further work pending.
+- *
+- * This is the last action before returning to the low level ASM code which
+- * just needs to return to the appropriate context.
+- *
+- * Counterpart to idtentry_enter(). The return value of the entry
+- * function must be fed into the @state argument.
+- */
+-void noinstr idtentry_exit(struct pt_regs *regs, idtentry_state_t state)
+-{
+-	lockdep_assert_irqs_disabled();
+-
+-	/* Check whether this returns to user mode */
+-	if (user_mode(regs)) {
+-		irqentry_exit_to_user_mode(regs);
+-	} else if (regs->flags & X86_EFLAGS_IF) {
+-		/*
+-		 * If RCU was not watching on entry this needs to be done
+-		 * carefully and needs the same ordering of lockdep/tracing
+-		 * and RCU as the return to user mode path.
+-		 */
+-		if (state.exit_rcu) {
+-			instrumentation_begin();
+-			/* Tell the tracer that IRET will enable interrupts */
+-			trace_hardirqs_on_prepare();
+-			lockdep_hardirqs_on_prepare(CALLER_ADDR0);
+-			instrumentation_end();
+-			rcu_irq_exit();
+-			lockdep_hardirqs_on(CALLER_ADDR0);
+-			return;
+-		}
+-
+-		instrumentation_begin();
+-		idtentry_exit_cond_resched(regs, IS_ENABLED(CONFIG_PREEMPTION));
+-		instrumentation_end();
+-	} else {
+-		/*
+-		 * IRQ flags state is correct already. Just tell RCU if it
+-		 * was not watching on entry.
+-		 */
+-		if (state.exit_rcu)
+-			rcu_irq_exit();
+-	}
+-}
+-
+ #ifdef CONFIG_XEN_PV
+ #ifndef CONFIG_PREEMPTION
+ /*
+@@ -427,7 +262,7 @@ static void __xen_pv_evtchn_do_upcall(vo
+ 	inhcall = get_and_clear_inhcall();
+ 	if (inhcall && !WARN_ON_ONCE(state.exit_rcu)) {
+ 		instrumentation_begin();
+-		idtentry_exit_cond_resched(regs, true);
++		irqentry_exit_cond_resched();
+ 		instrumentation_end();
+ 		restore_inhcall(inhcall);
+ 	} else {
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -11,12 +11,10 @@
+ 
+ #include <asm/irq_stack.h>
+ 
+-typedef struct idtentry_state {
+-	bool exit_rcu;
+-} idtentry_state_t;
+-
+-idtentry_state_t idtentry_enter(struct pt_regs *regs);
+-void idtentry_exit(struct pt_regs *regs, idtentry_state_t state);
++/* Temporary defines */
++typedef irqentry_state_t idtentry_state_t;
++#define idtentry_enter irqentry_enter
++#define idtentry_exit irqentry_exit
+ 
+ /**
+  * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
+
