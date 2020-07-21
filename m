@@ -2,118 +2,143 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A809C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A95C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC442073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72DFC2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:17:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="qWUN5QA1"
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="D+WP0ntT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgGUKRb (ORCPT
+        id S1729143AbgGUKRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:17:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgGUKR2 (ORCPT
+        Tue, 21 Jul 2020 06:17:40 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:21974 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgGUKRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:17:28 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FB48C0619D8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:17:28 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id 72so10060433ple.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:17:28 -0700 (PDT)
+        Tue, 21 Jul 2020 06:17:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o+q+SwIxmtmY9Sx81EleZKhYAND9OH1kntiZdkYfvU0=;
-        b=qWUN5QA1aFxfB2DjiMqONNST2jbTf6OJYJuEncUgJ0vCiHbJxunBCOUDrf4lekJ8ha
-         xuuUm8Cl2v7EumQrQheCESumNpdnZvcS/90E63isULze+vaWc8aZYciRvxhmhyyP0TSf
-         Fx5i/21HwbbQOGJLhczghtvtyGJAlsTYvRpp+0AqdPzgsjBVROzbARZ5qgx2026dMlub
-         TArir1DbUviFSysJwu5HANPdXBogPkA0ZUAF5zTOKrPGXo9tLNFEoeCG8VQ3YO8q5LMj
-         G/H0qmzRixx5hp8uXhDFskCspzBv5cfBU+5AglKLR3sVFp2gP3rGCESR0X453einKieP
-         5v/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o+q+SwIxmtmY9Sx81EleZKhYAND9OH1kntiZdkYfvU0=;
-        b=PE/4qXef/X/DmNRWfcU41Xb/JTEdwBIWt68NX3EheEvuDbRvV7tFfawB5KXM/HdB3z
-         hq18o/DiglvjX1Kw4nk/bN1xzNepel7Bwk1pO+lpQ790xEP3Vv8KNOhgjmRb3W8J3dUl
-         dt8lFpuNzPvZnw2+yyw+5D37hq5j7iY3MYd3THZvSuPVzfCgbaLtPzdhnSvYjKP9hWjq
-         t00Vvkb9FIkqtey91rHuK84yMv0PZVGMPtis4v+xFNPjHTqMA/F/tgzPS5Gk5ckezhgS
-         iR7KZKbwVsAr331niDRCRFmODzW695AJgnTIXYqL8c2pSaHaLoYE47nJABus/BYWt+Gd
-         DZjQ==
-X-Gm-Message-State: AOAM530ykj444f46d7OxT1MQktOR78+clPfohzG/cPBwEt7v/N31V31e
-        /uCFqXTcXMktdAt+LXwP7AUOOw==
-X-Google-Smtp-Source: ABdhPJzcHPIg+Zax6xdjIuD6JIMyV7+jwiFE6h9cpHXvzWvIdo5+AtqiMlB4S1ecvEas79S1d9KNiA==
-X-Received: by 2002:a17:90a:f68c:: with SMTP id cl12mr3570326pjb.116.1595326647639;
-        Tue, 21 Jul 2020 03:17:27 -0700 (PDT)
-Received: from C02ZK051LVCK.local.net ([61.120.150.77])
-        by smtp.gmail.com with ESMTPSA id e195sm19694815pfh.218.2020.07.21.03.17.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Jul 2020 03:17:26 -0700 (PDT)
-From:   Xin He <hexin.op@bytedance.com>
-To:     daniel@ffwll.ch, airlied@linux.ie, kraxel@redhat.com,
-        sumit.semwal@linaro.org
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        Qi Liu <liuqi.16@bytedance.com>,
-        Xin He <hexin.op@bytedance.com>,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v3] drm/virtio: fix missing dma_fence_put() in virtio_gpu_execbuffer_ioctl()
-Date:   Tue, 21 Jul 2020 18:16:47 +0800
-Message-Id: <20200721101647.42653-1-hexin.op@bytedance.com>
-X-Mailer: git-send-email 2.21.1 (Apple Git-122.3)
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1595326654; x=1626862654;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=/xLOkM2JYhUnLrEu5qMRjWL8+VI4XlSHNdQQX9qcfLU=;
+  b=D+WP0ntTMQ2m+VZxOuLYtYhaJZhW39kycdQt65letnpFLWmdmkvGNnCD
+   111HZMN+VPuSN9azzteb+0VfCX8jp0AH5CDQ+0VtkDuyvpfTuXyH3oElT
+   BtBcOfoKQQVYhxst1Mxy0mTD47KOXJL/1wYda9kuLZiXGzBjiKgzJDCuy
+   k=;
+IronPort-SDR: +bTGDocgGFhqFJ2NyJdStaKUP0hPLzbGvbFh2wXWM73ksqIUl1QDz4KpRby1Sr7bRT5W588z1Q
+ moud+KP/mfMw==
+X-IronPort-AV: E=Sophos;i="5.75,378,1589241600"; 
+   d="scan'208";a="43267821"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 21 Jul 2020 10:17:33 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id 70B31A1FA6;
+        Tue, 21 Jul 2020 10:17:32 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 21 Jul 2020 10:17:32 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.162.73) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 21 Jul 2020 10:17:26 +0000
+Subject: Re: [PATCH v5 05/18] nitro_enclaves: Handle PCI device command
+ requests
+To:     Andra Paraschiv <andraprs@amazon.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "David Duncan" <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Karen Noel <knoel@redhat.com>,
+        "Martin Pohlack" <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>, kbuild test robot <lkp@intel.com>
+References: <20200715194540.45532-1-andraprs@amazon.com>
+ <20200715194540.45532-6-andraprs@amazon.com>
+From:   Alexander Graf <graf@amazon.de>
+Message-ID: <87d25260-24e7-319a-f94f-d1eb77c3da00@amazon.de>
+Date:   Tue, 21 Jul 2020 12:17:24 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200715194540.45532-6-andraprs@amazon.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.162.73]
+X-ClientProxiedBy: EX13D16UWB003.ant.amazon.com (10.43.161.194) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qi Liu <liuqi.16@bytedance.com>
 
-We should put the reference count of the fence after calling
-virtio_gpu_cmd_submit(). So add the missing dma_fence_put().
 
-Fixes: 2cd7b6f08bc4 ("drm/virtio: add in/out fence support for explicit synchronization")
-Co-developed-by: Xin He <hexin.op@bytedance.com>
-Signed-off-by: Xin He <hexin.op@bytedance.com>
-Signed-off-by: Qi Liu <liuqi.16@bytedance.com>
-Reviewed-by: Muchun Song <songmuchun@bytedance.com>
----
+On 15.07.20 21:45, Andra Paraschiv wrote:
+> The Nitro Enclaves PCI device exposes a MMIO space that this driver
+> uses to submit command requests and to receive command replies e.g. for
+> enclave creation / termination or setting enclave resources.
+> =
 
-changelog in v3:
-1) Change the subject from "drm/virtio: fixed memory leak in virtio_gpu_execbuffer_ioctl()" to 
-   "drm/virtio: fix missing dma_fence_put() in virtio_gpu_execbuffer_ioctl()"
-2) Rework the commit log
+> Add logic for handling PCI device command requests based on the given
+> command type.
+> =
 
-changelog in v2:
-1) Add a change description 
+> Register an MSI-X interrupt vector for command reply notifications to
+> handle this type of communication events.
+> =
 
- drivers/gpu/drm/virtio/virtgpu_ioctl.c | 1 +
- 1 file changed, 1 insertion(+)
+> Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
+> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+> =
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index 5df722072ba0..19c5bc01eb79 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -179,6 +179,7 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
- 
- 	virtio_gpu_cmd_submit(vgdev, buf, exbuf->size,
- 			      vfpriv->ctx_id, buflist, out_fence);
-+	dma_fence_put(&out_fence->f);
- 	virtio_gpu_notify(vgdev);
- 	return 0;
- 
--- 
-2.21.1 (Apple Git-122.3)
+> Fix issue reported in:
+> https://lore.kernel.org/lkml/202004231644.xTmN4Z1z%25lkp@intel.com/
+> =
+
+> Reported-by: kbuild test robot <lkp@intel.com>
+
+This means that the overall patch is a fix that was reported by the test =
+
+rebot. I doubt that's what you mean. Just remove the line.
+
+> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+
+Reviewed-by: Alexander Graf <graf@amazon.com>
+
+
+Alex
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
 
