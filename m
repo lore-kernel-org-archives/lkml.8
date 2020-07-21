@@ -2,63 +2,64 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9741EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C92C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7191720771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA5C20771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pKahYClp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i7S9t2tE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgGUJo6 (ORCPT
+        id S1728907AbgGUJpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38396 "EHLO
+        Tue, 21 Jul 2020 05:45:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGUJo5 (ORCPT
+        with ESMTP id S1725984AbgGUJpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:44:57 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23749C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:44:57 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id c80so2171573wme.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:44:57 -0700 (PDT)
+        Tue, 21 Jul 2020 05:45:01 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 133B7C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:45:01 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z2so20574255wrp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:45:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oay/q/Jq6u5HCNMFK6qus7veTfF7oH0EkEyRRbWbBuo=;
-        b=pKahYClpT7rbPBcaiNecELPYrFpNr1sOL/KBnAvFlQ/TUhvOxhwaV1ieuOvT9p1us4
-         7pAMGHA/F5puU5alUBQzKCc28k+Z7+mKr70H2brQsauG36WtQ6blvcQgr3ZF1Dr6dJaS
-         NL9Gt6qiOUhFlbqwCHXnO0ZA2YCc5HCN5QvsQ1TrMrhwSb8hvm+Wwew6xBo0PTh1NWvE
-         zM7e0VS6eULENmw536jEVb8MBPO5pzsXLmYGcyVGyt6wLUAOk9SdqPLtQfySwLojPCT1
-         RxEs3sxrFuQdRj/H1OeiHeUP39Z3NLk78zuf6JvG/zOh96HuCYNOv3II/OKGccw/SIin
-         tgEg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=VCTmXoCDoueHGgkSs0dR8Q0gxBgF8BRtzs8whbeoPBY=;
+        b=i7S9t2tE6o1ZpRYbBoPLh0mSIFrwHpF9lRxApXBd0SVtfEaMYvKF999IuDfaCE0DdV
+         wFP+lVdRe3oBxP2XXvkxkBId3a9rt+6LPKWVsl+ePCY53KV/eftUkC17hvcyirlr+CGK
+         x7ecwNpbckzsh0wui6eblLsfMr8GEq9ZrWF10CjkBxj2vMY7btc6zTVBhf2gFaf+aYKQ
+         Z9o0w00u6PzL/RWmFmEzV0p9EKWUu+yEx7/TbdTY8Td8Japa4BSiSwPQ6XbmtKjsTrTi
+         vXBWkcRXULUnuwkT7FCat/ZEFHAvwe0oSFvoHGLxUv4FYZhSJU1tk0eMqjkihc349oCz
+         jYCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oay/q/Jq6u5HCNMFK6qus7veTfF7oH0EkEyRRbWbBuo=;
-        b=aPOwbjQpLutJqyKmgi3Bd5/jrao2ySysgrjC9M3R8wE65ExMtDEgKaTPiSmUMChQ0V
-         1RwoX+r187mjNeZwWj2l2g4Mpvqpe2xx336FZ5ilCNU7AFwQB7zHhCXegDBieBbs0Z5b
-         SQnOFazZA5L9kPi9tPhxhdVXEiwnvLBOVSDEydyW2/FfYy9KKe0fO6iS3JmGY6FKM5pG
-         XKhPB6sI7xwO68EyZAT7SGOK/HVD0uL7kgUX0OVNlCjbkVuxZzB20KgCRsMME7a15aO8
-         0WEOeu7Gv/MSJXgmamKpqwr3DoGudUqkiMNsa5dhBaBebD6iKSgRdRbAJp8mMLX9kbkB
-         /gzw==
-X-Gm-Message-State: AOAM533VlS6GUecoSurC66xgX1fmlHMYcAaqtm+42v6W/WL0yk+k0j8o
-        VHQPyR4PEfCgT1duk4485e+dvA==
-X-Google-Smtp-Source: ABdhPJxngyOwJYmlqV/5VQl0CDeLGpyMwcxXJSKOOd8cTePn/msAa3i6Sezc+NNalflZifuYHyrtpQ==
-X-Received: by 2002:a7b:c090:: with SMTP id r16mr3007999wmh.143.1595324695605;
-        Tue, 21 Jul 2020 02:44:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VCTmXoCDoueHGgkSs0dR8Q0gxBgF8BRtzs8whbeoPBY=;
+        b=gpmFJ4ffkpeG+HEZybcOsGJfIDzW09VBp5B+EmyGJ93jZDlICJ/fIPz47IquqL9HVc
+         98HuBmJM/t8XMNiiuYY0hJrYkFus85lNgtFm4bI9YzauAy2XhViy4uEBZ0DDzCQy1uOb
+         teq5pgU/p+Uhyd762c8QvFConZofstZ69wBjR/xD16RVWomVxS739cMOr4gGZBhNhmWY
+         EihvNOY8G8SKkVmYubfs8ZOXFAY/bdG6qiVpJk7ig3LkuCSjyVMC+3JNS7cw3siV8mvI
+         5/6pLK0Ha6Ko8yx4M/VgP1kmdjpO26D8UIZ4lSYZ3C6iWbI0fRKbwtSkAK8YdJOy0cYJ
+         NQ6w==
+X-Gm-Message-State: AOAM530GUyX5SFykr7mfGEwtj2Uqd9E428u6MSvIDosNmlxkW6673jHC
+        R3t3qEBk2pB6koLySUizFwWNyQ==
+X-Google-Smtp-Source: ABdhPJwsEeqkTbsLPEJadyPaueujiKzL/IxGYymb0jshDg7vVUsqj2qjWEo9k1RSpX4pHM494OqVlA==
+X-Received: by 2002:adf:f542:: with SMTP id j2mr25975490wrp.61.1595324699596;
+        Tue, 21 Jul 2020 02:44:59 -0700 (PDT)
 Received: from localhost ([2a01:4b00:8523:2d03:cd93:4ca4:af31:19e5])
-        by smtp.gmail.com with ESMTPSA id t3sm5442414wre.41.2020.07.21.02.44.54
+        by smtp.gmail.com with ESMTPSA id l1sm39195773wrb.12.2020.07.21.02.44.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 02:44:54 -0700 (PDT)
+        Tue, 21 Jul 2020 02:44:58 -0700 (PDT)
 From:   David Brazdil <dbrazdil@google.com>
 To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -68,10 +69,12 @@ To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
 Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, android-kvm@google.com,
         kernel-team@android.com, David Brazdil <dbrazdil@google.com>
-Subject: [PATCH 0/2] Unify non-VHE ASLR features behind CONFIG_RANDOMIZE_BASE
-Date:   Tue, 21 Jul 2020 10:44:43 +0100
-Message-Id: <20200721094445.82184-1-dbrazdil@google.com>
+Subject: [PATCH 1/2] KVM: arm64: Make nVHE ASLR conditional on RANDOMIZE_BASE
+Date:   Tue, 21 Jul 2020 10:44:44 +0100
+Message-Id: <20200721094445.82184-2-dbrazdil@google.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200721094445.82184-1-dbrazdil@google.com>
+References: <20200721094445.82184-1-dbrazdil@google.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,26 +82,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is currently no way to disable nVHE ASLR, e.g. for debugging, so the
-first patch in this series makes it conditional on RANDOMIZE_BASE, same as
-KASLR. Note that the 'nokaslr' command line flag has no effect here.
+If there are spare bits in non-VHE hyp VA, KVM unconditionally replaces them
+with a random tag chosen at init. Disable this if the kernel is built without
+RANDOMIZE_BASE to align with kernel behavior.
 
-Second patch unifies the HARDEN_EL2_VECTORS errate for A57 and A72 behind
-the same Kconfig for simplicity. Happy to make it just depend on
-RANDOMIZE_BASE if having an option to keep randomization on but hardenning
-off is preferred.
+Signed-off-by: David Brazdil <dbrazdil@google.com>
+---
+ arch/arm64/kvm/va_layout.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-David Brazdil (2):
-  KVM: arm64: Make nVHE ASLR conditional on RANDOMIZE_BASE
-  KVM: arm64: Substitute RANDOMIZE_BASE for HARDEN_EL2_VECTORS
-
- arch/arm64/Kconfig             | 16 ----------------
- arch/arm64/include/asm/mmu.h   |  6 ++----
- arch/arm64/kernel/cpu_errata.c |  4 ++--
- arch/arm64/kvm/Kconfig         |  2 +-
- arch/arm64/kvm/va_layout.c     |  2 +-
- 5 files changed, 6 insertions(+), 24 deletions(-)
-
+diff --git a/arch/arm64/kvm/va_layout.c b/arch/arm64/kvm/va_layout.c
+index a4f48c1ac28c..e0404bcab019 100644
+--- a/arch/arm64/kvm/va_layout.c
++++ b/arch/arm64/kvm/va_layout.c
+@@ -48,7 +48,7 @@ __init void kvm_compute_layout(void)
+ 	va_mask = GENMASK_ULL(tag_lsb - 1, 0);
+ 	tag_val = hyp_va_msb;
+ 
+-	if (tag_lsb != (vabits_actual - 1)) {
++	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && tag_lsb != (vabits_actual - 1)) {
+ 		/* We have some free bits to insert a random tag. */
+ 		tag_val |= get_random_long() & GENMASK_ULL(vabits_actual - 2, tag_lsb);
+ 	}
 -- 
 2.27.0
 
