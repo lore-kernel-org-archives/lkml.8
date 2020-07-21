@@ -2,111 +2,109 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C755C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE683C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB7822176B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:57:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WRThQTDl"
+	by mail.kernel.org (Postfix) with ESMTP id 901D72176B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgGUE5L (ORCPT
+        id S1726990AbgGUE6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 00:57:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgGUE5K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 00:57:10 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF64C061794;
-        Mon, 20 Jul 2020 21:57:10 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g10so1338190wmc.1;
-        Mon, 20 Jul 2020 21:57:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=MOHZPUcZmQ1+3Cm43KVtLVEMv7NaU72MO15NMay1HOU=;
-        b=WRThQTDlSSJMxAftVyK9UvBNMrio/jAxRn/LyrqEgQ/3ffpNbjjqAs9hZ3w+ktVqXF
-         hOWof8LtwTAeTtUSYhPaTguBwSae/53dUhGweyz4PUb6QCME2LjqjUTWbn5rKD023AvX
-         D/Zp02WIJXBqKaUMo7QryaVdA1RUcWKGH0TAkCPYuPti30jlIgH8iqeTFuDRvJEnca6f
-         qFVICtCT2+Y9aYrZyqNxUOyB1QvroX9cCm0UJcf5t0jiEDqb5dNvzP7Otu+0+EfuFfMv
-         3V9PE4EJDEpwNweDpLt3mFR/Zo8Kn5ga8OWdAsYbbNqn/wjSIZ4LsH9DcXdk+2T/oVJA
-         dgRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MOHZPUcZmQ1+3Cm43KVtLVEMv7NaU72MO15NMay1HOU=;
-        b=WKl/EO8djZwyDGFI/VU43nFSIa/CtRD3Siero/aLrYbXksKYnZggkEMGQuuImrXtdg
-         qdDGMYMQF2O9MKQ6oQl1Ag3rqy6v2UbuHoD23U3lxXnFWJSF6l8hTs9ZgG0/iMp5Ghf5
-         DmaxzDtAqASYAAlIIF5ZWp0b0XDvBM2Hbq0S+rFzUDbr85bDFwsdzjoRZdKTyWOfelHv
-         1m5H0X4OoaVUyBdRG8lgRBPblLdJfURJ+Iha+eM2ubqjYLCjMigQULEXOLi3BJMxFm+L
-         /0pD+BFu6GbyAGl4y/esQ64hsmna1A61viSsUFbJHqonbYOs9OCe8PaJJ6g6a9dV1abn
-         QnIw==
-X-Gm-Message-State: AOAM530+fKDbDc2oxURuGXcldO2OHsKkhCQjwO/JShl/7f4Hw+io0hZD
-        2lapUgdEtD6vFO4AoSisuxc=
-X-Google-Smtp-Source: ABdhPJy2O1AFpYh990sNPQv4CD/XFQDSbauwsPZg9MkzniGMGCUNueyPAJgZPdNKJM7mnUEzPZBuKA==
-X-Received: by 2002:a05:600c:2182:: with SMTP id e2mr2190555wme.186.1595307428909;
-        Mon, 20 Jul 2020 21:57:08 -0700 (PDT)
-Received: from [10.230.8.108] ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id i14sm5751539wrc.19.2020.07.20.21.57.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 21:57:08 -0700 (PDT)
-Subject: Re: [PATCH 1/2] net: dsa: Add flag for 802.1AD when adding VLAN for
- dsa switch and port
-To:     hongbo.wang@nxp.com, xiaoliang.yang_1@nxp.com,
-        allan.nielsen@microchip.com, po.liu@nxp.com,
-        claudiu.manoil@nxp.com, alexandru.marginean@nxp.com,
-        vladimir.oltean@nxp.com, leoyang.li@nxp.com, mingkai.hu@nxp.com,
-        andrew@lunn.ch, vivien.didelot@gmail.com, davem@davemloft.net,
-        jiri@resnulli.us, idosch@idosch.org, kuba@kernel.org,
-        vinicius.gomes@intel.com, nikolay@cumulusnetworks.com,
-        roopa@cumulusnetworks.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, horatiu.vultur@microchip.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        linux-devel@linux.nxdi.nxp.com
-References: <20200720104119.19146-1-hongbo.wang@nxp.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <3c41dab1-307c-51f3-9d39-a164e8ffcdee@gmail.com>
-Date:   Mon, 20 Jul 2020 21:57:01 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Tue, 21 Jul 2020 00:58:39 -0400
+Received: from verein.lst.de ([213.95.11.211]:50449 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725294AbgGUE6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 00:58:39 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id E950E68AFE; Tue, 21 Jul 2020 06:58:34 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 06:58:34 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Christoph Hellwig <hch@lst.de>, Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] syscalls: use uaccess_kernel in
+ addr_limit_user_check
+Message-ID: <20200721045834.GA9613@lst.de>
+References: <20200714105505.935079-1-hch@lst.de> <20200714105505.935079-2-hch@lst.de> <20200718013849.GA157764@roeck-us.net> <20200718094846.GA8593@lst.de> <20200720221046.GA86726@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <20200720104119.19146-1-hongbo.wang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720221046.GA86726@roeck-us.net>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/20/2020 3:41 AM, hongbo.wang@nxp.com wrote:
-> From: "hongbo.wang" <hongbo.wang@nxp.com>
+On Mon, Jul 20, 2020 at 03:10:46PM -0700, Guenter Roeck wrote:
+> I had another look into the code. Right after this patch, I see
 > 
-> the following command can be supported:
-> ip link add link swp1 name swp1.100 type vlan protocol 802.1ad id 100
+> #define uaccess_kernel() segment_eq(get_fs(), KERNEL_DS)
+> 
+> Yet, this patch is:
+> 
+> -       if (CHECK_DATA_CORRUPTION(!segment_eq(get_fs(), USER_DS),
+> +       if (CHECK_DATA_CORRUPTION(uaccess_kernel(),
+> 
+> So there is a negation in the condition. Indeed, the following change
+> on top of next-20200720 fixes the problem for mps2-an385.
+> 
+> -       if (CHECK_DATA_CORRUPTION(uaccess_kernel(),
+> +       if (CHECK_DATA_CORRUPTION(!uaccess_kernel(),
+> 
+> How does this work anywhere ?
 
-You should probably include the switch driver that is going to be
-benefiting from doing these changes in the patch series, provide a cover
-letter when sending more than one patch, and also combine both the add
-and delete parts.
+No, that is the wrong check - we want to make sure the address
+space override doesn't leak to userspace.  The problem is that
+armnommu (and m68knommu, but that doesn't call the offending
+function) pretends to not have a kernel address space, which doesn't
+really work.  Here is the fix I sent out yesterday, which I should
+have Cc'ed you on, sorry:
 
-Since you already have visibility into proto, it may not be necessary at
-all for now to define a BRIDGE_VLAN_INFO_8021AD bit in order to pass
-that flag down to DSA for programming the VLAN, just pass proto to
-dsa_port_vid_add() or a boolean flag which indicates whether this is the
-customer or service tag that you are trying to program?
+---
+From 2bb889b2d99a2d978e90640ade8fe02359287092 Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Mon, 20 Jul 2020 17:46:50 +0200
+Subject: arm: don't call addr_limit_user_check for nommu
+
+On arm nommu kernel use the same constant for USER_DS and KERNEL_DS,
+and seqment_eq always returns false.  With the current check in
+addr_limit_user_check that works by accident, but when replacing
+seqment_eq with uaccess_kerne it will fail.  Just remove the not
+needed check entirely.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+---
+ arch/arm/kernel/signal.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/kernel/signal.c b/arch/arm/kernel/signal.c
+index ab2568996ddb0c..c9dc912b83f012 100644
+--- a/arch/arm/kernel/signal.c
++++ b/arch/arm/kernel/signal.c
+@@ -713,7 +713,9 @@ struct page *get_signal_page(void)
+ /* Defer to generic check */
+ asmlinkage void addr_limit_check_failed(void)
+ {
++#ifdef CONFIG_MMU
+ 	addr_limit_user_check();
++#endif
+ }
+ 
+ #ifdef CONFIG_DEBUG_RSEQ
 -- 
-Florian
+2.27.0
+
