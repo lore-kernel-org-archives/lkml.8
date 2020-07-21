@@ -2,140 +2,125 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94E6C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 568862072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595296776;
-	bh=A2FDwNSyDpauYN840UREHbh62qgAGtvRaDcTfH064/w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VxJ5btS8lS5rIhoef1LeS5DdD9fSqoQJehK5B6nIrW7+7J3kfJQ7i7I9pNUIOP3fe
-	 g3lU00m+pAjKixlpHgUm5gkVqYGQnLaUNrWbYFyaLXbNnuuCcoXafKNntbhFxTjRtg
-	 7PkBAz41i3qQpu8ao99MsuPG86f3aKBLGTqhM5NQ=
+	by mail.kernel.org (Postfix) with ESMTP id B69312072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:59:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pB5hBti5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgGUB7e (ORCPT
+        id S1728082AbgGUB75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 21:59:34 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43740 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgGUB7e (ORCPT
+        Mon, 20 Jul 2020 21:59:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgGUB74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 21:59:34 -0400
-Received: by mail-io1-f65.google.com with SMTP id k23so19710424iom.10;
-        Mon, 20 Jul 2020 18:59:33 -0700 (PDT)
+        Mon, 20 Jul 2020 21:59:56 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E523EC061794;
+        Mon, 20 Jul 2020 18:59:55 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f18so19643024wrs.0;
+        Mon, 20 Jul 2020 18:59:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Re6La/qV3n1ukkxNTX/ju/OZLeqen/7aiCy5YNlMaBo=;
+        b=pB5hBti5DRoBjJS0TkkYddmaRA6YmLjbKVqgTjUx/cBp91jDcw7cN9/TagT1y9htZF
+         GVMeF5bbvlYerM1+LYKkstpzgn4gJq2EEveijDRFQ96zOyUh1PauLe9Oo2yIOxG3/dQB
+         UJNJ12yeYzV4dUIZTXYR47hR4xn6VNoHsRK5caBa+HrFxZwtyBOcz9voMxZ/beH0fb2f
+         TBDxkX7Dc1owqPdjtZfaowXJFZRP+SK5Uu9dTJ/HeMW4mSv5PffWY4HSQS9fnBaOyTw7
+         P9O5d2Ns7oGIqwoUQhEzqFG3Oj97Jmw+heq6u0rZHZhQ9zpHnqpi49MceoWTP+mfjTOD
+         PvMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wnc7YVfPETMY6OwZSSKyjxvpm6CL442HL8Evb64Bao0=;
-        b=ObDkZUCkUiIaGolGkqSsZKx1s5D0ohTz62PZZc+i+3bawVSOMebEEsJahX91MQgjxn
-         Lw7PdCN5bQlUXBYBvAxQpEqMSdZOtTbR5CNhnj1+ZXZbo5l42xj5Od+9zxKd0R3Mmp9y
-         RiJNsY4SzrVFPOOyjmoqIf3AThrrlG9XvsbnD/4EhpaFJ4evjbfd1c9Uo+9YVsBADCyh
-         e5lBAp7dIwqFjm4hcsUMHZdgJR+ImPC7onVQaj1bya0EMg4DkRiBCO2lHj43LfglzXHn
-         /ZBJPlbaYS4KT7LCHnYROP6jzVYYBBvxDXNPzgvdHGcI8jD3wE8ZYvpqNwiUE1LE0XX0
-         yDSA==
-X-Gm-Message-State: AOAM530dz9Th/EoAHozCdFh1sMTM5+exb38Ga6g+Hgb48wDPBZmYNBmd
-        yazyqVDWhxDhgsTp0o0oow==
-X-Google-Smtp-Source: ABdhPJy8KThvkeccvCI926AXDyWSugNKjKyrlGQkm9NW9P/FwLo9C9MOvQMwCMAcBFH6teHRisqXRg==
-X-Received: by 2002:a02:2401:: with SMTP id f1mr29054327jaa.66.1595296772813;
-        Mon, 20 Jul 2020 18:59:32 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p124sm9810465iod.32.2020.07.20.18.59.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Re6La/qV3n1ukkxNTX/ju/OZLeqen/7aiCy5YNlMaBo=;
+        b=XDook0cKrq5OIeeO2BpMMjaqvPCSDdCLn8wa99tFGjbcdJs2M1lD8h2dKyLJFtZ7/l
+         5k+cU6KKHghd31XHtZfrlIQXmVrRU2+lbncP1vpByF0APm+FodDIlhyIr4Ff7D27wX3b
+         fKSqfEmDQMdMjOBkdOeyu7kSPuE69OwNLgS8n1V6wp61GuumaxiRsVvEIMaJViVKULc/
+         FC9X/98+kFhZMLZSyUPlM50t+B5F3bsh79tVQ7BbIILOQGlpV5zKWlE3m+tqqtKN3TZ/
+         gCrzT+JYkMNYvHBH92R2IzR61BW24eqR0j82XaRM489yAwHtgv5w3lGRo1GrNpCDSSQo
+         dspA==
+X-Gm-Message-State: AOAM532xtUt0wywsLGdhMbSJnJ0dSEJGSM+D4DhHfojvgUZr+pH1n3Ap
+        h2AbfIE2NeoLKrqUL+jM5RU=
+X-Google-Smtp-Source: ABdhPJwdcC9jByWPNIZBOEA9DB5O7rqqiVArp+ZASBJj+ETWteWd4vVfPTsYntco232mpddtdCTd4g==
+X-Received: by 2002:a5d:550e:: with SMTP id b14mr16832282wrv.392.1595296794662;
+        Mon, 20 Jul 2020 18:59:54 -0700 (PDT)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id e8sm34479069wrp.26.2020.07.20.18.59.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 18:59:32 -0700 (PDT)
-Received: (nullmailer pid 3370741 invoked by uid 1000);
-        Tue, 21 Jul 2020 01:59:30 -0000
-Date:   Mon, 20 Jul 2020 19:59:30 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Matthew Hagan <mnhagan88@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Crispin <john@phrozen.org>,
-        Jonathan McDowell <noodles@earth.li>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
- properties
-Message-ID: <20200721015930.GA3363310@bogus>
-References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
- <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
- <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200716223236.GA1314837@lunn.ch>
- <c86c4da0-a740-55cc-33dd-7a91e36c7738@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c86c4da0-a740-55cc-33dd-7a91e36c7738@gmail.com>
+        Mon, 20 Jul 2020 18:59:54 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH v2] arm64: dts: meson: fix mmc0 tuning error on Khadas VIM3
+Date:   Tue, 21 Jul 2020 01:59:50 +0000
+Message-Id: <20200721015950.11816-1-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 08:26:02PM +0100, Matthew Hagan wrote:
-> 
-> 
-> On 16/07/2020 23:32, Andrew Lunn wrote:
-> > On Thu, Jul 16, 2020 at 03:09:25PM -0700, Jakub Kicinski wrote:
-> >> On Mon, 13 Jul 2020 21:50:26 +0100 Matthew Hagan wrote:
-> >>> Add names and decriptions of additional PORT0_PAD_CTRL properties.
-> >>>
-> >>> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
-> >>>  1 file changed, 8 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> >>> index ccbc6d89325d..3d34c4f2e891 100644
-> >>> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> >>> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> >>> @@ -13,6 +13,14 @@ Optional properties:
-> >>>  
-> >>>  - reset-gpios: GPIO to be used to reset the whole device
-> >>>  
-> >>> +Optional MAC configuration properties:
-> >>> +
-> >>> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
-> >>
-> >> Perhaps we can say a little more here?
-> >>
-> >>> +- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
-> >>> +				falling edge.
-> >>> +- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
-> >>> +				falling edge.
-> >>
-> >> These are not something that other vendors may implement and therefore
-> >> something we may want to make generic? Andrew?
-> > 
-> > I've never seen any other vendor implement this. Which to me makes me
-> > think this is a vendor extension, to Ciscos vendor extension of
-> > 1000BaseX.
-> > 
-> > Matthew, do you have a real use cases of these? I don't see a DT patch
-> > making use of them. And if you do, what is the PHY on the other end
-> > which also allows you to invert the clocks?
-> > 
-> The use case I am working on is the Cisco Meraki MX65 which requires bit
-> 18 set (qca,sgmii-txclk-falling-edge). On the other side is a BCM58625
-> SRAB with ports 4 and 5 in SGMII mode. There is no special polarity
-> configuration set on this side though I do have very limited info on
-> what is available. The settings I have replicate the vendor
-> configuration extracted from the device.
-> 
-> The qca,sgmii-rxclk-falling-edge option (bit 19) is commonly used
-> according to the device trees found in the OpenWrt, which is still using
-> the ar8216 driver. With a count through the ar8327-initvals I see bit 19
-> set on 18 of 22 devices using SGMII on MAC0.
+Similar to other G12B devices using the W400 dtsi, I see reports of mmc0
+tuning errors on VIM3 after a few hours uptime:
 
-Can't you identify the device and configure the setting based on that? 
-After all, MDIO devices are discoverable. Or there's no MDIO here?
+[12483.917391] mmc0: tuning execution failed: -5
+[30535.551221] mmc0: tuning execution failed: -5
+[35359.953671] mmc0: tuning execution failed: -5
+[35561.875332] mmc0: tuning execution failed: -5
+[61733.348709] mmc0: tuning execution failed: -5
 
-Rob
+I do not see the same on VIM3L, so remove sd-uhs-sdr50 from the common dtsi
+to silence the error, then (re)add it to the VIM3L dts.
+
+Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
+Fixes: 700ab8d83927 ("arm64: dts: khadas-vim3: add support for the SM1 based VIM3L")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi     | 1 -
+ arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts | 4 ++++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+index 27408c10a811..ddfd52b88002 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+@@ -293,7 +293,6 @@
+ 
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
+-	sd-uhs-sdr50;
+ 	max-frequency = <100000000>;
+ 
+ 	non-removable;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+index dbbf29a0dbf6..026b21708b07 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+@@ -88,6 +88,10 @@
+ 	status = "okay";
+ };
+ 
++&sd_emmc_a {
++	sd-uhs-sdr50;
++};
++
+ &usb {
+ 	phys = <&usb2_phy0>, <&usb2_phy1>;
+ 	phy-names = "usb2-phy0", "usb2-phy1";
+-- 
+2.17.1
+
