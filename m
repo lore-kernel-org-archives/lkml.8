@@ -2,96 +2,136 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CF3C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608CCC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB0E22C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C35B207CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:53:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4fbwZfv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbgGUOwy (ORCPT
+        id S1729616AbgGUOxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:52:54 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55431 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728156AbgGUOwx (ORCPT
+        Tue, 21 Jul 2020 10:53:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728064AbgGUOxI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:52:53 -0400
-Received: from 1.general.ppisati.uk.vpn ([10.172.193.134] helo=canonical.com)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <paolo.pisati@canonical.com>)
-        id 1jxtdR-0002Sv-Ig; Tue, 21 Jul 2020 14:52:49 +0000
-From:   Paolo Pisati <paolo.pisati@canonical.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Jian Yang <jianyang@google.com>
-Cc:     netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: txtimestamp: tear down setup() 'tc' and 'ip' env on EXIT
-Date:   Tue, 21 Jul 2020 16:52:49 +0200
-Message-Id: <20200721145249.72153-1-paolo.pisati@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 21 Jul 2020 10:53:08 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871C0C061794;
+        Tue, 21 Jul 2020 07:53:08 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id o3so16603829ilo.12;
+        Tue, 21 Jul 2020 07:53:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=gefT0usPwNpk++e6uaRtXlpKcI6kuzb4kMCCKqrFfP8=;
+        b=b4fbwZfv+f+CQ9FRW+4R1nY4ruQn7glFZMb4qq/JTveq+aXeE+zXcMmaJh2Vkk0c/Q
+         987BntmeC5ecl+70X0t4cfoLbLO87lOBiRyW5DwwBGFT3lfGPxcH1D9Fs1qMr23BCdb/
+         gSsZKQg77hQblYcYrDIMkSZF4RIZFIpVvbmCFGed9/MhnIIJHmEInyDHfVb8h52g257g
+         NcR29IgeofNpWEhP8+qwGfmQ46cV1A46cQM3D1aiWAN6MTNpRMxdBzTkma5XQJmULqgU
+         Tc4niZ+Ws6OiBLSS3M9kMmodmp8lyctXD/71ScwWam4HX4ereBTpCfG2qyZailXTOG9P
+         S1Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=gefT0usPwNpk++e6uaRtXlpKcI6kuzb4kMCCKqrFfP8=;
+        b=MyXPT9VZADq5xpnqEAJD5W94dMmisRcovpzoP2woMkXHuWc4CyD6LWQU2KouywHNl/
+         /mLpSP3x4W/JEkDv2vRPSEOHrzZRaV7/7XoboMzDDPjpz9TAtbBr7SW8XWIOnupKfRy4
+         6hXJmXQB+XKFKB9hp4BgDs1H2U8aGl84eKXlAq5+dgzuNh8OPbQ0xSVGo5we12kdglM2
+         5TsMqO3ETc2jJ7SLk/TLPkYX5g8EF1fKfk1GH01DbeycXaBqxGCddeGDFaYMl6kcde+q
+         R9DteryPJBTF709X8cArsufT8eA+ggSPumSSw+b4wHa+roIVogCcorDmRsIQvX/5llX2
+         /+XQ==
+X-Gm-Message-State: AOAM5318r2OUGSnpTOqnr8hTckU1blhTpSOK4y1Moel79v5DZGWxeiCb
+        Oyj5yHZ9iKfaCfv0yT+WmeR1duwM+Ua6p0GJEsQ=
+X-Google-Smtp-Source: ABdhPJw31yfOcTIu5NemOQg+BEwWwEa2rR/37X3QOEqy0M15pG5KgWNiEKxHOFs2dwz+hEByGN7QRUBYHSL246GMMt0=
+X-Received: by 2002:a92:dc09:: with SMTP id t9mr29451057iln.226.1595343187823;
+ Tue, 21 Jul 2020 07:53:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200721041940.4029552-1-maskray@google.com> <20200721104035.GC1676612@kroah.com>
+In-Reply-To: <20200721104035.GC1676612@kroah.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 21 Jul 2020 16:52:56 +0200
+Message-ID: <CA+icZUW9JhZEEcXfL5bid7+M-Qtw22XzSm2x-JxW1bU15HJ6sA@mail.gmail.com>
+Subject: Re: [PATCH v2] Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang cross compilation
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Fangrui Song <maskray@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        stable@vger.kernel.org, Jian Cai <jiancai@google.com>,
+        Bill Wendling <morbo@google.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a cleanup() path upon exit, making it possible to run the test twice in a
-row:
+On Tue, Jul 21, 2020 at 12:40 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Jul 20, 2020 at 09:19:38PM -0700, Fangrui Song wrote:
+> > When CROSS_COMPILE is set (e.g. aarch64-linux-gnu-), if
+> > $(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-elfedit,
+> > GCC_TOOLCHAIN_DIR will be set to /usr/bin/.  --prefix= will be set to
+> > /usr/bin/ and Clang as of 11 will search for both
+> > $(prefix)aarch64-linux-gnu-$needle and $(prefix)$needle.
+> >
+> > GCC searchs for $(prefix)aarch64-linux-gnu/$version/$needle,
+> > $(prefix)aarch64-linux-gnu/$needle and $(prefix)$needle. In practice,
+> > $(prefix)aarch64-linux-gnu/$needle rarely contains executables.
+> >
+> > To better model how GCC's -B/--prefix takes in effect in practice, newer
+> > Clang (since
+> > https://github.com/llvm/llvm-project/commit/3452a0d8c17f7166f479706b293caf6ac76ffd90)
+> > only searches for $(prefix)$needle. Currently it will find /usr/bin/as
+> > instead of /usr/bin/aarch64-linux-gnu-as.
+> >
+> > Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
+> > (/usr/bin/aarch64-linux-gnu-) so that newer Clang can find the
+> > appropriate cross compiling GNU as (when -no-integrated-as is in
+> > effect).
+> >
+> > Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Signed-off-by: Fangrui Song <maskray@google.com>
+> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/1099
+> > ---
+> > Changes in v2:
+> > * Updated description to add tags and the llvm-project commit link.
+> > * Fixed a typo.
+>
+>
+> <formletter>
+>
+> This is not the correct way to submit patches for inclusion in the
+> stable kernel tree.  Please read:
+>     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+> for how to do this properly.
+>
+> </formletter>
+>
 
-$ sudo bash -x ./txtimestamp.sh
-+ set -e
-++ ip netns identify
-+ [[ '' == \r\o\o\t ]]
-+ main
-+ [[ 0 -eq 0 ]]
-+ run_test_all
-+ setup
-+ tc qdisc add dev lo root netem delay 1ms
-Error: Exclusivity flag on, cannot modify.
+Hi Fangrui,
 
-Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
----
- tools/testing/selftests/net/txtimestamp.sh | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+your patch needs to be accepted first in Linus tree - among other
+things to have a unique commit-id for inclusion into any affected
+Linux-stable trees.
 
-diff --git a/tools/testing/selftests/net/txtimestamp.sh b/tools/testing/selftests/net/txtimestamp.sh
-index eea6f5193693..77f29cabff87 100755
---- a/tools/testing/selftests/net/txtimestamp.sh
-+++ b/tools/testing/selftests/net/txtimestamp.sh
-@@ -23,6 +23,14 @@ setup() {
- 		action mirred egress redirect dev ifb_netem0
- }
- 
-+cleanup() {
-+	tc filter del dev lo parent ffff:
-+	tc qdisc del dev lo handle ffff: ingress
-+	tc qdisc del dev ifb_netem0 root
-+	ip link del ifb_netem0
-+	tc qdisc del dev lo root
-+}
-+
- run_test_v4v6() {
- 	# SND will be delayed 1000us
- 	# ACK will be delayed 6000us: 1 + 2 ms round-trip
-@@ -75,6 +83,8 @@ main() {
- 	fi
- }
- 
-+trap cleanup EXIT
-+
- if [[ "$(ip netns identify)" == "root" ]]; then
- 	./in_netns.sh $0 $@
- else
--- 
-2.27.0
-
+Regards,
+- Sedat -
