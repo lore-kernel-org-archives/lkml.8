@@ -2,99 +2,100 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B5CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C135F2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595348002;
-	bh=6yp0dejYr/pxxfUqZk82RY/7Bg+S6u9JX5ToVgpRB70=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NTBGM+AFsxA80dw5DfNbIGzw9OP7WjzDse/0/IlTyOJvVJZqeCpY1Be/pexlWWmwY
-	 I+4BX9yZvjG1OzCaX0AJLktbNazV8NeYzfCt35srOs2tmKtfnyXmlaD9SkRJ/QJQfN
-	 g5KQHHBCrBb8QXVxV9KfEtQovushDfgSh+L3P/Wc=
+	by mail.kernel.org (Postfix) with ESMTP id 5EDA42073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:13:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=vmm.dev header.i=@vmm.dev header.b="fy7L/4Re"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbgGUQNW (ORCPT
+        id S1730055AbgGUQNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:13:22 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:41873 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgGUQNU (ORCPT
+        Tue, 21 Jul 2020 12:13:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgGUQNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:13:20 -0400
-Received: by mail-il1-f195.google.com with SMTP id q3so16871086ilt.8;
-        Tue, 21 Jul 2020 09:13:20 -0700 (PDT)
+        Tue, 21 Jul 2020 12:13:01 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642D6C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:13:01 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id 72so10467167ple.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:13:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vmm.dev; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wDitsdDHDoETDTxDKluPrWhU2D8DE6u8BnPSmRmrGh4=;
+        b=fy7L/4Re2TIFmm12k2i3bXju6ZZlkbEA1354CbMIGv3i6xktgqXThaI1n9+yLvVeEO
+         C6XotX0xy43lCHKadVKvJu6as164ENvY1aZYC+Yyk6hrIbMWtMK5qbbY/oAzlC1QJc/Q
+         8TrLwbEZwu3d5Il0QNTGzHqDr1Wi7ruxTjCJbyOBHnxKClmMl1qVy2GQASFp3s9u8YP4
+         VSo4vbTiSmKkp48DBE9pCIvmYDvC2JPmk5mrF9XSkbyYnR9veMcyfz8PlL4ZXKXSqov7
+         yfHhV8BL0GsYeU64KxJy8smQviZ1pKkO7sM+BGXTVcqsJVnmyRO6wSLGb235TJ1J3hxc
+         UCEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3hEvd6e5qQIyO2q50icuN5FjIQ5q4rwekadksksXza4=;
-        b=FoSg4oj+xbTGpENAvqh3FefVJNVTa9QVT++v1Ohdv0D7Mom9ootnHgLnly9OexqzCq
-         9Rdt6NX/uBHLHHyoXMs5ZuPa/um7y8pyxCzU2D4RlrmbsqDa3N1l3Sy+BtN9qyAyYdpo
-         xSJ9ZBJjYadFSZHKk3mOm9E0RG4G+TWvDVUjvMti1PB+xBmEp9OJ9aPWB7/2Mc1cER5j
-         hTUcPusuTclHm/4Ifr9Wy89X0o0k82uBR2e6MDmBhpdnkQQhUg4Jk/KlI7zmSrZYpUSN
-         il+3AricB2ispAV8va/eVCI+skzwZz/sgJ/RFB2ZznV6KuObzFHmL/HlsFDNsenCT7dd
-         lKoA==
-X-Gm-Message-State: AOAM532zQ3YonK9v2ApmJg0V0JvAmHAGfSTcrduaomVJ9VxqqN7RU02M
-        PAn96CyF3B0DR0+y/ibVLw==
-X-Google-Smtp-Source: ABdhPJwZyjj1eCmbDB8qodPjQFtYDmTZBEcJbwfaZKYhQLlgyU4nhZLjz4sJOcRtVBR5wxuFep/Rtw==
-X-Received: by 2002:a92:58d6:: with SMTP id z83mr28467802ilf.186.1595347999985;
-        Tue, 21 Jul 2020 09:13:19 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b14sm10999389ilg.86.2020.07.21.09.13.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:13:18 -0700 (PDT)
-Received: (nullmailer pid 393136 invoked by uid 1000);
-        Tue, 21 Jul 2020 16:13:17 -0000
-Date:   Tue, 21 Jul 2020 10:13:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     robh+dt@kernel.org, andrew@aj.id.au, joel@jms.id.au,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, lee.jones@linaro.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] dt-bindings: aspeed-lpc: Replace HTTP links with
- HTTPS ones
-Message-ID: <20200721161317.GA393067@bogus>
-References: <CACPK8Xc_iwvRtUVjY8G8rS8UbZf6-Q6FTGaNweJXk06A=Y459Q@mail.gmail.com>
- <20200720212110.64214-1-grandmaster@al2klimov.de>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wDitsdDHDoETDTxDKluPrWhU2D8DE6u8BnPSmRmrGh4=;
+        b=GGxd7rqwEeFz2iflQ8RZytXLVyDVUHNwI06D67aThunPeyADkm0dp2VYJGJgjZYLRN
+         CTl3THIlfbdHb+kC4CVuZlOqR5PLzhsUbkN5ACSLUdTlLxuyJda7CJQre6jx0i4bhccW
+         abloiEZctz5n0qeesNXblMfMKCp6rLu5AtaH+qmRC3HxO4U9vD89latyV7pNEaBCbn89
+         h+nBjW6c55qV6N9f6bWC0CRt3EUjO3SqBUToQlmbBDDyAXJm88MmJ0IthSNfPnKyyENi
+         M2NH8umySw9VF193JObdPZpOkubFqlu/FO0apImvsabHmGdzWTraQTLW7TIJ2j5Dusnr
+         wVXA==
+X-Gm-Message-State: AOAM532SreAgr+WdzjFFJq0SG3n0bE437xJCmBBXjfvZfK15sBXkcic0
+        zr3pumcRGDCXqQKv1ziZZtj8MA==
+X-Google-Smtp-Source: ABdhPJz/4Rls+u9+PMZSs3OFi3HIkImvb038W2RxX4ZvHHXgVr6fOs32UJtvHWbBcLF6bDLtkM4tvg==
+X-Received: by 2002:a17:902:8ecb:: with SMTP id x11mr17341190plo.123.1595347980879;
+        Tue, 21 Jul 2020 09:13:00 -0700 (PDT)
+Received: from ip-172-31-28-103.ap-northeast-1.compute.internal (ec2-18-183-109-148.ap-northeast-1.compute.amazonaws.com. [18.183.109.148])
+        by smtp.gmail.com with ESMTPSA id y80sm20467763pfb.165.2020.07.21.09.12.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 Jul 2020 09:13:00 -0700 (PDT)
+From:   Hayato Ohhashi <o8@vmm.dev>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, Hayato Ohhashi <o8@vmm.dev>
+Subject: [PATCH] x86/xen/time: set the X86_FEATURE_TSC_KNOWN_FREQ flag in xen_tsc_khz()
+Date:   Tue, 21 Jul 2020 16:12:31 +0000
+Message-Id: <20200721161231.6019-1-o8@vmm.dev>
+X-Mailer: git-send-email 2.23.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720212110.64214-1-grandmaster@al2klimov.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 23:21:10 +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  v2: Left only links to be only HTTPSified.
-> 
->  Documentation/devicetree/bindings/mfd/aspeed-lpc.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+If the TSC frequency is known from the pvclock page,
+the TSC frequency does not need to be recalibrated.
+We can avoid recalibration by setting X86_FEATURE_TSC_KNOWN_FREQ.
 
-Applied, thanks!
+Signed-off-by: Hayato Ohhashi <o8@vmm.dev>
+---
+ arch/x86/xen/time.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/xen/time.c b/arch/x86/xen/time.c
+index c8897aad13cd..91f5b330dcc6 100644
+--- a/arch/x86/xen/time.c
++++ b/arch/x86/xen/time.c
+@@ -39,6 +39,7 @@ static unsigned long xen_tsc_khz(void)
+ 	struct pvclock_vcpu_time_info *info =
+ 		&HYPERVISOR_shared_info->vcpu_info[0].time;
+ 
++	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+ 	return pvclock_tsc_khz(info);
+ }
+ 
+-- 
+2.23.3
+
