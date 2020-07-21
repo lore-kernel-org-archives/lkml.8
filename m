@@ -2,201 +2,276 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37346C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6BDC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8C92075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595297537;
-	bh=Wd+RJDtjybh53jqcmXzlsw+Ln4yJuFKK9ho7SBzI5Ys=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a1cUzid4PqtLm6dsRMp4Sy0u3eU2hAnzkimwcYqb6PEAeSxC1+oLtD1Co9e3gmbRQ
-	 lRP3E8lyjoGL/Ts/kfr3BwHef4RgDpda06QrWFuHi90FU9fRaV4nsRmata1YEtXrTH
-	 iCze0KgjnYfjBr0gfPJcTW6ZePX5A2EecuFGYKAk=
+	by mail.kernel.org (Postfix) with ESMTP id 700272072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:12:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="c22E8E5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgGUCMP (ORCPT
+        id S1727914AbgGUCMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:12:15 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:44155 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgGUCMO (ORCPT
+        Mon, 20 Jul 2020 22:12:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgGUCMF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 22:12:14 -0400
-Received: by mail-il1-f196.google.com with SMTP id h16so15079956ilj.11;
-        Mon, 20 Jul 2020 19:12:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NQUTeffJMHXMiqbsPX2xwEkXM3c5RyktUmybjJ1stHs=;
-        b=VQ32JPIkbnQ36s4c1dnXNaSICh8j8qpOERLo8ev2R982mb9TwXX7dMt1FCMDBBqfUT
-         tgEW3+7aZYohXASD56Nv8F6t+4eULr/rQM8/GXsCP7UdfBCnMdbZ+lbHY/WgKbUjVHan
-         9sqPtJJFy7qKH3el/TmZ7kkyo5rAVqvDcJerVt49OHYVB94AjnkkRVfxpFa80QXLRlpL
-         B6DOjLQUp6lwKglhM0NbQYjcL+pmJDBpOSs/AMaR8uDX9/1IcIYBQJTBUM72fnaYpByA
-         +oSOuxxMvpukgN3Ac4M43CpiuVESf2LaFxfeEIYXZp8TKuLfmDEMoQwcIeu17B8oA6E0
-         zcbg==
-X-Gm-Message-State: AOAM531WU26msYA6gE3RFY1MuPDFPvmzp3USnHSOlt7+UuVEMNGrrUkR
-        uFYpNvFCBEldVeHLhh7kbw==
-X-Google-Smtp-Source: ABdhPJzJnKhYPFFl4Fz41JdJz6qoRM9fJhj/Uf8pUDziQOo+75dmr6QMoYBHE/FV+bE8f94gH1De6g==
-X-Received: by 2002:a92:a312:: with SMTP id a18mr18402751ili.308.1595297532855;
-        Mon, 20 Jul 2020 19:12:12 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s5sm4527756ioo.29.2020.07.20.19.12.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 19:12:12 -0700 (PDT)
-Received: (nullmailer pid 3389433 invoked by uid 1000);
-        Tue, 21 Jul 2020 02:12:11 -0000
-Date:   Mon, 20 Jul 2020 20:12:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: sound: convert ROHM BD28623 amplifier
- binding to yaml
-Message-ID: <20200721021211.GA3388250@bogus>
-References: <20200714081000.177914-1-katsuhiro@katsuster.net>
+        Mon, 20 Jul 2020 22:12:05 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C580C061794;
+        Mon, 20 Jul 2020 19:12:05 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9htT5dGWz9sRN;
+        Tue, 21 Jul 2020 12:12:01 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595297522;
+        bh=UTMv+LohAVeywtSQA4FJ44hILUvS4URELTHwDgunZt8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=c22E8E5HIC4DH3WJUNji8RqUUvIiGX9ksWu8ovjnSMB4VhCsU2/r45p0JL8kim0RJ
+         slR+IIZuiuAlnT4DNRsx4thuOcy7L3V93ixcO2/BK1k251gE7S4fzRQPq75pMd35MV
+         SUZIbcy+5A3RHdOCostUc5p6VWXMGkBKMAxL4sk0h1Q1ftgTtOoTPymTW3enzg3Afn
+         dGXK0dIwa/Q5b2UMcyumF9oB4x0sYUNnrbHZYIrb39oXdcaHcf+uyDZGTaHEH1ttn0
+         x+GU/MtH+ozULaa7gSvtru+GNRia2OKzIbfmK0SI7TNIdJdbWO2z/vYFyLEWgvatJd
+         n7LQ2jW/TQsig==
+Date:   Tue, 21 Jul 2020 12:12:00 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Subject: linux-next: manual merge of the bpf-next tree with the net-next
+ tree
+Message-ID: <20200721121200.60ce87fb@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714081000.177914-1-katsuhiro@katsuster.net>
+Content-Type: multipart/signed; boundary="Sig_/NmcyHySB4QEYmS7SkHXyhmQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 05:09:59PM +0900, Katsuhiro Suzuki wrote:
-> This patch converts ROHM BD28623UMV class D speaker amplifier binding
-> to DT schema.
-> 
-> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> ---
->  .../bindings/sound/rohm,bd28623.txt           | 29 ---------
->  .../bindings/sound/rohm,bd28623.yaml          | 65 +++++++++++++++++++
->  2 files changed, 65 insertions(+), 29 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/rohm,bd28623.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/rohm,bd28623.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/rohm,bd28623.txt b/Documentation/devicetree/bindings/sound/rohm,bd28623.txt
-> deleted file mode 100644
-> index d84557c2686e..000000000000
-> --- a/Documentation/devicetree/bindings/sound/rohm,bd28623.txt
-> +++ /dev/null
-> @@ -1,29 +0,0 @@
-> -ROHM BD28623MUV Class D speaker amplifier for digital input
-> -
-> -This codec does not have any control buses such as I2C, it detect format and
-> -rate of I2S signal automatically. It has two signals that can be connected
-> -to GPIOs: reset and mute.
-> -
-> -Required properties:
-> -- compatible      : should be "rohm,bd28623"
-> -- #sound-dai-cells: should be 0.
-> -- VCCA-supply     : regulator phandle for the VCCA supply
-> -- VCCP1-supply    : regulator phandle for the VCCP1 supply
-> -- VCCP2-supply    : regulator phandle for the VCCP2 supply
-> -
-> -Optional properties:
-> -- reset-gpios     : GPIO specifier for the active low reset line
-> -- mute-gpios      : GPIO specifier for the active low mute line
-> -
-> -Example:
-> -
-> -	codec {
-> -		compatible = "rohm,bd28623";
-> -		#sound-dai-cells = <0>;
-> -
-> -		VCCA-supply = <&vcc_reg>;
-> -		VCCP1-supply = <&vcc_reg>;
-> -		VCCP2-supply = <&vcc_reg>;
-> -		reset-gpios = <&gpio 0 GPIO_ACTIVE_LOW>;
-> -		mute-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/sound/rohm,bd28623.yaml b/Documentation/devicetree/bindings/sound/rohm,bd28623.yaml
-> new file mode 100644
-> index 000000000000..acd8609252b4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/rohm,bd28623.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/rohm,bd28623.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ROHM BD28623MUV Class D speaker amplifier for digital input
-> +
-> +description:
-> +  This codec does not have any control buses such as I2C, it detect
-> +  format and rate of I2S signal automatically. It has two signals
-> +  that can be connected to GPIOs reset and mute.
-> +
-> +maintainers:
-> +  - Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> +
-> +properties:
-> +  compatible:
-> +    const: rohm,bd28623
-> +
-> +  "#sound-dai-cells":
-> +    const: 0
-> +
-> +  VCCA-supply:
-> +    description:
-> +      regulator phandle for the VCCA (for analog) power supply
-> +
-> +  VCCP1-supply:
-> +    description:
-> +      regulator phandle for the VCCP1 (for ch1) power supply
-> +
-> +  VCCP2-supply:
-> +    description:
-> +      regulator phandle for the VCCP2 (for ch2) power supply
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description:
-> +      GPIO specifier for the active low reset line
-> +
-> +  mute-gpios:
-> +    maxItems: 1
-> +    description:
-> +      GPIO specifier for the active low mute line
-> +
-> +required:
-> +  - compatible
-> +  - VCCA-supply
-> +  - VCCP1-supply
-> +  - VCCP2-supply
-> +  - "#sound-dai-cells"
+--Sig_/NmcyHySB4QEYmS7SkHXyhmQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Needs an:
+Hi all,
 
-additionalProperties: false
+Today's linux-next merge of the bpf-next tree got a conflict in:
 
-With that,
+  include/linux/filter.h
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+between commit:
 
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    codec {
-> +      compatible = "rohm,bd28623";
-> +      #sound-dai-cells = <0>;
-> +
-> +      VCCA-supply = <&vcc_reg>;
-> +      VCCP1-supply = <&vcc_reg>;
-> +      VCCP2-supply = <&vcc_reg>;
-> +      reset-gpios = <&gpio 0 GPIO_ACTIVE_LOW>;
-> +      mute-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
-> +    };
-> -- 
-> 2.27.0
-> 
+  4d295e546115 ("net: simplify cBPF setsockopt compat handling")
+
+from the net-next tree and commits:
+
+  e9ddbb7707ff ("bpf: Introduce SK_LOOKUP program type with a dedicated att=
+ach point")
+  1559b4aa1db4 ("inet: Run SK_LOOKUP BPF program on socket lookup")
+  1122702f0267 ("inet6: Run SK_LOOKUP BPF program on socket lookup")
+
+from the bpf-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/linux/filter.h
+index 4d049c8e1fbe,8252572db918..000000000000
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@@ -1276,6 -1278,151 +1276,153 @@@ struct bpf_sockopt_kern=20
+  	s32		retval;
+  };
+ =20
++ struct bpf_sk_lookup_kern {
++ 	u16		family;
++ 	u16		protocol;
++ 	struct {
++ 		__be32 saddr;
++ 		__be32 daddr;
++ 	} v4;
++ 	struct {
++ 		const struct in6_addr *saddr;
++ 		const struct in6_addr *daddr;
++ 	} v6;
++ 	__be16		sport;
++ 	u16		dport;
++ 	struct sock	*selected_sk;
++ 	bool		no_reuseport;
++ };
++=20
++ extern struct static_key_false bpf_sk_lookup_enabled;
++=20
++ /* Runners for BPF_SK_LOOKUP programs to invoke on socket lookup.
++  *
++  * Allowed return values for a BPF SK_LOOKUP program are SK_PASS and
++  * SK_DROP. Their meaning is as follows:
++  *
++  *  SK_PASS && ctx.selected_sk !=3D NULL: use selected_sk as lookup result
++  *  SK_PASS && ctx.selected_sk =3D=3D NULL: continue to htable-based sock=
+et lookup
++  *  SK_DROP                           : terminate lookup with -ECONNREFUS=
+ED
++  *
++  * This macro aggregates return values and selected sockets from
++  * multiple BPF programs according to following rules in order:
++  *
++  *  1. If any program returned SK_PASS and a non-NULL ctx.selected_sk,
++  *     macro result is SK_PASS and last ctx.selected_sk is used.
++  *  2. If any program returned SK_DROP return value,
++  *     macro result is SK_DROP.
++  *  3. Otherwise result is SK_PASS and ctx.selected_sk is NULL.
++  *
++  * Caller must ensure that the prog array is non-NULL, and that the
++  * array as well as the programs it contains remain valid.
++  */
++ #define BPF_PROG_SK_LOOKUP_RUN_ARRAY(array, ctx, func)			\
++ 	({								\
++ 		struct bpf_sk_lookup_kern *_ctx =3D &(ctx);		\
++ 		struct bpf_prog_array_item *_item;			\
++ 		struct sock *_selected_sk =3D NULL;			\
++ 		bool _no_reuseport =3D false;				\
++ 		struct bpf_prog *_prog;					\
++ 		bool _all_pass =3D true;					\
++ 		u32 _ret;						\
++ 									\
++ 		migrate_disable();					\
++ 		_item =3D &(array)->items[0];				\
++ 		while ((_prog =3D READ_ONCE(_item->prog))) {		\
++ 			/* restore most recent selection */		\
++ 			_ctx->selected_sk =3D _selected_sk;		\
++ 			_ctx->no_reuseport =3D _no_reuseport;		\
++ 									\
++ 			_ret =3D func(_prog, _ctx);			\
++ 			if (_ret =3D=3D SK_PASS && _ctx->selected_sk) {	\
++ 				/* remember last non-NULL socket */	\
++ 				_selected_sk =3D _ctx->selected_sk;	\
++ 				_no_reuseport =3D _ctx->no_reuseport;	\
++ 			} else if (_ret =3D=3D SK_DROP && _all_pass) {	\
++ 				_all_pass =3D false;			\
++ 			}						\
++ 			_item++;					\
++ 		}							\
++ 		_ctx->selected_sk =3D _selected_sk;			\
++ 		_ctx->no_reuseport =3D _no_reuseport;			\
++ 		migrate_enable();					\
++ 		_all_pass || _selected_sk ? SK_PASS : SK_DROP;		\
++ 	 })
++=20
++ static inline bool bpf_sk_lookup_run_v4(struct net *net, int protocol,
++ 					const __be32 saddr, const __be16 sport,
++ 					const __be32 daddr, const u16 dport,
++ 					struct sock **psk)
++ {
++ 	struct bpf_prog_array *run_array;
++ 	struct sock *selected_sk =3D NULL;
++ 	bool no_reuseport =3D false;
++=20
++ 	rcu_read_lock();
++ 	run_array =3D rcu_dereference(net->bpf.run_array[NETNS_BPF_SK_LOOKUP]);
++ 	if (run_array) {
++ 		struct bpf_sk_lookup_kern ctx =3D {
++ 			.family		=3D AF_INET,
++ 			.protocol	=3D protocol,
++ 			.v4.saddr	=3D saddr,
++ 			.v4.daddr	=3D daddr,
++ 			.sport		=3D sport,
++ 			.dport		=3D dport,
++ 		};
++ 		u32 act;
++=20
++ 		act =3D BPF_PROG_SK_LOOKUP_RUN_ARRAY(run_array, ctx, BPF_PROG_RUN);
++ 		if (act =3D=3D SK_PASS) {
++ 			selected_sk =3D ctx.selected_sk;
++ 			no_reuseport =3D ctx.no_reuseport;
++ 		} else {
++ 			selected_sk =3D ERR_PTR(-ECONNREFUSED);
++ 		}
++ 	}
++ 	rcu_read_unlock();
++ 	*psk =3D selected_sk;
++ 	return no_reuseport;
++ }
++=20
++ #if IS_ENABLED(CONFIG_IPV6)
++ static inline bool bpf_sk_lookup_run_v6(struct net *net, int protocol,
++ 					const struct in6_addr *saddr,
++ 					const __be16 sport,
++ 					const struct in6_addr *daddr,
++ 					const u16 dport,
++ 					struct sock **psk)
++ {
++ 	struct bpf_prog_array *run_array;
++ 	struct sock *selected_sk =3D NULL;
++ 	bool no_reuseport =3D false;
++=20
++ 	rcu_read_lock();
++ 	run_array =3D rcu_dereference(net->bpf.run_array[NETNS_BPF_SK_LOOKUP]);
++ 	if (run_array) {
++ 		struct bpf_sk_lookup_kern ctx =3D {
++ 			.family		=3D AF_INET6,
++ 			.protocol	=3D protocol,
++ 			.v6.saddr	=3D saddr,
++ 			.v6.daddr	=3D daddr,
++ 			.sport		=3D sport,
++ 			.dport		=3D dport,
++ 		};
++ 		u32 act;
++=20
++ 		act =3D BPF_PROG_SK_LOOKUP_RUN_ARRAY(run_array, ctx, BPF_PROG_RUN);
++ 		if (act =3D=3D SK_PASS) {
++ 			selected_sk =3D ctx.selected_sk;
++ 			no_reuseport =3D ctx.no_reuseport;
++ 		} else {
++ 			selected_sk =3D ERR_PTR(-ECONNREFUSED);
++ 		}
++ 	}
++ 	rcu_read_unlock();
++ 	*psk =3D selected_sk;
++ 	return no_reuseport;
++ }
++ #endif /* IS_ENABLED(CONFIG_IPV6) */
++=20
+ +int copy_bpf_fprog_from_user(struct sock_fprog *dst, void __user *src, in=
+t len);
+ +
+  #endif /* __LINUX_FILTER_H__ */
+
+--Sig_/NmcyHySB4QEYmS7SkHXyhmQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8WTvAACgkQAVBC80lX
+0GxLMQf+OyuUUt2hCYprT08GHMUBVcfrGxq5KOJW20Y7QB2Ap9E/OT0Se0sfh+RJ
+L8vdkBbrnLNWkBnhT+n1ONOSYY7tsxdE2VYGGg1Eh1LQ+gayvdqOJ8n6OczeDLgY
+opdUtxhq0UZM8hltxtOGFP3ymXaAmEfdv2VEvLBLK8gbrsB7i7ZDifgPJISCNk/1
+hzu/9N0KWkadJxTdUuQBmsN2evi8I75j/YzLyymqXVQqHCVfA7XePoLih+WNeV0O
+0AxltZGJKv5H6gafEVPXJ3fMQ9i6ZUl3VfyvqrLMWddyhnxePzqv3UF3GH+Nx7u3
+9rI0ARYd6/6twZcVAfl/NO5FPVA1Xw==
+=QTH6
+-----END PGP SIGNATURE-----
+
+--Sig_/NmcyHySB4QEYmS7SkHXyhmQ--
