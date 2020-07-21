@@ -2,109 +2,100 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAC3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AA2C433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F08820792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:31:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595338268;
-	bh=XU1hnquLcT3uOLI4CEBQSKNiZLfuqrOpsjs/ol0fJo0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qscFrRRcatpkDIsyLCq67PitQuB2cL23V3t5Y6PILIkNIU7pBQnxQP2Bb/AdlcWHS
-	 /DiNG9K1Y7dep2If3amrIAcc8aHEQzT/veEqIgfzFzDdiEOhKns1H7vUYP4MiO2d2h
-	 2kywHgsB317ULmVuNkvctMXeDBzuK+jzKge5O5MQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2524921702
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:31:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2MkfsCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgGUNbH (ORCPT
+        id S1728430AbgGUNbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:31:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbgGUNbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:31:06 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24AD9206E9;
-        Tue, 21 Jul 2020 13:31:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595338266;
-        bh=XU1hnquLcT3uOLI4CEBQSKNiZLfuqrOpsjs/ol0fJo0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FylJoQqJ/ehmVF0ki09SSZeGx6cTPmYCPzZySi4AGS0knaN4gPsguYtsBSrqx0B+k
-         HF7WkU7SK1+eR+v4tGCovnYOrJBoO3DNjsJOgwIDa8pFIAmeIiYrVHuAaoBWS9l57+
-         Ocz+h/JyemWLpd6YWSj9T5OlLyu7qht9AbfTtd6o=
-Date:   Tue, 21 Jul 2020 22:31:02 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        davem@davemloft.net, corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kprobes: Replace HTTP links with HTTPS ones
-Message-Id: <20200721223102.25b67b3c6b2114c146373a7a@kernel.org>
-In-Reply-To: <20200709191636.26252-1-grandmaster@al2klimov.de>
-References: <20200708184201.611d929ae6017c87ea98b114@kernel.org>
-        <20200709191636.26252-1-grandmaster@al2klimov.de>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 21 Jul 2020 09:31:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbgGUNbh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 09:31:37 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AB4CC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:31:37 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 22so2852579wmg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:31:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uyBU0n93mYL4MPnVZSrUf3hQRNa7z/RTZ/TKuAjq3Q8=;
+        b=R2MkfsCQuYWzdV3pwRrLaT8N1kzRpNcsFvr6wnqUiJrQk9jaPTpAwG9/BxmKH0fg4e
+         csnBNsmMOvVrz/CJ+WpUAIOUa92I9kRfRCKd33NJX/RQ5DALtKWGB9IV/8y5YuU/FEGm
+         ABQSVM09Kd1gfUDLlBqWcP6KdrcFWArxsSp6AkHFMYr/bnYPxQntffyf8B9orCvGnSZD
+         kpIz2FAvQ6MLmX+RfADxPxmtyzNZ4rFR5tmSwBCK0I9/l1n0ZDpLwFbwZ9tSpvPX0XTL
+         LQHQMEMxDFZ0U2xD6mGRCERCgYTrwUvl8rhc9PPSgVVavx2jLMlCN/QIytxMBrCHlFab
+         81Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uyBU0n93mYL4MPnVZSrUf3hQRNa7z/RTZ/TKuAjq3Q8=;
+        b=sJz/MA52rfL2T8vfqHp6FehAe7ycQQuRTVpg7kUAJjWaCAD0ZeUjMJ4xLixE7lflrJ
+         fKFNrxIdsH4al7pPu5NZTyXxVEIvbF4wiZFDecOzMRsnBF50MOw0D7I1vK+n6L+Z69G9
+         GhLYnGueYuAhMyj6MyLkjVOnZ8oogQpyeAaSUrFDrCIrSEzkioD3uOYehpdTRMBHB478
+         qCZAvipxzKNBDRJVZLrMcBFwEvnG9yjHB80n2Gl7HiJUuXu57eW+ArDjmlZZ/DMK4y8/
+         d0Sabvp2mOiz/y/PDP8nbt4qQQ1znnWP3AdvPg9NkqATORnf/F/ED2PEZ9antl7UJu8q
+         d8WA==
+X-Gm-Message-State: AOAM532gT430u4inLWXeuPQYdlywTdfKbdjQx5V4aTI/9iV0OaUjnvdz
+        wprIO5+CJBigF8TlnFPIWsI=
+X-Google-Smtp-Source: ABdhPJzuacQT/Evp2PHZb0CQXYblt0HAY+Bj+IAqC14Rd4DQUDuO+4iTsHjhrA3NqW8RBRIhAaQjlw==
+X-Received: by 2002:a1c:5453:: with SMTP id p19mr3983422wmi.41.1595338296463;
+        Tue, 21 Jul 2020 06:31:36 -0700 (PDT)
+Received: from [192.168.0.74] ([178.233.178.9])
+        by smtp.gmail.com with ESMTPSA id j8sm21924758wrd.85.2020.07.21.06.31.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 06:31:35 -0700 (PDT)
+Subject: Re: Speaker pops with max98357a on rk3399-gru-kevin since v5.7
+To:     Tzung-Bi Shih <tzungbi@google.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rockchip@lists.infradead.org
+References: <f2ca985f-7dbd-847a-1875-dd0e1044ef02@gmail.com>
+ <CA+Px+wU1S1EqtW-yZH9z9aCF3ggSriBqy73SRYy8q61x0GkdQQ@mail.gmail.com>
+ <846feea6-e2b6-3a0e-b05f-d70e898f9ea5@gmail.com>
+ <CA+Px+wUhAHAx-qmAEWy_8Jy40NDTAHH-TNYtPtMfwocMHQ=AbA@mail.gmail.com>
+From:   Alper Nebi Yasak <alpernebiyasak@gmail.com>
+Message-ID: <ba020dd4-167c-f67e-5cf7-5e4e60a71919@gmail.com>
+Date:   Tue, 21 Jul 2020 16:31:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CA+Px+wUhAHAx-qmAEWy_8Jy40NDTAHH-TNYtPtMfwocMHQ=AbA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  9 Jul 2020 21:16:36 +0200
-"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
-
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+On 21/07/2020 14:46, Tzung-Bi Shih wrote:
+> Hi, I got a rk3399-gru-kevin and can reproduce the issue.
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If both the HTTP and HTTPS versions
->           return 200 OK and serve the same content:
->             Replace HTTP with HTTPS.
-> 
+> Could you take a try on the proposed patch here
+> https://patchwork.kernel.org/patch/11675533/ to see if it fixes?
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+It does eliminate the pops, thanks.
 
-Thanks!
-
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  I'd really would like to get HTTPSifying done before other tasks...
-> 
->  Documentation/kprobes.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/kprobes.txt b/Documentation/kprobes.txt
-> index 8baab8832c5b..88b4d2845b37 100644
-> --- a/Documentation/kprobes.txt
-> +++ b/Documentation/kprobes.txt
-> @@ -693,7 +693,7 @@ process. Here are sample overhead figures (in usec) for x86 architectures::
->  TODO
->  ====
->  
-> -a. SystemTap (http://sourceware.org/systemtap): Provides a simplified
-> +a. SystemTap (https://sourceware.org/systemtap): Provides a simplified
->     programming interface for probe-based instrumentation.  Try it out.
->  b. Kernel return probes for sparc64.
->  c. Support for other architectures.
-> -- 
-> 2.27.0
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+(I've replied to the patch, I am sending this for completeness as the Cc
+list isn't exactly the same.)
