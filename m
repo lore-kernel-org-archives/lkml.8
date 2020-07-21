@@ -2,225 +2,88 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6953C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DC6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5D22073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:05:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z+OWQYN4"
+	by mail.kernel.org (Postfix) with ESMTP id 4D7CF20729
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgGUKFD (ORCPT
+        id S1729158AbgGUKAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:05:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726976AbgGUKFC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:05:02 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F828C0619D8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:05:02 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id x13so10040686vsx.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:05:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DZxYe5F17/UOWPF6juw9B6bodvCKqZ8eb70Nj76RBOQ=;
-        b=Z+OWQYN4GeYyvQh2sT0ZPpBL9rs3ALi2SinMwePZUJrslKEg126Nubmsq0pckNPJkJ
-         G901hFrBh18W50WAQ7wbTkPUEskaxzXdqqitYbYHmwllRmm9wWjGDvhr4SxXZ31A2VNG
-         qXOJN0rKkrBwgpSSOnDqd+O9+kmIyAN/u6OYMkFM7HVc3+HgDusMcExpuGsvjHTeNkGm
-         FTMOrkkIIlmE7kC4X1D/BUxpUNlN8GS44fR8avHN4UlAzWr+yAxjna7vHvirKEwdF8CE
-         koEZivgJ0FhTM85zgQag+BWr+LQG2YYNEZlX9W1oXGDj8PA6WAtOF4VZzj1fKVyxgn7q
-         jYhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DZxYe5F17/UOWPF6juw9B6bodvCKqZ8eb70Nj76RBOQ=;
-        b=Ay5g16mUUZxXEM9Cqt+PkdFvcPr8MjEw6sjV7xn8wVWXW+6vPmkEjZr1VWdmVtRahy
-         tH6T/pq+7oa6nIbFpzY5GFV2xva81m6awXo8o77L3EovMe72x2yPLT+MsRcfBZlmSAr4
-         5mgVpkz5f9RWq7Jgkt+wv9kqHi0m2BpvALU7DFx++WYOU2zmnNoTOc+XOt32C2onCZH6
-         4taiRq6ArU7IRuX+5qYivUSbgA7h+Oza5yHMfq2ky3OhkOlmmLqeEJ9Wqfb0oF4Z7MPi
-         RdEXOQB7AaBtFOC85VuW8aTrSUNySzL3VWVp3JUDuYlXTvCwg41vYWhFp70Ki5rNoTJ5
-         REYg==
-X-Gm-Message-State: AOAM531ucXQmFLBKnNMVko/L4WxTPgV2gh4tQKXvGaM8Fqeu3rQNGedh
-        8pH+qksuanULmassHhEmzWrgKeDMRShJ9VDGnrik8Q==
-X-Google-Smtp-Source: ABdhPJx9BMPVcvTz2IGb981toraC3zQUry/Y/3hz9GX+NHDG8dzhVtgCtqeX3yjz6NdF+BoO/CeZXYPkUsG1ECTkRgg=
-X-Received: by 2002:a05:6102:14d:: with SMTP id a13mr19344739vsr.142.1595325901421;
- Tue, 21 Jul 2020 03:05:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200720152820.122442056@linuxfoundation.org>
-In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 21 Jul 2020 15:34:49 +0530
-Message-ID: <CA+G9fYt_HQbAVT8obg59CkOTpHh=gYyQdjcx8PeMdo2Ba-A+Dw@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/215] 5.4.53-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
+        Tue, 21 Jul 2020 06:00:18 -0400
+Received: from 8bytes.org ([81.169.241.247]:58364 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729030AbgGUKAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:00:09 -0400
+Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 678D044A;
+        Tue, 21 Jul 2020 12:00:07 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Joerg Roedel <jroedel@suse.de>, joro@8bytes.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 3/3] x86/mm/64: Make sync_global_pgds() static
+Date:   Tue, 21 Jul 2020 11:59:53 +0200
+Message-Id: <20200721095953.6218-4-joro@8bytes.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200721095953.6218-1-joro@8bytes.org>
+References: <20200721095953.6218-1-joro@8bytes.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 at 21:27, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.53 release.
-> There are 215 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 22 Jul 2020 15:27:31 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.53-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+From: Joerg Roedel <jroedel@suse.de>
 
-Results from Linaro=E2=80=99s test farm.
-Regressions detected on arm and arm64 (Juno-r2)
+The function is only called from within init_64.c and can be static.
+Also remove it from pgtable_64.h.
 
-perf test cases failed
-  perf:
-    * perf_record_test
-    * perf_report_test
-    * Track-with-sched_switch (ignore intermittent failure)
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/include/asm/pgtable_64.h | 2 --
+ arch/x86/mm/init_64.c             | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-Bad case:
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.002 MB perf-lava-test.data ]
+diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
+index 1b68d24dc6a0..95ac911b1a30 100644
+--- a/arch/x86/include/asm/pgtable_64.h
++++ b/arch/x86/include/asm/pgtable_64.h
+@@ -168,8 +168,6 @@ static inline void native_pgd_clear(pgd_t *pgd)
+ 	native_set_pgd(pgd, native_make_pgd(0));
+ }
+ 
+-extern void sync_global_pgds(unsigned long start, unsigned long end);
+-
+ /*
+  * Conversion functions: convert a page and protection to a page entry,
+  * and a page entry and page directory to the page they refer to.
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index e0cd2dfd333d..e65b96f381a7 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -209,7 +209,7 @@ static void sync_global_pgds_l4(unsigned long start, unsigned long end)
+  * When memory was added make sure all the processes MM have
+  * suitable PGD entries in the local PGD level page.
+  */
+-void sync_global_pgds(unsigned long start, unsigned long end)
++static void sync_global_pgds(unsigned long start, unsigned long end)
+ {
+ 	if (pgtable_l5_enabled())
+ 		sync_global_pgds_l5(start, end);
+-- 
+2.27.0
 
-when it was pass it prints number of samples like below,
-Good case:
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.004 MB perf-lava-test.data (46 samples)=
- ]
-
-steps to reproduce:
-# perf record -e cycles -o perf-lava-test.data ls -a  2>&1 | tee perf-recor=
-d.log
-
-Link to full test:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/build/v5.4.52-216=
--g95f1079149bd/testrun/2969631/suite/perf/test/perf_record_test/log
-
-test case:
-https://github.com/Linaro/test-definitions/blob/master/automated/linux/perf=
-/perf.sh
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.4.53-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 95f1079149bd5596df492ff3dd12dacdd264e0ea
-git describe: v5.4.52-216-g95f1079149bd
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.52-216-g95f1079149bd
-
-Regressions (compared to build v5.4.52)
-------------------------------------------------------------------------
-  perf:
-    * perf_record_test
-    * perf_report_test
-    * Track-with-sched_switch (ignore intermittent failure)
-
-No fixes (compared to build v5.4.52)
-
-Ran 36089 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-commands-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fs-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
