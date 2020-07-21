@@ -2,166 +2,90 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FROM_LOCAL_NOVOWEL,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 803A4C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346A5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5567C20720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC5F20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:10:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r4drilcs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbgGUVHi (ORCPT
+        id S1731004AbgGUVKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:07:38 -0400
-Received: from mga18.intel.com ([134.134.136.126]:59841 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726658AbgGUVHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:07:37 -0400
-IronPort-SDR: r1EEjtt0RXCTi+5Svux5JzHIq8W7ZWdiwHfeCyap9deKgg4pXX75XOuCwqLr8esaJlpFKdydaN
- pr02jqCDLjnA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="137734230"
-X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
-   d="scan'208";a="137734230"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 14:07:36 -0700
-IronPort-SDR: xfiJ9NNJ4KGguu1iWyDcO576Ka4bjPrUvFlOQGqJSMEBEWg/5exeu91oTouiAq4N3bNDx/yM0L
- NUjgCdoyY2Nw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
-   d="scan'208";a="310380758"
-Received: from joycetoh-desk.sc.intel.com ([172.25.206.187])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Jul 2020 14:07:36 -0700
-From:   Harsha Priya <harshapriya.n@intel.com>
-To:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        pierre-louis.bossart@linux.intel.com
-Cc:     lma@semihalf.com, yang.jie@linux.intel.com,
-        liam.r.girdwood@linux.intel.com, rad@semihalf.com,
-        zwisler@google.com, linux-kernel@vger.kernel.org,
-        sathya.prakash.m.r@intel.com, brndt@google.com, mw@semihalf.com,
-        levinale@chromium.org, Harsha Priya <harshapriya.n@intel.com>,
-        Vamshi Krishna Gopal <vamshi.krishna.gopal@intel.com>
-Subject: [PATCH v7] ASoC: Intel: kbl_rt5663_rt5514_max98927: Fix kabylake_ssp_fixup function
-Date:   Tue, 21 Jul 2020 14:07:29 -0700
-Message-Id: <1595365649-8019-1-git-send-email-harshapriya.n@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 21 Jul 2020 17:10:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728606AbgGUVKb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 17:10:31 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11045C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:10:31 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id q17so42692pfu.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:10:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZhFDYa4FfOvvUM9wrXOQAjhc4Tt6wbIOg27vSWas00o=;
+        b=r4drilcsOVRuoawrOpfhw+dymjFUEvUJ8LUrnZdDYtwr4SUrvK1TOXNWu2AexT/Meh
+         uDWLtU6Do3cnH41/8Uo9sOh+kN0BKt68ziFJ0/S5OUoIoMatggCbTlbf2Pi04mWnZ7p5
+         4Jo1rs/LcGOzKFLAIFAg5As8aYZatAvppuO4sgZAjURrnsuT8BR3JdG3URMdy/rgyUkp
+         8Opjs5SX/eadOJhi466+ANacMI7Q4BNFuT6apL8uVaSLfHOdGLvuuzOwmMYCUyxtfz67
+         SKprIW4A9lLUkLHJtDMB8LKNZEcN6RC/dMDUvNs6CEH4/CIyCBtOH3jxyYUnTTRr1aJv
+         9Bqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZhFDYa4FfOvvUM9wrXOQAjhc4Tt6wbIOg27vSWas00o=;
+        b=C+rbSF/3shWsYvsv5JWfgFyz0/fbgN32mU0WNzbWn5I7gFj5noZjfM/v85IjCslqiH
+         aEPwsXOwa8Q1VBqPGg8xer/LMn19ZxKlLN/dX629hTpGQVdb9r6HnnTwGHw1fq0KF9qm
+         0HXLfwJUtXubshEP8pG+Nbh7Olqf8HuopCyTlWnbgFLmX8uYsLw3kKulpoaDWniAaVQF
+         5sbMgiYtvHXRf28RHMcrkLIi9l/Qv+H9fX/sleECawq5EMlPeJuQ39B/OVRKbSKiwiv9
+         GpYWLNSIeiZ3wsTgW2i1/okoUWEa/Vb+w/to3kzzptLRmkOe4VoMIdpJMvQzSkDSscLF
+         dUGA==
+X-Gm-Message-State: AOAM5310RsGLIewzf7etSW8zWRMzJjm8knlqv4FQV1aocSdbt2PYvDBT
+        eAcwSfnTitl18H60rmXb+YA43Johqk3r0ftB7EBErw==
+X-Google-Smtp-Source: ABdhPJwoWRbs5GZLbVtYueLHOUh103u+TTXn30QPO7TztEYzA+lP7eK9C1X4VZur6jmAkEvULmrS9QZgaydLUbsPVTc=
+X-Received: by 2002:a62:3645:: with SMTP id d66mr26786035pfa.275.1595365830665;
+ Tue, 21 Jul 2020 14:10:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200721210044.15458-1-rdunlap@infradead.org>
+In-Reply-To: <20200721210044.15458-1-rdunlap@infradead.org>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Tue, 21 Jul 2020 14:10:19 -0700
+Message-ID: <CAMo8Bf+Pnkwu59vhwz21K_qoMHn+44AW3YUmO53dZ5nROaDdzA@mail.gmail.com>
+Subject: Re: [PATCH] xtensa: initialize_mmu.h: fix a duplicated word
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Chris Zankel <chris@zankel.net>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kabylake_ssp_fixup function uses snd_soc_dpcm to identify the codecs DAIs.
-The hw parameters are changed based on the codec DAI,
-the stream is intended for. The earlier approach to get
-snd_soc_dpcm was using container_of() macro on snd_pcm_hw_params.
-The structures have been modified over time and snd_soc_dpcm does
-not have snd_pcm_hw_params as a reference but as a copy.
-This causes the current driver to crash when used.
-This patch changes the way snd_soc_dpcm is extracted.
-The snd_soc_pcm_runtime holds 2 dpcm
-instances (one for playback and one for capture).
-The 2 codecs on this SSP are dmic and speakers.
-One is for capture and one is for playback respectively.
-Based on the direction of the stream,
-the snd_soc_dpcm is extracted from the snd_soc_pcm_runtime structure.
-Tested for all use cases of the driver.
+On Tue, Jul 21, 2020 at 2:00 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> Change "The the" to "For the".
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Chris Zankel <chris@zankel.net>
+> Cc: Max Filippov <jcmvbkbc@gmail.com>
+> Cc: linux-xtensa@linux-xtensa.org
+> ---
+>  arch/xtensa/include/asm/initialize_mmu.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Harsha Priya <harshapriya.n@intel.com>
-Signed-off-by: Vamshi Krishna Gopal <vamshi.krishna.gopal@intel.com>
-Tested-by: Lukasz Majczak <lma@semihalf.com>
----
-v1 -> v2:
-- Extract dmic from SSP0 as every BE should have own fixup function.
-v2 -> v3:
-- Restore naming in the dapm route table to not confuse with other
-drivers
-- Fixed indentations
-v3 -> v4:
-- Updated code and commit description according to
-solution proposed by Harsha
-v4 -> v5:
-- Cosmetic Changes
-v5 -> v6:
-- Dmic regression seen with v4 fixed 
-- Using available routines for obtaining dpcm information
-v6 -> v7:
-- Updated comments
-- initilize rtd_dpcm variable
-- added break statement in the loop
+Thank you! Applied to my xtensa tree.
 
----
----
- .../intel/boards/kbl_rt5663_rt5514_max98927.c | 38 ++++++++++++++-----
- 1 file changed, 29 insertions(+), 9 deletions(-)
-
-diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-index 584e4f9cedc2..9f4b949cc39c 100644
---- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-+++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-@@ -379,22 +379,42 @@ static int kabylake_ssp_fixup(struct snd_soc_pcm_runtime *rtd,
- 	struct snd_interval *chan = hw_param_interval(params,
- 			SNDRV_PCM_HW_PARAM_CHANNELS);
- 	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
--	struct snd_soc_dpcm *dpcm = container_of(
--			params, struct snd_soc_dpcm, hw_params);
--	struct snd_soc_dai_link *fe_dai_link = dpcm->fe->dai_link;
--	struct snd_soc_dai_link *be_dai_link = dpcm->be->dai_link;
-+	struct snd_soc_dpcm *dpcm, *rtd_dpcm = NULL;
-+
-+	/*
-+	 * The following loop will be called only for playback stream
-+	 * In this platform, there is only one playback device on every SSP
-+	 */
-+	for_each_dpcm_fe(rtd, SNDRV_PCM_STREAM_PLAYBACK, dpcm) {
-+		rtd_dpcm = dpcm;
-+		break;
-+	}
-+
-+	/*
-+	 * This following loop will be called only for capture stream
-+	 * In this platform, there is only one capture device on every SSP
-+	 */
-+	for_each_dpcm_fe(rtd, SNDRV_PCM_STREAM_CAPTURE, dpcm) {
-+		rtd_dpcm = dpcm;
-+		break;
-+	}
-+
-+	/*
-+	 * The above 2 loops are mutually exclusive based on the strem direction,
-+	 * thus rtd_dpcm variable will never be overwritten
-+	 */
- 
- 	/*
- 	 * The ADSP will convert the FE rate to 48k, stereo, 24 bit
- 	 */
--	if (!strcmp(fe_dai_link->name, "Kbl Audio Port") ||
--	    !strcmp(fe_dai_link->name, "Kbl Audio Headset Playback") ||
--	    !strcmp(fe_dai_link->name, "Kbl Audio Capture Port")) {
-+	if (!strcmp(rtd_dpcm->fe->dai_link->name, "Kbl Audio Port") ||
-+	    !strcmp(rtd_dpcm->fe->dai_link->name, "Kbl Audio Headset Playback") ||
-+	    !strcmp(rtd_dpcm->fe->dai_link->name, "Kbl Audio Capture Port")) {
- 		rate->min = rate->max = 48000;
- 		chan->min = chan->max = 2;
- 		snd_mask_none(fmt);
- 		snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S24_LE);
--	} else if (!strcmp(fe_dai_link->name, "Kbl Audio DMIC cap")) {
-+	} else if (!strcmp(rtd_dpcm->fe->dai_link->name, "Kbl Audio DMIC cap")) {
- 		if (params_channels(params) == 2 ||
- 				DMIC_CH(dmic_constraints) == 2)
- 			chan->min = chan->max = 2;
-@@ -405,7 +425,7 @@ static int kabylake_ssp_fixup(struct snd_soc_pcm_runtime *rtd,
- 	 * The speaker on the SSP0 supports S16_LE and not S24_LE.
- 	 * thus changing the mask here
- 	 */
--	if (!strcmp(be_dai_link->name, "SSP0-Codec"))
-+	if (!strcmp(rtd_dpcm->be->dai_link->name, "SSP0-Codec"))
- 		snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S16_LE);
- 
- 	return 0;
--- 
-2.17.1
-
+-- Max
