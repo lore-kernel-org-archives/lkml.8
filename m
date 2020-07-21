@@ -2,110 +2,171 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA6FC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A70C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F02C2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:21:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="lw/szNsM"
+	by mail.kernel.org (Postfix) with ESMTP id E01E22068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595352220;
+	bh=o1VTqZy3PaEzLTyui6w9+v5TbCVASw3DdtRw6gu2BQI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=L3wGjQU7RofkyYgMW1eYg744UIvXAxqDCqZhK4yGqsPk1pUxyoRq6GYTqZx/Fm0mG
+	 hM4EwEYLonH4k6bRBWX7J3GkvMCaTVXae8CwpfkENkq/HWLLG4WQHUodo+miaWXiQf
+	 jSAZhzyDYFO8ZsY0Rw+KkIcBNKErLhpzCncZ+joM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730356AbgGURVw (ORCPT
+        id S1729600AbgGURXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:21:52 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:22525 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728306AbgGURVt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:21:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595352110; x=1626888110;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Cr9yMh/643YG+tS2Nsorca62cbZHykMm0kwOqg1UwAk=;
-  b=lw/szNsMajlb+0AdVo8voOGoG/msPvajoNGh8yH6vKT+IUNw1d5wqFo2
-   JMO+ruKApIR4Zud3EDItOlwybE6NOBYUtgVNj/Yma8f0EAmiVYeFC/Jz7
-   J+KcKTa2BDFS0ApkxoMq57h4xMtRc+Tcwos8chSvHmZJ5NoC/f0SP8az0
-   xzZvUiR+wG/W/QgiwrSkPONdmdthBwfQYW4wIttUUGr1kEMPBqdjwnSX4
-   pwSSldYwpwkDYuuPnJhjxglGUrB6aVOj1fhnIfquVxXdQM1cJ64BLWP56
-   PCO0YNHJfDC/ofEpSIHOS07kFdR3VTNub2Vc6ocb8y5AVaFu/38ICWrry
-   Q==;
-IronPort-SDR: CcUTc3On6c0yp9yuLQT1QB8qmu3kf1ctzNkAZV5ykz+c/Q4nHoQAmZsZXurSKjCElhdpE9vH3X
- jviXJD+TgYaZfN7gnZ3sCQD0xVo3KtgMuMMonpP989J6dwByPekkqtHLlHUj8URJbA/vwgc2zu
- etVGQzMqLQDCpsrUbbFKPiatvFNQsrnpSJQSZocfLuYXb3e1rVQQBLP3Of2S8Pu/Q70iPcdG/f
- oswuX8YdXbPr3uCVZQR1raA7mdWkVOwhzBIFqJUd4p2nxS0rUtgLsXJOjG7a3SJY7YsOZchP0J
- XaE=
-X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="84067376"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Jul 2020 10:21:49 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 21 Jul 2020 10:21:47 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 21 Jul 2020 10:20:43 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <nicolas.ferre@microchip.com>, <claudiu.beznea@microchip.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <andrew@lunn.ch>,
-        <f.fainelli@gmail.com>, <robh+dt@kernel.org>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
-Subject: [PATCH net-next v2 7/7] ARM: dts: at91: sam9x60: add an mdio sub-node to macb
-Date:   Tue, 21 Jul 2020 20:13:16 +0300
-Message-ID: <20200721171316.1427582-8-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
-References: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
+        Tue, 21 Jul 2020 13:23:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728306AbgGURXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 13:23:37 -0400
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67AA522BF5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 17:23:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595352216;
+        bh=o1VTqZy3PaEzLTyui6w9+v5TbCVASw3DdtRw6gu2BQI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jx74mrKpjkk5k6VOd5/kCwNOwwwf8wMs2cO4TwFtGtU593JDHKwoZZ/1yFW5DAFN3
+         uEJ0ee60GMUeaOGQbp5HsrLOothM3N5kpM8hhMr4fCTVv0ji9CEdSwTHGrvG5u9zNM
+         wAgsF02n2BBAlOUQUx+bQzZ5BSxQioXpjNbvHXsQ=
+Received: by mail-wm1-f48.google.com with SMTP id c80so3612514wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:23:36 -0700 (PDT)
+X-Gm-Message-State: AOAM5319CkIuGHd4f1esBwBQyck+mALB6nIH6u6CgfICR/4LKSEquRt7
+        LSADFIMBlxQDPu/lBLi8ix7b9Ocd0UrXabKV8dBJgA==
+X-Google-Smtp-Source: ABdhPJzs1pDydQd6AZNlTZP3zjRd99wsz0+yuH5F2e/lKdxi00sm+gxIPnvmITsfDDUdOGt0aPUsimQLPfiyTKcw794=
+X-Received: by 2002:a1c:56c3:: with SMTP id k186mr3860162wmb.21.1595352214965;
+ Tue, 21 Jul 2020 10:23:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
+ <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net> <20200715171130.GG12769@casper.infradead.org>
+ <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com> <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
+ <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com> <202007151511.2AA7718@keescook>
+ <20200716131404.bnzsaarooumrp3kx@steredhat> <202007160751.ED56C55@keescook>
+ <20200717080157.ezxapv7pscbqykhl@steredhat.lan> <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
+ <39a3378a-f8f3-6706-98c8-be7017e64ddb@kernel.dk>
+In-Reply-To: <39a3378a-f8f3-6706-98c8-be7017e64ddb@kernel.dk>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 21 Jul 2020 10:23:22 -0700
+X-Gmail-Original-Message-ID: <CALCETrXAxFzuRB5EJZR7bbgfrEcNc=9_E7wwhPaZ3YGJ1=DZ0w@mail.gmail.com>
+Message-ID: <CALCETrXAxFzuRB5EJZR7bbgfrEcNc=9_E7wwhPaZ3YGJ1=DZ0w@mail.gmail.com>
+Subject: Re: strace of io_uring events?
+To:     Jens Axboe <axboe@kernel.dk>, Andres Freund <andres@anarazel.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Kees Cook <keescook@chromium.org>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new macb bindings and add an mdio sub-node to contain all the
-phy nodes.
+On Tue, Jul 21, 2020 at 8:31 AM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 7/21/20 9:27 AM, Andy Lutomirski wrote:
+> > On Fri, Jul 17, 2020 at 1:02 AM Stefano Garzarella <sgarzare@redhat.com> wrote:
+> >>
+> >> On Thu, Jul 16, 2020 at 08:12:35AM -0700, Kees Cook wrote:
+> >>> On Thu, Jul 16, 2020 at 03:14:04PM +0200, Stefano Garzarella wrote:
+> >
+> >>> access (IIUC) is possible without actually calling any of the io_uring
+> >>> syscalls. Is that correct? A process would receive an fd (via SCM_RIGHTS,
+> >>> pidfd_getfd, or soon seccomp addfd), and then call mmap() on it to gain
+> >>> access to the SQ and CQ, and off it goes? (The only glitch I see is
+> >>> waking up the worker thread?)
+> >>
+> >> It is true only if the io_uring istance is created with SQPOLL flag (not the
+> >> default behaviour and it requires CAP_SYS_ADMIN). In this case the
+> >> kthread is created and you can also set an higher idle time for it, so
+> >> also the waking up syscall can be avoided.
+> >
+> > I stared at the io_uring code for a while, and I'm wondering if we're
+> > approaching this the wrong way. It seems to me that most of the
+> > complications here come from the fact that io_uring SQEs don't clearly
+> > belong to any particular security principle.  (We have struct creds,
+> > but we don't really have a task or mm.)  But I'm also not convinced
+> > that io_uring actually supports cross-mm submission except by accident
+> > -- as it stands, unless a user is very careful to only submit SQEs
+> > that don't use user pointers, the results will be unpredictable.
+>
+> How so?
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
+Unless I've missed something, either current->mm or sqo_mm will be
+used depending on which thread ends up doing the IO.  (And there might
+be similar issues with threads.)  Having the user memory references
+end up somewhere that is an implementation detail seems suboptimal.
 
-Changes in v2:
- - none
+>
+> > Perhaps we can get away with this:
+> >
+> > diff --git a/fs/io_uring.c b/fs/io_uring.c
+> > index 74bc4a04befa..92266f869174 100644
+> > --- a/fs/io_uring.c
+> > +++ b/fs/io_uring.c
+> > @@ -7660,6 +7660,20 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int,
+> > fd, u32, to_submit,
+> >      if (!percpu_ref_tryget(&ctx->refs))
+> >          goto out_fput;
+> >
+> > +    if (unlikely(current->mm != ctx->sqo_mm)) {
+> > +        /*
+> > +         * The mm used to process SQEs will be current->mm or
+> > +         * ctx->sqo_mm depending on which submission path is used.
+> > +         * It's also unclear who is responsible for an SQE submitted
+> > +         * out-of-process from a security and auditing perspective.
+> > +         *
+> > +         * Until a real usecase emerges and there are clear semantics
+> > +         * for out-of-process submission, disallow it.
+> > +         */
+> > +        ret = -EACCES;
+> > +        goto out;
+> > +    }
+> > +
+> >      /*
+> >       * For SQ polling, the thread will do all submissions and completions.
+> >       * Just return the requested submit count, and wake the thread if
+>
+> That'll break postgres that already uses this, also see:
+>
+> commit 73e08e711d9c1d79fae01daed4b0e1fee5f8a275
+> Author: Jens Axboe <axboe@kernel.dk>
+> Date:   Sun Jan 26 09:53:12 2020 -0700
+>
+>     Revert "io_uring: only allow submit from owning task"
+>
+> So no, we can't do that.
+>
 
- arch/arm/boot/dts/at91-sam9x60ek.dts | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Yikes, I missed that.
 
-diff --git a/arch/arm/boot/dts/at91-sam9x60ek.dts b/arch/arm/boot/dts/at91-sam9x60ek.dts
-index a5f5718c711a..ba871ebe10d4 100644
---- a/arch/arm/boot/dts/at91-sam9x60ek.dts
-+++ b/arch/arm/boot/dts/at91-sam9x60ek.dts
-@@ -324,8 +324,12 @@ &macb0 {
- 	pinctrl-0 = <&pinctrl_macb0_rmii>;
- 	status = "okay";
- 
--	ethernet-phy@0 {
--		reg = <0x0>;
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		ethernet-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
- 
--- 
-2.25.1
+Andres, how final is your Postgres branch?  I'm wondering if we could
+get away with requiring a special flag when creating an io_uring to
+indicate that you intend to submit IO from outside the creating mm.
 
+Even if we can't make this change, we could plausibly get away with
+tying seccomp-style filtering to sqo_mm.  IOW we'd look up a
+hypothetical sqo_mm->io_uring_filters to filter SQEs even when
+submitted from a different mm.
+
+--Andy
