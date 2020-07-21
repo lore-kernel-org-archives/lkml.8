@@ -2,123 +2,816 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36948C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAC3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10FD422CBB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595328495;
-	bh=mCVOD2/3rIZ2K7CMs4hFee4ep9/OgYgQYJgBZXG9RJc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kC/nKGrhs2bZGj8yC8vx3HY3P/YHIgGCRpX8eVL1x2wPQ8QIzlmQL0xLaaxeJ7Gn5
-	 Dpuzj/m3mDzrdRWDoTwfC27AHsLmOIeoFW+oq4qfhIkocmKvqqUOz152ONKg5y2dkM
-	 G5YWZfiujV6s1SEyjlw+z0g09ZkC4yWUAmjxtUjo=
+	by mail.kernel.org (Postfix) with ESMTP id 7F9CF20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:48:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="BCd2us5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbgGUKsN (ORCPT
+        id S1729330AbgGUKsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:48:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgGUKsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:48:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C87AA20674;
-        Tue, 21 Jul 2020 10:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595328491;
-        bh=mCVOD2/3rIZ2K7CMs4hFee4ep9/OgYgQYJgBZXG9RJc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mW8j8WIQbBScJfrAarqnLyQlPtHFHdBRC0whN3aOU5rZVBRrHa5J6hxstqFFa5sFJ
-         IUMzqgZ4LNvqcCyCQWgzosUiR9OrhGqczGLXzQxvT2Jz6RNhWeJ6IwyFsLEmpyQ4Eh
-         LC++w/roMQVmC2ODhp4GomhzPJMIuDM6yArByN+c=
-Date:   Tue, 21 Jul 2020 12:48:19 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jslaby@suse.com
-Subject: Re: [PATCH] serial: 8250: fix null-ptr-deref in serial8250_start_tx()
-Message-ID: <20200721104819.GA1678476@kroah.com>
-References: <20200721143852.4058352-1-yangyingliang@huawei.com>
+        Tue, 21 Jul 2020 06:48:32 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:50049 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726089AbgGUKsa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:48:30 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id xpoujgocCNPeYxpovjtYKD; Tue, 21 Jul 2020 12:48:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1595328505; bh=4QI15wubSGNbMDnZKy3CXO0sJY5vXbVFb/LtuT4S9/Y=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=BCd2us5Ge9HBz0GD/pniDl4YiPUQ3Nl4n8ndNpsF9/HBxZhHZil/bf5F6Wujmp/8Q
+         +JeXBOYwye7L9B5jSSTZRmnTj+yUSdZu9rnuUYMVtEHWbxs8FvyVJEG5WE9Q93qkJ4
+         /WExCduTCJbruomjJ3XtWgUS00OrNo+rfN8zhaK2LpBAPloyIgS6f3B/g0lmjmr4uJ
+         1er5KHI15E7/LUqayWvcwcsKrIbw+aO/RUW2PU/yIBtc+wpn+skbbG7yww2NfggT3o
+         zCGuK8PeUsn49MAv9JWS5/wPtRh1lCp6zJmqiDHIoy4v+XUrC9dsNjWGEGRhPg/M1P
+         z1F7wGyn3DRPQ==
+Subject: Re: [PATCH v4 2/6] media: v4l2: Add extended buffer operations
+To:     Helen Koike <helen.koike@collabora.com>, mchehab@kernel.org,
+        hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com,
+        sakari.ailus@iki.fi, linux-media@vger.kernel.org
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        tfiga@chromium.org, hiroh@chromium.org, nicolas@ndufresne.ca,
+        Brian.Starkey@arm.com, kernel@collabora.com,
+        narmstrong@baylibre.com, linux-kernel@vger.kernel.org,
+        frkoenig@chromium.org, mjourdan@baylibre.com,
+        stanimir.varbanov@linaro.org
+References: <20200717115435.2632623-1-helen.koike@collabora.com>
+ <20200717115435.2632623-3-helen.koike@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <786d2a41-83f1-30a8-83bc-17a5c106db81@xs4all.nl>
+Date:   Tue, 21 Jul 2020 12:48:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721143852.4058352-1-yangyingliang@huawei.com>
+In-Reply-To: <20200717115435.2632623-3-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfAaX1R57T8v4xvuePbPYDQ26+FxuWFg+bDrS8G2s2Zde47qbvklCJG/yWtw78m6tn4uGd0Fc66ggRLO+2KToAaEuksSMp94/XhXDV01x8naReqqZ8nGN
+ YxivcCkW0qhuP98T3n8W4b/8IblAnBSyKjetgFCDHGYxRl5yD11gICrs42DMoX93Wv2e7JyflcTRoSFYXXgqDyNnvy+QgY2Q/OMHt63U6YL9zmJTOrHsODb0
+ 0pG9Q/t1ha6rgJ1moEDfsnc792LMFldfpZMsDACpBg0DzW4hnMVQI+gfdRjsW2lo5J35jKCu+4OLOTEAHLQxK+Ay4xCgPJnKGsCiw+zkwxbSsIjIKnFTxMrc
+ m+lElK43eEJgMZk1lQvMF8K3i55eidBOkgkrjq26OQcMiEumGXtXX1YiY+h9zxyZBVCcIPe/9uUuCkh68TVRfAycDu2A2CfzoV+qOLr8QOaYwJDU1VYwbDZ0
+ 5mgM2vy0OUcmhpiakSafYCQxJ7OFIi4OaFpe2oT7xfOPpg3kbW8NZU7rNY50WKO88yn0kPE9Yi5eN85mkkX3jaE13KouQqU71Se10hWdIeDy30nwmhsDhtsT
+ AW3zs8qsEut9e/EHWYfYMvuHhvJq+uiIe+hkWlA0i7aJOhTlXwf0Z3UZVYB+WQ76pFgwLVA0h03s7Xgztq4jZhGwvXfnaKz6b23P0nAqVaFPbH9nYumJx0MR
+ uW+tQd6TcbHuzt8FC2ZVKVuM+MQqroBWa5GhipA8OIcTxzXUFjVsLoRMao20kpDs6uLPKHDPJ5s+mJyxqbgaKQ6oCit69sdssXQ82ql1X8bHV6XAqtwTxQlR
+ W0FG0WlKaptx5pgVTOE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 02:38:52PM +0000, Yang Yingliang wrote:
-> I got null-ptr-deref in serial8250_start_tx():
+On 17/07/2020 13:54, Helen Koike wrote:
+> From: Hans Verkuil <hans.verkuil@cisco.com>
 > 
-> [   78.114630] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-> [   78.123778] Mem abort info:
-> [   78.126560]   ESR = 0x86000007
-> [   78.129603]   EC = 0x21: IABT (current EL), IL = 32 bits
-> [   78.134891]   SET = 0, FnV = 0
-> [   78.137933]   EA = 0, S1PTW = 0
-> [   78.141064] user pgtable: 64k pages, 48-bit VAs, pgdp=00000027d41a8600
-> [   78.147562] [0000000000000000] pgd=00000027893f0003, p4d=00000027893f0003, pud=00000027893f0003, pmd=00000027c9a20003, pte=0000000000000000
-> [   78.160029] Internal error: Oops: 86000007 [#1] SMP
-> [   78.164886] Modules linked in: sunrpc vfat fat aes_ce_blk crypto_simd cryptd aes_ce_cipher crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce ses enclosure sg sbsa_gwdt ipmi_ssif spi_dw_mmio sch_fq_codel vhost_net tun vhost vhost_iotlb tap ip_tables ext4 mbcache jbd2 ahci hisi_sas_v3_hw libahci hisi_sas_main libsas hns3 scsi_transport_sas hclge libata megaraid_sas ipmi_si hnae3 ipmi_devintf ipmi_msghandler br_netfilter bridge stp llc nvme nvme_core xt_sctp sctp libcrc32c dm_mod nbd
-> [   78.207383] CPU: 11 PID: 23258 Comm: null-ptr Not tainted 5.8.0-rc6+ #48
-> [   78.214056] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V3.B210.01 03/12/2020
-> [   78.222888] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
-> [   78.228435] pc : 0x0
-> [   78.230618] lr : serial8250_start_tx+0x160/0x260
-> [   78.235215] sp : ffff800062eefb80
-> [   78.238517] x29: ffff800062eefb80 x28: 0000000000000fff
-> [   78.243807] x27: ffff800062eefd80 x26: ffff202fd83b3000
-> [   78.249098] x25: ffff800062eefd80 x24: ffff202fd83b3000
-> [   78.254388] x23: ffff002fc5e50be8 x22: 0000000000000002
-> [   78.259679] x21: 0000000000000001 x20: 0000000000000000
-> [   78.264969] x19: ffffa688827eecc8 x18: 0000000000000000
-> [   78.270259] x17: 0000000000000000 x16: 0000000000000000
-> [   78.275550] x15: ffffa68881bc67a8 x14: 00000000000002e6
-> [   78.280841] x13: ffffa68881bc67a8 x12: 000000000000c539
-> [   78.286131] x11: d37a6f4de9bd37a7 x10: ffffa68881cccff0
-> [   78.291421] x9 : ffffa68881bc6000 x8 : ffffa688819daa88
-> [   78.296711] x7 : ffffa688822a0f20 x6 : ffffa688819e0000
-> [   78.302002] x5 : ffff800062eef9d0 x4 : ffffa68881e707a8
-> [   78.307292] x3 : 0000000000000000 x2 : 0000000000000002
-> [   78.312582] x1 : 0000000000000001 x0 : ffffa688827eecc8
-> [   78.317873] Call trace:
-> [   78.320312]  0x0
-> [   78.322147]  __uart_start.isra.9+0x64/0x78
-> [   78.326229]  uart_start+0xb8/0x1c8
-> [   78.329620]  uart_flush_chars+0x24/0x30
-> [   78.333442]  n_tty_receive_buf_common+0x7b0/0xc30
-> [   78.338128]  n_tty_receive_buf+0x44/0x2c8
-> [   78.342122]  tty_ioctl+0x348/0x11f8
-> [   78.345599]  ksys_ioctl+0xd8/0xf8
-> [   78.348903]  __arm64_sys_ioctl+0x2c/0xc8
-> [   78.352812]  el0_svc_common.constprop.2+0x88/0x1b0
-> [   78.357583]  do_el0_svc+0x44/0xd0
-> [   78.360887]  el0_sync_handler+0x14c/0x1d0
-> [   78.364880]  el0_sync+0x140/0x180
-> [   78.368185] Code: bad PC value
+> Those extended buffer ops have several purpose:
+> 1/ Fix y2038 issues by converting the timestamp into an u64 counting
+>    the number of ns elapsed since 1970
+> 2/ Unify single/multiplanar handling
+> 3/ Add a new start offset field to each v4l2 plane buffer info struct
+>    to support the case where a single buffer object is storing all
+>    planes data, each one being placed at a different offset
 > 
-> SERIAL_PORT_DFNS is not defined on each arch, if it's not defined,
-> serial8250_set_defaults() won't be called in serial8250_isa_init_ports(),
-> so the p->serial_in pointer won't be initialized, and it leads a null-ptr-deref.
-> Fix this problem by calling serial8250_set_defaults() after init uart port.
+> New hooks are created in v4l2_ioctl_ops so that drivers can start using
+> these new objects.
 > 
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> The core takes care of converting new ioctls requests to old ones
+> if the driver does not support the new hooks, and vice versa.
+> 
+> Note that the timecode field is gone, since there doesn't seem to be
+> in-kernel users. We can be added back in the reserved area if needed or
+> use the Request API to collect more metadata information from the
+> frame.
+> 
+> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
 > ---
->  drivers/tty/serial/8250/8250_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes in v4:
+> - Use v4l2_ext_pix_format directly in the ioctl, drop v4l2_ext_format,
+> making V4L2_BUF_TYPE_VIDEO_[OUTPUT,CAPTURE] the only valid types.
+> - Drop VIDIOC_EXT_EXPBUF, since the only difference from VIDIOC_EXPBUF
+> was that with VIDIOC_EXT_EXPBUF we could export multiple planes at once.
+> I think we can add this later, so I removed it from this RFC to simplify it.
+> - Remove num_planes field from struct v4l2_ext_buffer
+> - Add flags field to struct v4l2_ext_create_buffers
+> - Reformulate struct v4l2_ext_plane
+> - Fix some bugs caught by v4l2-compliance
+> - Rebased on top of media/master (post 5.8-rc1)
+> 
+> Changes in v3:
+> - Rebased on top of media/master (post 5.4-rc1)
+> 
+> Changes in v2:
+> - Add reserved space to v4l2_ext_buffer so that new fields can be added
+>   later on
+> ---
+>  drivers/media/v4l2-core/v4l2-dev.c   |  29 ++-
+>  drivers/media/v4l2-core/v4l2-ioctl.c | 349 +++++++++++++++++++++++++--
+>  include/media/v4l2-ioctl.h           |  26 ++
+>  include/uapi/linux/videodev2.h       |  89 +++++++
+>  4 files changed, 471 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-dev.c b/drivers/media/v4l2-core/v4l2-dev.c
+> index e1829906bc086..cb21ee8eb075c 100644
+> --- a/drivers/media/v4l2-core/v4l2-dev.c
+> +++ b/drivers/media/v4l2-core/v4l2-dev.c
+> @@ -720,15 +720,34 @@ static void determine_valid_ioctls(struct video_device *vdev)
+>  		SET_VALID_IOCTL(ops, VIDIOC_TRY_FMT, vidioc_try_fmt_sdr_out);
+>  	}
+>  
+> +	if (is_vid || is_tch) {
+> +		/* ioctls valid for video and touch */
+> +		if (ops->vidioc_querybuf || ops->vidioc_ext_querybuf)
+> +			set_bit(_IOC_NR(VIDIOC_EXT_QUERYBUF), valid_ioctls);
+> +		if (ops->vidioc_qbuf || ops->vidioc_ext_qbuf)
+> +			set_bit(_IOC_NR(VIDIOC_EXT_QBUF), valid_ioctls);
+> +		if (ops->vidioc_dqbuf || ops->vidioc_ext_dqbuf)
+> +			set_bit(_IOC_NR(VIDIOC_EXT_DQBUF), valid_ioctls);
+> +		if (ops->vidioc_create_bufs || ops->vidioc_ext_create_bufs)
+> +			set_bit(_IOC_NR(VIDIOC_EXT_CREATE_BUFS), valid_ioctls);
+> +		if (ops->vidioc_prepare_buf || ops->vidioc_ext_prepare_buf)
+> +			set_bit(_IOC_NR(VIDIOC_EXT_PREPARE_BUF), valid_ioctls);
+> +	}
+> +
+>  	if (is_vid || is_vbi || is_sdr || is_tch || is_meta) {
+>  		/* ioctls valid for video, vbi, sdr, touch and metadata */
+>  		SET_VALID_IOCTL(ops, VIDIOC_REQBUFS, vidioc_reqbufs);
+> -		SET_VALID_IOCTL(ops, VIDIOC_QUERYBUF, vidioc_querybuf);
+> -		SET_VALID_IOCTL(ops, VIDIOC_QBUF, vidioc_qbuf);
+>  		SET_VALID_IOCTL(ops, VIDIOC_EXPBUF, vidioc_expbuf);
+> -		SET_VALID_IOCTL(ops, VIDIOC_DQBUF, vidioc_dqbuf);
+> -		SET_VALID_IOCTL(ops, VIDIOC_CREATE_BUFS, vidioc_create_bufs);
+> -		SET_VALID_IOCTL(ops, VIDIOC_PREPARE_BUF, vidioc_prepare_buf);
+> +		if (ops->vidioc_querybuf || ops->vidioc_ext_querybuf)
+> +			set_bit(_IOC_NR(VIDIOC_QUERYBUF), valid_ioctls);
+> +		if (ops->vidioc_qbuf || ops->vidioc_ext_qbuf)
+> +			set_bit(_IOC_NR(VIDIOC_QBUF), valid_ioctls);
+> +		if (ops->vidioc_dqbuf || ops->vidioc_ext_dqbuf)
+> +			set_bit(_IOC_NR(VIDIOC_DQBUF), valid_ioctls);
+> +		if (ops->vidioc_create_bufs || ops->vidioc_ext_create_bufs)
+> +			set_bit(_IOC_NR(VIDIOC_CREATE_BUFS), valid_ioctls);
+> +		if (ops->vidioc_prepare_buf || ops->vidioc_ext_prepare_buf)
+> +			set_bit(_IOC_NR(VIDIOC_PREPARE_BUF), valid_ioctls);
+>  		SET_VALID_IOCTL(ops, VIDIOC_STREAMON, vidioc_streamon);
+>  		SET_VALID_IOCTL(ops, VIDIOC_STREAMOFF, vidioc_streamoff);
+>  	}
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> index 3b77433f6c32b..5ddd57939c49c 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -527,6 +527,26 @@ static void v4l_print_buffer(const void *arg, bool write_only)
+>  			tc->type, tc->flags, tc->frames, *(__u32 *)tc->userbits);
+>  }
+>  
+> +static void v4l_print_ext_buffer(const void *arg, bool write_only)
+> +{
+> +	const struct v4l2_ext_buffer *e = arg;
+> +	const struct v4l2_ext_plane *plane;
+> +	unsigned int i;
+> +
+> +	pr_cont("%lld index=%d, type=%s, flags=0x%08x, field=%s, sequence=%d, memory=%s\n",
+> +		e->timestamp, e->index, prt_names(e->type, v4l2_type_names),
+> +		e->flags, prt_names(e->field, v4l2_field_names),
+> +		e->sequence, prt_names(e->memory, v4l2_memory_names));
+> +
+> +	for (i = 0; i < VIDEO_MAX_PLANES &&
+> +		    e->planes[i].buffer_length; i++) {
+> +		plane = &e->planes[i];
+> +		pr_debug("plane %d: buffer_length=%d, plane_length=%d offset=0x%08x\n",
+> +			 i, plane->buffer_length, plane->plane_length,
+> +			 plane->offset);
+> +	}
+> +}
+> +
+>  static void v4l_print_exportbuffer(const void *arg, bool write_only)
+>  {
+>  	const struct v4l2_exportbuffer *p = arg;
+> @@ -546,6 +566,15 @@ static void v4l_print_create_buffers(const void *arg, bool write_only)
+>  	v4l_print_format(&p->format, write_only);
+>  }
+>  
+> +static void v4l_print_ext_create_buffers(const void *arg, bool write_only)
+> +{
+> +	const struct v4l2_ext_create_buffers *p = arg;
+> +
+> +	pr_cont("index=%d, count=%d, memory=%s, ", p->index, p->count,
+> +		prt_names(p->memory, v4l2_memory_names));
+> +	v4l_print_ext_pix_format(&p->format, write_only);
+> +}
+> +
+>  static void v4l_print_streamparm(const void *arg, bool write_only)
+>  {
+>  	const struct v4l2_streamparm *p = arg;
+> @@ -1214,6 +1243,139 @@ int v4l2_format_to_ext_pix_format(const struct v4l2_format *f,
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_format_to_ext_pix_format);
+>  
+> +/*
+> + * If mplane_cap is true, b->m.planes should have a valid pointer of a
+> + * struct v4l2_plane array, and b->length with its size
+> + */
+> +int v4l2_ext_buffer_to_buffer(const struct v4l2_ext_buffer *e,
+> +			      struct v4l2_buffer *b, bool mplane_cap)
+> +{
+> +	unsigned int planes_array_size = b->length;
+> +	struct v4l2_plane *planes = b->m.planes;
+> +	u64 nsecs;
+> +
+> +	if (!mplane_cap && e->planes[1].buffer_length != 0)
+> +		return -EINVAL;
+> +
+> +	memset(b, 0, sizeof(*b));
+> +
+> +	b->index = e->index;
+> +	b->flags = e->flags;
+> +	b->field = e->field;
+> +	b->sequence = e->sequence;
+> +	b->memory = e->memory;
+> +	b->request_fd = e->request_fd;
+> +	b->timestamp.tv_sec = div64_u64_rem(e->timestamp, NSEC_PER_SEC, &nsecs);
+> +	b->timestamp.tv_usec = (u32)nsecs / NSEC_PER_USEC;
+> +
+> +	if (mplane_cap) {
+> +		unsigned int i;
+> +
+> +		if (!planes || !planes_array_size)
+> +			return -EINVAL;
+> +
+> +		b->m.planes = planes;
+> +
+> +		if (e->type == V4L2_BUF_TYPE_VIDEO_CAPTURE)
+> +			b->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
+> +		else
+> +			b->type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
+> +
+> +		for (i = 0; i < VIDEO_MAX_PLANES && i < planes_array_size &&
+> +			    e->planes[i].buffer_length; i++) {
+> +
+> +			if (b->memory != V4L2_MEMORY_MMAP && e->planes[i].offset)
+> +				return -EINVAL;
+> +
+> +			memset(&b->m.planes[i], 0, sizeof(b->m.planes[i]));
+> +
+> +			if (b->memory == V4L2_MEMORY_MMAP)
+> +				b->m.planes[i].m.mem_offset = e->planes[i].offset;
+> +			else if (b->memory == V4L2_MEMORY_DMABUF)
+> +				b->m.planes[i].m.fd = e->planes[i].m.dmabuf_fd;
+> +			else
+> +				b->m.planes[i].m.userptr = e->planes[i].m.userptr;
+> +
+> +			b->m.planes[i].bytesused = e->planes[i].plane_length;
+> +			b->m.planes[i].length = e->planes[i].buffer_length;
+> +		}
+> +		/* In multi-planar, length contain the number of planes */
+> +		b->length = i;
+> +	} else {
+> +		b->type = e->type;
+> +		b->bytesused = e->planes[0].plane_length;
+> +		b->length = e->planes[0].buffer_length;
+> +
+> +		if (b->memory != V4L2_MEMORY_MMAP && e->planes[0].offset)
+> +			return -EINVAL;
+> +
+> +		if (b->memory == V4L2_MEMORY_MMAP)
+> +			b->m.offset = e->planes[0].offset;
+> +		else if (b->memory == V4L2_MEMORY_DMABUF)
+> +			b->m.fd = e->planes[0].m.dmabuf_fd;
+> +		else
+> +			b->m.userptr = e->planes[0].m.userptr;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_ext_buffer_to_buffer);
+> +
+> +int v4l2_buffer_to_ext_buffer(const struct v4l2_buffer *b,
+> +			      struct v4l2_ext_buffer *e)
+> +{
+> +	memset(e, 0, sizeof(*e));
+> +
+> +	e->index = b->index;
+> +	e->flags = b->flags;
+> +	e->field = b->field;
+> +	e->sequence = b->sequence;
+> +	e->memory = b->memory;
+> +	e->request_fd = b->request_fd;
+> +	e->timestamp = b->timestamp.tv_sec * NSEC_PER_SEC +
+> +		b->timestamp.tv_usec * NSEC_PER_USEC;
+> +	if (V4L2_TYPE_IS_MULTIPLANAR(b->type)) {
+> +		unsigned int i;
+> +
+> +		if (!b->m.planes)
+> +			return -EINVAL;
+> +
+> +		if (b->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE)
+> +			e->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+> +		else
+> +			e->type = V4L2_BUF_TYPE_VIDEO_OUTPUT;
+> +
+> +		/* In multi-planar, length contain the number of planes */
+> +		for (i = 0; i < b->length; i++) {
+> +			if (b->memory == V4L2_MEMORY_MMAP)
+> +				e->planes[i].offset = b->m.planes[i].m.mem_offset;
+> +			else if (b->memory == V4L2_MEMORY_DMABUF)
+> +				e->planes[i].m.dmabuf_fd = b->m.planes[i].m.fd;
+> +			else
+> +				e->planes[i].m.userptr = b->m.planes[i].m.userptr;
+> +
+> +			e->planes[i].buffer_length = b->m.planes[i].length;
+> +			e->planes[i].plane_length = b->m.planes[i].bytesused;
+> +			if (b->m.planes[i].data_offset)
+> +				pr_warn("Ignoring data_offset value %d\n",
+> +					b->m.planes[i].data_offset);
+> +		}
+> +	} else {
+> +		e->type = b->type;
+> +		e->planes[0].plane_length = b->bytesused;
+> +		e->planes[0].buffer_length = b->length;
+> +		if (b->memory == V4L2_MEMORY_MMAP)
+> +			e->planes[0].offset = b->m.offset;
+> +		else if (b->memory == V4L2_MEMORY_DMABUF)
+> +			e->planes[0].m.dmabuf_fd = b->m.fd;
+> +		else
+> +			e->planes[0].m.userptr = b->m.userptr;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_buffer_to_ext_buffer);
+> +
+>  static int v4l_querycap(const struct v4l2_ioctl_ops *ops,
+>  				struct file *file, void *fh, void *arg)
+>  {
+> @@ -2467,31 +2629,112 @@ static int v4l_reqbufs(const struct v4l2_ioctl_ops *ops,
+>  	return ops->vidioc_reqbufs(file, fh, p);
+>  }
+>  
+> +static int v4l_do_buf_op(int (*op)(struct file *, void *,
+> +				   struct v4l2_buffer *),
+> +			 int (*ext_op)(struct file *, void *,
+> +				       struct v4l2_ext_buffer *),
+> +			 struct file *file, void *fh, struct v4l2_buffer *b)
+> +{
+> +	struct v4l2_ext_buffer e;
+> +	int ret;
+> +
+> +	ret = check_fmt(file, b->type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (op)
+> +		return op(file, fh, b);
+> +
+> +	ret = v4l2_buffer_to_ext_buffer(b, &e);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ext_op(file, fh, &e);
+> +	if (ret)
+> +		return ret;
+> +
+> +	v4l2_ext_buffer_to_buffer(&e, b, V4L2_TYPE_IS_MULTIPLANAR(b->type));
+> +	return 0;
+> +}
+> +
+> +static int v4l_do_ext_buf_op(int (*op)(struct file *, void *,
+> +				       struct v4l2_buffer *),
+> +			     int (*ext_op)(struct file *, void *,
+> +					   struct v4l2_ext_buffer *),
+> +			     struct file *file, void *fh,
+> +			     struct v4l2_ext_buffer *e)
+> +{
+> +	struct video_device *vdev = video_devdata(file);
+> +	struct v4l2_plane planes[VIDEO_MAX_PLANES];
+> +	struct v4l2_buffer b;
+> +	bool mplane_cap;
+> +	int ret;
+> +
+> +	ret = check_fmt(file, e->type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (ext_op)
+> +		return ext_op(file, fh, e);
+> +
+> +	mplane_cap = !!(vdev->device_caps &
+> +			(V4L2_CAP_VIDEO_CAPTURE_MPLANE |
+> +			 V4L2_CAP_VIDEO_OUTPUT_MPLANE |
+> +			 V4L2_CAP_VIDEO_M2M_MPLANE));
+> +	b.m.planes = planes;
+> +	b.length = VIDEO_MAX_PLANES;
+> +	ret = v4l2_ext_buffer_to_buffer(e, &b, mplane_cap);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = op(file, fh, &b);
+> +	if (ret)
+> +		return ret;
+> +
+> +	v4l2_buffer_to_ext_buffer(&b, e);
+> +	return 0;
+> +}
+> +
+>  static int v4l_querybuf(const struct v4l2_ioctl_ops *ops,
+> -				struct file *file, void *fh, void *arg)
+> +			struct file *file, void *fh, void *arg)
+>  {
+> -	struct v4l2_buffer *p = arg;
+> -	int ret = check_fmt(file, p->type);
+> +	return v4l_do_buf_op(ops->vidioc_querybuf, ops->vidioc_ext_querybuf,
+> +			     file, fh, arg);
+> +}
+>  
+> -	return ret ? ret : ops->vidioc_querybuf(file, fh, p);
+> +static int v4l_ext_querybuf(const struct v4l2_ioctl_ops *ops,
+> +			    struct file *file, void *fh, void *arg)
+> +{
+> +	return v4l_do_ext_buf_op(ops->vidioc_querybuf,
+> +				 ops->vidioc_ext_querybuf, file, fh, arg);
+>  }
+>  
+>  static int v4l_qbuf(const struct v4l2_ioctl_ops *ops,
+> -				struct file *file, void *fh, void *arg)
+> +		    struct file *file, void *fh, void *arg)
+>  {
+> -	struct v4l2_buffer *p = arg;
+> -	int ret = check_fmt(file, p->type);
+> +	return v4l_do_buf_op(ops->vidioc_qbuf, ops->vidioc_ext_qbuf,
+> +			     file, fh, arg);
+> +}
+>  
+> -	return ret ? ret : ops->vidioc_qbuf(file, fh, p);
+> +static int v4l_ext_qbuf(const struct v4l2_ioctl_ops *ops,
+> +			struct file *file, void *fh, void *arg)
+> +{
+> +	return v4l_do_ext_buf_op(ops->vidioc_qbuf, ops->vidioc_ext_qbuf,
+> +				 file, fh, arg);
+>  }
+>  
+>  static int v4l_dqbuf(const struct v4l2_ioctl_ops *ops,
+> -				struct file *file, void *fh, void *arg)
+> +		     struct file *file, void *fh, void *arg)
+>  {
+> -	struct v4l2_buffer *p = arg;
+> -	int ret = check_fmt(file, p->type);
+> +	return v4l_do_buf_op(ops->vidioc_dqbuf, ops->vidioc_ext_dqbuf,
+> +			     file, fh, arg);
+> +}
+>  
+> -	return ret ? ret : ops->vidioc_dqbuf(file, fh, p);
+> +static int v4l_ext_dqbuf(const struct v4l2_ioctl_ops *ops,
+> +			 struct file *file, void *fh, void *arg)
+> +{
+> +	return v4l_do_ext_buf_op(ops->vidioc_dqbuf, ops->vidioc_ext_dqbuf,
+> +				 file, fh, arg);
+>  }
+>  
+>  static int v4l_create_bufs(const struct v4l2_ioctl_ops *ops,
+> @@ -2507,7 +2750,27 @@ static int v4l_create_bufs(const struct v4l2_ioctl_ops *ops,
+>  
+>  	v4l_sanitize_format(&create->format);
+>  
+> -	ret = ops->vidioc_create_bufs(file, fh, create);
+> +	if (ops->vidioc_create_bufs) {
+> +		ret = ops->vidioc_create_bufs(file, fh, create);
+> +	} else {
+> +		struct v4l2_ext_create_buffers ecreate = {
+> +			.count = create->count,
+> +			.memory = create->memory,
+> +		};
+> +
+> +		ret = v4l2_format_to_ext_pix_format(&create->format,
+> +						    &ecreate.format, true);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = ops->vidioc_ext_create_bufs(file, fh, &ecreate);
+> +		if (ret)
+> +			return ret;
+> +
+> +		create->index = ecreate.index;
+> +		create->count = ecreate.count;
+> +		create->capabilities = ecreate.capabilities;
+> +	}
+>  
+>  	if (create->format.type == V4L2_BUF_TYPE_VIDEO_CAPTURE ||
+>  	    create->format.type == V4L2_BUF_TYPE_VIDEO_OUTPUT)
+> @@ -2516,13 +2779,60 @@ static int v4l_create_bufs(const struct v4l2_ioctl_ops *ops,
+>  	return ret;
+>  }
+>  
+> +static int v4l_ext_create_bufs(const struct v4l2_ioctl_ops *ops,
+> +			       struct file *file, void *fh, void *arg)
+> +{
+> +	struct v4l2_ext_create_buffers *ecreate = arg;
+> +	struct video_device *vdev = video_devdata(file);
+> +	struct v4l2_create_buffers create = {
+> +		.count = ecreate->count,
+> +		.memory = ecreate->memory,
+> +		.flags = ecreate->flags,
+> +	};
+> +	bool mplane_cap;
+> +	int ret;
+> +
+> +	ret = check_fmt(file, ecreate->format.type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (ops->vidioc_ext_create_bufs)
+> +		return ops->vidioc_ext_create_bufs(file, fh, ecreate);
+> +
+> +	mplane_cap = !!(vdev->device_caps &
+> +			(V4L2_CAP_VIDEO_CAPTURE_MPLANE |
+> +			 V4L2_CAP_VIDEO_OUTPUT_MPLANE |
+> +			 V4L2_CAP_VIDEO_M2M_MPLANE));
+> +	ret = v4l2_ext_pix_format_to_format(&ecreate->format,
+> +					    &create.format, mplane_cap, true);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = v4l_create_bufs(ops, file, fh, &create);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ecreate->index = create.index;
+> +	ecreate->count = create.count;
+> +	ecreate->capabilities = create.capabilities;
+> +
+> +	return 0;
+> +}
+> +
+>  static int v4l_prepare_buf(const struct v4l2_ioctl_ops *ops,
+> -				struct file *file, void *fh, void *arg)
+> +			   struct file *file, void *fh, void *arg)
+>  {
+> -	struct v4l2_buffer *b = arg;
+> -	int ret = check_fmt(file, b->type);
+> +	return v4l_do_buf_op(ops->vidioc_prepare_buf,
+> +			     ops->vidioc_ext_prepare_buf,
+> +			     file, fh, arg);
+> +}
+>  
+> -	return ret ? ret : ops->vidioc_prepare_buf(file, fh, b);
+> +static int v4l_ext_prepare_buf(const struct v4l2_ioctl_ops *ops,
+> +			       struct file *file, void *fh, void *arg)
+> +{
+> +	return v4l_do_ext_buf_op(ops->vidioc_prepare_buf,
+> +				 ops->vidioc_ext_prepare_buf,
+> +				 file, fh, arg);
+>  }
+>  
+>  static int v4l_g_parm(const struct v4l2_ioctl_ops *ops,
+> @@ -3196,12 +3506,15 @@ static const struct v4l2_ioctl_info v4l2_ioctls[] = {
+>  	IOCTL_INFO(VIDIOC_S_EXT_PIX_FMT, v4l_s_ext_pix_fmt, v4l_print_ext_pix_format, INFO_FL_PRIO),
+>  	IOCTL_INFO(VIDIOC_REQBUFS, v4l_reqbufs, v4l_print_requestbuffers, INFO_FL_PRIO | INFO_FL_QUEUE),
+>  	IOCTL_INFO(VIDIOC_QUERYBUF, v4l_querybuf, v4l_print_buffer, INFO_FL_QUEUE | INFO_FL_CLEAR(v4l2_buffer, length)),
+> +	IOCTL_INFO(VIDIOC_EXT_QUERYBUF, v4l_ext_querybuf, v4l_print_ext_buffer, INFO_FL_QUEUE | INFO_FL_CLEAR(v4l2_ext_buffer, planes)),
+>  	IOCTL_INFO(VIDIOC_G_FBUF, v4l_stub_g_fbuf, v4l_print_framebuffer, 0),
+>  	IOCTL_INFO(VIDIOC_S_FBUF, v4l_stub_s_fbuf, v4l_print_framebuffer, INFO_FL_PRIO),
+>  	IOCTL_INFO(VIDIOC_OVERLAY, v4l_overlay, v4l_print_u32, INFO_FL_PRIO),
+>  	IOCTL_INFO(VIDIOC_QBUF, v4l_qbuf, v4l_print_buffer, INFO_FL_QUEUE),
+>  	IOCTL_INFO(VIDIOC_EXPBUF, v4l_stub_expbuf, v4l_print_exportbuffer, INFO_FL_QUEUE | INFO_FL_CLEAR(v4l2_exportbuffer, flags)),
+> +	IOCTL_INFO(VIDIOC_EXT_QBUF, v4l_ext_qbuf, v4l_print_ext_buffer, INFO_FL_QUEUE),
+>  	IOCTL_INFO(VIDIOC_DQBUF, v4l_dqbuf, v4l_print_buffer, INFO_FL_QUEUE),
+> +	IOCTL_INFO(VIDIOC_EXT_DQBUF, v4l_ext_dqbuf, v4l_print_ext_buffer, INFO_FL_QUEUE),
+>  	IOCTL_INFO(VIDIOC_STREAMON, v4l_streamon, v4l_print_buftype, INFO_FL_PRIO | INFO_FL_QUEUE),
+>  	IOCTL_INFO(VIDIOC_STREAMOFF, v4l_streamoff, v4l_print_buftype, INFO_FL_PRIO | INFO_FL_QUEUE),
+>  	IOCTL_INFO(VIDIOC_G_PARM, v4l_g_parm, v4l_print_streamparm, INFO_FL_CLEAR(v4l2_streamparm, type)),
+> @@ -3266,7 +3579,9 @@ static const struct v4l2_ioctl_info v4l2_ioctls[] = {
+>  	IOCTL_INFO(VIDIOC_SUBSCRIBE_EVENT, v4l_subscribe_event, v4l_print_event_subscription, 0),
+>  	IOCTL_INFO(VIDIOC_UNSUBSCRIBE_EVENT, v4l_unsubscribe_event, v4l_print_event_subscription, 0),
+>  	IOCTL_INFO(VIDIOC_CREATE_BUFS, v4l_create_bufs, v4l_print_create_buffers, INFO_FL_PRIO | INFO_FL_QUEUE),
+> +	IOCTL_INFO(VIDIOC_EXT_CREATE_BUFS, v4l_ext_create_bufs, v4l_print_ext_create_buffers, INFO_FL_PRIO | INFO_FL_QUEUE),
+>  	IOCTL_INFO(VIDIOC_PREPARE_BUF, v4l_prepare_buf, v4l_print_buffer, INFO_FL_QUEUE),
+> +	IOCTL_INFO(VIDIOC_EXT_PREPARE_BUF, v4l_ext_prepare_buf, v4l_print_ext_buffer, INFO_FL_QUEUE),
+>  	IOCTL_INFO(VIDIOC_ENUM_DV_TIMINGS, v4l_stub_enum_dv_timings, v4l_print_enum_dv_timings, INFO_FL_CLEAR(v4l2_enum_dv_timings, pad)),
+>  	IOCTL_INFO(VIDIOC_QUERY_DV_TIMINGS, v4l_stub_query_dv_timings, v4l_print_dv_timings, INFO_FL_ALWAYS_COPY),
+>  	IOCTL_INFO(VIDIOC_DV_TIMINGS_CAP, v4l_stub_dv_timings_cap, v4l_print_dv_timings_cap, INFO_FL_CLEAR(v4l2_dv_timings_cap, pad)),
+> diff --git a/include/media/v4l2-ioctl.h b/include/media/v4l2-ioctl.h
+> index 525ce86725260..524caedebab3d 100644
+> --- a/include/media/v4l2-ioctl.h
+> +++ b/include/media/v4l2-ioctl.h
+> @@ -169,16 +169,26 @@ struct v4l2_fh;
+>   *	:ref:`VIDIOC_REQBUFS <vidioc_reqbufs>` ioctl
+>   * @vidioc_querybuf: pointer to the function that implements
+>   *	:ref:`VIDIOC_QUERYBUF <vidioc_querybuf>` ioctl
+> + * @vidioc_ext_querybuf: pointer to the function that implements
+> + *	:ref:`VIDIOC_EXT_QUERYBUF <vidioc_ext_querybuf>` ioctl
+>   * @vidioc_qbuf: pointer to the function that implements
+>   *	:ref:`VIDIOC_QBUF <vidioc_qbuf>` ioctl
+> + * @vidioc_ext_qbuf: pointer to the function that implements
+> + *	:ref:`VIDIOC_EXT_QBUF <vidioc_ext_qbuf>` ioctl
+>   * @vidioc_expbuf: pointer to the function that implements
+>   *	:ref:`VIDIOC_EXPBUF <vidioc_expbuf>` ioctl
+>   * @vidioc_dqbuf: pointer to the function that implements
+>   *	:ref:`VIDIOC_DQBUF <vidioc_qbuf>` ioctl
+> + * @vidioc_ext_dqbuf: pointer to the function that implements
+> + *	:ref:`VIDIOC_EXT_DQBUF <vidioc_ext_qbuf>` ioctl
+>   * @vidioc_create_bufs: pointer to the function that implements
+>   *	:ref:`VIDIOC_CREATE_BUFS <vidioc_create_bufs>` ioctl
+> + * @vidioc_ext_create_bufs: pointer to the function that implements
+> + *	:ref:`VIDIOC_EXT_CREATE_BUFS <vidioc_ext_create_bufs>` ioctl
+>   * @vidioc_prepare_buf: pointer to the function that implements
+>   *	:ref:`VIDIOC_PREPARE_BUF <vidioc_prepare_buf>` ioctl
+> + * @vidioc_ext_prepare_buf: pointer to the function that implements
+> + *	:ref:`VIDIOC_EXT_PREPARE_BUF <vidioc_ext_prepare_buf>` ioctl
+>   * @vidioc_overlay: pointer to the function that implements
+>   *	:ref:`VIDIOC_OVERLAY <vidioc_overlay>` ioctl
+>   * @vidioc_g_fbuf: pointer to the function that implements
+> @@ -439,17 +449,27 @@ struct v4l2_ioctl_ops {
+>  			      struct v4l2_requestbuffers *b);
+>  	int (*vidioc_querybuf)(struct file *file, void *fh,
+>  			       struct v4l2_buffer *b);
+> +	int (*vidioc_ext_querybuf)(struct file *file, void *fh,
+> +				   struct v4l2_ext_buffer *b);
+>  	int (*vidioc_qbuf)(struct file *file, void *fh,
+>  			   struct v4l2_buffer *b);
+> +	int (*vidioc_ext_qbuf)(struct file *file, void *fh,
+> +			       struct v4l2_ext_buffer *b);
+>  	int (*vidioc_expbuf)(struct file *file, void *fh,
+>  			     struct v4l2_exportbuffer *e);
+>  	int (*vidioc_dqbuf)(struct file *file, void *fh,
+>  			    struct v4l2_buffer *b);
+> +	int (*vidioc_ext_dqbuf)(struct file *file, void *fh,
+> +				struct v4l2_ext_buffer *b);
+>  
+>  	int (*vidioc_create_bufs)(struct file *file, void *fh,
+>  				  struct v4l2_create_buffers *b);
+> +	int (*vidioc_ext_create_bufs)(struct file *file, void *fh,
+> +				      struct v4l2_ext_create_buffers *b);
+>  	int (*vidioc_prepare_buf)(struct file *file, void *fh,
+>  				  struct v4l2_buffer *b);
+> +	int (*vidioc_ext_prepare_buf)(struct file *file, void *fh,
+> +				      struct v4l2_ext_buffer *b);
+>  
+>  	int (*vidioc_overlay)(struct file *file, void *fh, unsigned int i);
+>  	int (*vidioc_g_fbuf)(struct file *file, void *fh,
+> @@ -758,6 +778,12 @@ int v4l2_ext_pix_format_to_format(const struct v4l2_ext_pix_format *e,
+>  				  struct v4l2_format *f,
+>  				  bool mplane_cap, bool strict);
+>  
+> +int v4l2_ext_buffer_to_buffer(const struct v4l2_ext_buffer *e,
+> +			      struct v4l2_buffer *b,
+> +			      bool mplane_cap);
+> +int v4l2_buffer_to_ext_buffer(const struct v4l2_buffer *b,
+> +			      struct v4l2_ext_buffer *e);
+> +
+>  /*
+>   * The user space interpretation of the 'v4l2_event' differs
+>   * based on the 'time_t' definition on 32-bit architectures, so
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index fc04c81ce7713..f4906adddc280 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -994,6 +994,37 @@ struct v4l2_plane {
+>  	__u32			reserved[11];
+>  };
+>  
+> +/**
+> + * struct v4l2_ext_plane - extended plane buffer info
+> + * @buffer_length:	size of the entire buffer in bytes, should fit
+> + *			@offset + @plane_length
+> + * @plane_length:	size of the plane in bytes.
+> + * @userptr:		when memory is V4L2_MEMORY_USERPTR, a userspace pointer pointing
+> + *			to this plane.
+> + * @dmabuf_fd:		when memory is V4L2_MEMORY_DMABUF, a userspace file descriptor
+> + *			associated with this plane.
+> + * @offset:		offset in the memory buffer where the plane starts. If
+> + *			V4L2_MEMORY_MMAP is used, then it can be a "cookie" that
+> + *			should be passed to mmap() called on the video node.
 
-Does this fix a specific commit, or has this issue always been present?
-What has caused it to happen now that no one else has seen this?
+I wouldn't overload this field. Just keep a mem_offset field in the union m.
 
-thanks,
+The offset field itself is still valid, even for MMAPed planes.
 
-greg k-h
+> + * @reserved:		extra space reserved for future fields, must be set to 0.
+> + *
+> + *
+> + * Buffers consist of one or more planes, e.g. an YCbCr buffer with two planes
+> + * can have one plane for Y, and another for interleaved CbCr components.
+> + * Each plane can reside in a separate memory buffer, or even in
+> + * a completely separate memory node (e.g. in embedded devices).
+> + */
+> +struct v4l2_ext_plane {
+> +	__u32 buffer_length;
+> +	__u32 plane_length;
+> +	union {
+> +		__u64 userptr;
+> +		__s32 dmabuf_fd;
+> +	} m;
+> +	__u32 offset;
+> +	__u32 reserved[4];
+> +};
+> +
+>  /**
+>   * struct v4l2_buffer - video buffer info
+>   * @index:	id number of the buffer
+> @@ -1055,6 +1086,36 @@ struct v4l2_buffer {
+>  	};
+>  };
+>  
+> +/**
+> + * struct v4l2_ext_buffer - extended video buffer info
+> + * @index:	id number of the buffer
+> + * @type:	V4L2_BUF_TYPE_VIDEO_CAPTURE or V4L2_BUF_TYPE_VIDEO_OUTPUT
+> + * @flags:	buffer informational flags
+> + * @field:	enum v4l2_field; field order of the image in the buffer
+> + * @timestamp:	frame timestamp
+> + * @sequence:	sequence count of this frame
+> + * @memory:	enum v4l2_memory; the method, in which the actual video data is
+> + *		passed
+> + * @planes:	per-plane buffer information
+> + * @request_fd:	fd of the request that this buffer should use
+> + * @reserved:	extra space reserved for future fields, must be set to 0
+> + *
+> + * Contains data exchanged by application and driver using one of the Streaming
+> + * I/O methods.
+> + */
+> +struct v4l2_ext_buffer {
+> +	__u32 index;
+> +	__u32 type;
+> +	__u32 flags;
+
+Make this a u64: we have quite a few flags already.
+
+> +	__u32 field;
+> +	__u64 timestamp;
+
+We need a second timestamp here, i.e. the time at which the buffer was finalized
+and returned to userspace. This is needed to let userspace make a timeline between
+events and buffers. Each v4l2_event has a timestamp but it can't be used to
+see if a buffer was returned before or after that event. It's something that's
+been annoying me for some time now.
+
+A '__u64 seq_timestamp' seems like a decent name.
+
+Regards,
+
+	Hans
+
+> +	__u32 sequence;
+> +	__u32 memory;
+> +	__u32 request_fd;
+> +	struct v4l2_ext_plane planes[VIDEO_MAX_PLANES];
+> +	__u32 reserved[4];
+> +};
+> +
+>  #ifndef __KERNEL__
+>  /**
+>   * v4l2_timeval_to_ns - Convert timeval to nanoseconds
+> @@ -2520,6 +2581,29 @@ struct v4l2_create_buffers {
+>  	__u32			reserved[6];
+>  };
+>  
+> +/**
+> + * struct v4l2_ext_create_buffers - VIDIOC_EXT_CREATE_BUFS argument
+> + * @index:	on return, index of the first created buffer
+> + * @count:	entry: number of requested buffers,
+> + *		return: number of created buffers
+> + * @memory:	enum v4l2_memory; buffer memory type
+> + * @capabilities: capabilities of this buffer type.
+> + * @format:	frame format, for which buffers are requested
+> + * @flags:	additional buffer management attributes (ignored unless the
+> + *		queue has V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS capability
+> + *		and configured for MMAP streaming I/O).
+> + * @reserved:	extra space reserved for future fields, must be set to 0
+> + */
+> +struct v4l2_ext_create_buffers {
+> +	__u32				index;
+> +	__u32				count;
+> +	__u32				memory;
+> +	struct v4l2_ext_pix_format	format;
+> +	__u32				capabilities;
+> +	__u32				flags;
+> +	__u32 reserved[4];
+> +};
+> +
+>  /*
+>   *	I O C T L   C O D E S   F O R   V I D E O   D E V I C E S
+>   *
+> @@ -2623,6 +2707,11 @@ struct v4l2_create_buffers {
+>  #define VIDIOC_G_EXT_PIX_FMT	_IOWR('V', 104, struct v4l2_ext_pix_format)
+>  #define VIDIOC_S_EXT_PIX_FMT	_IOWR('V', 105, struct v4l2_ext_pix_format)
+>  #define VIDIOC_TRY_EXT_PIX_FMT	_IOWR('V', 106, struct v4l2_ext_pix_format)
+> +#define VIDIOC_EXT_CREATE_BUFS	_IOWR('V', 107, struct v4l2_ext_create_buffers)
+> +#define VIDIOC_EXT_QUERYBUF	_IOWR('V', 108, struct v4l2_ext_buffer)
+> +#define VIDIOC_EXT_QBUF		_IOWR('V', 109, struct v4l2_ext_buffer)
+> +#define VIDIOC_EXT_DQBUF	_IOWR('V', 110, struct v4l2_ext_buffer)
+> +#define VIDIOC_EXT_PREPARE_BUF	_IOWR('V', 111, struct v4l2_ext_buffer)
+>  
+>  /* Reminder: when adding new ioctls please add support for them to
+>     drivers/media/v4l2-core/v4l2-compat-ioctl32.c as well! */
+> 
+
