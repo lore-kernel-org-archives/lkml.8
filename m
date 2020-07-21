@@ -2,128 +2,118 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89628C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F71C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63F152080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009592080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:27:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gkxs/4L9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PFRa/z5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgGUEUG (ORCPT
+        id S1726697AbgGUE1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 00:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42984 "EHLO
+        Tue, 21 Jul 2020 00:27:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgGUEUF (ORCPT
+        with ESMTP id S1726474AbgGUE1U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 00:20:05 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39BA8C0619D6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:20:05 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id v10so11573518qvm.17
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:20:05 -0700 (PDT)
+        Tue, 21 Jul 2020 00:27:20 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66C10C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:27:20 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m9so10133939pfh.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:27:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=BihrwH3YWr7bTCjry1NXThJajsBWv/A/wcqD0l396O4=;
-        b=Gkxs/4L9w2KYJeqo1YzrritKtKVPQXS0nv3cFc1jhGooz2i2RqPdhiqYoQnp1qX6Fy
-         v0erMgNID5uKlh2JzkyqRUT3P2dNJPgGSUmyE/T5ReFLtmy2MGmujoy8D+zW9wi/mNkp
-         rOVTsvULqQVx9jc4HxHbW8MaJS/1Tgjjza0iSFEIf3TswCxVOm4j8tuNunvWr+cxf1Ts
-         hZYjAoCTG/p/3fEt/AbyH4JtklfW7Es9V6gVD8dewOgW2vhglnCtms5VhrnhEVBBrkbx
-         HsHa51amlowN1sfv6HI5H1SbmFc//YgFuisS3nLFiSmSjpetTSEK0L5bn028gUR8C5rs
-         T+uA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=N/wJfZ0DKQLS30NQ3l5EIxZJq9J06grk8ARjTDSck7w=;
+        b=PFRa/z5GQ2aechR5xdic5ratkkROo9TDbkDV0lfEhzl5c2wyBrpnCvl57h3r6cKVo6
+         pxMZ02n3ejPcvOlM99KP4pcnPYYp5sRlNo/dXiQZyn4d8IORomjDiBWZKyIRJOjrllZF
+         SdnwlQpb6nT2RAeLooiCOTqO33gn75W0W9hgQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=BihrwH3YWr7bTCjry1NXThJajsBWv/A/wcqD0l396O4=;
-        b=XUiA6Nn9UF/7K4mSlSxYej3Vs/8Z3hODz0Y/ZpLFsKoLDb5x+1SsjkgmK4bMRLhNfB
-         t0+eeVH4ycaeQBRfpB/zxZaKLgh6Y+AAG3Jb1O2Qb2o7zv7MlzJCbOS67Be8MkMKrhNN
-         1x83+54nae4o5yz9QwKNnaYnh6q25vYAvtKHg5IuEU14Pj8VOwsRHCEJ9OLxbO9NMEH2
-         WMsbVMdUFkZuPcyArTeSq7pzYs/g53Xly5CCRFVO7UhmdNHUBlKqjEbBjKFfAw1YVbZ3
-         3gI8brtfjtpevp7+5+iJIGUr6noYW5M9umT22GA7CYUdfMvQCJWdxrD2vTnFYu7Uc+jc
-         dang==
-X-Gm-Message-State: AOAM531ZtPOcyknUH315vnvHxK8k7o2UfnmK/8XDaBMzHHhbWqriYRW6
-        Gb3KlP8f2pR3+M/XdcxdXkYoqxeIiwD3
-X-Google-Smtp-Source: ABdhPJyws38D0FLgRfDbVjjMTi43YQTPV6lXnjuE3rDLoFlOp9lJ5MDKjHMYRc9vl3OPwcPnhjiqPGbn9gBf
-X-Received: by 2002:a05:6214:927:: with SMTP id dk7mr24912062qvb.26.1595305204150;
- Mon, 20 Jul 2020 21:20:04 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 21:19:38 -0700
-Message-Id: <20200721041940.4029552-1-maskray@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
-Subject: [PATCH v2] Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang cross compilation
-From:   Fangrui Song <maskray@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Cc:     stable@vger.kernel.org, Jian Cai <jiancai@google.com>,
-        Bill Wendling <morbo@google.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=N/wJfZ0DKQLS30NQ3l5EIxZJq9J06grk8ARjTDSck7w=;
+        b=kpxmXqqPR3lHCBwJduNDNFLx0JNvySk+ZpW6zeibYDDMmxTZA5nzgwJDPGXP5FxOuc
+         9zvNLJ8NMtnOCPowlWNojoREakmv66zwLMb6PD07g3gsS1fiX1jeVudwjKeoRpIeIp4u
+         4RGKYO8MW1GX17biMAW7Vgj8aZZhnzxHy28k08KtMRsiGevoiG89i2RwTCpHnfX57V7O
+         Ml3pS7VIS2EZ4SThLlLCPMwInbbEXYJhE/NE65GlhNXOFG5vVriTnZsD4AXKjpv7yHkB
+         ABv8DSdqb7W1uypmT1zcvEYeBHGR5kmnK/8dKSP+BVyx7ZMgYqzc2U7ArRGdYtXHPL03
+         CPzw==
+X-Gm-Message-State: AOAM531+hDI335r071yORbi9NdKuIqNr48if28d57nSPiHrxCkpDRSrr
+        cEgPE4wYP2SOeODFATMnUqxtnQ==
+X-Google-Smtp-Source: ABdhPJyUx8c12Dq9u0oNfnaJvKI51s1Ej6i9NFYa2LGNRTz8LXng/MMLgsjl9D/uUGj8e5JMXp2RVw==
+X-Received: by 2002:a62:647:: with SMTP id 68mr12022813pfg.45.1595305639994;
+        Mon, 20 Jul 2020 21:27:19 -0700 (PDT)
+Received: from alex-desktop.lan (c-73-63-253-164.hsd1.ca.comcast.net. [73.63.253.164])
+        by smtp.gmail.com with ESMTPSA id o8sm1207075pjf.37.2020.07.20.21.27.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 21:27:19 -0700 (PDT)
+From:   Alexandru Stan <amstan@chromium.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Alexandru Stan <amstan@chromium.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: [PATCH 2/3] backlight: pwm_bl: Artificially add 0% during interpolation
+Date:   Mon, 20 Jul 2020 21:25:21 -0700
+Message-Id: <20200720212502.2.Iab4d2192e4cf50226e0a58d58df7d90ef92713ce@changeid>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200721042522.2403410-1-amstan@chromium.org>
+References: <20200721042522.2403410-1-amstan@chromium.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CROSS_COMPILE is set (e.g. aarch64-linux-gnu-), if
-$(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-elfedit,
-GCC_TOOLCHAIN_DIR will be set to /usr/bin/.  --prefix= will be set to
-/usr/bin/ and Clang as of 11 will search for both
-$(prefix)aarch64-linux-gnu-$needle and $(prefix)$needle.
+Some displays need the low end of the curve cropped in order to make
+them happy. In that case we still want to have the 0% point, even though
+anything between 0% and 5%(example) would be skipped.
 
-GCC searchs for $(prefix)aarch64-linux-gnu/$version/$needle,
-$(prefix)aarch64-linux-gnu/$needle and $(prefix)$needle. In practice,
-$(prefix)aarch64-linux-gnu/$needle rarely contains executables.
-
-To better model how GCC's -B/--prefix takes in effect in practice, newer
-Clang (since
-https://github.com/llvm/llvm-project/commit/3452a0d8c17f7166f479706b293caf6ac76ffd90)
-only searches for $(prefix)$needle. Currently it will find /usr/bin/as
-instead of /usr/bin/aarch64-linux-gnu-as.
-
-Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
-(/usr/bin/aarch64-linux-gnu-) so that newer Clang can find the
-appropriate cross compiling GNU as (when -no-integrated-as is in
-effect).
-
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Fangrui Song <maskray@google.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/1099
+Signed-off-by: Alexandru Stan <amstan@chromium.org>
 ---
-Changes in v2:
-* Updated description to add tags and the llvm-project commit link.
-* Fixed a typo.
----
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 0b5f8538bde5..3ac83e375b61 100644
---- a/Makefile
-+++ b/Makefile
-@@ -567,7 +567,7 @@ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
- ifneq ($(CROSS_COMPILE),)
- CLANG_FLAGS	+= --target=$(notdir $(CROSS_COMPILE:%-=%))
- GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
--CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)
-+CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
- GCC_TOOLCHAIN	:= $(realpath $(GCC_TOOLCHAIN_DIR)/..)
- endif
- ifneq ($(GCC_TOOLCHAIN),)
+ drivers/video/backlight/pwm_bl.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 5193a72305a2..b24711ddf504 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -349,6 +349,14 @@ static int pwm_backlight_parse_dt(struct device *dev,
+ 			/* Fill in the last point, since no line starts here. */
+ 			table[x2] = y2;
+ 
++			/*
++			 * If we don't start at 0 yet we're increasing, assume
++			 * the dts wanted to crop the low end of the range, so
++			 * insert a 0 to provide a display off mode.
++			 */
++			if (table[0] > 0 && table[0] < table[num_levels - 1])
++				table[0] = 0;
++
+ 			/*
+ 			 * As we use interpolation lets remove current
+ 			 * brightness levels table and replace for the
 -- 
-2.28.0.rc0.105.gf9edc3c819-goog
+2.27.0
 
