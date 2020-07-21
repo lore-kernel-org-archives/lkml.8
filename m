@@ -2,113 +2,192 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1934C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57DC920714
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D794720714
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbgGUK1F convert rfc822-to-8bit (ORCPT
+        id S1728271AbgGUK3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:27:05 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:57186 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728271AbgGUK1E (ORCPT
+        Tue, 21 Jul 2020 06:29:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21230 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726521AbgGUK3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:27:04 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-165-VkETpnrTNNiCTn0jftGBVw-1; Tue, 21 Jul 2020 11:27:00 +0100
-X-MC-Unique: VkETpnrTNNiCTn0jftGBVw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 21 Jul 2020 11:26:58 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 21 Jul 2020 11:26:58 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christoph Hellwig' <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>
-CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
-Subject: RE: get rid of the address_space override in setsockopt
-Thread-Topic: get rid of the address_space override in setsockopt
-Thread-Index: AQHWXznU7Ce8ImOXV0WGgKrMes+hhakR08Lg
-Date:   Tue, 21 Jul 2020 10:26:58 +0000
-Message-ID: <ae6a743aaea3406596dbc89e332b6b3e@AcuMS.aculab.com>
-References: <20200720124737.118617-1-hch@lst.de>
-In-Reply-To: <20200720124737.118617-1-hch@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 21 Jul 2020 06:29:48 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LA0hbM052683;
+        Tue, 21 Jul 2020 06:29:19 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32dvps3q21-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 06:29:19 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06LA0pM8053656;
+        Tue, 21 Jul 2020 06:29:19 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32dvps3q0q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 06:29:18 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LAMBQc015364;
+        Tue, 21 Jul 2020 10:29:15 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06ams.nl.ibm.com with ESMTP id 32brbh3q39-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 10:29:15 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LATD1450135124
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jul 2020 10:29:13 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 12A7A4204C;
+        Tue, 21 Jul 2020 10:29:13 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 710164203F;
+        Tue, 21 Jul 2020 10:29:11 +0000 (GMT)
+Received: from [9.79.210.59] (unknown [9.79.210.59])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Jul 2020 10:29:11 +0000 (GMT)
+Subject: Re: [PATCH v3 2/3] powerpc/powernv/idle: Rename
+ pnv_first_spr_loss_level variable
+To:     Nicholas Piggin <npiggin@gmail.com>, benh@kernel.crashing.org,
+        ego@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mikey@neuling.org,
+        mpe@ellerman.id.au, paulus@samba.org, pratik.r.sampat@gmail.com,
+        svaidy@linux.ibm.com
+References: <20200717185306.60607-1-psampat@linux.ibm.com>
+ <20200717185306.60607-3-psampat@linux.ibm.com>
+ <1595202681.bt4670u7q7.astroid@bobo.none>
+From:   Pratik Sampat <psampat@linux.ibm.com>
+Message-ID: <81dcf34e-870d-b3a1-7876-a6a2f0b37d1f@linux.ibm.com>
+Date:   Tue, 21 Jul 2020 15:59:10 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1595202681.bt4670u7q7.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ phishscore=0 priorityscore=1501 adultscore=0 malwarescore=0 bulkscore=0
+ clxscore=1015 impostorscore=0 lowpriorityscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007210066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig
-> Sent: 20 July 2020 13:47
-> 
-> setsockopt is the last place in architecture-independ code that still
-> uses set_fs to force the uaccess routines to operate on kernel pointers.
-> 
-> This series adds a new sockptr_t type that can contained either a kernel
-> or user pointer, and which has accessors that do the right thing, and
-> then uses it for setsockopt, starting by refactoring some low-level
-> helpers and moving them over to it before finally doing the main
-> setsockopt method.
 
-Another 'gotcha' ...
 
-On an least some architectures (possibly only m68k) IIRC all structures
-are actually passed by reference.
-(This used to be true for sparc - but it may have changed in the
-last 30 years.)
+On 20/07/20 5:27 am, Nicholas Piggin wrote:
+> Excerpts from Pratik Rajesh Sampat's message of July 18, 2020 4:53 am:
+>> Replace the variable name from using "pnv_first_spr_loss_level" to
+>> "pnv_first_fullstate_loss_level".
+>>
+>> As pnv_first_spr_loss_level is supposed to be the earliest state that
+>> has OPAL_PM_LOSE_FULL_CONTEXT set, however as shallow states too loose
+>> SPR values, render an incorrect terminology.
+> It also doesn't lose "full" state at this loss level though. From the
+> architecture it could be called "hv state loss level", but in POWER10
+> even that is not strictly true.
+>
+Right. Just discovered that deep stop states won't loose full state
+P10 onwards.
+Would it better if we rename it as "pnv_all_spr_loss_state" instead
+so that it stays generic enough while being semantically coherent?
 
-	David
- 
+Thanks
+Pratik
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+>> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+>> ---
+>>   arch/powerpc/platforms/powernv/idle.c | 18 +++++++++---------
+>>   1 file changed, 9 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+>> index f62904f70fc6..d439e11af101 100644
+>> --- a/arch/powerpc/platforms/powernv/idle.c
+>> +++ b/arch/powerpc/platforms/powernv/idle.c
+>> @@ -48,7 +48,7 @@ static bool default_stop_found;
+>>    * First stop state levels when SPR and TB loss can occur.
+>>    */
+>>   static u64 pnv_first_tb_loss_level = MAX_STOP_STATE + 1;
+>> -static u64 pnv_first_spr_loss_level = MAX_STOP_STATE + 1;
+>> +static u64 pnv_first_fullstate_loss_level = MAX_STOP_STATE + 1;
+>>   
+>>   /*
+>>    * psscr value and mask of the deepest stop idle state.
+>> @@ -657,7 +657,7 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+>>   		  */
+>>   		mmcr0		= mfspr(SPRN_MMCR0);
+>>   	}
+>> -	if ((psscr & PSSCR_RL_MASK) >= pnv_first_spr_loss_level) {
+>> +	if ((psscr & PSSCR_RL_MASK) >= pnv_first_fullstate_loss_level) {
+>>   		sprs.lpcr	= mfspr(SPRN_LPCR);
+>>   		sprs.hfscr	= mfspr(SPRN_HFSCR);
+>>   		sprs.fscr	= mfspr(SPRN_FSCR);
+>> @@ -741,7 +741,7 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+>>   	 * just always test PSSCR for SPR/TB state loss.
+>>   	 */
+>>   	pls = (psscr & PSSCR_PLS) >> PSSCR_PLS_SHIFT;
+>> -	if (likely(pls < pnv_first_spr_loss_level)) {
+>> +	if (likely(pls < pnv_first_fullstate_loss_level)) {
+>>   		if (sprs_saved)
+>>   			atomic_stop_thread_idle();
+>>   		goto out;
+>> @@ -1088,7 +1088,7 @@ static void __init pnv_power9_idle_init(void)
+>>   	 * the deepest loss-less (OPAL_PM_STOP_INST_FAST) stop state.
+>>   	 */
+>>   	pnv_first_tb_loss_level = MAX_STOP_STATE + 1;
+>> -	pnv_first_spr_loss_level = MAX_STOP_STATE + 1;
+>> +	pnv_first_fullstate_loss_level = MAX_STOP_STATE + 1;
+>>   	for (i = 0; i < nr_pnv_idle_states; i++) {
+>>   		int err;
+>>   		struct pnv_idle_states_t *state = &pnv_idle_states[i];
+>> @@ -1099,8 +1099,8 @@ static void __init pnv_power9_idle_init(void)
+>>   			pnv_first_tb_loss_level = psscr_rl;
+>>   
+>>   		if ((state->flags & OPAL_PM_LOSE_FULL_CONTEXT) &&
+>> -		     (pnv_first_spr_loss_level > psscr_rl))
+>> -			pnv_first_spr_loss_level = psscr_rl;
+>> +		     (pnv_first_fullstate_loss_level > psscr_rl))
+>> +			pnv_first_fullstate_loss_level = psscr_rl;
+>>   
+>>   		/*
+>>   		 * The idle code does not deal with TB loss occurring
+>> @@ -1111,8 +1111,8 @@ static void __init pnv_power9_idle_init(void)
+>>   		 * compatibility.
+>>   		 */
+>>   		if ((state->flags & OPAL_PM_TIMEBASE_STOP) &&
+>> -		     (pnv_first_spr_loss_level > psscr_rl))
+>> -			pnv_first_spr_loss_level = psscr_rl;
+>> +		     (pnv_first_fullstate_loss_level > psscr_rl))
+>> +			pnv_first_fullstate_loss_level = psscr_rl;
+>>   
+>>   		err = validate_psscr_val_mask(&state->psscr_val,
+>>   					      &state->psscr_mask,
+>> @@ -1158,7 +1158,7 @@ static void __init pnv_power9_idle_init(void)
+>>   	}
+>>   
+>>   	pr_info("cpuidle-powernv: First stop level that may lose SPRs = 0x%llx\n",
+>> -		pnv_first_spr_loss_level);
+>> +		pnv_first_fullstate_loss_level);
+>>   
+>>   	pr_info("cpuidle-powernv: First stop level that may lose timebase = 0x%llx\n",
+>>   		pnv_first_tb_loss_level);
+>> -- 
+>> 2.25.4
+>>
+>>
 
