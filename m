@@ -7,68 +7,69 @@ X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7890C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4023C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C16B120709
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66F620709
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:01:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="OUKerrG1"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zsvHmLfj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgGUIBQ (ORCPT
+        id S1728476AbgGUIBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:01:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50628 "EHLO
+        Tue, 21 Jul 2020 04:01:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728536AbgGUIBP (ORCPT
+        with ESMTP id S1726919AbgGUIBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:01:15 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3881C0619D7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:01:14 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o8so1841568wmh.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:01:14 -0700 (PDT)
+        Tue, 21 Jul 2020 04:01:03 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E201C0619D7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:01:03 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c80so1863833wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:01:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ewM2HJBUENxVg5qVvtrerZEb13ZbfM5w015hCw1HWwU=;
-        b=OUKerrG1CySXbE77AKjQTvZgURBDiJ8f5dM/ZTkNpvjlyjyGvgoRboUhkdz5Q1p2nG
-         kdJGeGDV//+zLSfC2HjqH/PxUzr4NIv2rY9wBQy8t1u98pM4dThwBucBBoPtmpLPAgHG
-         zVhus9H7/LfdjTONZ+DA/NjkregDNiExdBCWYSjDMr1FXzB/RrRfexbbNe47Znb6jZTN
-         ivMpJRXmsYu5zx5XsWUk8lbQT7x1vix5IGyAZqJXz1zvbxfSYJtpB+tKDQ6MS9SVX53e
-         TEvu2PeXdVj5pjctiSdnMMoPbnhEhSKW+JzrACP/Mx+AiADzmbVZ2Fc8iOQTl25+sJgL
-         thFg==
+        bh=Xe1xj2UJLfRzN8/gTK/6++OrG88WTatlRMlGCyzzmm0=;
+        b=zsvHmLfjJ3qIlSGraoav1lLUCKJ/WL8hivFRPMZNBQHsH2XPKEh2SAQzhDCIpwiats
+         fhjY+KetWr8J33BQn6NZHAg3Y+MFvouR4bFQir9X3ZmFALluilzLXqoXzlXbHA8zsWpB
+         Qwou99IYa9UBi509MshAlJ0GqkURcmdzNgsK6216LL03oMhW52Tc1WFpdUAE3HgrmOwi
+         IEbV1Zc1MQjLOSNutwmxJsoU7CNK38wPZXKz1lBOd81g6NGj9mydvIWrHiBeg3DLWd17
+         P9+ttlijTMJJeJNmHKoh3TbEEy+/cQe2LRixU9JTBkbl91gjmY9mS4f58ehOhhJzkyZq
+         leCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=ewM2HJBUENxVg5qVvtrerZEb13ZbfM5w015hCw1HWwU=;
-        b=QM+1rJ12LI+RXOonMTW+8XAqeEiJM01tdBcN7tZjLEC8RMylLi8ef8UUwpt6QKHNl3
-         X8YPuSZKvUHDGqrghssGODQTKdlUkqoV2vlCaN3dsuL0isODmIDpDfqkocVsU67H7ARR
-         tP5BI9mMtzM/2cSvdV3DTIvmmPPg0y+/OIF8t5GNCZJuPEui/BXh6cuVNT5+tlyYMZk0
-         wOeenvdiI6nv36Pk3H79ZZZ9ABnBgdlEO2AG0o5Mm8O+7UWCS1gCVLJDUVa2Exea41m+
-         K1l0KBg+F3Cz4ytxvPPBStQ0hcAxnna6IuIGz8dvuG9W58l1C3XkaRzFoXs7kLOcInxS
-         Mr1w==
-X-Gm-Message-State: AOAM532XGZpomwZggMxNxey83BLYG7wSNaOAVzkX27JGUlv9g6wE1bjF
-        mOxI3tGk/zQhW4EtH5TYJH0tcw==
-X-Google-Smtp-Source: ABdhPJxoolgSA1w4rtOowZsyDXoO2mjTWJRQ9NaqCcfQ0hJvLcn/3oQWq/h8EGXW56PO81MG40LUDQ==
-X-Received: by 2002:a1c:b007:: with SMTP id z7mr2718946wme.37.1595318473343;
-        Tue, 21 Jul 2020 01:01:13 -0700 (PDT)
+        bh=Xe1xj2UJLfRzN8/gTK/6++OrG88WTatlRMlGCyzzmm0=;
+        b=KYXf9Kau9IwxYefsfRwxdkcs/PRJ/n1d9h0eEzGplBx8+hzokfcc4t+DM9qNMzS4aB
+         dA4eIKb94AHTbQVGO1Siq8F9uTeGTpxXWpcYBW71yysXscas7F3WEdzW+s+M6E6lXEvX
+         XarWiY2wILJBgUG78SWWuyhCaAzmdESqc5l8g3IQvPnKNlqq5Cuk4WgUPouxrljpSnN/
+         lxNX09BuEE0onZ7gpQRx5KvFTNBGW3Q2lIwzPFcBccgbqvHCr7Bke4qhDsZLT7MRdzWe
+         5KnMo0v6kqZbOVZpYxchkOgqfKqE4dKGeKoHUjrNdh1Hg/nSNnkNYDrqzwJEcrf5cwz+
+         7i/w==
+X-Gm-Message-State: AOAM530UAgZ5GwCGteoJlM+o58XrTCC+gBldTb/Ee06r/tgPcNE4uafT
+        MhYOC0bzsmIw6T6jcsqj9f3/Pg==
+X-Google-Smtp-Source: ABdhPJxIG3rVQw6vw0k3oB8t3+wUKdYuDLOTbrVMTvJW5oh4CXFN4wQ+Swr+xv7YFmD05HcBhlsuEQ==
+X-Received: by 2002:a1c:48c5:: with SMTP id v188mr2796746wma.58.1595318461729;
+        Tue, 21 Jul 2020 01:01:01 -0700 (PDT)
 Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id s19sm14322354wrb.54.2020.07.21.01.01.12
+        by smtp.gmail.com with ESMTPSA id 26sm2294065wmj.25.2020.07.21.01.01.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 01:01:12 -0700 (PDT)
-Subject: Re: [PATCH v2 06/14] spi: spi-meson-spicc: Remove set but never used
- variable 'data' from meson_spicc_reset_fifo()
+        Tue, 21 Jul 2020 01:01:00 -0700 (PDT)
+Subject: Re: [PATCH v2 05/14] spi: spi-meson-spifc: Fix misdocumenting of
+ 'dev' in 'struct meson_spifc'
 To:     Lee Jones <lee.jones@linaro.org>, broonie@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org
+Cc:     Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
 References: <20200717135424.2442271-1-lee.jones@linaro.org>
- <20200717135424.2442271-7-lee.jones@linaro.org>
+ <20200717135424.2442271-6-lee.jones@linaro.org>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -120,60 +121,46 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
  BSwxi7g3Mu7u5kUByanqHyA=
 Organization: Baylibre
-Message-ID: <7509786b-1a89-2238-cb74-c1662f393983@baylibre.com>
-Date:   Tue, 21 Jul 2020 10:01:11 +0200
+Message-ID: <6655a485-fc5a-690e-b752-59f12d545cc0@baylibre.com>
+Date:   Tue, 21 Jul 2020 10:00:59 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200717135424.2442271-7-lee.jones@linaro.org>
+In-Reply-To: <20200717135424.2442271-6-lee.jones@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 17/07/2020 15:54, Lee Jones wrote:
-> Looks like it hasn't ever been checked.
-> 
 > Fixes the following W=1 kernel build warning(s):
 > 
->  drivers/spi/spi-meson-spicc.c: In function ‘meson_spicc_reset_fifo’:
->  drivers/spi/spi-meson-spicc.c:365:6: warning: variable ‘data’ set but not used [-Wunused-but-set-variable]
->  365 | u32 data;
->  | ^~~~
+>  drivers/spi/spi-meson-spifc.c:80: warning: Function parameter or member 'dev' not described in 'meson_spifc'
 > 
 > Cc: Kevin Hilman <khilman@baylibre.com>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Beniamino Galvani <b.galvani@gmail.com>
 > Cc: linux-amlogic@lists.infradead.org
 > Signed-off-by: Lee Jones <lee.jones@linaro.org>
 > ---
->  drivers/spi/spi-meson-spicc.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+>  drivers/spi/spi-meson-spifc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/spi/spi-meson-spicc.c b/drivers/spi/spi-meson-spicc.c
-> index 77f7d0e0e46ad..ecba6b4a5d85d 100644
-> --- a/drivers/spi/spi-meson-spicc.c
-> +++ b/drivers/spi/spi-meson-spicc.c
-> @@ -362,8 +362,6 @@ static void meson_spicc_setup_xfer(struct meson_spicc_device *spicc,
->  
->  static void meson_spicc_reset_fifo(struct meson_spicc_device *spicc)
->  {
-> -	u32 data;
-> -
->  	if (spicc->data->has_oen)
->  		writel_bits_relaxed(SPICC_ENH_MAIN_CLK_AO,
->  				    SPICC_ENH_MAIN_CLK_AO,
-> @@ -373,7 +371,7 @@ static void meson_spicc_reset_fifo(struct meson_spicc_device *spicc)
->  			    spicc->base + SPICC_TESTREG);
->  
->  	while (meson_spicc_rxready(spicc))
-> -		data = readl_relaxed(spicc->base + SPICC_RXDATA);
-> +		readl_relaxed(spicc->base + SPICC_RXDATA);
->  
->  	if (spicc->data->has_oen)
->  		writel_bits_relaxed(SPICC_ENH_MAIN_CLK_AO, 0,
+> diff --git a/drivers/spi/spi-meson-spifc.c b/drivers/spi/spi-meson-spifc.c
+> index c7b0399802913..8eca6f24cb799 100644
+> --- a/drivers/spi/spi-meson-spifc.c
+> +++ b/drivers/spi/spi-meson-spifc.c
+> @@ -70,7 +70,7 @@
+>   * @master:	the SPI master
+>   * @regmap:	regmap for device registers
+>   * @clk:	input clock of the built-in baud rate generator
+> - * @device:	the device structure
+> + * @dev:	the device structure
+>   */
+>  struct meson_spifc {
+>  	struct spi_master *master;
 > 
 
 Acked-by: Neil Armstrong <narmstrong@baylibre.com>
