@@ -2,135 +2,206 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C8EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DC1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5FC22CA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595313214;
-	bh=42hmmXQJOOWCmw4Tgk574pBzovphCaf9MlOYp6UqC30=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=yJZf35F+84fFdmuIAeKkVpoyn6TqbvxBLQHsheK6zNZ19If/vl6YD8SEKxjT4SDT8
-	 I0XaNFiXT10rVPINp1EM73meNg+E5p92K80jaUOSmoyY/xis8iaRsV9s9NH5EBA+/9
-	 5iZPlm6oyiIPP054RzwRZjfHuKZ7ox5R9OykHfe8=
+	by mail.kernel.org (Postfix) with ESMTP id D2F8C20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:36:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgGUGdd (ORCPT
+        id S1727805AbgGUGgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:33:33 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36587 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgGUGdc (ORCPT
+        Tue, 21 Jul 2020 02:36:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29946 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726039AbgGUGgG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:33:32 -0400
-Received: by mail-wr1-f66.google.com with SMTP id 88so9704409wrh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 23:33:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tV1LRzNgPSEgDwGe9LGBIejRICI799y9RAnDI8eKpbg=;
-        b=op0tW9oUBuuQLj+2DGezQxxHW/iMjx4ZtZQ336mDHeAY3LHAFgFVg3/NBVHMU0RdOA
-         ELafIXRdLKAXkCNX76n0TOsul1W7/H1D/io1Pezulryd+azs1UjD+WKFFdg2Z5ArLsWz
-         hXf+xGIzkJkEUe21MYCjWA6fk4V0UBpt+NILG1twPsAuiqosetMf1vmwWrI6DAce8t3U
-         moFELLbwA7Y/zjrbUGDTFN+WtDXB5h/SPmo9rxxhrlf/+WnmbDK2fO8/m+pQ0AtaOC4X
-         qMw4/khZd3artIQLu94ajbBNmg3xkyIn9d6NC1lgvKMuZ+1tbSJmk1+ZTj1isCUEH8JY
-         fI1Q==
-X-Gm-Message-State: AOAM531IA3GKxi3v1y15pnVF3PWx+6ztvqPNY0rMHTxuWLQEuEj8K4WT
-        TM7fcQZbTqco4YgZUMKo75GuSvR3
-X-Google-Smtp-Source: ABdhPJxiB/dYqgFor+GO+S7YCh7ZoYChxfsvo91Dw+1AOToJGHEczK4ZX3skesAUKaqixM9i4q+sjQ==
-X-Received: by 2002:a5d:6702:: with SMTP id o2mr462986wru.364.1595313210451;
-        Mon, 20 Jul 2020 23:33:30 -0700 (PDT)
-Received: from tiehlicka.suse.cz (ip-37-188-169-187.eurotel.cz. [37.188.169.187])
-        by smtp.gmail.com with ESMTPSA id q7sm36617204wra.56.2020.07.20.23.33.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 23:33:29 -0700 (PDT)
-From:   Michal Hocko <mhocko@kernel.org>
-To:     <linux-mm@kvack.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: [RFC PATCH] mm: silence soft lockups from unlock_page
-Date:   Tue, 21 Jul 2020 08:32:58 +0200
-Message-Id: <20200721063258.17140-1-mhocko@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        Tue, 21 Jul 2020 02:36:06 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L6W64D148429;
+        Tue, 21 Jul 2020 02:35:32 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d91uv6gf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 02:35:31 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06L6Ulir019941;
+        Tue, 21 Jul 2020 06:35:29 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma02fra.de.ibm.com with ESMTP id 32brq7ukuw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 06:35:29 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06L6Y3gP55574970
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jul 2020 06:34:03 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 561C542047;
+        Tue, 21 Jul 2020 06:35:27 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 27E0A42041;
+        Tue, 21 Jul 2020 06:35:26 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.203.12])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 21 Jul 2020 06:35:26 +0000 (GMT)
+Date:   Tue, 21 Jul 2020 09:35:24 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     "liwei (CM)" <liwei213@huawei.com>
+Cc:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        fengbaopeng <fengbaopeng2@hisilicon.com>,
+        "nsaenzjulienne@suse.de" <nsaenzjulienne@suse.de>,
+        "steve.capper@arm.com" <steve.capper@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        sujunfei <sujunfei2@hisilicon.com>,
+        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
+        "Yaobaofeng (Yaobaofeng)" <yaobaofeng@huawei.com>
+Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIGFybTY0?=
+ =?utf-8?B?OiBtbTogZnJl?= =?utf-8?Q?e?= unused memmap for sparse memory model
+ that define VMEMMAP
+Message-ID: <20200721063524.GC802087@linux.ibm.com>
+References: <20200708015555.14946-1-liwei213@huawei.com>
+ <B926444035E5E2439431908E3842AFD255E7A1@DGGEMI525-MBS.china.huawei.com>
+ <1699CE87DE933F49876AD744B5DC140F230F8396@DGGEMM506-MBS.china.huawei.com>
+ <B926444035E5E2439431908E3842AFD256289A@DGGEMI525-MBS.china.huawei.com>
+ <1699CE87DE933F49876AD744B5DC140F2312A02B@dggemm526-mbx.china.huawei.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1699CE87DE933F49876AD744B5DC140F2312A02B@dggemm526-mbx.china.huawei.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=5 clxscore=1011
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007210043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Hocko <mhocko@suse.com>
+Hi,
 
-We have seen a bug report with huge number of soft lockups during the
-system boot on !PREEMPT kernel
-NMI watchdog: BUG: soft lockup - CPU#1291 stuck for 22s! [systemd-udevd:43283]
-[...]
-NIP [c00000000094e66c] _raw_spin_lock_irqsave+0xac/0x100
-LR [c00000000094e654] _raw_spin_lock_irqsave+0x94/0x100
-Call Trace:
-[c00002293d883b30] [c0000000012cdee8] __pmd_index_size+0x0/0x8 (unreliable)
-[c00002293d883b70] [c0000000002b7490] wake_up_page_bit+0xc0/0x150
-[c00002293d883bf0] [c00000000030ceb8] do_fault+0x448/0x870
-[c00002293d883c40] [c000000000310080] __handle_mm_fault+0x880/0x16b0
-[c00002293d883d10] [c000000000311018] handle_mm_fault+0x168/0x250
-[c00002293d883d50] [c00000000006c488] do_page_fault+0x568/0x8d0
-[c00002293d883e30] [c00000000000a534] handle_page_fault+0x18/0x38
-
-on a large ppc machine. The very likely cause is a suboptimal
-configuration when systed-udev spawns way too many workders to bring the
-system up.
-
-The lockup is in page_unlock in do_read_fault and I suspect that this is
-yet another effect of a very long waitqueue chain which has been
-addresses by 11a19c7b099f ("sched/wait: Introduce wakeup boomark in
-wake_up_page_bit") previously. The commit primarily aimed at hard lockup
-prevention but it doesn't really help !PREEMPT case which still has to
-process all the work without any rescheduling point. This is however not
-really trivial because page_unlock is called from many contexts many of
-which are likely called from an atomic context.
-
-Introducing page_unlock_sleepable is certainly an option but it seems
-like a hard to maintain option which doesn't really fix the underlying
-problem as the same might happen from other unlock_page callers. This
-patch doesn't address the underlying problem but it reduces the visible
-effect. Tell the soft lockup to shut up when retrying batches on queued
-waiters. This will also allow systems configured to panic on warning to
-proceed with the boot.
-
-Signed-off-by: Michal Hocko <mhocko@suse.com>
----
- mm/filemap.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 385759c4ce4b..74681c40a6e5 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -41,6 +41,7 @@
- #include <linux/delayacct.h>
- #include <linux/psi.h>
- #include <linux/ramfs.h>
-+#include <linux/nmi.h>
- #include "internal.h"
+On Tue, Jul 21, 2020 at 01:56:33AM +0000, liwei (CM) wrote:
+> Hi, all
+> 
+> I'm sorry to bother you, but still very hope you can give comments or suggestions to this patch, thank you very much.
  
- #define CREATE_TRACE_POINTS
-@@ -1055,6 +1056,7 @@ static void wake_up_page_bit(struct page *page, int bit_nr)
- 		 */
- 		spin_unlock_irqrestore(&q->lock, flags);
- 		cpu_relax();
-+		touch_softlockup_watchdog();
- 		spin_lock_irqsave(&q->lock, flags);
- 		__wake_up_locked_key_bookmark(q, TASK_NORMAL, &key, &bookmark);
- 	}
--- 
-2.27.0
+I cannot find your patch neither in Inbox nor in the public archives.
+Can you resend it please?
 
+
+> -----邮件原件-----
+> 发件人: Song Bao Hua (Barry Song) 
+> 发送时间: 2020年7月9日 20:27
+> 收件人: liwei (CM) <liwei213@huawei.com>; catalin.marinas@arm.com; will@kernel.org
+> 抄送: fengbaopeng <fengbaopeng2@hisilicon.com>; nsaenzjulienne@suse.de; steve.capper@arm.com; rppt@linux.ibm.com; linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; sujunfei <sujunfei2@hisilicon.com>; Xiaqing (A) <saberlily.xia@hisilicon.com>; Yaobaofeng (Yaobaofeng) <yaobaofeng@huawei.com>
+> 主题: RE: [PATCH] arm64: mm: free unused memmap for sparse memory model that define VMEMMAP
+> 
+> 
+> 
+> > -----Original Message-----
+> > From: liwei (CM)
+> > Sent: Wednesday, July 8, 2020 7:52 PM
+> > To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>; 
+> > catalin.marinas@arm.com; will@kernel.org
+> > Cc: fengbaopeng <fengbaopeng2@hisilicon.com>; nsaenzjulienne@suse.de; 
+> > steve.capper@arm.com; rppt@linux.ibm.com; 
+> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; 
+> > sujunfei <sujunfei2@hisilicon.com>; Xiaqing (A) 
+> > <saberlily.xia@hisilicon.com>; Yaobaofeng (Yaobaofeng) 
+> > <yaobaofeng@huawei.com>
+> > Subject: 答复: [PATCH] arm64: mm: free unused memmap for sparse memory 
+> > model that define VMEMMAP
+> > 
+> > Hi, baohua
+> > 
+> > Thank you for your attention.
+> > 
+> > In my understanding of the MEMORY_HOTPLUG this patch has no effect on it.
+> > The reason is that in sparse_add_one_section() the memory that memmap 
+> > needs from Slab if kernel start completed，this memory has nothing to 
+> > do with memblock alloc/ free memory in the process of kernel start.
+> > 
+> > You may have a look vmemmap_alloc_block () this function.
+> > 
+> > If I don't understand right welcome pointed out in a timely manner.
+> 
+> At the first glance of this patch, I suspect that this bootmem may be used by hot-added memory.
+> If you confirm this won't happen, please ignore my noise.
+> 
+> BTW, next time, bear in mind that top-post is not a good way to reply mail :-)
+> 
+> > 
+> > Thanks!
+> > 
+> > 
+> > -----邮件原件-----
+> > 发件人: Song Bao Hua (Barry Song)
+> > 发送时间: 2020年7月8日 15:19
+> > 收件人: liwei (CM) <liwei213@huawei.com>; catalin.marinas@arm.com; 
+> > will@kernel.org
+> > 抄送: fengbaopeng <fengbaopeng2@hisilicon.com>; nsaenzjulienne@suse.de; 
+> > steve.capper@arm.com; rppt@linux.ibm.com; 
+> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; 
+> > sujunfei <sujunfei2@hisilicon.com>
+> > 主题: RE: [PATCH] arm64: mm: free unused memmap for sparse memory model 
+> > that define VMEMMAP
+> > 
+> > 
+> > 
+> > > -----Original Message-----
+> > > From: liwei (CM)
+> > > Sent: Wednesday, July 8, 2020 1:56 PM
+> > > To: catalin.marinas@arm.com; will@kernel.org
+> > > Cc: liwei (CM) <liwei213@huawei.com>; fengbaopeng 
+> > > <fengbaopeng2@hisilicon.com>; nsaenzjulienne@suse.de; 
+> > > steve.capper@arm.com; rppt@linux.ibm.com; Song Bao Hua (Barry Song) 
+> > > <song.bao.hua@hisilicon.com>; linux-arm-kernel@lists.infradead.org;
+> > > linux-kernel@vger.kernel.org; sujunfei <sujunfei2@hisilicon.com>
+> > > Subject: [PATCH] arm64: mm: free unused memmap for sparse memory
+> > model
+> > > that define VMEMMAP
+> > >
+> > > For the memory hole, sparse memory model that define
+> > SPARSEMEM_VMEMMAP
+> > > do not free the reserved memory for the page map, this patch do it.
+> > 
+> > Hello Wei,
+> > Just curious if this patch breaks MEMORY_HOTPLUG?
+> > 
+> > >
+> > > Signed-off-by: Wei Li <liwei213@huawei.com>
+> > > Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+> > > Signed-off-by: Xia Qing <saberlily.xia@hisilicon.com>
+> > > ---
+> > >  arch/arm64/mm/init.c | 81
+> > > +++++++++++++++++++++++++++++++++++++++++++++-------
+> > >  1 file changed, 71 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c index 
+> > > 1e93cfc7c47a..d1b56b47d5ba 100644
+> > > --- a/arch/arm64/mm/init.c
+> > > +++ b/arch/arm64/mm/init.c
+> > > @@ -441,7 +441,48 @@ void __init bootmem_init(void)
+> > >  	memblock_dump_all();
+> > >  }
+> > >
+> > 
+> > Thanks
+> > Barry
+> 
+
+-- 
+Sincerely yours,
+Mike.
