@@ -2,135 +2,86 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4347DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E33C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD8E206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF202064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:04:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ftMqAWN9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yLLccylq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgGUN7N (ORCPT
+        id S1728730AbgGUOEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:59:13 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45827 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726359AbgGUN7M (ORCPT
+        Tue, 21 Jul 2020 10:04:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbgGUOEq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:59:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595339951;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1XSRxOKWh2EaVf4Y8gn83C3uqoFTDUh2rGXBPh4SjUw=;
-        b=ftMqAWN9K0hEp8KUDhZXRE3OtwnKucOdUjc6Pl5x3e6fCJNUPksBUph0c8Nnemz67BJH/N
-        M0oM7CnbE6ETlFqhKrhLvlG6vY0kk/O5R3uXYBOG+YNDxB4sW+jnTTw97YPUobRxdnTH0l
-        mUVIv2Jl2T0E1eiziWyByV9ou1BBW8I=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-66-QoFtDvEwO_2MPI81Uf_aFw-1; Tue, 21 Jul 2020 09:59:09 -0400
-X-MC-Unique: QoFtDvEwO_2MPI81Uf_aFw-1
-Received: by mail-wr1-f71.google.com with SMTP id s16so13065855wrv.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:59:09 -0700 (PDT)
+        Tue, 21 Jul 2020 10:04:46 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4D0C0619DA
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:04:45 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id d17so24217038ljl.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:04:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UtktXB94UoE1zwpGw4L7DaOAMB9VthZKcyfMWewtchM=;
+        b=yLLccylqygcGxLogT7uDUU7Zoo5Gf+rgoWnJxkrvtrNuUUC2Rm99zffl7dgXLUcsxV
+         JUsR4Mi/ot+fvK33v6Uu9vN0B0j5hKnXMEescl1VOpltOAT9W+Gc7AkhEo0n8b2nQ3N9
+         d/+3tCKJOzeU0p9NOt2e8P3KvgBHGGWOMJu6pZa/vhd+Kz+Aay2PlVhVJ3TIu9jZxoPC
+         r0KQv2Q360/8fCEcxHhs7RkvZv/6qZQ6+getRlZ//wMfZEIDwVEjPXekSUXa5CcHoapM
+         VtDgPKHLENtTXQEZU/5R51RZaY8KybsI0FcI9GKc9mCGpjhucIPruaTfi5edb2oyHwpN
+         f/VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=1XSRxOKWh2EaVf4Y8gn83C3uqoFTDUh2rGXBPh4SjUw=;
-        b=AIQQk2QrhdB9O1ztGEl98G/luEFW51sT2L5kSFUWiPK7SNUkuhzqRoUDmabU9xlJ1U
-         kuSTENCqRhmPDC8DcPBtjhetU8aQyNZZzPGqdap+ki138gXikQrcFtlCESCk9geSv3bM
-         FcjbH7MwnAQ78fmJlShU8bsIqt9RiFkLwE5ms9RcQYTL6LDwMdKopOAtDgfoy4I2YLcf
-         R6kkFEv3RWSyGbKVFGbFzq52qQt7nLONmnHMTlKc6Nn45AnK7Z4ejwxlKOBAonddD4n8
-         InjNDpBmsyH+xFEiXBHZqaGy4rPV9nFmdAZSKZD9Rzw0Ulvm/x6OJ+GBWJjOE+0+mK/t
-         kVCA==
-X-Gm-Message-State: AOAM530R/HsyKbOnyNqEdfXDgVO57Xn4xrTNE6y5/XdeI/jfXlhKKZ+u
-        fHn7RSB9lHVmuylDLpLmdqvFLKA03p2VEX/gHE1riKOtMkRnWCjsIYUjwslckMQKw1yxhqY2TGp
-        cyKK3Qir8CCVUCde13hGPicKs
-X-Received: by 2002:a7b:c14a:: with SMTP id z10mr4031827wmi.19.1595339948082;
-        Tue, 21 Jul 2020 06:59:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyG2A4z6SCsD9epS9EdBWaiWCEjcl6nQH/beMuz+mPDsHK4PgHUf5QKKCHzrdN8fMpih4ZIbA==
-X-Received: by 2002:a7b:c14a:: with SMTP id z10mr4031815wmi.19.1595339947844;
-        Tue, 21 Jul 2020 06:59:07 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id u84sm3634813wmg.7.2020.07.21.06.59.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 06:59:07 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 6/7] KVM: x86: Use common definition for kvm_nested_vmexit tracepoint
-In-Reply-To: <20200721002717.GC20375@linux.intel.com>
-References: <20200718063854.16017-1-sean.j.christopherson@intel.com> <20200718063854.16017-7-sean.j.christopherson@intel.com> <87365mqgcg.fsf@vitty.brq.redhat.com> <20200721002717.GC20375@linux.intel.com>
-Date:   Tue, 21 Jul 2020 15:59:06 +0200
-Message-ID: <87imehotp1.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UtktXB94UoE1zwpGw4L7DaOAMB9VthZKcyfMWewtchM=;
+        b=LEMsD5vph3H5GUUCSJ6i1et4AxvMoLIDiGYav6ev1m5j9ZCAF4GkYaSMf6iATZdXJ3
+         Gc9aP5/wJQcz1T0rBWx9SI9lzqLnyzyZNe3cq7FCLxyiwKgz73Q5zSAS7u5P/c83B5NH
+         wGQEpkp6cwLSeEP0GImKGbHMm0lAV4ik4zI8r1HUF0K1J84Bo1a0QqF5NrgMopD2g8T7
+         aWyDgI9odldYiuB55NqKkI1FbgqYUAuvNOIIn8O98y/zPeNZS1fdqyRiY4LUecA13VEg
+         1Mxxio5K/CEs++UZM7pcU7HDXdM4GC0xCNVHST4e1Xq5C63T63Hb8iZT75QBy7K4pGNs
+         4YQw==
+X-Gm-Message-State: AOAM530WW2t1bTLXe5Hm0A8p4lh/irHs+34wjI+34omUBwF+/U7wQcHR
+        tZLpAaKNusPhRBeNcqtxC3daMcmQnN4tZfRH9fb7Pw==
+X-Google-Smtp-Source: ABdhPJypCfBIap1qfVyDPf9GKnF6IcierHr4eIXAb39wsTOTb1+XEiOppOE1PPcvOhD3UUXSdtIpISL/xoX/eMJE4Q8=
+X-Received: by 2002:a2e:8046:: with SMTP id p6mr13595138ljg.100.1595340284205;
+ Tue, 21 Jul 2020 07:04:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200720154548.12453-1-paul@crapouillou.net>
+In-Reply-To: <20200720154548.12453-1-paul@crapouillou.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 21 Jul 2020 16:04:33 +0200
+Message-ID: <CACRpkdaqOFgjNkD0m0A3XTXYfh10YuAVYKxd-8cFk0WDsC0mZQ@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: ingenic,pinctrl: Support pinmux/pinconf nodes
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Mon, Jul 20, 2020 at 5:45 PM Paul Cercueil <paul@crapouillou.net> wrote:
 
-> On Mon, Jul 20, 2020 at 06:52:15PM +0200, Vitaly Kuznetsov wrote:
->> Sean Christopherson <sean.j.christopherson@intel.com> writes:
->> > +TRACE_EVENT_KVM_EXIT(kvm_nested_vmexit);
->> >  
->> >  /*
->> >   * Tracepoint for #VMEXIT reinjected to the guest
->> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->> > index fc70644b916ca..f437d99f4db09 100644
->> > --- a/arch/x86/kvm/vmx/nested.c
->> > +++ b/arch/x86/kvm/vmx/nested.c
->> > @@ -5912,10 +5912,7 @@ bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu)
->> >  	exit_intr_info = vmx_get_intr_info(vcpu);
->> >  	exit_qual = vmx_get_exit_qual(vcpu);
->> >  
->> > -	trace_kvm_nested_vmexit(vcpu, exit_reason, exit_qual,
->> > -				vmx->idt_vectoring_info, exit_intr_info,
->> > -				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
->> > -				KVM_ISA_VMX);
->> > +	trace_kvm_nested_vmexit(exit_reason, vcpu, KVM_ISA_VMX);
->> >  
->> >  	/* If L0 (KVM) wants the exit, it trumps L1's desires. */
->> >  	if (nested_vmx_l0_wants_exit(vcpu, exit_reason))
->> 
->> With so many lines removed I'm almost in love with the patch! However,
->> when testing on SVM (unrelated?) my trace log looks a bit ugly:
->> 
->>            <...>-315119 [010]  3733.092646: kvm_nested_vmexit:    CAN'T FIND FIELD "rip"<CANT FIND FIELD exit_code>vcpu 0 reason npf rip 0x400433 info1 0x0000000200000006 info2 0x0000000000641000 intr_info 0x00000000 error_code 0x00000000
->>            <...>-315119 [010]  3733.092655: kvm_nested_vmexit:    CAN'T FIND FIELD "rip"<CANT FIND FIELD exit_code>vcpu 0 reason npf rip 0x400433 info1 0x0000000100000014 info2 0x0000000000400000 intr_info 0x00000000 error_code 0x00000000
->> 
->> ...
->> 
->> but after staring at this for some time I still don't see where this
->> comes from :-( ... but reverting this commit helps:
+> Add YAML to describe the pinmux/pinconf sub-nodes of the pinctrl IP on
+> Ingenic SoCs.
 >
-> The CAN'T FIND FIELD blurb comes from tools/lib/traceevent/event-parse.c.
->
-> I assume you are using tooling of some form to generate the trace, i.e. the
-> issue doesn't show up in /sys/kernel/debug/tracing/trace.  If that's the
-> case, this is more or less ABI breakage :-(
->  
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-Right you are,
+Patch applied.
 
-the tool is called 'trace-cmd record -e kvm ...' / 'trace-cmd report'
-but I always thought it's not any different from looking at
-/sys/kernel/debug/tracing/trace directly. Apparently I was wrong. 'cat
-/sys/kernel/debug/tracing/trace' seems to be OK, e.g.:
-
- qemu-system-x86-20263 [006] .... 75982.292657: kvm_nested_vmexit: vcpu 0 reason hypercall rip 0x40122f info1 0x0000000000000000 info2 0x0000000000000000 intr_info 0x00000000 error_code 0x00000000
-
--- 
-Vitaly
-
+Yours,
+Linus Walleij
