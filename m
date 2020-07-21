@@ -2,84 +2,135 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C831FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B164A20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12CC62064C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:49:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FcI07BgD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgGUNrA (ORCPT
+        id S1727861AbgGUNtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:47:00 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35128 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726120AbgGUNq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:46:59 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 43DBA27079410748EBCA;
-        Tue, 21 Jul 2020 21:46:57 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Jul 2020
- 21:46:50 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <tsbogend@alpha.franken.de>, <huanglllzu@gmail.com>,
-        <chenhc@lemote.com>, <Steven.Hill@cavium.com>,
-        <david.daney@cavium.com>, <jhogan@kernel.org>
-CC:     <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yi.zhang@huawei.com>, <yukuai3@huawei.com>
-Subject: [PATCH] MIPS: OCTEON: add missing put_device() call in dwc3_octeon_device_init()
-Date:   Tue, 21 Jul 2020 21:47:18 +0800
-Message-ID: <20200721134718.1277347-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.25.4
+        Tue, 21 Jul 2020 09:49:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgGUNtF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 09:49:05 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E763BC0619DA
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:49:04 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f139so2933875wmf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:49:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eqcpjEIrcsVSFBgsxPpIE2wbXMnlhFiLHo79g30IYmY=;
+        b=FcI07BgDIsQZnkKoQ7ZcelTbxx0IA3ghFJ3Jg7OvrTSEL0HsT3x+ya+4TvM3rxzq9S
+         hKDrIRS7FLmiJJlrm2pw4emkaM4YwW+5lNnfH2p4H9zbIkt3/rmGr37tE3X+I2Bhw9DP
+         EhlJg7hwSeMEL1lgIp7CE9zMkvVgqPhp8ybhtTo7ImQb3ugD/RmY9q00cvjAxoL2UJbR
+         7WV3925u7CnPpMJ+eWmdN8bTzR/8FrZhnjEONC8SaaJTwdJHixMAQG5zTZ7ChqVpmm7R
+         UJxo6ac0ASf+//JmKtM3O3gdyceW3Dc+eyGAzJTP12A/Q5o4lPKHjDsHBJffLtK+KnUG
+         mRdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eqcpjEIrcsVSFBgsxPpIE2wbXMnlhFiLHo79g30IYmY=;
+        b=tykJyFPtKhf8D+HWE1UJ5Scv3O/evmoIM85iVZD1COINLQxWULpSbnN50Er0rv0w58
+         QM8k5uQKOON0MEm0EtQfH6xumJS6gkGv2winYC/pMoLWTWF9MVvH3XvWBt4rOQzot3WU
+         ote8MMnSE/SCpQsmUwoGRqkH3SsvEytzFNY8cmY0BHRrcD/14qkNdcKwFpxkk9LyqQcM
+         bfoDkkOOj2+O8kOrFPwa3dk5KIoJGR/e2FTPOYJVMmPMoA5rL6fcjLUqdEVQhQ3DWRyt
+         4DyiUIBpLTbMkKq3vfxWp/rmJu/1XXEpoHw7QJLLou8VL9BFe3z5Zveojs34emKjtjkC
+         ROmg==
+X-Gm-Message-State: AOAM5308ZuAsNcAosd+SkrVugaD5mxi+3v/U5SuDynYxAnCPY2Sjkh+C
+        M3+O8yhOCK3CPEmydIIDiu28iA==
+X-Google-Smtp-Source: ABdhPJy3d+hLbGrGf/sSsPOwfCC1/TSYzvAB67Rw+TgT/X9vHSPS3HJvfRFbLW/K+8t5eo0f5yKlsw==
+X-Received: by 2002:a1c:31c6:: with SMTP id x189mr3917750wmx.182.1595339343428;
+        Tue, 21 Jul 2020 06:49:03 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:c144:5385:c824:85ce? ([2a01:e34:ed2f:f020:c144:5385:c824:85ce])
+        by smtp.googlemail.com with ESMTPSA id d18sm40156733wrj.8.2020.07.21.06.49.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 06:49:02 -0700 (PDT)
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Fix suspend and resume
+ for am3 and am4
+To:     Carlos Hernandez <ceh@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200713162601.6829-1-tony@atomide.com>
+ <1ac1ac81-1335-8ba2-590c-8f57c2df1910@linaro.org>
+ <6b5fc12c-4da3-fc67-b9dd-bfca2ae870f2@ti.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <2081a11d-8678-03ec-cde4-b4eaae10e82d@linaro.org>
+Date:   Tue, 21 Jul 2020 15:49:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-CFilter-Loop: Reflected
+In-Reply-To: <6b5fc12c-4da3-fc67-b9dd-bfca2ae870f2@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-if of_find_device_by_node() succeed, dwc3_octeon_device_init() doesn't have
-a corresponding put_device(). Thus add put_device() to fix the exception
-handling for this function implementation.
+On 21/07/2020 15:11, Carlos Hernandez wrote:
+> 
+> On 7/17/20 6:29 AM, Daniel Lezcano wrote:
+>> On 13/07/2020 18:26, Tony Lindgren wrote:
+>>> Carlos Hernandez <ceh@ti.com> reported that we now have a suspend and
+>>> resume regresssion on am3 and am4 compared to the earlier kernels. While
+>>> suspend and resume works with v5.8-rc3, we now get errors with rtcwake:
+>>>
+>>> pm33xx pm33xx: PM: Could not transition all powerdomains to target state
+>>> ...
+>>> rtcwake: write error
+>>>
+>>> This is because we now fail to idle the system timer clocks that the
+>>> idle code checks and the error gets propagated to the rtcwake.
+>>>
+>>> Turns out there are several issues that need to be fixed:
+>>>
+>>> 1. Ignore no-idle and no-reset configured timers for the ti-sysc
+>>>     interconnect target driver as otherwise it will keep the system
+>>> timer
+>>>     clocks enabled
+>>>
+>>> 2. Toggle the system timer functional clock for suspend for am3 and am4
+>>>     (but not for clocksource on am3)
+>>>
+>>> 3. Only reconfigure type1 timers in dmtimer_systimer_disable()
+>>>
+>>> 4. Use of_machine_is_compatible() instead of of_device_is_compatible()
+>>>     for checking the SoC type
+>>>
+>>> Fixes: 52762fbd1c47 ("clocksource/drivers/timer-ti-dm: Add clockevent
+>>> and clocksource support")
+>>> Reported-by: Carlos Hernandez <ceh@ti.com>
+>>> Signed-off-by: Tony Lindgren <tony@atomide.com>
+>>> ---
+> 
+> Tested-by: Carlos Hernandez <ceh@ti.com>
 
-Fixes: 93e502b3c2d4 ("MIPS: OCTEON: Platform support for OCTEON III USB controller")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- arch/mips/cavium-octeon/octeon-usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Thanks
 
-diff --git a/arch/mips/cavium-octeon/octeon-usb.c b/arch/mips/cavium-octeon/octeon-usb.c
-index 1fd85c559700..950e6c6e8629 100644
---- a/arch/mips/cavium-octeon/octeon-usb.c
-+++ b/arch/mips/cavium-octeon/octeon-usb.c
-@@ -518,6 +518,7 @@ static int __init dwc3_octeon_device_init(void)
- 
- 			res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 			if (res == NULL) {
-+				put_device(&pdev->dev);
- 				dev_err(&pdev->dev, "No memory resources\n");
- 				return -ENXIO;
- 			}
-@@ -529,8 +530,10 @@ static int __init dwc3_octeon_device_init(void)
- 			 * know the difference.
- 			 */
- 			base = devm_ioremap_resource(&pdev->dev, res);
--			if (IS_ERR(base))
-+			if (IS_ERR(base)) {
-+				put_device(&pdev->dev);
- 				return PTR_ERR(base);
-+			}
- 
- 			mutex_lock(&dwc3_octeon_clocks_mutex);
- 			dwc3_octeon_clocks_start(&pdev->dev, (u64)base);
+>> Carlos, were you able to test this patch ?
+>>
+
+
 -- 
-2.25.4
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
