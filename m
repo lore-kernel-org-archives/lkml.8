@@ -2,200 +2,98 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D2BC4345C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00101C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37F9120720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:16:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Xaiud0Qh"
+	by mail.kernel.org (Postfix) with ESMTP id D05F120720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:17:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595366235;
+	bh=TzLWNM1LD+L4U5bRicVrwK2fS/0AiwZeVwE8H6XOFsg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lOeWdxLXQqNKWQ9A3i+4kVQz3Xiy2pFbmzyntUBV/N69BeVlIkWxZ5wX3tTJoDRkD
+	 J7lz4V2CNM4OydNFB5OaDGK22XT+Xpe/GC8p55stUavn3u6VTlJOaH3UbUM//f6R9Z
+	 pwMBCmwSgaj+yy+iynZ8qFxpmzuC0vEchnHoKOVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731469AbgGUVQi (ORCPT
+        id S1731490AbgGUVRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:16:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33294 "EHLO
+        Tue, 21 Jul 2020 17:17:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731446AbgGUVQh (ORCPT
+        with ESMTP id S1731335AbgGUVRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:16:37 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBAE3C0619DC
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:16:36 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id y10so23067465eje.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:16:36 -0700 (PDT)
+        Tue, 21 Jul 2020 17:17:11 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F41C0619DB
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:17:11 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id u25so130126lfm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:17:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PpobAsBikcZzGgFnqaofvkVdzW58Lh6D10Z7oCD2icY=;
-        b=Xaiud0QhSy/r6srFLC9er7wlzLNhJ+x9jBLOQzxfK7m29SgnF630tbPQWUQseBSCju
-         KrbRcGXupe16toOUy2OYa4QUFGQX9PiooUt6HS9DnozThiOUAlqPGXju+FatS0zW4ftE
-         ELnozaxPZcpw/WmxLFM9jhJByCd8ghT6F+37Xs1g5xjC3gc0h0ONPmGdii3xfZU520ie
-         h+Ir66N4019gG+oX+irJky59fod5on6Qp0/XyMB/bWu45E6qpB2OLdNJoB7Qr3hTbwlV
-         rNbBzuyU4ySKTnijMgsB8IYVo7aEAPYKOxBQp1Hq8havf/ISvWUYaT69UdGjqFYs+4PK
-         90FA==
+        bh=+yHNt87DNg06st5Xvcn/k5gkCvt7pppBHpC/nXo6E+w=;
+        b=eoUGsPTaLCi+OvvgDt1WVz1j91QiOdJd4Oq2XThqlHQuBV2m/mmlOa1jj8LR6xjFci
+         eYqT7+fgO3LWo4uXASHbEhi+l8B4qwpGiW5Q0l23MVEVF02we1Ji9ygGjb3FLO+FP1Mj
+         t/a+zOg0W3Se1DdWUn92n1LdvJUR2fKNauo4I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PpobAsBikcZzGgFnqaofvkVdzW58Lh6D10Z7oCD2icY=;
-        b=R14T22ZUEdjZSt+jSHGgWKSbgv4wZJ19wBXPKPgsAC2Cnoqs8orUyeeH7eqfORW9lS
-         hajEzHzPb7YMdFV00Hd2w6lOKMYKHmWXmCfLY3ehLgP1IymXegmZAlMFWJs1xHCyzc9h
-         64hJzgnFfGBFYLwmdJd98KFTixhh2XTLk0YbeK0DUEjOcZeHDENZni9D56HAHvRZ8eum
-         Wb1qcbVUpryp+xm0CHcVvXa4GqjyQy2qq7unaRbm0vHR/5nuAk+9Cg+R1WDE2oE/GmlB
-         hZAG9uqHdsoiYTSRksjZQkRLj8c2XHNr5l/cM/BRHF2pZBtPdzcxS1A4RQtGaXnQ0oxN
-         FATw==
-X-Gm-Message-State: AOAM531sj147vZpV4LNDNZCfm2UQmRlRIKyytqs29TSNEqsXHXd4dzpy
-        3lYzWFVGlkulPhgTcj4GX7JaWXb56gas0sQL0l/sbMY=
-X-Google-Smtp-Source: ABdhPJyY2Ce5NqMGMBhWAGWwnzWTH0+myvH3o2aHnpLX7WPIWCXYWZRi2c+CytjWBqS3on7CikdMRT1S93rvuO3HPGc=
-X-Received: by 2002:a17:906:1a59:: with SMTP id j25mr25594636ejf.398.1595366195416;
- Tue, 21 Jul 2020 14:16:35 -0700 (PDT)
+        bh=+yHNt87DNg06st5Xvcn/k5gkCvt7pppBHpC/nXo6E+w=;
+        b=JZtn6cyOkO2jlH6W/j/jiIkIqZEeDb9QGMbPgQPEmdLKIsTu9u5sVyOIpUlSDASRQF
+         Lmmf9Rf3S5Ifc3dvTtYaSldCzEOak6yFh9IqrIBfaOiNd245DtwTV9IE4yXuelKnO4dl
+         VFxnTLRByX6buq6woRisapwFgiVjNkamxrQK5CSPESmDDk1/f/Me8gGSynRCvYmeQiff
+         DuMXJFraJMHtokuh0i8wzKW4rhm7YFOBOr1CYs27a/v69V/P4lUlgnOdPH9ptfT4nFys
+         Gl9ROkq6ttQ1d2LMrJewanhicqq/lE189oqD00U8SgKh49RVgBbiIHalUaqyVwkezj5H
+         Uh8g==
+X-Gm-Message-State: AOAM5313+UAg2EKJt9hWjRccx8JfaoFCjM2hIH1CmmJDTt2dhJN+uHsd
+        2O2BJOsBg8rUh5A5sSiA7jYunehPSmU=
+X-Google-Smtp-Source: ABdhPJywtRqK9QVdoVbpVWMgdjx5Vh5EBxtJE5NgJnLrlrQSOXhOu7t3KInsbsO+uDmjmw4YD+sEJg==
+X-Received: by 2002:a05:6512:3193:: with SMTP id i19mr10407230lfe.183.1595366229639;
+        Tue, 21 Jul 2020 14:17:09 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id m14sm6846663lfp.18.2020.07.21.14.17.07
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 14:17:07 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id y18so98006lfh.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:17:07 -0700 (PDT)
+X-Received: by 2002:a05:6512:2082:: with SMTP id t2mr5445624lfr.142.1595366227470;
+ Tue, 21 Jul 2020 14:17:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <6effbbd4574407d6af21162e57d9102d5f8b02ed.1594664015.git.rgb@redhat.com>
- <CAHC9VhSyq7yKQqwvHL5syU9+TFki6-__WfCrvqewbnU3xpND4Q@mail.gmail.com>
- <20200714174353.ds7lj3iisy67t2zu@madcap2.tricolour.ca> <CAHC9VhQusQsdQc7EfdjdH5mp6qqqYVPHnG9nNhUhf3DS_cdWwA@mail.gmail.com>
- <20200714210027.me2ieywjfcsf4v5r@madcap2.tricolour.ca> <CAHC9VhQgDGPutYxQawMPmezm1a+i1nXO5KSn9_7KPDZsRBJ4pw@mail.gmail.com>
- <e6eb37d5-ec6b-852a-74df-bbf453607fbe@canonical.com>
-In-Reply-To: <e6eb37d5-ec6b-852a-74df-bbf453607fbe@canonical.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 21 Jul 2020 17:16:24 -0400
-Message-ID: <CAHC9VhSoUBqXh7ikVdpr9-e2+3Wx-A05g5EBjD3ka1i1xF2vMg@mail.gmail.com>
-Subject: Re: [PATCH ghak84 v4] audit: purge audit_log_string from the
- intra-kernel audit API
-To:     John Johansen <john.johansen@canonical.com>
-Cc:     Richard Guy Briggs <rgb@redhat.com>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Eric Paris <eparis@parisplace.org>
+References: <20200721202425.GA2786714@ZenIV.linux.org.uk> <20200721202549.4150745-1-viro@ZenIV.linux.org.uk>
+ <20200721202549.4150745-4-viro@ZenIV.linux.org.uk> <CAHk-=wiYS3sHp9bvRn3KmkFKnK-Pb0ksL+-gRRHLK_ZjJqQf=w@mail.gmail.com>
+ <CAHk-=wg4DXWjV0sHAk+5QGvkNqckJTBLLcse_U=AknqEf8r3pw@mail.gmail.com> <20200721211118.GB2786714@ZenIV.linux.org.uk>
+In-Reply-To: <20200721211118.GB2786714@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 21 Jul 2020 14:16:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh59vJmaH_jWWxpr97XdQfUpOTJgMEA11qzvMwJFjB0VQ@mail.gmail.com>
+Message-ID: <CAHk-=wh59vJmaH_jWWxpr97XdQfUpOTJgMEA11qzvMwJFjB0VQ@mail.gmail.com>
+Subject: Re: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
+ of 0 as initial sum
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 3:31 PM John Johansen
-<john.johansen@canonical.com> wrote:
-> On 7/21/20 8:19 AM, Paul Moore wrote:
-> > On Tue, Jul 14, 2020 at 5:00 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >> On 2020-07-14 16:29, Paul Moore wrote:
-> >>> On Tue, Jul 14, 2020 at 1:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >>>> On 2020-07-14 12:21, Paul Moore wrote:
-> >>>>> On Mon, Jul 13, 2020 at 3:52 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >>>>>>
-> >>>>>> audit_log_string() was inteded to be an internal audit function and
-> >>>>>> since there are only two internal uses, remove them.  Purge all external
-> >>>>>> uses of it by restructuring code to use an existing audit_log_format()
-> >>>>>> or using audit_log_format().
-> >>>>>>
-> >>>>>> Please see the upstream issue
-> >>>>>> https://github.com/linux-audit/audit-kernel/issues/84
-> >>>>>>
-> >>>>>> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> >>>>>> ---
-> >>>>>> Passes audit-testsuite.
-> >>>>>>
-> >>>>>> Changelog:
-> >>>>>> v4
-> >>>>>> - use double quotes in all replaced audit_log_string() calls
-> >>>>>>
-> >>>>>> v3
-> >>>>>> - fix two warning: non-void function does not return a value in all control paths
-> >>>>>>         Reported-by: kernel test robot <lkp@intel.com>
-> >>>>>>
-> >>>>>> v2
-> >>>>>> - restructure to piggyback on existing audit_log_format() calls, checking quoting needs for each.
-> >>>>>>
-> >>>>>> v1 Vlad Dronov
-> >>>>>> - https://github.com/nefigtut/audit-kernel/commit/dbbcba46335a002f44b05874153a85b9cc18aebf
-> >>>>>>
-> >>>>>>  include/linux/audit.h     |  5 -----
-> >>>>>>  kernel/audit.c            |  4 ++--
-> >>>>>>  security/apparmor/audit.c | 10 ++++------
-> >>>>>>  security/apparmor/file.c  | 25 +++++++------------------
-> >>>>>>  security/apparmor/ipc.c   | 46 +++++++++++++++++++++++-----------------------
-> >>>>>>  security/apparmor/net.c   | 14 ++++++++------
-> >>>>>>  security/lsm_audit.c      |  4 ++--
-> >>>>>>  7 files changed, 46 insertions(+), 62 deletions(-)
-> >>>>>
-> >>>>> Thanks for restoring the quotes, just one question below ...
-> >>>>>
-> >>>>>> diff --git a/security/apparmor/ipc.c b/security/apparmor/ipc.c
-> >>>>>> index 4ecedffbdd33..fe36d112aad9 100644
-> >>>>>> --- a/security/apparmor/ipc.c
-> >>>>>> +++ b/security/apparmor/ipc.c
-> >>>>>> @@ -20,25 +20,23 @@
-> >>>>>>
-> >>>>>>  /**
-> >>>>>>   * audit_ptrace_mask - convert mask to permission string
-> >>>>>> - * @buffer: buffer to write string to (NOT NULL)
-> >>>>>>   * @mask: permission mask to convert
-> >>>>>> + *
-> >>>>>> + * Returns: pointer to static string
-> >>>>>>   */
-> >>>>>> -static void audit_ptrace_mask(struct audit_buffer *ab, u32 mask)
-> >>>>>> +static const char *audit_ptrace_mask(u32 mask)
-> >>>>>>  {
-> >>>>>>         switch (mask) {
-> >>>>>>         case MAY_READ:
-> >>>>>> -               audit_log_string(ab, "read");
-> >>>>>> -               break;
-> >>>>>> +               return "read";
-> >>>>>>         case MAY_WRITE:
-> >>>>>> -               audit_log_string(ab, "trace");
-> >>>>>> -               break;
-> >>>>>> +               return "trace";
-> >>>>>>         case AA_MAY_BE_READ:
-> >>>>>> -               audit_log_string(ab, "readby");
-> >>>>>> -               break;
-> >>>>>> +               return "readby";
-> >>>>>>         case AA_MAY_BE_TRACED:
-> >>>>>> -               audit_log_string(ab, "tracedby");
-> >>>>>> -               break;
-> >>>>>> +               return "tracedby";
-> >>>>>>         }
-> >>>>>> +       return "";
-> >>>>>
-> >>>>> Are we okay with this returning an empty string ("") in this case?
-> >>>>> Should it be a question mark ("?")?
-> >>>>>
-> >>>>> My guess is that userspace parsing should be okay since it still has
-> >>>>> quotes, I'm just not sure if we wanted to use a question mark as we do
-> >>>>> in other cases where the field value is empty/unknown.
-> >>>>
-> >>>> Previously, it would have been an empty value, not even double quotes.
-> >>>> "?" might be an improvement.
-> >>>
-> >>> Did you want to fix that now in this patch, or leave it to later?  As
-> >>> I said above, I'm not too bothered by it with the quotes so either way
-> >>> is fine by me.
-> >>
-> >> I'd defer to Steve, otherwise I'd say leave it, since there wasn't
-> >> anything there before and this makes that more evident.
-> >>
-> >>> John, I'm assuming you are okay with this patch?
-> >
-> > With no comments from John or Steve in the past week, I've gone ahead
-> > and merged the patch into audit/next.
+On Tue, Jul 21, 2020 at 2:11 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
 >
-> sorry, for some reason I thought a new iteration of this was coming.
+> > > But I didn't check. Maybe we don't have anything that stupid in the kernel.
 >
-> the patch is fine, the empty unknown value should be possible here
-> so changing it to "?" won't affect anything.
+> I did.
 
-Yeah, I was kind of on the fence about requiring a new version from
-Richard.  I think "?" is arguably the right approach, but I don't
-think it matters enough to force the issue.  If it proves to be
-problematic we can fix it later.
+So then the commit message really should have said so, I feel. That
+would have avoided the whole worry, and made it clear that it's not an
+issue.
 
-Regardless, it's in audit/next now.
-
--- 
-paul moore
-www.paul-moore.com
+                Linus
