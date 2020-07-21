@@ -2,78 +2,124 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8968DC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2358C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68AF5208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFBED207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595309312;
+	bh=OOa3gDhGlr5LEqyQO/1fxeRDq6ypG03X4DPKVsFZGLw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Jroww9dY27pjps6x261QxH07ePX54QdLOgf9JiUiFW5/zTRvjg1y+VvvrsxTYwfMr
+	 7G32wiKsFidtQbW0p5dykgj/8+UFHYbuqroUjL+56PGKvaFWeD5hzJff85TIX9dVGC
+	 DCk/L89+k4hsp6h3OfWc8wRJzJ6Nqv3A/euOJ0H8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgGUFXe (ORCPT
+        id S1726949AbgGUF2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 01:23:34 -0400
-Received: from verein.lst.de ([213.95.11.211]:50572 "EHLO verein.lst.de"
+        Tue, 21 Jul 2020 01:28:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgGUFXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 01:23:32 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id B86216736F; Tue, 21 Jul 2020 07:23:26 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 07:23:26 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Subject: Re: [PATCH 02/24] bpfilter: fix up a sparse annotation
-Message-ID: <20200721052326.GA10071@lst.de>
-References: <20200720124737.118617-1-hch@lst.de> <20200720124737.118617-3-hch@lst.de> <20200721024016.2talwdt5hjqvirr6@ltop.local>
+        id S1725294AbgGUF2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 01:28:31 -0400
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1484B20B1F;
+        Tue, 21 Jul 2020 05:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595309310;
+        bh=OOa3gDhGlr5LEqyQO/1fxeRDq6ypG03X4DPKVsFZGLw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eLF1iiH6VXFqfdv457zBAn8Z83pLpwt9RzEXGJOheqPxphFwVKOJpVXhl9Vnp1HDc
+         kWjRbX4hmOe75XhDe65tEAqJQiRzuUw5gwgb0OWh/ht4pPIgGLYT1+92QsB88sW1di
+         A/37xh4K2Os0L3dEs/UjNF2HfBvWlB8DqRhUcuZ8=
+Received: by mail-ot1-f48.google.com with SMTP id h13so14162219otr.0;
+        Mon, 20 Jul 2020 22:28:30 -0700 (PDT)
+X-Gm-Message-State: AOAM532h0m2y2kiOPWOIZTbl5LaxSKdlsFzbh1VrQ/bt2Zn6ooqQuTON
+        2AKAhE8m+UUVNmXn6XAQV0zlUQUlUuEJJdu6/Ig=
+X-Google-Smtp-Source: ABdhPJzhfvA9m2iJIfFzS6aEiaVO0wWdbG2Og6PpBP9rQYeSPodxi+BEAfbSwWoESC6ebqTyx8KAaXbScFsnYS7B0yk=
+X-Received: by 2002:a9d:7553:: with SMTP id b19mr24390495otl.77.1595309309149;
+ Mon, 20 Jul 2020 22:28:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721024016.2talwdt5hjqvirr6@ltop.local>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20200709132807.32232-1-ardb@kernel.org> <CAMj1kXGHDS7PnuPsCnHWGDFdtcaJUuXboZUZQwowzw0LfrQ+pw@mail.gmail.com>
+In-Reply-To: <CAMj1kXGHDS7PnuPsCnHWGDFdtcaJUuXboZUZQwowzw0LfrQ+pw@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 21 Jul 2020 08:28:17 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXFQt4f0XT6C_4_xAuDALv_jVsc+z0zkSnxh6MU-zHxj2g@mail.gmail.com>
+Message-ID: <CAMj1kXFQt4f0XT6C_4_xAuDALv_jVsc+z0zkSnxh6MU-zHxj2g@mail.gmail.com>
+Subject: Re: [GIT PULL] EFI fixes for v5.8-rc
+To:     linux-efi <linux-efi@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 04:40:16AM +0200, Luc Van Oostenryck wrote:
-> >  	req.pid = current->pid;
-> >  	req.cmd = optname;
-> > -	req.addr = (long __force __user)optval;
-> > +	req.addr = (__force long)optval;
-> 
-> For casts to integers, even '__force' is not needed (since integers
-> can't be dereferenced, the concept of address-space is meaningless
-> for them, so it's never useful to warn when it's dropped and
-> '__force' is thus not needed).
+On Sat, 18 Jul 2020 at 08:54, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Thu, 9 Jul 2020 at 16:28, Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > The following changes since commit 2a55280a3675203496d302463b941834228b9875:
+> >
+> >   efi/libstub: arm: Print CPU boot mode and MMU state at boot (2020-06-17 15:29:11 +0200)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-urgent-for-v5.8-rc4
+> >
+> > for you to fetch changes up to 769e0fe1171e95d90ea5a2d6d0b2bdc7d5d2e7b2:
+> >
+> >   efi: Revert "efi/x86: Fix build with gcc 4" (2020-07-09 10:14:29 +0300)
+> >
+> > ----------------------------------------------------------------
+> > EFI fixes for v5.8-rc4:
+> > - Fix the layering violation in the use of the EFI runtime services
+> >   availability mask in users of the 'efivars' abstraction
+> > - Revert build fix for GCC v4.8 which is no longer supported
+> > - Some fixes for build issues found by Atish while working on RISC-V support
+> > - Avoid --whole-archive when linking the stub on arm64
+> > - Some x86 EFI stub cleanups from Arvind
+> >
+> > ----------------------------------------------------------------
+> > Ard Biesheuvel (2):
+> >       efi/efivars: Expose RT service availability via efivars abstraction
+> >       efi: Revert "efi/x86: Fix build with gcc 4"
+> >
+> > Arvind Sankar (2):
+> >       efi/x86: Remove unused variables
+> >       efi/x86: Only copy upto the end of setup_header
+> >
+> > Atish Patra (2):
+> >       efi/libstub: Fix gcc error around __umoddi3 for 32 bit builds
+> >       efi/libstub: Move the function prototypes to header file
+> >
+> > Masahiro Yamada (1):
+> >       efi/libstub/arm64: link stub lib.a conditionally
+> >
+> >  arch/arm64/Makefile                       |  2 +-
+> >  drivers/firmware/efi/efi-pstore.c         |  5 +----
+> >  drivers/firmware/efi/efi.c                | 12 ++++++++----
+> >  drivers/firmware/efi/efivars.c            |  5 +----
+> >  drivers/firmware/efi/libstub/Makefile     |  3 +--
+> >  drivers/firmware/efi/libstub/alignedmem.c |  2 +-
+> >  drivers/firmware/efi/libstub/efi-stub.c   | 17 -----------------
+> >  drivers/firmware/efi/libstub/efistub.h    | 16 ++++++++++++++++
+> >  drivers/firmware/efi/libstub/x86-stub.c   |  8 ++++----
+> >  drivers/firmware/efi/vars.c               |  6 ++++++
+> >  fs/efivarfs/super.c                       |  6 +++---
+> >  include/linux/efi.h                       |  1 +
+> >  12 files changed, 43 insertions(+), 40 deletions(-)
+>
+> Ping?
 
-That's what I thought. but if I remove it here I actually do get a
-warning:
-
-CHECK   net/bpfilter/bpfilter_kern.c
-net/bpfilter/bpfilter_kern.c:52:21: warning: cast removes address space '__user' of expression
-
-Using this recent sparse build:
-
-hch@brick:~/work/linux$ sparse --version
-v0.6.2-49-g707c5017
+Ping again?
