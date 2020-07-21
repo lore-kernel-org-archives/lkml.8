@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB98C433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CD9C433F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56DAC207BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DFF207CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:44:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QnpTahW5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bv94QDt4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730549AbgGUQoi (ORCPT
+        id S1730466AbgGUQmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:44:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46838 "EHLO
+        Tue, 21 Jul 2020 12:42:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730484AbgGUQmJ (ORCPT
+        with ESMTP id S1730262AbgGUQl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:42:09 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 343D0C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:09 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id j18so3482063wmi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:09 -0700 (PDT)
+        Tue, 21 Jul 2020 12:41:56 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BE5CC0619DA
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:41:56 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f2so21819062wrp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:41:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=U4057VEQknR+gIhh04CnggTUTUY/8B8thVt6VLtwHGM=;
-        b=QnpTahW57R2FYzZg5OTn+jcF7DBe+JUfkRNtuX/j6vG2VdCGebKk+uprWqRD3AQPIW
-         ckJNHjucJKxw8tmkIMiaubdO8mTyW8pP2rVfkXYaoX84NHjQ9q6Mtburk2fuJm0M0FMs
-         /i6t127QWh+yBV/n66Lws+cepy+3id+i35GSOpRdU0o3kBSkSMY6LrXRyuesjKFwk52K
-         RBBedq5iblML9Evk7n1yVEXEQ/KNHcu5ieB8Rld2MHzWxcIx07pJvnxfLM3G6IyTU0xK
-         DKFaMWRC5L6hs3kWWaRIREs8NUak0Cz1qQw5/Hri6CcXTsJAI5I5lODXfkoSBJhZEEET
-         2G4A==
+        bh=MFwQcwbTCB4l24rfJy2kTJtSqlwy97lYiWoNwLDhtXE=;
+        b=Bv94QDt4unIJ9g6Le3faZvrFcIGk8efu0t9DqrS9Xe08GS0yPhgYLxpm3bthoS7g55
+         nQNup9hMbn2X2yPbAOWhgH8tQDdAyWHw1prXNyp7r9c8ppXY8cpTAHc7CraqSCTcZG1i
+         1WBRGKsTma+ozlyHK+r7tVJXIMgXQDd5/7aT4O9iV5mpG3WG27LUu0UgQpStGfpKOMQK
+         +550kpZLqGZJTiGepFqNu1W7hEw9EhUmL3gAf3/gML+wuw8aGgI6R52np4j913upCqnT
+         vICorkCyskx2FcuQNX7m5S8QYF2CtPvzLGAh6f4udf8kBVn8/OQWLtFynPs5vppYtOfO
+         twuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=U4057VEQknR+gIhh04CnggTUTUY/8B8thVt6VLtwHGM=;
-        b=ApQUNhZAljxf5l7Z7ORjLYXjTkcNYLBmTcZCULxHKodt0OwgfdUnWxWjNMzroHLneb
-         GJyKv+ehEQPVIyLWiK/w8+JBuVwMxmXgcPWPyK/B0creUnqr72nYgIGcaLcrdvCaUd2c
-         DhbKvD70D6Th8hBCSTecjhINGCYGYH2qm6JYld4wsQV/2LqEVqSMGvWBeMiASzpi4MwT
-         880wS48p3EbN8yVRGW7fi6gT0xV051t0QmrJxbEn3xRu56Jt2gswMfPI5WoLbRr+kGWK
-         xO97E6yT+Ku6ujhu/a+/dSDtUUH2vSvMw74cGEYAeBkA/Zdb9aCBKAVM9p/pk2TRRHwI
-         Ls0Q==
-X-Gm-Message-State: AOAM530wAbvpBXgvUBMl5IBgNxD5hoOAD69O586cebvJNANyc3UCat5H
-        0GmmKeZ5a20835fO/luEi4LkeQ==
-X-Google-Smtp-Source: ABdhPJzrnwafVPORG1U4Vm6Oo3cqf4RKcBMVvuECB86C2Exrw3p7dALwOlz4y3sFIDuWRdtAM+zaMA==
-X-Received: by 2002:a1c:3954:: with SMTP id g81mr4796624wma.73.1595349727915;
-        Tue, 21 Jul 2020 09:42:07 -0700 (PDT)
+        bh=MFwQcwbTCB4l24rfJy2kTJtSqlwy97lYiWoNwLDhtXE=;
+        b=kZvi9T0cfKRc6jbtguWukNqji6RaAI2DXg6akUmnmSA7/wNdp38DHb8CXuuPVkkPnF
+         zj8esX+lTOQFqdCL1K246F142FPWXxMZ9tYp7XX7hfpJwSTcl14ep5zowpxehchAu9rT
+         atSo9zfKvfsJtHPk/DWzD5xUVNQAbvKEqWZPWldO1srQQixc6iW2obFSK4hBBeN4Rgq8
+         aMzdScVPi+NbL20w6zf3eEchC+IYFPVO1wQo3q3nsVSIkwQzh1IHlAen2Uly5v5UeMOu
+         Dk+H1q5VjBjPsPKzBvcCLDzXYoiONeJnIL/qD1H5ZLtG8sRyUU7Lpjbe59WB5n49FIWL
+         rOUw==
+X-Gm-Message-State: AOAM533dkdtYJiIrVRVpFXCvMoCjYtJbXIzylalxx+h5ZJzCOgaMUkmS
+        MaXD8EFYC2xRwROpCLFzGLtKrw==
+X-Google-Smtp-Source: ABdhPJziFCqK2L01y45cgu4AI91SmHbfPnd9DnO0wdmDYr2+DTfRQR7mUrBTtZTp8tF2s3kh4I46rw==
+X-Received: by 2002:adf:df91:: with SMTP id z17mr964095wrl.149.1595349715049;
+        Tue, 21 Jul 2020 09:41:55 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.42.06
+        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.41.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:42:07 -0700 (PDT)
+        Tue, 21 Jul 2020 09:41:54 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>
-Subject: [PATCH 09/40] scsi: pm8001: pm8001_sas: Fix strncpy() warning
-Date:   Tue, 21 Jul 2020 17:41:17 +0100
-Message-Id: <20200721164148.2617584-10-lee.jones@linaro.org>
+        Hannes Reinecke <hare@suse.com>
+Subject: [PATCH 02/40] scsi: aic7xxx: aic79xx_core: Remove a bunch of unused variables
+Date:   Tue, 21 Jul 2020 17:41:10 +0100
+Message-Id: <20200721164148.2617584-3-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200721164148.2617584-1-lee.jones@linaro.org>
 References: <20200721164148.2617584-1-lee.jones@linaro.org>
@@ -78,41 +78,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We're assuming that the string should be NUL terminated here.
-
-If not, then memcpy() might be more appropriate.
+Question: Can 'ahd_inb(ahd, LQISTAT2);' also be safely removed?
 
 Fixes the following W=1 kernel build warning(s):
 
- from drivers/scsi/pm8001/pm8001_sas.c:41:
- In function ‘strncpy’,
- inlined from ‘pm8001_issue_ssp_tmf’ at drivers/scsi/pm8001/pm8001_sas.c:919:2:
- include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ specified bound 8 equals destination size [-Wstringop-truncation]
- 297 | #define __underlying_strncpy __builtin_strncpy
- | ^
- include/linux/string.h:307:9: note: in expansion of macro ‘__underlying_strncpy’
- 307 | return __underlying_strncpy(p, q, size);
- | ^~~~~~~~~~~~~~~~~~~~
+ drivers/scsi/aic7xxx/aic79xx_core.c: In function ‘ahd_dump_sglist’:
+ drivers/scsi/aic7xxx/aic79xx_core.c:1738:14: warning: variable ‘len’ set but not used [-Wunused-but-set-variable]
+ 1738 | uint32_t len;
+ | ^~~
+ drivers/scsi/aic7xxx/aic79xx_core.c: In function ‘ahd_handle_seqint’:
+ drivers/scsi/aic7xxx/aic79xx_core.c:1911:26: warning: variable ‘tinfo’ set but not used [-Wunused-but-set-variable]
+ 1911 | struct ahd_transinfo *tinfo;
+ | ^~~~~
+ drivers/scsi/aic7xxx/aic79xx_core.c: In function ‘ahd_handle_transmission_error’:
+ drivers/scsi/aic7xxx/aic79xx_core.c:2672:8: warning: variable ‘lqistat2’ set but not used [-Wunused-but-set-variable]
+ 2672 | u_int lqistat2;
+ | ^~~~~~~~
+ drivers/scsi/aic7xxx/aic79xx_core.c: In function ‘ahd_update_pending_scbs’:
+ drivers/scsi/aic7xxx/aic79xx_core.c:4221:31: warning: variable ‘tinfo’ set but not used [-Wunused-but-set-variable]
+ 4221 | struct ahd_initiator_tinfo *tinfo;
+ | ^~~~~
 
-Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc: Hannes Reinecke <hare@suse.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/pm8001/pm8001_sas.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/aic7xxx/aic79xx_core.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
-index b7cbc312843e9..941f783897d8e 100644
---- a/drivers/scsi/pm8001/pm8001_sas.c
-+++ b/drivers/scsi/pm8001/pm8001_sas.c
-@@ -916,7 +916,7 @@ static int pm8001_issue_ssp_tmf(struct domain_device *dev,
- 	if (!(dev->tproto & SAS_PROTOCOL_SSP))
- 		return TMF_RESP_FUNC_ESUPP;
+diff --git a/drivers/scsi/aic7xxx/aic79xx_core.c b/drivers/scsi/aic7xxx/aic79xx_core.c
+index e4a09b93d00ce..243e763085a61 100644
+--- a/drivers/scsi/aic7xxx/aic79xx_core.c
++++ b/drivers/scsi/aic7xxx/aic79xx_core.c
+@@ -1735,10 +1735,8 @@ ahd_dump_sglist(struct scb *scb)
+ 			sg_list = (struct ahd_dma64_seg*)scb->sg_list;
+ 			for (i = 0; i < scb->sg_count; i++) {
+ 				uint64_t addr;
+-				uint32_t len;
  
--	strncpy((u8 *)&ssp_task.LUN, lun, 8);
-+	strscpy((u8 *)&ssp_task.LUN, lun, sizeof(ssp_task.LUN));
- 	return pm8001_exec_internal_tmf_task(dev, &ssp_task, sizeof(ssp_task),
- 		tmf);
- }
+ 				addr = ahd_le64toh(sg_list[i].addr);
+-				len = ahd_le32toh(sg_list[i].len);
+ 				printk("sg[%d] - Addr 0x%x%x : Length %d%s\n",
+ 				       i,
+ 				       (uint32_t)((addr >> 32) & 0xFFFFFFFF),
+@@ -1908,7 +1906,6 @@ ahd_handle_seqint(struct ahd_softc *ahd, u_int intstat)
+ 			struct	scb *scb;
+ 			struct	ahd_initiator_tinfo *targ_info;
+ 			struct	ahd_tmode_tstate *tstate;
+-			struct	ahd_transinfo *tinfo;
+ 			u_int	scbid;
+ 
+ 			/*
+@@ -1941,7 +1938,6 @@ ahd_handle_seqint(struct ahd_softc *ahd, u_int intstat)
+ 							devinfo.our_scsiid,
+ 							devinfo.target,
+ 							&tstate);
+-			tinfo = &targ_info->curr;
+ 			ahd_set_width(ahd, &devinfo, MSG_EXT_WDTR_BUS_8_BIT,
+ 				      AHD_TRANS_ACTIVE, /*paused*/TRUE);
+ 			ahd_set_syncrate(ahd, &devinfo, /*period*/0,
+@@ -2669,7 +2665,6 @@ ahd_handle_transmission_error(struct ahd_softc *ahd)
+ 	struct	scb *scb;
+ 	u_int	scbid;
+ 	u_int	lqistat1;
+-	u_int	lqistat2;
+ 	u_int	msg_out;
+ 	u_int	curphase;
+ 	u_int	lastphase;
+@@ -2680,7 +2675,7 @@ ahd_handle_transmission_error(struct ahd_softc *ahd)
+ 	scb = NULL;
+ 	ahd_set_modes(ahd, AHD_MODE_SCSI, AHD_MODE_SCSI);
+ 	lqistat1 = ahd_inb(ahd, LQISTAT1) & ~(LQIPHASE_LQ|LQIPHASE_NLQ);
+-	lqistat2 = ahd_inb(ahd, LQISTAT2);
++	ahd_inb(ahd, LQISTAT2);
+ 	if ((lqistat1 & (LQICRCI_NLQ|LQICRCI_LQ)) == 0
+ 	 && (ahd->bugs & AHD_NLQICRC_DELAYED_BUG) != 0) {
+ 		u_int lqistate;
+@@ -4218,13 +4213,11 @@ ahd_update_pending_scbs(struct ahd_softc *ahd)
+ 	pending_scb_count = 0;
+ 	LIST_FOREACH(pending_scb, &ahd->pending_scbs, pending_links) {
+ 		struct ahd_devinfo devinfo;
+-		struct ahd_initiator_tinfo *tinfo;
+ 		struct ahd_tmode_tstate *tstate;
+ 
+ 		ahd_scb_devinfo(ahd, &devinfo, pending_scb);
+-		tinfo = ahd_fetch_transinfo(ahd, devinfo.channel,
+-					    devinfo.our_scsiid,
+-					    devinfo.target, &tstate);
++		ahd_fetch_transinfo(ahd, devinfo.channel, devinfo.our_scsiid,
++				    devinfo.target, &tstate);
+ 		if ((tstate->auto_negotiate & devinfo.target_mask) == 0
+ 		 && (pending_scb->flags & SCB_AUTO_NEGOTIATE) != 0) {
+ 			pending_scb->flags &= ~SCB_AUTO_NEGOTIATE;
 -- 
 2.25.1
 
