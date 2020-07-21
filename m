@@ -2,77 +2,116 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430A8C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA430206E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22DC0206E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:07:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rRt75ZQ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbgGUPGR (ORCPT
+        id S1729944AbgGUPHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:06:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56022 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgGUPGR (ORCPT
+        Tue, 21 Jul 2020 11:07:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728342AbgGUPHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:06:17 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jxtqP-000480-BC; Tue, 21 Jul 2020 15:06:13 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        linux-arm-msm@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] phy: qualcomm: fix setting of tx_deamp_3_5db when device property read fails
-Date:   Tue, 21 Jul 2020 16:06:13 +0100
-Message-Id: <20200721150613.416876-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 21 Jul 2020 11:07:13 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17334C061794;
+        Tue, 21 Jul 2020 08:07:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=71NowoGixtjq18mdGDFwmexc9Svbvbn0P+0c9pBBqgg=; b=rRt75ZQ6MHmsL8Qdoi91H5eebV
+        dCcz3R9DppcQ2ntNO9cFf8oqJi04KtbpTMehLI39j3dKmmhdAVRH5bVYndvxaJNpA/DqfyVinxYGN
+        4wCiFh0XHZeoShMLF7IOtAT5tN7oYtFwe1J8e27ORUWy9y4nReRCdHhl7PAu9mkgYWnbz6BnP15t3
+        Kv6TTWUFLONBnnoLGn0gZV0nbzrFMyD5l9wQBGJa/jZXyub+Fh2HmfHHTteNM515Rrc/d7TKsFzus
+        ipKUcf4/8bBgn/bOJuQ33i8snhLjZlyWxrqpo2ZqOzuGIhrUqm3Y/WrBFzGxvivjlB5zxnARHjmHo
+        d1JJ38/g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxtrA-0007WY-0P; Tue, 21 Jul 2020 15:07:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 40027300446;
+        Tue, 21 Jul 2020 17:06:56 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2C5FB203B8783; Tue, 21 Jul 2020 17:06:56 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 17:06:56 +0200
+From:   peterz@infradead.org
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
+ membarrier_mm_sync_core_before_usermode
+Message-ID: <20200721150656.GN119549@hirez.programming.kicks-ass.net>
+References: <1594868476.6k5kvx8684.astroid@bobo.none>
+ <EFAD6E2F-EC08-4EB3-9ECC-2A963C023FC5@amacapital.net>
+ <20200716085032.GO10769@hirez.programming.kicks-ass.net>
+ <1594892300.mxnq3b9a77.astroid@bobo.none>
+ <20200716110038.GA119549@hirez.programming.kicks-ass.net>
+ <1594906688.ikv6r4gznx.astroid@bobo.none>
+ <1314561373.18530.1594993363050.JavaMail.zimbra@efficios.com>
+ <1595213677.kxru89dqy2.astroid@bobo.none>
+ <2055788870.20749.1595263590675.JavaMail.zimbra@efficios.com>
+ <1595324577.x3bf55tpgu.astroid@bobo.none>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595324577.x3bf55tpgu.astroid@bobo.none>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Jul 21, 2020 at 08:04:27PM +1000, Nicholas Piggin wrote:
 
-Currently when reading of the device property for "qcom,tx-deamp_3_5db"
-fails the default is being assigned incorrectly to phy_dwc3->rx_eq. This
-looks like a copy-n-paste error and in fact should be assigning the
-default instead to phy_dwc3->tx_deamp_3_5db
+> That being said, the x86 sync core gap that I imagined could be fixed 
+> by changing to rq->curr == rq->idle test does not actually exist because
+> the global membarrier does not have a sync core option. So fixing the
+> exit_lazy_tlb points that this series does *should* fix that. So
+> PF_KTHREAD may be less problematic than I thought from implementation
+> point of view, only semantics.
 
-Addresses-Coverity: ("Copy-paste error")
-Fixes: ef19b117b834 ("phy: qualcomm: add qcom ipq806x dwc usb phy driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So I've been trying to figure out where that PF_KTHREAD comes from,
+commit 227a4aadc75b ("sched/membarrier: Fix p->mm->membarrier_state racy
+load") changed 'p->mm' to '!(p->flags & PF_KTHREAD)'.
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c b/drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c
-index a7241bf110d7..71f257b4a7f5 100644
---- a/drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c
-+++ b/drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c
-@@ -531,7 +531,7 @@ static int qcom_ipq806x_usb_phy_probe(struct platform_device *pdev)
- 
- 	if (device_property_read_u32(&pdev->dev, "qcom,tx-deamp_3_5db",
- 				     &phy_dwc3->tx_deamp_3_5db))
--		phy_dwc3->rx_eq = SSPHY_TX_DEEMPH_3_5DB;
-+		phy_dwc3->tx_deamp_3_5db = SSPHY_TX_DEEMPH_3_5DB;
- 
- 	if (device_property_read_u32(&pdev->dev, "qcom,mpll", &phy_dwc3->mpll))
- 		phy_dwc3->mpll = SSPHY_MPLL_VALUE;
--- 
-2.27.0
+So the first version:
+
+  https://lkml.kernel.org/r/20190906031300.1647-5-mathieu.desnoyers@efficios.com
+
+appears to unconditionally send the IPI and checks p->mm in the IPI
+context, but then v2:
+
+  https://lkml.kernel.org/r/20190908134909.12389-1-mathieu.desnoyers@efficios.com
+
+has the current code. But I've been unable to find the reason the
+'p->mm' test changed into '!(p->flags & PF_KTHREAD)'.
+
+The comment doesn't really help either; sure we have the whole lazy mm
+thing, but that's ->active_mm, not ->mm.
+
+Possibly it is because {,un}use_mm() do not have sufficient barriers to
+make the remote p->mm test work? Or were we over-eager with the !p->mm
+doesn't imply kthread 'cleanups' at the time?
+
+Also, I just realized, I still have a fix for use_mm() now
+kthread_use_mm() that seems to have been lost.
+
 
