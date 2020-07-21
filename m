@@ -2,89 +2,112 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD159C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C2C2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB01A20734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:08:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J383kpAi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgGUDDX (ORCPT
+        id S1728504AbgGUDI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:03:23 -0400
-Received: from mga07.intel.com ([134.134.136.100]:59502 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbgGUDDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 23:03:23 -0400
-IronPort-SDR: AukhDBGLKowAWdlz7POWWV+5BgpgN+0Muze9p6/g2PVSDjifzaeWRHCJp9Bb2IaKq1jO9O319N
- ICLgoQFSyJpQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="214717283"
-X-IronPort-AV: E=Sophos;i="5.75,377,1589266800"; 
-   d="scan'208";a="214717283"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 20:03:22 -0700
-IronPort-SDR: HzVpQaG5twjIfxpnju8GDWuos4dAPQdPHlwMjDDX3gAPI5polM1zA6MY0q1jyqRDJxkom6+vDk
- TzYQS+SHGubQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,377,1589266800"; 
-   d="scan'208";a="487930766"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Jul 2020 20:03:19 -0700
-Date:   Mon, 20 Jul 2020 20:03:19 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Xiong Zhang <xiong.y.zhang@intel.com>,
-        Wayne Boyer <wayne.boyer@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Jun Nakajima <jun.nakajima@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Subject: Re: [PATCH] KVM: x86/mmu: Add capability to zap only sptes for the
- affected memslot
-Message-ID: <20200721030319.GD20375@linux.intel.com>
-References: <20200703025047.13987-1-sean.j.christopherson@intel.com>
- <51637a13-f23b-8b76-c93a-76346b4cc982@redhat.com>
- <20200709211253.GW24919@linux.intel.com>
- <49c7907a-3ab4-b5db-ccb4-190b990c8be3@redhat.com>
- <20200710042922.GA24919@linux.intel.com>
- <20200713122226.28188f93@x1.home>
- <20200713190649.GE29725@linux.intel.com>
+        Mon, 20 Jul 2020 23:08:57 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57536 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbgGUDI4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 23:08:56 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06L38T5M067344;
+        Mon, 20 Jul 2020 22:08:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595300909;
+        bh=eQGqxP1QWHp4sxGYk/YkYc0H0zt+vKwY/jDQBq7XFtU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=J383kpAi1TnccBq+kgRzAXc9Ox2mEIVibxoA8Iq5yLGQ3UjtYJPa9NoqGODp6yGVt
+         pSaojeK5mDEnCw/Qh7+HdfEG1Em8mrLbAa8Fy3xZam0b1dBJ1jIp4Mr8vkAxZfiws2
+         OEevvoTGEaicRfdE9jh2y3bA3Hz7IUVS/GkQp7XY=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06L38Tp0113319
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 Jul 2020 22:08:29 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
+ Jul 2020 22:08:28 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 20 Jul 2020 22:08:28 -0500
+Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06L38OVg050719;
+        Mon, 20 Jul 2020 22:08:25 -0500
+Subject: Re: [PATCH] ARM: dts: keystone-k2g-evm: fix rgmii phy-mode for
+ ksz9031 phy
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Philippe Schenker <philippe.schenker@toradex.com>
+References: <20200715085427.8713-1-grygorii.strashko@ti.com>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <f35d8ae5-c0f8-dcb2-f2f7-a4e56ea03825@ti.com>
+Date:   Tue, 21 Jul 2020 08:38:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713190649.GE29725@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200715085427.8713-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Weijiang
+Hi Santosh,
 
-On Mon, Jul 13, 2020 at 12:06:50PM -0700, Sean Christopherson wrote:
-> The only ideas I have going forward are to:
+On 7/15/20 2:24 PM, Grygorii Strashko wrote:
+> Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
+> KSZ9031 PHY") the networking is broken on keystone-k2g-evm board.
 > 
->   a) Reproduce the bug outside of your environment and find a resource that
->      can go through the painful bisection.
+> The above board have phy-mode = "rgmii-id" and it is worked before because
+> KSZ9031 PHY started with default RGMII internal delays configuration (TX
+> off, RX on 1.2 ns) and MAC provided TX delay by default.
+> After above commit, the KSZ9031 PHY starts handling phy mode properly and
+> enables both RX and TX delays, as result networking is become broken.
+> 
+> Fix it by switching to phy-mode = "rgmii-rxid" to reflect previous
+> behavior.
+> 
+> Cc: Oleksij Rempel <o.rempel@pengutronix.de>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Philippe Schenker <philippe.schenker@toradex.com>
+> Fixes: bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+> Fix for one more broken TI board with KSZ9031 PHY.
 
-We're trying to reproduce the original issue in the hopes of biesecting, but
-have not yet discovered the secret sauce.  A few questions:
+This is coming bit late, but its important to get into v5.8 since NFS
+boot fails without this blocking all mainline testing for this platform.
 
-  - Are there any known hardware requirements, e.g. specific flavor of GPU?
+Can we send this to ARM SoC for -rc7. If you are going to be busy this
+week, I am happy to send a pull request on your behalf with your ack
+included. Let me know.
 
-  - What's the average time to failure when running FurMark/PassMark?  E.g.
-    what's a reasonable time to wait before rebooting to rerun the tests (I
-    assume this is what you meant when you said you sometimes needed to
-    reboot to observe failure).
-
-Thanks!
+Thanks,
+Sekhar
