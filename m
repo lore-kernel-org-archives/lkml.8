@@ -2,108 +2,198 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6315CC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5173AC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDF12073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:38:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JHsLseT2"
+	by mail.kernel.org (Postfix) with ESMTP id 37B1022BEF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbgGULi5 (ORCPT
+        id S1728811AbgGULjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:38:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728557AbgGULiz (ORCPT
+        Tue, 21 Jul 2020 07:39:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59634 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728606AbgGULi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:38:55 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65A2C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:38:55 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id l63so16871857oih.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:38:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XOhre4ZHelqkJXjHEO2dPt7iyuhKP/1N5Dw7QY91fhU=;
-        b=JHsLseT2lcOz/wruVfkrp8wMLl+43nlJXYK7JdegsYA+RVPY6H0Jio3fPGB98+EagD
-         m/0Ni/9S2R2Ji6aP1KQoUFflkAW1BmIIF5lqKw4XKW8TJhKtk48jkv++Bp1iNgQSCc8J
-         joC2vl/h9vcChIhQh20daK93PZzlYdG2Uoy3lKecQfltGAihu4GsDXV0CcQjRqmwC3Ib
-         EQCS//pZBun3NARTZyMPHxAvhqXJheNkA01TrAnu6dc4MyIWuBRlimpyn+5qq8N2QgEY
-         KTXVt3Wpq0uBhuDh4RHQvVETUZvFxu00ef8QIrJXEY1qQB2sO8OD/R5I1Q06UDA7PaHt
-         yI8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XOhre4ZHelqkJXjHEO2dPt7iyuhKP/1N5Dw7QY91fhU=;
-        b=Lb50hhkocEfSnCuHyeTZvmzIWrgypc0K/3SqsmUPSDUvO2p9jfUcgumhhN5ayhlMtA
-         0Nu33M7tAGVpm0UN67D6N63wA/B0XcTiK8e5mVyRwdPZrAc2axzhGOnHNTAq90yiF0pV
-         l6AcO7hoyQX1rfk7d6d/RoD6FDIFVPVAdsHmo9BiYPF/j+OGmnh6yV5SulUl3oVM8LZP
-         KYSwJpYKC45r//tkcJT/UwGdRnaTJLa6QVgLrzZaYOG/HqX4UC0tMj5iGXqszg/cJwJM
-         g4sTWUTGXbXKtjVE0wefdIXEoxjhGQeUIlIT47Me3Vu+RdF6gZ7+ZFdnDZlVIhqtPDy2
-         CZIg==
-X-Gm-Message-State: AOAM531ZICDZYgIAr/BqLH5DLNbzGVzLdJwW9q4rZbiQxk1v5GdWKBKe
-        ZXh6wh9xs5ssO86l5Lp0Swc7YcjLvRtkeG9Me0F8FKyKbl8=
-X-Google-Smtp-Source: ABdhPJxFwYu6SrIg4V12JQtp21MW3IZ5RBPtuiqb6W7CwGZo2dqkCKnw0N6uPxlLenEN/goCufv9QU+rne1xWRgmz+Y=
-X-Received: by 2002:aca:5007:: with SMTP id e7mr2706577oib.70.1595331534816;
- Tue, 21 Jul 2020 04:38:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <14089ca5568d214295b2028b59fcd630c7adb0e2.1595331056.git.andreyknvl@google.com>
-In-Reply-To: <14089ca5568d214295b2028b59fcd630c7adb0e2.1595331056.git.andreyknvl@google.com>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 21 Jul 2020 13:38:43 +0200
-Message-ID: <CANpmjNOTPLzRoODvg7zab-tkOH0B67OiDj61x4J-33zBbBtWgw@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: add KCOV section
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 21 Jul 2020 07:38:57 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LBX42H057875;
+        Tue, 21 Jul 2020 07:38:49 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32dn0v8q27-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 07:38:49 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06LBXHnH058722;
+        Tue, 21 Jul 2020 07:38:48 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32dn0v8q0q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 07:38:48 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LBVxM3014794;
+        Tue, 21 Jul 2020 11:38:44 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma06ams.nl.ibm.com with ESMTP id 32brbh3s5p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 11:38:44 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LBbGCj65405212
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jul 2020 11:37:16 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 688E442042;
+        Tue, 21 Jul 2020 11:38:40 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B1B64203F;
+        Tue, 21 Jul 2020 11:38:35 +0000 (GMT)
+Received: from srikart450.in.ibm.com (unknown [9.85.93.17])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Jul 2020 11:38:35 +0000 (GMT)
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michael Ellerman <michaele@au1.ibm.com>
+Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Nick Piggin <npiggin@au1.ibm.com>,
+        Oliver OHalloran <oliveroh@au1.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@linux.ibm.com>,
+        Anton Blanchard <anton@au1.ibm.com>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: [PATCH v2 02/10] powerpc/smp: Merge Power9 topology with Power topology
+Date:   Tue, 21 Jul 2020 17:08:06 +0530
+Message-Id: <20200721113814.32284-3-srikar@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
+References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_05:2020-07-21,2020-07-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 spamscore=0 priorityscore=1501 suspectscore=0
+ lowpriorityscore=0 clxscore=1015 bulkscore=0 phishscore=0 adultscore=0
+ mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007210082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jul 2020 at 13:34, Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> To link KCOV to the kasan-dev@ mailing list.
->
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
->  MAINTAINERS | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d53db30d1365..eec0b687eb08 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9305,6 +9305,15 @@ F:       Documentation/kbuild/kconfig*
->  F:     scripts/Kconfig.include
->  F:     scripts/kconfig/
->
-> +KCOV
-> +R:     Dmitry Vyukov <dvyukov@google.com>
-> +R:     Andrey Konovalov <andreyknvl@google.com>
-> +L:     kasan-dev@googlegroups.com
-> +S:     Maintained
-> +F:     Documentation/dev-tools/kcov.rst
-> +F:     include/linux/kcov.h
-> +F:     kernel/kcov.c
+A new sched_domain_topology_level was added just for Power9. However the
+same can be achieved by merging powerpc_topology with power9_topology
+and makes the code more simpler especially when adding a new sched
+domain.
 
-I think this is missing:
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Michael Ellerman <michaele@au1.ibm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Nick Piggin <npiggin@au1.ibm.com>
+Cc: Oliver OHalloran <oliveroh@au1.ibm.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Michael Neuling <mikey@linux.ibm.com>
+Cc: Anton Blanchard <anton@au1.ibm.com>
+Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Cc: Jordan Niethe <jniethe5@gmail.com>
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+---
+Changelog v1 -> v2:
+powerpc/smp: Merge Power9 topology with Power topology
+	Replaced a reference to cpu_smt_mask with per_cpu(cpu_sibling_map, cpu)
+	since cpu_smt_mask is only defined under CONFIG_SCHED_SMT
 
-F: include/uapi/linux/kcov.h
-F: scripts/Makefile.kcov
+ arch/powerpc/kernel/smp.c | 33 ++++++++++-----------------------
+ 1 file changed, 10 insertions(+), 23 deletions(-)
 
-Thanks,
--- Marco
+diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+index 680c0edcc59d..0e0b118d9b6e 100644
+--- a/arch/powerpc/kernel/smp.c
++++ b/arch/powerpc/kernel/smp.c
+@@ -1315,7 +1315,7 @@ int setup_profiling_timer(unsigned int multiplier)
+ }
+ 
+ #ifdef CONFIG_SCHED_SMT
+-/* cpumask of CPUs with asymetric SMT dependancy */
++/* cpumask of CPUs with asymmetric SMT dependency */
+ static int powerpc_smt_flags(void)
+ {
+ 	int flags = SD_SHARE_CPUCAPACITY | SD_SHARE_PKG_RESOURCES;
+@@ -1328,14 +1328,6 @@ static int powerpc_smt_flags(void)
+ }
+ #endif
+ 
+-static struct sched_domain_topology_level powerpc_topology[] = {
+-#ifdef CONFIG_SCHED_SMT
+-	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
+-#endif
+-	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
+-	{ NULL, },
+-};
+-
+ /*
+  * P9 has a slightly odd architecture where pairs of cores share an L2 cache.
+  * This topology makes it *much* cheaper to migrate tasks between adjacent cores
+@@ -1353,7 +1345,13 @@ static int powerpc_shared_cache_flags(void)
+  */
+ static const struct cpumask *shared_cache_mask(int cpu)
+ {
+-	return cpu_l2_cache_mask(cpu);
++	if (shared_caches)
++		return cpu_l2_cache_mask(cpu);
++
++	if (has_big_cores)
++		return cpu_smallcore_mask(cpu);
++
++	return per_cpu(cpu_sibling_map, cpu);
+ }
+ 
+ #ifdef CONFIG_SCHED_SMT
+@@ -1363,7 +1361,7 @@ static const struct cpumask *smallcore_smt_mask(int cpu)
+ }
+ #endif
+ 
+-static struct sched_domain_topology_level power9_topology[] = {
++static struct sched_domain_topology_level powerpc_topology[] = {
+ #ifdef CONFIG_SCHED_SMT
+ 	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
+ #endif
+@@ -1388,21 +1386,10 @@ void __init smp_cpus_done(unsigned int max_cpus)
+ #ifdef CONFIG_SCHED_SMT
+ 	if (has_big_cores) {
+ 		pr_info("Big cores detected but using small core scheduling\n");
+-		power9_topology[0].mask = smallcore_smt_mask;
+ 		powerpc_topology[0].mask = smallcore_smt_mask;
+ 	}
+ #endif
+-	/*
+-	 * If any CPU detects that it's sharing a cache with another CPU then
+-	 * use the deeper topology that is aware of this sharing.
+-	 */
+-	if (shared_caches) {
+-		pr_info("Using shared cache scheduler topology\n");
+-		set_sched_topology(power9_topology);
+-	} else {
+-		pr_info("Using standard scheduler topology\n");
+-		set_sched_topology(powerpc_topology);
+-	}
++	set_sched_topology(powerpc_topology);
+ }
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+-- 
+2.17.1
+
