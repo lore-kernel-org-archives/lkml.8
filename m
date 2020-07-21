@@ -2,163 +2,146 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B53C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89612C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 075CB20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6569D206F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:56:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rmpPKuqq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K2vAwTSi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbgGURzg (ORCPT
+        id S1729362AbgGUR4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:55:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58394 "EHLO
+        Tue, 21 Jul 2020 13:56:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbgGURzg (ORCPT
+        with ESMTP id S1729226AbgGUR4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:55:36 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8082C061794;
-        Tue, 21 Jul 2020 10:55:35 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mn17so1929027pjb.4;
-        Tue, 21 Jul 2020 10:55:35 -0700 (PDT)
+        Tue, 21 Jul 2020 13:56:03 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFCF0C0619DB
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:56:02 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a24so11080162pfc.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:56:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OUcAWaKBtR4LKr6e87b8g5t2ZTIgYKpHEKsQXMOKeWo=;
-        b=rmpPKuqqjnC9UrFnTn0vhw4u82ElUPFpdUhfThXV4VlPDH+et8aAkh1NyA7QenrwCz
-         T27OtFOQXQReGOJxe1okEZwAZeTYElIMr8Zcm2iNwstC7hNvxHOYvz6CQCVm0TagYLCp
-         cs7Npy2Spo/4aZwE6AqdS+q0ZKaLlno1bf1nSF2w77JxMcvm9CxQHYvGoU9tiaRlol00
-         2YCRjuFA9QBFaB1I78ybrjRErSHDF0vVIUs6MU8Es1Ou/EAbJi71wXJJGXFHWuLT2vgj
-         J8sIQcg6YFfxrynb9hD07jSljGr6ibuIbrMx7eyr5eVquvZYCJyi7hbHTCK91/45R1RY
-         rKXw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jzIH5N8X89auq1yzOeN+/XIVI9FfDEkSMipXnUL9KwI=;
+        b=K2vAwTSirJJQPZG/CYaqut1fiZefV7wpVLDUtpTY0a0OD4d6BfcTvOSfiZ8AGVfkwt
+         oEbEBxsKFM4JtoIJiiV0D9UjHTn1jHYQ0sqzypvamxqa5HNnw/zjsVmSq3ztmZ/np9Q6
+         TrXqEpW00t8D8nTQFNc5xmFBygK3rPi+wGeEu2H4S4HhhNEcvX7lNta53rW7f1pxdL7A
+         pGi98fo49S30iAzg1eT5+5fIQ/AkUXyBUAWa+8uQVwCL3wavkoSIbxWQkAixjIuBb2ps
+         p5bawOd5RpRWRdEy3gU1Y6S4CeA2vTjbzYnpMuDUydTMZTZDMmgF4mGf8KniQoJrNqZI
+         IPkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OUcAWaKBtR4LKr6e87b8g5t2ZTIgYKpHEKsQXMOKeWo=;
-        b=qIQLYaG9yPEaTeKupoL3WQCep1TkXD7OCvVB65nYzJWkQTh3zxHdxQpUpkDrxFWKT6
-         te/nu4tdFFAYmfMyHRuuf5EDrHmTfy2xcXxJRBBpjc3gXqDP7xitZR8AV2LMwuoDBaxZ
-         JkhQzEwkQ01fZfZgwulXdhCvEZ3pbHnG4BSSNzwe35ynDj77OegZfTz2k+spK6GP40d+
-         zLTEOWoxUzRnPQFHgcejzmMr58NukCFKlxUFKfXLxlWZBGpgyLgHGtwElX3mkMdD+KVk
-         6zEsIsntkihrWiDloDsXPZY1dMmH/hfcaoY/J7iC04YJYmm9A5gLaoMSPU8N6VZC3KNQ
-         KYBQ==
-X-Gm-Message-State: AOAM5336P1GZE+VwVLJ1zcJGfoBcMJF1ExpMNkr0aaUtoDhh4eQJ7P3w
-        vSf74bve+qzhAh+c0jNszJl0wYruHNY=
-X-Google-Smtp-Source: ABdhPJwot7+HiFUnPxtZnBoW6Sln3/yoCftZ7iEm5CUCz2vAVBMaCAzK1dCXlfNni++AMyIrVp1D+w==
-X-Received: by 2002:a17:90a:ea84:: with SMTP id h4mr6046519pjz.128.1595354135382;
-        Tue, 21 Jul 2020 10:55:35 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id x9sm18154009pgr.57.2020.07.21.10.55.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 10:55:34 -0700 (PDT)
-Subject: Re: [PATCH] net: dsa: Add protocol support for 802.1AD when adding or
- deleting vlan for dsa switch and port
-To:     hongbo.wang@nxp.com, xiaoliang.yang_1@nxp.com,
-        allan.nielsen@microchip.com, po.liu@nxp.com,
-        claudiu.manoil@nxp.com, alexandru.marginean@nxp.com,
-        vladimir.oltean@nxp.com, leoyang.li@nxp.com, mingkai.hu@nxp.com,
-        andrew@lunn.ch, vivien.didelot@gmail.com, davem@davemloft.net,
-        jiri@resnulli.us, idosch@idosch.org, kuba@kernel.org,
-        vinicius.gomes@intel.com, nikolay@cumulusnetworks.com,
-        roopa@cumulusnetworks.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, horatiu.vultur@microchip.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        linux-devel@linux.nxdi.nxp.com
-References: <20200721110214.15268-1-hongbo.wang@nxp.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <eaf6e25a-4e64-1ffe-972a-9d309d307294@gmail.com>
-Date:   Tue, 21 Jul 2020 10:55:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jzIH5N8X89auq1yzOeN+/XIVI9FfDEkSMipXnUL9KwI=;
+        b=k9P+Tasy5cojYrZVLokoMvtblFSe0HZMfK2VyOIMvOmFBXJ8ZduwdqOLc5kBtZWIec
+         fW5uDmPE1UhZoa0jM8rHAxLXRtEjCg/jd3FfjXeR9I8pKbWlpTNp7zeeWtVt8pj26Nw6
+         ZmXJUvvXbFybMwAyueSuL3U1QaeJ0IjPekVNz7XWEraDMQd82C2P8C+NiN7nenI41xWy
+         JV7WhKKG590GydEevv2H2ONhwu+p02dovf5LHVFENexBdZAFW/gaMztf4B88110oCqKz
+         iSPN9MJOck1Bl/AVTFJkegRNCiRNeGjszo/EogbbsYOg9FsJAmbxUM9sz+/bZbLXtYrn
+         NiwA==
+X-Gm-Message-State: AOAM531slQ9qVfC1hcB52wvcdKB76SDWTm7/hi+1oIwJfU5bEu0gP3Jc
+        KpgFFw91TZ0aVaAI1UCh0Z5NcjMQz7F73RQBQZLs9BFT
+X-Google-Smtp-Source: ABdhPJzJ26/bO98FgRARdj7k4qHQ/IfXEN4zDqIUfRjmtDca4nUXGzoP/9ck2GkJ0/MMWGhuXJj+F6BjlNpL5An3HD8=
+X-Received: by 2002:aa7:84d7:: with SMTP id x23mr4452563pfn.169.1595354161941;
+ Tue, 21 Jul 2020 10:56:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200721110214.15268-1-hongbo.wang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200721173125.1273884-1-maskray@google.com>
+In-Reply-To: <20200721173125.1273884-1-maskray@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 21 Jul 2020 10:55:50 -0700
+Message-ID: <CAKwvOdkXs+Z28XmNA5i35Bun4kZM1fn5j9msPo8ajSi7JjMyCw@mail.gmail.com>
+Subject: Re: [PATCH v3] Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang cross compilation
+To:     Fangrui Song <maskray@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jian Cai <jiancai@google.com>,
+        Bill Wendling <morbo@google.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/21/20 4:02 AM, hongbo.wang@nxp.com wrote:
-> From: "hongbo.wang" <hongbo.wang@nxp.com>
-> 
-> the following command will be supported:
-> Add VLAN:
->     ip link add link swp1 name swp1.100 type vlan protocol 802.1ad id 100
-> Delete VLAN:
->     ip link del link swp1 name swp1.100
-> 
-> when adding vlan, this patch only set protocol for user port,
-> cpu port don't care it, so set parameter proto to 0 for cpu port.
+On Tue, Jul 21, 2020 at 10:31 AM Fangrui Song <maskray@google.com> wrote:
+>
+> When CROSS_COMPILE is set (e.g. aarch64-linux-gnu-), if
+> $(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-elfedit,
+> GCC_TOOLCHAIN_DIR will be set to /usr/bin/.  --prefix= will be set to
+> /usr/bin/ and Clang as of 11 will search for both
+> $(prefix)aarch64-linux-gnu-$needle and $(prefix)$needle.
+>
+> GCC searchs for $(prefix)aarch64-linux-gnu/$version/$needle,
+> $(prefix)aarch64-linux-gnu/$needle and $(prefix)$needle. In practice,
+> $(prefix)aarch64-linux-gnu/$needle rarely contains executables.
+>
+> To better model how GCC's -B/--prefix takes in effect in practice, newer
+> Clang (since
+> https://github.com/llvm/llvm-project/commit/3452a0d8c17f7166f479706b293caf6ac76ffd90)
+> only searches for $(prefix)$needle. Currently it will find /usr/bin/as
+> instead of /usr/bin/aarch64-linux-gnu-as.
+>
+> Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
+> (/usr/bin/aarch64-linux-gnu-) so that newer Clang can find the
+> appropriate cross compiling GNU as (when -no-integrated-as is in
+> effect).
+>
+> Cc: stable@vger.kernel.org
+> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> Signed-off-by: Fangrui Song <maskray@google.com>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 
-My previous feedback has been partially addressed, can you also post the
-switch driver changes that are going to implement the driver side
-changes? Presumably you must act on the 802.1AD programming request in
-the switch driver somehow, right?
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1099
+> ---
+> Changes in v2:
+> * Updated description to add tags and the llvm-project commit link.
+> * Fixed a typo.
+>
+> Changes in v3:
+> * Add Cc: stable@vger.kernel.org
+> ---
+>  Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 0b5f8538bde5..3ac83e375b61 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -567,7 +567,7 @@ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
+>  ifneq ($(CROSS_COMPILE),)
+>  CLANG_FLAGS    += --target=$(notdir $(CROSS_COMPILE:%-=%))
+>  GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
+> -CLANG_FLAGS    += --prefix=$(GCC_TOOLCHAIN_DIR)
+> +CLANG_FLAGS    += --prefix=$(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
+>  GCC_TOOLCHAIN  := $(realpath $(GCC_TOOLCHAIN_DIR)/..)
+>  endif
+>  ifneq ($(GCC_TOOLCHAIN),)
+> --
+> 2.28.0.rc0.105.gf9edc3c819-goog
+>
+
+
 -- 
-Florian
+Thanks,
+~Nick Desaulniers
