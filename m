@@ -2,76 +2,42 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31444C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CF3C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10FAC2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:51:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qWXQaaoj"
+	by mail.kernel.org (Postfix) with ESMTP id 7EB0E22C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbgGUOv0 (ORCPT
+        id S1729562AbgGUOwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728692AbgGUOvY (ORCPT
+        Tue, 21 Jul 2020 10:52:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55431 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728156AbgGUOwx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:51:24 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 128CEC061794;
-        Tue, 21 Jul 2020 07:51:24 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id y3so4144381wrl.4;
-        Tue, 21 Jul 2020 07:51:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8RncRLRROBybh/ytSIm9sTMuxY+/JPpvgiNZMG+zOjs=;
-        b=qWXQaaojQFRmE/P5FEKCaLLi+eA1yKMJ9rHSam2RR35uL3fL658gDkoZ3Rxozhv6mq
-         kdPPf1TxzAROMNd0NoWMASS3+iEsQMEuNg4MDp1MpXDqJwn4KYsrqLwV7OOmmElszvHU
-         gnDxAYbh8Cxs2MNOxd/p4g/IVN3ouVcqf6P6aNlXxXDTq6TgzcMfW96OkgYDhqtfGYqh
-         rKfp9H93EtjCxZ6C6TDh/zZ5/CNIBb34AoOqQyLNte3el/Qui9CaCON40B6oGRTaVG75
-         qWoAgazG0vEZWVQQIN19sjIPEdv60GrVpJpO6BRa1x0V8WRYOAjL+v21fLyPOGjn51jj
-         Ow+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8RncRLRROBybh/ytSIm9sTMuxY+/JPpvgiNZMG+zOjs=;
-        b=ZChY0oCTfjBCIiH40I66Kpno3+/JvKhFmSvHuyCK1SGR56xrYUNy5wnJskY23HNmQl
-         qhwjAqoVk8DMLIrnDqnWDWAL9a74UFRwSm7RjxmyuWT5YoyicK4v4bby3sOFG7vt1e2n
-         A/LV9bwUInIpvqZR0adkgzp2tpLzJsZb+hZHqGN8mwadHaE3xEyke8jGjJimfWT3gGSx
-         0VjycAnUU5eWmfpbgYKLk4eltgREgE6bKSkmsjNHvcD0YHI8nHT9ysSqyBz3D79z0lkb
-         HuSDWVfxmYxg2DdwOB1haN3dH/Itq40lW5JXPU6lN9pGKitF6LQJEDz4FKV9vSYAMhow
-         5DCw==
-X-Gm-Message-State: AOAM533Ha6P6qO/+ggcgnp9qzVuthQaMT5Yy9f57zAV6ETzfMoNp2RhJ
-        cLeDow31uls6hDi39BVEJ58=
-X-Google-Smtp-Source: ABdhPJxF0Tl5MQytmchwiS8ACtgVR96BZHratVl3DSqzMmZN7JlYv5S4cBfzHaeNcIk2J8WbcWHrSA==
-X-Received: by 2002:adf:b198:: with SMTP id q24mr26004342wra.335.1595343082809;
-        Tue, 21 Jul 2020 07:51:22 -0700 (PDT)
-Received: from localhost ([156.204.74.63])
-        by smtp.gmail.com with ESMTPSA id o21sm3711943wmh.18.2020.07.21.07.51.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 07:51:22 -0700 (PDT)
-From:   Abanoub Sameh <abanoubsameh8@gmail.com>
-X-Google-Original-From: Abanoub Sameh <abanoubsameh@protonmail.com>
-To:     andy.shevchenko@gmail.com
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Abanoub Sameh <abanoubsameh@protonmail.com>
-Subject: [PATCH 2/2] gpio: gpio-sch.c: fixed coding style issue
-Date:   Tue, 21 Jul 2020 16:51:04 +0200
-Message-Id: <20200721145104.776561-2-abanoubsameh@protonmail.com>
-X-Mailer: git-send-email 2.28.0.rc0
-In-Reply-To: <20200721145104.776561-1-abanoubsameh@protonmail.com>
-References: <20200721145104.776561-1-abanoubsameh@protonmail.com>
+        Tue, 21 Jul 2020 10:52:53 -0400
+Received: from 1.general.ppisati.uk.vpn ([10.172.193.134] helo=canonical.com)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <paolo.pisati@canonical.com>)
+        id 1jxtdR-0002Sv-Ig; Tue, 21 Jul 2020 14:52:49 +0000
+From:   Paolo Pisati <paolo.pisati@canonical.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Willem de Bruijn <willemb@google.com>,
+        Jian Yang <jianyang@google.com>
+Cc:     netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: txtimestamp: tear down setup() 'tc' and 'ip' env on EXIT
+Date:   Tue, 21 Jul 2020 16:52:49 +0200
+Message-Id: <20200721145249.72153-1-paolo.pisati@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,26 +45,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added a lined between a declaration and other statements according to the
-kenel coding style.
+Add a cleanup() path upon exit, making it possible to run the test twice in a
+row:
 
-Signed-off-by: Abanoub Sameh <abanoubsameh@protonmail.com>
+$ sudo bash -x ./txtimestamp.sh
++ set -e
+++ ip netns identify
++ [[ '' == \r\o\o\t ]]
++ main
++ [[ 0 -eq 0 ]]
++ run_test_all
++ setup
++ tc qdisc add dev lo root netem delay 1ms
+Error: Exclusivity flag on, cannot modify.
+
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
 ---
- drivers/gpio/gpio-sch.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/net/txtimestamp.sh | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
-index d7cade67717b..3a1b1adb08c6 100644
---- a/drivers/gpio/gpio-sch.c
-+++ b/drivers/gpio/gpio-sch.c
-@@ -89,6 +89,7 @@ static int sch_gpio_direction_in(struct gpio_chip *gc, unsigned int gpio_num)
- static int sch_gpio_get(struct gpio_chip *gc, unsigned int gpio_num)
- {
- 	struct sch_gpio *sch = gpiochip_get_data(gc);
-+
- 	return sch_gpio_reg_get(sch, gpio_num, GLV);
+diff --git a/tools/testing/selftests/net/txtimestamp.sh b/tools/testing/selftests/net/txtimestamp.sh
+index eea6f5193693..77f29cabff87 100755
+--- a/tools/testing/selftests/net/txtimestamp.sh
++++ b/tools/testing/selftests/net/txtimestamp.sh
+@@ -23,6 +23,14 @@ setup() {
+ 		action mirred egress redirect dev ifb_netem0
  }
  
++cleanup() {
++	tc filter del dev lo parent ffff:
++	tc qdisc del dev lo handle ffff: ingress
++	tc qdisc del dev ifb_netem0 root
++	ip link del ifb_netem0
++	tc qdisc del dev lo root
++}
++
+ run_test_v4v6() {
+ 	# SND will be delayed 1000us
+ 	# ACK will be delayed 6000us: 1 + 2 ms round-trip
+@@ -75,6 +83,8 @@ main() {
+ 	fi
+ }
+ 
++trap cleanup EXIT
++
+ if [[ "$(ip netns identify)" == "root" ]]; then
+ 	./in_netns.sh $0 $@
+ else
 -- 
-2.28.0.rc0
+2.27.0
 
