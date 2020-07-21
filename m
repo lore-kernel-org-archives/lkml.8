@@ -2,116 +2,90 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A49CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED0B420717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:55:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fqWzcFW4"
+	by mail.kernel.org (Postfix) with ESMTP id 7522522C9C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgGUGz6 (ORCPT
+        id S1728443AbgGUHAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:55:58 -0400
-Received: from ozlabs.org ([203.11.71.1]:58821 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgGUGz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:55:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9qB25lVGz9sSJ;
-        Tue, 21 Jul 2020 16:55:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595314555;
-        bh=Q7OXuH3IujvF32fVyUqHqhi4eviDa7shPE0mEDAD2ZA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fqWzcFW4+XcuCOAf46YhWOrzWlu2gVqyBUv/krZuWxTDgJ2iaDueazKri5ocAzx0m
-         JBNiWfGczJ0LP4Sem67zSo1mAeK5z9QpIGw+XqH2axGw9C8b2rdxHqnEQuJ3EPZz1U
-         TARgd/JcGF94kXfOdhQqnOFipqj/L+4dvWXw7OM5ej6uVi101S99u5qXkrZw91KVWa
-         eUbWPnZ2E70kF5VxeZAeWNZfD5SDiljFZn6e1gf7nHTEFgpdlMh1q1Mz7jADF3umVQ
-         zf+JTJOq3s7/ZqpAXwLM1ETZX6vpPSl71fdSpVEaSLV/JZswMJmgR6trRT+NCYIB3L
-         doizQfpjqaZLw==
-Date:   Tue, 21 Jul 2020 16:55:53 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Miller <davem@davemloft.net>,
-        Xin Long <lucien.xin@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: Re: mmotm 2020-07-20-19-06 uploaded (net/ipv6/ip6_vti.o)
-Message-ID: <20200721165553.713c51b3@canb.auug.org.au>
-In-Reply-To: <20200721165424.4aa21b81@canb.auug.org.au>
-References: <20200721020722.6C7YAze1t%akpm@linux-foundation.org>
-        <536c2421-7ae2-5657-ff31-fbd80bd71784@infradead.org>
-        <20200721165424.4aa21b81@canb.auug.org.au>
+        Tue, 21 Jul 2020 03:00:39 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:2776 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726510AbgGUHAi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 03:00:38 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U3O7OTC_1595314816;
+Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0U3O7OTC_1595314816)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 21 Jul 2020 15:00:22 +0800
+From:   Shile Zhang <shile.zhang@linux.alibaba.com>
+To:     "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        kernel test robot <lkp@intel.com>,
+        Jiang Liu <liuj97@gmail.com>
+Subject: [PATCH v2] virtio_ring: use alloc_pages_node for NUMA-aware allocation
+Date:   Tue, 21 Jul 2020 15:00:13 +0800
+Message-Id: <20200721070013.62894-1-shile.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.0.rc2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/euP/RBZrNT3uFkFfv5_O0cu";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/euP/RBZrNT3uFkFfv5_O0cu
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Use alloc_pages_node() allocate memory for vring queue with proper
+NUMA affinity.
 
-Hi all,
+Reported-by: kernel test robot <lkp@intel.com>
+Suggested-by: Jiang Liu <liuj97@gmail.com>
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+---
+Changelog
+v1 -> v2:
+- fixed compile warning reported by LKP.
+---
+ drivers/virtio/virtio_ring.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-On Tue, 21 Jul 2020 16:54:24 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Mon, 20 Jul 2020 23:09:34 -0700 Randy Dunlap <rdunlap@infradead.org> w=
-rote:
-> >
-> > on i386:
-> >=20
-> > ld: net/ipv6/ip6_vti.o: in function `vti6_rcv_tunnel':
-> > ip6_vti.c:(.text+0x2d11): undefined reference to `xfrm6_tunnel_spi_look=
-up' =20
->=20
-> Caused by commit
->=20
->   08622869ed3f ("ip6_vti: support IP6IP6 tunnel processing with .cb_handl=
-er")
->=20
-> from the linux-next ipsec-next tree.
->=20
-> CONFIG_INET6_XFRM_TUNNEL=3Dm
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index 58b96baa8d48..d38fd6872c8c 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -276,9 +276,11 @@ static void *vring_alloc_queue(struct virtio_device *vdev, size_t size,
+ 		return dma_alloc_coherent(vdev->dev.parent, size,
+ 					  dma_handle, flag);
+ 	} else {
+-		void *queue = alloc_pages_exact(PAGE_ALIGN(size), flag);
+-
+-		if (queue) {
++		void *queue = NULL;
++		struct page *page = alloc_pages_node(dev_to_node(vdev->dev.parent),
++						     flag, get_order(size));
++		if (page) {
++			queue = page_address(page);
+ 			phys_addr_t phys_addr = virt_to_phys(queue);
+ 			*dma_handle = (dma_addr_t)phys_addr;
+ 
+@@ -308,7 +310,7 @@ static void vring_free_queue(struct virtio_device *vdev, size_t size,
+ 	if (vring_use_dma_api(vdev))
+ 		dma_free_coherent(vdev->dev.parent, size, queue, dma_handle);
+ 	else
+-		free_pages_exact(queue, PAGE_ALIGN(size));
++		free_pages((unsigned long)queue, get_order(size));
+ }
+ 
+ /*
+-- 
+2.24.0.rc2
 
-I need to read ahead in my email :-)
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/euP/RBZrNT3uFkFfv5_O0cu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8WkXkACgkQAVBC80lX
-0Gy0pwf+OeRTrgcltii+j/ic9m/VaekZvTVtd1SKbimSlVNOEZFPvI4Qm7hhsR9g
-2czTCUKJQmJKyvjtgG9hHzMu0ahA7DPfeuBvv1hitKnTwvQexl9BW9Vm6pNtkEN6
-gulxuRMM30xucyIoPmggcBNPTXBGSQ+oAZ6UQww75wwaurmcdoENFNgn80nsb59/
-wqN7W47bWJ9OZAESIBEq1B75DJ7IZo/6OHrzWV0MJggEY7QTqUKd9M2o8ucGeEBf
-vo4o3J+3q+o9dLIXmwG2D1MQwVpwEI7oMiOzgVZvCyjUmPTXwhH7klV3FrReOt99
-9q6JBD4ZKGAOhqBEfqGwn1270NsnVg==
-=WkFR
------END PGP SIGNATURE-----
-
---Sig_/euP/RBZrNT3uFkFfv5_O0cu--
