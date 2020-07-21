@@ -2,61 +2,62 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EADAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3352C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58F71206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EEAD206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:11:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jcbCCb7h"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+YljNqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgGUMKu (ORCPT
+        id S1729897AbgGUMLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:10:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60972 "EHLO
+        Tue, 21 Jul 2020 08:11:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726904AbgGUMKs (ORCPT
+        with ESMTP id S1728692AbgGUMLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:10:48 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2AD1C0619D9
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:10:48 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 8so912897pjj.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:10:48 -0700 (PDT)
+        Tue, 21 Jul 2020 08:11:05 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD8AC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:11:05 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u5so10638472pfn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:11:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=DUhxoUHdk/G5hcIoHHmedsybYx4YWFvLP5ZmToBFcQA=;
-        b=jcbCCb7hQJlHIsdcZ51dQFHY/9ZAio9o8npqoAFikBjrRS5rSX8azSndpIfoxx4pB+
-         36zJ9XHfNsZaRy7DSN1DP/aiQPS1wdywIz2HH7ZUeQPS9pMnDDMBFScXUX8tkATs9D3Q
-         AgbIybVi4CKkW8frVqni9KeOc3TfJHu2wgPhSRbqmU1CzyLw2BnPvo3mq5J7vWHydhVG
-         ykZd7ucwFth+Pedeigm9B3p8zNkoO+gfshaZ2vqKoy3ykznGytstafoT6n4A86ml+rYT
-         oMyEtsd0jdPbtn+jYCfaazIcKecvvJ9MCT/0T4bbqk2TDYe3Ou5Vdbc5vVEP2p1XGntN
-         aHHg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=OGQRgVBuDs2YGom8JxN4Q6Y+XwAeTFKd4PRQsmAWmzk=;
+        b=C+YljNqfo+m3jtYr5ucEEoBYZHGPJbJaYid6dRHAr3tg1SE4+PBla45YLdd3dzeAHV
+         90eRRECKtqlWsTY5czSJlAD1vbdg7ui2zXs9SHToZ6XnExMoNPkSDk+ML6y5WMAiy/ZD
+         mDdVglWsqvth6SRd/6q3aFFQsxwYNgryrerakMMD+NV6wrDxUFLEeKNiqogb/3o2KXkd
+         u6VZ1ra+OywG31748fw9BXQkhU0S+LSiBUwohiti/NQQReJsbeDTqHTcaP2NTmtdYEnC
+         DTBsy6kLBZAlelpCT8CxjgLWv9tbmZYh7QoBm1TGYKc7xtGEbI5j8iw64L4vOMCRB4rF
+         oCTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DUhxoUHdk/G5hcIoHHmedsybYx4YWFvLP5ZmToBFcQA=;
-        b=CPXFgJMONdHj2MwMHLkZ3eLDGfa3RudO01+PIKNO5tySp+XUN9r3K1Pp06m/R5fN5D
-         ea8RG1rWClm2saBb9uA1P7qGKVcQC5lSolCUSVjCculCNK6H4r/POt+K1FZ39XKOYY24
-         3Vs0F7x02L/AlRqVAYIDpdXLtM4e2CEyg/EgVi3P+SRYqWGCswblhtpBjiHoFFGSmsUB
-         yFtfGkuH5ghGmYHg4SsWvHRofERDZ6OePyJMRG7eePp3HqpRIOijhF4Vy4vtVFcR1O34
-         wIKIYe5OtINjhh/zT5oVPb4jG+UVkQeMtX0OY89Zu1WDQCwxr+J53iU/msSk0cuPsV1Y
-         r8gw==
-X-Gm-Message-State: AOAM531tXhTGWIkQz5Nzqz07/VqL6GSEiItHG8F2anO3ieKsP8n8Yj2O
-        sIM7eCSo36iJmB5yXmK/jevgQA==
-X-Google-Smtp-Source: ABdhPJyRExe3Qfy877FM+lq0KPlLWXAqsMqBIE5QqFOrqY5bkLpSCnvsNe2TWxlOTPk4HSLRIyix+g==
-X-Received: by 2002:a17:902:d698:: with SMTP id v24mr21585075ply.163.1595333447996;
-        Tue, 21 Jul 2020 05:10:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=OGQRgVBuDs2YGom8JxN4Q6Y+XwAeTFKd4PRQsmAWmzk=;
+        b=YmTzMmWSHGUUvmnIyCG6phPYQCPPr/4oDqzoCYtmALEXwczenLHzQFwGHbAX1SXE83
+         rPV61CrND+DXtLp/gl0jXUb0L8UEO/PAwJHUvC03yNzSZjFKdUB8jsBPwkKk7jcc+IVO
+         dAe7/roDu+OLm9uzcB3EAVtIxla8b/ioMO3pE5U/AlImV33V4xuLX+Ulm+oss4LjCAwX
+         U/AUGbxOTR5VlzsT4VzLlgk/a+f1ojaXumQc2S/aMDbU8ivTcVWwQ3PSrqEK39UNRyCx
+         pTRTwAfYe2BPka3vqEVRAIcAX3GAqxomewp3pJiNtovT2kzqok4SFp/c0P5qyxLfOV5Q
+         joCQ==
+X-Gm-Message-State: AOAM531YY9viTE+ORCr+WCxWnTHUBgcjDc9HO7aNDx5/7ZvcG7i2nEdc
+        oQyOdbhCHo7KmrjgpJ9sc86SlA==
+X-Google-Smtp-Source: ABdhPJwbPLE5qE6oDrg12B+GPfjB19fSVE5EYiyAwJo6+g7xrMU3f6F7QpxgLLkrhSFzZ1GWjG8yLw==
+X-Received: by 2002:a63:f254:: with SMTP id d20mr15590929pgk.119.1595333465291;
+        Tue, 21 Jul 2020 05:11:05 -0700 (PDT)
 Received: from localhost.localdomain ([117.210.211.74])
-        by smtp.gmail.com with ESMTPSA id w9sm20601992pfq.178.2020.07.21.05.10.42
+        by smtp.gmail.com with ESMTPSA id w9sm20601992pfq.178.2020.07.21.05.11.00
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Jul 2020 05:10:47 -0700 (PDT)
+        Tue, 21 Jul 2020 05:11:04 -0700 (PDT)
 From:   Sumit Garg <sumit.garg@linaro.org>
 To:     gregkh@linuxfoundation.org, daniel.thompson@linaro.org,
         dianders@chromium.org, linux-serial@vger.kernel.org,
@@ -64,117 +65,200 @@ To:     gregkh@linuxfoundation.org, daniel.thompson@linaro.org,
 Cc:     jslaby@suse.com, linux@armlinux.org.uk, jason.wessel@windriver.com,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Sumit Garg <sumit.garg@linaro.org>
-Subject: [RFC 0/5] Introduce NMI aware serial drivers
-Date:   Tue, 21 Jul 2020 17:40:08 +0530
-Message-Id: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
+Subject: [RFC 3/5] serial: amba-pl011: Re-order APIs definition
+Date:   Tue, 21 Jul 2020 17:40:11 +0530
+Message-Id: <1595333413-30052-4-git-send-email-sumit.garg@linaro.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
+References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make it possible for UARTs to trigger magic sysrq from an NMI. With the
-advent of pseudo NMIs on arm64 it became quite generic to request serial
-device interrupt as an NMI rather than IRQ. And having NMI driven serial
-RX will allow us to trigger magic sysrq as an NMI and hence drop into
-kernel debugger in NMI context.
+A future patch will need to call pl011_hwinit() and
+pl011_enable_interrupts() before they are currently defined. Move
+them closer to the front of the file. There is no change in the
+implementation of either function.
 
-The major use-case is to add NMI debugging capabilities to the kernel
-in order to debug scenarios such as:
-- Primary CPU is stuck in deadlock with interrupts disabled and hence
-  doesn't honor serial device interrupt. So having magic sysrq triggered
-  as an NMI is helpful for debugging.
-- Always enabled NMI based magic sysrq irrespective of whether the serial
-  TTY port is active or not.
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+---
+ drivers/tty/serial/amba-pl011.c | 148 ++++++++++++++++++++--------------------
+ 1 file changed, 74 insertions(+), 74 deletions(-)
 
-Currently there is an existing kgdb NMI serial driver which provides
-partial implementation in upstream to have a separate ttyNMI0 port but
-that remained in silos with the serial core/drivers which made it a bit
-odd to enable using serial device interrupt and hence remained unused. It
-seems to be clearly intended to avoid almost all custom NMI changes to
-the UART driver.
-
-But this patch-set allows the serial core/drivers to be NMI aware which
-in turn provides NMI debugging capabilities via magic sysrq and hence
-there is no specific reason to keep this special driver. So remove it
-instead.
-
-Approach:
----------
-
-The overall idea is to intercept serial RX characters in NMI context, if
-those are specific to magic sysrq then allow corresponding handler to run
-in NMI context. Otherwise, defer all other RX and TX operations onto IRQ
-work queue in order to run those in normal interrupt context.
-
-This approach is demonstrated using amba-pl011 driver.
-
-Patch-wise description:
------------------------
-
-Patch #1 prepares magic sysrq handler to be NMI aware.
-Patch #2 adds NMI framework to serial core.
-Patch #3 and #4 demonstrates NMI aware uart port using amba-pl011 driver.
-Patch #5 removes kgdb NMI serial driver.
-
-Goal of this RFC:
------------------
-
-My main reason for sharing this as an RFC is to help decide whether or
-not to continue with this approach. The next step for me would to port
-the work to a system with an 8250 UART.
-
-Usage:
-------
-
-This RFC has been developed on top of 5.8-rc3 and if anyone is interested
-to give this a try on QEMU, just enable following config options
-additional to arm64 defconfig:
-
-CONFIG_KGDB=y
-CONFIG_KGDB_KDB=y
-CONFIG_ARM64_PSEUDO_NMI=y
-
-Qemu command line to test:
-
-$ qemu-system-aarch64 -nographic -machine virt,gic-version=3 -cpu cortex-a57 \
-  -smp 2 -kernel arch/arm64/boot/Image -append 'console=ttyAMA0,38400 \
-  keep_bootcon root=/dev/vda2 irqchip.gicv3_pseudo_nmi=1 kgdboc=ttyAMA0' \
-  -initrd rootfs-arm64.cpio.gz
-
-NMI entry into kgdb via sysrq:
-- Ctrl a + b + g
-
-Reference:
-----------
-
-For more details about NMI/FIQ debugger, refer to this blog post [1].
-
-[1] https://www.linaro.org/blog/debugging-arm-kernels-using-nmifiq/
-
-I do look forward to your comments and feedback.
-
-Sumit Garg (5):
-  tty/sysrq: Make sysrq handler NMI aware
-  serial: core: Add framework to allow NMI aware serial drivers
-  serial: amba-pl011: Re-order APIs definition
-  serial: amba-pl011: Enable NMI aware uart port
-  serial: Remove KGDB NMI serial driver
-
- drivers/tty/serial/Kconfig       |  19 --
- drivers/tty/serial/Makefile      |   1 -
- drivers/tty/serial/amba-pl011.c  | 232 +++++++++++++++++-------
- drivers/tty/serial/kgdb_nmi.c    | 383 ---------------------------------------
- drivers/tty/serial/kgdboc.c      |   8 -
- drivers/tty/serial/serial_core.c | 120 +++++++++++-
- drivers/tty/sysrq.c              |  33 +++-
- include/linux/kgdb.h             |  10 -
- include/linux/serial_core.h      |  67 +++++++
- include/linux/sysrq.h            |   1 +
- kernel/debug/debug_core.c        |   1 +
- 11 files changed, 386 insertions(+), 489 deletions(-)
- delete mode 100644 drivers/tty/serial/kgdb_nmi.c
-
+diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+index 8efd7c2..0983c5e 100644
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -1581,6 +1581,80 @@ static void pl011_break_ctl(struct uart_port *port, int break_state)
+ 	spin_unlock_irqrestore(&uap->port.lock, flags);
+ }
+ 
++static int pl011_hwinit(struct uart_port *port)
++{
++	struct uart_amba_port *uap =
++	    container_of(port, struct uart_amba_port, port);
++	int retval;
++
++	/* Optionaly enable pins to be muxed in and configured */
++	pinctrl_pm_select_default_state(port->dev);
++
++	/*
++	 * Try to enable the clock producer.
++	 */
++	retval = clk_prepare_enable(uap->clk);
++	if (retval)
++		return retval;
++
++	uap->port.uartclk = clk_get_rate(uap->clk);
++
++	/* Clear pending error and receive interrupts */
++	pl011_write(UART011_OEIS | UART011_BEIS | UART011_PEIS |
++		    UART011_FEIS | UART011_RTIS | UART011_RXIS,
++		    uap, REG_ICR);
++
++	/*
++	 * Save interrupts enable mask, and enable RX interrupts in case if
++	 * the interrupt is used for NMI entry.
++	 */
++	uap->im = pl011_read(uap, REG_IMSC);
++	pl011_write(UART011_RTIM | UART011_RXIM, uap, REG_IMSC);
++
++	if (dev_get_platdata(uap->port.dev)) {
++		struct amba_pl011_data *plat;
++
++		plat = dev_get_platdata(uap->port.dev);
++		if (plat->init)
++			plat->init();
++	}
++	return 0;
++}
++
++/*
++ * Enable interrupts, only timeouts when using DMA
++ * if initial RX DMA job failed, start in interrupt mode
++ * as well.
++ */
++static void pl011_enable_interrupts(struct uart_amba_port *uap)
++{
++	unsigned int i;
++
++	spin_lock_irq(&uap->port.lock);
++
++	/* Clear out any spuriously appearing RX interrupts */
++	pl011_write(UART011_RTIS | UART011_RXIS, uap, REG_ICR);
++
++	/*
++	 * RXIS is asserted only when the RX FIFO transitions from below
++	 * to above the trigger threshold.  If the RX FIFO is already
++	 * full to the threshold this can't happen and RXIS will now be
++	 * stuck off.  Drain the RX FIFO explicitly to fix this:
++	 */
++	for (i = 0; i < uap->fifosize * 2; ++i) {
++		if (pl011_read(uap, REG_FR) & UART01x_FR_RXFE)
++			break;
++
++		pl011_read(uap, REG_DR);
++	}
++
++	uap->im = UART011_RTIM;
++	if (!pl011_dma_rx_running(uap))
++		uap->im |= UART011_RXIM;
++	pl011_write(uap->im, uap, REG_IMSC);
++	spin_unlock_irq(&uap->port.lock);
++}
++
+ #ifdef CONFIG_CONSOLE_POLL
+ 
+ static void pl011_quiesce_irqs(struct uart_port *port)
+@@ -1639,46 +1713,6 @@ static void pl011_put_poll_char(struct uart_port *port,
+ 
+ #endif /* CONFIG_CONSOLE_POLL */
+ 
+-static int pl011_hwinit(struct uart_port *port)
+-{
+-	struct uart_amba_port *uap =
+-	    container_of(port, struct uart_amba_port, port);
+-	int retval;
+-
+-	/* Optionaly enable pins to be muxed in and configured */
+-	pinctrl_pm_select_default_state(port->dev);
+-
+-	/*
+-	 * Try to enable the clock producer.
+-	 */
+-	retval = clk_prepare_enable(uap->clk);
+-	if (retval)
+-		return retval;
+-
+-	uap->port.uartclk = clk_get_rate(uap->clk);
+-
+-	/* Clear pending error and receive interrupts */
+-	pl011_write(UART011_OEIS | UART011_BEIS | UART011_PEIS |
+-		    UART011_FEIS | UART011_RTIS | UART011_RXIS,
+-		    uap, REG_ICR);
+-
+-	/*
+-	 * Save interrupts enable mask, and enable RX interrupts in case if
+-	 * the interrupt is used for NMI entry.
+-	 */
+-	uap->im = pl011_read(uap, REG_IMSC);
+-	pl011_write(UART011_RTIM | UART011_RXIM, uap, REG_IMSC);
+-
+-	if (dev_get_platdata(uap->port.dev)) {
+-		struct amba_pl011_data *plat;
+-
+-		plat = dev_get_platdata(uap->port.dev);
+-		if (plat->init)
+-			plat->init();
+-	}
+-	return 0;
+-}
+-
+ static bool pl011_split_lcrh(const struct uart_amba_port *uap)
+ {
+ 	return pl011_reg_to_offset(uap, REG_LCRH_RX) !=
+@@ -1707,40 +1741,6 @@ static int pl011_allocate_irq(struct uart_amba_port *uap)
+ 	return request_irq(uap->port.irq, pl011_int, IRQF_SHARED, "uart-pl011", uap);
+ }
+ 
+-/*
+- * Enable interrupts, only timeouts when using DMA
+- * if initial RX DMA job failed, start in interrupt mode
+- * as well.
+- */
+-static void pl011_enable_interrupts(struct uart_amba_port *uap)
+-{
+-	unsigned int i;
+-
+-	spin_lock_irq(&uap->port.lock);
+-
+-	/* Clear out any spuriously appearing RX interrupts */
+-	pl011_write(UART011_RTIS | UART011_RXIS, uap, REG_ICR);
+-
+-	/*
+-	 * RXIS is asserted only when the RX FIFO transitions from below
+-	 * to above the trigger threshold.  If the RX FIFO is already
+-	 * full to the threshold this can't happen and RXIS will now be
+-	 * stuck off.  Drain the RX FIFO explicitly to fix this:
+-	 */
+-	for (i = 0; i < uap->fifosize * 2; ++i) {
+-		if (pl011_read(uap, REG_FR) & UART01x_FR_RXFE)
+-			break;
+-
+-		pl011_read(uap, REG_DR);
+-	}
+-
+-	uap->im = UART011_RTIM;
+-	if (!pl011_dma_rx_running(uap))
+-		uap->im |= UART011_RXIM;
+-	pl011_write(uap->im, uap, REG_IMSC);
+-	spin_unlock_irq(&uap->port.lock);
+-}
+-
+ static int pl011_startup(struct uart_port *port)
+ {
+ 	struct uart_amba_port *uap =
 -- 
 2.7.4
 
