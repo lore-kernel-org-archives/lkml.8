@@ -2,127 +2,114 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F15C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E54892065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A0E2065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:27:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GrsaIZkL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730334AbgGUR0a (ORCPT
+        id S1730449AbgGUR1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:26:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48766 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728379AbgGUR03 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:26:29 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LH1Ll9096868;
-        Tue, 21 Jul 2020 13:26:23 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1vgp1g2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 13:26:23 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06LH2TEk101896;
-        Tue, 21 Jul 2020 13:26:22 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1vgp1fg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 13:26:22 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LHP8wV023979;
-        Tue, 21 Jul 2020 17:26:21 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 32brq7m4ch-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 17:26:20 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LHQIDa58916972
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jul 2020 17:26:18 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1380842045;
-        Tue, 21 Jul 2020 17:26:18 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E9DC042041;
-        Tue, 21 Jul 2020 17:26:16 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.207.143])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Jul 2020 17:26:16 +0000 (GMT)
-Message-ID: <1595352376.5311.8.camel@linux.ibm.com>
-Subject: Re: [PATCH v6] ima: move APPRAISE_BOOTPARAM dependency on
- ARCH_POLICY to runtime
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Bruno Meneguele <bmeneg@redhat.com>
-Cc:     Nayna <nayna@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-integrity@vger.kernel.org,
-        erichte@linux.ibm.com, nayna@linux.ibm.com, stable@vger.kernel.org
-Date:   Tue, 21 Jul 2020 13:26:16 -0400
-In-Reply-To: <20200720153841.GG10323@glitch>
-References: <20200713164830.101165-1-bmeneg@redhat.com>
-         <d337cbba-e996-e898-1e75-9f142d480e5e@linux.vnet.ibm.com>
-         <1595257015.5055.8.camel@linux.ibm.com> <20200720153841.GG10323@glitch>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_09:2020-07-21,2020-07-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 priorityscore=1501 mlxlogscore=999 suspectscore=0 adultscore=0
- malwarescore=0 phishscore=0 clxscore=1015 impostorscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007210114
+        Tue, 21 Jul 2020 13:27:08 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:43878 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729266AbgGUR1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 13:27:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595352426; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=tn7ejI+sUf3otsLmxloNW0nHWliUL6j6F994zKSOkpc=; b=GrsaIZkLQTYaCAkjBM10OcHRtRwlr9MQAdM484Wvv402YVkx/aab2TtRRec6el+5TWuBW/jh
+ KflWbTRRqdhV/vKab/61YPCTql/IL0SS9FqtJBEaBFR8YXa8+RTlAbUmrskXNSkjW511OMpf
+ 49tMG7uLbNtAUH/REYtahRYIEUk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5f1725640cb8533c3bef1e6b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 21 Jul 2020 17:27:00
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7FEF6C433CA; Tue, 21 Jul 2020 17:27:00 +0000 (UTC)
+Received: from [192.168.0.106] (unknown [183.82.139.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 07DB0C433C6;
+        Tue, 21 Jul 2020 17:26:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 07DB0C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v4 2/4] dt-bindings: clock: Add YAML schemas for LPASS
+ clocks on SC7180
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org
+References: <1594795010-9074-1-git-send-email-tdas@codeaurora.org>
+ <1594795010-9074-3-git-send-email-tdas@codeaurora.org>
+ <159531791606.3847286.11896325263133276429@swboyd.mtv.corp.google.com>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <01daee94-756d-3970-9057-849de2b76430@codeaurora.org>
+Date:   Tue, 21 Jul 2020 22:56:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <159531791606.3847286.11896325263133276429@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-07-20 at 12:38 -0300, Bruno Meneguele wrote:
-> On Mon, Jul 20, 2020 at 10:56:55AM -0400, Mimi Zohar wrote:
-> > On Mon, 2020-07-20 at 10:40 -0400, Nayna wrote:
-> > > On 7/13/20 12:48 PM, Bruno Meneguele wrote:
-> > > > The IMA_APPRAISE_BOOTPARAM config allows enabling different "ima_appraise="
-> > > > modes - log, fix, enforce - at run time, but not when IMA architecture
-> > > > specific policies are enabled.  This prevents properly labeling the
-> > > > filesystem on systems where secure boot is supported, but not enabled on the
-> > > > platform.  Only when secure boot is actually enabled should these IMA
-> > > > appraise modes be disabled.
-> > > >
-> > > > This patch removes the compile time dependency and makes it a runtime
-> > > > decision, based on the secure boot state of that platform.
-> > > >
-> > > > Test results as follows:
-> > > >
-> > > > -> x86-64 with secure boot enabled
-> > > >
-> > > > [    0.015637] Kernel command line: <...> ima_policy=appraise_tcb ima_appraise=fix
-> > > > [    0.015668] ima: Secure boot enabled: ignoring ima_appraise=fix boot parameter option
-> > > >
-> > 
-> > Is it common to have two colons in the same line?  Is the colon being
-> > used as a delimiter when parsing the kernel logs?  Should the second
-> > colon be replaced with a hyphen?  (No need to repost.  I'll fix it
-> > up.)
-> >  
-> 
-> AFAICS it has been used without any limitations, e.g:
-> 
-> PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
-> clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 133484873504 ns
-> microcode: CPU0: patch_level=0x08701013
-> Lockdown: modprobe: unsigned module loading is restricted; see man kernel_lockdown.7
-> ...
-> 
-> I'd say we're fine using it.
+Hi Stephen,
 
-Ok.  FYI, it's now in next-integrity.
+Thanks for the review.
 
-Mimi
+On 7/21/2020 1:21 PM, Stephen Boyd wrote:
+
+>> +...
+>> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+>> index 992b67b..bdf43adc 100644
+>> --- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
+>> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+>> @@ -138,6 +138,7 @@
+>>   #define GCC_MSS_Q6_MEMNOC_AXI_CLK                              128
+>>   #define GCC_MSS_SNOC_AXI_CLK                                   129
+>>   #define GCC_SEC_CTRL_CLK_SRC                                   130
+>> +#define GCC_LPASS_CFG_NOC_SWAY_CLK                             131
+>>   
+>>   /* GCC resets */
+>>   #define GCC_QUSB2PHY_PRIM_BCR                                  0
+> 
+> This hunk should be in the next patch. Oh but then that patch should come
+> before this one so the binding can use it. Either way, shouldn't be part
+> of this patch.
+> 
+
+
+We had a problem with the bot complaining about the clock handles being 
+used in the example.
+
+https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1582540703-6328-4-git-send-email-tdas@codeaurora.org/
+
+Thus I have kept the GCC bindings in the same patch.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
