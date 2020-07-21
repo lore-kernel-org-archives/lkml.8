@@ -2,91 +2,166 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D1FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8887C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4794D207BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C294B20771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ymm00dD9"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Dakh7lth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730041AbgGUQVH (ORCPT
+        id S1730169AbgGUQVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:21:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgGUQVG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:21:06 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F063C061794;
-        Tue, 21 Jul 2020 09:21:06 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id dg28so15697284edb.3;
-        Tue, 21 Jul 2020 09:21:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=OHn7hEjFb/8SBXPDh1+DgoRQWsuvdjNe2+U9AyALG4o=;
-        b=Ymm00dD9F2MasO44D8/wTfY1on9EmII3e6c5icTnGDjY49MsIFNKckv4IZwX+ryogf
-         GRb1dqFZQCLJj0kOlfQ+/ioq9eSG3gXCeDvzxIkQ3XhNVRYELEvEWCTRfL41X2oFvkFJ
-         6B+e20IzO63huP1rpSd2WjArWZ25Qb3gIIWlfNwKP5mOav3z7CoBOoIoQhiYBALvUL52
-         BYB+4ZQb63i8kAb2LtDh/0/iF3bUWc3Th+eULyeWS+cGaSLe5tkqpkhazu1sKFawBxHm
-         fQZv5FoabAu9gg8akYzMCY6Fw5v7Hb5iimAkyb1YL8YKZPr0UHqJfXw85J3Bl5e2ND/y
-         4o2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=OHn7hEjFb/8SBXPDh1+DgoRQWsuvdjNe2+U9AyALG4o=;
-        b=o32R44laedXCQoK+YjeInT50P1QspspQ/j9TIEET6qf9tqvrb5rnxYQ/mIUGYgihGf
-         Zk7RMGw/otBjbnOezMldrpt5/CRsJXWVqtcUpSvlTe0xH8U0PPembi5F9Fovat/gdGlI
-         1xbGVzy5iluOuA7G6KVKox/KTOOv9iDkuaqdGPqWYnEtLEMooGfc5j2m7gWc+YypVYpZ
-         ssyx26b5dcCvtMFQgrOR3Fjp4ZPxURxWmTHI5alqgwOiMQADtdviQPpRbNVH/6rHkRLG
-         nXMYTBzKyNwKEMvf5dj8ikOWFAF4HxBVo0WFNiyzVgJx8QY1UkVoWbDhHXw1iMZrRIXu
-         x6BQ==
-X-Gm-Message-State: AOAM533q43LJthqcqI0IRoEnOJvscHsSb7b2HVWwjpa4RGOjzdRbcXE0
-        VemRosHxSzjDadPQAcB29eG5Pq3AKa6gP4p2BUno+zTqnZw=
-X-Google-Smtp-Source: ABdhPJwlkQdsmXiGVJuT5fBMSRufgvGnNFQJWXPQYp7JmU26Bood8ogKvJRBt/XX6NId4d0K7v9nUTgHvmnJoTuh4oY=
-X-Received: by 2002:a05:6402:202e:: with SMTP id ay14mr26654583edb.233.1595348465062;
- Tue, 21 Jul 2020 09:21:05 -0700 (PDT)
+        Tue, 21 Jul 2020 12:21:12 -0400
+Received: from mail-eopbgr60047.outbound.protection.outlook.com ([40.107.6.47]:19678
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726890AbgGUQVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 12:21:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PGUPmm9eBQilc9katYLS5zgV6gHYIk6HdnDB7LJIy0flNwoSisTHEqQNTefWzxGLQzPTRLXuIvKCWmuUges1VqY7d3tsaRS+M/HoK7QTAOUbRE9ZgwEik56s03tleNJJd5Hq4l1h5B7N13mQ9DGRrYKmfYzJNOSQ4f0yGy6C1NJ6P56yQH6juW0WjlA2fHqtSiWuFSae8U5G7xw1tn8kE4R2ghZJT5jhXCPoa97aSlXiBYRGof33B2VUUfbOFf+mNzeHzEdXK3sMV4mBsO0DM3s4vOLqWzwp5DqV8nkNlI8MIuvmzFZdBA5wJNEa5s62nWkBqd9oeM/KmxX5OPLDBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pfz6R21ZR6TTgTUkkMItOt3R8yEDUpLY6PRV/yUhqJk=;
+ b=Fx22qq0hx0LCbGibG2vSFPD6w786PcSHeE95knGp4BbqoKLI0k6lPYkHspQxOdx3c43ZKQE7ZvWaYQQii46aZZ+Qlik0OPZvdUJLvLYQhqiuDUBuS+tKjEAm2wKYJiTM8pWfzVK9dVvORNUHssrEZqFTEszm6lCFVt5tSfZWXdArds7czx+mT4M9scw5RhiZpkoR5KTY+PzEw89ics+tJwZ4GZF1Wl4eWPR/0hoN3B/oI/ewQiPQrRHyAvvt8R42jWq6d7dJWU8hsvZ7cI/rglCvXdY/hvhDDv5ptoJUnSsO9K7DcjfwnCiPTkLPbGsjx+4A6WxdnDQoMmZvdEQk8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pfz6R21ZR6TTgTUkkMItOt3R8yEDUpLY6PRV/yUhqJk=;
+ b=Dakh7lthQ93kmPlJxgYXp6/iE54EqYvtmsuMZk1XuHXgxJwiy7Qt2o8CZN0R4s5WqVYuER87iB7jU0TZWh41YOZ3YcMI86LaY+brb60IY+Ahv9o1MDD7+EGG0xDJp7n9bwO+dMSyHbdip+Q3ARIX41ELX/3tPK62JcskYBsj79w=
+Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR0502MB3952.eurprd05.prod.outlook.com (2603:10a6:803:23::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Tue, 21 Jul
+ 2020 16:21:08 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::252e:52c7:170b:35d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::252e:52c7:170b:35d%5]) with mapi id 15.20.3195.026; Tue, 21 Jul 2020
+ 16:21:08 +0000
+Date:   Tue, 21 Jul 2020 13:21:04 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     vkoul@kernel.org, megha.dey@intel.com, maz@kernel.org,
+        bhelgaas@google.com, rafael@kernel.org, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, hpa@zytor.com, alex.williamson@redhat.com,
+        jacob.jun.pan@intel.com, ashok.raj@intel.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC v2 03/18] irq/dev-msi: Create IR-DEV-MSI irq domain
+Message-ID: <20200721162104.GB2021248@mellanox.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <159534735519.28840.10435935598386192252.stgit@djiang5-desk3.ch.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159534735519.28840.10435935598386192252.stgit@djiang5-desk3.ch.intel.com>
+X-ClientProxiedBy: MN2PR18CA0026.namprd18.prod.outlook.com
+ (2603:10b6:208:23c::31) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-References: <20200704122809.73794-1-konradybcio@gmail.com> <20200704130922.GB21333@willie-the-truck>
- <20200705033511.GR388985@builder.lan> <CAMS8qEWO-1mNd12Zs-2WogCrgNF5=6RkF=Z1pTeOZxSuKjx+qg@mail.gmail.com>
- <20200721154415.GA5758@jcrouse1-lnx.qualcomm.com>
-In-Reply-To: <20200721154415.GA5758@jcrouse1-lnx.qualcomm.com>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Tue, 21 Jul 2020 18:20:29 +0200
-Message-ID: <CAMS8qEXNh6n9SpMkPAr8cPneasPvJPELD2TZ4gxUf0byxNePbg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
-To:     Konrad Dybcio <konradybcio@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>, skrzynka@konradybcio.pl,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR18CA0026.namprd18.prod.outlook.com (2603:10b6:208:23c::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.19 via Frontend Transport; Tue, 21 Jul 2020 16:21:08 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@mellanox.com>)      id 1jxv0q-00DGXA-Q2; Tue, 21 Jul 2020 13:21:04 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b1f212e5-786c-43ac-60cd-08d82d921301
+X-MS-TrafficTypeDiagnostic: VI1PR0502MB3952:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0502MB395227752989BA6FD8F8C84BCF780@VI1PR0502MB3952.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yixI2HbSJJeUFR/W3IQm4Oi1OPB6eTPNE081pCzA8BSXHKrivpHeOx99NtqqPr58M8yjqkqB+qm2sqJyX8GrPllXx/PbbTAo6IDk2xlkFaxlmZ8vCIDh/UZ2IeO43dHss+kXWO7Lot10Qq7JrUr/epoUAegb3QzgfFg/g49Iukr7sCf08cCPhdivIwYHUgKT9gRxKfsS60QzM0JXkAsnE4tJJ6GJBo74MkxXO0IuNer8rt0sCwgdMsokevTsMa9AOyvPI9anLR5bHJoKTAmT4qLUFhMpATco1JhnYFiVDarx4tSiO0L4BqEk+JvMWiFxbpwEozOclBxJpYSuzZR7LA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39830400003)(396003)(376002)(346002)(136003)(366004)(7416002)(7406005)(83380400001)(2616005)(4326008)(1076003)(8936002)(66946007)(9746002)(9786002)(66556008)(478600001)(36756003)(86362001)(316002)(5660300002)(2906002)(8676002)(6916009)(186003)(66476007)(33656002)(426003)(26005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: VSvDcJQ3uZiF//WSS21AtaTHzXHSYRZchv1wXo2GtDi0I2VxeVmg9eol6hfMKiI3HpM/iCw8jnXP1KcAJIQCulk2SbGygBucyRwbPUl9/Fupdf8RVTBKb2QOTxjXU+HwhCKYpQdhMweJxD/k+KBsoZ8lpTF9DtdsxRj6CSiOUUWUKtRDgGRhxQWcSvRiZVCLzWJWqJiA4FRwuHr+uxYOH/8tKDhv7P4tOaLOrExew0URVWAYf0FuOjesOPrttE2IUqormEq6omCFlf4riQgXODHLKbBWCMWukhcaXiQfnz2nc5NNZ3I13a+IYhpwrDDR9LXBDuWYbKFPSeyiQSF8o9Div8bscF4OKGHbCsbCLn+Hec7+bAbzii1Ds2AzhSfS7J3aTcS1jJwx/NPG0Hj9cSAHLJ8iuD60Mt4o78kKwRJpGHAHJMDVDbAHMlLTfjAfxBFtBLB9M4WjCEeIIyxXAk9+JBgDslMvRxgC9wBnbEQ=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1f212e5-786c-43ac-60cd-08d82d921301
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2020 16:21:08.2566
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uxJNC7lzLzMV8Ga/Mq6PStnmDcGUKB0egekGMAJrQDC5JoT0xzopIwx/l8lgYKHv1cYeuSjLRRyxtzdpW7Wh4Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3952
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->The current
->focus has been on moving more of the SMMU specific bits into the arm-smmu-qcom
->implementation [1] and I think that is the right way to go.
+On Tue, Jul 21, 2020 at 09:02:35AM -0700, Dave Jiang wrote:
+> From: Megha Dey <megha.dey@intel.com>
+> 
+> When DEV_MSI is enabled, the dev_msi_default_domain is updated to the
+> base DEV-MSI irq  domain. If interrupt remapping is enabled, we create
+> a new IR-DEV-MSI irq domain and update the dev_msi_default domain to
+> the same.
+> 
+> For X86, introduce a new irq_alloc_type which will be used by the
+> interrupt remapping driver.
 
-Pardon if I overlooked something obvious, but I can't seem to find a
-clean way for implementing qcom,skip-init in arm-smmu-qcom, as neither
-the arm_smmu_test_smr_masks nor the probe function seem to be
-alterable with arm_smmu_impl. I'm open to your ideas guys.
+Why? Shouldn't this by symmetrical with normal MSI? Does MSI do this?
 
-Konrad
+I would have thought you'd want to switch to this remapping mode as
+part of vfio or something like current cases.
+
+> +struct irq_domain *create_remap_dev_msi_irq_domain(struct irq_domain *parent,
+> +						   const char *name)
+> +{
+> +	struct fwnode_handle *fn;
+> +	struct irq_domain *domain;
+> +
+> +	fn = irq_domain_alloc_named_fwnode(name);
+> +	if (!fn)
+> +		return NULL;
+> +
+> +	domain = msi_create_irq_domain(fn, &dev_msi_ir_domain_info, parent);
+> +	if (!domain) {
+> +		pr_warn("failed to initialize irqdomain for IR-DEV-MSI.\n");
+> +		return ERR_PTR(-ENXIO);
+> +	}
+> +
+> +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
+> +
+> +	if (!dev_msi_default_domain)
+> +		dev_msi_default_domain = domain;
+> +
+> +	return domain;
+> +}
+
+What about this code creates a "remap" ? ie why is the function called
+"create_remap" ?
+
+> diff --git a/include/linux/msi.h b/include/linux/msi.h
+> index 1da97f905720..7098ba566bcd 100644
+> +++ b/include/linux/msi.h
+> @@ -378,6 +378,9 @@ void *platform_msi_get_host_data(struct irq_domain *domain);
+>  void platform_msi_write_msg(struct irq_data *data, struct msi_msg *msg);
+>  void platform_msi_unmask_irq(struct irq_data *data);
+>  void platform_msi_mask_irq(struct irq_data *data);
+> +
+> +int dev_msi_prepare(struct irq_domain *domain, struct device *dev,
+> +                           int nvec, msi_alloc_info_t *arg);
+
+I wonder if this should use the popular #ifdef dev_msi_prepare scheme
+instead of a weak symbol?
+
+Jason
