@@ -2,307 +2,199 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EEBC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA049C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3EF62068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5556206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:10:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="icFK+j1Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L9R5y5TO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730539AbgGUTJh (ORCPT
+        id S1730613AbgGUTKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:09:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41698 "EHLO
+        Tue, 21 Jul 2020 15:10:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730300AbgGUTJd (ORCPT
+        with ESMTP id S1726960AbgGUTKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:09:33 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA11C0619DA
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:09:33 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id f16so2142882pjt.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:09:33 -0700 (PDT)
+        Tue, 21 Jul 2020 15:10:13 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FD62C061794;
+        Tue, 21 Jul 2020 12:10:13 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id 72so10669847ple.0;
+        Tue, 21 Jul 2020 12:10:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=NAFt6C2lnvpS45jVhw23Ap3Sp8296UwbtX9tobHLa1g=;
-        b=icFK+j1QmdrfPm1agUfJealBTpwFHPXzo+8S/+STX6KNUWATkXlIlCEWGl2IAB0Kaw
-         81hUL9l2hd6YXn1feWWISzSrw+hQRCIGKNVJbWKr7A8mt5ntyHbZ7HqDqAM0G+A1AosL
-         C4oIXZNzgs1qwn+vlMLHBWHD7jiCUNtg/I8HA=
+        bh=4VasfkiSgNbg3DexTWANpLNDcXThnixKgOSNULSjEfA=;
+        b=L9R5y5TOMDt5OSaIal5MpxYPE3IRn8eYeUblKvHeUBPtWb6EUIWGKE2VT+eAMkxjGc
+         ynef9fttbPpB+yehrjn+pvfUNSJhbYhuV/bhM0ZQ8KWiCrBUg1Zw9Pwy/3aioG4+tld2
+         oVcw3VtTD8UkhQ46qzxSQ5zYhnQ0PVgUqNOJRjU3yjaf9abOdqvi9FS1bee3nfc4dFxO
+         iclQYqam/wcL4ZGgaIIUZ9T6c4AdhBd2gRTtztcgtbXrrQJ6+LE/ym3vAF/NagaeEy/T
+         6qP/CAO3l5JqEBln2UMnk7SfUuPmBa5pHxVZfQLKm7nhMzePuUoM/aNf6RNcNwzWs6Xl
+         opGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=NAFt6C2lnvpS45jVhw23Ap3Sp8296UwbtX9tobHLa1g=;
-        b=ir3Pvek4+f9B41gWGV/eHzBc56mVaT8nuZvK3D9lL4TB1wvfP/WZGKmh70XaHzjD0A
-         fxtA6Q15l66R6DZHCtAcfbcZdMf+e8fO+xTDyDirKEWbfrTEohdNxY8UhlH1smL4F3Oh
-         Jy/oIpWF4UaXkWrds27zP+dMgKQT/1sdgr0m4ndO+nl14C91kq6EBir8q7ztHsvSyejk
-         L/lZD7v4oxneYnyhsdIAe3APlyQEdePYviIrav+ESgLwtbn3tLeKsyectNdZ47JeoOfA
-         I+7bBJK5UEfOhz1xvVT7akAPwju/1iJBUIlbdEfMhc8LNW+NkR2QJt64ByHQyvg8wOwo
-         s0Ng==
-X-Gm-Message-State: AOAM530kcSagiK59gLflJZdsycaMZa49bmJkOk0UlghlQDDXGa4RAtXh
-        SSLLxU6dwEkmANJ9lNdX0CGfYLvMUR0=
-X-Google-Smtp-Source: ABdhPJzWAwKHQkMx9PJ9EAZVnXplkjPUmWmAhBJFL+0Oc7tM+S4Ojo/uUW20rsqp3QBbghADINzeSA==
-X-Received: by 2002:a17:902:7612:: with SMTP id k18mr22356298pll.187.1595358572696;
-        Tue, 21 Jul 2020 12:09:32 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c139sm20745411pfb.65.2020.07.21.12.09.31
+        bh=4VasfkiSgNbg3DexTWANpLNDcXThnixKgOSNULSjEfA=;
+        b=a2xbtQiWMxdUKu/OZpB3DSl+B4KceSJ+s5gbu9VuDqtEHa5xyN48Uft+p39m5g5fw7
+         cHtsIeIrU/hLaUzvdzU2zp7idBYuo7+0sEUIWofuNCd215EChtPUx4pb0CxWZciPaMi1
+         SBxvFnXJe9wx0LL44CeEntSqzlH+vfSca8rRlaCcbn0/2YyzLIHlOW2I2c0cRDFnz4Nm
+         Z4+kIERQfBsFSVxRGcSNZgV2cTKgEgfLb3JHx+bqf/UsSZzPhTjCpty1ztNUsAu2ABgQ
+         fhn4JZ4W2Qg/xvuVJmKfjPLSqmasxS/pOg/IsPton0Cf80Kav3pVTzCdnnpHGHCPbJJQ
+         joUQ==
+X-Gm-Message-State: AOAM533i0O+i8mfLTSds4KbpAW/8SHzGQBYxL+ToQGYR/PY06Saqfd8k
+        Osz5b0xWDtY3xWw0iJZDpNY=
+X-Google-Smtp-Source: ABdhPJwsmp2qZSeuy2yPW5EEVFEiG516nTfieiUGxmaw74pJ1ZL26UW/kpW5rXGE7uJCS9W48CMFcw==
+X-Received: by 2002:a17:90a:ec0a:: with SMTP id l10mr5615119pjy.152.1595358612670;
+        Tue, 21 Jul 2020 12:10:12 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:e3b])
+        by smtp.gmail.com with ESMTPSA id k189sm21202915pfd.175.2020.07.21.12.10.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 12:09:31 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 12:09:30 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Vitor Massaru Iha <vitor@massaru.org>
-Cc:     kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
-        davidgow@google.com, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v3] lib: Convert test_user_copy to KUnit test
-Message-ID: <202007211207.5BAA9D8D@keescook>
-References: <20200721174654.72132-1-vitor@massaru.org>
+        Tue, 21 Jul 2020 12:10:11 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 12:10:09 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kernel-team@fb.com, john.fastabend@gmail.com, kpsingh@chromium.org,
+        brouer@redhat.com, peterz@infradead.org
+Subject: Re: [PATCH v3 bpf-next 1/2] bpf: separate bpf_get_[stack|stackid]
+ for perf events BPF
+Message-ID: <20200721191009.5khr7blivtuv3qfj@ast-mbp.dhcp.thefacebook.com>
+References: <20200716225933.196342-1-songliubraving@fb.com>
+ <20200716225933.196342-2-songliubraving@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200721174654.72132-1-vitor@massaru.org>
+In-Reply-To: <20200716225933.196342-2-songliubraving@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 02:46:54PM -0300, Vitor Massaru Iha wrote:
-> This adds the conversion of the runtime tests of test_user_copy fuctions,
-> from `lib/test_user_copy.c`to KUnit tests.
-> 
-> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> ---
-> v2:
->     * splitted patch in 3:
->         - Allows to install and load modules in root filesystem;
->         - Provides an userspace memory context when tests are compiled
->           as module;
->         - Convert test_user_copy to KUnit test;
->     * removed entry for CONFIG_TEST_USER_COPY;
->     * replaced pr_warn to KUNIT_EXPECT_FALSE_MSG in test macro to
->       decrease the diff;
-> v3:
->     * rebased with last kunit branch
->     * Please apply this commit from kunit-fixes:
->         3f37d14b8a3152441f36b6bc74000996679f0998
->       And these from patchwork:
->         https://patchwork.kernel.org/patch/11676331/
->         https://patchwork.kernel.org/patch/11676335/
-> ---
->  lib/Kconfig.debug                           | 28 ++++++++------
->  lib/Makefile                                |  2 +-
->  lib/{test_user_copy.c => user_copy_kunit.c} | 42 +++++++++------------
->  3 files changed, 35 insertions(+), 37 deletions(-)
->  rename lib/{test_user_copy.c => user_copy_kunit.c} (91%)
-> 
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 9ad9210d70a1..f699a3624ae7 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2078,18 +2078,6 @@ config TEST_VMALLOC
-> 
->  	  If unsure, say N.
-> 
-> -config TEST_USER_COPY
-> -	tristate "Test user/kernel boundary protections"
-> -	depends on m
-> -	help
-> -	  This builds the "test_user_copy" module that runs sanity checks
-> -	  on the copy_to/from_user infrastructure, making sure basic
-> -	  user/kernel boundary testing is working. If it fails to load,
-> -	  a regression has been detected in the user/kernel memory boundary
-> -	  protections.
-> -
-> -	  If unsure, say N.
-> -
->  config TEST_BPF
->  	tristate "Test BPF filter functionality"
->  	depends on m && NET
-> @@ -2154,6 +2142,22 @@ config SYSCTL_KUNIT_TEST
-> 
->  	  If unsure, say N.
-> 
-> +config USER_COPY_KUNIT
-> +	tristate "KUnit Test for user/kernel boundary protections"
-> +	depends on KUNIT
-> +	depends on m
-> +	help
-> +	  This builds the "user_copy_kunit" module that runs sanity checks
-> +	  on the copy_to/from_user infrastructure, making sure basic
-> +	  user/kernel boundary testing is working. If it fails to load,
-> +	  a regression has been detected in the user/kernel memory boundary
-> +	  protections.
+On Thu, Jul 16, 2020 at 03:59:32PM -0700, Song Liu wrote:
 > +
-> +	  For more information on KUnit and unit tests in general please refer
-> +	  to the KUnit documentation in Documentation/dev-tools/kunit/.
+> +BPF_CALL_3(bpf_get_stackid_pe, struct bpf_perf_event_data_kern *, ctx,
+> +	   struct bpf_map *, map, u64, flags)
+> +{
+> +	struct perf_event *event = ctx->event;
+> +	struct perf_callchain_entry *trace;
+> +	bool has_kernel, has_user;
+> +	bool kernel, user;
 > +
-> +	  If unsure, say N.
+> +	/* perf_sample_data doesn't have callchain, use bpf_get_stackid */
+> +	if (!(event->attr.sample_type & __PERF_SAMPLE_CALLCHAIN_EARLY))
+
+what if event was not created with PERF_SAMPLE_CALLCHAIN ?
+Calling the helper will still cause crashes, no?
+
+> +		return bpf_get_stackid((unsigned long)(ctx->regs),
+> +				       (unsigned long) map, flags, 0, 0);
 > +
->  config LIST_KUNIT_TEST
->  	tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_ALL_TESTS
->  	depends on KUNIT
-> diff --git a/lib/Makefile b/lib/Makefile
-> index b1c42c10073b..8c145f85accc 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -78,7 +78,6 @@ obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
->  obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
->  obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
->  obj-$(CONFIG_TEST_SORT) += test_sort.o
-> -obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
->  obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
->  obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
->  obj-$(CONFIG_TEST_PRINTF) += test_printf.o
-> @@ -318,3 +317,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
->  # KUnit tests
->  obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
->  obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
-> +obj-$(CONFIG_USER_COPY_KUNIT) += user_copy_kunit.o
-> diff --git a/lib/test_user_copy.c b/lib/user_copy_kunit.c
-> similarity index 91%
-> rename from lib/test_user_copy.c
-> rename to lib/user_copy_kunit.c
-> index 5ff04d8fe971..a10ddd15b4cd 100644
-> --- a/lib/test_user_copy.c
-> +++ b/lib/user_copy_kunit.c
-> @@ -16,6 +16,7 @@
->  #include <linux/slab.h>
->  #include <linux/uaccess.h>
->  #include <linux/vmalloc.h>
-> +#include <kunit/test.h>
-> 
->  /*
->   * Several 32-bit architectures support 64-bit {get,put}_user() calls.
-> @@ -35,7 +36,7 @@
->  ({									\
->  	int cond = (condition);						\
->  	if (cond)							\
-> -		pr_warn("[%d] " msg "\n", __LINE__, ##__VA_ARGS__);	\
-> +		KUNIT_EXPECT_FALSE_MSG(test, cond, msg, ##__VA_ARGS__);	\
+> +	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
+> +			       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
+> +		return -EINVAL;
+> +
+> +	user = flags & BPF_F_USER_STACK;
+> +	kernel = !user;
+> +
+> +	has_kernel = !event->attr.exclude_callchain_kernel;
+> +	has_user = !event->attr.exclude_callchain_user;
+> +
+> +	if ((kernel && !has_kernel) || (user && !has_user))
+> +		return -EINVAL;
 
-I'm surprised any of this compiles with both a macro and arg named
-"test". :) Can you change the arg to something with more clarity?
-"context" or "kunit" seems better.
+this will break existing users in a way that will be very hard for them to debug.
+If they happen to set exclude_callchain_* flags during perf_event_open
+the helpers will be failing at run-time.
+One can argue that when precise_ip=1 the bpf_get_stack is broken, but
+this is a change in behavior.
+It also seems to be broken when PERF_SAMPLE_CALLCHAIN was not set at event
+creation time, but precise_ip=1 was.
 
->  	cond;								\
->  })
-> 
-> @@ -44,7 +45,7 @@ static bool is_zeroed(void *from, size_t size)
->  	return memchr_inv(from, 0x0, size) == NULL;
->  }
-> 
-> -static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
-> +static int test_check_nonzero_user(struct kunit *test, char *kmem, char __user *umem, size_t size)
->  {
->  	int ret = 0;
->  	size_t start, end, i, zero_start, zero_end;
-> @@ -102,7 +103,7 @@ static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
->  	return ret;
->  }
-> 
-> -static int test_copy_struct_from_user(char *kmem, char __user *umem,
-> +static int test_copy_struct_from_user(struct kunit *test, char *kmem, char __user *umem,
->  				      size_t size)
->  {
->  	int ret = 0;
-> @@ -177,7 +178,7 @@ static int test_copy_struct_from_user(char *kmem, char __user *umem,
->  	return ret;
->  }
-> 
-> -static int __init test_user_copy_init(void)
-> +static void user_copy_test(struct kunit *test)
->  {
->  	int ret = 0;
->  	char *kmem;
-> @@ -192,16 +193,14 @@ static int __init test_user_copy_init(void)
->  #endif
-> 
->  	kmem = kmalloc(PAGE_SIZE * 2, GFP_KERNEL);
-> -	if (!kmem)
-> -		return -ENOMEM;
-> +	KUNIT_EXPECT_FALSE_MSG(test, kmem == NULL, "kmalloc failed");
+> +
+> +	trace = ctx->data->callchain;
+> +	if (unlikely(!trace))
+> +		return -EFAULT;
+> +
+> +	if (has_kernel && has_user) {
 
-This would need to be an ASSERT, yes?
+shouldn't it be || ?
 
-> 
->  	user_addr = vm_mmap(NULL, 0, PAGE_SIZE * 2,
->  			    PROT_READ | PROT_WRITE | PROT_EXEC,
->  			    MAP_ANONYMOUS | MAP_PRIVATE, 0);
->  	if (user_addr >= (unsigned long)(TASK_SIZE)) {
-> -		pr_warn("Failed to allocate user memory\n");
->  		kfree(kmem);
-> -		return -ENOMEM;
-> +		KUNIT_FAIL(test, "Failed to allocate user memory");
->  	}
+> +		__u64 nr_kernel = count_kernel_ip(trace);
+> +		int ret;
+> +
+> +		if (kernel) {
+> +			__u64 nr = trace->nr;
+> +
+> +			trace->nr = nr_kernel;
+> +			ret = __bpf_get_stackid(map, trace, flags);
+> +
+> +			/* restore nr */
+> +			trace->nr = nr;
+> +		} else { /* user */
+> +			u64 skip = flags & BPF_F_SKIP_FIELD_MASK;
+> +
+> +			skip += nr_kernel;
+> +			if (skip > BPF_F_SKIP_FIELD_MASK)
+> +				return -EFAULT;
+> +
+> +			flags = (flags & ~BPF_F_SKIP_FIELD_MASK) | skip;
+> +			ret = __bpf_get_stackid(map, trace, flags);
+> +		}
+> +		return ret;
+> +	}
+> +	return __bpf_get_stackid(map, trace, flags);
+...
+> +	if (has_kernel && has_user) {
+> +		__u64 nr_kernel = count_kernel_ip(trace);
+> +		int ret;
+> +
+> +		if (kernel) {
+> +			__u64 nr = trace->nr;
+> +
+> +			trace->nr = nr_kernel;
+> +			ret = __bpf_get_stack(ctx->regs, NULL, trace, buf,
+> +					      size, flags);
+> +
+> +			/* restore nr */
+> +			trace->nr = nr;
+> +		} else { /* user */
+> +			u64 skip = flags & BPF_F_SKIP_FIELD_MASK;
+> +
+> +			skip += nr_kernel;
+> +			if (skip > BPF_F_SKIP_FIELD_MASK)
+> +				goto clear;
+> +
+> +			flags = (flags & ~BPF_F_SKIP_FIELD_MASK) | skip;
+> +			ret = __bpf_get_stack(ctx->regs, NULL, trace, buf,
+> +					      size, flags);
+> +		}
 
-Why FAIL instead of ASSERT?
+Looks like copy-paste. I think there should be a way to make it
+into common helper.
 
-> 
->  	usermem = (char __user *)user_addr;
-> @@ -245,9 +244,9 @@ static int __init test_user_copy_init(void)
->  #undef test_legit
-> 
->  	/* Test usage of check_nonzero_user(). */
-> -	ret |= test_check_nonzero_user(kmem, usermem, 2 * PAGE_SIZE);
-> +	ret |= test_check_nonzero_user(test, kmem, usermem, 2 * PAGE_SIZE);
->  	/* Test usage of copy_struct_from_user(). */
-> -	ret |= test_copy_struct_from_user(kmem, usermem, 2 * PAGE_SIZE);
-> +	ret |= test_copy_struct_from_user(test, kmem, usermem, 2 * PAGE_SIZE);
-> 
->  	/*
->  	 * Invalid usage: none of these copies should succeed.
-> @@ -309,23 +308,18 @@ static int __init test_user_copy_init(void)
-> 
->  	vm_munmap(user_addr, PAGE_SIZE * 2);
->  	kfree(kmem);
-> -
-> -	if (ret == 0) {
-> -		pr_info("tests passed.\n");
-> -		return 0;
-> -	}
-> -
-> -	return -EINVAL;
+I think the main isssue is wrong interaction with event attr flags.
+I think the verifier should detect that bpf_get_stack/bpf_get_stackid
+were used and prevent attaching to perf_event with attr.precise_ip=1
+and PERF_SAMPLE_CALLCHAIN is not specified.
+I was thinking whether attaching bpf to event can force setting of
+PERF_SAMPLE_CALLCHAIN, but that would be a surprising behavior,
+so not a good idea.
+So the only thing left is to reject attach when bpf_get_stack is used
+in two cases:
+if attr.precise_ip=1 and PERF_SAMPLE_CALLCHAIN is not set.
+  (since it will lead to crashes)
+if attr.precise_ip=1 and PERF_SAMPLE_CALLCHAIN is set,
+but exclude_callchain_[user|kernel]=1 is set too.
+  (since it will lead to surprising behavior of bpf_get_stack)
 
-Does KUnit provide a end-of-test summary now?
-
->  }
-> 
-> -module_init(test_user_copy_init);
-> -
-> -static void __exit test_user_copy_exit(void)
-> -{
-> -	pr_info("unloaded.\n");
-> -}
-> +static struct kunit_case user_copy_test_cases[] = {
-> +	KUNIT_CASE(user_copy_test),
-> +	{}
-> +};
-> 
-> -module_exit(test_user_copy_exit);
-> +static struct kunit_suite user_copy_test_suite = {
-> +	.name = "user_copy",
-> +	.test_cases = user_copy_test_cases,
-> +};
-> 
-> +kunit_test_suites(&user_copy_test_suite);
->  MODULE_AUTHOR("Kees Cook <keescook@chromium.org>");
->  MODULE_LICENSE("GPL");
-> 
-> base-commit: d43c7fb05765152d4d4a39a8ef957c4ea14d8847
-> --
-> 2.26.2
-> 
-
-Otherwise, yes, looking good.
-
--- 
-Kees Cook
+Other ideas?
