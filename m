@@ -2,286 +2,186 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB788C433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A561C2080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA3E2080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:34:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hKVAoug+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Y5Fi9v2I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgGUHdR (ORCPT
+        id S1726995AbgGUHeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:33:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46288 "EHLO
+        Tue, 21 Jul 2020 03:34:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbgGUHdQ (ORCPT
+        with ESMTP id S1725984AbgGUHeM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 03:33:16 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD38C0619D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:33:16 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id k7so5891580uan.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:33:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+t/pnEQ4NNsqTluf7AOakEjbmVq5C7q3xQXEC/0fJBA=;
-        b=hKVAoug+rm4SkarqQwzg/++fjVRG4oiIPogO8e0bICWCuEXK/kE+OzQGD7MJfE5ch/
-         9s6NoIXjhs92TDnSItNmYR39osn/gMrY8f2oC4JsK/WQ3A2nFXYdLxp5iESP6VD3efKj
-         5h+7CrLcyKOsNrvrJf+mwowor5kfNx4dVkBTkNPU6GQx+cwhDyquhLWnS/E9c6IYFPnL
-         /RNNJesXGMk+Sq3Sz1unfPGmKyXBd0mQhMAUEj7hyO+N2KF/81xHxrFPpld4xUjtUZel
-         fkr1Yk3IgBofZgiW66pVvhpKHoKIVAz1vBc2eFn5kjE1TIz2ylvmLj7LnMPLty9tTu77
-         Wheg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+t/pnEQ4NNsqTluf7AOakEjbmVq5C7q3xQXEC/0fJBA=;
-        b=F0RtMHBqZ2g3StqsjabFFpYVhJ7xQDxiQfhsQ8vszAt4mAjo7DrmHsrPvwL0FJn6k7
-         dge4V/BHWNPedW0qdI1xejF50hKbGflvcNnbdvVDAJqAsZbqk/nGv70YqZuMzO5kPK3f
-         Sv5cphG9M8Ad7WUwBnd3j4cen2HlunSscUPBpJdntVbQ7EzwECaZeipl83JYZKiMGi19
-         FuBSxQ3t2tXrMy8OInrszerRBqlwxg5WE8orlpef9fmdC9T69T3PxZyvRfWF0LJGhM35
-         MRq6W0z+ISQHtnCY/pTZRZ7CxIgAwwry2hpVFpG+rV1SMCiM2VQKapSeMBspL1ke8C5R
-         gD+Q==
-X-Gm-Message-State: AOAM530Ja670qormJZGFR0Vq+8QEOYzEE9wfsHn8a2Ysah+yK+l5Bx0l
-        TIG3uINnEcPSBlND2UwuFKRh7e5J9Gr2r1c+Nq1N6g==
-X-Google-Smtp-Source: ABdhPJxdCf21+4YrLutOnbYPUYtdkGx185wgV6qOn7mlEW9JyhPdivZaYT7Gg4HJEMTzXqkCG0pNVhT8kPDP2Sq3j1g=
-X-Received: by 2002:ab0:1167:: with SMTP id g39mr18207671uac.60.1595316795342;
- Tue, 21 Jul 2020 00:33:15 -0700 (PDT)
+        Tue, 21 Jul 2020 03:34:12 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B41E0C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:34:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=k+NHKxDCnl5MkrAMPujZSqjRAZLgNEEutC2amRb708k=; b=Y5Fi9v2I5dwBCIUuLbGG8QXEDL
+        ptnc2hmX+MGQKklEOc+bXv8+HanpXrPeQngRrbs4fJmjVObti9x8Egl+jGArkMZhIlln8YYo/y/jm
+        /Xvgwb/BShpzoJXlTt1G9nIysmPEi4P1GgxTV8MHRM5fR72WeJ8fecqcz+xxWf67pR9U=;
+Received: from p200300ccff1230001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff12:3000:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jxmmu-0002tx-7R; Tue, 21 Jul 2020 09:34:08 +0200
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jxmmt-0005yX-Pm; Tue, 21 Jul 2020 09:34:07 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        j.neuschaefer@gmx.net, m.felsch@pengutronix.de
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v2] mfd: rn5t618: Make restart handler atomic safe
+Date:   Tue, 21 Jul 2020 09:34:02 +0200
+Message-Id: <20200721073402.22925-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200707090159.1018-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20200707090159.1018-1-daniel.lezcano@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 21 Jul 2020 13:03:04 +0530
-Message-ID: <CAHLCerMa+gev2DC=CQ-KA2shjuK7LmkKCmUWTVwoA9rv5Hd6mA@mail.gmail.com>
-Subject: Re: [PATCH] thermal: netlink: Fix compilation error when CONFIG_NET=n
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        rdunlap@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 2:32 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> When the network is not configured, the netlink are disabled on all
-> the system. The thermal framework assumed the netlink are always
+The restart handler is executed during the shutdown phase which is
+atomic/irq-less. The i2c framework supports atomic transfers since
+commit 63b96983a5dd ("i2c: core: introduce callbacks for atomic
+transfers") to address this use case. Using i2c regmap in that
+situation is not allowed:
 
-nit: s/are/is/ in both places above
+[  165.177465] [ BUG: Invalid wait context ]
+[  165.181479] 5.8.0-rc3-00003-g0e9088558027-dirty #11 Not tainted
+[  165.187400] -----------------------------
+[  165.191410] systemd-shutdow/1 is trying to lock:
+[  165.196030] d85b4438 (rn5t618:170:(&rn5t618_regmap_config)->lock){+.+.}-{3:3}, at: regmap_update_bits_base+0x30/0x70
+[  165.206573] other info that might help us debug this:
+[  165.211625] context-{4:4}
+[  165.214248] 2 locks held by systemd-shutdow/1:
+[  165.218691]  #0: c131c47c (system_transition_mutex){+.+.}-{3:3}, at: __do_sys_reboot+0x90/0x204
+[  165.227405]  #1: c131efb4 (rcu_read_lock){....}-{1:2}, at: __atomic_notifier_call_chain+0x0/0x118
+[  165.236288] stack backtrace:
+[  165.239174] CPU: 0 PID: 1 Comm: systemd-shutdow Not tainted 5.8.0-rc3-00003-g0e9088558027-dirty #11
+[  165.248220] Hardware name: Freescale i.MX6 SoloLite (Device Tree)
+[  165.254330] [<c0112110>] (unwind_backtrace) from [<c010bfa0>] (show_stack+0x10/0x14)
+[  165.262084] [<c010bfa0>] (show_stack) from [<c058093c>] (dump_stack+0xe8/0x120)
+[  165.269407] [<c058093c>] (dump_stack) from [<c01835a4>] (__lock_acquire+0x81c/0x2ca0)
+[  165.277246] [<c01835a4>] (__lock_acquire) from [<c0186344>] (lock_acquire+0xe4/0x490)
+[  165.285090] [<c0186344>] (lock_acquire) from [<c0c98638>] (__mutex_lock+0x74/0x954)
+[  165.292756] [<c0c98638>] (__mutex_lock) from [<c0c98f34>] (mutex_lock_nested+0x1c/0x24)
+[  165.300769] [<c0c98f34>] (mutex_lock_nested) from [<c07593ec>] (regmap_update_bits_base+0x30/0x70)
+[  165.309741] [<c07593ec>] (regmap_update_bits_base) from [<c076b838>] (rn5t618_trigger_poweroff_sequence+0x34/0x64)
+[  165.320097] [<c076b838>] (rn5t618_trigger_poweroff_sequence) from [<c076b874>] (rn5t618_restart+0xc/0x2c)
+[  165.329669] [<c076b874>] (rn5t618_restart) from [<c01514f8>] (notifier_call_chain+0x48/0x80)
+[  165.338113] [<c01514f8>] (notifier_call_chain) from [<c01516a8>] (__atomic_notifier_call_chain+0x70/0x118)
+[  165.347770] [<c01516a8>] (__atomic_notifier_call_chain) from [<c0151768>] (atomic_notifier_call_chain+0x18/0x20)
+[  165.357949] [<c0151768>] (atomic_notifier_call_chain) from [<c010a828>] (machine_restart+0x68/0x80)
+[  165.367001] [<c010a828>] (machine_restart) from [<c0153224>] (__do_sys_reboot+0x11c/0x204)
+[  165.375272] [<c0153224>] (__do_sys_reboot) from [<c0100080>] (ret_fast_syscall+0x0/0x28)
+[  165.383364] Exception stack(0xd80a5fa8 to 0xd80a5ff0)
+[  165.388420] 5fa0:                   00406948 00000000 fee1dead 28121969 01234567 73299b00
+[  165.396602] 5fc0: 00406948 00000000 00000000 00000058 be91abc8 00000000 be91ab60 004056f8
+[  165.404781] 5fe0: 00000058 be91aabc b6ed4d45 b6e56746
 
-> opt-in.
->
-> Fix this by adding a Kconfig option for the netlink notification,
-> defaulting to yes and depending on CONFIG_NET.
->
-> As the change implies multiple stubs and in order to not pollute the
-> internal thermal header, the thermal_nelink.h has been added and
-> included in the thermal_core.h, so this one regain some kind of
-> clarity.
->
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+Changes in v2:
+- keep comments
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+ drivers/mfd/rn5t618.c | 43 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 33 insertions(+), 10 deletions(-)
 
-> ---
->  drivers/thermal/Kconfig           | 10 ++++
->  drivers/thermal/Makefile          |  5 +-
->  drivers/thermal/thermal_core.h    | 20 +------
->  drivers/thermal/thermal_netlink.h | 98 +++++++++++++++++++++++++++++++
->  4 files changed, 114 insertions(+), 19 deletions(-)
->  create mode 100644 drivers/thermal/thermal_netlink.h
->
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 3eb2348e5242..07983bef8d6a 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -17,6 +17,16 @@ menuconfig THERMAL
->
->  if THERMAL
->
-> +config THERMAL_NETLINK
-> +       bool "Thermal netlink management"
-> +       depends on NET
-> +       default y
-> +       help
-> +         The thermal framework has a netlink interface to do thermal
-> +         zones discovery, temperature readings and events such as
-> +         trip point crossed, cooling device update or governor
-> +         change. It is recommended to enable the feature.
-> +
->  config THERMAL_STATISTICS
->         bool "Thermal state transition statistics"
->         help
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 1bbf0805fb04..589f6fb0d381 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -5,7 +5,10 @@
->
->  obj-$(CONFIG_THERMAL)          += thermal_sys.o
->  thermal_sys-y                  += thermal_core.o thermal_sysfs.o \
-> -                                       thermal_helpers.o thermal_netlink.o
-> +                                       thermal_helpers.o
-> +
-> +# netlink interface to manage the thermal framework
-> +thermal_sys-$(CONFIG_THERMAL_NETLINK)          += thermal_netlink.o
->
->  # interface to/from other layers providing sensors
->  thermal_sys-$(CONFIG_THERMAL_HWMON)            += thermal_hwmon.o
-> diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-> index b44969d50ec0..99d065e6ed08 100644
-> --- a/drivers/thermal/thermal_core.h
-> +++ b/drivers/thermal/thermal_core.h
-> @@ -12,6 +12,8 @@
->  #include <linux/device.h>
->  #include <linux/thermal.h>
->
-> +#include "thermal_netlink.h"
-> +
->  /* Default Thermal Governor */
->  #if defined(CONFIG_THERMAL_DEFAULT_GOV_STEP_WISE)
->  #define DEFAULT_THERMAL_GOVERNOR       "step_wise"
-> @@ -52,24 +54,6 @@ int for_each_thermal_governor(int (*cb)(struct thermal_governor *, void *),
->
->  struct thermal_zone_device *thermal_zone_get_by_id(int id);
->
-> -/* Netlink notification function */
-> -int thermal_notify_tz_create(int tz_id, const char *name);
-> -int thermal_notify_tz_delete(int tz_id);
-> -int thermal_notify_tz_enable(int tz_id);
-> -int thermal_notify_tz_disable(int tz_id);
-> -int thermal_notify_tz_trip_down(int tz_id, int id);
-> -int thermal_notify_tz_trip_up(int tz_id, int id);
-> -int thermal_notify_tz_trip_delete(int tz_id, int id);
-> -int thermal_notify_tz_trip_add(int tz_id, int id, int type,
-> -                              int temp, int hyst);
-> -int thermal_notify_tz_trip_change(int tz_id, int id, int type,
-> -                                 int temp, int hyst);
-> -int thermal_notify_cdev_state_update(int cdev_id, int state);
-> -int thermal_notify_cdev_add(int cdev_id, const char *name, int max_state);
-> -int thermal_notify_cdev_delete(int cdev_id);
-> -int thermal_notify_tz_gov_change(int tz_id, const char *name);
-> -int thermal_genl_sampling_temp(int id, int temp);
-> -
->  struct thermal_attr {
->         struct device_attribute attr;
->         char name[THERMAL_NAME_LENGTH];
-> diff --git a/drivers/thermal/thermal_netlink.h b/drivers/thermal/thermal_netlink.h
-> new file mode 100644
-> index 000000000000..0ec28d105da5
-> --- /dev/null
-> +++ b/drivers/thermal/thermal_netlink.h
-> @@ -0,0 +1,98 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + *  Copyright (C) Linaro Ltd 2020
-> + *  Author: Daniel Lezcano <daniel.lezcano@linaro.org>
-> + */
-> +
-> +/* Netlink notification function */
-> +#ifdef CONFIG_THERMAL_NETLINK
-> +int thermal_notify_tz_create(int tz_id, const char *name);
-> +int thermal_notify_tz_delete(int tz_id);
-> +int thermal_notify_tz_enable(int tz_id);
-> +int thermal_notify_tz_disable(int tz_id);
-> +int thermal_notify_tz_trip_down(int tz_id, int id);
-> +int thermal_notify_tz_trip_up(int tz_id, int id);
-> +int thermal_notify_tz_trip_delete(int tz_id, int id);
-> +int thermal_notify_tz_trip_add(int tz_id, int id, int type,
-> +                              int temp, int hyst);
-> +int thermal_notify_tz_trip_change(int tz_id, int id, int type,
-> +                                 int temp, int hyst);
-> +int thermal_notify_cdev_state_update(int cdev_id, int state);
-> +int thermal_notify_cdev_add(int cdev_id, const char *name, int max_state);
-> +int thermal_notify_cdev_delete(int cdev_id);
-> +int thermal_notify_tz_gov_change(int tz_id, const char *name);
-> +int thermal_genl_sampling_temp(int id, int temp);
-> +#else
-> +static inline int thermal_notify_tz_create(int tz_id, const char *name)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int thermal_notify_tz_delete(int tz_id)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int thermal_notify_tz_enable(int tz_id)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int thermal_notify_tz_disable(int tz_id)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int thermal_notify_tz_trip_down(int tz_id, int id)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int thermal_notify_tz_trip_up(int tz_id, int id)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int thermal_notify_tz_trip_delete(int tz_id, int id)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int thermal_notify_tz_trip_add(int tz_id, int id, int type,
-> +                                            int temp, int hyst)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int thermal_notify_tz_trip_change(int tz_id, int id, int type,
-> +                                               int temp, int hyst)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int thermal_notify_cdev_state_update(int cdev_id, int state)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int thermal_notify_cdev_add(int cdev_id, const char *name,
-> +                                         int max_state)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int thermal_notify_cdev_delete(int cdev_id)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int thermal_notify_tz_gov_change(int tz_id, const char *name)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int thermal_genl_sampling_temp(int id, int temp)
-> +{
-> +       return 0;
-> +}
-> +#endif /* CONFIG_THERMAL_NETLINK */
-> --
-> 2.17.1
->
+diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+index f69450543091..e3882557fced 100644
+--- a/drivers/mfd/rn5t618.c
++++ b/drivers/mfd/rn5t618.c
+@@ -82,7 +82,7 @@ static const struct regmap_irq_chip rc5t619_irq_chip = {
+ 	.mask_invert = true,
+ };
+ 
+-static struct rn5t618 *rn5t618_pm_power_off;
++static struct i2c_client *rn5t618_pm_power_off;
+ static struct notifier_block rn5t618_restart_handler;
+ 
+ static int rn5t618_irq_init(struct rn5t618 *rn5t618)
+@@ -115,13 +115,38 @@ static int rn5t618_irq_init(struct rn5t618 *rn5t618)
+ 
+ static void rn5t618_trigger_poweroff_sequence(bool repower)
+ {
++	int ret;
++
+ 	/* disable automatic repower-on */
+-	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_REPCNT,
+-			   RN5T618_REPCNT_REPWRON,
+-			   repower ? RN5T618_REPCNT_REPWRON : 0);
++	ret = i2c_smbus_read_byte_data(rn5t618_pm_power_off, RN5T618_REPCNT);
++	if (ret < 0)
++		goto err;
++
++	ret &= ~RN5T618_REPCNT_REPWRON;
++	if (repower)
++		ret |= RN5T618_REPCNT_REPWRON;
++
++	ret = i2c_smbus_write_byte_data(rn5t618_pm_power_off,
++					RN5T618_REPCNT, (u8)ret);
++	if (ret < 0)
++		goto err;
++
+ 	/* start power-off sequence */
+-	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_SLPCNT,
+-			   RN5T618_SLPCNT_SWPWROFF, RN5T618_SLPCNT_SWPWROFF);
++	ret = i2c_smbus_read_byte_data(rn5t618_pm_power_off, RN5T618_SLPCNT);
++	if (ret < 0)
++		goto err;
++
++	ret |= RN5T618_SLPCNT_SWPWROFF;
++
++	ret = i2c_smbus_write_byte_data(rn5t618_pm_power_off,
++					RN5T618_SLPCNT, (u8)ret);
++	if (ret < 0)
++		goto err;
++
++	return;
++
++err:
++	dev_alert(&rn5t618_pm_power_off->dev, "Failed to shutdown (err = %d)\n", ret);
+ }
+ 
+ static void rn5t618_power_off(void)
+@@ -194,7 +219,7 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c)
+ 		return ret;
+ 	}
+ 
+-	rn5t618_pm_power_off = priv;
++	rn5t618_pm_power_off = i2c;
+ 	if (of_device_is_system_power_controller(i2c->dev.of_node)) {
+ 		if (!pm_power_off)
+ 			pm_power_off = rn5t618_power_off;
+@@ -216,9 +241,7 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c)
+ 
+ static int rn5t618_i2c_remove(struct i2c_client *i2c)
+ {
+-	struct rn5t618 *priv = i2c_get_clientdata(i2c);
+-
+-	if (priv == rn5t618_pm_power_off) {
++	if (i2c == rn5t618_pm_power_off) {
+ 		rn5t618_pm_power_off = NULL;
+ 		pm_power_off = NULL;
+ 	}
+-- 
+2.20.1
+
