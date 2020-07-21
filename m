@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB89CC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA74C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4BD20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F921207BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:28:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RCKVwb23"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tSHzESsK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730379AbgGUQ2f (ORCPT
+        id S1730421AbgGUQ2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:28:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44656 "EHLO
+        Tue, 21 Jul 2020 12:28:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730281AbgGUQ23 (ORCPT
+        with ESMTP id S1730281AbgGUQ2k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:28:29 -0400
+        Tue, 21 Jul 2020 12:28:40 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8140C061794;
-        Tue, 21 Jul 2020 09:28:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F67C061794;
+        Tue, 21 Jul 2020 09:28:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=OcSSjx97fwoZC4nhn07d+eqA+7PeJMhHbLVmJrKte/4=; b=RCKVwb23G5tMsdVaSYXYEn8cRi
-        gapiaPvQDrM0STAn+lc5PvvrmQfo/UKf+CMmkO37ePt8WB+q6btgK3J4pyOBBWXS1KQbJFWu6ddFh
-        RoEQm1SRh1ul6mOB7vW4KESKzhKb+GqoGcCXTDBPIxrEC3Kq9qFSuJjlBXAmP+xGPbhGdCuLdVUvB
-        R8FKGYYLzL1+pFy2VXA0UOSSHN65PkM52yhfOzuL+U8uhIDYoHGyRnkM87hJcfI4nglMlHN4kd432
-        VUOf1TbMNf8zz87QyOYcBcZe3v0d7RHqB4hNJFr9zOtluBuLHp19FyTAlHcQPm/Gq53oZw/xECTAa
-        3GTIrdbw==;
+        bh=kzfawodPPH5N/MMitLbdMROtyNQfWaS/yDMEugbp1H8=; b=tSHzESsKJpVOpOJu/E0Ydn5lom
+        MErSA9hWSS1z0meOljoEPyjmP86RehTWjDNqxCMzjIZhjdvz6Hio42O5MokHmXk4apA5i83rfEVyB
+        8RaJkavwR0IXVcWkHmA+2MdXq4C6+MkUTs8smArIFhy9KQDurtoPVt8rOBq2+ElIYABs8Hm0iY7qX
+        Ffp5eGUHcLuKVuLHPGbzexajxkwkL6zj+NBgLO1ysXb151gca81m/ngJFqhRoAiLg31NMNCqfO1gY
+        Bq3e/sB4J0tFEW+RNreJYvKYurXQhOwIkHtmKmklEiIHOTFJ9odBDZIUrIYiPCHYlc+CEb+/7dYS5
+        kC29u5OA==;
 Received: from [2001:4bb8:18c:2acc:5b1c:6483:bd6d:e406] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxv7y-0007S1-0t; Tue, 21 Jul 2020 16:28:26 +0000
+        id 1jxv87-0007Tc-VS; Tue, 21 Jul 2020 16:28:36 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 05/24] devtmpfs: open code ksys_chdir and ksys_chroot
-Date:   Tue, 21 Jul 2020 18:27:59 +0200
-Message-Id: <20200721162818.197315-6-hch@lst.de>
+Subject: [PATCH 11/24] init: open code do_utimes in do_utime
+Date:   Tue, 21 Jul 2020 18:28:05 +0200
+Message-Id: <20200721162818.197315-12-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200721162818.197315-1-hch@lst.de>
 References: <20200721162818.197315-1-hch@lst.de>
@@ -60,57 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devtmpfs is the only non-early init caller of ksys_chdir and ksys_chroot
-with kernel pointers.  Just open code the two operations which only
-really need a single path lookup anyway in devtmpfs_setup instead.
-The open coded verson doesn't need any of the stale dentry revalidation
-logic from the full blown version as those can't happen on tmpfs and
-ramfs.
+Open code the trivial utimes case in a version that takes proper kernel
+pointers.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/base/devtmpfs.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ init/initramfs.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
-index 5e8d677ee783bc..f798d3976b4052 100644
---- a/drivers/base/devtmpfs.c
-+++ b/drivers/base/devtmpfs.c
-@@ -25,6 +25,7 @@
- #include <linux/sched.h>
- #include <linux/slab.h>
- #include <linux/kthread.h>
-+#include <linux/fs_struct.h>
- #include <uapi/linux/mount.h>
- #include "base.h"
- 
-@@ -393,6 +394,7 @@ static int handle(const char *name, umode_t mode, kuid_t uid, kgid_t gid,
- 
- static int devtmpfs_setup(void *p)
+diff --git a/init/initramfs.c b/init/initramfs.c
+index 3823d15e5d2619..6135b55286fc35 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -104,13 +104,20 @@ static void __init free_hash(void)
+ static long __init do_utime(char *filename, time64_t mtime)
  {
+ 	struct timespec64 t[2];
 +	struct path path;
- 	int err;
++	int error;
  
- 	err = ksys_unshare(CLONE_NEWNS);
-@@ -401,8 +403,16 @@ static int devtmpfs_setup(void *p)
- 	err = devtmpfs_do_mount("/");
- 	if (err)
- 		goto out;
--	ksys_chdir("/.."); /* will traverse into overmounted root */
--	ksys_chroot(".");
-+
-+	/* traverse into overmounted root and then chroot to it */
-+	if (!kern_path("/..", LOOKUP_FOLLOW | LOOKUP_DIRECTORY, &path) &&
-+	    !inode_permission(path.dentry->d_inode, MAY_EXEC | MAY_CHDIR) &&
-+	    ns_capable(current_user_ns(), CAP_SYS_CHROOT) &&
-+	    !security_path_chroot(&path)) {
-+		set_fs_pwd(current->fs, &path);
-+		set_fs_root(current->fs, &path);
-+	}
+ 	t[0].tv_sec = mtime;
+ 	t[0].tv_nsec = 0;
+ 	t[1].tv_sec = mtime;
+ 	t[1].tv_nsec = 0;
+ 
+-	return do_utimes(AT_FDCWD, filename, t, AT_SYMLINK_NOFOLLOW);
++	error = kern_path(filename, 0, &path);
++	if (error)
++		return error;
++	error = vfs_utimes(&path, t);
 +	path_put(&path);
- out:
- 	*(int *)p = err;
- 	complete(&setup_done);
++	return error;
+ }
+ 
+ static __initdata LIST_HEAD(dir_list);
 -- 
 2.27.0
 
