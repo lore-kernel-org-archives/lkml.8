@@ -2,138 +2,135 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA23AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD94C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3F76208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE17208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:46:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="apmv1SMn"
+	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="bsdq3RgU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgGUFpi (ORCPT
+        id S1727020AbgGUFqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 01:45:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58052 "EHLO
+        Tue, 21 Jul 2020 01:46:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGUFpi (ORCPT
+        with ESMTP id S1725774AbgGUFqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 01:45:38 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CFC3C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 22:45:38 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id i3so13096650qkf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 22:45:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=TREar1MO2dsLwpnPrx9gwj7yD63VFVL8bjf4tFYmBsU=;
-        b=apmv1SMniLyVP9DP8KpPXG7RQHOGN/fSC0pWUwKU4iyWw1wJHLTBLr9qo+HGEHWvT1
-         swKqZoFolFmggo4Cc+ufeVeyFR7xB6wibB068ZGt6DKq3tBcTW1dh+5sYnKZHVvEjQUO
-         6rhy03ouhnuF6qOdmivW9gN/97XA4291+spP/i1Gk0AU3ieZHacv1G+9YY8t3KxFZTCU
-         qQLqLUgapsMx7zZ/Gk59hAi8urEfOijeVxZBHqWeRkOyuUt/DQ4m/1QepoFDGzz7s0z+
-         97bo2KFXq2HYguOxwI+3RkyuCwf0CL06WAfuMBue657xdx/IxQYRuNhM2vlTQQ62CDBG
-         AVLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=TREar1MO2dsLwpnPrx9gwj7yD63VFVL8bjf4tFYmBsU=;
-        b=YR9Obs4Ouu3MOT647cQBb4agtKDnmzsJd87VB+4vQauem5cOLP8luRkUz2ApWXd9eY
-         btq43PdXGcIsXKoMVqpBxR3jeCQtsIfGBjK8dHrgsLsAkEjJ99COtfEr27SGfrw7o7Rm
-         KTBGZTwkmt5TWmEg84VDrGDO9qCFbZIh4RafqnpCK36eLKXZyuSAEbXyCTKrzXbGuRol
-         a7Fkj2SFIzqjiUjPT7rKfXqCb630o6ODqTrNig2AqWEaqp7JM8IDAT3RQ6PR+wEfpO2P
-         JBppQsSc+XwLjnsH9HAOlJU3LrsdrMMgFpyFF132cneFfTAZz3kwz1WsC3xMobS4s3fH
-         jJYg==
-X-Gm-Message-State: AOAM531OXJ162UKhF59BV4XZE5JTlCofhxyVzEVLx7icVv1Zj8vpmbYy
-        fvrDgmlPq4VfLmeYG04sEkUN6bM0MPGhDA==
-X-Google-Smtp-Source: ABdhPJz9eYdF6Y8P16PshMHLBCfnnfJcQ+KbbT0G2k1BgzIqZJH7K+ErSTQxW2A37QxhMw2uUlIqOn2gw+wz3A==
-X-Received: by 2002:a0c:b712:: with SMTP id t18mr25194014qvd.205.1595310336945;
- Mon, 20 Jul 2020 22:45:36 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 22:45:28 -0700
-Message-Id: <20200721054528.2556267-1-davidgow@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
-Subject: [RFC PATCH] platform: ioremap: Build iomap functions even without HAS_IOMEM
-From:   David Gow <davidgow@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Dike <jdike@addtoit.com>, rafael@kernel.org,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Richard Weinberger <richard@nod.at>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        kunit-dev@googlegroups.com,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 21 Jul 2020 01:46:15 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA4ADC061794;
+        Mon, 20 Jul 2020 22:46:14 -0700 (PDT)
+Received: by ozlabs.org (Postfix, from userid 1003)
+        id 4B9ndd2kFkz9sRW; Tue, 21 Jul 2020 15:46:13 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
+        t=1595310373; bh=h5v/z0N4MGFxoJg1GsHzJ0zVrgcj/eMAzSW3netP+R4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bsdq3RgUQRm3imvD5OnpTg6IhTu+jJ3xjYGQIl1HU9x1bXRs1vF0znu25iSME054t
+         kgBNrbyAJd80vhvitaJIyJo082/z0WyZXg3ug8ICzN+m5wlJD9AgGO2uC3STqZfsw3
+         vlSPwiGL1mXsSEhB6mFQefmbrZEwzF2kF8SvjxsSJecY9SpZo87vJDZ/kQ9lwyZU4+
+         pgu/igX098brmF/Dv7vpkeJ/Hl3Y3RST9TybB2Ds2Tqu4YSQyZRnxNfnBhP2ro2Pai
+         NAXJRgsFjD36F8rKRfwJUxkaoWOaINJMey7cIFpL7jmKHVj7x9mx6FJ4pxE1OOjVAY
+         MMZJMdokBBUiw==
+Date:   Tue, 21 Jul 2020 15:46:09 +1000
+From:   Paul Mackerras <paulus@ozlabs.org>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     bharata@linux.ibm.com, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        mpe@ellerman.id.au, bauerman@linux.ibm.com, sukadev@linux.ibm.com,
+        sathnaga@linux.vnet.ibm.com, Ram Pai <linuxram@us.ibm.com>
+Subject: Re: [PATCH 2/2] KVM: PPC: Book3S HV: rework secure mem slot dropping
+Message-ID: <20200721054609.GB3878639@thinks.paulus.ozlabs.org>
+References: <20200703155914.40262-1-ldufour@linux.ibm.com>
+ <20200703155914.40262-3-ldufour@linux.ibm.com>
+ <20200708112531.GA7902@in.ibm.com>
+ <0588d16a-8548-0f55-1132-400807a390a1@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0588d16a-8548-0f55-1132-400807a390a1@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A number of drivers use devm_platform_ioremap_resource(), but do not (or
-did not) explicitly depend on IOMEM[1,2]. Given that the only platform
-without HAS_IOMEM seems to be UML, and it has sufficient stubs for
-devm_platform_ioremap_resource() and its dependencies to build, we can
-remove the HAS_IOMEM requirement here, rather than playing whack-a-mole
-with different drivers which don't try to build against ARCH=um.
+On Wed, Jul 08, 2020 at 02:16:36PM +0200, Laurent Dufour wrote:
+> Le 08/07/2020 à 13:25, Bharata B Rao a écrit :
+> > On Fri, Jul 03, 2020 at 05:59:14PM +0200, Laurent Dufour wrote:
+> > > When a secure memslot is dropped, all the pages backed in the secure device
+> > > (aka really backed by secure memory by the Ultravisor) should be paged out
+> > > to a normal page. Previously, this was achieved by triggering the page
+> > > fault mechanism which is calling kvmppc_svm_page_out() on each pages.
+> > > 
+> > > This can't work when hot unplugging a memory slot because the memory slot
+> > > is flagged as invalid and gfn_to_pfn() is then not trying to access the
+> > > page, so the page fault mechanism is not triggered.
+> > > 
+> > > Since the final goal is to make a call to kvmppc_svm_page_out() it seems
+> > > simpler to directly calling it instead of triggering such a mechanism. This
+> > > way kvmppc_uvmem_drop_pages() can be called even when hot unplugging a
+> > > memslot.
+> > 
+> > Yes, this appears much simpler.
+> 
+> Thanks Bharata for reviewing this.
+> 
+> > 
+> > > 
+> > > Since kvmppc_uvmem_drop_pages() is already holding kvm->arch.uvmem_lock,
+> > > the call to __kvmppc_svm_page_out() is made.
+> > > As __kvmppc_svm_page_out needs the vma pointer to migrate the pages, the
+> > > VMA is fetched in a lazy way, to not trigger find_vma() all the time. In
+> > > addition, the mmap_sem is help in read mode during that time, not in write
+> > > mode since the virual memory layout is not impacted, and
+> > > kvm->arch.uvmem_lock prevents concurrent operation on the secure device.
+> > > 
+> > > Cc: Ram Pai <linuxram@us.ibm.com>
+> > > Cc: Bharata B Rao <bharata@linux.ibm.com>
+> > > Cc: Paul Mackerras <paulus@ozlabs.org>
+> > > Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+> > > ---
+> > >   arch/powerpc/kvm/book3s_hv_uvmem.c | 54 ++++++++++++++++++++----------
+> > >   1 file changed, 37 insertions(+), 17 deletions(-)
+> > > 
+> > > diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
+> > > index 852cc9ae6a0b..479ddf16d18c 100644
+> > > --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
+> > > +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
+> > > @@ -533,35 +533,55 @@ static inline int kvmppc_svm_page_out(struct vm_area_struct *vma,
+> > >    * fault on them, do fault time migration to replace the device PTEs in
+> > >    * QEMU page table with normal PTEs from newly allocated pages.
+> > >    */
+> > > -void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *free,
+> > > +void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *slot,
+> > >   			     struct kvm *kvm, bool skip_page_out)
+> > >   {
+> > >   	int i;
+> > >   	struct kvmppc_uvmem_page_pvt *pvt;
+> > > -	unsigned long pfn, uvmem_pfn;
+> > > -	unsigned long gfn = free->base_gfn;
+> > > +	struct page *uvmem_page;
+> > > +	struct vm_area_struct *vma = NULL;
+> > > +	unsigned long uvmem_pfn, gfn;
+> > > +	unsigned long addr, end;
+> > > +
+> > > +	down_read(&kvm->mm->mmap_sem);
+> > 
+> > You should be using mmap_read_lock(kvm->mm) with recent kernels.
+> 
+> Absolutely, shame on me, I reviewed Michel's series about that!
+> 
+> Paul, Michael, could you fix that when pulling this patch or should I sent a
+> whole new series?
 
-The reason this works at the moment is that stub ioremap and iounmap
-functions were added to UML to support this sort-of thing[3]. This
-particular change doesn't require adding any additional stubs, but there
-is possibly room in the future to stub out the remaining iomem functions
-(or to provide mock implementations for testing), and get rid of
-HAS_IOMEM entirely.
+Given that Ram has reworked his series, I think it would be best if
+you rebase on top of his new series and re-send your series.
 
-[1]: https://lkml.org/lkml/2020/6/30/176
-[2]:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1e7468bd9d30a21e059af477106dc5588ae52dff
-[3]:
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1405627.html
-
-Signed-off-by: David Gow <davidgow@google.com>
----
- drivers/base/platform.c | 2 --
- lib/Makefile            | 2 +-
- 2 files changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index c0d0a5490ac6..628dde6675cf 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -61,7 +61,6 @@ struct resource *platform_get_resource(struct platform_device *dev,
- }
- EXPORT_SYMBOL_GPL(platform_get_resource);
- 
--#ifdef CONFIG_HAS_IOMEM
- /**
-  * devm_platform_get_and_ioremap_resource - call devm_ioremap_resource() for a
-  *					    platform device and get resource
-@@ -135,7 +134,6 @@ devm_platform_ioremap_resource_byname(struct platform_device *pdev,
- 	return devm_ioremap_resource(&pdev->dev, res);
- }
- EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
--#endif /* CONFIG_HAS_IOMEM */
- 
- /**
-  * platform_get_irq_optional - get an optional IRQ for a device
-diff --git a/lib/Makefile b/lib/Makefile
-index b1c42c10073b..35c21af33b93 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -115,7 +115,7 @@ obj-y += math/ crypto/
- 
- obj-$(CONFIG_GENERIC_IOMAP) += iomap.o
- obj-$(CONFIG_GENERIC_PCI_IOMAP) += pci_iomap.o
--obj-$(CONFIG_HAS_IOMEM) += iomap_copy.o devres.o
-+obj-y += iomap_copy.o devres.o
- obj-$(CONFIG_CHECK_SIGNATURE) += check_signature.o
- obj-$(CONFIG_DEBUG_LOCKING_API_SELFTESTS) += locking-selftest.o
- 
--- 
-2.28.0.rc0.105.gf9edc3c819-goog
-
+Thanks,
+Paul.
