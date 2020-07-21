@@ -2,118 +2,178 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9351CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3052077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A372072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgGUBn0 (ORCPT
+        id S1726731AbgGUBpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 21:43:26 -0400
-Received: from m176150.mail.qiye.163.com ([59.111.176.150]:2101 "EHLO
-        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgGUBnZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 21:43:25 -0400
-X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jul 2020 21:43:24 EDT
-Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
-        by m176150.mail.qiye.163.com (Hmail) with ESMTP id 083D01A2142;
-        Tue, 21 Jul 2020 09:33:03 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AE2AjQBfDVxlYNyBF9u*s4rp.1.1595295183020.Hmail.bernard@vivo.com>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Bernard Zhao <bernard@vivo.com>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com
-Subject: =?UTF-8?B?W1Jlc2VuZF1bUEFUQ0hdIGRybS9tc206IHVzZSBrdGhyZWFkX2NyZWF0ZV93b3JrZXIgaW5zdGVhZCBvZiBrdGhyZWFkX3J1bg==?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 14.29.82.33
+        Mon, 20 Jul 2020 21:45:50 -0400
+Received: from mga17.intel.com ([192.55.52.151]:56794 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725954AbgGUBpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 21:45:49 -0400
+IronPort-SDR: gfO2w3nz5I7iUFtj1/p6SmRbBe+Cn+55w39LJTf7cXDzokuRCcHywkIO+CjYqVtyegNOFXf8lT
+ qkkSAZUhW7cg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="130121533"
+X-IronPort-AV: E=Sophos;i="5.75,377,1589266800"; 
+   d="scan'208";a="130121533"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 18:45:48 -0700
+IronPort-SDR: KRaxwk92I+jel9tcLEJ2Nj2mexLNFK2VnXAavZ9QcNJIPrp9Lbx2Yh71ym9Ka0GtwL3+p924nn
+ p5m1lOXlOLCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,377,1589266800"; 
+   d="scan'208";a="326229072"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Jul 2020 18:45:48 -0700
+Date:   Mon, 20 Jul 2020 18:52:33 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Corbet <corbet@lwn.net>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v5 2/5] iommu/uapi: Add argsz for user filled data
+Message-ID: <20200720185233.3e5841c1@jacob-builder>
+In-Reply-To: <1538ec69-62a2-ea04-0870-a583fc63a2bf@redhat.com>
+References: <1594925117-64892-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1594925117-64892-3-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1538ec69-62a2-ea04-0870-a583fc63a2bf@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Received: from bernard@vivo.com( [14.29.82.33) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 21 Jul 2020 09:33:03 +0800 (GMT+08:00)
-From:   Bernard <bernard@vivo.com>
-Date:   Tue, 21 Jul 2020 09:33:03 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
-        oVCBIfWUFZSE8ZQh5CQ05OSU8eVkpOQk5JQk5KQ0hKT0tVEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
-        FZT0tIVUpKS0hKTFVKS0tZBg++
-X-HM-Sender-Digest: e1kMHhlZQQ8JDh5XWRIfHhUPWUFZRzo#SToRKjkdPy0DFyI1Ajk9Qg5R
-        CE8JC1VKVUpOQk5JQk5KQ0hOSENVMxYaEhdVGR4JFRoJHzsNEg0UVRgUFkVZV1kSC1lBWUpPVUlC
-        VUNJVUhIWVdZCAFZQU1OTk83Bg++
-X-HM-Tid: 0a736f00b0cd93b4kuws083d01a2142
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VXNlIGt0aHJlYWRfY3JlYXRlX3dvcmtlciB0byBzaW1wbGlmeSB0aGUgY29kZSBhbmQgb3B0aW1p
-c2UKdGhlIG1hbmFnZXIgc3RydWN0OiBtc21fZHJtX3RocmVhZC4gV2l0aCB0aGlzIGNoYW5nZSwg
-d2UKY291bGQgcmVtb3ZlIHN0cnVjdCBlbGVtZW50IChzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRocmVh
-ZCAmCnN0cnVjdCBrdGhyZWFkX3dvcmtlciB3b3JrZXIpLCBpbnN0ZWFkLCB1c2Ugb25lIHBvaW50
-IChzdHJ1Y3QKa3RocmVhZF93b3JrZXIgKndvcmtlcikuCgpTaWduZWQtb2ZmLWJ5OiBCZXJuYXJk
-IFpoYW8gPGJlcm5hcmRAdml2by5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2Rw
-dTEvZHB1X2NydGMuYyB8ICAyICstCiBkcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9kcnYuYyAgICAg
-ICAgICAgIHwgMTggKysrKysrLS0tLS0tLS0tLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9k
-cnYuaCAgICAgICAgICAgIHwgIDMgKy0tCiAzIGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygr
-KSwgMTUgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNw
-L2RwdTEvZHB1X2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9jcnRj
-LmMKaW5kZXggZTE1YjQyYTc4MGUwLi5jOTU5Yzk1OTAyMWQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9jcnRjLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21z
-bS9kaXNwL2RwdTEvZHB1X2NydGMuYwpAQCAtMzk2LDcgKzM5Niw3IEBAIHN0YXRpYyB2b2lkIGRw
-dV9jcnRjX2ZyYW1lX2V2ZW50X2NiKHZvaWQgKmRhdGEsIHUzMiBldmVudCkKIAlmZXZlbnQtPmV2
-ZW50ID0gZXZlbnQ7CiAJZmV2ZW50LT5jcnRjID0gY3J0YzsKIAlmZXZlbnQtPnRzID0ga3RpbWVf
-Z2V0KCk7Ci0Ja3RocmVhZF9xdWV1ZV93b3JrKCZwcml2LT5ldmVudF90aHJlYWRbY3J0Y19pZF0u
-d29ya2VyLCAmZmV2ZW50LT53b3JrKTsKKwlrdGhyZWFkX3F1ZXVlX3dvcmsocHJpdi0+ZXZlbnRf
-dGhyZWFkW2NydGNfaWRdLndvcmtlciwgJmZldmVudC0+d29yayk7CiB9CiAKIHZvaWQgZHB1X2Ny
-dGNfY29tcGxldGVfY29tbWl0KHN0cnVjdCBkcm1fY3J0YyAqY3J0YykKZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9tc21fZHJ2
-LmMKaW5kZXggZjZjZTQwYmYzNjk5Li44MmU3OWI4MmE1OTQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9tc20vbXNtX2Rydi5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5j
-CkBAIC0yMzgsMTAgKzIzOCw4IEBAIHN0YXRpYyBpbnQgbXNtX2RybV91bmluaXQoc3RydWN0IGRl
-dmljZSAqZGV2KQogCiAJLyogY2xlYW4gdXAgZXZlbnQgd29ya2VyIHRocmVhZHMgKi8KIAlmb3Ig
-KGkgPSAwOyBpIDwgcHJpdi0+bnVtX2NydGNzOyBpKyspIHsKLQkJaWYgKHByaXYtPmV2ZW50X3Ro
-cmVhZFtpXS50aHJlYWQpIHsKLQkJCWt0aHJlYWRfZGVzdHJveV93b3JrZXIoJnByaXYtPmV2ZW50
-X3RocmVhZFtpXS53b3JrZXIpOwotCQkJcHJpdi0+ZXZlbnRfdGhyZWFkW2ldLnRocmVhZCA9IE5V
-TEw7Ci0JCX0KKwkJaWYgKHByaXYtPmV2ZW50X3RocmVhZFtpXS53b3JrZXIpCisJCQlrdGhyZWFk
-X2Rlc3Ryb3lfd29ya2VyKHByaXYtPmV2ZW50X3RocmVhZFtpXS53b3JrZXIpOwogCX0KIAogCW1z
-bV9nZW1fc2hyaW5rZXJfY2xlYW51cChkZGV2KTsKQEAgLTUwNCwxOSArNTAyLDE1IEBAIHN0YXRp
-YyBpbnQgbXNtX2RybV9pbml0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRybV9kcml2ZXIg
-KmRydikKIAlmb3IgKGkgPSAwOyBpIDwgcHJpdi0+bnVtX2NydGNzOyBpKyspIHsKIAkJLyogaW5p
-dGlhbGl6ZSBldmVudCB0aHJlYWQgKi8KIAkJcHJpdi0+ZXZlbnRfdGhyZWFkW2ldLmNydGNfaWQg
-PSBwcml2LT5jcnRjc1tpXS0+YmFzZS5pZDsKLQkJa3RocmVhZF9pbml0X3dvcmtlcigmcHJpdi0+
-ZXZlbnRfdGhyZWFkW2ldLndvcmtlcik7CiAJCXByaXYtPmV2ZW50X3RocmVhZFtpXS5kZXYgPSBk
-ZGV2OwotCQlwcml2LT5ldmVudF90aHJlYWRbaV0udGhyZWFkID0KLQkJCWt0aHJlYWRfcnVuKGt0
-aHJlYWRfd29ya2VyX2ZuLAotCQkJCSZwcml2LT5ldmVudF90aHJlYWRbaV0ud29ya2VyLAotCQkJ
-CSJjcnRjX2V2ZW50OiVkIiwgcHJpdi0+ZXZlbnRfdGhyZWFkW2ldLmNydGNfaWQpOwotCQlpZiAo
-SVNfRVJSKHByaXYtPmV2ZW50X3RocmVhZFtpXS50aHJlYWQpKSB7CisJCXByaXYtPmV2ZW50X3Ro
-cmVhZFtpXS53b3JrZXIgPSBrdGhyZWFkX2NyZWF0ZV93b3JrZXIoMCwKKwkJCSJjcnRjX2V2ZW50
-OiVkIiwgcHJpdi0+ZXZlbnRfdGhyZWFkW2ldLmNydGNfaWQpOworCQlpZiAoSVNfRVJSKHByaXYt
-PmV2ZW50X3RocmVhZFtpXS53b3JrZXIpKSB7CiAJCQlEUk1fREVWX0VSUk9SKGRldiwgImZhaWxl
-ZCB0byBjcmVhdGUgY3J0Y19ldmVudCBrdGhyZWFkXG4iKTsKLQkJCXByaXYtPmV2ZW50X3RocmVh
-ZFtpXS50aHJlYWQgPSBOVUxMOwogCQkJZ290byBlcnJfbXNtX3VuaW5pdDsKIAkJfQogCi0JCXJl
-dCA9IHNjaGVkX3NldHNjaGVkdWxlcihwcml2LT5ldmVudF90aHJlYWRbaV0udGhyZWFkLAorCQly
-ZXQgPSBzY2hlZF9zZXRzY2hlZHVsZXIocHJpdi0+ZXZlbnRfdGhyZWFkW2ldLndvcmtlci0+dGFz
-aywKIAkJCQkJIFNDSEVEX0ZJRk8sICZwYXJhbSk7CiAJCWlmIChyZXQpCiAJCQlkZXZfd2Fybihk
-ZXYsICJldmVudF90aHJlYWQgc2V0IHByaW9yaXR5IGZhaWxlZDolZFxuIiwKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5oIGIvZHJpdmVycy9ncHUvZHJtL21zbS9tc21f
-ZHJ2LmgKaW5kZXggZTJkNmE2MDU2NDE4Li5kYWYyZjRlNTU0OGMgMTAwNjQ0Ci0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS9tc20vbXNtX2Rydi5oCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Ry
-di5oCkBAIC0xMjksOSArMTI5LDggQEAgc3RydWN0IG1zbV9kaXNwbGF5X2luZm8gewogLyogQ29t
-bWl0L0V2ZW50IHRocmVhZCBzcGVjaWZpYyBzdHJ1Y3R1cmUgKi8KIHN0cnVjdCBtc21fZHJtX3Ro
-cmVhZCB7CiAJc3RydWN0IGRybV9kZXZpY2UgKmRldjsKLQlzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRo
-cmVhZDsKIAl1bnNpZ25lZCBpbnQgY3J0Y19pZDsKLQlzdHJ1Y3Qga3RocmVhZF93b3JrZXIgd29y
-a2VyOworCXN0cnVjdCBrdGhyZWFkX3dvcmtlciAqd29ya2VyOwogfTsKIAogc3RydWN0IG1zbV9k
-cm1fcHJpdmF0ZSB7Ci0tIAoyLjE3LjEKCg0KDQo=
+On Fri, 17 Jul 2020 15:44:23 +0200
+Auger Eric <eric.auger@redhat.com> wrote:
+
+> Hi Jacob,
+> 
+> On 7/16/20 8:45 PM, Jacob Pan wrote:
+> > As IOMMU UAPI gets extended, user data size may increase. To support
+> > backward compatibiliy, this patch introduces a size field to each
+> > UAPI data structures. It is *always* the responsibility for the
+> > user to fill in the correct size. Padding fields are adjusted to
+> > ensure 8 byte alignment.
+> > 
+> > Specific scenarios for user data handling are documented in:
+> > Documentation/userspace-api/iommu.rst
+> > 
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  include/uapi/linux/iommu.h | 12 +++++++++---
+> >  1 file changed, 9 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> > index e907b7091a46..d5e9014f690e 100644
+> > --- a/include/uapi/linux/iommu.h
+> > +++ b/include/uapi/linux/iommu.h
+> > @@ -135,6 +135,7 @@ enum iommu_page_response_code {
+> >  
+> >  /**
+> >   * struct iommu_page_response - Generic page response information
+> > + * @argsz: User filled size of this data
+> >   * @version: API version of this structure
+> >   * @flags: encodes whether the corresponding fields are valid
+> >   *         (IOMMU_FAULT_PAGE_RESPONSE_* values)
+> > @@ -143,6 +144,7 @@ enum iommu_page_response_code {
+> >   * @code: response code from &enum iommu_page_response_code
+> >   */
+> >  struct iommu_page_response {
+> > +	__u32	argsz;
+> >  #define IOMMU_PAGE_RESP_VERSION_1	1  
+> Don't you need to incr the version for all the modified structs?
+not literal "flags" but @cache and @granularity are flags in reality. I
+think that is OK. I also updated document to say "flags or equivalent".
+
+> >  	__u32	version;
+> >  #define IOMMU_PAGE_RESP_PASID_VALID	(1 << 0)
+> > @@ -218,6 +220,7 @@ struct iommu_inv_pasid_info {
+> >  /**
+> >   * struct iommu_cache_invalidate_info - First level/stage
+> > invalidation
+> >   *     information
+> > + * @argsz: User filled size of this data
+> >   * @version: API version of this structure
+> >   * @cache: bitfield that allows to select which caches to
+> > invalidate
+> >   * @granularity: defines the lowest granularity used for the
+> > invalidation: @@ -246,6 +249,7 @@ struct iommu_inv_pasid_info {
+> >   * must support the used granularity.
+> >   */
+> >  struct iommu_cache_invalidate_info {
+> > +	__u32	argsz;
+> >  #define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+> >  	__u32	version;  
+> so there is no "flags" field in this struct. Is it OK?
+> >  /* IOMMU paging structure cache */
+> > @@ -255,7 +259,7 @@ struct iommu_cache_invalidate_info {
+> >  #define IOMMU_CACHE_INV_TYPE_NR		(3)
+> >  	__u8	cache;
+> >  	__u8	granularity;
+> > -	__u8	padding[2];
+> > +	__u8	padding[6];
+> >  	union {
+> >  		struct iommu_inv_pasid_info pasid_info;
+> >  		struct iommu_inv_addr_info addr_info;
+> > @@ -292,6 +296,7 @@ struct iommu_gpasid_bind_data_vtd {
+> >  
+> >  /**
+> >   * struct iommu_gpasid_bind_data - Information about device and
+> > guest PASID binding
+> > + * @argsz:	User filled size of this data
+> >   * @version:	Version of this data structure
+> >   * @format:	PASID table entry format
+> >   * @flags:	Additional information on guest bind request
+> > @@ -309,17 +314,18 @@ struct iommu_gpasid_bind_data_vtd {
+> >   * PASID to host PASID based on this bind data.
+> >   */
+> >  struct iommu_gpasid_bind_data {
+> > +	__u32 argsz;
+> >  #define IOMMU_GPASID_BIND_VERSION_1	1
+> >  	__u32 version;
+> >  #define IOMMU_PASID_FORMAT_INTEL_VTD	1
+> >  	__u32 format;
+> > +	__u32 addr_width;
+> >  #define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid
+> > */ __u64 flags;
+> >  	__u64 gpgd;
+> >  	__u64 hpasid;
+> >  	__u64 gpasid;
+> > -	__u32 addr_width;
+> > -	__u8  padding[12];
+> > +	__u8  padding[8];
+> >  	/* Vendor specific data */
+> >  	union {
+> >  		struct iommu_gpasid_bind_data_vtd vtd;
+> >   
+> Thanks
+> 
+> Eric
+> 
+
+[Jacob Pan]
