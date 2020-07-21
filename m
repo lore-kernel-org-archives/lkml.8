@@ -2,82 +2,71 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEB6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF977C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3A2422482
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8367A22BEF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:23:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oOkEf3hA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbgGUMWw (ORCPT
+        id S1729072AbgGUMXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:22:52 -0400
-Received: from mga06.intel.com ([134.134.136.31]:13460 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgGUMWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:22:52 -0400
-IronPort-SDR: /c8enrNmOKbbW9rA96IbrAmTpKI2J0TcwEynLZ18hngTj6aJm8YfF1cESdCEojHgXLytCmyR5c
- jnJIPXaNXfkw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="211662394"
-X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
-   d="scan'208";a="211662394"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 05:22:51 -0700
-IronPort-SDR: QRKBuOX3wimM7whHx8OuUjSdcYgNzpo16Eb3ifaPARH/EpOURaCxowV/BZ+z3RNd281xrN4eSQ
- ZJF6b0Kq8vAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
-   d="scan'208";a="392335007"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 21 Jul 2020 05:22:47 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 21 Jul 2020 15:22:47 +0300
-Date:   Tue, 21 Jul 2020 15:22:47 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-Message-ID: <20200721122247.GI5180@lahna.fi.intel.com>
-References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
- <20200716235440.GA675421@bjorn-Precision-5520>
- <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
- <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
+        Tue, 21 Jul 2020 08:23:40 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:59813 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728557AbgGUMXk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 08:23:40 -0400
+X-UUID: 40f2cfce92c94a44a2a1fcc5608db344-20200721
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=fjg7nMNQVLp7jHAziQfjeWpWwhYiATooWUXF/1IXayU=;
+        b=oOkEf3hAxACP+8aU9ajnmJQ3VHqbsBO0NGaLnQXHUcXsipANTE7t6Zl92VIp4XVBFsWPOtxlwGX5YBrbiIzo5InMM5k5MLVQTIX2a2aFosDIlmAHMcXWl67glxeoOo0uL62kqy+FFqw7V5z7om5RdZamuS8xFg6gxweBzsFtQxU=;
+X-UUID: 40f2cfce92c94a44a2a1fcc5608db344-20200721
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <leilk.liu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 768022660; Tue, 21 Jul 2020 20:23:29 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 21 Jul
+ 2020 20:23:28 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 21 Jul 2020 20:23:26 +0800
+Message-ID: <1595334144.31408.0.camel@mhfsdcap03>
+Subject: Re: [PATCH] dt-bindings: spi: update bindings for MT8192 SoC
+From:   lei liu <leilk.liu@mediatek.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-spi@vger.kernel.org>, <linux-mediatek@lists.infradead.org>
+Date:   Tue, 21 Jul 2020 20:22:24 +0800
+In-Reply-To: <20200721094859.GB4845@sirena.org.uk>
+References: <20200721024819.7150-1-leilk.liu@mediatek.com>
+         <20200721094859.GB4845@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-TM-SNTS-SMTP: 68EB313837D36780FC0EDA997D82074C7AB48D5FE3646CEC1E13DEF30727FA492000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+T24gVHVlLCAyMDIwLTA3LTIxIGF0IDEwOjQ4ICswMTAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
+biBUdWUsIEp1bCAyMSwgMjAyMCBhdCAxMDo0ODoxOUFNICswODAwLCBMZWlsayBMaXUgd3JvdGU6
+DQo+ID4gRnJvbTogImxlaWxrLmxpdSIgPGxlaWxrLmxpdUBtZWRpYXRlay5jb20+DQo+ID4gDQo+
+ID4gQWRkIGEgRFQgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciB0aGUgTVQ4MTkyIHNvYy4NCj4g
+DQo+IEknZCBleHBlY3QgdG8gc2VlIGEgbWF0Y2hpbmcgZHJpdmVyIHBhdGNoLg0KDQpPSyxJJ2xs
+IHNlbmQgcGF0Y2ggdjIuIFRoYW5rcy4NCg==
 
-[Sorry for the delay, I was on vacation]
-
-On Fri, Jul 17, 2020 at 01:32:10PM +0200, Karol Herbst wrote:
-> Filed at https://bugzilla.kernel.org/show_bug.cgi?id=208597
-
-Thanks for reporting.
-
-I'll check your logs and try to figure if there is something we can do
-to make both nouveau and TBT working at the same time.
-
-> oddly enough I wasn't able to reproduce it on my XPS 9560, will ping
-> once something breaks.
