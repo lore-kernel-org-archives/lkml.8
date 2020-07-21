@@ -2,117 +2,154 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D38C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E990420792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:47:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YxKBrfQ1"
+	by mail.kernel.org (Postfix) with ESMTP id 5FB4720792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:48:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595317686;
+	bh=BQZ5hmFIpZckWyenvtmkpbQjIg05LGMKNSIMSzTcK/A=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=HK0v2HYwaZQRrMvCA8Y6jT7IRpzJu9OzrKS1TYBFkp/tV2XQY8dXbA69o2RzUTCAX
+	 r6N/Dk7Rpv2ISFsDwooXQNEp+y3+j9Etl23PI69GLBQdX1FfDy1a3BgbfY//1I8BW1
+	 vlli+tgRedzrcsfCb17dtTBNrZq2BOw/zxpL42Vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgGUHre (ORCPT
+        id S1728140AbgGUHsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:47:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgGUHrd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 03:47:33 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41200C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:47:33 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id q4so23086129lji.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=u3nXJRiSdppGTtPj2ppffsfRJMywt07Ft1M0Vjk21zc=;
-        b=YxKBrfQ1VUCxq106/ImDl/osIy9f5cCVJPpaJSz6duopNcJ5cMjnp3+7ajb8vE06Fb
-         oSfrS/y0P+KgjEEVnhaPqrBToNHJTSNfK/Ej8ZqGbNrSjvURVqcdwVVINTfvDNp9pbya
-         d0ni5oGuM0QpweP64/dk/1phaqWFIVSiQ+iaibeJa3sfumYFAfL1X7Z0dSGyy2nNz+1A
-         Km1kp1bQrupLOacS1kdRMnTT7ueOin38M5b5tYuJoWU0wPoTjEzSVUZXazuXt6etedV+
-         9VxW9/mksXP7zR04PmR0EbpYdvsXHWofyAgc9AVHV2vL6G525qOuLB2UVy2jRYS5mcr/
-         N8ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=u3nXJRiSdppGTtPj2ppffsfRJMywt07Ft1M0Vjk21zc=;
-        b=CDXfR/5g3lZV5rR7SuXp+vX5Iuq9iAH4tKvRZ1+zpu6kb7njWBftNVaJijBnklEQxz
-         TyDvkkYFm7ens5LrqfT8BUGZYSvvIlNMmew4Z04vOMzCrxixHI7zU6bWCJqhuX7Nt4go
-         gTHa4AvTGnjRWlrPPiWF2EDU/0L2yrx0mTWInKXzdVjWgBvEhDQTf+P860P/ZLPkOmIB
-         BtPXL02v9eUPoFY17mrpGWPec4dwsLkPxvDxWhQUXdtOo+yICkyjqoY2GWdlOEZqzLMi
-         MSa0TJm93Pn17Zif6L8xJMmqs/13qHLkV79BfWANGNw6yTcxdFp6fyEeOxe98x8if10t
-         RpoA==
-X-Gm-Message-State: AOAM533c9vaXRrQxfwSHOdR2h/IEawkpB+ed7DpXu8ZDJAr5/7yGqhfA
-        uG3i5IUJBAzdpLNl1xU4YKTuz/k+dsE=
-X-Google-Smtp-Source: ABdhPJxdoABtefVextDp7MWon7gvzta5PmjzgLS7mmgtJCLxMrSAj2wajyrHjBe6DdsCmTmyIw7qlw==
-X-Received: by 2002:a05:651c:50d:: with SMTP id o13mr13083297ljp.181.1595317651371;
-        Tue, 21 Jul 2020 00:47:31 -0700 (PDT)
-Received: from localhost.localdomain ([195.24.90.54])
-        by smtp.gmail.com with ESMTPSA id d2sm4045334ljg.6.2020.07.21.00.47.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 00:47:30 -0700 (PDT)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maheshwar Ajja <majja@codeaurora.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v2 0/6] Add new controls for CQ and Frame-skip
-Date:   Tue, 21 Jul 2020 10:45:32 +0300
-Message-Id: <20200721074538.505-1-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 Jul 2020 03:48:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726389AbgGUHsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 03:48:04 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4DD420792;
+        Tue, 21 Jul 2020 07:48:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595317683;
+        bh=BQZ5hmFIpZckWyenvtmkpbQjIg05LGMKNSIMSzTcK/A=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=ehUhwlCwbnHNUi1W6XHRH3vBCM2gpc5QnE57816xOwX2itcx+armXE57XNgrOBLau
+         EHPxOfO/YQPTe6p8ldWbhMgOiM2aFisEQ0oO5kBNRIfpTD1nuvvxbxD7D+GCdjv/ZW
+         PVVy7gY2jBo0VwWfsLKgZvXH/XCCDDZFmzb2FBAI=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1594795010-9074-5-git-send-email-tdas@codeaurora.org>
+References: <1594795010-9074-1-git-send-email-tdas@codeaurora.org> <1594795010-9074-5-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v4 4/4] clk: qcom: lpass: Add support for LPASS clock controller for SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Tue, 21 Jul 2020 00:48:03 -0700
+Message-ID: <159531768310.3847286.13203525525881212775@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Quoting Taniya Das (2020-07-14 23:36:50)
+> diff --git a/drivers/clk/qcom/lpasscorecc-sc7180.c b/drivers/clk/qcom/lpa=
+sscorecc-sc7180.c
+> new file mode 100644
+> index 0000000..fd8537c
+> --- /dev/null
+> +++ b/drivers/clk/qcom/lpasscorecc-sc7180.c
+> @@ -0,0 +1,478 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pm_clock.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/of.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
+> +
+> +#include "clk-alpha-pll.h"
+> +#include "clk-branch.h"
+> +#include "clk-rcg.h"
+> +#include "clk-regmap.h"
+> +#include "common.h"
+> +#include "gdsc.h"
+> +
+> +enum {
+> +       P_BI_TCXO,
+> +       P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD,
+> +       P_SLEEP_CLK,
+> +};
+> +
+> +static struct pll_vco fabia_vco[] =3D {
+> +       { 249600000, 2000000000, 0 },
+> +};
+> +
+> +static const struct alpha_pll_config lpass_lpaaudio_dig_pll_config =3D {
+> +       .l =3D 0x20,
+> +       .alpha =3D 0x0,
+> +       .config_ctl_val =3D 0x20485699,
+> +       .config_ctl_hi_val =3D 0x00002067,
+> +       .test_ctl_val =3D 0x40000000,
+> +       .test_ctl_hi_val =3D 0x00000000,
+> +       .user_ctl_val =3D 0x00005105,
+> +       .user_ctl_hi_val =3D 0x00004805,
+> +};
+> +
+> +static const u8 clk_alpha_pll_regs_offset[][PLL_OFF_MAX_REGS] =3D {
+> +       [CLK_ALPHA_PLL_TYPE_FABIA] =3D  {
+> +               [PLL_OFF_L_VAL] =3D 0x04,
+> +               [PLL_OFF_CAL_L_VAL] =3D 0x8,
+> +               [PLL_OFF_USER_CTL] =3D 0x0c,
+> +               [PLL_OFF_USER_CTL_U] =3D 0x10,
+> +               [PLL_OFF_USER_CTL_U1] =3D 0x14,
+> +               [PLL_OFF_CONFIG_CTL] =3D 0x18,
+> +               [PLL_OFF_CONFIG_CTL_U] =3D 0x1C,
+> +               [PLL_OFF_CONFIG_CTL_U1] =3D 0x20,
+> +               [PLL_OFF_TEST_CTL] =3D 0x24,
+> +               [PLL_OFF_TEST_CTL_U] =3D 0x28,
+> +               [PLL_OFF_STATUS] =3D 0x30,
+> +               [PLL_OFF_OPMODE] =3D 0x38,
+> +               [PLL_OFF_FRAC] =3D 0x40,
+> +       },
+> +};
+> +
+> +static struct clk_alpha_pll lpass_lpaaudio_dig_pll =3D {
+> +       .offset =3D 0x1000,
+> +       .vco_table =3D fabia_vco,
+> +       .num_vco =3D ARRAY_SIZE(fabia_vco),
+> +       .regs =3D clk_alpha_pll_regs_offset[CLK_ALPHA_PLL_TYPE_FABIA],
+> +       .clkr =3D {
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "lpass_lpaaudio_dig_pll",
+> +                       .parent_data =3D &(const struct clk_parent_data){
+> +                               .fw_name =3D "bi_tcxo",
+> +                               .name =3D "bi_tcxo",
 
-Here is v2 with following changes:
+We don't need .name if we have .fw_name and this is a new binding/device.
 
- * 3/6 Added references for VBV size and h264 CPB size - requested by Nicolas
- * 4/6 Fixed compile warning
-
-Previous version can be found at [1].
-
-regards,
-Stan
-
-[1] https://lkml.org/lkml/2020/7/20/619
-
-Maheshwar Ajja (1):
-  media: v4l2-ctrls: Add encoder constant quality control
-
-Stanimir Varbanov (5):
-  venus: venc: Add support for constant quality control
-  media: v4l2-ctrl: Add frame-skip std encoder control
-  venus: venc: Add support for frame-skip mode v4l2 control
-  media: s5p-mfc: Use standard frame skip mode control
-  media: docs: Deprecate mfc frame skip control
-
- .../media/v4l/ext-ctrls-codec.rst             | 53 +++++++++++++++++++
- drivers/media/platform/qcom/venus/core.h      |  2 +
- drivers/media/platform/qcom/venus/hfi_cmds.c  | 37 ++++++++++++-
- .../media/platform/qcom/venus/hfi_helper.h    | 10 +++-
- drivers/media/platform/qcom/venus/venc.c      | 20 +++++--
- .../media/platform/qcom/venus/venc_ctrls.c    | 18 ++++++-
- drivers/media/platform/s5p-mfc/s5p_mfc_enc.c  |  6 +++
- drivers/media/v4l2-core/v4l2-ctrls.c          | 12 +++++
- include/uapi/linux/v4l2-controls.h            |  8 +++
- 9 files changed, 160 insertions(+), 6 deletions(-)
-
--- 
-2.17.1
-
+> +                       },
+> +                       .num_parents =3D 1,
+> +                       .ops =3D &clk_alpha_pll_fabia_ops,
+> +               },
+> +       },
+> +};
+> +
