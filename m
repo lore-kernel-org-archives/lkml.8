@@ -2,212 +2,135 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABE4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80915C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EBED2077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595371811;
-	bh=yWjyHl/+Jkepl7ur2pQs9fqUJrabWlVAD+P0xfkZ8Kw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=cQNcYE6T8itNqY/uXNspu7KFsfz5XQWL+oGCLn/JZfEae+KD8HTmc6sUeYxCGLqxh
-	 NAp8CjD9OT0vrPCKsitCGeRdZDF1AxsNa8aREFfjG0R3W4VFFfdXtbH2v8Vmtjw8BJ
-	 mkISH3JnVvVFknrdXmY+tCT/alAPPVLGVVqDI6Ro=
+	by mail.kernel.org (Postfix) with ESMTP id 5998420720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:50:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lFCV90tH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731293AbgGUWuK (ORCPT
+        id S1731348AbgGUWuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 18:50:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgGUWuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 18:50:09 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8436E2073A;
-        Tue, 21 Jul 2020 22:50:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595371808;
-        bh=yWjyHl/+Jkepl7ur2pQs9fqUJrabWlVAD+P0xfkZ8Kw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=frZ/aCsGdwx2O0J6NiYCjmBnlCneYGd7++gMRCAzkGm0qIJiLxl8nrxh6lIuzD5WQ
-         pas5ZRYD0TGP+7oJo/QcrGE8Vl82oas9D/71bE4w7dEM8wcfwsQoBtcJlyzCfKqYNJ
-         HQdzsRQQaTfH9aTS6JsFq2dxZ/7UsgBFk+Vh2MTM=
-Date:   Tue, 21 Jul 2020 17:50:07 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] irqdomain/treewide: Free firmware node after domain
- removal
-Message-ID: <20200721225007.GA1167473@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595363169-7157-1-git-send-email-jonathan.derrick@intel.com>
+        Tue, 21 Jul 2020 18:50:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgGUWui (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 18:50:38 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C53FC0619DB
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 15:50:37 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id mn17so137762pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 15:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZLNdH1kD/r0ZIb2tu8/TgP4snAvM1ZTMGSbpuMEUzJ0=;
+        b=lFCV90tH97Pb6IUKGAYrNt12b5wuCcmXuFEJFddsbwBXzFZoz0k8E8VSJy3qgWofq3
+         /1yQRik2NbTNXJQy5EhYNXZpbYD1/aF8LbWIJT8daIkgwHt1+VwR90DgsW5DkvA7DLlB
+         D4aoanXxkb05rh1ZYlQy6u3gt/3QoCLyk3taY2OpmARU6lCVcZAZyrPYvAOcMEIA2hf8
+         ivhV7pj0ufVquRBesEccfZX59zK3paqPDWoj2RtGxIPkwj8MJ98a+Qc3cp3uA3+SsWJQ
+         nOcuSp/KTBHSsHHCM/6p9bPjhY4HPBKcdGKiTe2UtwJ5s5ATZ2AdyGlb+M58qtK/vxLU
+         T+vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=ZLNdH1kD/r0ZIb2tu8/TgP4snAvM1ZTMGSbpuMEUzJ0=;
+        b=ShOSBDst4zS82QbkgVZsy96uUdHNKGq/qE8WyKxBM6wGMQVeektQnjifuGmkmX4Aqi
+         +FEOvR74wGDRBRJzc370XFAaqMlE2D+XGf9Oo3yhRPPvHqygLlDS2Jj4x7Nq2wRZ+7IZ
+         afwRfbybpaoB3IGHwNj2x0AmStNioxe6aNCclInrwKMdkxNZ4pPy3jPHBWd3fUZ/hTyc
+         d9KZXVEWtaz/cCtaqMdvgVjz9v0encLPTOUIDcno/I2FQOxBLN3MRVar+C2tB+Wl1xts
+         BWiBMVMGDo6TEdzGdt8d8neIvphUAOmfXFt2xEIx/pOH14tfhBYswJRcmJeo3IjivxoM
+         A24Q==
+X-Gm-Message-State: AOAM530wBxf80CV8KPOZWy5rZt6zPhoPAKcVdlE/zFHr2S2dn5IvvZwD
+        MTeW4XTSvAyBQPdvHAvJ0rHCjXJZ+Os=
+X-Google-Smtp-Source: ABdhPJxHyIJuOLzjsh1YKVqRwqYPvmrAkkW5JmyuN5Vf3DVI3bsiiLA67CkyTtHMXCt5a0meKsedkw==
+X-Received: by 2002:a17:90a:a68:: with SMTP id o95mr7764522pjo.64.1595371836547;
+        Tue, 21 Jul 2020 15:50:36 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id c134sm21417979pfc.115.2020.07.21.15.50.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 15:50:35 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 15:50:35 -0700 (PDT)
+X-Google-Original-Date: Tue, 21 Jul 2020 15:50:27 PDT (-0700)
+Subject:     Re: [PATCH 5.7 233/244] RISC-V: Acquire mmap lock before invoking walk_page_range
+In-Reply-To: <20200720191403.GB1529125@kroah.com>
+CC:     Atish Patra <Atish.Patra@wdc.com>, naresh.kamboju@linaro.org,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zong.li@sifive.com, lkft-triage@lists.linaro.org
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+To:     Greg KH <gregkh@linuxfoundation.org>, walken@google.com
+Message-ID: <mhng-903745bf-c5df-4e70-ade8-c1e596265fc4@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 02:26:09PM -0600, Jon Derrick wrote:
-> Change 711419e504eb ("irqdomain: Add the missing assignment of
-> domain->fwnode for named fwnode") unintentionally caused a dangling
-> pointer page fault issue on firmware nodes that were freed after IRQ
-> domain allocation. Change e3beca48a45b fixed that dangling pointer issue
-> by only freeing the firmware node after an IRQ domain allocation
-> failure. That fix no longer frees the firmware node immediately, but
-> leaves the firmware node allocated after the domain is removed.
-> 
-> We need to keep the firmware node through irq_domain_remove, but should
-> free it afterwards. This patch saves the handle and adds the freeing of
-> firmware node after domain removal where appropriate.
-> 
-> Fixes: e3beca48a45b ("irqdomain/treewide: Keep firmware node unconditionally allocated")
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> Cc: stable@vger.kernel.org
+On Mon, 20 Jul 2020 12:14:03 PDT (-0700), Greg KH wrote:
+> On Mon, Jul 20, 2020 at 06:50:10PM +0000, Atish Patra wrote:
+>> On Mon, 2020-07-20 at 23:11 +0530, Naresh Kamboju wrote:
+>> > RISC-V build breaks on stable-rc 5.7 branch.
+>> > build failed with gcc-8, gcc-9 and gcc-9.
+>> >
+>>
+>> Sorry for the compilation issue.
+>>
+>> mmap_read_lock was intrdouced in the following commit.
+>>
+>> commit 9740ca4e95b4
+>> Author: Michel Lespinasse <walken@google.com>
+>> Date:   Mon Jun 8 21:33:14 2020 -0700
+>>
+>>     mmap locking API: initial implementation as rwsem wrappers
+>>
+>> The following two commits replaced the usage of mmap_sem rwsem calls
+>> with mmap_lock.
+>>
+>> d8ed45c5dcd4 (mmap locking API: use coccinelle to convert mmap_sem
+>> rwsem call sites)
+>> 89154dd5313f (mmap locking API: convert mmap_sem call sites missed by
+>> coccinelle)
+>>
+>> The first commit is not present in stale 5.7-y for obvious reasons.
+>>
+>> Do we need to send a separate patch only for stable branch with
+>> mmap_sem ? I am not sure if that will cause a conflict again in future.
+>
+> I do not like taking odd backports, and would rather take the real patch
+> that is upstream.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci
+I guess I'm a bit new to stable backports so I'm not sure what's expected here.
+The failing patch fixes a bug by using a new interface.  The smallest diff fix
+for the stable kernels would be to construct a similar fix without the new
+interface, which in this case is very easy as the new interface just converted
+some generic locking calls to one-line functions.  It seems somewhat circuitous
+to land that in Linus' tree, though, as it would require breaking our port
+before fixing it to use the old interfaces and then cleaning it up to use the
+new interfaces.
 
-> ---
->  arch/mips/pci/pci-xtalk-bridge.c    | 3 +++
->  arch/x86/kernel/apic/io_apic.c      | 5 +++++
->  drivers/iommu/intel/irq_remapping.c | 8 ++++++++
->  drivers/mfd/ioc3.c                  | 6 ++++++
->  drivers/pci/controller/vmd.c        | 3 +++
->  5 files changed, 25 insertions(+)
-> 
-> diff --git a/arch/mips/pci/pci-xtalk-bridge.c b/arch/mips/pci/pci-xtalk-bridge.c
-> index 5958217..9b3cc77 100644
-> --- a/arch/mips/pci/pci-xtalk-bridge.c
-> +++ b/arch/mips/pci/pci-xtalk-bridge.c
-> @@ -728,6 +728,7 @@ static int bridge_probe(struct platform_device *pdev)
->  	pci_free_resource_list(&host->windows);
->  err_remove_domain:
->  	irq_domain_remove(domain);
-> +	irq_domain_free_fwnode(fn);
->  	return err;
->  }
->  
-> @@ -735,8 +736,10 @@ static int bridge_remove(struct platform_device *pdev)
->  {
->  	struct pci_bus *bus = platform_get_drvdata(pdev);
->  	struct bridge_controller *bc = BRIDGE_CONTROLLER(bus);
-> +	struct fwnode_handle *fn = bc->domain->fwnode;
->  
->  	irq_domain_remove(bc->domain);
-> +	irq_domain_free_fwnode(fn);
->  	pci_lock_rescan_remove();
->  	pci_stop_root_bus(bus);
->  	pci_remove_root_bus(bus);
-> diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-> index 81ffcfb..21325a4a 100644
-> --- a/arch/x86/kernel/apic/io_apic.c
-> +++ b/arch/x86/kernel/apic/io_apic.c
-> @@ -2335,8 +2335,13 @@ static int mp_irqdomain_create(int ioapic)
->  
->  static void ioapic_destroy_irqdomain(int idx)
->  {
-> +	struct ioapic_domain_cfg *cfg = &ioapics[idx].irqdomain_cfg;
-> +	struct fwnode_handle *fn = ioapics[idx].irqdomain->fwnode;
-> +
->  	if (ioapics[idx].irqdomain) {
->  		irq_domain_remove(ioapics[idx].irqdomain);
-> +		if (!cfg->dev)
-> +			irq_domain_free_fwnode(fn);
->  		ioapics[idx].irqdomain = NULL;
->  	}
->  }
-> diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
-> index 9564d23..aa096b3 100644
-> --- a/drivers/iommu/intel/irq_remapping.c
-> +++ b/drivers/iommu/intel/irq_remapping.c
-> @@ -628,13 +628,21 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
->  
->  static void intel_teardown_irq_remapping(struct intel_iommu *iommu)
->  {
-> +	struct fwnode_handle *fn;
-> +
->  	if (iommu && iommu->ir_table) {
->  		if (iommu->ir_msi_domain) {
-> +			fn = iommu->ir_msi_domain->fwnode;
-> +
->  			irq_domain_remove(iommu->ir_msi_domain);
-> +			irq_domain_free_fwnode(fn);
->  			iommu->ir_msi_domain = NULL;
->  		}
->  		if (iommu->ir_domain) {
-> +			fn = iommu->ir_domain->fwnode;
-> +
->  			irq_domain_remove(iommu->ir_domain);
-> +			irq_domain_free_fwnode(fn);
->  			iommu->ir_domain = NULL;
->  		}
->  		free_pages((unsigned long)iommu->ir_table->base,
-> diff --git a/drivers/mfd/ioc3.c b/drivers/mfd/ioc3.c
-> index 74cee7c..d939ccc 100644
-> --- a/drivers/mfd/ioc3.c
-> +++ b/drivers/mfd/ioc3.c
-> @@ -616,7 +616,10 @@ static int ioc3_mfd_probe(struct pci_dev *pdev,
->  		/* Remove all already added MFD devices */
->  		mfd_remove_devices(&ipd->pdev->dev);
->  		if (ipd->domain) {
-> +			struct fwnode_handle *fn = ipd->domain->fwnode;
-> +
->  			irq_domain_remove(ipd->domain);
-> +			irq_domain_free_fwnode(fn);
->  			free_irq(ipd->domain_irq, (void *)ipd);
->  		}
->  		pci_iounmap(pdev, regs);
-> @@ -643,7 +646,10 @@ static void ioc3_mfd_remove(struct pci_dev *pdev)
->  	/* Release resources */
->  	mfd_remove_devices(&ipd->pdev->dev);
->  	if (ipd->domain) {
-> +		struct fwnode_handle *fn = ipd->domain->fwnode;
-> +
->  		irq_domain_remove(ipd->domain);
-> +		irq_domain_free_fwnode(fn);
->  		free_irq(ipd->domain_irq, (void *)ipd);
->  	}
->  	pci_iounmap(pdev, ipd->regs);
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index f078114..91eb769 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -560,6 +560,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  	if (!vmd->bus) {
->  		pci_free_resource_list(&resources);
->  		irq_domain_remove(vmd->irq_domain);
-> +		irq_domain_free_fwnode(fn);
->  		return -ENODEV;
->  	}
->  
-> @@ -673,6 +674,7 @@ static void vmd_cleanup_srcu(struct vmd_dev *vmd)
->  static void vmd_remove(struct pci_dev *dev)
->  {
->  	struct vmd_dev *vmd = pci_get_drvdata(dev);
-> +	struct fwnode_handle *fn = vmd->irq_domain->fwnode;
->  
->  	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
->  	pci_stop_root_bus(vmd->bus);
-> @@ -680,6 +682,7 @@ static void vmd_remove(struct pci_dev *dev)
->  	vmd_cleanup_srcu(vmd);
->  	vmd_detach_resources(vmd);
->  	irq_domain_remove(vmd->irq_domain);
-> +	irq_domain_free_fwnode(fn);
->  }
->  
->  #ifdef CONFIG_PM_SLEEP
-> -- 
-> 1.8.3.1
-> 
+Are we expected to pull the new interface onto stable in addition to this fix?
+The new interface doesn't actually fix anything itself, but it would allow a
+functional kernel to be constructed that consisted of only backports from
+Linus' tree (which would also make further fixes easier).  It seems safe to
+just pull in 9740ca4e95b4 ("mmap locking API: initial implementation as rwsem
+wrappers") before this failing patch, as in this case the new interface will
+function correctly with only a subset of callers having been converted.  Of
+course that's not a generally true statement so I don't know if future code
+will behave that way, but pulling in those conversion patches is definitely
+unnecessary diff right now.
+
+> I will drop this patch from the tree now, so everyone can figure out
+> what they want to do in the future :)
+
+That certainly seems like the right way to go for now, thanks!
