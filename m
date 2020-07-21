@@ -7,47 +7,44 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B552AC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B42C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9715420729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFCEF20709
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:08:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WtJsFn/6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ir8573Mp"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3Y7E/nYF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="au3hbSFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbgGULIs (ORCPT
+        id S1729689AbgGULIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:08:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729633AbgGULIn (ORCPT
+        Tue, 21 Jul 2020 07:08:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37356 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729637AbgGULIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:08:43 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE9CDC061794;
-        Tue, 21 Jul 2020 04:08:42 -0700 (PDT)
-Message-Id: <20200721110808.889765456@linutronix.de>
+        Tue, 21 Jul 2020 07:08:45 -0400
+Message-Id: <20200721110809.106972388@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595329721;
+        s=2020; t=1595329723;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=BIblg0GvIzHOdzEAdRS9LO1K9FW06VcbJ687eytc7nU=;
-        b=WtJsFn/6dUUDuHDoecrwXQUtqkqhjMdJt72qtYarcr6RrHzROukeGf56reCuQQUE1qAm/R
-        iOfEKnTMnO8WV+ekQExCJt8SWQcMPG3Ztvq6kQIgb7dJUjPUNoP6cqHV27LdVkh7Q6enH8
-        IdWWrxNeeIO/JePmWzLla1i622X6/kXroHhELIc1qSRyzcZhBvqgIjN/BLzi3hq9giI4vn
-        JnzSf4uHIA0dwkSSKxtQO5TmImunYfIsRyIK96uIM9h10w7LGwIVqlQKey0jVHTMLbE8gO
-        QPt/X98kym1uNBca8d7KvF82vi07sXklxu9ewHSfA3I5yKy/kbUGs4R+kVwasQ==
+        bh=+JhihBtBRnfhnJQwGd90XJXoqMCU8kw0agti/vqJ948=;
+        b=3Y7E/nYFUOYf+T5096+T4N0PRyZbSJzdR85w1Ia5rnYp1JjR9YhoVwPb4vXmyGzC8iesA2
+        TVPabAvlVi6i8A2ZrqLT+M9R2gGouPnXC8vr8LyIImI8hporGhIygHaX7bmxYZt3ensQhZ
+        w/8s+DiF2A6LpUJMk2eglNXbGcCnOsFWZV2lN1GwfsFpO2XzwyXRhAaOYm1cuj9EfTdDLa
+        Kdbq+pymw2EfuX37qtY3tzZE4PsBQJlVVoN7vDNfJ6E2rRj9dEUdwFWGXeP1g5ICoKCL/w
+        69ASYc2ulb8RuA/K/z9W8hvkEOJt5xaZayinnjDqSMOlbv5bWOCFsihxk+MNEg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595329721;
+        s=2020e; t=1595329723;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=BIblg0GvIzHOdzEAdRS9LO1K9FW06VcbJ687eytc7nU=;
-        b=ir8573MpWDS0nQj1ym4ooLH2eTMBO6h1epOla8UuGn2MB9fOkdGbmaTAoL9VqDjcTxD+9J
-        Urp2Agv2nHHDSNCg==
-Date:   Tue, 21 Jul 2020 12:57:12 +0200
+        bh=+JhihBtBRnfhnJQwGd90XJXoqMCU8kw0agti/vqJ948=;
+        b=au3hbSFWuVNeNshIBJpEOZ5yE8X1HQHJoZLPFGTF0v/qvGZ4YosvhE5VOvPbsUyjBGrd8e
+        UoTyyZCA5K4blQBA==
+Date:   Tue, 21 Jul 2020 12:57:14 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
@@ -57,7 +54,7 @@ Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
         Keno Fischer <keno@juliacomputing.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
         Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: [patch V4 06/15] x86/entry: Consolidate check_user_regs()
+Subject: [patch V4 08/15] x86/entry: Move user return notifier out of loop
 References: <20200721105706.030914876@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,102 +64,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+Guests and user space share certain MSRs. KVM sets these MSRs to guest
+values once and does not set them back to user space values on every VM
+exit to spare the costly MSR operations.
 
-The user register sanity check is sprinkled all over the place. Move it
-into enter_from_user_mode().
+User return notifiers ensure that these MSRs are set back to the correct
+values before returning to user space in exit_to_usermode_loop().
+
+There is no reason to evaluate the TIF flag indicating that user return
+notifiers need to be invoked in the loop. The important point is that they
+are invoked before returning to user space.
+
+Move the invocation out of the loop into the section which does the last
+preperatory steps before returning to user space. That section is not
+preemptible and runs with interrupts disabled until the actual return.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/entry/common.c |   24 +++++++++---------------
- 1 file changed, 9 insertions(+), 15 deletions(-)
+V4: New patch
+---
+ arch/x86/entry/common.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 --- a/arch/x86/entry/common.c
 +++ b/arch/x86/entry/common.c
-@@ -82,10 +82,11 @@ static noinstr void check_user_regs(stru
-  * 2) Invoke context tracking if enabled to reactivate RCU
-  * 3) Trace interrupts off state
-  */
--static noinstr void enter_from_user_mode(void)
-+static noinstr void enter_from_user_mode(struct pt_regs *regs)
- {
- 	enum ctx_state state = ct_state();
+@@ -208,7 +208,7 @@ static long syscall_trace_enter(struct p
  
-+	check_user_regs(regs);
- 	lockdep_hardirqs_off(CALLER_ADDR0);
- 	user_exit_irqoff();
+ #define EXIT_TO_USERMODE_LOOP_FLAGS				\
+ 	(_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_UPROBE |	\
+-	 _TIF_NEED_RESCHED | _TIF_USER_RETURN_NOTIFY | _TIF_PATCH_PENDING)
++	 _TIF_NEED_RESCHED | _TIF_PATCH_PENDING)
  
-@@ -95,8 +96,9 @@ static noinstr void enter_from_user_mode
- 	instrumentation_end();
- }
- #else
--static __always_inline void enter_from_user_mode(void)
-+static __always_inline void enter_from_user_mode(struct pt_regs *regs)
+ static void exit_to_usermode_loop(struct pt_regs *regs, u32 cached_flags)
  {
-+	check_user_regs(regs);
- 	lockdep_hardirqs_off(CALLER_ADDR0);
- 	instrumentation_begin();
- 	trace_hardirqs_off_finish();
-@@ -369,9 +371,7 @@ static void __syscall_return_slowpath(st
- {
- 	struct thread_info *ti;
+@@ -242,9 +242,6 @@ static void exit_to_usermode_loop(struct
+ 			rseq_handle_notify_resume(NULL, regs);
+ 		}
  
--	check_user_regs(regs);
+-		if (cached_flags & _TIF_USER_RETURN_NOTIFY)
+-			fire_user_return_notifiers();
 -
--	enter_from_user_mode();
-+	enter_from_user_mode(regs);
- 	instrumentation_begin();
+ 		/* Disable IRQs and retry */
+ 		local_irq_disable();
  
- 	local_irq_enable();
-@@ -434,9 +434,7 @@ static void do_syscall_32_irqs_on(struct
- /* Handles int $0x80 */
- __visible noinstr void do_int80_syscall_32(struct pt_regs *regs)
- {
--	check_user_regs(regs);
--
--	enter_from_user_mode();
-+	enter_from_user_mode(regs);
- 	instrumentation_begin();
+@@ -273,6 +270,9 @@ static void __prepare_exit_to_usermode(s
+ 	/* Reload ti->flags; we may have rescheduled above. */
+ 	cached_flags = READ_ONCE(ti->flags);
  
- 	local_irq_enable();
-@@ -487,8 +485,6 @@ static bool __do_fast_syscall_32(struct
- 					vdso_image_32.sym_int80_landing_pad;
- 	bool success;
++	if (cached_flags & _TIF_USER_RETURN_NOTIFY)
++		fire_user_return_notifiers();
++
+ 	if (unlikely(cached_flags & _TIF_IO_BITMAP))
+ 		tss_update_io_bitmap();
  
--	check_user_regs(regs);
--
- 	/*
- 	 * SYSENTER loses EIP, and even SYSCALL32 needs us to skip forward
- 	 * so that 'regs->ip -= 2' lands back on an int $0x80 instruction.
-@@ -496,7 +492,7 @@ static bool __do_fast_syscall_32(struct
- 	 */
- 	regs->ip = landing_pad;
- 
--	enter_from_user_mode();
-+	enter_from_user_mode(regs);
- 	instrumentation_begin();
- 
- 	local_irq_enable();
-@@ -599,8 +595,7 @@ idtentry_state_t noinstr idtentry_enter(
- 	};
- 
- 	if (user_mode(regs)) {
--		check_user_regs(regs);
--		enter_from_user_mode();
-+		enter_from_user_mode(regs);
- 		return ret;
- 	}
- 
-@@ -733,8 +728,7 @@ void noinstr idtentry_exit(struct pt_reg
-  */
- void noinstr idtentry_enter_user(struct pt_regs *regs)
- {
--	check_user_regs(regs);
--	enter_from_user_mode();
-+	enter_from_user_mode(regs);
- }
- 
- /**
-
 
