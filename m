@@ -2,106 +2,212 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE10C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E54C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1A1C207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D919120792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgGUGR6 (ORCPT
+        id S1726891AbgGUGXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:17:58 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8338 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725294AbgGUGR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:17:58 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CD319428CB13F7977094;
-        Tue, 21 Jul 2020 14:17:50 +0800 (CST)
-Received: from [127.0.0.1] (10.174.178.16) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Jul 2020
- 14:17:40 +0800
-Subject: Re: [PATCH] ipmi/watchdog: add missing newlines when printing
- parameters by sysfs
-To:     Joe Perches <joe@perches.com>, <minyard@acm.org>
-CC:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
-        <openipmi-developer@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <guohanjun@huawei.com>
-References: <1595210605-27888-1-git-send-email-wangxiongfeng2@huawei.com>
- <20200720195234.GC2952@minyard.net>
- <908fcbf2-efbb-b3f4-0666-2da79fbe99c4@huawei.com>
- <b38a439b2bdd1122805aa182da9a1802e673f53e.camel@perches.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <70f4a8b9-1410-a32d-dfaa-4cb5d3cade10@huawei.com>
-Date:   Tue, 21 Jul 2020 14:17:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jul 2020 02:23:49 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:56478 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725294AbgGUGXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 02:23:48 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jxlfs-0001TC-Be; Tue, 21 Jul 2020 16:22:49 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 21 Jul 2020 16:22:48 +1000
+Date:   Tue, 21 Jul 2020 16:22:48 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [v3 PATCH RESEND] printk: Make linux/printk.h self-contained
+Message-ID: <20200721062248.GA18383@gondor.apana.org.au>
 MIME-Version: 1.0
-In-Reply-To: <b38a439b2bdd1122805aa182da9a1802e673f53e.camel@perches.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.178.16]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As it stands if you include printk.h by itself it will fail to
+compile because it requires definitions from ratelimit.h.  However,
+simply including ratelimit.h from printk.h does not work due to
+inclusion loops involving sched.h and kernel.h.
 
+This patch solves this by moving bits from ratelimit.h into a new
+header file which can then be included by printk.h without any
+worries about header loops.
 
-On 2020/7/21 10:00, Joe Perches wrote:
-> On Tue, 2020-07-21 at 09:20 +0800, Xiongfeng Wang wrote:
->> On 2020/7/21 3:52, Corey Minyard wrote:
->>> On Mon, Jul 20, 2020 at 10:03:25AM +0800, Xiongfeng Wang wrote:
->>>> When I cat some ipmi_watchdog parameters by sysfs, it displays as
->>>> follows. It's better to add a newline for easy reading.
-> []
->>>> diff --git a/drivers/char/ipmi/ipmi_watchdog.c b/drivers/char/ipmi/ipmi_watchdog.c
-> []
->>>> @@ -232,12 +232,16 @@ static int set_param_str(const char *val, const struct kernel_param *kp)
->>>>  static int get_param_str(char *buffer, const struct kernel_param *kp)
->>>>  {
->>>>  	action_fn fn = (action_fn) kp->arg;
->>>> -	int       rv;
->>>> +	int rv, len;
->>>>  
->>>>  	rv = fn(NULL, buffer);
->>>>  	if (rv)
->>>>  		return rv;
->>>> -	return strlen(buffer);
->>>> +
->>>> +	len = strlen(buffer);
->>>> +	len += sprintf(buffer + len, "\n");
->>>
->>> sprintf is kind of overkill to stick a \n on the end of a line.  How
->>> about:
->>>
->>> 	buffer[len++] = '\n';
->>>
->>> Since you are returning the length, you shouldn't need to nil terminate
->>> the string.
-> 
-> You never quite know for sure so I suggest making
-> the string null terminated just in case.
-> 
-> i.e.:
-> 
-> 	buffer[len++] = '\n';
-> 	buffer[len] = 0;
-> 
+The build bot then revealed some intriguing failures arising out
+of this patch.  On s390 there is an inclusion loop with asm/bug.h
+and linux/kernel.h that triggers a compile failure, because kernel.h
+will cause asm-generic/bug.h to be included before s390's own
+asm/bug.h has finished processing.  This has been fixed by not
+including kernel.h in arch/s390/include/asm/bug.h.
 
-Thanks for your advice. I will change it in the next version.
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Acked-by: Petr Mladek <pmladek@suse.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
 
-Thanks,
-Xiongfeng
+ arch/s390/include/asm/bug.h     |    2 -
+ include/linux/printk.h          |    1 
+ include/linux/ratelimit.h       |   36 ---------------------------------
+ include/linux/ratelimit_types.h |   43 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 46 insertions(+), 36 deletions(-)
 
-> 
-> 
-> .
-> 
-
+diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+index 7725f8006fdfb..0b25f28351edc 100644
+--- a/arch/s390/include/asm/bug.h
++++ b/arch/s390/include/asm/bug.h
+@@ -2,7 +2,7 @@
+ #ifndef _ASM_S390_BUG_H
+ #define _ASM_S390_BUG_H
+ 
+-#include <linux/kernel.h>
++#include <linux/compiler.h>
+ 
+ #ifdef CONFIG_BUG
+ 
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index fc8f03c545430..34c1a7be3e014 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -7,6 +7,7 @@
+ #include <linux/kern_levels.h>
+ #include <linux/linkage.h>
+ #include <linux/cache.h>
++#include <linux/ratelimit_types.h>
+ 
+ extern const char linux_banner[];
+ extern const char linux_proc_banner[];
+diff --git a/include/linux/ratelimit.h b/include/linux/ratelimit.h
+index 8ddf79e9207a9..b17e0cd0a30cf 100644
+--- a/include/linux/ratelimit.h
++++ b/include/linux/ratelimit.h
+@@ -2,41 +2,10 @@
+ #ifndef _LINUX_RATELIMIT_H
+ #define _LINUX_RATELIMIT_H
+ 
+-#include <linux/param.h>
++#include <linux/ratelimit_types.h>
+ #include <linux/sched.h>
+ #include <linux/spinlock.h>
+ 
+-#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
+-#define DEFAULT_RATELIMIT_BURST		10
+-
+-/* issue num suppressed message on exit */
+-#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
+-
+-struct ratelimit_state {
+-	raw_spinlock_t	lock;		/* protect the state */
+-
+-	int		interval;
+-	int		burst;
+-	int		printed;
+-	int		missed;
+-	unsigned long	begin;
+-	unsigned long	flags;
+-};
+-
+-#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
+-		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
+-		.interval	= interval_init,			\
+-		.burst		= burst_init,				\
+-	}
+-
+-#define RATELIMIT_STATE_INIT_DISABLED					\
+-	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
+-
+-#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
+-									\
+-	struct ratelimit_state name =					\
+-		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
+-
+ static inline void ratelimit_state_init(struct ratelimit_state *rs,
+ 					int interval, int burst)
+ {
+@@ -73,9 +42,6 @@ ratelimit_set_flags(struct ratelimit_state *rs, unsigned long flags)
+ 
+ extern struct ratelimit_state printk_ratelimit_state;
+ 
+-extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
+-#define __ratelimit(state) ___ratelimit(state, __func__)
+-
+ #ifdef CONFIG_PRINTK
+ 
+ #define WARN_ON_RATELIMIT(condition, state)	({		\
+diff --git a/include/linux/ratelimit_types.h b/include/linux/ratelimit_types.h
+new file mode 100644
+index 0000000000000..b676aa419eef8
+--- /dev/null
++++ b/include/linux/ratelimit_types.h
+@@ -0,0 +1,43 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_RATELIMIT_TYPES_H
++#define _LINUX_RATELIMIT_TYPES_H
++
++#include <linux/bits.h>
++#include <linux/param.h>
++#include <linux/spinlock_types.h>
++
++#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
++#define DEFAULT_RATELIMIT_BURST		10
++
++/* issue num suppressed message on exit */
++#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
++
++struct ratelimit_state {
++	raw_spinlock_t	lock;		/* protect the state */
++
++	int		interval;
++	int		burst;
++	int		printed;
++	int		missed;
++	unsigned long	begin;
++	unsigned long	flags;
++};
++
++#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
++		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
++		.interval	= interval_init,			\
++		.burst		= burst_init,				\
++	}
++
++#define RATELIMIT_STATE_INIT_DISABLED					\
++	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
++
++#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
++									\
++	struct ratelimit_state name =					\
++		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
++
++extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
++#define __ratelimit(state) ___ratelimit(state, __func__)
++
++#endif /* _LINUX_RATELIMIT_TYPES_H */
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
