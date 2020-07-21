@@ -2,89 +2,280 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E1DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 617B420729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595327791;
-	bh=2qjC9HdFBAZ5WokLmiKTQmWRkt/HedwNdcntoh6YMec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TGeJNml3EU/i/mSW2yAYU6fy1z944YQsLbySiKvnIB+PGWW5l5UY6alpo+mMkII1J
-	 bz6wQSQUGTRACJ9ycpczBXb1q15mcECVGqGcDC80BzINLxU099qKWLqp/9C4zDve5a
-	 BqOZgx6g2DvRoImXCvcK9SPEvW5PLWevr+kJz1Dw=
+	by mail.kernel.org (Postfix) with ESMTP id 05F9E20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:42:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgGUKga (ORCPT
+        id S1727926AbgGUKm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:36:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgGUKg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:36:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEC7320714;
-        Tue, 21 Jul 2020 10:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595327788;
-        bh=2qjC9HdFBAZ5WokLmiKTQmWRkt/HedwNdcntoh6YMec=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M85MMYqugreaqDOzOUb1x4lVXqVoKNPq4U0iMnjMsv4ROD0+dXYyX34cLSIgG110s
-         GxD5OLgZJ2hYFfc1VQoreITBrYldoDr+kSd1JIG0b00CFYbmrkj6mqkqXl28EyfLry
-         n+K2+ZIwvmCUcMjz1dT+BuxzkH/FdBYK7kBAcDu0=
-Date:   Tue, 21 Jul 2020 12:36:36 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Zheng Yongjun <zhengyongjun3@huawei.com>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tipc: remove set but not used variable 'no_warn'
-Message-ID: <20200721103636.GB1675802@kroah.com>
-References: <20200721084023.13402-1-zhengyongjun3@huawei.com>
+        Tue, 21 Jul 2020 06:42:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1100 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726089AbgGUKm1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:42:27 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LAXAoQ082549;
+        Tue, 21 Jul 2020 06:42:11 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32dmfk8nhn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 06:42:10 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LAaB13030968;
+        Tue, 21 Jul 2020 10:42:08 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03fra.de.ibm.com with ESMTP id 32brq81wm5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 10:42:08 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LAg5Xx63439014
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jul 2020 10:42:05 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 519AC4C062;
+        Tue, 21 Jul 2020 10:42:05 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD37A4C058;
+        Tue, 21 Jul 2020 10:42:04 +0000 (GMT)
+Received: from pomme.tlslab.ibm.com (unknown [9.145.36.105])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Jul 2020 10:42:04 +0000 (GMT)
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, mpe@ellerman.id.au, paulus@samba.org
+Cc:     linuxram@us.ibm.com, sukadev@linux.ibm.com, bauerman@linux.ibm.com,
+        bharata@linux.ibm.com, Paul Mackerras <paulus@ozlabs.org>
+Subject: [PATCH v2 1/2] KVM: PPC: Book3S HV: move kvmppc_svm_page_out up
+Date:   Tue, 21 Jul 2020 12:42:01 +0200
+Message-Id: <20200721104202.15727-2-ldufour@linux.ibm.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200721104202.15727-1-ldufour@linux.ibm.com>
+References: <20200721104202.15727-1-ldufour@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721084023.13402-1-zhengyongjun3@huawei.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_03:2020-07-21,2020-07-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ suspectscore=2 mlxscore=0 malwarescore=0 bulkscore=0 spamscore=0
+ adultscore=0 mlxlogscore=999 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007210075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 04:40:23PM +0800, Zheng Yongjun wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/base/module.c: In function 'module_add_driver':
-> drivers/base/module.c:33: warning:
-> variable 'no_warn' set but not used [-Wunused-but-set-variable]
-> 
-> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
-> ---
->  drivers/base/module.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/base/module.c b/drivers/base/module.c
-> index 46ad4d636731..d1060c504c1b 100644
-> --- a/drivers/base/module.c
-> +++ b/drivers/base/module.c
-> @@ -33,7 +33,6 @@ static void module_create_drivers_dir(struct module_kobject *mk)
->  void module_add_driver(struct module *mod, struct device_driver *drv)
->  {
->  	char *driver_name;
-> -	int no_warn;
->  	struct module_kobject *mk = NULL;
->  
->  	if (!drv)
-> @@ -59,11 +58,11 @@ void module_add_driver(struct module *mod, struct device_driver *drv)
->  		return;
->  
->  	/* Don't check return codes; these calls are idempotent */
-> -	no_warn = sysfs_create_link(&drv->p->kobj, &mk->kobj, "module");
-> +	sysfs_create_link(&drv->p->kobj, &mk->kobj, "module");
+kvmppc_svm_page_out() will need to be called by kvmppc_uvmem_drop_pages()
+so move it upper in this file.
 
-Always test-build your patches before sending them out :(
+Furthermore it will be interesting to call this function when already
+holding the kvm->arch.uvmem_lock, so prefix the original function with __
+and remove the locking in it, and introduce a wrapper which call that
+function with the lock held.
+
+There is no functional change.
+
+Cc: Ram Pai <linuxram@us.ibm.com>
+Cc: Bharata B Rao <bharata@linux.ibm.com>
+Cc: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+---
+ arch/powerpc/kvm/book3s_hv_uvmem.c | 166 ++++++++++++++++-------------
+ 1 file changed, 90 insertions(+), 76 deletions(-)
+
+diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
+index a2b4d259f8b0..5a4b02d3f651 100644
+--- a/arch/powerpc/kvm/book3s_hv_uvmem.c
++++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
+@@ -526,6 +526,96 @@ unsigned long kvmppc_h_svm_init_done(struct kvm *kvm)
+ 	return ret;
+ }
+ 
++/*
++ * Provision a new page on HV side and copy over the contents
++ * from secure memory using UV_PAGE_OUT uvcall.
++ * Caller must held kvm->arch.uvmem_lock.
++ */
++static int __kvmppc_svm_page_out(struct vm_area_struct *vma,
++		unsigned long start,
++		unsigned long end, unsigned long page_shift,
++		struct kvm *kvm, unsigned long gpa)
++{
++	unsigned long src_pfn, dst_pfn = 0;
++	struct migrate_vma mig;
++	struct page *dpage, *spage;
++	struct kvmppc_uvmem_page_pvt *pvt;
++	unsigned long pfn;
++	int ret = U_SUCCESS;
++
++	memset(&mig, 0, sizeof(mig));
++	mig.vma = vma;
++	mig.start = start;
++	mig.end = end;
++	mig.src = &src_pfn;
++	mig.dst = &dst_pfn;
++	mig.src_owner = &kvmppc_uvmem_pgmap;
++
++	/* The requested page is already paged-out, nothing to do */
++	if (!kvmppc_gfn_is_uvmem_pfn(gpa >> page_shift, kvm, NULL))
++		return ret;
++
++	ret = migrate_vma_setup(&mig);
++	if (ret)
++		return -1;
++
++	spage = migrate_pfn_to_page(*mig.src);
++	if (!spage || !(*mig.src & MIGRATE_PFN_MIGRATE))
++		goto out_finalize;
++
++	if (!is_zone_device_page(spage))
++		goto out_finalize;
++
++	dpage = alloc_page_vma(GFP_HIGHUSER, vma, start);
++	if (!dpage) {
++		ret = -1;
++		goto out_finalize;
++	}
++
++	lock_page(dpage);
++	pvt = spage->zone_device_data;
++	pfn = page_to_pfn(dpage);
++
++	/*
++	 * This function is used in two cases:
++	 * - When HV touches a secure page, for which we do UV_PAGE_OUT
++	 * - When a secure page is converted to shared page, we *get*
++	 *   the page to essentially unmap the device page. In this
++	 *   case we skip page-out.
++	 */
++	if (!pvt->skip_page_out)
++		ret = uv_page_out(kvm->arch.lpid, pfn << page_shift,
++				  gpa, 0, page_shift);
++
++	if (ret == U_SUCCESS)
++		*mig.dst = migrate_pfn(pfn) | MIGRATE_PFN_LOCKED;
++	else {
++		unlock_page(dpage);
++		__free_page(dpage);
++		goto out_finalize;
++	}
++
++	migrate_vma_pages(&mig);
++
++out_finalize:
++	migrate_vma_finalize(&mig);
++	return ret;
++}
++
++static inline int kvmppc_svm_page_out(struct vm_area_struct *vma,
++				      unsigned long start, unsigned long end,
++				      unsigned long page_shift,
++				      struct kvm *kvm, unsigned long gpa)
++{
++	int ret;
++
++	mutex_lock(&kvm->arch.uvmem_lock);
++	ret = __kvmppc_svm_page_out(vma, start, end, page_shift, kvm, gpa);
++	mutex_unlock(&kvm->arch.uvmem_lock);
++
++	return ret;
++}
++
+ /*
+  * Drop device pages that we maintain for the secure guest
+  *
+@@ -898,82 +988,6 @@ unsigned long kvmppc_h_svm_page_in(struct kvm *kvm, unsigned long gpa,
+ 	return ret;
+ }
+ 
+-/*
+- * Provision a new page on HV side and copy over the contents
+- * from secure memory using UV_PAGE_OUT uvcall.
+- */
+-static int kvmppc_svm_page_out(struct vm_area_struct *vma,
+-		unsigned long start,
+-		unsigned long end, unsigned long page_shift,
+-		struct kvm *kvm, unsigned long gpa)
+-{
+-	unsigned long src_pfn, dst_pfn = 0;
+-	struct migrate_vma mig;
+-	struct page *dpage, *spage;
+-	struct kvmppc_uvmem_page_pvt *pvt;
+-	unsigned long pfn;
+-	int ret = U_SUCCESS;
+-
+-	memset(&mig, 0, sizeof(mig));
+-	mig.vma = vma;
+-	mig.start = start;
+-	mig.end = end;
+-	mig.src = &src_pfn;
+-	mig.dst = &dst_pfn;
+-	mig.src_owner = &kvmppc_uvmem_pgmap;
+-
+-	mutex_lock(&kvm->arch.uvmem_lock);
+-	/* The requested page is already paged-out, nothing to do */
+-	if (!kvmppc_gfn_is_uvmem_pfn(gpa >> page_shift, kvm, NULL))
+-		goto out;
+-
+-	ret = migrate_vma_setup(&mig);
+-	if (ret)
+-		goto out;
+-
+-	spage = migrate_pfn_to_page(*mig.src);
+-	if (!spage || !(*mig.src & MIGRATE_PFN_MIGRATE))
+-		goto out_finalize;
+-
+-	if (!is_zone_device_page(spage))
+-		goto out_finalize;
+-
+-	dpage = alloc_page_vma(GFP_HIGHUSER, vma, start);
+-	if (!dpage) {
+-		ret = -1;
+-		goto out_finalize;
+-	}
+-
+-	lock_page(dpage);
+-	pvt = spage->zone_device_data;
+-	pfn = page_to_pfn(dpage);
+-
+-	/*
+-	 * This function is used in two cases:
+-	 * - When HV touches a secure page, for which we do UV_PAGE_OUT
+-	 * - When a secure page is converted to shared page, we *get*
+-	 *   the page to essentially unmap the device page. In this
+-	 *   case we skip page-out.
+-	 */
+-	if (!pvt->skip_page_out)
+-		ret = uv_page_out(kvm->arch.lpid, pfn << page_shift,
+-				  gpa, 0, page_shift);
+-
+-	if (ret == U_SUCCESS)
+-		*mig.dst = migrate_pfn(pfn) | MIGRATE_PFN_LOCKED;
+-	else {
+-		unlock_page(dpage);
+-		__free_page(dpage);
+-		goto out_finalize;
+-	}
+-
+-	migrate_vma_pages(&mig);
+-out_finalize:
+-	migrate_vma_finalize(&mig);
+-out:
+-	mutex_unlock(&kvm->arch.uvmem_lock);
+-	return ret;
+-}
+ 
+ /*
+  * Fault handler callback that gets called when HV touches any page that
+-- 
+2.27.0
 
