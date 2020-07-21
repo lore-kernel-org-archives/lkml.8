@@ -2,131 +2,194 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197A7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9EEC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECC9520714
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E2ED2080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:29:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="vAQqP/EZ"
+	dkim=pass (1024-bit key) header.d=towerbridgetechnology.onmicrosoft.com header.i=@towerbridgetechnology.onmicrosoft.com header.b="eDsnM/ci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbgGUB3V (ORCPT
+        id S1726359AbgGUB3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 21:29:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgGUB3U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 21:29:20 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB475C0619D7
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 18:29:19 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id d1so9532557plr.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 18:29:19 -0700 (PDT)
+        Mon, 20 Jul 2020 21:29:32 -0400
+Received: from mail-eopbgr750130.outbound.protection.outlook.com ([40.107.75.130]:17521
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726029AbgGUB3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 21:29:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Vj541ktkdzHmGPEWU8guOsv7CfVHPyJaZ1vEZJ2yn63yvFL5tkK4PeJ/MfkgnKYemmJxMiA22XzuCVAc9awE0FxCa0kIZhbUdViApwz6AMTnkdmtvr4G823eKRe0ooH71YW4xOoTCIetdnI4aRodrb3EBDuf2IgREtLHaMBcK5t+oy/LvxEzcsKLbtw1M2tSt+RnTRbMe5zz6hPyGdaZ4xr+hUe7cckOOA1ymfkttoppeqB/8C5QMer6+S+83eZTcOpGu9iw5SBgZsIU0rJ/eSbXs/h89bEaYQ7gagAOB9sAWjcaH29GRPEjOw46mLv+qQpkf1Sw7wpLe/ST1ZNgpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LBvW30MycsHksVGJ/ydS7ds/MoYvY9jYhxsqEg/0DmU=;
+ b=bylZ7iaj17f0beVcbMSJdt/+3UYshQeWZsdLCsTmPm3AGbAQe1IBHcxlJcF0nqVIJRjoyuozMyNkHh6YYmypOhnKa0B4t/iZg+bA7UnRxKd/j8yoVZ3Ef7nmVHuYHwEMct8X+YKVnbtuGcQwstn3xvNHMZlXfW6uXowzXxfVpFtbVsds3MCYwUWt3H514M7T2cPj/7Kd85vaW7Bv/v5d+6ZgoU3TShXKeyiR0bUUJ+HBYSsWG9vZBF+4dpFRo0dMQ5UwoJqdAxCz7315hFgKP9LwgLhnssjW1BZ1FUHqQ4aJvwoCo2c7Slrrc2LQLeI3k9ZdWCdJjsT7qZNdAzfjwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bayhubtech.com; dmarc=pass action=none
+ header.from=bayhubtech.com; dkim=pass header.d=bayhubtech.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sjioqcVovtB/2GCCf7EiFORrXptq/bceaX/G5i7rT0U=;
-        b=vAQqP/EZ0OO90K0v/2nWrxljG688ypm6ngU3+V2nfTwkI9kAqyJQBq2IqJz15IsGgN
-         FQBvcTfqYEHNloL/UC+GlYtIZonKyfl1GMPHmomJ3Sx2F1ymKVTIEoDRfFvUZ8QPPg8x
-         3iVQsTVkMjf3GgVyqO6Z78vpvb2uaTJXzniXkA7BNHW+ggOdBYJkv9bsfUJQYmR0a+jK
-         5xz2kpoKb2+yQYZkWIyua9E7hgM9JwJnZ1QmqGchBVcwhJsqMX3qe4tib2vjbi4AZ6yg
-         Ma0eRl2hzB60otJ/FNczONw4hC465Acjq3GdkguO3n2khtQkHVQtij6VNjkmntxxWOG8
-         ZhUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sjioqcVovtB/2GCCf7EiFORrXptq/bceaX/G5i7rT0U=;
-        b=RPsWxPqXAcKAAu/gGhstOqDdxLnm7nd4jypmgmo9GUICeswl5Cwz8OkEHB4KEuFXv0
-         SyjG9QY2+Z8p0Isc9f5Kq/YUwaVBAZS9XvBjruUUAILA2NjXh6FT2i2OV5WjdyR9N81L
-         64rZWufFXJQkou78Q4LKy8DUlT7sCLC009BtJkr5ruChfApQNvfb/+yCS2wT1YE6Esby
-         6K2dYfYCbuMI8TisJFZwAHFpP0ueDkG0+VNKCl6tX3mIxwFMR5jOdyzwIkHQRYiocAKD
-         v/RNaHFmLldmJUV8aFT+Xu0ZBVLSaGTnTRcHh9HH7SbuaiClymWi2ytld8fpFiK3R6+a
-         aWig==
-X-Gm-Message-State: AOAM532Ul0xs4VxJghFCD3prIPwQ5SffVeNceUjMbccaMBFAoC+eiNTG
-        3fM7nCSVfMhwAHNRuDg0N/EgBQ==
-X-Google-Smtp-Source: ABdhPJz6Q6JFb2MQ4nKJvlDB5yiikt5Aee2yKzIluLMpzv17W4Llpioax46MPzDMiRGLeYhyYSRuNQ==
-X-Received: by 2002:a17:902:c38a:: with SMTP id g10mr19287307plg.50.1595294959039;
-        Mon, 20 Jul 2020 18:29:19 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id b18sm870640pju.10.2020.07.20.18.29.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 18:29:18 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Matthew Wilcox <willy@infradead.org>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Kanchan Joshi <joshiiitr@gmail.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "bcrl@kvack.org" <bcrl@kvack.org>,
-        "asml.silence@gmail.com" <asml.silence@gmail.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Matias Bj??rling <mb@lightnvm.io>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <CA+1E3rLna6VVuwMSHVVEFmrgsTyJN=U4CcZtxSGWYr_UYV7AmQ@mail.gmail.com>
- <20200710131054.GB7491@infradead.org>
- <20200710134824.GK12769@casper.infradead.org>
- <20200710134932.GA16257@infradead.org>
- <20200710135119.GL12769@casper.infradead.org>
- <CA+1E3rKOZUz7oZ_DGW6xZPQaDu+T5iEKXctd+gsJw05VwpGQSQ@mail.gmail.com>
- <CA+1E3r+j=amkEg-_KUKSiu6gt2TRU6AU-_jwnB1C6wHHKnptfQ@mail.gmail.com>
- <20200720171416.GY12769@casper.infradead.org>
- <CA+1E3rLNo5sFH3RPFAM4_SYXSmyWTCdbC3k3-6jeaj3FRPYLkQ@mail.gmail.com>
- <CY4PR04MB37513C3424E81955EE7BFDA4E7780@CY4PR04MB3751.namprd04.prod.outlook.com>
- <20200721011509.GB15516@casper.infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <3ac5bfe7-f086-7531-fbd8-8dde77f13638@kernel.dk>
-Date:   Mon, 20 Jul 2020 19:29:15 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ d=towerbridgetechnology.onmicrosoft.com;
+ s=selector2-towerbridgetechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LBvW30MycsHksVGJ/ydS7ds/MoYvY9jYhxsqEg/0DmU=;
+ b=eDsnM/ciWTdjRXu4u0kmKr1xA/EZzzH6PuyFb8FCJdWj0br37psbcrv3HDRy5Bo0Dk5u9BfyvqXU1hxp/0HoF20pkpeOXRkL1Vyc62oWBgPr/SSk7CtIF1hR0VjL6GTeO/dpfDtAxsIKC7RMxkTQEu2ROkc1JcxnZOtS/JDds7k=
+Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=bayhubtech.com;
+Received: from BY5PR16MB3319.namprd16.prod.outlook.com (2603:10b6:a03:186::25)
+ by BYAPR16MB2998.namprd16.prod.outlook.com (2603:10b6:a03:e5::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18; Tue, 21 Jul
+ 2020 01:29:27 +0000
+Received: from BY5PR16MB3319.namprd16.prod.outlook.com
+ ([fe80::fd57:47b2:eaeb:d004]) by BY5PR16MB3319.namprd16.prod.outlook.com
+ ([fe80::fd57:47b2:eaeb:d004%5]) with mapi id 15.20.3195.025; Tue, 21 Jul 2020
+ 01:29:27 +0000
+From:   shirley her <shirley.her@bayhubtech.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     shaper.liu@bayhubtech.com, chevron.li@bayhubtech.com,
+        xiaoguang.yu@bayhubtech.com, max.huang@bayhubtech.com,
+        shirley.her@bayhubtech.com
+Subject: [PATCH V1 2/2] mmc: sdhci-pci-o2micro: Add HW tuning for SDR104 mode
+Date:   Mon, 20 Jul 2020 18:27:00 -0700
+Message-Id: <20200721012700.8564-1-shirley.her@bayhubtech.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR02CA0054.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::31) To BY5PR16MB3319.namprd16.prod.outlook.com
+ (2603:10b6:a03:186::25)
 MIME-Version: 1.0
-In-Reply-To: <20200721011509.GB15516@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (209.36.105.184) by BYAPR02CA0054.namprd02.prod.outlook.com (2603:10b6:a03:54::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Tue, 21 Jul 2020 01:27:44 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [209.36.105.184]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1ddaf357-9e4b-474b-9988-08d82d157d29
+X-MS-TrafficTypeDiagnostic: BYAPR16MB2998:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR16MB29988B241806AD076D1021388B780@BYAPR16MB2998.namprd16.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TgA4h07uue7AcsTZIedVKSvnNEHnT0GoNiaypBLBzap8s61fJ1Gh6JHDtM7Yb3mzVEcR1IjnRoC2wh9sxmsuENPIvD4E9drCcacHDBWNzNticSR5OqhCTVqBbJXkEE70JGKoHJen3LyutJHtOoZF5vhM8WBQ9pIJoULCfQBIvmO+vMRf8AoXmLGklIUaveKCbQT+owQ/tagDm8mhL0btokXGwjr+W1b5fLEzawwqKw+QxNcxbl0dOOdYI/tJEcpMETtpHNxCM4JXTyhz+hn7RlIbvLaO4W7+A6sUPNFeMtzHB8h41Hhr0nAp2d6p4yNGz6ySB97GvkFhZsv1NcF9dP0vpJ0gGNioV/ofWIwfebeHfAcqJgKPadK1AHV7evqT
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR16MB3319.namprd16.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(39830400003)(346002)(366004)(136003)(376002)(6666004)(6486002)(4326008)(6512007)(36756003)(1076003)(107886003)(52116002)(69590400007)(6506007)(956004)(2616005)(508600001)(16526019)(26005)(8936002)(186003)(316002)(83380400001)(2906002)(5660300002)(66556008)(66476007)(86362001)(8676002)(66946007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: Gy900oxOeBcjt0rOVHzyrWlQtcadCHqseJGeOpWH0gafK+jmDO0+NntxMeHaDE7OCBn8DCuLOLM2PfTQnDbfC0Xvhwk1QLTNKvjvJRuu+VkAyOlvQeWt1fuqcS8Gvnr6IFDKrieCq3I9CjXkFRKM6bPX3LDDUqA4D4G2ksSzFV0I/ulW0HxDVJfz34EezGz/A27THy1NFaW/3lQQPkXhAr3O7zPh69XEKZvuYGxqfz6V8wai36cS2ocj4PO25iJUi8LDGNdaHAnX9Nl4Un70JtayGUiHkI47tcu8ThTAGAugf8sOeSf1nniSCy/cqI2bpO1jeoawoORWoxf+TbShzv93YxZixM6qyk4WuvSfywVexzy5xjaI+fg1dYTEgwTbQUcH3bSUhkrnQjmAQyhR/tO/GoBOckAtbsAP7+oWv+brAJCvsqKl07jMRi+bv4Fk0fqHxQCehZvqZFpLv1YXt/aAAJ7ZwHswLFTxDTfEZdW3oF2tqfVBprVTaq38GSAG
+X-OriginatorOrg: bayhubtech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ddaf357-9e4b-474b-9988-08d82d157d29
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR16MB3319.namprd16.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2020 01:29:27.8377
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0a7aae2b-8f2e-44df-ba2f-42de7f93c642
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hm99ab7K8aQ6di6yRPhu4XGc+AmXXo2eB/sHfOvS/Nb+k/ATFP+36bYhj6AnL8QO2p59urnx0AusVizNAokwAwdA6Vrv/uqJZShBHAeuo/g=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR16MB2998
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/20/20 7:15 PM, Matthew Wilcox wrote:
->> Also, the completed size should be in res in the first cqe to follow
->> io_uring current interface, no ?. The second cqe would use the res64
->> field to return the written offset. Wasn't that the plan ?
-> 
-> two cqes for one sqe seems like a bad idea to me.
+Add HW tuning support for SD host controller in SDR104 mode
 
-I have to agree with that, it's counter to everything else. The app will
-then have to wait for two CQEs when it issues that one "special" SQE,
-which is really iffy. And we'd have to promise that they are adjacent in
-the ring. This isn't necessarily a problem right now, but I've been
-playing with un-serialized completions and this would then become an
-issue. The io_uring interface is clearly defined as "any sqe will either
-return an error on submit (if the error is not specific to the sqe
-contents), or post a completion event". Not two events, one.
+Signed-off-by: Shirley Her <shirley.her@bayhubtech.com>
+---
+Change in V1:
+1. Add HW tuning for SDR104 mode instead of SW tuning
+2. Change clock base to 208Mhz in SDR104 mode
+3. Add CMD and DATA line reset after HW tuning command
+---
+ drivers/mmc/host/sdhci-pci-o2micro.c | 33 ++++++++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 4 deletions(-)
 
-And imho, zoned device append isn't an interesting enough use case to
-warrant doing something special. If there was a super strong (and
-generic) use case for passing back more information in the cqe then
-maybe it would be considered. But it'd have to be a killer application.
-If that's not the case, then the use case should work within the
-constraints of the existing API.
-
+diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+index ed3c605fcf0c..fa76748d8929 100644
+--- a/drivers/mmc/host/sdhci-pci-o2micro.c
++++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+@@ -196,7 +196,7 @@ static void __sdhci_o2_execute_tuning(struct sdhci_host *host, u32 opcode)
+ {
+ 	int i;
+ 
+-	sdhci_send_tuning(host, MMC_SEND_TUNING_BLOCK_HS200);
++	sdhci_send_tuning(host, opcode);
+ 
+ 	for (i = 0; i < 150; i++) {
+ 		u16 ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+@@ -305,10 +305,12 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 	 * This handler only implements the eMMC tuning that is specific to
+ 	 * this controller.  Fall back to the standard method for other TIMING.
+ 	 */
+-	if (host->timing != MMC_TIMING_MMC_HS200)
++	if ((host->timing != MMC_TIMING_MMC_HS200) &&
++		(host->timing != MMC_TIMING_UHS_SDR104))
+ 		return sdhci_execute_tuning(mmc, opcode);
+ 
+-	if (WARN_ON(opcode != MMC_SEND_TUNING_BLOCK_HS200))
++	if (WARN_ON((opcode != MMC_SEND_TUNING_BLOCK_HS200) &&
++			(opcode != MMC_SEND_TUNING_BLOCK)))
+ 		return -EINVAL;
+ 	/*
+ 	 * Judge the tuning reason, whether caused by dll shift
+@@ -342,6 +344,9 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 		sdhci_set_bus_width(host, current_bus_width);
+ 	}
+ 
++	sdhci_reset(host, SDHCI_RESET_CMD);
++	sdhci_reset(host, SDHCI_RESET_DATA);
++
+ 	host->flags &= ~SDHCI_HS400_TUNING;
+ 	return 0;
+ }
+@@ -369,7 +374,6 @@ static void o2_pci_led_enable(struct sdhci_pci_chip *chip)
+ 	scratch_32 |= O2_SD_LED_ENABLE;
+ 	pci_write_config_dword(chip->pdev,
+ 			       O2_SD_TEST_REG, scratch_32);
+-
+ }
+ 
+ static void sdhci_pci_o2_fujin2_pci_init(struct sdhci_pci_chip *chip)
+@@ -497,6 +501,10 @@ static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
+ static void sdhci_pci_o2_set_clock(struct sdhci_host *host, unsigned int clock)
+ {
+ 	u16 clk;
++	u8 scratch;
++	u32 scratch_32;
++	struct sdhci_pci_slot *slot = sdhci_priv(host);
++	struct sdhci_pci_chip *chip = slot->chip;
+ 
+ 	host->mmc->actual_clock = 0;
+ 
+@@ -505,6 +513,23 @@ static void sdhci_pci_o2_set_clock(struct sdhci_host *host, unsigned int clock)
+ 	if (clock == 0)
+ 		return;
+ 
++	if ((host->timing == MMC_TIMING_UHS_SDR104) && (clock == 200000000)) {
++		pci_read_config_byte(chip->pdev, O2_SD_LOCK_WP, &scratch);
++
++		scratch &= 0x7f;
++		pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch);
++
++		pci_read_config_dword(chip->pdev, O2_SD_PLL_SETTING, &scratch_32);
++
++		if ((scratch_32 & 0xFFFF0000) != 0x2c280000)
++			o2_pci_set_baseclk(chip, 0x2c280000);
++
++		pci_read_config_byte(chip->pdev, O2_SD_LOCK_WP, &scratch);
++
++		scratch |= 0x80;
++		pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch);
++	}
++
+ 	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
+ 	sdhci_o2_enable_clk(host, clk);
+ }
 -- 
-Jens Axboe
+2.25.1
 
