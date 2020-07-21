@@ -2,253 +2,154 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3838C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9261EC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76A2C20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D00C22BF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:06:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gXIRjvrQ"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="MXHij6NH";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HaNtJGTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbgGUWGT (ORCPT
+        id S1731190AbgGUWGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 18:06:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26773 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728403AbgGUWGS (ORCPT
+        Tue, 21 Jul 2020 18:06:23 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:57332 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728403AbgGUWGW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 18:06:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595369175;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1drX5k7wXxd1OloGATtvbnUdSqXmULd42swYuvS87G0=;
-        b=gXIRjvrQ8kd+bEN7VqyQTuj1s2A8uCiP/tMzpkUSTlbJb/8MBNt///HWJoivxUTEMqHWCS
-        nyb0l3MsgElGMtJjLm5DPmIdpUgZoTVLIdpinaTdWuQmyNldooHeAjSmedPCSqpG1q0weD
-        BFMchIJGf7QKpiYO2d80UMqiNN0ezSM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-333-6FgYG1FjNjm6A49AzP2VsA-1; Tue, 21 Jul 2020 18:06:10 -0400
-X-MC-Unique: 6FgYG1FjNjm6A49AzP2VsA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 21 Jul 2020 18:06:22 -0400
+Received: from mailhost.synopsys.com (sv1-mailhost2.synopsys.com [10.205.2.132])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8198E1005510;
-        Tue, 21 Jul 2020 22:06:07 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A9220872FB;
-        Tue, 21 Jul 2020 22:05:51 +0000 (UTC)
-Date:   Tue, 21 Jul 2020 18:05:48 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, Ondrej Mosnacek <omosnace@redhat.com>,
-        dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V9 10/13] audit: add support for containerid to
- network namespaces
-Message-ID: <20200721220548.oy5iwquoohevlgbi@madcap2.tricolour.ca>
-References: <cover.1593198710.git.rgb@redhat.com>
- <e9c1216a361c38ebc9cb4089922c259e2cfd5013.1593198710.git.rgb@redhat.com>
- <CAHC9VhSRRN+Qq5dNx6Q5cG_TrXgbBMR0PNUYvf+Haf2na5wCfg@mail.gmail.com>
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A2B5D400E6;
+        Tue, 21 Jul 2020 22:06:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1595369182; bh=XfoA3wDwkQAyGJ0r3ASvxwksdkImsssZAYUimAUEt1k=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=MXHij6NH6YAp1bGLKoRtuesyzUA2rpCSX1ZyhgZzrUXuEpYtqGYV0bwDY5jt4px+a
+         Ga/YMP9062RbwyZ/GEgHtKdFV/9JqKrZ73HVEKtkMo4vgDemDBys4nsb1l3ZB7603A
+         JyemJ4pULIWfdTvdUJc1gnRFG8Akbq7KUQKXEmQG3boC8J3KP30iNdDRsxvatA+PeN
+         5mj5+dBHzGg++or7FFoX/lN0NKXVCJFBVGC3PhaQnOZcEOOLgUrNZE5ZD532ORGQpo
+         VnLKqKyZ8lexjHHXCh7Zz20D3rBRMKPa84H992p22qhetm9Wc3rgwVVCcb+Pb7VZkQ
+         P5FtIwubz9zEQ==
+Received: from o365relay-in.synopsys.com (us03-o365relay3.synopsys.com [10.4.161.139])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 669F6A006F;
+        Tue, 21 Jul 2020 22:06:18 +0000 (UTC)
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2107.outbound.protection.outlook.com [104.47.58.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id A9CB2801C1;
+        Tue, 21 Jul 2020 22:06:17 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=vgupta@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="HaNtJGTo";
+        dkim-atps=neutral
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=guCHS2dmguRuPsQnA8pKqUsZu2EMTJ5Mgf1Wb4CsCnrrxxLn3XqmSp6Hs4Puy9ZLoVCjrWVLmq7DSgtuifJlMEgEwolSJPKHotQh0FdtOhzuQlY1IU+22ci9h8E3rZrgD2jWmGBepeRdP46h9Afb1UOXcEdc7CpiEFHeNQCrksz5diwc/LRcaRoItGwpgm7/R7eh7bzC6XCewqe5qMrPlDPCfW7T4ytlrBaYp/q/3WNIFo/UsQsw0tgiVWOuVmzvKjQb4Aq0EPnR3hGEsfJXlPsbyDF1mGkxdnACii0EvL0zoOcL4pByRWAqLlSxLwgAu1jj9n33HsLcSLszB0hD1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XfoA3wDwkQAyGJ0r3ASvxwksdkImsssZAYUimAUEt1k=;
+ b=e4e0UINAlbOFI5UYI/e3xfTJYxXDSV/ZyZv9itkSrdANRMtMks4zjaDywykTkSu10Y2Jrl8foZQIJ0aQZi9eoVKorlgPmCm9aXi97snfuyq8Rf98uwPQivohR81+Wya8g9KNnd2mrGpUc7D5MvSMn4vV1eLM+40bC2FsnYZkeasKhGWsSzw/rvppNATMah3PSogneXtqBpAojOLPJbdydQ+JuHCPDpSNeRGBYl567xvsGXieLf8tcG/wjEMStp04vBEFQx2iefulKjZQsBK0n+KcieUuzHIiH4m+HZuZPSlDPBXnQDaXPAPJd5+GiPokbWmXX/FUFIuViq6vBgzkNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XfoA3wDwkQAyGJ0r3ASvxwksdkImsssZAYUimAUEt1k=;
+ b=HaNtJGToLiFkjV/Xa009OdJwW+aK27tJ2zwK++9zFa7jysk1tdCPVPMyMcL/PRiuWAu1vH5xpbp0TasERM9lvwHiaK75fXL75IyyHHzXUqx/b/Cn0hZo8rDPISEn/TfawKoOe2kkAGqqJZrFAntzdLqLhbPM3OFM7MTULQXVozM=
+Received: from BYAPR12MB3479.namprd12.prod.outlook.com (2603:10b6:a03:dc::26)
+ by BY5PR12MB4051.namprd12.prod.outlook.com (2603:10b6:a03:20c::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Tue, 21 Jul
+ 2020 22:06:15 +0000
+Received: from BYAPR12MB3479.namprd12.prod.outlook.com
+ ([fe80::3d4f:7ae8:8767:75a4]) by BYAPR12MB3479.namprd12.prod.outlook.com
+ ([fe80::3d4f:7ae8:8767:75a4%7]) with mapi id 15.20.3216.021; Tue, 21 Jul 2020
+ 22:06:15 +0000
+X-SNPS-Relay: synopsys.com
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+Subject: Re: [PATCH] ARC: pgalloc.h: delete a duplicated word + other fixes
+Thread-Topic: [PATCH] ARC: pgalloc.h: delete a duplicated word + other fixes
+Thread-Index: AQHWX6Ht/QnQkfU2BESqeocpiml8FKkSlwmA
+Date:   Tue, 21 Jul 2020 22:06:15 +0000
+Message-ID: <faf86b1c-fe64-5614-c212-ab707725f0d5@synopsys.com>
+References: <20200721205958.15229-1-rdunlap@infradead.org>
+In-Reply-To: <20200721205958.15229-1-rdunlap@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [73.222.250.45]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b55ffe46-3d24-4277-92c5-08d82dc249d5
+x-ms-traffictypediagnostic: BY5PR12MB4051:
+x-microsoft-antispam-prvs: <BY5PR12MB4051FE5CECE8934866339684B6780@BY5PR12MB4051.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: j/Wwwobx54ow8YKj9Cz94PfeRkBCrJcx0YeVw09L2+AkoA2aDq3rM7nlXpu3vJLZ1B9AU5pO8bb4ankK99abn1xwfHJmVFAyEFCWR4DlrPdDV+ZYorsM8ZBEu9T8DQW6Sk/Own6uagzfo++xBLBkd6pT60881YutqJsymcFmkPy9eJw+B6oCvtNcr2A3BlOtrlkdsuJZTJf9YUN/LMjlJB0yBso94XkXg/RDQh2DTioIbazhhnLIpFp1vktF4qySo9nNq5wFP8YQ1iXZNAe/zU7sdQgH/WliTETHBMsIDewa1CwJf1Y8r32EfuD0PTfu20I0Dwf7YMaVE/Vdd1rh6lYcj0XBMDeugZwxNvbjGzh5Gi7Kd2BeZdakXhI+m+sn
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3479.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(376002)(136003)(39830400003)(346002)(66476007)(66446008)(66556008)(64756008)(66946007)(2906002)(6506007)(8676002)(86362001)(53546011)(26005)(76116006)(6486002)(478600001)(71200400001)(2616005)(4326008)(31696002)(110136005)(5660300002)(8936002)(186003)(31686004)(83380400001)(36756003)(6512007)(316002)(43740500002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: MkDQBDPQPyhyMOsc/WdNIIDlF77pO49w2Gldf7zha+v045A2dSa4/vo6C9xTaTuxrSxyjQgXd6jP8cL0K7t41692s8T0n4Ld3Oe6Y5fYj6wDfO1Xu+/wwS6KyaBv47fwwYq99PwXlt/ZNiUpHhge/wvNZzHVh08RN3v5NJOPGjowK8FIkei4TQ3gQP28qfhsBflwuJm0u7L9yXcWkOSbXyMLylU5Hvsc/vMV4Z8hYQekKHrZdGuQvs8ZQnhSoRyQ+nDnN9f4sRfVkNXaAldXNWs9yC4vJH7kx3cx7MVzqUjmIvbnYvOKgCbUs1ycP4bFM+SH2UZqhO6mHURHz6P4cT5FyQQNspCXE1mkhH7emlyoIn7cT07tfcWpvyuWuzJ4lWJb2ySzuGxUAgZXV5Shc2g7wAbCyDjhrUwzFOLqgCyXWgQJcC0Qnbj09jTs3P+5M4GIZhHMjpplRU6uwVF9jSt3Tgba+pjnyNfkP30Ra9E=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E82BCA8EFB1A4E4B8ED4159593D7C8E9@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhSRRN+Qq5dNx6Q5cG_TrXgbBMR0PNUYvf+Haf2na5wCfg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3479.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b55ffe46-3d24-4277-92c5-08d82dc249d5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 22:06:15.6115
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: euGmiozzcvSS1sZboVCMn5aV1p3f/ZmyZGIfK4j4ys6+Age8Ab4VqEbNrkVl94d8LHfJMttuEwzjvMFuI/75Mw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-05 11:11, Paul Moore wrote:
-> On Sat, Jun 27, 2020 at 9:23 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >
-> > This also adds support to qualify NETFILTER_PKT records.
-> >
-> > Audit events could happen in a network namespace outside of a task
-> > context due to packets received from the net that trigger an auditing
-> > rule prior to being associated with a running task.  The network
-> > namespace could be in use by multiple containers by association to the
-> > tasks in that network namespace.  We still want a way to attribute
-> > these events to any potential containers.  Keep a list per network
-> > namespace to track these audit container identifiiers.
-> >
-> > Add/increment the audit container identifier on:
-> > - initial setting of the audit container identifier via /proc
-> > - clone/fork call that inherits an audit container identifier
-> > - unshare call that inherits an audit container identifier
-> > - setns call that inherits an audit container identifier
-> > Delete/decrement the audit container identifier on:
-> > - an inherited audit container identifier dropped when child set
-> > - process exit
-> > - unshare call that drops a net namespace
-> > - setns call that drops a net namespace
-> >
-> > Add audit container identifier auxiliary record(s) to NETFILTER_PKT
-> > event standalone records.  Iterate through all potential audit container
-> > identifiers associated with a network namespace.
-> >
-> > Please see the github audit kernel issue for contid net support:
-> >   https://github.com/linux-audit/audit-kernel/issues/92
-> > Please see the github audit testsuiite issue for the test case:
-> >   https://github.com/linux-audit/audit-testsuite/issues/64
-> > Please see the github audit wiki for the feature overview:
-> >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > Acked-by: Neil Horman <nhorman@tuxdriver.com>
-> > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
-> > ---
-> >  include/linux/audit.h    |  20 ++++++
-> >  kernel/audit.c           | 156 ++++++++++++++++++++++++++++++++++++++++++++++-
-> >  kernel/nsproxy.c         |   4 ++
-> >  net/netfilter/nft_log.c  |  11 +++-
-> >  net/netfilter/xt_AUDIT.c |  11 +++-
-> >  5 files changed, 195 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > index c4a755ae0d61..304fbb7c3c5b 100644
-> > --- a/include/linux/audit.h
-> > +++ b/include/linux/audit.h
-> > @@ -128,6 +128,13 @@ struct audit_task_info {
-> >
-> >  extern struct audit_task_info init_struct_audit;
-> >
-> > +struct audit_contobj_netns {
-> > +       struct list_head        list;
-> > +       struct audit_contobj    *obj;
-> > +       int                     count;
-> 
-> This seems like it might be a good candidate for refcount_t, yes?
-
-I considered this before when converting the struct audit_contobj to
-refcount_t, but decided against it since any updates are in the context
-of a list traversal where it could be added to the list and so the
-spinlock is already held anyways.
-
-Is there a more efficent or elegant way of doing the locking around the
-two list traversals below (_add and _del)?
-
-I wonder about converting the count to refcount_t and only holding the
-spinlock for the list_add_rcu() in the _add case.  And for the _del case
-holding the spinlock only for the list_del_rcu().
-
-These are the only two locations items are added or deleted from the
-lists.
-
-Somewhat related to this is does the list order matter?  Items are
-currently added at the end of the list which likely makes locking
-simpler, though the start of the list is a simple change.  However,
-unless we understand the profile of read use of these lists for
-reporting contid use in audit_log_netns_contid_list() I don't think
-order matters significantly.  It could be that reporting of a contid
-goes down in frequency over the lifetime of a contid that inserting them
-at the beginning of the list would be best.  This is not a visible
-implementation detail so later optimization should pose no problem.
-
-> > +       struct rcu_head         rcu;
-> > +};
-> 
-> ...
-> 
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index 997c34178ee8..a862721dfd9b 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -437,6 +452,136 @@ static struct sock *audit_get_sk(const struct net *net)
-> >         return aunet->sk;
-> >  }
-> >
-> > +void audit_netns_contid_add(struct net *net, struct audit_contobj *cont)
-> > +{
-> > +       struct audit_net *aunet;
-> > +       struct list_head *contobj_list;
-> > +       struct audit_contobj_netns *contns;
-> > +
-> > +       if (!net)
-> > +               return;
-> > +       if (!cont)
-> > +               return;
-> > +       aunet = net_generic(net, audit_net_id);
-> > +       if (!aunet)
-> > +               return;
-> > +       contobj_list = &aunet->contobj_list;
-> > +       rcu_read_lock();
-> > +       spin_lock(&aunet->contobj_list_lock);
-> > +       list_for_each_entry_rcu(contns, contobj_list, list)
-> > +               if (contns->obj == cont) {
-> > +                       contns->count++;
-> > +                       goto out;
-> > +               }
-> > +       contns = kmalloc(sizeof(*contns), GFP_ATOMIC);
-> > +       if (contns) {
-> > +               INIT_LIST_HEAD(&contns->list);
-> > +               contns->obj = cont;
-> > +               contns->count = 1;
-> > +               list_add_rcu(&contns->list, contobj_list);
-> > +       }
-> > +out:
-> > +       spin_unlock(&aunet->contobj_list_lock);
-> > +       rcu_read_unlock();
-> > +}
-> > +
-> > +void audit_netns_contid_del(struct net *net, struct audit_contobj *cont)
-> > +{
-> > +       struct audit_net *aunet;
-> > +       struct list_head *contobj_list;
-> > +       struct audit_contobj_netns *contns = NULL;
-> > +
-> > +       if (!net)
-> > +               return;
-> > +       if (!cont)
-> > +               return;
-> > +       aunet = net_generic(net, audit_net_id);
-> > +       if (!aunet)
-> > +               return;
-> > +       contobj_list = &aunet->contobj_list;
-> > +       rcu_read_lock();
-> > +       spin_lock(&aunet->contobj_list_lock);
-> > +       list_for_each_entry_rcu(contns, contobj_list, list)
-> > +               if (contns->obj == cont) {
-> > +                       contns->count--;
-> > +                       if (contns->count < 1) {
-> 
-> One could simplify this with "(--countns->count) < 1", although if it
-> is changed to a refcount_t (which seems like a smart thing), the
-> normal decrement/test would be the best choice.
-
-Agreed.
-
-> > +                               list_del_rcu(&contns->list);
-> > +                               kfree_rcu(contns, rcu);
-> > +                       }
-> > +                       break;
-> > +               }
-> > +       spin_unlock(&aunet->contobj_list_lock);
-> > +       rcu_read_unlock();
-> > +}
-> 
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+T24gNy8yMS8yMCAxOjU5IFBNLCBSYW5keSBEdW5sYXAgd3JvdGU6DQo+IERyb3AgdGhlIHJlcGVh
+dGVkIHdvcmQgInRvIi4NCj4gQ2hhbmdlICJUaGF5IiB0byAiVGhhdCIuDQo+IEFkZCBhIGNsb3Np
+bmcgcmlnaHQgcGFyZW50aGVzaXMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBSYW5keSBEdW5sYXAg
+PHJkdW5sYXBAaW5mcmFkZWFkLm9yZz4NCj4gQ2M6IFZpbmVldCBHdXB0YSA8dmd1cHRhQHN5bm9w
+c3lzLmNvbT4NCj4gQ2M6IGxpbnV4LXNucHMtYXJjQGxpc3RzLmluZnJhZGVhZC5vcmcNCg0KVGh4
+IFJhbmR5LiBBZGRlZCB0byBmb3ItY3VyciAhDQoNCi1WaW5lZXQNCg0KPiAtLS0NCj4gIGFyY2gv
+YXJjL2luY2x1ZGUvYXNtL3BnYWxsb2MuaCB8ICAgIDQgKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQs
+IDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IC0tLSBsaW51eC1uZXh0LTIw
+MjAwNzIwLm9yaWcvYXJjaC9hcmMvaW5jbHVkZS9hc20vcGdhbGxvYy5oDQo+ICsrKyBsaW51eC1u
+ZXh0LTIwMjAwNzIwL2FyY2gvYXJjL2luY2x1ZGUvYXNtL3BnYWxsb2MuaA0KPiBAQCAtMTgsMTAg
+KzE4LDEwIEBADQo+ICAgKiB2aW5lZXRnOiBBcHJpbCAyMDEwDQo+ICAgKiAgLVN3aXRjaGVkIHBn
+dGFibGVfdCBmcm9tIGJlaW5nIHN0cnVjdCBwYWdlICogdG8gdW5zaWduZWQgbG9uZw0KPiAgICog
+ICAgICA9TmVlZGVkIHNvIHRoYXQgUGFnZSBUYWJsZSBhbGxvY2F0b3IgKHB0ZV9hbGxvY19vbmUp
+IGlzIG5vdCBmb3JjZWQgdG8NCj4gLSAqICAgICAgIHRvIGRlYWwgd2l0aCBzdHJ1Y3QgcGFnZS4g
+VGhheSB3YXkgaW4gZnV0dXJlIHdlIGNhbiBtYWtlIGl0IGFsbG9jYXRlDQo+ICsgKiAgICAgICBk
+ZWFsIHdpdGggc3RydWN0IHBhZ2UuIFRoYXQgd2F5IGluIGZ1dHVyZSB3ZSBjYW4gbWFrZSBpdCBh
+bGxvY2F0ZQ0KPiAgICogICAgICAgbXVsdGlwbGUgUEcgVGJscyBpbiBvbmUgUGFnZSBGcmFtZQ0K
+PiAgICogICAgICA9c3dlZXQgc2lkZSBlZmZlY3QgaXMgYXZvaWRpbmcgY2FsbHMgdG8gdWdseSBw
+YWdlX2FkZHJlc3MoICkgZnJvbSB0aGUNCj4gLSAqICAgICAgIHBnLXRsYiBhbGxvY2F0b3Igc3Vi
+LXN5cyAocHRlX2FsbG9jX29uZSwgcHRyX2ZyZWUsIHBtZF9wb3B1bGF0ZQ0KPiArICogICAgICAg
+cGctdGxiIGFsbG9jYXRvciBzdWItc3lzIChwdGVfYWxsb2Nfb25lLCBwdHJfZnJlZSwgcG1kX3Bv
+cHVsYXRlKQ0KPiAgICoNCj4gICAqICBBbWl0IEJob3IsIFNhbWVlciBEaGF2YWxlOiBDb2RpdG8g
+VGVjaG5vbG9naWVzIDIwMDQNCj4gICAqLw0KPiANCg0K
