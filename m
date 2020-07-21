@@ -2,113 +2,129 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA3EC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD5CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85DD020720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C7F920771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:44:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ElYOyoi4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729974AbgGUPnf (ORCPT
+        id S1729180AbgGUPoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:43:35 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:34905 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgGUPne (ORCPT
+        Tue, 21 Jul 2020 11:44:22 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:24316 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726029AbgGUPoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:43:34 -0400
-Received: from mail-qv1-f43.google.com ([209.85.219.43]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M2etD-1jyAkE0sXv-004BZO; Tue, 21 Jul 2020 17:43:33 +0200
-Received: by mail-qv1-f43.google.com with SMTP id m9so9518939qvx.5;
-        Tue, 21 Jul 2020 08:43:32 -0700 (PDT)
-X-Gm-Message-State: AOAM532L3zrQpzZLgtOdI9YiVBJSlxTSn4pknaM0n2ypfxuSgHilWTvR
-        MrmL7ERPH1BJ8rttFIySlKdpp6aCEdsKzYShxMg=
-X-Google-Smtp-Source: ABdhPJy29R5Cz+4RaSNXe7LuLnSYNvFSpIXEreYS6NgwThe5nMaZYbF4N4CTUGK2Prnn8c4H8IEPbqJMB5aE6TnWUkM=
-X-Received: by 2002:a0c:f802:: with SMTP id r2mr27049618qvn.197.1595346211925;
- Tue, 21 Jul 2020 08:43:31 -0700 (PDT)
+        Tue, 21 Jul 2020 11:44:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595346261; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=rdC4JoLgL+0mT3i14s7ghddjUga20hFANQNIf9sHBoA=; b=ElYOyoi4cmnLW0R41wIYVLUXCFSJGJhgq/Mmkvr7sPdnrDl279HOAzL9sCh2HYYg/0m8yReO
+ 9XqRxnYJhvXk40+Y+pSrvPh507Gs4GFiFf4/XnPzxmOg8xqqN0MtYhgMb1LTNEhg0GqT2RvH
+ mXDZNDuttc8z+2N/O7y6bFJn8IQ=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f170d540cb8533c3baedcd2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 21 Jul 2020 15:44:20
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 536B5C433AD; Tue, 21 Jul 2020 15:44:20 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 819FDC433C6;
+        Tue, 21 Jul 2020 15:44:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 819FDC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Tue, 21 Jul 2020 09:44:15 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>, skrzynka@konradybcio.pl,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
+Message-ID: <20200721154415.GA5758@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Konrad Dybcio <konradybcio@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>, skrzynka@konradybcio.pl,
+        Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+References: <20200704122809.73794-1-konradybcio@gmail.com>
+ <20200704130922.GB21333@willie-the-truck>
+ <20200705033511.GR388985@builder.lan>
+ <CAMS8qEWO-1mNd12Zs-2WogCrgNF5=6RkF=Z1pTeOZxSuKjx+qg@mail.gmail.com>
 MIME-Version: 1.0
-References: <CA+G9fYtYPA7jHPNB5D+JFHpmtB5+Wj+YG8W33GhffHjmFaMiUg@mail.gmail.com>
-In-Reply-To: <CA+G9fYtYPA7jHPNB5D+JFHpmtB5+Wj+YG8W33GhffHjmFaMiUg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 21 Jul 2020 17:43:15 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1DYvyzkFQDPPnK1p4yUZ-Zp+Pg2Lg9QKO_wnjbnHygnw@mail.gmail.com>
-Message-ID: <CAK8P3a1DYvyzkFQDPPnK1p4yUZ-Zp+Pg2Lg9QKO_wnjbnHygnw@mail.gmail.com>
-Subject: Re: arm: tinyconfig: entry-common.S:156: Error: r13 not allowed here
- -- `bic tsk,sp,#(((1<<12)<<1)-1)&~63'
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ardb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:I0nmTvYr/K2nuig8/iC2CExRaC79OFfavlJCQNo5DbXwZ69xYCQ
- K38KWSDh+rdyd+Nc8pDjxh+27wdkrM6dTmnMezAYH5UyEa4a9u7k/ZrMIdOOy41hh7bnrxu
- QjMHo8zgKu2VW+krZGUgrqtGYbqGnEscQ0TIPB+Ceap/LKWhEdzWM0FrZ2G/ZK5j91TKJqM
- KBOYmYgDQu2dai3KHxacQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LNlUSd8ytUE=:BsENBj13KerCpCFPV54Uzr
- ozThJjBSXw05MVasj9WEQnVcqltjd2mtbbvlV2KbsGHbCIAWEFAMm+Nlgi0hvGVNYuQ5eLVvc
- liFM3RZ/SbOxHZ/mh7Augdw2p5qvh7XbxonfYGipzppn6NY+uIv8m64dleHD3vcGdt4e+Yxed
- u8XdtTcEOm8nMYzogsWly/c3XGKmqPnPK1ICl8fNIcZwC3BXrbQgyGKpnswPuxfF9DLemD7TG
- t/nFAQzqMBo+eumNp82VsgJ0579zzzKrrrI5pogEULS1Jsvda67tgBrwFflvAY761iLLQZ9GT
- E8E1ZYTshbWib0L7xmIMK3VY+5eHSyLIr5dDxqMz08Mh/5Gj3miEtJ6pyUF54fmhAl3X4SySX
- WJ9AjAyl0Ac4YM5N+qpHEelUO+SNOvcER3XInXVCH6AHZvk5IfM51C4Xv4geT7kg2pdoB9l48
- Ud6/PSHDtXxTFsMqe2WfiNf4ZbiBT42r8QsvH9eTh+/IIxRWsHTeyUB5sW/BpvoO5YCrl1dNC
- B8KEMlMRHYJWN2VO74yn78KOhf8/BYQPiFgG8eEigxqoU1yf4pEZMFPSgi48BRdIL0diRXCO8
- 27smn9Ieeh+s3VKBf+D867weobwZvBidsCsMthEKGS9Hz7BDVhWLcNE6KPrcPH9AP3B3kChUi
- HYMh5oXRfmpsY+mVXsmLQMN/BAdStXIJIGJSityyIhe00fqM/yN5KNNWux/a+5NaGcke3jHs8
- h4XZyLphaYudfWiQY5FfOr8605KhsoIRzbQ/7IAGLH6MKx2a7Dwp6pE4oSBkuiYRXHinEdKms
- n0voHtmYEm8ziYCrRzpQYDkLRvjgOaacb0CgOYgxYRajYp6RWSbPRO32lceqkLNo292jDz9H/
- wSlVsq0oG+imMUpTd/1vvXmILKzz2AxIZvEU992t40FkICDPEC2gbzy8zuRP4KCfuUi9dPZVt
- enYdqMNf/2gLenvJZxLrrMDdIQZWxrCRtXvTRt0s7hmMvAunIzio4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMS8qEWO-1mNd12Zs-2WogCrgNF5=6RkF=Z1pTeOZxSuKjx+qg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 5:07 PM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
->
-> This might add little value.
->
-> arm build sets failed on linux next 20200721.
-> The defconfig ( +config fragments ) builds PASS.
-> The tinyconfig and allnoconfig FAILED with gcc-8, gcc-9 and gcc-10.
->
-> make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j32 ARCH=arm
-> CROSS_COMPILE=arm-linux-gnueabihf- HOSTCC=gcc CC="sccache
-> arm-linux-gnueabihf-gcc" O=build zImage
-> #
-> ../arch/arm/kernel/entry-common.S: Assembler messages:
-> ../arch/arm/kernel/entry-common.S:156: Error: r13 not allowed here --
-> `bic tsk,sp,#(((1<<12)<<1)-1)&~63'
-> ../arch/arm/kernel/entry-common.S:243: Error: r13 not allowed here --
-> `bic tsk,sp,#(((1<<12)<<1)-1)&~63'
-> make[3]: *** [../scripts/Makefile.build:361:
-> arch/arm/kernel/entry-common.o] Error 1
-> ../arch/arm/kernel/entry-v7m.S: Assembler messages:
-> ../arch/arm/kernel/entry-v7m.S:60: Error: r13 not allowed here -- `bic
-> tsk,sp,#(((1<<12)<<1)-1)&~63'
-> ../arch/arm/kernel/entry-v7m.S:86: Error: r13 not allowed here -- `bic
-> tsk,sp,#(((1<<12)<<1)-1)&~63'
-> make[3]: *** [../scripts/Makefile.build:361:
-> arch/arm/kernel/entry-v7m.o] Error 1
->
-> full build link,
-> https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/648560264
+On Tue, Jul 21, 2020 at 05:04:11PM +0200, Konrad Dybcio wrote:
+> So.. is this a no-no?
+> 
+> I of course would like to omit this entirely, but SMMUs on sdm630 and
+> friends are REALLY picky.. What seems to happen is that when the
+> driver tries to do things the "standard" way, hypervisor decides to
+> hang the platform or force a reboot. Not very usable.
+> 
+> 
+> This thing is needed for the platform to even boot properly and one
+> more [1] is required to make mdss work with video mode panels (the
+> fact that CMD-mode panels work is kinda hilarious to me).
+> 
+> To be honest, there are even more qcom quirks (of which at least
+> qcom,dynamic and qcom-use-3-lvl-tables are used on 630).. [2]
+> 
+> Looking forward to your answers and possibly better solutions.
 
-This must come from
-ac5bb8f8445f ("ARM: 8983/1: asm: Rewrite get_thread_info using BIC")
+Nobody is disputing that the qcom SMMUs don't have their share of quirks but it
+seems that the community has mostly settled on the agreement that there are
+better ways to solve this than a handful of device tree properties. The current
+focus has been on moving more of the SMMU specific bits into the arm-smmu-qcom
+implementation [1] and I think that is the right way to go.
 
-Adding Linus and Ard to Cc as well.
+As for the other quirks we can probably discuss those on a case by case basis.
+I doubt you will find much enthusiasm for qcom,use-3-lvl-tables and I've been
+working on replacing qcom,dynamic with something much better [2].
 
-       Arnd
+[1] https://lists.linuxfoundation.org/pipermail/iommu/2020-July/046304.html
+[2] https://lists.linuxfoundation.org/pipermail/iommu/2020-July/046756.html
+
+Jordan
+
+> [1] https://github.com/konradybcio/linux/commit/83ac38af259968f92b6a8b7eab90096c78469f87
+> [2] https://github.com/sonyxperiadev/kernel/blob/aosp/LA.UM.7.1.r1/drivers/iommu/arm-smmu.c#L404-L415
+> 
+> Regards
+> Konrad
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
