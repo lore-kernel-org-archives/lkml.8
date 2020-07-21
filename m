@@ -2,288 +2,117 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577CAC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F84C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3258620792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 505712072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595317540;
+	bh=97y2zuXcVstRXdOrZNWE3KBD6w2VxtGXrPDl5D3CkIM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=yiksrWX77scLmVJav6tTKKQUC4hQmmFqRy1s4gYkiKaRQ4OJQU6PFVfNAzdZRY/sL
+	 gj+KfWLjkHP+4VZzGB3Uqmk9lzV0PniFhhcj5yaBOkkPEFnGUxAQPZJBCPN+mGk9be
+	 c0z/I1pwAsV8pTwgyt51jZmafZ6tR9WsNUn10L/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgGUHp3 (ORCPT
+        id S1728188AbgGUHpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:45:29 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:13786 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727768AbgGUHp1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 03:45:27 -0400
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 21 Jul 2020 00:45:27 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Jul 2020 00:45:24 -0700
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 21 Jul 2020 13:15:01 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 8221F2BA8; Tue, 21 Jul 2020 13:15:00 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: [PATCH v9 1/2] usb: dwc3: qcom: Add interconnect support in dwc3 driver
-Date:   Tue, 21 Jul 2020 13:14:48 +0530
-Message-Id: <1595317489-18432-2-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595317489-18432-1-git-send-email-sanm@codeaurora.org>
-References: <1595317489-18432-1-git-send-email-sanm@codeaurora.org>
+        Tue, 21 Jul 2020 03:45:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728144AbgGUHpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 03:45:35 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAEFE20792;
+        Tue, 21 Jul 2020 07:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595317534;
+        bh=97y2zuXcVstRXdOrZNWE3KBD6w2VxtGXrPDl5D3CkIM=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=WyksoiMLJAFq6dfdIMzZdi/o+mKSI6/xAJigf8NLmNQFNa40UCngkV7mj5gZP8OlV
+         5EhefaL/wrY6DxxzUBcQoifbQ40+G2RTcGzjdcdRlGYssjdiXpUpLq5aG3X6Qdu1Gc
+         B5ktvVZkl+7EMYj/PpL9bRyU8DzvvjOeRZFYy/go=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1594796050-14511-1-git-send-email-tdas@codeaurora.org>
+References: <1594796050-14511-1-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v0] clk: qcom: gcc: Update disp gpll0 branch for 7180/845
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        evgreen@google.com, Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Tue, 21 Jul 2020 00:45:33 -0700
+Message-ID: <159531753391.3847286.4226820520237148758@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interconnect support in dwc3-qcom driver to vote for bus
-bandwidth.
+Quoting Taniya Das (2020-07-14 23:54:10)
+> The display gpll0 branch clock needs to be always left enabled, thus
+> move the clock ops to _aon branch ops.
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 
-This requires for two different paths - from USB to
-DDR. The other is from APPS to USB.
+I wanted to apply this but it needs more commit text. Here's the commit
+text I wrote.
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
----
- drivers/usb/dwc3/dwc3-qcom.c | 127 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 125 insertions(+), 2 deletions(-)
+clk: qcom: gcc: Make disp gpll0 branch aon for sc7180/sdm845
 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index e1e78e9..82e08ff 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -13,6 +13,7 @@
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/extcon.h>
-+#include <linux/interconnect.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/phy/phy.h>
-@@ -43,6 +44,14 @@
- #define SDM845_QSCRATCH_SIZE			0x400
- #define SDM845_DWC3_CORE_SIZE			0xcd00
- 
-+/* Interconnect path bandwidths in MBps */
-+#define USB_MEMORY_AVG_HS_BW MBps_to_icc(240)
-+#define USB_MEMORY_PEAK_HS_BW MBps_to_icc(700)
-+#define USB_MEMORY_AVG_SS_BW  MBps_to_icc(1000)
-+#define USB_MEMORY_PEAK_SS_BW MBps_to_icc(2500)
-+#define APPS_USB_AVG_BW 0
-+#define APPS_USB_PEAK_BW MBps_to_icc(40)
-+
- struct dwc3_acpi_pdata {
- 	u32			qscratch_base_offset;
- 	u32			qscratch_base_size;
-@@ -76,6 +85,8 @@ struct dwc3_qcom {
- 	enum usb_dr_mode	mode;
- 	bool			is_suspended;
- 	bool			pm_suspended;
-+	struct icc_path		*icc_path_ddr;
-+	struct icc_path		*icc_path_apps;
- };
- 
- static inline void dwc3_qcom_setbits(void __iomem *base, u32 offset, u32 val)
-@@ -190,6 +201,101 @@ static int dwc3_qcom_register_extcon(struct dwc3_qcom *qcom)
- 	return 0;
- }
- 
-+/* Bandwidth levels are set in dwc3_qcom_interconnect_init ,
-+ * so just "enable" interconnects.
-+ */
-+static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom)
-+{
-+	int ret;
-+
-+	ret = icc_enable(qcom->icc_path_ddr);
-+	if (ret)
-+		return ret;
-+
-+	ret = icc_enable(qcom->icc_path_apps);
-+	if (ret)
-+		return ret;
-+
-+	return ret;
-+}
-+
-+/*Disabling the interconnect, will set the bandwidth to 0 */
-+static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
-+{
-+	int ret;
-+
-+	ret = icc_disable(qcom->icc_path_ddr);
-+	if (ret)
-+		return ret;
-+
-+	ret = icc_disable(qcom->icc_path_apps);
-+	if (ret)
-+		return ret;
-+
-+	return ret;
-+}
-+
-+/**
-+ * dwc3_qcom_interconnect_init() - Get interconnect path handles
-+ * and set bandwidhth.
-+ * @qcom:			Pointer to the concerned usb core.
-+ *
-+ */
-+static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
-+{
-+	struct device *dev = qcom->dev;
-+	int ret;
-+
-+	qcom->icc_path_ddr = of_icc_get(dev, "usb-ddr");
-+	if (IS_ERR(qcom->icc_path_ddr)) {
-+		dev_err(dev, "failed to get usb-ddr path: %ld\n",
-+			PTR_ERR(qcom->icc_path_ddr));
-+		return PTR_ERR(qcom->icc_path_ddr);
-+	}
-+
-+	qcom->icc_path_apps = of_icc_get(dev, "apps-usb");
-+	if (IS_ERR(qcom->icc_path_apps)) {
-+		dev_err(dev, "failed to get apps-usb path: %ld\n",
-+				PTR_ERR(qcom->icc_path_apps));
-+		return PTR_ERR(qcom->icc_path_apps);
-+	}
-+
-+	if (usb_get_maximum_speed(&qcom->dwc3->dev) >= USB_SPEED_SUPER ||
-+			usb_get_maximum_speed(&qcom->dwc3->dev) == USB_SPEED_UNKNOWN)
-+		ret = icc_set_bw(qcom->icc_path_ddr,
-+			USB_MEMORY_AVG_SS_BW, USB_MEMORY_PEAK_SS_BW);
-+	else
-+		ret = icc_set_bw(qcom->icc_path_ddr,
-+			USB_MEMORY_AVG_HS_BW, USB_MEMORY_PEAK_HS_BW);
-+
-+	if (ret) {
-+		dev_err(dev, "failed to set bandwidth for usb-ddr path: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = icc_set_bw(qcom->icc_path_apps,
-+		APPS_USB_AVG_BW, APPS_USB_PEAK_BW);
-+
-+	if (ret) {
-+		dev_err(dev, "failed to set bandwidth for apps-usb path: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * dwc3_qcom_interconnect_exit() - Release interconnect path handles
-+ * @qcom:			Pointer to the concerned usb core.
-+ *
-+ * This function is used to release interconnect path handle.
-+ */
-+static void dwc3_qcom_interconnect_exit(struct dwc3_qcom *qcom)
-+{
-+	icc_put(qcom->icc_path_ddr);
-+	icc_put(qcom->icc_path_apps);
-+}
-+
- static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
+The display gpll0 branch clock inside GCC needs to always be enabled.
+Otherwise the AHB clk (disp_cc_mdss_ahb_clk_src) for the display clk
+controller (dispcc) will stop clocking while sourcing from gpll0 when
+this branch inside GCC is turned off during unused clk disabling. We can
+never turn this branch off because the AHB clk for the display subsystem
+is needed to read/write any registers inside the display subsystem
+including clk related ones. This makes this branch a really easy way to
+turn off AHB access to the display subsystem and cause all sorts of
+mayhem. Let's just make the clk ops keep the clk enabled forever and
+ignore any attempts to disable this clk so that dispcc access keep
+working.
+
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Reported-by: Evan Green <evgreen@chromium.org>
+Link: https://lore.kernel.org/r/1594796050-14511-1-git-send-email-tdas@code=
+aurora.org
+Fixes: 17269568f726 ("clk: qcom: Add Global Clock controller (GCC) driver f=
+or SC7180")
+Fixes: 06391eddb60a ("clk: qcom: Add Global Clock controller (GCC) driver f=
+or SDM845")
+
+> ---
+>  drivers/clk/qcom/gcc-sc7180.c | 2 +-
+>  drivers/clk/qcom/gcc-sdm845.c | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
+> index ca4383e..538677b 100644
+> --- a/drivers/clk/qcom/gcc-sc7180.c
+> +++ b/drivers/clk/qcom/gcc-sc7180.c
+> @@ -1061,7 +1061,7 @@ static struct clk_branch gcc_disp_gpll0_clk_src =3D=
  {
- 	if (qcom->hs_phy_irq) {
-@@ -239,7 +345,7 @@ static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
- static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
- {
- 	u32 val;
--	int i;
-+	int i, ret;
- 
- 	if (qcom->is_suspended)
- 		return 0;
-@@ -251,6 +357,10 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
- 	for (i = qcom->num_clocks - 1; i >= 0; i--)
- 		clk_disable_unprepare(qcom->clks[i]);
- 
-+	ret = dwc3_qcom_interconnect_disable(qcom);
-+	if (ret)
-+		dev_warn(qcom->dev, "failed to disable interconnect: %d\n", ret);
-+
- 	qcom->is_suspended = true;
- 	dwc3_qcom_enable_interrupts(qcom);
- 
-@@ -276,6 +386,10 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
- 		}
- 	}
- 
-+	ret = dwc3_qcom_interconnect_enable(qcom);
-+	if (ret)
-+		dev_warn(qcom->dev, "failed to enable interconnect: %d\n", ret);
-+
- 	/* Clear existing events from PHY related to L2 in/out */
- 	dwc3_qcom_setbits(qcom->qscratch_base, PWR_EVNT_IRQ_STAT_REG,
- 			  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
-@@ -285,6 +399,8 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
- 	return 0;
- }
- 
-+
-+
- static irqreturn_t qcom_dwc3_resume_irq(int irq, void *data)
- {
- 	struct dwc3_qcom *qcom = data;
-@@ -638,6 +754,10 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
- 		goto depopulate;
- 	}
- 
-+	ret = dwc3_qcom_interconnect_init(qcom);
-+	if (ret)
-+		goto depopulate;
-+
- 	qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
- 
- 	/* enable vbus override for device mode */
-@@ -647,7 +767,7 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
- 	/* register extcon to override sw_vbus on Vbus change later */
- 	ret = dwc3_qcom_register_extcon(qcom);
- 	if (ret)
--		goto depopulate;
-+		goto interconnect_exit;
- 
- 	device_init_wakeup(&pdev->dev, 1);
- 	qcom->is_suspended = false;
-@@ -657,6 +777,8 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
-+interconnect_exit:
-+	dwc3_qcom_interconnect_exit(qcom);
- depopulate:
- 	if (np)
- 		of_platform_depopulate(&pdev->dev);
-@@ -687,6 +809,7 @@ static int dwc3_qcom_remove(struct platform_device *pdev)
- 	}
- 	qcom->num_clocks = 0;
- 
-+	dwc3_qcom_interconnect_exit(qcom);
- 	reset_control_assert(qcom->resets);
- 
- 	pm_runtime_allow(dev);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+>                                 .hw =3D &gpll0.clkr.hw,
+>                         },
+>                         .num_parents =3D 1,
+> -                       .ops =3D &clk_branch2_ops,
+> +                       .ops =3D &clk_branch2_aon_ops,
 
+I'm worried that dispcc may probe before GCC and then this branch is
+disabled out of boot. Then we'll try to read dispcc registers to
+determine clk rates and blow up. I hope that doesn't happen and fixing
+it would need this patch plus the usage of PM clks in the dispcc driver.
+I suppose if we run into that problem we can use PM clks to make this
+branch turn on before accessing any dispcc clks.
