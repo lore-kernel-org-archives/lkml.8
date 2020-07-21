@@ -2,163 +2,234 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C95C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEF7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF3C20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595289620;
-	bh=7ruEEyKDUeYqw7QTMZfSVf0o3+tXFE6jymo2C5c1vDA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FGU7D4xgX3cYNLXzAjubrn7uLtx+BWmkT9YbdbRIMBFSB7FXSqD1aond5YTnTuFix
-	 bNPlzX6EtYrjS02EAR202GgurajPpUTqOv7xbH7ko9NekzQLo2vkWwTYwJHQ00ruT9
-	 1mTrNfY93UHQrnalaxpRDVHivAR51l4OZQsRqABs=
+	by mail.kernel.org (Postfix) with ESMTP id 5F931208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:02:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NPqWf5rM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgGUAAT (ORCPT
+        id S1727888AbgGUACW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 20:00:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbgGUAAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 20:00:18 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE7DA208E4;
-        Mon, 20 Jul 2020 23:51:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595289105;
-        bh=7ruEEyKDUeYqw7QTMZfSVf0o3+tXFE6jymo2C5c1vDA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vigIZWauYeJjqcJLOmY21S4+ieHufF0KzoPQtCFsoYZikeJcCItEoqiDzxWfjzJ4L
-         CCTGDKwWEXkIVnZ3ZjfFbI0ZMZk4NUYjPhYjJGyoEOqJA/+dDuZ4LHPZ/wycAjslmQ
-         UUfxBqUqlaSpzZJ132C/8qiw5mg9Guv+GcWQFJZw=
-Date:   Mon, 20 Jul 2020 16:51:44 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     syzbot <syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        syzkaller-bugs@googlegroups.com,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: kernel BUG at include/linux/swapops.h:LINE!
-Message-Id: <20200720165144.93189f7825bd28e234a42cb8@linux-foundation.org>
-In-Reply-To: <0000000000004c38cd05aad1d13f@google.com>
-References: <000000000000bc4fd705a6e090e2@google.com>
-        <0000000000004c38cd05aad1d13f@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 20 Jul 2020 20:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbgGUACV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 20:02:21 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A609EC061794;
+        Mon, 20 Jul 2020 17:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=O8Y/+nsNJHbgYqWOOnWf55XQh5kSU6RsCQr/mG4GMiI=; b=NPqWf5rMuVq6zxbo0VR7p0NyfS
+        0nCJycXHEPlbEVuSy5pIrKWVQfChD3zPAHe6jQSOIyYQX2dymRXeJgs5N/tkeCC6k6TH0epLPMA9o
+        8iKHfDXIc9yb/cCqiMNVew1gy5257dc2wU4u8E3PoW9DI87TH2F+ZVHCUqIWbW2XtPWovP8pyZwDT
+        UxlfEHFzQ1stoGPJ1uL9PjCJg9M7SeNDeOFXqGP0TuvfCDgqNZzIcT3k//T7fqYVITtYWWTH3fVd3
+        fWlYkkVjUMhqr+76br50FiFucTEwIB0C15hK2q62P1qJTLUSQuGHukNCYgR2yUCmD8rnWRbu4SzqS
+        eJiCC6tQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxfjc-0004JH-TY; Tue, 21 Jul 2020 00:02:17 +0000
+Subject: Re: [PATCH v3 10/11] PM, libnvdimm: Add runtime firmware activation
+ support
+To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
+Cc:     Pavel Machek <pavel@ucw.cz>, Ira Weiny <ira.weiny@intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <159528284411.993790.11733759435137949717.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159528289856.993790.11787167534159675987.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c825b5ee-ec03-7aa8-e380-6003f33fa113@infradead.org>
+Date:   Mon, 20 Jul 2020 17:02:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <159528289856.993790.11787167534159675987.stgit@dwillia2-desk3.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Jul 2020 14:10:19 -0700 syzbot <syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com> wrote:
+Hi Dan,
 
-> syzbot has found a reproducer for the following issue on:
+Documentation comments below:
+
+On 7/20/20 3:08 PM, Dan Williams wrote:
+> Abstract platform specific mechanics for nvdimm firmware activation
+> behind a handful of generic ops. At the bus level ->activate_state()
+> indicates the unified state (idle, busy, armed) of all DIMMs on the bus,
+> and ->capability() indicates the system state expectations for activate.
+> At the DIMM level ->activate_state() indicates the per-DIMM state,
+> ->activate_result() indicates the outcome of the last activation
+> attempt, and ->arm() attempts to transition the DIMM from 'idle' to
+> 'armed'.
 > 
-> HEAD commit:    4c43049f Add linux-next specific files for 20200716
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12c56087100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=2c76d72659687242
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c48f34012b06c4ac67dd
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1344abeb100000
+> A new hibernate_quiet_exec() facility is added to support firmware
+> activation in an OS defined system quiesce state. It leverages the fact
+> that the hibernate-freeze state wants to assert that a memory
+> hibernation snapshot can be taken. This is in contrast to a platform
+> firmware defined quiesce state that may forcefully quiet the memory
+> controller independent of whether an individual device-driver properly
+> supports hibernate-freeze.
 > 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com
-
-Thanks.
-
-__handle_mm_fault
-  ->pmd_migration_entry_wait
-    ->migration_entry_to_page
-
-stumbled onto an unlocked page.
-
-I don't immediately see a cause.  Perhaps Matthew's "THP prep patches",
-perhaps something else.
-
-Is it possible to perform a bisection?
-
-> ------------[ cut here ]------------
-> kernel BUG at include/linux/swapops.h:197!
-> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 1 PID: 19938 Comm: syz-executor.2 Not tainted 5.8.0-rc5-next-20200716-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:migration_entry_to_page include/linux/swapops.h:197 [inline]
-> RIP: 0010:migration_entry_to_page include/linux/swapops.h:190 [inline]
-> RIP: 0010:pmd_migration_entry_wait+0x493/0x520 mm/migrate.c:368
-> Code: 4d 8d 66 ff e9 1f fe ff ff e8 b9 c4 be ff 49 8d 5f ff e9 58 fe ff ff e8 ab c4 be ff 4d 8d 66 ff e9 a9 fe ff ff e8 9d c4 be ff <0f> 0b e8 96 c4 be ff 0f 0b e8 8f c4 be ff 4c 8d 65 ff eb a7 48 89
-> RSP: 0018:ffffc9001095fb70 EFLAGS: 00010293
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff81b56a24
-> RDX: ffff888092022240 RSI: ffffffff81b56b43 RDI: 0000000000000001
-> RBP: ffffea0008468080 R08: 0000000000000000 R09: ffffea0008468087
-> R10: 0000000000000000 R11: 0000000000000000 R12: ffffea0008468080
-> R13: ffff888015d2e0c0 R14: 0000000000000000 R15: 0000000000000000
-> FS:  00007f55eb477700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020000080 CR3: 000000021ad87000 CR4: 00000000001526e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  __handle_mm_fault mm/memory.c:4349 [inline]
->  handle_mm_fault+0x23cf/0x45e0 mm/memory.c:4465
->  do_user_addr_fault+0x598/0xbf0 arch/x86/mm/fault.c:1294
->  handle_page_fault arch/x86/mm/fault.c:1351 [inline]
->  exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1404
->  asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:544
-> RIP: 0010:copy_user_generic_unrolled+0x89/0xc0 arch/x86/lib/copy_user_64.S:91
-> Code: 38 4c 89 47 20 4c 89 4f 28 4c 89 57 30 4c 89 5f 38 48 8d 76 40 48 8d 7f 40 ff c9 75 b6 89 d1 83 e2 07 c1 e9 03 74 12 4c 8b 06 <4c> 89 07 48 8d 76 08 48 8d 7f 08 ff c9 75 ee 21 d2 74 10 89 d1 8a
-> RSP: 0018:ffffc9001095fe48 EFLAGS: 00010202
-> RAX: 0000000000000001 RBX: 0000000020000080 RCX: 0000000000000001
-> RDX: 0000000000000000 RSI: ffffc9001095fea8 RDI: 0000000020000080
-> RBP: ffffc9001095fea8 R08: 0000000400000003 R09: ffffc9001095feaf
-> R10: fffff5200212bfd5 R11: 0000000000000000 R12: 0000000000000008
-> R13: 0000000020000088 R14: 00007ffffffff000 R15: 0000000000000000
->  copy_user_generic arch/x86/include/asm/uaccess_64.h:37 [inline]
->  raw_copy_to_user arch/x86/include/asm/uaccess_64.h:74 [inline]
->  _copy_to_user+0x11e/0x160 lib/usercopy.c:30
->  copy_to_user include/linux/uaccess.h:168 [inline]
->  do_pipe2+0x128/0x1b0 fs/pipe.c:1014
->  __do_sys_pipe fs/pipe.c:1035 [inline]
->  __se_sys_pipe fs/pipe.c:1033 [inline]
->  __x64_sys_pipe+0x2f/0x40 fs/pipe.c:1033
->  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> RIP: 0033:0x45c1d9
-> Code: Bad RIP value.
-> RSP: 002b:00007f55eb476c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000016
-> RAX: ffffffffffffffda RBX: 0000000000022ac0 RCX: 000000000045c1d9
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000080
-> RBP: 000000000078c070 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078c04c
-> R13: 00007ffcfc120ecf R14: 00007f55eb4779c0 R15: 000000000078c04c
-> Modules linked in:
-> ---[ end trace ea73d933d66ff0d4 ]---
-> RIP: 0010:migration_entry_to_page include/linux/swapops.h:197 [inline]
-> RIP: 0010:migration_entry_to_page include/linux/swapops.h:190 [inline]
-> RIP: 0010:pmd_migration_entry_wait+0x493/0x520 mm/migrate.c:368
-> Code: 4d 8d 66 ff e9 1f fe ff ff e8 b9 c4 be ff 49 8d 5f ff e9 58 fe ff ff e8 ab c4 be ff 4d 8d 66 ff e9 a9 fe ff ff e8 9d c4 be ff <0f> 0b e8 96 c4 be ff 0f 0b e8 8f c4 be ff 4c 8d 65 ff eb a7 48 89
-> RSP: 0018:ffffc9001095fb70 EFLAGS: 00010293
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff81b56a24
-> RDX: ffff888092022240 RSI: ffffffff81b56b43 RDI: 0000000000000001
-> RBP: ffffea0008468080 R08: 0000000000000000 R09: ffffea0008468087
-> R10: 0000000000000000 R11: 0000000000000000 R12: ffffea0008468080
-> R13: ffff888015d2e0c0 R14: 0000000000000000 R15: 0000000000000000
-> FS:  00007f55eb477700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020000080 CR3: 000000021ad87000 CR4: 00000000001526e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> The libnvdimm sysfs interface is extended to support detection of a
+> firmware activate capability. The mechanism supports enumeration and
+> triggering of firmware activate, optionally in the
+> hibernate_quiet_exec() context.
 > 
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> [rafael: hibernate_quiet_exec() proposal]
+> Co-developed-by: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-nvdimm         |    2 
+>  .../driver-api/nvdimm/firmware-activate.rst        |   86 ++++++++++++
+>  drivers/nvdimm/core.c                              |  149 ++++++++++++++++++++
+>  drivers/nvdimm/dimm_devs.c                         |  115 +++++++++++++++
+>  drivers/nvdimm/nd-core.h                           |    1 
+>  include/linux/libnvdimm.h                          |   44 ++++++
+>  include/linux/suspend.h                            |    6 +
+>  kernel/power/hibernate.c                           |   97 +++++++++++++
+>  8 files changed, 500 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-nvdimm
+>  create mode 100644 Documentation/driver-api/nvdimm/firmware-activate.rst
+
+
+> diff --git a/Documentation/driver-api/nvdimm/firmware-activate.rst b/Documentation/driver-api/nvdimm/firmware-activate.rst
+> new file mode 100644
+> index 000000000000..9eb98aa833c5
+> --- /dev/null
+> +++ b/Documentation/driver-api/nvdimm/firmware-activate.rst
+> @@ -0,0 +1,86 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +==================================
+> +NVDIMM Runtime Firmware Activation
+> +==================================
+> +
+> +Some persistent memory devices run a firmware locally on the device /
+
+                                  run firmware
+
+> +"DIMM" to perform tasks like media management, capacity provisioning,
+> +and health monitoring. The process of updating that firmware typically
+> +involves a reboot because it has implications for in-flight memory
+> +transactions. However, reboots are disruptive and at least the Intel
+> +persistent memory platform implementation, described by the Intel ACPI
+> +DSM specification [1], has added support for activating firmware at
+
+that's an Intel spec?  just checking.
+
+> +runtime.
+> +
+> +A native sysfs interface is implemented in libnvdimm to allow platform
+
+                                                                 platforms
+
+> +to advertise and control their local runtime firmware activation
+> +capability.
+> +
+> +The libnvdimm bus object, ndbusX, implements an ndbusX/firmware/activate
+> +attribute that shows the state of the firmware activation as one of 'idle',
+> +'armed', 'overflow', and 'busy'.
+
+                        or
+
+> +
+> +- idle:
+> +  No devices are set / armed to activate firmware
+> +
+> +- armed:
+> +  At least one device is armed
+> +
+> +- busy:
+> +  In the busy state armed devices are in the process of transitioning
+> +  back to idle and completing an activation cycle.
+> +
+> +- overflow:
+> +  If the platform has a concept of incremental work needed to perform
+> +  the activation it could be the case that too many DIMMs are armed for
+> +  activation. In that scenario the potential for firmware activation to
+> +  timeout is indicated by the 'overflow' state.
+> +
+> +The 'ndbusX/firmware/activate' property can be written with a value of
+> +either 'live', or 'quiesce'. A value of 'quiesce' triggers the kernel to
+> +run firmware activation from within the equivalent of the hibernation
+> +'freeze' state where drivers and applications are notified to stop their
+> +modifications of system memory. A value of 'live' attempts
+> +firmware-activation without this hibernation cycle. The
+
+  no hyphen^^
+
+> +'ndbusX/firmware/activate' property will be elided completely if no
+> +firmware activation capability is detected.
+> +
+> +Another property 'ndbusX/firmware/capability' indicates a value of
+> +'live', or 'quiesce'. Where 'live' indicates that the firmware
+
+no comma. no period. So this:
+
++'live' or 'quiesce', where
+
+> +does not require or inflict any quiesce period on the system to update
+> +firmware. A capability value of 'quiesce' indicates that firmware does
+> +expect and injects a quiet period for the memory controller, but 'live'
+> +may still be written to 'ndbusX/firmware/activate' as an override to
+> +assume the risk of racing firmware update with in-flight device and
+> +application activity. The 'ndbusX/firmware/capability' property will be
+> +elided completely if no firmware activation capability is detected.
+> +
+> +The libnvdimm memory-device / DIMM object, nmemX, implements
+> +'nmemX/firmware/activate' and 'nmemX/firmware/result' attributes to
+> +communicate the per-device firmware activation state. Similar to the
+> +'ndbusX/firmware/activate' attribute, the 'nmemX/firmware/activate'
+> +attribute indicates 'idle', 'armed', or 'busy'. The state transitions
+> +from 'armed' to 'idle' when the system is prepared to activate firmware,
+> +firmware staged + state set to armed, and 'ndbusX/firmware/activate' is
+> +triggered. After that activation event the nmemX/firmware/result
+> +attribute reflects the state of the last activation as one of:
+> +
+> +- none:
+> +  No runtime activation triggered since the last time the device was reset
+> +
+> +- success:
+> +  The last runtime activation completed successfully.
+> +
+> +- fail:
+> +  The last runtime activation failed for device-specific reasons.
+> +
+> +- not_staged:
+> +  The last runtime activation failed due to a sequencing error of the
+> +  firmware image not being staged.
+> +
+> +- need_reset:
+> +  Runtime firmware activation failed, but the firmware can still be
+> +  activated via the legacy method of power-cycling the system.
+> +
+> +[1]: https://docs.pmem.io/persistent-memory/
+
+
+thanks.
+-- 
+~Randy
+
