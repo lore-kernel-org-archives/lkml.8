@@ -2,131 +2,151 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C969DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 674B920720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:37:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="Bw99MbNq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bRj6i59i"
+	by mail.kernel.org (Postfix) with ESMTP id AD249206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730946AbgGUThZ (ORCPT
+        id S1730965AbgGUTiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:37:25 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:40337 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729928AbgGUThZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:37:25 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 155FD9B0;
-        Tue, 21 Jul 2020 15:37:23 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 21 Jul 2020 15:37:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=icIwlvDl4Gvx94nRgzuNJ7LN+Tj
-        VSkpAmRu1t8+EeeY=; b=Bw99MbNqyZqay4tM2z9/aDBM0qFvh35RV68RTg8mn5k
-        2g9PJy3zIROvOtKwcfpx4Ug0a39RkkQEdBMgRQ29ak7HffRFzLQbGZs3llsIm+x1
-        +WPWYn9xW9OjiIIk+JEmv9cvDon92SoNpu9lJr6SYhkEF+cZnqge5/82MsTWwWUm
-        ldCYKE1Qg+Um7Qu5SOFaoDmy3fLSfSDGtX3hKqjJEy06nYnAwje0yi4t68XiidAN
-        v3GQpVnC+ekjzyq2XJIGJM5RGu1SKmrIsjheNgMolabaAj/QguqpQHdDl9G7VwWH
-        Bw458FOB04OSsOD2jcF/wB/msT8VelWpJQLnoly45jg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=icIwlv
-        Dl4Gvx94nRgzuNJ7LN+TjVSkpAmRu1t8+EeeY=; b=bRj6i59i+X454YtANmNaul
-        moYMfIDn1u6Jqo7O007f8kWfkKycXChC7t61am68O0p/znROIan9jXlRakgMHyab
-        A51bbvQtsRXFX7MmiVAEogaG6DAQmXJHA2L7bBZJQSOGgjYICMbCGBR1lMKi8tou
-        B22VNaITJWovAIeoBng2+HsJ5ZGEWpqg0IM+LcXHapIamJWGlDzwcCuU9MZZP0d1
-        CtuGv1ljj8feb1/mtuI4/WzmzeDv9XTW/IvkwrlvlXVVAQY0bd0qfrm8SoVl9kSj
-        LsysC09l2icWQvlwbAzJHDHQTOorqyIfoUElo0TNmmtq1zszzRuVhZm8hcbaHa0Q
-        ==
-X-ME-Sender: <xms:8EMXX-uUvNY8xfdZw3o1BjkkauE4FWmW3LDPDI2Z8kIzx9Pr-c2Xzg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrgeejgddugecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnughrvghs
-    ucfhrhgvuhhnugcuoegrnhgurhgvshesrghnrghrrgiivghlrdguvgeqnecuggftrfgrth
-    htvghrnhepudekhfekleeugeevteehleffffejgeelueduleeffeeutdelffeujeffhfeu
-    ffdunecukfhppeeijedrudeitddrvddujedrvdehtdenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvshesrghnrghrrgiivghlrdgu
-    vg
-X-ME-Proxy: <xmx:8EMXXzemsDYLr_QYi0lP6K9OHyGpv21v_qGYF5A2jqVXY8TUehKdHw>
-    <xmx:8EMXX5yHoOLfeEsfhxEP87Mb_7FplwhsllFmMElIxMLj6E5a-0UuYg>
-    <xmx:8EMXX5NR40gvVM4KYggt7NbkS_BlktuVy1SsupbrLNu-BJHnTgECAw>
-    <xmx:8kMXXweuVEht6Lg8z_xmf7UB_I3jbGf0a7wZuycwTnJThC_1m_lh7CirKtA>
-Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B81EE3280059;
-        Tue, 21 Jul 2020 15:37:20 -0400 (EDT)
-Date:   Tue, 21 Jul 2020 12:37:19 -0700
-From:   Andres Freund <andres@anarazel.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Kees Cook <keescook@chromium.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: strace of io_uring events?
-Message-ID: <20200721193719.zx72xkbjvoake2po@alap3.anarazel.de>
-References: <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com>
- <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
- <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com>
- <202007151511.2AA7718@keescook>
- <20200716131404.bnzsaarooumrp3kx@steredhat>
- <202007160751.ED56C55@keescook>
- <20200717080157.ezxapv7pscbqykhl@steredhat.lan>
- <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
- <39a3378a-f8f3-6706-98c8-be7017e64ddb@kernel.dk>
- <CALCETrXAxFzuRB5EJZR7bbgfrEcNc=9_E7wwhPaZ3YGJ1=DZ0w@mail.gmail.com>
+        Tue, 21 Jul 2020 15:38:16 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:50286 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729928AbgGUTiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 15:38:16 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id BE6A4BC17B;
+        Tue, 21 Jul 2020 19:38:12 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     abbotti@mev.co.uk, hsweeten@visionengravers.com,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] staging: comedi: pcm: Replace HTTP links with HTTPS ones
+Date:   Tue, 21 Jul 2020 21:38:06 +0200
+Message-Id: <20200721193806.68010-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrXAxFzuRB5EJZR7bbgfrEcNc=9_E7wwhPaZ3YGJ1=DZ0w@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-On 2020-07-21 10:23:22 -0700, Andy Lutomirski wrote:
-> Andres, how final is your Postgres branch?
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Not final at all. Some of the constraints like needing to submit/receive
-completions to/from multiple processes are pretty immovable though.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
 
-> I'm wondering if we could get away with requiring a special flag when
-> creating an io_uring to indicate that you intend to submit IO from
-> outside the creating mm.
+ drivers/staging/comedi/drivers/pcm3724.c | 2 +-
+ drivers/staging/comedi/drivers/pcmad.c   | 2 +-
+ drivers/staging/comedi/drivers/pcmda12.c | 2 +-
+ drivers/staging/comedi/drivers/pcmmio.c  | 2 +-
+ drivers/staging/comedi/drivers/pcmuio.c  | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-Perhaps. It'd need to be clear when we need to do so, as we certainly
-won't want to move the minimal kernel version further up.
+diff --git a/drivers/staging/comedi/drivers/pcm3724.c b/drivers/staging/comedi/drivers/pcm3724.c
+index 5779e005c0cb..0cb1ad060402 100644
+--- a/drivers/staging/comedi/drivers/pcm3724.c
++++ b/drivers/staging/comedi/drivers/pcm3724.c
+@@ -222,6 +222,6 @@ static struct comedi_driver pcm3724_driver = {
+ };
+ module_comedi_driver(pcm3724_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Advantech PCM-3724 Digital I/O board");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/pcmad.c b/drivers/staging/comedi/drivers/pcmad.c
+index fe5449bb1716..eec89a0afb2f 100644
+--- a/drivers/staging/comedi/drivers/pcmad.c
++++ b/drivers/staging/comedi/drivers/pcmad.c
+@@ -144,6 +144,6 @@ static struct comedi_driver pcmad_driver = {
+ };
+ module_comedi_driver(pcmad_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/pcmda12.c b/drivers/staging/comedi/drivers/pcmda12.c
+index 33e463b193a1..14ab1f0d1e9f 100644
+--- a/drivers/staging/comedi/drivers/pcmda12.c
++++ b/drivers/staging/comedi/drivers/pcmda12.c
+@@ -160,6 +160,6 @@ static struct comedi_driver pcmda12_driver = {
+ };
+ module_comedi_driver(pcmda12_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/pcmmio.c b/drivers/staging/comedi/drivers/pcmmio.c
+index 72af1776f785..24a9568d3378 100644
+--- a/drivers/staging/comedi/drivers/pcmmio.c
++++ b/drivers/staging/comedi/drivers/pcmmio.c
+@@ -772,6 +772,6 @@ static struct comedi_driver pcmmio_driver = {
+ };
+ module_comedi_driver(pcmmio_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Winsystems PCM-MIO PC/104 board");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/pcmuio.c b/drivers/staging/comedi/drivers/pcmuio.c
+index 743fb226e2e4..7e1fc6ffb48c 100644
+--- a/drivers/staging/comedi/drivers/pcmuio.c
++++ b/drivers/staging/comedi/drivers/pcmuio.c
+@@ -619,6 +619,6 @@ static struct comedi_driver pcmuio_driver = {
+ };
+ module_comedi_driver(pcmuio_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+-- 
+2.27.0
 
-
-But I think postgres is far from the only use case for wanting the
-submitting mm to be the relevant one, not the creating one. It seems far
-more dangerous to use the creating mm than the submitting mm. Makes
-things like passing a uring fd with a few pre-opened files to another
-process impossible.
-
-Greetings,
-
-Andres Freund
