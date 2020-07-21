@@ -7,70 +7,71 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7E5C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C05C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 799B520658
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B450920658
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595296358;
-	bh=beZtH3r7XpGqmiNh9ohlW79ZLfo8S0vRo8tqO+LTmKY=;
+	s=default; t=1595296382;
+	bh=FDQZHy6V3YUHFMFMEikTPZZ1y5I2rcxlA3uomsiyjm0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=refPsHDO3ly7ibmDusaZ3f8QySpKYHit1O9xNlOJnoXGj/C1/+HtIGb7UZzcayftI
-	 0wEk4NWr45a/eo8TyIbFy0QC1pYhLsjBYMJ6QvetWHuqyr+tEVPyQBveZZeHuPhtJW
-	 Oire4kowPUitySDJMUmz5B7Db8hHd6NYestOtYBk=
+	b=YMKXK9+HosfzXC5I59b5okkaXZxix7Eem/bQvVIPjID/Y16iHpAWekzynhWP1n0lX
+	 onNeD/oxQnaWS2PyhHa0snghBBnUCkKQbuzf/zIlwunatSnBK+lP3jWf3JQP/K6wgr
+	 k+I/HOijfnwJQxeEXkHbv+8zad57nsi7LQ2XC6G0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgGUBwh (ORCPT
+        id S1727820AbgGUBxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 21:52:37 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43133 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgGUBwg (ORCPT
+        Mon, 20 Jul 2020 21:53:01 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40348 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgGUBxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 21:52:36 -0400
-Received: by mail-io1-f68.google.com with SMTP id k23so19697896iom.10;
-        Mon, 20 Jul 2020 18:52:36 -0700 (PDT)
+        Mon, 20 Jul 2020 21:53:01 -0400
+Received: by mail-io1-f65.google.com with SMTP id l17so19667814iok.7;
+        Mon, 20 Jul 2020 18:53:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=gZohupLyo656XqP4QIw1ulNxoOarM5/e7M44rf2cWq4=;
-        b=Hd+hzu3L3vssTidzDgsQpM0r7B+z54Rcm55gi8XR77zvwlw4TkaFQkYjlXZz8iUawg
-         dC3IzgvJVAuzEdGZH6R5WAEhyNNJo0LxmbCB9prINjwPdTrx8QrH+RPC3YsqsI79O6J0
-         uYH5ZC+22U3+/eOYpDEvQyOKL6WvOx5mFSEmsrZ+KKvYl9ROf9rbhJ86r4L+k11DBELG
-         /By+l6/E1fTXYG09017TS/ijYjJxeBqOzhmOSP08rJN4TDSSQV1owD+8qSK/1NvIlDa1
-         px5f0HKDLQFGZyQyhh7WLyfzQMSqZan0mOlDEbKoI/JXZP1B/u/SdncBPscZUeig7ejs
-         rF9A==
-X-Gm-Message-State: AOAM530A497YRew2G+Vw+jN0/RJfhne3LenCecHrWModaCy3wXD1X6D1
-        y9uFV8KO2qSzJZQYrgsylGCSVZcxkg==
-X-Google-Smtp-Source: ABdhPJxymzXjKx80rnnrA8u0IIv7eIJGwKLpCSKZuoMb6H5JJ8v9fxhzSSVnrC1E5iTplaZIBv+jnA==
-X-Received: by 2002:a02:cb92:: with SMTP id u18mr29452277jap.143.1595296355640;
-        Mon, 20 Jul 2020 18:52:35 -0700 (PDT)
+        bh=9KP0Rc8u4bVobD9Gj1dIehnk+YvHsu8cH9wSojjS1pw=;
+        b=b2EBRWcj3Knf3dshdCzhCSAi2J0/ruFrCLKZNwVsw5GJGtfz+PQHjzpMZicZZkEQoc
+         tgNDScbN5QSe1RMsS0vkSCxoPis0snDDCd6dcYeIXHytocSP/kc6UKMsNYPMwZCtLiVE
+         av2Zxt1p+nkfNTqy4iltZYiH5Wn9CxqNZw24vHTysSChsV92nRIAZnU9aFXKNVE1Me4s
+         j2lq3bHMMl2P/DpJpI2v36ByH1dlDwViClB5SatSlguy0J7ed2uWwMZOL0ZKwUabW93p
+         zsk+8+Ef3Irn/ap1ZrHM7kzmuJGMpYPQpi3dWNDEdwf1jRuLiuF2VgrhksRVMe8ZM9sB
+         qkLA==
+X-Gm-Message-State: AOAM530eXzq5Jx0c3/u4b38JOODsTf4HX2uXYWpg8Cqqz8b4iTaxygNe
+        2A9fnhTIksiexflE9/+EIw==
+X-Google-Smtp-Source: ABdhPJzaNK68W25st0exLMoy7RKom9FavgqN/p9iQOTVKMA8AHlp6hlZqOPW4z86KxVY7tE/qv2QBA==
+X-Received: by 2002:a02:9109:: with SMTP id a9mr30142492jag.130.1595296380320;
+        Mon, 20 Jul 2020 18:53:00 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w7sm7783820iov.1.2020.07.20.18.52.33
+        by smtp.gmail.com with ESMTPSA id x71sm9924564ilk.43.2020.07.20.18.52.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 18:52:34 -0700 (PDT)
-Received: (nullmailer pid 3361453 invoked by uid 1000);
-        Tue, 21 Jul 2020 01:52:32 -0000
-Date:   Mon, 20 Jul 2020 19:52:32 -0600
+        Mon, 20 Jul 2020 18:52:59 -0700 (PDT)
+Received: (nullmailer pid 3362142 invoked by uid 1000);
+        Tue, 21 Jul 2020 01:52:58 -0000
+Date:   Mon, 20 Jul 2020 19:52:58 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, pavel@ucw.cz, dmurphy@ti.com
-Subject: Re: [PATCH] leds: Replace HTTP links with HTTPS ones
-Message-ID: <20200721015232.GA3361404@bogus>
-References: <20200713145115.35121-1-grandmaster@al2klimov.de>
+Cc:     robh+dt@kernel.org, arnd@arndb.de, miquel.raynal@bootlin.com,
+        vigneshr@ti.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, richard@nod.at
+Subject: Re: [PATCH] mtd: Replace HTTP links with HTTPS ones
+Message-ID: <20200721015258.GA3362089@bogus>
+References: <20200713165408.36229-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200713145115.35121-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200713165408.36229-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 16:51:15 +0200, Alexander A. Klimov wrote:
+On Mon, 13 Jul 2020 18:54:08 +0200, Alexander A. Klimov wrote:
 > Rationale:
 > Reduces attack surface on kernel devs opening the links for MITM
 > as HTTPS traffic is much harder to manipulate.
@@ -109,18 +110,11 @@ On Mon, 13 Jul 2020 16:51:15 +0200, Alexander A. Klimov wrote:
 >  Impossible is nothing! :)
 > 
 > 
->  Documentation/devicetree/bindings/leds/leds-lm3532.txt  | 2 +-
->  Documentation/devicetree/bindings/leds/leds-lm3601x.txt | 4 ++--
->  Documentation/devicetree/bindings/leds/leds-lm36274.txt | 2 +-
->  Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 2 +-
->  Documentation/devicetree/bindings/leds/leds-lm3697.txt  | 2 +-
->  Documentation/devicetree/bindings/leds/leds-lp8860.txt  | 2 +-
->  drivers/leds/leds-lm3532.c                              | 4 ++--
->  drivers/leds/leds-lm3601x.c                             | 2 +-
->  drivers/leds/leds-lm36274.c                             | 2 +-
->  drivers/leds/leds-lm3692x.c                             | 2 +-
->  drivers/leds/leds-lm3697.c                              | 2 +-
->  11 files changed, 13 insertions(+), 13 deletions(-)
+>  Documentation/devicetree/bindings/mtd/davinci-nand.txt | 4 ++--
+>  drivers/mtd/chips/Kconfig                              | 2 +-
+>  drivers/mtd/maps/Kconfig                               | 2 +-
+>  drivers/mtd/maps/sc520cdp.c                            | 2 +-
+>  4 files changed, 5 insertions(+), 5 deletions(-)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
