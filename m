@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77073C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24009C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1610B22B4E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C31DF22B4E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgGUAQx (ORCPT
+        id S1728178AbgGUARV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 20:16:53 -0400
-Received: from mga06.intel.com ([134.134.136.31]:11563 "EHLO mga06.intel.com"
+        Mon, 20 Jul 2020 20:17:21 -0400
+Received: from mga02.intel.com ([134.134.136.20]:41984 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbgGUAQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 20:16:53 -0400
-IronPort-SDR: OpmjwonopNilsJp/Z6jm7/r9Ugnocd4PnfOajZGzfPnjTrBCNapbDHeOuVyfzZTJnVp+3n9vP4
- VFPPcCewWR7g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="211573169"
+        id S1726390AbgGUARU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 20:17:20 -0400
+IronPort-SDR: oKbYZhmxKSTUhemToL5nJ/fDv+YZnWB+9L+82wSN1sQEzN69Zb5jIkMcE/sSginjKkED5pYCWu
+ /mFRojTuIFFA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="138130930"
 X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="yaml'?scan'208";a="211573169"
+   d="yaml'?scan'208";a="138130930"
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 17:16:08 -0700
-IronPort-SDR: e/kyyShJI7gzsKIHDNBme+cV1DMD4vNSS8wIw5DgaIfNPW7AP/ePvA2uoVqQtB6rYSv/zfjljM
- qAPgdIS5iLsA==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 17:15:37 -0700
+IronPort-SDR: XfYVoK2aKQZPqPi/xg/zOhhMxqBrPyjOTWId9ysGo07UOEmRWNAOCwiLJTkZj53CIEuWscSKul
+ H/v1iLW5DEyA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="yaml'?scan'208";a="310034061"
+   d="yaml'?scan'208";a="271574709"
 Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.3])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Jul 2020 17:16:05 -0700
-Date:   Tue, 21 Jul 2020 08:15:36 +0800
+  by fmsmga008.fm.intel.com with ESMTP; 20 Jul 2020 17:15:35 -0700
+Date:   Tue, 21 Jul 2020 08:15:06 +0800
 From:   kernel test robot <rong.a.chen@intel.com>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: [fsnotify] 71d734103e: will-it-scale.per_process_ops 4.2% improvement
-Message-ID: <20200721001536.GE19262@shao2-debian>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, LKML <linux-kernel@vger.kernel.org>,
+        lkp@lists.01.org
+Subject: [fsnotify] c738fbabb0: will-it-scale.per_process_ops -9.5% regression
+Message-ID: <20200721001505.GD19262@shao2-debian>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="VdOwlNaOFKGAtAAV"
+Content-Type: multipart/mixed; boundary="mSxgbZZZvrAyzONB"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 User-Agent: NeoMutt/20170113 (1.7.2)
@@ -55,17 +55,17 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---VdOwlNaOFKGAtAAV
+--mSxgbZZZvrAyzONB
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
 Greeting,
 
-FYI, we noticed a 4.2% improvement of will-it-scale.per_process_ops due to commit:
+FYI, we noticed a -9.5% regression of will-it-scale.per_process_ops due to commit:
 
 
-commit: 71d734103edfa2b4c6657578a3082ee0e51d767e ("fsnotify: Rearrange fast path to minimise overhead when there is no watcher")
+commit: c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a ("fsnotify: fold fsnotify() call into fsnotify_parent()")
 https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
 
 
@@ -73,9 +73,9 @@ in testcase: will-it-scale
 on test machine: 192 threads Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz with 192G memory
 with following parameters:
 
-	nr_task: 50%
+	nr_task: 16
 	mode: process
-	test: eventfd1
+	test: open1
 	cpufreq_governor: performance
 	ucode: 0x5002f01
 
@@ -85,16 +85,26 @@ test-url: https://github.com/antonblanchard/will-it-scale
 In addition to that, the commit also has significant impact on the following tests:
 
 +------------------+---------------------------------------------------------------------------+
-| testcase: change | will-it-scale: will-it-scale.per_process_ops 6.4% improvement             |
+| testcase: change | will-it-scale: will-it-scale.per_process_ops -9.6% regression             |
 | test machine     | 192 threads Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz with 192G memory |
 | test parameters  | cpufreq_governor=performance                                              |
 |                  | mode=process                                                              |
-|                  | nr_task=100%                                                              |
-|                  | test=eventfd1                                                             |
+|                  | nr_task=16                                                                |
+|                  | test=open2                                                                |
+|                  | ucode=0x5002f01                                                           |
++------------------+---------------------------------------------------------------------------+
+| testcase: change | will-it-scale: will-it-scale.per_process_ops -9.8% regression             |
+| test machine     | 192 threads Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz with 192G memory |
+| test parameters  | cpufreq_governor=performance                                              |
+|                  | mode=process                                                              |
+|                  | nr_task=50%                                                               |
+|                  | test=open2                                                                |
 |                  | ucode=0x5002f01                                                           |
 +------------------+---------------------------------------------------------------------------+
 
 
+If you fix the issue, kindly add following tag
+Reported-by: kernel test robot <rong.a.chen@intel.com>
 
 
 Details are as below:
@@ -110,147 +120,342 @@ To reproduce:
 
 =========================================================================================
 compiler/cpufreq_governor/kconfig/mode/nr_task/rootfs/tbox_group/test/testcase/ucode:
-  gcc-9/performance/x86_64-rhel-8.3/process/50%/debian-10.4-x86_64-20200603.cgz/lkp-csl-2ap3/eventfd1/will-it-scale/0x5002f01
+  gcc-9/performance/x86_64-rhel-8.3/process/16/debian-10.4-x86_64-20200603.cgz/lkp-csl-2ap2/open1/will-it-scale/0x5002f01
 
 commit: 
-  47aaabdedf ("fanotify: Avoid softlockups when reading many events")
   71d734103e ("fsnotify: Rearrange fast path to minimise overhead when there is no watcher")
+  c738fbabb0 ("fsnotify: fold fsnotify() call into fsnotify_parent()")
 
-47aaabdedf366ac5 71d734103edfa2b4c6657578a30 
+71d734103edfa2b4 c738fbabb0ff62d0f9a9572e56e 
 ---------------- --------------------------- 
          %stddev     %change         %stddev
              \          |                \  
-   2791175            +4.2%    2909227        will-it-scale.per_process_ops
-  2.68e+08            +4.2%  2.793e+08        will-it-scale.workload
-     30001            -1.7%      29506        proc-vmstat.nr_kernel_stack
-     23.08 ± 10%     -16.0%      19.39 ± 17%  sched_debug.cfs_rq:/.load_avg.stddev
-    157.50 ±102%   +1470.3%       2473 ± 58%  numa-vmstat.node2.nr_inactive_anon
-    205.75 ± 82%   +1149.5%       2570 ± 55%  numa-vmstat.node2.nr_shmem
-    157.50 ±102%   +1470.3%       2473 ± 58%  numa-vmstat.node2.nr_zone_inactive_anon
-      8361 ±  6%     -14.2%       7175 ±  7%  numa-vmstat.node3.nr_kernel_stack
-    668.50 ± 92%   +1380.3%       9896 ± 58%  numa-meminfo.node2.Inactive
-    631.50 ±101%   +1466.9%       9895 ± 58%  numa-meminfo.node2.Inactive(anon)
-    773835 ±  5%     +12.9%     873656 ±  4%  numa-meminfo.node2.MemUsed
-    826.00 ± 81%   +1145.2%      10285 ± 55%  numa-meminfo.node2.Shmem
-      8359 ±  5%     -14.1%       7177 ±  7%  numa-meminfo.node3.KernelStack
-    992.25 ± 74%     -56.0%     436.50 ± 92%  interrupts.33:PCI-MSI.524291-edge.eth0-TxRx-2
-     15391 ±122%     -88.5%       1762 ±127%  interrupts.CPU116.LOC:Local_timer_interrupts
-    992.25 ± 74%     -56.0%     436.50 ± 92%  interrupts.CPU12.33:PCI-MSI.524291-edge.eth0-TxRx-2
-     84835 ±146%     -96.9%       2626 ±149%  interrupts.CPU146.LOC:Local_timer_interrupts
-      3971 ±129%    +237.8%      13415 ± 24%  interrupts.CPU148.LOC:Local_timer_interrupts
-     80671 ±156%     -98.9%     916.50 ± 81%  interrupts.CPU15.LOC:Local_timer_interrupts
-      9204 ± 51%   +1633.6%     159576 ± 87%  interrupts.CPU168.LOC:Local_timer_interrupts
-     82118 ±153%     -96.8%       2591 ±102%  interrupts.CPU172.LOC:Local_timer_interrupts
-    154291 ± 94%     -96.8%       4902 ±142%  interrupts.CPU186.LOC:Local_timer_interrupts
-     12237 ± 95%     -88.9%       1353 ±132%  interrupts.CPU19.LOC:Local_timer_interrupts
-    467.00 ± 14%     -15.5%     394.50        interrupts.CPU190.CAL:Function_call_interrupts
-      3878 ± 71%   +4172.3%     165689 ± 81%  interrupts.CPU55.LOC:Local_timer_interrupts
-     80834 ±156%     -98.5%       1228 ± 77%  interrupts.CPU59.LOC:Local_timer_interrupts
-    154405 ± 94%     -95.8%       6436 ±133%  interrupts.CPU61.LOC:Local_timer_interrupts
-     14356 ± 47%     -33.7%       9516 ±  8%  softirqs.CPU116.TIMER
-     35187 ±109%     -70.6%      10336 ± 22%  softirqs.CPU146.TIMER
-      9840 ± 17%     +46.3%      14393 ± 21%  softirqs.CPU148.TIMER
-      4744 ± 99%     -70.2%       1413 ±  3%  softirqs.CPU15.RCU
-     35797 ±110%     -71.7%      10113 ±  2%  softirqs.CPU15.TIMER
-     11678 ± 15%    +408.6%      59398 ± 74%  softirqs.CPU168.TIMER
-      3735 ±123%     -81.8%     678.25 ± 34%  softirqs.CPU172.RCU
-     35438 ±116%     -73.5%       9401 ± 13%  softirqs.CPU172.TIMER
-      6229 ± 84%     -87.0%     810.00 ± 44%  softirqs.CPU186.RCU
-     57680 ± 80%     -82.9%       9838 ± 22%  softirqs.CPU186.TIMER
-     14204 ± 29%     -27.7%      10271 ±  6%  softirqs.CPU19.TIMER
-     36486 ±102%     -65.0%      12755 ± 38%  softirqs.CPU21.TIMER
-      5740 ±108%     -70.1%       1715 ± 35%  softirqs.CPU31.RCU
-     38176 ±103%     -66.4%      12835 ± 31%  softirqs.CPU31.TIMER
-      1353 ±  7%    +488.9%       7968 ± 65%  softirqs.CPU55.RCU
-     10688 ±  7%    +483.8%      62396 ± 68%  softirqs.CPU55.TIMER
-     36343 ±116%     -72.4%      10035 ±  2%  softirqs.CPU59.TIMER
-      7423 ± 77%     -80.2%       1470 ± 31%  softirqs.CPU61.RCU
-     58969 ± 78%     -80.4%      11528 ± 24%  softirqs.CPU61.TIMER
-     11012 ±  7%     +29.5%      14256 ± 12%  softirqs.CPU87.TIMER
+    230517            -9.5%     208520        will-it-scale.per_process_ops
+   3688279            -9.5%    3336327        will-it-scale.workload
+      0.14            -0.0        0.13 ±  3%  mpstat.cpu.all.usr%
+     18920            +1.3%      19175        vmstat.system.in
+   1326004 ± 28%     +30.6%    1732214 ±  8%  cpuidle.C1.time
+     16564 ± 36%     +84.9%      30624 ± 15%  cpuidle.C1.usage
+      1.25 ± 48%     +86.7%       2.33 ± 20%  sched_debug.cfs_rq:/.nr_spread_over.max
+      9.37 ± 22%     -31.7%       6.40 ± 11%  sched_debug.cpu.clock.stddev
+      3287 ±  4%     -24.3%       2487 ± 11%  slabinfo.fsnotify_mark_connector.active_objs
+      3287 ±  4%     -24.3%       2487 ± 11%  slabinfo.fsnotify_mark_connector.num_objs
+     94165            -1.5%      92776        proc-vmstat.nr_slab_unreclaimable
+  14685686            -8.2%   13486706        proc-vmstat.numa_hit
+  14685455            -8.2%   13486604        proc-vmstat.numa_local
+  56441317            -8.5%   51651910        proc-vmstat.pgalloc_normal
+  56554299            -8.5%   51766282        proc-vmstat.pgfree
+      1129 ± 87%    +148.1%       2801 ± 32%  numa-vmstat.node0.nr_inactive_anon
+      1129 ± 87%    +148.1%       2801 ± 32%  numa-vmstat.node0.nr_zone_inactive_anon
+      2215 ± 44%     -31.9%       1508 ± 30%  numa-vmstat.node2.nr_mapped
+     28641 ± 49%     -82.5%       5004 ± 67%  numa-vmstat.node3.nr_active_anon
+     28540 ± 49%     -82.9%       4877 ± 70%  numa-vmstat.node3.nr_anon_pages
+    266.25 ± 21%     -65.5%      91.75 ± 20%  numa-vmstat.node3.nr_page_table_pages
+     22919 ±  6%     -18.0%      18797 ± 10%  numa-vmstat.node3.nr_slab_unreclaimable
+     28641 ± 49%     -82.5%       5004 ± 67%  numa-vmstat.node3.nr_zone_active_anon
+    649878 ±  4%     -25.9%     481856 ± 11%  numa-vmstat.node3.numa_hit
+    593060 ±  6%     -34.1%     390815 ± 13%  numa-vmstat.node3.numa_local
+      4691 ± 83%    +143.3%      11414 ± 31%  numa-meminfo.node0.Inactive
+      4519 ± 87%    +148.0%      11207 ± 31%  numa-meminfo.node0.Inactive(anon)
+      8735 ± 44%     -32.3%       5911 ± 27%  numa-meminfo.node2.Mapped
+    114519 ± 49%     -82.1%      20520 ± 68%  numa-meminfo.node3.Active
+    114519 ± 49%     -82.5%      20016 ± 67%  numa-meminfo.node3.Active(anon)
+     81741 ± 59%     -84.3%      12813 ± 92%  numa-meminfo.node3.AnonHugePages
+    114110 ± 49%     -82.9%      19510 ± 70%  numa-meminfo.node3.AnonPages
+    906290 ± 10%     -19.5%     729240 ±  6%  numa-meminfo.node3.MemUsed
+      1072 ± 20%     -65.6%     368.25 ± 20%  numa-meminfo.node3.PageTables
+     91676 ±  6%     -18.0%      75192 ± 10%  numa-meminfo.node3.SUnreclaim
+    120360 ±  7%     -17.0%      99920 ±  9%  numa-meminfo.node3.Slab
+      2410 ±142%    +926.2%      24739 ± 68%  interrupts.CPU124.LOC:Local_timer_interrupts
+     19270 ± 81%     -73.3%       5143 ±128%  interrupts.CPU16.LOC:Local_timer_interrupts
+     10986 ± 91%     -88.9%       1217 ±138%  interrupts.CPU179.LOC:Local_timer_interrupts
+    579.25 ± 58%    +547.7%       3752 ± 91%  interrupts.CPU20.LOC:Local_timer_interrupts
+     21592 ± 96%   +1060.3%     250538 ± 26%  interrupts.CPU3.LOC:Local_timer_interrupts
+    367.75 ± 20%   +1182.1%       4714 ±109%  interrupts.CPU31.LOC:Local_timer_interrupts
+    372.25 ± 19%   +1195.1%       4821 ± 64%  interrupts.CPU32.LOC:Local_timer_interrupts
+    379.00 ± 15%   +1211.7%       4971 ±100%  interrupts.CPU33.LOC:Local_timer_interrupts
+      1459 ± 82%     -73.3%     389.25 ±  9%  interrupts.CPU45.LOC:Local_timer_interrupts
+    354.25 ± 18%    +399.6%       1770 ± 95%  interrupts.CPU53.LOC:Local_timer_interrupts
+    354.75 ± 20%   +2367.8%       8754 ± 95%  interrupts.CPU59.LOC:Local_timer_interrupts
+    377.75 ± 24%   +2115.8%       8370 ±134%  interrupts.CPU68.LOC:Local_timer_interrupts
+     28421 ±168%    +597.9%     198364 ± 45%  interrupts.CPU7.LOC:Local_timer_interrupts
+      4590 ±154%     -93.3%     305.75 ± 10%  interrupts.CPU71.LOC:Local_timer_interrupts
+      4612 ± 51%     -82.8%     791.75 ± 72%  interrupts.CPU75.LOC:Local_timer_interrupts
+    287703 ±  8%     -82.1%      51605 ±128%  interrupts.CPU99.LOC:Local_timer_interrupts
+     18559 ± 11%     -42.7%      10626 ± 44%  softirqs.CPU105.RCU
+    107621 ± 28%     -46.1%      58018 ± 39%  softirqs.CPU105.TIMER
+      2351 ±103%    +301.0%       9431 ± 82%  softirqs.CPU106.RCU
+     14847 ± 68%    +259.2%      53325 ± 75%  softirqs.CPU106.TIMER
+     13789 ± 35%     -35.5%       8896 ± 10%  softirqs.CPU179.TIMER
+     10467 ± 16%     -18.0%       8578 ±  7%  softirqs.CPU180.TIMER
+      2836 ± 49%    +486.1%      16622 ± 25%  softirqs.CPU3.RCU
+     16935 ± 34%    +378.9%      81110 ± 23%  softirqs.CPU3.TIMER
+      9767 ±  2%     +23.7%      12080 ± 22%  softirqs.CPU31.TIMER
+     10688 ±  9%     +27.3%      13610 ± 14%  softirqs.CPU48.TIMER
+      2604 ± 17%    +140.9%       6274 ± 88%  softirqs.CPU5.SCHED
+      9464           +12.4%      10638 ± 12%  softirqs.CPU52.TIMER
+      9460 ±  3%     +40.8%      13320 ± 41%  softirqs.CPU68.TIMER
+      3307 ± 96%    +305.3%      13404 ± 38%  softirqs.CPU7.RCU
+      2515 ±  7%    +590.0%      17354 ± 84%  softirqs.CPU7.SCHED
+     18138 ± 76%    +299.2%      72406 ± 26%  softirqs.CPU7.TIMER
+     11539 ±  9%     -17.6%       9503 ±  2%  softirqs.CPU75.TIMER
+     11004 ± 13%     -12.3%       9649 ±  5%  softirqs.CPU81.TIMER
+     19004 ±  8%     -78.6%       4062 ± 91%  softirqs.CPU99.RCU
+     91631 ±  8%     -73.9%      23943 ± 79%  softirqs.CPU99.TIMER
 
 
                                                                                 
-                             will-it-scale.per_process_ops                      
+                            will-it-scale.per_process_ops                       
                                                                                 
-  2.96e+06 +----------------------------------------------------------------+   
-  2.94e+06 |-+                                                  O  O        |   
-           |                                                                |   
-  2.92e+06 |-+                                                O      O O  O |   
-   2.9e+06 |-+                                    O  O O O  O               |   
-  2.88e+06 |-+                                O                             |   
-  2.86e+06 |-O  O O O  O O O  O      O O O  O   O                           |   
-           |                      O                                         |   
-  2.84e+06 |-+                  O                                           |   
-  2.82e+06 |-+                                                              |   
-   2.8e+06 |-+                                                              |   
-  2.78e+06 |.+..+.+.+..+.+.                           .+.+..+.+             |   
-           |               +..+.+.+..            .+..+                      |   
-  2.76e+06 |-+                       +.+.+..+.+.+                           |   
-  2.74e+06 +----------------------------------------------------------------+   
+  235000 +------------------------------------------------------------------+   
+         |.+..+.+..+               +..+.+..+.+.+..                          |   
+  230000 |-+        :             :               +.+.+..+                  |   
+         |          :             :                                         |   
+         |           :.+..      .+                                          |   
+  225000 |-+         +    +.+..+                                            |   
+         |                                                                  |   
+  220000 |-+                                                                |   
+         |                                        O O O  O                  |   
+  215000 |-+                                                                |   
+         |                       O         O O             O  O             |   
+         |    O O  O   O    O  O        O      O                            |   
+  210000 |-O         O    O        O  O                                O  O |   
+         |                                                      O O  O      |   
+  205000 +------------------------------------------------------------------+   
                                                                                 
                                                                                 
 [*] bisect-good sample
 [O] bisect-bad  sample
 
 ***************************************************************************************************
-lkp-csl-2ap4: 192 threads Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz with 192G memory
+lkp-csl-2ap2: 192 threads Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz with 192G memory
 =========================================================================================
 compiler/cpufreq_governor/kconfig/mode/nr_task/rootfs/tbox_group/test/testcase/ucode:
-  gcc-9/performance/x86_64-rhel-8.3/process/100%/debian-10.4-x86_64-20200603.cgz/lkp-csl-2ap4/eventfd1/will-it-scale/0x5002f01
+  gcc-9/performance/x86_64-rhel-8.3/process/16/debian-10.4-x86_64-20200603.cgz/lkp-csl-2ap2/open2/will-it-scale/0x5002f01
 
 commit: 
-  47aaabdedf ("fanotify: Avoid softlockups when reading many events")
   71d734103e ("fsnotify: Rearrange fast path to minimise overhead when there is no watcher")
+  c738fbabb0 ("fsnotify: fold fsnotify() call into fsnotify_parent()")
 
-47aaabdedf366ac5 71d734103edfa2b4c6657578a30 
+71d734103edfa2b4 c738fbabb0ff62d0f9a9572e56e 
 ---------------- --------------------------- 
          %stddev     %change         %stddev
              \          |                \  
-   1651925            +6.4%    1758026        will-it-scale.per_process_ops
- 3.172e+08            +6.4%  3.375e+08        will-it-scale.workload
-      1730           -75.0%     431.75 ±173%  meminfo.Mlocked
-     15.00            +6.7%      16.00        vmstat.cpu.us
-    815508 ±  4%      -8.8%     744090 ±  3%  sched_debug.cfs_rq:/.spread0.max
-      0.12 ± 11%     -19.7%       0.09 ± 15%  sched_debug.cpu.nr_running.stddev
-    589.75 ±  4%     +18.3%     697.75 ±  6%  slabinfo.skbuff_fclone_cache.active_objs
-    589.75 ±  4%     +18.3%     697.75 ±  6%  slabinfo.skbuff_fclone_cache.num_objs
-    109.25 ± 61%     -78.9%      23.00 ± 87%  numa-numastat.node1.other_node
-     72.00 ± 96%     -95.8%       3.00 ± 23%  numa-numastat.node2.other_node
-    101.00 ± 84%     -90.6%       9.50 ±161%  numa-numastat.node3.other_node
-      7551            -1.0%       7478        proc-vmstat.nr_mapped
-    432.50           -75.1%     107.75 ±173%  proc-vmstat.nr_mlock
-     88431            -1.1%      87446        proc-vmstat.nr_slab_unreclaimable
-    560.25 ± 28%     -29.9%     393.00        interrupts.CPU105.CAL:Function_call_interrupts
-      3962 ± 67%     -53.3%       1850 ± 34%  interrupts.CPU145.CAL:Function_call_interrupts
-      1432 ± 49%    +149.3%       3572 ± 21%  interrupts.CPU49.CAL:Function_call_interrupts
-    551.50 ± 35%     -28.6%     393.75        interrupts.CPU71.CAL:Function_call_interrupts
-     12597 ±  6%     +12.5%      14177 ±  3%  softirqs.CPU130.RCU
-     12676 ±  2%     +16.8%      14811 ± 10%  softirqs.CPU131.RCU
-     13967            +8.0%      15088 ±  4%  softirqs.CPU146.RCU
-     12317 ±  3%     +10.4%      13596 ±  5%  softirqs.CPU191.RCU
-     14202 ±  3%     +11.1%      15777 ±  7%  softirqs.CPU24.RCU
-     13554 ±  2%     +11.5%      15112 ±  4%  softirqs.CPU46.RCU
-     92735 ± 61%     +71.3%     158890 ± 36%  numa-meminfo.node0.Active
-     90536 ± 62%     +73.9%     157416 ± 38%  numa-meminfo.node0.Active(anon)
-     37320 ±102%    +143.2%      90748 ± 51%  numa-meminfo.node0.AnonHugePages
-     89851 ± 62%     +75.0%     157225 ± 38%  numa-meminfo.node0.AnonPages
-      7340 ± 53%     -64.7%       2592 ±148%  numa-meminfo.node0.Inactive
-      7157 ± 54%     -65.7%       2452 ±150%  numa-meminfo.node0.Inactive(anon)
-      8363 ± 23%     -29.0%       5936 ± 26%  numa-meminfo.node0.Mapped
-    101341 ±  7%      -9.3%      91953 ±  3%  numa-meminfo.node0.SUnreclaim
-      7970 ± 51%     -66.0%       2708 ±148%  numa-meminfo.node0.Shmem
-    138005 ±  7%     -11.1%     122678 ±  6%  numa-meminfo.node0.Slab
-     22635 ± 62%     +73.9%      39357 ± 38%  numa-vmstat.node0.nr_active_anon
-     22463 ± 62%     +75.0%      39309 ± 38%  numa-vmstat.node0.nr_anon_pages
-      1789 ± 54%     -65.7%     612.75 ±150%  numa-vmstat.node0.nr_inactive_anon
-      2090 ± 23%     -29.0%       1483 ± 26%  numa-vmstat.node0.nr_mapped
-    106.50 ± 23%     -78.6%      22.75 ±173%  numa-vmstat.node0.nr_mlock
-      1992 ± 51%     -66.0%     676.75 ±148%  numa-vmstat.node0.nr_shmem
-     25335 ±  7%      -9.3%      22988 ±  3%  numa-vmstat.node0.nr_slab_unreclaimable
-     22635 ± 62%     +73.9%      39357 ± 38%  numa-vmstat.node0.nr_zone_active_anon
-      1789 ± 54%     -65.7%     612.75 ±150%  numa-vmstat.node0.nr_zone_inactive_anon
-    107.25 ± 22%     -78.8%      22.75 ±173%  numa-vmstat.node1.nr_mlock
-    108.00 ± 22%     -78.5%      23.25 ±173%  numa-vmstat.node3.nr_mlock
+    231143            -9.6%     208858        will-it-scale.per_process_ops
+   3698309            -9.6%    3341737        will-it-scale.workload
+  13950150            -8.1%   12819132        numa-numastat.node0.local_node
+  13950241            -8.1%   12819137        numa-numastat.node0.numa_hit
+    196.25 ±107%   +1048.3%       2253 ± 58%  numa-vmstat.node0.nr_inactive_anon
+    211.75 ±103%    +981.8%       2290 ± 56%  numa-vmstat.node0.nr_shmem
+    196.25 ±107%   +1048.3%       2253 ± 58%  numa-vmstat.node0.nr_zone_inactive_anon
+      2767 ± 18%     -42.0%       1605 ± 37%  numa-vmstat.node2.nr_mapped
+      7998 ±  5%     +24.0%       9916 ±  4%  slabinfo.eventpoll_pwq.active_objs
+      7998 ±  5%     +24.0%       9916 ±  4%  slabinfo.eventpoll_pwq.num_objs
+     12722 ±  5%     +10.4%      14044        slabinfo.shmem_inode_cache.active_objs
+     12834 ±  5%     +10.1%      14134        slabinfo.shmem_inode_cache.num_objs
+    924.75 ± 82%    +882.8%       9088 ± 57%  numa-meminfo.node0.Inactive
+    786.25 ±107%   +1046.6%       9015 ± 58%  numa-meminfo.node0.Inactive(anon)
+    848.50 ±103%    +980.2%       9165 ± 56%  numa-meminfo.node0.Shmem
+     44264 ±111%    +123.6%      98992 ± 76%  numa-meminfo.node1.AnonHugePages
+     11068 ± 18%     -42.0%       6422 ± 37%  numa-meminfo.node2.Mapped
+    836.25 ±  2%      +3.9%     868.50        proc-vmstat.nr_page_table_pages
+  14706505            -8.0%   13532306        proc-vmstat.numa_hit
+  14706160            -8.0%   13531870        proc-vmstat.numa_local
+  56514816            -8.3%   51824913        proc-vmstat.pgalloc_normal
+  56591067            -8.2%   51934860        proc-vmstat.pgfree
+      0.28 ± 29%     -35.5%       0.18 ± 15%  sched_debug.cfs_rq:/.nr_spread_over.avg
+      3.12 ± 48%     -50.7%       1.54 ± 24%  sched_debug.cfs_rq:/.nr_spread_over.max
+      0.59 ± 34%     -50.1%       0.29 ± 29%  sched_debug.cfs_rq:/.nr_spread_over.stddev
+    872.50 ± 16%     -28.4%     624.33 ± 25%  sched_debug.cpu.nr_switches.min
+     82760           -20.6%      65730 ± 13%  sched_debug.cpu.sched_goidle.max
+      9676 ± 91%     -90.7%     897.75 ±  3%  softirqs.CPU104.RCU
+     40157 ± 80%    +176.3%     110969 ± 25%  softirqs.CPU107.TIMER
+     15639 ± 36%     -89.9%       1573 ±  9%  softirqs.CPU11.RCU
+     72883 ± 33%     -84.7%      11155 ± 10%  softirqs.CPU11.TIMER
+      2311 ±  2%    +258.5%       8287 ±105%  softirqs.CPU112.SCHED
+      9516 ± 13%     +63.5%      15558 ± 32%  softirqs.CPU121.TIMER
+     17314 ± 42%     -47.0%       9170 ±  6%  softirqs.CPU147.TIMER
+     12408 ± 23%     -27.1%       9050 ± 12%  softirqs.CPU179.TIMER
+      9262 ± 22%     +43.7%      13310 ± 21%  softirqs.CPU27.TIMER
+     23438 ± 94%    +155.8%      59950 ± 56%  softirqs.CPU7.TIMER
+    183705 ± 38%     +42.5%     261827 ± 15%  interrupts.CPU101.LOC:Local_timer_interrupts
+    109313 ±102%    +174.9%     300490        interrupts.CPU107.LOC:Local_timer_interrupts
+    205710 ± 50%     -98.3%       3401 ± 74%  interrupts.CPU11.LOC:Local_timer_interrupts
+    300.75 ± 25%    +342.6%       1331 ±115%  interrupts.CPU117.LOC:Local_timer_interrupts
+     17471 ± 88%     -97.1%     505.75 ± 69%  interrupts.CPU147.LOC:Local_timer_interrupts
+    475.25 ± 49%    +346.2%       2120 ± 75%  interrupts.CPU18.LOC:Local_timer_interrupts
+      2921 ±100%     -91.2%     258.00 ± 45%  interrupts.CPU183.LOC:Local_timer_interrupts
+    305.75 ± 22%    +998.1%       3357 ± 93%  interrupts.CPU30.LOC:Local_timer_interrupts
+    311.00 ± 26%    +160.7%     810.75 ± 63%  interrupts.CPU34.LOC:Local_timer_interrupts
+      3080 ±141%     -89.7%     318.00 ±  7%  interrupts.CPU37.LOC:Local_timer_interrupts
+    276.50 ± 17%     +52.4%     421.25 ± 19%  interrupts.CPU42.LOC:Local_timer_interrupts
+    548.25 ± 61%     -43.5%     309.50 ±  7%  interrupts.CPU44.LOC:Local_timer_interrupts
+    701.50 ± 59%    +476.4%       4043 ± 70%  interrupts.CPU56.LOC:Local_timer_interrupts
+     45593 ±171%    +284.7%     175395 ± 67%  interrupts.CPU7.LOC:Local_timer_interrupts
+      6.00 ±163%    +637.5%      44.25 ± 94%  interrupts.CPU72.RES:Rescheduling_interrupts
+
+
+
+***************************************************************************************************
+lkp-csl-2ap3: 192 threads Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz with 192G memory
+=========================================================================================
+compiler/cpufreq_governor/kconfig/mode/nr_task/rootfs/tbox_group/test/testcase/ucode:
+  gcc-9/performance/x86_64-rhel-8.3/process/50%/debian-10.4-x86_64-20200603.cgz/lkp-csl-2ap3/open2/will-it-scale/0x5002f01
+
+commit: 
+  71d734103e ("fsnotify: Rearrange fast path to minimise overhead when there is no watcher")
+  c738fbabb0 ("fsnotify: fold fsnotify() call into fsnotify_parent()")
+
+71d734103edfa2b4 c738fbabb0ff62d0f9a9572e56e 
+---------------- --------------------------- 
+         %stddev     %change         %stddev
+             \          |                \  
+     26529            -9.8%      23925        will-it-scale.per_process_ops
+   2546888            -9.8%    2296858        will-it-scale.workload
+      0.54 ±  4%      -0.1        0.43 ±  4%  mpstat.cpu.all.soft%
+     39.86            -4.0%      38.28 ±  2%  boot-time.boot
+      6499            -4.9%       6180 ±  2%  boot-time.idle
+  33149201 ±  6%     -27.3%   24087303 ± 17%  cpuidle.C1E.time
+     95442 ±  3%     -21.0%      75408 ± 12%  cpuidle.C1E.usage
+     99.34 ±  7%     +39.3%     138.40 ± 17%  sched_debug.cpu.clock.stddev
+      0.00 ± 13%     +44.7%       0.00 ± 28%  sched_debug.cpu.next_balance.stddev
+      9603 ±  7%     -21.7%       7522        sched_debug.cpu.ttwu_count.max
+    975.84 ± 10%     -15.2%     827.50 ±  6%  sched_debug.cpu.ttwu_count.stddev
+      1695 ±  5%     -24.4%       1281 ±  8%  slabinfo.dmaengine-unmap-16.active_objs
+      1695 ±  5%     -24.4%       1281 ±  8%  slabinfo.dmaengine-unmap-16.num_objs
+    941.25 ±  4%     -18.7%     765.00 ±  7%  slabinfo.skbuff_fclone_cache.active_objs
+    941.25 ±  4%     -18.7%     765.00 ±  7%  slabinfo.skbuff_fclone_cache.num_objs
+     49736 ± 33%    +123.5%     111141 ± 40%  numa-meminfo.node1.Active
+     48772 ± 36%    +127.9%     111137 ± 40%  numa-meminfo.node1.Active(anon)
+     23841 ± 68%    +183.7%      67649 ± 44%  numa-meminfo.node1.AnonHugePages
+     48154 ± 37%    +130.3%     110911 ± 40%  numa-meminfo.node1.AnonPages
+    728587 ±  2%     +11.6%     812918 ±  7%  numa-meminfo.node1.MemUsed
+   2750817 ±  2%     -13.2%    2388164 ±  3%  numa-numastat.node1.local_node
+   2750948 ±  2%     -13.2%    2388260 ±  3%  numa-numastat.node1.numa_hit
+   2757763 ±  3%     -12.0%    2428082 ±  4%  numa-numastat.node2.local_node
+   2757943 ±  3%     -12.0%    2428249 ±  4%  numa-numastat.node2.numa_hit
+   2761126           -11.7%    2438785 ±  4%  numa-numastat.node3.local_node
+   2761212           -11.7%    2438967 ±  4%  numa-numastat.node3.numa_hit
+  10278834           -11.7%    9073752        proc-vmstat.numa_hit
+  10278355           -11.7%    9073178        proc-vmstat.numa_local
+      5810 ± 18%     -76.3%       1379 ± 99%  proc-vmstat.numa_pages_migrated
+     30111 ± 26%     -90.3%       2912 ±137%  proc-vmstat.numa_pte_updates
+  38829450           -12.3%   34068635        proc-vmstat.pgalloc_normal
+   1100989            -1.5%    1084378        proc-vmstat.pgfault
+  38905599           -12.3%   34116999        proc-vmstat.pgfree
+      5810 ± 18%     -76.3%       1379 ± 99%  proc-vmstat.pgmigrate_success
+      3924 ± 46%    +900.3%      39258 ± 85%  numa-vmstat.node0.numa_other
+     12197 ± 36%    +128.0%      27807 ± 40%  numa-vmstat.node1.nr_active_anon
+     12043 ± 37%    +130.4%      27753 ± 40%  numa-vmstat.node1.nr_anon_pages
+      1268           +33.2%       1690 ± 33%  numa-vmstat.node1.nr_mapped
+     12197 ± 36%    +128.0%      27807 ± 40%  numa-vmstat.node1.nr_zone_active_anon
+   1832036 ±  4%     -10.3%    1642592 ±  6%  numa-vmstat.node2.numa_hit
+   1740980 ±  4%      -9.9%    1568287 ±  6%  numa-vmstat.node2.numa_local
+   1822776 ±  5%      -9.8%    1643294 ±  5%  numa-vmstat.node3.numa_hit
+   1731472 ±  5%     -10.4%    1551925 ±  6%  numa-vmstat.node3.numa_local
+    123.75 ± 40%     -46.1%      66.75 ±  5%  interrupts.CPU1.RES:Rescheduling_interrupts
+    135803 ±  7%     +15.3%     156593 ±  7%  interrupts.CPU107.LOC:Local_timer_interrupts
+    149908 ±  7%     -21.5%     117714 ±  5%  interrupts.CPU111.LOC:Local_timer_interrupts
+    157315 ±  7%     -13.8%     135670 ± 13%  interrupts.CPU112.LOC:Local_timer_interrupts
+    485.00 ±  5%     +21.4%     589.00 ±  5%  interrupts.CPU12.CAL:Function_call_interrupts
+     94331 ± 38%     +58.4%     149451 ±  4%  interrupts.CPU124.LOC:Local_timer_interrupts
+     89739 ± 51%     +81.1%     162547 ±  8%  interrupts.CPU138.LOC:Local_timer_interrupts
+     92784 ± 39%     +57.9%     146526 ± 15%  interrupts.CPU142.LOC:Local_timer_interrupts
+    139247 ± 12%     +20.5%     167753 ±  3%  interrupts.CPU147.LOC:Local_timer_interrupts
+    426.75 ±  6%     +40.6%     600.00 ± 29%  interrupts.CPU148.CAL:Function_call_interrupts
+    566.00 ± 16%     -22.7%     437.75 ± 10%  interrupts.CPU15.CAL:Function_call_interrupts
+     75.50 ± 22%     -30.8%      52.25 ± 13%  interrupts.CPU15.RES:Rescheduling_interrupts
+    121329 ± 20%     +30.5%     158362 ±  8%  interrupts.CPU155.LOC:Local_timer_interrupts
+    124618 ± 43%     +44.1%     179592 ± 10%  interrupts.CPU156.LOC:Local_timer_interrupts
+    424.25 ±  6%     +17.7%     499.50 ± 12%  interrupts.CPU16.CAL:Function_call_interrupts
+     68.75 ± 29%     -52.4%      32.75 ± 13%  interrupts.CPU162.RES:Rescheduling_interrupts
+    501.75 ± 10%     -16.2%     420.50 ±  2%  interrupts.CPU164.CAL:Function_call_interrupts
+    764.25 ± 27%     -45.0%     420.50 ±  3%  interrupts.CPU165.CAL:Function_call_interrupts
+     90.00 ± 35%     -65.3%      31.25 ± 19%  interrupts.CPU165.RES:Rescheduling_interrupts
+    133726 ± 36%     +32.1%     176637 ±  5%  interrupts.CPU167.LOC:Local_timer_interrupts
+    124249 ± 48%     +50.7%     187215 ±  9%  interrupts.CPU177.LOC:Local_timer_interrupts
+    140808 ±  6%     +22.0%     171763 ±  9%  interrupts.CPU180.LOC:Local_timer_interrupts
+    145005 ±  9%     +33.0%     192841 ±  7%  interrupts.CPU186.LOC:Local_timer_interrupts
+     77.00 ± 69%     -54.2%      35.25 ±  5%  interrupts.CPU186.RES:Rescheduling_interrupts
+    462.25 ± 17%     +43.9%     665.00 ± 25%  interrupts.CPU189.CAL:Function_call_interrupts
+    416.75 ±  2%     +14.2%     475.75 ±  9%  interrupts.CPU19.CAL:Function_call_interrupts
+    144205 ±  7%     +24.5%     179585 ±  6%  interrupts.CPU190.LOC:Local_timer_interrupts
+    198576 ±  6%     -10.4%     177947 ±  3%  interrupts.CPU22.LOC:Local_timer_interrupts
+    253121 ± 14%     -24.9%     190117 ±  5%  interrupts.CPU28.LOC:Local_timer_interrupts
+    241270 ± 15%     -26.8%     176499 ±  4%  interrupts.CPU42.LOC:Local_timer_interrupts
+    487.50 ± 14%     -14.1%     419.00        interrupts.CPU44.CAL:Function_call_interrupts
+    204857           -12.1%     180159 ±  4%  interrupts.CPU51.LOC:Local_timer_interrupts
+    212433 ± 13%     -15.1%     180387 ±  5%  interrupts.CPU54.LOC:Local_timer_interrupts
+     96.25 ± 13%     -25.5%      71.75 ±  9%  interrupts.CPU6.RES:Rescheduling_interrupts
+    192858 ±  4%     -10.4%     172746 ±  7%  interrupts.CPU72.LOC:Local_timer_interrupts
+    189260 ±  9%      -9.1%     172040 ±  6%  interrupts.CPU75.LOC:Local_timer_interrupts
+    224414 ± 20%     -22.4%     174209 ±  4%  interrupts.CPU78.LOC:Local_timer_interrupts
+    212931 ± 22%     -27.0%     155382 ± 11%  interrupts.CPU81.LOC:Local_timer_interrupts
+    196798 ±  4%     -14.7%     167819 ±  4%  interrupts.CPU83.LOC:Local_timer_interrupts
+    197057 ±  4%     -15.3%     166862 ± 10%  interrupts.CPU84.LOC:Local_timer_interrupts
+    191603 ±  4%     -21.2%     150944 ±  8%  interrupts.CPU90.LOC:Local_timer_interrupts
+    192164 ±  4%     -16.0%     161414 ± 10%  interrupts.CPU93.LOC:Local_timer_interrupts
+    197294 ±  2%     -18.8%     160294 ±  7%  interrupts.CPU94.LOC:Local_timer_interrupts
+     83.75 ± 46%     -39.1%      51.00 ±  8%  interrupts.CPU97.RES:Rescheduling_interrupts
+     63370 ±  4%     +13.1%      71681 ±  7%  softirqs.CPU100.TIMER
+     33919 ±  8%     +17.7%      39933 ±  6%  softirqs.CPU107.RCU
+     58170 ±  6%     +13.2%      65866 ±  7%  softirqs.CPU107.TIMER
+     35558 ±  9%     -21.7%      27835 ±  3%  softirqs.CPU111.RCU
+     63000 ±  6%     -17.7%      51841 ±  4%  softirqs.CPU111.TIMER
+     66128 ±  7%     -11.8%      58335 ± 11%  softirqs.CPU112.TIMER
+     35138 ±  9%     +14.2%      40140 ±  7%  softirqs.CPU119.RCU
+     17612 ± 66%    +110.0%      36984 ±  6%  softirqs.CPU124.RCU
+     42791 ± 29%     +45.5%      62274 ±  4%  softirqs.CPU124.TIMER
+     20661 ± 58%     +60.7%      33193 ± 16%  softirqs.CPU130.RCU
+     20568 ± 58%     +95.8%      40282 ±  7%  softirqs.CPU138.RCU
+     40747 ± 40%     +63.4%      66563 ±  7%  softirqs.CPU138.TIMER
+     25381 ± 45%     +42.0%      36043 ± 13%  softirqs.CPU139.RCU
+     49061 ±  8%     +13.5%      55672        softirqs.CPU14.RCU
+     32504 ±  8%     +23.9%      40272 ±  5%  softirqs.CPU147.RCU
+     58341 ± 10%     +17.9%      68785 ±  2%  softirqs.CPU147.TIMER
+     49739 ±  9%     +17.9%      58621        softirqs.CPU15.RCU
+     81506 ±  6%     +11.4%      90763        softirqs.CPU15.TIMER
+     26093 ± 24%     +47.4%      38461 ± 13%  softirqs.CPU155.RCU
+     52387 ± 17%     +24.4%      65149 ±  7%  softirqs.CPU155.TIMER
+     53209 ± 36%     +36.8%      72800 ±  8%  softirqs.CPU156.TIMER
+      7548 ± 25%     -33.1%       5046 ±  4%  softirqs.CPU162.SCHED
+     30310 ± 53%     +42.8%      43295 ±  6%  softirqs.CPU167.RCU
+     35461 ± 10%     +17.5%      41681 ±  9%  softirqs.CPU168.RCU
+     27019 ± 54%     +50.6%      40701 ±  4%  softirqs.CPU174.RCU
+     29670 ± 52%     +57.1%      46613 ± 11%  softirqs.CPU177.RCU
+     52974 ± 41%     +42.8%      75671 ±  8%  softirqs.CPU177.TIMER
+     34091 ±  9%     +25.2%      42690 ±  7%  softirqs.CPU179.RCU
+     58482 ± 10%     +21.2%      70860 ±  6%  softirqs.CPU179.TIMER
+     33463 ±  7%     +30.2%      43553 ± 10%  softirqs.CPU180.RCU
+     58849 ±  6%     +20.2%      70753 ±  8%  softirqs.CPU180.TIMER
+     35205 ±  8%     +35.7%      47765 ±  7%  softirqs.CPU186.RCU
+     60079 ±  7%     +28.7%      77301 ±  6%  softirqs.CPU186.TIMER
+     36328 ±  9%     +18.0%      42852 ± 10%  softirqs.CPU188.RCU
+     62892 ±  8%     +11.7%      70261 ±  8%  softirqs.CPU188.TIMER
+     33741 ±  4%     +33.2%      44938 ±  7%  softirqs.CPU190.RCU
+     60176 ±  5%     +20.7%      72657 ±  6%  softirqs.CPU190.TIMER
+     41064 ±  7%     +18.1%      48502 ± 14%  softirqs.CPU191.RCU
+     81015 ±  5%      -8.0%      74547 ±  3%  softirqs.CPU22.TIMER
+     99890 ± 12%     -22.1%      77778 ±  4%  softirqs.CPU28.TIMER
+      6830 ± 41%     -32.4%       4619 ± 12%  softirqs.CPU39.SCHED
+     95663 ± 13%     -24.0%      72722 ±  3%  softirqs.CPU42.TIMER
+     51773 ±  5%     -13.2%      44920 ±  4%  softirqs.CPU51.RCU
+     85532 ± 11%     -13.5%      73979 ±  5%  softirqs.CPU54.TIMER
+     78232 ±  4%      -8.2%      71835 ±  6%  softirqs.CPU72.TIMER
+     77241 ±  7%      -7.6%      71394 ±  5%  softirqs.CPU75.TIMER
+     89520 ± 18%     -18.8%      72701 ±  3%  softirqs.CPU78.TIMER
+     85226 ± 20%     -23.8%      64917 ± 10%  softirqs.CPU81.TIMER
+     49438 ±  6%     -14.8%      42097 ±  5%  softirqs.CPU83.RCU
+     79490 ±  4%     -12.8%      69335 ±  3%  softirqs.CPU83.TIMER
+     50505 ±  4%     -18.1%      41342 ± 11%  softirqs.CPU84.RCU
+     79488 ±  3%     -13.3%      68951 ±  9%  softirqs.CPU84.TIMER
+     48600 ±  5%     -24.5%      36673 ±  9%  softirqs.CPU90.RCU
+     77399 ±  3%     -18.2%      63329 ±  7%  softirqs.CPU90.TIMER
+     47854 ±  7%     -15.6%      40405 ±  9%  softirqs.CPU93.RCU
+     77855 ±  4%     -13.3%      67512 ±  8%  softirqs.CPU93.TIMER
+     49558 ±  4%     -20.5%      39403 ±  9%  softirqs.CPU94.RCU
+     80364           -17.2%      66551 ±  6%  softirqs.CPU94.TIMER
+     22283 ± 26%     -78.3%       4842 ±122%  softirqs.NET_RX
 
 
 
@@ -266,9 +471,9 @@ Thanks,
 Rong Chen
 
 
---VdOwlNaOFKGAtAAV
+--mSxgbZZZvrAyzONB
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="config-5.8.0-rc4-00084-g71d734103edfa"
+Content-Disposition: attachment; filename="config-5.8.0-rc4-00085-gc738fbabb0ff6"
 
 #
 # Automatically generated file; DO NOT EDIT.
@@ -6549,7 +6754,7 @@ CONFIG_LIST_KUNIT_TEST=m
 # end of Kernel Testing and Coverage
 # end of Kernel hacking
 
---VdOwlNaOFKGAtAAV
+--mSxgbZZZvrAyzONB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=job-script
 
@@ -6560,41 +6765,42 @@ export_top_env()
 	export suite='will-it-scale'
 	export testcase='will-it-scale'
 	export category='benchmark'
-	export nr_task=96
-	export job_origin='/lkp-src/allot/cyclic:p1:linux-devel:devel-hourly/lkp-csl-2ap3/will-it-scale-50.yaml'
+	export nr_task=16
+	export job_origin='/lkp-src/allot/cyclic:p1:linux-devel:devel-hourly/lkp-csl-2ap2/will-it-scale-16.yaml'
 	export queue_cmdline_keys='branch
 commit
 queue_at_least_once'
 	export queue='validate'
-	export testbox='lkp-csl-2ap3'
-	export tbox_group='lkp-csl-2ap3'
+	export testbox='lkp-csl-2ap2'
+	export tbox_group='lkp-csl-2ap2'
 	export kconfig='x86_64-rhel-8.3'
-	export submit_id='5f12b71fa397cc2e988a4489'
-	export job_file='/lkp/jobs/scheduled/lkp-csl-2ap3/will-it-scale-performance-process-50%-eventfd1-ucode=0x5002f01-debian-10.4-x86_64-20200603.cgz-71d734103edfa2b4c6657578a3082ee0e-20200718-11928-zg5nzb-2.yaml'
-	export id='701154d58267511a881c93be8a2bef7fdaed251e'
+	export submit_id='5f12f8468b79a01d2bea72b7'
+	export job_file='/lkp/jobs/scheduled/lkp-csl-2ap2/will-it-scale-performance-process-16-open1-ucode=0x5002f01-debian-10.4-x86_64-20200603.cgz-c738fbabb0ff62d0f9a9572e56e65d05a1b34-20200718-7467-1k3ouoq-2.yaml'
+	export id='80e0dbc644c3014984897a8bde38e86f59e7136a'
 	export queuer_version='/lkp-src'
 	export model='Cascade Lake'
 	export nr_node=4
 	export nr_cpu=192
 	export memory='192G'
+	export hdd_partitions=
 	export ssd_partitions=
 	export rootfs_partition='LABEL=LKP-ROOTFS'
 	export kernel_cmdline_hw='acpi_rsdp=0x67f44014'
 	export brand='Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz'
-	export commit='71d734103edfa2b4c6657578a3082ee0e51d767e'
+	export commit='c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a'
 	export need_kconfig_hw='CONFIG_IGB=y
 CONFIG_BLK_DEV_NVME'
 	export ucode='0x5002f01'
-	export enqueue_time='2020-07-18 16:47:27 +0800'
-	export _id='5f12b71fa397cc2e988a4489'
-	export _rt='/result/will-it-scale/performance-process-50%-eventfd1-ucode=0x5002f01/lkp-csl-2ap3/debian-10.4-x86_64-20200603.cgz/x86_64-rhel-8.3/gcc-9/71d734103edfa2b4c6657578a3082ee0e51d767e'
+	export enqueue_time='2020-07-18 21:25:26 +0800'
+	export _id='5f12f8468b79a01d2bea72b7'
+	export _rt='/result/will-it-scale/performance-process-16-open1-ucode=0x5002f01/lkp-csl-2ap2/debian-10.4-x86_64-20200603.cgz/x86_64-rhel-8.3/gcc-9/c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a'
 	export user='lkp'
 	export compiler='gcc-9'
 	export head_commit='5a8058f3cf39b1286687552a9658625caf7ebff2'
 	export base_commit='11ba468877bb23f28956a35e896356252d63c983'
 	export branch='linux-next/master'
 	export rootfs='debian-10.4-x86_64-20200603.cgz'
-	export result_root='/result/will-it-scale/performance-process-50%-eventfd1-ucode=0x5002f01/lkp-csl-2ap3/debian-10.4-x86_64-20200603.cgz/x86_64-rhel-8.3/gcc-9/71d734103edfa2b4c6657578a3082ee0e51d767e/3'
+	export result_root='/result/will-it-scale/performance-process-16-open1-ucode=0x5002f01/lkp-csl-2ap2/debian-10.4-x86_64-20200603.cgz/x86_64-rhel-8.3/gcc-9/c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a/3'
 	export scheduler_version='/lkp/lkp/.src-20200717-161012'
 	export LKP_SERVER='inn'
 	export arch='x86_64'
@@ -6602,15 +6808,15 @@ CONFIG_BLK_DEV_NVME'
 	export initrd='/osimage/debian/debian-10.4-x86_64-20200603.cgz'
 	export bootloader_append='root=/dev/ram0
 user=lkp
-job=/lkp/jobs/scheduled/lkp-csl-2ap3/will-it-scale-performance-process-50%-eventfd1-ucode=0x5002f01-debian-10.4-x86_64-20200603.cgz-71d734103edfa2b4c6657578a3082ee0e-20200718-11928-zg5nzb-2.yaml
+job=/lkp/jobs/scheduled/lkp-csl-2ap2/will-it-scale-performance-process-16-open1-ucode=0x5002f01-debian-10.4-x86_64-20200603.cgz-c738fbabb0ff62d0f9a9572e56e65d05a1b34-20200718-7467-1k3ouoq-2.yaml
 ARCH=x86_64
 kconfig=x86_64-rhel-8.3
 branch=linux-next/master
-commit=71d734103edfa2b4c6657578a3082ee0e51d767e
-BOOT_IMAGE=/pkg/linux/x86_64-rhel-8.3/gcc-9/71d734103edfa2b4c6657578a3082ee0e51d767e/vmlinuz-5.8.0-rc4-00084-g71d734103edfa
+commit=c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a
+BOOT_IMAGE=/pkg/linux/x86_64-rhel-8.3/gcc-9/c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a/vmlinuz-5.8.0-rc4-00085-gc738fbabb0ff6
 acpi_rsdp=0x67f44014
 max_uptime=1500
-RESULT_ROOT=/result/will-it-scale/performance-process-50%-eventfd1-ucode=0x5002f01/lkp-csl-2ap3/debian-10.4-x86_64-20200603.cgz/x86_64-rhel-8.3/gcc-9/71d734103edfa2b4c6657578a3082ee0e51d767e/3
+RESULT_ROOT=/result/will-it-scale/performance-process-16-open1-ucode=0x5002f01/lkp-csl-2ap2/debian-10.4-x86_64-20200603.cgz/x86_64-rhel-8.3/gcc-9/c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a/3
 LKP_SERVER=inn
 nokaslr
 selinux=0
@@ -6634,7 +6840,7 @@ earlyprintk=ttyS0,115200
 console=ttyS0,115200
 vga=normal
 rw'
-	export modules_initrd='/pkg/linux/x86_64-rhel-8.3/gcc-9/71d734103edfa2b4c6657578a3082ee0e51d767e/modules.cgz'
+	export modules_initrd='/pkg/linux/x86_64-rhel-8.3/gcc-9/c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a/modules.cgz'
 	export bm_initrd='/osimage/deps/debian-10.4-x86_64-20200603.cgz/run-ipconfig_20200608.cgz,/osimage/deps/debian-10.4-x86_64-20200603.cgz/lkp_20200709.cgz,/osimage/deps/debian-10.4-x86_64-20200603.cgz/rsync-rootfs_20200608.cgz,/osimage/deps/debian-10.4-x86_64-20200603.cgz/will-it-scale_20200619.cgz,/osimage/pkg/debian-10.4-x86_64-20200603.cgz/will-it-scale-x86_64-0f26364-1_20200619.cgz,/osimage/deps/debian-10.4-x86_64-20200603.cgz/mpstat_20200714.cgz,/osimage/deps/debian-10.4-x86_64-20200603.cgz/perf_20200702.cgz,/osimage/pkg/debian-10.4-x86_64-20200603.cgz/perf-x86_64-07a56bb875af-1_20200717.cgz,/osimage/pkg/debian-10.4-x86_64-20200603.cgz/sar-x86_64-34c92ae-1_20200702.cgz,/osimage/deps/debian-10.4-x86_64-20200603.cgz/hw_20200715.cgz'
 	export ucode_initrd='/osimage/ucode/intel-ucode-20200610.cgz'
 	export lkp_initrd='/osimage/user/lkp/lkp-x86_64.cgz'
@@ -6645,9 +6851,9 @@ rw'
 	export repeat_to=4
 	export schedule_notify_address=
 	export queue_at_least_once=1
-	export kernel='/pkg/linux/x86_64-rhel-8.3/gcc-9/71d734103edfa2b4c6657578a3082ee0e51d767e/vmlinuz-5.8.0-rc4-00084-g71d734103edfa'
-	export dequeue_time='2020-07-18 16:55:18 +0800'
-	export job_initrd='/lkp/jobs/scheduled/lkp-csl-2ap3/will-it-scale-performance-process-50%-eventfd1-ucode=0x5002f01-debian-10.4-x86_64-20200603.cgz-71d734103edfa2b4c6657578a3082ee0e-20200718-11928-zg5nzb-2.cgz'
+	export kernel='/pkg/linux/x86_64-rhel-8.3/gcc-9/c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a/vmlinuz-5.8.0-rc4-00085-gc738fbabb0ff6'
+	export dequeue_time='2020-07-18 21:34:54 +0800'
+	export job_initrd='/lkp/jobs/scheduled/lkp-csl-2ap2/will-it-scale-performance-process-16-open1-ucode=0x5002f01-debian-10.4-x86_64-20200603.cgz-c738fbabb0ff62d0f9a9572e56e65d05a1b34-20200718-7467-1k3ouoq-2.cgz'
 
 	[ -n "$LKP_SRC" ] ||
 	export LKP_SRC=/lkp/${user:-lkp}/src
@@ -6693,7 +6899,7 @@ run_job()
 	run_monitor $LKP_SRC/monitors/wrapper oom-killer
 	run_monitor $LKP_SRC/monitors/plain/watchdog
 
-	run_test mode='process' test='eventfd1' $LKP_SRC/tests/wrapper will-it-scale
+	run_test mode='process' test='open1' $LKP_SRC/tests/wrapper will-it-scale
 }
 
 extract_stats()
@@ -6734,21 +6940,21 @@ extract_stats()
 
 "$@"
 
---VdOwlNaOFKGAtAAV
+--mSxgbZZZvrAyzONB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename="job.yaml"
 
 ---
 
-#! jobs/will-it-scale-50.yaml
+#! jobs/will-it-scale-16.yaml
 suite: will-it-scale
 testcase: will-it-scale
 category: benchmark
-nr_task: 50%
+nr_task: 16
 will-it-scale:
   mode: process
-  test: eventfd1
-job_origin: "/lkp-src/allot/cyclic:p1:linux-devel:devel-hourly/lkp-csl-2ap3/will-it-scale-50.yaml"
+  test: open1
+job_origin: "/lkp-src/allot/cyclic:p1:linux-devel:devel-hourly/lkp-csl-2ap2/will-it-scale-16.yaml"
 
 #! queue options
 queue_cmdline_keys:
@@ -6756,19 +6962,20 @@ queue_cmdline_keys:
 - commit
 - queue_at_least_once
 queue: bisect
-testbox: lkp-csl-2ap3
-tbox_group: lkp-csl-2ap3
+testbox: lkp-csl-2ap2
+tbox_group: lkp-csl-2ap2
 kconfig: x86_64-rhel-8.3
-submit_id: 5f12a0bfa397cc2bc6bac88d
-job_file: "/lkp/jobs/scheduled/lkp-csl-2ap3/will-it-scale-performance-process-50%-eventfd1-ucode=0x5002f01-debian-10.4-x86_64-20200603.cgz-71d734103edfa2b4c6657578a3082ee0e-20200718-11206-w3kbhk-0.yaml"
-id: 8026d568ce852a15b2a5561b7d4dafa436bf8e46
+submit_id: 5f12e85c8b79a01b868c04a5
+job_file: "/lkp/jobs/scheduled/lkp-csl-2ap2/will-it-scale-performance-process-16-open1-ucode=0x5002f01-debian-10.4-x86_64-20200603.cgz-c738fbabb0ff62d0f9a9572e56e65d05a1b34-20200718-7046-a8ri4j-1.yaml"
+id: c65485c748631a5de853d5c7404d7e64d5a3e9a7
 queuer_version: "/lkp-src"
 
-#! hosts/lkp-csl-2ap3
+#! hosts/lkp-csl-2ap2
 model: Cascade Lake
 nr_node: 4
 nr_cpu: 192
 memory: 192G
+hdd_partitions: 
 ssd_partitions: 
 rootfs_partition: LABEL=LKP-ROOTFS
 kernel_cmdline_hw: acpi_rsdp=0x67f44014
@@ -6805,16 +7012,16 @@ perf-profile:
 cpufreq_governor: performance
 
 #! include/queue/cyclic
-commit: 71d734103edfa2b4c6657578a3082ee0e51d767e
+commit: c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a
 
-#! include/testbox/lkp-csl-2ap3
+#! include/testbox/lkp-csl-2ap2
 need_kconfig_hw:
 - CONFIG_IGB=y
 - CONFIG_BLK_DEV_NVME
 ucode: '0x5002f01'
-enqueue_time: 2020-07-18 15:11:59.211297527 +08:00
-_id: 5f12a0bfa397cc2bc6bac88d
-_rt: "/result/will-it-scale/performance-process-50%-eventfd1-ucode=0x5002f01/lkp-csl-2ap3/debian-10.4-x86_64-20200603.cgz/x86_64-rhel-8.3/gcc-9/71d734103edfa2b4c6657578a3082ee0e51d767e"
+enqueue_time: 2020-07-18 20:17:32.857256781 +08:00
+_id: 5f12ec228b79a01b868c04a6
+_rt: "/result/will-it-scale/performance-process-16-open1-ucode=0x5002f01/lkp-csl-2ap2/debian-10.4-x86_64-20200603.cgz/x86_64-rhel-8.3/gcc-9/c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a"
 
 #! schedule options
 user: lkp
@@ -6823,7 +7030,7 @@ head_commit: 5a8058f3cf39b1286687552a9658625caf7ebff2
 base_commit: 11ba468877bb23f28956a35e896356252d63c983
 branch: linux-devel/devel-hourly-2020071715
 rootfs: debian-10.4-x86_64-20200603.cgz
-result_root: "/result/will-it-scale/performance-process-50%-eventfd1-ucode=0x5002f01/lkp-csl-2ap3/debian-10.4-x86_64-20200603.cgz/x86_64-rhel-8.3/gcc-9/71d734103edfa2b4c6657578a3082ee0e51d767e/0"
+result_root: "/result/will-it-scale/performance-process-16-open1-ucode=0x5002f01/lkp-csl-2ap2/debian-10.4-x86_64-20200603.cgz/x86_64-rhel-8.3/gcc-9/c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a/0"
 scheduler_version: "/lkp/lkp/.src-20200717-161012"
 LKP_SERVER: inn
 arch: x86_64
@@ -6832,15 +7039,15 @@ initrd: "/osimage/debian/debian-10.4-x86_64-20200603.cgz"
 bootloader_append:
 - root=/dev/ram0
 - user=lkp
-- job=/lkp/jobs/scheduled/lkp-csl-2ap3/will-it-scale-performance-process-50%-eventfd1-ucode=0x5002f01-debian-10.4-x86_64-20200603.cgz-71d734103edfa2b4c6657578a3082ee0e-20200718-11206-w3kbhk-0.yaml
+- job=/lkp/jobs/scheduled/lkp-csl-2ap2/will-it-scale-performance-process-16-open1-ucode=0x5002f01-debian-10.4-x86_64-20200603.cgz-c738fbabb0ff62d0f9a9572e56e65d05a1b34-20200718-7046-a8ri4j-1.yaml
 - ARCH=x86_64
 - kconfig=x86_64-rhel-8.3
 - branch=linux-devel/devel-hourly-2020071715
-- commit=71d734103edfa2b4c6657578a3082ee0e51d767e
-- BOOT_IMAGE=/pkg/linux/x86_64-rhel-8.3/gcc-9/71d734103edfa2b4c6657578a3082ee0e51d767e/vmlinuz-5.8.0-rc4-00084-g71d734103edfa
+- commit=c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a
+- BOOT_IMAGE=/pkg/linux/x86_64-rhel-8.3/gcc-9/c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a/vmlinuz-5.8.0-rc4-00085-gc738fbabb0ff6
 - acpi_rsdp=0x67f44014
 - max_uptime=1500
-- RESULT_ROOT=/result/will-it-scale/performance-process-50%-eventfd1-ucode=0x5002f01/lkp-csl-2ap3/debian-10.4-x86_64-20200603.cgz/x86_64-rhel-8.3/gcc-9/71d734103edfa2b4c6657578a3082ee0e51d767e/0
+- RESULT_ROOT=/result/will-it-scale/performance-process-16-open1-ucode=0x5002f01/lkp-csl-2ap2/debian-10.4-x86_64-20200603.cgz/x86_64-rhel-8.3/gcc-9/c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a/0
 - LKP_SERVER=inn
 - nokaslr
 - selinux=0
@@ -6864,7 +7071,7 @@ bootloader_append:
 - console=ttyS0,115200
 - vga=normal
 - rw
-modules_initrd: "/pkg/linux/x86_64-rhel-8.3/gcc-9/71d734103edfa2b4c6657578a3082ee0e51d767e/modules.cgz"
+modules_initrd: "/pkg/linux/x86_64-rhel-8.3/gcc-9/c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a/modules.cgz"
 bm_initrd: "/osimage/deps/debian-10.4-x86_64-20200603.cgz/run-ipconfig_20200608.cgz,/osimage/deps/debian-10.4-x86_64-20200603.cgz/lkp_20200709.cgz,/osimage/deps/debian-10.4-x86_64-20200603.cgz/rsync-rootfs_20200608.cgz,/osimage/deps/debian-10.4-x86_64-20200603.cgz/will-it-scale_20200619.cgz,/osimage/pkg/debian-10.4-x86_64-20200603.cgz/will-it-scale-x86_64-0f26364-1_20200619.cgz,/osimage/deps/debian-10.4-x86_64-20200603.cgz/mpstat_20200714.cgz,/osimage/deps/debian-10.4-x86_64-20200603.cgz/perf_20200702.cgz,/osimage/pkg/debian-10.4-x86_64-20200603.cgz/perf-x86_64-07a56bb875af-1_20200717.cgz,/osimage/pkg/debian-10.4-x86_64-20200603.cgz/sar-x86_64-34c92ae-1_20200702.cgz,/osimage/deps/debian-10.4-x86_64-20200603.cgz/hw_20200715.cgz"
 ucode_initrd: "/osimage/ucode/intel-ucode-20200610.cgz"
 lkp_initrd: "/osimage/user/lkp/lkp-x86_64.cgz"
@@ -6877,21 +7084,21 @@ oom-killer:
 watchdog: 
 
 #! runtime status
-last_kernel: 5.8.0-rc5-eudyptula-07870-g5a8058f3cf39b
+last_kernel: 5.8.0-rc5-eudyptula-04736-g33ddac4a5cd8d
 repeat_to: 2
 schedule_notify_address: 
 
 #! user overrides
 queue_at_least_once: 0
-kernel: "/pkg/linux/x86_64-rhel-8.3/gcc-9/71d734103edfa2b4c6657578a3082ee0e51d767e/vmlinuz-5.8.0-rc4-00084-g71d734103edfa"
-dequeue_time: 2020-07-18 15:33:09.220534706 +08:00
+kernel: "/pkg/linux/x86_64-rhel-8.3/gcc-9/c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a/vmlinuz-5.8.0-rc4-00085-gc738fbabb0ff6"
+dequeue_time: 2020-07-18 20:39:41.376945772 +08:00
 job_state: finished
-loadavg: 87.80 59.97 26.46 1/1300 12800
-start_time: '1595057647'
-end_time: '1595057948'
+loadavg: 14.63 10.07 4.46 1/1293 12710
+start_time: '1595076039'
+end_time: '1595076340'
 version: "/lkp/lkp/.src-20200717-161045:f62ea06c:d3df1da0d"
 
---VdOwlNaOFKGAtAAV
+--mSxgbZZZvrAyzONB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=reproduce
 
@@ -6905,6 +7112,6 @@ do
 	[ -f "$file" ] && echo "performance" > "$file"
 done
 
- "/lkp/benchmarks/python3/bin/python3" "./runtest.py" "eventfd1" "295" "process" "96"
+ "/lkp/benchmarks/python3/bin/python3" "./runtest.py" "open1" "295" "process" "16"
 
---VdOwlNaOFKGAtAAV--
+--mSxgbZZZvrAyzONB--
