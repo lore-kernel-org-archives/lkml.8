@@ -2,125 +2,116 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80852C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3A4C433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6165E2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7B42073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595347559;
-	bh=MVP3OpzScc9JjM+8+tSf1gE2+cNmrTX8DEqNNjz9VeY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=X622oKPkkdreX1AH50i5ii3R6PptlrE0Vm+bJ77agSCAAI1gREisFvIbpyZnr3tkV
-	 ThwSN7FJXEigxABFmZjn70X/7S3D/fM2LlSrvHdQ2qy6ne2KbpSnl7AWMFrblYN0+e
-	 AzbN/LtTS3Nn4n+E6nIWaojMvKZOOVUf7AhDeKD4=
+	s=default; t=1595347579;
+	bh=Ci4uPdNrn7JVB5LU0PFCw5AZKheuWEY0KSofqjrH4/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2BQe2fVgHKgYXEJMZtXA1knMVleiD/t+nj05h+mA0PM7hyirNc0XoJaSgMcaijClc
+	 fFfPJ4w/aXx99dIRTsjsuQ/M8bG/HsxgRFFBQdFhFUdQDje2tzSsEebWM5zmyF9b0z
+	 Lrnx63G8Di1/kmksdvWSBjQvHuxbee/ndqWwh6OM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730125AbgGUQF4 (ORCPT
+        id S1730223AbgGUQGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:05:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728219AbgGUQFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:05:55 -0400
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 349AD2077D;
-        Tue, 21 Jul 2020 16:05:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595347554;
-        bh=MVP3OpzScc9JjM+8+tSf1gE2+cNmrTX8DEqNNjz9VeY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XXLGUgyVuW69/ZzoZ6TWEjcHhoEQ4BmikarMVI4Dhz8eDjCovH2uVMUE3ZnocqhSH
-         5BSXQOkx0OpI+wsw8ixesFZwggbK2OgnrFDuViYcaa9tGcLmJMP5RXbNmk5hmogqOn
-         1lY69HAJMsGS6O0PvxhQuaC809BzpGMmYzH8cXsg=
-Received: by mail-lj1-f172.google.com with SMTP id e8so24700053ljb.0;
-        Tue, 21 Jul 2020 09:05:54 -0700 (PDT)
-X-Gm-Message-State: AOAM533U6Brvk89hzf3QPqTt5X6KyfqBE218z3heBL4cgQDT9G/PUisE
-        UF6rBlifKVfDllaehxfXBl5CwPuB4xQ0995m36s=
-X-Google-Smtp-Source: ABdhPJw0hco+aL68Av32bukogJjf6+WGT3mk7PwPG+qMfUeXDISwCl7Tlm4ssAdoDblIYlw7Sqih8P3eV+rx3LbhTTw=
-X-Received: by 2002:a2e:864e:: with SMTP id i14mr13406723ljj.441.1595347552511;
- Tue, 21 Jul 2020 09:05:52 -0700 (PDT)
+        Tue, 21 Jul 2020 12:06:18 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45424 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728462AbgGUQGQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 12:06:16 -0400
+Received: by mail-io1-f67.google.com with SMTP id e64so21966984iof.12;
+        Tue, 21 Jul 2020 09:06:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xmFiyYVAXh8dLGcqP1mUgHDGPOUnEx9ltZZJeHm/90U=;
+        b=BgCnRSBMuc6+yGI6PMHGqPiH3hK8Vewze/VGgj851XgysHKRNJheCYl5lj+O1yPcp3
+         pArTMzbusj2sVcfpD1K5UdxodmVbwWxmXouhnDe96wTcWPCuddYupLYDmxZRlYNLkfFo
+         FfzpNV0fksGcFrpXNr33Vq5m5jyIEitm5gn8x8MzsiWX0KzzhzAEhglV/obpW/6q1SmW
+         VZeq7WuQ1B40Mo1Saa+80Vq0bpJzvBmk9y2NVqwqgLUxU2PjeGaM7zcf4eJHPSrqqH+1
+         jIBJHlH0P60E4aBVJPlFpXDVH7pnnlxd0BS86hynZjdVpc5bhrRk35/rvxBf1VKoY/gl
+         fHHA==
+X-Gm-Message-State: AOAM533qVudyJnv2nFD2fe10suKoNnN6pVnOVuN+uxAjRt7vrokGH57C
+        EXEus/rgrjpUfrQbsOoBMw==
+X-Google-Smtp-Source: ABdhPJz/byD3lCIAK+KOCr8tkp6iytOXF67GXPOZHcVpAtLQmMBl43jbmfyqhruhjKTJCj0McCmYNA==
+X-Received: by 2002:a02:8308:: with SMTP id v8mr32365035jag.101.1595347575497;
+        Tue, 21 Jul 2020 09:06:15 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v13sm10694113iox.12.2020.07.21.09.06.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 09:06:12 -0700 (PDT)
+Received: (nullmailer pid 382755 invoked by uid 1000);
+        Tue, 21 Jul 2020 16:06:10 -0000
+Date:   Tue, 21 Jul 2020 10:06:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     maz@kernel.org, devicetree@vger.kernel.org, ssantosh@kernel.org,
+        jason@lakedaemon.net, tglx@linutronix.de, t-kristo@ti.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, nm@ti.com, p.zabel@pengutronix.de
+Subject: Re: [PATCH] firmware: ti_sci: Replace HTTP links with HTTPS ones
+Message-ID: <20200721160610.GA382708@bogus>
+References: <20200718105538.9542-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <20200721132155.GA27649@roeck-us.net>
-In-Reply-To: <20200721132155.GA27649@roeck-us.net>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Wed, 22 Jul 2020 00:05:41 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTR34maSk_Up2CUKyxaHJ=wKLUx+LfhKsv6=Ci25dWbqJg@mail.gmail.com>
-Message-ID: <CAJF2gTR34maSk_Up2CUKyxaHJ=wKLUx+LfhKsv6=Ci25dWbqJg@mail.gmail.com>
-Subject: Re: [PATCH] csky: Fix build with upstream gcc
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Joerg Roedel <joro@8bytes.org>, linux-csky@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <jroedel@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200718105538.9542-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thx Joerg & Guenter,
+On Sat, 18 Jul 2020 12:55:38 +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+> 
+>  If there are any URLs to be removed completely
+>  or at least not (just) HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+> 
+>  .../devicetree/bindings/interrupt-controller/ti,sci-intr.txt    | 2 +-
+>  drivers/firmware/ti_sci.c                                       | 2 +-
+>  drivers/firmware/ti_sci.h                                       | 2 +-
+>  drivers/irqchip/irq-ti-sci-inta.c                               | 2 +-
+>  drivers/irqchip/irq-ti-sci-intr.c                               | 2 +-
+>  drivers/reset/reset-ti-sci.c                                    | 2 +-
+>  include/linux/soc/ti/ti_sci_inta_msi.h                          | 2 +-
+>  include/linux/soc/ti/ti_sci_protocol.h                          | 2 +-
+>  8 files changed, 8 insertions(+), 8 deletions(-)
+> 
 
-Cool work!
-
-Acked-by: Guo Ren <guoren@kernel.org>
-
-Approve to next branch.
-
-On Tue, Jul 21, 2020 at 9:21 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Tue, Jul 21, 2020 at 01:23:14PM +0200, Joerg Roedel wrote:
-> > From: Joerg Roedel <jroedel@suse.de>
-> >
-> > Building a kernel for the CSKY architecture with CONFIG_FRAME_POINTER
-> > set requires a gcc supporting the non-upstream '-mbacktrace' option.
-> > Check for the '-mbacktrace' option before enabling CONFIG_FRAMEPOINTER
-> > and fix building CSKY with an upstream gcc compiler.
-> >
-> > Signed-off-by: Joerg Roedel <jroedel@suse.de>
->
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> Tested-by: Guenter Roeck <linux@roeck-us.net>
->
-> > ---
-> >  arch/csky/Kconfig | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-> > index bd31ab12f77d..1622e1c56026 100644
-> > --- a/arch/csky/Kconfig
-> > +++ b/arch/csky/Kconfig
-> > @@ -8,7 +8,7 @@ config CSKY
-> >       select ARCH_HAS_SYNC_DMA_FOR_DEVICE
-> >       select ARCH_USE_BUILTIN_BSWAP
-> >       select ARCH_USE_QUEUED_RWLOCKS if NR_CPUS>2
-> > -     select ARCH_WANT_FRAME_POINTERS if !CPU_CK610
-> > +     select ARCH_WANT_FRAME_POINTERS if (!CPU_CK610 && STACKTRACE_SUPPORT)
-> >       select COMMON_CLK
-> >       select CLKSRC_MMIO
-> >       select CSKY_MPINTC if CPU_CK860
-> > @@ -125,7 +125,7 @@ config MMU
-> >       def_bool y
-> >
-> >  config STACKTRACE_SUPPORT
-> > -     def_bool y
-> > +     def_bool $(success,echo 'int foo(void) { return 0; }' | $(CC) -mbacktrace -x c - -c -o /dev/null)
-> >
-> >  config TIME_LOW_RES
-> >       def_bool y
-> > --
-> > 2.27.0
-> >
-
-
-
--- 
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+Acked-by: Rob Herring <robh@kernel.org>
