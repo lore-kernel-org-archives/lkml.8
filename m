@@ -2,278 +2,191 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E05C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8987BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5367920B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:49:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xO/qrEaz"
+	by mail.kernel.org (Postfix) with ESMTP id 673E3208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:51:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbgGUHtS (ORCPT
+        id S1727067AbgGUHvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727876AbgGUHtQ (ORCPT
+        Tue, 21 Jul 2020 03:51:49 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45426 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726389AbgGUHvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 03:49:16 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 763D3C0619D7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:49:16 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id u12so11132176lff.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:49:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UY1nsdPNSUSAf+7YLs436phqwdMpy28An6352a8KdMA=;
-        b=xO/qrEazEurCKMVx/z8pZNoA4cSkvoSezcPLfk7wG1+eXesSMkQ2ER0gWslYpa4DsV
-         6byH1lsaaeDBHyJ7BBzxnobi6QUsDFGYp5s4o5dHQNp5V9l+pseaorlHVQ+GRhakKHsY
-         1TKiJb8pbyZUtZshd4JoRD4wuL65HNqPL3PqgzXfD3rpU8lkh9l5P2axbnWkaPCs5Qlo
-         cRIPRAEmzfw4MyXkIqUhM7D8ajhYSZIrDciAq8QqjcXBkbG/6Rma4zX0da1nK11FF3Pw
-         jRmGw1cYmHcMYv62VoPWaRbNwnMstM3b6+V3eeit6MVCwkV9IbqxlXESmw+ZnWk0FRjJ
-         V9bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=UY1nsdPNSUSAf+7YLs436phqwdMpy28An6352a8KdMA=;
-        b=TnWo2brexyhqKaDkvtrLy0w6jSGntKH9vokjcQKBLRyYChtCVHjZwMLKjSMThrI0S2
-         s99MGfxVbDcEnzWlgMIw6deeFuBlG8WjVNlsHrTD2vk5THaUHxoL3BMsveBKJZ7uJMwr
-         XHUrjYncFA08uzXip8V8lP0OxGV3ehjGzFIrhYnxmstTemu+liPqyeRPH3Yq9JJar0Ms
-         pRPehSbKFroXin0co3rudbO9ImKG1zVjlfLVtMwRBgupTMF9sjZwCWmlX15e0nyYAYQt
-         zrnq4WQp0xutC50ojXcFTxBAxBoXF8f5Up6Ldt0HFEzYtqSlcuksi1e09QnazUUPEf7r
-         7+jg==
-X-Gm-Message-State: AOAM530q399f3EwR+lzmKTKgjZ9YfmL/8+FY9AG2UOTVfsDsZyEdJPA/
-        s8Y/O5+4P6S+PhM8SSCjWnzIhQ==
-X-Google-Smtp-Source: ABdhPJyOn29vQuyh40KEazMlyhGKWe5PZwPC4xaKKkMpds+iayhn9AQzaS02pBFfnbZgRktR3d8Xcw==
-X-Received: by 2002:a19:be87:: with SMTP id o129mr270351lff.180.1595317754868;
-        Tue, 21 Jul 2020 00:49:14 -0700 (PDT)
-Received: from localhost.localdomain ([195.24.90.54])
-        by smtp.gmail.com with ESMTPSA id d2sm4045334ljg.6.2020.07.21.00.49.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 00:49:14 -0700 (PDT)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maheshwar Ajja <majja@codeaurora.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v2 2/6] venus: venc: Add support for constant quality control
-Date:   Tue, 21 Jul 2020 10:45:34 +0300
-Message-Id: <20200721074538.505-3-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200721074538.505-1-stanimir.varbanov@linaro.org>
-References: <20200721074538.505-1-stanimir.varbanov@linaro.org>
+        Tue, 21 Jul 2020 03:51:48 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L72le6146267;
+        Tue, 21 Jul 2020 03:51:26 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32dn0xu58e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 03:51:26 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06L73TAS148956;
+        Tue, 21 Jul 2020 03:51:25 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32dn0xu57h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 03:51:25 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06L7okta007505;
+        Tue, 21 Jul 2020 07:51:23 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 32brq83m0g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 07:51:23 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06L7pK5058392634
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jul 2020 07:51:20 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6009E4C04A;
+        Tue, 21 Jul 2020 07:51:20 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E39D14C046;
+        Tue, 21 Jul 2020 07:51:16 +0000 (GMT)
+Received: from [9.199.47.202] (unknown [9.199.47.202])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Jul 2020 07:51:16 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: Re: [PATCH v4 05/10] powerpc/dt_cpu_ftrs: Add feature for 2nd DAWR
+To:     Jordan Niethe <jniethe5@gmail.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org,
+        apopple@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200717040958.70561-1-ravi.bangoria@linux.ibm.com>
+ <20200717040958.70561-6-ravi.bangoria@linux.ibm.com>
+ <CACzsE9oE+OMnWEXvbZZbq35YzpSzCbBHWEJcjtCgkcq-YrABng@mail.gmail.com>
+Message-ID: <c34b1a66-2db6-c97a-1782-0d473c758502@linux.ibm.com>
+Date:   Tue, 21 Jul 2020 13:21:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CACzsE9oE+OMnWEXvbZZbq35YzpSzCbBHWEJcjtCgkcq-YrABng@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ priorityscore=1501 adultscore=0 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007210048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds implementation of V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY v4l
-control when the bitrate mode is CQ.
 
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- drivers/media/platform/qcom/venus/core.h      |  1 +
- drivers/media/platform/qcom/venus/hfi_cmds.c  | 37 ++++++++++++++++++-
- .../media/platform/qcom/venus/hfi_helper.h    | 10 ++++-
- drivers/media/platform/qcom/venus/venc.c      | 14 ++++++-
- .../media/platform/qcom/venus/venc_ctrls.c    |  8 +++-
- 5 files changed, 66 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index 7118612673c9..1bac30d4cf50 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -201,6 +201,7 @@ struct venc_controls {
- 	u32 bitrate;
- 	u32 bitrate_peak;
- 	u32 rc_enable;
-+	u32 const_quality;
- 
- 	u32 h264_i_period;
- 	u32 h264_entropy_mode;
-diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.c b/drivers/media/platform/qcom/venus/hfi_cmds.c
-index c67e412f8201..7022368c1e63 100644
---- a/drivers/media/platform/qcom/venus/hfi_cmds.c
-+++ b/drivers/media/platform/qcom/venus/hfi_cmds.c
-@@ -640,6 +640,7 @@ static int pkt_session_set_property_1x(struct hfi_session_set_property_pkt *pkt,
- 		case HFI_RATE_CONTROL_CBR_VFR:
- 		case HFI_RATE_CONTROL_VBR_CFR:
- 		case HFI_RATE_CONTROL_VBR_VFR:
-+		case HFI_RATE_CONTROL_CQ:
- 			break;
- 		default:
- 			ret = -EINVAL;
-@@ -1218,6 +1219,37 @@ pkt_session_set_property_4xx(struct hfi_session_set_property_pkt *pkt,
- 	return 0;
- }
- 
-+static int
-+pkt_session_set_property_6xx(struct hfi_session_set_property_pkt *pkt,
-+			     void *cookie, u32 ptype, void *pdata)
-+{
-+	void *prop_data;
-+
-+	if (!pkt || !cookie || !pdata)
-+		return -EINVAL;
-+
-+	prop_data = &pkt->data[1];
-+
-+	pkt->shdr.hdr.size = sizeof(*pkt);
-+	pkt->shdr.hdr.pkt_type = HFI_CMD_SESSION_SET_PROPERTY;
-+	pkt->shdr.session_id = hash32_ptr(cookie);
-+	pkt->num_properties = 1;
-+	pkt->data[0] = ptype;
-+
-+	switch (ptype) {
-+	case HFI_PROPERTY_CONFIG_HEIC_FRAME_QUALITY: {
-+		struct hfi_heic_frame_quality *in = pdata, *cq = prop_data;
-+
-+		cq->frame_quality = in->frame_quality;
-+		pkt->shdr.hdr.size += sizeof(u32) + sizeof(*cq);
-+		break;
-+	} default:
-+		return pkt_session_set_property_4xx(pkt, cookie, ptype, pdata);
-+	}
-+
-+	return 0;
-+}
-+
- int pkt_session_get_property(struct hfi_session_get_property_pkt *pkt,
- 			     void *cookie, u32 ptype)
- {
-@@ -1236,7 +1268,10 @@ int pkt_session_set_property(struct hfi_session_set_property_pkt *pkt,
- 	if (hfi_ver == HFI_VERSION_3XX)
- 		return pkt_session_set_property_3xx(pkt, cookie, ptype, pdata);
- 
--	return pkt_session_set_property_4xx(pkt, cookie, ptype, pdata);
-+	if (hfi_ver == HFI_VERSION_4XX)
-+		return pkt_session_set_property_4xx(pkt, cookie, ptype, pdata);
-+
-+	return pkt_session_set_property_6xx(pkt, cookie, ptype, pdata);
- }
- 
- void pkt_set_version(enum hfi_version version)
-diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
-index f6613df1d16b..758c70ac26fd 100644
---- a/drivers/media/platform/qcom/venus/hfi_helper.h
-+++ b/drivers/media/platform/qcom/venus/hfi_helper.h
-@@ -231,6 +231,7 @@
- #define HFI_RATE_CONTROL_VBR_CFR		0x1000003
- #define HFI_RATE_CONTROL_CBR_VFR		0x1000004
- #define HFI_RATE_CONTROL_CBR_CFR		0x1000005
-+#define HFI_RATE_CONTROL_CQ			0x1000008
- 
- #define HFI_VIDEO_CODEC_H264			0x00000002
- #define HFI_VIDEO_CODEC_H263			0x00000004
-@@ -504,6 +505,7 @@
- #define HFI_PROPERTY_CONFIG_VENC_HIER_P_ENH_LAYER		0x200600b
- #define HFI_PROPERTY_CONFIG_VENC_LTRPERIOD			0x200600c
- #define HFI_PROPERTY_CONFIG_VENC_PERF_MODE			0x200600e
-+#define HFI_PROPERTY_CONFIG_HEIC_FRAME_QUALITY			0x2006014
- 
- /*
-  * HFI_PROPERTY_PARAM_VPE_COMMON_START
-@@ -520,7 +522,8 @@
- enum hfi_version {
- 	HFI_VERSION_1XX,
- 	HFI_VERSION_3XX,
--	HFI_VERSION_4XX
-+	HFI_VERSION_4XX,
-+	HFI_VERSION_6XX,
- };
- 
- struct hfi_buffer_info {
-@@ -725,6 +728,11 @@ struct hfi_quality_vs_speed {
- 	u32 quality_vs_speed;
- };
- 
-+struct hfi_heic_frame_quality {
-+	u32 frame_quality;
-+	u32 reserved[3];
-+};
-+
- struct hfi_quantization {
- 	u32 qp_i;
- 	u32 qp_p;
-diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-index 513bbc07f7bc..4c30c3f3369e 100644
---- a/drivers/media/platform/qcom/venus/venc.c
-+++ b/drivers/media/platform/qcom/venus/venc.c
-@@ -740,14 +740,26 @@ static int venc_set_properties(struct venus_inst *inst)
- 		rate_control = HFI_RATE_CONTROL_OFF;
- 	else if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_VBR)
- 		rate_control = HFI_RATE_CONTROL_VBR_CFR;
--	else
-+	else if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_CBR)
- 		rate_control = HFI_RATE_CONTROL_CBR_CFR;
-+	else if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_CQ)
-+		rate_control = HFI_RATE_CONTROL_CQ;
- 
- 	ptype = HFI_PROPERTY_PARAM_VENC_RATE_CONTROL;
- 	ret = hfi_session_set_property(inst, ptype, &rate_control);
- 	if (ret)
- 		return ret;
- 
-+	if (rate_control == HFI_RATE_CONTROL_CQ && ctr->const_quality) {
-+		struct hfi_heic_frame_quality quality = {};
-+
-+		ptype = HFI_PROPERTY_CONFIG_HEIC_FRAME_QUALITY;
-+		quality.frame_quality = ctr->const_quality;
-+		ret = hfi_session_set_property(inst, ptype, &quality);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	if (!ctr->bitrate)
- 		bitrate = 64000;
- 	else
-diff --git a/drivers/media/platform/qcom/venus/venc_ctrls.c b/drivers/media/platform/qcom/venus/venc_ctrls.c
-index 8362dde7949e..97a1e821c07e 100644
---- a/drivers/media/platform/qcom/venus/venc_ctrls.c
-+++ b/drivers/media/platform/qcom/venus/venc_ctrls.c
-@@ -202,6 +202,9 @@ static int venc_op_s_ctrl(struct v4l2_ctrl *ctrl)
- 	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
- 		ctr->rc_enable = ctrl->val;
- 		break;
-+	case V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY:
-+		ctr->const_quality = ctrl->val;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -217,7 +220,7 @@ int venc_ctrl_init(struct venus_inst *inst)
- {
- 	int ret;
- 
--	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 31);
-+	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 32);
- 	if (ret)
- 		return ret;
- 
-@@ -357,6 +360,9 @@ int venc_ctrl_init(struct venus_inst *inst)
- 	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
- 			  V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE, 0, 1, 1, 1);
- 
-+	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
-+			  V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY, 0, 100, 1, 0);
-+
- 	ret = inst->ctrl_handler.error;
- 	if (ret)
- 		goto err;
--- 
-2.17.1
+On 7/17/20 11:14 AM, Jordan Niethe wrote:
+> On Fri, Jul 17, 2020 at 2:10 PM Ravi Bangoria
+> <ravi.bangoria@linux.ibm.com> wrote:
+>>
+>> Add new device-tree feature for 2nd DAWR. If this feature is present,
+>> 2nd DAWR is supported, otherwise not.
+>>
+>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>> ---
+>>   arch/powerpc/include/asm/cputable.h | 7 +++++--
+>>   arch/powerpc/kernel/dt_cpu_ftrs.c   | 7 +++++++
+>>   2 files changed, 12 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
+>> index e506d429b1af..3445c86e1f6f 100644
+>> --- a/arch/powerpc/include/asm/cputable.h
+>> +++ b/arch/powerpc/include/asm/cputable.h
+>> @@ -214,6 +214,7 @@ static inline void cpu_feature_keys_init(void) { }
+>>   #define CPU_FTR_P9_TLBIE_ERAT_BUG      LONG_ASM_CONST(0x0001000000000000)
+>>   #define CPU_FTR_P9_RADIX_PREFETCH_BUG  LONG_ASM_CONST(0x0002000000000000)
+>>   #define CPU_FTR_ARCH_31                        LONG_ASM_CONST(0x0004000000000000)
+>> +#define CPU_FTR_DAWR1                  LONG_ASM_CONST(0x0008000000000000)
+>>
+>>   #ifndef __ASSEMBLY__
+>>
+>> @@ -497,14 +498,16 @@ static inline void cpu_feature_keys_init(void) { }
+>>   #define CPU_FTRS_POSSIBLE      \
+>>              (CPU_FTRS_POWER7 | CPU_FTRS_POWER8E | CPU_FTRS_POWER8 | \
+>>               CPU_FTR_ALTIVEC_COMP | CPU_FTR_VSX_COMP | CPU_FTRS_POWER9 | \
+>> -            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10)
+>> +            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10 | \
+>> +            CPU_FTR_DAWR1)
+>>   #else
+>>   #define CPU_FTRS_POSSIBLE      \
+>>              (CPU_FTRS_PPC970 | CPU_FTRS_POWER5 | \
+>>               CPU_FTRS_POWER6 | CPU_FTRS_POWER7 | CPU_FTRS_POWER8E | \
+>>               CPU_FTRS_POWER8 | CPU_FTRS_CELL | CPU_FTRS_PA6T | \
+>>               CPU_FTR_VSX_COMP | CPU_FTR_ALTIVEC_COMP | CPU_FTRS_POWER9 | \
+>> -            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10)
+>> +            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10 | \
+>> +            CPU_FTR_DAWR1)
+> Instead of putting CPU_FTR_DAWR1 into CPU_FTRS_POSSIBLE should it go
+> into CPU_FTRS_POWER10?
+> Then it will be picked up by CPU_FTRS_POSSIBLE.
 
+I remember a discussion about this with Mikey and we decided to do it
+this way. Obviously, the purpose is to make CPU_FTR_DAWR1 independent of
+CPU_FTRS_POWER10 because DAWR1 is an optional feature in p10. I fear
+including CPU_FTR_DAWR1 in CPU_FTRS_POWER10 can make it forcefully enabled
+even when device-tree property is not present or pa-feature bit it not set,
+because we do:
+
+       {       /* 3.1-compliant processor, i.e. Power10 "architected" mode */
+               .pvr_mask               = 0xffffffff,
+               .pvr_value              = 0x0f000006,
+               .cpu_name               = "POWER10 (architected)",
+               .cpu_features           = CPU_FTRS_POWER10,
+
+>>   #endif /* CONFIG_CPU_LITTLE_ENDIAN */
+>>   #endif
+>>   #else
+>> diff --git a/arch/powerpc/kernel/dt_cpu_ftrs.c b/arch/powerpc/kernel/dt_cpu_ftrs.c
+>> index ac650c233cd9..c78cd3596ec4 100644
+>> --- a/arch/powerpc/kernel/dt_cpu_ftrs.c
+>> +++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
+>> @@ -574,6 +574,12 @@ static int __init feat_enable_mma(struct dt_cpu_feature *f)
+>>          return 1;
+>>   }
+>>
+>> +static int __init feat_enable_debug_facilities_v31(struct dt_cpu_feature *f)
+>> +{
+>> +       cur_cpu_spec->cpu_features |= CPU_FTR_DAWR1;
+>> +       return 1;
+>> +}
+>> +
+>>   struct dt_cpu_feature_match {
+>>          const char *name;
+>>          int (*enable)(struct dt_cpu_feature *f);
+>> @@ -649,6 +655,7 @@ static struct dt_cpu_feature_match __initdata
+>>          {"wait-v3", feat_enable, 0},
+>>          {"prefix-instructions", feat_enable, 0},
+>>          {"matrix-multiply-assist", feat_enable_mma, 0},
+>> +       {"debug-facilities-v31", feat_enable_debug_facilities_v31, 0},
+> Since all feat_enable_debug_facilities_v31() does is set
+> CPU_FTR_DAWR1, if you just have:
+> {"debug-facilities-v31", feat_enable, CPU_FTR_DAWR1},
+> I think cpufeatures_process_feature() should set it in for you at this point:
+>              if (m->enable(f)) {
+>                  cur_cpu_spec->cpu_features |= m->cpu_ftr_bit_mask;
+>                  break;
+>              }
+
+Yes, that seems a better option.
+
+Thanks,
+Ravi
