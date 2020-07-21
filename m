@@ -2,158 +2,132 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC97AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CDAC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96521206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A529F20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:14:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qSfMSUQJ"
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="UVkWJ6lS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbgGURN1 (ORCPT
+        id S1730305AbgGUROV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:13:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51820 "EHLO
+        Tue, 21 Jul 2020 13:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728922AbgGURN0 (ORCPT
+        with ESMTP id S1729951AbgGUROT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:13:26 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88393C061794;
-        Tue, 21 Jul 2020 10:13:26 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id m8so9654544qvk.7;
-        Tue, 21 Jul 2020 10:13:26 -0700 (PDT)
+        Tue, 21 Jul 2020 13:14:19 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F94BC0619DA
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:14:19 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id t11so11016843pfq.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:14:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZbVxqAmomsyhr+KEyYXdRet54/+siHxMMPFBRHCBS08=;
-        b=qSfMSUQJ6WOKHXfb5DjEHw/nGyKktRAx4kiJQxElRHQr7JrxnQ1k55a8eCxv2zv65G
-         gi7FoDOqHLECUyVllhxBYU6dyDEHKF6nNOUdK+p3K7mvrQzDLVrs6fiQfxMwh2mYaM/3
-         crgg0ElpbMgjPqzygn8RHPhdeWOU1Q8LSH2isbjB4ISibsZKPioFclPsXWcJbdoRwiU8
-         hSP4dbwmfHPPxD0xm4I5Hm6/41tMK1EXVkHKNH9gnP3goNxEG+SrNJlTYJ4Qu2vMVe1s
-         2v3JDCnB6TpVN2329tBqdlXAOSPflCvpfyC5+vhn1KIxkOyFQto2nlGvLhVyykpISLv9
-         tJRw==
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Pf9387P6pQdIdEtt81PR6nfU9ZoFkF+G5kNWohKHeqo=;
+        b=UVkWJ6lS4iOeLNd8CBsIehrgJ94bCAMS6q7pQ46939s2553llSYJyO5E6HDitxAeX4
+         qfEuxj70/BEtHyHrTTWLsn4DsR8C8pVGXrkDZRux0j59Sy4NqRXpL+4Z1CWXcRGJVV6y
+         kKKJ7AfnpX1EpnFbC83wv78jdiEdP9Mr++Vji9pWRRDDoWN9t93AJuLO1lILyPEoXOAc
+         N0rph+BKWwaCPdfrdB/czzgQJVvSxxpJi+5Ya9rkiA7pnjvpQhPzV7bzWm3JorR8HGRI
+         3xrkyyqCrUUrKqG7EKvUePPJugeUey8c2ia1Vk+szG/2l+kd8vOfgPxWV9yEULZFnW3C
+         9rFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZbVxqAmomsyhr+KEyYXdRet54/+siHxMMPFBRHCBS08=;
-        b=m7kON/awyOc6Olsi3KDskbnyF1swhSnw2+0rDTQ3ClemhP5urgnA4zu/EpxDDz/nxw
-         lNSZfGcrA04r4gH6XXMnt3RRgefVeGaUROMdc2K/hSitQyuKF9cUmbVD7w9IsMo4hX4k
-         w+hinAOykKctWGiklcFsTcQ3nrD3a7F0XoVbW4ZSVniP0aAVsw6g0a2Dom60/RsBD3zf
-         MK63fpOu1Hfz5oNavwayYGy4yJI6wiCFiXPpJTuCQcooTFNQFgO7HNyjB20ONLTUP7hm
-         mYbxpuu3akpV8Bq0J2T3T7ofSTLHiHgEi9ndvslu0TfQYtgAy4jNga6hXo49uXzzAdc9
-         fgog==
-X-Gm-Message-State: AOAM532jg3pvlTGvIqXTrLNWN69DYAQB5lcuKHUrF7zkWYzrah0e8EPo
-        T0qJjTrFTxUp8xGyPuW4XKk=
-X-Google-Smtp-Source: ABdhPJwAmHphVXWVxGd+7+rFL1JmGpNvGLd7pHr/P7IGmOsp2TKbd5OE9jgZNJcO8pPTI/vq4UXQnA==
-X-Received: by 2002:a05:6214:851:: with SMTP id dg17mr27965377qvb.235.1595351605715;
-        Tue, 21 Jul 2020 10:13:25 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id h124sm2938013qkd.84.2020.07.21.10.13.24
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Pf9387P6pQdIdEtt81PR6nfU9ZoFkF+G5kNWohKHeqo=;
+        b=iM90lN+//a5NMyPxFUfr2P/yVKaIC91zgbTXH4Y6rklQrX17WKwsbTQcsqMpApwOdC
+         I74Ke/1Y5qHTbItvfPV1L9w9aaVJ6ZdezGfSyFCuhE/RtLWLH/zUxRFF0BGqT7wijbB4
+         CSX0HXLIHZ8pTvBi0niBaDQyCzsDhQrD/++FzWb59AEL/aFVo4zcjhzcBjx0rexbHAjE
+         N2iiEN5aQRoRWnlkAFbP24+DyNZ7YY4ZEJQFsCQyigskCzuoWHEKmn12FzSLlxvpuVoj
+         mj8RxZv8jPDUdPypEajrv9PKGVjZzfTCePv5mWeSRyncAfKmXkV1UqeDjLd1zaFfXBO4
+         T1bw==
+X-Gm-Message-State: AOAM5327WhihoiSoslzoeDN5oE7aUsmYve5lRwTVn3F2u3nwnqslCqhB
+        M+/ak5pcYSIBsaynKJC7Kvlmpg==
+X-Google-Smtp-Source: ABdhPJx+igMiGHQSrnF0vS4TSQeTCbzR3biiWzZ7JbPKt7DqbIPWTGkovOoFDaoP9+T7ibJjtcpg3w==
+X-Received: by 2002:a63:7f5d:: with SMTP id p29mr23273143pgn.259.1595351658706;
+        Tue, 21 Jul 2020 10:14:18 -0700 (PDT)
+Received: from localhost ([2406:7400:73:d7b6:d055:3e56:d1e4:ce99])
+        by smtp.gmail.com with ESMTPSA id z25sm20953188pfg.140.2020.07.21.10.14.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 10:13:25 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 10:13:23 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Fangrui Song <maskray@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        stable@vger.kernel.org, Jian Cai <jiancai@google.com>,
-        Bill Wendling <morbo@google.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v2] Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang
- cross compilation
-Message-ID: <20200721171323.GA3327914@ubuntu-n2-xlarge-x86>
-References: <20200721041940.4029552-1-maskray@google.com>
- <20200721104035.GC1676612@kroah.com>
- <CA+icZUW9JhZEEcXfL5bid7+M-Qtw22XzSm2x-JxW1bU15HJ6sA@mail.gmail.com>
+        Tue, 21 Jul 2020 10:14:17 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 22:44:12 +0530
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] tty: serial: fsl_lpuart.c: fix a parentheses coding
+ style issue
+Message-ID: <20200721171412.xfpzswsrjn7savco@pesu.pes.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="a6njxhymkk2m2bqq"
 Content-Disposition: inline
-In-Reply-To: <CA+icZUW9JhZEEcXfL5bid7+M-Qtw22XzSm2x-JxW1bU15HJ6sA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 04:52:56PM +0200, Sedat Dilek wrote:
-> On Tue, Jul 21, 2020 at 12:40 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Jul 20, 2020 at 09:19:38PM -0700, Fangrui Song wrote:
-> > > When CROSS_COMPILE is set (e.g. aarch64-linux-gnu-), if
-> > > $(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-elfedit,
-> > > GCC_TOOLCHAIN_DIR will be set to /usr/bin/.  --prefix= will be set to
-> > > /usr/bin/ and Clang as of 11 will search for both
-> > > $(prefix)aarch64-linux-gnu-$needle and $(prefix)$needle.
-> > >
-> > > GCC searchs for $(prefix)aarch64-linux-gnu/$version/$needle,
-> > > $(prefix)aarch64-linux-gnu/$needle and $(prefix)$needle. In practice,
-> > > $(prefix)aarch64-linux-gnu/$needle rarely contains executables.
-> > >
-> > > To better model how GCC's -B/--prefix takes in effect in practice, newer
-> > > Clang (since
-> > > https://github.com/llvm/llvm-project/commit/3452a0d8c17f7166f479706b293caf6ac76ffd90)
-> > > only searches for $(prefix)$needle. Currently it will find /usr/bin/as
-> > > instead of /usr/bin/aarch64-linux-gnu-as.
-> > >
-> > > Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
-> > > (/usr/bin/aarch64-linux-gnu-) so that newer Clang can find the
-> > > appropriate cross compiling GNU as (when -no-integrated-as is in
-> > > effect).
-> > >
-> > > Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-> > > Signed-off-by: Fangrui Song <maskray@google.com>
-> > > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> > > Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-> > > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-> > > Link: https://github.com/ClangBuiltLinux/linux/issues/1099
-> > > ---
-> > > Changes in v2:
-> > > * Updated description to add tags and the llvm-project commit link.
-> > > * Fixed a typo.
-> >
-> >
-> > <formletter>
-> >
-> > This is not the correct way to submit patches for inclusion in the
-> > stable kernel tree.  Please read:
-> >     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> > for how to do this properly.
-> >
-> > </formletter>
-> >
-> 
-> Hi Fangrui,
-> 
-> your patch needs to be accepted first in Linus tree - among other
-> things to have a unique commit-id for inclusion into any affected
-> Linux-stable trees.
-> 
-> Regards,
-> - Sedat -
 
-You are not wrong but that is not what Greg's auto response is complaining
-about. It is that stable@vger.kernel.org was cc'd but there was no
+--a6njxhymkk2m2bqq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: stable@vger.kernel.org
+add parentheses to expression to improve
+code readability.
 
-in the commit message, which is how patches get automatically picked up
-by Greg and Sasha once they hit Linus's tree.
+Signed-off-by: B K Karthik <bkkarthik@pesu.pes.edu>
+---
+ drivers/tty/serial/fsl_lpuart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-That line should be added above my Reported-by tag. Fangrui, sorry for
-not being clear in my initial response :(
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuar=
+t.c
+index 0cc64279cd2d..3108f5ab57fa 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -1167,7 +1167,7 @@ static inline int lpuart_start_rx_dma(struct lpuart_p=
+ort *sport)
+ 	 * Calculate length of one DMA buffer size to keep latency below
+ 	 * 10ms at any baud rate.
+ 	 */
+-	sport->rx_dma_rng_buf_len =3D (DMA_RX_TIMEOUT * baud /  bits / 1000) * 2;
++	sport->rx_dma_rng_buf_len =3D (((DMA_RX_TIMEOUT * baud) / bits) / 1000) *=
+ 2;
+ 	if (sport->rx_dma_rng_buf_len !=3D 0)
+ 		sport->rx_dma_rng_buf_len =3D (1 << (fls(sport->rx_dma_rng_buf_len) - 1)=
+);
+ 	if (sport->rx_dma_rng_buf_len < 16)
+--=20
+2.20.1
 
-Cheers,
-Nathan
+
+--a6njxhymkk2m2bqq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEEIF+jd5Z5uS7xKTfpQZdt+T1HgiEFAl8XImQACgkQQZdt+T1H
+giERlQv/S2icA1m53XUpMbtlbFJcZrJOA4QwY8aR5B7zHmpZglXUk4JXNwTQGCme
+aGRKGFGVeD3oGpYRK+wF0LjfuXQQwZ9DZ00z6mf7uAf3a5CQp/pGGOAUdOkEKnfY
+TZX9FbREERoiF7bMuVyH2yDu7kCbsXPRzRMqpeQorIHOTFoQqX1WUa+e3GgVdlWc
+lvcGQeGHLlzCEZcQTktr6zlQlGeyeRw37VyOc24Bq9mgbBaZnk4Mxo/R8YxGrRrF
+5kH7Xu2mxrQ/eUuX9O44xr5MBgMMlbHixclzAxUfGb9wZai/LPrJPi2ZbbgTbB2G
+WlpJJ/PH7e19W43IxiF497l738xGOag2yFe4R7lMfHJW2GkVW3L/Fn23XUQYAKuq
+bqohITqc0sD/gs3ALeKPrk9Jx1Fj20rD7x/tGJV79IYB80cBiTT8U0dh8KcIZk4a
+bMMILiwpydGQ7o5nBX2NVNtmS7UFdfgYfIYZe+MnaIe9NpnGt7wz9zF6pfcsCzeD
+ViqUR9gu
+=01qZ
+-----END PGP SIGNATURE-----
+
+--a6njxhymkk2m2bqq--
