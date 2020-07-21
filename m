@@ -2,145 +2,123 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36948C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E477720792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10FD422CBB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:48:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595328495;
+	bh=mCVOD2/3rIZ2K7CMs4hFee4ep9/OgYgQYJgBZXG9RJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kC/nKGrhs2bZGj8yC8vx3HY3P/YHIgGCRpX8eVL1x2wPQ8QIzlmQL0xLaaxeJ7Gn5
+	 Dpuzj/m3mDzrdRWDoTwfC27AHsLmOIeoFW+oq4qfhIkocmKvqqUOz152ONKg5y2dkM
+	 G5YWZfiujV6s1SEyjlw+z0g09ZkC4yWUAmjxtUjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgGUKsK (ORCPT
+        id S1729310AbgGUKsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:48:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:35834 "EHLO foss.arm.com"
+        Tue, 21 Jul 2020 06:48:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgGUKsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:48:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C364106F;
-        Tue, 21 Jul 2020 03:48:09 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D8533F66E;
-        Tue, 21 Jul 2020 03:48:08 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 11:48:02 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200721104802.GA2618@e121166-lin.cambridge.arm.com>
-References: <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
- <20200709122208.rmfeuu6zgbwh3fr5@pali>
- <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
- <20200709150959.wq6zfkcy4m6hvvpl@pali>
- <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
- <20200713082747.e3q3ml3wpbszn4j7@pali>
- <20200713112325.GA25865@e121166-lin.cambridge.arm.com>
- <20200715121726.eh4xglkdbcqkh7td@pali>
- <20200715162108.GB3432@e121166-lin.cambridge.arm.com>
- <20200721085713.p2rbmucpk5ra3quw@pali>
+        id S1726089AbgGUKsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:48:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C87AA20674;
+        Tue, 21 Jul 2020 10:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595328491;
+        bh=mCVOD2/3rIZ2K7CMs4hFee4ep9/OgYgQYJgBZXG9RJc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mW8j8WIQbBScJfrAarqnLyQlPtHFHdBRC0whN3aOU5rZVBRrHa5J6hxstqFFa5sFJ
+         IUMzqgZ4LNvqcCyCQWgzosUiR9OrhGqczGLXzQxvT2Jz6RNhWeJ6IwyFsLEmpyQ4Eh
+         LC++w/roMQVmC2ODhp4GomhzPJMIuDM6yArByN+c=
+Date:   Tue, 21 Jul 2020 12:48:19 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jslaby@suse.com
+Subject: Re: [PATCH] serial: 8250: fix null-ptr-deref in serial8250_start_tx()
+Message-ID: <20200721104819.GA1678476@kroah.com>
+References: <20200721143852.4058352-1-yangyingliang@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200721085713.p2rbmucpk5ra3quw@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200721143852.4058352-1-yangyingliang@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:57:13AM +0200, Pali Rohár wrote:
-> On Wednesday 15 July 2020 17:21:08 Lorenzo Pieralisi wrote:
-> > On Wed, Jul 15, 2020 at 02:17:26PM +0200, Pali Rohár wrote:
-> > > On Monday 13 July 2020 12:23:25 Lorenzo Pieralisi wrote:
-> > > > On Mon, Jul 13, 2020 at 10:27:47AM +0200, Pali Rohár wrote:
-> > > > > On Friday 10 July 2020 10:18:00 Lorenzo Pieralisi wrote:
-> > > > > > On Thu, Jul 09, 2020 at 05:09:59PM +0200, Pali Rohár wrote:
-> > > > > > > > I understand that but the bridge bus resource can be trimmed to just
-> > > > > > > > contain the root bus because that's the only one where there is a
-> > > > > > > > chance you can enumerate a device.
-> > > > > > > 
-> > > > > > > It is possible to register only root bridge without endpoint?
-> > > > > > 
-> > > > > > It is possible to register the root bridge with a trimmed IORESOURCE_BUS
-> > > > > > so that you don't enumerate anything other than the root port.
-> > > > > 
-> > > > > Hello Lorenzo! I really do not know how to achieve it. From code it
-> > > > > looks like that pci/probe.c scans child buses unconditionally.
-> > > > > 
-> > > > > pci-aardvark.c calls pci_host_probe() which calls functions
-> > > > > pci_scan_root_bus_bridge() which calls pci_scan_child_bus() which calls
-> > > > > pci_scan_child_bus_extend() which calls pci_scan_bridge_extend() (bridge
-> > > > > needs to be reconfigured) which then try to probe child bus via
-> > > > > pci_scan_child_bus_extend() because bridge is not card bus.
-> > > > > 
-> > > > > In function pci_scan_bridge_extend() I do not see a way how to skip
-> > > > > probing for child buses which would avoid enumerating aardvark root
-> > > > > bridge when PCIe device is not connected.
-> > > > > 
-> > > > > dmesg output contains:
-> > > > > 
-> > > > >   advk-pcie d0070000.pcie: link never came up
-> > > > >   advk-pcie d0070000.pcie: PCI host bridge to bus 0000:00
-> > > > >   pci_bus 0000:00: root bus resource [bus 00-ff]
-> > > > 
-> > > > This resource can be limited to the root bus number only before calling
-> > > > pci_host_probe() (ie see pci_parse_request_of_pci_ranges() and code in
-> > > > pci_scan_bridge_extend() that programs primary/secondary/subordinate
-> > > > busses) but I think that only papers over the issue, it does not fix it.
-> > > 
-> > > I looked at the code in pci/probe.c again and I do not think it is
-> > > possible to avoid scanning devices. pci_scan_child_bus_extend() is
-> > > unconditionally calling pci_scan_slot() for devfn=0 as the first thing.
-> > > And this function unconditionally calls pci_scan_device() which is
-> > > directly trying to read vendor id from config register.
-> > > 
-> > > So for me it looks like that kernel expects that can read vendor id and
-> > > device id from config register for device which is not connected.
-> > 
-> > Not if it is connected to a bus that the root port does not decode,
-> > that's what I am saying.
-> > 
-> > > And trying to read config register would cause those timeouts in
-> > > aardvark.
-> > 
-> > The root port (which effectively works as PCI bridge from this
-> > standpoint) does not issue config cycles for busses that aren't within
-> > its decoded bus range, which in turn is determined by the firmware
-> > IORESOURCE_BUS resource.
-> > 
-> > This issue is caused by devices that are connected downstream to
-> > the root port.
-> > 
-> > Anyway - patch merged
+On Tue, Jul 21, 2020 at 02:38:52PM +0000, Yang Yingliang wrote:
+> I got null-ptr-deref in serial8250_start_tx():
 > 
-> Could you send me a link to git commit? I have looked into
-> lpieralisi/pci.git repository, but I do not see it here.
-
-Apologies - I did not push it out, I have pushed it out on
-pci/aardvark now.
-
-> > but I would be happy to keep this discussion going, somehow.
+> [   78.114630] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+> [   78.123778] Mem abort info:
+> [   78.126560]   ESR = 0x86000007
+> [   78.129603]   EC = 0x21: IABT (current EL), IL = 32 bits
+> [   78.134891]   SET = 0, FnV = 0
+> [   78.137933]   EA = 0, S1PTW = 0
+> [   78.141064] user pgtable: 64k pages, 48-bit VAs, pgdp=00000027d41a8600
+> [   78.147562] [0000000000000000] pgd=00000027893f0003, p4d=00000027893f0003, pud=00000027893f0003, pmd=00000027c9a20003, pte=0000000000000000
+> [   78.160029] Internal error: Oops: 86000007 [#1] SMP
+> [   78.164886] Modules linked in: sunrpc vfat fat aes_ce_blk crypto_simd cryptd aes_ce_cipher crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce ses enclosure sg sbsa_gwdt ipmi_ssif spi_dw_mmio sch_fq_codel vhost_net tun vhost vhost_iotlb tap ip_tables ext4 mbcache jbd2 ahci hisi_sas_v3_hw libahci hisi_sas_main libsas hns3 scsi_transport_sas hclge libata megaraid_sas ipmi_si hnae3 ipmi_devintf ipmi_msghandler br_netfilter bridge stp llc nvme nvme_core xt_sctp sctp libcrc32c dm_mod nbd
+> [   78.207383] CPU: 11 PID: 23258 Comm: null-ptr Not tainted 5.8.0-rc6+ #48
+> [   78.214056] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V3.B210.01 03/12/2020
+> [   78.222888] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
+> [   78.228435] pc : 0x0
+> [   78.230618] lr : serial8250_start_tx+0x160/0x260
+> [   78.235215] sp : ffff800062eefb80
+> [   78.238517] x29: ffff800062eefb80 x28: 0000000000000fff
+> [   78.243807] x27: ffff800062eefd80 x26: ffff202fd83b3000
+> [   78.249098] x25: ffff800062eefd80 x24: ffff202fd83b3000
+> [   78.254388] x23: ffff002fc5e50be8 x22: 0000000000000002
+> [   78.259679] x21: 0000000000000001 x20: 0000000000000000
+> [   78.264969] x19: ffffa688827eecc8 x18: 0000000000000000
+> [   78.270259] x17: 0000000000000000 x16: 0000000000000000
+> [   78.275550] x15: ffffa68881bc67a8 x14: 00000000000002e6
+> [   78.280841] x13: ffffa68881bc67a8 x12: 000000000000c539
+> [   78.286131] x11: d37a6f4de9bd37a7 x10: ffffa68881cccff0
+> [   78.291421] x9 : ffffa68881bc6000 x8 : ffffa688819daa88
+> [   78.296711] x7 : ffffa688822a0f20 x6 : ffffa688819e0000
+> [   78.302002] x5 : ffff800062eef9d0 x4 : ffffa68881e707a8
+> [   78.307292] x3 : 0000000000000000 x2 : 0000000000000002
+> [   78.312582] x1 : 0000000000000001 x0 : ffffa688827eecc8
+> [   78.317873] Call trace:
+> [   78.320312]  0x0
+> [   78.322147]  __uart_start.isra.9+0x64/0x78
+> [   78.326229]  uart_start+0xb8/0x1c8
+> [   78.329620]  uart_flush_chars+0x24/0x30
+> [   78.333442]  n_tty_receive_buf_common+0x7b0/0xc30
+> [   78.338128]  n_tty_receive_buf+0x44/0x2c8
+> [   78.342122]  tty_ioctl+0x348/0x11f8
+> [   78.345599]  ksys_ioctl+0xd8/0xf8
+> [   78.348903]  __arm64_sys_ioctl+0x2c/0xc8
+> [   78.352812]  el0_svc_common.constprop.2+0x88/0x1b0
+> [   78.357583]  do_el0_svc+0x44/0xd0
+> [   78.360887]  el0_sync_handler+0x14c/0x1d0
+> [   78.364880]  el0_sync+0x140/0x180
+> [   78.368185] Code: bad PC value
 > 
-> Ok, no problem. As I said if anybody has any idea or would like to see
-> some tests from me, I can do it and provide results.
+> SERIAL_PORT_DFNS is not defined on each arch, if it's not defined,
+> serial8250_set_defaults() won't be called in serial8250_isa_init_ports(),
+> so the p->serial_in pointer won't be initialized, and it leads a null-ptr-deref.
+> Fix this problem by calling serial8250_set_defaults() after init uart port.
+> 
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> ---
+>  drivers/tty/serial/8250/8250_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sounds good, I will let you know, thanks.
+Does this fix a specific commit, or has this issue always been present?
+What has caused it to happen now that no one else has seen this?
 
-Lorenzo
+thanks,
 
-> > If the LPC20 VFIO/IOMMU/PCI microconference is approved it can be a
-> > good venue for this to happen.
-> > 
-> > Lorenzo
+greg k-h
