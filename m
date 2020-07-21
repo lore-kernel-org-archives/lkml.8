@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7637C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52381C433FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B83522077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 357B920720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730303AbgGUQD5 (ORCPT
+        id S1730317AbgGUQEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:03:57 -0400
-Received: from mga05.intel.com ([192.55.52.43]:35066 "EHLO mga05.intel.com"
+        Tue, 21 Jul 2020 12:04:00 -0400
+Received: from mga07.intel.com ([134.134.136.100]:3141 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727903AbgGUQD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:03:56 -0400
-IronPort-SDR: IkDxihq4sFVhBpu0oUT4xZ3vRJYe2T2oxm+XXugJQ8VEoH7fcVSX/Q57x++x89l7XHo1vwAb6b
- xtFIIl1ZmEHQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="235019338"
+        id S1730287AbgGUQD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 12:03:57 -0400
+IronPort-SDR: coDlyFPbzNL+V/zlp/4xO0mrBliQ5GCo3bRWyrWKOct78WIgi0ioQBH/e05goH/Bjq1QmZ/hRI
+ xB0GFVy1wnJg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="214815456"
 X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="235019338"
+   d="scan'208";a="214815456"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 09:03:44 -0700
-IronPort-SDR: TbQmM6QJK1TY8Upp2xDxQXhNIQ2dVdqFM8BiRJGD3v9de8WoGxfSkxdKyxfi2hiqj7h5tdPcXU
- HW4+G/zm6bTg==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 09:03:55 -0700
+IronPort-SDR: dRgRTHoVhoULeTzKBuAHpfKKzxGpg7J54u4aGWontPX3WG9vAPwwXxjs1q2mqHlJkOWegq526N
+ xC6FCJzZ9Wig==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="318379937"
+   d="scan'208";a="432045318"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga008.jf.intel.com with ESMTP; 21 Jul 2020 09:03:40 -0700
-Subject: [PATCH RFC v2 13/18] dmaengine: idxd: ims setup for the vdcm
+  by orsmga004.jf.intel.com with ESMTP; 21 Jul 2020 09:03:53 -0700
+Subject: [PATCH RFC v2 15/18] dmaengine: idxd: add dedicated wq mdev type
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org, megha.dey@intel.com, maz@kernel.org,
         bhelgaas@google.com, rafael@kernel.org, gregkh@linuxfoundation.org,
@@ -51,8 +51,8 @@ To:     vkoul@kernel.org, megha.dey@intel.com, maz@kernel.org,
         pbonzini@redhat.com, samuel.ortiz@intel.com, mona.hossain@intel.com
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Date:   Tue, 21 Jul 2020 09:03:40 -0700
-Message-ID: <159534742073.28840.5432268637638647551.stgit@djiang5-desk3.ch.intel.com>
+Date:   Tue, 21 Jul 2020 09:03:53 -0700
+Message-ID: <159534743378.28840.14343631681400866758.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
 References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/unknown-version
@@ -64,335 +64,200 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for IMS enabling on the mediated device.
-
-On the actual hardware the MSIX vector 0 is misc interrupt and handles
-events such as administrative command completion, error reporting,
-performance monitor overflow, and etc. The MSIX vectors 1...N
-are used for descriptor completion interrupts. On the guest kernel,
-the MSIX interrupts are backed by the mediated device through emulation
-or IMS vectors. Vector 0 is handled through emulation by the host vdcm.
-The vector 1 (and more may be supported later) is backed by IMS. IMS can
-be setup with interrupt handlers via request_irq() just like MSIX
-interrupts once the relevant IRQ domain is set with
-dev_msi_domain_alloc_irqs().
+Add the support code for "1dwq" mdev type. This mdev type follows the
+standard VFIO mdev flow. The "1dwq" type will export a single dedicated wq
+to the mdev. The dwq will have read-only configuration that is configured
+by the host. The mdev type does not support PASID and SVA and will match
+the stage 1 driver in functional support. For backward compatibility, the
+mdev will maintain the DSA spec definition of this mdev type once the
+commit goes upstream.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 Reviewed-by: Kevin Tian <kevin.tian@intel.com>
 ---
- drivers/dma/Kconfig     |    1 
- drivers/dma/idxd/ims.c  |  142 +++++++++++++++++++++++++++++++++++++++++------
- drivers/dma/idxd/ims.h  |    7 ++
- drivers/dma/idxd/vdev.c |   76 +++++++++++++++++++++----
- 4 files changed, 195 insertions(+), 31 deletions(-)
+ drivers/dma/idxd/mdev.c |  142 ++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 133 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 69c1ae72df86..a19e5dbeab9b 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -311,6 +311,7 @@ config INTEL_IDXD_MDEV
- 	depends on INTEL_IDXD
- 	depends on VFIO_MDEV
- 	depends on VFIO_MDEV_DEVICE
-+	depends on DEV_MSI
- 
- config INTEL_IOATDMA
- 	tristate "Intel I/OAT DMA support"
-diff --git a/drivers/dma/idxd/ims.c b/drivers/dma/idxd/ims.c
-index bffc74c2b305..f9b7fbcb61df 100644
---- a/drivers/dma/idxd/ims.c
-+++ b/drivers/dma/idxd/ims.c
-@@ -7,22 +7,13 @@
- #include <linux/device.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include <linux/msi.h>
-+#include <linux/mdev.h>
- #include <uapi/linux/idxd.h>
- #include "registers.h"
- #include "idxd.h"
- #include "mdev.h"
--
--int vidxd_setup_ims_entries(struct vdcm_idxd *vidxd)
--{
--	/* PLACEHOLDER */
--	return 0;
--}
--
--int vidxd_free_ims_entries(struct vdcm_idxd *vidxd)
--{
--	/* PLACEHOLDER */
--	return 0;
--}
-+#include "ims.h"
-+#include "vdev.h"
- 
- static void idxd_free_ims_index(struct idxd_device *idxd,
- 				unsigned long ims_idx)
-@@ -42,21 +33,65 @@ static int idxd_alloc_ims_index(struct idxd_device *idxd)
- 
- static unsigned int idxd_ims_irq_mask(struct msi_desc *desc)
- {
--	// Filled out later when VDCM is introduced.
-+	int ims_offset;
-+	u32 mask_bits;
-+	struct device *dev = desc->dev;
-+	struct mdev_device *mdev = mdev_from_dev(dev);
-+	struct vdcm_idxd *vidxd = mdev_get_drvdata(mdev);
-+	struct idxd_device *idxd = vidxd->idxd;
-+	void __iomem *base;
-+	int ims_id = desc->platform.msi_index;
- 
--	return 0;
-+	dev_dbg(dev, "idxd irq mask: %d\n", ims_id);
-+
-+	ims_offset = idxd->ims_offset + vidxd->ims_index[ims_id] * 0x10;
-+	base = idxd->reg_base + ims_offset;
-+	mask_bits = ioread32(base + IMS_ENTRY_VECTOR_CTRL);
-+	mask_bits |= IMS_ENTRY_CTRL_MASKBIT;
-+	iowrite32(mask_bits, base + IMS_ENTRY_VECTOR_CTRL);
-+
-+	return mask_bits;
+diff --git a/drivers/dma/idxd/mdev.c b/drivers/dma/idxd/mdev.c
+index 01207ca42a79..744adfdc06cd 100644
+--- a/drivers/dma/idxd/mdev.c
++++ b/drivers/dma/idxd/mdev.c
+@@ -113,21 +113,58 @@ static void idxd_vdcm_release_work(struct work_struct *work)
+ 	__idxd_vdcm_release(vidxd);
  }
  
- static unsigned int idxd_ims_irq_unmask(struct msi_desc *desc)
- {
--	// Filled out later when VDCM is introduced.
-+	int ims_offset;
-+	u32 mask_bits;
-+	struct device *dev = desc->dev;
-+	struct mdev_device *mdev = mdev_from_dev(dev);
-+	struct vdcm_idxd *vidxd = mdev_get_drvdata(mdev);
-+	struct idxd_device *idxd = vidxd->idxd;
-+	void __iomem *base;
-+	int ims_id = desc->platform.msi_index;
- 
--	return 0;
-+	dev_dbg(dev, "idxd irq unmask: %d\n", ims_id);
-+
-+	ims_offset = idxd->ims_offset + vidxd->ims_index[ims_id] * 0x10;
-+	base = idxd->reg_base + ims_offset;
-+	mask_bits = ioread32(base + IMS_ENTRY_VECTOR_CTRL);
-+	mask_bits &= ~IMS_ENTRY_CTRL_MASKBIT;
-+	iowrite32(mask_bits, base + IMS_ENTRY_VECTOR_CTRL);
-+
-+	return mask_bits;
- }
- 
- static void idxd_ims_write_msg(struct msi_desc *desc, struct msi_msg *msg)
- {
--	// Filled out later when VDCM is introduced.
-+	int ims_offset;
-+	struct device *dev = desc->dev;
-+	struct mdev_device *mdev = mdev_from_dev(dev);
-+	struct vdcm_idxd *vidxd = mdev_get_drvdata(mdev);
-+	struct idxd_device *idxd = vidxd->idxd;
-+	void __iomem *base;
-+	int ims_id = desc->platform.msi_index;
-+
-+	dev_dbg(dev, "ims_write: %d %x\n", ims_id, msg->address_lo);
-+
-+	ims_offset = idxd->ims_offset + vidxd->ims_index[ims_id] * 0x10;
-+	base = idxd->reg_base + ims_offset;
-+	iowrite32(msg->address_lo, base + IMS_ENTRY_LOWER_ADDR);
-+	iowrite32(msg->address_hi, base + IMS_ENTRY_UPPER_ADDR);
-+	iowrite32(msg->data, base + IMS_ENTRY_DATA);
- }
- 
- static struct platform_msi_ops idxd_ims_ops  = {
-@@ -64,3 +99,76 @@ static struct platform_msi_ops idxd_ims_ops  = {
- 	.irq_unmask		= idxd_ims_irq_unmask,
- 	.write_msg		= idxd_ims_write_msg,
- };
-+
-+int vidxd_free_ims_entries(struct vdcm_idxd *vidxd)
++static struct idxd_wq *find_any_dwq(struct idxd_device *idxd)
 +{
-+	struct idxd_device *idxd = vidxd->idxd;
-+	struct ims_irq_entry *irq_entry;
-+	struct mdev_device *mdev = vidxd->vdev.mdev;
-+	struct device *dev = mdev_dev(mdev);
-+	struct msi_desc *desc;
-+	int i = 0;
++	int i;
++	struct idxd_wq *wq;
++	unsigned long flags;
 +
-+	for_each_msi_entry(desc, dev) {
-+		irq_entry = &vidxd->irq_entries[i];
-+		/*
-+		 * When qemu dies unexpectedly, it does not call VFIO_IRQ_SET_DATA_NONE ioctl
-+		 * to free up the interrupts. We need to free the interrupts here as clean up
-+		 * if they haven't been freed.
-+		 */
-+		if (irq_entry->irq_set)
-+			free_irq(irq_entry->irq, irq_entry);
-+		idxd_free_ims_index(idxd, vidxd->ims_index[i]);
-+		vidxd->ims_index[i] = -1;
-+		memset(irq_entry, 0, sizeof(*irq_entry));
-+		i++;
-+	}
++	spin_lock_irqsave(&idxd->dev_lock, flags);
++	for (i = 0; i < idxd->max_wqs; i++) {
++		wq = &idxd->wqs[i];
 +
-+	dev_msi_domain_free_irqs(dev);
-+	return 0;
-+}
++		if (wq->state != IDXD_WQ_ENABLED)
++			continue;
 +
-+int vidxd_setup_ims_entries(struct vdcm_idxd *vidxd)
-+{
-+	struct idxd_device *idxd = vidxd->idxd;
-+	struct ims_irq_entry *irq_entry;
-+	struct mdev_device *mdev = vidxd->vdev.mdev;
-+	struct device *dev = mdev_dev(mdev);
-+	struct msi_desc *desc;
-+	int err, i = 0;
-+	int index;
++		if (!wq_dedicated(wq))
++			continue;
 +
-+	/*
-+	 * MSIX vec 0 is emulated by the vdcm and does not take up an IMS. The total MSIX vecs used
-+	 * by the mdev will be total IMS + 1. vec 0 is used for misc interrupts such as command
-+	 * completion, error notification, PMU, etc. The other vectors are used for descriptor
-+	 * completion. Thus only the number of IMS vectors need to be allocated, which is
-+	 * VIDXD_MAX_MSIX_VECS - 1.
-+	 */
-+	err = dev_msi_domain_alloc_irqs(dev, VIDXD_MAX_MSIX_VECS - 1, &idxd_ims_ops);
-+	if (err < 0) {
-+		dev_dbg(dev, "Enabling IMS entry! %d\n", err);
-+		return err;
-+	}
++		if (idxd_wq_refcount(wq) != 0)
++			continue;
 +
-+	i = 0;
-+	for_each_msi_entry(desc, dev) {
-+		index = idxd_alloc_ims_index(idxd);
-+		if (index < 0) {
-+			err = index;
-+			break;
++		spin_unlock_irqrestore(&idxd->dev_lock, flags);
++		mutex_lock(&wq->wq_lock);
++		if (idxd_wq_refcount(wq)) {
++			spin_lock_irqsave(&idxd->dev_lock, flags);
++			continue;
 +		}
-+		vidxd->ims_index[i] = index;
 +
-+		irq_entry = &vidxd->irq_entries[i];
-+		irq_entry->vidxd = vidxd;
-+		irq_entry->int_src = i;
-+		irq_entry->irq = desc->irq;
-+		i++;
++		idxd_wq_get(wq);
++		mutex_unlock(&wq->wq_lock);
++		return wq;
 +	}
 +
-+	if (err)
-+		vidxd_free_ims_entries(vidxd);
-+
-+	return 0;
++	spin_unlock_irqrestore(&idxd->dev_lock, flags);
++	return NULL;
 +}
-diff --git a/drivers/dma/idxd/ims.h b/drivers/dma/idxd/ims.h
-index 3d823606e3a3..97826abf1163 100644
---- a/drivers/dma/idxd/ims.h
-+++ b/drivers/dma/idxd/ims.h
-@@ -4,6 +4,13 @@
- #ifndef _IDXD_IMS_H_
- #define _IDXD_IMS_H_
- 
-+/* IMS entry format */
-+#define IMS_ENTRY_LOWER_ADDR    0  /* Message Address */
-+#define IMS_ENTRY_UPPER_ADDR    4  /* Message Upper Address */
-+#define IMS_ENTRY_DATA          8  /* Message Data */
-+#define IMS_ENTRY_VECTOR_CTRL   12 /* Vector Control */
-+#define IMS_ENTRY_CTRL_MASKBIT  0x00000001
 +
- int vidxd_setup_ims_entries(struct vdcm_idxd *vidxd);
- int vidxd_free_ims_entries(struct vdcm_idxd *vidxd);
+ static struct vdcm_idxd *vdcm_vidxd_create(struct idxd_device *idxd, struct mdev_device *mdev,
+ 					   struct vdcm_idxd_type *type)
+ {
+ 	struct vdcm_idxd *vidxd;
+ 	struct idxd_wq *wq = NULL;
+-	int i;
+-
+-	/* PLACEHOLDER, wq matching comes later */
++	int i, rc;
  
-diff --git a/drivers/dma/idxd/vdev.c b/drivers/dma/idxd/vdev.c
-index df99d0bce5e9..66e59cb02635 100644
---- a/drivers/dma/idxd/vdev.c
-+++ b/drivers/dma/idxd/vdev.c
-@@ -44,15 +44,75 @@ int vidxd_send_interrupt(struct vdcm_idxd *vidxd, int msix_idx)
++	if (type->type == IDXD_MDEV_TYPE_1_DWQ)
++		wq = find_any_dwq(idxd);
+ 	if (!wq)
+ 		return ERR_PTR(-ENODEV);
+ 
+ 	vidxd = kzalloc(sizeof(*vidxd), GFP_KERNEL);
+-	if (!vidxd)
+-		return ERR_PTR(-ENOMEM);
++	if (!vidxd) {
++		rc = -ENOMEM;
++		goto err;
++	}
+ 
+ 	mutex_init(&vidxd->dev_lock);
+ 	vidxd->idxd = idxd;
+@@ -142,14 +179,23 @@ static struct vdcm_idxd *vdcm_vidxd_create(struct idxd_device *idxd, struct mdev
+ 
+ 	INIT_WORK(&vidxd->vdev.release_work, idxd_vdcm_release_work);
+ 	idxd_vdcm_init(vidxd);
+-	mutex_lock(&wq->wq_lock);
+-	idxd_wq_get(wq);
+-	mutex_unlock(&wq->wq_lock);
+ 
+ 	return vidxd;
++
++ err:
++	mutex_lock(&wq->wq_lock);
++	idxd_wq_put(wq);
++	mutex_unlock(&wq->wq_lock);
++	return ERR_PTR(rc);
+ }
+ 
+-static struct vdcm_idxd_type idxd_mdev_types[IDXD_MDEV_TYPES];
++static struct vdcm_idxd_type idxd_mdev_types[IDXD_MDEV_TYPES] = {
++	{
++		.name = "1dwq",
++		.description = "IDXD MDEV with 1 dedicated workqueue",
++		.type = IDXD_MDEV_TYPE_1_DWQ,
++	},
++};
+ 
+ static struct vdcm_idxd_type *idxd_vdcm_find_vidxd_type(struct device *dev,
+ 							const char *name)
+@@ -932,7 +978,85 @@ static long idxd_vdcm_ioctl(struct mdev_device *mdev, unsigned int cmd,
  	return rc;
  }
  
-+static int idxd_get_mdev_pasid(struct mdev_device *mdev)
++static ssize_t name_show(struct kobject *kobj, struct device *dev, char *buf)
 +{
-+	struct iommu_domain *domain;
-+	struct device *dev = mdev_dev(mdev);
++	struct vdcm_idxd_type *type;
 +
-+	domain = mdev_get_iommu_domain(dev);
-+	if (!domain)
-+		return -EINVAL;
++	type = idxd_vdcm_find_vidxd_type(dev, kobject_name(kobj));
 +
-+	return iommu_aux_get_pasid(domain, dev->parent);
++	if (type)
++		return sprintf(buf, "%s\n", type->description);
++
++	return -EINVAL;
++}
++static MDEV_TYPE_ATTR_RO(name);
++
++static int find_available_mdev_instances(struct idxd_device *idxd, struct vdcm_idxd_type *type)
++{
++	int count = 0, i;
++	unsigned long flags;
++
++	if (type->type != IDXD_MDEV_TYPE_1_DWQ)
++		return 0;
++
++	spin_lock_irqsave(&idxd->dev_lock, flags);
++	for (i = 0; i < idxd->max_wqs; i++) {
++		struct idxd_wq *wq;
++
++		wq = &idxd->wqs[i];
++		if (!is_idxd_wq_mdev(wq) || !wq_dedicated(wq) || idxd_wq_refcount(wq))
++			continue;
++
++		count++;
++	}
++	spin_unlock_irqrestore(&idxd->dev_lock, flags);
++
++	return count;
 +}
 +
-+#define IMS_PASID_ENABLE	0x8
- int vidxd_disable_host_ims_pasid(struct vdcm_idxd *vidxd, int ims_idx)
- {
--	/* PLACEHOLDER */
-+	struct mdev_device *mdev = vidxd->vdev.mdev;
-+	struct device *dev = mdev_dev(mdev);
-+	unsigned int ims_offset;
-+	struct idxd_device *idxd = vidxd->idxd;
-+	u32 val;
++static ssize_t available_instances_show(struct kobject *kobj,
++					struct device *dev, char *buf)
++{
++	int count;
++	struct idxd_device *idxd = dev_get_drvdata(dev);
++	struct vdcm_idxd_type *type;
 +
-+	/*
-+	 * Current implementation limits to 1 WQ for the vdev and therefore
-+	 * also only 1 IMS interrupt for that vdev.
-+	 */
-+	if (ims_idx >= VIDXD_MAX_WQS) {
-+		dev_warn(dev, "ims_idx greater than vidxd allowed: %d\n", ims_idx);
++	type = idxd_vdcm_find_vidxd_type(dev, kobject_name(kobj));
++	if (!type)
 +		return -EINVAL;
-+	}
 +
-+	ims_offset = idxd->ims_offset + vidxd->ims_index[ims_idx] * 0x10;
-+	val = ioread32(idxd->reg_base + ims_offset + 12);
-+	val &= ~IMS_PASID_ENABLE;
-+	iowrite32(val, idxd->reg_base + ims_offset + 12);
++	count = find_available_mdev_instances(idxd, type);
 +
- 	return 0;
- }
- 
- int vidxd_enable_host_ims_pasid(struct vdcm_idxd *vidxd, int ims_idx)
- {
--	/* PLACEHOLDER */
-+	struct mdev_device *mdev = vidxd->vdev.mdev;
-+	struct device *dev = mdev_dev(mdev);
-+	int pasid;
-+	unsigned int ims_offset;
-+	struct idxd_device *idxd = vidxd->idxd;
-+	u32 val;
++	return sprintf(buf, "%d\n", count);
++}
++static MDEV_TYPE_ATTR_RO(available_instances);
 +
-+	/*
-+	 * Current implementation limits to 1 WQ for the vdev and therefore
-+	 * also only 1 IMS interrupt for that vdev.
-+	 */
-+	if (ims_idx >= VIDXD_MAX_WQS) {
-+		dev_warn(dev, "ims_idx greater than vidxd allowed: %d\n", ims_idx);
-+		return -EINVAL;
-+	}
++static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
++			       char *buf)
++{
++	return sprintf(buf, "%s\n", VFIO_DEVICE_API_PCI_STRING);
++}
++static MDEV_TYPE_ATTR_RO(device_api);
 +
-+	/* Setup the PASID filtering */
-+	pasid = idxd_get_mdev_pasid(mdev);
++static struct attribute *idxd_mdev_types_attrs[] = {
++	&mdev_type_attr_name.attr,
++	&mdev_type_attr_device_api.attr,
++	&mdev_type_attr_available_instances.attr,
++	NULL,
++};
 +
-+	if (pasid >= 0) {
-+		ims_offset = idxd->ims_offset + vidxd->ims_index[ims_idx] * 0x10;
-+		val = ioread32(idxd->reg_base + ims_offset + 12);
-+		val |= IMS_PASID_ENABLE | (pasid << 12) | (val & 0x7);
-+		iowrite32(val, idxd->reg_base + ims_offset + 12);
-+	} else {
-+		dev_warn(dev, "pasid setup failed for ims entry %lld\n", vidxd->ims_index[ims_idx]);
-+		return -ENXIO;
-+	}
++static struct attribute_group idxd_mdev_type_group0 = {
++	.name = "1dwq",
++	.attrs = idxd_mdev_types_attrs,
++};
 +
- 	return 0;
- }
- 
-@@ -81,18 +141,6 @@ static void vidxd_report_error(struct vdcm_idxd *vidxd, unsigned int error)
- 	}
- }
- 
--static int idxd_get_mdev_pasid(struct mdev_device *mdev)
--{
--	struct iommu_domain *domain;
--	struct device *dev = mdev_dev(mdev);
--
--	domain = mdev_get_iommu_domain(dev);
--	if (!domain)
--		return -EINVAL;
--
--	return iommu_aux_get_pasid(domain, dev->parent);
--}
--
- int vidxd_mmio_write(struct vdcm_idxd *vidxd, u64 pos, void *buf, unsigned int size)
- {
- 	u32 offset = pos & (vidxd->bar_size[0] - 1);
++static struct attribute_group *idxd_mdev_type_groups[] = {
++	&idxd_mdev_type_group0,
++	NULL,
++};
++
+ static const struct mdev_parent_ops idxd_vdcm_ops = {
++	.supported_type_groups	= idxd_mdev_type_groups,
+ 	.create			= idxd_vdcm_create,
+ 	.remove			= idxd_vdcm_remove,
+ 	.open			= idxd_vdcm_open,
 
