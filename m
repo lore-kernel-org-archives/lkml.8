@@ -2,117 +2,117 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F84C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 182F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 505712072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595317540;
-	bh=97y2zuXcVstRXdOrZNWE3KBD6w2VxtGXrPDl5D3CkIM=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=yiksrWX77scLmVJav6tTKKQUC4hQmmFqRy1s4gYkiKaRQ4OJQU6PFVfNAzdZRY/sL
-	 gj+KfWLjkHP+4VZzGB3Uqmk9lzV0PniFhhcj5yaBOkkPEFnGUxAQPZJBCPN+mGk9be
-	 c0z/I1pwAsV8pTwgyt51jZmafZ6tR9WsNUn10L/w=
+	by mail.kernel.org (Postfix) with ESMTP id E990420792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:47:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YxKBrfQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgGUHpi (ORCPT
+        id S1728193AbgGUHre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:45:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728144AbgGUHpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 03:45:35 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAEFE20792;
-        Tue, 21 Jul 2020 07:45:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595317534;
-        bh=97y2zuXcVstRXdOrZNWE3KBD6w2VxtGXrPDl5D3CkIM=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=WyksoiMLJAFq6dfdIMzZdi/o+mKSI6/xAJigf8NLmNQFNa40UCngkV7mj5gZP8OlV
-         5EhefaL/wrY6DxxzUBcQoifbQ40+G2RTcGzjdcdRlGYssjdiXpUpLq5aG3X6Qdu1Gc
-         B5ktvVZkl+7EMYj/PpL9bRyU8DzvvjOeRZFYy/go=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1594796050-14511-1-git-send-email-tdas@codeaurora.org>
-References: <1594796050-14511-1-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v0] clk: qcom: gcc: Update disp gpll0 branch for 7180/845
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        evgreen@google.com, Taniya Das <tdas@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Date:   Tue, 21 Jul 2020 00:45:33 -0700
-Message-ID: <159531753391.3847286.4226820520237148758@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        Tue, 21 Jul 2020 03:47:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbgGUHrd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 03:47:33 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41200C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:47:33 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id q4so23086129lji.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:47:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=u3nXJRiSdppGTtPj2ppffsfRJMywt07Ft1M0Vjk21zc=;
+        b=YxKBrfQ1VUCxq106/ImDl/osIy9f5cCVJPpaJSz6duopNcJ5cMjnp3+7ajb8vE06Fb
+         oSfrS/y0P+KgjEEVnhaPqrBToNHJTSNfK/Ej8ZqGbNrSjvURVqcdwVVINTfvDNp9pbya
+         d0ni5oGuM0QpweP64/dk/1phaqWFIVSiQ+iaibeJa3sfumYFAfL1X7Z0dSGyy2nNz+1A
+         Km1kp1bQrupLOacS1kdRMnTT7ueOin38M5b5tYuJoWU0wPoTjEzSVUZXazuXt6etedV+
+         9VxW9/mksXP7zR04PmR0EbpYdvsXHWofyAgc9AVHV2vL6G525qOuLB2UVy2jRYS5mcr/
+         N8ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=u3nXJRiSdppGTtPj2ppffsfRJMywt07Ft1M0Vjk21zc=;
+        b=CDXfR/5g3lZV5rR7SuXp+vX5Iuq9iAH4tKvRZ1+zpu6kb7njWBftNVaJijBnklEQxz
+         TyDvkkYFm7ens5LrqfT8BUGZYSvvIlNMmew4Z04vOMzCrxixHI7zU6bWCJqhuX7Nt4go
+         gTHa4AvTGnjRWlrPPiWF2EDU/0L2yrx0mTWInKXzdVjWgBvEhDQTf+P860P/ZLPkOmIB
+         BtPXL02v9eUPoFY17mrpGWPec4dwsLkPxvDxWhQUXdtOo+yICkyjqoY2GWdlOEZqzLMi
+         MSa0TJm93Pn17Zif6L8xJMmqs/13qHLkV79BfWANGNw6yTcxdFp6fyEeOxe98x8if10t
+         RpoA==
+X-Gm-Message-State: AOAM533c9vaXRrQxfwSHOdR2h/IEawkpB+ed7DpXu8ZDJAr5/7yGqhfA
+        uG3i5IUJBAzdpLNl1xU4YKTuz/k+dsE=
+X-Google-Smtp-Source: ABdhPJxdoABtefVextDp7MWon7gvzta5PmjzgLS7mmgtJCLxMrSAj2wajyrHjBe6DdsCmTmyIw7qlw==
+X-Received: by 2002:a05:651c:50d:: with SMTP id o13mr13083297ljp.181.1595317651371;
+        Tue, 21 Jul 2020 00:47:31 -0700 (PDT)
+Received: from localhost.localdomain ([195.24.90.54])
+        by smtp.gmail.com with ESMTPSA id d2sm4045334ljg.6.2020.07.21.00.47.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 00:47:30 -0700 (PDT)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Maheshwar Ajja <majja@codeaurora.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH v2 0/6] Add new controls for CQ and Frame-skip
+Date:   Tue, 21 Jul 2020 10:45:32 +0300
+Message-Id: <20200721074538.505-1-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2020-07-14 23:54:10)
-> The display gpll0 branch clock needs to be always left enabled, thus
-> move the clock ops to _aon branch ops.
->=20
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Hello,
 
-I wanted to apply this but it needs more commit text. Here's the commit
-text I wrote.
+Here is v2 with following changes:
 
-clk: qcom: gcc: Make disp gpll0 branch aon for sc7180/sdm845
+ * 3/6 Added references for VBV size and h264 CPB size - requested by Nicolas
+ * 4/6 Fixed compile warning
 
-The display gpll0 branch clock inside GCC needs to always be enabled.
-Otherwise the AHB clk (disp_cc_mdss_ahb_clk_src) for the display clk
-controller (dispcc) will stop clocking while sourcing from gpll0 when
-this branch inside GCC is turned off during unused clk disabling. We can
-never turn this branch off because the AHB clk for the display subsystem
-is needed to read/write any registers inside the display subsystem
-including clk related ones. This makes this branch a really easy way to
-turn off AHB access to the display subsystem and cause all sorts of
-mayhem. Let's just make the clk ops keep the clk enabled forever and
-ignore any attempts to disable this clk so that dispcc access keep
-working.
+Previous version can be found at [1].
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
-Reported-by: Evan Green <evgreen@chromium.org>
-Link: https://lore.kernel.org/r/1594796050-14511-1-git-send-email-tdas@code=
-aurora.org
-Fixes: 17269568f726 ("clk: qcom: Add Global Clock controller (GCC) driver f=
-or SC7180")
-Fixes: 06391eddb60a ("clk: qcom: Add Global Clock controller (GCC) driver f=
-or SDM845")
+regards,
+Stan
 
-> ---
->  drivers/clk/qcom/gcc-sc7180.c | 2 +-
->  drivers/clk/qcom/gcc-sdm845.c | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
-> index ca4383e..538677b 100644
-> --- a/drivers/clk/qcom/gcc-sc7180.c
-> +++ b/drivers/clk/qcom/gcc-sc7180.c
-> @@ -1061,7 +1061,7 @@ static struct clk_branch gcc_disp_gpll0_clk_src =3D=
- {
->                                 .hw =3D &gpll0.clkr.hw,
->                         },
->                         .num_parents =3D 1,
-> -                       .ops =3D &clk_branch2_ops,
-> +                       .ops =3D &clk_branch2_aon_ops,
+[1] https://lkml.org/lkml/2020/7/20/619
 
-I'm worried that dispcc may probe before GCC and then this branch is
-disabled out of boot. Then we'll try to read dispcc registers to
-determine clk rates and blow up. I hope that doesn't happen and fixing
-it would need this patch plus the usage of PM clks in the dispcc driver.
-I suppose if we run into that problem we can use PM clks to make this
-branch turn on before accessing any dispcc clks.
+Maheshwar Ajja (1):
+  media: v4l2-ctrls: Add encoder constant quality control
+
+Stanimir Varbanov (5):
+  venus: venc: Add support for constant quality control
+  media: v4l2-ctrl: Add frame-skip std encoder control
+  venus: venc: Add support for frame-skip mode v4l2 control
+  media: s5p-mfc: Use standard frame skip mode control
+  media: docs: Deprecate mfc frame skip control
+
+ .../media/v4l/ext-ctrls-codec.rst             | 53 +++++++++++++++++++
+ drivers/media/platform/qcom/venus/core.h      |  2 +
+ drivers/media/platform/qcom/venus/hfi_cmds.c  | 37 ++++++++++++-
+ .../media/platform/qcom/venus/hfi_helper.h    | 10 +++-
+ drivers/media/platform/qcom/venus/venc.c      | 20 +++++--
+ .../media/platform/qcom/venus/venc_ctrls.c    | 18 ++++++-
+ drivers/media/platform/s5p-mfc/s5p_mfc_enc.c  |  6 +++
+ drivers/media/v4l2-core/v4l2-ctrls.c          | 12 +++++
+ include/uapi/linux/v4l2-controls.h            |  8 +++
+ 9 files changed, 160 insertions(+), 6 deletions(-)
+
+-- 
+2.17.1
+
