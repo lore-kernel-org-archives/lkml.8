@@ -2,113 +2,177 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B029C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B07F0C4363E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 715C8207BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F0320684
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:30:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mdh/cnjx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbgGUQbx (ORCPT
+        id S1726890AbgGUQaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:31:53 -0400
-Received: from mga04.intel.com ([192.55.52.120]:46226 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727860AbgGUQbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:31:52 -0400
-IronPort-SDR: o0NiPHrTuxyP+q0NerB5nLFWmpMBzzujbGJ4Xpay4EJr9vBcrn0nyDvKIft1+P0zWUc9RAxnLz
- YlsnXg+/tuqA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="147673884"
-X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="147673884"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 09:31:52 -0700
-IronPort-SDR: QIqyg569mkeyzGevueJJ0WqfJG1wbbgWKT8l7gfSm5T3TqYGXngLSHY7sbeaPpwcZZol3ESKK7
- P6/eMlyR/hZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="270482086"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Jul 2020 09:31:52 -0700
-Date:   Tue, 21 Jul 2020 09:31:52 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 13/17] kmap: Add stray write protection for device
- pages
-Message-ID: <20200721163151.GA643353@iweiny-DESK2.sc.intel.com>
-References: <20200717072056.73134-1-ira.weiny@intel.com>
- <20200717072056.73134-14-ira.weiny@intel.com>
- <20200717092139.GC10769@hirez.programming.kicks-ass.net>
- <20200719041319.GA478573@iweiny-DESK2.sc.intel.com>
- <20200720091740.GP10769@hirez.programming.kicks-ass.net>
+        Tue, 21 Jul 2020 12:30:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728956AbgGUQ2Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 12:28:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FB6CC0619DA;
+        Tue, 21 Jul 2020 09:28:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=CAvAtIIkzm3fHK0HKBHFJbCbWuSjjmsX8Z35+03m94I=; b=Mdh/cnjxeP+90d07hvT42e5OTb
+        SJehNGJ6lRo0gUibMHZui+5L4KxWRhiKXXeDSyxnxjvjtgJufGqVpmwF0hNJKJok0txYSSY5zeSja
+        BzPgZVL5goWPwRRBMneQx+hrpJ+CCcnOxv0/sXtzo7mQ5uqYsMVenTzEgVjOTPJtj1yKQvsE9nPh0
+        ok9L2Qtf4ECGPe/KQwS+jHFFMPx/Ni6A4bg+7mflmvmRE4yotLpgKiQqgFviHL/Pmz8VoD7WnMMKm
+        wFimCYe9PpiuQvCJmkTRLeNFihucuLCpP4RYde/WBuuDoJOa5C0BAcnHewgqtYVPDSxrIcBiR/fOH
+        1nRQArcw==;
+Received: from [2001:4bb8:18c:2acc:5b1c:6483:bd6d:e406] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxv7s-0007Qw-FT; Tue, 21 Jul 2020 16:28:21 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH 01/24] fs: refactor do_mount
+Date:   Tue, 21 Jul 2020 18:27:55 +0200
+Message-Id: <20200721162818.197315-2-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200721162818.197315-1-hch@lst.de>
+References: <20200721162818.197315-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720091740.GP10769@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 11:17:40AM +0200, Peter Zijlstra wrote:
-> On Sat, Jul 18, 2020 at 09:13:19PM -0700, Ira Weiny wrote:
-> > On Fri, Jul 17, 2020 at 11:21:39AM +0200, Peter Zijlstra wrote:
-> > > On Fri, Jul 17, 2020 at 12:20:52AM -0700, ira.weiny@intel.com wrote:
-> > > > @@ -31,6 +32,20 @@ static inline void invalidate_kernel_vmap_range(void *vaddr, int size)
-> > > >  
-> > > >  #include <asm/kmap_types.h>
-> > > >  
-> > > > +static inline void enable_access(struct page *page)
-> > > > +{
-> > > > +	if (!page_is_access_protected(page))
-> > > > +		return;
-> > > > +	dev_access_enable();
-> > > > +}
-> > > > +
-> > > > +static inline void disable_access(struct page *page)
-> > > > +{
-> > > > +	if (!page_is_access_protected(page))
-> > > > +		return;
-> > > > +	dev_access_disable();
-> > > > +}
-> > > 
-> > > These are some very generic names, do we want them to be a little more
-> > > specific?
-> > 
-> > I had them named kmap_* but Dave (I think it was Dave) thought they did not
-> > really apply strictly to kmap_*.
-> > 
-> > They are static to this file which I thought may be sufficient to 'uniqify'
-> > them?
-> 
-> They're static to a .h, which means they're all over the place ;-)
+Factor out a path_mount helper that takes a struct path * instead of the
+actual file name.  This will allow to convert the init and devtmpfs code
+to properly mount based on a kernel pointer instead of relying on the
+implicit set_fs(KERNEL_DS) during early init.
 
-I've thought about it a bit.  I think I agree with both you and Dave.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/namespace.c | 67 ++++++++++++++++++++++++++------------------------
+ 1 file changed, 35 insertions(+), 32 deletions(-)
 
-How about:
+diff --git a/fs/namespace.c b/fs/namespace.c
+index f30ed401cc6d7a..6f8234f74bed90 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -3115,12 +3115,11 @@ char *copy_mount_string(const void __user *data)
+  * Therefore, if this magic number is present, it carries no information
+  * and must be discarded.
+  */
+-long do_mount(const char *dev_name, const char __user *dir_name,
++static int path_mount(const char *dev_name, struct path *path,
+ 		const char *type_page, unsigned long flags, void *data_page)
+ {
+-	struct path path;
+ 	unsigned int mnt_flags = 0, sb_flags;
+-	int retval = 0;
++	int ret;
+ 
+ 	/* Discard magic */
+ 	if ((flags & MS_MGC_MSK) == MS_MGC_VAL)
+@@ -3133,19 +3132,13 @@ long do_mount(const char *dev_name, const char __user *dir_name,
+ 	if (flags & MS_NOUSER)
+ 		return -EINVAL;
+ 
+-	/* ... and get the mountpoint */
+-	retval = user_path_at(AT_FDCWD, dir_name, LOOKUP_FOLLOW, &path);
+-	if (retval)
+-		return retval;
+-
+-	retval = security_sb_mount(dev_name, &path,
+-				   type_page, flags, data_page);
+-	if (!retval && !may_mount())
+-		retval = -EPERM;
+-	if (!retval && (flags & SB_MANDLOCK) && !may_mandlock())
+-		retval = -EPERM;
+-	if (retval)
+-		goto dput_out;
++	ret = security_sb_mount(dev_name, path, type_page, flags, data_page);
++	if (ret)
++		return ret;
++	if (!may_mount())
++		return -EPERM;
++	if ((flags & SB_MANDLOCK) && !may_mandlock())
++		return -EPERM;
+ 
+ 	/* Default to relatime unless overriden */
+ 	if (!(flags & MS_NOATIME))
+@@ -3172,7 +3165,7 @@ long do_mount(const char *dev_name, const char __user *dir_name,
+ 	    ((flags & (MS_NOATIME | MS_NODIRATIME | MS_RELATIME |
+ 		       MS_STRICTATIME)) == 0)) {
+ 		mnt_flags &= ~MNT_ATIME_MASK;
+-		mnt_flags |= path.mnt->mnt_flags & MNT_ATIME_MASK;
++		mnt_flags |= path->mnt->mnt_flags & MNT_ATIME_MASK;
+ 	}
+ 
+ 	sb_flags = flags & (SB_RDONLY |
+@@ -3185,22 +3178,32 @@ long do_mount(const char *dev_name, const char __user *dir_name,
+ 			    SB_I_VERSION);
+ 
+ 	if ((flags & (MS_REMOUNT | MS_BIND)) == (MS_REMOUNT | MS_BIND))
+-		retval = do_reconfigure_mnt(&path, mnt_flags);
+-	else if (flags & MS_REMOUNT)
+-		retval = do_remount(&path, flags, sb_flags, mnt_flags,
+-				    data_page);
+-	else if (flags & MS_BIND)
+-		retval = do_loopback(&path, dev_name, flags & MS_REC);
+-	else if (flags & (MS_SHARED | MS_PRIVATE | MS_SLAVE | MS_UNBINDABLE))
+-		retval = do_change_type(&path, flags);
+-	else if (flags & MS_MOVE)
+-		retval = do_move_mount_old(&path, dev_name);
+-	else
+-		retval = do_new_mount(&path, type_page, sb_flags, mnt_flags,
+-				      dev_name, data_page);
+-dput_out:
++		return do_reconfigure_mnt(path, mnt_flags);
++	if (flags & MS_REMOUNT)
++		return do_remount(path, flags, sb_flags, mnt_flags, data_page);
++	if (flags & MS_BIND)
++		return do_loopback(path, dev_name, flags & MS_REC);
++	if (flags & (MS_SHARED | MS_PRIVATE | MS_SLAVE | MS_UNBINDABLE))
++		return do_change_type(path, flags);
++	if (flags & MS_MOVE)
++		return do_move_mount_old(path, dev_name);
++
++	return do_new_mount(path, type_page, sb_flags, mnt_flags, dev_name,
++			    data_page);
++}
++
++long do_mount(const char *dev_name, const char __user *dir_name,
++		const char *type_page, unsigned long flags, void *data_page)
++{
++	struct path path;
++	int ret;
++
++	ret = user_path_at(AT_FDCWD, dir_name, LOOKUP_FOLLOW, &path);
++	if (ret)
++		return ret;
++	ret = path_mount(dev_name, &path, type_page, flags, data_page);
+ 	path_put(&path);
+-	return retval;
++	return ret;
+ }
+ 
+ static struct ucounts *inc_mnt_namespaces(struct user_namespace *ns)
+-- 
+2.27.0
 
-dev_page_{en,dis}able_access()
-
-??
-
-I've made that change for now.
-
-Thanks,
-Ira
