@@ -2,105 +2,155 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF2AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3F0C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD02208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B988120709
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:01:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVJa/eVd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgGUIAa (ORCPT
+        id S1728532AbgGUIBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:00:30 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:59986 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGUIAa (ORCPT
+        Tue, 21 Jul 2020 04:01:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbgGUIBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:00:30 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 002392005C;
-        Tue, 21 Jul 2020 10:00:23 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 10:00:22 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/1] video: backlight: cr_bllcd: Remove unused variable
- 'intensity'
-Message-ID: <20200721080022.GA41608@ravnborg.org>
-References: <20200721073919.925935-1-lee.jones@linaro.org>
+        Tue, 21 Jul 2020 04:01:03 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864E2C0619D8;
+        Tue, 21 Jul 2020 01:01:03 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 207so10363311pfu.3;
+        Tue, 21 Jul 2020 01:01:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FKztgh8Zky/8/rtOQRmpObjZaYTW88VeKPdEo6E56Zs=;
+        b=NVJa/eVdnXncXoZ/3vDBSMzZJvOHbsuk+Sj56FDAS5xrQoD08c5yVOuKNaylUAdI2D
+         6iu2gn0/Um54HkxD8aMFvcUNKvmzBqT4cjNx+gKlpVEK8twYFLtaGeBCxxK9dHkCGPZq
+         XJ6sNfmD3xGnPzVaj0DuOv4KpCUqUPGdKnhREI9CsTGJmWKr2tNgVdckZe3ZoRIvC0KF
+         mDr9iN4N9t21vAgSvmdpIBsalhT12FCFCMMtCx7rNRYh4YvoI5C5olGAkYP9M+g18dOp
+         Cx17859vzfonmY4ZWm1hI4LyUQzlQ+r7R8HaUMgM9yKWa//bcfESPP3xZnE57eHWxu14
+         ghKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FKztgh8Zky/8/rtOQRmpObjZaYTW88VeKPdEo6E56Zs=;
+        b=Ll1rCkdPd9XLxDJv43eknrOS3kiCYXIh/rUPUAnvksfDD0ZTeS5KjBZq0ZYwamdVd2
+         y1IedXLRZ359b5sBFz8cz+P5Gxu9EkNNhdVHEXikmC2Hrc7jkIJ9Fl+XpPVHTXLQh39u
+         MyQ67YIlzdp/fUkx9yi2CpNR2LvIRk/2wQVXzgMPqC84h66nJ/0vUsgVLaIaeDNj5iIZ
+         60UBHZuEjfD7JdO/jNRKNwxwBpxlzAz2iuYhZxs1h6qIxM1C5R+pGp/+uS2B3mHXWxT4
+         6+ha9EN/RYsa6ogHST51Gu1saRTHbzf9yE8j5kbXCLtP63D2W+WgLKmNCpRWReKJUAtm
+         Ei6A==
+X-Gm-Message-State: AOAM53093pUxuoDr/Q0FLipe+DDTDakt8t96XPMfmkZGy3DaEqWkGvBQ
+        t0TjLRO7g62+m67ZsTEIHoI=
+X-Google-Smtp-Source: ABdhPJw6K7r/HonYmgqw9HnF4JWA+2Yrlp3PlFPTCgT3A0Rf8Dj0K6UnTTAfMcQKwDNRW9g5N4ZcPQ==
+X-Received: by 2002:a62:7c97:: with SMTP id x145mr24122060pfc.80.1595318462971;
+        Tue, 21 Jul 2020 01:01:02 -0700 (PDT)
+Received: from localhost ([2601:647:5800:8d47:9eef:d5ff:fefc:64ae])
+        by smtp.gmail.com with ESMTPSA id a2sm19500731pfg.120.2020.07.21.01.01.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 Jul 2020 01:01:02 -0700 (PDT)
+From:   Brian Norris <computersforpeace@gmail.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, <linux-kernel@vger.kernel.org>,
+        Brian Norris <computersforpeace@gmail.com>
+Subject: [RFC PATCH] firmware: qcom_scm: disable SDI at boot
+Date:   Tue, 21 Jul 2020 01:00:54 -0700
+Message-Id: <20200721080054.2803881-1-computersforpeace@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200721073919.925935-1-lee.jones@linaro.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=IkcTkHD0fZMA:10 a=7gkXJVJtAAAA:8 a=KKAkSRfTAAAA:8 a=pGLkceISAAAA:8
-        a=hD80L64hAAAA:8 a=e5mUnYsNAAAA:8 a=VwQbUJbxAAAA:8 a=8YDWVOxWXuGqFK3bR7oA:9
-        a=QEXdDO2ut3YA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=cvBusfyB2V15izCimMoJ:22
-        a=Vxmtnl_E_bksehYqCbjh:22 a=AjGcO6oz07-iQ99wixmX:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee.
+*** Disclaimer: I know extremely little about Qualcomm's undocumented
+SMC API. ***
 
-On Tue, Jul 21, 2020 at 08:39:19AM +0100, Lee Jones wrote:
-> Fixes the following kernel build warning:
-> 
->  drivers/video/backlight/cr_bllcd.c: In function ‘cr_backlight_set_intensity’:
->  drivers/video/backlight/cr_bllcd.c:62:6: warning: unused variable ‘intensity’ [-Wunused-variable]
->  62 | int intensity = bd->props.brightness;
->  | ^~~~~~~~~
-> 
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-fbdev@vger.kernel.org
-> Fixes: 24d34617c24f ("backlight: cr_bllcd: Introduce gpio-backlight semantics")
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+I'm trying to get upstream support for an IPQ4019 device I have, and by
+default, warm boot does not work properly -- it appears to trap into
+TrustZone. I find that the downstream/vendor kernel makes this call at
+boot, with notes about the watchdog and SDI configuration. It appears
+some of this is leftover from when they had download-mode enabled, as
+well as some other debug features, and they didn't get completely turned
+off in the production bootloader. But I reall can't tell that well; I'm
+just going off the minimal source code and git logs.
 
-Thanks for fixing this.
-The driver only build for X86 so the warnings was lost in other build
-noise.
-One more thing to improve before next submission - sorry for this.
+Because this is so undocumented, I can't tell what the right thing to do
+is -- should this go behind a DT property? Should I apply it only for
+ipq4019? Is there a better way to describe and document the bits used in
+this command?
 
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+If it helps, I can try to shop around for some testing on other systems.
 
-> ---
->  drivers/video/backlight/cr_bllcd.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/video/backlight/cr_bllcd.c b/drivers/video/backlight/cr_bllcd.c
-> index a24d42e1ea3cd..4ad0a72531fe2 100644
-> --- a/drivers/video/backlight/cr_bllcd.c
-> +++ b/drivers/video/backlight/cr_bllcd.c
-> @@ -59,7 +59,6 @@ struct cr_panel {
->  
->  static int cr_backlight_set_intensity(struct backlight_device *bd)
->  {
-> -	int intensity = bd->props.brightness;
->  	u32 addr = gpio_bar + CRVML_PANEL_PORT;
->  	u32 cur = inl(addr);
->  
-> -- 
-> 2.25.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+---
+ drivers/firmware/qcom_scm.c | 20 ++++++++++++++++++++
+ drivers/firmware/qcom_scm.h |  1 +
+ 2 files changed, 21 insertions(+)
+
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 0e7233a20f34..70c46f1668d1 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -394,6 +394,20 @@ static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
+ 	return qcom_scm_call(__scm->dev, &desc, NULL);
+ }
+ 
++static int __qcom_scm_disable_sdi(struct device *dev)
++{
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_BOOT,
++		.cmd = QCOM_SCM_BOOT_CONFIG_SDI,
++		.arginfo = QCOM_SCM_ARGS(2),
++		.args[0] = 1  /* 1: disable watchdog debug */,
++		.args[1] = 0  /* 0: disable SDI */,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
++
++	return qcom_scm_call(__scm->dev, &desc, NULL);
++}
++
+ static void qcom_scm_set_download_mode(bool enable)
+ {
+ 	bool avail;
+@@ -1122,6 +1136,12 @@ static int qcom_scm_probe(struct platform_device *pdev)
+ 	if (download_mode)
+ 		qcom_scm_set_download_mode(true);
+ 
++	/*
++	 * Some bootloaders leave this enabled by default, which prevents
++	 * normal warm reboot.
++	 */
++	__qcom_scm_disable_sdi(__scm->dev);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+index d9ed670da222..39c3dc0dfc50 100644
+--- a/drivers/firmware/qcom_scm.h
++++ b/drivers/firmware/qcom_scm.h
+@@ -74,6 +74,7 @@ extern int scm_legacy_call(struct device *dev, const struct qcom_scm_desc *desc,
+ #define QCOM_SCM_SVC_BOOT		0x01
+ #define QCOM_SCM_BOOT_SET_ADDR		0x01
+ #define QCOM_SCM_BOOT_TERMINATE_PC	0x02
++#define QCOM_SCM_BOOT_CONFIG_SDI	0x09
+ #define QCOM_SCM_BOOT_SET_DLOAD_MODE	0x10
+ #define QCOM_SCM_BOOT_SET_REMOTE_STATE	0x0a
+ #define QCOM_SCM_FLUSH_FLAG_MASK	0x3
+-- 
+2.27.0
+
