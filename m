@@ -2,67 +2,67 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E1AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5BAC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D64320714
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0532077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:30:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LT9NtZoo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vXrgbBZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbgGUKah (ORCPT
+        id S1729265AbgGUKap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:30:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45434 "EHLO
+        Tue, 21 Jul 2020 06:30:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgGUKae (ORCPT
+        with ESMTP id S1726521AbgGUKai (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:30:34 -0400
-Received: from mail-wm1-x34a.google.com (mail-wm1-x34a.google.com [IPv6:2a00:1450:4864:20::34a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D781C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:30:34 -0700 (PDT)
-Received: by mail-wm1-x34a.google.com with SMTP id q20so1081293wme.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:30:34 -0700 (PDT)
+        Tue, 21 Jul 2020 06:30:38 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81662C0619D9
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:30:38 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id w15so2094570qti.21
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:30:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=QN03hGb1dtnU9kx2PScGQDyxb1uL0PGs7IgSGP8StbY=;
-        b=LT9NtZoo2FjFxBsEXCjW1j5nFRTQtzt0CPeLu9AuY8l3l6RafCO62lt60euCFRqeLS
-         kIAs1R4UkfxSauSu9Yc02kTwcf31h9HJpeEypF8MfwGMH0ErdDPw9Gix1Ai+DlEp6JtW
-         UG2BSCFC3GBzof6x9CL21EBppH0LCZXhnPn3RzCMgyZd/CjL0iC9OWLze5a/rjuKQv9m
-         j0ZworTHLVh2PGTTfUjAe8U7hJT/9KP6DRLYg43FA6aINqkyK1X3IkgcVqTAWl4Y1VRg
-         pCwq3Ve7KvwAH20w2DrF5qmVgl94NsvCldzHdG01IfjlE4G/XP1kJ3OByJseIynZnd/J
-         RZyg==
+        bh=vVlSyEcdwOQNKSx6Cnzx1nFD8CBubHuBwhuu4avdOuU=;
+        b=vXrgbBZMeSjvDTESYkIbwmgjhHej1P9NPmtoI0jh82pgDLABLiJRVX4pp9/coI4VJR
+         3OMaP53Sv9UFXLEOuyFlQ6LVm/IjXFe4BMvCzcgjNy/cDGZAfG4IYUrch2FwpM/va84U
+         ZpbW3fDwwIPzU7/jN4c+KatCCX0HNHvXo48p7z9qckD7p8LscgFUMNf5iej+xYoar1h7
+         mtB3W8wrurFcIwNEq703YUbX3QPhQzjMVB15yuF+fxwz3JFjvQ+48BeZDSMwTa1+2pos
+         W2/Z1ShXiVoiRd78daIZJfsCNNYhNc+Whbprbm83B8mkONow9+d2FxLOF5l602RByaqu
+         8R0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=QN03hGb1dtnU9kx2PScGQDyxb1uL0PGs7IgSGP8StbY=;
-        b=EG7WoYwFbs2Xz3bn8XjHnO/9AOaHTOyp4aIiqBXqqopM0kA+YQdfyvljf9m4ejMdT6
-         FBKG4+riQcPAzDyJXm6sjMYfHKwcQQYYHGqLPOmVynSTjyKK4xhkz205f4FqMUa9m9Db
-         SC8/+oTyw2QMysrzytmqv8Vrr8apX4kFmBh1jmVLnpxV8apbSdaYLKiio1Op5Dh94A8n
-         Ww9VkYj59ap0uc28k9MInpN79OzlvVOncnbhLRPS+O84+Pnv6aIqyvWYZQ6SJa4TDqqo
-         hYmUceRM4/s72eAzvMyjLviMGpW9NCdRaN9y/Hn+osN1Efgiv+uppU7mxaOmT4yhMDe8
-         zFMg==
-X-Gm-Message-State: AOAM533jPao1+LcwdnFCfzLTERLLdPptQ/XrCAlNs4oF4Rd3Sx8EYDeS
-        vsTRmejaHnnxDmHs/VhPDMe9xm9dyQ==
-X-Google-Smtp-Source: ABdhPJyNqqbJOCcO/0w0aNVhLlUcakcA8qAMo/mwhTj1A5Qy7JKuDcVFeXZrrVlOOVqh47yJ1K569lmf7A==
-X-Received: by 2002:a7b:c84d:: with SMTP id c13mr3416944wml.170.1595327433015;
- Tue, 21 Jul 2020 03:30:33 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 12:30:09 +0200
+        bh=vVlSyEcdwOQNKSx6Cnzx1nFD8CBubHuBwhuu4avdOuU=;
+        b=TEJYVGNer7PMurYtEBXVqG+MZm7lX79hRIJpr+MUhfm9ATy9lHomxpxdzE+N6h8xio
+         CjArAPO3w5b/XCFXTpEYP53yfcm6rmsQy8AYk9CvtPv2gtxRz+5E4Zq+sOCLwLvYO08I
+         G1g/sovdpKxCGWk/7I/ELTunZ8j7OtCIuo2leeBcDNC0mDgkdiLZI5IaZ9mdOmuHggDV
+         hpn6664/C6mt3b7wYbouNIu4/bAnh3QaJmvlxyMq3w4U+RYFl//1lxzVXYL2QiCs8QP5
+         oA7aL7K3gAQWXsr9pURhifFV5B3OQjpqRozLApEZYv2NXKYdtsHjmsNvaO2oSWFLO4PY
+         HFrA==
+X-Gm-Message-State: AOAM533o7rNGiSKTrIX4PVZYNoegiQeq46JFGjSGwZYch3Mo5EuTWBft
+        BjRyTDsvVKO8BDwVW4Ai9B0HumRtew==
+X-Google-Smtp-Source: ABdhPJw9AZJ6/Sq8gRuvn69c50PCI7j/zYVvTftn2YQFr3SnFEinKaitleRuJAZKsRV6Dc9/Ltu56y9PYg==
+X-Received: by 2002:a0c:b48e:: with SMTP id c14mr26052857qve.47.1595327437707;
+ Tue, 21 Jul 2020 03:30:37 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 12:30:11 +0200
 In-Reply-To: <20200721103016.3287832-1-elver@google.com>
-Message-Id: <20200721103016.3287832-2-elver@google.com>
+Message-Id: <20200721103016.3287832-4-elver@google.com>
 Mime-Version: 1.0
 References: <20200721103016.3287832-1-elver@google.com>
 X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
-Subject: [PATCH 1/8] kcsan: Support compounded read-write instrumentation
+Subject: [PATCH 3/8] kcsan: Skew delay to be longer for certain access types
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com, paulmck@kernel.org
 Cc:     will@kernel.org, peterz@infradead.org, arnd@arndb.de,
@@ -75,220 +75,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for compounded read-write instrumentation if supported by
-the compiler. Adds the necessary instrumentation functions, and a new
-type which is used to generate a more descriptive report.
-
-Furthermore, such compounded memory access instrumentation is excluded
-from the "assume aligned writes up to word size are atomic" rule,
-because we cannot assume that the compiler emits code that is atomic for
-compound ops.
-
-LLVM/Clang added support for the feature in:
-https://github.com/llvm/llvm-project/commit/785d41a261d136b64ab6c15c5d35f2adc5ad53e3
-
-The new instrumentation is emitted for sets of memory accesses in the
-same basic block to the same address with at least one read appearing
-before a write. These typically result from compound operations such as
-++, --, +=, -=, |=, &=, etc. but also equivalent forms such as "var =
-var + 1". Where the compiler determines that it is equivalent to emit a
-call to a single __tsan_read_write instead of separate __tsan_read and
-__tsan_write, we can then benefit from improved performance and better
-reporting for such access patterns.
-
-The new reports now show that the ops are both reads and writes, for
-example:
-
-	read-write to 0xffffffff90548a38 of 8 bytes by task 143 on cpu 3:
-	 test_kernel_rmw_array+0x45/0xa0
-	 access_thread+0x71/0xb0
-	 kthread+0x21e/0x240
-	 ret_from_fork+0x22/0x30
-
-	read-write to 0xffffffff90548a38 of 8 bytes by task 144 on cpu 2:
-	 test_kernel_rmw_array+0x45/0xa0
-	 access_thread+0x71/0xb0
-	 kthread+0x21e/0x240
-	 ret_from_fork+0x22/0x30
+For compound instrumentation and assert accesses, skew the watchpoint
+delay to be longer. We still shouldn't exceed the maximum delays, but it
+is safe to skew the delay for these accesses.
 
 Signed-off-by: Marco Elver <elver@google.com>
 ---
- include/linux/kcsan-checks.h | 45 ++++++++++++++++++++++++------------
- kernel/kcsan/core.c          | 23 ++++++++++++++----
- kernel/kcsan/report.c        |  4 ++++
- scripts/Makefile.kcsan       |  2 +-
- 4 files changed, 53 insertions(+), 21 deletions(-)
+ kernel/kcsan/core.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/kcsan-checks.h b/include/linux/kcsan-checks.h
-index 7b0b9c44f5f3..ab23b38ad93d 100644
---- a/include/linux/kcsan-checks.h
-+++ b/include/linux/kcsan-checks.h
-@@ -7,19 +7,13 @@
- #include <linux/compiler_attributes.h>
- #include <linux/types.h>
- 
--/*
-- * ACCESS TYPE MODIFIERS
-- *
-- *   <none>: normal read access;
-- *   WRITE : write access;
-- *   ATOMIC: access is atomic;
-- *   ASSERT: access is not a regular access, but an assertion;
-- *   SCOPED: access is a scoped access;
-- */
--#define KCSAN_ACCESS_WRITE  0x1
--#define KCSAN_ACCESS_ATOMIC 0x2
--#define KCSAN_ACCESS_ASSERT 0x4
--#define KCSAN_ACCESS_SCOPED 0x8
-+/* Access types -- if KCSAN_ACCESS_WRITE is not set, the access is a read. */
-+#define KCSAN_ACCESS_WRITE	(1 << 0) /* Access is a write. */
-+#define KCSAN_ACCESS_COMPOUND	(1 << 1) /* Compounded read-write instrumentation. */
-+#define KCSAN_ACCESS_ATOMIC	(1 << 2) /* Access is atomic. */
-+/* The following are special, and never due to compiler instrumentation. */
-+#define KCSAN_ACCESS_ASSERT	(1 << 3) /* Access is an assertion. */
-+#define KCSAN_ACCESS_SCOPED	(1 << 4) /* Access is a scoped access. */
- 
- /*
-  * __kcsan_*: Always calls into the runtime when KCSAN is enabled. This may be used
-@@ -204,6 +198,15 @@ static inline void __kcsan_disable_current(void) { }
- #define __kcsan_check_write(ptr, size)                                         \
- 	__kcsan_check_access(ptr, size, KCSAN_ACCESS_WRITE)
- 
-+/**
-+ * __kcsan_check_read_write - check regular read-write access for races
-+ *
-+ * @ptr: address of access
-+ * @size: size of access
-+ */
-+#define __kcsan_check_read_write(ptr, size)                                    \
-+	__kcsan_check_access(ptr, size, KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE)
-+
- /**
-  * kcsan_check_read - check regular read access for races
-  *
-@@ -221,18 +224,30 @@ static inline void __kcsan_disable_current(void) { }
- #define kcsan_check_write(ptr, size)                                           \
- 	kcsan_check_access(ptr, size, KCSAN_ACCESS_WRITE)
- 
-+/**
-+ * kcsan_check_read_write - check regular read-write access for races
-+ *
-+ * @ptr: address of access
-+ * @size: size of access
-+ */
-+#define kcsan_check_read_write(ptr, size)                                      \
-+	kcsan_check_access(ptr, size, KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE)
-+
- /*
-  * Check for atomic accesses: if atomic accesses are not ignored, this simply
-  * aliases to kcsan_check_access(), otherwise becomes a no-op.
-  */
- #ifdef CONFIG_KCSAN_IGNORE_ATOMICS
--#define kcsan_check_atomic_read(...)	do { } while (0)
--#define kcsan_check_atomic_write(...)	do { } while (0)
-+#define kcsan_check_atomic_read(...)		do { } while (0)
-+#define kcsan_check_atomic_write(...)		do { } while (0)
-+#define kcsan_check_atomic_read_write(...)	do { } while (0)
- #else
- #define kcsan_check_atomic_read(ptr, size)                                     \
- 	kcsan_check_access(ptr, size, KCSAN_ACCESS_ATOMIC)
- #define kcsan_check_atomic_write(ptr, size)                                    \
- 	kcsan_check_access(ptr, size, KCSAN_ACCESS_ATOMIC | KCSAN_ACCESS_WRITE)
-+#define kcsan_check_atomic_read_write(ptr, size)                               \
-+	kcsan_check_access(ptr, size, KCSAN_ACCESS_ATOMIC | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_COMPOUND)
- #endif
- 
- /**
 diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index f8dd9b2b8068..fb52de2facf3 100644
+index fb52de2facf3..4633baebf84e 100644
 --- a/kernel/kcsan/core.c
 +++ b/kernel/kcsan/core.c
-@@ -223,7 +223,7 @@ is_atomic(const volatile void *ptr, size_t size, int type, struct kcsan_ctx *ctx
+@@ -283,11 +283,15 @@ static __always_inline bool kcsan_is_enabled(void)
+ 	return READ_ONCE(kcsan_enabled) && get_ctx()->disable_count == 0;
+ }
  
- 	if (IS_ENABLED(CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC) &&
- 	    (type & KCSAN_ACCESS_WRITE) && size <= sizeof(long) &&
--	    IS_ALIGNED((unsigned long)ptr, size))
-+	    !(type & KCSAN_ACCESS_COMPOUND) && IS_ALIGNED((unsigned long)ptr, size))
- 		return true; /* Assume aligned writes up to word size are atomic. */
+-static inline unsigned int get_delay(void)
++static inline unsigned int get_delay(int type)
+ {
+ 	unsigned int delay = in_task() ? kcsan_udelay_task : kcsan_udelay_interrupt;
++	/* For certain access types, skew the random delay to be longer. */
++	unsigned int skew_delay_order =
++		(type & (KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_ASSERT)) ? 1 : 0;
++
+ 	return delay - (IS_ENABLED(CONFIG_KCSAN_DELAY_RANDOMIZE) ?
+-				prandom_u32_max(delay) :
++				prandom_u32_max(delay >> skew_delay_order) :
+ 				0);
+ }
  
- 	if (ctx->atomic_next > 0) {
-@@ -771,7 +771,17 @@ EXPORT_SYMBOL(__kcsan_check_access);
- 	EXPORT_SYMBOL(__tsan_write##size);                                     \
- 	void __tsan_unaligned_write##size(void *ptr)                           \
- 		__alias(__tsan_write##size);                                   \
--	EXPORT_SYMBOL(__tsan_unaligned_write##size)
-+	EXPORT_SYMBOL(__tsan_unaligned_write##size);                           \
-+	void __tsan_read_write##size(void *ptr);                               \
-+	void __tsan_read_write##size(void *ptr)                                \
-+	{                                                                      \
-+		check_access(ptr, size,                                        \
-+			     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE);      \
-+	}                                                                      \
-+	EXPORT_SYMBOL(__tsan_read_write##size);                                \
-+	void __tsan_unaligned_read_write##size(void *ptr)                      \
-+		__alias(__tsan_read_write##size);                              \
-+	EXPORT_SYMBOL(__tsan_unaligned_read_write##size)
+@@ -449,7 +453,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 	 * Delay this thread, to increase probability of observing a racy
+ 	 * conflicting access.
+ 	 */
+-	udelay(get_delay());
++	udelay(get_delay(type));
  
- DEFINE_TSAN_READ_WRITE(1);
- DEFINE_TSAN_READ_WRITE(2);
-@@ -894,7 +904,8 @@ EXPORT_SYMBOL(__tsan_init);
- 	u##bits __tsan_atomic##bits##_##op(u##bits *ptr, u##bits v, int memorder);                 \
- 	u##bits __tsan_atomic##bits##_##op(u##bits *ptr, u##bits v, int memorder)                  \
- 	{                                                                                          \
--		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC); \
-+		check_access(ptr, bits / BITS_PER_BYTE,                                            \
-+			     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);    \
- 		return __atomic_##op##suffix(ptr, v, memorder);                                    \
- 	}                                                                                          \
- 	EXPORT_SYMBOL(__tsan_atomic##bits##_##op)
-@@ -922,7 +933,8 @@ EXPORT_SYMBOL(__tsan_init);
- 	int __tsan_atomic##bits##_compare_exchange_##strength(u##bits *ptr, u##bits *exp,          \
- 							      u##bits val, int mo, int fail_mo)    \
- 	{                                                                                          \
--		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC); \
-+		check_access(ptr, bits / BITS_PER_BYTE,                                            \
-+			     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);    \
- 		return __atomic_compare_exchange_n(ptr, exp, val, weak, mo, fail_mo);              \
- 	}                                                                                          \
- 	EXPORT_SYMBOL(__tsan_atomic##bits##_compare_exchange_##strength)
-@@ -933,7 +945,8 @@ EXPORT_SYMBOL(__tsan_init);
- 	u##bits __tsan_atomic##bits##_compare_exchange_val(u##bits *ptr, u##bits exp, u##bits val, \
- 							   int mo, int fail_mo)                    \
- 	{                                                                                          \
--		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC); \
-+		check_access(ptr, bits / BITS_PER_BYTE,                                            \
-+			     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);    \
- 		__atomic_compare_exchange_n(ptr, &exp, val, 0, mo, fail_mo);                       \
- 		return exp;                                                                        \
- 	}                                                                                          \
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index ac5f8345bae9..d05052c23261 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -228,6 +228,10 @@ static const char *get_access_type(int type)
- 		return "write";
- 	case KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC:
- 		return "write (marked)";
-+	case KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE:
-+		return "read-write";
-+	case KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC:
-+		return "read-write (marked)";
- 	case KCSAN_ACCESS_SCOPED:
- 		return "read (scoped)";
- 	case KCSAN_ACCESS_SCOPED | KCSAN_ACCESS_ATOMIC:
-diff --git a/scripts/Makefile.kcsan b/scripts/Makefile.kcsan
-index dd66206f4578..a20dd63dfd17 100644
---- a/scripts/Makefile.kcsan
-+++ b/scripts/Makefile.kcsan
-@@ -13,7 +13,7 @@ endif
- # of some options does not break KCSAN nor causes false positive reports.
- CFLAGS_KCSAN := -fsanitize=thread \
- 	$(call cc-option,$(call cc-param,tsan-instrument-func-entry-exit=0) -fno-optimize-sibling-calls) \
--	$(call cc-option,$(call cc-param,tsan-instrument-read-before-write=1)) \
-+	$(call cc-option,$(call cc-param,tsan-compound-read-before-write=1),$(call cc-option,$(call cc-param,tsan-instrument-read-before-write=1))) \
- 	$(call cc-param,tsan-distinguish-volatile=1)
- 
- endif # CONFIG_KCSAN
+ 	/*
+ 	 * Re-read value, and check if it is as expected; if not, we infer a
 -- 
 2.28.0.rc0.105.gf9edc3c819-goog
 
