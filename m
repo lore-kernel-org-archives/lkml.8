@@ -2,224 +2,113 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE10DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E450C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6FA820714
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2192F2065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:37:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A1Kzhq2z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTDq8VUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729243AbgGUOg1 (ORCPT
+        id S1728924AbgGUOhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:36:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49842 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726412AbgGUOg1 (ORCPT
+        Tue, 21 Jul 2020 10:37:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbgGUOhu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:36:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595342183;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NycHO4cCvRulg7ZB9M1xTLI2cl8/0+geie9uWHt9/cE=;
-        b=A1Kzhq2zdJ9arbgb3EFP++B8q85rPrUUOUFl3PFqpp0Ou8sIL0Y1EePYWtoO9uewsVJFvD
-        ZWZuQCM/ANydaKyIjG8V3kWQLjbmX3DHChfd8tdT8Q6yugc/Cr7GiaXbgFQpwPwgQxsAPd
-        un86pFiAXTMUmzIhhEzAl0BAC3EBA0I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-Zm_0Vb-1P1eJUlH4iKjACg-1; Tue, 21 Jul 2020 10:36:22 -0400
-X-MC-Unique: Zm_0Vb-1P1eJUlH4iKjACg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE3FE80183C;
-        Tue, 21 Jul 2020 14:36:19 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-115-32.rdu2.redhat.com [10.10.115.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A76752B6E2;
-        Tue, 21 Jul 2020 14:36:16 +0000 (UTC)
-Subject: Re: [PATCH v3 0/6] powerpc: queued spinlocks and rwlocks
-To:     Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Anton Blanchard <anton@ozlabs.org>,
-        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        Will Deacon <will@kernel.org>
-References: <20200706043540.1563616-1-npiggin@gmail.com>
- <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
- <1594101082.hfq9x5yact.astroid@bobo.none>
- <20200708084106.GE597537@hirez.programming.kicks-ass.net>
- <1595327263.lk78cqolxm.astroid@bobo.none>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <eaabf501-80fe-dd15-c03c-f75ce4f75877@redhat.com>
-Date:   Tue, 21 Jul 2020 10:36:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jul 2020 10:37:50 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16A75C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:37:50 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id s10so21390197wrw.12
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:37:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:references:in-reply-to:mime-version:message-id
+         :content-transfer-encoding;
+        bh=JnIy8b7JnpzdmcIgpVJbxKihlNWQMt2nBTi33743rcg=;
+        b=bTDq8VUZtFWvxWOVMetsDQottRZ3MaBIBDpdXMfsWrkEkfrqYrv7w/Wz/9G4K2dzSj
+         79XkgyDB1QYTWDlBuG0l+2vSwvBSOzdfT/xm8vzUgbNYA87FVfJPd+y9NrA+YZY84aMF
+         9BygtaBEFWSFRwfVY1s5REOlJOqXdpU9Z1qhKeGjClj0I7W3qkVehelAv4XgS+J59y8d
+         OYtxGEGJOsSdvqrpNHM/CVrKiJ6byt1+AMACJE/ptxqq5m09jmAcNRP9YTFCCw3J835f
+         fnzi7cSAgDvuj7Pfy2qin5tq9Z8k5Y3EOEIOzb9kJvqo/8U6nVWusi8uoH/ydYxocbgU
+         O/Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=JnIy8b7JnpzdmcIgpVJbxKihlNWQMt2nBTi33743rcg=;
+        b=oRbSwCeiU5+wLvH4KdwvfnRIFKAs+z/KfhmkMl5ukggtWuR4+M80ZhR8hJmDQoU53k
+         ecwfeyrWRH+VJMVT207kBnP6A3rM8IyPRDS1mFkrxV9TAgCKWf/5Fk7P72OHvn0/bUiO
+         WxUx3oELFY18MK93MWWD2VgOYHFG7GVr90Wxcq+rSKlWkHoEf1McZ/Y6wm12hfXPGvBq
+         VOabBZ3SnAZi0XbvJXZxYKVGqhE/nQO2LPCGWOL7UpC9Mg14A6/0ZS/VViKpUHEfdvKm
+         05XToGTbAAREzaIjppyveJSlgNG5mhaKzEexWh5VmnX953yA2X2OqndejyGbAobFkGEz
+         21NA==
+X-Gm-Message-State: AOAM5320fUtgrBV02bosMlKVWwcWoKWzb3jVojI6AmjRke8Y7fmh1X/O
+        FtLNPxagOWDZo2Fnt/vAIOFwZ0N7
+X-Google-Smtp-Source: ABdhPJwEM2zAzSrBnxsLfc+qZxea4pNgOzpy7g+iFwxaW8xtzhmq24DMxaWi8GMjy9mSPUT6P61Www==
+X-Received: by 2002:a5d:56c5:: with SMTP id m5mr539260wrw.356.1595342268872;
+        Tue, 21 Jul 2020 07:37:48 -0700 (PDT)
+Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id l8sm37128263wrq.15.2020.07.21.07.37.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 07:37:48 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 00:37:41 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v3 2/3] powerpc/powernv/idle: Rename
+ pnv_first_spr_loss_level variable
+To:     benh@kernel.crashing.org, ego@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        mikey@neuling.org, mpe@ellerman.id.au, paulus@samba.org,
+        pratik.r.sampat@gmail.com, Pratik Sampat <psampat@linux.ibm.com>,
+        svaidy@linux.ibm.com
+References: <20200717185306.60607-1-psampat@linux.ibm.com>
+        <20200717185306.60607-3-psampat@linux.ibm.com>
+        <1595202681.bt4670u7q7.astroid@bobo.none>
+        <81dcf34e-870d-b3a1-7876-a6a2f0b37d1f@linux.ibm.com>
+In-Reply-To: <81dcf34e-870d-b3a1-7876-a6a2f0b37d1f@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <1595327263.lk78cqolxm.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Message-Id: <1595341835.8ad8mjl9hm.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/21/20 7:08 AM, Nicholas Piggin wrote:
-> diff --git a/arch/powerpc/include/asm/qspinlock.h b/arch/powerpc/include/asm/qspinlock.h
-> index b752d34517b3..26d8766a1106 100644
-> --- a/arch/powerpc/include/asm/qspinlock.h
-> +++ b/arch/powerpc/include/asm/qspinlock.h
-> @@ -31,16 +31,57 @@ static inline void queued_spin_unlock(struct qspinlock *lock)
->   
->   #else
->   extern void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
-> +extern void queued_spin_lock_slowpath_queue(struct qspinlock *lock);
->   #endif
->   
->   static __always_inline void queued_spin_lock(struct qspinlock *lock)
->   {
-> -	u32 val = 0;
-> -
-> -	if (likely(atomic_try_cmpxchg_lock(&lock->val, &val, _Q_LOCKED_VAL)))
-> +	atomic_t *a = &lock->val;
-> +	u32 val;
-> +
-> +again:
-> +	asm volatile(
-> +"1:\t"	PPC_LWARX(%0,0,%1,1) "	# queued_spin_lock			\n"
-> +	: "=&r" (val)
-> +	: "r" (&a->counter)
-> +	: "memory");
-> +
-> +	if (likely(val == 0)) {
-> +		asm_volatile_goto(
-> +	"	stwcx.	%0,0,%1							\n"
-> +	"	bne-	%l[again]						\n"
-> +	"\t"	PPC_ACQUIRE_BARRIER "						\n"
-> +		:
-> +		: "r"(_Q_LOCKED_VAL), "r" (&a->counter)
-> +		: "cr0", "memory"
-> +		: again );
->   		return;
-> -
-> -	queued_spin_lock_slowpath(lock, val);
-> +	}
-> +
-> +	if (likely(val == _Q_LOCKED_VAL)) {
-> +		asm_volatile_goto(
-> +	"	stwcx.	%0,0,%1							\n"
-> +	"	bne-	%l[again]						\n"
-> +		:
-> +		: "r"(_Q_LOCKED_VAL | _Q_PENDING_VAL), "r" (&a->counter)
-> +		: "cr0", "memory"
-> +		: again );
-> +
-> +		atomic_cond_read_acquire(a, !(VAL & _Q_LOCKED_MASK));
-> +//		clear_pending_set_locked(lock);
-> +		WRITE_ONCE(lock->locked_pending, _Q_LOCKED_VAL);
-> +//		lockevent_inc(lock_pending);
-> +		return;
-> +	}
-> +
-> +	if (val == _Q_PENDING_VAL) {
-> +		int cnt = _Q_PENDING_LOOPS;
-> +		val = atomic_cond_read_relaxed(a,
-> +					       (VAL != _Q_PENDING_VAL) || !cnt--);
-> +		if (!(val & ~_Q_LOCKED_MASK))
-> +			goto again;
-> +        }
-> +	queued_spin_lock_slowpath_queue(lock);
->   }
->   #define queued_spin_lock queued_spin_lock
->   
+Excerpts from Pratik Sampat's message of July 21, 2020 8:29 pm:
+>=20
+>=20
+> On 20/07/20 5:27 am, Nicholas Piggin wrote:
+>> Excerpts from Pratik Rajesh Sampat's message of July 18, 2020 4:53 am:
+>>> Replace the variable name from using "pnv_first_spr_loss_level" to
+>>> "pnv_first_fullstate_loss_level".
+>>>
+>>> As pnv_first_spr_loss_level is supposed to be the earliest state that
+>>> has OPAL_PM_LOSE_FULL_CONTEXT set, however as shallow states too loose
+>>> SPR values, render an incorrect terminology.
+>> It also doesn't lose "full" state at this loss level though. From the
+>> architecture it could be called "hv state loss level", but in POWER10
+>> even that is not strictly true.
+>>
+> Right. Just discovered that deep stop states won't loose full state
+> P10 onwards.
+> Would it better if we rename it as "pnv_all_spr_loss_state" instead
+> so that it stays generic enough while being semantically coherent?
 
-I am fine with the arch code override some part of the generic code.
+It doesn't lose all SPRs. It does physically, but for Linux it appears=20
+at least timebase SPRs are retained and that's mostly how it's=20
+documented.
 
+Maybe there's no really good name for it, but we do call it "deep" stop=20
+in other places, you could call it deep_spr_loss maybe. I don't mind too=20
+much though, whatever Gautham is happy with.
 
-> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-> index b9515fcc9b29..ebcc6f5d99d5 100644
-> --- a/kernel/locking/qspinlock.c
-> +++ b/kernel/locking/qspinlock.c
-> @@ -287,10 +287,14 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
->   
->   #ifdef CONFIG_PARAVIRT_SPINLOCKS
->   #define queued_spin_lock_slowpath	native_queued_spin_lock_slowpath
-> +#define queued_spin_lock_slowpath_queue	native_queued_spin_lock_slowpath_queue
->   #endif
->   
->   #endif /* _GEN_PV_LOCK_SLOWPATH */
->   
-> +void queued_spin_lock_slowpath_queue(struct qspinlock *lock);
-> +static void __queued_spin_lock_slowpath_queue(struct qspinlock *lock);
-> +
->   /**
->    * queued_spin_lock_slowpath - acquire the queued spinlock
->    * @lock: Pointer to queued spinlock structure
-> @@ -314,12 +318,6 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
->    */
->   void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
->   {
-> -	struct mcs_spinlock *prev, *next, *node;
-> -	u32 old, tail;
-> -	int idx;
-> -
-> -	BUILD_BUG_ON(CONFIG_NR_CPUS >= (1U << _Q_TAIL_CPU_BITS));
-> -
->   	if (pv_enabled())
->   		goto pv_queue;
->   
-> @@ -397,6 +395,26 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
->   queue:
->   	lockevent_inc(lock_slowpath);
->   pv_queue:
-> +	__queued_spin_lock_slowpath_queue(lock);
-> +}
-> +EXPORT_SYMBOL(queued_spin_lock_slowpath);
-> +
-> +void queued_spin_lock_slowpath_queue(struct qspinlock *lock)
-> +{
-> +	lockevent_inc(lock_slowpath);
-> +	__queued_spin_lock_slowpath_queue(lock);
-> +}
-> +EXPORT_SYMBOL(queued_spin_lock_slowpath_queue);
-> +
-> +static void __queued_spin_lock_slowpath_queue(struct qspinlock *lock)
-> +{
-> +	struct mcs_spinlock *prev, *next, *node;
-> +	u32 old, tail;
-> +	u32 val;
-> +	int idx;
-> +
-> +	BUILD_BUG_ON(CONFIG_NR_CPUS >= (1U << _Q_TAIL_CPU_BITS));
-> +
->   	node = this_cpu_ptr(&qnodes[0].mcs);
->   	idx = node->count++;
->   	tail = encode_tail(smp_processor_id(), idx);
-> @@ -559,7 +577,6 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
->   	 */
->   	__this_cpu_dec(qnodes[0].mcs.count);
->   }
-> -EXPORT_SYMBOL(queued_spin_lock_slowpath);
->   
->   /*
->    * Generate the paravirt code for queued_spin_unlock_slowpath().
->
-I would prefer to extract out the pending bit handling code out into a 
-separate helper function which can be overridden by the arch code 
-instead of breaking the slowpath into 2 pieces.
-
-Cheers,
-Longman
-
+Thanks,
+Nick
