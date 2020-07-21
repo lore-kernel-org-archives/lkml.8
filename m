@@ -2,121 +2,107 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B831C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BADEC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7C520792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5480F208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:25:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PX2ZjUaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbgGUDZb (ORCPT
+        id S1728657AbgGUDZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:25:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27804 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725857AbgGUDZb (ORCPT
+        Mon, 20 Jul 2020 23:25:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgGUDZg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 23:25:31 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L33Lb2118592;
-        Mon, 20 Jul 2020 23:25:05 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32dhprt72k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 23:25:05 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06L3EPZh159648;
-        Mon, 20 Jul 2020 23:25:04 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32dhprt71r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 23:25:04 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06L3Kncs010724;
-        Tue, 21 Jul 2020 03:25:02 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 32brq83ckp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 03:25:02 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06L3OxBx59244558
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jul 2020 03:24:59 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1828FAE053;
-        Tue, 21 Jul 2020 03:24:59 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7FC91AE045;
-        Tue, 21 Jul 2020 03:24:55 +0000 (GMT)
-Received: from [9.199.47.202] (unknown [9.199.47.202])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Jul 2020 03:24:55 +0000 (GMT)
-Subject: Re: [PATCH v4 10/10] powerpc/watchpoint: Remove 512 byte boundary
-To:     Jordan Niethe <jniethe5@gmail.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org,
-        apopple@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200717040958.70561-1-ravi.bangoria@linux.ibm.com>
- <20200717040958.70561-11-ravi.bangoria@linux.ibm.com>
- <CACzsE9og50tH9jRZjWYDgbFxdTkDXJq3gMuP8uxPWfrrREo=4w@mail.gmail.com>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Message-ID: <8ee4424b-ca42-082d-d845-0e06357c8b8f@linux.ibm.com>
-Date:   Tue, 21 Jul 2020 08:54:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 23:25:36 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A66FC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 20:25:36 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id t6so11299689pgq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 20:25:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mcNol1/FAOyFHA2Q0+vtk8HafcKXm8QqfR2Cf5173a0=;
+        b=PX2ZjUaWYHYgdZFx7EGRO2USo2FwvuDdhVNvQfavJY7R2OcRfZArzbIptVbacNtV8q
+         5fcCZBM8FWhHgl7Wb1L/uIxolOOmHIm+B9ogiUlr7/KFWOi2B8hMYm3I9sLGP9rwrsCq
+         jJMa10dbqmabsOnjjac+/okOOnPnXwFVnI51DE6uMfdwmdu/Yy391VJE2+3dPSxfbJ9Y
+         Kdo4TycHPV1AK4vLyt79Mc7iYNgy+QRe1WV0yS0ozcbUG6MC9PYLLmPDvQYJECRc5bsP
+         WIYo2xnwZSjewZXR0vD51cCmvOgqRX2b3MGkNOAFuGJPZERu6I7THmndLfIJGCfl09ZN
+         vuhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mcNol1/FAOyFHA2Q0+vtk8HafcKXm8QqfR2Cf5173a0=;
+        b=qlopc0hsNSxy3Y1FzcnZluT/wwYLl+25pg/uMrQvGoFDSiHwDxJDu3OV0a4Fy45DLK
+         wlGhy6WaK2QQ0ThlxBo/BZ6HyZCcm17vRCuQLno1udoJtTOZ0UaTTWbVALQyc3FdH77w
+         ou+xnq9f6skbSg/k+rIXWbXe6ZeOls/qYK6eZxw99MEKEQpb1/f5s8XI5aTG6+PsUKdP
+         iyaI8oJcOEQ61lYT4wG3EkJW8V+JeEfkEtwz8+WJWZTU3wysXIUxFfjuNz3Ww5QdCKgK
+         rWTCi7bd6B9MOjLEWNy/FWQFGDZCFc6R6cZlB7vHxQexG6gi+KYL5dmvee0M62EpKHnq
+         pmLw==
+X-Gm-Message-State: AOAM530jbDV2I03HTxwEcm1I6RH6YiZlbVqtddz8WBXLNtRSyT050Bif
+        XeoFq/+sEdcpi3NR0+amxYCdS/Q4Fwvf7pQWYKH7GQ==
+X-Google-Smtp-Source: ABdhPJwIBAxwW31MIBloBFPAUJgCinlAUnyqR/tT0rVfGWwhXsd8ZZmREvA9cA+7LCbdOOKW+ffcJhqKVHNpTZFkpJ4=
+X-Received: by 2002:a05:6a00:15c7:: with SMTP id o7mr21665218pfu.51.1595301935722;
+ Mon, 20 Jul 2020 20:25:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACzsE9og50tH9jRZjWYDgbFxdTkDXJq3gMuP8uxPWfrrREo=4w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-20_19:2020-07-20,2020-07-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- spamscore=0 lowpriorityscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
- clxscore=1015 impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007210020
+References: <20200716042053.1927676-1-saravanak@google.com>
+ <20200716042053.1927676-5-saravanak@google.com> <20200720143533.GG4601@sirena.org.uk>
+In-Reply-To: <20200720143533.GG4601@sirena.org.uk>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 20 Jul 2020 20:24:59 -0700
+Message-ID: <CAGETcx89xBoLiqe2392_vFuoMytKMxbeM5n0vdL9dJvAF25+Qg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] regulator: core: Add voltage support for
+ sync_state() callbacks
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jordan,
+On Mon, Jul 20, 2020 at 7:35 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Wed, Jul 15, 2020 at 09:20:53PM -0700, Saravana Kannan wrote:
+>
+> > -     if (!handoff)
+> > +     if (!handoff) {
+> >               regulator_disable(rdev->boot_limits);
+> > -     else
+> > +             regulator_set_voltage(rdev->boot_limits, 0, INT_MAX);
+> > +     } else {
+> >               rdev->use_count--;
+> > +     }
+> >       destroy_regulator(rdev->boot_limits);
+>
+> These sets should be completely redundant since they will go away when
+> the regulator is destroyed, if there's an issue with that we should fix
+> it rather than bodging around it.
 
-On 7/20/20 12:24 PM, Jordan Niethe wrote:
-> On Fri, Jul 17, 2020 at 2:11 PM Ravi Bangoria
-> <ravi.bangoria@linux.ibm.com> wrote:
->>
->> Power10 has removed 512 bytes boundary from match criteria. i.e. The watch
->> range can cross 512 bytes boundary.
-> It looks like this change is not mentioned in ISA v3.1 Book III 9.4
-> Data Address Watchpoint. It could be useful to mention that in the
-> commit message.
+Yeah, I was aware of this, but I thought it was clearer to have an
+explicit unwinding. Since you prefer the other way around, I can drop
+the set voltage.
 
-Yes, ISA 3.1 Book III 9.4 has a documentation mistake and hopefully it
-will be fixed in the next version of ISA. Though, this is mentioned in
-ISA 3.1 change log:
+Btw, going a tangent, why is regulator_set_voltage() not dependent on
+a consumer's regulator enable request? If they don't care if the
+regulator goes off, do they really care if the voltage goes lower?
+What's the reason behind not tying voltage request with the enable
+request?
 
-   Multiple DEAW:
-   Added a second Data Address Watchpoint. [H]DAR is
-   set to the first byte of overlap. 512B boundary is
-   removed.
-
-I'll mention this in the commit description.
-
-> Also I wonder if could add a test for this to the ptrace-hwbreak selftest?
-
-Yes, I already have a selftest for this in perf-hwbreak. Will send that soon.
-
-Thanks,
-Ravi
+-Saravana
