@@ -2,117 +2,125 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D79C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D98C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C549C20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217D921702
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:06:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vCN0S6+u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o1nHLbny"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgGUG6q (ORCPT
+        id S1728466AbgGUHGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:58:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41018 "EHLO
+        Tue, 21 Jul 2020 03:06:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbgGUG6q (ORCPT
+        with ESMTP id S1726698AbgGUHGH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:58:46 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 187A7C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 23:58:46 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id gc15so1018254pjb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 23:58:46 -0700 (PDT)
+        Tue, 21 Jul 2020 03:06:07 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C881C061794;
+        Tue, 21 Jul 2020 00:06:07 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x8so9845682plm.10;
+        Tue, 21 Jul 2020 00:06:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=Tno23bD6CNrvtvTJ8w81B3EthF3Ld5kpNkTOAg+JnsM=;
-        b=vCN0S6+uLMv5XxoT4ifN8Mdl3iTpXPghqyV86DALod7pGA+schHiD8gHYrnVqyy2Gw
-         NdGXaEZUVvaRR17C5MMQLEMJOasCO12cX8d8/FzpKEt1kD85nU46h0D6VmXzmYXg2B7v
-         2hKu8/RCGgdRfjVU69+QlDO6CK3QKrVdWQLkcjL9a/ioimyRVfuE6zOTpRBu/0bumC6S
-         i9kj2THROnCIdatTaUy+bAkDc5jXrTDRZr4PvOUqxZNskPpcLW+hWHvj+5BamjEUFbmg
-         Zorhst4Y4suuRAnj6TCsOBhs6wW1c+ILYfv0LVwl+X+R4s9rm0dJe1CCXaueL1jbqqFy
-         hz+Q==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hQAVZqdCDGXaSgKJO4tHAULnO6o8IgHcxHvcFrASXJM=;
+        b=o1nHLbnyC76cTBkZ8o02WGza5nv95DmFPmE6Kv/2qtedmnUgrkutnnB7W5dDKaHXn7
+         gsbzIzAVg2SXSaHepfx67ZVvQCbn75pEENAb5buco7ZGoXgEH5L+uaTMq8p9PIntP5/9
+         Pg6P/Hiz4k3Qe/JUKHeOwPly1AeyA2gPYhUbcMPcW5NNyVVLVCDhq3oomjJkRrujZLKp
+         mh2Gj1QxVxhYq9UCMU6FxXhwixv6ANQQ9a+Gqio4OhFPKQesVf1ybjnN32OPj2409y29
+         J4TVfgKPj+wYb6uGzT0lf5Mzm8JBN2G0rMVLHhWBAy+UMJem0dyM2AFBb7Hw6qIgVeQF
+         FT0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Tno23bD6CNrvtvTJ8w81B3EthF3Ld5kpNkTOAg+JnsM=;
-        b=bl3tFYM9uzGYYp5CFq94Pa2hzG/Zn168LdXSRRt0+GLlA2ieg0zqRnMtjXRKI+K3E0
-         bHZ25cE/qDENSeD9Xd1v6MXFuE9HgYSEt218NfMxXavXoCtnmZf+ymzrBsM3xM9HXRr4
-         PpY10Rm7X69v3ediBCYfIz0CLxyO8VEYe1qD1yT7CrWfqlMQcVkij4nG4H2JjxNbR703
-         OgwD5ncgjOCxr689CAWboXYfTozLtP44hr5AjUddkaOac+RI8TM28g+0d6TUcoibFjjX
-         MYR8ojkqC//U2w6wytVq++nn3WPi1NzJqUyu3ZvyQB9mlOklNnv5gD1ywFZlNPDY0yeb
-         iWdA==
-X-Gm-Message-State: AOAM533kRPVBR4H6G57y11xZiJ9Bws5/QXFO9RNe4VspTJ41d/FaqaQ3
-        yEjGNA7tOOOcIHVcmUr1LmmaNQ==
-X-Google-Smtp-Source: ABdhPJxckY0lmGlBsj/0MC92yIRwggmuPmCKttx9B6PanKuNgALvduemXmj14Lm7ruLSqbUmbcdjHA==
-X-Received: by 2002:a17:90b:400f:: with SMTP id ie15mr3235503pjb.94.1595314725521;
-        Mon, 20 Jul 2020 23:58:45 -0700 (PDT)
-Received: from ?IPv6:240e:362:4ac:f200:40d1:ed88:5dbd:3f3a? ([240e:362:4ac:f200:40d1:ed88:5dbd:3f3a])
-        by smtp.gmail.com with ESMTPSA id mv6sm1756670pjb.57.2020.07.20.23.58.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 23:58:44 -0700 (PDT)
-Subject: Re: [PATCH] uacce: fix some coding styles
-To:     Kai Ye <yekai13@huawei.com>, linux-accelerators@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linuxarm@huawei.com
-References: <1595229523-14103-1-git-send-email-yekai13@huawei.com>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <0775c541-5802-cdf3-e2aa-c62c027ab8a7@linaro.org>
-Date:   Tue, 21 Jul 2020 14:57:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hQAVZqdCDGXaSgKJO4tHAULnO6o8IgHcxHvcFrASXJM=;
+        b=G+ljNrJy3F8DMqLlT6UvxzdOsHSYWxrvP9cYe1udgN5sdBa1c0sfzfaAeCNiBidBPy
+         fdfHzDqbMq/7LfUZQge50pWJyj2e5S8dfEtJuF1t3R8vMiBb8oDKxsslUR9/GoyudpL1
+         TUSrXczWB5SAAH2FnM06FpHqygfUNmxDLDhwzeuv61iiH2tFZjyMd2D0LyNr9TcWQj2M
+         SLc25svcBY8G2Erz9aLYxE3eM6Pmt68uUftruXb/frKXLPxEGc9LKyygTGFTumKzOL9s
+         fw1MfScoClfJGkSnusfKWen5Gje7eX7obZR3ECKZ4KIyY1KcStQ8kzkLbF2cdJPEKDbE
+         +dbA==
+X-Gm-Message-State: AOAM530tD8+qB1ifGZk20qZ9hcIPXej5BkMbzUhkrBarhinc+UE5wLn0
+        28KUq9v4dJKQl79trFqGLYY=
+X-Google-Smtp-Source: ABdhPJzf3truDWDxS9RbTZomnBgsQrj7q4dk+RFuooF81G1rrHqrSeIGTHAI2483Gk4mGi0I+frPZA==
+X-Received: by 2002:a17:90b:3683:: with SMTP id mj3mr3303694pjb.91.1595315166748;
+        Tue, 21 Jul 2020 00:06:06 -0700 (PDT)
+Received: from gmail.com ([103.105.153.67])
+        by smtp.gmail.com with ESMTPSA id h2sm16144431pfk.93.2020.07.21.00.05.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 00:06:05 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 12:34:40 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v1 3/3] skd: use generic power management
+Message-ID: <20200721070440.GA51743@gmail.com>
+References: <20200717080910.342741-1-vaibhavgupta40@gmail.com>
+ <20200717080910.342741-4-vaibhavgupta40@gmail.com>
+ <CY4PR04MB37516C5544A7DCAD84921937E77B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200720131627.GA447599@gmail.com>
+ <CY4PR04MB3751EB3DA357A6856B3337D0E7780@CY4PR04MB3751.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <1595229523-14103-1-git-send-email-yekai13@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CY4PR04MB3751EB3DA357A6856B3337D0E7780@CY4PR04MB3751.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/7/20 下午3:18, Kai Ye wrote:
-> 1. add some parameter check.
-> 2. delete some redundant code.
-> 3. modify the module author information.
+On Tue, Jul 21, 2020 at 02:49:06AM +0000, Damien Le Moal wrote:
+> On 2020/07/20 22:18, Vaibhav Gupta wrote:
+> > On Mon, Jul 20, 2020 at 12:52:14PM +0000, Damien Le Moal wrote:
+> >> On 2020/07/17 17:10, Vaibhav Gupta wrote:
+> >>> Change function parameter in both .suspend() and .resume() to
+> >>> "struct device*" type. Use to_pci_dev() to get "struct pci_dev*" variable.
+> >>>
+> >>> Compile-tested only.
+> >>
+> >> I do not think this belongs into the commit message. This was mentioned in the
+> >> cover letter.
+> >>
+> > The messages in cover letter and commit message are bit similar. But the commit
+> > message has patch specific changes mentioned in it.
+> 
+> My point was about the "compile-tested only" mention in the commit message. That
+> should be mentioned in the cover letter only. The goal of the patch review
+> process is also to get these patches tested by others if you do not have access
+> to the hardware. That is fine, and I can test for the skd driver. But a patch
+> mentioning that it is untested cannot be applied, for obvious reasons :)
+> 
+> So I only requested that you remove the "compiled tested only" note. The commit
+> message could be simpler too, see followup comment.
 >
-> Signed-off-by: Kai Ye <yekai13@huawei.com>
-> Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
-Thanks Kai.
-> ---
->   drivers/misc/uacce/uacce.c | 28 +++++++++++++---------------
->   1 file changed, 13 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/misc/uacce/uacce.c b/drivers/misc/uacce/uacce.c
-> index 107028e..2e1af58 100644
-> --- a/drivers/misc/uacce/uacce.c
-> +++ b/drivers/misc/uacce/uacce.c
-> @@ -63,8 +63,12 @@ static long uacce_fops_unl_ioctl(struct file *filep,
->   				 unsigned int cmd, unsigned long arg)
->   {
->   	struct uacce_queue *q = filep->private_data;
-> -	struct uacce_device *uacce = q->uacce;
-> +	struct uacce_device *uacce;
-> +
-> +	if (WARN_ON(!q))
-> +		return -EINVAL;
-WARN_ON should not be used in uacce, instead error can be printed in 
-user space driver.
-Error should not be printed in kernel log as pasid can be used by unpriv 
-user.
+Oh okay. Thanks for clarification and pointing this out :) . From now on, I
+will put "Compile-tested only." message only in cover letters.
 
-And I think we do not need check filep->private_data.
-The fd is double checked in __fget_files.
-
-Thanks
+Thanks.
+--Vaibhav Gupta
+> 
+> 
+> -- 
+> Damien Le Moal
+> Western Digital Research
