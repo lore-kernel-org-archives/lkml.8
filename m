@@ -2,188 +2,262 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79D3C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C61AC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91ABC21702
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:18:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q1bGCE8E"
+	by mail.kernel.org (Postfix) with ESMTP id 80C0F21702
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729937AbgGUMSD (ORCPT
+        id S1729421AbgGUMSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbgGUMSC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:18:02 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60DEFC061794;
-        Tue, 21 Jul 2020 05:18:02 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id u8so9161037qvj.12;
-        Tue, 21 Jul 2020 05:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bXPYZoz1OZvFJbxoCWlNL9817NOB+zxWWBK3hJr5qF0=;
-        b=q1bGCE8EcEkb1VR8sk6YW4pGfBsPhbbNXM39cJ/a8oyNHDSzyC5IIgzzr1p9F/bUU6
-         Ss70SU+nK1LAxIv5y0ilgsQGGUiOKY8IczcGMPdWyzM8gf3SpFQc9T0l+yVsrUw3RhuF
-         NbEa1LdB6i7768zAYEPTE/W8Imh2VDNsQQf+5w70nCKP8wyVLZidby3MjIfYjurQ8lng
-         xv0leU8swMonzqB+wQqkBmGYxQDeSCwRnFfk9IG7i1SfrMAEdceoP5VNu/1vwR9ZOxyS
-         VCMxuOOXGwDFXZ/bZR9OB1H3DMvVUFoetXGW9Ok9IvfTgEpNbV5oqQnvRGi3znMie2Iy
-         DCzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=bXPYZoz1OZvFJbxoCWlNL9817NOB+zxWWBK3hJr5qF0=;
-        b=lKtxhPQ85V6NZGVUR3GJlTRwNZe4h9FNhCjusPNaqDy6BF6i68iJegGwSCceV3Kr9d
-         XKJQ72WJq0LOV4M0o6lh/somM3VFIlZdAZ/Or0PUnpTT45D57dW5ZT92M4MBgTQovcW2
-         nsMztfF5P//mHBnuGyenesD95SkeTmTMAf9ZhWPfk51BmfZNukweV9G1kmyMy8qr6k66
-         BLNWkcSHnCqun++eBv0aU6TB0fTdmCqZz2J/cjkIMJQzzMsoUGuBzAhaspShSUKqPQBg
-         nQzgYUn5orWzvoWUdx1XB2CBME4P3toG8eV+5hm2pE5G6nKpYNZtUTTHobpRsnZVqUgX
-         lk5A==
-X-Gm-Message-State: AOAM530+jzw7MhqtG8B53/vh+IpJxGXxNZmEnLrA6MmvnXJas6OD/fnd
-        pZO1q8jGNI2ZYnGY81GWez4=
-X-Google-Smtp-Source: ABdhPJyg2qSJU16N5LW7VVnZ8y/kne9TdZ7vhlLgF/dUSXi0dI55cSFhFxUmyfR71XwFyOPnfUGc6A==
-X-Received: by 2002:a0c:8643:: with SMTP id p61mr26743630qva.43.1595333881577;
-        Tue, 21 Jul 2020 05:18:01 -0700 (PDT)
-Received: from [192.168.1.201] (pool-108-51-35-162.washdc.fios.verizon.net. [108.51.35.162])
-        by smtp.googlemail.com with ESMTPSA id t35sm24309428qth.79.2020.07.21.05.18.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 05:18:00 -0700 (PDT)
-Subject: Re: [PATCH v4 4/4] dt-bindings: timer: Add CLINT bindings
-To:     Anup Patel <anup@brainfault.org>,
-        Atish Patra <atishp@atishpatra.org>
-Cc:     devicetree@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Emil Renner Berhing <kernel@esmil.dk>,
-        Anup Patel <anup.patel@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>
-References: <20200717075101.263332-1-anup.patel@wdc.com>
- <20200717075101.263332-5-anup.patel@wdc.com>
- <CAOnJCULcffij3-d-TsQixj5TZdatBdUcC-y73L=W-+5h41ytKQ@mail.gmail.com>
- <CAAhSdy1cbKA9iwBPYMX5xaYFe_BxnB2Sm_ftHPPDq+96SeKbnA@mail.gmail.com>
-From:   Sean Anderson <seanga2@gmail.com>
-Autocrypt: addr=seanga2@gmail.com; prefer-encrypt=mutual; keydata=
- mQENBFe74PkBCACoLC5Zq2gwrDcCkr+EPGsT14bsxrW07GiYzQhLCgwnPdEpgU95pXltbFhw
- 46GfyffABWxHKO2x+3L1S6ZxC5AiKbYXo7lpnTBYjamPWYouz+VJEVjUx9aaSEByBah5kX6a
- lKFZWNbXLAJh+dE1HFaMi3TQXXaInaREc+aO1F7fCa2zNE75ja+6ah8L4TPRFZ2HKQzve0/Y
- GXtoRw97qmnm3U36vKWT/m2AiLF619F4T1mHvlfjyd9hrVwjH5h/2rFyroXVXBZHGA9Aj8eN
- F2si35dWSZlIwXkNu9bXp0/pIu6FD0bI+BEkD5S7aH1G1iAcMFi5Qq2RNa041DfQSDDHABEB
- AAG0K1NlYW4gR2FsbGFnaGVyIEFuZGVyc29uIDxzZWFuZ2EyQGdtYWlsLmNvbT6JAVcEEwEK
- AEECGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4ACGQEWIQSQYR1bzo1I0gPoYCg+6I/stKEQ
- bgUCXT+S2AUJB2TlXwAKCRA+6I/stKEQbhNOB/9ooea0hU9Sgh7PBloU6CgaC5mlqPLB7NTp
- +JkB+nh3Fqhk+qLZwzEynnuDLl6ESpVHIc0Ym1lyF4gT3DsrlGT1h0Gzw7vUwd1+ZfN0CuIx
- Rn861U/dAUjvbtN5kMBqOI4/5ea+0r7MACcIVnKF/wMXBD8eypHsorT2sJTzwZ6DRCNP70C5
- N1ahpqqNmXe0uLdP0pu55JCqhrGw2SinkRMdWyhSxT56uNwIVHGhLTqH7Q4t1N6G1EH626qa
- SvIJsWlNpll6Y3AYLDw2/Spw/hqieS2PQ/Ky3rPZnvJt7/aSNYsKoFGX0yjkH67Uq8Lx0k1L
- w8jpXnbEPQN3A2ZJCbeMuQENBF0/k2UBCADhvSlHblNc/aRAWtCFDblCJJMN/8Sd7S9u4ZRS
- w1wIB4tTF7caxc8yfCHa+FjMFeVu34QPtMOvd/gfHz0mr+t0PiTAdDSbd6o7tj+g5ylm+FhT
- OTUtJQ6mx6L9GzMmIDEbLxJMB9RfJaL2mT5JkujKxEst6nlHGV/lEQ54xBl5ImrPvuR5Dbnr
- zWQYlafb1IC5ZFwSMpBeSfhS7/kGPtFY3NkpLrii/CF+ME0DYYWxlkDIycqF3fsUGGfb3HIq
- z2l95OB45+mCs9DrIDZXRT6mFjLcl35UzuEErNIskCl9NKlbvAMAl+gbDH275SnE44ocC4qu
- 0tMe7Z5jpOy6J8nNABEBAAGJATwEGAEKACYWIQSQYR1bzo1I0gPoYCg+6I/stKEQbgUCXT+T
- ZQIbDAUJAeEzgAAKCRA+6I/stKEQbjAGB/4mYRqZTTEFmcS+f+8zsmjt2CfWvm38kR+sJFWB
- vz82pFiUWbUM5xvcuOQhz698WQnIazbDGSYaOipyVNS52YiuYJDqMszzgw++DrcSuu0oRYWN
- EWCkJjxMqjGg8uY0OZ6FJG+gYRN5wMFErGfV1OqQ7l00FYA9OzpOEuW9PzPZEutFnAbbh77i
- zvxbQtT7IJCL24A4KutNYKmWg98im4mCzQcJCxE86Bv69ErLVPUyYbp4doLadScilXlvkkjL
- iq1wOt3rRzOuw+qnWVgWGBPxdDftz0Wck941tYF9XE0aMgkf4o1sGoDZFUFPCQdfEYPzzV7O
- S5hN3/mP5UeooFHb
-Message-ID: <b2d7b1d6-db33-7b40-9511-95de991e9ad6@gmail.com>
-Date:   Tue, 21 Jul 2020 08:17:59 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 08:18:31 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8345 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726715AbgGUMSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 08:18:30 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C43DCBD069A4045BE7D7;
+        Tue, 21 Jul 2020 20:18:22 +0800 (CST)
+Received: from [127.0.0.1] (10.174.176.211) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Jul 2020
+ 20:18:11 +0800
+Subject: Re: [PATCH] serial: 8250: fix null-ptr-deref in serial8250_start_tx()
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jslaby@suse.com>, Hanjun Guo <guohanjun@huawei.com>,
+        "Libin (Huawei)" <huawei.libin@huawei.com>
+References: <20200721143852.4058352-1-yangyingliang@huawei.com>
+ <20200721104819.GA1678476@kroah.com>
+ <b0cbee3f-05cd-b15c-06db-68c223c9944c@huawei.com>
+Message-ID: <571a38df-37a3-3680-bea0-b4698d4b417a@huawei.com>
+Date:   Tue, 21 Jul 2020 20:18:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAAhSdy1cbKA9iwBPYMX5xaYFe_BxnB2Sm_ftHPPDq+96SeKbnA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <b0cbee3f-05cd-b15c-06db-68c223c9944c@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.176.211]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/20/20 9:15 PM, Atish Patra wrote:
-> On Fri, Jul 17, 2020 at 12:52 AM Anup Patel <anup.patel@wdc.com> wrote:
->>
->> We add DT bindings documentation for CLINT device.
->>
->> Signed-off-by: Anup Patel <anup.patel@wdc.com>
->> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
->> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
->> ---
->>  .../bindings/timer/sifive,clint.yaml          | 58 +++++++++++++++++++
->>  1 file changed, 58 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
->> new file mode 100644
->> index 000000000000..8ad115611860
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
->> @@ -0,0 +1,58 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/timer/sifive,clint.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: SiFive Core Local Interruptor
->> +
->> +maintainers:
->> +  - Palmer Dabbelt <palmer@dabbelt.com>
->> +  - Anup Patel <anup.patel@wdc.com>
->> +
->> +description:
->> +  SiFive (and other RISC-V) SOCs include an implementation of the SiFive
->> +  Core Local Interruptor (CLINT) for M-mode timer and M-mode inter-processor
->> +  interrupts. It directly connects to the timer and inter-processor interrupt
->> +  lines of various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local
->> +  interrupt controller is the parent interrupt controller for CLINT device.
->> +  The clock frequency of CLINT is specified via "timebase-frequency" DT
->> +  property of "/cpus" DT node. The "timebase-frequency" DT property is
->> +  described in Documentation/devicetree/bindings/riscv/cpus.yaml
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - const: sifive,clint0
->> +      - const: sifive,fu540-c000-clint
->> +
->> +    description:
->> +      Should be "sifive,<chip>-clint" and "sifive,clint<version>".
->> +      Supported compatible strings are -
->> +      "sifive,fu540-c000-clint" for the SiFive CLINT v0 as integrated
->> +      onto the SiFive FU540 chip, and "sifive,clint0" for the SiFive
->> +      CLINT v0 IP block with no chip integration tweaks.
->> +      Please refer to sifive-blocks-ip-versioning.txt for details
->> +
-> 
-> As the DT binding suggests that the clint device should be named as "sifive,**",
-> I think we should change the DT property in kendryte dts as well.
 
-The kendryte device is based on Rocket Chip, not any SiFive IP/device.
-If anything, the general binding should be "chipsalliance,clint" and the
-specific bindings should be "sifive,clint" and "kendryte,clint" (or
-"canaan,clint").
+On 2020/7/21 19:54, Yang Yingliang wrote:
+>
+> On 2020/7/21 18:48, Greg KH wrote:
+>> On Tue, Jul 21, 2020 at 02:38:52PM +0000, Yang Yingliang wrote:
+>>> I got null-ptr-deref in serial8250_start_tx():
+>>>
+>>> [   78.114630] Unable to handle kernel NULL pointer dereference at 
+>>> virtual address 0000000000000000
+>>> [   78.123778] Mem abort info:
+>>> [   78.126560]   ESR = 0x86000007
+>>> [   78.129603]   EC = 0x21: IABT (current EL), IL = 32 bits
+>>> [   78.134891]   SET = 0, FnV = 0
+>>> [   78.137933]   EA = 0, S1PTW = 0
+>>> [   78.141064] user pgtable: 64k pages, 48-bit VAs, 
+>>> pgdp=00000027d41a8600
+>>> [   78.147562] [0000000000000000] pgd=00000027893f0003, 
+>>> p4d=00000027893f0003, pud=00000027893f0003, pmd=00000027c9a20003, 
+>>> pte=0000000000000000
+>>> [   78.160029] Internal error: Oops: 86000007 [#1] SMP
+>>> [   78.164886] Modules linked in: sunrpc vfat fat aes_ce_blk 
+>>> crypto_simd cryptd aes_ce_cipher crct10dif_ce ghash_ce sha2_ce 
+>>> sha256_arm64 sha1_ce ses enclosure sg sbsa_gwdt ipmi_ssif 
+>>> spi_dw_mmio sch_fq_codel vhost_net tun vhost vhost_iotlb tap 
+>>> ip_tables ext4 mbcache jbd2 ahci hisi_sas_v3_hw libahci 
+>>> hisi_sas_main libsas hns3 scsi_transport_sas hclge libata 
+>>> megaraid_sas ipmi_si hnae3 ipmi_devintf ipmi_msghandler br_netfilter 
+>>> bridge stp llc nvme nvme_core xt_sctp sctp libcrc32c dm_mod nbd
+>>> [   78.207383] CPU: 11 PID: 23258 Comm: null-ptr Not tainted 
+>>> 5.8.0-rc6+ #48
+>>> [   78.214056] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 
+>>> 2280-V2 CS V3.B210.01 03/12/2020
+>>> [   78.222888] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
+>>> [   78.228435] pc : 0x0
+>>> [   78.230618] lr : serial8250_start_tx+0x160/0x260
+>>> [   78.235215] sp : ffff800062eefb80
+>>> [   78.238517] x29: ffff800062eefb80 x28: 0000000000000fff
+>>> [   78.243807] x27: ffff800062eefd80 x26: ffff202fd83b3000
+>>> [   78.249098] x25: ffff800062eefd80 x24: ffff202fd83b3000
+>>> [   78.254388] x23: ffff002fc5e50be8 x22: 0000000000000002
+>>> [   78.259679] x21: 0000000000000001 x20: 0000000000000000
+>>> [   78.264969] x19: ffffa688827eecc8 x18: 0000000000000000
+>>> [   78.270259] x17: 0000000000000000 x16: 0000000000000000
+>>> [   78.275550] x15: ffffa68881bc67a8 x14: 00000000000002e6
+>>> [   78.280841] x13: ffffa68881bc67a8 x12: 000000000000c539
+>>> [   78.286131] x11: d37a6f4de9bd37a7 x10: ffffa68881cccff0
+>>> [   78.291421] x9 : ffffa68881bc6000 x8 : ffffa688819daa88
+>>> [   78.296711] x7 : ffffa688822a0f20 x6 : ffffa688819e0000
+>>> [   78.302002] x5 : ffff800062eef9d0 x4 : ffffa68881e707a8
+>>> [   78.307292] x3 : 0000000000000000 x2 : 0000000000000002
+>>> [   78.312582] x1 : 0000000000000001 x0 : ffffa688827eecc8
+>>> [   78.317873] Call trace:
+>>> [   78.320312]  0x0
+>>> [   78.322147]  __uart_start.isra.9+0x64/0x78
+>>> [   78.326229]  uart_start+0xb8/0x1c8
+>>> [   78.329620]  uart_flush_chars+0x24/0x30
+>>> [   78.333442]  n_tty_receive_buf_common+0x7b0/0xc30
+>>> [   78.338128]  n_tty_receive_buf+0x44/0x2c8
+>>> [   78.342122]  tty_ioctl+0x348/0x11f8
+>>> [   78.345599]  ksys_ioctl+0xd8/0xf8
+>>> [   78.348903]  __arm64_sys_ioctl+0x2c/0xc8
+>>> [   78.352812]  el0_svc_common.constprop.2+0x88/0x1b0
+>>> [   78.357583]  do_el0_svc+0x44/0xd0
+>>> [   78.360887]  el0_sync_handler+0x14c/0x1d0
+>>> [   78.364880]  el0_sync+0x140/0x180
+>>> [   78.368185] Code: bad PC value
+>>>
+>>> SERIAL_PORT_DFNS is not defined on each arch, if it's not defined,
+>>> serial8250_set_defaults() won't be called in 
+>>> serial8250_isa_init_ports(),
+>>> so the p->serial_in pointer won't be initialized, and it leads a 
+>>> null-ptr-deref.
+>>> Fix this problem by calling serial8250_set_defaults() after init 
+>>> uart port.
+>>>
+>>> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+>>> ---
+>>>   drivers/tty/serial/8250/8250_core.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>> Does this fix a specific commit, or has this issue always been present?
+>> What has caused it to happen now that no one else has seen this?
+>
+> I think it's always been present on the arch that not defined 
+> SERIAL_PORT_DFNS.
+>
+> I got this on arm64 and here is the C reproducer:
+>
+> // autogenerated by syzkaller (https://github.com/google/syzkaller)
+>
+> #define _GNU_SOURCE
+>
+> #include <endian.h>
+> #include <stdint.h>
+> #include <stdio.h>
+> #include <stdlib.h>
+> #include <string.h>
+> #include <sys/syscall.h>
+> #include <sys/types.h>
+> #include <unistd.h>
+>
+> #ifndef __NR_ioctl
+> #define __NR_ioctl 29
+> #endif
+> #ifndef __NR_mmap
+> #define __NR_mmap 222
+> #endif
+> #ifndef __NR_openat
+> #define __NR_openat 56
+> #endif
+>
+> uint64_t r[1] = {0xffffffffffffffff};
+>
+> int main(void)
+> {
+>     syscall(__NR_mmap, 0x20000000ul, 0x1000000ul, 3ul, 0x32ul, -1, 0);
+>     intptr_t res = 0;
+>     memcpy((void*)0x20000040, "/dev/ttyS3\000", 11);
+>     res = syscall(__NR_openat, 0xffffffffffffff9cul, 0x20000040ul, 
+> 0x401ul, 0ul);
+>     if (res != -1)
+>         r[0] = res;
+>     syscall(__NR_ioctl, r[0], 0x5412ul, 0x20000080ul);
+>     return 0;
+> }
+>
+It's can be reproduced with CONFIG_SERIAL_8250_RUNTIME_UARTS=8 and
 
---Sean
+by opening ttyS4 on x86_64. Because the size of SERIAL_PORT_DFNS is 4 and
+
+the pointers of ttyS4 ~ ttyS7 won't be initialized.
+
+
+[   49.427884] BUG: unable to handle kernel NULL pointer dereference at 
+0000000000000000
+[   49.432786] PGD 80000003d7573067 P4D 80000003d7573067 PUD 3d7526067 PMD 0
+[   49.436944] Oops: 0010 [#1] SMP KASAN PTI
+[   49.439490] CPU: 1 PID: 2491 Comm: test Not tainted 4.19.90+ #1083
+[   49.443437] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
+BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+[   49.450233] RIP: 0010:          (null)
+[   49.452279] Code: Bad RIP value.
+[   49.454066] RSP: 0018:ffff8883d73a7880 EFLAGS: 00010093
+[   49.457082] RAX: ffff8883d72d6000 RBX: ffffffff85e243a0 RCX: 
+ffffffff820a062b
+[   49.460916] RDX: 0000000000000002 RSI: 0000000000000001 RDI: 
+ffffffff85e243a0
+[   49.464490] RBP: 0000000000000002 R08: fffffbfff0bc4875 R09: 
+fffffbfff0bc4874
+[   49.467993] R10: fffffbfff0bc4874 R11: ffffffff85e243a3 R12: 
+ffffffff85e245f6
+[   49.471526] R13: ffffffff85e243f0 R14: 0000000000000000 R15: 
+0000000000000000
+[   49.475192] FS:  0000000002064880(0000) GS:ffff8883eb240000(0000) 
+knlGS:0000000000000000
+[   49.479019] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   49.481852] CR2: ffffffffffffffd6 CR3: 00000003d77a2006 CR4: 
+0000000000020ee0
+[   49.485131] Call Trace:
+[   49.486278]  serial8250_start_tx+0x56c/0x9b0
+[   49.488167]  __uart_start.isra.1+0x16a/0x1b0
+[   49.490082]  uart_start+0x1a7/0x340
+[   49.491650]  ? __uart_start.isra.1+0x1b0/0x1b0
+[   49.493670]  ? __process_echoes+0x636/0x860
+[   49.495540]  ? uart_start+0x340/0x340
+[   49.497442]  n_tty_receive_buf_common+0x10ff/0x2460
+[   49.499897]  ? n_tty_receive_buf2+0x40/0x40
+[   49.501915]  tty_ioctl+0x6e1/0x1400
+[   49.503629]  ? quarantine_put+0xb7/0x150
+[   49.505474]  ? tty_vhangup+0x30/0x30
+[   49.507237]  ? lockdep_hardirqs_on+0x290/0x560
+[   49.509419]  ? __kasan_slab_free+0x1ce/0x230
+[   49.511490]  ? kmem_cache_free+0xa6/0x2a0
+[   49.513454]  ? putname+0xd4/0x110
+[   49.515059]  ? do_sys_open+0x291/0x3f0
+[   49.516888]  ? do_syscall_64+0x11c/0xe08
+[   49.518795]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   49.521359]  ? __lock_acquire+0x5eb/0x2e50
+[   49.523278]  ? restore_nameidata+0x108/0x180
+[   49.525242]  ? tty_vhangup+0x30/0x30
+[   49.526895]  do_vfs_ioctl+0x1a5/0x1100
+[   49.528608]  ? may_open_dev+0xd0/0xd0
+[   49.530414]  ? ioctl_preallocate+0x1d0/0x1d0
+[   49.532607]  ? putname+0xd4/0x110
+[   49.534097]  ? rcu_read_lock_sched_held+0x114/0x130
+[   49.536342]  ? kmem_cache_free+0x263/0x2a0
+[   49.538450]  ? putname+0xd4/0x110
+[   49.540036]  ? do_sys_open+0x1ec/0x3f0
+[   49.541909]  ksys_ioctl+0x7c/0xa0
+[   49.543458]  __x64_sys_ioctl+0x74/0xb0
+[   49.545433]  ? lockdep_hardirqs_on+0x37c/0x560
+[   49.547642]  do_syscall_64+0x11c/0xe08
+[   49.549447]  ? syscall_return_slowpath+0x3a0/0x3a0
+[   49.551741]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+[   49.553810]  ? trace_hardirqs_off_caller+0x54/0x190
+[   49.556125]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+[   49.558453]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+>
+> Thanks,
+>
+> Yang
+>
+>>
+>> thanks,
+>>
+>> greg k-h
+>> .
+>
+> .
+
