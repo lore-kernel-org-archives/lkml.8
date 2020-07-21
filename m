@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B42C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A31C433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFCEF20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB4442077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:09:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3Y7E/nYF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="au3hbSFW"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VFkJN/zz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D82q6ZR1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgGULIv (ORCPT
+        id S1729739AbgGULJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:08:51 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37356 "EHLO
+        Tue, 21 Jul 2020 07:09:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37508 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729637AbgGULIp (ORCPT
+        with ESMTP id S1729673AbgGULIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:08:45 -0400
-Message-Id: <20200721110809.106972388@linutronix.de>
+        Tue, 21 Jul 2020 07:08:51 -0400
+Message-Id: <20200721110809.531305010@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595329723;
+        s=2020; t=1595329728;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=+JhihBtBRnfhnJQwGd90XJXoqMCU8kw0agti/vqJ948=;
-        b=3Y7E/nYFUOYf+T5096+T4N0PRyZbSJzdR85w1Ia5rnYp1JjR9YhoVwPb4vXmyGzC8iesA2
-        TVPabAvlVi6i8A2ZrqLT+M9R2gGouPnXC8vr8LyIImI8hporGhIygHaX7bmxYZt3ensQhZ
-        w/8s+DiF2A6LpUJMk2eglNXbGcCnOsFWZV2lN1GwfsFpO2XzwyXRhAaOYm1cuj9EfTdDLa
-        Kdbq+pymw2EfuX37qtY3tzZE4PsBQJlVVoN7vDNfJ6E2rRj9dEUdwFWGXeP1g5ICoKCL/w
-        69ASYc2ulb8RuA/K/z9W8hvkEOJt5xaZayinnjDqSMOlbv5bWOCFsihxk+MNEg==
+        bh=TW2YREFZRpmpV7lTAtkkgutVDumUXCXPLDpmUk0C+O8=;
+        b=VFkJN/zzpCbS1wdxZOSwOXRAicZIJJ6asrWMRGbA/dFg2FyaKUYRaoqL9ELuu4Kdzf/0rw
+        rgA/j0jGdtH+FdEYAuEumx/4VypzRXh0tdNt2MRUO27XjfSzOAyJzBi1mqDFAweKivMi3a
+        oHbcMnuxI5ATqGWnwP6pjELK6MjXcup0SJ78H8RqAa2cfT4re4S2MzPbualLHASdl4vR49
+        JEO/rJEm0U3qhuYSUQwcV+huFcddiV69/gVLBOqFXCQx4CXU+tOJCKuHQNYbbGEUhsKHpJ
+        fJs4r03aHvPai7+WT2MVlwIRSMtkA3lPalntZQJuc50BPRvqeqcAR2dXKk2bqg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595329723;
+        s=2020e; t=1595329728;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=+JhihBtBRnfhnJQwGd90XJXoqMCU8kw0agti/vqJ948=;
-        b=au3hbSFWuVNeNshIBJpEOZ5yE8X1HQHJoZLPFGTF0v/qvGZ4YosvhE5VOvPbsUyjBGrd8e
-        UoTyyZCA5K4blQBA==
-Date:   Tue, 21 Jul 2020 12:57:14 +0200
+        bh=TW2YREFZRpmpV7lTAtkkgutVDumUXCXPLDpmUk0C+O8=;
+        b=D82q6ZR1OJNVxeUXQgOsX9COtRcP2XFMqDYLAQfddyw49SigpAtHKnQ/EV5s0i3xkCABM6
+        4dKmrq9xZ09D7ZDg==
+Date:   Tue, 21 Jul 2020 12:57:18 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
@@ -54,7 +54,7 @@ Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
         Keno Fischer <keno@juliacomputing.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
         Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: [patch V4 08/15] x86/entry: Move user return notifier out of loop
+Subject: [patch V4 12/15] x86/entry: Cleanup idtentry_entry/exit_user
 References: <20200721105706.030914876@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,57 +64,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guests and user space share certain MSRs. KVM sets these MSRs to guest
-values once and does not set them back to user space values on every VM
-exit to spare the costly MSR operations.
-
-User return notifiers ensure that these MSRs are set back to the correct
-values before returning to user space in exit_to_usermode_loop().
-
-There is no reason to evaluate the TIF flag indicating that user return
-notifiers need to be invoked in the loop. The important point is that they
-are invoked before returning to user space.
-
-Move the invocation out of the loop into the section which does the last
-preperatory steps before returning to user space. That section is not
-preemptible and runs with interrupts disabled until the actual return.
+Cleanup the temporary defines and use irqentry_ instead of idtentry_.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
-V4: New patch
----
- arch/x86/entry/common.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/idtentry.h |    4 ----
+ arch/x86/kernel/cpu/mce/core.c  |    4 ++--
+ arch/x86/kernel/traps.c         |   18 +++++++++---------
+ 3 files changed, 11 insertions(+), 15 deletions(-)
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -208,7 +208,7 @@ static long syscall_trace_enter(struct p
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -11,10 +11,6 @@
  
- #define EXIT_TO_USERMODE_LOOP_FLAGS				\
- 	(_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_UPROBE |	\
--	 _TIF_NEED_RESCHED | _TIF_USER_RETURN_NOTIFY | _TIF_PATCH_PENDING)
-+	 _TIF_NEED_RESCHED | _TIF_PATCH_PENDING)
+ #include <asm/irq_stack.h>
  
- static void exit_to_usermode_loop(struct pt_regs *regs, u32 cached_flags)
- {
-@@ -242,9 +242,6 @@ static void exit_to_usermode_loop(struct
- 			rseq_handle_notify_resume(NULL, regs);
- 		}
- 
--		if (cached_flags & _TIF_USER_RETURN_NOTIFY)
--			fire_user_return_notifiers();
+-/* Temporary define */
+-#define idtentry_enter_user	irqentry_enter_from_user_mode
+-#define idtentry_exit_user	irqentry_exit_to_user_mode
 -
- 		/* Disable IRQs and retry */
- 		local_irq_disable();
+ typedef struct idtentry_state {
+ 	bool exit_rcu;
+ } idtentry_state_t;
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1927,11 +1927,11 @@ static __always_inline void exc_machine_
  
-@@ -273,6 +270,9 @@ static void __prepare_exit_to_usermode(s
- 	/* Reload ti->flags; we may have rescheduled above. */
- 	cached_flags = READ_ONCE(ti->flags);
+ static __always_inline void exc_machine_check_user(struct pt_regs *regs)
+ {
+-	idtentry_enter_user(regs);
++	irqentry_enter_from_user_mode(regs);
+ 	instrumentation_begin();
+ 	machine_check_vector(regs);
+ 	instrumentation_end();
+-	idtentry_exit_user(regs);
++	irqentry_exit_to_user_mode(regs);
+ }
  
-+	if (cached_flags & _TIF_USER_RETURN_NOTIFY)
-+		fire_user_return_notifiers();
-+
- 	if (unlikely(cached_flags & _TIF_IO_BITMAP))
- 		tss_update_io_bitmap();
+ #ifdef CONFIG_X86_64
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -638,18 +638,18 @@ DEFINE_IDTENTRY_RAW(exc_int3)
+ 		return;
  
+ 	/*
+-	 * idtentry_enter_user() uses static_branch_{,un}likely() and therefore
+-	 * can trigger INT3, hence poke_int3_handler() must be done
+-	 * before. If the entry came from kernel mode, then use nmi_enter()
+-	 * because the INT3 could have been hit in any context including
+-	 * NMI.
++	 * irqentry_enter_from_user_mode() uses static_branch_{,un}likely()
++	 * and therefore can trigger INT3, hence poke_int3_handler() must
++	 * be done before. If the entry came from kernel mode, then use
++	 * nmi_enter() because the INT3 could have been hit in any context
++	 * including NMI.
+ 	 */
+ 	if (user_mode(regs)) {
+-		idtentry_enter_user(regs);
++		irqentry_enter_from_user_mode(regs);
+ 		instrumentation_begin();
+ 		do_int3_user(regs);
+ 		instrumentation_end();
+-		idtentry_exit_user(regs);
++		irqentry_exit_to_user_mode(regs);
+ 	} else {
+ 		nmi_enter();
+ 		instrumentation_begin();
+@@ -901,12 +901,12 @@ static __always_inline void exc_debug_us
+ 	 */
+ 	WARN_ON_ONCE(!user_mode(regs));
+ 
+-	idtentry_enter_user(regs);
++	irqentry_enter_from_user_mode(regs);
+ 	instrumentation_begin();
+ 
+ 	handle_debug(regs, dr6, true);
+ 	instrumentation_end();
+-	idtentry_exit_user(regs);
++	irqentry_exit_to_user_mode(regs);
+ }
+ 
+ #ifdef CONFIG_X86_64
+
 
