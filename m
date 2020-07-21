@@ -2,211 +2,92 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B63CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B0FC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 752222077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:50:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Zs/uCH9I"
+	by mail.kernel.org (Postfix) with ESMTP id 695B220672
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbgGUDuI (ORCPT
+        id S1728731AbgGUDuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:50:08 -0400
-Received: from mail-eopbgr1320137.outbound.protection.outlook.com ([40.107.132.137]:33056
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726389AbgGUDuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 23:50:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JFKhC8cKJgW4SZ40F7jsNj/QprOk3Ffp3csGQk4Pom7t83asqjaxUFPQeHwXrm6olTmcDeC5tVb9sFMFbyiRpzFh+HNNtKWKjbCHv9d4d+tzBU8nDxx4LEgSi/Ry9+85gKRKiS0ngkQnwusgGAbEpEqVCKQYVYLyGZ7LExXR9DlLCva/9YRYCFhiskoV7HAQRrxlXIpmm7qhtPhdV9khiqtj57By6n3Ay5b7bCasa7qZHKQ0iGf3OIPsoud/ZY/JGgICPCI4UfNum+7tX/Ug8tPufijOYThLiZBzP6yoJh4OksTXHhERcIyvYDPec58WcufQkLSGf4dNRmyvGIiEsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jukI3T1SdY7BD63o/7jL2tkXfaWvYnjmuXJh8IayEhk=;
- b=Ft+X9ipzlRTzlwsGXSu87RRpD9fwlN2kNRGopzMXIz5NEdA9eW5CXT2VVgMFeRgZ8bhqdKWNhNZaGuI1ogMsfbt7pRjOJBxqDfW60Cmut0HEamGyVM2Ikp8TAewtFBbxqD0Q6hBvxnn54KT5/xvj53AHgKnIDCdYwtWR6cQytWXxJtr6YKsaeeGNkyvekJh9cB+8ns+bx6mUwHRK2i0yfoNBKDAfkfQFh65Lq+zHcVPB7M91TZ0uIQw+Ntd/a9tbkqggQi3dGhzMIA58+Yd8qUpRntqnihFho9VgOvuO/vIKPnH7jqtk5loy1ENQHKj14ClrgPWj9RQdCBi600CyYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jukI3T1SdY7BD63o/7jL2tkXfaWvYnjmuXJh8IayEhk=;
- b=Zs/uCH9IBy9l1fvqM36yooySs2gpODrjAkii8Fs4K9z6zQXgQuUlUBl4L5uK55nV0mlf8ul9B5QpABLX9ahLJ+xdhbRRkzGHdWx8WGFdf63QJBgaIoXAuk1wFKT+CpMeVbJRpV/1SPtXgk0qBCLilJ0Oy3yHQpf6U3EXcAF/+sc=
-Received: from HK0P153MB0275.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::14)
- by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (2603:1096:203:1a::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.7; Tue, 21 Jul
- 2020 03:50:01 +0000
-Received: from HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
- ([fe80::b5ca:82a1:cb67:52e]) by HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
- ([fe80::b5ca:82a1:cb67:52e%6]) with mapi id 15.20.3216.020; Tue, 21 Jul 2020
- 03:50:01 +0000
-From:   Chi Song <Song.Chi@microsoft.com>
-To:     David Miller <davem@davemloft.net>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 net-next] net: hyperv: Add attributes to show TX
- indirection table
-Thread-Topic: [PATCH v5 net-next] net: hyperv: Add attributes to show TX
- indirection table
-Thread-Index: AdZfEcPKGd7xulNnRpunpA+7DCPz/w==
-Date:   Tue, 21 Jul 2020 03:50:00 +0000
-Message-ID: <HK0P153MB0275B7FFBA43843CC7B1EABB98780@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-21T03:49:59Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=22e5ad65-f8db-4b06-8dee-ceac40c0f86e;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [2404:f801:8050:1:b1ce:4ac6:46d:28d5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 633fa444-b542-4431-c02a-08d82d29250e
-x-ms-traffictypediagnostic: HK0P153MB0148:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB0148A4FBA108CF04213DF7C398780@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:1417;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9DTL0mUykFlI/Vj/kzavtYpIQlRWlqr4Lu+oAR3FYC1TG13vhu+2f2dD7zABoeSi874y25GbPOMEDZtNINUG20PW80Bq5PVV/70h2Rgc2Yo78z5nis2oOZFuVOTbHVSMtQOy4u2S6GHpphf+B8cKUiBRcq/PuYMWoXKD76VIKNdDrV0a8x5vCA+32nooy8DEzSzfIqSm6B4R2UTzWiPyn/4BxO9VZQa7Cb4XTb27Z5buW0HP+JiFklUfIGXFP0GXrw/SlDjSCgul8mZJr8t29veOX4nZIMnpFsQ7nmq/WPSSe/waL8dhDI2boFzjdm2iTvRoTu9iXjieiO8wh86SUg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0275.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(376002)(136003)(346002)(86362001)(33656002)(76116006)(82960400001)(83380400001)(52536014)(82950400001)(5660300002)(66946007)(66476007)(66556008)(64756008)(66446008)(9686003)(55016002)(10290500003)(7696005)(316002)(4326008)(8676002)(2906002)(186003)(54906003)(8990500004)(110136005)(6506007)(71200400001)(478600001)(8936002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: xmzDA8bWly9Z9V+6mkMh1oOj0FE4BKlJtbUy84UtfN+Emu1l2sX18mjXbEUx696NTwTjhw+t34I0QW8fZmk360xMletuHbbW6kyKyHQHINxL/M18ceg4sK56MO69LQHgwWzt2VpDyomw5APaVVBmKBwZuxAuTzLzmQTwkI7kxDrUy57HCNkGe/sZ9SdF/ZKNELyKNz9q7kjvusLhm/mdIakqQCGxC2hjgCvQ5zvR8Z8Li8NGLSO3Kzpu07pUOZYLPfZpFLScGMAUKXSAq+hrGJfaZDE+Y52KZDyVSHcIPPrR21PXHHqZprWxWEQ29A2xwro3tjh+i+3et8PUfJgjvSVv4JSlya7gWu007TdTgVGwlnn7X87+IBujOfJELaEmohp85GXsopYixoKavS9bn03TAYQ6jVwL4RuLvYJ0cqa7rnKo2FggdPEvwNYRUlouSHQOWRsg4P36H9ZQoV/YRv9jt802GcN6/HjgKuv2yYy9V2fjp1KzWOHfn2XKIsPNONuR18CpV0lpdWnqSNNNXgDrE6nb5Y+Ns1PNHE7NS1M=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Jul 2020 23:50:24 -0400
+Received: from mga18.intel.com ([134.134.136.126]:19298 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726016AbgGUDuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 23:50:24 -0400
+IronPort-SDR: LeaxCREqBpNwJ1VzedhPfGNGNXpsZWDRKicQ8SilmBBUxRB0CQQrdsTOIksa/Ta4lHOGSVU7bH
+ FWyOucN2sa2w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="137545709"
+X-IronPort-AV: E=Sophos;i="5.75,377,1589266800"; 
+   d="scan'208";a="137545709"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 20:50:23 -0700
+IronPort-SDR: /5XVtmUxVOAjLvfPM7pFQIbvZL+4s8LLGFglLW4KaEq8z7NF1SHp30/MisacreC+3NaIYSZZeA
+ G260C8MNucVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,377,1589266800"; 
+   d="scan'208";a="310084736"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by fmsmga004.fm.intel.com with ESMTP; 20 Jul 2020 20:50:20 -0700
+Date:   Tue, 21 Jul 2020 11:47:13 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        trix@redhat.com, matthew.gerlach@linux.intel.com,
+        russell.h.weight@intel.com, lgoncalv@redhat.com, hao.wu@intel.com,
+        yilun.xu@intel.com
+Subject: Re: [PATCH v2 3/3] mfd: intel-m10-bmc: add Max10 BMC chip support
+  for Intel FPGA PAC
+Message-ID: <20200721034713.GB17091@yilunxu-OptiPlex-7050>
+References: <1594896174-18826-1-git-send-email-yilun.xu@intel.com>
+ <1594896174-18826-4-git-send-email-yilun.xu@intel.com>
+ <20200717181609.GB905@sirena.org.uk>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 633fa444-b542-4431-c02a-08d82d29250e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 03:50:00.7160
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GIR9a5lUtX6/jy+hz5/zkDQdjLgjUIJz5WqJmtNgwObOQhWNp8g5nhTKNkSLqaSfv06mhL1MhyuTXI4F35BXXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0148
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717181609.GB905@sirena.org.uk>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An imbalanced TX indirection table causes netvsc to have low
-performance. This table is created and managed during runtime. To help
-better diagnose performance issues caused by imbalanced tables, add
-device attributes to show the content of TX indirection tables.
+On Fri, Jul 17, 2020 at 07:16:09PM +0100, Mark Brown wrote:
+> On Thu, Jul 16, 2020 at 06:42:54PM +0800, Xu Yilun wrote:
+> 
+> > +static const struct spi_device_id m10bmc_spi_id[] = {
+> > +	{ "m10-n3000", M10_N3000 },
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(spi, m10bmc_spi_id);
+> 
+> > +static struct spi_driver intel_m10bmc_spi_driver = {
+> > +	.driver = {
+> > +		.name = "intel-m10-bmc",
+> > +		.dev_groups = m10bmc_dev_groups,
+> > +	},
+> > +	.probe = intel_m10_bmc_spi_probe,
+> > +	.id_table = m10bmc_spi_id,
+> > +};
+> 
+> > +module_spi_driver(intel_m10bmc_spi_driver);
+> 
+> This device has no ACPI information - how will it be instantiated?
 
-Signed-off-by: Chi Song <chisong@microsoft.com>
----
-v4: use a separated group to organize tx_indirection better, change=20
- location of attributes init/exit to netvsc_drv_init/exit
-v5: update variable orders.
+In our case, The m10-bmc is connected to the intel FPGA (PAC N3000),
+which uses the Device Feature List (DFL) mechanism to enumerate features
+(devices) on FPGA. Each feature in DFL has a feature_id. And for this
+m10-n3000 feature (feature_id = 0xd), it contains a spi-altera & a
+m10-n3000 chip. So the DFL subsystem would help enumerate the info.
 
- drivers/net/hyperv/netvsc_drv.c | 49 +++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+Recently I added the platform data for slave information in spi-altera,
+to support this use case.
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_dr=
-v.c
-index 6267f706e8ee..a1e009edd37e 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -2370,6 +2370,51 @@ static int netvsc_unregister_vf(struct net_device *v=
-f_netdev)
- 	return NOTIFY_OK;
- }
-=20
-+static struct device_attribute dev_attr_netvsc_dev_attrs[VRSS_SEND_TAB_SIZ=
-E];
-+static struct attribute *netvsc_dev_attrs[VRSS_SEND_TAB_SIZE + 1];
-+
-+const struct attribute_group netvsc_dev_group =3D {
-+	.name =3D "tx_indirection",
-+	.attrs =3D netvsc_dev_attrs,
-+};
-+
-+static ssize_t tx_indirection_show(struct device *dev,
-+				   struct device_attribute *dev_attr, char *buf)
-+{
-+	int index =3D dev_attr - dev_attr_netvsc_dev_attrs;
-+	struct net_device *ndev =3D to_net_dev(dev);
-+	struct net_device_context *ndc =3D netdev_priv(ndev);
-+
-+	return sprintf(buf, "%u\n", ndc->tx_table[index]);
-+}
-+
-+static void netvsc_attrs_init(void)
-+{
-+	char buffer[4];
-+	int i;
-+
-+	for (i =3D 0; i < VRSS_SEND_TAB_SIZE; i++) {
-+		sprintf(buffer, "%02u", i);
-+		dev_attr_netvsc_dev_attrs[i].attr.name =3D
-+			kstrdup(buffer, GFP_KERNEL);
-+		dev_attr_netvsc_dev_attrs[i].attr.mode =3D 0444;
-+		sysfs_attr_init(&dev_attr_netvsc_dev_attrs[i].attr);
-+
-+		dev_attr_netvsc_dev_attrs[i].show =3D tx_indirection_show;
-+		dev_attr_netvsc_dev_attrs[i].store =3D NULL;
-+		netvsc_dev_attrs[i] =3D &dev_attr_netvsc_dev_attrs[i].attr;
-+	}
-+	netvsc_dev_attrs[VRSS_SEND_TAB_SIZE] =3D NULL;
-+}
-+
-+static void netvsc_attrs_exit(void)
-+{
-+	int i;
-+
-+	for (i =3D 0; i < VRSS_SEND_TAB_SIZE; i++)
-+		kfree(dev_attr_netvsc_dev_attrs[i].attr.name);
-+}
-+
- static int netvsc_probe(struct hv_device *dev,
- 			const struct hv_vmbus_device_id *dev_id)
- {
-@@ -2410,6 +2455,7 @@ static int netvsc_probe(struct hv_device *dev,
-=20
- 	net->netdev_ops =3D &device_ops;
- 	net->ethtool_ops =3D &ethtool_ops;
-+	net->sysfs_groups[0] =3D &netvsc_dev_group;
- 	SET_NETDEV_DEV(net, &dev->device);
-=20
- 	/* We always need headroom for rndis header */
-@@ -2665,6 +2711,7 @@ static void __exit netvsc_drv_exit(void)
- {
- 	unregister_netdevice_notifier(&netvsc_netdev_notifier);
- 	vmbus_driver_unregister(&netvsc_drv);
-+	netvsc_attrs_exit();
- }
-=20
- static int __init netvsc_drv_init(void)
-@@ -2678,6 +2725,8 @@ static int __init netvsc_drv_init(void)
- 	}
- 	netvsc_ring_bytes =3D ring_size * PAGE_SIZE;
-=20
-+	netvsc_attrs_init();
-+
- 	ret =3D vmbus_driver_register(&netvsc_drv);
- 	if (ret)
- 		return ret;
---=20
-2.25.1
+Thanks,
+Yilun
