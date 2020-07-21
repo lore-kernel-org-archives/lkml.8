@@ -2,331 +2,110 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C461C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C12FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00C9E20672
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A31420672
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjJmOnjS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgGUTRm (ORCPT
+        id S1730410AbgGUTRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:17:42 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:47048 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbgGUTRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:17:41 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 35E0FBC1AB;
-        Tue, 21 Jul 2020 19:17:36 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     abbotti@mev.co.uk, hsweeten@visionengravers.com,
-        gregkh@linuxfoundation.org, mh12gx2825@gmail.com, ejyu99@gmail.com,
-        yuehaibing@huawei.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] staging: comedi: ni: Replace HTTP links with HTTPS ones
-Date:   Tue, 21 Jul 2020 21:17:29 +0200
-Message-Id: <20200721191729.67847-1-grandmaster@al2klimov.de>
+        Tue, 21 Jul 2020 15:17:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbgGUTRu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 15:17:50 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF084C061794;
+        Tue, 21 Jul 2020 12:17:49 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 140so1900536lfi.5;
+        Tue, 21 Jul 2020 12:17:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZWBDSpvSID9isJQH7VhMl+fYpyhlV/5rIWPv6OTFX7k=;
+        b=bjJmOnjSvHymIbPjtRqJcq5iUmACuMPlpNYY6EiWRnwQ+sFauRHkIDHR5ii1tNFodT
+         ZnGD/2GgQCh8NnD4rf8Ac3y7LP2ZzOXhMhd4+1PTsXLxT1J6FVdqFTZl9/8paiZu46F+
+         11ZygeKCLBq/O9uFsto9he37C6pu1uCRIFRFhS+mH2Fx+r/+W8yMbhqzmFUsWNxY2dVJ
+         oFKNi1baFIPVyTgn3OmUXQr+TVKR8DWDca0+usbBxY573rfj5PrAwdT/AviH+Bnnqzh7
+         rBH51dIX87TxnklidM+nyuPcde5wMeX/OKWTGFOpS9tuuruGLaHLaQjhwVMbJGhs9QN9
+         g+rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZWBDSpvSID9isJQH7VhMl+fYpyhlV/5rIWPv6OTFX7k=;
+        b=AqaVCx4dmf0CXrkFgizjSdrMNXq1tiW3GbiKWWSS6i1b5l25oLIKJEbAu5Z23SAKhv
+         we2eO1gpnmZ1itRuk+79LC7oipIy/366k26PsifiC73+6khysTu9APkjhgk5jy4VPDl6
+         agy1ateTmz1U8pr6Q/HAeMyqEMqecEk3jU1j9d6R8eEGC9KPrHSWaeaJlLEhdGG5XSsn
+         /lh9UbfRNqFl9S+aS6/O/7kSi8C+NKlV4+F6RRyOw67HDxofh6DQikahdz2+/SH4y809
+         xeltIrGOszq7R60Enus0i81EQ/HtMRTXLqQvwwFeQJNF07x0wxXFQQcBJj7UmaU7lHi+
+         B1tA==
+X-Gm-Message-State: AOAM533Cy1GKErFDLZle7T6sZC/JUdZZyn00xY+5lEkpXyKGsAZ8LPUf
+        BHUcm2W2tpuF81Sz4a0PTwaW9tk+7dStOuGj90Q=
+X-Google-Smtp-Source: ABdhPJzrrRmzoMl0l7Jzq9SQZQf3um1JlMaVowRRAM+BxYECxE+izAQMM7qYNVXZ6dnQZDkCxLqs2b1d7HmQF0qklRk=
+X-Received: by 2002:a05:6512:3610:: with SMTP id f16mr6898040lfs.8.1595359068359;
+ Tue, 21 Jul 2020 12:17:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+References: <20200717020842.GA29747@vm_111_229_centos>
+In-Reply-To: <20200717020842.GA29747@vm_111_229_centos>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 21 Jul 2020 12:17:36 -0700
+Message-ID: <CAADnVQJvW7hto4E740Hi9b22wszYLxVwUCDS5jMdQ_2E3==GRQ@mail.gmail.com>
+Subject: Re: [PATCH] ebpf: fix parameter naming confusing
+To:     YangYuxi <yx.atom1@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Thu, Jul 16, 2020 at 7:08 PM YangYuxi <yx.atom1@gmail.com> wrote:
+>
+> Signed-off-by: YangYuxi <yx.atom1@gmail.com>
+> ---
+>  kernel/bpf/syscall.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index 0fd80ac81f70..300ae16baffc 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -1881,13 +1881,13 @@ struct bpf_prog *bpf_prog_inc_not_zero(struct bpf_prog *prog)
+>  EXPORT_SYMBOL_GPL(bpf_prog_inc_not_zero);
+>
+>  bool bpf_prog_get_ok(struct bpf_prog *prog,
+> -                           enum bpf_prog_type *attach_type, bool attach_drv)
+> +                           enum bpf_prog_type *prog_type, bool attach_drv)
+>  {
+>         /* not an attachment, just a refcount inc, always allow */
+> -       if (!attach_type)
+> +       if (!prog_type)
+>                 return true;
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
-
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/staging/comedi/drivers/ni_6527.c         | 2 +-
- drivers/staging/comedi/drivers/ni_65xx.c         | 2 +-
- drivers/staging/comedi/drivers/ni_660x.c         | 2 +-
- drivers/staging/comedi/drivers/ni_670x.c         | 2 +-
- drivers/staging/comedi/drivers/ni_at_a2150.c     | 2 +-
- drivers/staging/comedi/drivers/ni_at_ao.c        | 2 +-
- drivers/staging/comedi/drivers/ni_atmio.c        | 2 +-
- drivers/staging/comedi/drivers/ni_atmio16d.c     | 2 +-
- drivers/staging/comedi/drivers/ni_daq_700.c      | 4 ++--
- drivers/staging/comedi/drivers/ni_labpc.c        | 4 ++--
- drivers/staging/comedi/drivers/ni_labpc_common.c | 2 +-
- drivers/staging/comedi/drivers/ni_labpc_isadma.c | 2 +-
- drivers/staging/comedi/drivers/ni_labpc_pci.c    | 2 +-
- drivers/staging/comedi/drivers/ni_pcidio.c       | 4 ++--
- drivers/staging/comedi/drivers/ni_pcimio.c       | 2 +-
- drivers/staging/comedi/drivers/ni_routes.c       | 2 +-
- drivers/staging/comedi/drivers/ni_usb6501.c      | 2 +-
- 17 files changed, 20 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/staging/comedi/drivers/ni_6527.c b/drivers/staging/comedi/drivers/ni_6527.c
-index 4d1eccb5041d..ba7f40b46c3a 100644
---- a/drivers/staging/comedi/drivers/ni_6527.c
-+++ b/drivers/staging/comedi/drivers/ni_6527.c
-@@ -486,6 +486,6 @@ static struct pci_driver ni6527_pci_driver = {
- };
- module_comedi_pci_driver(ni6527_driver, ni6527_pci_driver);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi driver for National Instruments PCI-6527");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/comedi/drivers/ni_65xx.c b/drivers/staging/comedi/drivers/ni_65xx.c
-index 996074e471d3..eb3f9f7109da 100644
---- a/drivers/staging/comedi/drivers/ni_65xx.c
-+++ b/drivers/staging/comedi/drivers/ni_65xx.c
-@@ -817,6 +817,6 @@ static struct pci_driver ni_65xx_pci_driver = {
- };
- module_comedi_pci_driver(ni_65xx_driver, ni_65xx_pci_driver);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi driver for NI PCI-65xx static dio boards");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/comedi/drivers/ni_660x.c b/drivers/staging/comedi/drivers/ni_660x.c
-index 75d5c9c24596..e60d0125bcb2 100644
---- a/drivers/staging/comedi/drivers/ni_660x.c
-+++ b/drivers/staging/comedi/drivers/ni_660x.c
-@@ -1250,6 +1250,6 @@ static struct pci_driver ni_660x_pci_driver = {
- };
- module_comedi_pci_driver(ni_660x_driver, ni_660x_pci_driver);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi driver for NI 660x counter/timer boards");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/comedi/drivers/ni_670x.c b/drivers/staging/comedi/drivers/ni_670x.c
-index 4e4ae31c8d0b..c197e47486be 100644
---- a/drivers/staging/comedi/drivers/ni_670x.c
-+++ b/drivers/staging/comedi/drivers/ni_670x.c
-@@ -277,6 +277,6 @@ static struct pci_driver ni_670x_pci_driver = {
- };
- module_comedi_pci_driver(ni_670x_driver, ni_670x_pci_driver);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi low-level driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/comedi/drivers/ni_at_a2150.c b/drivers/staging/comedi/drivers/ni_at_a2150.c
-index 76e8d047f71e..10ad7b88713e 100644
---- a/drivers/staging/comedi/drivers/ni_at_a2150.c
-+++ b/drivers/staging/comedi/drivers/ni_at_a2150.c
-@@ -777,6 +777,6 @@ static struct comedi_driver ni_at_a2150_driver = {
- };
- module_comedi_driver(ni_at_a2150_driver);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi low-level driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/comedi/drivers/ni_at_ao.c b/drivers/staging/comedi/drivers/ni_at_ao.c
-index 814895d01ffa..2a0fb4d460db 100644
---- a/drivers/staging/comedi/drivers/ni_at_ao.c
-+++ b/drivers/staging/comedi/drivers/ni_at_ao.c
-@@ -369,6 +369,6 @@ static struct comedi_driver ni_at_ao_driver = {
- };
- module_comedi_driver(ni_at_ao_driver);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi driver for NI AT-AO-6/10 boards");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/comedi/drivers/ni_atmio.c b/drivers/staging/comedi/drivers/ni_atmio.c
-index 2b7bfe0dd7f3..56c78da475e7 100644
---- a/drivers/staging/comedi/drivers/ni_atmio.c
-+++ b/drivers/staging/comedi/drivers/ni_atmio.c
-@@ -354,7 +354,7 @@ static struct comedi_driver ni_atmio_driver = {
- };
- module_comedi_driver(ni_atmio_driver);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi low-level driver");
- MODULE_LICENSE("GPL");
- 
-diff --git a/drivers/staging/comedi/drivers/ni_atmio16d.c b/drivers/staging/comedi/drivers/ni_atmio16d.c
-index 0bca7d752015..dffce1aa3e69 100644
---- a/drivers/staging/comedi/drivers/ni_atmio16d.c
-+++ b/drivers/staging/comedi/drivers/ni_atmio16d.c
-@@ -724,6 +724,6 @@ static struct comedi_driver atmio16d_driver = {
- };
- module_comedi_driver(atmio16d_driver);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi low-level driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/comedi/drivers/ni_daq_700.c b/drivers/staging/comedi/drivers/ni_daq_700.c
-index 81fd4c26a16f..d40fc89f9cef 100644
---- a/drivers/staging/comedi/drivers/ni_daq_700.c
-+++ b/drivers/staging/comedi/drivers/ni_daq_700.c
-@@ -34,8 +34,8 @@
-  *
-  * IRQ is assigned but not used.
-  *
-- * Manuals:	Register level:	http://www.ni.com/pdf/manuals/340698.pdf
-- *		User Manual:	http://www.ni.com/pdf/manuals/320676d.pdf
-+ * Manuals:	Register level:	https://www.ni.com/pdf/manuals/340698.pdf
-+ *		User Manual:	https://www.ni.com/pdf/manuals/320676d.pdf
-  */
- 
- #include <linux/module.h>
-diff --git a/drivers/staging/comedi/drivers/ni_labpc.c b/drivers/staging/comedi/drivers/ni_labpc.c
-index c6cf37ccbc92..1f4a07bd1d26 100644
---- a/drivers/staging/comedi/drivers/ni_labpc.c
-+++ b/drivers/staging/comedi/drivers/ni_labpc.c
-@@ -27,7 +27,7 @@
-  * Kernel-level ISA plug-and-play support for the lab-pc-1200 boards
-  * has not yet been added to the driver, mainly due to the fact that
-  * I don't know the device id numbers. If you have one of these boards,
-- * please file a bug report at http://comedi.org/ so I can get the
-+ * please file a bug report at https://comedi.org/ so I can get the
-  * necessary information from you.
-  *
-  * The 1200 series boards have onboard calibration dacs for correcting
-@@ -111,6 +111,6 @@ static struct comedi_driver labpc_driver = {
- };
- module_comedi_driver(labpc_driver);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi driver for NI Lab-PC ISA boards");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/comedi/drivers/ni_labpc_common.c b/drivers/staging/comedi/drivers/ni_labpc_common.c
-index ce0f85026277..dd97946eacaf 100644
---- a/drivers/staging/comedi/drivers/ni_labpc_common.c
-+++ b/drivers/staging/comedi/drivers/ni_labpc_common.c
-@@ -1358,6 +1358,6 @@ static void __exit labpc_common_exit(void)
- }
- module_exit(labpc_common_exit);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi helper for ni_labpc, ni_labpc_pci, ni_labpc_cs");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/comedi/drivers/ni_labpc_isadma.c b/drivers/staging/comedi/drivers/ni_labpc_isadma.c
-index 5657736a9408..a551aca6e615 100644
---- a/drivers/staging/comedi/drivers/ni_labpc_isadma.c
-+++ b/drivers/staging/comedi/drivers/ni_labpc_isadma.c
-@@ -176,6 +176,6 @@ static void __exit ni_labpc_isadma_cleanup_module(void)
- }
- module_exit(ni_labpc_isadma_cleanup_module);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi NI Lab-PC ISA DMA support");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/comedi/drivers/ni_labpc_pci.c b/drivers/staging/comedi/drivers/ni_labpc_pci.c
-index d7d5a7973558..ec180b0fedf7 100644
---- a/drivers/staging/comedi/drivers/ni_labpc_pci.c
-+++ b/drivers/staging/comedi/drivers/ni_labpc_pci.c
-@@ -128,5 +128,5 @@ static struct pci_driver labpc_pci_driver = {
- module_comedi_pci_driver(labpc_pci_comedi_driver, labpc_pci_driver);
- 
- MODULE_DESCRIPTION("Comedi: National Instruments Lab-PC PCI-1200 driver");
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/comedi/drivers/ni_pcidio.c b/drivers/staging/comedi/drivers/ni_pcidio.c
-index 8f3864799c19..623f8d08d13a 100644
---- a/drivers/staging/comedi/drivers/ni_pcidio.c
-+++ b/drivers/staging/comedi/drivers/ni_pcidio.c
-@@ -33,7 +33,7 @@
-  * The PCI-6534 requires a firmware upload after power-up to work, the
-  * firmware data and instructions for loading it with comedi_config
-  * it are contained in the comedi_nonfree_firmware tarball available from
-- * http://www.comedi.org
-+ * https://www.comedi.org
-  */
- 
- #define USE_DMA
-@@ -1005,6 +1005,6 @@ static struct pci_driver ni_pcidio_pci_driver = {
- };
- module_comedi_pci_driver(ni_pcidio_driver, ni_pcidio_pci_driver);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi low-level driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/comedi/drivers/ni_pcimio.c b/drivers/staging/comedi/drivers/ni_pcimio.c
-index c1d70eec24ab..6c813a490ba5 100644
---- a/drivers/staging/comedi/drivers/ni_pcimio.c
-+++ b/drivers/staging/comedi/drivers/ni_pcimio.c
-@@ -1472,6 +1472,6 @@ static struct pci_driver ni_pcimio_pci_driver = {
- };
- module_comedi_pci_driver(ni_pcimio_driver, ni_pcimio_pci_driver);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi low-level driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/comedi/drivers/ni_routes.c b/drivers/staging/comedi/drivers/ni_routes.c
-index 07cb970340db..c426a9286f15 100644
---- a/drivers/staging/comedi/drivers/ni_routes.c
-+++ b/drivers/staging/comedi/drivers/ni_routes.c
-@@ -556,7 +556,7 @@ static void __exit ni_routes_module_exit(void)
- module_init(ni_routes_module_init);
- module_exit(ni_routes_module_exit);
- 
--MODULE_AUTHOR("Comedi http://www.comedi.org");
-+MODULE_AUTHOR("Comedi https://www.comedi.org");
- MODULE_DESCRIPTION("Comedi helper for routing signals-->terminals for NI");
- MODULE_LICENSE("GPL");
- /* **** END simple module entry/exit functions **** */
-diff --git a/drivers/staging/comedi/drivers/ni_usb6501.c b/drivers/staging/comedi/drivers/ni_usb6501.c
-index 360e86a19fe3..5b6d9d783b2f 100644
---- a/drivers/staging/comedi/drivers/ni_usb6501.c
-+++ b/drivers/staging/comedi/drivers/ni_usb6501.c
-@@ -79,7 +79,7 @@
-  *	RES: 00 01 00 0C 00 08 01 00 00 00 00 02
-  *
-  *
-- *	Please  visit http://www.brickedbrain.com if you need
-+ *	Please  visit https://www.brickedbrain.com if you need
-  *	additional information or have any questions.
-  *
-  */
--- 
-2.27.0
-
+I think it makes it worse.
+Now the comment doesn't match the code.
+And attach_drv name also looks out of place.
+Technically program type is also an attach type to some degree.
+The name could be a bit confusing, but in combination with type:
+'enum bpf_prog_type *attach_type'
+I think it's pretty clear what these functions are doing.
+So I prefer to keep the code as-is.
