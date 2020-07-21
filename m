@@ -2,219 +2,160 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D43C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65430C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58113207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:59:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595311177;
-	bh=MIJOMLgYWmL4iYFNkn09Czpo8FFKvRuXARB/inYWKag=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YqlPH67qWwrXqDwXL+ZwEj4j2oxsuSuNGCG6MdbCz+M4iIKHI7u62/QMD33iy0SQZ
-	 2Dj7kO87G6+G5OvvNl7q3LAwtVtAXvpUPlwpe1iqvJReJ0gEiJ1paZWhm13FYzXp9/
-	 gULHbdsFDvpYu/H6R7rRmRU3sk6t5++7JaP6fy+A=
+	by mail.kernel.org (Postfix) with ESMTP id 44F0B207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:59:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rxv84i0Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgGUF7Y (ORCPT
+        id S1726867AbgGUF7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 01:59:24 -0400
-Received: from mail-wr1-f52.google.com ([209.85.221.52]:35165 "EHLO
-        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgGUF7Y (ORCPT
+        Tue, 21 Jul 2020 01:59:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbgGUF7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 01:59:24 -0400
-Received: by mail-wr1-f52.google.com with SMTP id z2so19953368wrp.2;
-        Mon, 20 Jul 2020 22:59:22 -0700 (PDT)
+        Tue, 21 Jul 2020 01:59:16 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44A5C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 22:59:16 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id md7so1117710pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 22:59:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=KMmzvRDJd+7JQh3nAfR3C392m0BpTUJ+3ePAUF20ipM=;
+        b=Rxv84i0QAHjDtaiOwh/2J3sKXar2+ERm+ATC8Q8Xfyc6nMJXbwVIhxRyXUP7SVjfjn
+         eQwUEXhTG6oJTATxSLbFZDVKCQZ8LHhZvaqcBbUlVl2wUb8bRcMtUal/mqZnQfb0LhnE
+         RFJNs7S2GBbfDx2RAk/LtKpF31pDh4oP37amc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yn+IvGYcGADoyV/li1kx8w6qqUr66L1fqMcGdqGychA=;
-        b=PjCbu2c5/HBDNxl2KyyhzDOM1FEPy+J+dPhQORs1T3mcHpsBcfq0LPOW2psZTS1vFS
-         4YzURtLV66x9Sbh0dot1vRZM5NvKRZ5rw9DDRMJLbbNWGDRCzHqzU/rnh1XCQNBMfPFb
-         ltoOU3js1kpKQAQUXweIRmVnYpLCbME7+uo5NlzU7CkrP/Sg3H2CjT0CrxCvgfB2/x+j
-         b4mqhbXAHuhGvepoT3UJ4jRq2nL93uAk59W/7dUrSpvNtiTaYrRIHDMl6Tt5AuKYr9px
-         /BRdA2kqA/2yjxrqHQlH9R0eKlxxfVwbrgBNWbgYEdekfCVsFEytFEacOJeRBDbucxiW
-         KitQ==
-X-Gm-Message-State: AOAM531qrRMZ6WaoANk2Ctfsb+1U/6RM/hHZIMJFSow1wZ1S9jBRS+iL
-        ZEJw7szzpfa0OjSa8SVwTRY=
-X-Google-Smtp-Source: ABdhPJx6zkIXCLbTYl5gajQE79/CHChTPjwr7RpAdw7wESfAwSSTXItZTs4hkyyuaOA61wm8qT+dGg==
-X-Received: by 2002:adf:c185:: with SMTP id x5mr27196525wre.403.1595311161402;
-        Mon, 20 Jul 2020 22:59:21 -0700 (PDT)
-Received: from localhost (ip-37-188-169-187.eurotel.cz. [37.188.169.187])
-        by smtp.gmail.com with ESMTPSA id d132sm1964546wmd.35.2020.07.20.22.59.19
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=KMmzvRDJd+7JQh3nAfR3C392m0BpTUJ+3ePAUF20ipM=;
+        b=j6tMErg19EVRvumMjQ9JcpHkgbEWOfFP1B5JD+hu+wI8YdZ3fAoTPeNZRe3y4A6JTZ
+         Oo6KyMr5T6ILL0ErCSkwEaUhUQfn3rcjDuowFTBrXxQH2y7BaQNAT1Zl916DisQoQWoD
+         E08f/gddsXlHfOB2i3mAz20PCm6kwfFudO7usYwn0UXsmPH3KMiaWIxJV8dsk/iz1nbY
+         u8x+/UeAsxkTrFQ4DQwY/tlmUpsOBuOFYsP59Aj9ZaexYpRWt7slnuu5WpkRnm+F44BP
+         uxF2jxU02PaIQGTl+IdvMok6xRZgzf6dRAms6SQprjhcz0Ke5N2IryjJuKPotJdynSuv
+         Hdgw==
+X-Gm-Message-State: AOAM5300rNkxoUlyLhviw7DOXX9/RBAwNOYLlrSCky1RcvfCix3QYRO+
+        rv53P4rAft584zOtPjF/BN8O5A==
+X-Google-Smtp-Source: ABdhPJyPsf7kVDCbzPver/0zOXuRkOwd1jKCYu5DVQc3foP0eJly1X6oGmB7HiIREep2HWy6KWn53A==
+X-Received: by 2002:a17:90b:46d0:: with SMTP id jx16mr2894431pjb.222.1595311156227;
+        Mon, 20 Jul 2020 22:59:16 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id nh14sm1594205pjb.4.2020.07.20.22.59.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 22:59:20 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 07:59:17 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: kworker/0:3+pm hogging CPU
-Message-ID: <20200721055917.GD4061@dhcp22.suse.cz>
-References: <20200720083956.GA4074@dhcp22.suse.cz>
- <20200720135857.GB1228057@rowland.harvard.edu>
- <20200720143213.GJ4074@dhcp22.suse.cz>
- <20200720151255.GE1228057@rowland.harvard.edu>
- <20200720163355.GA4061@dhcp22.suse.cz>
- <20200720173807.GJ1228057@rowland.harvard.edu>
- <20200720174530.GB4061@dhcp22.suse.cz>
- <20200720174812.GK1228057@rowland.harvard.edu>
- <20200720181605.GC4061@dhcp22.suse.cz>
- <20200720200243.GA1244989@rowland.harvard.edu>
+        Mon, 20 Jul 2020 22:59:15 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720200243.GA1244989@rowland.harvard.edu>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200720172448.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
+References: <20200720172448.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
+Subject: Re: [PATCH] i2c: i2c-qcom-geni: Fix DMA transfer race
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
+        Wolfram Sang <wsa@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Douglas Anderson <dianders@chromium.org>,
+        Wolfram Sang <wsa@the-dreams.de>
+Date:   Mon, 20 Jul 2020 22:59:14 -0700
+Message-ID: <159531115483.3847286.18280088484118119899@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20-07-20 16:02:43, Alan Stern wrote:
-> On Mon, Jul 20, 2020 at 08:16:05PM +0200, Michal Hocko wrote:
-> > On Mon 20-07-20 13:48:12, Alan Stern wrote:
-> > > On Mon, Jul 20, 2020 at 07:45:30PM +0200, Michal Hocko wrote:
-> > > > On Mon 20-07-20 13:38:07, Alan Stern wrote:
-> > > > > On Mon, Jul 20, 2020 at 06:33:55PM +0200, Michal Hocko wrote:
-> > > > > > On Mon 20-07-20 11:12:55, Alan Stern wrote:
-> > > > > > [...]
-> > > > > > > 	sudo echo 'module usbcore =p' >/debug/dynamic_debug/control
-> > > > > > > 
-> > > > > > > Then wait long enough for some interesting messages to appear in the 
-> > > > > > > kernel log (it should only take a few seconds if the worker thread is as 
-> > > > > > > busy as you say) and collect the output from the dmesg command.
-> > > > > > > 
-> > > > > > > To turn dynamic debugging back off when you're finished, use the same 
-> > > > > > > command with "=p" changed to "-p".
-> > > > > > 
-> > > > > > [   95.395815] hub 2-0:1.0: state 7 ports 6 chg 0006 evt 0000
-> > > > > > [   95.395824] usb usb2-port1: status 0088, change 0000, 5.0 Gb/s
-> > > > > > [   95.395838] usb usb2-port2: status 0088, change 0000, 5.0 Gb/s
-> > > > > > [   95.396016] hub 2-0:1.0: hub_suspend
-> > > > > > [   95.396023] usb usb2: bus auto-suspend, wakeup 1
-> > > > > > [   95.396029] usb usb2: bus suspend fail, err -16
-> > > > > 
-> > > > > Okay, that's the problem.  You may get more specific information about 
-> > > > > the suspend failure if you turn on dynamic debugging for the xhci-hcd 
-> > > > > module (same command as above but with xhci-hcd instead of usbcore).
-> > > > 
-> > > > Would that help to pinpoint the problem down?
-> > > 
-> > > It might.  I can't say for sure without seeing the output.
-> > 
-> > echo 'module xhci-hcd =p' >/sys/kernel/debug/dynamic_debug/control
-> > 
-> > doesn't yield to any output. I have tried both with and without usbcore
-> > debug output enabled. In the former there is no new output and for the
-> > later I get the same I have posted earlier.
-> 
-> Sorry, my mistake.  The module name needs to be "xhci_hcd" with an '_' 
-> character, not a '-' character -- the same as what shows up in the lsmod 
-> output.
+Quoting Douglas Anderson (2020-07-20 17:24:53)
+> When I have KASAN enabled on my kernel and I start stressing the
+> touchscreen my system tends to hang.  The touchscreen is one of the
+> only things that does a lot of big i2c transfers and ends up hitting
+> the DMA paths in the geni i2c driver.  It appears that KASAN adds
+> enough delay in my system to tickle a race condition in the DMA setup
+> code.
+>=20
+> When the system hangs, I found that it was running the geni_i2c_irq()
+> over and over again.  It had these:
+>=20
+> m_stat   =3D 0x04000080
+> rx_st    =3D 0x30000011
+> dm_tx_st =3D 0x00000000
+> dm_rx_st =3D 0x00000000
+> dma      =3D 0x00000001
+>=20
+> Notably we're in DMA mode but are getting M_RX_IRQ_EN and
+> M_RX_FIFO_WATERMARK_EN over and over again.
+>=20
+> Putting some traces in geni_i2c_rx_one_msg() showed that when we
+> failed we were getting to the start of geni_i2c_rx_one_msg() but were
+> never executing geni_se_rx_dma_prep().
+>=20
+> I believe that the problem here is that we are writing the transfer
+> length and setting up the geni command before we run
+> geni_se_rx_dma_prep().  If a transfer makes it far enough before we do
+> that then we get into the state I have observed.  Let's change the
+> order, which seems to work fine.
 
+Does the length matter or the I2C_READ m_cmd matter? Or somehow both?
+Otherwise it sounds correct to me that we're configuring it to start the
+read before mapping the buffer.
 
-[14766.973734] xhci_hcd 0000:00:14.0: Get port status 2-1 read: 0xe000088, return 0x88
-[14766.973738] xhci_hcd 0000:00:14.0: Get port status 2-2 read: 0xe000088, return 0x88
-[14766.973742] xhci_hcd 0000:00:14.0: Get port status 2-3 read: 0xe0002a0, return 0x2a0
-[14766.973746] xhci_hcd 0000:00:14.0: Get port status 2-4 read: 0xe0002a0, return 0x2a0
-[14766.973750] xhci_hcd 0000:00:14.0: Get port status 2-5 read: 0xe0002a0, return 0x2a0
-[14766.973754] xhci_hcd 0000:00:14.0: Get port status 2-6 read: 0xe0002a0, return 0x2a0
-[14766.973759] xhci_hcd 0000:00:14.0: Get port status 2-1 read: 0xe000088, return 0x88
-[14766.973763] xhci_hcd 0000:00:14.0: Get port status 2-2 read: 0xe000088, return 0x88
-[14766.973771] xhci_hcd 0000:00:14.0: set port remote wake mask, actual port 0 status  = 0xe000088
-[14766.973780] xhci_hcd 0000:00:14.0: set port remote wake mask, actual port 1 status  = 0xe000088
-[14766.973789] xhci_hcd 0000:00:14.0: set port remote wake mask, actual port 2 status  = 0xe0002a0
-[14766.973798] xhci_hcd 0000:00:14.0: set port remote wake mask, actual port 3 status  = 0xe0002a0
-[14766.973807] xhci_hcd 0000:00:14.0: set port remote wake mask, actual port 4 status  = 0xe0002a0
-[14766.973816] xhci_hcd 0000:00:14.0: set port remote wake mask, actual port 5 status  = 0xe0002a0
-[14766.973830] xhci_hcd 0000:00:14.0: Bus suspend bailout, port over-current detected
+>=20
+> Fixes: 37692de5d523 ("i2c: i2c-qcom-geni: Add bus driver for the Qualcomm=
+ GENI I2C controller")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>=20
+>  drivers/i2c/busses/i2c-qcom-geni.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-=
+qcom-geni.c
+> index 18d1e4fd4cf3..21e27f10510a 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -366,15 +366,15 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev =
+*gi2c, struct i2c_msg *msg,
+>         else
+>                 geni_se_select_mode(se, GENI_SE_FIFO);
+> =20
+> -       writel_relaxed(len, se->base + SE_I2C_RX_TRANS_LEN);
+> -       geni_se_setup_m_cmd(se, I2C_READ, m_param);
+> -
+>         if (dma_buf && geni_se_rx_dma_prep(se, dma_buf, len, &rx_dma)) {
+>                 geni_se_select_mode(se, GENI_SE_FIFO);
+>                 i2c_put_dma_safe_msg_buf(dma_buf, msg, false);
+>                 dma_buf =3D NULL;
+>         }
+> =20
 
-Repeating again and again. The last message suggests a HW problem? But
-why does the kernel try the same thing over and over?
+I worry that we also need a dmb() here to make sure the dma buffer is
+properly mapped before this write to the device is attempted. But it may
+only matter to be before the I2C_READ.
 
-> You could also try collect a usbmon trace from the .../2u file.  It does 
-> seem that bus 2 is where the problem occurs.
-
-a random sample
-
-ffff8882447743c0 2551256361 S Ii:2:001:1 -115:2048 4 <
-ffff888040808cc0 2551256367 C Ci:2:001:0 0 4 = 88000000
-ffff888040808cc0 2551256373 C Ci:2:001:0 0 4 = 88000000
-ffff888040808cc0 2551256377 S Co:2:001:0 s 23 03 001b 0701 0000 0
-ffff888040808cc0 2551256384 C Co:2:001:0 0 0
-ffff888040808cc0 2551256432 C Co:2:001:0 0 0
-ffff888040808cc0 2551256482 C Co:2:001:0 0 0
-ffff888040808cc0 2551256531 C Co:2:001:0 0 0
-ffff888040808cc0 2551256535 S Co:2:001:0 s 23 03 001b 0705 0000 0
-ffff888040808cc0 2551256542 C Co:2:001:0 0 0
-ffff888040808cc0 2551256551 C Co:2:001:0 0 0
-ffff8882447743c0 2551256555 C Ii:2:001:1 -2:2048 0
-ffff888040808cc0 2551256562 S Ci:2:001:0 s a3 00 0000 0001 0004 4 <
-ffff888040808cc0 2551256566 C Ci:2:001:0 0 4 = 88000000
-ffff888040808cc0 2551256568 S Ci:2:001:0 s a3 00 0000 0002 0004 4 <
-ffff888040808cc0 2551256573 S Ci:2:001:0 s a3 00 0000 0003 0004 4 <
-ffff888040808cc0 2551256579 S Ci:2:001:0 s a3 00 0000 0004 0004 4 <
-ffff888040808cc0 2551256584 S Ci:2:001:0 s a3 00 0000 0005 0004 4 <
-ffff888040808cc0 2551256625 S Ci:2:001:0 s a3 00 0000 0006 0004 4 <
-ffff888040808cc0 2551256686 S Ci:2:001:0 s a3 00 0000 0001 0004 4 <
-ffff888040808cc0 2551256689 C Ci:2:001:0 0 4 = 88000000
-ffff888040808cc0 2551256735 C Ci:2:001:0 0 4 = 88000000
-ffff888040808cc0 2551256745 C Co:2:001:0 0 0
-ffff888040808cc0 2551256748 S Co:2:001:0 s 23 03 001b 0702 0000 0
-ffff888040808cc0 2551256755 C Co:2:001:0 0 0
-ffff888040808cc0 2551256757 S Co:2:001:0 s 23 03 001b 0703 0000 0
-ffff888040808cc0 2551256764 C Co:2:001:0 0 0
-ffff888040808cc0 2551256802 C Co:2:001:0 0 0
-ffff888040808cc0 2551256843 C Co:2:001:0 0 0
-ffff888040808cc0 2551256871 C Co:2:001:0 0 0
-ffff8882447743c0 2551256914 C Ii:2:001:1 -2:2048 0
-ffff888040808cc0 2551256922 S Ci:2:001:0 s a3 00 0000 0001 0004 4 <
-ffff888040808cc0 2551256925 C Ci:2:001:0 0 4 = 88000000
-ffff888040808cc0 2551256927 S Ci:2:001:0 s a3 00 0000 0002 0004 4 <
-ffff888040808cc0 2551256933 S Ci:2:001:0 s a3 00 0000 0003 0004 4 <
-ffff888040808cc0 2551256936 C Ci:2:001:0 0 4 = a0020000
-ffff888040808cc0 2551256942 C Ci:2:001:0 0 4 = a0020000
-ffff8882447743c0 2551257018 S Ii:2:001:1 -115:2048 4 <
-ffff888040808cc0 2551257070 S Ci:2:001:0 s a3 00 0000 0002 0004 4 <
-ffff888040808cc0 2551257106 C Co:2:001:0 0 0
-ffff888040808cc0 2551257115 C Co:2:001:0 0 0
-ffff888040808cc0 2551257125 C Co:2:001:0 0 0
-ffff888040808cc0 2551257288 C Co:2:001:0 0 0
-ffff888040808cc0 2551257290 S Co:2:001:0 s 23 03 001b 0706 0000 0
-ffff888040808cc0 2551257297 C Co:2:001:0 0 0
-ffff8882447743c0 2551257300 C Ii:2:001:1 -2:2048 0
-ffff888040808cc0 2551257329 S Ci:2:001:0 s a3 00 0000 0001 0004 4 <
-ffff888040808cc0 2551257367 S Ci:2:001:0 s a3 00 0000 0002 0004 4 <
-ffff888040808cc0 2551257408 S Ci:2:001:0 s a3 00 0000 0004 0004 4 <
-ffff888040808cc0 2551257461 C Ci:2:001:0 0 4 = a0020000
-ffff8882447743c0 2551257762 S Ii:2:001:1 -115:2048 4 <
-ffff888040808cc0 2551257815 S Co:2:001:0 s 23 03 001b 0701 0000 0
-ffff888040808cc0 2551257823 C Co:2:001:0 0 0
-ffff888040808cc0 2551257839 C Co:2:001:0 0 0
-ffff888040808cc0 2551257877 C Co:2:001:0 0 0
-ffff888040808cc0 2551257947 C Co:2:001:0 0 0
-ffff888040808cc0 2551257996 S Ci:2:001:0 s a3 00 0000 0001 0004 4 <
-ffff888040808cc0 2551258005 S Ci:2:001:0 s a3 00 0000 0003 0004 4 <
-ffff888040808cc0 2551258017 C Ci:2:001:0 0 4 = a0020000
-ffff888040808cc0 2551258057 S Ci:2:001:0 s a3 00 0000 0001 0004 4 <
-ffff888040808cc0 2551258140 C Co:2:001:0 0 0
-ffff888040808cc0 2551258179 C Co:2:001:0 0 0
-ffff888040808cc0 2551258257 C Co:2:001:0 0 0
-ffff888040808cc0 2551258265 C Co:2:001:0 0 0
-ffff888040808cc0 2551258273 C Co:2:001:0 0 0
-ffff888040808cc0 2551258286 C Ci:2:001:0 0 4 = 88000000
-ffff888040808cc0 2551258294 C Ci:2:001:0 0 4 = a0020000
-ffff888040808cc0 2551258391 C Ci:2:001:0 0 4 = a0020000
-ffff888040808cc0 2551258448 C Ci:2:001:0 0 4 = 88000000
-ffff888040808cc0 2551258462 C Co:2:001:0 0 0
-ffff888040808cc0 2551258470 C Co:2:001:0 0 0
-ffff888040808cc0 2551258486 C Co:2:001:0 0 0
--- 
-Michal Hocko
-SUSE Labs
+> +       writel_relaxed(len, se->base + SE_I2C_RX_TRANS_LEN);
+> +       geni_se_setup_m_cmd(se, I2C_READ, m_param);
+> +
+>         time_left =3D wait_for_completion_timeout(&gi2c->done, XFER_TIMEO=
+UT);
+>         if (!time_left)
+>                 geni_i2c_abort_xfer(gi2c);
