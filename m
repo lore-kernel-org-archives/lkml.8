@@ -2,145 +2,163 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F70DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9690C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDBF206F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C71206F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:24:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gBw5x7mn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbgGUTXX (ORCPT
+        id S1730774AbgGUTYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:23:23 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:56591 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728700AbgGUTXV (ORCPT
+        Tue, 21 Jul 2020 15:24:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728700AbgGUTYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:23:21 -0400
-Received: by mail-il1-f198.google.com with SMTP id w81so14090478ilk.23
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:23:20 -0700 (PDT)
+        Tue, 21 Jul 2020 15:24:21 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC5C8C061794;
+        Tue, 21 Jul 2020 12:24:20 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g10so2834887wmc.1;
+        Tue, 21 Jul 2020 12:24:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JWKSISgzVPC5P4jCtoTQbkdXc8gO2i4WXkOHsTlD9og=;
+        b=gBw5x7mnWt+TGfcgP//bF0sC6N1m+SpT+NOaaeWnU0TBUdnsMJjUtPU5HC624AQ6v5
+         hyTnMYJLUuzBTWvWqOYSrhmsxRvZI/9leTOOKB8wAsUyhR+iKpgvjEhedzVgA0EoxIUg
+         VmdcJ2JAMT4FyJkeuuZpnkHAXRFpa2xBuWbPae81C5cAMw6dluMGCt8vmo2JM4a+qBw3
+         Yq2ApJNxtX+SKnqVyNZ1YT4tS3nNxOmmLRmkDgNsU6DKuTbMbXBgl3EEZjr0bqniIhZI
+         Ns0rzaULoU6CMyRj69pYaDMTY9sS8U++/WwMCHYnp8bSz/1Y3LGlrCU5KOt+l26qRh8T
+         rL9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=8pBhih6E7jp4Yifk7uB3TtyX3Tgan338q7ojskTkGXI=;
-        b=Dtkrv+mGEVdRM3ghUNDLIgQ5GrRAyWAMfPtH6hTcjngIxol28xkBx859oGGJ4CF+09
-         blV99pldO/IvqYN7MoXZBW+nbeoxlFXkPcmrfDzM7YRbl+6/A9iwEkxASOVdIT/LPHvB
-         F02TP79IXnS+Uafobp5nNalyYcCcQN8h8GPnhRnohix43ZBUxTI7r5I47izlkkCvIfhn
-         IDAPlqvNY34QbX3Ld6Qnntub7dq3Mfy6HEgFokceQ54ZmcXnkpVNg9fUKV+lII7JSBsm
-         TXinv3Yj0Uh5bEoQgcnaUdWLlMKMuPhwo1EeMnbGABwM/HNiF/O/hN6moKWesJa4EKIM
-         Mekw==
-X-Gm-Message-State: AOAM532Cd/sg4rnm7JtpAPCxXpHJuI4uCzi1vLmfGVQCyK4SuukF1M3L
-        SiS/lzL0+OA54OjA3uVdPGN64nad+f/MyhhToYe+n99c4vHV
-X-Google-Smtp-Source: ABdhPJxap7SInu5wcPt0Cc5EAFz9kb/YqV8Lo8krpx9cdeVhZgDNfRDuUoSE/LPdu/QDzNncmSxQXWwn6ZwA9JVxBlJxZN78rbdq
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=JWKSISgzVPC5P4jCtoTQbkdXc8gO2i4WXkOHsTlD9og=;
+        b=YLtIM5CiFZYKTgCeioBNe9U6y3lT3AYHNQ2khJrcOxv/AlZ+J5hBJXsfJJrZS+kldd
+         cwDlAiXt9rEiRJR0GQf/U2Z2GP6ldxco5Ss/P1A2GEOCmOk4oDNgozQTWwqjjcKzm325
+         5M7py6YOQaRNIgDWDgkeaK4qthc9vq5N8E41x6tX5zVdOZRQO3++1CClRN3HtV1A9zWo
+         7z/xF94ivNRXPfT/K68sJNafdtTg5i1zz3aTU2PW3dJzyccU7ib//CAjskm6v2Txsa0d
+         1RZZ0Z3rUIscMhHlY+v/keNpQKmcG5XtgUjSiQxURBWCpc8otkKthUKVjFKeqdCtu2PS
+         7wkA==
+X-Gm-Message-State: AOAM533Uvm04iGr2/79WMmijSfpdiwKVwSn2kZ70Dug7bYrObifX/9CO
+        z+agvrpYc6QUUEuDY1Bg0imr8pI5
+X-Google-Smtp-Source: ABdhPJwgXqMlg/t8eGmlfrcpEyqQdYxvPotRvV9QXZWJNBz0LKhCgl+cD4pFh4f8KMfddwxX6UTBeg==
+X-Received: by 2002:a7b:c208:: with SMTP id x8mr5361140wmi.49.1595359458819;
+        Tue, 21 Jul 2020 12:24:18 -0700 (PDT)
+Received: from [10.67.50.75] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id k204sm3079636wma.21.2020.07.21.12.24.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 12:24:17 -0700 (PDT)
+Subject: Re: [PATCH v6 net-next] net: hyperv: Add attributes to show TX
+ indirection table
+To:     Jakub Kicinski <kuba@kernel.org>, Chi Song <Song.Chi@microsoft.com>
+Cc:     Stephen Hemminger <stephen@networkplumber.org>,
+        David Miller <davem@davemloft.net>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <PS1P15301MB028211A9D09DA5601EBEBEA298780@PS1P15301MB0282.APCP153.PROD.OUTLOOK.COM>
+ <20200721122127.3ce422f3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <78ca93f5-bb3f-96f9-17c5-3c1855b11a40@gmail.com>
+Date:   Tue, 21 Jul 2020 12:24:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:128d:: with SMTP id y13mr29208739ilq.305.1595359400166;
- Tue, 21 Jul 2020 12:23:20 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 12:23:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005613c705aaf88e04@google.com>
-Subject: BUG: MAX_LOCKDEP_CHAINS too low! (2)
-From:   syzbot <syzbot+4c0c011e71ae95a85ffe@syzkaller.appspotmail.com>
-To:     bridge@lists.linux-foundation.org,
-        clang-built-linux@googlegroups.com, davem@davemloft.net,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, nikolay@cumulusnetworks.com,
-        roopa@cumulusnetworks.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200721122127.3ce422f3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 7/21/20 12:21 PM, Jakub Kicinski wrote:
+> On Tue, 21 Jul 2020 04:58:59 +0000 Chi Song wrote:
+>> An imbalanced TX indirection table causes netvsc to have low
+>> performance. This table is created and managed during runtime. To help
+>> better diagnose performance issues caused by imbalanced tables, add
+>> device attributes to show the content of TX indirection tables.
+>>
+>> Signed-off-by: Chi Song <chisong@microsoft.com>
+> 
+> Sorry for waiting until v6 but sysfs feel like a very strange place to
+> expose this. Especially under the netdev, not the bus device.
+> 
+> This looks like device specific state, perhaps ethtool -d is a more
+> appropriate place?
 
-syzbot found the following issue on:
-
-HEAD commit:    6a70f89c Merge tag 'nfs-for-5.8-3' of git://git.linux-nfs...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17607db3100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a160d1053fc89af5
-dashboard link: https://syzkaller.appspot.com/bug?extid=4c0c011e71ae95a85ffe
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ba6d7d100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13b72dd7100000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4c0c011e71ae95a85ffe@syzkaller.appspotmail.com
-
-BUG: MAX_LOCKDEP_CHAINS too low!
-turning off the locking correctness validator.
-CPU: 1 PID: 30234 Comm: kworker/u4:3 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: bond1453 bond_resend_igmp_join_requests_delayed
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- add_chain_cache kernel/locking/lockdep.c:3063 [inline]
- lookup_chain_cache_add kernel/locking/lockdep.c:3162 [inline]
- validate_chain kernel/locking/lockdep.c:3183 [inline]
- __lock_acquire.cold+0x11/0x3f8 kernel/locking/lockdep.c:4380
- lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
- __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
- _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
- spin_lock include/linux/spinlock.h:353 [inline]
- br_multicast_add_group+0x68/0x740 net/bridge/br_multicast.c:546
- br_ip6_multicast_add_group net/bridge/br_multicast.c:622 [inline]
- br_ip6_multicast_add_group net/bridge/br_multicast.c:606 [inline]
- br_ip6_multicast_mld2_report net/bridge/br_multicast.c:1048 [inline]
- br_multicast_ipv6_rcv net/bridge/br_multicast.c:1712 [inline]
- br_multicast_rcv+0x1083/0x4730 net/bridge/br_multicast.c:1747
- br_dev_xmit+0x708/0x1510 net/bridge/br_device.c:87
- __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
- netdev_start_xmit include/linux/netdevice.h:4625 [inline]
- xmit_one net/core/dev.c:3556 [inline]
- dev_hard_start_xmit+0x193/0x950 net/core/dev.c:3572
- __dev_queue_xmit+0x2091/0x2d60 net/core/dev.c:4131
- bond_dev_queue_xmit+0xf8/0x1c0 drivers/net/bonding/bond_main.c:302
- bond_3ad_xor_xmit drivers/net/bonding/bond_main.c:4258 [inline]
- __bond_start_xmit drivers/net/bonding/bond_main.c:4398 [inline]
- bond_start_xmit+0x534/0xfc0 drivers/net/bonding/bond_main.c:4426
- __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
- netdev_start_xmit include/linux/netdevice.h:4625 [inline]
- xmit_one net/core/dev.c:3556 [inline]
- dev_hard_start_xmit+0x193/0x950 net/core/dev.c:3572
- __dev_queue_xmit+0x2091/0x2d60 net/core/dev.c:4131
- neigh_hh_output include/net/neighbour.h:498 [inline]
- neigh_output include/net/neighbour.h:507 [inline]
- ip6_finish_output2+0x7f1/0x17b0 net/ipv6/ip6_output.c:117
- __ip6_finish_output net/ipv6/ip6_output.c:143 [inline]
- __ip6_finish_output+0x447/0xab0 net/ipv6/ip6_output.c:128
- ip6_finish_output+0x34/0x1f0 net/ipv6/ip6_output.c:153
- NF_HOOK_COND include/linux/netfilter.h:296 [inline]
- ip6_output+0x1db/0x520 net/ipv6/ip6_output.c:176
- dst_output include/net/dst.h:443 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- mld_sendpack+0x92a/0xdb0 net/ipv6/mcast.c:1679
- mld_send_report+0xc3/0x230 net/ipv6/mcast.c:1881
- ipv6_mc_rejoin_groups net/ipv6/mcast.c:2637 [inline]
- ipv6_mc_netdev_event+0x287/0x480 net/ipv6/mcast.c:2650
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
- call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
- call_netdevice_notifiers+0x79/0xa0 net/core/dev.c:2053
- bond_resend_igmp_join_requests_delayed+0x5d/0x170 drivers/net/bonding/bond_main.c:590
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Agreed, or a devlink resource maybe?
+-- 
+Florian
