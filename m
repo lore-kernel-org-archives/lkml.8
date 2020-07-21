@@ -2,103 +2,149 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67220C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A69C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42A9620684
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D8F20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:43:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YZW7+M6n"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X9SVl1no"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbgGUIn3 (ORCPT
+        id S1728858AbgGUInh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:43:29 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:4336 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728418AbgGUIn2 (ORCPT
+        Tue, 21 Jul 2020 04:43:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728089AbgGUIng (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:43:28 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L8avqI020757;
-        Tue, 21 Jul 2020 10:43:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=dJLHdoGwt48EnjSrf0L0JKYkNiadZM77RdxMqkK77T4=;
- b=YZW7+M6nqFCTFlcQL3GU+ISgaS6SJXJGBep9/K1+AsjqH+ytBHRT4TXY7MUEAQkJtvKi
- 8YyURQEKTCDYK6adyvmpvwogPC65A+yIB3kKD0hg45BlVkY8vRtLhtb4+Ure5F94kxmr
- VaxKLw3reSYy17cxeLAlHJkFG7y1jgZ+L16KhYivxeBnzA6gyVFEpqe7LMyw/PGYFydL
- 0ppetjLHxh6fNSP/3QtjZJHnm9re4p47WGPyo9Cw/kDklXN/Wotv/1fraYAWWt1U80Pt
- pPd1DJUpJcL+I6FA+5l4Kmx7/WVrrkHDeqnBQn64ZGfbco+w0HCBBXecO34MVxjsajW0 UQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32bs6uvswq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 10:43:18 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B4F0C10002A;
-        Tue, 21 Jul 2020 10:43:17 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A2F702A615D;
-        Tue, 21 Jul 2020 10:43:17 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 Jul
- 2020 10:43:17 +0200
-Subject: Re: [PATCH 0/5] ARM: STM32: Add compatibles for syscon nodes
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <lee.jones@linaro.org>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200703095520.30264-1-benjamin.gaignard@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <dc7779a9-fe0d-5317-2b7f-3607963888c5@st.com>
-Date:   Tue, 21 Jul 2020 10:43:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 04:43:36 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17758C0619D7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:43:36 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id q17so9949164pls.9
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:43:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=LDyYq7mGwU/io/5kwm3whsJhqDFrwNw4M+0gHu2yWNM=;
+        b=X9SVl1noxhxAJSxVLxnUk8o/KVL6aNK/lBRqGdm26YT8FAGcP40UJUB4BB2eG9FC9R
+         7cY73a/L9bOTX3FMGx+9yNjqfED2E3hwadYVHTGyX9aEqhrcpcKsT8Q7Gykux3FwOouw
+         2QGN+kC97nd84cz5yCXtzKOKY+5Dy6TvR83fk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=LDyYq7mGwU/io/5kwm3whsJhqDFrwNw4M+0gHu2yWNM=;
+        b=NUqRcic4pk89Hgw/GalSflwUk8k14XIbqzUsPXHXNEo0SIACha/K9hsMTJWDwSEJOJ
+         yXSyNBA3hgJPyrIOhtx/1ydAu25y2HMuLo0L9UPodHWhWWc1JfucwTx1kvK5Ga6Z9Erm
+         pBdpTYgqeEm752V7IJ53epkI9NXU+WKem75UjtqrgbGPrdtyv8tpZj7gtMozqxrA8FfE
+         lO5JFhdBoAaSk7darWZoh3B+gpriDLOw6v19YRg4d7xdipFRvJfbTrshuoH0ym0NHUZa
+         qUrBY0M7p98gZPRGIqc9fX4Q/Je6D/DuU8MZXrWICjxm0xbrlTSrlEXsrTA2pNgH4zul
+         qXgA==
+X-Gm-Message-State: AOAM533bb6lGOajuuCjHKIeDrn192Ulsyfj0448wBcbw8qGZEPInNTEX
+        +HlHobk7NFTJXEMcR/TTnFELYA==
+X-Google-Smtp-Source: ABdhPJy4aKFmpB5Dgc+0DC8B10/KpMNM/Ag1dR6K/OxvywuhrosN4V4qOP35QJiccdOAUxzwf8dn0g==
+X-Received: by 2002:a17:90a:6888:: with SMTP id a8mr3579090pjd.59.1595321015512;
+        Tue, 21 Jul 2020 01:43:35 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id r191sm19920333pfr.181.2020.07.21.01.43.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 01:43:34 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200703095520.30264-1-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200630030552.cfp5oh33qde6nlnf@vireshk-i7>
+References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org> <1592222564-13556-2-git-send-email-rnayak@codeaurora.org> <159347264530.1987609.11350620235820019545@swboyd.mtv.corp.google.com> <a3d53f82-b29d-97ef-3ba1-ca9bd650d354@codeaurora.org> <20200630030552.cfp5oh33qde6nlnf@vireshk-i7>
+Subject: Re: [PATCH v6 1/6] tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        robdclark@chromium.org, robdclark@gmail.com,
+        stanimir.varbanov@linaro.org, mka@chromium.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-serial@vger.kernel.org
+To:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Date:   Tue, 21 Jul 2020 01:43:33 -0700
+Message-ID: <159532101373.3847286.9695594340556014384@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin
+Quoting Viresh Kumar (2020-06-29 20:05:52)
+> On 30-06-20, 08:31, Rajendra Nayak wrote:
+> >=20
+> >=20
+> > On 6/30/2020 4:47 AM, Stephen Boyd wrote:
+> > > Quoting Rajendra Nayak (2020-06-15 05:02:39)
+> > > > diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/se=
+rial/qcom_geni_serial.c
+> > > > index 457c0bf..a90f8ec 100644
+> > > > --- a/drivers/tty/serial/qcom_geni_serial.c
+> > > > +++ b/drivers/tty/serial/qcom_geni_serial.c
+> > > > @@ -9,6 +9,7 @@
+> > > >   #include <linux/module.h>
+> > > >   #include <linux/of.h>
+> > > >   #include <linux/of_device.h>
+> > > > +#include <linux/pm_opp.h>
+> > > >   #include <linux/platform_device.h>
+> > > >   #include <linux/pm_runtime.h>
+> > > >   #include <linux/pm_wakeirq.h>
+> > > > @@ -962,7 +963,7 @@ static void qcom_geni_serial_set_termios(struct=
+ uart_port *uport,
+> > > >                  goto out_restart_rx;
+> > > >          uport->uartclk =3D clk_rate;
+> > > > -       clk_set_rate(port->se.clk, clk_rate);
+> > > > +       dev_pm_opp_set_rate(uport->dev, clk_rate);
+> > >=20
+> > > If there isn't an OPP table for the device because it is optional then
+> > > how can we unconditionally call dev_pm_opp_set_rate()?
+>=20
+> Looks like some *Maintainers* aren't paying enough attention lately ;)
+>=20
+> Just kidding.
+>=20
 
-On 7/3/20 11:55 AM, Benjamin Gaignard wrote:
-> Since commit ad440432d1f9 ("dt-bindings: mfd: Ensure 'syscon' has a more specific compatible")
-> it is required to provide at least 2 compatibles string for syscon node.
-> This series update the syscon of the STM32 SoCs to fix the reported errors.
-> 
-> Benjamin Gaignard (5):
->    dt-bingings: arm: stm32: Add compatibles for syscon nodes
->    ARM: dts: stm32: Add compatibles for syscon for stm32f426
->    ARM: dts: stm32: Add compatibles for syscon for stm32f746
->    ARM: dts: stm32: Add compatibles for syscon for stm32h743
->    ARM: dts: stm32: Add compatibles for syscon for stm32mp151
-> 
->   .../devicetree/bindings/arm/stm32/st,stm32-syscon.yaml     | 14 +++++++++++++-
->   arch/arm/boot/dts/stm32f429.dtsi                           |  6 +++---
->   arch/arm/boot/dts/stm32f746.dtsi                           |  6 +++---
->   arch/arm/boot/dts/stm32h743.dtsi                           |  6 +++---
->   arch/arm/boot/dts/stm32mp151.dtsi                          |  2 +-
->   5 files changed, 23 insertions(+), 11 deletions(-)
-> 
+It seems that dev_pm_opp_set_rate() calls _find_opp_table() and finds
+something that isn't an error pointer but then dev_pm_opp_of_add_table()
+returns an error value because there isn't an operating-points property
+in DT. We're getting saved because this driver also happens to call
+dev_pm_opp_set_clkname() which allocates the OPP table a second time
+(because the first time it got freed when dev_pm_opp_of_add_table()
+return -ENODEV because the property was missing).
 
-Series applied on stm32-next by fixing subject of patch [1].
+Why do we need 'has_opp_table' logic? It seems that we have to keep
+track of the fact that dev_pm_opp_of_add_table() failed so that we don't
+put the table again, but then dev_pm_opp_set_clkname() can be called
+to allocate the table regardless.
 
-Regards
-Alex
+This maintainer is paying very close attention to super confusing code like
+this:
+
+	if (drv->has_opp_table)
+		dev_pm_opp_of_remove_table(dev);
+	dev_pm_opp_put_clkname(drv->opp_table);
+
+which reads as "if I have an opp table remove it and oh by the way
+remove the clk name for this opp table pointer I also happen to always
+have".
+
+Maybe I would be happier if dev_pm_opp_of_table() went away and we just
+had dev_pm_opp_add_table(const struct opp_config *config) that did all
+the things for us like set a clk name, set the supported hw, set the
+prop name, etc. based on the single config struct pointer and also
+parsed out the OPP table from DT or just ignored that if there isn't any
+operating-points property. Then the caller wouldn't need to keep track
+of 'if has_opp_table' because it doesn't seem to actually care and the
+core is happy to allocate a table for the device anyway so long as it
+sets a clk name.
