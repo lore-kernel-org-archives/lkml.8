@@ -2,128 +2,102 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E97C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33803C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD7020771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE1320792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:26:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nUKUr55E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgGUQZl (ORCPT
+        id S1729976AbgGUQ0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:25:41 -0400
-Received: from mga06.intel.com ([134.134.136.31]:38912 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbgGUQZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:25:40 -0400
-IronPort-SDR: zStfbMFIlpraalvVd4sJhSPU0HChG4ij78Ry+S5VUf2J6SjrMUj/9A3XOhRALQ8DONZK2pANlD
- TCmFjU03gBLw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="211715778"
-X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="211715778"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 09:25:37 -0700
-IronPort-SDR: hryq/gywAQdtW3AZ3P9cFmuFkG1C1Uq9yicrFjyp1cWlHwY4DU4cxqNCrJ3fm8tqMsQ7pRxK4U
- kpZFmQREgUKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="327920958"
-Received: from jacoraci-mobl.amr.corp.intel.com ([10.212.210.224])
-  by orsmga007.jf.intel.com with ESMTP; 21 Jul 2020 09:25:36 -0700
-Message-ID: <babeff29a60d3fadb5515eaf57f7bb42a1c9c792.camel@linux.intel.com>
-Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP
- enabled
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Francisco Jerez <currojerez@riseup.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Doug Smythies <dsmythies@telus.net>
-Date:   Tue, 21 Jul 2020 09:25:36 -0700
-In-Reply-To: <87mu3thiz5.fsf@riseup.net>
-References: <3955470.QvD6XneCf3@kreacher> <87r1tdiqpu.fsf@riseup.net>
-         <CAJZ5v0jaRm-wv+ZKhOyGJrrKZAsTKc3sq2GYyv0uerTTe3gXbQ@mail.gmail.com>
-         <87imeoihqs.fsf@riseup.net>
-         <CAJZ5v0hhLWvbNA6w0yHtzKa5ANR9yF++u63dh8wWAgkhbtLXXA@mail.gmail.com>
-         <875zanhty6.fsf@riseup.net>
-         <CAJZ5v0g2U+1wD5rUQwJ4_x9sQyvGyGiBiLFs7MA-xdhRBX9zBQ@mail.gmail.com>
-         <87mu3thiz5.fsf@riseup.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Tue, 21 Jul 2020 12:26:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgGUQ0P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 12:26:15 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEA62C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:26:14 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id h7so4048057qkk.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:26:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UBP7qP0FYUChGaa0hrCulaczX/efODgBvnjZrXBVhPI=;
+        b=nUKUr55EXExbEWdGOSEgTubGim/24Vyuixpdf0xLuViukQ1HYqXJ7wLSsx+StUT43t
+         K7S55wPrevvD8wkT/jrhclLmMejSUMDLw/wfvqShS0D/yhLD7MZQeo5BKdYi4rR98vdh
+         A4Abp/qboL4FVZMjQwFlFG/Qg49E4D6cnF+/nV1uHLYdZC2dmvQK1VAuuU6ef+ygSSnQ
+         8nE6dM9lGyZyn4qkp8Fh/bl8PGghxxHCR1zTT9HnL1uv9lfgENAOh4F46b94eDP/ywhC
+         fHczpcKRfaXaS77iH+rIzwkD7Z+il6u/vAyKFt8XUshWYfbGW0VPWA07ft3AHzYXsQOH
+         rEqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UBP7qP0FYUChGaa0hrCulaczX/efODgBvnjZrXBVhPI=;
+        b=VV5/J5tn2Sagh9GvkBN4RpMk886TlCFPIvuCVzfIkHwvIFXj2t7lBwth3B09MEPr1i
+         BN6Il48kkhPkrW7Pd8/NO+nqMQR4UcopM2Mhzh41bcijJD6E+0WKwnW9UUBLO0jWlMwC
+         wVBCrahPXna4QAeiJ8SCJoAflMUjx/eaELlhkbJ8y5Vf2gsx3KSKIV33AuRF1khOdfgu
+         K4+SdI6l4P2jDH/urbc5HHoo3KKrrray76PDcrZRT1e/Q/rN80ceWFHfoWsIx7EfqY/u
+         uHp7RwnJxgluIcfXCLI0mACYFo0+QFUuYKZnKJNIEyDm8kBQzGZl3+ywRI2VN0d6EkUW
+         +q5g==
+X-Gm-Message-State: AOAM532BhOc19XYjRgOKDVZrna8iIKKzt7ZDFcdDu7vnwFWsXwUikKy3
+        us0toTaaNG+aWZfJCvT5lWQIin3y
+X-Google-Smtp-Source: ABdhPJwv7l6NSdtUWUi3w/JFmJsTeZDPNmRGMPEj8FrMIp0kykTH/IDykRuidD0zTmwZr9VgAevM9A==
+X-Received: by 2002:a37:a08f:: with SMTP id j137mr1571194qke.150.1595348773530;
+        Tue, 21 Jul 2020 09:26:13 -0700 (PDT)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id m26sm24924541qtc.83.2020.07.21.09.26.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 09:26:12 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id x9so10266562ybd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:26:12 -0700 (PDT)
+X-Received: by 2002:a25:6d87:: with SMTP id i129mr42670421ybc.315.1595348772036;
+ Tue, 21 Jul 2020 09:26:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <CA+FuTSeN8SONXySGys8b2EtTqJmHDKw1XVoDte0vzUPg=yuH5g@mail.gmail.com>
+ <20200721161710.80797-1-paolo.pisati@canonical.com>
+In-Reply-To: <20200721161710.80797-1-paolo.pisati@canonical.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Tue, 21 Jul 2020 12:25:36 -0400
+X-Gmail-Original-Message-ID: <CA+FuTSe1-ZEC5xEXXbT=cbN6eAK1NXXKJ3f2Gz_v3gQyh2SkjA@mail.gmail.com>
+Message-ID: <CA+FuTSe1-ZEC5xEXXbT=cbN6eAK1NXXKJ3f2Gz_v3gQyh2SkjA@mail.gmail.com>
+Subject: Re: [PATCH v2] selftest: txtimestamp: fix net ns entry logic
+To:     Paolo Pisati <paolo.pisati@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, Jian Yang <jianyang@google.com>,
+        Network Development <netdev@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-07-20 at 16:20 -0700, Francisco Jerez wrote:
-> "Rafael J. Wysocki" <rafael@kernel.org> writes:
-> 
-> > On Fri, Jul 17, 2020 at 2:21 AM Francisco Jerez <
-> > currojerez@riseup.net> wrote:
-> > > "Rafael J. Wysocki" <rafael@kernel.org> writes:
-> > > 
-{...]
+On Tue, Jul 21, 2020 at 12:17 PM Paolo Pisati
+<paolo.pisati@canonical.com> wrote:
+>
+> According to 'man 8 ip-netns', if `ip netns identify` returns an empty string,
+> there's no net namespace associated with current PID: fix the net ns entrance
+> logic.
+>
+> Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
 
-> > Overall, so far, I'm seeing a claim that the CPU subsystem can be
-> > made
-> > use less energy and do as much work as before (which is what
-> > improving
-> > the energy-efficiency means in general) if the maximum frequency of
-> > CPUs is limited in a clever way.
-> > 
-> > I'm failing to see what that clever way is, though.
-> Hopefully the clarifications above help some.
+Fixes: cda261f421ba ("selftests: add txtimestamp kselftest")
 
-To simplify:
+Acked-by: Willem de Bruijn <willemb@google.com>
 
-Suppose I called a function numpy.multiply() to multiply two big arrays
-and thread is a pegged to a CPU. Let's say it is causing CPU to
-finish the job in 10ms and it is using a P-State of 0x20. But the same
-job could have been done in 10ms even if it was using P-state of 0x16.
-So we are not energy efficient. To really know where is the bottle neck
-there are numbers of perf counters, may be cache was the issue, we
-could rather raise the uncore frequency a little. A simple APRF,MPERF
-counters are not enough. or we characterize the workload at different
-P-states and set limits.
-I think this is not you want to say for energy efficiency with your
-changes. 
-
-The way you are trying to improve "performance" is by caller (device
-driver) to say how important my job at hand. Here device driver suppose
-offload this calculations to some GPU and can wait up to 10 ms, you
-want to tell CPU to be slow. But the p-state driver at a movement
-observes that there is a chance of overshoot of latency, it will
-immediately ask for higher P-state. So you want P-state limits based on
-the latency requirements of the caller. Since caller has more knowledge
-of latency requirement, this allows other devices sharing the power
-budget to get more or less power, and improve overall energy efficiency
-as the combined performance of system is improved.
-Is this correct?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Thanks for the fix.
