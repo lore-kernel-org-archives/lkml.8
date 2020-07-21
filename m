@@ -2,135 +2,160 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD94C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8373DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDE17208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:46:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="bsdq3RgU"
+	by mail.kernel.org (Postfix) with ESMTP id 6318320792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595310383;
+	bh=GJSZ0WGzLgwNl4DQMs6HYjl9j3lrZd+WGqJgUXYVcMc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ItgwlNPseHmLHJbFFQN+bhuYzRJaMjdjr1+GZyVpfJ4eoRlWevtTHyzAxygIpsQhr
+	 zebyS42Fb54/e7ZuL0gVtmgipCE5yfuhBOzVygE5srSaMLLGwrl+JgBDnc6EVDpOX8
+	 ZT95cAq9xFwsiTfVDtucYcVSj+yZ7mfXQgox91G8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgGUFqP (ORCPT
+        id S1728047AbgGUFqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 01:46:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58146 "EHLO
+        Tue, 21 Jul 2020 01:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGUFqP (ORCPT
+        with ESMTP id S1725774AbgGUFqV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 01:46:15 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA4ADC061794;
-        Mon, 20 Jul 2020 22:46:14 -0700 (PDT)
-Received: by ozlabs.org (Postfix, from userid 1003)
-        id 4B9ndd2kFkz9sRW; Tue, 21 Jul 2020 15:46:13 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
-        t=1595310373; bh=h5v/z0N4MGFxoJg1GsHzJ0zVrgcj/eMAzSW3netP+R4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bsdq3RgUQRm3imvD5OnpTg6IhTu+jJ3xjYGQIl1HU9x1bXRs1vF0znu25iSME054t
-         kgBNrbyAJd80vhvitaJIyJo082/z0WyZXg3ug8ICzN+m5wlJD9AgGO2uC3STqZfsw3
-         vlSPwiGL1mXsSEhB6mFQefmbrZEwzF2kF8SvjxsSJecY9SpZo87vJDZ/kQ9lwyZU4+
-         pgu/igX098brmF/Dv7vpkeJ/Hl3Y3RST9TybB2Ds2Tqu4YSQyZRnxNfnBhP2ro2Pai
-         NAXJRgsFjD36F8rKRfwJUxkaoWOaINJMey7cIFpL7jmKHVj7x9mx6FJ4pxE1OOjVAY
-         MMZJMdokBBUiw==
-Date:   Tue, 21 Jul 2020 15:46:09 +1000
-From:   Paul Mackerras <paulus@ozlabs.org>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     bharata@linux.ibm.com, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        mpe@ellerman.id.au, bauerman@linux.ibm.com, sukadev@linux.ibm.com,
-        sathnaga@linux.vnet.ibm.com, Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH 2/2] KVM: PPC: Book3S HV: rework secure mem slot dropping
-Message-ID: <20200721054609.GB3878639@thinks.paulus.ozlabs.org>
-References: <20200703155914.40262-1-ldufour@linux.ibm.com>
- <20200703155914.40262-3-ldufour@linux.ibm.com>
- <20200708112531.GA7902@in.ibm.com>
- <0588d16a-8548-0f55-1132-400807a390a1@linux.ibm.com>
+        Tue, 21 Jul 2020 01:46:21 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE6DC061794;
+        Mon, 20 Jul 2020 22:46:21 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id b92so1094980pjc.4;
+        Mon, 20 Jul 2020 22:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3veC3pi53wl7dFDGpjkOo+uS1itnPbzCOm4x4ko6JVY=;
+        b=D/IxIwyEq3hF3iTuaIk+KFCFZyGC8VqcCGJnFT12TDv/8eGagJrHkXCGkF3Muc266t
+         OGT7OoG2HtHbaXMhlknQISHa5De5A/xFpxWKJLCbc/SAIqTngBdVmIG3+rFG2+Y1Wb46
+         YATZPWszcpNmKSDpEHErZUkhido9bvZlai2206IHzthib3Y0UiQ6fX8Re2N3orWnF12s
+         XZ6RPqQNT9T2QKcABfS3hJr1GCzgJFm/rDpCofJQA16hsZZMLUHK0fkaVJHJKDnTcvEP
+         YayBMF/DStbLmLjOPFjbig16IweaRvLj4UCWCSitHEj/N0DuM+39Lm+dho9165oRwpKe
+         XDKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=3veC3pi53wl7dFDGpjkOo+uS1itnPbzCOm4x4ko6JVY=;
+        b=kKDf9hYPNfFx+vlamvo53EVnijLvDnh2gDSOEgTN7NK8ieDWPEkAvH09bq9L8KZT8A
+         NqhxhuAxU5Eoo1HglQpQCoUzAwwRsNPbN3Cqc8dogQzsQmPHywFP0N8CyKGvQP4E8jUD
+         HtDs2nnIVl4vn98n9Q+nNfsx0VS5u52SXHhf1X1tVz8+c8nwscKuYShEIKvp4oSGgk8B
+         jb0alZHqijPGTuO5lWGKDeoL9Er0qxLP05vJOq0/34lQdXnxY8mevxGj/ZLJHhKRd+zP
+         7CyzC6V0wYZ/jw19o0Jm9E+Omx6Jr6IHKngv6bRBE8VSXJDewgpPEVf3Czz743yCr9/t
+         mS1w==
+X-Gm-Message-State: AOAM532LNpJqlyiIILMOP8g32Cr4HkRAeFZ/WApONLKFeA79jZOkw/o5
+        8imwm3wvnM6fjJ2Lf/1IGM4=
+X-Google-Smtp-Source: ABdhPJylrFyWY9zOcJ3tuosterYe/etVkRG4BboKrT7kWFS6Sy9YPaV4NbuHkPEn95UZ4BSYHonUbw==
+X-Received: by 2002:a17:90a:dd44:: with SMTP id u4mr2794038pjv.203.1595310380927;
+        Mon, 20 Jul 2020 22:46:20 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:7220:84ff:fe09:5e58])
+        by smtp.gmail.com with ESMTPSA id nh14sm1541134pjb.4.2020.07.20.22.46.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 22:46:19 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 22:46:17 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Song Liu <song@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, drbd-dev@lists.linbit.com,
+        linux-raid@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>
+Subject: Re: [PATCH 11/14] mm: use SWP_SYNCHRONOUS_IO more intelligently
+Message-ID: <20200721054617.GA1879427@google.com>
+References: <20200720075148.172156-1-hch@lst.de>
+ <20200720075148.172156-12-hch@lst.de>
+ <CALvZod7ACBnNX5W-gtTzheh8R-rxv1nB-5q7UcDUZ7BvtpakpA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0588d16a-8548-0f55-1132-400807a390a1@linux.ibm.com>
+In-Reply-To: <CALvZod7ACBnNX5W-gtTzheh8R-rxv1nB-5q7UcDUZ7BvtpakpA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 02:16:36PM +0200, Laurent Dufour wrote:
-> Le 08/07/2020 à 13:25, Bharata B Rao a écrit :
-> > On Fri, Jul 03, 2020 at 05:59:14PM +0200, Laurent Dufour wrote:
-> > > When a secure memslot is dropped, all the pages backed in the secure device
-> > > (aka really backed by secure memory by the Ultravisor) should be paged out
-> > > to a normal page. Previously, this was achieved by triggering the page
-> > > fault mechanism which is calling kvmppc_svm_page_out() on each pages.
-> > > 
-> > > This can't work when hot unplugging a memory slot because the memory slot
-> > > is flagged as invalid and gfn_to_pfn() is then not trying to access the
-> > > page, so the page fault mechanism is not triggered.
-> > > 
-> > > Since the final goal is to make a call to kvmppc_svm_page_out() it seems
-> > > simpler to directly calling it instead of triggering such a mechanism. This
-> > > way kvmppc_uvmem_drop_pages() can be called even when hot unplugging a
-> > > memslot.
-> > 
-> > Yes, this appears much simpler.
-> 
-> Thanks Bharata for reviewing this.
-> 
-> > 
-> > > 
-> > > Since kvmppc_uvmem_drop_pages() is already holding kvm->arch.uvmem_lock,
-> > > the call to __kvmppc_svm_page_out() is made.
-> > > As __kvmppc_svm_page_out needs the vma pointer to migrate the pages, the
-> > > VMA is fetched in a lazy way, to not trigger find_vma() all the time. In
-> > > addition, the mmap_sem is help in read mode during that time, not in write
-> > > mode since the virual memory layout is not impacted, and
-> > > kvm->arch.uvmem_lock prevents concurrent operation on the secure device.
-> > > 
-> > > Cc: Ram Pai <linuxram@us.ibm.com>
-> > > Cc: Bharata B Rao <bharata@linux.ibm.com>
-> > > Cc: Paul Mackerras <paulus@ozlabs.org>
-> > > Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-> > > ---
-> > >   arch/powerpc/kvm/book3s_hv_uvmem.c | 54 ++++++++++++++++++++----------
-> > >   1 file changed, 37 insertions(+), 17 deletions(-)
-> > > 
-> > > diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
-> > > index 852cc9ae6a0b..479ddf16d18c 100644
-> > > --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
-> > > +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
-> > > @@ -533,35 +533,55 @@ static inline int kvmppc_svm_page_out(struct vm_area_struct *vma,
-> > >    * fault on them, do fault time migration to replace the device PTEs in
-> > >    * QEMU page table with normal PTEs from newly allocated pages.
-> > >    */
-> > > -void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *free,
-> > > +void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *slot,
-> > >   			     struct kvm *kvm, bool skip_page_out)
-> > >   {
-> > >   	int i;
-> > >   	struct kvmppc_uvmem_page_pvt *pvt;
-> > > -	unsigned long pfn, uvmem_pfn;
-> > > -	unsigned long gfn = free->base_gfn;
-> > > +	struct page *uvmem_page;
-> > > +	struct vm_area_struct *vma = NULL;
-> > > +	unsigned long uvmem_pfn, gfn;
-> > > +	unsigned long addr, end;
-> > > +
-> > > +	down_read(&kvm->mm->mmap_sem);
-> > 
-> > You should be using mmap_read_lock(kvm->mm) with recent kernels.
-> 
-> Absolutely, shame on me, I reviewed Michel's series about that!
-> 
-> Paul, Michael, could you fix that when pulling this patch or should I sent a
-> whole new series?
+Thanks for Ccing me, Shakeel.
 
-Given that Ram has reworked his series, I think it would be best if
-you rebase on top of his new series and re-send your series.
+On Mon, Jul 20, 2020 at 10:52:55AM -0700, Shakeel Butt wrote:
+> +Minchan Kim
+> 
+> On Mon, Jul 20, 2020 at 12:52 AM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > There is no point in trying to call bdev_read_page if SWP_SYNCHRONOUS_IO
+> > is not set, as the device won't support it.  Also there is no point in
+> > trying a bio submission if bdev_read_page failed.
+> 
+> This will at least break the failure path of zram_rw_page().
 
-Thanks,
-Paul.
+Yes, it needs post processing for error propagaion like *page* handling
+part in end_swap_bio_read(mostly, PG_error and PG_uptodate with pr_alert).
+bdev_read_page's sematic doesn't need to be synchronous so it could just
+submit the IO request and complete the IO afterward. In that case, we
+need right error handling, too if the IO encoutered error. BIO fallback
+makes it simple.
+
+ * bdev_read_page() - Start reading a page from a block device
+ * @bdev: The device to read the page from
+ * @sector: The offset on the device to read the page to (need not be aligned)
+ * @page: The page to read
+ *
+ * On entry, the page should be locked.  It will be unlocked when the page
+ * has been read.  If the block driver implements rw_page synchronously,
+ * that will be true on exit from this function, but it need not be.
+ *
+ * Errors returned by this function are usually "soft", eg out of memory, or
+ * queue full; callers should try a different route to read this page rather
+ * than propagate an error back up the stack.
+
+The other concern about this patch is zram have used rw_page for a long
+time even though sometime it doesn't declare BDI_CAP_SYNCHRONOUS_IO by itself
+because rw_page shows 4~5% bandwidth improvement compared to bio-based.
+The performance gain becomes more important these day because compressor
+becomes more fast day by day.
+
+> 
+> >
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  mm/page_io.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/mm/page_io.c b/mm/page_io.c
+> > index ccda7679008851..63b44b8221af0f 100644
+> > --- a/mm/page_io.c
+> > +++ b/mm/page_io.c
+> > @@ -403,8 +403,11 @@ int swap_readpage(struct page *page, bool synchronous)
+> >                 goto out;
+> >         }
+> >
+> > -       ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
+> > -       if (!ret) {
+> > +       if (sis->flags & SWP_SYNCHRONOUS_IO) {
+> > +               ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
+> > +               if (ret)
+> > +                       goto out;
+> > +
+> >                 if (trylock_page(page)) {
+> >                         swap_slot_free_notify(page);
+> >                         unlock_page(page);
+> > --
+> > 2.27.0
+> >
