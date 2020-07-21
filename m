@@ -2,174 +2,303 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9620DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79E0A20720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72E520717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:35:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7ci4Ua/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbgGUU1q (ORCPT
+        id S1728995AbgGUUfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 16:27:46 -0400
-Received: from mga11.intel.com ([192.55.52.93]:39000 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728691AbgGUU1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 16:27:45 -0400
-IronPort-SDR: pAvP2tZ7/0lumg010VNwGFhlmiHGcEFnlbGilcNxm1FmSQDOsRTz1w1DeoQNtY0Psj4ASlUV+6
- FIRr6p6c51rw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="148165061"
-X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
-   d="scan'208";a="148165061"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 13:27:45 -0700
-IronPort-SDR: Di7XWoAMlVe/6yt1473v/d/4u04SiS189Wzdft/sNGm1KA66RIDYhg+JwtBOBrO8eYuBNkYRZ6
- XPffxJoOaJUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
-   d="scan'208";a="318449992"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga008.jf.intel.com with ESMTP; 21 Jul 2020 13:27:45 -0700
-Date:   Tue, 21 Jul 2020 13:27:45 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [patch V4 15/15] x86/kvm: Use generic exit to guest work function
-Message-ID: <20200721202745.GJ22083@linux.intel.com>
-References: <20200721105706.030914876@linutronix.de>
- <20200721110809.855490955@linutronix.de>
+        Tue, 21 Jul 2020 16:35:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728606AbgGUUfR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 16:35:17 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D63C061794;
+        Tue, 21 Jul 2020 13:35:17 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id l63so12456206pge.12;
+        Tue, 21 Jul 2020 13:35:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H2rlhi44PP/yGILmVfXDfaXGTcLk3tY2rxvlC2hr1ng=;
+        b=c7ci4Ua/7LOBYP/R/an9KQ0sHvxaJAXFrSsrT3yazooggq8gZDlgmLkGzoRwpYAxNj
+         C6F8TRui+arKmOUHwDPBrEFSrPapzUJObU/fwrDIv41D9Pm2Qc1FhugBx5k2Iz2L9bMM
+         QFBLvFUmJpfZttdCPAajbf+ZsU0k3e82CuNyAW52I9Zg8tcQcEArWRq2t0vI8JL1M9zp
+         eJG2HdwWAj1xd7WtOZwRcNnJlLQdCC+Hq8rFwBH14hiluT//5Gdl9KKH9/jFiOchshET
+         7ZImaWDYp+ktu3oM0dtrvCCG2fhoNkeFlVNYAYc3hO0467i0F86qMf/eHCg3XFCjAlwC
+         zuhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H2rlhi44PP/yGILmVfXDfaXGTcLk3tY2rxvlC2hr1ng=;
+        b=p3x4vPHeb72h1YR1w4ULL7TpM1ZtfU+5e+9nyvK6+t/lvtw302ttXylkQOFQJvwWjo
+         dbw7ccQhwd7As3ElUY1/MzJFDpPAtegOVk0Dt/OAkcBLqOLlGDUAFejzRa1QrkyKmPha
+         dFJldkNzA0Z05GXWe9MOCQuMnfe0pR2LJlZK1MFiKintYiaViVu8aoVXipinO6C8gJjW
+         0nod2qff8IxKaGItX/xQ81JJTtcUjFuQnmKqRAfMh7VKGYxQCezrhkgO7x4f4Nyf4FtU
+         7qXQ/ccoLcANr3jck53bJj3JSZdq2tuPgX8lVRVoHKA5CtFay6/qmyngP9p7eHFiQOWh
+         w8gA==
+X-Gm-Message-State: AOAM531RsFYf1yHckgLxg0UBn5PyVZaFkx95kb3O4ETF6kCQPc1qHTtW
+        WYn5WIbumbzZx/0s24Wf/EzqXrNK
+X-Google-Smtp-Source: ABdhPJyhqOcYNtd5vksn2vWZzTK+6YDHifO80UBVUzQovhdMF5nT3BelgrNB8ZAXNiqdNDc3PIVqww==
+X-Received: by 2002:a63:ab4f:: with SMTP id k15mr24489873pgp.247.1595363716278;
+        Tue, 21 Jul 2020 13:35:16 -0700 (PDT)
+Received: from ?IPv6:2409:4072:593:314e:d028:8959:a8a3:a7bc? ([2409:4072:593:314e:d028:8959:a8a3:a7bc])
+        by smtp.gmail.com with ESMTPSA id w64sm19528075pgd.67.2020.07.21.13.35.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 13:35:15 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] iio: gyro: Add driver support for ADXRS290
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
+        darius.berghe@analog.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+References: <20200721181926.27046-1-nish.malpani25@gmail.com>
+ <CAHp75Vdr+Uo2uw3mzYP+LMRgp-eyi+YjG=O+wGVqyYx-+MRCaw@mail.gmail.com>
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+Message-ID: <7ba8469a-dd8c-1686-6d26-e2a4cbfedce9@gmail.com>
+Date:   Wed, 22 Jul 2020 02:05:07 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721110809.855490955@linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAHp75Vdr+Uo2uw3mzYP+LMRgp-eyi+YjG=O+wGVqyYx-+MRCaw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 12:57:21PM +0200, Thomas Gleixner wrote:
-> Use the generic infrastructure to check for and handle pending work before
-> entering into guest mode.
+Hello Andy,
+
+Thanks for the review. Comments inline...
+
+On 22/07/20 1:16 am, Andy Shevchenko wrote:
+> On Tue, Jul 21, 2020 at 9:20 PM Nishant Malpani
+> <nish.malpani25@gmail.com> wrote:
+>>
+>> ADXRS290 is a high performance MEMS pitch and roll (dual-axis in-plane)
+>> angular rate sensor (gyroscope) designed for use in stabilization
+>> applications. It also features an internal temperature sensor and
+>> programmable high-pass and low-pass filters.
+>>
+>> Add support for ADXRS290 in direct-access mode for now.
 > 
-> This now handles TIF_NOTIFY_RESUME as well which was ignored so
-> far. Handling it is important as this covers task work and task work will
-> be used to offload the heavy lifting of POSIX CPU timers to thread context.
+>> Datasheet:
+>> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ADXRS290.pdf
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  arch/x86/kvm/Kconfig   |    1 +
->  arch/x86/kvm/vmx/vmx.c |   11 +++++------
->  arch/x86/kvm/x86.c     |   15 ++++++---------
->  3 files changed, 12 insertions(+), 15 deletions(-)
+> Drop that 'Link:' part and followed blank line, so get something like
 > 
-> --- a/arch/x86/kvm/Kconfig
-> +++ b/arch/x86/kvm/Kconfig
-> @@ -42,6 +42,7 @@ config KVM
->  	select HAVE_KVM_MSI
->  	select HAVE_KVM_CPU_RELAX_INTERCEPT
->  	select HAVE_KVM_NO_POLL
-> +	select KVM_EXIT_TO_GUEST_WORK
->  	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
->  	select KVM_VFIO
->  	select SRCU
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -27,6 +27,7 @@
->  #include <linux/slab.h>
->  #include <linux/tboot.h>
->  #include <linux/trace_events.h>
-> +#include <linux/entry-kvm.h>
->  
->  #include <asm/apic.h>
->  #include <asm/asm.h>
-> @@ -5376,14 +5377,12 @@ static int handle_invalid_guest_state(st
->  		}
->  
->  		/*
-> -		 * Note, return 1 and not 0, vcpu_run() is responsible for
-> -		 * morphing the pending signal into the proper return code.
-> +		 * Note, return 1 and not 0, vcpu_run() will invoke
-> +		 * exit_to_guest_mode() which will create a proper return
-> +		 * code.
->  		 */
-> -		if (signal_pending(current))
-> +		if (__exit_to_guest_mode_work_pending())
+> Datasheet: https://...
+> Signed-off-by: ...
+> 
+Okay. Will fix in v3.
 
-I whined about this back in v2[*].  "exit to guest mode" is confusing becuase
-virt terminology is "enter to guest" and "exit from guest", whereas the
-kernel's terminology here is "exit from kernel to guest".
+>> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+> 
+> ...
+> 
+>> +config ADXRS290
+>> +       tristate "Analog Devices ADXRS290 Dual-Axis MEMS Gyroscope SPI driver"
+>> +       depends on SPI
+>> +       help
+>> +         Say yes here to build support for Analog Devices ADXRS290 programmable
+>> +         digital output gyroscope.
+>> +
+>> +         This driver can also be built as a module. If so, the module will be
+>> +         called adxrs290.
+> 
+> 
+>> +enum adxrs290_mode {
+>> +       STANDBY,
+>> +       MEASUREMENT,
+>> +};
+> 
+>> +struct adxrs290_state {
+>> +       struct spi_device       *spi;
+>> +       /* Serialize reads and their subsequent processing */
+>> +       struct mutex            lock;
+>> +       enum adxrs290_mode      mode;
+>> +       unsigned int            lpf_3db_freq_idx;
+>> +       unsigned int            hpf_3db_freq_idx;
+>> +};
+> 
+> ...
+> 
+>> +/*
+>> + * Available cut-off frequencies of the low pass filter in Hz.
+>> + * The integer part and fractional part are represented separately.
+>> + */
+> 
+>> +static const int adxrs290_lpf_3db_freq_tbl[][2] = {
+> 
+> What about adxrs290_lpf_3db_freq_hz_table ?
+> 
+Sure, makes it very precise. Will address in v3.
 
-My past and current self still like XFER_TO_GUEST as the base terminology.
+>> +};
+>> +
+>> +/*
+>> + * Available cut-off frequencies of the high pass filter in Hz.
+>> + * The integer part and fractional part are represented separately.
+>> + */
+>> +static const int adxrs290_hpf_3db_freq_tbl[][2] = {
+> 
+> Ditto.
+> 
+Yes.
 
-[*] https://lkml.kernel.org/r/20191023144848.GH329@linux.intel.com
+>> +};
+> 
+> ...
+> 
+>> +static int adxrs290_get_rate_data(struct iio_dev *indio_dev, const u8 cmd,
+>> +                                 unsigned int *val)
+>> +{
+>> +       struct adxrs290_state *st = iio_priv(indio_dev);
+> 
+>> +       int ret = 0;
+> 
+> Purpose of this?
+>
+'ret' will not be initialized if a successful spi_w8r16() takes place 
+i.e if it doesn't go into the 'if' block. (Doesn't make sense to have it 
+now since the below block of code is erroneous, but will need this in v3).
 
->  			return 1;
-> -
-> -		if (need_resched())
-> -			schedule();
->  	}
->  
->  	return 1;
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -56,6 +56,7 @@
->  #include <linux/sched/stat.h>
->  #include <linux/sched/isolation.h>
->  #include <linux/mem_encrypt.h>
-> +#include <linux/entry-kvm.h>
->  
->  #include <trace/events/kvm.h>
->  
-> @@ -1585,7 +1586,7 @@ EXPORT_SYMBOL_GPL(kvm_emulate_wrmsr);
->  bool kvm_vcpu_exit_request(struct kvm_vcpu *vcpu)
->  {
->  	return vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu) ||
-> -		need_resched() || signal_pending(current);
-> +		exit_to_guest_mode_work_pending();
->  }
->  EXPORT_SYMBOL_GPL(kvm_vcpu_exit_request);
->  
-> @@ -8676,15 +8677,11 @@ static int vcpu_run(struct kvm_vcpu *vcp
->  			break;
->  		}
->  
-> -		if (signal_pending(current)) {
-> -			r = -EINTR;
-> -			vcpu->run->exit_reason = KVM_EXIT_INTR;
-> -			++vcpu->stat.signal_exits;
-> -			break;
-> -		}
-> -		if (need_resched()) {
-> +		if (exit_to_guest_mode_work_pending()) {
->  			srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
-> -			cond_resched();
-> +			r = exit_to_guest_mode(vcpu);
-> +			if (r)
+>> +       u16 temp;
+>> +
+>> +       mutex_lock(&st->lock);
+>> +       temp = spi_w8r16(st->spi, cmd);
+> 
+>> +       if (temp < 0) {
+> 
+> How can this ever happen?
+> 
+Oops, you're right. Even though spi_w8r16() returns a negative error 
+code on failure, 'temp' is declared unsigned. Thanks for pointing out. 
+Will fix in v3.
 
-This loses the stat.signal_exits accounting.  Maybe this?
+>> +               ret = temp;
+>> +               goto err_unlock;
+>> +       }
+>> +
+>> +       *val = temp;
+>> +
+>> +err_unlock:
+>> +       mutex_unlock(&st->lock);
+>> +       return ret;
+>> +}
+> 
+> Ditto for the rest of the similar cases.
+>
+Sure.
 
-			if (r) {
-				if (r == -EINTR)
-					++vcpu->stat.signal_exits;
-				return r;
-			}
+> ...
+> 
+>> +       case IIO_CHAN_INFO_SCALE:
+>> +               switch (chan->type) {
+>> +               case IIO_ANGL_VEL:
+>> +                       *val = 0;
+> 
+> 
+>> +                       *val2 = 87266;
+> 
+> Magic!
+> 
+Haha, will add comments in v3!
 
-> +				return r;
->  			vcpu->srcu_idx = srcu_read_lock(&kvm->srcu);
->  		}
->  	}
+>> +                       return IIO_VAL_INT_PLUS_NANO;
+>> +               case IIO_TEMP:
+> 
+>> +                       *val = 100;
+> 
+> Magic!
+> 
+Will add comments in v3.
+
+>> +                       return IIO_VAL_INT;
+>> +               default:
+>> +                       return -EINVAL;
+>> +               }
+> 
+> ...
+> 
+>> +               *vals = (const int *)adxrs290_lpf_3db_freq_tbl;
+> 
+> Why casting?
+> 
+adxrs290_lpf_3db_freq_tbl is of type (int *)[2], right? Without the 
+casting, an incompatible-pointer-type error is thrown.
+
+> ...
+> 
+>> +               *vals = (const int *)adxrs290_hpf_3db_freq_tbl;
+> 
+> Ditto.
+> 
+See above comment.
+
+> ...
+> 
+> 
+>> +       struct iio_dev *indio_dev;
+>> +       struct adxrs290_state *st;
+> 
+>> +       int ret;
+>> +       u8 val, val2;
+> 
+> Swap them to have in reversed spruce tree order.
+> 
+Okay, will do so in v3.
+
+> ...
+> 
+>> +       indio_dev->dev.parent = &spi->dev;
+> 
+> Do you need this?
+Oh, right (I'm aware of Alexandru's recent patch on this). Will address 
+in v3.
+
+> 
+>> +       /* max transition time to measurement mode */
+>> +       msleep_interruptible(ADXRS290_MAX_TRANSITION_TIME_MS);
+> 
+> I'm not sure what the point of interruptible variant here?
+> 
+I referred Documentation/timers/timers-howto.rst for this.
+My reasoning was shaped to use the interruptible variant because the 
+transition settles in a time *less than* 100ms and since 100ms is quite 
+a huge time to sleep, it should be interrupted in case a signal arrives.
+
+> ...
+> 
+>> +static const struct of_device_id adxrs290_of_match[] = {
+>> +       { .compatible = "adi,adxrs290" },
+> 
+>> +       { },
+> 
+> No comma here!
+> 
+Okay. Will remove in v3.
+
+With regards,
+Nishant Malpani
+
+>> +};
 > 
