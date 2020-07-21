@@ -2,172 +2,140 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63ACAC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DBAA207BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4178320792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:41:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cq2Bp7+9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Egp5H4pu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730187AbgGUQlz (ORCPT
+        id S1730336AbgGUQl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:41:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46766 "EHLO
+        Tue, 21 Jul 2020 12:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728127AbgGUQly (ORCPT
+        with ESMTP id S1728127AbgGUQlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:41:54 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF25C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:41:54 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 22so3479123wmg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:41:54 -0700 (PDT)
+        Tue, 21 Jul 2020 12:41:55 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F0BC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:41:55 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a14so7001895wra.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:41:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jrvp4Bz5UjZdR7iMsUpWTUDT01MaTtGC3shuBGmqGX4=;
-        b=cq2Bp7+9rqaPiy5mR4WAheJe9dB5/w6mx7Ww01A0+6be4T9ijK1oakrf2zcNFuIgKv
-         SGcsaq/jIhei8ZKPDj63Sq6wfNxVIKPgjKh7ktng3nRGkYUxBL2SmBwZshlZ192ukxc0
-         Gd4oShMtvs0zcXOjRWQ7JlP77WgeYU45Q0+/mzTb4s03m8SHNHpDAhKIitVTPr1fYDCa
-         uQs1XqOm1uVPvZP0co5dWrGEUBenKzzZ8rdfPuSbTe/Zwc3nJtTpI9hcA6ImQyX6HAGt
-         ZxOeGQFTh06eDbDffF8O38AFZDaSN5NVSXFSQJ/+MYNK6zUdX4hBx8lhLVJu6UFvMKVh
-         FkPw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GSRBp5WStd9Y481S5Og1e8mziqqocuxpn4+5CH6s/V4=;
+        b=Egp5H4pu2L6EzccLlHAMIwLTK50EpvvWcuSavl6dxS+o+rUQRPDp2XpTYnTjUS+KUi
+         uWcXXe2s/Ehz/WZYWK2zGL15XByi2KO1f61XaLxkMeIDIT6YezDvsqTSLn0cpcs0b5Eu
+         kvPRw32tr4a3i05MdWTSX7LKYf9m30098UCHy2q6dMk7VTOVwfgnXeBjXhBultigxuwp
+         JZo16vd/sGh2ag2xaKw/9nNAVBmihuOg6m+UxZsxeeN1B0T/jgcOA8YIh3thO5XR5/fu
+         khqpOmb/LS+svniR+y9VvCrP1z5dJnmhYAt49FVHboj+QnXVIAb28S4oHvg0xgmu1agu
+         Z2QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jrvp4Bz5UjZdR7iMsUpWTUDT01MaTtGC3shuBGmqGX4=;
-        b=A+hfl0P9U/JM8n/adWwPHb/nkWO27jvwpjO8LdLAGZPPm38/kDPk0wMIZcKkHpDYR+
-         6cxHbRubwKhGIOwmgrpIqJnRIC383nE3hrUtTOKKwKrO0AjYVAfiHuR41nZzf1wjzDlf
-         ECcbpB8W83qKolRcSKHU4nIaWOEcHtHL3O7bXoSSBAjPiJl7LeZdRzuo3nJPmmxu2P9S
-         tC+Luaq0oI/ycICZInIID3/6mg42l6CHBP3kCSi5oJS5GJlD0PCqtvbwKR9VAO2801RU
-         qWea4Q1GGQpE7MVOHV3yszMxC3Ce4kzsHMz9IVGaLz1L91ZkmJ09zddVq5o8GsuK0N+1
-         pR+g==
-X-Gm-Message-State: AOAM530uL7KWFZZodBfROKNhb4DjZ20NgEBC9vZ7e5HmGetO5Os9teCk
-        NiiuznYl0bHtd25bZtv0TwLZ2SnfE34=
-X-Google-Smtp-Source: ABdhPJwqpB/xgGKxh9mMbx2FeeMx09BX/Qf45xrz0kDMEwlxCTngZxpLp0rmn72u1p2sEJK03SeATA==
-X-Received: by 2002:a1c:3504:: with SMTP id c4mr4795113wma.177.1595349712779;
-        Tue, 21 Jul 2020 09:41:52 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GSRBp5WStd9Y481S5Og1e8mziqqocuxpn4+5CH6s/V4=;
+        b=KyCpVdvJcFxOjLyAilpb0tCczbV2c50BRD/cxzs7WvHUW0xeuQb81oS7FD9I5QYNYt
+         XiFlVfjOjCouSq63gelcsNBMZAUPTndo09HRAkj1HfSmprIHlu/mUdiHFLdauAEt6bU+
+         OOE9WI1TOiY/Y9UrgCh7+uM1OQoH1dZlgHPxKzKlhfOMfhjnkKGZf95mz/wNXoWXDK1U
+         9j5tyz8869seMdgRPYcI7GewdBmUYloP3JYjqH/0HNgTRr2JticDx36gcJlCOtNiZP08
+         9Kt03Q3Ml8/UKRoYhzI9IniydmGPLrDQCD3KRj8lmbSCQL2fqDfofrmOiPYe1l6ojk4x
+         BJIA==
+X-Gm-Message-State: AOAM530a+c0zjFM3+fwy6i7BAfOgFjq2bDTRjuA8Mjvfp0Yb6KVj3tA+
+        sYEOITsSaMJ3U1qbL9p3W9X8PA==
+X-Google-Smtp-Source: ABdhPJwR9PfgqrQM6xiiXqEdTd0R303eL546jC1FrUf25+Zxk9wVW2r7JsLFudeclns7p1DZw05OZQ==
+X-Received: by 2002:a05:6000:10c4:: with SMTP id b4mr25734756wrx.50.1595349714031;
+        Tue, 21 Jul 2020 09:41:54 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.41.51
+        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.41.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:41:52 -0700 (PDT)
+        Tue, 21 Jul 2020 09:41:53 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 00/40] Set 4: Next set of SCSI related W=1 warnings
-Date:   Tue, 21 Jul 2020 17:41:08 +0100
-Message-Id: <20200721164148.2617584-1-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>, support@areca.com.tw,
+        kernel test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 01/40] scsi: arcmsr: arcmsr_hba: Remove statement with no effect
+Date:   Tue, 21 Jul 2020 17:41:09 +0100
+Message-Id: <20200721164148.2617584-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200721164148.2617584-1-lee.jones@linaro.org>
+References: <20200721164148.2617584-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set is part of a larger effort attempting to clean-up W=1
-kernel builds, which are currently overwhelmingly riddled with
-niggly little warnings.
+According to LKP, commit [no upstream SHA yet] ("scsi: arcmsr: Remove
+some set but unused variables") can be furthered to remove the entire
+statement and not just the unused variable read into.
 
-This brings the total of W=1 SCSI wanings from 1690 in v5.8-rc1 to 817.
+Snipped LKP report:
 
-Lee Jones (40):
-  scsi: arcmsr: arcmsr_hba: Remove statement with no effect
-  scsi: aic7xxx: aic79xx_core: Remove a bunch of unused variables
-  scsi: aacraid: sa: Add descriptions for missing parameters
-  scsi: aacraid: rkt: Add missing description for 'dev'
-  scsi: aacraid: nark: Add missing description for 'dev'
-  scsi: aic94xx: aic94xx_dev: Fix a couple of kerneldoc formatting
-    issues
-  scsi: aacraid: src: Add descriptions for missing parameters
-  scsi: aic94xx: aic94xx_tmf: Fix kerneldoc formatting issue with 'task'
-  scsi: pm8001: pm8001_sas: Fix strncpy() warning
-  scsi: pm8001: pm8001_sas: Mover function header and supply some
-    missing parameter descriptions
-  scsi: pm8001: pm8001_ctl: Add descriptions for unused 'attr' function
-    parameters
-  scsi: qla4xxx: ql4_init: Remove set but unused variable 'func_number'
-  scsi: qla4xxx: ql4_init: Check return value of pci_set_mwi()
-  scsi: qla4xxx: ql4_83xx: Move 'qla4_83xx_reg_tbl' from shared header
-  scsi: aic7xxx: aic79xx_core: Remove set but unused variables
-    'targ_info' and 'value'
-  scsi: pm8001: pm8001_hwi: Fix a bunch of kerneldoc issues
-  scsi: pm8001: pm80xx_hwi: Fix some function documentation issues
-  scsi: pm8001: pm8001_hwi: Remove a bunch of set but unused variables
-  scsi: qla4xxx: ql4_nx: Move 'qla4_82xx_reg_tbl' to the only place its
-    used
-  scsi: lpfc: lpfc_sli: Remove unused variable 'pg_addr'
-  scsi: qla4xxx: ql4_mbx: Fix-up incorrectly documented parameter
-  scsi: qla4xxx: ql4_iocb: Fix incorrectly named function parameter
-  scsi: lpfc: lpfc_sli: Fix-up around 120 documentation issues
-  scsi: pm8001: pm8001_hwi: Remove unused variable 'value'
-  scsi: pm8001: pm80xx_hwi: Staticify 'pm80xx_pci_mem_copy' and
-    'mpi_set_phy_profile_req'
-  scsi: qla4xxx: ql4_os: Fix some kerneldoc parameter documentation
-    issues
-  scsi: qla4xxx: ql4_isr: Repair function documentation headers
-  scsi: lpfc: lpfc_mem: Provide description for lpfc_mem_alloc()'s
-    'align' param
-  scsi: qla4xxx: ql4_init: Document qla4xxx_process_ddb()'s 'conn_err'
-  scsi: lpfc: lpfc_ct: Fix-up formatting/docrot where appropriate
-  scsi: csiostor: csio_init: Fix misnamed function parameter
-  scsi: qla4xxx: ql4_nx: Remove three set but unused variables
-  scsi: qla4xxx: ql4_nx: Supply description for 'code'
-  scsi: csiostor: csio_lnode: Demote kerneldoc that fails to meet the
-    criteria
-  scsi: bfa: bfad_bsg: Staticify all local functions
-  scsi: lpfc: lpfc_sli: Ensure variable has the same stipulations as
-    code using it
-  scsi: sym53c8xx_2: sym_glue: Add missing description for 'pdev'
-  scsi: sym53c8xx_2: sym_hipd: Ensure variable has the same stipulations
-    as code using it
-  scsi: mvsas: mv_init: Move 'core_nr' inside #ifdef and remove unused
-    variable 'res_flag'
-  scsi: cxgbi: cxgb3i: cxgb3i: Remove bad documentation and demote
-    kerneldoc header
+ config: x86_64-randconfig-m001-20200719
+ compiler: gcc-9 (Debian 9.3.0-14) 9.3.0
 
- drivers/scsi/aacraid/nark.c         |   1 +
- drivers/scsi/aacraid/rkt.c          |   5 +-
- drivers/scsi/aacraid/sa.c           |  19 ++-
- drivers/scsi/aacraid/src.c          |  13 +-
- drivers/scsi/aic7xxx/aic79xx_core.c |  20 +--
- drivers/scsi/aic94xx/aic94xx_dev.c  |   4 +-
- drivers/scsi/aic94xx/aic94xx_tmf.c  |   2 +-
- drivers/scsi/arcmsr/arcmsr_hba.c    |   3 -
- drivers/scsi/bfa/bfad_bsg.c         | 222 ++++++++++++++--------------
- drivers/scsi/csiostor/csio_init.c   |   2 +-
- drivers/scsi/csiostor/csio_lnode.c  |   3 +-
- drivers/scsi/cxgbi/cxgb3i/cxgb3i.c  |  13 +-
- drivers/scsi/lpfc/lpfc_ct.c         |  10 +-
- drivers/scsi/lpfc/lpfc_mem.c        |   1 +
- drivers/scsi/lpfc/lpfc_sli.c        | 125 ++++++++++------
- drivers/scsi/mvsas/mv_init.c        |   9 +-
- drivers/scsi/pm8001/pm8001_ctl.c    |   9 +-
- drivers/scsi/pm8001/pm8001_hwi.c    |  30 ++--
- drivers/scsi/pm8001/pm8001_sas.c    |  11 +-
- drivers/scsi/pm8001/pm80xx_hwi.c    |  23 +--
- drivers/scsi/qla4xxx/ql4_83xx.h     |  17 ---
- drivers/scsi/qla4xxx/ql4_init.c     |   6 +-
- drivers/scsi/qla4xxx/ql4_iocb.c     |   2 +-
- drivers/scsi/qla4xxx/ql4_isr.c      |   6 +-
- drivers/scsi/qla4xxx/ql4_mbx.c      |   7 +-
- drivers/scsi/qla4xxx/ql4_nx.c       |  18 +--
- drivers/scsi/qla4xxx/ql4_nx.h       |  17 ---
- drivers/scsi/qla4xxx/ql4_os.c       |  58 ++++++--
- drivers/scsi/sym53c8xx_2/sym_glue.c |   1 +
- drivers/scsi/sym53c8xx_2/sym_hipd.c |   8 +
- 30 files changed, 354 insertions(+), 311 deletions(-)
+ New smatch warnings:
+  drivers/scsi/arcmsr/arcmsr_hba.c:1490 arcmsr_done4abort_postqueue() warn: statement has no effect 8
+  drivers/scsi/arcmsr/arcmsr_hba.c:2459 arcmsr_hbaD_postqueue_isr() warn: statement has no effect 8
+  drivers/scsi/arcmsr/arcmsr_hba.c:3526 arcmsr_hbaD_polling_ccbdone() warn: statement has no effect 8
 
+ 1a4f550a09f89e Nick Cheng  2007-09-13  1401  static void arcmsr_done4abort_postqueue(struct AdapterControlBlock *acb)
+ 1a4f550a09f89e Nick Cheng  2007-09-13  1402  {
+ [...]
+ 18bc435e0a1de2 Lee Jones   2020-07-13 @1490                             pmu->done_qbuffer[doneq_index & 0xFFF].addressHigh;
+                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ Delete this line.
+ [...]
+
+Cc: support@areca.com.tw
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/scsi/arcmsr/arcmsr_hba.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/scsi/arcmsr/arcmsr_hba.c b/drivers/scsi/arcmsr/arcmsr_hba.c
+index 5feed135eb26c..23e9e12d588f6 100644
+--- a/drivers/scsi/arcmsr/arcmsr_hba.c
++++ b/drivers/scsi/arcmsr/arcmsr_hba.c
+@@ -1487,7 +1487,6 @@ static void arcmsr_done4abort_postqueue(struct AdapterControlBlock *acb)
+ 					((toggle ^ 0x4000) + 1);
+ 				doneq_index = pmu->doneq_index;
+ 				spin_unlock_irqrestore(&acb->doneq_lock, flags);
+-				pmu->done_qbuffer[doneq_index & 0xFFF].addressHigh;
+ 				addressLow = pmu->done_qbuffer[doneq_index &
+ 					0xFFF].addressLow;
+ 				ccb_cdb_phy = (addressLow & 0xFFFFFFF0);
+@@ -2456,7 +2455,6 @@ static void arcmsr_hbaD_postqueue_isr(struct AdapterControlBlock *acb)
+ 			pmu->doneq_index = index_stripped ? (index_stripped | toggle) :
+ 				((toggle ^ 0x4000) + 1);
+ 			doneq_index = pmu->doneq_index;
+-			pmu->done_qbuffer[doneq_index & 0xFFF].addressHigh;
+ 			addressLow = pmu->done_qbuffer[doneq_index &
+ 				0xFFF].addressLow;
+ 			ccb_cdb_phy = (addressLow & 0xFFFFFFF0);
+@@ -3523,7 +3521,6 @@ static int arcmsr_hbaD_polling_ccbdone(struct AdapterControlBlock *acb,
+ 				((toggle ^ 0x4000) + 1);
+ 		doneq_index = pmu->doneq_index;
+ 		spin_unlock_irqrestore(&acb->doneq_lock, flags);
+-		pmu->done_qbuffer[doneq_index & 0xFFF].addressHigh;
+ 		flag_ccb = pmu->done_qbuffer[doneq_index & 0xFFF].addressLow;
+ 		ccb_cdb_phy = (flag_ccb & 0xFFFFFFF0);
+ 		if (acb->cdb_phyadd_hipart)
 -- 
 2.25.1
 
