@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50580C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A14C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0A02073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61142073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:05:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="I1LiMBUt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="J7Al6bx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729243AbgGUKHj (ORCPT
+        id S1729215AbgGUKFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:07:39 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:5938 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728006AbgGUKHi (ORCPT
+        Tue, 21 Jul 2020 06:05:11 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:59330 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbgGUKFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:07:38 -0400
+        Tue, 21 Jul 2020 06:05:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595326058; x=1626862058;
+  t=1595325910; x=1626861910;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Q+YIkrycvE7mcy6+CcZBaCVfDuosYUTIYGmg/IJOMjg=;
-  b=I1LiMBUt99LODxcE+2imt48hzOQ6zg3RSUn8IrxN3MWZHwlvGaXGBsI8
-   4DG8IRm3d2kZpOuVCCEAsA2vwHqEv4votN9UfuhojB/ynAZ+/Mh/TO+Te
-   k8L+iIMnWBwCIBvrNEO0aZQA1UxRIEaRyyQA9/ffz5tadR7nQg1is6uVR
-   7aNi0UDEVCFXIBJnDg9XyhxlFhHGwIvUXHFwG55wkO1FiDr8yDC4AezQI
-   akKwNZFzo+4qzU/ZD0R4ziTUpU9kzHOSH9pw34lIudSDZnsEAYSmXfmI1
-   ZRjPQ37vAWDMHQPUGsSI7C7dWR+/IXEeWC4L+qkbCCQQxHUaPgBKY7zg/
-   Q==;
-IronPort-SDR: 85HL3tkoVh4AbHNyzFxxHAv73QwEqsDra0lKxLidJo5i0rztM1sluwyCx1/A36/iYhb5DYgjiF
- MRx0134elbGoDVP7csbkRUty+sor0PGgay+XaV/UZCvehnDN0di+Pz3F977FcC5Kdt7Zhk2Yt2
- PwwOS0r0DZfE5nknjc9wPTsBPnsFuXizVy0g+5tWMzettnaD37EatDtyuvI4A4YATuMAW0xnVJ
- uJNq4Glj3UtTDDVF9ZeO5eSBuBtwYA4Bt/f1DE6NanRIza/MyocMF5elmXTtxj89CqXT7CPOBr
- jI8=
+  bh=PQhdyJFUcE/B+fHmZsdxZExh6mjBo63eSp4PWdlxyO0=;
+  b=J7Al6bx06SREzqHpSbF5MLLDs53q8K85O1bMG1SyYGMTryr4r9GNQvdZ
+   NkMLdHewmLvnMMYAwvdqNI3hogkVLPMKiV1i614MQFjDOVQHSTmyjf9Y6
+   ITqrRIXeZsADuaF1AwV4n6EjFISEUrmVRlrEUINrV73doL7SzwwUXllwg
+   6mBmYUVdwOTqMVjheoH8oXlup2LQl/s9uwdsLhjJm9DtOFquo4eF2SJWu
+   +GE9eyEG2FTA7JsBK6cyzKOSzPCZg4EXF1v6hDXNA0zHNB8ckBcIIdd1M
+   nbF1saJtLmnLgr5pxbz43629k6AMfYAfLvPyh+Ip3wFNM2ZQE9D72ToGE
+   w==;
+IronPort-SDR: kYOGqRBc3cKms3pWJwWEtqR4GGzfxu48uSdmDxeQBd/TcMT6FykuhbE33dUDHctBVcdjnFhIna
+ 1KyPRFyBtFW10ThcwrhCzy7fHja3G+fmezLWhtbiO6E0JcjNtod3mnwkYLNmlw0YmrrDnI0R4g
+ jRMbsGjpK0CtSdz982UNTyPcL20viNfUfkZzjeJZvzvmfdN/wmP02y9sNSbDDfrS0tDNNP7QQ7
+ OcftoEwCRpq5OSt5k/LNfasuLFntCRWn/idSqeqOAaKdog0IEvtm6HTsI7/ew76XZngnt8nBuU
+ mB0=
 X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
-   d="scan'208";a="84749272"
+   d="scan'208";a="82644333"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Jul 2020 03:07:37 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Jul 2020 03:05:10 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 21 Jul 2020 03:06:55 -0700
+ 15.1.1979.3; Tue, 21 Jul 2020 03:05:09 -0700
 Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 21 Jul 2020 03:06:33 -0700
+ 15.1.1979.3 via Frontend Transport; Tue, 21 Jul 2020 03:04:06 -0700
 From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -61,9 +61,9 @@ CC:     <nicolas.ferre@microchip.com>, <claudiu.beznea@microchip.com>,
         <f.fainelli@gmail.com>, <robh+dt@kernel.org>,
         <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
         "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
-Subject: [PATCH net-next 7/7] ARM: dts: at91: sam9x60: add an mdio sub-node to macb
-Date:   Tue, 21 Jul 2020 13:02:34 +0300
-Message-ID: <20200721100234.1302910-8-codrin.ciubotariu@microchip.com>
+Subject: [PATCH net-next 3/7] net: macb: parse PHY nodes found under an MDIO node
+Date:   Tue, 21 Jul 2020 13:02:30 +0300
+Message-ID: <20200721100234.1302910-4-codrin.ciubotariu@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200721100234.1302910-1-codrin.ciubotariu@microchip.com>
 References: <20200721100234.1302910-1-codrin.ciubotariu@microchip.com>
@@ -75,32 +75,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new macb bindings and add an mdio sub-node to contain all the
-phy nodes.
+The MACB embeds an MDIO bus controller. For this reason, the PHY nodes
+were represented as sub-nodes in the MACB node. Generally, the
+Ethernet controller is different than the MDIO controller, so the PHYs
+are probed by a separate MDIO driver. Since adding the PHY nodes directly
+under the ETH node became deprecated, we adjust the MACB driver to look
+for an MDIO node and register the subnode MDIO devices.
 
 Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 ---
- arch/arm/boot/dts/at91-sam9x60ek.dts | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/at91-sam9x60ek.dts b/arch/arm/boot/dts/at91-sam9x60ek.dts
-index a5f5718c711a..ba871ebe10d4 100644
---- a/arch/arm/boot/dts/at91-sam9x60ek.dts
-+++ b/arch/arm/boot/dts/at91-sam9x60ek.dts
-@@ -324,8 +324,12 @@ &macb0 {
- 	pinctrl-0 = <&pinctrl_macb0_rmii>;
- 	status = "okay";
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 89fe7af5e408..66f02c16cc7c 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -740,10 +740,20 @@ static int macb_mii_probe(struct net_device *dev)
+ static int macb_mdiobus_register(struct macb *bp)
+ {
+ 	struct device_node *child, *np = bp->pdev->dev.of_node;
++	struct device_node *mdio_node;
++	int ret;
  
--	ethernet-phy@0 {
--		reg = <0x0>;
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		ethernet-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
+ 	if (of_phy_is_fixed_link(np))
+ 		return mdiobus_register(bp->mii_bus);
+ 
++	/* if an MDIO node is present, it should contain the PHY nodes */
++	mdio_node = of_get_child_by_name(np, "mdio");
++	if (mdio_node) {
++		ret = of_mdiobus_register(bp->mii_bus, mdio_node);
++		of_node_put(mdio_node);
++		return ret;
++	}
++
+ 	/* Only create the PHY from the device tree if at least one PHY is
+ 	 * described. Otherwise scan the entire MDIO bus. We do this to support
+ 	 * old device tree that did not follow the best practices and did not
+@@ -755,7 +765,6 @@ static int macb_mdiobus_register(struct macb *bp)
+ 			 * decrement it before returning.
+ 			 */
+ 			of_node_put(child);
+-
+ 			return of_mdiobus_register(bp->mii_bus, np);
+ 		}
  
 -- 
 2.25.1
