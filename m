@@ -2,168 +2,166 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C420C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E46C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA7B522482
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:55:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="aa8+RFop"
+	by mail.kernel.org (Postfix) with ESMTP id 3924520792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:56:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595332564;
+	bh=l+HUvAyrBjGy9WfEth7/photuV939CFeeU0UqdolEIg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=Asqao/BicrGOwbY9ugSXk0xwUuRWyNyGRYLp/VH1aSI+9HrnoQEgLg0Xk2YZ/C01U
+	 aH+n63Taf995eF4/h40AemcGIZ6Xy24px8YjLBzVA3uERlV+7tYZApWjmbrI6a1yzc
+	 toRuyc/mZlV08Qqbq24eydhUbetx7HjIPLmRh7PU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbgGULzm (ORCPT
+        id S1729880AbgGUL4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58652 "EHLO
+        Tue, 21 Jul 2020 07:56:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729706AbgGULzm (ORCPT
+        with ESMTP id S1726919AbgGUL4C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:55:42 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B76C0619D9
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:55:41 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id x9so23720799ljc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:55:41 -0700 (PDT)
+        Tue, 21 Jul 2020 07:56:02 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C89C061794;
+        Tue, 21 Jul 2020 04:56:02 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z24so23713965ljn.8;
+        Tue, 21 Jul 2020 04:56:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZVoINjtMGDezcJLO2Zg+Y+JYaakD+WyYlrSO3cxN39E=;
-        b=aa8+RFopvlFWXMkD7+eV+fIBRXzv4Pt8JGEJ+BqDGFG/TZB44jBsVKadLiKtcdiHUs
-         GjvioRKJDFK2KcgpW97MqhnlHEw5wGT2ZJr81d17irYkbtYW6hrYoaqc86vqEuV8bVHv
-         +0ll3jJCUvA5JGwtCDwRBYLNSwUeT11to9awVAssIUVG6T6jpsbIlKslyYevC6NaUOYq
-         zsUHn1oAvV+v21iA1LWrNBvpWQGugEoTI7qus5Yoy/tVf0gz2sNsgZ/jWS6Ua0/gAY4J
-         Z/gmVwA503RiPiefguw1iNJ4MYbmi5uhfDcMHDwLFBpt9HYD2G52+Ab+VxWjQSSUly0e
-         8oEg==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=UuXQlL9wnaYJsw7ikLdLURfWd1VScHy70zV2v5mo5Wk=;
+        b=CR4B9VqyMBf+6kUn7fW8Fv6vPiDD0jb/DjgcVM7Xh66qnzbBkR1bwIrix3b9I7xvDq
+         2mx2dR52SsNoMtXi+c1dFVt5XxbgL1nu6+0rnXgzcGqc5ZcTnyDPcIyKSn2wSaOn1P9E
+         U4dMeIrfAr4c+gPzEmyT4MQpmY7vHX/n0feNKGSGSlg7CXemFsNr+qLBUf7aLVav0aWf
+         sEq0gatSaDPff5TLlqxQyH6AdsVpc1yR+2L3GQXxCU94W2gWR5xI14va9jlJhQgshxu0
+         nwQVXYn/QT3i5hknJsjxEtHdl33xEOdmEc5UY1+p//z3520f6XjmcHNI3eM/Jc4ES7e6
+         g8og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZVoINjtMGDezcJLO2Zg+Y+JYaakD+WyYlrSO3cxN39E=;
-        b=qxeAjuAB0Fq+RPfJFmO/AiPnT3BJIkQ9OWhX/u09qdiv7VIdOXdn+r5q3LUGCvPtz7
-         owCegDHmxztb0OYvE1sw6DpYw4mK7dsuc9m6ia8RAmwA4gup7RndkbNvp+ih8/hD9IFU
-         yu5Ay1V1NTYfUmNYzre1GNiP/aetn8dyMgm/ghh3qRofIevsyHy3sSmlEk2ZuRETZH9O
-         q2vjh9pz+glvvOEdqH3dcO79pZVw0OEofAP43ZsSznCVPpF7P5LYvay0wy1/7TqiTeg0
-         XaR9O0dJ/aHt79t4UKBGRs9FnwHMteS5L8wZFtgH1XsNYV5w9tiStaC+eb1VUJhpQIJ9
-         YMRA==
-X-Gm-Message-State: AOAM531/BR4EDjtQ9O26OIlckxXK9ZepUNhqMSEnIHRtKIV0o13BQWvO
-        pf9miVzkZSoZ0GIGg4+QNXVZsfqjnCcTm0lBG6Mr9MsCrvg=
-X-Google-Smtp-Source: ABdhPJweVCEg+lAlZfetbFPmgrzJZsHlsZaisRv/zVTnOsUHbVD1AwEcazd0D5dxzyF05L2c+g2C7U8SOV5JY9LHcn4=
-X-Received: by 2002:a2e:6f19:: with SMTP id k25mr13050134ljc.443.1595332539804;
- Tue, 21 Jul 2020 04:55:39 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=UuXQlL9wnaYJsw7ikLdLURfWd1VScHy70zV2v5mo5Wk=;
+        b=MtmYJBRPEfIQL3u9oC3nvS2Iu/oRNRQlRS3iBCwY/bTLPgiHj8hi3UWVd2DzY6Lz0y
+         96IOcxXDYr+0k3y3vbr2Zx8mX+PemKnTJmm8MClLRxIPT+NKX5e6l5v4eeJyjpLbmV7+
+         JdNsw58mpUUPa4fD2+JD9TDps3fkjlAHLLDU9yWIqbWcUlGeEG9ibxxRRy3sGzowtkkf
+         keoWYO4VvTvHZwqO+qXMTXZDxYOCRnhkElOlZbkx/ARlWl9Inhvjcyh7P1n3ZT/lu7ia
+         WjqwHeCA5IQeSOt7Zx+3ujZEYn2itQJKemeCouo4Y5YyuZpp7nL3Cy0oRcFST0aELsUp
+         aLCA==
+X-Gm-Message-State: AOAM5320vtO1zvg6DYht5dKubjG+2LXM9VJzoO6USfS7JlIqJ12CSybr
+        EuNqJMo23Ij1Al0xWPFMd9M=
+X-Google-Smtp-Source: ABdhPJwqmos6ZZxG4AKGfzLwBOkpIcuG0XibJW5qPfhgTgkYeiH/Ax0CcD+xA/8ba028wsTG5rBo3g==
+X-Received: by 2002:a2e:1502:: with SMTP id s2mr11589814ljd.236.1595332560529;
+        Tue, 21 Jul 2020 04:56:00 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id y8sm4232793ljy.59.2020.07.21.04.55.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 Jul 2020 04:55:59 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-arm-kernel\@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Ben Dooks <ben@simtec.co.uk>
+Subject: Re: [PATCH v2 1/8] usb: dwc2: gadget: Make use of GINTMSK2
+In-Reply-To: <20200721115246.GE621928@dell>
+References: <20200715093209.3165641-1-lee.jones@linaro.org> <20200715093209.3165641-2-lee.jones@linaro.org> <566f2d65-1b5a-ed2a-f33f-516b66be2624@synopsys.com> <87blk9p5ia.fsf@kernel.org> <5862f649-8058-7e39-cb43-2a4b09303333@synopsys.com> <875zahp0i0.fsf@kernel.org> <20200721115246.GE621928@dell>
+Date:   Tue, 21 Jul 2020 14:55:55 +0300
+Message-ID: <87365lozec.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20200721111007.hwwdveqxeqcry4wn@pesu.pes.edu> <0000000000001e30e105aaf1ce89@google.com>
-In-Reply-To: <0000000000001e30e105aaf1ce89@google.com>
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-Date:   Tue, 21 Jul 2020 17:25:28 +0530
-Message-ID: <CAAhDqq3uSnRMXE3Pn1PjLo+XKXruB7jqkJx70gCPd_=-HJD4Rw@mail.gmail.com>
-Subject: Re: WARNING in pvr2_i2c_core_done
-To:     syzbot <syzbot+e74a998ca8f1df9cc332@syzkaller.appspotmail.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Isely <isely@pobox.com>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 4:50 PM syzbot
-<syzbot+e74a998ca8f1df9cc332@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-> general protection fault in kernfs_find_ns
->
-> pvrusb2: Invalid write control endpoint
-> pvrusb2: Invalid write control endpoint
-> pvrusb2: Invalid write control endpoint
-> pvrusb2: Invalid write control endpoint
-> pvrusb2: Invalid write control endpoint
-> pvrusb2: Invalid write control endpoint
-> general protection fault, probably for non-canonical address 0xdffffc000000000e: 0000 [#1] SMP KASAN
-> KASAN: null-ptr-deref in range [0x0000000000000070-0x0000000000000077]
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-I'm guessing this has to do with kmem_cache_free() called by
-i2c_acpi_remove_space_handler()
-through acpi_ut_delete_generic_state() in drivers/acpi/osl.c:1708 ?
+Hi,
 
-> CPU: 0 PID: 78 Comm: pvrusb2-context Not tainted 5.7.0-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:kernfs_find_ns+0x31/0x370 fs/kernfs/dir.c:829
-> Code: 49 89 d6 41 55 41 54 55 48 89 fd 53 48 83 ec 08 e8 f4 61 af ff 48 8d 7d 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 1e 03 00 00 48 8d bd 98 00 00 00 48 8b 5d 70 48
-> RSP: 0018:ffff8881d4187938 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: ffffffff863789c0 RCX: ffffffff85a79ba7
-> RDX: 000000000000000e RSI: ffffffff81901d1c RDI: 0000000000000070
-> RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff873ed1e7
-> R10: fffffbfff0e7da3c R11: 0000000000000001 R12: 0000000000000000
-> R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff863790e0
-> FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000557f2b45ae48 CR3: 00000001d2762000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  kernfs_find_and_get_ns+0x2f/0x60 fs/kernfs/dir.c:906
->  kernfs_find_and_get include/linux/kernfs.h:548 [inline]
->  sysfs_unmerge_group+0x5d/0x160 fs/sysfs/group.c:366
->  dpm_sysfs_remove+0x62/0xb0 drivers/base/power/sysfs.c:790
->  device_del+0x18b/0xd20 drivers/base/core.c:2834
->  device_unregister+0x22/0xc0 drivers/base/core.c:2889
->  i2c_unregister_device include/linux/err.h:41 [inline]
->  i2c_client_dev_release+0x39/0x50 drivers/i2c/i2c-core-base.c:465
->  device_release+0x71/0x200 drivers/base/core.c:1559
->  kobject_cleanup lib/kobject.c:693 [inline]
->  kobject_release lib/kobject.c:722 [inline]
->  kref_put include/linux/kref.h:65 [inline]
->  kobject_put+0x245/0x540 lib/kobject.c:739
->  put_device drivers/base/core.c:2779 [inline]
->  device_unregister+0x34/0xc0 drivers/base/core.c:2890
->  i2c_unregister_device+0x38/0x40 include/linux/err.h:41
->  v4l2_i2c_new_subdev_board+0x159/0x2c0 drivers/media/v4l2-core/v4l2-i2c.c:114
->  v4l2_i2c_new_subdev+0xb8/0xf0 drivers/media/v4l2-core/v4l2-i2c.c:135
->  pvr2_hdw_load_subdev drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2023 [inline]
->  pvr2_hdw_load_modules drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2075 [inline]
->  pvr2_hdw_setup_low drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2156 [inline]
->  pvr2_hdw_setup drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2262 [inline]
->  pvr2_hdw_initialize+0xc8d/0x3600 drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2339
->  pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:109 [inline]
->  pvr2_context_thread_func+0x250/0x850 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
->  kthread+0x392/0x470 kernel/kthread.c:291
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-> Modules linked in:
-> ---[ end trace 9af941b6bcb04b01 ]---
-> RIP: 0010:kernfs_find_ns+0x31/0x370 fs/kernfs/dir.c:829
-> Code: 49 89 d6 41 55 41 54 55 48 89 fd 53 48 83 ec 08 e8 f4 61 af ff 48 8d 7d 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 1e 03 00 00 48 8d bd 98 00 00 00 48 8b 5d 70 48
-> RSP: 0018:ffff8881d4187938 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: ffffffff863789c0 RCX: ffffffff85a79ba7
-> RDX: 000000000000000e RSI: ffffffff81901d1c RDI: 0000000000000070
-> RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff873ed1e7
-> R10: fffffbfff0e7da3c R11: 0000000000000001 R12: 0000000000000000
-> R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff863790e0
-> FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000557f2b45ae48 CR3: 00000001d2762000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Lee Jones <lee.jones@linaro.org> writes:
+> On Tue, 21 Jul 2020, Felipe Balbi wrote:
 >
+>> Minas Harutyunyan <Minas.Harutyunyan@synopsys.com> writes:
+>>=20
+>> > Hi Felipe,
+>> >
+>> > On 7/21/2020 1:43 PM, Felipe Balbi wrote:
+>> >> Minas Harutyunyan <Minas.Harutyunyan@synopsys.com> writes:
+>> >>=20
+>> >>> On 7/15/2020 1:32 PM, Lee Jones wrote:
+>> >>>> The value obtained from GINTSTS2 should be masked with the GINTMSK2
+>> >>>> value.  Looks like this has been broken since
+>> >>>> dwc2_gadget_wkup_alert_handler() was added back in 2018.
+>> >>>>
+>> >>>> Also fixes the following W=3D1 warning:
+>> >>>>
+>> >>>>    drivers/usb/dwc2/gadget.c: In function =E2=80=98dwc2_gadget_wkup=
+_alert_handler=E2=80=99:
+>> >>>>    drivers/usb/dwc2/gadget.c:259:6: warning: variable =E2=80=98gint=
+msk2=E2=80=99 set but not used [-Wunused-but-set-variable]
+>> >>>>    259 | u32 gintmsk2;
+>> >>>>    | ^~~~~~~~
+>> >>>>
+>> >>>> Cc: Minas Harutyunyan <hminas@synopsys.com>
+>> >>>> Cc: Ben Dooks <ben@simtec.co.uk>
+>> >>>> Fixes: 187c5298a1229 ("usb: dwc2: gadget: Add handler for WkupAlert=
+ interrupt")
+>> >>>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>> >>>
+>> >>> Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+>> >>=20
+>> >> Should I apply the entire series or only 1/8?
+>> >>=20
+>> > In this series only 2 patches are related to dwc2, which I'm already A=
+cked:
+>> >
+>> > [PATCH v2 1/8] usb: dwc2: gadget: Make use of GINTMSK2
+>> > [PATCH v2 2/8] usb: dwc2: gadget: Avoid pointless read of EP control=20
+>> > register
+>> >
+>> > I can't acked other patches from this series, because they are not=20
+>> > related to dwc2.
+>>=20
+>> heh, I saw that after sending the email, sorry :-)
 >
-> Tested on:
->
-> commit:         b791d1bd Merge tag 'locking-kcsan-2020-06-11' of git://git..
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16dfe440900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ccf1899337a6e343
-> dashboard link: https://syzkaller.appspot.com/bug?extid=e74a998ca8f1df9cc332
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=117e281b100000
->
+> Also, all patches are already in -next, courtesy of Greg.
+
+Cool, I'll rebase on top of Greg's branch
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8W18sACgkQzL64meEa
+mQZHExAAoXdNBgNtWBOLLiLM8dWumwGhOlOBXhu6BxEcUtofB9WWbKIKeQFYxSaq
+Oze/j7Z9hceIAIYK/xgW4Zv94oy7yYugNMD6EzvVuPk+XcTPlZj0NOM0eUAr/bwu
+mrfxB4gmuKddKjrrgSNQNqVlno2CnLaXhElqh61FxrsPICMoeQa8iyPfl3L5cwC3
+ty59TfHkaP3EU7TpRsj4y++z3jbLHlqtXE2p+yRsGht7UeLHd6qhJWjtVijpLU7t
+yGD8DHwBFsj9s9AnXXpzSDVhp/2MJnIegH73s8g3zFQ4S2KNubADBxF16Nuxf8NZ
+EOD/qUECHJSURDoXLJG07+Bf+FGNVbHWJMpWRPPz+NiNgSBBxbBqqBH4/cBYy6yd
+kksNBJlmZkC+Ix4hyMJ/uQdVe3laksEiP8W7chLGJlyldzYvwUys9S+sKvl7me3V
+92SOp4xj+dragFXknHtqUpIQHn+6KmRQJved8HhqTcAZ0o9dUAYa4SU8SF0aFXfX
+TJyrp6ySTlupacoabzg0CC4qUGfLH91hUpewjG35qiN3weWrzQHeUyZ9rdIAVa+8
+whlftnwMr/7EC2Dk1rCJJjahs8IfsHQhklI99sb+wDBl/kFVpDRyMwWO1Io4562E
+ldBZ6RHgOwhO3TbYatCtvhzCiy6dqENORarHcuI8I3TQC0MzyhA=
+=cJMs
+-----END PGP SIGNATURE-----
+--=-=-=--
