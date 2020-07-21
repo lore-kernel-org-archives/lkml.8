@@ -2,92 +2,95 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648D5C433F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5E2C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3861B207BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 025B220720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:38:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZLISQ8gB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s01eLfpE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730290AbgGUQcP (ORCPT
+        id S1730343AbgGUQiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:32:15 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44704 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbgGUQcO (ORCPT
+        Tue, 21 Jul 2020 12:38:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728042AbgGUQiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:32:14 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LGWCZo009455;
-        Tue, 21 Jul 2020 11:32:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595349132;
-        bh=VXQVYB3wzJZWQT9GPM/H2pXNrk9WfmlT/oWF5ORcuqY=;
-        h=From:To:CC:Subject:Date;
-        b=ZLISQ8gBnfpEgWRKBMAQZ99+D9fIOsDzyqQ2M7TEjzc46/TCtB7ph6PkNAiGN8s9K
-         iMYkemgOMItg6Di+LqUQ32j6suxcisVJIa6zJH2Ryhy6OXgbGy2Rz4/1VZ1L3QFz+d
-         umMoPS4Tz9WxPcQIm5H6FMluGRlDdS9mGyK5xv/Y=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06LGWCKs039721
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Jul 2020 11:32:12 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
- Jul 2020 11:32:12 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 21 Jul 2020 11:32:12 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LGWCAt027900;
-        Tue, 21 Jul 2020 11:32:12 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <sre@kernel.org>, <afd@ti.com>, <pali@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh@kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v3 1/4] dt-bindings: power: Add BQ27561 compatible
-Date:   Tue, 21 Jul 2020 11:32:03 -0500
-Message-ID: <20200721163206.25438-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 21 Jul 2020 12:38:09 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72BB2C061794;
+        Tue, 21 Jul 2020 09:38:09 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x72so10998115pfc.6;
+        Tue, 21 Jul 2020 09:38:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eu10JA5OLvwplrNmV/SXDOuEoK36a/cnU1OAIE1ulVg=;
+        b=s01eLfpEg46mAJ0+8Jx435jbuv+VsLHMmsW6VtMVMV1al6nwy729Y9CG1LERJ3Wzk8
+         cpWiOd4UB9VmN7ihqup7/BS19/Tx/ccHf/MbUb/vWJUDNSesx5fe4xmU/yEOZJq1vWZ1
+         GaeB4CAAfuhvPEJU9Gdw150a48EsSwhXma+Urrnbblcg+jvj98nyMcWCfTlj9CWDjDJX
+         KTBanhJRpzqSxvuWUozqJPYDzhHtu6R0PnUio2jr+iNxYGrcyWbNCDQNxGFcviQgxIWs
+         5niWWZ87QeXWsI+3Ac+CyjodCz0fwo9pTnzzkEM467M9Pa6WGvGSEO7Y5d8lylvru0tr
+         atXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eu10JA5OLvwplrNmV/SXDOuEoK36a/cnU1OAIE1ulVg=;
+        b=O0WLV+7+tQDEZdjEp5d0eUrWPYIs06CROMRh5WRHxGdtDYMetnNGz9G/eeh2K+OcHb
+         aWD37tAbOwghw3gERXozv/IH2QFo11dwOYrB6tnAoQLFBR4ZMoE/gczClG+Unync0Igv
+         PWNTSm/czUUwGjcz/lh5oLQTejUdoqh+piIhV77ofd0fMApo1KOmAThXJ+sw8pp1PYrb
+         KxH5EKIzx6JJ7gb++E/nvgVTuNBp68uX9rDiOA+yKcrn/ZRQe/g2SgN8erEIcyNCNQ6d
+         3gQyps7yFfzJlscc1kjAMFsdrGO5JDMwG+KX4mqO+bVEFqoCr+TCRYQlIm+U612jZnVL
+         b7Dw==
+X-Gm-Message-State: AOAM5308ki6WDbFb2V4/VSH0IDAZsEeQAOL1xxS2dSCpvtAQplmLPZop
+        7hKTJ5zF9OvoCpZuoSHa8E45nzsc
+X-Google-Smtp-Source: ABdhPJyrzWPB0V13F5vI6Kyxost9DS1GEIdpPrFAb9ZfXBvb82EBYpGJzfZCUGsInKWrM46PaJg7zQ==
+X-Received: by 2002:a63:f90f:: with SMTP id h15mr22855754pgi.53.1595349488783;
+        Tue, 21 Jul 2020 09:38:08 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q6sm20838407pfg.76.2020.07.21.09.38.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 Jul 2020 09:38:08 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 09:38:07 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/215] 5.4.53-rc1 review
+Message-ID: <20200721163807.GE239562@roeck-us.net>
+References: <20200720152820.122442056@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the Texas Instruments bq27561 battery monitor to the bq27xxx
-binding.
+On Mon, Jul 20, 2020 at 05:34:42PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.53 release.
+> There are 215 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 22 Jul 2020 15:27:31 +0000.
+> Anything received after that time might be too late.
+> 
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- Documentation/devicetree/bindings/power/supply/bq27xxx.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Build results:
+	total: 157 pass: 157 fail: 0
+Qemu test results:
+	total: 430 pass: 430 fail: 0
 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
-index 03d1020a2e47..51cb1f685dcf 100644
---- a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
-+++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
-@@ -49,6 +49,7 @@ properties:
-       - ti,bq27426
-       - ti,bq27441
-       - ti,bq27621
-+      - ti,bq27561
- 
-   reg:
-     maxItems: 1
--- 
-2.27.0
-
+Guenter
