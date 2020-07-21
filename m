@@ -2,96 +2,62 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFFEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E62F6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01E7720771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:41:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595371283;
-	bh=BotUQxfjVA9emKtHJ7bK7WZE9k8SVjbJ8o4YzULBYuc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hupFn4c/WwJ+OfIsnwSDL2Zsr3p8CLQ9nhnsgrvC6Hp/dkH4x1sap152I990P5amP
-	 PjzGUy625s3lTJ2hnd9fPwsIBNGQG1nDYH3PTJpnJZpY7g2PiH+vNZzk88YHZp5Pm2
-	 tNYVBi5st8LyxAd7RcKQ5oJGsc/g64EZ+ju9u3YA=
+	by mail.kernel.org (Postfix) with ESMTP id C5DD920771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731156AbgGUWlW (ORCPT
+        id S1731249AbgGUWmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 18:41:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgGUWlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 18:41:21 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC9432073A;
-        Tue, 21 Jul 2020 22:41:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595371281;
-        bh=BotUQxfjVA9emKtHJ7bK7WZE9k8SVjbJ8o4YzULBYuc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LnjHqe5dFaJAjU1mdmhbOGRtUe+nabCriuQ3qMWXn72psho8i/zd9ytwmpXX+YKMH
-         YaZlT7XLJ2B3bNzZAYwO5QTAIFshoo3WHyBtYoqrrIKkpQlb2jfRsXjmQT6uVQlq4C
-         AOXemd3CRqZxUO8Zia8mhaBEgJGGmhl1tMrTQ7vE=
-Date:   Tue, 21 Jul 2020 23:41:08 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     robh+dt@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
-        kuninori.morimoto.gx@renesas.com, tiwai@suse.com,
-        rlokhande@nvidia.com, digetx@gmail.com,
-        linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
-        linux-tegra@vger.kernel.org, swarren@nvidia.com,
-        sharadg@nvidia.com, nicoleotsuka@gmail.com, viswanathl@nvidia.com,
-        nwartikar@nvidia.com, jonathanh@nvidia.com, atalambedu@nvidia.com,
-        mkumard@nvidia.com, dramesh@nvidia.com, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v5 00/11] Add ASoC AHUB components for Tegra210 and later
-Message-ID: <20200721224108.GG4845@sirena.org.uk>
-References: <1595134890-16470-1-git-send-email-spujar@nvidia.com>
- <159525589435.6792.708136378511410418.b4-ty@kernel.org>
- <72d45476-7050-187b-19d6-2ddb9b0ba97a@nvidia.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YH9Qf6Fh2G5kB/85"
-Content-Disposition: inline
-In-Reply-To: <72d45476-7050-187b-19d6-2ddb9b0ba97a@nvidia.com>
-X-Cookie: I'm also against BODY-SURFING!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 21 Jul 2020 18:42:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgGUWmi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 18:42:38 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 631F9C061794;
+        Tue, 21 Jul 2020 15:42:38 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 97ADB11E45906;
+        Tue, 21 Jul 2020 15:25:52 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 15:42:36 -0700 (PDT)
+Message-Id: <20200721.154236.1466030648919683295.davem@davemloft.net>
+To:     linmiaohe@huawei.com
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
+        wangchen@cn.fujitsu.com, herbert@gondor.apana.org.au,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: udp: Fix wrong clean up for IS_UDPLITE macro
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1595322704-31548-1-git-send-email-linmiaohe@huawei.com>
+References: <1595322704-31548-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 21 Jul 2020 15:25:52 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: linmiaohe <linmiaohe@huawei.com>
+Date: Tue, 21 Jul 2020 17:11:44 +0800
 
---YH9Qf6Fh2G5kB/85
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> From: Miaohe Lin <linmiaohe@huawei.com>
+> 
+> We can't use IS_UDPLITE to replace udp_sk->pcflag when UDPLITE_RECV_CC is
+> checked.
+> 
+> Fixes: b2bf1e2659b1 ("[UDP]: Clean up for IS_UDPLITE macro")
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 
-On Tue, Jul 21, 2020 at 05:22:35PM +0530, Sameer Pujar wrote:
-
-> I see that "[PATCH v5 07/11] ASoC: tegra: Add Tegra210 based ADMAIF driver"
-> is not applied as part of this. I wanted to understand if this is because
-> some more review comments are expected or there are other reasons?
-
-I just hadn't got that far through the patch series yet, looks fine.
-
---YH9Qf6Fh2G5kB/85
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8XbwMACgkQJNaLcl1U
-h9DtvQf/e8yERKcTlsxgN756R8KDhLh+qzlkWNW3GPS8vrJKP0kOaysI2CDcHvhS
-Z4dtbFFRCgzRhb+m7k42pnnjZ+kEggR2iBeof1kXKLzBybxcaujyULGvI6jtfYVd
-Nvo3rNBhwseVrVNWgS6HURCkfp2aDTDqnXZIQpXrd/eaPwZMajW5vsgkO4vucjRe
-bVopPMTErkT99QWK5XxSj1ZdOFUdbzqQawZvDF75+gh1ZWDp8M64GSttm96zS/rL
-AiiPPVTv1F8c4nxlotfQQ59P/MyW9G5pBYdon3plnVyqYI08k6bUZYMLcHwiFYLu
-HykGGaZPPnMO3stUy64AKKNZmZBxyA==
-=mT4+
------END PGP SIGNATURE-----
-
---YH9Qf6Fh2G5kB/85--
+Applied and queued up for -stable, thanks.
