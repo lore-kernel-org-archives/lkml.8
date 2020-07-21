@@ -2,161 +2,90 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F80CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A321C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3C4D20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BEB220717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:43:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZRTvmXSz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ig/x4pHH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbgGUMmY (ORCPT
+        id S1729246AbgGUMnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:42:24 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41200 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726904AbgGUMmX (ORCPT
+        Tue, 21 Jul 2020 08:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726904AbgGUMnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:42:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595335342;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sxEWR5e+zFYMBJOOuaa+SYdRZddlN9HI1DKBH6wob58=;
-        b=ZRTvmXSz7Rh+hPT0fQAvmYiDjwXPM+ti/tOaKzGp6FVMRz3Q8Lekog1wEFY1v5wTpHRbCU
-        2OMkIf4g9pOflXTvHshxcY2cM+IbyRmobhCZagQiDqJWzOWJNgtME82sR1DHPhavU4NLrb
-        10M9jw4Q3LVcUFTB0Ugkeu9TBwUgooI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-263--3BfRSnxPBiIkZC8r_aHkQ-1; Tue, 21 Jul 2020 08:42:20 -0400
-X-MC-Unique: -3BfRSnxPBiIkZC8r_aHkQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35D7780047E;
-        Tue, 21 Jul 2020 12:42:16 +0000 (UTC)
-Received: from starship (unknown [10.35.206.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A1F9870105;
-        Tue, 21 Jul 2020 12:42:08 +0000 (UTC)
-Message-ID: <435f1c04b58bd2298be3166b7bab458640927118.camel@redhat.com>
-Subject: Re: [PATCH 05/10] block: null: use blk_is_valid_logical_block_size
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
-        "open list:SCSI CDROM DRIVER" <linux-scsi@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Ajay Joshi <Ajay.Joshi@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "open list:SONY MEMORYSTICK SUBSYSTEM" <linux-mmc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Satya Tangirala <satyat@google.com>,
-        "open list:NETWORK BLOCK DEVICE (NBD)" <nbd@other.debian.org>,
-        Hou Tao <houtao1@huawei.com>, Jens Axboe <axboe@fb.com>,
-        "open list:VIRTIO CORE AND NET DRIVERS" 
-        <virtualization@lists.linux-foundation.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Alex Dubov <oakad@yahoo.com>
-Date:   Tue, 21 Jul 2020 15:42:07 +0300
-In-Reply-To: <CY4PR04MB3751882A6BDF7C073D6ECF88E7780@CY4PR04MB3751.namprd04.prod.outlook.com>
-References: <20200721105239.8270-1-mlevitsk@redhat.com>
-         <20200721105239.8270-6-mlevitsk@redhat.com>
-         <CY4PR04MB3751882A6BDF7C073D6ECF88E7780@CY4PR04MB3751.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Tue, 21 Jul 2020 08:43:17 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4082C061794;
+        Tue, 21 Jul 2020 05:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=95YZXz3xxlBOTS58dhuQjh4OGBpdFgqsFCQfxS9mS3k=; b=Ig/x4pHHVBpLErcMn0lsrCPY9M
+        0BNQWBie4Cz8aoJX0pZEKqzc8nkJlu4m+dUhTgMalQJ9z+8TarVYFNW62Bb0SHNvGL2a0/5kqyGTV
+        sTCtKlD4n1L7yzYRjDWGwGujF7C5js5WlfPgiamtUQIw8K75AEKJWyV0aBi+kotG7nC1xvMsXlk/+
+        mJv5oF+8g2R+kpNzDk4/zd+Qjscef+YImXtGWEhQLIr9/5hnOjQB2ejJ+wE655ykvI9RsS2L1m5yw
+        E/Rt7duHDyIa3xKMou6IEtHda1xjbeUeT+Va7CicrbG/ghxqafAsFqi7yXoxFxxNNZ8JK3GWUSfAV
+        36ECX8pQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxrc0-00039d-CK; Tue, 21 Jul 2020 12:43:12 +0000
+Date:   Tue, 21 Jul 2020 13:43:12 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] mm/page_alloc: fix memalloc_nocma_{save/restore} APIs
+Message-ID: <20200721124312.GE15516@casper.infradead.org>
+References: <1595302129-23895-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <20200721120533.GD15516@casper.infradead.org>
+ <4c484ce0-cfed-0c50-7a20-d1474ce9afee@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4c484ce0-cfed-0c50-7a20-d1474ce9afee@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-21 at 11:15 +0000, Damien Le Moal wrote:
-> On 2020/07/21 19:54, Maxim Levitsky wrote:
-> > This slightly changes the behavier of the driver,
-> 
-> s/behavier/behavior
-Thanks. This is one of the typos I make very consistently.
-
-> 
-> > when given invalid block size (non power of two, or below 512 bytes),
-> > but shoudn't matter.
+On Tue, Jul 21, 2020 at 02:38:56PM +0200, Vlastimil Babka wrote:
+> On 7/21/20 2:05 PM, Matthew Wilcox wrote:
+> > On Tue, Jul 21, 2020 at 12:28:49PM +0900, js1304@gmail.com wrote:
+> >> @@ -4619,8 +4631,10 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+> >>  		wake_all_kswapds(order, gfp_mask, ac);
+> >>  
+> >>  	reserve_flags = __gfp_pfmemalloc_flags(gfp_mask);
+> >> -	if (reserve_flags)
+> >> +	if (reserve_flags) {
+> >>  		alloc_flags = reserve_flags;
+> >> +		alloc_flags = current_alloc_flags(gfp_mask, alloc_flags);
+> >> +	}
 > > 
-> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > ---
-> >  drivers/block/null_blk_main.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-> > index 87b31f9ca362e..e4df4b903b90b 100644
-> > --- a/drivers/block/null_blk_main.c
-> > +++ b/drivers/block/null_blk_main.c
-> > @@ -1684,8 +1684,8 @@ static int null_init_tag_set(struct nullb *nullb, struct blk_mq_tag_set *set)
-> >  
-> >  static int null_validate_conf(struct nullb_device *dev)
-> >  {
-> > -	dev->blocksize = round_down(dev->blocksize, 512);
-> > -	dev->blocksize = clamp_t(unsigned int, dev->blocksize, 512, 4096);
-> > +	if (!blk_is_valid_logical_block_size(dev->blocksize))
-> > +		return -ENODEV;
-> >  
-> >  	if (dev->queue_mode == NULL_Q_MQ && dev->use_per_node_hctx) {
-> >  		if (dev->submit_queues != nr_online_nodes)
-> > @@ -1865,7 +1865,7 @@ static int __init null_init(void)
-> >  	struct nullb *nullb;
-> >  	struct nullb_device *dev;
-> >  
-> > -	if (g_bs > PAGE_SIZE) {
-> > +	if (!blk_is_valid_logical_block_size(g_bs)) {
-> >  		pr_warn("invalid block size\n");
-> >  		pr_warn("defaults block size to %lu\n", PAGE_SIZE);
-> >  		g_bs = PAGE_SIZE;
+> > Is this right?  Shouldn't you be passing reserve_flags to
+> > current_alloc_flags() here?  Also, there's no need to add { } here.
 > 
-> Not sure if this change is OK. Shouldn't the if here be kept as is and
-> blk_is_valid_logical_block_size() called after it to check values lower than 4K ?
+> Note the "alloc_flags = reserve_flags;" line is not being deleted here. But if
+> it was, your points would be true, and yeah it would be a bit more tidy.
 
-The thing is that this driver supports two ways of creating the block devices.
-On module load it creates by default a single block device and it uses g_bs
-as its block size, but then it also has configfs based interface that allows
-to create more block devices.
+Oh ... I should wake up a little more.
 
-The default is taken also from g_bs but then user can change it (
-via those NULLB_DEVICE_ATTR wrappers)
-I changed the behavior slightly, that now if user supplies bad value,
-it will be rejected instead of finding closest valid value.
+Yeah, I'd recommend just doing this:
 
-In addition to that there is very small bug that didn't bother to fix in
-this series (but I will in next one). The bug is that when null_validate_conf
-fails, it return value is overriden with -ENOMEM, which gives the user a wrong
-error message.
-
-Thanks for the review!
-
-Best regards,
-	Maxim Levitsky
-
-> 
-> 
-
+-		alloc_flags = reserve_flags;
++		alloc_flags = current_alloc_flags(gfp_mask, reserve_flags);
 
