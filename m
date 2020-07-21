@@ -2,106 +2,140 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56330C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C36C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35D3A20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D488C206E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:15:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="C5UnhXc8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbgGUPOl (ORCPT
+        id S1729996AbgGUPPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:14:41 -0400
-Received: from verein.lst.de ([213.95.11.211]:52627 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728089AbgGUPOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:14:40 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9AD7268B05; Tue, 21 Jul 2020 17:14:37 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 17:14:37 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Maxim Levitsky <mlevitsk@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
-        "open list:SCSI CDROM DRIVER" <linux-scsi@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Ajay Joshi <ajay.joshi@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "open list:SONY MEMORYSTICK SUBSYSTEM" <linux-mmc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Satya Tangirala <satyat@google.com>,
-        "open list:NETWORK BLOCK DEVICE (NBD)" <nbd@other.debian.org>,
-        Hou Tao <houtao1@huawei.com>, Jens Axboe <axboe@fb.com>,
-        "open list:VIRTIO CORE AND NET DRIVERS" 
-        <virtualization@lists.linux-foundation.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Alex Dubov <oakad@yahoo.com>
-Subject: Re: [PATCH 02/10] block: virtio-blk: check logical block size
-Message-ID: <20200721151437.GB10620@lst.de>
-References: <20200721105239.8270-1-mlevitsk@redhat.com> <20200721105239.8270-3-mlevitsk@redhat.com>
+        Tue, 21 Jul 2020 11:15:15 -0400
+Received: from mail.efficios.com ([167.114.26.124]:45222 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728089AbgGUPPP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:15:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 90A402CC1FF;
+        Tue, 21 Jul 2020 11:15:13 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id i_ILqhqx3baP; Tue, 21 Jul 2020 11:15:13 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 234FA2CC1FE;
+        Tue, 21 Jul 2020 11:15:13 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 234FA2CC1FE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1595344513;
+        bh=LACFvmTqTi5J1fcQsZ51OGzHhe1dZPA2GtTC8a9i8dU=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=C5UnhXc8yTLZu4S4FDtBnaTG3AvJBSI7VMsTi+7tLMDDUEm0AN07tHs+kBS0avSfk
+         Zb6Oi6A6I2fwtEk9k9dkoeOesUQ+z0SVGZwvaGnAojmOFHH/B7Druewi4HsVIme3lj
+         3QpxDKGdjCLILXfxbuboznKEAcvuDjiplSq3FO03y4Cct+A7vNBD0QEUhOXBQZNNvZ
+         prF/HhMA+bUitQU+S/lNG+b+P8UvYpT/8ZN0cMCUEpMt1jzXBp63tWFCn1MAwV6HVE
+         j7hoq1brP1vaLgba4o2rpgB3dKogqWCDx3ejLA77EpM3TRQowNZbOazis6UMoYMY32
+         b8clEMapNaZDQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id WCqJak2w2fcK; Tue, 21 Jul 2020 11:15:13 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 123C62CC793;
+        Tue, 21 Jul 2020 11:15:13 -0400 (EDT)
+Date:   Tue, 21 Jul 2020 11:15:13 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>
+Message-ID: <616209816.22376.1595344513051.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200721150656.GN119549@hirez.programming.kicks-ass.net>
+References: <1594868476.6k5kvx8684.astroid@bobo.none> <20200716110038.GA119549@hirez.programming.kicks-ass.net> <1594906688.ikv6r4gznx.astroid@bobo.none> <1314561373.18530.1594993363050.JavaMail.zimbra@efficios.com> <1595213677.kxru89dqy2.astroid@bobo.none> <2055788870.20749.1595263590675.JavaMail.zimbra@efficios.com> <1595324577.x3bf55tpgu.astroid@bobo.none> <20200721150656.GN119549@hirez.programming.kicks-ass.net>
+Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
+ membarrier_mm_sync_core_before_usermode
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721105239.8270-3-mlevitsk@redhat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
+Thread-Topic: x86: use exit_lazy_tlb rather than membarrier_mm_sync_core_before_usermode
+Thread-Index: GYKX/33s7dI4jh+8dYDzcgY5i+BP6Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 01:52:31PM +0300, Maxim Levitsky wrote:
-> Linux kernel only supports logical block sizes which are power of two,
-> at least 512 bytes and no more that PAGE_SIZE.
-> 
-> Check this instead of crashing later on.
-> 
-> Note that there is no need to check physical block size since it is
-> only a hint, and virtio-blk already only supports power of two values.
-> 
-> Bugzilla link: https://bugzilla.redhat.com/show_bug.cgi?id=1664619
-> 
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> ---
->  drivers/block/virtio_blk.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> index 980df853ee497..b5ee87cba00ed 100644
-> --- a/drivers/block/virtio_blk.c
-> +++ b/drivers/block/virtio_blk.c
-> @@ -809,10 +809,18 @@ static int virtblk_probe(struct virtio_device *vdev)
->  	err = virtio_cread_feature(vdev, VIRTIO_BLK_F_BLK_SIZE,
->  				   struct virtio_blk_config, blk_size,
->  				   &blk_size);
-> -	if (!err)
-> +	if (!err) {
-> +		if (!blk_is_valid_logical_block_size(blk_size)) {
-> +			dev_err(&vdev->dev,
-> +				"%s failure: invalid logical block size %d\n",
-> +				__func__, blk_size);
-> +			err = -EINVAL;
-> +			goto out_cleanup_queue;
-> +		}
->  		blk_queue_logical_block_size(q, blk_size);
+----- On Jul 21, 2020, at 11:06 AM, Peter Zijlstra peterz@infradead.org wrote:
 
-Hmm, I wonder if we should simply add the check and warning to
-blk_queue_logical_block_size and add an error in that case.  Then
-drivers only have to check the error return, which might add a lot
-less boiler plate code.
+> On Tue, Jul 21, 2020 at 08:04:27PM +1000, Nicholas Piggin wrote:
+> 
+>> That being said, the x86 sync core gap that I imagined could be fixed
+>> by changing to rq->curr == rq->idle test does not actually exist because
+>> the global membarrier does not have a sync core option. So fixing the
+>> exit_lazy_tlb points that this series does *should* fix that. So
+>> PF_KTHREAD may be less problematic than I thought from implementation
+>> point of view, only semantics.
+> 
+> So I've been trying to figure out where that PF_KTHREAD comes from,
+> commit 227a4aadc75b ("sched/membarrier: Fix p->mm->membarrier_state racy
+> load") changed 'p->mm' to '!(p->flags & PF_KTHREAD)'.
+> 
+> So the first version:
+> 
+>  https://lkml.kernel.org/r/20190906031300.1647-5-mathieu.desnoyers@efficios.com
+> 
+> appears to unconditionally send the IPI and checks p->mm in the IPI
+> context, but then v2:
+> 
+>  https://lkml.kernel.org/r/20190908134909.12389-1-mathieu.desnoyers@efficios.com
+> 
+> has the current code. But I've been unable to find the reason the
+> 'p->mm' test changed into '!(p->flags & PF_KTHREAD)'.
+
+Looking back at my inbox, it seems like you are the one who proposed to
+skip all kthreads: 
+
+https://lkml.kernel.org/r/20190904124333.GQ2332@hirez.programming.kicks-ass.net
+
+> 
+> The comment doesn't really help either; sure we have the whole lazy mm
+> thing, but that's ->active_mm, not ->mm.
+> 
+> Possibly it is because {,un}use_mm() do not have sufficient barriers to
+> make the remote p->mm test work? Or were we over-eager with the !p->mm
+> doesn't imply kthread 'cleanups' at the time?
+
+The nice thing about adding back kthreads to the threads considered for membarrier
+IPI is that it has no observable effect on the user-space ABI. No pre-existing kthread
+rely on this, and we just provide an additional guarantee for future kthread
+implementations.
+
+> Also, I just realized, I still have a fix for use_mm() now
+> kthread_use_mm() that seems to have been lost.
+
+I suspect we need to at least document the memory barriers in kthread_use_mm and
+kthread_unuse_mm to state that they are required by membarrier if we want to
+ipi kthreads as well.
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
