@@ -2,143 +2,161 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82071C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9C5520709
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550E520709
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:15:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="tWan2osb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="htEFh6G4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731438AbgGUXOs (ORCPT
+        id S1731445AbgGUXPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 19:14:48 -0400
-Received: from mx1.riseup.net ([198.252.153.129]:45742 "EHLO mx1.riseup.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgGUXOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 19:14:48 -0400
-Received: from bell.riseup.net (bell-pn.riseup.net [10.0.1.178])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "*.riseup.net", Issuer "Sectigo RSA Domain Validation Secure Server CA" (not verified))
-        by mx1.riseup.net (Postfix) with ESMTPS id 4BBDvW5l4BzDsyq;
-        Tue, 21 Jul 2020 16:14:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-        t=1595373287; bh=xTMTPC9hzFXTn074+lx+RG5xa8F+eokxN3Wm7v/sl5w=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=tWan2osbkTAhw60D6EEvW6y1Sia0ZrAnYPzzghqfAXoRNpVy9Cios+mIuALUru9lT
-         YSibRGi5JuuTzKlyGI0e/JZGpjoCYPBmxY3Mhs1cIWqMLAKlcSuldVRoJkHXv+3qKD
-         4kZ5LY1Dt0oaUt/6s58z/9bhgGVOfZM/iSV5G3AY=
-X-Riseup-User-ID: 5D3B783D35A34F52B7A96CE5A467C9284C412353663B0286B37FB04230C3A720
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-         by bell.riseup.net (Postfix) with ESMTPSA id 4BBDvV6VbhzJqp6;
-        Tue, 21 Jul 2020 16:14:46 -0700 (PDT)
-From:   Francisco Jerez <currojerez@riseup.net>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Doug Smythies <dsmythies@telus.net>
-Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-In-Reply-To: <babeff29a60d3fadb5515eaf57f7bb42a1c9c792.camel@linux.intel.com>
-References: <3955470.QvD6XneCf3@kreacher> <87r1tdiqpu.fsf@riseup.net> <CAJZ5v0jaRm-wv+ZKhOyGJrrKZAsTKc3sq2GYyv0uerTTe3gXbQ@mail.gmail.com> <87imeoihqs.fsf@riseup.net> <CAJZ5v0hhLWvbNA6w0yHtzKa5ANR9yF++u63dh8wWAgkhbtLXXA@mail.gmail.com> <875zanhty6.fsf@riseup.net> <CAJZ5v0g2U+1wD5rUQwJ4_x9sQyvGyGiBiLFs7MA-xdhRBX9zBQ@mail.gmail.com> <87mu3thiz5.fsf@riseup.net> <babeff29a60d3fadb5515eaf57f7bb42a1c9c792.camel@linux.intel.com>
-Date:   Tue, 21 Jul 2020 16:14:42 -0700
-Message-ID: <87h7u0h34t.fsf@riseup.net>
+        Tue, 21 Jul 2020 19:15:34 -0400
+Received: from gateway34.websitewelcome.com ([192.185.149.62]:48311 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726148AbgGUXPd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 19:15:33 -0400
+X-Greylist: delayed 1224 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jul 2020 19:15:33 EDT
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id A022CB5148
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 17:55:05 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id y1A9j1FvWSxZVy1A9jgQ6I; Tue, 21 Jul 2020 17:55:05 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=9OW2VPItvGpDfr11jOD22AlUKrpb6JmLu8uCRL23HBg=; b=htEFh6G4vMmWAkFjZxmOhH3KaB
+        DyauyiflA7N439lzHs4NnssVmjBq2W5KXJuqQxGwjHHGXsZ8KkDQ+W65ABtPbjuIR1mf/0OXq66/M
+        MPnIl61M3A81D7Qs5IZ7hslTt/sIrbn2K5EfEdoE+E78lxm7PtiDhPb928ajeZfqzlnwpwHOFRakn
+        DRGtCnJ2rOnITKtuQbgWqi1qAc3ZLunFFsNAtNrSCgsEwXEHJAVQc5dkc7WoTbKl2wel05wUEWD2a
+        8tf03wsW18dG7ZAw6SwS4tpJiUh2eJ0K94DkM/Rsznye909RLgVbkkb3RokQcw9u+YvS5LwhB4HgK
+        zXIBS51w==;
+Received: from [201.162.241.127] (port=18901 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jy1A9-003G9f-FA; Tue, 21 Jul 2020 17:55:05 -0500
+Subject: Re: [PATCH][next] i2c: digicolor: Use fallthrough pseudo-keyword
+To:     Baruch Siach <baruch@tkos.co.il>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200716220055.GA19603@embeddedor>
+ <20200717043802.uvorspihdh6cvby3@tarshish>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ AP7RWS474w==
+Message-ID: <0a0361b0-dcde-70f8-8fba-6f464c64e081@embeddedor.com>
+Date:   Tue, 21 Jul 2020 18:00:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="==-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <20200717043802.uvorspihdh6cvby3@tarshish>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.241.127
+X-Source-L: No
+X-Exim-ID: 1jy1A9-003G9f-FA
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [201.162.241.127]:18901
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==-=-=
-Content-Type: multipart/mixed; boundary="=-=-="
+Hi Baruch,
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 7/16/20 23:38, Baruch Siach wrote:
+> Hi Gustavo,
+> 
+> On Thu, Jul 16, 2020 at 05:00:55PM -0500, Gustavo A. R. Silva wrote:
+>> Replace the existing /* fall through */ comments and its variants with
+>> the new pseudo-keyword macro fallthrough[1].
+>>
+>> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> 
+> This URL is likely to break at some point as documentation contest changes. 
+> Just refer to in kernel Documentation/process/deprecated.rst file.
+> 
 
-Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> writes:
+You're right. Helpdesk just generated the proper doc for v5.7:
 
-> On Mon, 2020-07-20 at 16:20 -0700, Francisco Jerez wrote:
->> "Rafael J. Wysocki" <rafael@kernel.org> writes:
->>=20
->> > On Fri, Jul 17, 2020 at 2:21 AM Francisco Jerez <
->> > currojerez@riseup.net> wrote:
->> > > "Rafael J. Wysocki" <rafael@kernel.org> writes:
->> > >=20
-> {...]
->
->> > Overall, so far, I'm seeing a claim that the CPU subsystem can be
->> > made
->> > use less energy and do as much work as before (which is what
->> > improving
->> > the energy-efficiency means in general) if the maximum frequency of
->> > CPUs is limited in a clever way.
->> >=20
->> > I'm failing to see what that clever way is, though.
->> Hopefully the clarifications above help some.
->
-> To simplify:
->
-> Suppose I called a function numpy.multiply() to multiply two big arrays
-> and thread is a pegged to a CPU. Let's say it is causing CPU to
-> finish the job in 10ms and it is using a P-State of 0x20. But the same
-> job could have been done in 10ms even if it was using P-state of 0x16.
-> So we are not energy efficient. To really know where is the bottle neck
-> there are numbers of perf counters, may be cache was the issue, we
-> could rather raise the uncore frequency a little. A simple APRF,MPERF
-> counters are not enough.=20
+https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Yes, that's right, APERF and MPERF aren't sufficient to identify every
-kind of possible bottleneck, some visibility of the utilization of other
-subsystems is necessary in addition -- Like e.g the instrumentation
-introduced in my series to detect a GPU bottleneck.  A bottleneck
-condition in an IO device can be communicated to CPUFREQ by adjusting a
-PM QoS latency request (link [2] in my previous reply) that effectively
-gives the governor permission to rearrange CPU work arbitrarily within
-the specified time frame (which should be of the order of the natural
-latency of the IO device -- e.g. at least the rendering time of a frame
-for a GPU) in order to minimize energy usage.
+> Other than that:
+> 
+> Acked-by: Baruch Siach <baruch@tkos.co.il>
+> 
 
-> or we characterize the workload at different P-states and set limits.
-> I think this is not you want to say for energy efficiency with your
-> changes.=20
->
-> The way you are trying to improve "performance" is by caller (device
-> driver) to say how important my job at hand. Here device driver suppose
-> offload this calculations to some GPU and can wait up to 10 ms, you
-> want to tell CPU to be slow. But the p-state driver at a movement
-> observes that there is a chance of overshoot of latency, it will
-> immediately ask for higher P-state. So you want P-state limits based on
-> the latency requirements of the caller. Since caller has more knowledge
-> of latency requirement, this allows other devices sharing the power
-> budget to get more or less power, and improve overall energy efficiency
-> as the combined performance of system is improved.
-> Is this correct?
+I'll send v2 with the URL above and your Acked-by, shortly.
 
-Yes, pretty much.
-
---=-=-=--
-
---==-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEAREIAB0WIQST8OekYz69PM20/4aDmTidfVK/WwUCXxd24gAKCRCDmTidfVK/
-W4GXAPwIcPQpg2P5WEtcbZXe6xj58DHrm74yDbNuqQ97/+QnOQD9EinC1l0jSaqa
-oDWAREm4nOKPJuHFuljv0ghORZ+GI6I=
-=aUj6
------END PGP SIGNATURE-----
---==-=-=--
+Thanks
+--
+Gustavo
