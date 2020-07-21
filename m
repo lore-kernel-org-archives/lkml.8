@@ -2,156 +2,146 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B755DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C899C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 893F520717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A84F20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="TbeYjfKf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="or+3pvwT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgGUNMA (ORCPT
+        id S1728535AbgGUNMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:12:00 -0400
-Received: from mail.efficios.com ([167.114.26.124]:53232 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbgGUNMA (ORCPT
+        Tue, 21 Jul 2020 09:12:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726993AbgGUNMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:12:00 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 38C8F2CB608;
-        Tue, 21 Jul 2020 09:11:59 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id PPeQyMfgGubd; Tue, 21 Jul 2020 09:11:58 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id C150F2CB9E3;
-        Tue, 21 Jul 2020 09:11:58 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C150F2CB9E3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1595337118;
-        bh=0FzZwzLd/Z/vpUIiWCr7Q1hJk/9TD3I9q2HN7VpjQsk=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=TbeYjfKfvZxAGqtB11GVb5XqOHAKg2eKsbOGMlSNpgsYi78GStsexknzpopA5gYjd
-         iHW5pJeBlD9K41JNcKHEhCXFtl6TXTOiuks37rMUgNNyxEtV1JiwhdJOZpmN5BwmOJ
-         C1qw7Nz+Z+aXC6F72ruRruWZUTMFaWY8gOg+CohD5g+7k6LkOV5AfuY4EuJgQphMvA
-         qyBDRD77CQ3RGF4P9bdqDFNR240kwOmkxFpNqfXOqyByvwnVDzBnBzJ4/JbyMVAlvx
-         tv+xyVSuXGIKtSIrbcsom5VY1p1AP5DiuSLr1KmKilBpD6G2v84tT/dYzF0TE8mX4p
-         XzC6ra9yQ52zQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id ivaCxDrJH8Q5; Tue, 21 Jul 2020 09:11:58 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id A6DDB2CB7D9;
-        Tue, 21 Jul 2020 09:11:58 -0400 (EDT)
-Date:   Tue, 21 Jul 2020 09:11:58 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
-Message-ID: <470490605.22057.1595337118562.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1595324577.x3bf55tpgu.astroid@bobo.none>
-References: <1594868476.6k5kvx8684.astroid@bobo.none> <1594892300.mxnq3b9a77.astroid@bobo.none> <20200716110038.GA119549@hirez.programming.kicks-ass.net> <1594906688.ikv6r4gznx.astroid@bobo.none> <1314561373.18530.1594993363050.JavaMail.zimbra@efficios.com> <1595213677.kxru89dqy2.astroid@bobo.none> <2055788870.20749.1595263590675.JavaMail.zimbra@efficios.com> <1595324577.x3bf55tpgu.astroid@bobo.none>
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
- membarrier_mm_sync_core_before_usermode
+        Tue, 21 Jul 2020 09:12:32 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B842C061794;
+        Tue, 21 Jul 2020 06:12:32 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id a1so15223961edt.10;
+        Tue, 21 Jul 2020 06:12:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nBossCmsWHPL8MggqjHAug4Bmu5ZUdQEBmNCEtFn8zM=;
+        b=or+3pvwTt1vOhuGz040GR32tZvLpKotZUd3iYPsgZS1wFzpE/enxKyLGRSXdqTApok
+         cvlOa9UFJjNGbP3FQHLDSsF2+iF8ugwDE8GS4sE9MI0rsicHyWklDjs4ik5ZXs21L7mL
+         Tjy+h1UFO8qF7sOS9DjA6W8wKpBIs5aEHkNwoLApZq04MQh77GZxQ1PaN1YjL6QzEIxw
+         bOxzCPTt+QGFK+nYhRJ/a8HN0xcS6eTqmDPNOyTDannpf9MuUsk/VH2ybEjTzVrXu+Tm
+         pWEqTetNc7k75CY08ockS2TlQ3RLS371uFCPvNgEcSCrm5VgpPZvM1T8hrSseHtfGFPJ
+         NzvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nBossCmsWHPL8MggqjHAug4Bmu5ZUdQEBmNCEtFn8zM=;
+        b=CKcn+hn9ESqN5rD+YP7Edbti4vvz8mGHb2HrczU/6MkuYhzaIi5PXOcZKfhb1y3184
+         VCMYEE64SDRnv5FcbwIXGZ1SMYp9gx+kTQjin13vA6z4mhIvRgB9b98fm+ZI/emcHQI6
+         BltgTkX0CNiBlioNqJw/0Pz5qs+X4tAPkC+tlXZ8lKbI56yWQxIqvkeDe2daJH0rZi/c
+         /rdYjzO05Nr0nKLivOE8kowcKuX14ZQCcAMKmAYJNch1MNzz81DCtGNmANP9mT3jVezd
+         LirgfJgL5JTd92no86ngSsIW4gxKBS/piB64P+SoYTaUwEHPtQPcPCEEGkTm4pL9UITz
+         UVRg==
+X-Gm-Message-State: AOAM532qFlaIQlX4ZpZ3927JpwrieeE7mIFBmqSmMch3X+glQf3JFvxk
+        M0F1lzI6oxkT4/QZk0ZQNQw=
+X-Google-Smtp-Source: ABdhPJyDkXpVtFsNCRmAEWk5XLwB2YGiXnrpKPXO/+POrQPjsQZh9RwMNFkINqkAeIXrnKXeHdk+Bg==
+X-Received: by 2002:a05:6402:b23:: with SMTP id bo3mr26500295edb.331.1595337150742;
+        Tue, 21 Jul 2020 06:12:30 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id d23sm16287991ejj.74.2020.07.21.06.12.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 06:12:29 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 15:12:28 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/215] 5.4.53-rc1 review
+Message-ID: <20200721131228.GC44604@ulmo>
+References: <20200720152820.122442056@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: x86: use exit_lazy_tlb rather than membarrier_mm_sync_core_before_usermode
-Thread-Index: vi7IW503i62QJHH8I6RRgM2HetIWrA==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Sr1nOIr3CvdE5hEN"
+Content-Disposition: inline
+In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 21, 2020, at 6:04 AM, Nicholas Piggin npiggin@gmail.com wrote:
 
-> Excerpts from Mathieu Desnoyers's message of July 21, 2020 2:46 am:
-[...]
-> 
-> Yeah you're probably right in this case I think. Quite likely most kernel
-> tasks that asynchronously write to user memory would at least have some
-> kind of producer-consumer barriers.
-> 
-> But is that restriction of all async modifications documented and enforced
-> anywhere?
-> 
->>> How about other memory accesses via kthread_use_mm? Presumably there is
->>> still ordering requirement there for membarrier,
->> 
->> Please provide an example case with memory accesses via kthread_use_mm where
->> ordering matters to support your concern.
-> 
-> I think the concern Andy raised with io_uring was less a specific
-> problem he saw and more a general concern that we have these memory
-> accesses which are not synchronized with membarrier.
-> 
->>> so I really think
->>> it's a fragile interface with no real way for the user to know how
->>> kernel threads may use its mm for any particular reason, so membarrier
->>> should synchronize all possible kernel users as well.
->> 
->> I strongly doubt so, but perhaps something should be clarified in the
->> documentation
->> if you have that feeling.
-> 
-> I'd rather go the other way and say if you have reasoning or numbers for
-> why PF_KTHREAD is an important optimisation above rq->curr == rq->idle
-> then we could think about keeping this subtlety with appropriate
-> documentation added, otherwise we can just kill it and remove all doubt.
-> 
-> That being said, the x86 sync core gap that I imagined could be fixed
-> by changing to rq->curr == rq->idle test does not actually exist because
-> the global membarrier does not have a sync core option. So fixing the
-> exit_lazy_tlb points that this series does *should* fix that. So
-> PF_KTHREAD may be less problematic than I thought from implementation
-> point of view, only semantics.
+--Sr1nOIr3CvdE5hEN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Today, the membarrier global expedited command explicitly skips kernel threads,
-but it happens that membarrier private expedited considers those with the
-same mm as target for the IPI.
+On Mon, Jul 20, 2020 at 05:34:42PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.53 release.
+> There are 215 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>=20
+> Responses should be made by Wed, 22 Jul 2020 15:27:31 +0000.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.53-=
+rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
+ linux-5.4.y
+> and the diffstat can be found below.
+>=20
+> thanks,
+>=20
+> greg k-h
 
-So we already implement a semantic which differs between private and global
-expedited membarriers. This can be explained in part by the fact that
-kthread_use_mm was introduced after 4.16, where the most recent membarrier
-commands where introduced. It seems that the effect on membarrier was not
-considered when kthread_use_mm was introduced.
+All tests passing for Tegra ...
 
-Looking at membarrier(2) documentation, it states that IPIs are only sent to
-threads belonging to the same process as the calling thread. If my understanding
-of the notion of process is correct, this should rule out sending the IPI to
-kernel threads, given they are not "part" of the same process, only borrowing
-the mm. But I agree that the distinction is moot, and should be clarified.
+Test results for stable-v5.4:
+    11 builds:  11 pass, 0 fail
+    26 boots:   26 pass, 0 fail
+    56 tests:   56 pass, 0 fail
 
-Without a clear use-case to justify adding a constraint on membarrier, I am
-tempted to simply clarify documentation of current membarrier commands,
-stating clearly that they are not guaranteed to affect kernel threads. Then,
-if we have a compelling use-case to implement a different behavior which covers
-kthreads, this could be added consistently across membarrier commands with a
-flag (or by adding new commands).
+Linux version:  5.4.53-rc1-g95f1079149bd
+Boards tested:  tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
 
-Does this approach make sense ?
+Cheers,
+Thierry
 
-Thanks,
+--Sr1nOIr3CvdE5hEN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Mathieu
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8W6bwACgkQ3SOs138+
+s6HPEhAArSagNcoTsjy+Qa6lyYFHrcbGEIlpHKO6hSLhXV6XywzCwfPgtWjg/Vgi
++3Pnd+rxfgjlx/OzU+UFN8QwNobVEO5TAajoNI+8nCqSTOyGFZkVXlaL6gdeMA8P
+SH/LSuSNmMsa6U28wEhyi5Eo5mmIkRg3+RP9B+CSZiAJn4CxBY5wlOtDd+qOzyMw
+8Fbph4GOGG+hrWl6L1bLJ1/RBLrybpXdOStHso+M7K0U2UYb80nz0BfBKAw0FebQ
+yrNE4lUhed50vWAtKdhnWQn6cvkPsOP71BgUOHd1EC1PzvHNFVX44+BqZ9aKCz4D
+Kj0UAiCI/OwhahMoLeCcv/b7rWboZG6ny2wWPzSnHvXGNKZ/jYfkfxHW04jrjXGH
+XMkmjzASbIqkQQyaXcRF7FQeSTCkgE1+mnsKvFj0IR6x/XQaX0f4EtCdwrlZAOWD
+B1ccmr/m3DgF1wXwy5nlPkZ0HYPlElBUzczRSTeBFum9Ib2FaOc4r3G1RCjJgDDj
+4HQdu7lszduPvilu62b36o9u24xmtIIa3vDvoOq74uso6UPQUNSSvcfnIzllxQTW
+p1Q907wEGflhNIrHKd1ux+UKLgAt7Q+w/ur6dX2L45EFWbOoZNqy/fJCLJx8VVVA
+keEZZ3gQHoXGhDmjUbvAr794d+l5IAuLSTD10Anth+OW4+5jEpU=
+=555I
+-----END PGP SIGNATURE-----
+
+--Sr1nOIr3CvdE5hEN--
