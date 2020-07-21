@@ -2,119 +2,157 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FB8C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0163C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 833AC20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:27:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tb36TVsv"
+	by mail.kernel.org (Postfix) with ESMTP id AB0A02070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgGUO15 (ORCPT
+        id S1728383AbgGUO3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728362AbgGUO1z (ORCPT
+        Tue, 21 Jul 2020 10:29:34 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54777 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgGUO3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:27:55 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F2DC061794;
-        Tue, 21 Jul 2020 07:27:55 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id n26so21889746ejx.0;
-        Tue, 21 Jul 2020 07:27:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FoM2lLvk+HU1JsguyDzCkDhJcQpe74th81bnFKHZ61k=;
-        b=Tb36TVsvZyPVCNfk8o0RlrlP+mnR/eMaGMgp6Ca1CqlBYlXZG8opeFsuRSmWNEGnGT
-         3a0tm2PbY756z7t31/5nk17pGk2BzWpoQBFQIyUej3lj4szEfe+nJh91oxub3Fy77Ztt
-         tf4BTSjY2cEUt7m4bl9/ZYp4SZnw4Fi3KOq/M6F92/ntlTkSAaLFhE1WGSUUQImHNrKr
-         tcRL5XsJwxlx/iEv9vt86Kc3XkyDdsQYaX8qd020OiJ4QhECITtA7w3G5t4t+V4XhVDz
-         ZBaw6bBvig4y+KfHz01SUMWZbGu+5lTOxxFaAfSXLQu4XEfbEWDywzSrEfb7texqDZ4G
-         aW2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FoM2lLvk+HU1JsguyDzCkDhJcQpe74th81bnFKHZ61k=;
-        b=MVy5/l/hzL0yRaRqtSPIc3Sd+GBWA8BkC0pHx9HOyErlf2SfLyFspiOnTuwwBdDHr4
-         RKuhuZOiez0jt6KxsziQbjZSJIJo/JpHBblKFLG/V3Eg1KR00iT0hPA8FYMvQqTo2D2g
-         a9ZpM2qqNTKsNL7M0sgxR9MIZvx7aICNDiNVUj6QffLza6L2H+1ZdcMzhgE8xmZHLB4W
-         HjApVHwXPgBw36nnuuLEoUHVlkDgR23FWOIhviRPPrFM2hTQLZ0Vs6o0CAQShZH4p2kC
-         32tev6v0zH07J4mSQCB4wKCIEcp1jr6YskT20IdcBiV8D3AWiXWNLOkBfqbistGiKiAg
-         KoDw==
-X-Gm-Message-State: AOAM5318k2N24ij6fFY+OqCe2veG5vsIKpt9tHC+/45a9ZzP/zxF6nTc
-        05rXr12x6PuDt/pAsUH4u68MXR7T/ex+pEf4c28=
-X-Google-Smtp-Source: ABdhPJzSo6Fh1hKllPx1Sf8jn5wjHy9PnUTmzYxaeqSTRJRgYWldpUIItzBxdpOIlcnV/OUxWXwrM0RFinDCHwJeuFY=
-X-Received: by 2002:a17:906:ca4c:: with SMTP id jx12mr24039568ejb.231.1595341674113;
- Tue, 21 Jul 2020 07:27:54 -0700 (PDT)
+        Tue, 21 Jul 2020 10:29:33 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jxtGm-0007RE-2j; Tue, 21 Jul 2020 14:29:24 +0000
+Date:   Tue, 21 Jul 2020 16:29:22 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     peterz@infradead.org
+Cc:     Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Jiri Slaby <jirislaby@kernel.org>, christian@brauner.io,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Dave Jones <davej@codemonkey.org.uk>
+Subject: Re: [PATCH] sched: Fix race against ptrace_freeze_trace()
+Message-ID: <20200721142922.qyd4o44rqvy7kbxu@wittgenstein>
+References: <badcb9d5-f628-2be1-7a72-902cf08010bd@kernel.org>
+ <20200720064326.GA6612@redhat.com>
+ <20200720082657.GC6612@redhat.com>
+ <20200720084106.GJ10769@hirez.programming.kicks-ass.net>
+ <20200720105924.GE43129@hirez.programming.kicks-ass.net>
+ <20200720140224.GD6612@redhat.com>
+ <20200720142105.GR10769@hirez.programming.kicks-ass.net>
+ <20200721045251.GA28481@windriver.com>
+ <20200721083753.GH119549@hirez.programming.kicks-ass.net>
+ <20200721121308.GH43129@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
- <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
- <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu> <CAF6AEGurrsd3nrbB=ktZjWfKTNbKwPHYwTFiZdD-NOW1T7gePQ@mail.gmail.com>
- <20200721032442.hv7l4q6633vnmnfe@vireshk-mac-ubuntu>
-In-Reply-To: <20200721032442.hv7l4q6633vnmnfe@vireshk-mac-ubuntu>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 21 Jul 2020 07:28:30 -0700
-Message-ID: <CAF6AEGuhQcRskGhrFvmCf5T3EcZ9S+3LRdZBiaDYqF34yZjd+A@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
-        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
-        Jonathan <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dave Airlie <airlied@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200721121308.GH43129@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 8:24 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 20-07-20, 08:03, Rob Clark wrote:
-> > On Mon, Jul 20, 2020 at 3:01 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > On 15-07-20, 08:36, Rob Clark wrote:
-> > > > I can take the first two into msm-next, the 3rd will need to wait
-> > > > until dev_pm_opp_set_bw() lands
-> > >
-> > > You can base that on a8351c12c6c7 in linux-next, I will make sure not to rebase
-> > > it anymore.
->
-> This was 5.8-rc1 + 2 patches for OPP. That's all.
->
-> > >
-> >
-> > I can't really base on something newer than drm-next
->
-> But you need the OPP dependency, isn't it ?
+On Tue, Jul 21, 2020 at 02:13:08PM +0200, peterz@infradead.org wrote:
+> 
+> There is apparently one site that violates the rule that only current
+> and ttwu() will modify task->state, namely ptrace_{,un}freeze_traced()
+> will change task->state for a remote task.
+> 
+> Oleg explains:
+> 
+>   "TASK_TRACED/TASK_STOPPED was always protected by siglock. In
+> particular, ttwu(__TASK_TRACED) must be always called with siglock
+> held. That is why ptrace_freeze_traced() assumes it can safely do
+> s/TASK_TRACED/__TASK_TRACED/ under spin_lock(siglock)."
+> 
+> This breaks the ordering scheme introduced by commit:
+> 
+>   dbfb089d360b ("sched: Fix loadavg accounting race")
+> 
+> Specifically, the reload not matching no longer implies we don't have
+> to block.
+> 
+> Simply things by noting that what we need is a LOAD->STORE ordering
+> and this can be provided by a control dependency.
+> 
+> So replace:
+> 
+> 	prev_state = prev->state;
+> 	raw_spin_lock(&rq->lock);
+> 	smp_mb__after_spinlock(); /* SMP-MB */
+> 	if (... && prev_state && prev_state == prev->state)
+> 		deactivate_task();
+> 
+> with:
+> 
+> 	prev_state = prev->state;
+> 	if (... && prev_state) /* CTRL-DEP */
+> 		deactivate_task();
+> 
+> Since that already implies the 'prev->state' load must be complete
+> before allowing the 'prev->on_rq = 0' store to become visible.
+> 
+> Fixes: dbfb089d360b ("sched: Fix loadavg accounting race")
+> Reported-by: Jiri Slaby <jirislaby@kernel.org>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Tested-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+> ---
 
-With your ack, I can add the patch the dev_pm_opp_set_bw patch to my
-tree and merge it via msm-next -> drm-next -> linus
+Thank you. I applied this on top of v5.8-rc6 and re-ran the strace-test
+suite successfully. So at least
 
-Otherwise I can send a second later pull req that adds the final patch
-after has rebased to 5.9-rc1 (by which point the opp next tree will
-have presumably been merged
+Tested-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-BR,
--R
-
->
-> --
-> viresh
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -4193,9 +4193,6 @@ static void __sched notrace __schedule(b
+>  	local_irq_disable();
+>  	rcu_note_context_switch(preempt);
+>  
+> -	/* See deactivate_task() below. */
+> -	prev_state = prev->state;
+> -
+>  	/*
+>  	 * Make sure that signal_pending_state()->signal_pending() below
+>  	 * can't be reordered with __set_current_state(TASK_INTERRUPTIBLE)
+> @@ -4219,11 +4216,16 @@ static void __sched notrace __schedule(b
+>  	update_rq_clock(rq);
+>  
+>  	switch_count = &prev->nivcsw;
+> +
+>  	/*
+> -	 * We must re-load prev->state in case ttwu_remote() changed it
+> -	 * before we acquired rq->lock.
+> +	 * We must load prev->state once (task_struct::state is volatile), such
+> +	 * that:
+> +	 *
+> +	 *  - we form a control dependency vs deactivate_task() below.
+> +	 *  - ptrace_{,un}freeze_traced() can change ->state underneath us.
+>  	 */
+> -	if (!preempt && prev_state && prev_state == prev->state) {
+> +	prev_state = prev->state;
+> +	if (!preempt && prev_state) {
+>  		if (signal_pending_state(prev_state, prev)) {
+>  			prev->state = TASK_RUNNING;
+>  		} else {
+> @@ -4237,10 +4239,12 @@ static void __sched notrace __schedule(b
+>  
+>  			/*
+>  			 * __schedule()			ttwu()
+> -			 *   prev_state = prev->state;	  if (READ_ONCE(p->on_rq) && ...)
+> -			 *   LOCK rq->lock		    goto out;
+> -			 *   smp_mb__after_spinlock();	  smp_acquire__after_ctrl_dep();
+> -			 *   p->on_rq = 0;		  p->state = TASK_WAKING;
+> +			 *   if (prev_state)		  if (p->on_rq && ...)
+> +			 *     p->on_rq = 0;		    goto out;
+> +			 *				  smp_acquire__after_ctrl_dep();
+> +			 *				  p->state = TASK_WAKING
+> +			 *
+> +			 * Where __schedule() and ttwu() have matching control dependencies.
+>  			 *
+>  			 * After this, schedule() must not care about p->state any more.
+>  			 */
