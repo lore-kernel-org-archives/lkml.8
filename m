@@ -2,122 +2,79 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765A8C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76765C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 512672073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:36:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="JyhmLykP"
+	by mail.kernel.org (Postfix) with ESMTP id 5B3D622CBB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbgGULg5 (ORCPT
+        id S1729710AbgGULhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:36:57 -0400
-Received: from ozlabs.org ([203.11.71.1]:38021 "EHLO ozlabs.org"
+        Tue, 21 Jul 2020 07:37:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39252 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727106AbgGULg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:36:56 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9xQH045Xz9sSJ;
-        Tue, 21 Jul 2020 21:36:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1595331415;
-        bh=8cWqEZ7b8BkO4Lc0Yw9kRlVs08QZ7978e9X0CuvOH3I=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=JyhmLykPfuVbCmNgLwFSzcomuXhpdEJTpqJ7z3tXJaJxIOnZheJmHY0gNc6ljONpf
-         cWMncIFEKRaAuy9NXF8JOniiQPI/xhDLFO+9Ax0KCPFBLjqRf8NwaexBpxte9A0cuO
-         OXhqY7VsIdhf1+ipTE9Vg2FayfKkcH/5ln1pjPAdm8TudEONBAezMcRR7wxrmuryG4
-         dYAfSi4ZD+YZXmzfcgEPhyhpOGJWHWSv5Kfr+CCW9VTypwW9rTiGimSVyokaM+/onJ
-         3mYDfMsC8liIOPX0svCn03YVxiDz4aP/76avkJ8BrxbNWSNbcSdXkbp+RS2HdljEsj
-         F1BmP47NUh3kA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Cc:     mikey@neuling.org, apopple@linux.ibm.com,
-        Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH v4 09/10] powerpc/watchpoint: Return available watchpoints dynamically
-In-Reply-To: <ccfcf488-0ec9-1737-8368-a848de1d72d1@linux.ibm.com>
-References: <20200717040958.70561-1-ravi.bangoria@linux.ibm.com> <20200717040958.70561-10-ravi.bangoria@linux.ibm.com> <CACzsE9r0acLUkV35mVxy1AEK_xObs0yz+fD6UdbNdc6uz=Buqw@mail.gmail.com> <ccfcf488-0ec9-1737-8368-a848de1d72d1@linux.ibm.com>
-Date:   Tue, 21 Jul 2020 21:36:54 +1000
-Message-ID: <87k0yxrtex.fsf@mpe.ellerman.id.au>
+        id S1726942AbgGULhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 07:37:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 6D424AD25;
+        Tue, 21 Jul 2020 11:37:19 +0000 (UTC)
+Message-ID: <d073fc344a4ec458aa3456b6838e2000f042f8e2.camel@suse.de>
+Subject: Re: [PATCH] dma-pool: Do not allocate pool memory from CMA
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@lst.de>,
+        Amit Pundir <amit.pundir@linaro.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Rientjes <rientjes@google.com>,
+        linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
+        iommu@lists.linux-foundation.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Tue, 21 Jul 2020 13:37:11 +0200
+In-Reply-To: <20200721112842.GB27356@lst.de>
+References: <20200708164936.9340-1-nsaenzjulienne@suse.de>
+         <CAMi1Hd35tRM=cnmzwX=SDgu-OoXi1Xj+twFkoULaVZBbTpe6sw@mail.gmail.com>
+         <550b30a86c0785049d24c945e2c6628d491cee3a.camel@suse.de>
+         <CAMi1Hd2V2pJjP=USS4r-Z3vK-aq7_aBy-jcVNk1GvbdEQAuzWg@mail.gmail.com>
+         <011994f8a717a00dcd9ed7682a1ddeb421c2c43f.camel@suse.de>
+         <20200721112842.GB27356@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ravi Bangoria <ravi.bangoria@linux.ibm.com> writes:
-> On 7/20/20 9:12 AM, Jordan Niethe wrote:
->> On Fri, Jul 17, 2020 at 2:11 PM Ravi Bangoria
->> <ravi.bangoria@linux.ibm.com> wrote:
->>>
->>> So far Book3S Powerpc supported only one watchpoint. Power10 is
->>> introducing 2nd DAWR. Enable 2nd DAWR support for Power10.
->>> Availability of 2nd DAWR will depend on CPU_FTR_DAWR1.
->>>
->>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
->>> ---
->>>   arch/powerpc/include/asm/cputable.h      | 4 +++-
->>>   arch/powerpc/include/asm/hw_breakpoint.h | 5 +++--
->>>   2 files changed, 6 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
->>> index 3445c86e1f6f..36a0851a7a9b 100644
->>> --- a/arch/powerpc/include/asm/cputable.h
->>> +++ b/arch/powerpc/include/asm/cputable.h
->>> @@ -633,7 +633,9 @@ enum {
->>>    * Maximum number of hw breakpoint supported on powerpc. Number of
->>>    * breakpoints supported by actual hw might be less than this.
->>>    */
->>> -#define HBP_NUM_MAX    1
->>> +#define HBP_NUM_MAX    2
->>> +#define HBP_NUM_ONE    1
->>> +#define HBP_NUM_TWO    2
+On Tue, 2020-07-21 at 13:28 +0200, Christoph Hellwig wrote:
+> On Tue, Jul 21, 2020 at 01:15:23PM +0200, Nicolas Saenz Julienne
+> wrote:
+> > I'm at loss at what could be failing here. Your device should be
+> > able
+> > to address the whole 8GB memory space, which AFAIK is the max
+> > available
+> > on that smartphone family. But maybe the device-tree is lying, who
+> > knows...
+> 
+> Maybe we should give your patch to allocate from CMA but check the
+> address a try?  (just because we can..)
 
->> I wonder if these defines are necessary - has it any advantage over
->> just using the literal?
->
-> No, not really. Initially I had something like:
->
-> #define HBP_NUM_MAX    2
-> #define HBP_NUM_P8_P9  1
-> #define HBP_NUM_P10    2
->
-> But then I thought it's also not right. So I made it _ONE and _TWO.
-> Now the function that decides nr watchpoints dynamically (nr_wp_slots)
-> is in different file, I thought to keep it like this so it would be
-> easier to figure out why _MAX is 2.
+Yes, good idea!
 
-I don't think it makes anything clearer.
+Amir, could you also test this patch[1] (having reverted the one that
+casues trouble) and report on whether it boots or not?
 
-I had to stare at it thinking there was some sort of mapping or
-indirection going on, before I realised it's just literally the number
-of breakpoints.
+Regards,
+Nicolas
 
-So please just do:
+[1] https://lore.kernel.org/linux-iomhttps://lore.kernel.org/linux-iom
+mu/fe14037b02fd887a73cd91c115dccc4485f8446e.camel@suse.de/T/#t
 
-static inline int nr_wp_slots(void)
-{
-       return cpu_has_feature(CPU_FTR_DAWR1) ? 2 : 1;
-}
 
-If you think HBP_NUM_MAX needs explanation then do that with a comment,
-it can refer to nr_wp_slots() if that's helpful.
-
-cheers
