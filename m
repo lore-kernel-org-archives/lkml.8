@@ -2,92 +2,197 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A72E1C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F033C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7539A2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 004912073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:44:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sFJ02tBV"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vHj4iN6V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731340AbgGUWno (ORCPT
+        id S1731359AbgGUWoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 18:43:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbgGUWnn (ORCPT
+        Tue, 21 Jul 2020 18:44:10 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39932 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728893AbgGUWoK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 18:43:43 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44D29C061794;
-        Tue, 21 Jul 2020 15:43:41 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id r19so373524ljn.12;
-        Tue, 21 Jul 2020 15:43:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cAaXK7lO7E0sfa22BeOcHfPDdNwJneexEMiK9grJAq8=;
-        b=sFJ02tBVNSJNZkVxndf5OQhTrGefYPmP7ZFh+Nu3oEnQ57Fwyi9fTKUqFcxmU5A653
-         BQRx8vo6ccvmrrkp4KxjLitUsOA15ZxW+1x44c5vMgbWHEysKzvwOU8sw7Y/Ku7k9em7
-         1xsWncwGaELKyTJTr0qWtW0M78mpAjI/micA6j0Ug2kE7Ce3zsfBKF2QlA4PRKZg1uaP
-         osFp83WieUX9nfLEHECSJ1YyYoLv29ZO6h722kqlfYtARySQ+Yht1LQ/qUCXhlK+3Rum
-         P7w6QA/Rjlu77QKu9Fwv/tSzcku6JLSBZuzqCDyK2HMnpOoDvO7HKXjkJUTbnBiXeMPF
-         F1ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cAaXK7lO7E0sfa22BeOcHfPDdNwJneexEMiK9grJAq8=;
-        b=j/E7hzg9+XniQcVbuMdJLdISTWE0b3t+siCA7x9wG+ZYZ/Pa3szc+0z7oe4S6VgtRZ
-         uEjlrB69ZX5FQwP6ZlzQuR4jDcgeZvvlob3v9Gq5DJkETrOBrekZC9Zu6wh3PLNrH8PJ
-         B6jdlcp88DNSgDfId48PXpOk3CPSJXwXxIakEqI0CdkQQ4+jh/yX8mfWWG/I+BsmW4w8
-         ZCP8YsAo9ohRK9JS6buPWh4NqIq5RMs8jh43SCrs/OeJf28c6lOGlGABiR7KxAEOeE2M
-         B+2IOJfcJr4QFSPEow7JkpOTKAl9u2dV1xvQsYa4Yd7GhkOZfQrFKCp7yA4bQKf8YhY0
-         t40g==
-X-Gm-Message-State: AOAM533DX0juposV9Yh5EqqDRK+BX/EXW0kl20XyZ2j+SSpXefnQfWBf
-        5bdrixllDC0bWadqbg/oBvGJvKW4rU5334sZf2A=
-X-Google-Smtp-Source: ABdhPJwRDs0M7KhVLZnQ3eAXxJz5h35URF9O7UX58QiSiwYfFUJtCH7whpdc5rHDo8AlypqL5m4qVWzNzjf7VePhsFg=
-X-Received: by 2002:a2e:8357:: with SMTP id l23mr12856199ljh.290.1595371419717;
- Tue, 21 Jul 2020 15:43:39 -0700 (PDT)
+        Tue, 21 Jul 2020 18:44:10 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LMi57v102668;
+        Tue, 21 Jul 2020 17:44:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595371445;
+        bh=o5pfuOZQ3v8bqEF5rP8SfpEUPbWc47QiCm/8pv3TAyE=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=vHj4iN6ViSlXKMm/c8wbLFymdX0NvGMIN5Jr3YL1BjqHK7w7jjnAD9DsAges+dtUi
+         IzkyB2YDAnQzCjzxjH5hIBa5ETJK6K+58RApTwxs0f2+BFkxt32VyPcoMhGgSuL8rr
+         S6X4xBE0vYoc0iYQeCBGvSYvubw7OnNwXvfGsXjw=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06LMi5g5067639
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 Jul 2020 17:44:05 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
+ Jul 2020 17:44:04 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 21 Jul 2020 17:44:05 -0500
+Received: from [10.250.34.248] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LMi45V028193;
+        Tue, 21 Jul 2020 17:44:04 -0500
+Subject: Re: [PATCH v4 3/6] dt-bindings: remoteproc: Add common TI SCI rproc
+ bindings
+From:   Suman Anna <s-anna@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200717234800.9423-1-s-anna@ti.com>
+ <20200717234800.9423-4-s-anna@ti.com>
+ <CAL_JsqLnPQNZ7KhqfPwiMCJESYrD9_UN2gwc_hj9=WOJM8NQQw@mail.gmail.com>
+ <647642d5-5021-363f-c9c9-3714a826436c@ti.com>
+Message-ID: <deead680-9699-9de5-84af-059c31a4bbd4@ti.com>
+Date:   Tue, 21 Jul 2020 17:44:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200716225933.196342-1-songliubraving@fb.com>
- <20200716225933.196342-2-songliubraving@fb.com> <20200721191009.5khr7blivtuv3qfj@ast-mbp.dhcp.thefacebook.com>
- <42DEE452-F411-4098-917B-11B23AC99F5F@fb.com>
-In-Reply-To: <42DEE452-F411-4098-917B-11B23AC99F5F@fb.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 21 Jul 2020 15:43:27 -0700
-Message-ID: <CAADnVQJPmo3He3cdUUbMm4DtTDNBeWRMRkNzPw8S3GdxxODemA@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 1/2] bpf: separate bpf_get_[stack|stackid] for
- perf events BPF
-To:     Song Liu <songliubraving@fb.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>,
-        "brouer@redhat.com" <brouer@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <647642d5-5021-363f-c9c9-3714a826436c@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 3:40 PM Song Liu <songliubraving@fb.com> wrote:
->
-> We only need to block precise_ip >= 2. precise_ip == 1 is OK.
+Hi Rob,
 
-Are you sure?
-intel_pmu_hw_config() has:
-if (event->attr.precise_ip) {
-    if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
-            event->attr.sample_type |= __PERF_SAMPLE_CALLCHAIN_EARLY;
-}
+On 7/21/20 11:40 AM, Suman Anna wrote:
+> Hi Rob,
+> 
+> On 7/21/20 10:53 AM, Rob Herring wrote:
+>> On Fri, Jul 17, 2020 at 5:48 PM Suman Anna <s-anna@ti.com> wrote:
+>>>
+>>> Add a bindings document that lists the common TI SCI properties
+>>> used by the K3 R5F and DSP remoteproc devices.
+>>>
+>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>> ---
+>>> v4: Addressed both of Rob's review comments on ti,sci-proc-ids property
+>>> v3: https://patchwork.kernel.org/patch/11602317/
+>>>
+>>>   .../bindings/remoteproc/ti,k3-sci-proc.yaml   | 48 +++++++++++++++++++
+>>>   1 file changed, 48 insertions(+)
+>>>   create mode 100644 
+>>> Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+>>>
+>>> diff --git 
+>>> a/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml 
+>>> b/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+>>> new file mode 100644
+>>> index 000000000000..0dca2ffdbc48
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+>>> @@ -0,0 +1,48 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-sci-proc.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Common TI K3 remote processor device bindings
+>>> +
+>>> +maintainers:
+>>> +  - Suman Anna <s-anna@ti.com>
+>>> +
+>>> +description: |
+>>> +  The TI K3 family of SoCs usually have one or more remote processor 
+>>> sub-systems
+>>> +  like the dual-core R5F sub-system or a C66x or C71x DSP processor 
+>>> subsystem.
+>>> +  The device management of these remote processors is managed by a 
+>>> dedicated
+>>> +  System Processor, and the communication with that processor is 
+>>> managed through
+>>> +  the TI-SCI protocol.
+>>> +
+>>> +  Each remote processor device node should define a common set of 
+>>> properties
+>>> +  that allows the System Processor firmware to perform the device 
+>>> management
+>>> +  such as powering the IPs, asserting/deasserting the resets for 
+>>> each of these
+>>> +  processors.
+>>> +
+>>> +properties:
+>>> +  ti,sci:
+>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>> +    description:
+>>> +      Should be a phandle to the TI-SCI System Controller node
+>>> +
+>>> +  ti,sci-dev-id:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description: |
+>>> +      Should contain the TI-SCI device id corresponding to the 
+>>> remote processor
+>>> +      core. Please refer to the corresponding System Controller 
+>>> documentation
+>>> +      for valid values.
+>>
+>> These also apply on Lokesh's series converting ti,sci-int[ra]
+>> bindings. Please rework to use for both.
+> 
+> OK.
+
+OK, I have reworked for this and posted it [1] as part of v5 of this series.
+
+regards
+Suman
+
+[1] https://patchwork.kernel.org/patch/11676821/
+
+> 
+>>
+>>> +
+>>> +  ti,sci-proc-ids:
+>>> +    description: Should contain a single tuple of <proc_id host_id>.
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>>> +    items:
+>>> +      - description: TI-SCI processor id for the remote processor 
+>>> device
+>>> +      - description: TI-SCI host id to which processor control 
+>>> ownership
+>>> +                     should be transferred to
+> 
+> This property is not required for the ti,sci-int[ra].
+> 
+> I can plan to move this to a common location like 
+> Documentation/devicetree/bindings/arm/keystone/ and let the individual 
+> bindings define the required properties. Does that sound ok to you?
+> 
+> regards
+> Suman
+> 
+>>> +
+>>> +required:
+>>> +  - ti,sci
+>>> +  - ti,sci-dev-id
+>>> +  - ti,sci-proc-ids
+>>> -- 
+>>> 2.26.0
+>>>
+> 
+
