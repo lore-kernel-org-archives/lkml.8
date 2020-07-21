@@ -2,108 +2,67 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D676C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0814D20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:35:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="emDhVk99"
+	by mail.kernel.org (Postfix) with ESMTP id 40EA720792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:35:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgGUFfU (ORCPT
+        id S1728068AbgGUFfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 01:35:20 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41822 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725774AbgGUFfR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 01:35:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595309716;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TZjxOuuUV4o3h7MOrSFtriNZrlOkqkWFhvhjNDp5Ej0=;
-        b=emDhVk99XuFuBdHpfbhJNXwFGgQUb+JtDg+IBLK/a6xEiZ4s4JodzPrHUKccgwYCTwX/9Z
-        wTTEaLLpt04HE5EeU66bGyUccR4N0MLXC+herWp4cRGm30JJeDW+KdC507I7PGY4uxdluI
-        6za8RHUB/MtWbz3EysOMysCXfEdPop0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-93-GDSThcsLNlyMS6kolGBV8w-1; Tue, 21 Jul 2020 01:35:12 -0400
-X-MC-Unique: GDSThcsLNlyMS6kolGBV8w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 731B858;
-        Tue, 21 Jul 2020 05:35:11 +0000 (UTC)
-Received: from [10.72.12.202] (ovpn-12-202.pek2.redhat.com [10.72.12.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3981260BF1;
-        Tue, 21 Jul 2020 05:35:04 +0000 (UTC)
-Subject: Re: [PATCH V2 vhost next 05/10] vhost: Fix documentation
-To:     Eli Cohen <eli@mellanox.com>, mst@redhat.com,
-        virtualization@lists.linux-foundation.org,
+        Tue, 21 Jul 2020 01:35:46 -0400
+Received: from verein.lst.de ([213.95.11.211]:50620 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbgGUFfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 01:35:46 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 78C446736F; Tue, 21 Jul 2020 07:35:42 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 07:35:42 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Christoph Hellwig <hch@lst.de>, Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com
-References: <20200720071416.32112-1-eli@mellanox.com>
- <20200720071416.32112-6-eli@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <7c323cac-fa03-bc46-1c41-ee7d37f350cf@redhat.com>
-Date:   Tue, 21 Jul 2020 13:35:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Subject: Re: [PATCH 1/6] syscalls: use uaccess_kernel in
+ addr_limit_user_check
+Message-ID: <20200721053542.GA10301@lst.de>
+References: <20200714105505.935079-1-hch@lst.de> <20200714105505.935079-2-hch@lst.de> <20200718013849.GA157764@roeck-us.net> <20200718094846.GA8593@lst.de> <20200720221046.GA86726@roeck-us.net> <20200721045834.GA9613@lst.de> <eb470677-b569-a6f0-e63b-60149b54863a@roeck-us.net> <20200721052022.GA10011@lst.de> <7fc565fe-411e-6a0b-8aaf-0bf808f0d6a9@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <20200720071416.32112-6-eli@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <7fc565fe-411e-6a0b-8aaf-0bf808f0d6a9@roeck-us.net>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 20, 2020 at 10:30:30PM -0700, Guenter Roeck wrote:
+> Guess I lost it somewhere. Are you saying the check was wrong all along
+> and your patch fixed it ?
 
-On 2020/7/20 下午3:14, Eli Cohen wrote:
-> Fix documentation to match actual function prototypes.
->
-> Reviewed-by: Parav Pandit <parav@mellanox.com>
-> Signed-off-by: Eli Cohen <eli@mellanox.com>
+Oh, it is a little complicated.
 
+Normally we have two address space limits, KERNEL_DS and USER_DS,
+and they are supposed to be different.  armnommu and m68k define them
+to the same value for no good reason.  That leads to:
 
-Acked-by: Jason Wang <jasowang@redhat.com>
+uaccess_kernel always returning true as it does a positive check
+agains KERNEL_DS, which disables a bunch of drivers like sg and
+rdma, and could also lead to really strange and probably broken
+results in a few places.
 
-
-> ---
->   drivers/vhost/iotlb.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/vhost/iotlb.c b/drivers/vhost/iotlb.c
-> index 1f0ca6e44410..0d4213a54a88 100644
-> --- a/drivers/vhost/iotlb.c
-> +++ b/drivers/vhost/iotlb.c
-> @@ -149,7 +149,7 @@ EXPORT_SYMBOL_GPL(vhost_iotlb_free);
->    * vhost_iotlb_itree_first - return the first overlapped range
->    * @iotlb: the IOTLB
->    * @start: start of IOVA range
-> - * @end: end of IOVA range
-> + * @last: last byte in IOVA range
->    */
->   struct vhost_iotlb_map *
->   vhost_iotlb_itree_first(struct vhost_iotlb *iotlb, u64 start, u64 last)
-> @@ -162,7 +162,7 @@ EXPORT_SYMBOL_GPL(vhost_iotlb_itree_first);
->    * vhost_iotlb_itree_first - return the next overlapped range
->    * @iotlb: the IOTLB
->    * @start: start of IOVA range
-> - * @end: end of IOVA range
-> + * @last: last byte IOVA range
->    */
->   struct vhost_iotlb_map *
->   vhost_iotlb_itree_next(struct vhost_iotlb_map *map, u64 start, u64 last)
-
+It also leads to the SIGKILL in addr_limit_user_check never
+triggering due to the negatіve check, which is ok as the limits
+never are different.
