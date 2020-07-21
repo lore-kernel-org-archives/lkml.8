@@ -2,74 +2,95 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAA9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E95C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB79720684
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0027D206E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729706AbgGUUQC (ORCPT
+        id S1730416AbgGUUSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 16:16:02 -0400
-Received: from mail.ispras.ru ([83.149.199.84]:54136 "EHLO mail.ispras.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbgGUUQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 16:16:01 -0400
-Received: from hellwig.intra.ispras.ru (unknown [10.10.2.182])
-        by mail.ispras.ru (Postfix) with ESMTPS id 39A094089EF1;
-        Tue, 21 Jul 2020 20:15:59 +0000 (UTC)
-From:   Evgeny Novikov <novikov@ispras.ru>
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     Evgeny Novikov <novikov@ispras.ru>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ldv-project@linuxtesting.org
-Subject: [PATCH] usb: gadget: net2280: fix memory leak on probe error handling paths
-Date:   Tue, 21 Jul 2020 23:15:58 +0300
-Message-Id: <20200721201558.20069-1-novikov@ispras.ru>
-X-Mailer: git-send-email 2.16.4
+        Tue, 21 Jul 2020 16:18:11 -0400
+Received: from www62.your-server.de ([213.133.104.62]:35228 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgGUUSL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 16:18:11 -0400
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jxyi7-0001a2-3k; Tue, 21 Jul 2020 22:17:59 +0200
+Received: from [178.196.57.75] (helo=pc-9.home)
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jxyi6-000HIz-T8; Tue, 21 Jul 2020 22:17:58 +0200
+Subject: Re: [PATCH bpf-next] bpf: Generate cookie for new non-initial net NS
+To:     Jianlin Lv <Jianlin.Lv@arm.com>, bpf@vger.kernel.org
+Cc:     davem@davemloft.net, kuba@kernel.org, ast@kernel.org, yhs@fb.com,
+        Song.Zhu@arm.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20200720140919.22342-1-Jianlin.Lv@arm.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <840a9007-3dcb-457f-8746-7f8e6fa209c5@iogearbox.net>
+Date:   Tue, 21 Jul 2020 22:17:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20200720140919.22342-1-Jianlin.Lv@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.3/25880/Tue Jul 21 16:34:58 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver does not release memory for device on error handling paths in
-net2280_probe() when gadget_release() is not registered yet.
+On 7/20/20 4:09 PM, Jianlin Lv wrote:
+> For non-initial network NS, the net cookie is generated when
+> bpf_get_netns_cookie_sock is called for the first time, but it is more
+> reasonable to complete the cookie generation work when creating a new
+> network NS, just like init_net.
+> net_gen_cookie() be moved into setup_net() that it can serve the initial
+> and non-initial network namespace.
+> 
+> Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
 
-The patch fixes the bug like in other similar drivers.
+What use-case are you trying to solve? Why should it be different than, say,
+socket cookie generation? I'm currently not seeing much of a point in moving
+this. When it's not used in the system, it would actually create more work.
 
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
----
- drivers/usb/gadget/udc/net2280.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
-index 5eff85eeaa5a..d5fe071b2db2 100644
---- a/drivers/usb/gadget/udc/net2280.c
-+++ b/drivers/usb/gadget/udc/net2280.c
-@@ -3781,8 +3781,10 @@ static int net2280_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	return 0;
- 
- done:
--	if (dev)
-+	if (dev) {
- 		net2280_remove(pdev);
-+		kfree(dev);
-+	}
- 	return retval;
- }
- 
--- 
-2.16.4
+> ---
+>   net/core/net_namespace.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+> index dcd61aca343e..5937bd0df56d 100644
+> --- a/net/core/net_namespace.c
+> +++ b/net/core/net_namespace.c
+> @@ -336,6 +336,7 @@ static __net_init int setup_net(struct net *net, struct user_namespace *user_ns)
+>   	idr_init(&net->netns_ids);
+>   	spin_lock_init(&net->nsid_lock);
+>   	mutex_init(&net->ipv4.ra_mutex);
+> +	net_gen_cookie(net);
+>   
+>   	list_for_each_entry(ops, &pernet_list, list) {
+>   		error = ops_init(ops, net);
+> @@ -1101,7 +1102,6 @@ static int __init net_ns_init(void)
+>   		panic("Could not allocate generic netns");
+>   
+>   	rcu_assign_pointer(init_net.gen, ng);
+> -	net_gen_cookie(&init_net);
+>   
+>   	down_write(&pernet_ops_rwsem);
+>   	if (setup_net(&init_net, &init_user_ns))
+> 
 
