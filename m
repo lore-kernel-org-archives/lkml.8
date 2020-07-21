@@ -2,136 +2,156 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C41A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 883E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB402065E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B83206E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:45:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sWaGYNFN"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="FR9eCJbq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbgGUQpm (ORCPT
+        id S1730754AbgGUQpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:45:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728750AbgGUQpj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:45:39 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFEE3C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:45:38 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id e22so15759035edq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:45:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gDLw9Dcw3YPv5eg4D1cNA4KJREZ+5phRSHLKAVCSqo4=;
-        b=sWaGYNFNvLHfLnFqhWw6qD05fZJ3xzg9qHpo5WavC+HOa4H9WOO8R58q/QpUclGLry
-         9IL4j0cs6T2tzt1njgxmRIdcHQe5/HHEbENPKtlUivjjo0774Sk4dPYbx6pNd9sj+Hba
-         BGIPr7vGf3Wz1I0ZlD9HrORuybaANBJwq3p9No8LKz53+Z00y2Qe5yTAZzt4xK0KTD14
-         opOIvzeXklxODdltPMXE0N5/iPdGcCtOPo35S5qmc4oYuzfqMy8yKOjCCu2miu7Qw5xg
-         SL+vKrFM9D2pcb4rxS2e3UFTvCX3US6gxaITccHPkYUeoMaMFGays+1SH64jb+4HGZ6x
-         uO9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gDLw9Dcw3YPv5eg4D1cNA4KJREZ+5phRSHLKAVCSqo4=;
-        b=N/IxZiWktsoTf86K5Oa4xykcOHNUNWECfFlwvpSFpyvIjWs+7AeeqOhPP1IfxKS5KV
-         qCOUIGKRtjmYFuIlHhitMCkcjdH/of0FikJG8UcU0MCE4hnhcUORpdSnEnYvBHrIPC/A
-         bp/fYnSvidFzQtVl22xgyG62WyjQHK254uioStuCaHsqt3eKY+FR0/kDQ138hz5fLMlU
-         O1Y/S8jSlrA5R//HOpol2zh0krZJ7Juw4FN1jMWfsOly1p4jE78WLQvvnsrg7cL7kBhi
-         1/xqvUxjiaXBbPLotBwM/ArrmPP9dB1wX/2oiD7lgYlSOqzURdU+yjWAiv0fp9uvHlQk
-         Khnw==
-X-Gm-Message-State: AOAM530tSeryfJ1VVuLqxR2SF4DbW2zhfD7nBMwfkCGZgn3g4NpXGE3j
-        ikrsOoxwDqa7L4NXnqHyfFOlGdp9bdhiWqTni9A9vHtYL4w=
-X-Google-Smtp-Source: ABdhPJwFbdgTKwMQXCY5MUgVfRS3h4/ECO4sk0mNo2dLY8J6zu/iV27GdbWz0YHGFmXds1uVOpAILDeHMdcYDWpz4wY=
-X-Received: by 2002:aa7:d5cd:: with SMTP id d13mr27413638eds.370.1595349937400;
- Tue, 21 Jul 2020 09:45:37 -0700 (PDT)
+        Tue, 21 Jul 2020 12:45:43 -0400
+Received: from mail-eopbgr130077.outbound.protection.outlook.com ([40.107.13.77]:31221
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728732AbgGUQpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 12:45:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AWu5oN83QKpKkFj6C2fdTz1ueCuO+fWnbU6ACWF7tRRqrm5x6t6PIQxIC61ybrZ0Jlk9AOC/u1kZ5rXgz5QJBjwQUiF1QaXXnHaCqwqucoo1E+NKhpA4f0CZU1TeDBb9jFWROAqB7OPdz9g5/mHCdaFNOF2yXQSuj7LhtsXnbPWKCYkA8Z7H5F4hWeXTSOP0m1AIYtOqn9j6LmEkw0sb6Xiw5g2fhfsbkZXbW2VAT2M+ZwjR/kRuJMUYDFkiEzhcGeLAA9nQTqZEmLAKbIDoai1Si0lZlAXC9uEpt+fyffaO3i4ZVe47c16GVgF1OfJfKsXa6BFkLUezjr3qmDpyqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/KB1+xW1JOVkQ9k5s+GzNaQdle4TosuvO9MSxQ1oXU8=;
+ b=jLy+TI34xoUgmfWUnh8kRxuWNgrKIyTTQ5enbNahBe0dwUrMuCp6IltQsLN65g5SSGEJ0y2QHnz6X1yLXZPndk5GkimqRMb4z+3o739j7OUY9clwxKjfAohzIcokhMQC10iAkKsGh3rHWTYjV9bfP+duRKkoOch9qeTR/iMtpRHylOsPN2g1RWDX58/a1EsyIHBbX//e20A7OA4E/jfeiG7QIfzZEJW92amnZuNvcchD1SkL1SkbRFbmifpiUthRcfPg5UoNeF6XVpXHIrIxB7VZ+vN7nP1XR+WOb45NCKg14xK/rYK08org5gGp4ETz6+XLFk2MSwrEqAt9WqZLZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/KB1+xW1JOVkQ9k5s+GzNaQdle4TosuvO9MSxQ1oXU8=;
+ b=FR9eCJbqzJGEBMIW6uQTg32o8/O4KYS76xxFFYQj5BvU1+uTNow9GWbRySwzmjV0cH8UjG9Rn+p+U7gZyWWqge5KU6repNtLTHOXHqEO3bBcB1BoNt+/cO1wOtptYUomSLelyzEdcFZqnvJ8ikEiSVJS+a9mP3FOF7c1Yaptgck=
+Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB5183.eurprd05.prod.outlook.com (2603:10a6:803:a9::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Tue, 21 Jul
+ 2020 16:45:31 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::252e:52c7:170b:35d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::252e:52c7:170b:35d%5]) with mapi id 15.20.3195.026; Tue, 21 Jul 2020
+ 16:45:31 +0000
+Date:   Tue, 21 Jul 2020 13:45:27 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     vkoul@kernel.org, megha.dey@intel.com, maz@kernel.org,
+        bhelgaas@google.com, rafael@kernel.org, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, hpa@zytor.com, alex.williamson@redhat.com,
+        jacob.jun.pan@intel.com, ashok.raj@intel.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
+ DEV-MSI support for the idxd driver
+Message-ID: <20200721164527.GD2021248@mellanox.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+X-ClientProxiedBy: BL0PR0102CA0057.prod.exchangelabs.com
+ (2603:10b6:208:25::34) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-References: <20200715214312.2266839-1-haoluo@google.com> <20200715214312.2266839-3-haoluo@google.com>
- <CAEf4BzYxWk9OmN0QhDrvE943YsYd2Opdkbt7NQTO9-YM6c4aGw@mail.gmail.com>
- <CA+khW7i9wq0+2P_M46pEv-onGXL_=sW7xE=10CYeP_yjPh-Rpw@mail.gmail.com> <CAEf4BzY=6PH4YS8sX1SRFOj+6oQnfAk-f0P8+0XWMGMS+RJ0pw@mail.gmail.com>
-In-Reply-To: <CAEf4BzY=6PH4YS8sX1SRFOj+6oQnfAk-f0P8+0XWMGMS+RJ0pw@mail.gmail.com>
-From:   Hao Luo <haoluo@google.com>
-Date:   Tue, 21 Jul 2020 09:45:26 -0700
-Message-ID: <CA+khW7j93gtB-e8x1-Fd9sTrOaHHD7suzVaBh9gPjnOJux+-AA@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next 2/2] selftests/bpf: Test __ksym externs with BTF
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin@isovalent.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR0102CA0057.prod.exchangelabs.com (2603:10b6:208:25::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Tue, 21 Jul 2020 16:45:31 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@mellanox.com>)      id 1jxvOR-00DH1l-Mx; Tue, 21 Jul 2020 13:45:27 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 60e0d88b-08a8-4486-b930-08d82d957b19
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5183:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB5183A6AD1584BA02BF288933CF780@VI1PR05MB5183.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qxi4rtN97Bo4zxbh1rZGJ3gU08j/+mMjLx1j289AZ7sryIrhO7XYN49IO5PpQ+iOYbICTrxsNGPpK5nN9o52lBErI4osfYM+bOAjat5vntK1lULLPoZmF7GuV2zaPAOpID2uHN+63C1YEixYvnSzuoFuF3Uh3QHLoT8slv/tiCAxxx19XXBJfdIgroxoS1ywTHh31nMIaMNRblhO6sulvjiF2rd98pzeuHGMF/UeOssnOTD07oDwnzmP+q3PAR43TNxApxZoJYGtd/btzz8R6Y0bvzgcsBbnZ3rqynd6gTG3eqkqgb4Luy+w92GdrZKpp+RLmhiUrsPBJT7KcwnJkJQDWx3fJGpp6T8J8tC1G3mOhFvr2j0fdmcFTPvCiUOMQKnR/yu0yDaDCi7t341wiQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39840400004)(376002)(136003)(346002)(396003)(2906002)(66476007)(426003)(478600001)(4326008)(9746002)(8936002)(966005)(9786002)(2616005)(8676002)(66946007)(186003)(316002)(33656002)(86362001)(7406005)(6916009)(83380400001)(5660300002)(36756003)(7416002)(26005)(1076003)(66556008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: oqqVlI3nfj8oPGCaJat5P1nS+2a5c+CFBnoVBy6QNViEZ1Xe6652tRe03W7EhDvUEcP/m3yQ+HpyoIvjactRVyPcMwrQYvWVGW1d748cQ8J9TNW4TYvCS1MRl1DbhLZfHaetneBrItHtbrbcl5P95PxJpEtHaK+fit6h7X2ei3fZxhtwn/sDPtX+H9Re2CXlNAmoIXXzU6SNNH7gBuWW9V8qMUZlsWWxbuqkV5n3pxoqyVcJcAy1lzb6ROaC2tSmzvbUf1ZXSCV+T2psRcozSNa4EDWp9ZPEGvwYzbu7Uyv6swjsq+u4m+zAzYmYrj+wsEj/6GLkiudN3RlDYkwctXCgIZpLB2YdN2NdArJm1HhCCYbMhHt82jaPTjow8/69JAWxk+QSFNSz62Dvy7komBS5x+1OZLefY0cvaOw57h6TKsBo8IaxBLLvJGtOQMIWi2LQVTNHycDqYA4DA5e3CXANhlIo9ZtNZKoL/DXMmr4=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60e0d88b-08a8-4486-b930-08d82d957b19
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2020 16:45:31.4963
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Hwbn8s9k1hr7+FBAFfuHQHhMhQXXZ3nlon3/N/XXBHNKbAnZhzJK+QtVg5oNtfMUKkMKIOZyJzszeCef9KgSOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ack. Will have that in v2.
+On Tue, Jul 21, 2020 at 09:02:15AM -0700, Dave Jiang wrote:
+> v2:
+> IMS (now dev-msi):
+> With recommendations from Jason/Thomas/Dan on making IMS more generic:
+> Pass a non-pci generic device(struct device) for IMS management instead of mdev
+> Remove all references to mdev and symbol_get/put
+> Remove all references to IMS in common code and replace with dev-msi
+> remove dynamic allocation of platform-msi interrupts: no groups,no new msi list or list helpers
+> Create a generic dev-msi domain with and without interrupt remapping enabled.
+> Introduce dev_msi_domain_alloc_irqs and dev_msi_domain_free_irqs apis
 
-Hao
+I didn't dig into the details of irq handling to really check this,
+but the big picture of this is much more in line with what I would
+expect for this kind of ability.
 
-On Mon, Jul 20, 2020 at 7:37 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Mon, Jul 20, 2020 at 1:28 PM Hao Luo <haoluo@google.com> wrote:
-> >
-> > >
-> > > This should ideally look like a real global variable extern:
-> > >
-> > > extern const struct rq runqueues __ksym;
-> > >
-> > >
-> > > But that's the case for non-per-cpu variables. You didn't seem to
-> > > address per-CPU variables in this patch set. How did you intend to
-> > > handle that? We should look at a possible BPF helper to access such
-> > > variables as well and how the verifier will prevent direct memory
-> > > accesses for such variables.
-> > >
-> > > We should have some BPF helper that accepts per-CPU PTR_TO_BTF_ID, and
-> > > returns PTR_TO_BTF_ID, but adjusted to desired CPU. And verifier
-> > > ideally would allow direct memory access on that resulting
-> > > PTR_TO_BTF_ID, but not on per-CPU one. Not sure yet how this should
-> > > look like, but the verifier probably needs to know that variable
-> > > itself is per-cpu, no?
-> > >
-> >
-> > Yes, that's what I was unclear about, so I don't have that part in
-> > this patchset. But your explanation helped me organize my thoughts. :)
-> >
-> > Actually, the verifier can tell whether a var is percpu from the
-> > DATASEC, since we have encoded "percpu" DATASEC in btf. I think the
-> > following should work:
-> >
-> > We may introduce a new PTR_TO_BTF_VAR_ID. In ld_imm, libbpf replaces
-> > ksyms with btf_id. The btf id points to a KIND_VAR. If the pointed VAR
-> > is found in the "percpu" DATASEC, dst_reg is set to PTR_TO_BTF_VAR_ID;
-> > otherwise, it will be a PTR_TO_BTF_ID. For PTR_TO_BTF_VAR_ID,
-> > reg->btf_id is the id of the VAR. For PTR_TO_BTF_ID, reg->btf_id is
-> > the id of the actual kernel type. The verifier would reject direct
-> > memory access on PTR_TO_BTF_VAR_ID, but the new BPF helper can convert
-> > a PTR_TO_BTF_VAR_ID to PTR_TO_BTF_ID.
->
-> Sounds good to me as a plan, except that PTR_TO_BTF_VAR_ID is a
-> misleading name. It's always a variable. The per-CPU part is crucial,
-> though, so maybe something like PTR_TO_PERCPU_BTF_ID?
->
-> >
-> > Hao
+> Link to previous discussions with Jason:
+> https://lore.kernel.org/lkml/57296ad1-20fe-caf2-b83f-46d823ca0b5f@intel.com/
+> The emulation part that can be moved to user space is very small due to the majority of the
+> emulations being control bits and need to reside in the kernel. We can revisit the necessity of
+> moving the small emulation part to userspace and required architectural changes at a later time.
+
+The point here is that you already have a user space interface for
+these queues that already has kernel support to twiddle the control
+bits. Generally I'd expect extending that existing kernel code to do
+the small bit more needed for mapping the queue through to PCI
+emulation to be smaller than the 2kloc of new code here to put all the
+emulation and support framework in the kernel, and exposes a lower
+attack surface of kernel code to the guest.
+
+> The kernel can specify the requirements for these callback functions
+> (e.g., the driver is not expected to block, or not expected to take
+> a lock in the callback function).
+
+I didn't notice any of this in the patch series? What is the calling
+context for the platform_msi_ops ? I think I already mentioned that
+ideally we'd need blocking/sleeping. The big selling point is that IMS
+allows this data to move off-chip, which means accessing it is no
+longer just an atomic write to some on-chip memory.
+
+These details should be documented in the comment on top of
+platform_msi_ops
+
+I'm actually a little confused how idxd_ims_irq_mask() manages this -
+I thought IRQ masking should be synchronous, shouldn't there at least be a
+flushing read to ensure that new MSI's are stopped and any in flight
+are flushed to the APIC?
+
+Jason
