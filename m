@@ -8,50 +8,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08B8C433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB6DC433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 836EF2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0C62073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:36:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M+Q0htl3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X3luzB2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731401AbgGUWgp (ORCPT
+        id S1731349AbgGUWge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 18:36:45 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39112 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731335AbgGUWgf (ORCPT
+        Tue, 21 Jul 2020 18:36:34 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40918 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgGUWgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 18:36:35 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LMaOkl100805;
-        Tue, 21 Jul 2020 17:36:24 -0500
+        Tue, 21 Jul 2020 18:36:32 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LMaMnb125597;
+        Tue, 21 Jul 2020 17:36:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595370984;
-        bh=6UiKg+knl8MrqKrYA+lbxWfW7NMoJDOdtzeTcA4fLTM=;
+        s=ti-com-17Q1; t=1595370982;
+        bh=OEsAttWzprHsc6R94CAL0mEmhDef5DxQVhrGxVmSMeI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=M+Q0htl3pFjmGcm1cko5XtaI3+1VDXJ6zYKvOHqfc4BJTtW+muqHOtEtvquj8qCH0
-         I2ENLKYFyENtDf7AgCjCHWxOCoYx99gqwZSI/x5/x0RU67n6QRPinQ4MfArqpKzsyM
-         tfn2azietbqJZvU8t0NdXuiAlMxrQLueFVrZiXvg=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06LMaOW5056840
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Jul 2020 17:36:24 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        b=X3luzB2u8JYkDIX8cQh6bE+MHHUVXCX7PhB+hWvBjqcAO2siqHyN9/yyAn+AZ8k4N
+         eksvAdfl4XRYkyF+9yyxqcOZi775LVuGVvOn23SapDfzpcbIMsEr+HFwFAyCq34FlA
+         j8ybie4ZC7ErWOO4RJnEDLdy+S65XF39SX8Gd/eM=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LMaMro023681;
+        Tue, 21 Jul 2020 17:36:22 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
- Jul 2020 17:36:24 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2020 17:36:22 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 21 Jul 2020 17:36:24 -0500
+ Frontend Transport; Tue, 21 Jul 2020 17:36:22 -0500
 Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LMaORa028234;
-        Tue, 21 Jul 2020 17:36:24 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LMaM4i028179;
+        Tue, 21 Jul 2020 17:36:22 -0500
 Received: from localhost ([10.250.34.248])
-        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 06LMaOIq080809;
-        Tue, 21 Jul 2020 17:36:24 -0500
+        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 06LMaMn0080798;
+        Tue, 21 Jul 2020 17:36:22 -0500
 From:   Suman Anna <s-anna@ti.com>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -59,11 +58,10 @@ To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
 CC:     Nishanth Menon <nm@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
         <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v5 4/6] dt-bindings: remoteproc: Add bindings for C66x DSPs on TI K3 SoCs
-Date:   Tue, 21 Jul 2020 17:36:15 -0500
-Message-ID: <20200721223617.20312-5-s-anna@ti.com>
+        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH v5 1/6] dt-bindings: arm: keystone: Add common TI SCI bindings
+Date:   Tue, 21 Jul 2020 17:36:12 -0500
+Message-ID: <20200721223617.20312-2-s-anna@ti.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200721223617.20312-1-s-anna@ti.com>
 References: <20200721223617.20312-1-s-anna@ti.com>
@@ -76,175 +74,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some Texas Instruments K3 family of SoCs have one of more Digital Signal
-Processor (DSP) subsystems that are comprised of either a TMS320C66x
-CorePac and/or a next-generation TMS320C71x CorePac processor subsystem.
-Add the device tree bindings document for the C66x DSP devices on these
-SoCs. The added example illustrates the DT nodes for the first C66x DSP
-device present on the K3 J721E family of SoCs.
+Add a bindings document that defines the common TI SCI properties
+used by various K3 device management nodes such as clock controllers,
+interrupt controllers, reset controllers or remoteproc devices.
+
+The required properties for each device management node shall be
+specified in the respective binding document.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 v5:
- - Replaced ti,k3-sci-proc.yaml references with the new ti,k3-sci-common.yaml
- - Updated required list to include the three ti,sci properties
-v4: https://patchwork.kernel.org/patch/11671453/
- - No changes, picked up Rob's Reviewed-by tag
-v3: https://patchwork.kernel.org/patch/11602325/
+ - New patch refactored out for usage by remoteproc and other TI SCI
+   interrupt controller bindings
+ - Patch based on remoteproc ti,k3-sci-proc.yaml binding (v4 patch 3)
+   with revised overall description and ti,sci-dev-id and no required
+   properties
+v4: https://patchwork.kernel.org/patch/11671455/
+ - Addressed both of Rob's review comments on ti,sci-proc-ids property
+v3: https://patchwork.kernel.org/patch/11602317/
 
- .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 142 ++++++++++++++++++
- 1 file changed, 142 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+ .../arm/keystone/ti,k3-sci-common.yaml        | 44 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/keystone/ti,k3-sci-common.yaml
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+diff --git a/Documentation/devicetree/bindings/arm/keystone/ti,k3-sci-common.yaml b/Documentation/devicetree/bindings/arm/keystone/ti,k3-sci-common.yaml
 new file mode 100644
-index 000000000000..a7834bc1530f
+index 000000000000..7597bc93a55f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
-@@ -0,0 +1,142 @@
++++ b/Documentation/devicetree/bindings/arm/keystone/ti,k3-sci-common.yaml
+@@ -0,0 +1,44 @@
 +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/remoteproc/ti,k3-dsp-rproc.yaml#
++$id: http://devicetree.org/schemas/arm/keystone/ti,k3-sci-common.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: TI K3 DSP devices
++title: Common K3 TI-SCI bindings
 +
 +maintainers:
-+  - Suman Anna <s-anna@ti.com>
++  - Nishanth Menon <nm@ti.com>
 +
 +description: |
-+  The TI K3 family of SoCs usually have one or more TI DSP Core sub-systems
-+  that are used to offload some of the processor-intensive tasks or algorithms,
-+  for achieving various system level goals.
++  The TI K3 family of SoCs usually have a central System Controller Processor
++  that is responsible for managing various SoC-level resources like clocks,
++  resets, interrupts etc. The communication with that processor is performed
++  through the TI-SCI protocol.
 +
-+  These processor sub-systems usually contain additional sub-modules like
-+  L1 and/or L2 caches/SRAMs, an Interrupt Controller, an external memory
-+  controller, a dedicated local power/sleep controller etc. The DSP processor
-+  cores in the K3 SoCs are usually either a TMS320C66x CorePac processor or a
-+  TMS320C71x CorePac processor.
-+
-+  Each DSP Core sub-system is represented as a single DT node. Each node has a
-+  number of required or optional properties that enable the OS running on the
-+  host processor (Arm CorePac) to perform the device management of the remote
-+  processor and to communicate with the remote processor.
-+
-+allOf:
-+  - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
++  Each specific device management node like a clock controller node, a reset
++  controller node or an interrupt-controller node should define a common set
++  of properties that enables them to implement the corresponding functionality
++  over the TI-SCI protocol. The following are some of the common properties
++  needed by such individual nodes. The required properties for each device
++  management node is defined in the respective binding.
 +
 +properties:
-+  compatible:
-+    const: ti,j721e-c66-dsp
++  ti,sci:
++    $ref: /schemas/types.yaml#/definitions/phandle
 +    description:
-+      Use "ti,j721e-c66-dsp" for C66x DSPs on K3 J721E SoCs
++      Should be a phandle to the TI-SCI System Controller node
 +
-+  reg:
++  ti,sci-dev-id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Should contain the TI-SCI device id corresponding to the device. Please
++      refer to the corresponding System Controller documentation for valid
++      values for the desired device.
++
++  ti,sci-proc-ids:
++    description: Should contain a single tuple of <proc_id host_id>.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
 +    items:
-+      - description: Address and Size of the L2 SRAM internal memory region
-+      - description: Address and Size of the L1 PRAM internal memory region
-+      - description: Address and Size of the L1 DRAM internal memory region
-+
-+  reg-names:
-+    items:
-+      - const: l2sram
-+      - const: l1pram
-+      - const: l1dram
-+
-+  resets:
-+    description: |
-+      Should contain the phandle to the reset controller node managing the
-+      local resets for this device, and a reset specifier.
-+    maxItems: 1
-+
-+  firmware-name:
-+    description: |
-+      Should contain the name of the default firmware image
-+      file located on the firmware search path
-+
-+  mboxes:
-+    description: |
-+      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
-+      communication with the remote processor. This property should match
-+      with the sub-mailbox node used in the firmware image.
-+    maxItems: 1
-+
-+  memory-region:
-+    minItems: 2
-+    maxItems: 8
-+    description: |
-+      phandle to the reserved memory nodes to be associated with the remoteproc
-+      device. There should be at least two reserved memory nodes defined. The
-+      reserved memory nodes should be carveout nodes, and should be defined as
-+      per the bindings in
-+      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-+    items:
-+      - description: region used for dynamic DMA allocations like vrings and
-+                     vring buffers
-+      - description: region reserved for firmware image sections
-+    additionalItems: true
-+
-+# Optional properties:
-+# --------------------
-+
-+  sram:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    minItems: 1
-+    maxItems: 4
-+    description: |
-+      phandles to one or more reserved on-chip SRAM regions. The regions
-+      should be defined as child nodes of the respective SRAM node, and
-+      should be defined as per the generic bindings in,
-+      Documentation/devicetree/bindings/sram/sram.yaml
-+
-+required:
-+ - compatible
-+ - reg
-+ - reg-names
-+ - ti,sci
-+ - ti,sci-dev-id
-+ - ti,sci-proc-ids
-+ - resets
-+ - firmware-name
-+ - mboxes
-+ - memory-region
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    / {
-+        model = "Texas Instruments K3 J721E SoC";
-+        compatible = "ti,j721e";
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        bus@100000 {
-+            compatible = "simple-bus";
-+            #address-cells = <2>;
-+            #size-cells = <2>;
-+            ranges = <0x00 0x00100000 0x00 0x00100000 0x00 0x00020000>, /* ctrl mmr */
-+                     <0x4d 0x80800000 0x4d 0x80800000 0x00 0x00800000>, /* C66_0 */
-+                     <0x4d 0x81800000 0x4d 0x81800000 0x00 0x00800000>; /* C66_1 */
-+
-+            /* J721E C66_0 DSP node */
-+            dsp@4d80800000 {
-+                compatible = "ti,j721e-c66-dsp";
-+                reg = <0x4d 0x80800000 0x00 0x00048000>,
-+                      <0x4d 0x80e00000 0x00 0x00008000>,
-+                      <0x4d 0x80f00000 0x00 0x00008000>;
-+                reg-names = "l2sram", "l1pram", "l1dram";
-+                ti,sci = <&dmsc>;
-+                ti,sci-dev-id = <142>;
-+                ti,sci-proc-ids = <0x03 0xFF>;
-+                resets = <&k3_reset 142 1>;
-+                firmware-name = "j7-c66_0-fw";
-+                memory-region = <&c66_0_dma_memory_region>,
-+                                <&c66_0_memory_region>;
-+                mboxes = <&mailbox0_cluster3 &mbox_c66_0>;
-+            };
-+        };
-+    };
++      - description: TI-SCI processor id for the remote processor device
++      - description: TI-SCI host id to which processor control ownership
++                     should be transferred to
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d53db30d1365..61ab0b7ed54d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16902,6 +16902,7 @@ M:	Tero Kristo <t-kristo@ti.com>
+ M:	Santosh Shilimkar <ssantosh@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/arm/keystone/ti,k3-sci-common.yaml
+ F:	Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+ F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+ F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
 -- 
 2.26.0
 
